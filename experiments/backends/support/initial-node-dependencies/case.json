@@ -1,0 +1,27 @@
+{
+  "scope": "three finite initialization probes; no original MUX qualification",
+  "voltage_absolute_V": 1e-09,
+  "forced_times_s": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    1
+  ],
+  "time_policy": "exact binary64 membership; no resampling or exclusion",
+  "cases": {
+    "initial-transition": {
+      "ctrl": 1.0,
+      "y": 1.0
+    },
+    "initial-coupled": {
+      "ctrl": 1.0,
+      "y": 1.0
+    },
+    "initial-nonground-state": {
+      "ctrl": 2.0,
+      "y": 1.0,
+      "aux": 1.0
+    }
+  }
+}

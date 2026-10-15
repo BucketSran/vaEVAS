@@ -1,0 +1,324 @@
+{
+  "status": "PASS",
+  "scope": "three finite initialization probes; no original MUX qualification",
+  "voltage_absolute_V": 1e-09,
+  "forced_times_s": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    1
+  ],
+  "time_policy": "exact binary64 membership; no resampling or exclusion",
+  "kernel": {
+    "name": "initial-final-v4-debug-kernel",
+    "sha256": "0a7f4c47246c79f067d81e37c606b80983f65095e83792d6aea4538d844e6a20",
+    "receipt_sha256": "3df84a0ba37f2fd62574409de07b8295436921a13979d946166a5b44a69086ee",
+    "owned_source_sha256": "49a913f9cfedb799d886ff35e2abba9cc21e62e746daacab294012a3de969b39",
+    "compiled_snapshots_sha256": {
+      "SOURCE-v4.json": "d04f71d591a8ccf40b7330e1165404935510d01b054909d76e9f488b9eb0059f",
+      "SOURCE-v4b.json": "8d45eb8907ecefb18f2ad26a88822fa39b4758d56abac906f730397fa2f801ef"
+    }
+  },
+  "python_wrapper": {
+    "identity_basis": "SHA256 of sorted JSON mapping of all 35 relative Python source paths to SHA256; complete mapping retained in local summary",
+    "aggregate_source_sha256": "c6186752fe38842ea33b8c3b371f04509d0cc6205bd5cefadb6d4409f0e608ef",
+    "scs_py_sha256": "79559dab2e3ad680a57b145405920c5605603b08d2d2bda554bfbd4f2765b52a",
+    "origin": "separate SCS-wrapper checkout identified as PR184 by coordinator; fixed kernel remains v4"
+  },
+  "checker_sha256": "83f3943c60907ba9738ba334f66c21b3f51d031bab64dd16a15d935d3e651057",
+  "case_sha256": "0f3e958f432066a877c1a2ef20deead3ec788a32eb3118d6977eb98ef9ccd3cf",
+  "records": [
+    {
+      "case": "initial-transition",
+      "status": "PASS",
+      "expected_V": {
+        "ctrl": 1.0,
+        "y": 1.0
+      },
+      "checks": {
+        "EVAS": {
+          "native_rows": 13,
+          "maximum_error_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          },
+          "forced_times_s": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ]
+        },
+        "Spectre": {
+          "native_rows": 19,
+          "maximum_error_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          },
+          "forced_times_s": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ]
+        }
+      },
+      "exact_native_pairs": [
+        {
+          "time_s": 0.0,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 0.25,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 0.5,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 0.75,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 1.0,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        }
+      ],
+      "Spectre_version": "21.1.0.509.isr12",
+      "EVAS_effective_tolerances": {
+        "vabstol": 1e-10,
+        "reltol": 1e-10
+      },
+      "input_sha256": {
+        "dut.va": "e01095e228df49f06e7d7514e363f47e75dbcc8f38c47ef3b26b02e81c9ff1bb",
+        "tb.scs": "c2e75cafd7c5cf8dca10b46ff19f10c2c38a7bc79d244d2233b1c1cb6c2e0b40"
+      },
+      "reference_sha256": {
+        "psf/tran.tran.tran": "cc39b727eabf9d20495af75c14422d3fa6e3a1d8c0cd4a7618ea2719e673a3f7",
+        "RESULT.json": "e16ae03b2e5e1cda5429395decb85574c9debdc837a3284ae608a72d178a56ce",
+        "spectre.log": "c9a5ad6269967775d4b349b1fb7ac5944c4e5c094714ea9100ff0ca44dbe806d"
+      },
+      "EVAS_response_sha256": "07da6316f13bc335f3888a9175d8f68c6c96a46d8f8b1b26f7d64d992e3a2f95",
+      "warnings": []
+    },
+    {
+      "case": "initial-coupled",
+      "status": "PASS",
+      "expected_V": {
+        "ctrl": 1.0,
+        "y": 1.0
+      },
+      "checks": {
+        "EVAS": {
+          "native_rows": 13,
+          "maximum_error_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          },
+          "forced_times_s": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ]
+        },
+        "Spectre": {
+          "native_rows": 19,
+          "maximum_error_V": {
+            "ctrl": 2.220446049250313e-16,
+            "y": 0.0
+          },
+          "forced_times_s": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ]
+        }
+      },
+      "exact_native_pairs": [
+        {
+          "time_s": 0.0,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 0.25,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 0.5,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 0.75,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 1.0,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        }
+      ],
+      "Spectre_version": "21.1.0.509.isr12",
+      "EVAS_effective_tolerances": {
+        "vabstol": 1e-10,
+        "reltol": 1e-10
+      },
+      "input_sha256": {
+        "dut.va": "62dfbb4b9e8a3328b24cc908fafd93a6dc9b5c3ffd5c3d61337c117702a2801a",
+        "tb.scs": "c2e75cafd7c5cf8dca10b46ff19f10c2c38a7bc79d244d2233b1c1cb6c2e0b40"
+      },
+      "reference_sha256": {
+        "psf/tran.tran.tran": "fccf63f1255f9819755f100b05ad6a73e771d76d4cab482503250157e26e622e",
+        "RESULT.json": "686d65485f4660b93a870c73506a56790614389cf142c049340e6d3c714dcfaa",
+        "spectre.log": "b061eb35278c60c1b5ac0aa6541605ac0d5a7fee545bb3b9c5384f2b6adea4c9"
+      },
+      "EVAS_response_sha256": "f5faeec0215b8fc7caa4538e9a761c712a9f4f287d912e52a5606c748eba71a2",
+      "warnings": []
+    },
+    {
+      "case": "initial-nonground-state",
+      "status": "PASS",
+      "expected_V": {
+        "ctrl": 2.0,
+        "y": 1.0,
+        "aux": 1.0
+      },
+      "checks": {
+        "EVAS": {
+          "native_rows": 13,
+          "maximum_error_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          },
+          "forced_times_s": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ]
+        },
+        "Spectre": {
+          "native_rows": 19,
+          "maximum_error_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          },
+          "forced_times_s": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ]
+        }
+      },
+      "exact_native_pairs": [
+        {
+          "time_s": 0.0,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          }
+        },
+        {
+          "time_s": 0.25,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          }
+        },
+        {
+          "time_s": 0.5,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          }
+        },
+        {
+          "time_s": 0.75,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          }
+        },
+        {
+          "time_s": 1.0,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          }
+        }
+      ],
+      "Spectre_version": "21.1.0.509.isr12",
+      "EVAS_effective_tolerances": {
+        "vabstol": 1e-10,
+        "reltol": 1e-10
+      },
+      "input_sha256": {
+        "dut.va": "48ce2661a3c539c9abf3d8573904d2af80a4f972a42ac7f1de8215ad4220c6da",
+        "tb.scs": "42eb12f2e9f5aed814efa19fcc79dc7b481d78b9989fa2f9bc4b9cca26fd7738"
+      },
+      "reference_sha256": {
+        "psf/tran.tran.tran": "367f631a4db8264d5b2e8c533aa8b6fbaed57b663ad1703685c5bae12ffa40c3",
+        "RESULT.json": "cf4568da917af2af05bfe014f1f97d2b12c6a136bac28afbaa336ac55e765edc",
+        "spectre.log": "f9cb4fa9924eef24009b45812b598248dbb686bb02169d2970187f44cd7d1265"
+      },
+      "EVAS_response_sha256": "fd51492f34b2736262bc61a358c48f4d0e50f5005dbfab7f47c34ba3eded9179",
+      "warnings": []
+    }
+  ],
+  "limitations": [
+    "Only these three microcases; no original MUX/task pass or new Q.",
+    "Native PSF, full responses and kernel are local retained evidence, not public reference downloads.",
+    "EVAS kernel is the frozen v4 artifact; Python SCS wrapper comes from the separately identified checkout."
+  ],
+  "calibration": {
+    "controls": 4,
+    "all_rejected": true,
+    "receipt_sha256": "04642895081e6583e77bd37ee159fd7c15099fd770e680212ec3d6d1a72a3b9d"
+  }
+}

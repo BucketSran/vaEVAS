@@ -1,0 +1,352 @@
+{
+  "status": "PASS",
+  "scope": "three finite initialization probes; no original MUX qualification",
+  "voltage_absolute_V": 1e-09,
+  "forced_times_s": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    1
+  ],
+  "time_policy": "exact binary64 membership; no resampling or exclusion",
+  "kernel": {
+    "name": "evas-kernel",
+    "sha256": "6bc62d6e144fd737f93e02d9e857f8417d0d41203e68f8bb9a4bb62c66f5f218",
+    "receipt_sha256": "539fd139466f49f09b8f281e85e3a40b5baaa5d5803b71b4a70bcec6c3465cb0",
+    "owned_source_sha256": "b94ba43da29b8da3b64b5346240a20297c036f42c45d75838df265acb5e14a0e",
+    "compiled_snapshots_sha256": {
+      "compiled-snapshot.json": "fcad2ba55a5adf0471c3567c9ee9d656c4a8b7b3f7afb8adbbd0b9bd6e666122"
+    }
+  },
+  "python_wrapper": {
+    "identity_basis": "all Python source hashes at execution; no Git query",
+    "source_sha256": {
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "03467610db7d5563c99f2ffcf65c8f258175575fff18a38ca89dc5854439d651",
+      "evas/src/evas/array_elaboration.py": "119587782600f675e8fc9451f9b55dae731496c90bbba9d3c93dfce965faac9a",
+      "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+      "evas/src/evas/display.py": "c53802f643b2405e1f3da36596a8d4674aebf409635232ded3dc52f852f38b5c",
+      "evas/src/evas/elaboration.py": "87857ddb3b2c551a2f92621da604f80d52cbd74a977aa1a9b766238196a0045e",
+      "evas/src/evas/errors.py": "4716787d137c2232e13d9b9b7231b407d5c87a38c755345c63bc9df91a45a158",
+      "evas/src/evas/event_index_domains.py": "08393aa045e1c32394580432f27c6b4fe3264ab78677faeb316ef4c7080ec847",
+      "evas/src/evas/event_specialization.py": "6f97314d201ddd059cba72f659718109ec808f773b46b83ef3a914bdcc6871f6",
+      "evas/src/evas/frontend.py": "310159f89cea075ff3f35a7d46e7177dfd8888eb8841528ddb924be45768854a",
+      "evas/src/evas/hierarchy.py": "ec8cd24105bfb646f28874dd40fe0923ae51ca5d22b45b1be0e6153347a7a10b",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/instance_compiler.py": "bdc925eb7de518f87feeaa0b54e1eafb6ce1323882470400d340c4edf68a426a",
+      "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/src/evas/ir.py": "02a5c377f314e8a9bee1578d991d143180997ba0ac7f4299c06c4d441a94c41c",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/src/evas/lowering.py": "b6e1084ec6c8b72bc3ab516097421527f3674451c0a0780365d2adfe0903577a",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/node_elaboration.py": "c21db591e370dc5efcfde9ee31eaf26cf4f69727536bfd775c86e2b58916ded5",
+      "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/src/evas/predicate_structure.py": "0f145fafcf1a926877f555207da48d54e6334e8ffbde1d9b385499ea74d11543",
+      "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+      "evas/src/evas/protocol.py": "6259e984782022afd7abfe50dc4e58a454bf30ca219829f4f32a6586467795a9",
+      "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+      "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+      "evas/src/evas/runtime.py": "6c13d7a03fb4d5f36d5c53e51621e37ccfc40ff28e9386218697c3a8b2b5bf12",
+      "evas/src/evas/scs.py": "79559dab2e3ad680a57b145405920c5605603b08d2d2bda554bfbd4f2765b52a",
+      "evas/src/evas/scs_sources.py": "ceb199cc2cda9fbcce5ae770c8b5eca6184cd29f186e921df922ce726d99feae",
+      "evas/src/evas/standard_headers.py": "efe0b2421d400ac723cfdf71c5d406cdef510dc89d3556ad999e2253600ec88e",
+      "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+      "evas/src/evas/syntax.py": "15b49e6573ef8fa52eaa9703e026044f484f6659350367b70c548ceb01498b09"
+    }
+  },
+  "checker_sha256": "f60dea102457687b937cce9f820a85140e992c411cc6e6b4bc447776b7f3e8bc",
+  "case_sha256": "0f3e958f432066a877c1a2ef20deead3ec788a32eb3118d6977eb98ef9ccd3cf",
+  "records": [
+    {
+      "case": "initial-transition",
+      "status": "PASS",
+      "expected_V": {
+        "ctrl": 1.0,
+        "y": 1.0
+      },
+      "checks": {
+        "EVAS": {
+          "native_rows": 13,
+          "maximum_error_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          },
+          "forced_times_s": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ]
+        },
+        "Spectre": {
+          "native_rows": 19,
+          "maximum_error_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          },
+          "forced_times_s": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ]
+        }
+      },
+      "exact_native_pairs": [
+        {
+          "time_s": 0.0,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 0.25,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 0.5,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 0.75,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 1.0,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        }
+      ],
+      "Spectre_version": "21.1.0.509.isr12",
+      "EVAS_effective_tolerances": {
+        "vabstol": 1e-10,
+        "reltol": 1e-10
+      },
+      "input_sha256": {
+        "dut.va": "e01095e228df49f06e7d7514e363f47e75dbcc8f38c47ef3b26b02e81c9ff1bb",
+        "tb.scs": "c2e75cafd7c5cf8dca10b46ff19f10c2c38a7bc79d244d2233b1c1cb6c2e0b40"
+      },
+      "reference_sha256": {
+        "psf/tran.tran.tran": "cc39b727eabf9d20495af75c14422d3fa6e3a1d8c0cd4a7618ea2719e673a3f7",
+        "RESULT.json": "e16ae03b2e5e1cda5429395decb85574c9debdc837a3284ae608a72d178a56ce",
+        "spectre.log": "c9a5ad6269967775d4b349b1fb7ac5944c4e5c094714ea9100ff0ca44dbe806d"
+      },
+      "EVAS_response_sha256": "3fad4c48b7a664451facf3c55cc0585e208afca1572c106257547043915d3846",
+      "warnings": []
+    },
+    {
+      "case": "initial-coupled",
+      "status": "PASS",
+      "expected_V": {
+        "ctrl": 1.0,
+        "y": 1.0
+      },
+      "checks": {
+        "EVAS": {
+          "native_rows": 13,
+          "maximum_error_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          },
+          "forced_times_s": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ]
+        },
+        "Spectre": {
+          "native_rows": 19,
+          "maximum_error_V": {
+            "ctrl": 2.220446049250313e-16,
+            "y": 0.0
+          },
+          "forced_times_s": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ]
+        }
+      },
+      "exact_native_pairs": [
+        {
+          "time_s": 0.0,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 0.25,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 0.5,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 0.75,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "time_s": 1.0,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0
+          }
+        }
+      ],
+      "Spectre_version": "21.1.0.509.isr12",
+      "EVAS_effective_tolerances": {
+        "vabstol": 1e-10,
+        "reltol": 1e-10
+      },
+      "input_sha256": {
+        "dut.va": "62dfbb4b9e8a3328b24cc908fafd93a6dc9b5c3ffd5c3d61337c117702a2801a",
+        "tb.scs": "c2e75cafd7c5cf8dca10b46ff19f10c2c38a7bc79d244d2233b1c1cb6c2e0b40"
+      },
+      "reference_sha256": {
+        "psf/tran.tran.tran": "fccf63f1255f9819755f100b05ad6a73e771d76d4cab482503250157e26e622e",
+        "RESULT.json": "686d65485f4660b93a870c73506a56790614389cf142c049340e6d3c714dcfaa",
+        "spectre.log": "b061eb35278c60c1b5ac0aa6541605ac0d5a7fee545bb3b9c5384f2b6adea4c9"
+      },
+      "EVAS_response_sha256": "b56051c59db85810c0389c7d366f1af18f46e17bb29a02ea865dae8f7e0f65ce",
+      "warnings": []
+    },
+    {
+      "case": "initial-nonground-state",
+      "status": "PASS",
+      "expected_V": {
+        "ctrl": 2.0,
+        "y": 1.0,
+        "aux": 1.0
+      },
+      "checks": {
+        "EVAS": {
+          "native_rows": 13,
+          "maximum_error_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          },
+          "forced_times_s": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ]
+        },
+        "Spectre": {
+          "native_rows": 19,
+          "maximum_error_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          },
+          "forced_times_s": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ]
+        }
+      },
+      "exact_native_pairs": [
+        {
+          "time_s": 0.0,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          }
+        },
+        {
+          "time_s": 0.25,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          }
+        },
+        {
+          "time_s": 0.5,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          }
+        },
+        {
+          "time_s": 0.75,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          }
+        },
+        {
+          "time_s": 1.0,
+          "absolute_difference_V": {
+            "ctrl": 0.0,
+            "y": 0.0,
+            "aux": 0.0
+          }
+        }
+      ],
+      "Spectre_version": "21.1.0.509.isr12",
+      "EVAS_effective_tolerances": {
+        "vabstol": 1e-10,
+        "reltol": 1e-10
+      },
+      "input_sha256": {
+        "dut.va": "48ce2661a3c539c9abf3d8573904d2af80a4f972a42ac7f1de8215ad4220c6da",
+        "tb.scs": "42eb12f2e9f5aed814efa19fcc79dc7b481d78b9989fa2f9bc4b9cca26fd7738"
+      },
+      "reference_sha256": {
+        "psf/tran.tran.tran": "367f631a4db8264d5b2e8c533aa8b6fbaed57b663ad1703685c5bae12ffa40c3",
+        "RESULT.json": "cf4568da917af2af05bfe014f1f97d2b12c6a136bac28afbaa336ac55e765edc",
+        "spectre.log": "f9cb4fa9924eef24009b45812b598248dbb686bb02169d2970187f44cd7d1265"
+      },
+      "EVAS_response_sha256": "5904d3226b4686a96824a4c9c98794cd78b4fd1b32f83c5d2ba53ed327d44404",
+      "warnings": []
+    }
+  ],
+  "limitations": [
+    "Only these three microcases; no original MUX/task pass or new Q.",
+    "Native PSF, full responses and kernel are local retained evidence, not public reference downloads.",
+    "Root integration on main146ea2ed; copied v4 source, mtime cache repaired by touching owned Rust before actual rebuild; actual kernel SHA and complete Rust/Python source map bound here. Original frozen v4 evidence retained separately."
+  ]
+}

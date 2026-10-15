@@ -17,6 +17,8 @@
 
 [隐式 DAE 的动态模型步长](../../../experiments/backends/implicit-step-bounds/README.md)补充 DYNAMICS 的有限开发证据；两条实际参考各33点通过原100nV门槛，不宣称原R01请求新增恢复。
 
+[初始化节点依赖](../../../experiments/backends/support/initial-node-dependencies/README.md)补充 LANG、LIN 和 COMPOSE 的有限开发证据；三个同源实际 Spectre 对照通过，不宣称原 MUX 任务完成。
+
 IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) 合入 main，补充 LANG、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE 和 DEV:scs-input。
 契约见[局部变量与条件支路](../../validation/ANALOG_CONDITIONS_CONTRACT.md)、
 [事件条件与输出记录](../math/events.md)、[连续选路与有理流](../math/continuous.md#selected-flow)。

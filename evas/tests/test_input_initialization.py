@@ -161,16 +161,15 @@ module pair(a,b,oa,ob,na,nb); inout a,b,oa,ob,na,nb;
             transient(p,{'in':[[0,.9],[1,.9]]},[0],stop=1,max_step=1,kernel=KERNEL)
         self.assertEqual(caught.exception.detail['kind'],'unsupported_initialization')
 
-    def test_cross_instance_output_input_is_not_an_external_driven_source(self):
+    def test_cross_instance_output_initialization_follows_the_certified_voltage_dependency(self):
         wrapper="""`include "disciplines.vams"
 module cascade(a,oa,ob,na,nb); inout a,oa,ob,na,nb;
         electrical a,oa,ob,na,nb; paper_hc_start A(a,oa,na); paper_hc_start B(oa,ob,nb); endmodule"""
         p=compile_sources({'cascade.va':SOURCE+wrapper},
             [Instance('dut','cascade',{n:n for n in ('a','oa','ob','na','nb')})])
-        with self.assertRaises(KernelError) as caught:
-            transient(p,{'a':[[0,.9],[1,.9]]},[0],stop=1,max_step=1,kernel=KERNEL)
-        self.assertEqual(caught.exception.detail['kind'],'unsupported_initialization')
-        self.assertIn('dut/B:q',caught.exception.detail['message'])
+        for value, expected in [(.9, [1,0,1,0]), (.1, [0,0,0,0])]:
+            result=transient(p,{'a':[[0,value],[1,value]]},[0],stop=1,max_step=1,kernel=KERNEL)
+            self.assertEqual(result['transient']['states'], [expected])
 
     def test_constant_and_version_compatibility(self):
         p=compile_sources({'constant.va':model('@(initial_step) q=3; V(y,r)<+q;', 'real q;')},[instance()])

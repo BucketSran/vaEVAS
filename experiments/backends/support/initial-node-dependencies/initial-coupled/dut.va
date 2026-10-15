@@ -1,0 +1,3 @@
+`include "disciplines.vams"
+module load(ctrl,y);input ctrl;output y;electrical ctrl,y;integer q;analog begin @(initial_step) q=(V(ctrl)>0.5); V(y)<+q; end endmodule
+module drive(ctrl);output ctrl;electrical ctrl,a;analog begin V(ctrl)<+0.5*V(a)+0.5;V(a)<+0.5*V(ctrl)+0.5;end endmodule
