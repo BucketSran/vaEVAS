@@ -78,7 +78,7 @@ def snapshot(args):
     for value in [args.task_id, args.label]:
         if Path(value).name != value or value in {'.', '..'}:
             raise ValueError('task and label must be single directory components')
-    task = REPO / 'benchmark/tasks' / args.task_id
+    task = REPO / 'benchmark/material/historyref/tasks' / args.task_id
     root = ROOT / 'representatives' / f'{args.task_id}-{args.label}'
     root.mkdir(mode=0o700, parents=True, exist_ok=False)
     reference = root / 'reference'

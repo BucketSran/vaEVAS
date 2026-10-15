@@ -33,7 +33,7 @@ Python 的 `syntax.Parser._statements` 将每个标量匹配 `s == label` 降低
 没有新增回退或状态协议，既有 event_conditions、event_body_loops 与 initial_cross
 回归检查事件条件和顺序路径。开发测试不折算为正式资格条件。
 
-[case_statements](cases/case_statements/) 冻结五个 DC 输入 `[0,1,2,-1,0.5]`。
+[case_statements](cases/case_statements) 冻结五个 DC 输入 `[0,1,2,-1,0.5]`。
 普通 case 的独立输出为 `[3,3,7,9,9]`，纯函数输出为 `[3,4,5,5,5]`。
 `.scs` 与独立手写 manifest 采用同一 VA、九个查询时刻和相同精度设置，
 本地真实 Rust 输出满足这些答案且相互一致。固定 Spectre 比较预算为 `1e-8 V`，

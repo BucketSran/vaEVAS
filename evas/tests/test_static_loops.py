@@ -84,7 +84,7 @@ class StaticLoops(unittest.TestCase):
                 compiled('@(initial_step) n=0; '+body+' V(y,r)<+n;','genvar i; integer n;')
 
     def test_original_zoom_source_expands_every_clock_without_rewriting(self):
-        source=Path(__file__).resolve().parents[2]/'benchmark/tasks/va03-zoom-timing/solution/dut.va'
+        source=Path(__file__).resolve().parents[2]/'benchmark/material/historyref/tasks/va03-zoom-timing/solution/dut.va'
         ports='RST S SAR RES INT CLK_SAR ZOOM CLK_ZOOM RST_ZOOM'.split()
         p=compile_sources({'dut.va':source.read_text()},[Instance('dut','CLOCK_VA',dict(zip(ports,ports)),{})])
         # Two edges for each of 1+4+28+4+32+32+128+32+32 pulses.

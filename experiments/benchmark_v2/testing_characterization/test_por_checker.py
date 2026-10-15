@@ -2,7 +2,7 @@
 from pathlib import Path
 import importlib.util
 import unittest
-spec=importlib.util.spec_from_file_location('testing',Path(__file__).resolve().parents[3]/'benchmark/checkers/v2_testing.py')
+spec=importlib.util.spec_from_file_location('testing',Path(__file__).resolve().parents[3]/'benchmark/material/historyref/legacy-authoring/checkers/v2_testing.py')
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 
 class FullPorWave(unittest.TestCase):

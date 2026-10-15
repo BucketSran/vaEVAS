@@ -1,6 +1,6 @@
 import unittest, sys
 from pathlib import Path
-sys.path.insert(0,str(Path(__file__).resolve().parents[3]/"benchmark/checkers"))
+sys.path.insert(0,str(Path(__file__).resolve().parents[3]/"benchmark/material/historyref/legacy-authoring/checkers"))
 from v2_next_calibration import evaluate
 class OutputContract(unittest.TestCase):
  def test_equal_outputs_cannot_pass_common_mode(self):

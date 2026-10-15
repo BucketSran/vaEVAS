@@ -3,8 +3,20 @@ from pathlib import Path
 import hashlib,json,unittest,importlib.util,tempfile
 
 ROOT=Path(__file__).resolve().parents[3]
-TASK=ROOT/'benchmark/tasks/v2-test-por-sequence'
+TASK=ROOT/'benchmark/material/draftbench/batches/v2-01/tasks/v2-test-por-sequence'
 class PublicBoundary(unittest.TestCase):
+    def test_materializer_runs_from_the_public_package_without_repository_imports(self):
+        import subprocess,sys,shutil
+        with tempfile.TemporaryDirectory() as directory:
+            public=Path(directory)/'public'
+            shutil.copytree(TASK/'environment/public',public)
+            helper=public/'materialize_case.py'
+            helper.write_bytes((ROOT/'experiments/benchmark_v2/testing_characterization/por_public_case.py').read_bytes())
+            output=Path(directory)/'visible-cases.json'
+            result=subprocess.run([sys.executable,'-I',str(helper),'--materials',str(public),'--output',str(output)],capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stderr)
+            self.assertEqual(len(json.loads(output.read_text())),1)
+
     def materializer(self):
         spec=importlib.util.spec_from_file_location('public_case',ROOT/'experiments/benchmark_v2/testing_characterization/por_public_case.py')
         module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
@@ -27,7 +39,7 @@ class PublicBoundary(unittest.TestCase):
         # Process fixture validates package preparation only, not POR physics.
         import sys,os
         from unittest.mock import patch
-        sys.path.insert(0,str(ROOT/'benchmark/checkers'))
+        sys.path.insert(0,str(ROOT/'benchmark/material/historyref/legacy-authoring/checkers'))
         from v2_runtime import verify
         cases=json.loads((TASK/'tests/cases.json').read_text())
         signals=cases[0]['signals']

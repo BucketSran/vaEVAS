@@ -6,7 +6,7 @@ to match a shared skill's default layout.
 
 - [GLOSSARY.md](../../GLOSSARY.md) defines common terms.
 - [Project goals](../../README.md#研究验收与论文实验) define research acceptance.
-- [Benchmark](../../benchmark/README.md#目标与边界) owns task scope, grading and reproduction requirements.
+- [Benchmark](../../benchmark/README.md) owns task scope, grading and reproduction requirements.
 - [EVAS](../../evas/README.md) and its [handbook](../../evas/docs/README.md) own simulator behavior and mathematics.
 - [EVAS architecture decisions](../../evas/docs/development/DECISIONS.md) explain existing product and compatibility choices.
 - [CONTRIBUTING](../../CONTRIBUTING.md#find-the-relevant-rules) owns scope, review and delivery rules and routes to the relevant test, workspace and evidence procedures.

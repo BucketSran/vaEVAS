@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[3]
-spec=importlib.util.spec_from_file_location('lossless_performance',ROOT/'benchmark/checkers/first_batch_optimization.py')
+spec=importlib.util.spec_from_file_location('lossless_performance',ROOT/'benchmark/material/historyref/legacy-authoring/checkers/first_batch_optimization.py')
 M=importlib.util.module_from_spec(spec);spec.loader.exec_module(M)
 DATA=b'PSFASCII\nVALUE\n'+b'"time" 1.234e-9\n"out" 0.5\n'*10000+b'END\n'
 

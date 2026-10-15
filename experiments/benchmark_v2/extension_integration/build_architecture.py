@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[3]
-TASK=ROOT/'benchmark/tasks/v2-integrate-349-multichannel-readout'
+TASK=ROOT/'benchmark/material/draftbench/batches/v2-01/tasks/v2-integrate-349-multichannel-readout'
 OUT=Path(__file__).resolve().parent
 VERSION='sample-hold-causal-v2'
 

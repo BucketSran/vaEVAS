@@ -6,9 +6,9 @@ import math
 import unittest
 ROOT=Path(__file__).resolve().parents[3]
 def module(name):
- s=importlib.util.spec_from_file_location(name,ROOT/'benchmark/checkers'/f'first_batch_{name}.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+ s=importlib.util.spec_from_file_location(name,ROOT/'benchmark/material/historyref/legacy-authoring/checkers'/f'first_batch_{name}.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
 V=module('verification');M=module('measurement')
-def cases(task):return json.loads((ROOT/'benchmark/tasks'/task/'tests/cases.json').read_text())
+def cases(task):return json.loads((ROOT/'benchmark/material/historyref/tasks'/task/'tests/cases.json').read_text())
 def square(t,start,end):
  if start<=t<start+.1e-9:return (t-start)/.1e-9
  if start+.1e-9<=t<end:return 1

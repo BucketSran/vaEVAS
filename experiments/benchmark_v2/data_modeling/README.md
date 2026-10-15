@@ -2,7 +2,7 @@
 
 当前作者校准为8/8个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。两种模型的Agentic与one-shot试做已结束，完整分母和有限质量结论见[模型结果](../model_pilots/model-pilot-results.md)及[规格验收](../spec-delivery.md)。计划和生成清单中的 pending 保留生成时状态，当前作者结论以该报告为准。
 
-本目录已建立来自JKU SKY130晶体管采样级的真实数据、完整实验划分、Harbor任务和独立评分程序。来源真实性、初始化和误差预算见[任务来源](../../../benchmark/tasks/v2-data-sampling-identification/SOURCE.md)。参考、合法替代和六类语义负例已完成实际Spectre作者校准，D3通过。D4四个试做单元均已终态，均未产生可评分候选；公开数据的实际使用已有分析，留出泛化能力仍未知，详见[质量分析](../model_pilots/model-quality.md)。
+本目录已建立来自JKU SKY130晶体管采样级的真实数据、完整实验划分、Harbor任务和独立评分程序。来源真实性、初始化和误差预算见[任务来源](../../../benchmark/material/draftbench/batches/v2-01/tasks/v2-data-sampling-identification/SOURCE.md)。参考、合法替代和六类语义负例已完成实际Spectre作者校准，D3通过。D4四个试做单元均已终态，均未产生可评分候选；公开数据的实际使用已有分析，留出泛化能力仍未知，详见[质量分析](../model_pilots/model-quality.md)。
 
 [category-manifest.json](category-manifest.json)将本类唯一必做来源映射至任务。该采样级不是32个P1来源的新增计数。固定32条训练、2条公开自测与4条隐藏实验的身份在[dataset-manifest.json](dataset-manifest.json)，公开与隐藏不共享完整序列。
 

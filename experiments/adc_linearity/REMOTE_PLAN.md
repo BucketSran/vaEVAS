@@ -4,7 +4,7 @@
 部署计划中的资源请求与有效限制须分别记录，实际运行前由协调者核对版本、授权和资源。
 它不记录第二份任务进度。
 
-输入是 `benchmark/tasks/va08-adc-linearity/tests/cases.json`、原创reference与
+输入是 `benchmark/material/historyref/tasks/va08-adc-linearity/tests/cases.json`、原创reference与
 `prepare.py`产生的六个错版。`prepare.py`生成各ADC、网表和candidate的 SHA256 manifest，
 执行时保存同一输入身份，不在运行中改阈值、容差或求解设置。
 四个计分阈值数组均不同于public器件：均匀平移、四周期码宽、重复阈值与端区扩展。
@@ -25,12 +25,12 @@
 被checker拒绝，需要修复校准资产后重跑受影响病例。
 
 每场景固定 stop=4.102ms、maxstep=20ns、conservative、reltol=1e-6、vabstol=1e-9。
-[task.toml](../../benchmark/tasks/va08-adc-linearity/task.toml) 请求的1 CPU、1 GiB内存、2 GiB磁盘
+[task.toml](../../benchmark/material/historyref/tasks/va08-adc-linearity/task.toml) 请求的1 CPU、1 GiB内存、2 GiB磁盘
 属于Harbor容器环境；远端Spectre在宿主运行，是另一层。requested字段不能证明宿主硬限制，
 当前计划不宣称宿主CPU quota、总RSS上限或cgroup隔离。
 
 远端按既有harness串行提交，每个job终止且取回收据后才提交下一个。Spectre的 `+mt=1`
-是线程请求；[checker](../../benchmark/checkers/adc_linearity.py) 对单次主求解设置90秒timeout，
+是线程请求；[checker](../../benchmark/material/historyref/legacy-authoring/checkers/adc_linearity.py) 对单次主求解设置90秒timeout，
 每job的实际license/标准include preflight探针等待上限15秒，版本查询上限30秒。
 部署profile的180秒单调时钟deadline由preflight与checker共享，不提高主求解90秒上限。
 本题计划10次主求解加10次preflight求解；10次版本查询另计时间，不算求解。
@@ -68,7 +68,7 @@ VA真实编译、浮动电压输出节点、总线端口展开、timer及文件I
 本地准备命令：
 
 ```sh
-python3 -B experiments/adc_linearity/harness_adapter.py   --harness-checkout /path/to/circuits/harness   --candidate benchmark/tasks/va08-adc-linearity/solution/reference.va   --output runs/adc-linearity/harness-reference
+python3 -B experiments/adc_linearity/harness_adapter.py   --harness-checkout /path/to/circuits/harness   --candidate benchmark/material/historyref/tasks/va08-adc-linearity/solution/reference.va   --output runs/adc-linearity/harness-reference
 ```
 
 错版加 `--case <上表场景>`，输出另用新目录。输出含原始 frozen candidate、
@@ -88,7 +88,7 @@ Harbor verifier日志目录默认仍挂给agent，只写 `status`、`reward` 的
 配置内容不进入候选镜像，也不把它复制到任务源码。
 
 ```sh
-PYTHONPATH="$PWD" uvx --from harbor==0.23.0 harbor run   --path benchmark/tasks/va08-adc-linearity --agent oracle   --verifier experiments.adc_linearity.harbor_adapter:ADCHarnessVerifier   --verifier-kwarg config_path=/operator/private/adc-harness.json   --jobs-dir "$PWD/runs/adc-linearity/harbor" --job-name oracle-integration -n 1 -r 0
+PYTHONPATH="$PWD" uvx --from harbor==0.23.0 harbor run   --path benchmark/material/historyref/tasks/va08-adc-linearity --agent oracle   --verifier experiments.adc_linearity.harbor_adapter:ADCHarnessVerifier   --verifier-kwarg config_path=/operator/private/adc-harness.json   --jobs-dir "$PWD/runs/adc-linearity/harbor" --job-name oracle-integration -n 1 -r 0
 ```
 
 这是既有实际入口。Harbor0.23.0、Docker、SSH、实际preflight、Spectre及artifact取回

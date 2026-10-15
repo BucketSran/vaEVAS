@@ -3,6 +3,7 @@ import argparse,json,sys,subprocess,hashlib
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(ROOT))
+from experiments.benchmark_paths import material_path
 from experiments.benchmark_first_batch.runtime import prepare
 
 def main():
@@ -13,7 +14,7 @@ def main():
  for request in manifest['calibration_requests']:
   if args.task and Path(request['task']).name not in args.task:continue
   if args.variant and request['variant'] not in args.variant:continue
-  task=ROOT/request['task'];candidate=ROOT/request['candidate_directory']/'dut.va'
+  task=material_path(ROOT, request['task']);candidate=material_path(ROOT, request['candidate_directory'])/'dut.va'
   if request['variant']=='reference':
    generated=out/'solve-outputs'/task.name;generated.mkdir(parents=True,exist_ok=True)
    script=task/'solution/solve.sh';invocation=script.read_text().replace('/solution/',str(task/'solution')+'/').replace('/work/',str(generated)+'/')

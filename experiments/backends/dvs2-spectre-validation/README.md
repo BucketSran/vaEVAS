@@ -186,7 +186,7 @@ python3 -B -m unittest discover -s . -p test_history_relocalization_reference.py
 
 ### 仓库自有的候选修复题
 
-[va07-triangle-repair](../../../benchmark/tasks/va07-triangle-repair/instruction.md) 要求修复边界换向，
+[va07-triangle-repair](../../../benchmark/material/historyref/tasks/va07-triangle-repair/instruction.md) 要求修复边界换向，
 并改变上下限、初态、运动方向及正速度输入。数学答案来自速度积分和三角波折返：
 若区间宽 W=upper−lower，累计路程 `A(t)=∫v_ctl(t)dt`，
 则相位按 `2W` 取模后折返；每跨过一个宽度 W 就发生一次换向。
@@ -208,7 +208,7 @@ python3 -B -m unittest discover -s . -p test_history_relocalization_reference.py
 从仓库根目录运行：
 
 ```sh
-python3 -B experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py cases benchmark/tasks/va07-triangle-repair/tests/cases.json
+python3 -B experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py cases benchmark/material/historyref/tasks/va07-triangle-repair/tests/cases.json
 python3 -B experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py prepare runs/NEW-ID
 python3 -B experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py evas runs/NEW-ID
 # 在同样目录结构、已配置 Spectre 的主机中运行：
@@ -380,7 +380,7 @@ r2/r3 Spectre 产物同时保留在 thu-sui；不是公开完整回放包。
 r2 的六个 Spectre 案例因模型使用 `.125e-6` 等无前导零写法，在 AHDL 读入时报 VACOMP-1795，
 不能用于判断 timer 语义。r3 同时修正两端源码为 `0.125e-6` 等写法后重跑；外部判据未放宽。
 
-修复缺省参数后，原 [ZOOM 参考模型](../../../benchmark/tasks/va03-zoom-timing/solution/dut.va)
+修复缺省参数后，原 [ZOOM 参考模型](../../../benchmark/material/historyref/tasks/va03-zoom-timing/solution/dut.va)
 在该检查点编译推进到第 79 行的循环内事件。当时尚不支持静态 genvar 循环内的 `@(timer(...))`，
 所以这份 timer 缺省参数收据未证明原模型可运行。后续补齐与新执行见下节。
 
@@ -390,8 +390,8 @@ r2 的六个 Spectre 案例因模型使用 `.125e-6` 等无前导零写法，在
 ## ZOOM 静态循环事件对照
 
 2026-10-04 补齐循环内事件展开后，用未改写的
-[ZOOM 参考 VA](../../../benchmark/tasks/va03-zoom-timing/solution/dut.va)分别运行本地 EVAS 候选和
-thu-sui Spectre 21.1.0.509.isr12。两端采用原 [cases.json](../../../benchmark/tasks/va03-zoom-timing/tests/cases.json)
+[ZOOM 参考 VA](../../../benchmark/material/historyref/tasks/va03-zoom-timing/solution/dut.va)分别运行本地 EVAS 候选和
+thu-sui Spectre 21.1.0.509.isr12。两端采用原 [cases.json](../../../benchmark/material/historyref/tasks/va03-zoom-timing/tests/cases.json)
 的两组参数，各跑两个周期。原 checker 的独立脉冲日程、15 mV 采样误差和 90 ps 边沿误差均未修改。
 
 | 原案例 | 展开事件声明 | 两周期边沿总数 | 电压样本 | EVAS / Spectre |

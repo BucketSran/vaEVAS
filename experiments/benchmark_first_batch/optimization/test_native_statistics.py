@@ -3,7 +3,7 @@ import importlib.util
 from pathlib import Path
 import unittest
 
-PATH=Path(__file__).resolve().parents[3]/'benchmark/checkers/first_batch_optimization.py'
+PATH=Path(__file__).resolve().parents[3]/'benchmark/material/historyref/legacy-authoring/checkers/first_batch_optimization.py'
 SPEC=importlib.util.spec_from_file_location('performance_evidence',PATH)
 M=importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(M)

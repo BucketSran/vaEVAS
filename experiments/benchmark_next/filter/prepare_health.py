@@ -12,10 +12,10 @@ def main():
     parser=argparse.ArgumentParser();parser.add_argument('--output',type=Path,required=True);parser.add_argument('--harness-checkout',type=Path,required=True);args=parser.parse_args()
     root=args.output.resolve();temp=root/'benchmark';(temp/'checkers').mkdir(parents=True)
     task=temp/'tasks/v3-filter-programmable-lp';(task/'tests').mkdir(parents=True)
-    original=ROOT/'benchmark/tasks/v3-filter-programmable-lp'
+    original=ROOT/'benchmark/material/draftbench/batches/v3-01/tasks/v3-filter-programmable-lp'
     for p in (original/'tests').glob('*'):
         if p.is_file():shutil.copyfile(p,task/'tests'/p.name)
-    for name in ['v2_runtime.py','v2_next_filter.py','adc_linearity.py']:shutil.copyfile(ROOT/'benchmark/checkers'/name,temp/'checkers'/name)
+    for name in ['v2_runtime.py','v2_next_filter.py','adc_linearity.py']:shutil.copyfile(ROOT/'benchmark/material/historyref/legacy-authoring/checkers'/name,temp/'checkers'/name)
     shutil.copyfile(original/'instruction.md',task/'instruction.md')
     cases=json.loads((task/'tests/cases.json').read_text())[:1];c=cases[0];c['name']='fixed-baseline-health'
     old=next(line for line in c['netlist'].splitlines() if line.startswith('Vc (code'))

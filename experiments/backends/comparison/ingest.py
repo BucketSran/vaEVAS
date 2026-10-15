@@ -140,18 +140,18 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
                 record.update(stage='infrastructure', reason=receipt['reason'],
                               evidence=[{'path': str(path.relative_to(ROOT)), 'sha256': sha(path), 'kind': 'failed preflight'}])
     application = next(d for d in data['datasets'] if d['id'] == 'application-reference')
-    task = ROOT / 'benchmark/tasks/va07-triangle-repair'
+    task = ROOT / 'benchmark/material/historyref/tasks/va07-triangle-repair'
     case = next(c for c in load(task / 'tests/cases.json') if c['name'] == 'constant-tighter')
     application['scope'] = '正确参考候选已固定，四后端公共回放合同尚未冻结；原本地EVAS结果仅为单后端历史开发回放。'
     application['candidates'] = [{'id': 'va07-correct-reference', 'case_name': 'constant-tighter',
         'revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(), 'source_sha256': sha(task / 'solution/dut.va'),
-        'case_sha256': identity(case), 'checker_sha256': sha(ROOT / 'benchmark/checkers/triangle_oscillator.py'),
-        'adapter_checker_sha256': sha(ROOT / 'benchmark/checkers/triangle_evas.py'),
-        'history_path': 'benchmark/tasks/va07-triangle-repair/SOURCE.md#通过-harness-调用本地-evas',
+        'case_sha256': identity(case), 'checker_sha256': sha(ROOT / 'benchmark/material/historyref/legacy-authoring/checkers/triangle_oscillator.py'),
+        'adapter_checker_sha256': sha(ROOT / 'benchmark/material/historyref/legacy-authoring/checkers/triangle_evas.py'),
+        'history_path': 'benchmark/material/historyref/tasks/va07-triangle-repair/SOURCE.md#通过-harness-调用本地-evas',
         'pending_contract': '同源后端外壳、精度设置映射、601/607查询的公平观察与独立时间区间资格',
         'sources': [{'path': str(p.relative_to(ROOT)), 'sha256': sha(p), 'kind': 'application source'} for p in
-                    (task / 'solution/dut.va', task / 'tests/cases.json', ROOT / 'benchmark/checkers/triangle_oscillator.py',
-                     ROOT / 'benchmark/checkers/triangle_evas.py')]}]
+                    (task / 'solution/dut.va', task / 'tests/cases.json', ROOT / 'benchmark/material/historyref/legacy-authoring/checkers/triangle_oscillator.py',
+                     ROOT / 'benchmark/material/historyref/legacy-authoring/checkers/triangle_evas.py')]}]
     from derive import freeze_candidates
     freeze_candidates(data, ROOT)
     validate(data)

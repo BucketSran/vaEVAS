@@ -10,6 +10,10 @@ import json
 from pathlib import Path
 import re
 import shutil
+import sys as _benchmark_sys
+from pathlib import Path as _BenchmarkPath
+_benchmark_sys.path.insert(0, str(_BenchmarkPath(__file__).resolve().parents[3]))
+from experiments.benchmark_paths import material_path
 
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / 'experiments/benchmark_v2/spec_modeling'
@@ -140,11 +144,11 @@ def main():
     plan = json.loads((OUT / 'run-plan.json').read_text())
     plan = [r for r in plan if r['variant'] not in ('architecture-empty', 'architecture-bypass')]
     for sid, (producer, consumer) in CONFIG.items():
-        task = next((ROOT / 'benchmark/tasks').glob('v2-spec-' + sid + '-*'))
+        task = next((ROOT / 'benchmark/material/draftbench/batches/v2-01/tasks').glob('v2-spec-' + sid + '-*'))
         cases = build_cases(task, sid)
         (task / 'tests/cases.json').write_text(json.dumps(cases, indent=2) + '\n')
         for name in ('v2_structure.py',):
-            shutil.copy2(ROOT / 'benchmark/checkers' / name, task / 'tests' / name)
+            shutil.copy2(ROOT / 'benchmark/material/historyref/legacy-authoring/checkers' / name, task / 'tests' / name)
         (task / 'tests/verify.py').write_text(
             'from v2_runtime import main\n'
             '# Explicit transitive import keeps prepare/sync self-contained.\n'
@@ -181,7 +185,7 @@ def main():
     for row in manifest['sources']:
         if row['source_id'] not in CONFIG:
             continue
-        task = ROOT / row['assets']['task']
+        task = material_path(ROOT, row['assets']['task'])
         row['architecture_version'] = VERSION
         row['conditions'] = [c['name'] for c in json.loads((task/'tests/cases.json').read_text())]
         for field, filename in [('instruction_sha256', 'instruction.md'),
@@ -195,7 +199,7 @@ def main():
         for request in plan:
             if request['task'] != row['assets']['task']:
                 continue
-            directory = ROOT / request['candidate_directory']
+            directory = material_path(ROOT, request['candidate_directory'])
             row['variants'].append(dict(id=request['variant'], expected=request['expected'],
                                         status='pending', semantic_behavior=request['semantic_behavior'],
                                         files={p.name: hashlib.sha256(p.read_bytes()).hexdigest()

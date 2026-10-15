@@ -4,12 +4,16 @@ import json
 from pathlib import Path
 
 from runtime import ROOT, prepare
+import sys as _benchmark_sys
+from pathlib import Path as _BenchmarkPath
+_benchmark_sys.path.insert(0, str(_BenchmarkPath(__file__).resolve().parents[2]))
+from experiments.benchmark_paths import material_path
 
 
 def build(output, harness, selections):
     output = Path(output).resolve()
     output.mkdir(mode=0o700, parents=True, exist_ok=False)
-    registry = json.loads((ROOT / "benchmark/tasks/first_batch-optimization.json").read_text())
+    registry = json.loads((ROOT / "benchmark/material/historyref/tasks/first_batch-optimization.json").read_text())
     entries = registry["candidates"] + registry["tasks"]
     candidates = {c.get("candidate_id", c.get("id")): c for c in entries}
     if len(candidates) != len(entries) or None in candidates:
@@ -21,7 +25,7 @@ def build(output, harness, selections):
             phase = "warmup" if pair == 0 else "measurement"
             for side in ("baseline", "reference"):
                 prepared = output / task_id / f"{pair:02d}-{phase}-{side}"
-                record = prepare(ROOT / candidate["probe_path"], ROOT / candidate[side + "_path"],
+                record = prepare(material_path(ROOT, candidate["probe_path"]), material_path(ROOT, candidate[side + "_path"]),
                                  prepared, harness, case_names=[condition])
                 attempts.append({"prepared": str(prepared), "task_id": task_id,
                                  "condition_id": condition, "phase": phase, "pair": pair,

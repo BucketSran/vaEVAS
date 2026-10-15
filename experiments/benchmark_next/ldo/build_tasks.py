@@ -1,6 +1,10 @@
 """Deterministic LDO task packaging; does not run simulations or model trials."""
 from pathlib import Path
 import json,shutil,hashlib,re
+import sys as _benchmark_sys
+from pathlib import Path as _BenchmarkPath
+_benchmark_sys.path.insert(0, str(_BenchmarkPath(__file__).resolve().parents[3]))
+from experiments.benchmark_paths import material_path
 ROOT=Path(__file__).resolve().parents[3];HERE=Path(__file__).parent
 IMAGE='python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c'
 def put(p,s):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(s)
@@ -9,7 +13,7 @@ COMMON='''\n\n## 输入与修改权限\n\n只提交 `/work/dut.va`。公开目�
 STARTUP='''# LDO 启动在线测量\n\n为固定晶体管 LDO 编写只读观测模块 `ldo_startup_meter(vin,vout,t90_us,overshoot_mv,settle_us,reached,settled,status,done)`。参数 `tick=50ns,ramp_start=1us,ramp_end=21us,window=70us,target=1.2,tail=20`，隐藏条件可改 ramp_end 至17..25us、window至60..80us、VIN高值至1.0..1.8V、固定RLOAD至60..240Ω、COUT至0.5..2µF。tick、target、tail固定。\n\n每个全局 i*tick 从t=0至window采样实际vout。t90是最早一个样本满足输出≥0.9*target且后续所有样本也满足的时刻，减ramp_start，单位µs。不存在则t90_us=-1,reached=0；存在则reached=1。overshoot_mv=max(0,全部样本最大值-target)*1000。建立是ramp_end后最早一个样本在target±2%且其余样本始终在带内，并至少有末20个连续样本的时刻。settle_us是该时刻减ramp_end，单位µs。不存在则settle_us=-1,settled=0。ramp_end与window为tick整数倍。\n\n任何样本出[-0.1,2.2]V则status=4；否则未达90%为2，否则未建立为3，否则为1。数值与有效位仍按各自定义输出。done在window采样后变1。全部报告端在此之前为0，此后保持至仿真结束。边沿可在5ns内过渡。终评报告误差t90/settle≤0.075µs，过冲≤0.3mV，逻辑与status≤0.002V。原来源的记录采样定义沿用；这里明确增加末20样本资格，防止末尾单点入带误报。''' + COMMON
 
 def package(slug,instruction,ref,variants,cases,public):
- task=ROOT/'benchmark/tasks'/('v3-ldo-'+slug)
+ task=ROOT/'benchmark/material/draftbench/batches/v3-01/tasks'/('v3-ldo-'+slug)
  put(task/'instruction.md',instruction+'\n')
  put(task/'task.toml',f'''schema_version = "1.4"\n[metadata]\nname = "{task.name}"\ncategory = "verilog-a"\nengineering_action = "testing-characterization"\nsource_group = "adb-ldo-ota5"\nweight = 1\n[agent]\ntimeout_sec = 1200\n[verifier]\ntimeout_sec = 900\n[environment]\nbuild_timeout_sec = 600\ncpus = 1\nmemory_mb = 2048\nstorage_mb = 2048\n''')
  put(task/'environment/Dockerfile',f'FROM {IMAGE}\nWORKDIR /work\nCOPY public/ /work/public/\nCOPY starter.va /work/dut.va\n')
@@ -17,7 +21,7 @@ def package(slug,instruction,ref,variants,cases,public):
  put(task/'solution/dut.va',ref);put(task/'solution/solve.sh','#!/bin/sh\nset -eu\ncp /solution/dut.va /work/dut.va\n')
  put(task/'tests/test.sh','#!/bin/sh\nset -eu\ncd "$(dirname "$0")"\nexec python3 -B verify.py --candidate "${CANDIDATE:-/work/dut.va}" --output "${VERIFY_OUTPUT:-/logs/verifier}" --tests . "$@"\n')
  put(task/'tests/verify.py','from v2_runtime import main\nfrom v2_next_ldo import evaluate\nif __name__ == "__main__": main(evaluate)\n')
- for name in ['v2_runtime.py','v2_next_ldo.py','adc_linearity.py']:shutil.copyfile(ROOT/'benchmark/checkers'/name,task/'tests'/name)
+ for name in ['v2_runtime.py','v2_next_ldo.py','adc_linearity.py']:shutil.copyfile(ROOT/'benchmark/material/historyref/legacy-authoring/checkers'/name,task/'tests'/name)
  put(task/'tests/contract.json',json.dumps(dict(candidate_files=['dut.va'],output_files=[],task_id=task.name,category='testing-characterization',source_group='adb-ldo-ota5'),indent=2)+'\n')
  for c in cases:
   c['observation_currents']=['VOBSIN:p','VOBSOUT:p'] if c['kind']=='startup' else ['VOBSOUT:p']
@@ -35,7 +39,7 @@ def package(slug,instruction,ref,variants,cases,public):
  for name,(text,passed,reason) in {'reference':(ref,True,'author reference'),**variants}.items():
   p=HERE/'candidates'/task.name/name/'dut.va';put(p,text)
   entries.append(dict(task=str(task.relative_to(ROOT)),variant=name,candidate=str(p.parent.relative_to(ROOT)),expected_pass=passed,semantic_behavior=reason))
- put(task/'SOURCE.md','''# 来源与发布范围\n\n同源组 adb-ldo-ota5，规格 #148。固定 ADB 提交972f7cd7c95381134387b250edf18f3bd23bdd25的参考晶体管电路，电路内容CC-BY-NC-4.0，原作者Analog Design Bench contributors。许可证与完整许可正文随公开资产分发。固定SKY130 PDK提交f62031a1be9aefe902d6d54cddd6f59b57627436，Apache-2.0。自有VA测量解与独立checker不取上游评分代码。外围网络与输入工况是注明的任务适配。\n\n本题为Spectre扩展集，未提供经过校准的开源候选VA执行环境。原电路、适配差异、实际校准身份和许可依据见[路线记录](../../../experiments/benchmark_next/ldo/README.md)。341/372/340仅是后续控制素材，没有形成本题的新计数。\n''')
+ put(task/'SOURCE.md','''# 来源与发布范围\n\n同源组 adb-ldo-ota5，规格 #148。固定 ADB 提交972f7cd7c95381134387b250edf18f3bd23bdd25的参考晶体管电路，电路内容CC-BY-NC-4.0，原作者Analog Design Bench contributors。许可证与完整许可正文随公开资产分发。固定SKY130 PDK提交f62031a1be9aefe902d6d54cddd6f59b57627436，Apache-2.0。自有VA测量解与独立checker不取上游评分代码。外围网络与输入工况是注明的任务适配。\n\n本题为Spectre扩展集，未提供经过校准的开源候选VA执行环境。原电路、适配差异、实际校准身份和许可依据见[路线记录](../../../../../../../experiments/benchmark_next/ldo/README.md)。341/372/340仅是后续控制素材，没有形成本题的新计数。\n''')
  return entries
 
 def startup_case(name,vin=1.8,ramp=21e-6,window=70e-6,rload=120,cap=1e-6):
@@ -94,9 +98,9 @@ def main():
  alt=re.sub(r'transition\((p\[\d\]|o\[\d\]|r\[\d\]|s\[\d\]|st|d),0,1n\)',r'transition(\1,0,3n)',alt)
  variants={'alternate':(alt,True,'duration qualification instead of count comparison'),'fixed-schedule':(ref.replace('(age>=minimum-tick/10 && ok) || age>=limit-tick/10','age>=minimum-tick/10'),False,'advances on fixed time without actual qualification'),'skip-load':(ref.replace('load=(st==3)?1:0;','load=0;'),False,'does not apply load disturbance'),'stale-recovery':(ref.replace('start=$abstime;good=0;peak=0;','start=$abstime;peak=0;'),False,'carries qualification across disturbances'),'zero-peaks':(ref.replace('p[st]=peak*1e3;','p[st]=0;'),False,'suppresses observed peak deviation'),'input-drive':(ref.replace(' V(load_cmd)<+', ' V(vout)<+1.2;\n V(load_cmd)<+'),False,'illegally replaces actual DUT output'),'input-load':(ref.replace(' V(load_cmd)<+', ' I(vout)<+V(vout)/1e6;\n V(load_cmd)<+'),False,'loads DUT observation input'),'always-timeout':(ref.replace('ok=(good>=qualification);','ok=0;'),False,'always reports timeout despite health')}
  entries+=package('response-experiment',BENCH,ref,variants,[bench_case('healthy'),bench_case('slow-cap',cap=2e-6,ramp=25e-6),bench_case('offset-timeout',vref=.76,rload=150)],bench_case('public'))
- for item in entries:item['candidate_file_sha256']=sha(ROOT/item['candidate']/'dut.va')
+ for item in entries:item['candidate_file_sha256']=sha(material_path(ROOT, item['candidate'])/'dut.va')
  paths=list((HERE/'source').rglob('*'))
- for task in (ROOT/'benchmark/tasks').glob('v3-ldo-*'):paths+=list(task.rglob('*'))
+ for task in (ROOT/'benchmark/material/draftbench/batches/v3-01/tasks').glob('v3-ldo-*'):paths+=list(task.rglob('*'))
  material={str(p.relative_to(ROOT)):sha(p) for p in sorted(paths) if p.is_file() and '__pycache__' not in str(p)}
  (HERE/'manifest.json').write_text(json.dumps(dict(spec=148,source_group='adb-ldo-ota5',backend='spectre',task_version='circuit-benchmark-next-development',calibration=entries,material_sha256=material),indent=2)+'\n')
 if __name__=='__main__':main()

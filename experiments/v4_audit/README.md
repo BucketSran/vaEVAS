@@ -5,7 +5,7 @@
 
 ## 范围与输入
 
-输入是 `benchmark/reference/v4/release/benchmarkv4-r53/tasks/` 的400家族、1200包，
+输入是 `benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/` 的400家族、1200包，
 以及相应 provenance 的 derivation、mutation、认证和任务记录。每家族一请求。
 任务包全部文本入包，完全相同的文件按 SHA256 合并展示，同时列出全部原路径和原行号。
 重复网表行用已展示的原行引用；重复JSON字段值用已展示的相同值引用，允许对象键顺序不同。
@@ -32,8 +32,8 @@ python3 -B experiments/v4_audit/run.py status --run-dir runs/v4-audit-20261010-r
 先核对试审的模型身份、报告内容和最大输入，再省略 `--families` 展开全量。
 2026-10-10 的 r3 审核已完成400家族，首轮8路、补跑4路；原会话已结束。
 运行日志仍保存在本地 `runs/v4-audit-20261010-r3/full.log`。
-完整结论见[优先清单](../../benchmark/workbench/migration/v4-migration-priorities.md)，
-调用统计与恢复例外见[紧凑摘要](../../benchmark/workbench/migration/v4-audit-summary.json)。
+完整结论见[优先清单](../../benchmark/material/draftbench/migration/v4-migration-priorities.md)，
+调用统计与恢复例外见[紧凑摘要](../../benchmark/material/draftbench/migration/v4-audit-summary.json)。
 默认每次调用上限 USD 5、15分钟、32000输出token；模型思考使用 high。
 首轮最多400次正常调用，失败不自动重试。限额是 CLI 护栏，CLI 成本估计不等于供应商账单。
 预算或输出截断失败须保留响应、调整对应资源后再明确重试。不能仅因退出码为0认定完成。
@@ -58,7 +58,7 @@ run 目录的 `INDEX.md` 按400个家族展示 pending、running、failed、acce
 再把核实结论写回设计卡。缺参考工程、缺 checker 或需要仿真的事项继续保留为未知。
 400个家族有草稿与1200道题已具备可信验收是不同交付。
 
-本轮运行与审核结论入口见[迁移讨论记录](../../benchmark/workbench/migration/README.md)。
+本轮运行与审核结论入口见[迁移讨论记录](../../benchmark/material/draftbench/migration/README.md)。
 大体积输入和原响应仅保留在 ignored `runs/`，进入仓库的结论应经过复核并保留来源身份。
 
 工具的离线回归不调用模型或仿真器：

@@ -41,7 +41,7 @@ SH 首次实际后端失败的可重放诊断见 `sh-v3-diagnosis.json` 与
 
 ```sh
 python3 -B experiments/benchmark_first_batch/identification/static_check_candidates.py \
-  --runtime /absolute/path/to/benchmark/checkers/circuit_task.py
+  --runtime /absolute/path/to/benchmark/material/historyref/legacy-authoring/checkers/circuit_task.py
 ```
 
 `candidate-static-check.json` 保留一次28候选全部通过的来源哈希与运行时哈希。

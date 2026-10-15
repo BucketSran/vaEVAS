@@ -24,7 +24,7 @@ def dump_cases(cases):
 
 
 def write(task,rel,text):
-    p=ROOT/"benchmark/tasks"/task/rel
+    p=ROOT/"benchmark/material/historyref/tasks"/task/rel
     p.parent.mkdir(parents=True,exist_ok=True)
     p.write_text(text)
     if p.suffix==".sh":p.chmod(0o755)

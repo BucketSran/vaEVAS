@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 from scipy.optimize import least_squares
 from scipy import __version__ as SCIPY_VERSION
-ROOT=Path(__file__).resolve().parents[3];HERE=Path(__file__).parent;TASK=ROOT/'benchmark/tasks/v2-data-sampling-identification'
+ROOT=Path(__file__).resolve().parents[3];HERE=Path(__file__).parent;TASK=ROOT/'benchmark/material/draftbench/batches/v2-01/tasks/v2-data-sampling-identification'
 
 def components(p,u,y,gn=1.8,gp=0):
     kn,kp,vtn,vtp,bn,bp,ln,lp,tn,tp=p

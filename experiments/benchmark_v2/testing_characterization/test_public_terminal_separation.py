@@ -12,7 +12,7 @@ class PublicTerminalSeparation(unittest.TestCase):
     def test_delivered_agent_assets_exclude_terminal_instances(self):
         for slug in SLUGS:
             with self.subTest(task=slug):
-                task=ROOT/'benchmark/tasks'/('v2-test-'+slug)
+                task=ROOT/'benchmark/material/draftbench/batches/v2-01/tasks'/('v2-test-'+slug)
                 public=json.loads((task/'environment/public/cases.json').read_text())
                 hidden=json.loads((task/'tests/cases.json').read_text())
                 self.assertEqual(len(public),3)

@@ -13,7 +13,7 @@ import sys
 
 ROOT=Path(__file__).resolve().parents[3]
 LOCAL=Path(__file__).resolve().parent
-sys.path.insert(0,str(ROOT/'benchmark/checkers'))
+sys.path.insert(0,str(ROOT/'benchmark/material/historyref/legacy-authoring/checkers'))
 from first_batch_optimization import canonical_case_sha256,validate_admitted_policy,validate_performance_source
 
 FAMILIES={'optimize-vco-step':'vco_boundstep','optimize-flash-thresholds':'flash_thresholds',
@@ -184,7 +184,7 @@ storage_mb = 2048
     (destination/'environment/public/README.md').write_text('starter.va是实际功能校准合格的原始基线；visible.scs是固定性能负载。\n提交/work/dut.va，保持题面所有参数与电路行为。参考优化代码不公开。\n性能满分只说明达到题面指定指标；须分开报告CPU/steps和实际进程耗时，不能据满分推导端到端更快。\n')
     shutil.copyfile(family/'evaluate.py',destination/'tests/evaluate.py')
     shutil.copyfile(shared_runtime,destination/'tests/circuit_task.py')
-    for name in ('adc_linearity.py','first_batch_optimization.py'):shutil.copyfile(ROOT/'benchmark/checkers'/name,destination/'tests'/name)
+    for name in ('adc_linearity.py','first_batch_optimization.py'):shutil.copyfile(ROOT/'benchmark/material/historyref/legacy-authoring/checkers'/name,destination/'tests'/name)
     for name in ('verify.py',):shutil.copyfile(LOCAL/'scoring_prototype'/name,destination/'tests'/name)
     (destination/'tests/cases.json').write_text(json.dumps(cases,indent=2)+'\n')
     (destination/'tests/contract.json').write_text(json.dumps(dict(candidate_files=['dut.va'],output_files=[]),indent=2)+'\n')
@@ -214,8 +214,8 @@ experiments/benchmark_first_batch/optimization，五对准入证据SHA256为
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--admission',type=Path,required=True)
-    parser.add_argument('--tasks-root',type=Path,default=ROOT/'benchmark/tasks')
-    parser.add_argument('--shared-runtime',type=Path,default=ROOT/'benchmark/checkers/circuit_task.py')
+    parser.add_argument('--tasks-root',type=Path,default=ROOT/'benchmark/material/historyref/tasks')
+    parser.add_argument('--shared-runtime',type=Path,default=ROOT/'benchmark/material/historyref/legacy-authoring/checkers/circuit_task.py')
     args=parser.parse_args();admission=json.loads(args.admission.read_text())
     paired_path=Path(admission['paired_evidence']);raw=paired_path.read_bytes();paired=json.loads(raw)
     plans=[]

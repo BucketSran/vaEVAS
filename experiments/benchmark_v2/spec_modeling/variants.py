@@ -1,7 +1,7 @@
 """Prepare semantically described VA variants; only live calibration may certify them."""
 from pathlib import Path
 import json,re,shutil
-ROOT=Path(__file__).resolve().parents[3];BASE=ROOT/'benchmark/tasks';OUT=ROOT/'experiments/benchmark_v2/spec_modeling';requests=[]
+ROOT=Path(__file__).resolve().parents[3];BASE=ROOT/'benchmark/material/draftbench/batches/v2-01/tasks';OUT=ROOT/'experiments/benchmark_v2/spec_modeling';requests=[]
 from alternative_forms import alternative, REASONS
 mutations={
 '024':('cross(V(CLK, VSS) - vth, +1)','cross(V(CLK, VSS) - vth, -1)','samples falling edge'),

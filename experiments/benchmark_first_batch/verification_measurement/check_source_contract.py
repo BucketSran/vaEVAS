@@ -4,6 +4,10 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import sys as _benchmark_sys
+from pathlib import Path as _BenchmarkPath
+_benchmark_sys.path.insert(0, str(_BenchmarkPath(__file__).resolve().parents[3]))
+from experiments.benchmark_paths import material_path
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -12,12 +16,12 @@ def check(runtime):
     spec = importlib.util.spec_from_file_location('first_batch_submission_policy', runtime)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    registry = json.loads((ROOT / 'benchmark/tasks/first_batch-verification_measurement.json').read_text())
+    registry = json.loads((ROOT / 'benchmark/material/historyref/tasks/first_batch-verification_measurement.json').read_text())
     sources = []
     for task in registry['tasks']:
         if task['id'] == 'va08-adc-linearity':
             continue
-        directory = ROOT / task['path']
+        directory = material_path(ROOT, task['path'])
         contract = json.loads((directory / 'tests/contract.json').read_text())
         paths = [directory / 'solution/dut.va', *sorted((directory / 'tests/mutants').glob('*.va')),
                  directory / 'environment/public/starter.va', directory / 'environment/public/device.va']
@@ -36,7 +40,7 @@ def check(runtime):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--runtime', type=Path, default=ROOT / 'benchmark/checkers/circuit_task.py')
+    parser.add_argument('--runtime', type=Path, default=ROOT / 'benchmark/material/historyref/legacy-authoring/checkers/circuit_task.py')
     parser.add_argument('--output', type=Path)
     args = parser.parse_args()
     report = check(args.runtime)

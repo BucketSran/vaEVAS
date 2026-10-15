@@ -7,7 +7,7 @@ from pathlib import Path
 from build_common import dump_cases
 
 ROOT = Path(__file__).resolve().parents[3]
-TASK = ROOT / "benchmark/tasks/identify-sh-acquisition"
+TASK = ROOT / "benchmark/material/historyref/tasks/identify-sh-acquisition"
 # Author-only synthetic system. These constants are never copied into public
 # metadata or solution code. The public observations identify observable behavior.
 TAU, H0, H1, DROOP = 3.7e-6, 0.0007, 0.0013, -12.0

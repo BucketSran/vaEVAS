@@ -6,8 +6,8 @@
 
 | 任务 | 交付差异 | 独立验收 |
 | --- | --- | --- |
-| [B1 启动测量](../../../benchmark/tasks/v3-ldo-startup-measurement/instruction.md) | 固定激励下开发只读 VA 测量模块 | 从实际输出的固定采样点重算 t90、过冲和有限窗口建立，包括不足目标和末尾资格不足 |
-| [B2 响应实验](../../../benchmark/tasks/v3-ldo-response-experiment/instruction.md) | 开发可驱动允许命令的完整 VA 测试台 | 验证真实 line 和 load 扰动、阶段顺序、实际资格或超时，以及每阶段重置后的峰值、偏移和恢复 |
+| [B1 启动测量](../../../benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-startup-measurement/instruction.md) | 固定激励下开发只读 VA 测量模块 | 从实际输出的固定采样点重算 t90、过冲和有限窗口建立，包括不足目标和末尾资格不足 |
+| [B2 响应实验](../../../benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-response-experiment/instruction.md) | 开发可驱动允许命令的完整 VA 测试台 | 验证真实 line 和 load 扰动、阶段顺序、实际资格或超时，以及每阶段重置后的峰值、偏移和恢复 |
 
 两题没有合并。B1 的激励完全固定，测量必须等待完整窗口才能确认此后全部样本入带。B2 的下一阶段发生时间由实际连续入带资格或超时决定，候选承担实验组织职责。原始 341、372、340 是后续软启动、PWM 和热保护素材，本批没有据此新增任务。
 

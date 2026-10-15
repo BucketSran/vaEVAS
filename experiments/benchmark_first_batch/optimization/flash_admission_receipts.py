@@ -10,7 +10,7 @@ from compact_receipts import native_clock_times, sha
 
 HERE = Path(__file__).resolve().parent
 FAMILY = HERE / 'flash_thresholds'
-sys.path.insert(0, str(HERE.parents[2] / 'benchmark/checkers'))
+sys.path.insert(0, str(HERE.parents[2] / 'benchmark/material/historyref/legacy-authoring/checkers'))
 from adc_linearity import read_psf
 from first_batch_optimization import validate_solver_evidence
 

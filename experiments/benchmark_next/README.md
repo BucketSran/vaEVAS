@@ -1,6 +1,6 @@
 # 下一批 Verilog-A 题目
 
-本目录对应五份独立规格，共 19 道题。五条路线分别通过 PR #152–#156 合入 main；与前批 37 题合并后的宏观 review 入口见 [工作区 56 题总览](../../benchmark/workbench/TASKS.md)。各路线保留独立的作者校准与交付记录。
+本目录对应五份独立规格，共 19 道题。五条路线分别通过 PR #152–#156 合入 main；与前批 37 题合并后的宏观 review 入口见 [工作区 56 题总览](../../benchmark/material/draftbench/TASKS.md)。各路线保留独立的作者校准与交付记录。
 
 | 路线 | 规格 | 工程内容 |
 | --- | --- | --- |
@@ -12,6 +12,6 @@
 
 进入相应目录的 `README.md` 查看任务映射、构建和运行入口；作者校准报告记录正确实现、合法替代实现及编译成功的语义错版，机器收据绑定材料、判据、实际后端与原始归档身份。完整运行资料保存在所属工作区的 ignored `runs/`，本地路径不代表公开下载。
 
-题目沿用 [五类工程动作](../../benchmark/workbench/docs/task-types.md) 和现有 Harbor 格式。公开材料、候选源码、固定环境与私有评分资产分别维护，参考解实际产物经过后端执行再由独立 checker 判断。本轮不做模型解题实验；作者校准也不等于已完成 Harbor Agent Trial 或正式 benchmark 发布。
+题目沿用 [五类工程动作](../../benchmark/material/draftbench/docs/task-types.md) 和现有 Harbor 格式。公开材料、候选源码、固定环境与私有评分资产分别维护，参考解实际产物经过后端执行再由独立 checker 判断。本轮不做模型解题实验；作者校准也不等于已完成 Harbor Agent Trial 或正式 benchmark 发布。
 
 各题固定其评分后端。真实源电路能在 ngspice 运行，不自动证明对应 VA 任务已可开源复现。后端资格与校准限制以每条路线的实际证据为准。

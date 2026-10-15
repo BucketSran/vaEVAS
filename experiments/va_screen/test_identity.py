@@ -13,19 +13,19 @@ class IdentityTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        for name in ["benchmark/tasks", "benchmark/checkers", "experiments/va_screen"]:
+        for name in ["benchmark/material/historyref/tasks", "benchmark/material/historyref/legacy-authoring/checkers", "experiments/va_screen"]:
             shutil.copytree(ROOT / name, self.root / name, ignore=shutil.ignore_patterns("__pycache__"))
 
     def test_complete_snapshot_includes_shared_source_and_evidence(self):
         tasks = verify_current_inputs(self.root)
         self.assertEqual(len(tasks), 6)
         snapshot = snapshot_files(self.root, tasks)
-        for name in ["benchmark/checkers/spectre_waveform.py", "experiments/va_screen/remote.py",
+        for name in ["benchmark/material/historyref/legacy-authoring/checkers/spectre_waveform.py", "experiments/va_screen/remote.py",
                      "experiments/va_screen/CALIBRATION.json", "experiments/va_screen/FROZEN_INPUTS.json"]:
             self.assertIn(name, snapshot)
 
     def test_changed_scoring_file_and_missing_file_fail(self):
-        file = self.root / "benchmark/tasks/va01-and2/tests/cases.json"
+        file = self.root / "benchmark/material/historyref/tasks/va01-and2/tests/cases.json"
         original = file.read_bytes()
         file.write_bytes(original + b"\n")
         with self.assertRaisesRegex(ValueError, "changed or missing"):
@@ -35,19 +35,25 @@ class IdentityTests(unittest.TestCase):
             verify_current_inputs(self.root)
 
     def test_shared_checker_cannot_drift_while_copies_remain_old(self):
-        file = self.root / "benchmark/checkers/spectre_waveform.py"
+        file = self.root / "benchmark/material/historyref/legacy-authoring/checkers/spectre_waveform.py"
         file.write_text(file.read_text() + "\n# changed source\n")
         with self.assertRaisesRegex(ValueError, "shared checker changed"):
             verify_current_inputs(self.root)
 
     def test_execution_copy_and_adapter_changes_fail(self):
-        for name in ["benchmark/tasks/va01-and2/tests/verify.py", "experiments/va_screen/remote.py"]:
+        for name in ["benchmark/material/historyref/tasks/va01-and2/tests/verify.py", "experiments/va_screen/remote.py"]:
             file = self.root / name
             original = file.read_bytes()
             file.write_bytes(original + b"\n")
             with self.assertRaisesRegex(ValueError, "changed or missing"):
                 verify_current_inputs(self.root)
             file.write_bytes(original)
+
+    def test_author_wrapper_allows_only_the_explicit_directory_relocation(self):
+        file = self.root / "experiments/va_screen/build_tasks.py"
+        file.write_bytes(file.read_bytes() + b"\n# unrelated change\n")
+        with self.assertRaisesRegex(ValueError, "changed or missing"):
+            verify_current_inputs(self.root)
 
     def test_failed_mutation_and_frozen_manifest_changes_fail(self):
         file = self.root / "experiments/va_screen/CALIBRATION.json"

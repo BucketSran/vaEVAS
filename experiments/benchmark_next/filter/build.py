@@ -185,7 +185,7 @@ VA必须驱动4个频点并从实际 drive、sense 测量稳态幅相。参数f0
 幅值报告误差0.035，包裹相位误差0.035rad，真实激励误差0.002V。覆盖全部频点，包括无效的低幅度窗口。'''))
     manifest=[]; plan=[]
     for slug,unit,action,source,ref,alt,cases,mutants,contract in tasks:
-        tid='v3-filter-'+slug; task=ROOT/'benchmark/tasks'/tid
+        tid='v3-filter-'+slug; task=ROOT/'benchmark/material/draftbench/batches/v3-01/tasks'/tid
         for folder in ['environment','public','solution','tests']:(task/folder).mkdir(parents=True,exist_ok=True)
         public=task/'environment/public';public.mkdir(exist_ok=True)
         shell=ref.split('analog begin')[0]+'analog begin\n'+ {'ctle':'V(y)<+0;','programmable-lp':'V(y)<+0;','iq-conversion':'V(up)<+0; V(di)<+0; V(dq)<+0;','envelope':'V(env)<+0;','sweep-measurement':'V(drive)<+0; V(gain)<+0; V(phase)<+0; V(valid)<+0;'}[slug]+'\nend\nendmodule\n'
@@ -224,8 +224,8 @@ storage_mb = 2048
         (task/'tests/verify.py').write_text('from v2_runtime import main\nfrom v2_next_filter import evaluate\nif __name__=="__main__": main(evaluate)\n')
         (task/'tests/test.sh').write_text('#!/bin/sh\nset -eu\nexec python3 /tests/verify.py --candidate "${CANDIDATE:-/work/dut.va}" --output "${VERIFY_OUTPUT:-/logs/verifier}" --tests /tests "$@"\n')
         (task/'tests/test.sh').chmod(0o755)
-        for name in ['v2_next_filter.py','v2_runtime.py','adc_linearity.py']:shutil.copyfile(ROOT/'benchmark/checkers'/name,task/'tests'/name)
-        (task/'SOURCE.md').write_text(f'# 来源与验收边界\n\n所属规格 #149，单元{unit}，同源组 `{source}`。\n\n来源身份、许可边界和改编见 [路线来源](../../../experiments/benchmark_next/filter/SOURCES.md)。候选、公开合同和独立 checker 为本仓库原创重建；未将旧源码当成答案。\n\n后端为Spectre扩展集；未证明候选VA具备ngspice等开源复验资格。作者校准与模型试跑分别记录，本次不运行模型实验。\n')
+        for name in ['v2_next_filter.py','v2_runtime.py','adc_linearity.py']:shutil.copyfile(ROOT/'benchmark/material/historyref/legacy-authoring/checkers'/name,task/'tests'/name)
+        (task/'SOURCE.md').write_text(f'# 来源与验收边界\n\n所属规格 #149，单元{unit}，同源组 `{source}`。\n\n来源身份、许可边界和改编见 [路线来源](../../../../../../../experiments/benchmark_next/filter/SOURCES.md)。候选、公开合同和独立 checker 为本仓库原创重建；未将旧源码当成答案。\n\n后端为Spectre扩展集；未证明候选VA具备ngspice等开源复验资格。作者校准与模型试跑分别记录，本次不运行模型实验。\n')
         variants={'reference':ref,'alternative':alt,**mutants}
         for variant,code in variants.items():
             dest=OUT/'candidates'/tid/variant;dest.mkdir(parents=True,exist_ok=True)

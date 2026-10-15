@@ -86,15 +86,31 @@ class RoutingTests(unittest.TestCase):
 
     def test_task_instructions_are_a_benchmark_input_even_when_markdown(self):
         for path in ('benchmark/tasks/adc/instruction.md',
+                     'benchmark/material/draftbench/batches/test-01/tasks/adc/instruction.md',
+                     'benchmark/material/historyref/tasks/va07-triangle-repair/instruction.md',
+                     'experiments/benchmark_paths.py',
+                     'experiments/test_benchmark_paths.py',
                      'experiments/benchmark_next/adc/source/instruction.md',
-                     'benchmark/checkers/adc.py'):
+                     'benchmark/material/historyref/legacy-authoring/checkers/adc.py'):
+            with self.subTest(path=path):
+                self.assertEqual(ci.classify([path]), ci.flags('benchmark'))
+
+    def test_benchmark_sources_and_format_checks_keep_their_ci_consumer(self):
+        for path in ('benchmark/material/draftbench/sources/cvdp-heavy-multifile.md',
+                     'benchmark/material/draftbench/sources/README.md',
+                     'benchmark/material/draftbench/docs/task-package.md',
+                     'benchmark/material/draftbench/templates/INSTRUCTION.md',
+                     'benchmark/README.md', 'scripts/benchmark_workbench.py',
+                     'scripts/benchmark_package.py',
+                     'scripts/tests/test_benchmark_workbench.py',
+                     'scripts/tests/test_benchmark_package.py'):
             with self.subTest(path=path):
                 self.assertEqual(ci.classify([path]), ci.flags('benchmark'))
 
     def test_mixed_change_runs_the_union_of_checks(self):
         self.assertEqual(ci.classify(['evas/docs/COMPARISON.md',
                                       'scripts/check_workspaces.py',
-                                      'benchmark/checkers/adc.py']),
+                                      'benchmark/material/historyref/legacy-authoring/checkers/adc.py']),
                          ci.flags('maintenance', 'provenance', 'benchmark'))
 
     def test_workflow_selector_or_unrecognized_code_runs_every_check(self):

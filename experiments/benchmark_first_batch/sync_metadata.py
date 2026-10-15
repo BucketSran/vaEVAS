@@ -4,8 +4,11 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from experiments.benchmark_paths import material_path, task_directories
 ACTIONS = {
     "specification": "specification-modeling",
     "repair": "diagnosis-repair",
@@ -29,7 +32,7 @@ END = "<!-- end generated first-batch metadata -->"
 def protected_identity(root):
     """Protect task contents, excluding editable metadata and root suite manifests."""
     return {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
-            for task in (root / "benchmark/tasks").iterdir() if task.is_dir()
+            for task in task_directories(root)
             for p in task.rglob("*")
             if p.is_file() and p.name not in {"task.toml", "SOURCE.md"}}
 
@@ -59,7 +62,7 @@ def normalize(root, check=False):
     changes = {}
     seen = set()
     for filename in ("model_repair.json", "identification.json", "integration.json", "verification_measurement.json", "optimization.json"):
-        path = root / "benchmark/tasks" / ("first_batch-" + filename)
+        path = root / "benchmark/material/historyref/tasks" / ("first_batch-" + filename)
         document = json.loads(path.read_text())
         for row in document.get("tasks", []) + document.get("candidates", []):
             ident = row.get("id", row.get("task_id", row.get("candidate_id")))
@@ -83,7 +86,7 @@ def normalize(root, check=False):
             row.update(metadata)
             task_path = row.get("path", row.get("task_path"))
             if task_path:
-                folder = root / task_path
+                folder = material_path(root, task_path)
                 toml = folder / "task.toml"
                 source = folder / "SOURCE.md"
                 changes[toml] = toml_metadata(toml.read_text(), metadata)

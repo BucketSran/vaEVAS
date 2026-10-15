@@ -1,6 +1,10 @@
 """Keep every actual attempt, verify reports, and summarize frozen calibration."""
 import argparse,hashlib,json,re,tarfile
 from pathlib import Path
+import sys as _benchmark_sys
+from pathlib import Path as _BenchmarkPath
+_benchmark_sys.path.insert(0, str(_BenchmarkPath(__file__).resolve().parents[3]))
+from experiments.benchmark_paths import material_path
 
 def sha(data):return hashlib.sha256(data).hexdigest()
 
@@ -41,13 +45,13 @@ def main():
    if not args.reanalysis:raise ValueError('Reused execution requires explicit current-checker reanalysis')
    analyses=json.loads(args.reanalysis.read_text())
    for name,expected in analyses['unchanged_material_assets'].items():
-    if sha((Path(__file__).resolve().parents[3]/name).read_bytes())!=expected:raise ValueError('Reused circuit material changed')
+    if sha(material_path(Path(__file__).resolve().parents[3], name).read_bytes())!=expected:raise ValueError('Reused circuit material changed')
    record['reuse_reason']=analyses['reason'];record['reused_from']=request['reused_from']
    for condition in record['conditions']:
     analysis=next(a for a in analyses['conditions'] if a['job_id']==condition['job_id'])
     identity={k:v for k,v in analysis.items() if k!='analysis_identity_sha256'}
     if sha(json.dumps(identity,sort_keys=True,separators=(',',':')).encode())!=analysis['analysis_identity_sha256']:raise ValueError('Reanalysis identity mismatch')
-    task=Path(__file__).resolve().parents[3]/request['task']
+    task=material_path(Path(__file__).resolve().parents[3], request['task'])
     for name,expected in analysis['analysis_sources'].items():
      path=task/name if name=='instruction.md' else task/'tests'/name
      if sha(path.read_bytes())!=expected:raise ValueError('Current analysis source changed')
@@ -74,7 +78,7 @@ def main():
  root=Path(__file__).resolve().parents[3]
  material={}
  for task_id in sorted({r['task_id'] for r in final}):
-  task=root/'benchmark/tasks'/task_id
+  task=root/'benchmark/material/draftbench/batches/v3-01/tasks'/task_id
   for path in sorted(task.rglob('*')):
    if path.is_file() and '__pycache__' not in path.parts:material[str(path.relative_to(root))]=sha(path.read_bytes())
  report['material_assets']=material

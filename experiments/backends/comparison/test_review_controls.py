@@ -41,7 +41,7 @@ class ReviewControls(unittest.TestCase):
 
     def test_historical_candidate_survives_real_checker_fix_blob(self):
         data=load(SNAPSHOT)
-        target=ROOT/'benchmark/checkers/triangle_evas.py'
+        target=ROOT/'benchmark/material/historyref/legacy-authoring/checkers/triangle_evas.py'
         changed=hashlib.sha256(subprocess.check_output(['git','show','1006c3d5:benchmark/checkers/triangle_evas.py'],cwd=ROOT)).hexdigest()
         original=records.sha
         with patch('records.sha',side_effect=lambda p:changed if p.resolve()==target.resolve() else original(p)):
@@ -95,7 +95,7 @@ class ReviewControls(unittest.TestCase):
             validate(data)
 
     def test_old_and_derived_snapshots_survive_base1006_combination(self):
-        target=ROOT/'benchmark/checkers/triangle_evas.py'
+        target=ROOT/'benchmark/material/historyref/legacy-authoring/checkers/triangle_evas.py'
         changed=hashlib.sha256(subprocess.check_output(['git','show','1006c3d5:benchmark/checkers/triangle_evas.py'],cwd=ROOT)).hexdigest()
         original=records.sha
         snapshots=sorted(SNAPSHOT.parent.glob('snapshot*.json'))
@@ -149,7 +149,7 @@ class ReviewControls(unittest.TestCase):
 
     def test_deriving_old_snapshot_survives_real_base1006_checker_drift(self):
         from derive import derive
-        target=ROOT/'benchmark/checkers/triangle_evas.py'
+        target=ROOT/'benchmark/material/historyref/legacy-authoring/checkers/triangle_evas.py'
         changed=hashlib.sha256(subprocess.check_output(['git','show','1006c3d5:benchmark/checkers/triangle_evas.py'],cwd=ROOT)).hexdigest()
         original=records.sha
         with patch('records.sha',side_effect=lambda p:changed if p.resolve()==target.resolve() else original(p)):

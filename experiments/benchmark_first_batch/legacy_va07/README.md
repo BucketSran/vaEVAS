@@ -30,7 +30,7 @@ python3 -B -m unittest discover \
 
 ```sh
 python3 -B experiments/benchmark_first_batch/runtime.py prepare \
-  --task benchmark/tasks/va07-triangle-repair \
+  --task benchmark/material/historyref/tasks/va07-triangle-repair \
   --candidate runs/va07-new-candidates/reference/dut.va \
   --output runs/va07-new-reference-package \
   --harness-checkout /path/to/circuits/harness

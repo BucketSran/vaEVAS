@@ -1,7 +1,7 @@
 import importlib.util
 from pathlib import Path
 import unittest
-P=Path(__file__).resolve().parents[3]/"benchmark/checkers/v2_integration.py"
+P=Path(__file__).resolve().parents[3]/"benchmark/material/historyref/legacy-authoring/checkers/v2_integration.py"
 spec=importlib.util.spec_from_file_location("checker",P)
 checker=importlib.util.module_from_spec(spec);spec.loader.exec_module(checker)
 
@@ -134,7 +134,7 @@ class RecoveryContract(unittest.TestCase):
 class AuthorOutageWindows(unittest.TestCase):
     def test_stable_windows_exclude_missing_reference_and_cover_recovery(self):
         import json
-        cases=json.loads((P.parent.parent/'tasks/v2-integrate-case0007-adpll-fine-tdc/tests/cases.json').read_text())
+        cases=json.loads((Path(__file__).resolve().parents[3]/'benchmark/material/draftbench/batches/v2-01/tasks/v2-integrate-case0007-adpll-fine-tdc/tests/cases.json').read_text())
         case=next(c for c in cases if c['name']=='fine-reference-outage')
         for w in case['windows']:
             lo,hi=w['window']

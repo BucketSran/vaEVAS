@@ -7,15 +7,15 @@
 
 | Harbor 任务 | 原始来源 | 首轮要检验的能力 |
 |---|---|---|
-| [va01-and2](../../benchmark/tasks/va01-and2/instruction.md) | 课题组 tangxy AND2 | 简单对照：阈值、电平和延迟 |
-| [va02-sar-handshake](../../benchmark/tasks/va02-sar-handshake/instruction.md) | 课题组七位 SAR 控制 | 握手、逐位写入、CDAC 极性、复位 |
-| [va03-zoom-timing](../../benchmark/tasks/va03-zoom-timing/instruction.md) | 课题组 ZOOM ADC 时序 | 九路输出、三级嵌套脉冲、参数变化 |
-| [va04-gain-calibration](../../benchmark/tasks/va04-gain-calibration/instruction.md) | 课题组流水线 ADC 校准 | 两相采样、带符号差、步进方向和上下限 |
-| [va05-dynamic-vco](../../benchmark/tasks/va05-dynamic-vco/instruction.md) | Cadence 安装库 dig_vco | 变频过程中的连续相位与边沿定位 |
-| [va06-loaded-opamp](../../benchmark/tasks/va06-loaded-opamp/instruction.md) | Cadence 安装库 opamp | 电流贡献、内部储能、压摆/软限幅、外部 R/C 负载 |
+| [va01-and2](../../benchmark/material/historyref/tasks/va01-and2/instruction.md) | 课题组 tangxy AND2 | 简单对照：阈值、电平和延迟 |
+| [va02-sar-handshake](../../benchmark/material/historyref/tasks/va02-sar-handshake/instruction.md) | 课题组七位 SAR 控制 | 握手、逐位写入、CDAC 极性、复位 |
+| [va03-zoom-timing](../../benchmark/material/historyref/tasks/va03-zoom-timing/instruction.md) | 课题组 ZOOM ADC 时序 | 九路输出、三级嵌套脉冲、参数变化 |
+| [va04-gain-calibration](../../benchmark/material/historyref/tasks/va04-gain-calibration/instruction.md) | 课题组流水线 ADC 校准 | 两相采样、带符号差、步进方向和上下限 |
+| [va05-dynamic-vco](../../benchmark/material/historyref/tasks/va05-dynamic-vco/instruction.md) | Cadence 安装库 dig_vco | 变频过程中的连续相位与边沿定位 |
+| [va06-loaded-opamp](../../benchmark/material/historyref/tasks/va06-loaded-opamp/instruction.md) | Cadence 安装库 opamp | 电流贡献、内部储能、压摆/软限幅、外部 R/C 负载 |
 
 每题的 `SOURCE.md` 记录原始文件和改编。原文件保存在
-[reference/veriloga](../../benchmark/reference/veriloga/README.md)，没有覆盖修改。
+[reference/veriloga](../../benchmark/material/historyref/veriloga/README.md)，没有覆盖修改。
 未把原文件中未初始化状态或明显笔误作为隐含考点；必要改编已写入题面。
 模型仅收到 `instruction.md`，不接触原始资产、参考解、测试输入和判据。
 
@@ -92,7 +92,7 @@ if [ -n "${CODEX_CLI_PATH:-}" ]; then
   export PATH="$(dirname "$CODEX_CLI_PATH"):$PATH"
 fi
 python3 -m experiments.va_screen.build_tasks
-for va_task in benchmark/tasks/va0*; do
+for va_task in benchmark/material/draftbench/tasks/va0*; do
   python3 -m experiments.va_screen.remote \
     "$va_task" "$va_task/solution/dut.va" \
     "runs/va-screen/calibration/${va_task##*/}"
@@ -107,7 +107,7 @@ python3 -m experiments.va_screen.run_pilot
 
 ```sh
 PYTHONPATH="$PWD" uvx --from harbor==0.23.0 harbor run \
-  --path benchmark/tasks/va01-and2 --agent oracle \
+  --path benchmark/material/historyref/tasks/va01-and2 --agent oracle \
   --verifier experiments.va_screen.harbor_adapters:RemoteSpectreVerifier \
   --jobs-dir "$PWD/runs/va-screen/harbor" --job-name oracle-integration -n 1 -r 0
 ```
@@ -134,7 +134,7 @@ Docker 任务镜像不含商业 Spectre，默认 Harbor verifier 因此不能直
 本目录保存可从仓库获取的任务、冻结身份、[最终结果](RESULTS.json)与校准摘要。
 原始模型输出/报告和远端波形仍是 local-only；保存了本地归档清单，没有公开下载地址。
 材料没有上传 Harbor Hub；第三方资料与内部来源的外发规则见
-[reference 使用说明](../../benchmark/reference/README.md#公开或外发前)。
+[reference 使用说明](../../benchmark/material/historyref/README.md#公开或外发前)。
 
 全过只能说明这 6 道明确规格、这些参数和这些检查点下的一次生成表现；
 不能推出整个任务族已经解决。若难题也普遍通过，优先减少这类模板实现题的开发投入，

@@ -40,7 +40,7 @@ def run(task, work):
 if __name__ == '__main__':
     report = dict(schema_version=1, purpose='Supplemental reference-entry execution; does not reconstruct earlier image identity', earlier_entry_image_identity='unknown: historical tag-based invocation retained no Docker image receipt', command_path_notation='${CHECKOUT} denotes repository root; raw absolute command receipts remain in ignored runs', entry_tool_sha256=sha(Path(__file__)), final_calibration_sha256=sha(HERE / 'final-calibration.json'), delivery_material_manifest_sha256=sha(HERE / 'material-manifest.json'), records=[])
     calibration = json.loads((HERE / 'final-calibration.json').read_text())
-    for task in sorted((ROOT / 'benchmark/tasks').glob('v3-ota-*')):
+    for task in sorted((ROOT / 'benchmark/material/draftbench/batches/v3-01/tasks').glob('v3-ota-*')):
         receipt = run(task, ROOT / 'runs/ota-reference-entry-pinned' / task.name)
         expected = sha(HERE / 'candidates' / task.name / 'reference/dut.va')
         assert receipt['output_sha256'] == expected

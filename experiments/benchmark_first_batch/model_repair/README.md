@@ -1,6 +1,6 @@
 # 规格建模与修复首批资产
 
-规范生成入口是 `build.py`，独立评分是 `benchmark/checkers/first_batch_model_repair.py`。
+规范生成入口是 `build.py`，独立评分是 `benchmark/material/historyref/legacy-authoring/checkers/first_batch_model_repair.py`。
 本目录建设五个规格任务、四个新修复任务，并登记复用现有 va07 三角波原型，共十个任务。
 生成器没有复制历史 Verilog-A，SOURCE 逐题说明架构需求参考和原创合同；旧题的许可和成绩不继承。
 
@@ -28,4 +28,4 @@ Harbor oracle 和 Agentic 模型试跑分别记录，参考通过不证明整个
 - ZOOM 用相位日历核验九路时钟、全部脉冲数及相位关系；计时量化容差公开，不以累计RMSE掩盖漏脉冲。
 
 所有新题是电压域行为工程任务，未声称晶体管级测量真实性、噪声/负载/电流能力或开源复现。
-`benchmark/tasks/first_batch-model_repair.json` 保存任务清单与当前状态，实际校准收据由协调者维护。
+`benchmark/material/historyref/tasks/first_batch-model_repair.json` 保存任务清单与当前状态，实际校准收据由协调者维护。

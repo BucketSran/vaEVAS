@@ -140,7 +140,7 @@ def regrade_one(directory, wrapper, root, modules, scratch):
         frozen = json.loads(frozen_bytes)
         require(len(frozen) == 1 and frozen[0]['name'] == old['name'], 'frozen case selection')
         case = frozen[0]
-        task = root / 'benchmark/tasks' / package['task_id']
+        task = root / 'benchmark/material/historyref/tasks' / package['task_id']
         current_cases = json.loads((task / 'tests/cases.json').read_text())
         matches = [c for c in current_cases if c['name'] == case['name']]
         require(len(matches) == 1, 'current case missing or duplicated; refuse reuse')
@@ -201,7 +201,7 @@ def main():
     args=parser.parse_args()
     root=args.canonical_root.resolve();output=args.output.resolve()
     require(not output.exists(),'output must be a new file')
-    paths=[root/'benchmark/checkers'/name for name in ('adc_linearity.py','circuit_task.py','first_batch_measurement.py')]
+    paths=[root/'benchmark/material/historyref/legacy-authoring/checkers'/name for name in ('adc_linearity.py','circuit_task.py','first_batch_measurement.py')]
     modules=[load_module(path,'measurement_regrade_'+path.stem) for path in paths]
     records=[];pending=[]
     with tempfile.TemporaryDirectory(prefix='measurement-waveform-regrade-') as temporary:

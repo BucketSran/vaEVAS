@@ -67,7 +67,7 @@ endmodule
 ''')
 # Complement retained hysteretic state while preserving old-state bookkeeping.
 p=next(OUT.glob('v2-spec-314-*'))/'alternative/dut.va'
-reference=next((ROOT/'benchmark/tasks').glob('v2-spec-314-*'))/'solution/dut.va'
+reference=next((ROOT/'benchmark/material/draftbench/batches/v2-01/tasks').glob('v2-spec-314-*'))/'solution/dut.va'
 s=reference.read_text().replace('integer state,oldstate;','integer outside,oldstate;')
 s=re.sub(r'\bstate=0', 'outside=1',s)
 s=re.sub(r'\bstate=1', 'outside=0',s)

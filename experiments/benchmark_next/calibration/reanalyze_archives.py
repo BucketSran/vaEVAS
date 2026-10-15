@@ -3,11 +3,15 @@ import argparse,hashlib,json,sys,tarfile,tempfile
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[3]
-sys.path.insert(0,str(ROOT/'benchmark/checkers'))
-sys.path.insert(0,str(ROOT/'benchmark/tasks/v3-calibration-continuous-offset/tests'))
+sys.path.insert(0,str(ROOT/'benchmark/material/historyref/legacy-authoring/checkers'))
+sys.path.insert(0,str(ROOT/'benchmark/material/draftbench/batches/v3-01/tasks/v3-calibration-continuous-offset/tests'))
 from adc_linearity import read_psf
 from v2_runtime import validate_rows
 from v2_next_calibration import evaluate
+import sys as _benchmark_sys
+from pathlib import Path as _BenchmarkPath
+_benchmark_sys.path.insert(0, str(_BenchmarkPath(__file__).resolve().parents[3]))
+from experiments.benchmark_paths import material_path
 
 def sha(data):return hashlib.sha256(data).hexdigest()
 
@@ -16,13 +20,13 @@ def main():
  baseline=json.loads(args.baseline_report.read_text());records=[];unchanged={}
  for name,expected in baseline['material_assets'].items():
   if ('continuous-offset' in name or 'common-mode-servo' in name) and not name.endswith('/v2_next_calibration.py'):
-   actual=sha((ROOT/name).read_bytes())
+   actual=sha(material_path(ROOT, name).read_bytes())
    if actual!=expected:raise ValueError('analog material changed: '+name)
    unchanged[name]=actual
  for request in json.loads((args.prepared/'requests.json').read_text()):
   task_id=Path(request['task']).name
   if task_id=='v3-calibration-fractional-pll':continue
-  prepared=Path(request['prepared']);task=ROOT/'benchmark/tasks'/task_id;tests=task/'tests';plan=json.loads((prepared/'preparation.json').read_text())
+  prepared=Path(request['prepared']);task=ROOT/'benchmark/material/draftbench/batches/v3-01/tasks'/task_id;tests=task/'tests';plan=json.loads((prepared/'preparation.json').read_text())
   cases={case['name']:case for case in json.loads((tests/'cases.json').read_text())}
   analysis_sources={name:sha((tests/name).read_bytes()) for name in ('v2_next_calibration.py','adc_linearity.py','v2_runtime.py','cases.json','contract.json')}
   analysis_sources['instruction.md']=sha((task/'instruction.md').read_bytes())
@@ -32,7 +36,7 @@ def main():
     raw_report=stream.extractfile('run/work/verifier/report.json').read()
     if sha(raw_report)!=item['result']['artifacts']['work/verifier/report.json']['sha256']:raise ValueError('execution report changed')
     old=json.loads(raw_report);outputs=[]
-    candidate=ROOT/request['candidate_directory']/'dut.va'
+    candidate=material_path(ROOT, request['candidate_directory'])/'dut.va'
     if sha(candidate.read_bytes())!=old['candidate_files']['dut.va']:raise ValueError('current candidate differs from actual execution')
     for execution_case in old['cases']:
      if execution_case['status']!='graded' or execution_case['returncode']!=0:raise ValueError('cannot reuse ungraded circuit execution')

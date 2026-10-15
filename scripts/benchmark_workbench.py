@@ -10,6 +10,11 @@ import sys
 import tomllib
 from urllib.parse import quote
 
+if __package__:
+    from .benchmark_package import LEVELS, legacy_task_ids, read_config, validate_package
+else:
+    from benchmark_package import LEVELS, legacy_task_ids, read_config, validate_package
+
 
 STAGES = {
     "source-screening": "材料筛选", "design-draft": "题目草案",
@@ -91,7 +96,7 @@ def load_catalog(root):
 def load_cases(root, catalog):
     cases = []
     ids = set()
-    repo = root.parent.parent
+    repo = root.parents[2]
     for path in sorted((root / "cases").rglob("case.json")):
         data = read_json(path)
         require(isinstance(data, dict), f"{path}: expected object")
@@ -154,6 +159,23 @@ def task_batch(identity):
     return f"v{match[1]}" if match and int(match[1]) >= 2 else None
 
 
+def batch_packages(root):
+    """Locate real packages in batches; one task has only one active draft."""
+    require(not (root / "tasks").exists(), "flat draftbench/tasks is obsolete; use batches/<batch>/tasks")
+    packages = {}
+    for batch in sorted((root / "batches").iterdir()) if (root / "batches").exists() else []:
+        if not batch.is_dir():
+            continue
+        require(SLUG.fullmatch(batch.name), f"invalid batch directory: {batch.name}")
+        require((batch / "README.md").is_file(), f"{batch.name}: missing batch README")
+        for task in sorted((batch / "tasks").iterdir()) if (batch / "tasks").exists() else []:
+            if not task.is_dir():
+                continue
+            require(task.name not in packages, f"duplicate draft task across batches: {task.name}")
+            packages[task.name] = task
+    return packages
+
+
 def load_tasks(root, catalog, cases):
     """Read source/category facts from task files, keeping only lineage in tasks.json."""
     data = read_json(root / "tasks.json")
@@ -176,8 +198,11 @@ def load_tasks(root, catalog, cases):
     require(isinstance(rows, list), "tasks.json: tasks must be a list")
     case_index = {c["case_id"]: c for c in cases}
     tasks, ids = [], set()
-    repo = root.parent.parent
-    task_root = repo / "benchmark/tasks"
+    repo = root.parents[2]
+    packages = batch_packages(root)
+    formal_root = repo / "benchmark/tasks"
+    formal = {p.name: p for p in formal_root.iterdir() if p.is_dir()} if formal_root.exists() else {}
+    require(not (packages.keys() & formal.keys()), "task has both a draft and a formal package")
     for row in rows:
         require(isinstance(row, dict) and set(row) == {"task_id", "title", "function_group", "case_ids"},
                 "tasks.json: invalid task fields; category and source_group come from task.toml")
@@ -192,7 +217,8 @@ def load_tasks(root, catalog, cases):
         linked = row["case_ids"]
         require(isinstance(linked, list) and all(isinstance(c, str) and c in case_index for c in linked)
                 and len(linked) == len(set(linked)), f"{identity}: invalid case_ids")
-        directory = task_root / identity
+        directory = packages.get(identity, formal.get(identity))
+        require(directory is not None, f"{identity}: missing task package")
         for filename in ("instruction.md", "SOURCE.md", "task.toml"):
             target = repository_file(repo, str(directory.relative_to(repo) / filename), identity)
             require(target.is_file(), f"{identity}: expected file {filename}")
@@ -204,13 +230,13 @@ def load_tasks(root, catalog, cases):
         require(isinstance(source, str) and source.strip(), f"{identity}: missing source_group")
         tasks.append(dict(row, directory=directory, batch=task_batch(identity),
                           engineering_action=action, source_group=source))
-    discovered = {p.name for p in task_root.iterdir() if p.is_dir() and task_batch(p.name)} if task_root.exists() else set()
+    discovered = {name for name in packages.keys() | formal.keys() if task_batch(name)}
     require(ids == discovered,
             f"task registration mismatch: unregistered={sorted(discovered - ids)}, missing={sorted(ids - discovered)}")
     for case in cases:
         if case["task_path"] is not None:
             target = (repo / case["task_path"]).resolve()
-            if target.parent == task_root.resolve() and task_batch(target.name):
+            if target in {p.resolve() for p in [*packages.values(), *formal.values()]} and task_batch(target.name):
                 require(any(t["task_id"] == target.name and case["case_id"] in t["case_ids"] for t in tasks),
                         f"{case['case_id']}: task_path disagrees with tasks.json")
     return groups, tasks
@@ -220,9 +246,9 @@ def render_tasks(root, catalog, groups, tasks, cases, outputs):
     """Generate counts and navigation only; preserve human judgments and contracts."""
     categories = catalog["categories"]
     batches = sorted({t["batch"] for t in tasks}, key=lambda b: int(b[1:]))
-    summary = f"登记 **{len(tasks)} 道已建设任务**；" + "、".join(
+    summary = f"登记 **{len(tasks)} 道待审核题包资产**；" + "、".join(
         f"{batch} {sum(t['batch'] == batch for t in tasks)} 道" for batch in batches) + "。\n"
-    summary += "类别、来源组读自 `task.toml`；登记与生成索引不证明设计认可、校准通过或正式发布。\n"
+    summary += "类别、来源组读自 `task.toml`；实现与历史作者校准不代表人工审核通过，正式题目仅见 `benchmark/tasks/benchmark.toml`。\n"
     for name in ("README.md", "TASKS.md"):
         page = root / name
         outputs[page] = replace_block(page, summary, "task-summary", outputs.get(page))
@@ -266,7 +292,7 @@ def render(root, catalog, cases, groups, tasks):
     """Build all expected contents before writing anything, including marker validation."""
     outputs = {}
     page = root / "README.md"
-    summary = f"登记 **{len(cases)} 张历史候选设计卡**；设计卡状态与已建设任务分开维护，当前任务见 [已建设任务总览](TASKS.md)。\n\n"
+    summary = f"登记 **{len(cases)} 张历史候选设计卡**；设计卡状态与题包实现分开维护，当前草稿见 [题包资产总览](TASKS.md)。\n\n"
     summary += table(["工程动作", "候选数"], [
         [link(label, root / "cases" / category / "README.md", page),
          str(sum(d["engineering_action"] == category for d in cases))]
@@ -305,17 +331,17 @@ def render(root, catalog, cases, groups, tasks):
         linked_tasks = [t for t in tasks if data["case_id"] in t["case_ids"]]
         task_links = [link(t["task_id"], t["directory"] / "instruction.md", page) for t in linked_tasks]
         if data["task_path"] and not linked_tasks:
-            task_links.append(link(data["task_path"], root.parent.parent / data["task_path"], page))
-        rows.append(["正式任务（设计状态独立）", "、".join(task_links) or "尚无登记映射"])
-        rows.append(["本卡登记的运行 / 校准证据", "、".join(link(v, root.parent.parent / v, page) for v in data["evidence_paths"])
+            task_links.append(link(data["task_path"], root.parents[2] / data["task_path"], page))
+        rows.append(["关联的待审核题包资产", "、".join(task_links) or "尚无登记映射"])
+        rows.append(["本卡登记的运行 / 校准证据", "、".join(link(v, root.parents[2] / v, page) for v in data["evidence_paths"])
                      or "本卡未登记；关联任务的校准范围见" + link("交付证据入口", root / "TASKS.md", page)])
         outputs[page] = replace_block(page, table(["项目", "当前记录"], rows))
     page = root / "REVIEW.md"
-    outputs[page] = GENERATED + "# 设计 Review\n\n设计认可与实现、校准、任务冻结分别记录。这里只汇总历史设计卡的 review 状态；已建设任务与实现映射见 [已建设任务总览](TASKS.md)。当前按电路类别的审核结论维护在 [#159](https://github.com/BucketSran/vaEVAS/issues/159)。pending 不等于没有正式任务，登记映射也不改变设计认可状态。\n"
+    outputs[page] = GENERATED + "# 设计 Review\n\n设计认可与实现、校准、任务冻结分别记录。这里只汇总历史设计卡的 review 状态；实现映射见 [题包资产总览](TASKS.md)。当前按电路类别的审核结论维护在 [#159](https://github.com/BucketSran/vaEVAS/issues/159)。pending 表示具体设计尚待审核，草稿登记不会改变设计认可。\n"
     for status, label in REVIEWS.items():
         outputs[page] += f"\n## {label}\n\n" + case_table([d for d in cases if d["review_status"] == status], page, catalog)
     page = root / "SOURCE_GROUPS.md"
-    outputs[page] = GENERATED + "# 同源任务\n\n同一来源组中的题目保留独立 Case ID；分析成绩时考虑共享电路、数据或衍生关系。引用同一篇方法论文不自动归为同源。本页仅覆盖历史设计卡，已建设任务的同源变体见 [已建设任务总览](TASKS.md#同源变体与跨题关联)。\n"
+    outputs[page] = GENERATED + "# 同源任务\n\n同一来源组中的题目保留独立 Case ID；分析成绩时考虑共享电路、数据或衍生关系。引用同一篇方法论文不自动归为同源。本页仅覆盖历史设计卡，题包资产的同源变体见 [题包资产总览](TASKS.md#同源变体与跨题关联)。\n"
     for group in sorted({v for d in cases for v in d["source_groups"]}):
         outputs[page] += f"\n## {group}\n\n" + case_table([d for d in cases if group in d["source_groups"]], page, catalog)
     outputs[page] += "\n## 尚未确定来源组\n\n以下各项不视为同一组。\n\n"
@@ -334,18 +360,83 @@ def render(root, catalog, cases, groups, tasks):
     return outputs
 
 
+def validate_formal_tasks(repo):
+    """Keep unpublished designs out of the reviewed task collection."""
+    root = repo / "benchmark/tasks"
+    manifest = tomllib.loads((root / "benchmark.toml").read_text(encoding="utf-8"))
+    require(manifest.get("schema_version") == 1, "benchmark.toml: unsupported schema")
+    require(manifest.get("state") in {"draft", "frozen"}, "benchmark.toml: invalid state")
+    require(manifest.get("task_defaults") == "defaults.toml", "benchmark.toml: missing defaults.toml")
+    defaults = tomllib.loads((root / "defaults.toml").read_text(encoding="utf-8"))
+    require(defaults.get("schema_version") == 1, "defaults.toml: unsupported schema")
+    rows = manifest.get("tasks")
+    require(isinstance(rows, list), "benchmark.toml: tasks must be a list")
+    ids, slots = set(), set()
+    for row in rows:
+        require(isinstance(row, dict) and set(row) == {"slot", "id"}, "benchmark.toml: invalid task entry")
+        identity, slot = row["id"], row["slot"]
+        require(isinstance(identity, str) and SLUG.fullmatch(identity) and identity not in ids,
+                "benchmark.toml: invalid or duplicate task id")
+        require(type(slot) is int and slot > 0 and slot not in slots, "benchmark.toml: invalid or duplicate slot")
+        ids.add(identity)
+        slots.add(slot)
+        task = root / identity
+        for name in ("instruction.md", "task.toml", "SOURCE.md", "environment/Dockerfile",
+                     "solution/solve.sh", "tests/test.sh", "tests/verify.py",
+                     "results/reference.json", "results/calibration.json"):
+            require((task / name).is_file(), f"{identity}: formal task missing {name}")
+        metadata = tomllib.loads((task / "task.toml").read_text(encoding="utf-8")).get("metadata", {})
+        require(metadata.get("review_status") == "accepted",
+                f"{identity}: formal task requires explicit accepted review")
+        validate_package(task, repo, formal=True)
+    directories = {p.name for p in root.iterdir() if p.is_dir()}
+    require(ids == directories,
+            f"formal task collection mismatch: unlisted={sorted(directories - ids)}, missing={sorted(ids - directories)}")
+    require(manifest["state"] != "frozen" or bool(rows), "benchmark.toml: empty collection cannot be frozen")
+    return len(rows)
+
+
+def validate_draft_packages(root, registered):
+    """Retain registered v2/v3 compatibility; all other drafts use stage checks."""
+    legacy_ids = legacy_task_ids(root.parents[2]) & {t["task_id"] for t in registered}
+    counts = dict.fromkeys(LEVELS, 0)
+    legacy = 0
+    for identity, task in batch_packages(root).items():
+        config = read_config(task)
+        if (identity in legacy_ids and "stage" not in config["metadata"]
+                and "artifacts" not in config and not (task / "environment/starter").exists()):
+            legacy += 1
+            continue
+        level = validate_package(task, root.parents[2])
+        counts[level] += 1
+    return counts, legacy
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1] / "benchmark/workbench")
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1] / "benchmark/material/draftbench")
+    parser.add_argument("--package", type=Path, help="check one package without generating indexes")
+    parser.add_argument("--stage", choices=LEVELS, help="require this check level or higher; --package only")
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--check", action="store_true", help="check metadata and stale indexes without writing")
     mode.add_argument("--write", action="store_true", help="validate and refresh generated indexes")
     args = parser.parse_args()
+    if (args.package and not args.check) or (args.stage and not args.package):
+        parser.error("--package requires --check; --stage requires --package")
     try:
         root = args.root.resolve()
+        if args.package:
+            task = args.package.absolute()
+            formal = task.parent.resolve() == root.parents[2] / "benchmark/tasks"
+            level = validate_package(task, root.parents[2], level=args.stage, formal=formal)
+            print(f"{task.name}: {level} static checks passed; simulation and calibration not executed; "
+                  "human approval and evidence identity not verified")
+            return 0
+        formal_count = validate_formal_tasks(root.parents[2])
         catalog = load_catalog(root)
         cases = load_cases(root, catalog)
         groups, tasks = load_tasks(root, catalog, cases)
+        levels, legacy_count = validate_draft_packages(root, tasks)
         outputs = render(root, catalog, cases, groups, tasks)
         for path, content in outputs.items():
             if content.startswith(GENERATED) and path.exists():
@@ -361,8 +452,11 @@ def main():
             path.write_text(outputs[path], encoding="utf-8")
         for path in obsolete:
             path.unlink()
-        print(f"{len(cases)} cases and {len(tasks)} tasks validated; {len(changed)} views updated; {len(obsolete)} obsolete indexes removed"
-              if args.write else f"{len(cases)} cases and {len(tasks)} tasks validated; all generated views current")
+        print(f"{len(cases)} cases, {len(tasks)} draft assets and {formal_count} reviewed tasks validated; {len(changed)} views updated; {len(obsolete)} obsolete indexes removed"
+              if args.write else f"{len(cases)} cases, {len(tasks)} draft assets and {formal_count} reviewed tasks validated; all generated views current")
+        print("Draft package static checks: " + ", ".join(f"{name}={count}" for name, count in levels.items())
+              + f"; legacy registration only={legacy_count}. Simulation and calibration not executed; "
+                "human approval and evidence identity not verified.")
         return 0
     except (OSError, ValueError, TypeError, KeyError) as error:
         print(f"workbench: {error}", file=sys.stderr)

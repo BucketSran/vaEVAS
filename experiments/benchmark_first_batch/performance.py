@@ -30,7 +30,7 @@ def extract(prepared):
     prepared = Path(prepared)
     plan = json.loads((prepared / "preparation.json").read_text())
     results = json.loads((prepared / "results.json").read_text())
-    primitive_path = ROOT / "benchmark/checkers/first_batch_optimization.py"
+    primitive_path = ROOT / "benchmark/material/historyref/legacy-authoring/checkers/first_batch_optimization.py"
     primitive = module_at(primitive_path, "_performance_primitives")
     if len(results) != len(plan["cases"]):
         raise ValueError("incomplete execution set")

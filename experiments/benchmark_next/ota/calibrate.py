@@ -2,6 +2,7 @@
 import sys,json,tarfile,hashlib,argparse
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3];sys.path.insert(0,str(ROOT))
+from experiments.benchmark_paths import material_path
 from experiments.benchmark_first_batch.runtime import prepare,execute
 p=argparse.ArgumentParser();p.add_argument('--operator',type=Path,required=True);p.add_argument('--harness',type=Path,required=True);p.add_argument('--slug');p.add_argument('--variant');p.add_argument('--revision',required=True);args=p.parse_args()
 from experiments.benchmark_next.ota.seal import materials
@@ -12,7 +13,7 @@ plan=json.loads((ROOT/'experiments/benchmark_next/ota/calibration-plan.json').re
 for item in plan:
  if args.slug and item['task'].split('/')[-1]!='v3-ota-'+args.slug:continue
  if args.variant and item['variant']!=args.variant:continue
- task=ROOT/item['task'];candidate=ROOT/item['candidate']/'dut.va'
+ task=material_path(ROOT, item['task']);candidate=material_path(ROOT, item['candidate'])/'dut.va'
  out=ROOT/'runs'/('ota-calibration-'+args.revision)/task.name/item['variant']
  if item['variant']=='reference':
   work=out/'solve-candidate';work.mkdir(parents=True,exist_ok=True)

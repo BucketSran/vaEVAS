@@ -16,7 +16,7 @@ VARIANTS={
 def prepare(output=None):
     output=output or ROOT/"runs/identification-candidates"
     for task,variants in VARIANTS.items():
-        directory=ROOT/"benchmark/tasks"/task
+        directory=ROOT/"benchmark/material/historyref/tasks"/task
         path=directory/"solution/fit.py"
         spec=importlib.util.spec_from_file_location(task,path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
         parameters=m.fit(directory/"environment/public")

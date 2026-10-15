@@ -6,7 +6,7 @@ import re
 import unittest
 from experiments.benchmark_v2.extension_integration.test_checker import checker
 ROOT=Path(__file__).resolve().parents[3]
-TASK=ROOT/'benchmark/tasks/v2-integrate-349-multichannel-readout'
+TASK=ROOT/'benchmark/material/draftbench/batches/v2-01/tasks/v2-integrate-349-multichannel-readout'
 def number(value):
     scales={'n':1e-9,'p':1e-12}
     return float(value[:-1])*scales[value[-1]] if value[-1] in scales else float(value)

@@ -19,7 +19,7 @@ def check(runtime, candidates):
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
     results=[]
     for task,variants in VARIANTS.items():
-        contract_path=ROOT/'benchmark/tasks'/task/'tests/contract.json'
+        contract_path=ROOT/'benchmark/material/historyref/tasks'/task/'tests/contract.json'
         contract=json.loads(contract_path.read_text())
         for variant in ['reference']+variants:
             path=candidates/task/variant/'dut.va'

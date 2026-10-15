@@ -11,7 +11,7 @@ class MetadataTests(unittest.TestCase):
     def test_normalize_colocated_manifest_without_changing_task_inputs(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            tasks = root / "benchmark/tasks"
+            tasks = root / "benchmark/material/historyref/tasks"
             task = tasks / "spec-example"
             (task / "solution").mkdir(parents=True)
             (task / "task.toml").write_text('[metadata]\ncategory = "analog"\n')
@@ -24,13 +24,13 @@ class MetadataTests(unittest.TestCase):
             for name in names:
                 entries = [{"id": "spec-example", "action": "specification",
                             "source_group": "example-source",
-                            "path": "benchmark/tasks/spec-example"}] if name == "model_repair" else []
+                            "path": "benchmark/material/historyref/tasks/spec-example"}] if name == "model_repair" else []
                 (tasks / f"first_batch-{name}.json").write_text(json.dumps({"tasks": entries}))
             manifest = tasks / "first_batch-model_repair.json"
             before = manifest.read_bytes()
             count, stale = normalize(root, check=True)
             self.assertEqual(count, 1)
-            self.assertIn("benchmark/tasks/first_batch-model_repair.json", stale)
+            self.assertIn("benchmark/material/historyref/tasks/first_batch-model_repair.json", stale)
             self.assertEqual(manifest.read_bytes(), before)
 
             normalize(root)

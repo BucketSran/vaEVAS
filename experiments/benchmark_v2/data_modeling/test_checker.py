@@ -2,9 +2,9 @@
 import copy, importlib.util, json, math, tempfile, unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3]
-spec=importlib.util.spec_from_file_location('v2_data',ROOT/'benchmark/checkers/v2_data.py')
+spec=importlib.util.spec_from_file_location('v2_data',ROOT/'benchmark/material/historyref/legacy-authoring/checkers/v2_data.py')
 mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
-CASES=json.loads((ROOT/'benchmark/tasks/v2-data-sampling-identification/tests/cases.json').read_text())
+CASES=json.loads((ROOT/'benchmark/material/draftbench/batches/v2-01/tasks/v2-data-sampling-identification/tests/cases.json').read_text())
 class CheckerTests(unittest.TestCase):
     def test_sample_error_cannot_be_diluted_by_long_hold(self):
         case=copy.deepcopy(CASES[2])
@@ -26,7 +26,7 @@ class CheckerTests(unittest.TestCase):
             rows[1]={'time':1};self.assertEqual(mod.evaluate(rows,case,Path(d))['status'],'checker_error')
             case['truth']=[[0,0],[1,float('nan')],[2,1]];self.assertEqual(mod.evaluate(rows,case,Path(d))['status'],'checker_error')
     def test_missing_acquisition_observation_is_checker_error(self):
-        cases=json.loads((ROOT/'benchmark/tasks/v2-data-sampling-identification/tests/cases.json').read_text())
+        cases=json.loads((ROOT/'benchmark/material/draftbench/batches/v2-01/tasks/v2-data-sampling-identification/tests/cases.json').read_text())
         case=copy.deepcopy(next(c for c in cases if c['name']=='heldout-0'))
         rows=[{'time':t,'vhold':v} for t,v in case['truth']]
         index=next(i for i,r in enumerate(rows) if abs(r['time']-40.75e-9)<1e-15)

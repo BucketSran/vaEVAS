@@ -48,7 +48,7 @@ protocol 状态名验证及 Rust 状态/历史消费。Model、Program、IR18 �
 保存实际设置重读、独立公式及查询不变性。9 个要求点中仅 4 个原生 token 精确命中，
 末记录比 stop 大一个 ULP，严格观察资格 I 保留；原生数值相容不替代这一缺口。
 
-原 `benchmark/tasks/va05-dynamic-vco/solution/dut.va` 原字节保留。
+原 `benchmark/material/historyref/tasks/va05-dynamic-vco/solution/dut.va` 原字节保留。
 本切片移除将 `freq/triangle` 错当作未初始化持久状态的首失败，
 随后 `cross(triangle-.5,1)` 的局部量读取会明确拒绝。
 未来还需定义源顺序局部快照、持久方向驱动 idt、反馈事件未来根和

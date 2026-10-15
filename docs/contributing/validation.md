@@ -219,7 +219,7 @@ before changing a solver rule.
 <a id="development-bench-candidates"></a>
 
 When development exposes a reusable modeling mistake, semantic trap or compatibility
-problem, add or update [the candidate register](../../benchmark/workbench/CANDIDATES.md) before handoff.
+problem, add or update [the candidate register](../../benchmark/material/draftbench/CANDIDATES.md) before handoff.
 Record the concrete trigger, observed versus required behavior, evidence and proposed
 modeling task. Separate confirmed causes from hypotheses; a simulator bug or infrastructure
 failure must not be mislabeled as a VA model defect. Reuse the existing candidate for the

@@ -11,9 +11,9 @@ import audit_optimization as audit
 
 class OptimizationAuditTests(unittest.TestCase):
     def test_main_compile_failure_has_no_invented_performance_work(self):
-        canonical = {name: audit.REPO / 'benchmark/checkers' / name for name in
+        canonical = {name: audit.REPO / 'benchmark/material/historyref/legacy-authoring/checkers' / name for name in
                      ('adc_linearity.py', 'circuit_task.py', 'first_batch_optimization.py')}
-        canonical.update({name: audit.REPO / 'benchmark/tasks/optimize-vco-step/tests' / name
+        canonical.update({name: audit.REPO / 'benchmark/material/historyref/tasks/optimize-vco-step/tests' / name
                           for name in ('evaluate.py', 'performance.json', 'baseline.va')})
         contents = {'run/work/tests/' + name: path.read_bytes()
                     for name, path in canonical.items()}

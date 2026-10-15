@@ -13,7 +13,7 @@ import unittest
 ROOT=Path(__file__).resolve().parents[2]
 spec=importlib.util.spec_from_file_location('adapter',ROOT/'experiments/adc_linearity/harness_adapter.py')
 adapter=importlib.util.module_from_spec(spec);spec.loader.exec_module(adapter)
-spec=importlib.util.spec_from_file_location('checker',ROOT/'benchmark/checkers/adc_linearity.py')
+spec=importlib.util.spec_from_file_location('checker',ROOT/'benchmark/material/historyref/legacy-authoring/checkers/adc_linearity.py')
 checker=importlib.util.module_from_spec(spec);spec.loader.exec_module(checker)
 HARNESS=ROOT.parents[2]/'circuits/harness'
 

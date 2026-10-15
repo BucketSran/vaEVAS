@@ -1,7 +1,7 @@
 # 纯 real 函数有限分支对照
 
 两个开发用例检查限幅、实例参数隔离，以及条件捕获发生在局部变量改写之前。
-[独立输入与答案](../../../evas/validation/cases/function_branches/)属于 EVAS 验证目录；
+[独立输入与答案](../../../evas/validation/cases/function_branches)属于 EVAS 验证目录；
 [精简对照](comparison.json)保存实际查询样本、源码/工具/检查器身份和失败记录。
 
 | 用例 | 有限观测 | Spectre 与独立答案最大误差 | EVAS 与 Spectre 最大差值 |

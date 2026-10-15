@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[2]
-TASK=ROOT/'benchmark/tasks/va08-adc-linearity'
+TASK=ROOT/'benchmark/material/historyref/tasks/va08-adc-linearity'
 
 
 def prepare(output):
@@ -26,7 +26,7 @@ def prepare(output):
             f'if (V(dout[{bit}])>=0.5) code=code+{1<<bit};',
             f'if (V(dout[{bit}])>=0.5) code=code+{1<<(7-bit)};')
     for name,text in variants.items(): (output/(name+'.va')).write_text(text)
-    spec=importlib.util.spec_from_file_location('adc',ROOT/'benchmark/checkers/adc_linearity.py')
+    spec=importlib.util.spec_from_file_location('adc',ROOT/'benchmark/material/historyref/legacy-authoring/checkers/adc_linearity.py')
     adc=importlib.util.module_from_spec(spec);spec.loader.exec_module(adc)
     cases=json.loads((TASK/'tests/cases.json').read_text())
     for case in cases:
@@ -36,7 +36,7 @@ def prepare(output):
     files={str(p.relative_to(output)):hashlib.sha256(p.read_bytes()).hexdigest()
            for p in sorted(output.rglob('*')) if p.is_file()}
     manifest=dict(status='prepared_only',simulator_executed=False,files=files,
-                  checker_sha256=adc.sha(ROOT/'benchmark/checkers/adc_linearity.py'),
+                  checker_sha256=adc.sha(ROOT/'benchmark/material/historyref/legacy-authoring/checkers/adc_linearity.py'),
                   cases_sha256=adc.sha(TASK/'tests/cases.json'),
                   resources=dict(case_timeout_s=90,verifier_timeout_s=600,threads=1,cpus=1,memory_mb=1024,storage_mb=2048),
                   expected=dict(reference='4/4 pass',mutants='6 targeted single-case rejections; not a full cross product'),

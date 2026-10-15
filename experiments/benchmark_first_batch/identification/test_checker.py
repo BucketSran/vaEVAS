@@ -7,13 +7,13 @@ import sys
 import unittest
 
 ROOT=Path(__file__).resolve().parents[3]
-sys.path.insert(0,str(ROOT/"benchmark/checkers"))
+sys.path.insert(0,str(ROOT/"benchmark/material/historyref/legacy-authoring/checkers"))
 from first_batch_identification import evaluate
 
 
 class SampleHoldCriteria(unittest.TestCase):
     def setUp(self):
-        self.cases=json.loads((ROOT/"benchmark/tasks/identify-sh-acquisition/tests/cases.json").read_text())
+        self.cases=json.loads((ROOT/"benchmark/material/historyref/tasks/identify-sh-acquisition/tests/cases.json").read_text())
 
     def rows(self,case):
         # Separate interpolation fixture uses the fixed contractual probes,

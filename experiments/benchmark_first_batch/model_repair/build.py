@@ -7,7 +7,7 @@ BASE='FROM python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0f
 HEADER='`include "constants.vams"\n`include "disciplines.vams"\n'
 
 def write_task(task_id,instruction,source,reference,negatives,cases,public_case,kind,group):
-    p=ROOT/'benchmark/tasks'/task_id
+    p=ROOT/'benchmark/material/historyref/tasks'/task_id
     for sub in ['environment/public','solution','tests','tests/negatives']:(p/sub).mkdir(parents=True,exist_ok=True)
     (p/'instruction.md').write_text(instruction+'\n\n提交 `/work/dut.va`。只能使用标准 constants.vams / disciplines.vams；禁止文件I/O、系统调用及外部include。公开自测网表在 `/work/public/visible.scs`，用有授权的 Spectre 自测；远端公开调用入口由评测环境提供。最终评分独立运行，不能作为解题反馈。\n')
     (p/'SOURCE.md').write_text(source+'\n\n本次参考VA、测试网表和checker独立编写，未复制历史VA或Cadence安装库。工程需求参考旧题的架构名称与公开接口描述；不声称实测/晶体管级真实性。来源组：'+group+'。状态：本地构造与行级checker测试；实际Spectre、Harbor和Agentic校准必须另有执行收据。\n')
@@ -171,7 +171,7 @@ def build_sigma(task_id='spec-sigma-delta',repair=False):
       'positive_feedback':SIGMA.replace('V(vin)/vref-decision','V(vin)/vref+decision'),
       'discard_accumulator':SIGMA.replace('residue=residue+V(vin)/vref-decision','residue=V(vin)/vref-decision')}
     result=write_task(task_id,text,'原创行为ΣΔ合同参考旧v4 055/1055的一阶反馈架构，不复制源码。修复版属于人工注错；规格与修复共用source_group，结果必须关联分析。',SIGMA,negatives,[sigma_case('ascending',[.125,.375,.75,.25]),sigma_case('descending',[.875,.5,.125,.625])],sigma_case('public',[.25,.625]),'repair' if repair else 'specification','sigma-delta-original')
-    if repair:(ROOT/'benchmark/tasks'/task_id/'environment/public/starter.va').write_text(HEADER+negatives['wrong_clock_phase'])
+    if repair:(ROOT/'benchmark/material/historyref/tasks'/task_id/'environment/public/starter.va').write_text(HEADER+negatives['wrong_clock_phase'])
     return result
 
 SAMPLE_HOLD='''module sample_hold(vin,sample,rst,vout);
@@ -246,7 +246,7 @@ starter包含人工注入的资格状态错误，短电源扰动可能发布旧�
       'accumulate_short_glitches':UVLO.replace('@(cross(V(vin)-upper,-1)) up_at=1e30;','@(cross(V(vin)-upper,-1)) begin end').replace('if(V(rst)<vth && V(vin)>upper)begin good=1;','if(V(rst)<vth)begin good=1;'),
       'skip_recovery_delay':UVLO.replace('@(cross(V(rst)-vth,-1)) if(V(vin)>upper)up_at=$abstime+tgood;','@(cross(V(rst)-vth,-1)) if(V(vin)>upper)good=1;')}
     result=write_task(task_id,text,'原创带连续资格时间的电压UVLO合同，工程需求参考旧v4 046/1046的电源阈值/滞回。新增抗毛刺和恢复时间合同，未复制旧源。修复故障为人工注入取消计时遗漏。',UVLO,negatives,[uvlo_case('glitches_and_recovery'),uvlo_case('long_qualification',3e-9,1.5e-9,1.3)],uvlo_case('public',1.5e-9,.7e-9),'repair' if repair else 'specification','uvlo-monitor-original')
-    if repair:(ROOT/'benchmark/tasks'/task_id/'environment/public/starter.va').write_text(HEADER+negatives['accumulate_short_glitches'])
+    if repair:(ROOT/'benchmark/material/historyref/tasks'/task_id/'environment/public/starter.va').write_text(HEADER+negatives['accumulate_short_glitches'])
     return result
 
 
@@ -304,7 +304,7 @@ def build_sar():
       'inverted_comparator':SAR.replace('if(V(cmp)>vth)','if(V(cmp)<vth)'),
       'publish_without_latency':SAR.replace('$abstime+tvalid','$abstime+1p')}
     result=write_task('repair-sar-abort',text,'原创四位SAR试探/发布延迟合同；工程需求参考旧SAR握手资产与ADC复位扩展设计稿。人工注错为pending事件复位取消遗漏，未复制旧源码。',SAR,negatives,[sar_case('abort_then_two_codes',[.63,.21,.82]),sar_case('zero_code_and_latency',[.91,.03,.45],1.1e-9)],sar_case('public',[.55,.35,.72]),'repair','sar-controller-original')
-    p=ROOT/'benchmark/tasks/repair-sar-abort/environment/public'
+    p=ROOT/'benchmark/material/historyref/tasks/repair-sar-abort/environment/public'
     (p/'starter.va').write_text(HEADER+negatives['late_result_after_abort']);(p/'adc_compare.va').write_text(CMP_SUPPORT)
     return result
 
@@ -349,16 +349,16 @@ residue在[F+0.2,F+0.7 ns)，integrate在[F+1,F+2 ns)，rst_zoom在[F+2.1,F+2.3 
       'missing_sar_last_bit':ZOOM.replace('j<nbits','j<nbits-1'),
       'no_zoom_reset':ZOOM.replace('rz=(phase>=finish+2.1n && phase<finish+2.3n)?1:0;','rz=0;')}
     result=write_task('repair-zoom-sequencer',text,'需求参考课题组ZOOM/NSSAR多相时钟用途及va03真实错误类型。所有九相合同、参考实现、负例和checker原创；没有复制课题组原VA。设计为有限时序控制原型，不声称恢复原ADC外围工程。',ZOOM,negatives,[zoom_case('four_bit'),zoom_case('five_bit',5,.9e-9,20e-9)],zoom_case('public',4,.7e-9,19e-9),'repair','zoom-timing-original')
-    (ROOT/'benchmark/tasks/repair-zoom-sequencer/environment/public/starter.va').write_text(HEADER+negatives['zoom_parent_period'])
+    (ROOT/'benchmark/material/historyref/tasks/repair-zoom-sequencer/environment/public/starter.va').write_text(HEADER+negatives['zoom_parent_period'])
     return result
 
 
 
 def build_all():
     items=[build_comparator(),build_bbpd(),build_sigma(),build_hold(),build_uvlo(),build_sigma('repair-sigma-delta-phase',True),build_uvlo('repair-uvlo-recovery',True),build_sar(),build_zoom()]
-    items.append({'id':'va07-triangle-repair','action':'repair','source_group':'repository-triangle-oscillator','path':'benchmark/tasks/va07-triangle-repair','status':'existing_prototype_reused_no_new_copy','notes':'Existing development/Spectre evidence belongs to va07 SOURCE; formal admission and Agentic still pending. Not counted twice.'})
+    items.append({'id':'va07-triangle-repair','action':'repair','source_group':'repository-triangle-oscillator','path':'benchmark/material/historyref/tasks/va07-triangle-repair','status':'existing_prototype_reused_no_new_copy','notes':'Existing development/Spectre evidence belongs to va07 SOURCE; formal admission and Agentic still pending. Not counted twice.'})
     registry={'schema':'first-batch-model-repair-v1','counts':{'specification':5,'repair':5,'new_tasks':9,'reused_tasks':1},'tasks':items,'local_checker_tests':'python3 -B -m unittest discover -s experiments/benchmark_first_batch/model_repair -p test_contracts.py -v','evidence_boundary':'Line-level synthetic tests are checker tests, not Verilog-A execution. Actual calibration is recorded separately by coordinator.'}
-    (ROOT/'benchmark/tasks/first_batch-model_repair.json').write_text(json.dumps(registry,indent=2)+'\n')
+    (ROOT/'benchmark/material/historyref/tasks/first_batch-model_repair.json').write_text(json.dumps(registry,indent=2)+'\n')
     return registry
 
 if __name__=='__main__':build_all()
