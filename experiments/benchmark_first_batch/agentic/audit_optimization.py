@@ -43,8 +43,8 @@ def audit_trial(folder):
 
 def audit_bound_archive(receipt_path, identity):
     """The frozen Trial identity must bind the previously sealed archive."""
-    task = REPO / 'benchmark/tasks' / identity['task_id']
-    canonical = {name: REPO / 'benchmark/checkers' / name for name in
+    task = REPO / 'benchmark/material/historyref/tasks' / identity['task_id']
+    canonical = {name: REPO / 'benchmark/material/historyref/legacy-authoring/checkers' / name for name in
                  ('adc_linearity.py', 'circuit_task.py', 'first_batch_optimization.py')}
     canonical.update({name: task / 'tests' / name for name in
                       ('evaluate.py', 'performance.json', 'baseline.va')})

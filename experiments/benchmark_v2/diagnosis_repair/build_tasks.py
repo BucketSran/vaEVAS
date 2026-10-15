@@ -3,7 +3,7 @@ import json, hashlib
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3]
 HERE=Path(__file__).resolve().parent
-SOURCE=ROOT/'benchmark/reference/v4/release/benchmarkv4-r53/tasks'
+SOURCE=ROOT/'benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks'
 IMAGE='python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c'
 
 def write(path,text):
@@ -39,7 +39,7 @@ DESIGNS=[
   {'ref':(0,[(1.2,0.9),(1.6,0),(3.2,0.9),(3.6,0),(5,0.9),(5.09,0),(5.11,0.9),(5.5,0),(7.2,0.9),(7.6,0)]),'fb':(0,[(1,0.9),(1.4,0),(3,0.9),(3.4,0),(5.05,0.9),(5.09,0),(5.3,0.9),(5.7,0),(7,0.9),(7.4,0)]),'rstb':(0.9,[(5.08,0),(5.1,0.9)])}],9)]
 
 def package(task,files,cases,instruction,source):
- path=ROOT/'benchmark/tasks'/task
+ path=ROOT/'benchmark/material/draftbench/batches/v2-01/tasks'/task
  write(path/'instruction.md',f'# 修复{task}\n\n{instruction}\n\n输入源码位于 `/work/`。可整体重写指定模块；保持公开端口和行为。验收激励与checker固定。逻辑阈值0.45V，禁止条件也须满足按时启动要求。提交指定文件，不依靠运行外部程序或隐藏终评材料。Spectre是本题固定后端；公开自测执行 `/tests/test.sh`，可自行建立诊断激励。\n')
  write(path/'task.toml',f'schema_version = "1.4"\n[metadata]\nname = "{task}"\ncategory = "verilog-a"\nengineering_action = "diagnosis-repair"\nsource_group = "{source}"\n[agent]\ntimeout_sec = 1200\n[verifier]\ntimeout_sec = 600\n[environment]\nbuild_timeout_sec = 600\ncpus = 1\nmemory_mb = 1024\nstorage_mb = 2048\n')
  docker=f'FROM {IMAGE}\nWORKDIR /work\nCOPY input/ /work/\n'
@@ -49,7 +49,7 @@ def package(task,files,cases,instruction,source):
  write(path/'tests/test.sh','#!/bin/sh\nset -eu\nexec python3 -B /tests/verify.py --candidate "${CANDIDATE:-/work/dut.va}" --output "${VERIFY_OUTPUT:-/logs/verifier}" --tests /tests "$@"\n')
  write(path/'tests/verify.py','from v2_runtime import main\nfrom v2_repair import evaluate\nif __name__ == "__main__":\n    main(evaluate)\n')
  dump(path/'tests/cases.json',cases);dump(path/'tests/contract.json',{'candidate_files':list(files),'output_files':[],'task_id':task,'category':'diagnosis-repair','source_group':source})
- write(path/'tests/v2_repair.py',(ROOT/'benchmark/checkers/v2_repair.py').read_text())
+ write(path/'tests/v2_repair.py',(ROOT/'benchmark/material/historyref/legacy-authoring/checkers/v2_repair.py').read_text())
  return path
 
 def build():

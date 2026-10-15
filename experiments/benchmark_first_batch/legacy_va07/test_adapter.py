@@ -8,7 +8,7 @@ import tempfile
 import unittest
 
 ROOT=Path(__file__).resolve().parents[3]
-sys.path.insert(0,str(ROOT/'benchmark/checkers'))
+sys.path.insert(0,str(ROOT/'benchmark/material/historyref/legacy-authoring/checkers'))
 import first_batch_triangle as adapter
 import triangle_oscillator as oracle
 spec=importlib.util.spec_from_file_location('legacy_va07_candidates',Path(__file__).with_name('prepare_candidates.py'))
@@ -49,10 +49,10 @@ class ExecutionAdapter(unittest.TestCase):
             with self.assertRaises(ValueError):adapter.evaluate(data,case())
 
     def test_original_cases_and_canonical_copy_frozen(self):
-        task=ROOT/'benchmark/tasks/va07-triangle-repair'
+        task=ROOT/'benchmark/material/historyref/tasks/va07-triangle-repair'
         self.assertEqual(hashlib.sha256((task/'tests/cases.json').read_bytes()).hexdigest(),
             'df84f3123a91a8ef6e70818d5437db8e101c871aba8d5da85c7e8302653417e1')
-        self.assertEqual((task/'tests/triangle_oscillator.py').read_bytes(),(ROOT/'benchmark/checkers/triangle_oscillator.py').read_bytes())
+        self.assertEqual((task/'tests/triangle_oscillator.py').read_bytes(),(ROOT/'benchmark/material/historyref/legacy-authoring/checkers/triangle_oscillator.py').read_bytes())
         self.assertEqual(json.loads((task/'tests/contract.json').read_text())['signals'],['ctl','z','count'])
 
     def test_historical_variants_match_actual_calibration_identity(self):

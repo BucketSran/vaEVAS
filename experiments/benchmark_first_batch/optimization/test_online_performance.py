@@ -5,7 +5,7 @@ import tempfile
 import unittest
 
 ROOT=Path(__file__).resolve().parents[3]
-spec=importlib.util.spec_from_file_location('performance_check',ROOT/'benchmark/checkers/first_batch_optimization.py')
+spec=importlib.util.spec_from_file_location('performance_check',ROOT/'benchmark/material/historyref/legacy-authoring/checkers/first_batch_optimization.py')
 M=importlib.util.module_from_spec(spec);spec.loader.exec_module(M)
 POLICY=dict(admitted=True,admission_evidence_sha256='a'*64,pairs=5,metric='intrinsic_cpu_s',max_median_ratio=.8,min_winning_pairs=4)
 BASE=b'module x; analog begin end endmodule'

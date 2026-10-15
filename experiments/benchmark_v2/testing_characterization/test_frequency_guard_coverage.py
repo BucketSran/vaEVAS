@@ -7,7 +7,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).parent
-TASK = ROOT / "benchmark/tasks/v2-test-clock-frequency"
+TASK = ROOT / "benchmark/material/draftbench/batches/v2-01/tasks/v2-test-clock-frequency"
 
 
 def load(name, path):
@@ -36,7 +36,7 @@ class FrequencyGuardCoverage(unittest.TestCase):
         self.assertIn("divide_ratio=7", case["netlist"])
 
     def test_literal_fourteen_period_ratio_rejects_cap_without_checker_change(self):
-        checker = load("frequency_coverage_checker", ROOT / "benchmark/checkers/v2_testing.py")
+        checker = load("frequency_coverage_checker", ROOT / "benchmark/material/historyref/legacy-authoring/checkers/v2_testing.py")
         # Independent literal trace: 100 MHz DCO rises at 5,15,... ns; divided
         # clock rises at 5 and145 ns. The measured ratio is 140/10 = 14.
         rows = []

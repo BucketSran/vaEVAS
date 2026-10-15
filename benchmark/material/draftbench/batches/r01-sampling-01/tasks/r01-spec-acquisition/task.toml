@@ -1,0 +1,13 @@
+schema_version = "1.4"
+artifacts = ["/app/circuit.va"]
+
+[metadata]
+name = "r01-spec-acquisition"
+category = "verilog-a"
+engineering_action = "spec-modeling"
+source_group = "r01-basic"
+shared_core = "r01-basic-equation"
+backend = "spectre"
+stage = "design-draft"
+review_status = "pending"
+weight = 1

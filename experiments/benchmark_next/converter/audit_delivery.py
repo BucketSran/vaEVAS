@@ -7,6 +7,10 @@ import shutil
 import subprocess
 import tempfile
 import tarfile
+import sys as _benchmark_sys
+from pathlib import Path as _BenchmarkPath
+_benchmark_sys.path.insert(0, str(_BenchmarkPath(__file__).resolve().parents[3]))
+from experiments.benchmark_paths import material_path
 
 ROOT = Path(__file__).resolve().parents[3]
 OUT = Path(__file__).parent
@@ -20,24 +24,24 @@ def sha(data):
 
 def audit(final):
     snapshot = json.loads((OUT/'task-snapshot.json').read_text())
-    archive = ROOT/snapshot['archive']
+    archive = material_path(ROOT, snapshot['archive'])
     assert sha(archive.read_bytes()) == snapshot['archive_sha256']
     with tarfile.open(archive) as tar:
         assert {m.name for m in tar.getmembers()} == set(snapshot['files'])
         for name, identity in snapshot['files'].items():
             data = tar.extractfile(name).read()
-            assert sha(data) == identity['sha256'] == sha((ROOT/name).read_bytes()), name
+            assert sha(data) == identity['sha256'] == sha(material_path(ROOT, name).read_bytes()), name
             assert len(data) == identity['bytes']
     tasks = []
     for tid in sorted({r['task'] for r in final}):
-        task = ROOT / 'benchmark/tasks' / tid
+        task = ROOT / 'benchmark/material/draftbench/batches/v3-01/tasks' / tid
         current = (task / 'instruction.md').read_bytes()
         checkpoint = subprocess.check_output(['git', 'show', f'{CHECKPOINT}:benchmark/tasks/{tid}/instruction.md'], cwd=ROOT)
         assert current.decode() == checkpoint.decode().replace('输入及固定器件只读。', '输入及固定器件只读。' + UNIT_NOTE)
         groups = {}
         comparisons = []
         for run in [r for r in final if r['task'] == tid]:
-            prepared = ROOT / run['prepared']
+            prepared = material_path(ROOT, run['prepared'])
             record = json.loads((prepared / 'preparation.json').read_text())
             old = record['source_identity']['instruction.md']
             groups.setdefault(old, []).append(dict(variant=run['variant'], prepared=run['prepared'], preparation_sha256=sha((prepared / 'preparation.json').read_bytes())))

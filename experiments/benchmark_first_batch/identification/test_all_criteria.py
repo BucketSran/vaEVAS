@@ -8,7 +8,7 @@ import sys
 import unittest
 
 ROOT=Path(__file__).resolve().parents[3]
-sys.path.insert(0,str(ROOT/"benchmark/checkers"))
+sys.path.insert(0,str(ROOT/"benchmark/material/historyref/legacy-authoring/checkers"))
 from first_batch_identification import evaluate
 from prepare_candidates import VARIANTS
 import build_sh,build_sc,build_driver,build_comparator,build_pll
@@ -48,14 +48,14 @@ def fixture(task,c):
 class IdentificationCriteria(unittest.TestCase):
     def test_reference_contract_rows_for_all_experiments(self):
         for task in VARIANTS:
-            cases=json.loads((ROOT/"benchmark/tasks"/task/"tests/cases.json").read_text())
+            cases=json.loads((ROOT/"benchmark/material/historyref/tasks"/task/"tests/cases.json").read_text())
             for c in cases:
                 result=evaluate(fixture(task,c),c)
                 self.assertTrue(result["passed"],(task,c["name"],result["failures"][:3]))
 
     def test_local_bias_missing_output_and_time_rejected(self):
         for task in VARIANTS:
-            c=json.loads((ROOT/"benchmark/tasks"/task/"tests/cases.json").read_text())[0]
+            c=json.loads((ROOT/"benchmark/material/historyref/tasks"/task/"tests/cases.json").read_text())[0]
             rows=fixture(task,c)
             for r in rows:r["out"]+=.03
             self.assertFalse(evaluate(rows,c)["passed"],task)
@@ -65,7 +65,7 @@ class IdentificationCriteria(unittest.TestCase):
             self.assertFalse(evaluate(rows,c)["passed"],task)
 
     def test_correct_monitor_with_wrong_clock_phase_rejected(self):
-        c=json.loads((ROOT/"benchmark/tasks/identify-pll-hop-dynamics/tests/cases.json").read_text())[0]
+        c=json.loads((ROOT/"benchmark/material/historyref/tasks/identify-pll-hop-dynamics/tests/cases.json").read_text())[0]
         rows=fixture("identify-pll-hop-dynamics",c)
         for r in rows:r["out"]=0
         result=evaluate(rows,c)
@@ -73,7 +73,7 @@ class IdentificationCriteria(unittest.TestCase):
         self.assertLessEqual(result["max_error_V"]["instantaneous-frequency-monitor"],FIXTURE_ROUNDOFF_V)
 
     def test_comparator_missing_or_late_decision_rejected(self):
-        cases=json.loads((ROOT/"benchmark/tasks/identify-comparator-overdrive/tests/cases.json").read_text())
+        cases=json.loads((ROOT/"benchmark/material/historyref/tasks/identify-comparator-overdrive/tests/cases.json").read_text())
         c=cases[0];rows=fixture("identify-comparator-overdrive",c)
         for r in rows:r["out"]=0
         self.assertFalse(evaluate(rows,c)["passed"])
@@ -83,7 +83,7 @@ class IdentificationCriteria(unittest.TestCase):
         self.assertFalse(evaluate(rows,c)["passed"])
 
     def test_sc_low_phase_reset_rejected_for_all_experiments(self):
-        cases=json.loads((ROOT/"benchmark/tasks/identify-sc-clocked-filter/tests/cases.json").read_text())
+        cases=json.loads((ROOT/"benchmark/material/historyref/tasks/identify-sc-clocked-filter/tests/cases.json").read_text())
         for c in cases:
             rows=fixture("identify-sc-clocked-filter",c)
             for row in rows:
@@ -97,7 +97,7 @@ class IdentificationCriteria(unittest.TestCase):
             self.assertGreater(result["max_error_V"]["full-cycle-hold"],2e-5)
 
     def test_pll_grid_alias_ripple_rejected_for_all_experiments(self):
-        cases=json.loads((ROOT/"benchmark/tasks/identify-pll-hop-dynamics/tests/cases.json").read_text())
+        cases=json.loads((ROOT/"benchmark/material/historyref/tasks/identify-pll-hop-dynamics/tests/cases.json").read_text())
         for c in cases:
             rows=fixture("identify-pll-hop-dynamics",c)
             for row in rows:
@@ -110,7 +110,7 @@ class IdentificationCriteria(unittest.TestCase):
             self.assertLessEqual(result["max_error_V"]["instantaneous-frequency-monitor"],FIXTURE_ROUNDOFF_V)
 
     def test_pll_early_tune_alias_ripple_rejected_for_all_experiments(self):
-        cases=json.loads((ROOT/"benchmark/tasks/identify-pll-hop-dynamics/tests/cases.json").read_text())
+        cases=json.loads((ROOT/"benchmark/material/historyref/tasks/identify-pll-hop-dynamics/tests/cases.json").read_text())
         for c in cases:
             rows=fixture("identify-pll-hop-dynamics",c)
             for row in rows:
@@ -126,7 +126,7 @@ class IdentificationCriteria(unittest.TestCase):
 
     def test_actual_public_fits_generate_each_mutant(self):
         for task,variants in VARIANTS.items():
-            p=ROOT/"benchmark/tasks"/task/"solution/fit.py"
+            p=ROOT/"benchmark/material/historyref/tasks"/task/"solution/fit.py"
             spec=importlib.util.spec_from_file_location(task,p);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
             parameters=m.fit(p.parents[1]/"environment/public")
             reference=m.model(parameters)

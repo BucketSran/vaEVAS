@@ -10,10 +10,14 @@ import tarfile
 
 HERE=Path(__file__).resolve().parent
 REPO=HERE.parents[4]
-sys.path.insert(0,str(REPO/'benchmark/checkers'))
+sys.path.insert(0,str(REPO/'benchmark/material/historyref/legacy-authoring/checkers'))
 from adc_linearity import read_psf
 from first_batch_optimization import read_native_statistics,validate_solver_evidence
 from read_counters import read as read_counters
+import sys as _benchmark_sys
+from pathlib import Path as _BenchmarkPath
+_benchmark_sys.path.insert(0, str(_BenchmarkPath(__file__).resolve().parents[5]))
+from experiments.benchmark_paths import material_path
 
 
 def sha(data):return hashlib.sha256(data).hexdigest()
@@ -27,7 +31,7 @@ def main():
     cases={c['name']:c for c in json.loads((HERE.parent/'cases.json').read_text())}
     records=[]
     for request in json.loads((HERE/'REQUEST.json').read_text())['requests']:
-        label=request['label'];source=(REPO/request['source']).read_bytes()
+        label=request['label'];source=(material_path(REPO, request['source'])).read_bytes()
         archives=list((args.run_root/label/'remote').glob('*/archive/job.tar.gz'))
         if len(archives)!=1:raise ValueError('need exactly one actual diagnostic archive')
         archive=archives[0]

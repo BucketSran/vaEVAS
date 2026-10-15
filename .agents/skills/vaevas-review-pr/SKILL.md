@@ -100,7 +100,7 @@ kernel and rollback tests when they protect properties that outer tests do not e
 Apply the [test selection rules](../../../docs/contributing/validation.md#behavior-first-tests): flag
 self-derived oracles and duplicated fault coverage, but require a retained detector
 before recommending regression deletion. For reusable development failures, check the
-[candidate entry](../../../benchmark/workbench/CANDIDATES.md); recording one does not require
+[candidate entry](../../../benchmark/material/draftbench/CANDIDATES.md); recording one does not require
 completing a benchmark task in this PR.
 Run a focused reproduction when feasible and within task scope;
 if it would alter shared state or require an unauthorized resource, explain the

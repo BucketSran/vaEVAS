@@ -36,7 +36,7 @@ attempts/records重算摘要与声明比较；所提门槛须由实际中位数�
 ```sh
 python3 -B experiments/benchmark_first_batch/optimization/generate_admitted_tasks.py \
   --admission /path/to/reviewed-admission.json \
-  --shared-runtime benchmark/checkers/circuit_task.py
+  --shared-runtime benchmark/material/historyref/legacy-authoring/checkers/circuit_task.py
 ```
 
 公开starter和visible网表只含合法原始基线，参考优化源码只在solution；题面明确电路

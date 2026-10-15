@@ -14,8 +14,8 @@ from experiments.benchmark_first_batch.verification_measurement.regrade_measurem
 )
 
 
-PARSER = load_module(REPO / 'benchmark/checkers/adc_linearity.py', 'agentic_audit_parser')
-ROW_VALIDATOR = load_module(REPO / 'benchmark/checkers/circuit_task.py', 'agentic_audit_row_validator')
+PARSER = load_module(REPO / 'benchmark/material/historyref/legacy-authoring/checkers/adc_linearity.py', 'agentic_audit_parser')
+ROW_VALIDATOR = load_module(REPO / 'benchmark/material/historyref/legacy-authoring/checkers/circuit_task.py', 'agentic_audit_row_validator')
 
 def read(path):
     return json.loads(path.read_text())
@@ -181,8 +181,8 @@ def audit_archive(receipt_path, evaluations, frozen_identity):
                 'actual_candidate_and_case_bytes_verified': True,
                 'case_execution_identity_verified_count':len(records),
                 'graded_waveform_verified_count':sum(c.get('status')=='graded' for c in records),
-                'audit_parser_sha256':digest((REPO/'benchmark/checkers/adc_linearity.py').read_bytes()),
-                'audit_row_validator_sha256':digest((REPO/'benchmark/checkers/circuit_task.py').read_bytes()), 'report_status': status, 'score': reward,
+                'audit_parser_sha256':digest((REPO/'benchmark/material/historyref/legacy-authoring/checkers/adc_linearity.py').read_bytes()),
+                'audit_row_validator_sha256':digest((REPO/'benchmark/material/historyref/legacy-authoring/checkers/circuit_task.py').read_bytes()), 'report_status': status, 'score': reward,
                 'all_cases_present': set(names) == set(expected),
                 'complete_pass': status == 'completed' and reward == 1,
                 'checker_inventory_verified': list(package['files']),

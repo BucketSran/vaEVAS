@@ -296,7 +296,7 @@ vout - vref = min(0.875, max(-0.75, y0))
 电压访问或历史调用。决策仍只限普通无状态模拟表达式；参数、事件、历史上下文不扩大。
 不能通过区间或有预算原始源证书认证的 PWL 谓词仍报 `condition_precision`。
 
-真实需求来自保留的 [PA 限幅函数](../../benchmark/reference/v4/provenance/dut-base-v3-exact-five-hash-bound-v2/339-pa-ampm-memory-tap-macro/evaluator/solution/pa_ampm_memory_tap_macro.va)。
+真实需求来自保留的 [PA 限幅函数](../../benchmark/material/historyref/v4/provenance/dut-base-v3-exact-five-hash-bound-v2/339-pa-ampm-memory-tap-macro/evaluator/solution/pa_ampm_memory_tap_macro.va)。
 本切片只补原 `clip` 函数语义，不修改模型或声称完整 PA 模型已可运行。
 [冻结函数输入](cases/function_branches/dut.va)与[独立电压/顺序赋值测试](../tests/test_function_branches.py)
 通过公开编译、solve 和实际 Rust 瞬态入口验证。

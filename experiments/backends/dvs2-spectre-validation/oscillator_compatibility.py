@@ -13,8 +13,8 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[3]
-TASK = ROOT/'benchmark/tasks/va07-triangle-repair'
-CHECKER = ROOT/'benchmark/checkers/triangle_oscillator.py'
+TASK = ROOT/'benchmark/material/historyref/tasks/va07-triangle-repair'
+CHECKER = ROOT/'benchmark/material/historyref/legacy-authoring/checkers/triangle_oscillator.py'
 spec = importlib.util.spec_from_file_location('triangle_checker', CHECKER)
 check = importlib.util.module_from_spec(spec); spec.loader.exec_module(check)
 

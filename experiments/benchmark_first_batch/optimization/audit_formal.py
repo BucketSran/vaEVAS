@@ -233,7 +233,7 @@ def audit_one(directory, wrapper, entry, root, scratch):
                 'criteria digest differs from full preparation source inventory')
         packet = [c for c in prepared['cases'] if c['condition_id'] == wrapper['condition_id']]
         require(len(packet) == 1 and packet[0]['sha256'] == result['task_package_sha256'], 'prepared packet differs')
-        task = root / 'benchmark/tasks' / entry['task_id']
+        task = root / 'benchmark/material/historyref/tasks' / entry['task_id']
         for name in ('cases.json','instruction.md'):
             path=task/'instruction.md' if name=='instruction.md' else task/'tests/cases.json'
             require(prepared['source_identity'][name] == digest(path.read_bytes()),
@@ -247,7 +247,7 @@ def audit_one(directory, wrapper, entry, root, scratch):
         matching = [c for c in current if c['name'] == case['name']]
         require(len(matching) == 1, 'current condition missing or duplicate')
         require_same_case(matching[0], case)
-        canonical_files = {name:root/'benchmark/checkers'/name for name in
+        canonical_files = {name:root/'benchmark/material/historyref/legacy-authoring/checkers'/name for name in
                            ('adc_linearity.py','circuit_task.py','first_batch_optimization.py')}
         canonical_files.update({name:task/'tests'/name for name in
                                 ('verify.py','evaluate.py','contract.json','performance.json','baseline.va')})
@@ -383,7 +383,7 @@ def audit_matrix(matrix_path, plan_path, root):
             require(key not in variants, 'duplicate task/variant preparation')
             variants.add(key)
             require(len(set(entry['conditions'])) == len(entry['conditions']), 'duplicate matrix condition')
-            current_cases=json.loads((root/'benchmark/tasks'/entry['task_id']/'tests/cases.json').read_text())
+            current_cases=json.loads((root/'benchmark/material/historyref/tasks'/entry['task_id']/'tests/cases.json').read_text())
             require_full_inventory(entry,preparation,current_cases)
             path = directory/'results.json'
             wrappers = json.loads(path.read_text()) if path.exists() else []

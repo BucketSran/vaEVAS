@@ -1,6 +1,6 @@
 """Analytical stage timing at the public waveform/report seam."""
 import importlib.util,pathlib,unittest
-p=pathlib.Path(__file__).resolve().parents[3]/'benchmark/checkers/v2_next_ldo.py'
+p=pathlib.Path(__file__).resolve().parents[3]/'benchmark/material/historyref/legacy-authoring/checkers/v2_next_ldo.py'
 s=importlib.util.spec_from_file_location('ldo',p);c=importlib.util.module_from_spec(s);s.loader.exec_module(c)
 class Bench(unittest.TestCase):
  def example(self,edge):

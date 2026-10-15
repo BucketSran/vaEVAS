@@ -1,7 +1,7 @@
 """Public waveform seam tests. Literal expectations follow worked contracts."""
 import sys,unittest,json,copy
 from pathlib import Path
-sys.path.insert(0,str(Path(__file__).resolve().parents[3]/'benchmark/checkers'))
+sys.path.insert(0,str(Path(__file__).resolve().parents[3]/'benchmark/material/historyref/legacy-authoring/checkers'))
 from v2_next_ota import propagate, measured, evaluate, measure_verdict
 import bisect
 class ContinuousContract(unittest.TestCase):
@@ -17,7 +17,7 @@ class ContinuousContract(unittest.TestCase):
         self.assertEqual(metric['valid'],0)
     def test_source_truth_identity_cannot_be_changed(self):
         root=Path(__file__).resolve().parents[3]
-        case=json.loads((root/'benchmark/tasks/v3-ota-data-model/tests/cases.json').read_text())[0]
+        case=json.loads((root/'benchmark/material/draftbench/batches/v3-01/tasks/v3-ota-data-model/tests/cases.json').read_text())[0]
         rows=[dict(time=0.,vin=.75,enable=0.,vout=0.),dict(time=case['stop'],vin=.75,enable=1.5,vout=.75)]
         case['resolution']=case['stop']
         case['truth'][100][1]+=.00001

@@ -14,7 +14,7 @@ Start from current code and component contracts; read historical material when i
 4. Make the smallest coherent change. Use [behavior-first TDD and test selection](docs/contributing/validation.md#behavior-first-tests); for EVAS, select checks and revalidation triggers from [evas-validate](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks). Documentation-only changes need no simulator run.
 5. Update affected component contracts and evidence links; update capability rows only when EVAS support/evidence changes. Report the reviewed revision or local diff, checks, failures and limits; prepare/publish through the PR skill within the requested scope.
 
-Capture reusable development failures in [benchmark candidates](benchmark/workbench/CANDIDATES.md), linking existing evidence. Recording a candidate does not add a scored task or authorize benchmark construction.
+Capture reusable development failures in [benchmark candidates](benchmark/material/draftbench/CANDIDATES.md), linking existing evidence. Recording a candidate does not add a scored task or authorize benchmark construction.
 
 Carry authorization forward for the same task, target and action within its resource limits; it does not automatically extend to another PR. Implementation permits necessary local edits/checks; review alone stays read-only. Publishing, merging and cleanup need authorization covering that action. If absent, finish independent work and ask once about the concrete action. See [boundaries and examples](CONTRIBUTING.md#scope-and-authorization).
 

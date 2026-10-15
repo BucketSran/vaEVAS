@@ -3,7 +3,7 @@ import importlib.util
 from pathlib import Path
 import unittest
 ROOT=Path(__file__).resolve().parents[3]
-spec=importlib.util.spec_from_file_location('packet_check',ROOT/'benchmark/checkers/first_batch_optimization.py')
+spec=importlib.util.spec_from_file_location('packet_check',ROOT/'benchmark/material/historyref/legacy-authoring/checkers/first_batch_optimization.py')
 M=importlib.util.module_from_spec(spec);spec.loader.exec_module(M)
 CASES=[dict(name='throughput',performance=True,netlist='fixed'),dict(name='reset',performance=False,netlist='reset'),dict(name='high-band',performance=False,netlist='high')]
 POLICY=dict(case_inventory=[dict(name=c['name'],performance=c['performance'],case_sha256=M.canonical_case_sha256(c)) for c in CASES],allow_private_condition_packets=True)

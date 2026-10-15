@@ -7,7 +7,7 @@ import copy
 
 ROOT=Path(__file__).resolve().parents[3]
 OUT=Path(__file__).parent
-LEGACY=ROOT/'benchmark/reference/v4/release/benchmarkv4-r53/tasks'
+LEGACY=ROOT/'benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks'
 IMAGE='python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c'
 CAL=[]
 
@@ -107,9 +107,9 @@ def package(slug,source,title,contract,reference,alternate,mutants,cases,public_
         contract += ('\n\ncode是结果寄存器的输出。start后至stop或溢出之前，code_0..code_7全部保持0，valid=0、overflow=0；内部累加计数不直接驱动code。stop或第256个clk发布结果后，code、valid和overflow保持到下一次start或rst。初始状态与rst清零后的状态相同，尚未武装。')
     contract += ('\n\n## 公开自测与终评范围\n\n'+INSTANCE_RANGES[slug]) if slug in INSTANCE_RANGES else ''
     task_id='v2-test-'+slug
-    task=ROOT/'benchmark/tasks'/task_id
+    task=ROOT/'benchmark/material/draftbench/batches/v2-01/tasks'/task_id
     put(task/'instruction.md',f'# {title}\n\n实现 `/work/dut.va`，保留以下公开接口与行为。固定 DUT 源码位于 `/work/public/dut/`，只读。不得驱动观测输入。测量不达标 DUT 时，报告正确结果仍可通过。\n\n{contract}\n\n固定后端为 Spectre；语法遵循该后端的 Verilog-A。源码按原字节运行。工具链故障单独诊断，不作为候选零分。公开自测实例位于 `/work/public/cases.json`，固定DUT实现位于 `/work/public/dut/`，可据此运行自己的Spectre自测。终评在提交后使用合同范围内不同的参数、事件及故障实例；终评台架和checker不进入解题材料。判定目标与数值容差以本题公开合同为准。\n')
-    put(task/'SOURCE.md',f'# 来源与改编\n\n来源 `{source}`。本任务保留来源的工程目标，新增固定只读 DUT、独立实际波形 checker 和明确窗口协议。原始参考资产仍保存在 benchmark/reference/。本次校准与模型试跑尚待实际运行；目录存在不表示发布资格。固定 Spectre，开源同题等价尚未验证。\n')
+    put(task/'SOURCE.md',f'# 来源与改编\n\n来源 `{source}`。本任务保留来源的工程目标，新增固定只读 DUT、独立实际波形 checker 和明确窗口协议。原始参考资产仍保存在 benchmark/material/historyref/。本次校准与模型试跑尚待实际运行；目录存在不表示发布资格。固定 Spectre，开源同题等价尚未验证。\n')
     put(task/'task.toml',f'schema_version = "1.4"\n[metadata]\nname = "{task_id}"\ncategory = "verilog-a"\nengineering_action = "testing-characterization"\nsource_group = "{source}"\n[agent]\ntimeout_sec = 900\n[verifier]\ntimeout_sec = 600\n[environment]\nbuild_timeout_sec = 600\ncpus = 1\nmemory_mb = 1024\nstorage_mb = 2048\n')
     put(task/'environment/Dockerfile',f'FROM {IMAGE}\nWORKDIR /work\nCOPY public/ /work/public/\nCOPY starter.va /work/dut.va\n')
     # Public case data contains only the fixed stimulus/DUT and oracle tolerances.
@@ -123,7 +123,7 @@ def package(slug,source,title,contract,reference,alternate,mutants,cases,public_
     put(task/'tests/verify.py','from v2_runtime import main\nfrom v2_testing import evaluate\nif __name__ == "__main__":\n    main(evaluate)\n')
     put(task/'tests/contract.json',json.dumps(dict(candidate_files=['dut.va'],output_files=[],task_id=task_id,category='testing-characterization',source_group=source),indent=2)+'\n')
     put(task/'tests/cases.json',json.dumps(cases,indent=2)+'\n')
-    shutil.copyfile(ROOT/'benchmark/checkers/v2_testing.py',task/'tests/v2_testing.py')
+    shutil.copyfile(ROOT/'benchmark/material/historyref/legacy-authoring/checkers/v2_testing.py',task/'tests/v2_testing.py')
     for path in [task/'solution/solve.sh',task/'tests/test.sh']: path.chmod(0o755)
     variants={'reference':(reference,True,'reference implementation'),'alternate':(alternate,True,'different state representation and event implementation')}
     variants.update({name:(text,False,why) for name,(text,why) in mutants.items()})

@@ -1,7 +1,7 @@
 from pathlib import Path
 import json, textwrap
 ROOT=Path(__file__).resolve().parents[3]
-TASKS=ROOT/'benchmark/tasks'
+TASKS=ROOT/'benchmark/material/historyref/tasks'
 
 def put(p,s):
  p.parent.mkdir(parents=True,exist_ok=True);p.write_text(textwrap.dedent(s).lstrip())
@@ -138,7 +138,7 @@ for fault in [0,1,2,3]:
 entries=[task('verify-sar-flow','verification-tools','SAR 转换完整验证流程','vin,start,rst,code,done,verdict', '''SAR ADC 前端验证需要同时检查采样值、转换握手和复位中止。器件将 vin 的 0..1 V 转为 4-bit unsigned code 电压。start 上升沿在空闲时接收请求；器件每 10 ns 检查端口，接收后 4..6 个 tick 发出宽 10 ns 的 done，code=floor(16*vin) 限幅 0..15。忙时请求忽略。rst 低立即在下一 tick 中止并清零，不允许旧 done。
 
 实现完整激励与自动判定。运行 1.2 us，每 200 ns 一次转换。第 k 个周期 vin=(2*(k mod 6)+1.25)/16 V，主 start 在周期内 31..42 ns，忙时 start 在 51..62 ns。初始 rst 在 0..21 ns 为低，第 k=2 周期在 65..76 ns 拉低中止。边沿过渡不超过 0.2 ns。其余 rst=1、start=0。独立终评检查刺激覆盖和每个实际请求/输出。verdict 初值 0，发现错误锁存 1；正确器件最终应为 0。需拒绝一码偏移、忙时重新接收、复位后旧结果三类器件。判定允许 code 0.1 V 误差，done 必须在请求后 35..75 ns；监测至结束。器件故障模式终评可注入，候选不能知道其参数。''',sar_sol,sar_device,sar_cases,{'always_accept':sar_sol.replace('V(verdict)<+bad;','V(verdict)<+0;'),'always_reject':sar_sol.replace('V(verdict)<+bad;','V(verdict)<+1;'),'no_abort':sar_sol.replace('if(k==2 && slot>=65 && slot<76)r=0;','if(k==20 && slot>=65 && slot<76)r=0;')})]
-put(ROOT/'benchmark/tasks/first_batch-verification_measurement.json',json.dumps({'tasks':entries},indent=2)+'\n')
+put(ROOT/'benchmark/material/historyref/tasks/first_batch-verification_measurement.json',json.dumps({'tasks':entries},indent=2)+'\n')
 # Stimulus-only validation tasks exercise real downstream electrical observers.
 clock_dev=HEADER+'''module phase_device(p1,p2,vin,z);
 inout p1,p2,vin,z; electrical p1,p2,vin,z;
@@ -281,7 +281,7 @@ endmodule
 '''
 shc=[{'name':f'fault{f}','netlist':net(f'Xmon (vin track y verdict) dut\nXsh (vin track y) sh_device fault={f}','2u','0.5n'),'stop':2e-6,'signals':['vin','track','y','verdict'],'fault':f}for f in range(4)]
 entries.append(task('verify-sh-settling-checker','verification-tools','采样保持全窗口建立判定','vin,track,y,verdict','''S/H输出在每500ns周期重新采集，前250ns track=1，后250ns保持。输入交替0.8/0.2V，从0.5V初始状态采集，正确获取时间常数20ns。建立要求周期120..249ns每一点 |y-vin|≤5mV；保持要求255..490ns同样≤5mV。运行4周期，verdict初值0，任何超限锁存1。隐含故障仅在公开条件内，包括过慢60ns时间常数、180..200ns短暂25mV回弹、保持期间200kV/s下垂。应接受正确器件，拒绝持续误差、迟发回弹、保持下垂，不能只检查一次过零或一个末点。终评核验真实波形所有窗口。''',sh_mon,sh_dev,shc,{'always_accept':sh_mon.replace('V(verdict)<+bad','V(verdict)<+0'),'loose_limit':sh_mon.replace('>0.005','>0.1'),'early_only':sh_mon.replace('phase<249n','phase<150n').replace('phase<490n','phase<270n')}))
-put(ROOT/'benchmark/tasks/first_batch-verification_measurement.json',json.dumps({'tasks':entries},indent=2)+'\n')
+put(ROOT/'benchmark/material/historyref/tasks/first_batch-verification_measurement.json',json.dumps({'tasks':entries},indent=2)+'\n')
 adc_dev=HEADER+'''module adc_device(vin,clk,code);
 inout vin,clk,code; electrical vin,clk,code;
 parameter integer tone_bin=5;parameter real amp=1700,h2=0.02,h3=0.01;
@@ -446,5 +446,5 @@ pmc=[]
 for n,j in [(5,1e-9),(3,.5e-9),(7,1.5e-9)]:
  pmc.append({'name':f'settle{n}-jitter{j*1e9:g}','netlist':net(f'Xmeasure (ref clk relock_ns jitter_ns) dut\nXpll (ref clk) relock_device settle_cycles={n} jitter={j:.12g}','4.5u','0.5n'),'stop':4.5e-6,'signals':['ref','clk','relock_ns','jitter_ns'],'settle_cycles':n,'jitter':j})
 entries.append(task('measure-pll-relock-jitter','measurement-characterization','PLL 重锁时间与周期抖动表征','ref,clk,relock_ns,jitter_ns','''ref为100ns参考时钟，clk为反馈时钟，1us发生跳频后相位重捕获。初始已锁定，1..2.2us获取阶段，允许相位偏移按周期收敛，公开settle_cycles为3/5/7。重锁定义是在1..2.2us期间首次出现连续4个clk上升沿均距最近ref上升沿≤3ns的序列，以该序列第一沿减1us作为relock_ns，单位ns。不能用第4沿时间或1us前锁定状态。2.2..4.2us稳定段有交替确定性相位抖动0.5/1/1.5ns，围绕2ns共模偏移；其首沿开始20周期窗口。jitter_ns为窗口内相邻20个clk上升沿产生的19个周期的总体标准差sqrt(mean(T²)-mean(T)²)，单位ns，移除均值，非TIE RMS，非峰峰值。4.4us前完成，重锁容差0.3ns，抖动容差0.02ns。终评直接提取原始ref/clk边沿独立计算，数据为behavioral_synthetic。''',pll_measure,pll_measure_dev,pmc,{'fourth_edge':pll_measure.replace('relock=run_start-1u','relock=$abstime-1u'),'peak_to_peak':pll_measure.replace('V(jitter_ns)<+rms','V(jitter_ns)<+2*rms'),'include_acquisition':pll_measure.replace('last>=2.2u','last>=1u').replace('$abstime>=2.2u && $abstime<4.2u','$abstime>=1u && $abstime<4.2u')}))
-entries.insert(5,{'id':'va08-adc-linearity','category':'measurement-characterization','source_group':'repository-owned-original-adc-linearity','status':'existing_calibration_reference','path':'benchmark/tasks/va08-adc-linearity','note':'Existing task referenced without copying or changing; Agentic status stays separate.'})
-put(ROOT/'benchmark/tasks/first_batch-verification_measurement.json',json.dumps({'tasks':entries},indent=2)+'\n')
+entries.insert(5,{'id':'va08-adc-linearity','category':'measurement-characterization','source_group':'repository-owned-original-adc-linearity','status':'existing_calibration_reference','path':'benchmark/material/historyref/tasks/va08-adc-linearity','note':'Existing task referenced without copying or changing; Agentic status stays separate.'})
+put(ROOT/'benchmark/material/historyref/tasks/first_batch-verification_measurement.json',json.dumps({'tasks':entries},indent=2)+'\n')

@@ -2,7 +2,7 @@
 import sys
 from pathlib import Path
 import unittest
-sys.path.insert(0,str(Path(__file__).resolve().parents[3]/'benchmark/checkers'))
+sys.path.insert(0,str(Path(__file__).resolve().parents[3]/'benchmark/material/historyref/legacy-authoring/checkers'))
 from v2_next_filter import phasor, response
 
 class ContractTests(unittest.TestCase):

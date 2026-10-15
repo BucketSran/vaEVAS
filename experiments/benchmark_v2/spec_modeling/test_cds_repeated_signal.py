@@ -7,7 +7,7 @@ import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[3]
-TASK = ROOT / 'benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel'
+TASK = ROOT / 'benchmark/material/draftbench/batches/v2-01/tasks/v2-spec-308-correlated-double-sampler-offset-cancel'
 
 
 def load(name, path):
@@ -60,7 +60,7 @@ class RepeatedSignalTests(unittest.TestCase):
                              valid=ramp(t, 2.01e-9, 0., .9)))
         case = dict(source_id='308', stop=5e-9, resolution=2e-12,
                     signals=list(rows[0].keys() - {'time'}), params={'tr': 20e-12})
-        checker = load('cds_checker', ROOT / 'benchmark/checkers/v2_spec.py')
+        checker = load('cds_checker', ROOT / 'benchmark/material/historyref/legacy-authoring/checkers/v2_spec.py')
         self.assertTrue(checker.evaluate(rows, case, ROOT)['passed'])
         stale = copy.deepcopy(rows)
         for row in stale:

@@ -100,7 +100,7 @@ python3 -B scripts/check_workspaces.py --repo /path/to/checkout --base main
 真实目录或指向 Codex 托管目录的符号链接。项目外层 README 必须链接这个索引。
 只在索引里写一个隐藏目录的绝对路径，不满足可见入口要求。普通单 checkout 无需索引。
 
-导航使用普通 Markdown 行内链接，例如 `[任务](task/)`；含空格的路径可以百分号编码或
+导航使用普通 Markdown 行内链接，例如 `[任务](task)`；含空格的路径可以百分号编码或
 放在尖括号中。检查器排除 HTML 注释和代码中的示例链接，不解析完整 Markdown 或 HTML；
 引用式链接不属于索引格式。索引可附带指向现有草稿文件的链接，已消失的本地目标会报错，
 包括不带尾斜杠的旧目录链接。`worktrees/` 内的目录链接用于活动工作区入口；
@@ -148,7 +148,7 @@ python3 -B scripts/benchmark_workbench.py --check
 python3 -B -m unittest discover -s scripts/tests -p test_benchmark_workbench.py -v
 ```
 
-`benchmark_workbench.py` 读取 [workbench](../benchmark/workbench/README.md) 的 `catalog.json` 与
+`benchmark_workbench.py` 读取 [workbench](../benchmark/material/draftbench/README.md) 的 `catalog.json` 与
 逐题 `case.json`，维护历史卡索引与摘要；读取 `tasks.json` 的功能组与卡片关联，
 以及各题 `task.toml` 的类别和来源组，生成任务计数、定位链接与设计卡的实现关联。
 `--write` 先验证所有元数据与摘要标记，再更新生成内容；`--check` 只读，拒绝重复 ID、

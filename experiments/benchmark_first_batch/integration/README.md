@@ -17,7 +17,7 @@ Makefile、公开回归和可执行自测入口，明确标为原创工程，没
 
 ## 独立判据
 
-`benchmark/checkers/first_batch_integration.py` 检查波形完整性、每个稳态窗口内全部采样、
+`benchmark/material/historyref/legacy-authoring/checkers/first_batch_integration.py` 检查波形完整性、每个稳态窗口内全部采样、
 独立预测点及精确状态边沿。它不读取参考VA，也不使用参考波形定义真值。
 任务cases由公开合同的事件账本或闭式公式产生，生成器不执行参考解。
 
@@ -43,8 +43,8 @@ python3 -B -m unittest discover -s experiments/benchmark_first_batch/integration
 共享runtime及checker副本由协调者冻结打包，单case入口例如：
 
 ```sh
-python3 benchmark/tasks/integrate-tdc-measurement-chain/tests/verify.py \
-  --candidate benchmark/tasks/integrate-tdc-measurement-chain/solution/dut.va \
+python3 benchmark/material/historyref/tasks/integrate-tdc-measurement-chain/tests/verify.py \
+  --candidate benchmark/material/historyref/tasks/integrate-tdc-measurement-chain/solution/dut.va \
   --output runs/integration-tdc-reference --case pairing-timeout-reset
 ```
 

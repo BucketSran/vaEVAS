@@ -12,8 +12,8 @@ class V2PackagingTest(unittest.TestCase):
     def test_v2_sync_copies_its_runtime_without_legacy_submission_rules(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            checkers = root / "benchmark/checkers"
-            tests = root / "benchmark/tasks/v2-fixture/tests"
+            checkers = root / "benchmark/material/historyref/legacy-authoring/checkers"
+            tests = root / "benchmark/material/draftbench/batches/v2-01/tasks/v2-fixture/tests"
             checkers.mkdir(parents=True)
             tests.mkdir(parents=True)
             for name in ("v2_runtime", "v2_fixture", "adc_linearity", "circuit_task"):

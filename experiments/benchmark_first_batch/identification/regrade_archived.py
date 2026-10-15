@@ -12,7 +12,7 @@ import tarfile
 from diagnose_sh_archive import rows
 from prepare_candidates import ROOT
 
-sys.path.insert(0,str(ROOT/'benchmark/checkers'))
+sys.path.insert(0,str(ROOT/'benchmark/material/historyref/legacy-authoring/checkers'))
 from first_batch_identification import evaluate
 
 
@@ -21,7 +21,7 @@ def digest(content):
 
 
 def regrade(task,archive_root,candidate):
-    cases_path=ROOT/'benchmark/tasks'/task/'tests/cases.json'
+    cases_path=ROOT/'benchmark/material/historyref/tasks'/task/'tests/cases.json'
     cases={c['name']:c for c in json.loads(cases_path.read_text())}
     results=[]
     for archive in sorted(archive_root.glob('remote/*/archive/job.tar.gz')):
@@ -44,7 +44,7 @@ def regrade(task,archive_root,candidate):
                     old_contract_and_stimulus_unchanged=True,**evaluate(wave,c)))
     if not results:raise ValueError('no archived actual waveform')
     return dict(kind='existing_actual_spectre_waveform_regrading',task=task,source_run=archive_root.name,
-        cases_sha256=digest(cases_path.read_bytes()),checker_sha256=digest((ROOT/'benchmark/checkers/first_batch_identification.py').read_bytes()),
+        cases_sha256=digest(cases_path.read_bytes()),checker_sha256=digest((ROOT/'benchmark/material/historyref/legacy-authoring/checkers/first_batch_identification.py').read_bytes()),
         scope='Regrade immutable actual archived PSF against new sample grids. No simulator launched; not a new frozen-run execution receipt.',cases=results)
 
 

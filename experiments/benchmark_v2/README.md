@@ -16,7 +16,7 @@
 
 ## 固定后端入口
 
-`benchmark/checkers/v2_runtime.py` 接受固定 Spectre 台架及独立
+`benchmark/material/historyref/legacy-authoring/checkers/v2_runtime.py` 接受固定 Spectre 台架及独立
 `evaluate(rows, case, work)` 回调。输入/输出协议见下表。
 
 | 材料 | 内容 |

@@ -70,7 +70,7 @@ reward=0、cases为空，原因是叙述中的反引号不符合允许的include
 Harbor端到端Trial；Codex缺少实际named-model身份，GLM是有效的本地提交合同失败。
 [设计Issue72](https://github.com/BucketSran/vaEVAS/issues/72)将评分接入、真实Agent流程与任务效果
 分开验收，长期主评测为Agentic、one-shot作对照；本轮受限原型不替代该长期验收。
-[ADC设计稿](../../benchmark/workbench/examples/adc-linearity-measurement.md)要求模型试跑且不宣称强模型
+[ADC设计稿](../../benchmark/material/draftbench/examples/adc-linearity-measurement.md)要求模型试跑且不宣称强模型
 调试后持续失败。上述两次attempt满足已授权的本地生成尝试，不能因此宣称完成长期主评测、
 确定任务区分度或PR已ready。任务数值功能验收与named-model身份缺口分别报告。
 

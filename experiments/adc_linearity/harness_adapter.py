@@ -9,7 +9,7 @@ from pathlib import Path
 import sys
 
 ROOT=Path(__file__).resolve().parents[2]
-TASK=ROOT/'benchmark/tasks/va08-adc-linearity'
+TASK=ROOT/'benchmark/material/historyref/tasks/va08-adc-linearity'
 VERSION='adc-linearity-v2-local-candidate'
 
 

@@ -23,8 +23,8 @@ import threading
 import time
 
 ROOT = Path(__file__).resolve().parents[2]
-RELEASE = ROOT / 'benchmark/reference/v4/release/benchmarkv4-r53'
-PROVENANCE = ROOT / 'benchmark/reference/v4/provenance/dut-base-v3-exact-five-hash-bound-v2'
+RELEASE = ROOT / 'benchmark/material/historyref/v4/release/benchmarkv4-r53'
+PROVENANCE = ROOT / 'benchmark/material/historyref/v4/provenance/dut-base-v3-exact-five-hash-bound-v2'
 FORMS = {'dut', 'testbench', 'bugfix'}
 CATEGORIES = {'spec-modeling', 'data-modeling', 'extension-integration',
               'diagnosis-repair', 'testing-characterization'}

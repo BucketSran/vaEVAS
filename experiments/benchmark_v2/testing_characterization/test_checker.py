@@ -1,7 +1,7 @@
 import importlib.util
 from pathlib import Path
 import unittest
-p=Path(__file__).resolve().parents[3]/'benchmark/checkers/v2_testing.py'
+p=Path(__file__).resolve().parents[3]/'benchmark/material/historyref/legacy-authoring/checkers/v2_testing.py'
 spec=importlib.util.spec_from_file_location('meter',p)
 m=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)

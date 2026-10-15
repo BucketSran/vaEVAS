@@ -10,7 +10,7 @@ import json
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-spec = importlib.util.spec_from_file_location('adc', ROOT/'benchmark/checkers/adc_linearity.py')
+spec = importlib.util.spec_from_file_location('adc', ROOT/'benchmark/material/historyref/legacy-authoring/checkers/adc_linearity.py')
 adc = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(adc)
 
@@ -101,7 +101,7 @@ class Contract(unittest.TestCase):
             return adc.evaluate(rows,case,path,trace)
 
     def test_frozen_four_references_and_six_targeted_negative_fixtures(self):
-        cases={case['name']:case for case in json.loads((ROOT/'benchmark/tasks/va08-adc-linearity/tests/cases.json').read_text())}
+        cases={case['name']:case for case in json.loads((ROOT/'benchmark/material/historyref/tasks/va08-adc-linearity/tests/cases.json').read_text())}
         for name,case in cases.items():
             with self.subTest(reference=name):
                 result=self.evaluate(case=case)
@@ -125,7 +125,7 @@ class Contract(unittest.TestCase):
                 with self.assertRaises(ValueError): adc.read_psf(path)
 
     def test_failed_version_probe_is_unscored_without_simulation(self):
-        task=ROOT/'benchmark/tasks/va08-adc-linearity'
+        task=ROOT/'benchmark/material/historyref/tasks/va08-adc-linearity'
         with tempfile.TemporaryDirectory() as folder:
             executable=Path(folder)/'spectre';executable.write_text('#!/bin/sh\nexit 17\n');executable.chmod(0o755)
             output=Path(folder)/'logs'

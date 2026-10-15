@@ -1,6 +1,6 @@
 # 首批任务的校准入口
 
-任务范围与准入条件见 [首批合同](../../benchmark/workbench/history/first-batch/README.md)。
+任务范围与准入条件见 [首批合同](../../benchmark/material/historyref/legacy-authoring/first-batch/README.md)。
 本目录提供任务打包、校准队列和各类任务的独立判据回归。
 远端提交、进程限制、清理和归档由已有 circuit harness 执行。
 
@@ -25,8 +25,8 @@ Spectre 部署。配置和批量输出放在 ignored `runs/`。任务自身的 D
 
 ```sh
 python3 -B experiments/benchmark_first_batch/runtime.py prepare \
-  --task benchmark/tasks/spec-latched-comparator \
-  --candidate benchmark/tasks/spec-latched-comparator/solution/dut.va \
+  --task benchmark/material/historyref/tasks/spec-latched-comparator \
+  --candidate benchmark/material/historyref/tasks/spec-latched-comparator/solution/dut.va \
   --output runs/first-batch/comparator-reference \
   --harness-checkout /absolute/path/to/circuit-harness
 python3 -B experiments/benchmark_first_batch/runtime.py execute \
@@ -59,7 +59,7 @@ python3 -B experiments/benchmark_first_batch/batch.py runs/first-batch/plan.json
 
 ## 可移植评分副本
 
-`benchmark/checkers/circuit_task.py` 维护公共执行边界，复用既有 `adc_linearity.py`
+`benchmark/material/historyref/legacy-authoring/checkers/circuit_task.py` 维护公共执行边界，复用既有 `adc_linearity.py`
 的源码词法分析与 PSF 读取。各任务的 `first_batch_*.py` 定义独立正确性条件。
 Harbor 任务的 `tests/` 保存这些模块的逐字副本。更新共享源后运行：
 

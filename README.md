@@ -10,7 +10,7 @@ benchmark 评估模型与智能体能否用 Verilog-A 完成工程任务；EVAS 
 Benchmark 按题目能力需求固定验收后端，正确性要求来自题目规格与独立判据。
 具备完整运行与 checker 校准证据的 ngspice 题可独立评分；Spectre 用于需要它的题目及按需对照。
 EVAS 的支持范围和后端对照证据决定当前可以复现哪些行为，不以开源目标代替已经完成的验证。
-两条工作线的配合与范围见 [benchmark 目标](benchmark/README.md#目标与边界)、
+两条工作线的配合与范围见 [benchmark 目标](benchmark/material/draftbench/docs/design.md)、
 [EVAS 说明](evas/README.md)；共同术语见[术语表](GLOSSARY.md)。
 
 ## 研究验收与论文实验
@@ -36,21 +36,17 @@ EVAS 的支持范围和后端对照证据决定当前可以复现哪些行为，
 benchmark 以实际 Verilog-A 使用场景组织工程任务，检查交付物是否满足任务要求。
 建设内容包括题目、运行环境、参考解和验收材料，采用 Harbor 任务格式。
 
-当前五类方案的逐题设计入口为 [Benchmark 工作区](benchmark/workbench/README.md)，
-按工程动作、电路家族和稳定 Case ID 记录来源、改编形式与 review 状态。
-POR、LDO 和运放压摆率三个候选仍是草案；下述七类资产保留为历史批次。
+当前按五类工程动作和电路功能组织设计，入口为 [Benchmark 工作区](benchmark/material/draftbench/README.md)。
+两批 56 个既有题包和 1 个 R01 有限采集合同草稿放在[三个草稿批次](benchmark/material/draftbench/batches/README.md)，
+本版完整题目审核尚未完成。[正式清单](benchmark/tasks/benchmark.toml)当前为空，
+每题完成审核与必要作者校准后再录取。题包格式、批次管理和历史材料分工见[benchmark 入口](benchmark/README.md)。
 
-**当前状态：**[首批七类工程任务](benchmark/workbench/history/first-batch/README.md)已完成每类 5 题，
-共 35 题的参考解与代表负例 Spectre 校准。真实模型试跑及其反馈限制见
-[Agentic 实验](experiments/benchmark_first_batch/agentic/README.md)；校准通过不代表模型通过，
-当前任务仍依赖商业后端验收。
-
-原六个内部初筛任务作为独立历史基线保留，覆盖逻辑、SAR 握手、时序、校准、VCO 和带负载运放。
-[首轮结果](experiments/va_screen/RESULTS.md)记录当时的模型提交、失败原因和验证边界。
-[历史参考资料](benchmark/reference/README.md)包含 vaBench v1/v4 与原始模型来源。
-这些历史任务尚未作为正式 benchmark 发布；部分第三方资料仅限内部保存。
-新批次复用独立校准的三角波振荡器修复与 ADC DNL/INL 测量两题，不并入旧六题成绩。
-任务来源、独立判据、实际后端校准和模型试跑分别记录，不以题目目录数量代替可用性。
+[41 个早期题包](benchmark/material/historyref/tasks/README.md)单独保留历史身份。
+其中旧七类首批的 35 题包含复用的三角波修复和 ADC DNL/INL 测量，
+参考解校准与模型试跑仅说明[当时的执行范围](experiments/benchmark_first_batch/README.md)。
+原六题初筛的成绩另见[首轮结果](experiments/va_screen/RESULTS.md)。
+[历史参考资料](benchmark/material/historyref/README.md)还保存 vaBench v1/v4 与原始模型来源。
+这些材料可供复用，旧成绩与旧校准不自动成为当前题包的验收证据。
 
 ## EVAS 仿真器
 
@@ -120,7 +116,7 @@ main 保留持续维护的工具与支撑公开结论的精简证据；已结束
 ## 仓库导航
 
 本仓库是 EVAS 与 benchmark 的共同开发入口。两条线各按可验收结果建立任务；
-EVAS 从[四后端支持范围](evas/docs/COMPARISON.md)选择问题，benchmark 从[候选登记](benchmark/workbench/CANDIDATES.md)
+EVAS 从[四后端支持范围](evas/docs/COMPARISON.md)选择问题，benchmark 从[候选登记](benchmark/material/draftbench/CANDIDATES.md)
 和[题库入口](benchmark/README.md)继续。候选与设计稿不等于已发布任务。
 
 共享电路仿真 harness 在独立仓库维护执行与结果回收，目标是接入当前 EVAS 和远端仿真器。

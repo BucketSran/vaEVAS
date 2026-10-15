@@ -22,7 +22,7 @@ def main():
         summary=[r for r in json.loads((output/'summary.json').read_text()) if r['task']!=args.task]
     for name,(old,new,description) in MUTATIONS.items():
         if args.task and name!=args.task:continue
-        task=ROOT/'benchmark/tasks'/name;text=(task/'solution/dut.va').read_text()
+        task=ROOT/'benchmark/material/historyref/tasks'/name;text=(task/'solution/dut.va').read_text()
         assert old in text,(name,'mutation target absent')
         candidate=output/name/'dut.va';candidate.parent.mkdir(parents=True,exist_ok=True)
         candidate.write_text(text.replace(old,new,1))

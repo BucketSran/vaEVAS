@@ -1,5 +1,5 @@
 import importlib.util, pathlib, unittest, math
-p=pathlib.Path(__file__).resolve().parents[3]/'benchmark/checkers/v2_next_ldo.py'
+p=pathlib.Path(__file__).resolve().parents[3]/'benchmark/material/historyref/legacy-authoring/checkers/v2_next_ldo.py'
 s=importlib.util.spec_from_file_location('checker',p); c=importlib.util.module_from_spec(s)
 class Startup(unittest.TestCase):
  def test_ring_exit_resets_finite_settle(self):

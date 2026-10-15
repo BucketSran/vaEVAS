@@ -16,8 +16,16 @@ class WorkbenchTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.repo = Path(self.temp.name)
-        self.root = self.repo / "benchmark/workbench"
+        self.root = self.repo / "benchmark/material/draftbench"
         self.root.mkdir(parents=True)
+        batch = self.root / "batches/test-01"
+        batch.mkdir(parents=True)
+        (batch / "README.md").write_text("# Review batch\n")
+        formal = self.repo / "benchmark/tasks"
+        formal.mkdir()
+        (formal / "benchmark.toml").write_text(
+            'schema_version = 1\nstate = "draft"\ntask_defaults = "defaults.toml"\ntasks = []\n')
+        (formal / "defaults.toml").write_text('schema_version = 1\n')
         self.write("catalog.json", json.dumps({
             "categories": {"testing-characterization": "电路测试与表征"},
             "families": {"power": "电源与复位"},
@@ -67,7 +75,7 @@ class WorkbenchTests(unittest.TestCase):
         )
 
     def add_task(self, identity="v2-test-por", category="testing-characterization"):
-        directory = self.repo / "benchmark/tasks" / identity
+        directory = self.repo / "benchmark/material/draftbench/batches/test-01/tasks" / identity
         directory.mkdir(parents=True)
         (directory / "instruction.md").write_text("Public task contract.\n")
         (directory / "SOURCE.md").write_text("# Original circuit and adaptation\n")
@@ -80,6 +88,75 @@ class WorkbenchTests(unittest.TestCase):
 
     def save_inventory(self):
         self.write("tasks.json", json.dumps(self.inventory, ensure_ascii=False))
+
+    def test_duplicate_package_across_batches_is_rejected(self):
+        first = self.add_task()
+        second = self.root / "batches/second-01"
+        second.mkdir()
+        (second / "README.md").write_text("# Second batch\n")
+        duplicate = second / "tasks" / first.name
+        duplicate.mkdir(parents=True)
+        result = self.run_cli("--check")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("duplicate draft task across batches", result.stderr)
+
+    def test_flat_draft_pool_is_rejected(self):
+        (self.root / "tasks").mkdir()
+        result = self.run_cli("--check")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("flat draftbench/tasks is obsolete", result.stderr)
+
+    def test_batch_requires_a_review_entry(self):
+        self.add_task()
+        (self.root / "batches/test-01/README.md").unlink()
+        result = self.run_cli("--check")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("missing batch README", result.stderr)
+
+    def add_formal_task(self, identity="reviewed-por", review="pending"):
+        root = self.repo / "benchmark/tasks"
+        directory = root / identity
+        for filename in ("instruction.md", "SOURCE.md", "environment/Dockerfile", "solution/solve.sh",
+                         "tests/test.sh", "tests/verify.py", "results/reference.json", "results/calibration.json"):
+            path = directory / filename
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("Author review fixture.\n")
+        (directory / "task.toml").write_text(f'[metadata]\nreview_status = "{review}"\n')
+        (root / "benchmark.toml").write_text(
+            'schema_version = 1\nstate = "draft"\ntask_defaults = "defaults.toml"\n'
+            f'[[tasks]]\nslot = 1\nid = "{identity}"\n')
+        return directory
+
+    def test_unlisted_formal_directory_is_rejected_before_index_writes(self):
+        (self.repo / "benchmark/tasks/unfinished-model").mkdir()
+        before = (self.root / "README.md").read_bytes()
+        result = self.run_cli("--write")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("unlisted=['unfinished-model']", result.stderr)
+        self.assertEqual(before, (self.root / "README.md").read_bytes())
+
+    def test_formal_admission_requires_review_and_keeps_draft_count_separate(self):
+        self.add_task()
+        directory = self.add_formal_task()
+        result = self.run_cli("--write")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("requires explicit accepted review", result.stderr)
+        (directory / "task.toml").write_text('[metadata]\nreview_status = "accepted"\n')
+        result = self.run_cli("--write")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("1 draft assets and 1 reviewed tasks", result.stdout)
+        self.assertIn("登记 **1 道待审核题包资产**", (self.root / "TASKS.md").read_text())
+
+    def test_formal_task_requires_local_checker_and_author_results(self):
+        directory = self.add_formal_task(review="accepted")
+        for filename in ("tests/verify.py", "results/calibration.json"):
+            path = directory / filename
+            content = path.read_bytes()
+            path.unlink()
+            result = self.run_cli("--write")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn(f"formal task missing {filename}", result.stderr)
+            path.write_bytes(content)
 
     def test_task_mapping_does_not_approve_design_or_change_human_conclusions(self):
         self.add_task()
@@ -96,7 +173,7 @@ class WorkbenchTests(unittest.TestCase):
         self.assertIn("Human engineering judgment.", index)
         self.assertIn("real-por", index)
         self.assertIn("case-0001", index)
-        self.assertIn("登记 **1 道已建设任务**", index)
+        self.assertIn("登记 **1 道待审核题包资产**", index)
         self.assertEqual(self.run_cli("--check").returncode, 0)
 
     def test_missing_registration_in_new_version_fails_before_any_write(self):
@@ -111,7 +188,7 @@ class WorkbenchTests(unittest.TestCase):
         self.assertFalse((self.root / "REVIEW.md").exists())
 
     def test_malformed_versioned_task_directory_is_not_silently_ignored(self):
-        directory = self.repo / "benchmark/tasks/v4-NewTask"
+        directory = self.repo / "benchmark/material/draftbench/batches/test-01/tasks/v4-NewTask"
         directory.mkdir(parents=True)
         result = self.run_cli("--write")
         self.assertNotEqual(result.returncode, 0)
@@ -183,11 +260,11 @@ class WorkbenchTests(unittest.TestCase):
         self.save_inventory()
         self.write_case("cases/testing-characterization/power/case-0002-other",
                         dict(self.metadata, case_id="case-0002"))
-        (self.repo / "benchmark/tasks/va01-legacy").mkdir()
-        (self.repo / "benchmark/tasks/v1-old-category").mkdir()
+        (self.repo / "benchmark/material/draftbench/batches/test-01/tasks/va01-legacy").mkdir()
+        (self.repo / "benchmark/material/draftbench/batches/test-01/tasks/v1-old-category").mkdir()
         self.assertEqual(self.run_cli("--write").returncode, 0)
         text = (self.root / "TASKS.md").read_text()
-        self.assertIn("登记 **2 道已建设任务**", text)
+        self.assertIn("登记 **2 道待审核题包资产**", text)
         self.assertIn("| 总计 | 1 | 1 | 2 |", text)
         card = (self.root / self.directory / "README.md").read_text()
         self.assertIn("v2-test-por", card)
@@ -197,7 +274,7 @@ class WorkbenchTests(unittest.TestCase):
         self.add_task()
         self.inventory["tasks"][0]["case_ids"] = []
         self.save_inventory()
-        self.metadata["task_path"] = "benchmark/tasks/v2-test-por"
+        self.metadata["task_path"] = "benchmark/material/draftbench/batches/test-01/tasks/v2-test-por"
         self.write(f"{self.directory}/case.json", json.dumps(self.metadata))
         result = self.run_cli("--write")
         self.assertNotEqual(result.returncode, 0)

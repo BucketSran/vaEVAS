@@ -1,7 +1,7 @@
 import importlib.util
 import unittest
 from pathlib import Path
-SPEC=importlib.util.spec_from_file_location('checker',Path(__file__).parents[3]/'benchmark/checkers/v2_spec.py')
+SPEC=importlib.util.spec_from_file_location('checker',Path(__file__).parents[3]/'benchmark/material/historyref/legacy-authoring/checkers/v2_spec.py')
 class ContractTests(unittest.TestCase):
  def test_edge_sample_uses_crossing_value_and_holds_high(self):
   mod=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(mod)

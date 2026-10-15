@@ -137,7 +137,7 @@ def build(selected=None):
  manifest={'spec_issue':150,'weight':1,'model_trials':'not-requested','calibration_requests':[],'source_disposition':{'302':'D1 N/N+1 feedback; old toggle convention replaced by explicit rising-edge contract','306':'D2 static trim retained as healthy frontend start','369':'D2 signed continuous control merged with306 because same execution contract','390':'D3 real common-mode actuation and preserved differential transfer'}}
  for kind,reference,support,cases in [('fractional-pll',PLL,DCO,pll_cases()),('continuous-offset',SERVO,FRONT,analog_cases('continuous-offset')),('common-mode-servo',SERVO,FRONT,analog_cases('common-mode'))]:
   if selected and kind not in selected:continue
-  task=ROOT/'benchmark/tasks'/f'v3-calibration-{kind}'
+  task=ROOT/'benchmark/material/draftbench/batches/v3-01/tasks'/f'v3-calibration-{kind}'
   for s in ('environment/public','solution','tests'): (task/s).mkdir(parents=True,exist_ok=True)
   pub=task/'environment/public';test=task/'tests';sol=task/'solution'
   starter=reference if kind=='fractional-pll' else reference.replace('next=value-250*error;','next=value;')
@@ -145,7 +145,7 @@ def build(selected=None):
   (pub/'dut.va').write_text(starter);(pub/'healthy.va').write_text(support);(pub/'public-default.scs').write_text(cases[0]['netlist'])
   (sol/'dut.va').write_text(reference);(sol/'solve.sh').write_text('#!/bin/sh\nset -eu\ncp /solution/dut.va /work/dut.va\n')
   (sol/'solve.sh').chmod(0o755)
-  (task/'environment/Dockerfile').write_text((ROOT/'benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc/environment/Dockerfile').read_text())
+  (task/'environment/Dockerfile').write_text((ROOT/'benchmark/material/draftbench/batches/v2-01/tasks/v2-integrate-case0007-adpll-fine-tdc/environment/Dockerfile').read_text())
   (task/'task.toml').write_text(f'''schema_version = "1.4"
 [metadata]
 name = "{task.name}"
@@ -166,9 +166,9 @@ cpus = 1
 memory_mb = 2048
 storage_mb = 4096
 ''')
-  for file in ('v2_runtime.py','adc_linearity.py','v2_next_calibration.py'):shutil.copyfile(ROOT/'benchmark/checkers'/file,test/file)
+  for file in ('v2_runtime.py','adc_linearity.py','v2_next_calibration.py'):shutil.copyfile(ROOT/'benchmark/material/historyref/legacy-authoring/checkers'/file,test/file)
   (test/'verify.py').write_text('from v2_runtime import main\nfrom v2_next_calibration import evaluate\nif __name__ == "__main__": main(evaluate)\n')
-  (test/'test.sh').write_text((ROOT/'benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc/tests/test.sh').read_text())
+  (test/'test.sh').write_text((ROOT/'benchmark/material/draftbench/batches/v2-01/tasks/v2-integrate-case0007-adpll-fine-tdc/tests/test.sh').read_text())
   (test/'test.sh').chmod(0o755)
   (test/'contract.json').write_text(json.dumps(dict(task_id=task.name,candidate_files=['dut.va'],category='extension-integration'),indent=2)+'\n')
   (test/'cases.json').write_text(json.dumps(cases,indent=2)+'\n')

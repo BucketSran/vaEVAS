@@ -1,5 +1,0 @@
-# 来源与覆盖
-
-repository-owned-dac-scan va08 ADC histogram已复用审计，新增DAC端点静态扫描。
-
-来源固定在 reviewed main 81eb66258b59b0a0cd48cd3decaa767be02cdd58。本题为独立编写的 VA 改编，未复制商业库源码。固定 Spectre 扩展集；开源等价尚未验证。真实校准及已执行分母见[作者校准](../../../experiments/benchmark_next/converter/author-calibration.md)，旧资产关系见[资产审计](../../../experiments/benchmark_next/converter/asset-audit.md)。不开展模型试跑。

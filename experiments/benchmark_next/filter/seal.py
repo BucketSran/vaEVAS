@@ -10,7 +10,7 @@ import math
 ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(ROOT))
 from experiments.benchmark_first_batch.batch import summarize
-sys.path.insert(0,str(ROOT/"benchmark/checkers"))
+sys.path.insert(0,str(ROOT/"benchmark/material/historyref/legacy-authoring/checkers"))
 from adc_linearity import read_psf
 
 
@@ -76,18 +76,18 @@ def main():
             elif revision=='r4':item['disposition']='reference smoke; final matrix additionally checks report held until window end'
             history.append(item)
     baseline_health=compact(args.baseline_health)
-    baseline_health['asset_sha256']=sha(ROOT/'benchmark/tasks/v3-filter-programmable-lp/public/fixed_lp.va')
+    baseline_health['asset_sha256']=sha(ROOT/'benchmark/material/draftbench/batches/v3-01/tasks/v3-filter-programmable-lp/public/fixed_lp.va')
     entrypoints=json.loads((args.runs/'test-entry-help.json').read_text())
     task_ids={Path(e['task']).name for e in plan}
     if {e['task_id'] for e in entrypoints}!=task_ids or len(entrypoints)!=len(task_ids):
         raise ValueError('original test entrypoint coverage mismatch')
     for e in entrypoints:
-        tests=ROOT/'benchmark/tasks'/e['task_id']/'tests'
+        tests=ROOT/'benchmark/material/draftbench/batches/v3-01/tasks'/e['task_id']/'tests'
         if not e['original_test_sh_executed'] or e['returncode']!=0 or not e['import_completed']:
             raise ValueError('original test entrypoint did not import successfully')
         if e['test_sh_sha256']!=sha(tests/'test.sh') or e['verify_sha256']!=sha(tests/'verify.py'):
             raise ValueError('original test entrypoint identity mismatch')
-    report=dict(baseline_health=baseline_health,spec_issue=149,model_experiments_run=False,backend='Spectre',task_count=5,variant_count=len(records),condition_positions=sum(r['expected_conditions'] for r in records),all_author_expectations_matched=all(r['calibration_matched'] for r in records),records=records,historical_attempts=history,original_solve_receipts=json.loads((args.solve_artifacts/'receipt.json').read_text()),material_identities={str(p.relative_to(ROOT)):sha(p) for p in [ROOT/'benchmark/checkers/v2_next_filter.py',Path(__file__).with_name('build.py'),Path(__file__).with_name('run-plan.json'),Path(__file__).with_name('manifest.json'),Path(__file__).with_name('source-identities.json')]})
+    report=dict(baseline_health=baseline_health,spec_issue=149,model_experiments_run=False,backend='Spectre',task_count=5,variant_count=len(records),condition_positions=sum(r['expected_conditions'] for r in records),all_author_expectations_matched=all(r['calibration_matched'] for r in records),records=records,historical_attempts=history,original_solve_receipts=json.loads((args.solve_artifacts/'receipt.json').read_text()),material_identities={str(p.relative_to(ROOT)):sha(p) for p in [ROOT/'benchmark/material/historyref/legacy-authoring/checkers/v2_next_filter.py',Path(__file__).with_name('build.py'),Path(__file__).with_name('run-plan.json'),Path(__file__).with_name('manifest.json'),Path(__file__).with_name('source-identities.json')]})
     recovery=args.runs/'sweep-reference-recovery.log'
     if recovery.exists():
         state=json.loads((args.runs/'v3-filter-sweep-measurement/reference/sweep-2-job.json').read_text())

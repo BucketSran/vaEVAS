@@ -48,7 +48,7 @@ def finite_edge_value(c,t,parameters):
 
 
 def diagnose(archive_root):
-    fit_path=ROOT/"benchmark/tasks/identify-sh-acquisition/solution/fit.py"
+    fit_path=ROOT/"benchmark/material/historyref/tasks/identify-sh-acquisition/solution/fit.py"
     spec=importlib.util.spec_from_file_location("public_fit",fit_path)
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
     parameters=module.fit(fit_path.parents[1]/"environment/public")

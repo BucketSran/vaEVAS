@@ -12,9 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 BENCHMARK_PREFIXES = (
     'benchmark/', 'experiments/va_screen/', 'experiments/benchmark_first_batch/',
     'experiments/benchmark_v2/', 'experiments/benchmark_next/',
+    'experiments/benchmark_paths.py', 'experiments/test_benchmark_paths.py',
 )
 TASK_PREFIXES = (
     'benchmark/tasks/',
+    'benchmark/material/draftbench/batches/',
+    'benchmark/material/historyref/tasks/',
     'experiments/benchmark_first_batch/', 'experiments/benchmark_v2/',
     'experiments/benchmark_next/',
 )

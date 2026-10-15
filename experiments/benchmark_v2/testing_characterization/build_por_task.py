@@ -98,10 +98,10 @@ endmodule
 
 只读DUT含原晶体管电源检测/滤波/RC振荡器/输出缓冲、忠实原数字状态的可读VA边界。公开健康自测使用原RC；终评使用独立固定的RC负载实例，性质覆盖健康、较慢振荡器、漏掉恢复POR的接口故障、提前释放POR的接口故障及首POR保持高直到实际power欠压下降的缺首轮下降沿接口故障，具体终评负载不进入公开包。不得把固定预期时间当实测结果。公开默认台架为 `/work/public/public-default.scs`，只引用原RC健康资产并加载候选dut.va。`python /work/public/materialize_case.py --output visible-cases.json` 可核对独立资产SHA并重建该公开自测的完整材料。'''
     packages.package('por-sequence','case-0001-sky130-ajc-por','POR真实上电、欠压与恢复闭环测试台',contract,ref,alt,mutants,cases,{k:public_spice(v) if k.endswith('.spice') else v for k,v in base.items()},public_cases=[public_case])
-    task=packages.ROOT/'benchmark/tasks/v2-test-por-sequence'
+    task=packages.ROOT/'benchmark/material/draftbench/batches/v2-01/tasks/v2-test-por-sequence'
     export_public_case(task,public_case)
     export_private_cases(task,cases)
-    shutil.copyfile(packages.ROOT/'benchmark/checkers/v2_runtime.py',task/'tests/v2_runtime.py')
+    shutil.copyfile(packages.ROOT/'benchmark/material/historyref/legacy-authoring/checkers/v2_runtime.py',task/'tests/v2_runtime.py')
     identity=json.loads((prepared/'identity.json').read_text())
     if 'dev/gauss' in base['models.spice']:
         identity['processing']=[x for x in identity['processing'] if 'dev/gauss' not in x]

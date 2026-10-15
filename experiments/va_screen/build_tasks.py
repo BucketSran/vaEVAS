@@ -10,8 +10,8 @@ import re
 import shutil
 
 ROOT = Path(__file__).resolve().parents[2]
-REF = ROOT / 'benchmark/reference/veriloga'
-TASKS = ROOT / 'benchmark/tasks'
+REF = ROOT / 'benchmark/material/historyref/veriloga'
+TASKS = ROOT / 'benchmark/material/historyref/tasks'
 COMMON = '''Write a self-contained Spectre-compatible Verilog-A model to `/work/dut.va`.
 Use standard `disciplines.vams` and `constants.vams` headers as needed. All ports
 use the electrical discipline. Preserve the module, port order, parameter names,
@@ -90,9 +90,9 @@ storage_mb = 2048
     write(p/'solution/dut.va', oracle)
     write(p/'solution/solve.sh', '#!/bin/sh\nset -eu\nmkdir -p /work\ncp /solution/dut.va /work/dut.va\n')
     write(p/'tests/test.sh', '#!/bin/sh\nset -eu\ncd "$(dirname "$0")"\nexec python3 verify.py --candidate "${CANDIDATE:-/work/dut.va}" --output "${VERIFY_OUTPUT:-/logs/verifier}"\n')
-    shutil.copyfile(ROOT/'benchmark/checkers/spectre_waveform.py', p/'tests/verify.py')
+    shutil.copyfile(ROOT/'benchmark/material/historyref/legacy-authoring/checkers/spectre_waveform.py', p/'tests/verify.py')
     write(p/'tests/cases.json', json.dumps(cases, indent=2)+'\n')
-    write(p/'SOURCE.md', f'# 来源与改编\n\n原始资产：[veriloga/{rel}](../../reference/veriloga/{rel})。\n完整历史来源见 [SOURCES.md](../../reference/veriloga/SOURCES.md)。\n\n{adaptations}\n\n原始文件未修改。该题评估明确规格到 Verilog-A 的一次性实现，不评估从模糊需求提出模型的能力。\n')
+    write(p/'SOURCE.md', f'# 来源与改编\n\n原始资产：[veriloga/{rel}](../../veriloga/{rel})。\n完整历史来源见 [SOURCES.md](../../veriloga/SOURCES.md)。\n\n{adaptations}\n\n原始文件未修改。该题评估明确规格到 Verilog-A 的一次性实现，不评估从模糊需求提出模型的能力。\n')
 
 
 def and2():

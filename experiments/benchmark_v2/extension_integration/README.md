@@ -4,7 +4,7 @@
 
 必须完成来源349和case0007，两题已建立Harbor材料、参考、其他合法实现及语义mutants。旧包已有实际Spectre运行，严格审查发现reset、分频关系和lock资格覆盖缺口；修订包的作者校准与八个模型试做单元已完成。模型均未形成可评分候选，功能、兼容与部件作用的模型能力仍未知；参考入口通过不代替模型能力。
 
-349复用#133健康单通道024四实例，检验同时采样、顺序读出与保持；case0007由出题方提供健康粗调、实际DCO反馈和有效fine执行器，候选完成TDC、控制与模式集成。行为输出统一由 `benchmark/checkers/v2_integration.py` 独立评分，不以内部lock替代真实输出边沿。
+349复用#133健康单通道024四实例，检验同时采样、顺序读出与保持；case0007由出题方提供健康粗调、实际DCO反馈和有效fine执行器，候选完成TDC、控制与模式集成。行为输出统一由 `benchmark/material/historyref/legacy-authoring/checkers/v2_integration.py` 独立评分，不以内部lock替代真实输出边沿。
 
 `manifest.json` 保存来源mapping及实际校准请求。`candidates/` 保存不同合法实现与可编译语义mutants；这些候选已纳入当前作者校准；单凭文件存在仍不证明checker能拒绝它们。
 

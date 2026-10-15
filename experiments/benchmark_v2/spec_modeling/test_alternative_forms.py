@@ -8,7 +8,7 @@ ROOT=Path(__file__).resolve().parents[3]
 OUT=Path(__file__).resolve().parent
 
 def source(sid,file='dut.va'):
-    task=next((ROOT/'benchmark/tasks').glob('v2-spec-'+sid+'-*'))
+    task=next((ROOT/'benchmark/material/draftbench/batches/v2-01/tasks').glob('v2-spec-'+sid+'-*'))
     return (OUT/'candidates'/task.name/'alternative'/file).read_text()
 
 def rhs(text,name):
@@ -84,7 +84,7 @@ class DifferentStateForms(unittest.TestCase):
     def test_all_sixteen_authored_forms_exist(self):
         from experiments.benchmark_v2.spec_modeling.alternative_forms import REASONS,alternative
         for sid in REASONS:
-            task=next((ROOT/'benchmark/tasks').glob('v2-spec-'+sid+'-*'))
+            task=next((ROOT/'benchmark/material/draftbench/batches/v2-01/tasks').glob('v2-spec-'+sid+'-*'))
             differences=[]
             for f in (task/'solution').glob('*.va'):
                 generated=alternative(f.read_text(),sid,f.name)

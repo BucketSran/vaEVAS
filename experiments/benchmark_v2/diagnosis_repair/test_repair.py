@@ -1,7 +1,7 @@
 import unittest
 import sys
 from pathlib import Path
-sys.path.insert(0,str(Path(__file__).resolve().parents[3]/"benchmark/checkers"))
+sys.path.insert(0,str(Path(__file__).resolve().parents[3]/"benchmark/material/historyref/legacy-authoring/checkers"))
 from v2_repair import evaluate
 class SequencerContract(unittest.TestCase):
  def test_synchronous_reset_and_reentry(self):

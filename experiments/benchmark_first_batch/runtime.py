@@ -96,11 +96,11 @@ def prepare(task, candidate, output, harness_checkout, *, case_names=None, task_
     # The actual portable runtime is coordinator-owned. Task graders are owned
     # by the task's checkout and snapshotted with the task.
     for name in ["circuit_task.py", "adc_linearity.py"]:
-        templates[name] = (ROOT / "benchmark/checkers" / name).read_bytes()
+        templates[name] = (ROOT / "benchmark/material/historyref/legacy-authoring/checkers" / name).read_bytes()
     tree = ast.parse(templates["verify.py"])
     modules = {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom) and node.module}
     if "first_batch_triangle" in modules:
-        templates["triangle_oscillator.py"] = (ROOT / "benchmark/checkers/triangle_oscillator.py").read_bytes()
+        templates["triangle_oscillator.py"] = (ROOT / "benchmark/material/historyref/legacy-authoring/checkers/triangle_oscillator.py").read_bytes()
     for name in modules:
         if name.startswith(("first_batch_", "v2_")):
             templates[name + ".py"] = (task.parents[1] / "checkers" / (name + ".py")).read_bytes()

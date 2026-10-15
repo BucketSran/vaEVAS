@@ -54,16 +54,16 @@ def prepare(repo,harness,output):
     repo=repo.resolve();output=output.resolve()
     if output.exists():raise FileExistsError('never overwrite existing preparation/evidence directory')
     runtime=load(repo/'experiments/benchmark_first_batch/runtime.py','optimization_coordinator_prepare')
-    guard=load(repo/'benchmark/checkers/first_batch_optimization.py','optimization_formal_source_guard')
-    core=load(repo/'benchmark/checkers/circuit_task.py','optimization_actual_core_guard')
+    guard=load(repo/'benchmark/material/historyref/legacy-authoring/checkers/first_batch_optimization.py','optimization_formal_source_guard')
+    core=load(repo/'benchmark/material/historyref/legacy-authoring/checkers/circuit_task.py','optimization_actual_core_guard')
     checkpoint_source=subprocess.check_output(['git','show',CHECKPOINT+':benchmark/checkers/first_batch_optimization.py'],cwd=repo)
-    checker_sha=sha((repo/'benchmark/checkers/first_batch_optimization.py').read_bytes())
+    checker_sha=sha((repo/'benchmark/material/historyref/legacy-authoring/checkers/first_batch_optimization.py').read_bytes())
     if checker_sha!=sha(checkpoint_source):raise ValueError('main checker differs from specified reviewed checkpoint')
     revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip()
     items=[]
     # Validate whole inventory/guards before creating any frozen packet.
     for task_id,negatives in CLASSIFICATION.items():
-        task=repo/'benchmark/tasks'/task_id
+        task=repo/'benchmark/material/historyref/tasks'/task_id
         files={p.stem:p for p in (task/'tests/negatives').glob('*.va')}
         if set(files)!=set(negatives):raise ValueError('formal negatives changed: '+task_id)
         if sha((task/'tests/first_batch_optimization.py').read_bytes())!=checker_sha:raise ValueError('task/shared checker drift')

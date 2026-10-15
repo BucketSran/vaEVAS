@@ -61,7 +61,7 @@ UART每侧warmup+五对净PSF约266.2MB，也超256MiB硬上限。现实现paire
 判读后lossless gzip，逐字节解压SHA相同才删除重复原件；主功能PSF不压缩。
 见scoring_prototype/README.md与lossless_psf_calibration.json；1GiB profile不可用。
 
-五个正式资产在`benchmark/tasks/optimize-*`，准入配置为`admission_step_tasks.json`与
+五个正式资产在`benchmark/material/draftbench/tasks/optimize-*`，准入配置为`admission_step_tasks.json`与
 `admission_flash.json`。各题完整成功要求全部3个条件通过；性能条件在同job
 保存两侧warmup及5对AB，逐次功能通过后才计算原生指标。private单条件一分不代表
 整题成功。实际参考、负例及替代实现状态由最终封存收据记录，不由目录存在推导。

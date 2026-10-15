@@ -24,9 +24,9 @@ def case(kind,inputs,values,params='',support=None,outputs=None,**kw):
  if kind=='spectrum':net=net.replace('XM (code sample_ok clk rst','XM (code clk rst sample_ok')
  return dict(name='normal',kind=kind,stop=stop,maxstep=50e-12,guard=1e-9,signals=inputs+['clk','rst']+outputs+(['observe'] if support else []),outputs=outputs,tolerances={n:(.03 if n in ['sndr','sfdr'] else .006 if n=='enob' else .001) for n in outputs},netlist=net,**({'support':{'fixed.va':support}} if support else {}),**kw)
 def package(slug,source,contract,ref,alt,wrong,cases,public):
- tid='v3-converter-'+slug;t=ROOT/'benchmark/tasks'/tid
+ tid='v3-converter-'+slug;t=ROOT/'benchmark/material/draftbench/batches/v3-01/tasks'/tid
  put(t/'instruction.md','# '+slug+'\n\n实现 `/work/dut.va`。'+contract+'\n\n固定后端 Spectre，候选源码按原字节运行，不作语言子集限制。仅 dut.va 可修改；输入及固定器件只读。测量题各电气报告端口的电压数值就是指标数值，例如0.5LSB用0.5V、20dB用20V，valid用0或1V。初态及事件后允许1ns建立，之后输出绝对误差1mV，频谱dB误差0.03dB、ENOB误差0.006bit。输出可用 transition(...,0,100p,100p)；无需复制参考结构。公开台架见 `/work/public/cases.json`，终评改变合同内输入、端点、样本和控制时刻。测量 DUT 性能差仍可通过，评分只看报告正确。源代码、reference与私有checker不进入公开包。\n')
- put(t/'SOURCE.md',f'# 来源与覆盖\n\n{source}\n\n来源固定在 reviewed main 81eb66258b59b0a0cd48cd3decaa767be02cdd58。本题为独立编写的 VA 改编，未复制商业库源码。固定 Spectre 扩展集；开源等价尚未验证。真实校准及已执行分母见[作者校准](../../../experiments/benchmark_next/converter/author-calibration.md)，旧资产关系见[资产审计](../../../experiments/benchmark_next/converter/asset-audit.md)。不开展模型试跑。\n')
+ put(t/'SOURCE.md',f'# 来源与覆盖\n\n{source}\n\n来源固定在 reviewed main 81eb66258b59b0a0cd48cd3decaa767be02cdd58。本题为独立编写的 VA 改编，未复制商业库源码。固定 Spectre 扩展集；开源等价尚未验证。真实校准及已执行分母见[作者校准](../../../../../../../experiments/benchmark_next/converter/author-calibration.md)，旧资产关系见[资产审计](../../../../../../../experiments/benchmark_next/converter/asset-audit.md)。不开展模型试跑。\n')
  action='spec-modeling' if cases[0]['kind']=='dac' else 'testing-characterization'
  put(t/'task.toml',f'schema_version = "1.4"\n[metadata]\nname = "{tid}"\ncategory = "verilog-a"\nengineering_action = "{action}"\nsource_group = "{source.split()[0]}"\nweight = 1\n[agent]\ntimeout_sec = 900\n[verifier]\ntimeout_sec = 600\n[environment]\nbuild_timeout_sec = 600\ncpus = 1\nmemory_mb = 1024\nstorage_mb = 2048\n')
  put(t/'environment/Dockerfile',f'FROM {IMAGE}\nWORKDIR /work\nCOPY public/ /work/public/\nCOPY starter.va /work/dut.va\n')
@@ -38,7 +38,7 @@ def package(slug,source,contract,ref,alt,wrong,cases,public):
  put(t/'tests/test.sh','#!/bin/sh\nset -eu\ncd "$(dirname "$0")"\nexec python3 verify.py --candidate "${CANDIDATE:-/work/dut.va}" --output "${VERIFY_OUTPUT:-/logs/verifier}" --tests . "$@"\n')
  put(t/'tests/verify.py','from v2_runtime import main\nfrom v2_next_converter import evaluate\nif __name__ == "__main__": main(evaluate)\n')
  for name in ['v2_next_converter.py','v2_runtime.py','adc_linearity.py']:
-  shutil.copyfile(ROOT/'benchmark/checkers'/name,t/'tests'/name)
+  shutil.copyfile(ROOT/'benchmark/material/historyref/legacy-authoring/checkers'/name,t/'tests'/name)
  for p in [t/'tests/test.sh',t/'solution/solve.sh']:p.chmod(0o755)
  for name,text,expected in [('reference',ref,True),('alternative',alt,True)]+[(n,s,False) for n,s in wrong.items()]:
   p=OUT/'candidates'/tid/name/'dut.va';put(p,text)
@@ -144,7 +144,7 @@ endmodule
  package('dac-linearity','repository-owned-dac-scan va08 ADC histogram已复用审计，新增DAC端点静态扫描。',contract,ref,alt,{'ideal-report':ref.replace('x[n]=V(observe)','x[n]=V(code)/15.0'),'wrong-step':ref.replace('/15;','/16;'),'ignore-order':ref.replace('if(abs(V(code)-n)>0.001) bad=1;','// Deliberately omit code-order validation.'),'stale-reset':ref.replace(' @(cross(V(rst)-0.5,+1)) begin n=0;bad=0;ok=0;od=0;oi=0;end\n','')},cases,public)
 
 def spectrum():
- old=(ROOT/'benchmark/tasks/measure-adc-spectrum/solution/dut.va').read_text()
+ old=(ROOT/'benchmark/material/historyref/tasks/measure-adc-spectrum/solution/dut.va').read_text()
  ref=old.replace('module dut(code,clk,sndr,sfdr,dc);','module dut(code,clk,rst,sample_ok,sndr,sfdr,dc,enob,valid);').replace('code,clk,sndr,sfdr,dc;','code,clk,rst,sample_ok,sndr,sfdr,dc,enob,valid;').replace('integer n,k;','integer n,k,bad,ok;').replace('out_dc=0;for','out_dc=0;bad=0;ok=0;for').replace(' @(cross(V(clk)-0.5,+1))begin',' @(cross(V(rst)-0.5,+1))begin n=0;sum=0;out_sndr=0;out_sfdr=0;out_dc=0;bad=0;ok=0;for(k=0;k<=32;k=k+1)begin cs[k]=0;ss[k]=0;end end\n @(cross(V(clk)-0.5,+1))begin').replace('if(n<64)begin','if(V(rst)<0.5 && n<64)begin').replace('x=V(code);sum=', 'x=V(code);if(V(sample_ok)<0.5 || x<0 || x>4095 || abs(x-floor(x+0.5))>0.0001)bad=1;sum=').replace('out_sndr=10*ln(fund/noise)/ln(10);out_sfdr=10*ln(fund/spurious)/ln(10);out_dc=sum/64;','if(!bad && fund>1e-8 && noise>1e-8 && spurious>1e-8)begin out_sndr=10*ln(fund/noise)/ln(10);out_sfdr=10*ln(fund/spurious)/ln(10);out_dc=sum/64;ok=1;end').replace(' V(sndr)<+', ' V(valid)<+ok;V(enob)<+(ok?(out_sndr-1.76)/6.02:0);\n V(sndr)<+')
  # Batch DFT alternative stores samples first, computes after last sample.
  alt=ref.replace('integer n,k,bad,ok;','real record[0:63];integer n,k,j,bad,ok;')

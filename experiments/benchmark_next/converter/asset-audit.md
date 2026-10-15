@@ -4,9 +4,9 @@
 
 | 资产 | 已有合同与证据 | 本轮处置 |
 | --- | --- | --- |
-| [va08 ADC线性度](../../../benchmark/tasks/va08-adc-linearity/instruction.md) | 4096个均匀输入，8位ADC原总线与逐次读取记录，254个内部码直方图；DNL=254H/H_int-1，INL累计；已有四场景参考、六个错版和提前读取实际Spectre证据 | 保留旧任务及结果，复用完整扫描、实际观测与独立真值校核的原则。不能把其有限直方图定义直接称为DAC端点INL。新增题是16码DAC实际模拟电平扫描，端点LSB归一化。 |
-| [旧相干频谱](../../../benchmark/tasks/measure-adc-spectrum/instruction.md) | 12位unsigned、最初64个实际clk/code、矩形窗、DC排除、谐波进入SNDR、Nyquist不翻倍；参考VA在线DFT | 迁移同源计算合同与参考。改为200MHz固定回放、明确reset及sample_ok、截断和无效状态、ENOB，独立checker改用余弦自相关功率；这些新增控制行为单独校准。 |
-| [ADCToolbox来源卡](../../../benchmark/workbench/sources/adctoolbox-spectrum.md) | 固定8d62fb1863e38ffe5c6cc3ac48fa9c24d9df1ae9，MIT方法参考 | 本轮没有复制或执行其库代码；采用公开数学定义和已知功率比，不把同库两次调用当独立证据。 |
+| [va08 ADC线性度](../../../benchmark/material/historyref/tasks/va08-adc-linearity/instruction.md) | 4096个均匀输入，8位ADC原总线与逐次读取记录，254个内部码直方图；DNL=254H/H_int-1，INL累计；已有四场景参考、六个错版和提前读取实际Spectre证据 | 保留旧任务及结果，复用完整扫描、实际观测与独立真值校核的原则。不能把其有限直方图定义直接称为DAC端点INL。新增题是16码DAC实际模拟电平扫描，端点LSB归一化。 |
+| [旧相干频谱](../../../benchmark/material/historyref/tasks/measure-adc-spectrum/instruction.md) | 12位unsigned、最初64个实际clk/code、矩形窗、DC排除、谐波进入SNDR、Nyquist不翻倍；参考VA在线DFT | 迁移同源计算合同与参考。改为200MHz固定回放、明确reset及sample_ok、截断和无效状态、ENOB，独立checker改用余弦自相关功率；这些新增控制行为单独校准。 |
+| [ADCToolbox来源卡](../../../benchmark/material/draftbench/sources/adctoolbox-spectrum.md) | 固定8d62fb1863e38ffe5c6cc3ac48fa9c24d9df1ae9，MIT方法参考 | 本轮没有复制或执行其库代码；采用公开数学定义和已知功率比，不把同库两次调用当独立证据。 |
 
 旧题面中的词法限制、不能读器件源码或把编译失败计零的规定属于旧版，不继承到本批任务。新题公开可读固定DUT与完整观测输入，候选代码原字节运行；工具链和后端失败保持未评分。旧题的历史证据继续保持旧身份，本轮不宣称已经重新验收旧任务或修改旧成绩。
 

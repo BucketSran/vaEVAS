@@ -35,7 +35,7 @@ def main():
     env=os.environ.copy();env['PYTHONPATH']=str(ROOT)
     def run(model):
         name='glm' if model.startswith('glm') else 'codex'
-        argv=['uvx','--from','harbor==0.23.0','harbor','run','--path','benchmark/tasks',
+        argv=['uvx','--from','harbor==0.23.0','harbor','run','--path','benchmark/material/historyref/tasks',
               '--agent','experiments.va_screen.harbor_adapters:OneShotAgent','--model',model,
               '--verifier','experiments.va_screen.harbor_adapters:RemoteSpectreVerifier',
               '--jobs-dir',str(output),'--job-name',name,'--n-attempts','1','--n-concurrent','1','--max-retries','0']

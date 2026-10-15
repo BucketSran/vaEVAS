@@ -15,7 +15,7 @@ def main():
     args = parser.parse_args()
     target = args.output.resolve()
     target.mkdir(parents=True, exist_ok=False)
-    assets = sorted(p for task in (ROOT/'benchmark/tasks').glob('v3-converter-*') for p in task.rglob('*') if p.is_file() and '__pycache__' not in p.parts)
+    assets = sorted(p for task in (ROOT/'benchmark/material/draftbench/batches/v3-01/tasks').glob('v3-converter-*') for p in task.rglob('*') if p.is_file() and '__pycache__' not in p.parts)
     archive = target/'task-source.tar.gz'
     with tarfile.open(archive, 'w:gz') as tar:
         for path in assets:

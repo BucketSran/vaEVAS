@@ -11,7 +11,7 @@ import unittest
 from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[3]
-spec=importlib.util.spec_from_file_location('triangle',ROOT/'benchmark/checkers/triangle_oscillator.py')
+spec=importlib.util.spec_from_file_location('triangle',ROOT/'benchmark/material/historyref/legacy-authoring/checkers/triangle_oscillator.py')
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 
 
@@ -79,7 +79,7 @@ class TriangleOracle(unittest.TestCase):
                 with self.assertRaises(ValueError):m.read_psf(p)
 
     def test_task_checker_is_identical(self):
-        self.assertEqual((ROOT/'benchmark/checkers/triangle_oscillator.py').read_bytes(),(ROOT/'benchmark/tasks/va07-triangle-repair/tests/triangle_oscillator.py').read_bytes())
+        self.assertEqual((ROOT/'benchmark/material/historyref/legacy-authoring/checkers/triangle_oscillator.py').read_bytes(),(ROOT/'benchmark/material/historyref/tasks/va07-triangle-repair/tests/triangle_oscillator.py').read_bytes())
 
 
 class TriangleVerifier(unittest.TestCase):

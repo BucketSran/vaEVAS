@@ -2,7 +2,7 @@
 import copy,json,math,re,sys,unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3]
-sys.path.insert(0,str(ROOT/'benchmark/checkers'))
+sys.path.insert(0,str(ROOT/'benchmark/material/historyref/legacy-authoring/checkers'))
 from first_batch_integration import evaluate
 
 class CheckerTests(unittest.TestCase):
@@ -38,7 +38,7 @@ class CheckerTests(unittest.TestCase):
         rows=copy.deepcopy(self.rows);rows[-2]['result']=.5
         self.assertFalse(evaluate(rows,self.case)['passed'])
     def test_manifest_numerical_contract(self):
-        paths=sorted((ROOT/'benchmark/tasks').glob('integrate-*/tests/cases.json'))
+        paths=sorted((ROOT/'benchmark/material/historyref/tasks').glob('integrate-*/tests/cases.json'))
         self.assertEqual(len(paths),5)
         for path in paths:
             for case in json.loads(path.read_text()):
@@ -49,7 +49,7 @@ class CheckerTests(unittest.TestCase):
                 for spec in case.get('samples',[]):
                     self.assertTrue(0<=spec['t']<=case['stop']);self.assertTrue(math.isfinite(spec['value']))
     def test_no_conflicting_stable_windows(self):
-        for path in sorted((ROOT/'benchmark/tasks').glob('integrate-*/tests/cases.json')):
+        for path in sorted((ROOT/'benchmark/material/historyref/tasks').glob('integrate-*/tests/cases.json')):
             for case in json.loads(path.read_text()):
                 specs=case.get('windows',[])
                 for i,a in enumerate(specs):
@@ -57,7 +57,7 @@ class CheckerTests(unittest.TestCase):
                         if a['node']==b['node'] and max(a['start'],b['start'])<min(a['end'],b['end']):
                             self.assertLessEqual(abs(a['value']-b['value']),min(a['atol'],b['atol']),(path,a,b))
     def test_edge_ledgers_match_stable_flag_windows(self):
-        for path in sorted((ROOT/'benchmark/tasks').glob('integrate-*/tests/cases.json')):
+        for path in sorted((ROOT/'benchmark/material/historyref/tasks').glob('integrate-*/tests/cases.json')):
             for case in json.loads(path.read_text()):
                 for edge in case.get('edges',[]):
                     for window in case.get('windows',[]):
@@ -79,7 +79,7 @@ class CheckerTests(unittest.TestCase):
         result=evaluate(rows,case)
         self.assertFalse(result['passed']);self.assertEqual(result['failures'][0]['node'],'frequency')
     def test_every_public_and_hidden_pwl_has_monotone_times(self):
-        for task in sorted((ROOT/'benchmark/tasks').glob('integrate-*')):
+        for task in sorted((ROOT/'benchmark/material/historyref/tasks').glob('integrate-*')):
             for path in [task/'tests/cases.json',task/'environment/public/smoke_cases.json']:
                 for case in json.loads(path.read_text()):
                     for waveform in re.findall(r'wave=\[([^]]+)\]',case['netlist']):
@@ -89,7 +89,7 @@ class CheckerTests(unittest.TestCase):
     def test_agc_does_not_reuse_actual_spectre_reserved_identifier(self):
         # VACOMP-1705 in the archived actual AGC calibration established this
         # reserved-name conflict. This is static protection, not compilation.
-        paths=list((ROOT/'benchmark/tasks/integrate-agc-attack-release').rglob('*.va'))
+        paths=list((ROOT/'benchmark/material/historyref/tasks/integrate-agc-attack-release').rglob('*.va'))
         paths+=list((ROOT/'experiments/benchmark_first_batch/integration/mutants/integrate-agc-attack-release').rglob('*.va'))
         for path in paths:
             for declaration in re.findall(r'\breal\s+([^;]+);',path.read_text()):
@@ -97,7 +97,7 @@ class CheckerTests(unittest.TestCase):
     def test_va_real_literals_have_required_leading_digit(self):
         # Actual Spectre VACOMP-1795 rejected .9, -.9 and .5 in sampled-output.
         paths=[]
-        for task in (ROOT/'benchmark/tasks').glob('integrate-*'):paths.extend(task.rglob('*.va'))
+        for task in (ROOT/'benchmark/material/historyref/tasks').glob('integrate-*'):paths.extend(task.rglob('*.va'))
         paths.extend((ROOT/'experiments/benchmark_first_batch/integration/mutants').rglob('*.va'))
         for path in paths:
             self.assertIsNone(re.search(r'(?<![A-Za-z0-9_.])\.[0-9]',path.read_text()),path)

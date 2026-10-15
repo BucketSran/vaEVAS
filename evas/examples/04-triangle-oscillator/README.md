@@ -63,7 +63,7 @@ spectre -64 tb.scs +log "$triangle_run/spectre.log" -format psfascii -raw "$tria
 两边内部设置不同，共同外部验收为波形误差 1 µV、事件时刻误差 200 ns，换向恰好三次。
 定向模型仍有积分与事件定位误差，方向正确不代替精度检查。
 
-模型与已校准的[候选参考解](../../../benchmark/tasks/va07-triangle-repair/solution/dut.va)
+模型与已校准的[候选参考解](../../../benchmark/material/historyref/tasks/va07-triangle-repair/solution/dut.va)
 一致；本例固定单位速度，变化速度的证据见[兼容性实验](../../../experiments/backends/dvs2-spectre-validation/README.md#oscillator-compatibility)。
 原始双向模型继续保留为[诊断探针](../../../experiments/backends/dvs2-spectre-validation/README.md#cross-restart-diagnostic)，
 兼容性问题由 [Issue #70](https://github.com/BucketSran/vaEVAS/issues/70) 跟踪，没有算作已修复。

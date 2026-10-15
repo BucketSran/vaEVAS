@@ -30,10 +30,12 @@ jobs:
         run: python3 -B scripts/benchmark_workbench.py --check
       - name: Task registration and preservation regressions
         run: python3 -B -m unittest discover -s scripts/tests -p test_benchmark_workbench.py -v
+      - name: Historical material path and frozen-plan consumers
+        run: python3 -B -m unittest experiments.test_benchmark_paths -v
       - name: Identity and result reporting regressions
         run: python3 -B -m unittest experiments.va_screen.test_identity experiments.va_screen.test_summarize -v
       - name: Saved-candidate EVAS replay regressions
-        run: python3 -B -m unittest discover -s benchmark/checkers -p test_triangle_evas_replay.py -v
+        run: python3 -B -m unittest discover -s benchmark/material/historyref/legacy-authoring/checkers -p test_triangle_evas_replay.py -v
       - name: Record completed checks
         id: verified
         run: echo "result=success" >> "$GITHUB_OUTPUT"

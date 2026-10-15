@@ -1,7 +1,7 @@
 """Build VA models from public table fit, plus semantic negative controls."""
 import csv,json
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[3];TASK=ROOT/'benchmark/tasks/v2-data-sampling-identification';CANDS=Path(__file__).parent/'candidates'/TASK.name
+ROOT=Path(__file__).resolve().parents[3];TASK=ROOT/'benchmark/material/draftbench/batches/v2-01/tasks/v2-data-sampling-identification';CANDS=Path(__file__).parent/'candidates'/TASK.name
 
 def model(count,alternative=False):
     data=json.loads((Path(__file__).parent/f'rate-table-{count}.json').read_text());us=data['input_grid_V'];ys=data['state_grid_V'];rates=data['correction']

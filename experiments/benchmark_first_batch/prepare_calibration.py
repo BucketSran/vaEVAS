@@ -25,7 +25,7 @@ def build(output, harness, selected=None, include="all"):
     output.mkdir(mode=0o700, parents=True, exist_ok=False)
     task_names = set()
     for name in ("model_repair", "identification", "integration", "verification_measurement"):
-        registry = json.loads((ROOT / "benchmark/tasks" / ("first_batch-" + name + ".json")).read_text())
+        registry = json.loads((ROOT / "benchmark/material/historyref/tasks" / ("first_batch-" + name + ".json")).read_text())
         task_names.update(t.get("id", t.get("task_id")) for t in registry["tasks"])
     task_names = {name for name in task_names if not name.startswith("va")}
     if selected:
@@ -35,7 +35,7 @@ def build(output, harness, selected=None, include="all"):
     focused = json.loads((ROOT / "experiments/benchmark_first_batch/verification_measurement/calibration_plan.json").read_text())["negative_cases"]
     matrix = []
     for name in sorted(task_names):
-        task = ROOT / "benchmark/tasks" / name
+        task = ROOT / "benchmark/material/historyref/tasks" / name
         choices = candidates(task)
         if sum(role == "reference" for role, _, _ in choices) != 1 or len(choices) < 2:
             raise ValueError("missing reference or semantic negatives: " + name)

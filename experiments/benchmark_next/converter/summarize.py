@@ -3,6 +3,10 @@ from pathlib import Path
 import argparse,hashlib,json,re,tarfile
 ROOT=Path(__file__).resolve().parents[3];OUT=Path(__file__).parent
 from audit_delivery import write as audit_delivery
+import sys as _benchmark_sys
+from pathlib import Path as _BenchmarkPath
+_benchmark_sys.path.insert(0, str(_BenchmarkPath(__file__).resolve().parents[3]))
+from experiments.benchmark_paths import material_path
 
 def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def receipt(prepared):
@@ -28,9 +32,9 @@ def main():
   if 'dac-linearity' in tid and v=='ignore-order':run='r6'
   if v in ['bit-order','harmonics-as-fundamental']:run='r7'
   r=receipt(Path('runs')/('benchmark-next-converter-'+run)/tid/v)
-  candidate=ROOT/row['candidate']/'dut.va';assert all(c['candidate_sha256']==digest(candidate) for c in r['conditions']),(tid,v,'source changed')
+  candidate=material_path(ROOT, row['candidate'])/'dut.va';assert all(c['candidate_sha256']==digest(candidate) for c in r['conditions']),(tid,v,'source changed')
   r['dut_file_sha256']=digest(candidate)
-  expected=row['case_names'] or [c['name'] for c in json.loads((ROOT/row['task']/'tests/cases.json').read_text())]
+  expected=row['case_names'] or [c['name'] for c in json.loads((material_path(ROOT, row['task'])/'tests/cases.json').read_text())]
   assert set(expected)=={c['condition'] for c in r['conditions']}
   r.update(variant=v,expected_pass=row['expected_pass'],selected_case_names=expected,calibration_met=r['all_selected_conditions_graded'] and (r['all_selected_conditions_passed'] if row['expected_pass'] else r['has_selected_graded_failure']))
   final.append(r)

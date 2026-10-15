@@ -2,7 +2,7 @@
 
 This report covers protocol A on seven fixed representatives and two requested endpoint labels, `glm-5.3` and `glm-5.3-flash`. The public feedback backend was native EVAS; frozen candidates received independent Spectre final evaluation. It is a restricted-feedback pilot, not a score for all 35 tasks or evidence for ranking task difficulty. Both labels advertise the same model family. The server response model IDs remain unknown.
 
-The machine-readable [receipt](pilot-fixed14-receipt.json) contains all 14 cells, complete case outcomes, candidate and final-package identities, tool counts, token fields, source inventories, and independent archive audit results. Published [candidates](candidates/) retain the exact frozen source bytes. Each task has weight 1/7 within a requested route. The integration representative is a complete-repository task with four declared candidate files; it still counts as one task.
+The machine-readable [receipt](pilot-fixed14-receipt.json) contains all 14 cells, complete case outcomes, candidate and final-package identities, tool counts, token fields, source inventories, and independent archive audit results. Published [candidates](candidates) retain the exact frozen source bytes. Each task has weight 1/7 within a requested route. The integration representative is a complete-repository task with four declared candidate files; it still counts as one task.
 
 ## Fixed results
 

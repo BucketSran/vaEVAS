@@ -13,6 +13,31 @@ REPORT_WRAPPERS = {
     "experiments/va_screen/run_pilot.py",
     "experiments/va_screen/summarize.py",
 }
+RELOCATIONS = {
+    "benchmark/tasks": "benchmark/material/historyref/tasks",
+    "benchmark/reference": "benchmark/material/historyref",
+    "benchmark/checkers": "benchmark/material/historyref/legacy-authoring/checkers",
+}
+# These author wrappers are not executed as the candidate's scoring code.
+# Their frozen content is still checked exactly, with only these directory literals relocated.
+RELOCATED_AUTHOR_WRAPPERS = {"experiments/va_screen/build_tasks.py", "experiments/va_screen/calibrate.py"}
+
+
+def current_path(root, historical_name):
+    for old, new in RELOCATIONS.items():
+        if historical_name == old or historical_name.startswith(old + "/"):
+            return Path(root) / (new + historical_name[len(old):])
+    return Path(root) / historical_name
+
+
+def historical_author_bytes(name, data):
+    if name in RELOCATED_AUTHOR_WRAPPERS:
+        for old, new in sorted(RELOCATIONS.items(), key=lambda item: len(item[1]), reverse=True):
+            data = data.replace(new.encode(), old.encode())
+        if name == "experiments/va_screen/build_tasks.py":
+            # The SOURCE template moved with its historical packages.
+            data = data.replace(b"](../../veriloga/", b"](../../reference/veriloga/")
+    return data
 
 
 def sha(data):
@@ -35,16 +60,16 @@ def verify_current_inputs(root=ROOT):
     for name, expected in frozen.items():
         if name in REPORT_WRAPPERS or name.endswith(".md"):
             continue
-        path = root / name
-        if not path.is_file() or sha(path.read_bytes()) != expected:
+        path = current_path(root, name)
+        if not path.is_file() or sha(historical_author_bytes(name, path.read_bytes())) != expected:
             raise ValueError(f"calibrated input changed or missing: {name}")
     canonical = "benchmark/checkers/spectre_waveform.py"
     expected = record["source_identity_checked_after_run"][canonical]
-    if sha((root / canonical).read_bytes()) != expected:
+    if sha(current_path(root, canonical).read_bytes()) != expected:
         raise ValueError("shared checker changed: affected tasks need recalibration")
     tasks = []
     for report in record["calibration_reports"]:
-        task = root / "benchmark/tasks" / report["task"]
+        task = root / "benchmark/material/historyref/tasks" / report["task"]
         for key, name in [
             ("candidate_sha256", "solution/dut.va"),
             ("cases_sha256", "tests/cases.json"),
@@ -62,7 +87,7 @@ def verify_current_inputs(root=ROOT):
         tasks.append(task)
     if not tasks or len(set(tasks)) != len(tasks):
         raise ValueError("missing or duplicate calibration tasks")
-    if {p.name for p in tasks} != {p.name for p in (root / "benchmark/tasks").glob("va0[1-6]-*")}:
+    if {p.name for p in tasks} != {p.name for p in (root / "benchmark/material/historyref/tasks").glob("va0[1-6]-*")}:
         raise ValueError("task inventory differs from calibration")
     mutations = record["mutation_reports"]
     if len(mutations) != len(tasks) or {r["task"] for r in mutations} != {p.name for p in tasks}:
@@ -137,7 +162,7 @@ def snapshot_files(root=ROOT, tasks=None):
     files = [p for task in tasks for p in task.rglob("*")
              if p.is_file() and "__pycache__" not in p.parts and p.suffix != ".pyc"]
     files += list((root / "experiments/va_screen").glob("*.py"))
-    files += [root / "benchmark/checkers/spectre_waveform.py",
+    files += [root / "benchmark/material/historyref/legacy-authoring/checkers/spectre_waveform.py",
               root / "experiments/va_screen/CALIBRATION.json",
               root / "experiments/va_screen/FROZEN_INPUTS.json"]
     return {str(p.relative_to(root)): sha(p.read_bytes()) for p in sorted(set(files))}

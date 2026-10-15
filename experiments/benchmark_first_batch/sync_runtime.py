@@ -3,8 +3,11 @@ import argparse
 import ast
 import json
 from pathlib import Path
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from experiments.benchmark_paths import task_directories
 POLICY_START = "<!-- generated submission policy -->"
 POLICY_END = "<!-- end generated submission policy -->"
 
@@ -41,7 +44,8 @@ def with_submission_policy(instruction, contract):
 def sync(check=False):
     stale = []
     count = 0
-    for contract in sorted((ROOT / "benchmark/tasks").glob("*/tests/contract.json")):
+    for contract in sorted(task / "tests/contract.json" for task in task_directories(ROOT)
+                           if (task / "tests/contract.json").is_file()):
         tests = contract.parent
         if tests.parent.name.startswith("va") and tests.parent.name != "va07-triangle-repair":
             continue
@@ -55,7 +59,7 @@ def sync(check=False):
         if "first_batch_triangle" in modules:
             names.add("triangle_oscillator")
         for name in sorted(names):
-            source = ROOT / "benchmark/checkers" / (name + ".py")
+            source = ROOT / "benchmark/material/historyref/legacy-authoring/checkers" / (name + ".py")
             target = tests / source.name
             data = source.read_bytes()
             if not target.exists() or target.read_bytes() != data:

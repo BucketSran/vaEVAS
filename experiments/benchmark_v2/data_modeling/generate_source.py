@@ -4,7 +4,7 @@ from pathlib import Path
 
 PDK_REV='f62031a1be9aefe902d6d54cddd6f59b57627436'
 SOURCE_REV='892272208df28b6c7620101e129a9d8dd95ebab7'
-TASK=Path(__file__).resolve().parents[3]/'benchmark/tasks/v2-data-sampling-identification'
+TASK=Path(__file__).resolve().parents[3]/'benchmark/material/draftbench/batches/v2-01/tasks/v2-data-sampling-identification'
 
 def flatten(path):
     text=[]

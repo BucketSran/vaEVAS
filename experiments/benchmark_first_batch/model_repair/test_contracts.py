@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import unittest
 ROOT=Path(__file__).resolve().parents[3]
-spec=importlib.util.spec_from_file_location('checker',ROOT/'benchmark/checkers/first_batch_model_repair.py')
+spec=importlib.util.spec_from_file_location('checker',ROOT/'benchmark/material/historyref/legacy-authoring/checkers/first_batch_model_repair.py')
 checker=importlib.util.module_from_spec(spec);spec.loader.exec_module(checker)
 
 def fixture(case,targets):
@@ -29,7 +29,7 @@ def fixture(case,targets):
 
 class ComparatorTests(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):cls.cases=json.loads((ROOT/'benchmark/tasks/spec-latched-comparator/tests/cases.json').read_text())
+    def setUpClass(cls):cls.cases=json.loads((ROOT/'benchmark/material/historyref/tasks/spec-latched-comparator/tests/cases.json').read_text())
     def test_analytic_event_trajectories_pass(self):
         for c in self.cases:self.assertTrue(checker.evaluate(fixture(c,checker.comparator_targets(c)),c)['passed'])
     def test_swapped_decision_fails(self):
@@ -66,7 +66,7 @@ class ComparatorTests(unittest.TestCase):
             self.assertFalse(checker.evaluate(fixture(c,checker.comparator_targets(wrong)),c)['passed'])
 
 class AdditionalContracts(unittest.TestCase):
-    def cases(self,task):return json.loads((ROOT/'benchmark/tasks'/task/'tests/cases.json').read_text())
+    def cases(self,task):return json.loads((ROOT/'benchmark/material/historyref/tasks'/task/'tests/cases.json').read_text())
     def test_phase_pulses_and_semantic_faults(self):
         for c in self.cases('spec-cdr-phase-detector'):
             targets=checker.bbpd_targets(c);self.assertTrue(checker.evaluate(fixture(c,targets),c)['passed'])
@@ -88,24 +88,24 @@ class AdditionalContracts(unittest.TestCase):
 
 class UVLOTests(unittest.TestCase):
     def test_supply_crossing_qualification(self):
-        cases=json.loads((ROOT/'benchmark/tasks/spec-uvlo-deglitch/tests/cases.json').read_text())
+        cases=json.loads((ROOT/'benchmark/material/historyref/tasks/spec-uvlo-deglitch/tests/cases.json').read_text())
         for c in cases:
             targets=checker.uvlo_targets(c);self.assertTrue(checker.evaluate(fixture(c,targets),c)['passed'])
             self.assertGreater(targets['pgood'][1][0],7e-9)
             wrong=dict(c,tgood=1e-12,tbad=1e-12)
             self.assertFalse(checker.evaluate(fixture(c,checker.uvlo_targets(wrong)),c)['passed'])
     def test_cancelled_startup_glitch_rejected(self):
-        c=json.loads((ROOT/'benchmark/tasks/spec-uvlo-deglitch/tests/cases.json').read_text())[0]
+        c=json.loads((ROOT/'benchmark/material/historyref/tasks/spec-uvlo-deglitch/tests/cases.json').read_text())[0]
         targets=checker.uvlo_targets(c);targets['pgood'] += [(4e-9,1),(5e-9,0)];targets['pgood'].sort()
         self.assertFalse(checker.evaluate(fixture(c,targets),c)['passed'])
 
 class SARZoomTests(unittest.TestCase):
-    def cases(self,task):return json.loads((ROOT/'benchmark/tasks'/task/'tests/cases.json').read_text())
+    def cases(self,task):return json.loads((ROOT/'benchmark/material/historyref/tasks'/task/'tests/cases.json').read_text())
     def test_sar_public_and_private_inputs_respect_boundary_margin(self):
         from fractions import Fraction
         import re
         cases=self.cases('repair-sar-abort')
-        visible=(ROOT/'benchmark/tasks/repair-sar-abort/environment/public/visible.scs').read_text()
+        visible=(ROOT/'benchmark/material/historyref/tasks/repair-sar-abort/environment/public/visible.scs').read_text()
         wave=re.search(r'Vvin .*?wave=\[([^\]]+)\]',visible).group(1).split()
         inputs=[Fraction(str(v)) for c in cases for t,v in c['vin']]+[Fraction(v) for v in wave[1::2]]
         for vin in inputs:

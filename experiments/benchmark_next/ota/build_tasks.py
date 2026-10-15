@@ -33,7 +33,7 @@ def package(slug,action,title,contract,ref,alt,cases,public,mutants,dut=None):
  if dut:dut=normalize(dut)
  for c in cases+public:
   if 'support' in c:c['support']={n:normalize(t) for n,t in c['support'].items()}
- taskid='v3-ota-'+slug;task=ROOT/'benchmark/tasks'/taskid
+ taskid='v3-ota-'+slug;task=ROOT/'benchmark/material/draftbench/batches/v3-01/tasks'/taskid
  put(task/'instruction.md',f'# {title}\n\n{contract}\n\n交付 `/work/dut.va`；只修改此文件。固定后端 Spectre，候选原字节执行，后端编译或执行故障须诊断，不能自动计为语义零分。公开自测 `/work/public/cases.json` 和只读外围可用，终评只改变公开范围内的完整实验条件。权重 1。\n')
  put(task/'SOURCE.md',f'# 来源和权限\n\n规格 #147 {slug}，来源组 jku-ota-dynamics。A1/A3 为仓库原创固定负载电压合同及测量实现。A2 真值独立来自 JKU 晶体管 OTA ngspice 仿真，非实测、非 A1 合成。来源、工具和校准身份见 experiments/benchmark_next/ota/README.md。保留同源关联，不以不同参数增加题数。Spectre 候选运行的同题开源等价尚未证明。\n')
  put(task/'task.toml',f'schema_version = "1.4"\n[metadata]\nname = "{taskid}"\ncategory = "verilog-a"\nengineering_action = "{action}"\nsource_group = "jku-ota-dynamics"\nweight = 1\n[agent]\ntimeout_sec = 900\n[verifier]\ntimeout_sec = 600\n[environment]\nbuild_timeout_sec = 600\ncpus = 1\nmemory_mb = 1024\nstorage_mb = 2048\n')
@@ -46,7 +46,7 @@ def package(slug,action,title,contract,ref,alt,cases,public,mutants,dut=None):
  put(task/'tests/verify.py','from v2_runtime import main\nfrom v2_next_ota import evaluate\nif __name__ == "__main__": main(evaluate)\n')
  put(task/'tests/contract.json',json.dumps(dict(candidate_files=['dut.va'],output_files=[],task_id=taskid),indent=2)+'\n')
  put(task/'tests/cases.json',json.dumps(cases,indent=None if slug=='data-model' else 2)+'\n')
- for n in ['v2_runtime.py','v2_next_ota.py','adc_linearity.py']:shutil.copyfile(ROOT/'benchmark/checkers'/n,task/'tests'/n)
+ for n in ['v2_runtime.py','v2_next_ota.py','adc_linearity.py']:shutil.copyfile(ROOT/'benchmark/material/historyref/legacy-authoring/checkers'/n,task/'tests'/n)
  for p in [task/'solution/solve.sh',task/'tests/test.sh']:p.chmod(0o755)
  variants={'reference':(ref,True,'author reference'),'alternate':(alt,True,'different state/event representation')};variants.update(mutants)
  for name,(text,expected,why) in variants.items():
@@ -120,7 +120,7 @@ def data_task():
 误差分别在每个窗口检查，安静段不能稀释动态误差。初始数值冲击的前10 ns不评分，其完整原始观察仍提供。启动与重启400 ns窗口RMS<=20 mV、峰值<=100 mV；两个小阶跃40 ns窗口RMS<=2 mV、峰值<=8 mV；大阶跃、进入高端限幅与恢复40 ns窗口RMS<=20 mV、峰值<=75 mV；每次变化后200 ns至下一变化前100 ns（13 µs恢复的窗口在14.5 µs关断开始时结束）的稳态，以及最后1.5 µs长尾RMS<=6 mV、峰值<=12 mV；shutdown200 ns窗口RMS<=30 mV、峰值<=100 mV；初始关闭段RMS<=2 mV、峰值<=10 mV。各窗口实际观察时间不平移。误差是本用途的近似模型合同，不声称晶体管精确等价。'''
  wrong={'static':(ref.replace('V(vout)<+V(q);','V(vout)<+((V(enable)>0.9)?dc_curve(V(vin)):0);'),False,'static curve loses startup and dynamic response'),'single-pole':(ref.replace('dq=V(d)*1e9;dd=', 'dq=err/20n;dd='),False,'one fixed time constant does not explain amplitude dynamics'),'no-startup':(ref.replace('bias_drive=(V(enable)>0.9)?bias:0;', 'bias_drive=(V(enable)>0.9)?1:0;').replace('if(V(b)<0.95)', 'if(V(b)<0)'),False,'omits startup bias behavior'),'clear-recovery':(ref.replace('analog begin','real recovery_end;\nanalog begin\n @(initial_step) recovery_end=0;\n @(cross(V(vin)-1.3,-1)) recovery_end=$abstime+1n;').replace('V(b)<+idt(db,0);','if($abstime<recovery_end) begin dq=-V(q)/0.1n;dd=-V(d)/0.1n;end\n V(b)<+idt(db,0);'),False,'clears continuous output and velocity to initial state on rail recovery')}
  package('data-model','data-modeling','从真实 OTA 完整轨迹建立连续模型',contract,ref,alt,cases,public,wrong)
- task=ROOT/'benchmark/tasks/v3-ota-data-model'
+ task=ROOT/'benchmark/material/draftbench/batches/v3-01/tasks/v3-ota-data-model'
  (task/'environment/public/observations').mkdir(parents=True,exist_ok=True)
  for p in source.glob('*.json'):shutil.copyfile(p,task/'environment/public/observations'/p.name)
  (task/'environment/public/source').mkdir(parents=True,exist_ok=True)

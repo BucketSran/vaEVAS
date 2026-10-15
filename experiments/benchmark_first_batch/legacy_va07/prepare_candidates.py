@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[3]
 GENERATOR=ROOT/'experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py'
-TASK=ROOT/'benchmark/tasks/va07-triangle-repair'
+TASK=ROOT/'benchmark/material/historyref/tasks/va07-triangle-repair'
 
 
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -37,7 +37,7 @@ def prepare(output):
         plan.append(dict(variant=variant,candidate=str(candidate.resolve()),candidate_sha256=digest(candidate),
             cases=groups[variant],expected_score=0 if variant not in ['reference','equivalent'] else 1))
     result=dict(status='prepared_only',simulator_executed=False,task='va07-triangle-repair',
-        generator_sha256=digest(GENERATOR),canonical_oracle_sha256=digest(ROOT/'benchmark/checkers/triangle_oscillator.py'),
+        generator_sha256=digest(GENERATOR),canonical_oracle_sha256=digest(ROOT/'benchmark/material/historyref/legacy-authoring/checkers/triangle_oscillator.py'),
         original_cases_sha256=digest(TASK/'tests/cases.json'),reference_sha256=digest(TASK/'solution/dut.va'),
         signal_mapping=dict(ctl='positive velocity input relative to grounded r',z='triangle output relative to grounded r',count='integer reversal count voltage relative to grounded r'),
         candidates=plan,planned_condition_count=sum(len(r['cases']) for r in plan),

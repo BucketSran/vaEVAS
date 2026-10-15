@@ -1,5 +1,9 @@
 """Curate actual author runs with material identities, excluding private config."""
 import argparse,hashlib,json,pathlib,tarfile
+import sys as _benchmark_sys
+from pathlib import Path as _BenchmarkPath
+_benchmark_sys.path.insert(0, str(_BenchmarkPath(__file__).resolve().parents[3]))
+from experiments.benchmark_paths import material_path
 ROOT=pathlib.Path(__file__).resolve().parents[3];HERE=pathlib.Path(__file__).parent
 
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
@@ -21,9 +25,9 @@ def main():
   preparation=json.loads((out/'preparation.json').read_text())
   for name,value in preparation['source_identity'].items():
    if name=='test.sh':continue  # Harness freezes its canonical unchanged CLI wrapper.
-   if name=='instruction.md':current=ROOT/item['task']/name
-   else:current=ROOT/item['task']/'tests'/name
-   if name.startswith('v2_') and current.suffix=='.py':current=ROOT/'benchmark/checkers'/name
+   if name=='instruction.md':current=material_path(ROOT, item['task'])/name
+   else:current=material_path(ROOT, item['task'])/'tests'/name
+   if name.startswith('v2_') and current.suffix=='.py':current=ROOT/'benchmark/material/historyref/legacy-authoring/checkers'/name
    if current.exists():assert sha(current)==value,str(current)
   conditions=[]
   for r in json.loads((out/'results.json').read_text()):

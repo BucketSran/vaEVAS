@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / 'benchmark/checkers'))
+sys.path.insert(0, str(ROOT / 'benchmark/material/historyref/legacy-authoring/checkers'))
 from v2_structure import evaluate, check_chopper_boundary
 import json
 
@@ -15,7 +15,7 @@ class ReplacementContractTests(unittest.TestCase):
         import re
         from experiments.benchmark_v2.spec_modeling.build_structure import consumer_probe,CONFIG
         for sid,(_,consumer) in CONFIG.items():
-            task=next((ROOT/'benchmark/tasks').glob('v2-spec-'+sid+'-*'))
+            task=next((ROOT/'benchmark/material/draftbench/batches/v2-01/tasks').glob('v2-spec-'+sid+'-*'))
             source=consumer_probe((task/'solution'/f'{consumer}.va').read_text(),sid)
             assignments=re.findall(r'V\([^)]*\)\s*<\+\s*([^;]+);',source)
             self.assertTrue(assignments)
@@ -72,7 +72,7 @@ class ReplacementContractTests(unittest.TestCase):
 
     def test_component_cases_compile_only_selected_candidate_helper(self):
         for sid in ('091', '307', '308'):
-            task = next((ROOT/'benchmark/tasks').glob('v2-spec-'+sid+'-*'))
+            task = next((ROOT/'benchmark/material/draftbench/batches/v2-01/tasks').glob('v2-spec-'+sid+'-*'))
             cases = json.loads((task/'tests/cases.json').read_text())
             self.assertEqual(len(cases), 6)
             for case in cases[2:4]:

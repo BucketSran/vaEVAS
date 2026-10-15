@@ -21,7 +21,7 @@ DAC 扫描使用可读固定器件，16个码各采一次。端点步长由实�
 
 `build_tasks.py`生成Harbor资产、公开实例、私有条件、两种正确实现和针对语义错误的VA变体。`manifest.json`登记完整变体。`prepare.py`复用既有runtime，不另建执行框架；原参考脚本保持原字节，通过固定路径映射的cp执行，产物作为实际候选。公开镜像只COPY public和starter，私有checker与reference不进入解题包。
 
-六题私有tests均包含独立checker、运行时及PSF读取依赖，直接执行 `sh benchmark/tasks/v3-converter-adc-spectrum/tests/test.sh --help` 可检查参数入口，无需prepare补入模块。其他五题使用相同入口。
+六题私有tests均包含独立checker、运行时及PSF读取依赖，直接执行 `sh benchmark/material/draftbench/batches/v3-01/tasks/v3-converter-adc-spectrum/tests/test.sh --help` 可检查参数入口，无需prepare补入模块。其他五题使用相同入口。
 
 本地检查 `python3 -B -m unittest discover -s experiments/benchmark_next/converter -p test_checker.py -v` 校验已知单音/谐波功率、端点拟合及实际波形保持判据，并把每题tests单独复制到临时目录执行原test.sh参数入口。它不替代真实Spectre作者校准。远端原始输出留在忽略runs目录，精简结果与全部失败尝试见[作者校准](author-calibration.md)。[交付复用审计](delivery-reuse.json)绑定34份冻结准备与当前题包。204项可执行评分资产不变，单位说明只是解释既有电气指标表示。早期四DAC旧题面仅留SHA，原文差异未知，旧参考结果保留历史。四DAC当前参考重新运行全部8条件。[完整题包快照](task-snapshot.json)保存包含题面、公开输入、参考和私有tests的91文件归档身份；其他可恢复题面只增加单位说明，单独记录精确差异。
 

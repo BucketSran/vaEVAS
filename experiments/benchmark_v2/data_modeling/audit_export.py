@@ -2,7 +2,7 @@
 import csv,json
 from pathlib import Path
 from generate_source import experiments,interp
-ROOT=Path(__file__).resolve().parents[3];TASK=ROOT/'benchmark/tasks/v2-data-sampling-identification';report={}
+ROOT=Path(__file__).resolve().parents[3];TASK=ROOT/'benchmark/material/draftbench/batches/v2-01/tasks/v2-data-sampling-identification';report={}
 for group,exps in experiments().items():
     for exp in exps:
         path=TASK/('tests/truth' if group=='heldout' else 'environment/public/data')/(exp['name']+'.csv')

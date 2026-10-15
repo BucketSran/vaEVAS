@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 import tarfile
 ROOT=Path(__file__).resolve().parents[3]
-spec=importlib.util.spec_from_file_location('actual_psf_storage',ROOT/'benchmark/checkers/first_batch_optimization.py')
+spec=importlib.util.spec_from_file_location('actual_psf_storage',ROOT/'benchmark/material/historyref/legacy-authoring/checkers/first_batch_optimization.py')
 M=importlib.util.module_from_spec(spec);spec.loader.exec_module(M)
 
 

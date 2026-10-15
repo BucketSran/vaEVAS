@@ -69,7 +69,7 @@ def audit(root, run_root, legacy_audit):
     published_measurement = subprocess.check_output(['git','show',measurement_revision+':'+str(measurement_path.relative_to(root))],cwd=root)
     seal.require(published_measurement == measurement_path.read_bytes(), 'measurement compact receipt differs from fixed revision')
     seal.require(measurement['tool_sha256'] == digest((base/'verification_measurement/regrade_measurement.py').read_bytes()), 'measurement strict regrade tool differs')
-    measurement_checker = root / 'benchmark/checkers/first_batch_measurement.py'
+    measurement_checker = root / 'benchmark/material/historyref/legacy-authoring/checkers/first_batch_measurement.py'
     seal.require(digest(measurement_checker.read_bytes()) == measurement['canonical_identity']['first_batch_measurement.py'], 'measurement regrade checker differs from current')
     measurement_records = {r['job_id']: r for r in measurement['records']}
     matrix = read_json(run_root / 'round2-active-matrix.json')
@@ -143,7 +143,7 @@ def audit(root, run_root, legacy_audit):
                 seal.require(len(report['cases']) == 1, 'expected one condition per job')
                 old = report['cases'][0]
                 seal.require(old['name'] == wrapper['condition_id'], 'case name mismatch')
-                task = root / 'benchmark/tasks' / entry['task_id']
+                task = root / 'benchmark/material/historyref/tasks' / entry['task_id']
                 frozen_bytes = archive.read('run/work/tests/cases.json')
                 frozen = json.loads(frozen_bytes)[0]
                 seal.require(digest(frozen_bytes) == report['cases_sha256'], 'report cases binding')
@@ -251,13 +251,13 @@ def audit(root, run_root, legacy_audit):
     # VA08 retains its existing standalone numeric execution boundary. Reverify
     # sealed bytes and the previously audited current/frozen mathematical inputs.
     legacy = read_json(legacy_audit)
-    adc_task = root / 'benchmark/tasks/va08-adc-linearity'
+    adc_task = root / 'benchmark/material/historyref/tasks/va08-adc-linearity'
     adc_compact_path = root / 'experiments/adc_linearity/calibration-20261007.json'
     adc_compact = read_json(adc_compact_path)
     adc_planned = adc_compact['corrected_original_calibration']['jobs']+[adc_compact['isolated_early_read']]
     require_condition_coverage([r['job_id'] for r in adc_planned], [r['job_id'] for r in legacy['va08']['jobs']])
     adc_expected = {r['job_id']:r for r in adc_planned}
-    adc_checker = load(root/'benchmark/checkers/adc_linearity.py','calibration_adc_oracle')
+    adc_checker = load(root/'benchmark/material/historyref/legacy-authoring/checkers/adc_linearity.py','calibration_adc_oracle')
     adc_cases = {c['name']:c for c in read_json(adc_task/'tests/cases.json')}
     adc_criteria = digest((adc_task/'instruction.md').read_bytes()+(adc_task/'tests/verify.py').read_bytes()+(adc_task/'tests/cases.json').read_bytes())
     for audited in legacy['va08']['jobs']:
@@ -324,7 +324,7 @@ def audit(root, run_root, legacy_audit):
             reference_conditions=stats([r for r in selected if r['role']=='reference']),
             equivalent_conditions=stats([r for r in selected if r['role']=='equivalent']),semantic_negative_conditions=stats([r for r in selected if r['role']=='semantic_negative']),
             uncovered_current_numerical_conditions=[r['job_id'] for r in selected if not r['current_numerical_contract_covered']],
-            current_task_metadata_sha256=digest((root/'benchmark/tasks'/task/'task.toml').read_bytes())))
+            current_task_metadata_sha256=digest((root/'benchmark/material/historyref/tasks'/task/'task.toml').read_bytes())))
     history={}
     for rnd in sorted({r['round'] for r in records}):history[rnd]=stats([r for r in records if r['round']==rnd])
     return dict(schema_version=1,evidence_kind='sealed_actual_spectre_calibration_audit',simulator_executed=False,
@@ -349,7 +349,7 @@ def audit(root, run_root, legacy_audit):
             'Measurement zero-code and empty PLL reference guards have row-level tests only; no actual VA induction established.',
             'This selected-input history is not an inventory of every earlier exploratory run in the repository.',
             'Targeted negative calibration does not establish full cross-product coverage; no Agentic named-model conclusions.'],
-        legacy_va08_documentation_identity_delta=dict(file='benchmark/tasks/va08-adc-linearity/SOURCE.md',
+        legacy_va08_documentation_identity_delta=dict(file='benchmark/material/historyref/tasks/va08-adc-linearity/SOURCE.md',
             execution_revision=adc_execution_revision,frozen_sha256=digest(subprocess.check_output(['git','show',adc_execution_revision+':benchmark/tasks/va08-adc-linearity/SOURCE.md'],cwd=root)),
             current_sha256=digest((adc_task/'SOURCE.md').read_bytes()),interpretation='Historical evidence documentation changed; numeric inputs/reference/checker and standalone task boundary verified separately.'),
         public_reference_derivation={name:{key:value for key,value in data.items() if key!='source'} for name,data in derived_reference.items()},

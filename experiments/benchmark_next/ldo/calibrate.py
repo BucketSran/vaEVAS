@@ -2,6 +2,7 @@
 import argparse,json,pathlib,subprocess,sys
 ROOT=pathlib.Path(__file__).resolve().parents[3];HERE=pathlib.Path(__file__).parent
 sys.path.insert(0,str(ROOT))
+from experiments.benchmark_paths import material_path
 from experiments.benchmark_first_batch.runtime import prepare,execute
 
 def main():
@@ -10,7 +11,7 @@ def main():
  a.output=a.output.resolve();a.output.mkdir(parents=True,exist_ok=True)
  for item in plan:
   if a.variant and item['variant'] not in a.variant:continue
-  task=ROOT/item['task'];out=a.output/(task.name+'-'+item['variant']);candidate=ROOT/item['candidate']/'dut.va'
+  task=material_path(ROOT, item['task']);out=a.output/(task.name+'-'+item['variant']);candidate=material_path(ROOT, item['candidate'])/'dut.va'
   if item['variant']=='reference':
    # Execute original oracle script using its unchanged fixed paths in a Docker
    # container; /work is a fresh host directory, /solution is immutable.

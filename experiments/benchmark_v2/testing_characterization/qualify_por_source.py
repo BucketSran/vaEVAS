@@ -6,7 +6,7 @@ inventing an alignment tolerance after execution.
 """
 from pathlib import Path
 import argparse,json,sys,hashlib
-sys.path.insert(0,str(Path(__file__).resolve().parents[3]/'benchmark/checkers'))
+sys.path.insert(0,str(Path(__file__).resolve().parents[3]/'benchmark/material/historyref/legacy-authoring/checkers'))
 from adc_linearity import read_psf
 from v2_testing import Wave
 

@@ -1,5 +1,9 @@
 """Different authored state realizations; live calibration remains required."""
 import re
+import sys as _benchmark_sys
+from pathlib import Path as _BenchmarkPath
+_benchmark_sys.path.insert(0, str(_BenchmarkPath(__file__).resolve().parents[3]))
+from experiments.benchmark_paths import material_path
 
 REASONS={
  '071':'voltage deficit relative to vinit is the acquisition state',
@@ -144,7 +148,7 @@ def main():
     out=Path(__file__).resolve().parent
     changes=[]
     for sid,reason in REASONS.items():
-        task=next((root/'benchmark/tasks').glob('v2-spec-'+sid+'-*'))
+        task=next((root/'benchmark/material/draftbench/batches/v2-01/tasks').glob('v2-spec-'+sid+'-*'))
         dest=out/'candidates'/task.name/'alternative'
         files={}
         for f in (task/'solution').glob('*.va'):
@@ -164,7 +168,7 @@ def main():
         sid=row['source_id']
         if sid in REASONS:
             row['alternative_calibration']='pending'
-            task=root/row['assets']['task']
+            task=material_path(root, row['assets']['task'])
             for variant in row['variants']:
                 if variant['id']=='alternative':
                     variant['status']='pending';variant['semantic_behavior']=REASONS[sid]
