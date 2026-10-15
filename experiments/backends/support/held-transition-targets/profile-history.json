@@ -1,0 +1,134 @@
+{
+  "budget_V": 1e-07,
+  "profiles": [
+    {
+      "profile": "v1",
+      "pass": false,
+      "reference_output_manifest_sha256": "435774cc1f4532789fc4e464df57c1e53adc8a37753af6890b3cebad5db20383",
+      "cases": [
+        {
+          "case": "held-nested-select",
+          "reference_SCS_sha256": "73f2ec457bef0ca1acc46bef09dd67872a65f2c200d733d57ad318e0ae76ec3f",
+          "reference_psf_sha256": "06d0e10015645f55d9bdbc25eec7338e593640c363f05c07210b620f0c4169c7",
+          "reference_native_count": 16,
+          "reference_max_print_cell_error_V": 4.65e-14,
+          "reference_missing_exact_forced": [
+            3,
+            3.25
+          ],
+          "reference_effective_PSF_settings": {
+            "reltol": "0.000100000",
+            "abstol(V)": "1.00000e-06",
+            "method": "\"traponly\"",
+            "maxstep": "0.0100000",
+            "errpreset": "\"conservative\""
+          }
+        },
+        {
+          "case": "held-hidden-feedback",
+          "reference_SCS_sha256": "73f2ec457bef0ca1acc46bef09dd67872a65f2c200d733d57ad318e0ae76ec3f",
+          "reference_psf_sha256": "1768570eb734bd20665db63d0f368111ea44550ba90d33d4b8202ed5edeb0601",
+          "reference_native_count": 16,
+          "reference_max_print_cell_error_V": 4.65e-14,
+          "reference_missing_exact_forced": [
+            3,
+            3.25
+          ],
+          "reference_effective_PSF_settings": {
+            "reltol": "0.000100000",
+            "abstol(V)": "1.00000e-06",
+            "method": "\"traponly\"",
+            "maxstep": "0.0100000",
+            "errpreset": "\"conservative\""
+          }
+        }
+      ]
+    },
+    {
+      "profile": "v2",
+      "pass": false,
+      "reference_output_manifest_sha256": "4ae1c65980ed09146d32cbd7f378040a7e4a0f3fb5f0ad8beb1ae60e4861883e",
+      "cases": [
+        {
+          "case": "held-nested-select",
+          "reference_SCS_sha256": "ffa0ee8a92c5997243936c8d86dd24a73ca95fbddc11adb64084e74ce06d7a23",
+          "reference_psf_sha256": "e92a9116e48acca54a39cedb05ac49589158a0780b2de0d08d1a2078d0e160fa",
+          "reference_native_count": 16,
+          "reference_max_print_cell_error_V": 4.65e-14,
+          "reference_missing_exact_forced": [
+            3,
+            3.25
+          ],
+          "reference_effective_PSF_settings": {
+            "reltol": "1.00000e-11",
+            "abstol(V)": "1.00000e-12",
+            "method": "\"traponly\"",
+            "maxstep": "0.0100000",
+            "errpreset": "\"conservative\""
+          }
+        },
+        {
+          "case": "held-hidden-feedback",
+          "reference_SCS_sha256": "ffa0ee8a92c5997243936c8d86dd24a73ca95fbddc11adb64084e74ce06d7a23",
+          "reference_psf_sha256": "28592b99a0fea38e948f09a00d9d5d473305a461840afa59ce1604e54083fa08",
+          "reference_native_count": 16,
+          "reference_max_print_cell_error_V": 4.65e-14,
+          "reference_missing_exact_forced": [
+            3,
+            3.25
+          ],
+          "reference_effective_PSF_settings": {
+            "reltol": "1.00000e-11",
+            "abstol(V)": "1.00000e-12",
+            "method": "\"traponly\"",
+            "maxstep": "0.0100000",
+            "errpreset": "\"conservative\""
+          }
+        }
+      ]
+    },
+    {
+      "profile": "v3",
+      "pass": true,
+      "reference_output_manifest_sha256": "6588023d1eabf92cdf7b8a18b3c929f14d5875727786650d20ab063b293fe204",
+      "cases": [
+        {
+          "case": "held-nested-select",
+          "reference_SCS_sha256": "305b9cfc9991a44cbf01e17984b5f945098c8e945ead74eaccf58b5f7fdb8473",
+          "reference_psf_sha256": "9402af661078210d500d321fd5e21242993d3c84706acbd2a8aec624c49c3654",
+          "reference_native_count": 16,
+          "reference_max_print_cell_error_V": 2.5e-15,
+          "reference_missing_exact_forced": [],
+          "reference_effective_PSF_settings": {
+            "reltol": "1.00000e-11",
+            "abstol(V)": "1.00000e-12",
+            "method": "\"traponly\"",
+            "maxstep": "0.00781250",
+            "errpreset": "\"conservative\""
+          }
+        },
+        {
+          "case": "held-hidden-feedback",
+          "reference_SCS_sha256": "305b9cfc9991a44cbf01e17984b5f945098c8e945ead74eaccf58b5f7fdb8473",
+          "reference_psf_sha256": "478bda05b8ba6dbc012ae2d9fa54d1fbe008fb8c0517fa05b06523f9b6a7324e",
+          "reference_native_count": 16,
+          "reference_max_print_cell_error_V": 2.5e-15,
+          "reference_missing_exact_forced": [],
+          "reference_effective_PSF_settings": {
+            "reltol": "1.00000e-11",
+            "abstol(V)": "1.00000e-12",
+            "method": "\"traponly\"",
+            "maxstep": "0.00781250",
+            "errpreset": "\"conservative\""
+          }
+        }
+      ]
+    }
+  ],
+  "v1_ignored_tran_options": [
+    "reltol",
+    "vabstol"
+  ],
+  "v2_change": "move tolerances to simulatorOptions, add strobeonly",
+  "v3_change": "only maxstep .01 to .0078125; original 16 requested times unchanged"
+}

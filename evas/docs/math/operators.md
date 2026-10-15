@@ -70,7 +70,14 @@ IR 保存 operators 与调用点引用。结构依赖在数值绑定前检查，
 
 ## transition
 
-接受本实例已提交标量状态与常数的仿射输入；支持三参数 `transition(x,d,tr)` 和四参数 `transition(x,d,tr,tf)`。
+接受本实例已提交标量状态与常数的仿射输入。保持量条件的 `Select` 可以嵌在算术内部，
+例如 `transition(q-2*(q<2?0:1),0,0.25,0.25)` 在 q=0、1、2、3 时的目标依次为0、1、0、1。
+准入先完整展开所有值分支组合，再逐个验证仿射形式，最后才按已提交状态选择当前分支；
+未选臂、零系数电压依赖和非线性状态乘积仍参与原结构检查。沿用每次展开最多8192个候选的限制，
+超限明确返回 `step_budget`。这不开放历史电压谓词，也不修改 IR 或事件准入。
+[独立测试与有限参考](../../../experiments/backends/support/held-transition-targets/README.md)保留原算式、负控和参考观测缺口。
+
+支持三参数 `transition(x,d,tr)` 和四参数 `transition(x,d,tr,tf)`。
 延迟和边沿为有限实例常数，`d≥0`、`tr>0,tf>0`。仅省略 fall 且显式 rise 为正时，
 按 Verilog-AMS LRM 2.4 §4.5.8 将 `tf=tr`，编译到同一 Transition IR；保留原源位置、实例和调用点。
 这不引入零边沿或完全省略边沿的默认最小时间。
