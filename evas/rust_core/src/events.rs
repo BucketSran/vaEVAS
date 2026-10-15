@@ -320,18 +320,32 @@ pub(crate) fn contribution_affine(
             // Reuse affine validation on a representative arm, retaining every
             // structural dependency separately for feedback checks.
             let representative = representative(expr);
-            let state_only = |v: &AffineState| {
-                !v.state_dependencies.is_empty()
-                    && v.node_dependencies.is_empty()
-                    && v.operator_dependencies.is_empty()
-            };
+            let operator_free = |v: &AffineState| v.operator_dependencies.is_empty();
             let operator_only = |v: &AffineState| {
                 !v.operator_dependencies.is_empty()
                     && v.node_dependencies.is_empty()
                     && v.state_dependencies.is_empty()
             };
+            let state_only = |v: &AffineState| {
+                !v.state_dependencies.is_empty()
+                    && v.node_dependencies.is_empty()
+                    && v.operator_dependencies.is_empty()
+            };
+            let held_coefficient =
+                (state_only(&a) && operator_only(&b)) || (operator_only(&a) && state_only(&b));
+            let transition_coefficient = ((operator_free(&a) && operator_only(&b))
+                || (operator_only(&a) && operator_free(&b)))
+                && a.operator_dependencies
+                    .iter()
+                    .chain(&b.operator_dependencies)
+                    .all(|&index| {
+                        matches!(
+                            program.operators[index],
+                            crate::ir::OperatorSpec::Transition { .. }
+                        )
+                    });
             let sampled_coefficient = matches!(expr, Expression::Multiply { .. })
-                && ((state_only(&a) && operator_only(&b)) || (operator_only(&a) && state_only(&b)));
+                && (held_coefficient || transition_coefficient);
             if matches!(expr, Expression::Divide { .. }) && b.has_variables {
                 return Err(Error::new(
                     "unsupported_transient",

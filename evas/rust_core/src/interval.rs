@@ -144,7 +144,15 @@ fn add(a: f64, b: f64) -> Interval {
 }
 
 fn multiply(a: f64, b: f64) -> Interval {
+    #[cfg(test)]
+    zero_product_tests::record(a, b);
     let value = a * b;
+    // A finite exact zero factor has an exact signed-zero product. Keep the
+    // rounded product itself, including its sign; underflow of nonzero factors
+    // still needs the exact-product test below.
+    if (a == 0.0 || b == 0.0) && a.is_finite() && b.is_finite() {
+        return Interval::point(value);
+    }
     Interval::rounded(value, equal_products(a, b, value, 1.0))
 }
 
@@ -246,3 +254,7 @@ mod tests {
         assert!(!equal_products(0.1, 0.1, 0.01, 1.0));
     }
 }
+
+#[cfg(test)]
+#[path = "interval_zero_product_tests.rs"]
+pub(crate) mod zero_product_tests;

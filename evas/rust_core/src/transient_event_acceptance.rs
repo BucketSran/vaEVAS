@@ -407,16 +407,26 @@ impl Controller {
         plan: CalendarPlan,
     ) -> Result<(Frame, Vec<ScheduledEvent>), Error> {
         let until = plan.horizon(trajectory);
-        next.operators = next.operators.evaluation(next.time)?.advanced_until(
-            I::point(next.time),
-            &next.states,
-            &next.state_bounds,
-            &[],
-            until,
-        )?;
+        next.operators = next
+            .operators
+            .evaluation(next.time)?
+            .advanced_until_with_time_proofs(
+                I::point(next.time),
+                &next.states,
+                &next.state_bounds,
+                &[],
+                until,
+                None,
+                Some(&next.time_proofs),
+            )?;
         let future = plan.resolve(model, trajectory, &next, until)?;
-        next.operators
-            .check_deadline_order(next.time, future.first().map(|event| event.bounds()))?;
+        next.operators.check_deadline_order(
+            next.time,
+            future.first().map(|event| event.bounds()),
+            future
+                .first()
+                .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
+        )?;
         // Nonlinear extension can widen the endpoint enclosure. Certify the
         // stored observation against the final history, not just reset closure.
         let inputs = trajectory.value_bounds(next.time);

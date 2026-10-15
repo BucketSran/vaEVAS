@@ -1,0 +1,102 @@
+{
+  "basis": "main 2eda4be73b1d7a5f651acd4ff69580187897398f; production not changed",
+  "unit_s": 9.5367431640625e-07,
+  "tier_budget_V": {
+    "Q1": 1.01e-05,
+    "Q2": 1.01e-06,
+    "Q3": 1.01e-07
+  },
+  "independent_development_conditions": [
+    {
+      "id": "ramp",
+      "kind": "ramp",
+      "interrupt": false,
+      "gain": 1,
+      "scale_V": 1,
+      "counter_final": 1,
+      "simulation_status": "not_run",
+      "recipe_status": "unqualified_pilot_only",
+      "files": {
+        "dut-callback.va": "e53fb04375ac070e7a07601adfc349394bf71c43c693eb0badcad4dccd616cc3",
+        "dut.va": "d9b4285b00203fb448297e65347338f62541b8bcba87886697259c8a2531dce0",
+        "observations.json": "73a58ae2eb05bca1a7aa7bdcaf9e3e58a3895e6218eaa3b7f9e87fb6bc79e9fd",
+        "tb-callback.scs": "888523ece48ef0b708119978b3c7cd786d4b2ff66f997ed4fb9329ba40f754e8",
+        "tb.scs": "1546399f4a4781a6a2e59df2a508473c652eb64f5f1ac9f5b2c0846bd1787ea9"
+      }
+    },
+    {
+      "id": "ramp-g1000",
+      "kind": "ramp",
+      "interrupt": false,
+      "gain": 1000,
+      "scale_V": 1,
+      "counter_final": 1,
+      "simulation_status": "not_run",
+      "recipe_status": "unqualified_pilot_only",
+      "files": {
+        "dut-callback.va": "2054958c802b7dc2eb1624aa56ec648925098c79844bee0c21460f62525033c0",
+        "dut.va": "9b2f16fa9890b3fa9a245cf55e60fddec49110b1032615dd05f395253bde296f",
+        "observations.json": "73a58ae2eb05bca1a7aa7bdcaf9e3e58a3895e6218eaa3b7f9e87fb6bc79e9fd",
+        "tb-callback.scs": "888523ece48ef0b708119978b3c7cd786d4b2ff66f997ed4fb9329ba40f754e8",
+        "tb.scs": "1546399f4a4781a6a2e59df2a508473c652eb64f5f1ac9f5b2c0846bd1787ea9"
+      }
+    },
+    {
+      "id": "history",
+      "kind": "history",
+      "interrupt": false,
+      "gain": 1,
+      "scale_V": 1,
+      "counter_final": 1,
+      "simulation_status": "not_run",
+      "recipe_status": "unqualified_pilot_only",
+      "files": {
+        "dut-callback.va": "7c6e0c7debfcfa9fc608f3210f114d6cfbe7f0fc7a5801d251e203742d29e44f",
+        "dut.va": "648b259f139607aa1b951d4cf4780f7188d659da5be486bdc57641d173d1c361",
+        "observations.json": "73a58ae2eb05bca1a7aa7bdcaf9e3e58a3895e6218eaa3b7f9e87fb6bc79e9fd",
+        "tb-callback.scs": "0467f7ddc45c110de2a5e3343f9f57a8db0622c5324f04075b141a948e27bf9b",
+        "tb.scs": "abd3703611ee3d3c721c0495327b25e35fe56fed8a374ec89ad2a47c0069e741"
+      }
+    },
+    {
+      "id": "filter",
+      "kind": "filter",
+      "interrupt": false,
+      "gain": 1,
+      "scale_V": 1,
+      "counter_final": 1,
+      "simulation_status": "not_run",
+      "recipe_status": "unqualified_pilot_only",
+      "files": {
+        "dut-callback.va": "7abdb9d4783d7be45168e3cca2352a4cae8e1be5171b9cf9bdbe16a17aa3bc67",
+        "dut.va": "23348e87af8653f17aa50dc6b33c666fe29dd5b2be74d2e3b030d3d06c598138",
+        "observations.json": "73a58ae2eb05bca1a7aa7bdcaf9e3e58a3895e6218eaa3b7f9e87fb6bc79e9fd",
+        "tb-callback.scs": "1ee63932beded88fda4723aee5db8ace240cf945c0eb6a37023d0e18b7040726",
+        "tb.scs": "c52968617ca82537c28dfabb7231f3f16b3d7ea31f9497e45f9330cbb1cbaf07"
+      }
+    },
+    {
+      "id": "filter-interrupt",
+      "kind": "filter",
+      "interrupt": true,
+      "gain": 1,
+      "scale_V": 1,
+      "counter_final": 2,
+      "simulation_status": "not_run",
+      "recipe_status": "unqualified_pilot_only",
+      "files": {
+        "dut-callback.va": "b7338a0fd821afb431cc065f5d00edc21d1f660c45bf04a9bb1eb47302388507",
+        "dut.va": "26e6da991d354b5bd996b0b1126e24556e135ca7068fab2dbcd45f2aaaf36a2e",
+        "observations.json": "9bf2e47e4a8c3629d2e2e4323ae3b2c65b83b15b128aba5ab5e872185b682f9c",
+        "tb-callback.scs": "16f00bc6511ade38e3d381d0e7e445d0240aa8be892b8923a8f7c9c4ae128fab",
+        "tb.scs": "120e0f017d65d77a2b5e17930cc87cc3bc26c54dd70ac4bbd6150177ce16ea57"
+      }
+    }
+  ],
+  "not_holdout": true,
+  "original_regressions_counted_separately": [
+    "r01-integrate-sync/core-boundary",
+    "r01-integrate-sync/c0"
+  ],
+  "singular_source_sha256": "52ea8f52abb7c4ae0bac1a61800811788fa52655ffef5f431538e1907efa9ffa"
+}

@@ -816,6 +816,7 @@ fn initialize(
             force_integrals: false,
             detached_timed: false,
             live_parameters: None,
+            time_proofs: Default::default(),
             program: program.clone(),
             trajectory: trajectory.clone(),
             driven: driven.to_vec(),

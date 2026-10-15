@@ -1,0 +1,27 @@
+{
+  "status": "static_design_checks_passed",
+  "checks": [
+    "five manual rational anchors",
+    "declared fixture hashes",
+    "callback-only source transformation",
+    "sorted unique observation grids and endpoints",
+    "three P+P prime identities",
+    "60/90 digit anchor consistency"
+  ],
+  "values": {
+    "f_regular_x2": "1.36787944117144232159552377016146086744581113103176783450784",
+    "f_interrupt_x1.5": "0.356530659712633423603799534991180453441918135487186955682892",
+    "f_interrupt_x2": "0.54828746203354205078412516518791950712005672457020696745916",
+    "gain1000_Q3_callback_halfwidth_limit_s": "1.926422119140625E-18"
+  },
+  "corrected_during_design": "interrupt centers sorted before neighbor generation; initial static check detected beyond-stop neighbor and was rerun after fixture correction",
+  "not_run": [
+    "VA compile",
+    "EVAS kernel",
+    "Spectre",
+    "four-backend adapter",
+    "checker calibration",
+    "same-controller rollback"
+  ],
+  "limitations": "Decimal consistency is not a certified reference error bound."
+}

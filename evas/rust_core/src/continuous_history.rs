@@ -184,7 +184,17 @@ impl LinearContinuous {
         time_bounds: I,
         parameters: &[I],
     ) -> Result<Self, Error> {
-        self.event_candidate(time, time_bounds, parameters, true)
+        self.event_candidate(time, time_bounds, parameters, true, self.context.clone())
+    }
+
+    pub(super) fn restarted_with_context(
+        &self,
+        time: f64,
+        time_bounds: I,
+        parameters: &[I],
+        context: Arc<Context>,
+    ) -> Result<Self, Error> {
+        self.event_candidate(time, time_bounds, parameters, true, context)
     }
 
     pub(crate) fn mapped_event(
@@ -193,7 +203,17 @@ impl LinearContinuous {
         time_bounds: I,
         parameters: &[I],
     ) -> Result<Self, Error> {
-        self.event_candidate(time, time_bounds, parameters, false)
+        self.event_candidate(time, time_bounds, parameters, false, self.context.clone())
+    }
+
+    pub(super) fn mapped_event_with_context(
+        &self,
+        time: f64,
+        bounds: I,
+        states: &[I],
+        context: Arc<Context>,
+    ) -> Result<Self, Error> {
+        self.event_candidate(time, bounds, states, false, context)
     }
 
     fn event_candidate(
@@ -202,8 +222,11 @@ impl LinearContinuous {
         time_bounds: I,
         parameters: &[I],
         propagate_to_representative: bool,
+        context: Arc<Context>,
     ) -> Result<Self, Error> {
-        if !self.event_dependent || self.parameters == parameters {
+        if (!self.event_dependent || self.parameters == parameters)
+            && self.context.time_proofs == context.time_proofs
+        {
             return Ok(self.clone());
         }
         if !time.is_finite() || !time_bounds.finite() || time_bounds.hi != time {
@@ -256,18 +279,13 @@ impl LinearContinuous {
         let exact_seed = (time_bounds.lo == time_bounds.hi)
             .then(|| self.exact_affine.as_ref()?.states_at(time))
             .flatten();
-        let mut next = Self::build(
-            self.context.clone(),
-            parameters.to_vec(),
-            time,
-            Some(physical),
-        )?
-        .ok_or_else(|| {
-            Error::new(
-                "invalid_ir",
-                "continuous network disappeared during event replay",
-            )
-        })?;
+        let mut next = Self::build(context, parameters.to_vec(), time, Some(physical))?
+            .ok_or_else(|| {
+                Error::new(
+                    "invalid_ir",
+                    "continuous network disappeared during event replay",
+                )
+            })?;
         // build applies the final held reset map. Save that physical state
         // before adding any propagation to the representative.
         let event_seed = (time_bounds, next.initial.clone());
@@ -309,7 +327,7 @@ impl LinearContinuous {
                     .to_vec()
             };
             next = Self::build(
-                self.context.clone(),
+                next.context.clone(),
                 parameters.to_vec(),
                 time,
                 Some(physical),

@@ -140,6 +140,7 @@ pub(crate) struct LinearContinuous {
     exact_seed: Option<Vec<Option<num_rational::BigRational>>>,
 }
 
+#[derive(Clone)]
 struct Context {
     program: Program,
     trajectory: Trajectory,
@@ -147,6 +148,7 @@ struct Context {
     force_integrals: bool,
     detached_timed: bool,
     live_parameters: Option<Arc<BTreeSet<usize>>>,
+    time_proofs: crate::exact_source::TimeProofs,
 }
 
 impl Context {
@@ -158,6 +160,7 @@ impl Context {
             .transpose()?
             .map(Arc::new);
         Ok(Self {
+            time_proofs: Default::default(),
             detached_timed: projected.is_some(),
             live_parameters,
             program: projected.unwrap_or_else(|| program.clone()),
@@ -195,6 +198,7 @@ fn local_context(context: &Arc<Context>, horizon: f64) -> Arc<Context> {
         force_integrals: context.force_integrals,
         detached_timed: context.detached_timed,
         live_parameters: context.live_parameters.clone(),
+        time_proofs: context.time_proofs.clone(),
     })
 }
 

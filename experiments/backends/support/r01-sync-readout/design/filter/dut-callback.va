@@ -1,0 +1,20 @@
+`include "disciplines.vams"
+module product_card(h,edge,y,qout,count,f);
+inout h,edge,y,qout,count,f;
+electrical h,edge,y,qout,count,f;
+parameter real T=9.5367431640625e-07;
+parameter real TT=9.9999999999999998e-13;
+parameter real G=1;
+integer q,n; real e;
+analog begin
+@(initial_step) begin q=0; n=0; end
+@(timer(T,0,TT)) begin q=1; n=n+1; $strobe("PRODUCT_CALLBACK %0d %.17g %0d",n,$abstime,q); end
+e=transition(q,0,T,T);
+V(h)<+2+$abstime/T;
+V(edge)<+e;
+V(y)<+G*V(h)*e;
+V(qout)<+q;
+V(count)<+n;
+V(f)<+laplace_nd(V(y),'{1},'{1,T});
+end
+endmodule

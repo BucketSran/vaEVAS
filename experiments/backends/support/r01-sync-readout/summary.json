@@ -1,0 +1,1185 @@
+{
+  "scope": "Finite sync-readout repair evidence; original scores unchanged; no new Q qualification",
+  "source": {
+    "base": "6be1e2cedaf3597825c6de4476dbf1beb42d8787",
+    "manifest": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/SOURCE-timeout-final-v2.json",
+      "sha256": "5f902e8ad5027ed7fd304427c7c41a6e380d4b26c92a11db4293dda850ba690b"
+    },
+    "archive": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/timeout-final-source-v2.tar.gz",
+      "sha256": "ef00726e10f6d334c0708e5d3216d35d2530ca4b11025759da907e590c646325"
+    },
+    "binaries": {
+      "debug": "142b4383b17840624ede1afa8ba2e60f5817a99dd2e9d15c94280c0c6c064763",
+      "release": "61348528decdd96f20c78d0f4afccba4c636f6abfeded4d30068d45c8897715d"
+    }
+  },
+  "original_requests": [
+    {
+      "task": "r01-integrate-sync",
+      "condition": "c0",
+      "elapsed_seconds": 91.33708629201283,
+      "solution_rows": 9001,
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c0/tb.scs": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1"
+      },
+      "grade": {
+        "original_checker": {
+          "passed": false,
+          "checks": 1776,
+          "max_abs_error": {
+            "held0": 6.411138842032926e-10,
+            "held1": 6.117345519029982e-10,
+            "held2": 6.140308261848304e-10,
+            "held3": 6.636702298834507e-10,
+            "valid": 1.8,
+            "dout": 1.0355578207829703
+          },
+          "retained_failure_examples": [
+            {
+              "time": 8.640000000000002e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 8.640000000000002e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.2674439970067503,
+              "error": 0.2674439970067503
+            },
+            {
+              "time": 8.71e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            }
+          ]
+        },
+        "paired_observation": {
+          "output_nodes": [
+            "dout",
+            "held0",
+            "held1",
+            "held2",
+            "held3",
+            "valid"
+          ],
+          "input_nodes": [
+            "ain0",
+            "ain1",
+            "ain2",
+            "ain3",
+            "read_en",
+            "rst",
+            "sel0",
+            "sel1",
+            "track",
+            "vin"
+          ],
+          "output_passed": false,
+          "input_passed": true,
+          "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+          "max_abs_difference": {
+            "ain0": 0.0,
+            "ain1": 0.0,
+            "ain2": 0.0,
+            "ain3": 0.0,
+            "dout": 1.035566323035457,
+            "held0": 1.4114454178093538e-05,
+            "held1": 1.8421584845551564e-05,
+            "held2": 2.3017575682571234e-05,
+            "held3": 2.9557770563570784e-05,
+            "read_en": 0.0,
+            "rst": 0.0,
+            "sel0": 0.0,
+            "sel1": 0.0,
+            "track": 0.0,
+            "valid": 1.8,
+            "vin": 4.765077221691172e-13
+          },
+          "tolerances": {
+            "ain0": 0.002,
+            "ain1": 0.002,
+            "ain2": 0.002,
+            "ain3": 0.002,
+            "dout": 0.002,
+            "held0": 0.002,
+            "held1": 0.002,
+            "held2": 0.002,
+            "held3": 0.002,
+            "read_en": 0.002,
+            "rst": 0.002,
+            "sel0": 0.002,
+            "sel1": 0.002,
+            "track": 0.002,
+            "valid": 0.002,
+            "vin": 0.002
+          },
+          "passed": false,
+          "spectre_version": "2026/10/13 14:22:29 System is not a supported distribution\n2026/10/13 14:22:29 An error occurred. We don't recognize OS \n2026/10/13 14:22:29 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:22:29 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "spectre_waveform_sha256": "05487d5c1a7b8c2b6d615021823d22c411c3586d4c12f33f2b72f0ae73eda3e6",
+          "observation_count": 291
+        }
+      },
+      "raw_receipts": {
+        "result.json": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-low-order-v3/r01/r01-integrate-sync/c0/result.json",
+          "sha256": "b2272456c907ac2f3b303a78bd60bba53e50d5d946a216a26709678239c80a40"
+        },
+        "stdout.json": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-low-order-v3/r01/r01-integrate-sync/c0/stdout.json",
+          "sha256": "e4f67e361080d7d15cead1b2680bb665161dccc3a37fd55a0ba819c8c7cd7f8b"
+        },
+        "stderr.json": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-low-order-v3/r01/r01-integrate-sync/c0/stderr.json",
+          "sha256": "5eaa11b7856cc197c74f86b423fdd07d0dbee9161bdfb79ac950e372427b7b62"
+        },
+        "regrade.json": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-low-order-v3/r01/r01-integrate-sync/c0/regrade.json",
+          "sha256": "59a1ea3c4d7f3495b6cb24c6eb7d9ef3acd7dca4793a5456c31580c115ebf5ed"
+        }
+      }
+    },
+    {
+      "task": "r01-integrate-sync",
+      "condition": "core-boundary",
+      "elapsed_seconds": 27.26997345800919,
+      "solution_rows": 9001,
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/core-boundary/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+        "run/work/verifier/core-boundary/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/core-boundary/tb.scs": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1"
+      },
+      "grade": {
+        "original_checker": {
+          "passed": false,
+          "checks": 1776,
+          "max_abs_error": {
+            "held0": 1.1102230246251565e-16,
+            "held1": 1.1102230246251565e-16,
+            "held2": 5.551115123125783e-17,
+            "held3": 1.1102230246251565e-16,
+            "valid": 1.8,
+            "dout": 0.515
+          },
+          "retained_failure_examples": [
+            {
+              "time": 8.640000000000002e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 8.640000000000002e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.275,
+              "error": 0.275
+            },
+            {
+              "time": 8.71e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            }
+          ]
+        },
+        "paired_observation": {
+          "output_nodes": [
+            "dout",
+            "held0",
+            "held1",
+            "held2",
+            "held3",
+            "valid"
+          ],
+          "input_nodes": [
+            "ain0",
+            "ain1",
+            "ain2",
+            "ain3",
+            "read_en",
+            "rst",
+            "sel0",
+            "sel1",
+            "track",
+            "vin"
+          ],
+          "output_passed": false,
+          "input_passed": true,
+          "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+          "max_abs_difference": {
+            "ain0": 0.0,
+            "ain1": 0.0,
+            "ain2": 0.0,
+            "ain3": 0.0,
+            "dout": 0.515,
+            "held0": 1.1102230246251565e-16,
+            "held1": 5.551115123125783e-17,
+            "held2": 5.551115123125783e-17,
+            "held3": 1.1102230246251565e-16,
+            "read_en": 0.0,
+            "rst": 0.0,
+            "sel0": 0.0,
+            "sel1": 0.0,
+            "track": 0.0,
+            "valid": 1.8,
+            "vin": 4.765077221691172e-13
+          },
+          "tolerances": {
+            "ain0": 0.002,
+            "ain1": 0.002,
+            "ain2": 0.002,
+            "ain3": 0.002,
+            "dout": 0.002,
+            "held0": 0.002,
+            "held1": 0.002,
+            "held2": 0.002,
+            "held3": 0.002,
+            "read_en": 0.002,
+            "rst": 0.002,
+            "sel0": 0.002,
+            "sel1": 0.002,
+            "track": 0.002,
+            "valid": 0.002,
+            "vin": 0.002
+          },
+          "passed": false,
+          "spectre_version": "2026/10/13 14:23:22 System is not a supported distribution\n2026/10/13 14:23:22 An error occurred. We don't recognize OS \n2026/10/13 14:23:22 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:23:22 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "spectre_waveform_sha256": "74229826bec490b1411d3400698025018e304bf3d777949906195707e439af3d",
+          "observation_count": 291
+        }
+      },
+      "raw_receipts": {
+        "result.json": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-boundary-final/r01/r01-integrate-sync/core-boundary/result.json",
+          "sha256": "be31ef641224bf44d3a1fd5a1d84057bbcaaf409cef46f2f8268324ba7cb4354"
+        },
+        "stdout.json": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-boundary-final/r01/r01-integrate-sync/core-boundary/stdout.json",
+          "sha256": "ecf09fa9f5f8e68daaf462ceadf0b1f8cb7bba9a520b085110a496c9566d2e9e"
+        },
+        "stderr.json": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-boundary-final/r01/r01-integrate-sync/core-boundary/stderr.json",
+          "sha256": "fe9fab049da2cb1faa1deffd6bd3703982a796712a7d1485904fc5bfec5d8867"
+        },
+        "regrade.json": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-boundary-final/r01/r01-integrate-sync/core-boundary/regrade.json",
+          "sha256": "3c5c6690caf341397bf914abf0f96f12879780f0d5d7f64d6ae69590cc3bb754"
+        }
+      }
+    }
+  ],
+  "fresh_spectre_originals": [
+    {
+      "condition": "c0",
+      "native_rows": 10902,
+      "original_checker": {
+        "passed": true,
+        "checks": 1776,
+        "max_abs_error": {
+          "held0": 1.4114059170955429e-05,
+          "held1": 1.842097311099966e-05,
+          "held2": 2.301696177520185e-05,
+          "held3": 2.9557107333877397e-05,
+          "valid": 0,
+          "dout": 1.822408843166201e-05
+        },
+        "failures": []
+      },
+      "checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "wave_sha256": "99158a2318b9d6c8890aed02bc55c2798d78814d5355a8be518cf63f98f14294",
+      "old_native_values_identical": true,
+      "accuracy_warning_lines": []
+    },
+    {
+      "condition": "core-boundary",
+      "native_rows": 10052,
+      "original_checker": {
+        "passed": true,
+        "checks": 1776,
+        "max_abs_error": {
+          "held0": 5.551115123125783e-17,
+          "held1": 1.1102230246251565e-16,
+          "held2": 5.551115123125783e-17,
+          "held3": 5.551115123125783e-17,
+          "valid": 0,
+          "dout": 1.1102230246251565e-16
+        },
+        "failures": []
+      },
+      "checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "wave_sha256": "3bb1787de462e0d8d11eb844c2aa517ec96cd33c73c770f60add00ef1592bc8e",
+      "old_native_values_identical": true,
+      "accuracy_warning_lines": []
+    }
+  ],
+  "physical_sync_diagnostic": {
+    "scope": "Diagnostic partitions of exactly the existing finite paired observation set, no new pass criterion or all-time claim",
+    "original_checker_passed": false,
+    "original_finite_pair_passed": false,
+    "denominator": 291,
+    "groups": {
+      "matching_valid": {
+        "observations": 236,
+        "max_absolute_difference_V": {
+          "ain0": 0.0,
+          "ain1": 0.0,
+          "ain2": 0.0,
+          "ain3": 0.0,
+          "dout": 6.0503408020329275e-06,
+          "held0": 1.4114454178093538e-05,
+          "held1": 1.8421584845551564e-05,
+          "held2": 2.3017575682571234e-05,
+          "held3": 2.9557770563570784e-05,
+          "read_en": 0.0,
+          "rst": 0.0,
+          "sel0": 0.0,
+          "sel1": 0.0,
+          "track": 0.0,
+          "valid": 0.0,
+          "vin": 4.765077221691172e-13
+        }
+      },
+      "different_valid": {
+        "observations": 55,
+        "max_absolute_difference_V": {
+          "ain0": 0.0,
+          "ain1": 0.0,
+          "ain2": 0.0,
+          "ain3": 0.0,
+          "dout": 1.035566323035457,
+          "held0": 1.3425336797101561e-05,
+          "held1": 1.8224688194012906e-05,
+          "held2": 2.2772013349880993e-05,
+          "held3": 2.924280393457046e-05,
+          "read_en": 0.0,
+          "rst": 0.0,
+          "sel0": 0.0,
+          "sel1": 0.0,
+          "track": 0.0,
+          "valid": 1.8,
+          "vin": 0.0
+        }
+      }
+    },
+    "original_checker_max_error_V": {
+      "held0": 6.411138842032926e-10,
+      "held1": 6.117345519029982e-10,
+      "held2": 6.140308261848304e-10,
+      "held3": 6.636702298834507e-10,
+      "valid": 1.8,
+      "dout": 1.0355578207829703
+    },
+    "source_sha256": {
+      "script": "6cd0c32f1394b58a35e5a0d05a7f61147d643cdf53c4e6b5bcac6e8119dda786",
+      "response": "e4f67e361080d7d15cead1b2680bb665161dccc3a37fd55a0ba819c8c7cd7f8b",
+      "grade": "59a1ea3c4d7f3495b6cb24c6eb7d9ef3acd7dca4793a5456c31580c115ebf5ed",
+      "fresh_spectre": "99158a2318b9d6c8890aed02bc55c2798d78814d5355a8be518cf63f98f14294"
+    },
+    "fresh_reference_reuse": "original-spectre-v2 independently confirmed all native VALUEs identical to original archived reference",
+    "known_difference": "At track rising root EVAS guard=0 keeps strict > false; Spectre printed positive guard in matching observation-only callback run. Original score remains FAIL.",
+    "event_record_count": 10
+  },
+  "independent_cards": [
+    {
+      "case": "ramp",
+      "evas": {
+        "receipt": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/evas-cards-sync-v5/ramp/RESULT.json",
+          "sha256": "a9ee5e108ffbfbd621acebc30131c24f3474ce27ce527a11f90d00b30a8f0de9"
+        },
+        "observations": 385,
+        "error_upper_V": 0.0,
+        "behavior": {
+          "status": "pass",
+          "errors": []
+        },
+        "evidence": {
+          "status": "insufficient",
+          "issues": [
+            "missing actual boundary left/right: 9.5367431640625e-07",
+            "missing actual boundary left/right: 1.9073486328125e-06",
+            "callback producer not externally qualified",
+            "native export/time representation not externally qualified",
+            "missing external qualification/source identity receipt"
+          ]
+        },
+        "Q_status": "not_qualified",
+        "model_sha256": "d9b4285b00203fb448297e65347338f62541b8bcba87886697259c8a2531dce0",
+        "tb_sha256": "6943a375111065993d1491089003f0ad462e61561c4f81773b6853d417eebef3",
+        "effective_tolerances": {
+          "vabstol": 1e-11,
+          "reltol": 1e-09
+        }
+      },
+      "spectre_observation_only": {
+        "case": "ramp",
+        "tier": "Q3",
+        "budget_V": 1.01e-07,
+        "scope": "finite native observations only",
+        "numerical": {
+          "status": "pass",
+          "error_upper_V": 1.1256810225972174e-15,
+          "error_lower_V": 1.1256810225972174e-15,
+          "input_contribution_upper_V": 8.580448e-16,
+          "input_contribution_lower_V": 8.580448e-16,
+          "input_contribution_budget_V": 1.01e-09,
+          "reference_width_V": 0.0,
+          "observation_uncertainty_V": 0.0,
+          "worst": {
+            "time_s": 1.4983957998844886e-06,
+            "node": "y",
+            "actual_V": 2.03979435626183,
+            "reference_bounds_V": [
+              2.039794356261831,
+              2.039794356261831
+            ]
+          },
+          "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+        },
+        "evidence": {
+          "status": "insufficient",
+          "issues": [
+            "missing actual boundary center: 1.9073486328124998e-06",
+            "callback producer not externally qualified",
+            "native export/time representation not externally qualified",
+            "missing external qualification/source identity receipt"
+          ]
+        },
+        "behavior": {
+          "status": "pass",
+          "errors": []
+        },
+        "Q_status": "not_qualified",
+        "status": "evidence_insufficient",
+        "psf_sha256": "33ff000b843f40c3ed28aa376fdf4d277a56be74c641769396018cef73a07f98",
+        "checker_sha256": "2480f6d8546b977aae440e6eca13d0e97388c1e72be6bdec7b36cf921a2bf3a4",
+        "label": "ramp-callback",
+        "inputs_sha256": {
+          "tb.scs": "888523ece48ef0b708119978b3c7cd786d4b2ff66f997ed4fb9329ba40f754e8",
+          "dut-callback.va": "e53fb04375ac070e7a07601adfc349394bf71c43c693eb0badcad4dccd616cc3"
+        },
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/checker/v2-centered/check.py",
+          "--case",
+          "ramp",
+          "--tier",
+          "Q3",
+          "--psf",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/pilot-spectre-v2/raw/ramp-callback/psf/tran.tran.tran",
+          "--log",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/pilot-spectre-v2/raw/ramp-callback/stdout.log"
+        ]
+      }
+    },
+    {
+      "case": "ramp-g1000",
+      "evas": {
+        "receipt": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/evas-cards-sync-v4/ramp-g1000/RESULT.json",
+          "sha256": "0ba52c1c306f4bf08a6b5ed650aa97e43b045c87777168aa2c7cefeac7f36b10"
+        },
+        "observations": 385,
+        "error_upper_V": 4.547473508864641e-13,
+        "behavior": {
+          "status": "pass",
+          "errors": []
+        },
+        "evidence": {
+          "status": "insufficient",
+          "issues": [
+            "missing actual boundary left/right: 9.5367431640625e-07",
+            "missing actual boundary left/right: 1.9073486328125e-06",
+            "callback producer not externally qualified",
+            "native export/time representation not externally qualified",
+            "missing external qualification/source identity receipt"
+          ]
+        },
+        "Q_status": "not_qualified",
+        "model_sha256": "9b2f16fa9890b3fa9a245cf55e60fddec49110b1032615dd05f395253bde296f",
+        "tb_sha256": "6943a375111065993d1491089003f0ad462e61561c4f81773b6853d417eebef3",
+        "effective_tolerances": {
+          "vabstol": 1e-11,
+          "reltol": 1e-09
+        }
+      },
+      "spectre_observation_only": {
+        "case": "ramp-g1000",
+        "tier": "Q3",
+        "budget_V": 1.01e-07,
+        "scope": "finite native observations only",
+        "numerical": {
+          "status": "pass",
+          "error_upper_V": 1.19599232e-12,
+          "error_lower_V": 1.19599232e-12,
+          "input_contribution_upper_V": 8.580448e-13,
+          "input_contribution_lower_V": 8.580448e-13,
+          "input_contribution_budget_V": 1.01e-09,
+          "reference_width_V": 0.0,
+          "observation_uncertainty_V": 0.0,
+          "worst": {
+            "time_s": 1.7881393432617188e-06,
+            "node": "y",
+            "actual_V": 3390.6249999999995,
+            "reference_bounds_V": [
+              3390.625000000001,
+              3390.625000000001
+            ]
+          },
+          "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+        },
+        "evidence": {
+          "status": "insufficient",
+          "issues": [
+            "missing actual boundary center: 1.9073486328124998e-06",
+            "callback producer not externally qualified",
+            "native export/time representation not externally qualified",
+            "missing external qualification/source identity receipt"
+          ]
+        },
+        "behavior": {
+          "status": "pass",
+          "errors": []
+        },
+        "Q_status": "not_qualified",
+        "status": "evidence_insufficient",
+        "psf_sha256": "27e092704205433abb5906d07d6883423f1e7bb65d559a5d626f5119c8ecac2d",
+        "checker_sha256": "2480f6d8546b977aae440e6eca13d0e97388c1e72be6bdec7b36cf921a2bf3a4",
+        "label": "ramp-g1000-callback",
+        "inputs_sha256": {
+          "tb.scs": "888523ece48ef0b708119978b3c7cd786d4b2ff66f997ed4fb9329ba40f754e8",
+          "dut-callback.va": "2054958c802b7dc2eb1624aa56ec648925098c79844bee0c21460f62525033c0"
+        },
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/checker/v2-centered/check.py",
+          "--case",
+          "ramp-g1000",
+          "--tier",
+          "Q3",
+          "--psf",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/cards-spectre-v1/raw/ramp-g1000-callback/psf/tran.tran.tran",
+          "--log",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/cards-spectre-v1/raw/ramp-g1000-callback/stdout.log"
+        ]
+      }
+    },
+    {
+      "case": "history",
+      "evas": {
+        "receipt": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/evas-cards-sync-v4/history/RESULT.json",
+          "sha256": "6ad257bb0168ded792d0eed12f8e7565bb930ee03ad20552ee3ef0c37554cfba"
+        },
+        "observations": 385,
+        "error_upper_V": 0.0,
+        "behavior": {
+          "status": "pass",
+          "errors": []
+        },
+        "evidence": {
+          "status": "insufficient",
+          "issues": [
+            "missing actual boundary left/right: 9.5367431640625e-07",
+            "missing actual boundary left/right: 1.9073486328125e-06",
+            "callback producer not externally qualified",
+            "native export/time representation not externally qualified",
+            "missing external qualification/source identity receipt"
+          ]
+        },
+        "Q_status": "not_qualified",
+        "model_sha256": "648b259f139607aa1b951d4cf4780f7188d659da5be486bdc57641d173d1c361",
+        "tb_sha256": "986962a14da6c77756dd11e1d802846160cc4da0e85ff9575df13261e5453c0d",
+        "effective_tolerances": {
+          "vabstol": 1e-11,
+          "reltol": 1e-09
+        }
+      },
+      "spectre_observation_only": {
+        "case": "history",
+        "tier": "Q3",
+        "budget_V": 1.01e-07,
+        "scope": "finite native observations only",
+        "numerical": {
+          "status": "pass",
+          "error_upper_V": 3.01737856e-14,
+          "error_lower_V": 3.01737856e-14,
+          "input_contribution_upper_V": 3.01737856e-14,
+          "input_contribution_lower_V": 3.01737856e-14,
+          "input_contribution_budget_V": 1.01e-09,
+          "reference_width_V": 0.0,
+          "observation_uncertainty_V": 0.0,
+          "worst": {
+            "time_s": 1.6093254089355469e-06,
+            "node": "h",
+            "actual_V": 1.9375000000000302,
+            "reference_bounds_V": [
+              1.9375,
+              1.9375
+            ]
+          },
+          "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+        },
+        "evidence": {
+          "status": "insufficient",
+          "issues": [
+            "missing actual boundary center: 1.9073486328124998e-06",
+            "callback producer not externally qualified",
+            "native export/time representation not externally qualified",
+            "missing external qualification/source identity receipt"
+          ]
+        },
+        "behavior": {
+          "status": "pass",
+          "errors": []
+        },
+        "Q_status": "not_qualified",
+        "status": "evidence_insufficient",
+        "psf_sha256": "1fda6c6a2d2801e826d6c862c4a3748a8157888758e8d2322f84e933e066d55c",
+        "checker_sha256": "2480f6d8546b977aae440e6eca13d0e97388c1e72be6bdec7b36cf921a2bf3a4",
+        "label": "history-callback",
+        "inputs_sha256": {
+          "tb.scs": "0467f7ddc45c110de2a5e3343f9f57a8db0622c5324f04075b141a948e27bf9b",
+          "dut-callback.va": "7c6e0c7debfcfa9fc608f3210f114d6cfbe7f0fc7a5801d251e203742d29e44f"
+        },
+        "command": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "-B",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/checker/v2-centered/check.py",
+          "--case",
+          "history",
+          "--tier",
+          "Q3",
+          "--psf",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/cards-spectre-v1/raw/history-callback/psf/tran.tran.tran",
+          "--log",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/cards-spectre-v1/raw/history-callback/stdout.log"
+        ]
+      }
+    }
+  ],
+  "checker_calibration": {
+    "result": {
+      "status": "pass",
+      "controls": 61,
+      "passed": 61,
+      "not_simulator_results": true,
+      "oracle": "independent 90-digit Decimal ODE Taylor recursion, 160 terms; checker uses exact rational exp enclosure",
+      "outcomes": [
+        {
+          "id": "correct-ramp",
+          "case": "ramp",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "legal-offset-ramp",
+          "case": "ramp",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "perturb-0.5B-ramp",
+          "case": "ramp",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "perturb-2B-ramp",
+          "case": "ramp",
+          "expected": "numerical_error",
+          "actual": "numerical_error",
+          "calibration_passed": true
+        },
+        {
+          "id": "remove-only-a-center-ramp",
+          "case": "ramp",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "remove-only-c-center-ramp",
+          "case": "ramp",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "missing-boundary-ramp",
+          "case": "ramp",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "nan-ramp",
+          "case": "ramp",
+          "expected": "invalid_or_incomplete",
+          "actual": "invalid_or_incomplete",
+          "calibration_passed": true
+        },
+        {
+          "id": "duplicate-callback-ramp",
+          "case": "ramp",
+          "expected": "invalid_or_incomplete",
+          "actual": "invalid_or_incomplete",
+          "calibration_passed": true
+        },
+        {
+          "id": "no-callback-ramp",
+          "case": "ramp",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "correct-ramp-g1000",
+          "case": "ramp-g1000",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "legal-offset-ramp-g1000",
+          "case": "ramp-g1000",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "perturb-0.5B-ramp-g1000",
+          "case": "ramp-g1000",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "perturb-2B-ramp-g1000",
+          "case": "ramp-g1000",
+          "expected": "numerical_error",
+          "actual": "numerical_error",
+          "calibration_passed": true
+        },
+        {
+          "id": "remove-only-a-center-ramp-g1000",
+          "case": "ramp-g1000",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "remove-only-c-center-ramp-g1000",
+          "case": "ramp-g1000",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "missing-boundary-ramp-g1000",
+          "case": "ramp-g1000",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "nan-ramp-g1000",
+          "case": "ramp-g1000",
+          "expected": "invalid_or_incomplete",
+          "actual": "invalid_or_incomplete",
+          "calibration_passed": true
+        },
+        {
+          "id": "duplicate-callback-ramp-g1000",
+          "case": "ramp-g1000",
+          "expected": "invalid_or_incomplete",
+          "actual": "invalid_or_incomplete",
+          "calibration_passed": true
+        },
+        {
+          "id": "no-callback-ramp-g1000",
+          "case": "ramp-g1000",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "correct-history",
+          "case": "history",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "legal-offset-history",
+          "case": "history",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "perturb-0.5B-history",
+          "case": "history",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "perturb-2B-history",
+          "case": "history",
+          "expected": "numerical_error",
+          "actual": "numerical_error",
+          "calibration_passed": true
+        },
+        {
+          "id": "remove-only-a-center-history",
+          "case": "history",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "remove-only-c-center-history",
+          "case": "history",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "missing-boundary-history",
+          "case": "history",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "nan-history",
+          "case": "history",
+          "expected": "invalid_or_incomplete",
+          "actual": "invalid_or_incomplete",
+          "calibration_passed": true
+        },
+        {
+          "id": "duplicate-callback-history",
+          "case": "history",
+          "expected": "invalid_or_incomplete",
+          "actual": "invalid_or_incomplete",
+          "calibration_passed": true
+        },
+        {
+          "id": "no-callback-history",
+          "case": "history",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "correct-filter",
+          "case": "filter",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "legal-offset-filter",
+          "case": "filter",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "perturb-0.5B-filter",
+          "case": "filter",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "perturb-2B-filter",
+          "case": "filter",
+          "expected": "numerical_error",
+          "actual": "numerical_error",
+          "calibration_passed": true
+        },
+        {
+          "id": "remove-only-a-center-filter",
+          "case": "filter",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "remove-only-c-center-filter",
+          "case": "filter",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "missing-boundary-filter",
+          "case": "filter",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "nan-filter",
+          "case": "filter",
+          "expected": "invalid_or_incomplete",
+          "actual": "invalid_or_incomplete",
+          "calibration_passed": true
+        },
+        {
+          "id": "duplicate-callback-filter",
+          "case": "filter",
+          "expected": "invalid_or_incomplete",
+          "actual": "invalid_or_incomplete",
+          "calibration_passed": true
+        },
+        {
+          "id": "no-callback-filter",
+          "case": "filter",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "correct-filter-interrupt",
+          "case": "filter-interrupt",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "legal-offset-filter-interrupt",
+          "case": "filter-interrupt",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "perturb-0.5B-filter-interrupt",
+          "case": "filter-interrupt",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "perturb-2B-filter-interrupt",
+          "case": "filter-interrupt",
+          "expected": "numerical_error",
+          "actual": "numerical_error",
+          "calibration_passed": true
+        },
+        {
+          "id": "remove-only-a-center-filter-interrupt",
+          "case": "filter-interrupt",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "remove-only-c-center-filter-interrupt",
+          "case": "filter-interrupt",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "remove-only-b-center-filter-interrupt",
+          "case": "filter-interrupt",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "missing-boundary-filter-interrupt",
+          "case": "filter-interrupt",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "nan-filter-interrupt",
+          "case": "filter-interrupt",
+          "expected": "invalid_or_incomplete",
+          "actual": "invalid_or_incomplete",
+          "calibration_passed": true
+        },
+        {
+          "id": "duplicate-callback-filter-interrupt",
+          "case": "filter-interrupt",
+          "expected": "invalid_or_incomplete",
+          "actual": "invalid_or_incomplete",
+          "calibration_passed": true
+        },
+        {
+          "id": "no-callback-filter-interrupt",
+          "case": "filter-interrupt",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "locked-held",
+          "case": "ramp",
+          "expected": "numerical_error",
+          "actual": "numerical_error",
+          "calibration_passed": true
+        },
+        {
+          "id": "history-restart",
+          "case": "history",
+          "expected": "numerical_error",
+          "actual": "numerical_error",
+          "calibration_passed": true
+        },
+        {
+          "id": "wrong-interruption",
+          "case": "filter-interrupt",
+          "expected": "numerical_error",
+          "actual": "numerical_error",
+          "calibration_passed": true
+        },
+        {
+          "id": "wrong-filter-tail",
+          "case": "filter-interrupt",
+          "expected": "numerical_error",
+          "actual": "numerical_error",
+          "calibration_passed": true
+        },
+        {
+          "id": "incompatible-pointwise-a",
+          "case": "ramp",
+          "expected": "numerical_error",
+          "actual": "numerical_error",
+          "calibration_passed": true
+        },
+        {
+          "id": "wide-callback-box",
+          "case": "ramp",
+          "expected": "evidence_insufficient",
+          "actual": "evidence_insufficient",
+          "calibration_passed": true
+        },
+        {
+          "id": "nonpoint-small-callback-box",
+          "case": "ramp",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        },
+        {
+          "id": "incoherent-count-target",
+          "case": "ramp",
+          "expected": "behavior_error",
+          "actual": "behavior_error",
+          "calibration_passed": true
+        },
+        {
+          "id": "input-export-budget-preserved",
+          "case": "ramp",
+          "expected": "indeterminate",
+          "actual": "indeterminate",
+          "calibration_passed": true
+        },
+        {
+          "id": "reused-psf-adapter",
+          "case": "ramp",
+          "expected": "pass",
+          "actual": "pass",
+          "calibration_passed": true
+        }
+      ]
+    },
+    "identity": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/checker/v2-centered/IDENTITY.json",
+      "sha256": "7dc628eb353d9bc666338b61925a42a38f0338f044ab3855ff80dded13f4ae81"
+    },
+    "checker": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/checker/v2-centered/check.py",
+      "sha256": "2480f6d8546b977aae440e6eca13d0e97388c1e72be6bdec7b36cf921a2bf3a4"
+    },
+    "calibrator": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/checker/v2-centered/calibrate.py",
+      "sha256": "93f3ec5e0df9880e69e9d61c0905ecac648ef3d88f83facb6b5c0f66badf998f"
+    },
+    "full_receipt": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/checker/v2-centered/CALIBRATION.json",
+      "sha256": "25c7ce751138d82fa5a59be62ee118a863baf395bb22a82ee37f3b1584423bc6"
+    }
+  },
+  "remaining": {
+    "filter": "original positive fixture pending implementation",
+    "filter-interrupt": "original positive fixture pending implementation",
+    "nonlinear_adjacent_float_window": {
+      "status": "retained_positive_fixture_rejection_gap",
+      "owner_issue": 119,
+      "not_issue": 131,
+      "fixture": "nonlinear-proof-rejected-fixture.rs",
+      "fixture_sha256": "f1ae17b53b82d3dac78bd822c4625f12f74a16b3260bfdfd42aa3b0e3ada60e7",
+      "log": "nonlinear-proof-rejection-branch.log",
+      "observed_branch": "nonlinear_dynamics::event_picard_enclosure; parts None; no representable interior midpoint",
+      "window_endpoint_bits": [
+        "3fd3333333333333",
+        "3fd3333333333334"
+      ],
+      "probe_endpoint": "hi",
+      "diagnostic": "event_resolution: uncertain event window crosses unproved selected flow",
+      "limits": [
+        "Original nonlinear cross fixture rejects at its first capture; it did not reach the proposed proof-only lifecycle assertions.",
+        "This is retained as a capability/recovery gap, not converted into a passing expected-rejection test.",
+        "Ordinary time node naming alone was not established as the cause.",
+        "No numerical production repair or scope expansion into #131 performed."
+      ],
+      "replacement_test_scope": "Supported point-event capture; legal nonpoint held-proof context; actual Nonlinear mapped_event deletion/replacement plus strict failed-candidate same-controller retry; independent tanh solution."
+    },
+    "issue_131": "unchanged"
+  },
+  "retention": {
+    "raw": "local-only under /Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync",
+    "historical_results": "unchanged, including failed and interrupted candidates",
+    "adaptation_failures": "evas-cards-sync-final and v2 netlist failures; v3 ramp analysis failure; final unique conditions v4/v5",
+    "qualification": "Actual point callback records are diagnostic; missing externally qualified export/time/callback and actual boundary observations remain insufficient."
+  },
+  "reviews": {
+    "astra": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/review/timeout-final-astra.md",
+      "sha256": "af064e66e2f8b5ce479e4ce6e87acfd543477066feec6a61577feae9ddd9e6d4"
+    }
+  }
+}

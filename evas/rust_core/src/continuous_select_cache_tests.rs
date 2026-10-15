@@ -57,7 +57,7 @@ fn trajectory(points: Vec<[f64; 2]>) -> Trajectory {
     .unwrap()
 }
 fn collect_for(roots: &mut Roots, e: &Expression, t: &Trajectory, s: &[I]) -> Result<(), Error> {
-    roots.collect(e, &program(), &["u".into()], t, s)
+    roots.collect(e, &program(), &["u".into()], t, s, &Default::default())
 }
 #[test]
 fn scans_every_segment_then_reuses() {
@@ -94,7 +94,7 @@ fn new_roots_recompute_changed_state_and_source() {
     assert!(v.lo <= 0.25 && 0.25 <= v.hi);
 }
 #[test]
-fn different_expressions_do_not_merge_equal_root_boxes() {
+fn different_expressions_merge_only_certified_equal_real_roots() {
     let t = trajectory(vec![[0., 0.], [1., 3.]]);
     let mut r = Roots::new();
     collect_for(
@@ -109,13 +109,9 @@ fn different_expressions_do_not_merge_equal_root_boxes() {
         right: Box::new(constant(0.)),
     };
     collect_for(&mut r, &select(other, constant(1.), "dut"), &t, &[I::ZERO]).unwrap();
-    assert_eq!(r.roots.len(), 2);
-    assert_eq!(
-        r.finish(&mut vec![I::point(0.), I::point(1.)], 0., 1.)
-            .unwrap_err()
-            .kind,
-        "condition_precision"
-    );
+    assert_eq!(r.roots.len(), 1);
+    r.finish(&mut vec![I::point(0.), I::point(1.)], 0., 1.)
+        .unwrap();
 }
 #[test]
 fn hit_does_not_skip_owner_check() {

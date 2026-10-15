@@ -1,0 +1,62 @@
+{
+  "ramp": {
+    "VA_unchanged": true,
+    "original_tb_sha256": "1546399f4a4781a6a2e59df2a508473c652eb64f5f1ac9f5b2c0846bd1787ea9",
+    "evas_tb_sha256": "6943a375111065993d1491089003f0ad462e61561c4f81773b6853d417eebef3",
+    "removed_backend_specific_controls": [
+      "Spectre PSF precision format, EVAS returns JSON",
+      "Spectre gear2only method, EVAS uses its certified solver",
+      "Spectre strobeoutput=all; EVAS saves its regular output grid and explicit strobetimes"
+    ],
+    "numerical_tolerances_stimuli_and_observation_times_unchanged": true,
+    "preflight": "load_scs passed; original numeric tolerances and all explicit strobetimes retained"
+  },
+  "ramp-g1000": {
+    "VA_unchanged": true,
+    "original_tb_sha256": "1546399f4a4781a6a2e59df2a508473c652eb64f5f1ac9f5b2c0846bd1787ea9",
+    "evas_tb_sha256": "6943a375111065993d1491089003f0ad462e61561c4f81773b6853d417eebef3",
+    "removed_backend_specific_controls": [
+      "Spectre PSF precision format, EVAS returns JSON",
+      "Spectre gear2only method, EVAS uses its certified solver",
+      "Spectre strobeoutput=all; EVAS saves its regular output grid and explicit strobetimes"
+    ],
+    "numerical_tolerances_stimuli_and_observation_times_unchanged": true,
+    "preflight": "load_scs passed; original numeric tolerances and all explicit strobetimes retained"
+  },
+  "history": {
+    "VA_unchanged": true,
+    "original_tb_sha256": "abd3703611ee3d3c721c0495327b25e35fe56fed8a374ec89ad2a47c0069e741",
+    "evas_tb_sha256": "986962a14da6c77756dd11e1d802846160cc4da0e85ff9575df13261e5453c0d",
+    "removed_backend_specific_controls": [
+      "Spectre PSF precision format, EVAS returns JSON",
+      "Spectre gear2only method, EVAS uses its certified solver",
+      "Spectre strobeoutput=all; EVAS saves its regular output grid and explicit strobetimes"
+    ],
+    "numerical_tolerances_stimuli_and_observation_times_unchanged": true,
+    "preflight": "load_scs passed; original numeric tolerances and all explicit strobetimes retained"
+  },
+  "filter": {
+    "VA_unchanged": true,
+    "original_tb_sha256": "c52968617ca82537c28dfabb7231f3f16b3d7ea31f9497e45f9330cbb1cbaf07",
+    "evas_tb_sha256": "955c522dd2dda5df92d31d8256a0c87df393565c585fbd6a7955929d9e323ebe",
+    "removed_backend_specific_controls": [
+      "Spectre PSF precision format, EVAS returns JSON",
+      "Spectre gear2only method, EVAS uses its certified solver",
+      "Spectre strobeoutput=all; EVAS saves its regular output grid and explicit strobetimes"
+    ],
+    "numerical_tolerances_stimuli_and_observation_times_unchanged": true,
+    "preflight": "load_scs passed; original numeric tolerances and all explicit strobetimes retained"
+  },
+  "filter-interrupt": {
+    "VA_unchanged": true,
+    "original_tb_sha256": "120e0f017d65d77a2b5e17930cc87cc3bc26c54dd70ac4bbd6150177ce16ea57",
+    "evas_tb_sha256": "6bb504b6d30089ce0526404ca563082cdd1f7cd1f74948c476683645a8ba9675",
+    "removed_backend_specific_controls": [
+      "Spectre PSF precision format, EVAS returns JSON",
+      "Spectre gear2only method, EVAS uses its certified solver",
+      "Spectre strobeoutput=all; EVAS saves its regular output grid and explicit strobetimes"
+    ],
+    "numerical_tolerances_stimuli_and_observation_times_unchanged": true,
+    "preflight": "load_scs passed; original numeric tolerances and all explicit strobetimes retained"
+  }
+}
