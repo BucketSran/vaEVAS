@@ -28,8 +28,8 @@ jobs:
         run: python3 -B -m experiments.va_screen.identity --historical
       - name: Current task registration and generated indexes
         run: python3 -B scripts/benchmark_workbench.py --check
-      - name: Task registration and preservation regressions
-        run: python3 -B -m unittest discover -s scripts/tests -p test_benchmark_workbench.py -v
+      - name: Task registration, stage checks and preservation regressions
+        run: python3 -B -m unittest scripts.tests.test_benchmark_workbench scripts.tests.test_benchmark_package -v
       - name: Historical material path and frozen-plan consumers
         run: python3 -B -m unittest experiments.test_benchmark_paths -v
       - name: Identity and result reporting regressions

@@ -14,13 +14,10 @@ BENCHMARK_PREFIXES = (
     'experiments/benchmark_v2/', 'experiments/benchmark_next/',
     'experiments/benchmark_paths.py', 'experiments/test_benchmark_paths.py',
 )
-TASK_PREFIXES = (
-    'benchmark/tasks/',
-    'benchmark/material/draftbench/batches/',
-    'benchmark/material/historyref/tasks/',
-    'experiments/benchmark_first_batch/', 'experiments/benchmark_v2/',
-    'experiments/benchmark_next/',
-)
+BENCHMARK_FILES = {
+    'scripts/benchmark_workbench.py', 'scripts/benchmark_package.py',
+    'scripts/tests/test_benchmark_workbench.py', 'scripts/tests/test_benchmark_package.py',
+}
 CI_FILES = {'scripts/ci_selection.py', 'scripts/tests/test_ci_selection.py'}
 CHECKS = ('maintenance', 'calibration', 'provenance', 'regression',
           'differential', 'fuzz', 'package', 'benchmark')
@@ -37,9 +34,8 @@ CHILD_RESULTS = {'package': ('install_result',),
 MAINTENANCE_FILES = {
     'scripts/traceability.py', 'scripts/diagnostic_inventory.py',
     'scripts/verify_validation_version.py', 'scripts/check_workspaces.py',
-    'scripts/benchmark_workbench.py', 'scripts/tests/test_traceability.py',
+    'scripts/tests/test_traceability.py',
     'scripts/tests/test_diagnostic_inventory.py', 'scripts/tests/test_workspaces.py',
-    'scripts/tests/test_benchmark_workbench.py',
 }
 PACKAGE_FILES = {'scripts/check_installed_evas.py',
                  'scripts/tests/test_installed_evas_package.py'}
@@ -68,8 +64,8 @@ def classify(paths):
         suffix = Path(path).suffix.lower()
         if path.startswith('.github/') or path in CI_FILES:
             return flags(*CHECKS)
-        # Task instructions are test inputs, even when written in Markdown.
-        if path.startswith(TASK_PREFIXES):
+        # Sources and contract docs also feed generated benchmark views.
+        if path.startswith(BENCHMARK_PREFIXES) or path in BENCHMARK_FILES:
             selected.add('benchmark')
         elif suffix in ('.md', '.rst'):
             if path in ('evas/docs/COMPARISON.md', 'evas/docs/COMPARISON-METHODOLOGY.md'):
@@ -82,8 +78,6 @@ def classify(paths):
                 selected.add('calibration')
             elif path.startswith('evas/docs/development/'):
                 selected.add('maintenance')
-        elif path.startswith(BENCHMARK_PREFIXES):
-            selected.add('benchmark')
         elif path in MAINTENANCE_FILES:
             selected.add('maintenance')
         elif path in PACKAGE_FILES:

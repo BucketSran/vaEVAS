@@ -96,7 +96,7 @@ benchmark/tasks/<task-id>/
 ```
 
 上述是已确认的目标规范。56 个保留题包仍使用原工程合同；当前 R01 批次只有有限采集的合同草稿，
-尚未接入完整环境、参考解与终评。题包生成器、格式检查和实际题包仍需按规范适配。
+尚未接入完整环境、参考解与终评。题包生成器和实际题包仍需按规范适配；[阶段静态检查](evaluation.md#题包静态检查)已接入，完整运行适配另行验证。
 目录搬迁或旧格式检查通过不能作为已与 analogbench 统一的证据；
 完成实际转换和受影响的校准前，历史结果继续按原运行合同解释。
 已读取的格式参照为 [analogbench MUX 题包](https://github.com/Arcadia-1/analog-design-bench/tree/972f7cd7c95381134387b250edf18f3bd23bdd25/tasks/sky130-analog-input-mux-8to1-pvt)。
@@ -179,7 +179,7 @@ environment/starter/
 
 开发中发现的可复用问题进入[候选登记](../CANDIDATES.md)，先记录触发条件、独立预期与证据，
 不自动创建题目或增加评分分母。`python3 -B scripts/benchmark_workbench.py --check` 检查历史题卡、
-现有 `vN-*`（N ≥ 2）任务登记与生成索引；不证明题包符合新格式。
+现有 `vN-*`（N ≥ 2）任务登记与生成索引，并对新题包执行[阶段静态检查](evaluation.md#题包静态检查)；通过不证明完整运行、校准或人工认可。
 共享 checker 的副本同步、校准与环境说明见[评分实现](evaluation.md#共享评分程序)。
 
 [历史题集与建设记录](../history/README.md)保留初筛、旧七类和后续两批的来源及实验入口；

@@ -20,13 +20,14 @@ CI 按改动涉及的内容选择检查。普通说明文档只检查改动行�
 | EVAS 实现、依赖或构建文件 | 完整回归、静态检查、ngspice 对照、fuzz、两平台安装测试 |
 | ngspice 对照工具 | 对照测试、相关静态检查 |
 | 安装验收脚本 | 维护工具测试、两平台安装测试 |
-| Benchmark 题目输入、checker 或实验工具 | Benchmark 身份、独立判据和题目来源检查 |
+| Benchmark 材料与规范文档、题目、checker、登记工具 | Benchmark 登记与索引、阶段静态检查、身份与独立判据回归 |
 | CI 配置、检查选择器或未登记的非文档路径 | 全部检查 |
 
 “已登记”指 [ci_selection.py](ci_selection.py) 中明确列出的路径。不能笼统地跳过实验目录：
 论文输入生成器和部分后端夹具也被 EVAS 回归读取，修改它们仍跑完整回归。
 smoke 模型同时触发 ngspice 对照，源码包要求的 fuzz seed 同时触发安装验收。
-题目的 Markdown 指令属于 Benchmark 输入，不能当成普通说明文档。
+Benchmark 下的来源说明、规范、模板和题面均触发 Benchmark 检查；来源说明新增或删除会改变生成索引。
+对应维护脚本及测试也触发同一检查，不因 Markdown 扩展名或脚本目录而漏选。
 静态校准通过不代表重新完成了 Spectre 对照。
 
 混合修改取检查的并集，删除和重命名也参与选择。PR 使用分叉点至最新提交的完整 Git 差异，
@@ -145,7 +146,7 @@ python3 -B -m unittest discover -s scripts/tests -v
 ```sh
 python3 -B scripts/benchmark_workbench.py --write
 python3 -B scripts/benchmark_workbench.py --check
-python3 -B -m unittest discover -s scripts/tests -p test_benchmark_workbench.py -v
+python3 -B -m unittest scripts.tests.test_benchmark_workbench scripts.tests.test_benchmark_package -v
 ```
 
 `benchmark_workbench.py` 读取 [workbench](../benchmark/material/draftbench/README.md) 的 `catalog.json` 与
@@ -158,7 +159,10 @@ python3 -B -m unittest discover -s scripts/tests -p test_benchmark_workbench.py 
 CI 接线不代表每次检查都已执行，实际结果仍按具体作业报告。
 题目迁移后，`--write` 删除不再需要且带完整生成标记的类别/家族索引页，保留手写说明。
 可用 `--root` 指定另一处同结构目录；其中运行证据路径相对该目录上两级的仓库根目录。
-静态通过只说明登记与索引一致，不证明仿真通过、checker 正确或题目达到发布条件。
+新题包的 `metadata.stage` 决定静态检查层级；单题可加 `--package <task-directory>`，
+用 `--stage implementation` 等选项提前核对更高阶段。文件和结果的具体检查边界见
+[题包静态检查](../benchmark/material/draftbench/docs/evaluation.md#题包静态检查)。
+旧 v2/v3 登记兼容与新格式结果分别报告；静态通过不证明仿真通过、checker 正确或题目达到发布条件。
 
 ## 核验冻结的验证集
 

@@ -10,6 +10,11 @@ import sys
 import tomllib
 from urllib.parse import quote
 
+if __package__:
+    from .benchmark_package import LEVELS, legacy_task_ids, read_config, validate_package
+else:
+    from benchmark_package import LEVELS, legacy_task_ids, read_config, validate_package
+
 
 STAGES = {
     "source-screening": "材料筛选", "design-draft": "题目草案",
@@ -383,6 +388,7 @@ def validate_formal_tasks(repo):
         metadata = tomllib.loads((task / "task.toml").read_text(encoding="utf-8")).get("metadata", {})
         require(metadata.get("review_status") == "accepted",
                 f"{identity}: formal task requires explicit accepted review")
+        validate_package(task, repo, formal=True)
     directories = {p.name for p in root.iterdir() if p.is_dir()}
     require(ids == directories,
             f"formal task collection mismatch: unlisted={sorted(directories - ids)}, missing={sorted(ids - directories)}")
@@ -390,19 +396,47 @@ def validate_formal_tasks(repo):
     return len(rows)
 
 
+def validate_draft_packages(root, registered):
+    """Retain registered v2/v3 compatibility; all other drafts use stage checks."""
+    legacy_ids = legacy_task_ids(root.parents[2]) & {t["task_id"] for t in registered}
+    counts = dict.fromkeys(LEVELS, 0)
+    legacy = 0
+    for identity, task in batch_packages(root).items():
+        config = read_config(task)
+        if (identity in legacy_ids and "stage" not in config["metadata"]
+                and "artifacts" not in config and not (task / "environment/starter").exists()):
+            legacy += 1
+            continue
+        level = validate_package(task, root.parents[2])
+        counts[level] += 1
+    return counts, legacy
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1] / "benchmark/material/draftbench")
+    parser.add_argument("--package", type=Path, help="check one package without generating indexes")
+    parser.add_argument("--stage", choices=LEVELS, help="require this check level or higher; --package only")
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--check", action="store_true", help="check metadata and stale indexes without writing")
     mode.add_argument("--write", action="store_true", help="validate and refresh generated indexes")
     args = parser.parse_args()
+    if (args.package and not args.check) or (args.stage and not args.package):
+        parser.error("--package requires --check; --stage requires --package")
     try:
         root = args.root.resolve()
+        if args.package:
+            task = args.package.absolute()
+            formal = task.parent.resolve() == root.parents[2] / "benchmark/tasks"
+            level = validate_package(task, root.parents[2], level=args.stage, formal=formal)
+            print(f"{task.name}: {level} static checks passed; simulation and calibration not executed; "
+                  "human approval and evidence identity not verified")
+            return 0
         formal_count = validate_formal_tasks(root.parents[2])
         catalog = load_catalog(root)
         cases = load_cases(root, catalog)
         groups, tasks = load_tasks(root, catalog, cases)
+        levels, legacy_count = validate_draft_packages(root, tasks)
         outputs = render(root, catalog, cases, groups, tasks)
         for path, content in outputs.items():
             if content.startswith(GENERATED) and path.exists():
@@ -420,6 +454,9 @@ def main():
             path.unlink()
         print(f"{len(cases)} cases, {len(tasks)} draft assets and {formal_count} reviewed tasks validated; {len(changed)} views updated; {len(obsolete)} obsolete indexes removed"
               if args.write else f"{len(cases)} cases, {len(tasks)} draft assets and {formal_count} reviewed tasks validated; all generated views current")
+        print("Draft package static checks: " + ", ".join(f"{name}={count}" for name, count in levels.items())
+              + f"; legacy registration only={legacy_count}. Simulation and calibration not executed; "
+                "human approval and evidence identity not verified.")
         return 0
     except (OSError, ValueError, TypeError, KeyError) as error:
         print(f"workbench: {error}", file=sys.stderr)

@@ -79,7 +79,8 @@ checker 由该题的规格与实验决定，正式题不能依赖仓库外层的
 [批次管理](material/draftbench/docs/evaluation.md#按批次管理与逐题录取)。现有草稿已按批次存放，历史题包单独保留。
 
 运行 `python3 -B scripts/benchmark_workbench.py --check` 检查草稿登记、生成索引和正式清单。
-检查拒绝正式目录与清单不一致、缺少题包文件或尚未标记审核通过的题目，不判断工程价值。
+新题包另按[建设阶段](material/draftbench/docs/evaluation.md#题包静态检查)检查公开合同、实现文件和作者结果的基本结构。
+检查拒绝正式目录与清单不一致、缺少题包文件或尚未标记审核通过的题目；不执行仿真，也不判断工程价值或认证人工审核。
 模型实验与发布按相应授权推进。
 
 `defaults.toml` 与 `benchmark.toml` 的文件分工参考 analog-design-bench 的

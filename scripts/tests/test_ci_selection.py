@@ -95,6 +95,18 @@ class RoutingTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertEqual(ci.classify([path]), ci.flags('benchmark'))
 
+    def test_benchmark_sources_and_format_checks_keep_their_ci_consumer(self):
+        for path in ('benchmark/material/draftbench/sources/cvdp-heavy-multifile.md',
+                     'benchmark/material/draftbench/sources/README.md',
+                     'benchmark/material/draftbench/docs/task-package.md',
+                     'benchmark/material/draftbench/templates/INSTRUCTION.md',
+                     'benchmark/README.md', 'scripts/benchmark_workbench.py',
+                     'scripts/benchmark_package.py',
+                     'scripts/tests/test_benchmark_workbench.py',
+                     'scripts/tests/test_benchmark_package.py'):
+            with self.subTest(path=path):
+                self.assertEqual(ci.classify([path]), ci.flags('benchmark'))
+
     def test_mixed_change_runs_the_union_of_checks(self):
         self.assertEqual(ci.classify(['evas/docs/COMPARISON.md',
                                       'scripts/check_workspaces.py',

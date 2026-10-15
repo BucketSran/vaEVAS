@@ -7,6 +7,9 @@ import sys
 import tempfile
 import unittest
 
+from scripts.tests.test_benchmark_package import make_package
+from scripts.benchmark_package import LEGACY_REGISTRIES
+
 
 SCRIPT = Path(__file__).resolve().parents[1] / "benchmark_workbench.py"
 
@@ -18,6 +21,12 @@ class WorkbenchTests(unittest.TestCase):
         self.repo = Path(self.temp.name)
         self.root = self.repo / "benchmark/material/draftbench"
         self.root.mkdir(parents=True)
+        for name in LEGACY_REGISTRIES:
+            path = self.repo / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("[]\n")
+        (self.repo / LEGACY_REGISTRIES[0]).write_text(json.dumps({"rows": [
+            {"task_id": "v2-test-por"}, {"task_id": "v3-test-por"}]}))
         batch = self.root / "batches/test-01"
         batch.mkdir(parents=True)
         (batch / "README.md").write_text("# Review batch\n")
@@ -106,6 +115,34 @@ class WorkbenchTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("flat draftbench/tasks is obsolete", result.stderr)
 
+    def test_unversioned_drafts_get_stage_checks_without_changing_old_packages(self):
+        legacy = self.add_task()
+        before = {p: p.read_bytes() for p in legacy.rglob("*") if p.is_file()}
+        draft = make_package(self.root / "batches/test-01/tasks/new-sampler")
+        self.assertEqual(self.run_cli("--write").returncode, 0)
+        result = self.run_cli("--check")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("contract=1", result.stdout)
+        self.assertIn("legacy registration only=1", result.stdout)
+        self.assertEqual(before, {p: p.read_bytes() for p in before})
+        (draft / "environment/starter/circuit.va").unlink()
+        self.assertNotEqual(self.run_cli("--check").returncode, 0)
+
+    def test_new_draft_cannot_silently_skip_format_checks_by_omitting_metadata(self):
+        draft = self.root / "batches/test-01/tasks/new-sampler"
+        draft.mkdir(parents=True)
+        result = self.run_cli("--write")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("task.toml", result.stderr)
+        self.assertFalse((self.root / "REVIEW.md").exists())
+
+    def test_new_version_prefixed_task_cannot_claim_historical_exemption(self):
+        self.add_task("v2-brand-new-nonlegacy")
+        result = self.run_cli("--write")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("stage", result.stderr)
+        self.assertFalse((self.root / "REVIEW.md").exists())
+
     def test_batch_requires_a_review_entry(self):
         self.add_task()
         (self.root / "batches/test-01/README.md").unlink()
@@ -116,12 +153,10 @@ class WorkbenchTests(unittest.TestCase):
     def add_formal_task(self, identity="reviewed-por", review="pending"):
         root = self.repo / "benchmark/tasks"
         directory = root / identity
-        for filename in ("instruction.md", "SOURCE.md", "environment/Dockerfile", "solution/solve.sh",
-                         "tests/test.sh", "tests/verify.py", "results/reference.json", "results/calibration.json"):
-            path = directory / filename
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text("Author review fixture.\n")
-        (directory / "task.toml").write_text(f'[metadata]\nreview_status = "{review}"\n')
+        make_package(directory, "frozen", review)
+        (directory / "review.md").write_text("Synthetic review record.\n")
+        with (directory / "SOURCE.md").open("a") as stream:
+            stream.write("\nReview: [record](review.md)\n")
         (root / "benchmark.toml").write_text(
             'schema_version = 1\nstate = "draft"\ntask_defaults = "defaults.toml"\n'
             f'[[tasks]]\nslot = 1\nid = "{identity}"\n')
@@ -141,7 +176,8 @@ class WorkbenchTests(unittest.TestCase):
         result = self.run_cli("--write")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("requires explicit accepted review", result.stderr)
-        (directory / "task.toml").write_text('[metadata]\nreview_status = "accepted"\n')
+        path = directory / "task.toml"
+        path.write_text(path.read_text().replace('review_status = "pending"', 'review_status = "accepted"'))
         result = self.run_cli("--write")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("1 draft assets and 1 reviewed tasks", result.stdout)
@@ -260,8 +296,8 @@ class WorkbenchTests(unittest.TestCase):
         self.save_inventory()
         self.write_case("cases/testing-characterization/power/case-0002-other",
                         dict(self.metadata, case_id="case-0002"))
-        (self.repo / "benchmark/material/draftbench/batches/test-01/tasks/va01-legacy").mkdir()
-        (self.repo / "benchmark/material/draftbench/batches/test-01/tasks/v1-old-category").mkdir()
+        (self.repo / "benchmark/material/historyref/tasks/va01-legacy").mkdir(parents=True)
+        (self.repo / "benchmark/material/historyref/tasks/v1-old-category").mkdir(parents=True)
         self.assertEqual(self.run_cli("--write").returncode, 0)
         text = (self.root / "TASKS.md").read_text()
         self.assertIn("登记 **2 道待审核题包资产**", text)
@@ -337,6 +373,19 @@ class WorkbenchTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("stale", result.stderr)
         self.assertEqual((self.root / "README.md").read_bytes(), before)
+
+    def test_new_source_requires_index_refresh_even_without_a_case(self):
+        self.assertEqual(self.run_cli("--write").returncode, 0)
+        index = self.root / "sources/README.md"
+        before = index.read_bytes()
+        self.write("sources/cvdp-heavy-multifile.md", "# Multi-file handoff\n")
+        result = self.run_cli("--check")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("sources/README.md", result.stderr)
+        self.assertEqual(index.read_bytes(), before)
+        self.assertEqual(self.run_cli("--write").returncode, 0)
+        self.assertIn("cvdp-heavy-multifile.md", index.read_text())
+        self.assertEqual(self.run_cli("--check").returncode, 0)
 
     def test_missing_source_and_dangling_case_relationship_are_rejected(self):
         for change, diagnostic in (({"source_ids": ["missing"]}, "missing source_ids"),
