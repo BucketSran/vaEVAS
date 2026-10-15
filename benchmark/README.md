@@ -62,7 +62,9 @@ checker 由该题的规格与实验决定，正式题不能依赖仓库外层的
 
 单文件题在环境中原位编辑并提交 `/app/circuit.va`，英文 instruction 使用 `Spec` 和 `Deliverable`，
 接口放在 starter 中。此前确认的完整分工见[题包约定](material/draftbench/docs/task-package.md#任务结构)。
-多文件工程的交付约定后续单独细化。草稿中的旧格式继续保留，目录迁移不表示格式迁移已完成。
+多文件工程保留实际布局，在 `/app/` 原位修改，默认逐文件声明交付，确有需要时开放指定目录；
+详见[多文件交付约定](material/draftbench/docs/task-package.md#多文件工程的交付约定)。
+草稿中的旧格式继续保留，规范确认或目录迁移不表示格式迁移已完成。
 
 ## 从草稿进入正式题集
 

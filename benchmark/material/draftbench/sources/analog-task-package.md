@@ -101,3 +101,14 @@ OTA 的 [test_regressions.py](https://github.com/Arcadia-1/analog-design-bench/b
 
 后续讨论已在 2026-10-14 确认采用完整验收表、表格与 JSON 同源，以及先审验收方案再实现与校准。
 本项目的维护规范见[验收方案与结果呈现](../docs/evaluation.md#验收方案与结果呈现)；上述源仓库缺口仍作为固定版本的静态核对结论保留。
+
+
+## 多文件约定讨论的补查，2026-10-15
+
+GitHub 当前 main 仍是上述 `972f7cd7c95381134387b250edf18f3bd23bdd25`。再次读取递归文件树，50 个 starter 中，在公开 testbench 之外筛选 `.spi`、`.va`、`.v` 源文件，每题均只有一个。这个文件树观察不证明所有可能的工程类型都必须采用单文件交付。
+
+实读 [MUX task.toml](https://github.com/Arcadia-1/analog-design-bench/blob/972f7cd7c95381134387b250edf18f3bd23bdd25/tasks/sky130-analog-input-mux-8to1-pvt/task.toml) 声明 `artifacts = ["/app/circuit.spi"]`，并采用 separate verifier。[环境 Dockerfile](https://github.com/Arcadia-1/analog-design-bench/blob/972f7cd7c95381134387b250edf18f3bd23bdd25/tasks/sky130-analog-input-mux-8to1-pvt/environment/Dockerfile) 把 starter 原样复制到 `/app` 并初始化 Git；[题面](https://github.com/Arcadia-1/analog-design-bench/blob/972f7cd7c95381134387b250edf18f3bd23bdd25/tasks/sky130-analog-input-mux-8to1-pvt/instruction.md)要求原位修改声明的交付文件，固定公开台架、模型库和外部材料，结束时收集文件当时的内容，临时文件不提交。不能由该单文件例子推导出 analogbench 已规定多文件工程的通用子目录或新增文件权限。
+
+[Harbor artifacts 文档](https://docs.harborframework.com/tasks/artifacts)明确允许列出文件或目录；[独立 verifier 文档](https://docs.harborframework.com/tasks/separate-verifier)说明评分环境重新建立，收集的 artifact 恢复到原 source 路径。声明哪些输出需要传递，与规定求解者允许修改哪些内容，是两项需要保持一致的约定。目录复制是否精确保留删除、使用何种权限检查，仍需在本项目的运行适配中验证，本次没有运行 Harbor。
+
+CVDP heavy 的实际工程准备、修改范围和交付记录见[独立来源核对](cvdp-heavy-multifile.md)。两份笔记记录来源事实；2026-10-15 用户确认的本项目规则统一维护在[多文件交付约定](../docs/task-package.md#多文件工程的交付约定)。

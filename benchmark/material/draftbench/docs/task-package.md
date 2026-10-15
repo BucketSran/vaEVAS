@@ -24,7 +24,7 @@
 2026-10-14 题包规范讨论已确认，采用 analog-design-bench 的原位编辑与交付方式：
 仓库中的 `environment/starter/circuit.va` 进入环境后成为 `/app/circuit.va`。
 该文件提供固定接口和起始内容，求解者直接编辑它，最终也收集同一文件。
-`task.toml` 明确声明 `artifacts = ["/app/circuit.va"]`。多文件工程的约定后续单独细化。
+`task.toml` 明确声明 `artifacts = ["/app/circuit.va"]`。多文件工程见下方[交付约定](#多文件工程的交付约定)。
 
 英文 instruction 开头简述本题工程工作，以 `Spec`、`Deliverable` 两个主段组织。
 `Spec` 说明本题规格与实验条件，`Deliverable` 指向实际工作文件并给出公开测试入口；
@@ -100,6 +100,65 @@ benchmark/tasks/<task-id>/
 目录搬迁或旧格式检查通过不能作为已与 analogbench 统一的证据；
 完成实际转换和受影响的校准前，历史结果继续按原运行合同解释。
 已读取的格式参照为 [analogbench MUX 题包](https://github.com/Arcadia-1/analog-design-bench/tree/972f7cd7c95381134387b250edf18f3bd23bdd25/tasks/sky130-analog-input-mux-8to1-pvt)。
+
+### 多文件工程的交付约定
+
+2026-10-15 已确认：沿用 Harbor 外层结构，在 `/app/` 原位修改并自动收集交付物。
+默认逐文件声明，确有自由拆分模块或维护工程目录的需要时，才开放指定目录。
+输入是多文件工程，不代表交付也必须有多个文件；例如在完整系统中补一个模块，可以只交付该模块。
+
+`environment/starter/` 按相对路径复制到 `/app/`。新建 VA 工程可使用下列布局，
+少量文件可以平铺，子目录按需增加；改编真实工程时保留原文件名、目录和入口，不强制改名为 `circuit.va`。
+
+```text
+environment/starter/
+├── circuit.va             # 新建 VA 工程的顶层入口
+├── modules/               # 按需拆分模块
+│   ├── sampler.va
+│   └── controller.va
+├── design_params.inc      # 需要独立参数文件时才提供
+└── testbench/              # 公开测试与分析入口
+```
+
+接口声明留在对应起始源码中。建模、扩展和修复的起始内容继续按上方分工提供。
+工程入口、依赖或运行方法较复杂时，增加英文 README，避免把完整规格另抄一份。
+`solution/` 按相同相对路径保存参考交付文件，由 `solve.sh` 安装到 `/app/` 对应位置；
+固定依赖由环境提供。`tests/`、`SOURCE.md` 和 `results/` 的职责与单文件题相同。
+
+英文 instruction 仍用 `Spec` 与 `Deliverable`。`Deliverable` 明确交付路径和可修改范围，
+必要的接口或架构限制放在 `Spec` 的 `Constraints` 中。文件与模块名采用工程本身的名称。
+
+| 内容 | 修改与交付约定 |
+| --- | --- |
+| 待完成或修改的模块 | 逐文件列出；允许整体重写，仍须满足规定的接口、行为和模块职责 |
+| 系统连接、设计参数、源文件清单 | 按工程工作决定是否可改，明确列入范围；文件可见不代表可修改 |
+| 固定依赖、官方公开测试、评分材料 | 保持作者版本，不作为求解者可修改的交付物 |
+| 新增辅助模块 | 仅在题目明确开放的目录中新增，说明如何被工程加载并纳入交付 |
+| 自定义实验文件 | 按题允许用于自测，是否属于交付物另行声明 |
+
+当任务是开发 VA 测试或测量模块时，该模块属于可修改的交付物；用来验收它的外部测试保持固定。
+不能仅凭文件名或目录名含有 testbench 就把它视为固定材料。
+
+`task.toml` 的 `artifacts` 与公开交付范围保持一致。指定文件交付时，列出每个完整路径，
+例如 `/app/circuit.va` 与 `/app/modules/sampler.va`。开放目录时，声明目录路径，
+并说明允许新增、删除和重命名哪些文件，以及必须保留的入口与接口。
+目录中含有固定材料时，须将其与可交付部分区分，不能因收集目录而允许覆盖固定材料。
+交付源码所需的新依赖也必须处于声明的收集范围内。
+
+求解者保存工作文件即可，不要求 Git 提交、打包或手写 patch。结束时收集声明范围的当前内容，
+包括允许的新文件，不以是否执行 `git add` 判断；未声明的临时实验、波形和缓存不作为交付物。
+运行器可生成差分供 review，但差分不能替代实际交付文件。
+
+终评在独立环境中恢复固定工程基线，再装入声明的交付物。开放目录交付时，
+需要保留合同允许的删除与重命名结果，不能让单纯覆盖复制把已删除的文件恢复回来。
+固定材料不得被候选覆盖，收集遗漏应与候选本身缺少依赖分别诊断。
+这些是运行适配的要求，当前文档更新不表示收集、恢复或完整 Harbor 流程已经验证。
+
+来源分工见 [analogbench 题包核对](../sources/analog-task-package.md#多文件约定讨论的补查2026-10-15)
+和 [CVDP heavy 多文件核对](../sources/cvdp-heavy-multifile.md)。
+[Harbor artifacts](https://docs.harborframework.com/tasks/artifacts)支持文件或目录收集，
+[独立 verifier](https://docs.harborframework.com/tasks/separate-verifier)支持重新建立评分环境。
+默认逐文件声明、修改权限与目录恢复要求是本项目确认的约定，不是对所有 CVDP heavy 题目的描述。
 
 ### 作者目录与记录
 
