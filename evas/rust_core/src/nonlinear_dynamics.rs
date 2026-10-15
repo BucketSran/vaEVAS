@@ -1,10 +1,12 @@
 //! Validated polynomial ODE propagation for integral and filter call-site states.
 //! A Picard enclosure proves a finite trajectory tube. Order-p interval Taylor
 //! coefficients carry accepted uncertainty; order p+1 bounds the remainder.
-//! Polynomial ODEs try p=12/24; DAE keeps p=12. Dense queries are immutable.
+//! Explicit fields not proved source-only try p=6/12/24; source-only fields keep
+//! p=12/24 and DAE keeps p=12. Dense queries are immutable.
 use super::*;
 use crate::ir::Tolerances;
 
+const FIRST_EXPLICIT_ORDER: usize = 6;
 const ORDER: usize = 12;
 const MAX_ORDER: usize = 24;
 const MAX_STEPS: usize = 16_384;
@@ -128,6 +130,99 @@ enum Polynomial {
     Power(Box<Self>, u32),
     Reciprocal(Box<Self>),
     Exp(Box<Self>),
+}
+
+// One immutable expression/variables/order borrow owns the entire memo. It is
+// discarded before any coefficient, trial, source context or epoch can change.
+struct GradientJets<'a> {
+    function: &'a Polynomial,
+    variables: &'a [Jet],
+    order: usize,
+    values: std::collections::HashMap<*const Polynomial, std::rc::Rc<Jet>>,
+    #[cfg(test)]
+    hits: usize,
+    #[cfg(test)]
+    misses: usize,
+}
+impl<'a> GradientJets<'a> {
+    fn new(function: &'a Polynomial, variables: &'a [Jet], order: usize) -> Self {
+        Self {
+            function,
+            variables,
+            order,
+            values: Default::default(),
+            #[cfg(test)]
+            hits: 0,
+            #[cfg(test)]
+            misses: 0,
+        }
+    }
+    fn value(&mut self, node: &'a Polynomial) -> std::rc::Rc<Jet> {
+        let key = node as *const Polynomial;
+        if let Some(value) = self.values.get(&key) {
+            #[cfg(test)]
+            {
+                self.hits += 1;
+            }
+            return value.clone();
+        }
+        #[cfg(test)]
+        {
+            self.misses += 1;
+        }
+        let value = std::rc::Rc::new(node.jet(self.variables, self.order));
+        if value.iter().all(|v| v.finite()) {
+            self.values.insert(key, value.clone());
+        }
+        value
+    }
+    fn gradient(&mut self, coordinate: usize) -> Jet {
+        self.gradient_at(self.function, coordinate)
+    }
+    fn gradient_at(&mut self, node: &'a Polynomial, coordinate: usize) -> Jet {
+        let order = self.order;
+        match node {
+            Polynomial::Linear(row) => {
+                let mut result = vec![I::ZERO; order + 1];
+                result[0] = row[coordinate];
+                result
+            }
+            Polynomial::Add(a, b) => self
+                .gradient_at(a, coordinate)
+                .into_iter()
+                .zip(self.gradient_at(b, coordinate))
+                .map(|(a, b)| a + b)
+                .collect(),
+            Polynomial::Multiply(a, b) => {
+                let left = multiply(&self.gradient_at(a, coordinate), &self.value(b), order);
+                let right = multiply(&self.value(a), &self.gradient_at(b, coordinate), order);
+                left.into_iter().zip(right).map(|(a, b)| a + b).collect()
+            }
+            Polynomial::Exp(a) => {
+                multiply(&self.value(node), &self.gradient_at(a, coordinate), order)
+            }
+            Polynomial::Reciprocal(a) => {
+                let inverse = reciprocal_jet(&self.value(a), order);
+                multiply(
+                    &multiply(&inverse, &inverse, order),
+                    &self.gradient_at(a, coordinate),
+                    order,
+                )
+                .into_iter()
+                .map(|v| -v)
+                .collect()
+            }
+            Polynomial::Power(a, n) => {
+                let values = self.value(a);
+                let mut power = vec![I::ZERO; order + 1];
+                power[0] = I::point(*n as f64);
+                for _ in 1..*n {
+                    power = multiply(&power, &values, order);
+                }
+                multiply(&power, &self.gradient_at(a, coordinate), order)
+            }
+        }
+    }
 }
 
 pub(super) fn validate(expr: &Expression, program: &Program, owner: &str) -> Result<(), Error> {
@@ -262,7 +357,13 @@ impl Polynomial {
         }
     }
 
+    #[cfg(test)]
     fn gradient_jet(&self, variables: &[Jet], order: usize, coordinate: usize) -> Jet {
+        GradientJets::new(self, variables, order).gradient(coordinate)
+    }
+
+    #[cfg(test)]
+    fn old_gradient_jet(&self, variables: &[Jet], order: usize, coordinate: usize) -> Jet {
         match self {
             Self::Linear(row) => {
                 let mut result = vec![I::ZERO; order + 1];
@@ -270,34 +371,34 @@ impl Polynomial {
                 result
             }
             Self::Add(a, b) => a
-                .gradient_jet(variables, order, coordinate)
+                .old_gradient_jet(variables, order, coordinate)
                 .into_iter()
-                .zip(b.gradient_jet(variables, order, coordinate))
+                .zip(b.old_gradient_jet(variables, order, coordinate))
                 .map(|(a, b)| a + b)
                 .collect(),
             Self::Multiply(a, b) => {
                 let left = multiply(
-                    &a.gradient_jet(variables, order, coordinate),
+                    &a.old_gradient_jet(variables, order, coordinate),
                     &b.jet(variables, order),
                     order,
                 );
                 let right = multiply(
                     &a.jet(variables, order),
-                    &b.gradient_jet(variables, order, coordinate),
+                    &b.old_gradient_jet(variables, order, coordinate),
                     order,
                 );
                 left.into_iter().zip(right).map(|(a, b)| a + b).collect()
             }
             Self::Exp(a) => multiply(
                 &self.jet(variables, order),
-                &a.gradient_jet(variables, order, coordinate),
+                &a.old_gradient_jet(variables, order, coordinate),
                 order,
             ),
             Self::Reciprocal(a) => {
                 let inverse = reciprocal_jet(&a.jet(variables, order), order);
                 multiply(
                     &multiply(&inverse, &inverse, order),
-                    &a.gradient_jet(variables, order, coordinate),
+                    &a.old_gradient_jet(variables, order, coordinate),
                     order,
                 )
                 .into_iter()
@@ -311,7 +412,11 @@ impl Polynomial {
                 for _ in 1..*n {
                     power = multiply(&power, &values, order);
                 }
-                multiply(&power, &a.gradient_jet(variables, order, coordinate), order)
+                multiply(
+                    &power,
+                    &a.old_gradient_jet(variables, order, coordinate),
+                    order,
+                )
             }
         }
     }
@@ -648,7 +753,7 @@ struct PhysicalEventSeed {
 
 #[derive(Clone)]
 pub(crate) struct NonlinearContinuous {
-    context: Arc<Context>,
+    pub(super) context: Arc<Context>,
     parameters: Vec<I>,
     functions: Vec<Polynomial>,
     step_bounds: Vec<(Polynomial, Polynomial)>,
@@ -1212,9 +1317,8 @@ impl NonlinearContinuous {
             let gradients: Vec<Vec<Jet>> = functions
                 .iter()
                 .map(|function| {
-                    (0..count)
-                        .map(|k| function.gradient_jet(&variables, n, k))
-                        .collect()
+                    let mut jets = GradientJets::new(function, &variables, n);
+                    (0..count).map(|k| jets.gradient(k)).collect()
                 })
                 .collect();
             for i in 0..count {
@@ -1261,6 +1365,15 @@ impl NonlinearContinuous {
         order: usize,
         centers: Option<&[CenterValue]>,
     ) -> Option<DenseStep> {
+        crate::diagnostics::counter(
+            match order {
+                6 => "nonlinear_trial_order_6",
+                12 => "nonlinear_trial_order_12",
+                24 => "nonlinear_trial_order_24",
+                _ => "nonlinear_trial_other_order",
+            },
+            1,
+        );
         let state: Vec<_> = state
             .iter()
             .enumerate()
@@ -1739,6 +1852,35 @@ impl NonlinearContinuous {
                     if end <= start {
                         break;
                     }
+                    // Keep the original high-order path for a whole field
+                    // proved independent of physical states. Lower order on
+                    // a strobe-truncated source-only step can change its
+                    // representative even when the user tail budget passes.
+                    // This narrows an optimization; it is not a proof of
+                    // bitwise invariance for arbitrary solver grids.
+                    if self.implicit.is_none()
+                        && !self
+                            .functions
+                            .iter()
+                            .all(|f| f.source_only(self.initial.len()))
+                    {
+                        Self::charge_trial(remaining_work, start, end, self.step_budget())?;
+                        if let Some(step) = self.trial_order(
+                            start,
+                            end,
+                            &state,
+                            &source,
+                            &slopes,
+                            FIRST_EXPLICIT_ORDER,
+                            centers.as_deref(),
+                        ) {
+                            if self.truncation_fits(&step, &source, &slopes, refinement)? {
+                                accepted = Some(step);
+                                break;
+                            }
+                        }
+                        crate::diagnostics::counter("nonlinear_low_order_retries", 1);
+                    }
                     Self::charge_trial(remaining_work, start, end, self.step_budget())?;
                     if let Some(step) = self.trial_order(
                         start,
@@ -1793,6 +1935,15 @@ impl NonlinearContinuous {
                         "cannot refine nonlinear trajectory within 64 trials: tube or user-budget Taylor remainder not certified",
                     )
                 })?;
+                crate::diagnostics::counter(
+                    match step.coefficients[0].len() - 1 {
+                        6 => "nonlinear_accepted_order_6",
+                        12 => "nonlinear_accepted_order_12",
+                        24 => "nonlinear_accepted_order_24",
+                        _ => "nonlinear_accepted_other_order",
+                    },
+                    1,
+                );
                 crate::diagnostics::counter("nonlinear_validated_work_steps", 1);
                 state = step.range(I::point(step.end));
                 centers = step.centered_range(I::point(step.end) - I::point(step.start), true);
@@ -2088,14 +2239,13 @@ impl NonlinearContinuous {
             .map(|row| dot(row, &forcing, "nonlinear operator derivative"))
             .collect::<Result<Vec<_>, _>>()?;
         for (_, function) in &self.math_outputs {
+            let mut jets = GradientJets::new(function, &variables, 0);
             let derivative = velocities
                 .iter()
                 .map(|v| v[0])
                 .chain(source_velocities.iter().copied())
                 .enumerate()
-                .fold(I::ZERO, |sum, (k, v)| {
-                    sum + function.gradient_jet(&variables, 0, k)[0] * v
-                });
+                .fold(I::ZERO, |sum, (k, v)| sum + jets.gradient(k)[0] * v);
             if !derivative.finite() {
                 return Err(Error::new(
                     "waveform_accuracy",
@@ -2261,11 +2411,24 @@ impl NonlinearContinuous {
         parameters: &[I],
         horizon: f64,
     ) -> Result<Self, Error> {
-        let mut next = self.mapped_event(time, window, parameters)?;
-        if !self.event_dependent
-            || self
-                .context
-                .parameters_equal(&self.parameters, parameters)?
+        self.restarted_with_context(time, window, parameters, horizon, self.context.clone())
+    }
+
+    pub(super) fn restarted_with_context(
+        &self,
+        time: f64,
+        window: I,
+        parameters: &[I],
+        horizon: f64,
+        context: Arc<Context>,
+    ) -> Result<Self, Error> {
+        let same_proofs = self.context.time_proofs == context.time_proofs;
+        let mut next = self.mapped_event_with_context(time, window, parameters, context)?;
+        if same_proofs
+            && (!self.event_dependent
+                || self
+                    .context
+                    .parameters_equal(&self.parameters, parameters)?)
         {
             next.propagate_until(horizon)?;
             return Ok(next);
@@ -2288,10 +2451,21 @@ impl NonlinearContinuous {
         window: I,
         parameters: &[I],
     ) -> Result<Self, Error> {
-        if !self.event_dependent
-            || self
-                .context
-                .parameters_equal(&self.parameters, parameters)?
+        self.mapped_event_with_context(time, window, parameters, self.context.clone())
+    }
+
+    pub(super) fn mapped_event_with_context(
+        &self,
+        time: f64,
+        window: I,
+        parameters: &[I],
+        context: Arc<Context>,
+    ) -> Result<Self, Error> {
+        if self.context.time_proofs == context.time_proofs
+            && (!self.event_dependent
+                || self
+                    .context
+                    .parameters_equal(&self.parameters, parameters)?)
         {
             return Ok(self.clone());
         }
@@ -2307,7 +2481,7 @@ impl NonlinearContinuous {
             self.state_bounds(window)?
         };
         let mut next = Self::initialized(
-            self.context.clone(),
+            context,
             parameters.to_vec(),
             time,
             Some(physical),
@@ -2472,6 +2646,7 @@ mod tests {
                 force_integrals: false,
                 detached_timed: false,
                 live_parameters: None,
+                time_proofs: Default::default(),
                 driven: vec![],
             }),
             parameters: vec![],
@@ -2699,7 +2874,7 @@ mod tests {
     fn failed_trials_consume_the_shared_work_allowance() {
         let mut candidate = scalar(1e300);
         let accepted = candidate.clone();
-        let mut remaining = 1;
+        let mut remaining = 2;
         let (result, report) = crate::diagnostics::capture(Default::default(), || {
             candidate.propagate_once(0.125, 1.0, &mut remaining)
         });
@@ -2707,6 +2882,8 @@ mod tests {
         assert_eq!(error.kind, "waveform_accuracy");
         assert!(error.message.contains("trial evaluations"));
         assert_eq!(remaining, 0);
+        assert_eq!(report.counters["nonlinear_trial_evaluations"], 2);
+        assert_eq!(report.counters["nonlinear_low_order_retries"], 1);
         assert_eq!(report.counters["nonlinear_rejected_trials"], 1);
         assert!(candidate.same_history(&accepted));
     }
@@ -2741,10 +2918,11 @@ mod tests {
         };
         let accepted = candidate.clone();
         let (result, report) = crate::diagnostics::capture(Default::default(), || {
-            candidate.propagate_once(0.125, 1.0, &mut 1)
+            candidate.propagate_once(0.125, 1.0, &mut 2)
         });
         assert!(result.unwrap_err().message.contains("trial evaluations"));
-        assert_eq!(report.counters["nonlinear_trial_evaluations"], 1);
+        assert_eq!(report.counters["nonlinear_trial_evaluations"], 2);
+        assert_eq!(report.counters["nonlinear_low_order_retries"], 1);
         assert_eq!(report.counters["nonlinear_order_refinements"], 1);
         assert!(candidate.same_history(&accepted));
     }
@@ -2935,6 +3113,139 @@ mod tests {
     }
 
     #[test]
+    fn low_order_small_step_keeps_exact_rational_answer_and_uses_six_coefficients() {
+        let mut flow = scalar(-1.);
+        let (result, work) =
+            crate::diagnostics::capture(Default::default(), || flow.propagate_until(1. / 1024.));
+        result.unwrap();
+        assert!(
+            work.counters
+                .get("nonlinear_accepted_order_6")
+                .copied()
+                .unwrap_or(0)
+                > 0
+        );
+        let v = flow.state_bounds(I::point(1. / 1024.)).unwrap()[0];
+        assert!(crate::interval::sum_products_sign(&[(v.lo, 1025.), (-1024., 1.)]).unwrap() <= 0);
+        assert!(crate::interval::sum_products_sign(&[(v.hi, 1025.), (-1024., 1.)]).unwrap() >= 0);
+    }
+
+    #[test]
+    fn source_only_rational_forcing_keeps_high_order_with_forced_partitions() {
+        use serde_json::json;
+        let origin = json!({"instance":"dut","source":"source-only.va","line":1,"column":1});
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","y"],
+            "operators":[{"kind":"idt","ic":0,"origin":origin,
+                "input":{"op":"divide",
+                    "left":{"op":"affine","constant":1,"terms":[]},
+                    "right":{"op":"power","exponent":2,
+                        "base":{"op":"affine","constant":1,"terms":[{"node":1,"coefficient":1}]}}}}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},
+                "positive":2,"negative":0,"origin":origin,"rhs":{"op":"operator","operator":0}}]
+        })).unwrap();
+        for strobetimes in [vec![], vec![0.03125, 0.0625, 0.09375]] {
+            let trajectory = Trajectory::new(
+                crate::ir::TransientInputs {
+                    strobetimes,
+                    pwl: vec![vec![[0., 0.], [0.125, 0.125]]],
+                    output_times: vec![0., 0.125],
+                    stop: 0.125,
+                    max_step: 0.125,
+                },
+                1,
+            )
+            .unwrap();
+            let (flow, work) = crate::diagnostics::capture(Default::default(), || {
+                NonlinearContinuous::new(&program, &trajectory, &["u".into()], &[], 0.125)
+            });
+            let flow = flow.unwrap();
+            assert_eq!(
+                work.counters
+                    .get("nonlinear_trial_order_6")
+                    .copied()
+                    .unwrap_or(0),
+                0
+            );
+            assert!(
+                work.counters
+                    .get("nonlinear_accepted_order_12")
+                    .copied()
+                    .unwrap_or(0)
+                    + work
+                        .counters
+                        .get("nonlinear_accepted_order_24")
+                        .copied()
+                        .unwrap_or(0)
+                    > 0
+            );
+            // Integral of 1/(1+t)^2, from zero to 1/8, is exactly 1/9.
+            let value = flow.state_bounds(I::point(0.125)).unwrap()[0];
+            assert!(crate::interval::sum_products_sign(&[(value.lo, 9.), (-1., 1.)]).unwrap() <= 0);
+            assert!(crate::interval::sum_products_sign(&[(value.hi, 9.), (-1., 1.)]).unwrap() >= 0);
+        }
+    }
+
+    #[test]
+    fn low_order_large_tail_falls_back_without_relaxing_rational_enclosure() {
+        let mut flow = scalar(-1.);
+        let small = flow
+            .trial_order(0., 0.125, &[I::ONE], &[], &[], 6, None)
+            .unwrap();
+        assert!(!flow.truncation_fits(&small, &[], &[], 1.).unwrap());
+        let (result, work) =
+            crate::diagnostics::capture(Default::default(), || flow.propagate_until(0.125));
+        result.unwrap();
+        assert!(
+            work.counters
+                .get("nonlinear_trial_order_6")
+                .copied()
+                .unwrap_or(0)
+                > 0
+        );
+        assert!(
+            work.counters
+                .get("nonlinear_accepted_order_12")
+                .copied()
+                .unwrap_or(0)
+                + work
+                    .counters
+                    .get("nonlinear_accepted_order_24")
+                    .copied()
+                    .unwrap_or(0)
+                > 0
+        );
+        let v = flow.state_bounds(I::point(0.125)).unwrap()[0];
+        assert!(crate::interval::sum_products_sign(&[(v.lo, 9.), (-8., 1.)]).unwrap() <= 0);
+        assert!(crate::interval::sum_products_sign(&[(v.hi, 9.), (-8., 1.)]).unwrap() >= 0);
+    }
+
+    #[test]
+    fn low_order_remainder_preserves_inherited_box_at_all_observations() {
+        use num_rational::BigRational as R;
+        let flow = scalar(-1.);
+        let initial = I {
+            lo: 1. - 1e-8,
+            hi: 1. + 1e-8,
+        };
+        let step = flow
+            .trial_order(0., 1. / 1024., &[initial], &[], &[], 6, None)
+            .unwrap();
+        for t in [0., 1. / 2048., 1. / 1024.] {
+            let bound = step.range(I::point(t))[0];
+            for x in [initial.lo, initial.hi] {
+                let x = R::from_float(x).unwrap();
+                let exact = &x / (R::from_integer(1.into()) + &x * R::from_float(t).unwrap());
+                assert!(
+                    R::from_float(bound.lo).unwrap() <= exact
+                        && exact <= R::from_float(bound.hi).unwrap()
+                );
+            }
+        }
+        assert!(step.range(I::ZERO)[0].hi - step.range(I::ZERO)[0].lo >= initial.hi - initial.lo);
+    }
+
+    #[test]
     fn centered_taylor_flow_encloses_initial_box_and_contracts_decay_uncertainty() {
         use num_rational::BigRational;
         let flow = scalar(-1.0);
@@ -3070,3 +3381,7 @@ mod tests {
         assert_eq!(retry.range_bounds(I::point(0.75)).unwrap(), future);
     }
 }
+
+#[cfg(test)]
+#[path = "nonlinear_value_memo_tests.rs"]
+mod value_memo_tests;

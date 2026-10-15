@@ -137,6 +137,7 @@ pub(crate) struct GuardTrajectory<'a> {
     operators: Option<&'a Operators>,
     states: Option<&'a [I]>,
     nodes: Vec<Vec<I>>,
+    direct_nodes: Option<BTreeSet<usize>>,
 }
 
 impl<'a> GuardTrajectory<'a> {
@@ -160,13 +161,70 @@ impl<'a> GuardTrajectory<'a> {
                 operators.check_guard(*index)?;
             }
         }
+        let p = &model.program;
+        let driven: Vec<_> = model
+            .driven
+            .iter()
+            .map(|name| {
+                p.nodes
+                    .iter()
+                    .position(|n| n == name)
+                    .ok_or_else(|| Error::new("invalid_inputs", "unknown driven guard input"))
+            })
+            .collect::<Result<_, _>>()?;
+        let mut allowed: BTreeSet<_> = driven.iter().copied().collect();
+        allowed.insert(0);
+        let mut direct = true;
+        // Every OR leaf participates, including disabled and zero-weight
+        // dependencies. A cancelled internal voltage is still structural.
+        for leaf in &model.triggers {
+            if let crate::ir::EventTrigger::Cross { guard, .. } = &leaf.trigger {
+                let owner = &p.events[leaf.event].origin.instance;
+                let (nodes, _) = dependencies(guard, p, owner)?;
+                direct &= nodes.is_subset(&allowed);
+            }
+        }
+        let (nodes, direct_nodes) = if direct {
+            let variables = p.nodes.len() + p.states.len() + p.operators.len();
+            let width = model.driven.len() + p.states.len() + p.operators.len() + 1;
+            let mut nodes = vec![vec![I::ZERO; width]; variables];
+            for (column, &node) in driven.iter().enumerate() {
+                nodes[node][column] = I::ONE;
+            }
+            for index in 0..p.states.len() + p.operators.len() {
+                nodes[p.nodes.len() + index][model.driven.len() + index] = I::ONE;
+            }
+            (nodes, Some(allowed))
+        } else {
+            (crate::affine_bounds::node_map(p, &model.driven)?, None)
+        };
         Ok(Self {
             model,
             trajectory,
             operators,
             states,
-            nodes: crate::affine_bounds::node_map(&model.program, &model.driven)?,
+            nodes,
+            direct_nodes,
         })
+    }
+
+    fn checked_dependencies(
+        &self,
+        expression: &Expression,
+        owner: &str,
+    ) -> Result<(BTreeSet<usize>, BTreeSet<usize>), Error> {
+        let result = dependencies(expression, &self.model.program, owner)?;
+        if self
+            .direct_nodes
+            .as_ref()
+            .is_some_and(|allowed| !result.0.is_subset(allowed))
+        {
+            return Err(Error::new(
+                "unsupported_cross",
+                "direct guard projection cannot read an unprojected internal voltage",
+            ));
+        }
+        Ok(result)
     }
 
     pub(crate) fn exact_affine_root(
@@ -175,6 +233,22 @@ impl<'a> GuardTrajectory<'a> {
         bounds: I,
         local: bool,
     ) -> Option<crate::exact_source::RootTime> {
+        if self.direct_nodes.is_some() {
+            let owner = self
+                .model
+                .triggers
+                .iter()
+                .find_map(|leaf| match &leaf.trigger {
+                    crate::ir::EventTrigger::Cross { guard, .. } if guard == expression => Some(
+                        self.model.program.events[leaf.event]
+                            .origin
+                            .instance
+                            .as_str(),
+                    ),
+                    _ => None,
+                })?;
+            self.checked_dependencies(expression, owner).ok()?;
+        }
         use crate::exact_source::{binary, Budget, MAX_POINTS};
         use num_rational::BigRational as R;
         use num_traits::Zero;
@@ -247,7 +321,7 @@ impl<'a> GuardTrajectory<'a> {
         after: &[I],
     ) -> Result<bool, Error> {
         let mut states = state_dependencies(expression);
-        let (nodes, _) = dependencies(expression, &self.model.program, owner)?;
+        let (nodes, _) = self.checked_dependencies(expression, owner)?;
         let start = self.model.driven.len();
         for node in nodes {
             for (index, c) in self.nodes[node][start..start + before.len()]
@@ -288,7 +362,7 @@ impl<'a> GuardTrajectory<'a> {
         owner: &str,
     ) -> Result<(I, I), Error> {
         let p = &self.model.program;
-        let (node_deps, mut operator_deps) = dependencies(expression, p, owner)?;
+        let (node_deps, mut operator_deps) = self.checked_dependencies(expression, owner)?;
         // Ownership was validated in EventModel. The network can contain
         // operators in other instances, so follow each projected node map.
         let state_start = self.model.driven.len();
@@ -376,7 +450,7 @@ impl<'a> GuardTrajectory<'a> {
         event: bool,
     ) -> Result<(I, I), Error> {
         let p = &self.model.program;
-        let (node_deps, mut operator_deps) = dependencies(expression, p, owner)?;
+        let (node_deps, mut operator_deps) = self.checked_dependencies(expression, owner)?;
         // Ownership was validated in EventModel. The network can contain
         // operators in other instances, so follow each projected node map.
         let state_start = self.model.driven.len();

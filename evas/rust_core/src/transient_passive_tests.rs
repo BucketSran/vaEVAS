@@ -478,3 +478,150 @@ fn failed_observer_math_discards_records_states_and_calendar_then_retries() {
     );
     assert_eq!(signature(&calendar), signature(&clean_calendar));
 }
+
+fn source_fixture(due: f64) -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+    let (base, trajectory, _, _) = fixture(due);
+    let mut value = serde_json::to_value(&base.program).unwrap();
+    let origin = value["events"][0]["origin"].clone();
+    let observer = value["events"][1]["origin"].clone();
+    let mut integral_origin = origin.clone();
+    integral_origin["column"] = json!(2);
+    value["nodes"] = json!(["0", "u", "y", "h"]);
+    value["states"][0]["initial"] = json!(1);
+    value["operators"] = json!([
+        {"kind":"transition","origin":origin,"delay":0,"rise":1,"fall":1,
+         "input":{"op":"select","relation":"gt","origin":origin,
+          "left":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},
+          "right":{"op":"affine","constant":0.25,"terms":[]},
+          "then_value":{"op":"state","state":0},"else_value":{"op":"affine","constant":0,"terms":[]}}},
+        {"kind":"idt","origin":integral_origin,"input":{"op":"affine","constant":1,"terms":[]},"ic":0.25}]);
+    value["contributions"][0]["rhs"] = json!({"op":"multiply",
+        "left":{"op":"affine","constant":0,"terms":[{"node":3,"coefficient":1}]},
+        "right":{"op":"operator","operator":0}});
+    value["contributions"].as_array_mut().unwrap().push(
+        json!({"positive":3,"negative":0,"origin":origin,
+        "branch":{"instance":"D","local_positive":"h","local_negative":"ref","kind":"voltage"},
+        "rhs":{"op":"operator","operator":1}}),
+    );
+    value["events"][0]["body"][0]["rhs"] = json!({"op":"affine","constant":0,"terms":[]});
+    value["events"][1]["body"] = json!([
+        {"kind":"assign","state":1,"rhs":{"op":"affine","constant":0,"terms":[{"node":2,"coefficient":1}]}},
+        {"kind":"assign","state":2,"rhs":{"op":"affine","constant":due,"terms":[]}},
+        {"kind":"display","format":"source %g","args":[{"op":"state","state":1}],"origin":observer}]);
+    let model = EventModel::new(
+        serde_json::from_value(value).unwrap(),
+        base.driven,
+        base.tolerances,
+    )
+    .unwrap();
+    let states = model.initial();
+    let bounds = states.iter().copied().map(I::point).collect::<Vec<_>>();
+    let operators = Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+    let circuit = model
+        .circuit_with(&states, &operators.values(0.).unwrap())
+        .unwrap();
+    let mut controller = Controller {
+        accepted: Frame {
+            time: 0.,
+            time_proofs: Default::default(),
+            solution: circuit.solve(&trajectory.values(0.)).unwrap(),
+            circuit,
+            states,
+            state_bounds: bounds,
+            operators,
+        },
+        event: 0,
+        records: vec![],
+        outputs: vec![],
+    };
+    let root = crate::exact_source::RootTime::point(0.25).unwrap();
+    let next = prepare_root_window(
+        &model,
+        &trajectory,
+        &controller.accepted,
+        EventMoment {
+            exact_root: Some(&root),
+            representative: 0.25,
+            observation: I::point(0.25),
+            fired_roots: &[],
+            prediction_end: 0.5,
+        },
+        &[],
+    )
+    .unwrap();
+    controller.commit_events(next, vec![], 0);
+    let calendar = schedule_held(&model, &trajectory, &controller.accepted.state_bounds).unwrap();
+    (model, trajectory, controller, calendar)
+}
+
+#[test]
+fn failed_source_target_epoch_and_memo_roll_back_then_same_controller_retries() {
+    let (bad, trajectory, mut controller, mut calendar) = source_fixture(-1.);
+    let before = controller.accepted.operators.clone();
+    let states = controller.accepted.states.clone();
+    let bounds = controller.accepted.state_bounds.clone();
+    let signature = |c: &Vec<ScheduledEvent>| {
+        c.iter()
+            .map(|e| (e.event, e.time, e.bounds()))
+            .collect::<Vec<_>>()
+    };
+    let queue = signature(&calendar);
+    for _ in 0..2 {
+        let (result, proof_work) =
+            crate::diagnostics::capture(crate::diagnostics::Options::default(), || {
+                controller.accept_relocalized(&bad, &trajectory, &mut calendar)
+            });
+        assert!(result.is_err());
+        // A failed complete candidate cannot publish its new q=0 proof. The
+        // second attempt must certify that context again from accepted q=1.
+        assert_eq!(
+            proof_work.counters.get("source_plan_context_calls"),
+            Some(&1)
+        );
+        assert_eq!(controller.accepted.time, 0.25);
+        assert_eq!(controller.accepted.states, states);
+        assert_eq!(controller.accepted.state_bounds, bounds);
+        assert!(controller.accepted.operators.same_reset_history(&before));
+        assert!(controller.records.is_empty() && controller.outputs.is_empty());
+        assert_eq!(signature(&calendar), queue);
+    }
+    let (good, _, mut clean, mut clean_calendar) = source_fixture(0.9);
+    let (result, proof_work) =
+        crate::diagnostics::capture(crate::diagnostics::Options::default(), || {
+            controller.accept_relocalized(&good, &trajectory, &mut calendar)
+        });
+    result.unwrap();
+    // Certify q=0 once. Frozen-history replay may share that immutable proof
+    // but must still replay its old cursor/edge and compare the whole result.
+    assert_eq!(
+        proof_work.counters.get("source_plan_context_calls"),
+        Some(&1)
+    );
+    clean
+        .accept_relocalized(&good, &trajectory, &mut clean_calendar)
+        .unwrap();
+    assert_eq!(controller.accepted.states, [0., 0.1875, 0.9]);
+    assert_eq!(controller.accepted.states, clean.accepted.states);
+    assert_eq!(
+        controller.accepted.state_bounds,
+        clean.accepted.state_bounds
+    );
+    assert_eq!(
+        serde_json::to_value(&controller.records).unwrap(),
+        serde_json::to_value(&clean.records).unwrap()
+    );
+    assert_eq!(signature(&calendar), signature(&clean_calendar));
+    for t in [0.5, 0.625, 0.75, 0.9, 1.] {
+        assert_eq!(
+            controller.accepted.operators.values(t).unwrap(),
+            clean.accepted.operators.values(t).unwrap()
+        );
+        assert_eq!(
+            controller.accepted.operators.bounds(t).unwrap(),
+            clean.accepted.operators.bounds(t).unwrap()
+        );
+    }
+    // q changed from 1 to 0: keeping the old successful Plan would leave a
+    // positive edge here. The newly certified target must have reversed it.
+    assert_eq!(controller.accepted.operators.values(0.9).unwrap()[0], 0.);
+}

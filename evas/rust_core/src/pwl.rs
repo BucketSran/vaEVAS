@@ -373,6 +373,25 @@ impl Trajectory {
         )
     }
 
+    pub(crate) fn original_guard_curve_with_states(
+        &self,
+        guard: &crate::ir::Expression,
+        input_nodes: &[usize],
+        end: f64,
+        states: &crate::exact_source::TimeProofs,
+    ) -> Option<crate::exact_source::Curve> {
+        if !end.is_finite() || end < 0.0 {
+            return None;
+        }
+        crate::exact_source::Curve::expression_with_states(
+            guard,
+            input_nodes.get(..self.original_source_count)?,
+            &self.exact_sources[..self.original_source_count],
+            end,
+            states,
+        )
+    }
+
     /// Compare retained original source trees, never rounded/generated nodes.
     pub(crate) fn original_predicate_sign(
         &self,

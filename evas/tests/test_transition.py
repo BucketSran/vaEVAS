@@ -194,11 +194,33 @@ class TransitionRejections(unittest.TestCase):
                            'transition(a,a,1n,1n)']:
             with self.subTest(expression=expression), self.assertRaises(CompileError):
                 compile_transition(f'@(initial_step) a=0; V(y,r)<+{expression};','real a;')
-        for expression in ['transition(a,0,1n,1n)*V(u,r)',
-                           'transition(a,0,1n,1n)*(V(u,r)-V(u,r))',
-                           'transition(a,0,1n,1n)*(V(u,r)/1e308/1e308)', 'transition(a*a,0,1n,1n)']:
+        for expression in ['transition(a*a,0,1n,1n)']:
             with self.subTest(expression=expression), self.assertRaises(KernelError):
                 run_transition(f'@(initial_step) a=0; V(y,r)<+{expression};',[0,1e-9],1e-9,declarations='real a;')
+
+    def test_live_affine_products_preserve_old_inputs_and_use_current_voltage(self):
+        # These exact expressions used to be structurally rejected. Keep the
+        # original zero-input requests, then exercise a nonzero changing input.
+        expressions = [
+            ('transition(a,0,1n,1n)*V(u,r)', [0,0,.75,2,3]),
+            ('transition(a,0,1n,1n)*(V(u,r)-V(u,r))', [0]*5),
+            ('transition(a,0,1n,1n)*(V(u,r)/1e308/1e308)', [0]*5),
+        ]
+        for expression, expected in expressions:
+            with self.subTest(expression=expression):
+                old = run_transition(f'@(initial_step) a=0; V(y,r)<+{expression};',
+                                     [0,1e-9],1e-9,declarations='real a;')
+                yi = old['nodes'].index('y')
+                self.assertEqual([r['voltages'][yi] for r in old['solutions']], [0,0])
+                program = compile_transition(
+                    f'@(initial_step) a=0; @(timer(1n,0,1p)) a=1; V(y,r)<+{expression};',
+                    'real a;')
+                result = transient(program, {'u':[[0,0],[3e-9,3]]},
+                                   [0,1e-9,1.5e-9,2e-9,3e-9], stop=3e-9,
+                                   max_step=3e-9, kernel=KERNEL)
+                yi = result['nodes'].index('y')
+                for row, want in zip(result['solutions'], expected, strict=True):
+                    self.assertAlmostEqual(row['voltages'][yi], want, delta=2e-12)
 
     def test_cross_through_operator_output_rejected(self):
         body='''@(initial_step) begin a=0; b=0; end

@@ -48,7 +48,12 @@ fn contains(bounds: I, value: &R) -> bool {
         && binary(bounds.hi).is_some_and(|hi| *value <= hi)
 }
 
+pub(crate) type TimeProofs = std::collections::BTreeMap<usize, RootTime>;
+
 impl RootTime {
+    pub(crate) fn point(time: f64) -> Option<Self> {
+        Some(Self(binary(time)?))
+    }
     /// Original fixed-clock arithmetic; the proof must fit discovery unchanged.
     pub(crate) fn from_clock(clock: crate::exact_time::Clock, discovery: I) -> Option<Self> {
         if clock.index > crate::schedule::EVENT_BUDGET {
@@ -171,11 +176,35 @@ fn evaluate(
     depth: usize,
     count: &mut usize,
 ) -> Option<R> {
+    evaluate_states(
+        e,
+        nodes,
+        sources,
+        time,
+        budget,
+        depth,
+        count,
+        &Default::default(),
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn evaluate_states(
+    e: &Expression,
+    nodes: &[usize],
+    sources: &[Option<Curve>],
+    time: &R,
+    budget: &mut Budget,
+    depth: usize,
+    count: &mut usize,
+    states: &crate::exact_source::TimeProofs,
+) -> Option<R> {
     *count += 1;
     if depth > MAX_DEPTH || *count > MAX_EXPR_NODES {
         return None;
     }
     match e {
+        Expression::State { state } => budget.check(states.get(state)?.0.clone()),
         Expression::Affine { constant, terms } => {
             if terms.len() > MAX_POINTS {
                 return None;
@@ -193,8 +222,17 @@ fn evaluate(
             Some(value)
         }
         Expression::Add { left, right } | Expression::Multiply { left, right } => {
-            let a = evaluate(left, nodes, sources, time, budget, depth + 1, count)?;
-            let b = evaluate(right, nodes, sources, time, budget, depth + 1, count)?;
+            let a = evaluate_states(left, nodes, sources, time, budget, depth + 1, count, states)?;
+            let b = evaluate_states(
+                right,
+                nodes,
+                sources,
+                time,
+                budget,
+                depth + 1,
+                count,
+                states,
+            )?;
             budget.check(if matches!(e, Expression::Add { .. }) {
                 a + b
             } else {
@@ -268,6 +306,49 @@ impl Curve {
         RootTime::from_affine(segment, [a, b], bounds)
     }
 
+    /// Complete original affine roots and source corners, retaining their real
+    /// rational times. Binary64 upper bounds are representatives, not roots.
+    pub(crate) fn isolated_zero_times(&self) -> Option<Vec<RootTime>> {
+        let mut work = Budget(0);
+        let mut out = Vec::new();
+        for pair in self.0.windows(2) {
+            let (a, x) = &pair[0];
+            let (b, y) = &pair[1];
+            if a >= b {
+                return None;
+            }
+            out.extend([RootTime(a.clone()), RootTime(b.clone())]);
+            if x.is_zero() || y.is_zero() || x.is_positive() == y.is_positive() {
+                continue;
+            }
+            let duration = work.check(b - a)?;
+            let delta = work.check(y - x)?;
+            let numerator = work.check(x * duration)?;
+            let shift = work.check(numerator / delta)?;
+            let root = work.check(a - shift)?;
+            if root <= *a || root >= *b {
+                return None;
+            }
+            enclosure(&root)?;
+            out.push(RootTime(root));
+        }
+        out.sort_by(RootTime::order);
+        out.dedup_by(|a, b| a.order(b) == std::cmp::Ordering::Equal);
+        Some(out)
+    }
+    /// Predicate sign at the original real root. In particular strict and
+    /// non-strict comparisons cannot use the upper representative's sign.
+    pub(crate) fn sign_at_root(&self, root: &RootTime) -> Option<i8> {
+        let value = self.value(&root.0, &mut Budget(0))?;
+        Some(if value.is_zero() {
+            0
+        } else if value.is_positive() {
+            1
+        } else {
+            -1
+        })
+    }
+
     pub(crate) fn source(points: &[[f64; 2]]) -> Option<Self> {
         if points.len() > MAX_POINTS {
             return None;
@@ -299,6 +380,15 @@ impl Curve {
         sources: &[Option<Self>],
         stop: f64,
     ) -> Option<Self> {
+        Self::expression_with_states(expr, nodes, sources, stop, &Default::default())
+    }
+    pub(crate) fn expression_with_states(
+        expr: &Expression,
+        nodes: &[usize],
+        sources: &[Option<Self>],
+        stop: f64,
+        states: &crate::exact_source::TimeProofs,
+    ) -> Option<Self> {
         // Existing callers validate affinity/ownership first. Recheck degree
         // here as well: endpoint interpolation cannot certify a quadratic.
         fn varying(e: &Expression, depth: usize, count: &mut usize) -> Option<bool> {
@@ -307,6 +397,7 @@ impl Curve {
                 return None;
             }
             match e {
+                Expression::State { .. } => Some(false),
                 Expression::Affine { terms, .. } => Some(terms.iter().any(|t| t.node != 0)),
                 Expression::Add { left, right } => {
                     let a = varying(left, depth + 1, count)?;
@@ -338,6 +429,7 @@ impl Curve {
                 return None;
             }
             match e {
+                Expression::State { .. } => {}
                 Expression::Affine { terms, .. } => {
                     if terms.len() > MAX_POINTS {
                         return None;
@@ -374,7 +466,8 @@ impl Curve {
             knots
                 .into_iter()
                 .map(|t| {
-                    let value = evaluate(expr, nodes, sources, &t, &mut budget, 0, &mut 0)?;
+                    let value =
+                        evaluate_states(expr, nodes, sources, &t, &mut budget, 0, &mut 0, states)?;
                     Some((t, value))
                 })
                 .collect::<Option<Vec<_>>>()?,
@@ -490,6 +583,22 @@ impl Curve {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn source_cut_keeps_nonbinary_root_and_exact_boundary_sign() {
+        let curve = super::Curve::source(&[[0., -0.5], [1., 2.5]]).unwrap();
+        let cuts = curve.isolated_zero_times().unwrap();
+        assert_eq!(cuts.len(), 3);
+        let root = &cuts[1];
+        let exact = num_rational::BigRational::new(1.into(), 6.into());
+        assert_eq!(root.0, exact);
+        let window = root.bounds().unwrap();
+        assert!(super::binary(window.lo).unwrap() < exact);
+        assert!(super::binary(window.hi).unwrap() > exact);
+        assert_eq!(curve.sign_at_root(root), Some(0));
+        let representative = super::RootTime(super::binary(window.hi).unwrap());
+        assert_eq!(curve.sign_at_root(&representative), Some(1));
+    }
+
     use super::*;
 
     #[test]

@@ -241,6 +241,75 @@ fn physical_expressions(program: &Program) -> impl Iterator<Item = (&Expression,
             _ => None,
         }))
 }
+pub(super) fn time_parameters(program: &Program) -> BTreeSet<usize> {
+    fn states(e: &Expression, out: &mut BTreeSet<usize>) {
+        match e {
+            Expression::State { state } => {
+                out.insert(*state);
+            }
+            Expression::Add { left, right }
+            | Expression::Multiply { left, right }
+            | Expression::Divide { left, right } => {
+                states(left, out);
+                states(right, out);
+            }
+            Expression::Power { base, .. } => states(base, out),
+            Expression::EventMath { args, .. } => {
+                for a in args {
+                    states(a, out);
+                }
+            }
+            Expression::Select {
+                left,
+                right,
+                then_value,
+                else_value,
+                ..
+            } => {
+                for a in [left, right, then_value, else_value] {
+                    states(a, out);
+                }
+            }
+            _ => {}
+        }
+    }
+    fn guards(e: &Expression, out: &mut BTreeSet<usize>) {
+        match e {
+            Expression::Select {
+                left,
+                right,
+                then_value,
+                else_value,
+                ..
+            } => {
+                states(left, out);
+                states(right, out);
+                for a in [left, right, then_value, else_value] {
+                    guards(a, out);
+                }
+            }
+            Expression::Add { left, right }
+            | Expression::Multiply { left, right }
+            | Expression::Divide { left, right } => {
+                guards(left, out);
+                guards(right, out);
+            }
+            Expression::Power { base, .. } => guards(base, out),
+            Expression::EventMath { args, .. } => {
+                for a in args {
+                    guards(a, out);
+                }
+            }
+            _ => {}
+        }
+    }
+    let mut out = BTreeSet::new();
+    for (e, _) in expressions(program) {
+        guards(e, &mut out);
+    }
+    out
+}
+
 fn expressions(program: &Program) -> impl Iterator<Item = (&Expression, &str)> {
     physical_expressions(program).chain(program.step_bounds.iter().flat_map(|b| {
         [
@@ -285,6 +354,7 @@ pub(super) fn build(
             &context.driven,
             &context.trajectory,
             &parameters,
+            &context.time_proofs,
         )?;
     }
     roots.finish(&mut cuts, start, context.trajectory.config.stop)?;
@@ -350,6 +420,7 @@ pub(super) fn build(
             force_integrals: true,
             detached_timed: context.detached_timed,
             live_parameters: context.live_parameters.clone(),
+            time_proofs: context.time_proofs.clone(),
         });
         let mut branch =
             LinearContinuous::build(branch_context.clone(), parameters.clone(), begin, seed)?
@@ -436,6 +507,7 @@ pub(super) fn nonlinear_parts(
             &context.driven,
             &context.trajectory,
             parameters,
+            &context.time_proofs,
         )?;
     }
     let roots = roots.window_roots(start, horizon)?;
@@ -572,6 +644,7 @@ pub(super) fn freeze_context(
         force_integrals: true,
         detached_timed: context.detached_timed,
         live_parameters: context.live_parameters.clone(),
+        time_proofs: context.time_proofs.clone(),
     }))
 }
 
@@ -619,6 +692,7 @@ pub(super) fn isolated_root_witnesses(
             &context.driven,
             &context.trajectory,
             parameters,
+            &context.time_proofs,
         )?;
     }
     let neighbors = roots.window_roots(left, right)?;

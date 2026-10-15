@@ -5,9 +5,9 @@ use crate::exact_source::RootTime;
 use crate::interval::Interval as I;
 use crate::ir::{Expression, StateKind, Term};
 use crate::pwl::Trajectory;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeSet;
 
-pub(crate) type TimeProofs = BTreeMap<usize, RootTime>;
+pub(crate) use crate::exact_source::TimeProofs;
 
 fn identity_nodes(model: &EventModel, trajectory: &Trajectory) -> BTreeSet<usize> {
     let nodes: Vec<_> = model
@@ -113,6 +113,7 @@ pub(crate) fn apply(
         })
         .map(|(&s, r)| (s, r.clone()))
         .collect();
+    crate::diagnostics::counter("time_proof_root_calls", usize::from(root.is_some()));
     let mut result = before.clone();
     let identity = if root.is_some() && !selection.actions.is_empty() {
         identity_nodes(model, trajectory)
@@ -140,6 +141,7 @@ pub(crate) fn apply(
             .get(*s)
             .is_some_and(|bounds| r.refine(*bounds).is_some())
     });
+    crate::diagnostics::counter("time_proof_result_slots", result.len());
     result
 }
 

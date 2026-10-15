@@ -66,10 +66,13 @@ impl Controller {
         crossings: &[ScheduledEvent],
     ) -> Result<(Frame, Vec<EventRecord>, usize), Error> {
         let result = self.prepare_events_until(model, trajectory, crossings, None)?;
-        result
-            .0
-            .operators
-            .check_deadline_order(result.0.time, crossings.get(result.2).map(|e| e.bounds()))?;
+        result.0.operators.check_deadline_order(
+            result.0.time,
+            crossings.get(result.2).map(|e| e.bounds()),
+            crossings
+                .get(result.2)
+                .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
+        )?;
         Ok(result)
     }
 
@@ -369,6 +372,19 @@ fn prepare_root_window_selected_impl(
     refine_ordinary_phase: bool,
 ) -> Result<(Frame, crate::event_conditions::Selection), Error> {
     let _timing = crate::diagnostics::span("controller.prepare_candidate");
+    for (&state, proof) in &accepted.time_proofs {
+        if accepted
+            .state_bounds
+            .get(state)
+            .and_then(|bounds| proof.refine(*bounds))
+            .is_none()
+        {
+            return Err(Error::new(
+                "event_resolution",
+                "accepted time proof outside matching state enclosure",
+            ));
+        }
+    }
 
     let EventMoment {
         exact_root,
@@ -389,7 +405,7 @@ fn prepare_root_window_selected_impl(
     // Every trial starts from accepted uncertainty, regardless of whether the
     // program has conditional statements or history operators.
     let old_bounds = accepted.state_bounds.as_slice();
-    operators.advance(time, time_bounds, &accepted.states, old_bounds, &[])?;
+    operators.advance_old(time, time_bounds, &accepted.states, old_bounds)?;
     // Positive edge durations make transition continuous at a target change.
     // Freeze its current value for the same-time state/voltage solve, then
     // install the new target only in this disposable candidate history.
@@ -425,6 +441,13 @@ fn prepare_root_window_selected_impl(
             )
         }
     };
+    let mut physical_selection =
+        model
+            .conditions
+            .select_at_roots(events, &input_bounds, fired_leaves, old_bounds)?;
+    physical_selection
+        .actions
+        .retain(|(event, _)| !model.passive_events[*event]);
     let mut prepared = settle(&frozen.values, &frozen.bounds)?;
     let mut observation = (frozen.values.clone(), frozen.bounds.clone());
     let mut closed = false;
@@ -432,7 +455,20 @@ fn prepare_root_window_selected_impl(
     // maps until stable, rebuilding assignments from accepted state each time.
     // This is an observation closure, never a chain of provisional histories.
     for _ in 0..=model.program.operators.len() {
-        let (mapped, values, bounds) = frozen.observed_after(time_bounds, &prepared.bounds)?;
+        let observed_time_proofs = time_provenance::apply(
+            model,
+            trajectory,
+            &physical_selection,
+            &accepted.time_proofs,
+            exact_root,
+            old_bounds,
+            &prepared.bounds,
+        );
+        let (mapped, values, bounds) = frozen.observed_after_with_time_proofs(
+            time_bounds,
+            &prepared.bounds,
+            Some(&observed_time_proofs),
+        )?;
         if values == observation.0 && bounds == observation.1 {
             closed = true;
             break;
@@ -459,22 +495,46 @@ fn prepare_root_window_selected_impl(
         .copied()
         .filter(|&s| old_bounds[s] != prepared.bounds[s] || old_bounds[s].lo != old_bounds[s].hi)
         .collect();
-    let mut operators = frozen.advanced_until(
+
+    let physical_time_proofs = time_provenance::apply(
+        model,
+        trajectory,
+        &physical_selection,
+        &accepted.time_proofs,
+        exact_root,
+        old_bounds,
+        &prepared.bounds,
+    );
+    let mut operators = frozen.advanced_until_with_time_proofs(
         time_bounds,
         &prepared.states,
         &prepared.bounds,
         &changed,
         prediction_end,
+        None,
+        Some(&physical_time_proofs),
     )?;
     let replay = settle(&observation.0, &observation.1)?;
-    let history_replay = frozen.advanced_until(
+    let replay_time_proofs = time_provenance::apply(
+        model,
+        trajectory,
+        &physical_selection,
+        &accepted.time_proofs,
+        exact_root,
+        old_bounds,
+        &replay.bounds,
+    );
+    let history_replay = frozen.advanced_until_with_time_proofs(
         time_bounds,
         &replay.states,
         &replay.bounds,
         &changed,
         prediction_end,
+        Some(&operators),
+        Some(&replay_time_proofs),
     )?;
     if prepared.states != replay.states
+        || physical_time_proofs != replay_time_proofs
         || prepared.bounds != replay.bounds
         || !history_replay.same_reset_history(&operators)
     {
@@ -640,7 +700,8 @@ fn prepare_batch_until(
         .collect();
     let (next, selection) =
         prepare_root_window_selected(model, trajectory, accepted, moment, &blocks)?;
-    next.operators.check_deadline_order(event_time, None)?;
+    next.operators
+        .check_deadline_order(event_time, None, None)?;
     let (display_states, candidate_displays) = model.apply_with_displays(
         &selection,
         &next.solution.voltages,
@@ -1101,6 +1162,9 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         controller.accepted.operators.check_deadline_order(
             controller.accepted.time,
             crossings.get(controller.event).map(|e| e.bounds()),
+            crossings
+                .get(controller.event)
+                .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
         )?;
         // t=0 is processed after initial_step and before the initial observation.
         // Later events are reached by the same loop after advancing to their time.
@@ -1127,6 +1191,9 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         controller.accepted.operators.check_deadline_order(
             controller.accepted.time,
             crossings.get(controller.event).map(|e| e.bounds()),
+            crossings
+                .get(controller.event)
+                .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
         )?;
         while output < trace.times.len() && trace.times[output] < controller.accepted.time {
             let index = controller
@@ -1247,6 +1314,11 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             }
         } else {
             if !model.program.operators.is_empty() {
+                let source_root = controller.accepted.operators.source_root_at(time)?;
+                let source_window = source_root
+                    .as_ref()
+                    .and_then(|root| root.bounds())
+                    .unwrap_or(I::point(time));
                 let next = crate::diagnostics::outcome(
                     "history_candidate",
                     time,
@@ -1255,9 +1327,9 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                         &trajectory,
                         &controller.accepted,
                         EventMoment {
-                            exact_root: None,
+                            exact_root: source_root.as_ref(),
                             representative: time,
-                            observation: I::point(time),
+                            observation: source_window,
                             fired_roots: &[],
                             prediction_end: prediction_end(
                                 &model,
@@ -1271,6 +1343,9 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 next.operators.check_deadline_order(
                     time,
                     crossings.get(controller.event).map(|e| e.bounds()),
+                    crossings
+                        .get(controller.event)
+                        .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
                 )?;
                 controller.accepted = next;
             } else {
@@ -2680,3 +2755,7 @@ mod timer_boundary_tests;
 #[cfg(test)]
 #[path = "transient_passive_tests.rs"]
 mod passive_tests;
+
+#[cfg(test)]
+#[path = "transient_time_proof_tests.rs"]
+mod time_proof_tests;

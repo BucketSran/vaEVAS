@@ -37,6 +37,8 @@ EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候
 
 0.18.0 / IR22 的[隔离事件统计修复](../../experiments/backends/support/README.md#event-statistics)使三条原 gain 请求通过原 checker及实际 Spectre有限配对；四项手算控制另行通过。它补出 [L3-13 的开发证据](../validation/paper/COVERAGE.md#event-statistics-development)，尚未完成四后端共同 Q 验收，本表旧行和成绩保持。
 
+[同步读出修复](../../experiments/backends/support/r01-sync-readout/README.md)使原物理请求在原时限内完整执行；严格阈值导致的整题失败仍保留。独立乘积卡的有限数值结果不增加本表Q成绩，滤波消费者另行补齐。
+
 固定零时刻 timer 的 transition 初态修正已取得[三模型实际有限配对](../../experiments/backends/support/README.md#initial-transition-seed)。
 该修复使用原 `1e-8 V` 预算；第四反馈模型仅作诊断，不新增本表 Q 成绩，也不覆盖一般历史反馈。
 

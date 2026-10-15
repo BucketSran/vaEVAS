@@ -58,6 +58,7 @@ pub(super) fn forms(expr: &Expression, budget: &mut usize) -> Result<Vec<Express
 
 struct Root {
     value: I,
+    exact: Option<crate::exact_source::RootTime>,
     left: Expression,
     right: Expression,
     segment: usize,
@@ -70,24 +71,40 @@ fn original_predicate_curve(
     driven: &[String],
     trajectory: &Trajectory,
     states: &[I],
+    time_proofs: &crate::exact_source::TimeProofs,
 ) -> Option<crate::exact_source::Curve> {
+    crate::diagnostics::counter("continuous_predicate_time_proof_slots", time_proofs.len());
+    let mut values = time_proofs.clone();
+    for (&index, proof) in time_proofs {
+        proof.refine(*states.get(index)?)?;
+    }
+    for (index, state) in states.iter().enumerate() {
+        if state.lo == state.hi && !values.contains_key(&index) {
+            values.insert(index, crate::exact_source::RootTime::point(state.lo)?);
+        }
+    }
     // Preserve the original expression tree, not rounded affine coefficients.
     // An uncertain held value or unavailable original source gives no proof.
     let guard = Expression::Add {
-        left: Box::new(bind_states(left, states).ok()?),
+        left: Box::new(left.clone()),
         right: Box::new(Expression::Multiply {
             left: Box::new(Expression::Affine {
                 constant: -1.0,
                 terms: vec![],
             }),
-            right: Box::new(bind_states(right, states).ok()?),
+            right: Box::new(right.clone()),
         }),
     };
     let input_nodes = driven
         .iter()
         .map(|name| program.nodes.iter().position(|n| n == name))
         .collect::<Option<Vec<_>>>()?;
-    trajectory.original_guard_curve_until(&guard, &input_nodes, *trajectory.knots.last()?)
+    trajectory.original_guard_curve_with_states(
+        &guard,
+        &input_nodes,
+        *trajectory.knots.last()?,
+        &values,
+    )
 }
 pub(super) struct Roots {
     roots: Vec<Root>,
@@ -111,6 +128,7 @@ impl Roots {
         driven: &[String],
         trajectory: &Trajectory,
         states: &[I],
+        time_proofs: &crate::exact_source::TimeProofs,
     ) -> Result<(), Error> {
         spend(&mut self.budget)?;
         match expr {
@@ -124,7 +142,7 @@ impl Roots {
             } => {
                 // Conditions nested inside conditions also introduce cuts.
                 for child in [left, right, then_value, else_value] {
-                    self.collect(child, program, driven, trajectory, states)?;
+                    self.collect(child, program, driven, trajectory, states, time_proofs)?;
                 }
                 let a = forms(left, &mut self.budget)?;
                 let b = forms(right, &mut self.budget)?;
@@ -149,7 +167,13 @@ impl Roots {
                             continue;
                         }
                         let exact = original_predicate_curve(
-                            left, right, program, driven, trajectory, states,
+                            left,
+                            right,
+                            program,
+                            driven,
+                            trajectory,
+                            states,
+                            time_proofs,
                         );
                         let at = |time| {
                             let mut nodes = vec![I::ZERO; program.nodes.len()];
@@ -184,23 +208,29 @@ impl Roots {
                                     "cannot isolate nested predicate breakpoint",
                                 ));
                             }
-                            if let Some(point) = exact
-                                .as_ref()
-                                .and_then(|curve| curve.root_in([pair[0], pair[1]], [lo, hi], root))
-                                .and_then(|time| time.bounds())
-                                .filter(|b| b.lo == b.hi)
+                            let exact_root = exact.as_ref().and_then(|curve| {
+                                curve.root_in([pair[0], pair[1]], [lo, hi], root)
+                            });
+                            if let Some(bounds) = exact_root.as_ref().and_then(|time| time.bounds())
                             {
-                                root = point;
+                                root = I {
+                                    lo: root.lo.max(bounds.lo),
+                                    hi: root.hi.min(bounds.hi),
+                                };
                             }
                             // Equal enclosures are not evidence that two roots agree.
                             // Reuse only the identical expression on the identical segment.
                             if self.roots.iter().any(|r| {
-                                r.segment == segment && r.left == *left && r.right == *right
+                                (r.segment == segment && r.left == *left && r.right == *right)
+                                    || r.exact.as_ref().zip(exact_root.as_ref()).is_some_and(
+                                        |(a, b)| a.order(b) == std::cmp::Ordering::Equal,
+                                    )
                             }) {
                                 continue;
                             }
                             self.roots.push(Root {
                                 value: root,
+                                exact: exact_root,
                                 left: left.clone(),
                                 right: right.clone(),
                                 segment,
@@ -215,11 +245,11 @@ impl Roots {
             Expression::Add { left, right }
             | Expression::Multiply { left, right }
             | Expression::Divide { left, right } => {
-                self.collect(left, program, driven, trajectory, states)?;
-                self.collect(right, program, driven, trajectory, states)
+                self.collect(left, program, driven, trajectory, states, time_proofs)?;
+                self.collect(right, program, driven, trajectory, states, time_proofs)
             }
             Expression::Power { base, .. } => {
-                self.collect(base, program, driven, trajectory, states)
+                self.collect(base, program, driven, trajectory, states, time_proofs)
             }
             _ => Ok(()),
         }
@@ -227,19 +257,30 @@ impl Roots {
     // Keep full certificates at physical endpoints. The nonlinear consumer
     // owns a certified history segment over the clipped physical coverage.
     pub(super) fn window_roots(self, start: f64, horizon: f64) -> Result<Vec<I>, Error> {
-        let mut roots: Vec<_> = self
+        let mut selected: Vec<_> = self
             .roots
             .into_iter()
-            .map(|r| r.value)
-            .filter(|r| r.hi >= start && r.lo <= horizon)
+            .filter(|r| r.value.hi >= start && r.value.lo <= horizon)
             .collect();
-        roots.sort_by(|a, b| a.lo.total_cmp(&b.lo).then(a.hi.total_cmp(&b.hi)));
-        for pair in roots.windows(2) {
-            let (a, b) = (pair[0], pair[1]);
-            if a.hi >= b.lo && !(a.lo == a.hi && a == b) {
-                return Err(precision("distinct physical root certificates overlap"));
+        selected.sort_by(|a, b| {
+            a.value
+                .lo
+                .total_cmp(&b.value.lo)
+                .then(a.value.hi.total_cmp(&b.value.hi))
+        });
+        for pair in selected.windows(2) {
+            let (a, b) = (&pair[0], &pair[1]);
+            if a.value.hi >= b.value.lo && !(a.value.lo == a.value.hi && a.value == b.value) {
+                crate::diagnostics::detail(
+                    "physical_root_overlap",
+                    "rejected",
+                    Some(start),
+                    &serde_json::json!({"horizon":horizon,"a":{"bounds":[a.value.lo,a.value.hi],"exact":a.exact.is_some(),"left":a.left,"right":a.right},"b":{"bounds":[b.value.lo,b.value.hi],"exact":b.exact.is_some(),"left":b.left,"right":b.right}}),
+                );
+                return Err(precision(&format!("distinct physical root certificates overlap: [{:.17e},{:.17e}] exact {}, [{:.17e},{:.17e}] exact {}",a.value.lo,a.value.hi,a.exact.is_some(),b.value.lo,b.value.hi,b.exact.is_some())));
             }
         }
+        let mut roots: Vec<_> = selected.into_iter().map(|r| r.value).collect();
         roots.dedup();
         Ok(roots)
     }

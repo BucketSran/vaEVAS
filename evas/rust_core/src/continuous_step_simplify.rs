@@ -154,6 +154,7 @@ mod tests {
             force_integrals: false,
             detached_timed: false,
             live_parameters: None,
+            time_proofs: Default::default(),
         }
     }
     #[test]

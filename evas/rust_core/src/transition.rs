@@ -21,8 +21,52 @@ impl Deadline {
                 .zip(other.exact.as_ref())
                 .is_some_and(|(a, b)| a.order(b) == std::cmp::Ordering::Equal)
     }
+    pub(crate) fn coincides_root(&self, root: &crate::exact_source::RootTime) -> bool {
+        let exact = self
+            .exact
+            .clone()
+            .or_else(|| {
+                let terms = self.sum?;
+                let mut root = crate::exact_source::RootTime::point(terms[0])?;
+                for term in &terms[1..] {
+                    root = root.shifted_fixed(*term, root.bounds()? + I::point(*term))?;
+                }
+                root.refine(self.bounds)?;
+                Some(root)
+            })
+            .or_else(|| {
+                (self.bounds.lo == self.bounds.hi)
+                    .then(|| crate::exact_source::RootTime::point(self.bounds.lo))
+                    .flatten()
+            });
+        exact.is_some_and(|exact| {
+            exact.refine(self.bounds).is_some() && exact.order(root) == std::cmp::Ordering::Equal
+        })
+    }
     pub(crate) fn overlaps(&self, other: I) -> bool {
         self.bounds.lo <= other.hi && other.lo <= self.bounds.hi
+    }
+    pub(crate) fn ordered_with_point(&self, event: I) -> bool {
+        if event.lo != event.hi || !event.finite() {
+            return false;
+        }
+        let proof = || {
+            let exact = self
+                .sum?
+                .into_iter()
+                .try_fold(crate::exact_source::binary(0.)?, |sum, term| {
+                    Some(sum + crate::exact_source::binary(term)?)
+                })?;
+            if crate::exact_source::enclosure(&exact)? != self.bounds {
+                return None;
+            }
+            Some(match exact.cmp(&crate::exact_source::binary(event.lo)?) {
+                std::cmp::Ordering::Less => self.bounds.hi <= event.lo,
+                std::cmp::Ordering::Equal => self.bounds == event,
+                std::cmp::Ordering::Greater => self.bounds.hi > event.hi,
+            })
+        };
+        proof().unwrap_or(false)
     }
 }
 

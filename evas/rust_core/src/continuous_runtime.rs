@@ -186,6 +186,7 @@ impl Continuous {
                 force_integrals: true,
                 detached_timed: prepared.detached_timed,
                 live_parameters: prepared.live_parameters.clone(),
+                time_proofs: prepared.time_proofs.clone(),
             });
             let frozen = selection::freeze_context(&context, &parameters, 0.)?;
             if program.operators.iter().any(|op|matches!(op,OperatorSpec::Idt{input,..}|OperatorSpec::LaplaceNd{input,..} if selection::has_variable_division(input)||nonlinear::contains_exp_operator(input,program))) || frozen.program.operators.iter().any(|op|matches!(op,OperatorSpec::Idt{input,..}|OperatorSpec::LaplaceNd{input,..} if affine_bounds::affine(input,&frozen.program).is_err())) {
@@ -387,6 +388,115 @@ impl Continuous {
             }
         }
     }
+    pub(crate) fn restarted_with_time_proofs(
+        &self,
+        time: f64,
+        bounds: I,
+        states: &[I],
+        horizon: f64,
+        proofs: &crate::exact_source::TimeProofs,
+    ) -> Result<Self, Error> {
+        for (&state, proof) in proofs {
+            if states.get(state).and_then(|b| proof.refine(*b)).is_none() {
+                return Err(Error::new(
+                    "event_resolution",
+                    "continuous time proof outside matching state enclosure",
+                ));
+            }
+        }
+        let context_with = |context: &Arc<Context>| {
+            let mut next = (**context).clone();
+            let relevant = selection::time_parameters(&next.program);
+            next.time_proofs = proofs
+                .iter()
+                .filter(|(state, _)| {
+                    relevant.contains(state) && states[**state].lo != states[**state].hi
+                })
+                .map(|(&state, proof)| (state, proof.clone()))
+                .collect();
+            Arc::new(next)
+        };
+        match self {
+            Self::Linear(v) => v
+                .restarted_with_context(time, bounds, states, context_with(&v.context))
+                .map(|v| Self::Linear(Box::new(v))),
+            Self::Nonlinear(v) => v
+                .restarted_with_context(time, bounds, states, horizon, context_with(&v.context))
+                .map(|v| Self::Nonlinear(Box::new(v))),
+            Self::Anchored(v)
+                if context_with(match &v.inner {
+                    Self::Linear(c) => &c.context,
+                    Self::Nonlinear(c) => &c.context,
+                    Self::Anchored(_) => {
+                        return Err(Error::new("invalid_ir", "nested local causal history"))
+                    }
+                })
+                .time_proofs
+                .is_empty() =>
+            {
+                self.restarted(time, bounds, states, horizon)
+            }
+            Self::Anchored(_) => Err(Error::new(
+                "event_resolution",
+                "absolute time proofs cannot be rebound into a local causal epoch",
+            )),
+        }
+    }
+
+    pub(crate) fn mapped_event_with_time_proofs(
+        &self,
+        time: f64,
+        bounds: I,
+        states: &[I],
+        proofs: &crate::exact_source::TimeProofs,
+    ) -> Result<Self, Error> {
+        for (&state, proof) in proofs {
+            if states.get(state).and_then(|b| proof.refine(*b)).is_none() {
+                return Err(Error::new(
+                    "event_resolution",
+                    "continuous time proof outside matching state enclosure",
+                ));
+            }
+        }
+        let context_with = |context: &Arc<Context>| {
+            let mut next = (**context).clone();
+            let relevant = selection::time_parameters(&next.program);
+            next.time_proofs = proofs
+                .iter()
+                .filter(|(state, _)| {
+                    relevant.contains(state) && states[**state].lo != states[**state].hi
+                })
+                .map(|(&state, proof)| (state, proof.clone()))
+                .collect();
+            Arc::new(next)
+        };
+        match self {
+            Self::Linear(v) => v
+                .mapped_event_with_context(time, bounds, states, context_with(&v.context))
+                .map(|v| Self::Linear(Box::new(v))),
+            Self::Nonlinear(v) => v
+                .mapped_event_with_context(time, bounds, states, context_with(&v.context))
+                .map(|v| Self::Nonlinear(Box::new(v))),
+            Self::Anchored(v)
+                if context_with(match &v.inner {
+                    Self::Linear(c) => &c.context,
+                    Self::Nonlinear(c) => &c.context,
+                    Self::Anchored(_) => {
+                        return Err(Error::new("invalid_ir", "nested local causal history"))
+                    }
+                })
+                .time_proofs
+                .is_empty() =>
+            {
+                self.mapped_event(time, bounds, states)
+            }
+            Self::Anchored(_) => Err(Error::new(
+                "event_resolution",
+                "absolute time proofs cannot be rebound into a local causal epoch",
+            )),
+        }
+    }
+
     pub(crate) fn mapped_event(&self, time: f64, bounds: I, states: &[I]) -> Result<Self, Error> {
         match self {
             Self::Linear(v) => v

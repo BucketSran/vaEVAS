@@ -139,13 +139,38 @@ pub(super) fn prepare(
     let mut seeds = BTreeSet::new();
     for spec in &model.program.operators {
         if let OperatorSpec::Transition { input, origin, .. } = spec {
-            let Ok(row) = crate::events::affine(input, &model.program, &origin.instance) else {
-                return Ok(None); // The original constructor owns target diagnostics.
-            };
-            if !row.node_dependencies.is_empty() || !row.operator_dependencies.is_empty() {
-                return Ok(None); // Preserve the existing target validation path.
+            match crate::events::affine(input, &model.program, &origin.instance) {
+                Ok(row)
+                    if row.node_dependencies.is_empty() && row.operator_dependencies.is_empty() =>
+                {
+                    seeds.extend(row.state_dependencies);
+                }
+                _ => {
+                    // Gather the complete structural seed set for direct-source
+                    // targets. This is not target admission: the one real
+                    // constructor still proves all piecewise-held leaves/cuts
+                    // after the final zero-time state has been certified.
+                    let (nodes, dependencies, operators) =
+                        crate::continuous::integral_dependency_edges(
+                            input,
+                            &model.program,
+                            &origin.instance,
+                        )?;
+                    let driven: BTreeSet<_> = model
+                        .driven
+                        .iter()
+                        .filter_map(|name| model.program.nodes.iter().position(|node| node == name))
+                        .collect();
+                    if !operators.is_empty()
+                        || nodes
+                            .iter()
+                            .any(|node| *node != 0 && !driven.contains(node))
+                    {
+                        return Ok(None); // Preserve general/coupled constructor diagnostics.
+                    }
+                    seeds.extend(dependencies);
+                }
             }
-            seeds.extend(row.state_dependencies);
         }
     }
     if seeds.is_disjoint(&assigned)
