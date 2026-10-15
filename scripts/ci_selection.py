@@ -85,6 +85,16 @@ def classify(paths):
             selected.update(('maintenance', 'package'))
         elif path == 'scripts/recompile_evas_manifests.py':
             selected.update(('maintenance', 'regression', 'calibration'))
+        elif (path.startswith('evas/tests/') and suffix == '.py'
+              or path.startswith('evas/rust_core/tests/') and suffix == '.rs'):
+            # Calibration does not read development tests. Provenance freezes
+            # both Python and Rust tests in source-identity manifests.
+            selected.update(('maintenance', 'provenance', 'regression'))
+        elif path.startswith(('evas/rust_core/src/', 'evas/rust_core/ir/src/')) and suffix == '.rs':
+            # Calibration does not read Rust implementation. Provenance does:
+            # its producer-identity controls inspect the production source closure.
+            selected.update(('maintenance', 'provenance', 'regression',
+                             'differential', 'fuzz', 'package'))
         elif path.startswith(('evas/src/', 'evas/rust_core/')):
             selected.update(('maintenance', 'calibration', 'provenance', 'regression'))
             if path.startswith('evas/rust_core/fuzz/'):

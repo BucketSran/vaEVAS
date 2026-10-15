@@ -88,7 +88,7 @@ checks pass. Local installation changes outside the repository must be reported 
 ## Branch lifecycle
 
 1. Reuse a suitable task branch/worktree. Otherwise branch from reviewed `main`; record a different parent only for a real dependency. No permanent `develop` branch is required.
-2. Keep one reviewable outcome's code, tests, mathematics and evidence in one PR. Use small commits for iteration; do not branch for each review or asset type.
+2. Keep one reviewable outcome's code, tests, mathematics and evidence in one PR. A benchmark batch can share one temporary branch and PR when its tasks have a common delivery scope and can be accepted together. Use small commits for iteration; do not branch or create a worktree for each benchmark task, agent, review or asset type.
 3. For dependent PRs, record parent PR and exact base/head. The coordinator updates the child after the parent lands, retargets it to `main`, and selects [affected checks](.agents/skills/evas-validate/SKILL.md#revalidation-triggers). Preserve published checkpoints; prefer merges over rewriting shared history.
 4. Temporary integration work records its component commits and separate evidence; it does not mark components merged or released. Paused work records the remaining question in its existing PR/Issue.
 5. Merge the agreed scope after relevant checks and authorized review; universal simulator support is not a gate. End that task after merge and use a new PR for later work. Apply the [retirement checklist](docs/contributing/workspaces.md#retiring-work) separately before cleanup.
@@ -107,6 +107,14 @@ deliver one outcome can use one integration branch and PR. Several independent s
 use separate PRs; record real dependencies and merge order under the branch lifecycle above.
 Do not combine all specs merely because they were planned together or assigned for one night.
 
+Keep each round bounded by one outcome: record the problem, a distinguishing acceptance
+check, the owning checkout and the delivery endpoint in the existing task record. Repairs
+follow [original request acceptance](docs/contributing/validation.md#original-request-acceptance). For a
+shared core change, name one integration candidate; keep author and review checkouts as
+sources of evidence rather than competing continuations. Queue newly discovered independent
+gaps with their evidence instead of silently expanding the current round. Stop at the agreed
+endpoint and leave the next choice visible; no additional plan or process file is required.
+
 A spec is implemented when every required acceptance criterion has observed evidence,
 the necessary tests and contracts are current, and required review findings are resolved.
 Record any user-accepted scope change explicitly. Remaining required criteria keep the spec
@@ -114,6 +122,15 @@ incomplete; code written, tickets attempted or a passing test count alone does n
 Report implementation and the requested delivery endpoint separately. PR bodies follow
 `pr` through [vaevas-prepare-pr](.agents/skills/vaevas-prepare-pr/SKILL.md); a decision trail
 links the evidence and does not replace the PR explanation or acceptance checks.
+
+Close the round at its agreed delivery endpoint. Complete already-authorized review fixes,
+publication or integration when their conditions are met. If a check, dependency or missing
+authorization prevents delivery, keep the exact remaining step and its owner at the existing
+current-task entry. State implementation, review, target-branch integration and daily-checkout
+visibility separately under the [handoff rules](docs/contributing/workspaces.md#workspace-visibility-and-handoff).
+Keep one integration candidate for a shared outcome, with links to its fixed evidence and
+remaining acceptance checks. Later independent ideas go to the existing queue instead of
+extending a nearly finished round. Worktree retention or retirement is a separate decision.
 
 For authorized overnight or unattended execution, record the bounded scope, available
 resources, agreed time/cost/tool budgets, delivery endpoint and stop conditions in the

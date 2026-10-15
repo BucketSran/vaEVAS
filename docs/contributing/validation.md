@@ -40,6 +40,28 @@ Its mandatory interface confirmations, blanket ban on internal tests and review-
 refactoring are not repository rules. Existing authorization, numerical evidence and
 independent validation contracts govern those choices here.
 
+## Original request acceptance
+
+For a behavioral repair, link the original failing request and its observed failure in the
+existing task or PR. Preserve its model, stimulus, settings, checker and acceptance limits.
+Reuse a recorded failure when its identities match; a reduced reproducer helps diagnosis but
+does not replace acceptance of the original request. Benchmark repairs use their owning task
+and grading contract.
+
+Before claiming the repair complete, verify the original request on the final integrated
+candidate through the supported public entry point, with the actual source and binary identified.
+Select affected consumer and composition checks from [evas-validate](../../.agents/skills/evas-validate/SKILL.md#composition-triggers).
+For EVAS behavior, apply [Spectre alignment acceptance](#spectre-alignment-acceptance) to the
+changed behavior. A local unit-test pass or an author's earlier candidate does not establish
+acceptance of the integrated version.
+
+If the final candidate changes, follow the existing
+[revalidation triggers](../../.agents/skills/evas-validate/SKILL.md#revalidation-triggers).
+Reuse unaffected evidence with its identities and reason; rerun the affected obligations.
+When the original request still fails or cannot be rerun within the task's resources, keep that
+acceptance item open and state the blocker. Do not replace it with nearby passing cases or
+expand the task to unrelated mechanisms without an agreed scope change.
+
 ## Accuracy recovery and performance acceptance
 
 For EVAS accuracy or speed work, state the final observable requirement before choosing
