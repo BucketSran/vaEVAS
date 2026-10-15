@@ -525,7 +525,25 @@ Spectre 的闭源实现不能由波形反推出完整算法；固定 V3 实验�
   `output_times` 是 [0,stop] 内严格递增的有限观测时刻，`stop/max_step` 均为正且有限。
   观测时刻会实际求解；若恰逢接受的事件时刻，返回事件后电压。事件不必落在输出网格上。
 
-通过上述限制，固定状态下的方程系数不变，输入每个分段内的节点电压和 guard 都是时间的仿射函数。
+外部源可另给逐源的绝对电压误差上界。Python `transient` 的 `source_errors`
+按驱动节点命名；原生请求 `transient.pwl_errors_V` 按 `pwl/driven` 顺序排列，长度必须一致，
+每项为有限非负电压值。省略表示全零，显式 null 或错误长度拒绝。这不改变 Program IR。
+对于非零误差 `E`，`Trajectory.value_bounds` 在名义 PWL 插值的区间上加 `[-E,E]`，
+并清除该源的精确曲线证明。固定 timer 的 real 采样使用此区间；后续状态电压放大继续检查原误差预算。
+该请求目前拒绝所有算子、cross 和保持状态 timer，避免用单一幅度界冒充导数或根时刻证明。
+零误差源保留原路径。这是有限源误差支持，尚不涵盖动态消费者。
+
+SCS pulse 的原时间参数是已解析 binary64 的精确有理数。设精确拐点为 `t_k`，保存拐点为 `s_k`，
+`D=max(abs(s_k-t_k))`，最大原坡度 `L=abs(val1-val0)/min(rise,fall)`。
+在相邻拐点间对时间位移线性插值，位移仍不超过 `D`；原 pulse 是 Lipschitz 连续函数，
+所以同一时刻的原波形与保存 PWL 相差不超过 `L*D`。
+端点电压本来就是输入 binary64，没有额外端值舍入；误差上界用有理数求积，再向上舍入。
+折点合并或边沿不能表示时仍拒绝。源码、构造证明和独立预算回归分别见
+[scs_sources.py](../../src/evas/scs_sources.py)、[pwl.rs](../../rust_core/src/pwl.rs) 和
+[test_source_uncertainty.py](../../tests/test_source_uncertainty.py)。原曲线的有理数角点和舍入差保留在运行元数据，
+不把保存 PWL 当作原 pulse 的精确定义。
+
+对于没有外部源误差的请求，通过上述限制，固定状态下的方程系数不变，输入每个分段内的节点电压和 guard 都是时间的仿射函数。
 guard 的状态独立性允许提前生成事件日程。内核同时进行普通求解和保守误差界计算：
 
 1. JSON 保留 Python 提交的 binary64 值；以编译后 IR 系数及 PWL 点的这些精确数值定义仿射问题。

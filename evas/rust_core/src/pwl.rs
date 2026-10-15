@@ -283,11 +283,30 @@ impl Trajectory {
         }
         knots.sort_by(f64::total_cmp);
         knots.dedup();
-        let source_errors = vec![0.0; config.pwl.len()];
+        let source_errors = match &config.pwl_errors_v {
+            Some(errors)
+                if errors.len() == config.pwl.len()
+                    && errors.iter().all(|e| e.is_finite() && *e >= 0.) =>
+            {
+                errors.clone()
+            }
+            Some(_) => return Err(Error::new(
+                "invalid_inputs",
+                "pwl_errors_V must match PWL sources and contain nonnegative finite voltage bounds",
+            )),
+            None => vec![0.0; config.pwl.len()],
+        };
         let exact_sources = config
             .pwl
             .iter()
-            .map(|p| crate::exact_source::Curve::source(p))
+            .zip(&source_errors)
+            .map(|(p, error)| {
+                if *error == 0. {
+                    crate::exact_source::Curve::source(p)
+                } else {
+                    None
+                }
+            })
             .collect();
         let mut solver_points = knots.clone();
         solver_points.extend(&config.strobetimes);
@@ -546,6 +565,7 @@ mod tests {
     fn flat_generated_source_keeps_its_enclosure_error() {
         let mut trajectory = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0., 0.], [1., 0.]]],
                 output_times: vec![0., 1.],
@@ -570,6 +590,7 @@ mod tests {
         let points = vec![[0.0, -1.0], [2.0, 1.0]];
         let mut trajectory = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![points.clone()],
                 output_times: vec![0.0, 2.0],

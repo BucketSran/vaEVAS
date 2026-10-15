@@ -1607,6 +1607,7 @@ mod tests {
         let model = EventModel::new(program, vec!["u".into()], tolerances).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [3.0, 1.0]]],
                 output_times: vec![0.0, 3.0],
@@ -1683,6 +1684,7 @@ mod tests {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 pwl: vec![vec![[0., 0.], [2., 4.], [4., -4.], [24., -4.]]],
                 output_times: vec![0., 4., 24.],
                 stop: 24.,
@@ -1826,6 +1828,7 @@ mod tests {
         // isolates reset-time uncertainty rather than PWL interpolation error.
         let trajectory = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![
                     [0.0, 0.0],
@@ -2062,6 +2065,7 @@ mod tests {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 pwl: vec![vec![[0., 0.], [5e-6, 0.]]],
                 output_times: vec![0., 0.5e-6, 4.5e-6],
                 strobetimes: vec![0., 0.5e-6, 4.5e-6],
@@ -2257,6 +2261,7 @@ mod tests {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![
                     [0.0, 1.0],
@@ -2345,6 +2350,7 @@ mod tests {
         let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [1.0, 1.0], [2.0, 0.0]]],
                 output_times: vec![0.0, 2.0],

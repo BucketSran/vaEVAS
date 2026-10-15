@@ -187,6 +187,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
     seen_options,warning_reports=set(),[]
     behavioral_sources=[]
     preset=None
+    save_policy=None
     transient_spec=None
     for tokens in _statements(text,str(path)):
         s=_Statement(tokens,constants)
@@ -250,11 +251,11 @@ def load_scs(path: str | Path) -> ScsTestbench:
                 devices.append((first,nodes,module,settings))
         elif s.index<len(s.tokens) and s.token.text in ('options','tran'):
             kind=s.take().text
-            settings=s.settings(symbolic={'errpreset'} if kind=='tran' else ())
-            allowed={'vabstol','reltol','iabstol'} if kind=='options' else {'stop','maxstep','errpreset'} | STROBE_FIELDS
+            settings=s.settings(symbolic={'errpreset','strobeoutput'} if kind=='tran' else ())
+            allowed={'vabstol','reltol','iabstol'} if kind=='options' else {'stop','maxstep','errpreset','strobeoutput'} | STROBE_FIELDS
             if set(settings)-allowed:
                 s.fail(f'unsupported {kind} settings: {sorted(set(settings)-allowed)}',unsupported=True)
-            if any(not isinstance(v,list if k=='strobetimes' else str if k=='errpreset' else float) for k,v in settings.items()):
+            if any(not isinstance(v,list if k=='strobetimes' else str if k in ('errpreset','strobeoutput') else float) for k,v in settings.items()):
                 s.fail('analysis settings must be scalar numbers')
             if kind=='options':
                 if set(settings)&seen_options:
@@ -275,6 +276,10 @@ def load_scs(path: str | Path) -> ScsTestbench:
                     if value not in ('liberal','moderate','conservative'):
                         s.fail('errpreset must be liberal, moderate, or conservative',unsupported=True)
                     preset=(s.setting_tokens['errpreset'],value)
+                if 'strobeoutput' in settings:
+                    save_policy=settings.pop('strobeoutput')
+                    if save_policy not in ('all','strobeonly'):
+                        s.fail('strobeoutput must be all or strobeonly',unsupported=True)
                 transient_spec=settings
         else:
             s.fail(f'unsupported netlist statement {first.text!r}',unsupported=True)
@@ -308,22 +313,41 @@ def load_scs(path: str | Path) -> ScsTestbench:
     times=[t for i in range(count+1) if (t:=float(i*Q(step)))<stop]+[stop]
     if any(a>=b for a,b in zip(times,times[1:])):
         fail('output times collapse at binary64 resolution')
-    waveforms,rounding={},{}
+    waveforms,rounding,source_errors,pulse_proofs={},{},{},{}
     for nodes,settings,token in source_specs:
         def source_fail(message,*,unsupported=False):
             _fail(message,token,unsupported=unsupported)
         net=nodes[0] if nodes[1]=='0' else nodes[1]
         if net in waveforms:
             source_fail('multiple voltage sources drive the same node')
-        points,error=voltage_points(settings,stop,source_fail)
+        points,error,proof=voltage_points(settings,stop,source_fail)
         waveforms[net]=[[t,v if nodes[1]=='0' else -v] for t,v in points]
         rounding[token.text]=error
+        if proof is not None:
+            pulse_proofs[token.text]=proof
+            if proof['voltage_error_bound_V']>0:
+                source_errors[net]=proof['voltage_error_bound_V']
     # Keep the physical PWL definition intact. Saving every source corner
     # prevents a later linear interpolation of the saved drive from skipping
     # a pulse or replacing a piecewise-linear segment by a different line.
     times=sorted(set(times).union(t for points in waveforms.values() for t,_ in points if 0<=t<=stop))
     if len(times)>POINT_BUDGET:
         fail('output point budget (100000) exceeded after including source corners')
+    saved_times=times
+    if save_policy is not None:
+        if (save_policy=='strobeonly' and 'strobeperiod' in strobe
+                and not expand_strobe(stop,**{k:v for k,v in strobe.items() if k!='strobetimes'})):
+            fail('strobeonly with an empty periodic schedule is not yet supported',unsupported=True)
+        if forced:
+            regular=times
+            if save_policy=='strobeonly':
+                start,end=strobe.get('skipstart',0.),strobe.get('skipstop',stop)
+                regular=[t for t in times if t<start or t>end] if 'strobeperiod' in strobe else []
+            # Spectre retains the terminal observation even when it is not a
+            # forced point; outside the periodic window ordinary rows remain.
+            saved_times=sorted(set(regular).union(forced,[stop]))
+        if len(saved_times)>POINT_BUDGET:
+            fail('saved output point budget (100000) exceeded')
     models=parse_sources(sources)
     instances=[]
     for token,nodes,name,settings in devices:
@@ -372,10 +396,16 @@ def load_scs(path: str | Path) -> ScsTestbench:
         fail(f'save names unknown scalar nodes: {sorted(set(saved)-available)}')
     manifest=dict(models=list(sources),instances=instances,tolerances=effective,
                   transient=dict(sources=waveforms,output_times=times,stop=stop,max_step=step,**strobe))
+    if source_errors:
+        manifest['transient']['source_errors']=source_errors
     metadata=dict(input_format='spectre-voltage-subset',path=str(path),sha256=hashlib.sha256(text.encode()).hexdigest(),
                   model_sha256=model_sha256,
                   effective_tolerances=effective,output_grid='union of 0, k*maxstep below stop, stop, source corners within stop',
                   pulse_corner_rounding_seconds=rounding)
+    if pulse_proofs:
+        metadata['pulse_corner_proofs']=pulse_proofs
+    if save_policy is not None:
+        metadata.update(strobeoutput=save_policy,saved_output_times=saved_times)
     if generated_sha256:
         metadata['generated_model_sha256']=generated_sha256
     if warning_reports:
@@ -394,5 +424,11 @@ def simulate_scs(path: str | Path, *, kernel=None, timeout=DEFAULT_TIMEOUT):
                      **bench.manifest['transient'],**bench.manifest['tolerances'])
     saved=bench.save or list(result['nodes'])
     indices=[result['nodes'].index(n) for n in saved]
-    return dict(result,testbench=bench.metadata,saved=dict(nodes=saved,times=bench.manifest['transient']['output_times'],
-                values=[[row['voltages'][i] for i in indices] for row in result['solutions']]))
+    ordinary=bench.manifest['transient']['output_times']
+    times=bench.metadata.get('saved_output_times',ordinary)
+    rows=dict(zip(ordinary,(row['voltages'] for row in result['solutions'])))
+    if 'strobeoutput' in bench.metadata and result.get('strobe_evidence'):
+        receipt=result['strobe_evidence']
+        rows.update(zip(receipt['times'],receipt['voltages_V']))
+    return dict(result,testbench=bench.metadata,saved=dict(nodes=saved,times=times,
+                values=[[rows[t][i] for i in indices] for t in times]))

@@ -1,0 +1,101 @@
+{
+  "name": "SCS-STROBEOUTPUT",
+  "stimulus": [
+    [
+      0,
+      0
+    ],
+    [
+      0.25,
+      0
+    ],
+    [
+      0.375,
+      1
+    ],
+    [
+      0.4375,
+      0
+    ],
+    [
+      1,
+      0
+    ]
+  ],
+  "analytic": "y=3*u; triangle slopes +8 V/s and -16 V/s",
+  "stop_s": 1.0,
+  "source_and_settings_identity": "same model and voltage source as the frozen actual Spectre 21.1.0.509.isr12 probes; settings and save policy remain explicit in each deck",
+  "ordinary_evas_times": [
+    0.0,
+    0.25,
+    0.375,
+    0.4375,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "acceptance": {
+    "voltage_absolute_V": 1e-10,
+    "time_presence": "exact numeric membership; no interpolation or nearest-row substitution",
+    "physical_history": "all/strobeonly must preserve complete EVAS solutions, transient events/states and strobe evidence; saved rows may differ",
+    "all_policy": "ordinary rows plus forced rows",
+    "only_explicit": "exactly .125, .625 and terminal 1",
+    "only_period_window": "inside [.2,.8] only .325/.575; retain regular rows outside and terminal 1",
+    "no_strobes": "both explicit policies preserve ordinary rows"
+  },
+  "cases": {
+    "all-no-strobe": {
+      "deck": "all-no-strobe.scs",
+      "policy": "all",
+      "forced_times": [],
+      "window_s": null
+    },
+    "only-no-strobe": {
+      "deck": "only-no-strobe.scs",
+      "policy": "strobeonly",
+      "forced_times": [],
+      "window_s": null
+    },
+    "all-period-window": {
+      "deck": "all-period-window.scs",
+      "policy": "all",
+      "forced_times": [
+        0.325,
+        0.575
+      ],
+      "window_s": [
+        0.2,
+        0.8
+      ]
+    },
+    "only-period-window": {
+      "deck": "only-period-window.scs",
+      "policy": "strobeonly",
+      "forced_times": [
+        0.325,
+        0.575
+      ],
+      "window_s": [
+        0.2,
+        0.8
+      ]
+    },
+    "strobeonly-explicit": {
+      "deck": "strobeonly-explicit.scs",
+      "policy": "strobeonly",
+      "forced_times": [
+        0.125,
+        0.625
+      ],
+      "window_s": null
+    }
+  },
+  "fixture_sha256": {
+    "dut.va": "c2e004806fe802408e19d12d621dea05d80e754968fed9de58c932046726c459",
+    "all-no-strobe.scs": "c71f61d95236d6fdcf5696abaf9bc246059db2bf1a7c2fbb9741367c82c30a68",
+    "strobeonly-explicit.scs": "fc6068703cb18b380fd6c8f3f58a276f1e6e44daa669e4e6b730c6d7dcfce516",
+    "all-period-window.scs": "ec66df2c9047c88c5572fcf177a6c2fa4f8895393091c5c860de5719bb8ff8a5",
+    "only-no-strobe.scs": "fe7961826cf3b0c1fbe5bab82a37befc1751ac19d9dcb41ab781997e111069cd",
+    "only-period-window.scs": "0087e0c9846b211ea6ad508c204a48199e22ba2ef745e499518b6dbc1afa178b"
+  }
+}

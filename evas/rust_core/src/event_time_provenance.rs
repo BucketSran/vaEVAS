@@ -225,6 +225,7 @@ mod tests {
         let m = EventModel::new(p, vec!["alias".into()], Tolerances::default()).unwrap();
         let t = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 pwl: vec![vec![[0., 0.], [1., 1.]]],
                 output_times: vec![0., 1.],
                 strobetimes: vec![],
@@ -601,6 +602,7 @@ mod held_review_tests {
     fn trajectory(fake: Vec<[f64; 2]>) -> Trajectory {
         let mut t = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 pwl: vec![vec![[0., 0.], [0.25, 0.25], [1., 1.]], fake],
                 strobetimes: vec![],
                 output_times: vec![0., 1.],

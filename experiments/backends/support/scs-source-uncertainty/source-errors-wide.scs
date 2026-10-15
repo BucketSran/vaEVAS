@@ -1,0 +1,8 @@
+simulator lang=spectre
+global 0
+ahdl_include "source-errors-gain.va"
+Vin (u 0) vsource type=pulse val0=0 val1=1 delay=1e9 rise=.2 width=.2 fall=.2 period=1
+DUT (u y 0) m
+tran tran stop=1000000001 maxstep=1000000001
+opts options vabstol=1e-5 reltol=0
+save y u

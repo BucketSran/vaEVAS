@@ -9,7 +9,7 @@ import sys
 import unittest
 from unittest.mock import patch
 import warnings
-from evas import CompileError, Instance, compile_sources, transient
+from evas import CompileError, Instance, KernelError, compile_sources, transient
 from evas.scs import load_scs, simulate_scs
 from test_affine import KERNEL, model
 
@@ -133,6 +133,47 @@ class ScsContracts(unittest.TestCase):
         self.assertEqual(actual['saved']['times'],[0,.25,.5,.75,1])
         self.assertEqual(actual['solutions'],expected['solutions'])
 
+    def test_explicit_strobeoutput_retains_terminal_and_selects_forced_rows(self):
+        for policy,times in [('all',[0,.125,.25,.5,.625,.75,1]),('strobeonly',[.125,.625,1])]:
+            with self.subTest(policy=policy):
+                self.deck(tran=f'tran tran stop=1 maxstep=.25 strobetimes=[.125 .625] strobeoutput={policy}')
+                result=simulate_scs(self.path,kernel=KERNEL)
+                self.assertEqual(result['saved']['times'],times)
+                self.assertEqual([row[1] for row in result['saved']['values']],
+                                 [2*t if t<=.5 else 2*(1-t) for t in times])
+
+    def test_periodic_strobeonly_keeps_regular_rows_outside_window(self):
+        self.deck(tran='tran tran stop=1 maxstep=.25 strobeperiod=.25 strobedelay=.125 skipstart=.2 skipstop=.8 strobeoutput=strobeonly')
+        result=simulate_scs(self.path,kernel=KERNEL)
+        self.assertEqual(result['strobe_evidence']['times'],[.325,.575])
+        self.assertEqual(result['saved']['times'],[0,.325,.575,1])
+
+    def test_strobeoutput_without_strobes_preserves_regular_rows(self):
+        self.deck();expected=simulate_scs(self.path,kernel=KERNEL)
+        for policy in ('all','strobeonly'):
+            self.deck(tran=f'tran tran stop=1 maxstep=.25 strobeoutput={policy}')
+            result=simulate_scs(self.path,kernel=KERNEL)
+            self.assertEqual(result['saved'],expected['saved'])
+            self.assertEqual(result['solutions'],expected['solutions'])
+
+    def test_explicit_points_do_not_hide_an_empty_periodic_strobeonly_schedule(self):
+        self.deck(tran='tran tran stop=1 maxstep=.25 strobeperiod=.25 '
+                  'strobedelay=.125 skipstart=.2 skipstop=.25 '
+                  'strobetimes=[.625] strobeoutput=strobeonly')
+        with self.assertRaisesRegex(CompileError, 'empty periodic schedule'):
+            load_scs(self.path)
+
+    def test_strobeoutput_policies_preserve_complete_timer_history_and_observations(self):
+        (self.root/'m.va').write_text(model('''@(initial_step) q=0;
+            @(timer(0.125,0.25)) q=V(u,r); V(y,r)<+gain*q;''','parameter real gain=2; real q;'))
+        results=[]
+        for policy in ('all','strobeonly'):
+            self.deck(tran=f'tran tran stop=1 maxstep=.25 strobetimes=[.125 .625] strobeoutput={policy}')
+            results.append(simulate_scs(self.path,kernel=KERNEL))
+        for key in ('solutions','transient','strobe_evidence','observation_evidence'):
+            self.assertEqual(results[0][key],results[1][key],key)
+        self.assertNotEqual(results[0]['saved']['times'],results[1]['saved']['times'])
+
     def test_errpreset_warns_and_preserves_explicit_and_default_controls(self):
         for options in ('','opts options vabstol=1n reltol=1u'):
             self.deck(extra=options)
@@ -173,7 +214,8 @@ class ScsContracts(unittest.TestCase):
         for controls in ['strobetimes=.1','strobetimes=[.2 .1]','strobetimes=[1.1]',
                          'strobeperiod=0','strobeperiod=[.1]', 'skipstop=.5',
                          'strobeperiod=.1 strobedelay=.1','strobeperiod=1e-20',
-                         'strobeoutput=all']:
+                         'strobeoutput=unknown','strobeoutput=1',
+                         'strobeperiod=.25 skipstart=.2 skipstop=.25 strobedelay=.125 strobeoutput=strobeonly']:
             with self.subTest(controls=controls),self.assertRaises(CompileError) as caught:
                 load_scs(self.deck(tran='tran tran stop=1 maxstep=.25 '+controls))
             self.assertEqual(caught.exception.diagnostic['stage'],'netlist')
@@ -200,8 +242,20 @@ class ScsContracts(unittest.TestCase):
     def test_pulse_time_rounding_cannot_hide_behind_voltage_residual(self):
         self.deck('Vin (u 0) vsource type=pulse val0=0 val1=1 delay=1e9 rise=.2 width=.2 fall=.2 period=1',
                   tran='tran tran stop=1000000001 maxstep=1000000001')
-        with self.assertRaisesRegex(CompileError,'corner.*exactly representable'):
-            load_scs(self.path)
+        bench=load_scs(self.path)
+        self.assertGreater(bench.manifest['transient']['source_errors']['u'],2e-7)
+        with self.assertRaises(KernelError):
+            simulate_scs(self.path,kernel=KERNEL)
+        original=self.path.read_text()
+        self.path.write_text(original+'opts options reltol=0 vabstol=5e-7\n')
+        with self.assertRaisesRegex(KernelError,'at y'):
+            simulate_scs(self.path,kernel=KERNEL)
+        self.path.write_text(original+'opts options reltol=0 vabstol=1e-5\n')
+        result=simulate_scs(self.path,kernel=KERNEL)
+        proof=result['testbench']['pulse_corner_proofs']['Vin']
+        self.assertGreater(proof['voltage_error_bound_V'],2e-7)
+        self.assertEqual(proof['value_rounding_error_V'],0.)
+        self.assertGreater(len(proof['corners']),0)
 
     def test_unknown_options_devices_discontinuities_and_sources_reject(self):
         cases=[('Vin (u 0) vsource type=sine ampl=1 freq=1',''),

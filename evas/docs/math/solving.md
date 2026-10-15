@@ -163,7 +163,7 @@ lambda=0 的解是 a；lambda=1 的零点与原方程相同。中间每一步用
 
 [默认省略规则与事件语义](events.md)、[strobe 参数](../reference/strobe.md)保持各自契约。
 `output_times` 是查询时刻；在有历史的路径中，加密查询不应修改已经接受的历史。
-当前没有独立 `lteratio`、`relref`、`errpreset` 或积分方法选择开关；不接受这些名称后静默忽略。
+当前没有独立 `lteratio`、`relref`、`errpreset` 或积分方法选择开关。受限 SCS 入口接受 `tran errpreset` 的写法并明确警告它不生效；这不是 EVAS 精度预设。`iabstol` 同样只作带警告的输入兼容，不控制电压域求解。其他未支持设置明确拒绝。
 
 精度失败先按发生位置处理：
 

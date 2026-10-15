@@ -53,6 +53,7 @@ fn fixture_impl(nonlinear: bool) -> (EventModel, Trajectory, Controller, Vec<Sch
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            pwl_errors_v: None,
             pwl: vec![vec![[0., 0.], [1., 1.]], vec![[0., 0.], [1., 3.]]],
             output_times: vec![0., 1.],
             stop: 1.,

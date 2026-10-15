@@ -28,6 +28,7 @@ fn fixture(due: f64) -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>
     let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            pwl_errors_v: None,
             strobetimes: vec![],
             pwl: vec![vec![[0., 0.], [1., 1.]]],
             output_times: vec![0., 0.25, 1.],
@@ -222,6 +223,7 @@ fn branch_review_same_controller_failure_keeps_history_proof_records_then_retrie
     let traj = |points| {
         Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 pwl: vec![points],
                 strobetimes: vec![],
                 output_times: vec![0., 0.25, 0.6, 1.],

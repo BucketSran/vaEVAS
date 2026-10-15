@@ -29,6 +29,7 @@ def solve(program: Program, driven: list[str], samples: list[list[float]], *,
 
 def transient(program: Program, sources: dict[str, list[list[float]]],
               output_times: list[float], *, stop: float, max_step: float,
+              source_errors: dict[str, float] | None = None,
               strobetimes=None, strobeperiod=None, strobedelay=0.0, skipstart=0.0, skipstop=None,
               kernel: str | Path | None = None, vabstol: float | None = None, reltol: float | None = None,
               absolute: float | None = None, relative: float | None = None,
@@ -38,6 +39,20 @@ def transient(program: Program, sources: dict[str, list[list[float]]],
                    transient=dict(pwl=list(sources.values()), output_times=output_times,
                                   stop=stop, max_step=max_step),
                    tolerances=_tolerances(vabstol, reltol, absolute, relative))
+    if source_errors is not None:
+        if not isinstance(source_errors,dict) or set(source_errors)-set(sources):
+            raise ValueError('source_errors must map driven source names to nonnegative finite voltage bounds')
+        errors=[]
+        for name in sources:
+            error=source_errors.get(name,0.)
+            try:
+                valid=not isinstance(error,bool) and isinstance(error,(int,float)) and math.isfinite(error) and error>=0
+            except OverflowError:
+                valid=False
+            if not valid:
+                raise ValueError('source_errors must contain nonnegative finite voltage bounds')
+            errors.append(float(error))
+        request['transient']['pwl_errors_V']=errors
     points = (expand(stop, strobetimes=strobetimes, strobeperiod=strobeperiod,
                      strobedelay=strobedelay, skipstart=skipstart, skipstop=skipstop)
               if strobetimes is not None or strobeperiod is not None or strobedelay != 0 or skipstart != 0 or skipstop is not None else [])
