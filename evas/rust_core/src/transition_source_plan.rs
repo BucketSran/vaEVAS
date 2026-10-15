@@ -44,11 +44,18 @@ impl Work {
         let counter = [&self.0.plans, &self.0.cuts, &self.0.work][slot];
         // Failed reservations remain exhausted; a candidate clone cannot refund
         // proof work already attempted in this request.
-        let old = counter
-            .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| {
-                Some(v.saturating_add(amount))
-            })
-            .unwrap();
+        let mut old = counter.load(Ordering::Relaxed);
+        loop {
+            match counter.compare_exchange_weak(
+                old,
+                old.saturating_add(amount),
+                Ordering::Relaxed,
+                Ordering::Relaxed,
+            ) {
+                Ok(_) => break,
+                Err(current) => old = current,
+            }
+        }
         if old
             .checked_add(amount)
             .is_none_or(|v| v > self.0.limits[slot])
@@ -72,6 +79,26 @@ fn constant(value: f64) -> Expression {
     Expression::Affine {
         constant: value,
         terms: vec![],
+    }
+}
+
+#[cfg(test)]
+mod budget_tests {
+    use super::Work;
+
+    #[test]
+    fn reservations_share_exhaustion_without_refunding_rejected_work() {
+        let work = Work::limited([3, u64::MAX, 0]);
+        let retry = work.clone();
+        work.debit(0, 2).unwrap();
+        retry.debit(0, 1).unwrap();
+        assert_eq!(work.debit(0, 1).unwrap_err().kind, "step_budget");
+        assert_eq!(retry.debit(0, 0).unwrap_err().kind, "step_budget");
+        work.debit(1, u64::MAX).unwrap();
+        assert_eq!(retry.debit(1, 1).unwrap_err().kind, "step_budget");
+        assert_eq!(work.debit(1, 1).unwrap_err().kind, "step_budget");
+        work.debit(2, 0).unwrap();
+        assert_eq!(retry.debit(2, 1).unwrap_err().kind, "step_budget");
     }
 }
 fn bind(expr: &Expression, states: &[I], work: &Work) -> Result<Expression, Error> {
