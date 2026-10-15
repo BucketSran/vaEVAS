@@ -1637,7 +1637,11 @@ impl Operators {
                     denominator,
                     origin,
                 } => {
-                    if let Some(projection) = transition_filter::projection(program, driven, index)
+                    let live = transition_filter::live_specification(program, driven, index);
+                    let projection = transition_filter::projection(program, driven, index);
+                    if let Some(parent_index) = projection
+                        .map(|p| p.parent)
+                        .or_else(|| live.as_ref().map(|p| p.parent))
                     {
                         let OperatorSpec::Transition {
                             input,
@@ -1645,7 +1649,7 @@ impl Operators {
                             rise,
                             fall,
                             origin,
-                        } = &program.operators[projection.parent]
+                        } = &program.operators[parent_index]
                         else {
                             unreachable!()
                         };
@@ -1670,13 +1674,22 @@ impl Operators {
                             *fall,
                         )?;
                         entries.push(Runtime::TransitionFilter {
-                            parent: projection.parent,
-                            history: Box::new(transition_filter::Filter::new(
-                                projection,
-                                &parent,
-                                numerator,
-                                denominator,
-                            )?),
+                            parent: parent_index,
+                            history: Box::new(match projection {
+                                Some(projection) => transition_filter::Filter::new(
+                                    projection,
+                                    &parent,
+                                    numerator,
+                                    denominator,
+                                )?,
+                                None => transition_filter::Filter::new_live(
+                                    live.unwrap(),
+                                    trajectory,
+                                    &parent,
+                                    numerator,
+                                    denominator,
+                                )?,
+                            }),
                         });
                         continue;
                     }
@@ -2595,6 +2608,7 @@ mod phase_operator_tests {
         )
         .unwrap();
         let base = Operators::new(&program, &trajectory, &["u".into()], &[0.25]).unwrap();
+        assert!(base.single_filter_budget(3.).is_some());
         let original = base.bounds(3.).unwrap();
         let frozen = base.evaluation(1.).unwrap();
         let failed = frozen.advanced(I::point(1.), &[0.25], &[I { lo: 0.2, hi: 0.3 }], &[0]);
@@ -2615,6 +2629,96 @@ mod phase_operator_tests {
             base.bounds(0.5).unwrap()[1]
         );
         assert_eq!(base.bounds(3.).unwrap(), original);
+    }
+
+    #[test]
+    fn live_transition_filter_candidates_consume_old_edge_and_rollback_failed_targets() {
+        use serde_json::json;
+        let origin =
+            |column| json!({"source":"chain.va","line":1,"column":column,"instance":"dut"});
+        let program:Program=serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","edge","filtered"],
+            "states":[{"instance":"dut","name":"q","kind":"real","initial":0.25}],
+            "operators":[
+                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.5,"origin":origin(1)},
+                {"kind":"laplace_nd","input":{"op":"affine","constant":0,"terms":[{"node":2,"coefficient":1}]},"numerator":[1],"denominator":[1,0.25],"origin":origin(2)}],
+            "contributions":[
+                {"branch":{"instance":"dut","local_positive":"edge","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"multiply","left":{"op":"affine","constant":2,"terms":[{"node":1,"coefficient":1}]},"right":{"op":"operator","operator":0}},"origin":origin(3)},
+                {"branch":{"instance":"dut","local_positive":"filtered","local_negative":"r","kind":"voltage"},"positive":3,"negative":0,"rhs":{"op":"operator","operator":1},"origin":origin(4)}]
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                strobetimes: vec![],
+                pwl: vec![vec![[0., 0.], [3., 3.]]],
+                output_times: vec![0., 3.],
+                stop: 3.,
+                max_step: 3.,
+            },
+            1,
+        )
+        .unwrap();
+        let base = Operators::new(&program, &trajectory, &["u".into()], &[0.25]).unwrap();
+        assert!(base.single_filter_budget(3.).is_none());
+        // Two operators and a currently zero coefficient are still live forcing.
+        let mut zero_initial = program.clone();
+        if let Expression::Multiply { left, .. } = &mut zero_initial.contributions[0].rhs {
+            if let Expression::Affine { constant, .. } = left.as_mut() {
+                *constant = 0.;
+            }
+        }
+        let zero_base = Operators::new(&zero_initial, &trajectory, &["u".into()], &[0.25]).unwrap();
+        assert!(zero_base.single_filter_budget(0.).is_none());
+        assert!(zero_base.bounds(1.).unwrap()[1].hi > 0.);
+        let original = base.bounds(3.).unwrap();
+        let frozen = base.evaluation(1.).unwrap();
+        let failed = frozen.advanced(I::point(1.), &[0.25], &[I { lo: 0.2, hi: 0.3 }], &[0]);
+        assert!(failed.is_err());
+        assert_eq!(base.bounds(3.).unwrap(), original);
+        let candidate = frozen
+            .advanced(I::point(1.), &[1.25], &[I::point(1.25)], &[0])
+            .unwrap();
+        let clean = frozen
+            .advanced(I::point(1.), &[1.25], &[I::point(1.25)], &[0])
+            .unwrap();
+        assert!(candidate.same_reset_history(&clean));
+        let at = candidate.bounds(1.625).unwrap()[1];
+        // Before the edge starts at 1.125, input=.25*(2+t).
+        // At start, the slope becomes .25 + 2*(2+1.125), then p2=2.
+        let tau = 0.25;
+        let first = |t: f64| 0.5 + 0.25 * (t - tau) + 0.25 * tau * (-t / tau).exp();
+        let p0 = 0.25 * (2. + 1.125);
+        let p1 = 0.25 + 2. * (2. + 1.125);
+        let p2 = 2.;
+        let h = 0.5;
+        let q0 = p0 - tau * p1 + 2. * tau * tau * p2;
+        let qh = p0 + p1 * h + p2 * h * h - tau * (p1 + 2. * p2 * h) + 2. * tau * tau * p2;
+        let expected = qh + (first(1.125) - q0) * (-h / tau).exp();
+        assert!((0.5 * (at.lo + at.hi) - expected).abs() < 1e-11);
+        assert!(at.hi - at.lo < 1e-10);
+        assert_eq!(
+            candidate.bounds(0.5).unwrap()[1],
+            base.bounds(0.5).unwrap()[1]
+        );
+        assert_eq!(base.bounds(3.).unwrap(), original);
+        let accepted = candidate;
+        let accepted_before = accepted.bounds(2.5).unwrap();
+        let retry_base = accepted.evaluation(1.5).unwrap();
+        assert!(retry_base
+            .advanced(I::point(1.5), &[1.25], &[I { lo: 1.2, hi: 1.3 }], &[0])
+            .is_err());
+        assert_eq!(accepted.bounds(2.5).unwrap(), accepted_before);
+        let retry = retry_base
+            .advanced(I::point(1.5), &[-0.25], &[I::point(-0.25)], &[0])
+            .unwrap();
+        let direct = retry_base
+            .advanced(I::point(1.5), &[-0.25], &[I::point(-0.25)], &[0])
+            .unwrap();
+        assert!(retry.same_reset_history(&direct));
+        assert_eq!(retry.bounds(2.5).unwrap(), direct.bounds(2.5).unwrap());
+        assert_eq!(
+            retry.bounds(1.25).unwrap()[1],
+            accepted.bounds(1.25).unwrap()[1]
+        );
     }
 
     #[test]

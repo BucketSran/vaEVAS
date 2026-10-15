@@ -6,6 +6,10 @@ use crate::transition::Transition;
 use std::collections::BTreeSet;
 use std::sync::Arc;
 
+#[path = "transition_filter_input.rs"]
+mod input;
+pub(crate) use input::specification as live_specification;
+
 #[derive(Clone, Copy, PartialEq)]
 pub(crate) struct Projection {
     pub(crate) parent: usize,
@@ -108,6 +112,7 @@ pub(crate) struct Filter {
     gain: I,
     tau: I,
     projection: Projection,
+    live: Option<Arc<input::Bound>>,
     prior: Option<Arc<(Filter, Transition)>>,
     prefix: Option<ActivationPrefix>,
 }
@@ -152,7 +157,10 @@ impl super::Operators {
                 return None;
             };
             // This first slice has one held state and a unit transition input.
-            if input_bounds.as_slice() != [I::ONE, I::ZERO] || history.prefix.is_some() {
+            if input_bounds.as_slice() != [I::ONE, I::ZERO]
+                || history.prefix.is_some()
+                || history.live.is_some()
+            {
                 return None;
             }
             let (nominal, initial, duration) = edge.idle_level()?;
@@ -211,9 +219,74 @@ impl Filter {
             gain,
             tau,
             projection,
+            live: None,
             prior: None,
             prefix: None,
         })
+    }
+
+    pub(crate) fn new_live(
+        spec: input::Spec,
+        trajectory: &crate::pwl::Trajectory,
+        parent: &Transition,
+        numerator: &[f64],
+        denominator: &[f64],
+    ) -> Result<Self, Error> {
+        let projection = Projection {
+            parent: spec.parent,
+            coefficient: I::ZERO,
+            constant: I::ZERO,
+        };
+        let mut result = Self::new(projection, parent, numerator, denominator)?;
+        let bound = spec.bind(trajectory).ok_or_else(|| {
+            Error::new(
+                "unsupported_operator",
+                "live filter needs original physical PWL coefficients",
+            )
+        })?;
+        result.output = result.gain * bound.range(I::ZERO, parent.value_bounds(0.)?);
+        if !result.output.finite() {
+            return Err(Error::new(
+                "unsupported_operator",
+                "nonfinite live transition/filter initial value",
+            ));
+        }
+        result.live = Some(Arc::new(bound));
+        Ok(result)
+    }
+    fn input_range(&self, times: I, edge: I) -> I {
+        match &self.live {
+            Some(input) => input.range(times, edge),
+            None => self.projection.coefficient * edge + self.projection.constant,
+        }
+    }
+    fn polynomial_step(
+        &self,
+        input: &input::Bound,
+        edge: &Transition,
+        end: f64,
+    ) -> Result<I, Error> {
+        let h = I::point(end) - I::point(self.time);
+        let scale = I::point(h.hi);
+        let ((a, da), (b, db)) = input.line(self.time);
+        let (e, de) = edge.forcing_line(self.time);
+        let p0 = a * e + b;
+        let p1 = a * de + da * e + db;
+        let p2 = da * de;
+        let rate = scale / self.tau;
+        let matrix = vec![
+            vec![-rate, self.gain * rate, I::ZERO, I::ZERO],
+            vec![I::ZERO, I::ZERO, I::ONE, I::ZERO],
+            vec![I::ZERO, I::ZERO, I::ZERO, I::ONE],
+            vec![I::ZERO; 4],
+        ];
+        let initial = [
+            self.output,
+            p0,
+            scale * p1,
+            I::point(2.) * scale * scale * p2,
+        ];
+        Ok(crate::state_space::propagate(&matrix, &initial, h / scale)?[0])
     }
 
     pub(crate) fn predicted(&self, parent: &Transition, time: f64) -> Result<Self, Error> {
@@ -232,19 +305,26 @@ impl Filter {
                 .forcing_boundary(next.time)
                 .unwrap_or(time)
                 .min(time);
+            let end = next
+                .live
+                .as_ref()
+                .and_then(|input| input.boundary(next.time))
+                .unwrap_or(end)
+                .min(end);
             let h = I::point(end) - I::point(next.time);
             let (g, b) = crate::laplace::laplace_weights(h, next.tau)?;
             let p = next.projection;
             next.output = if forcing.forcing_uncertain(next.time) {
                 // Positive exponential kernel bounds every forcing trajectory
                 // in this range. Never connect endpoints across an activation.
-                let input = p.coefficient
-                    * forcing.forcing_range(I {
-                        lo: next.time,
-                        hi: end,
-                    })
-                    + p.constant;
+                let times = I {
+                    lo: next.time,
+                    hi: end,
+                };
+                let input = next.input_range(times, forcing.forcing_range(times));
                 next.output * (I::ONE - g) + next.gain * input * g
+            } else if let Some(input) = &next.live {
+                next.polynomial_step(input, &forcing, end)?
             } else {
                 let (input, slope) = forcing.forcing_line(next.time);
                 let input = p.coefficient * input + p.constant;
@@ -294,14 +374,15 @@ impl Filter {
                 lo: window.lo,
                 hi: time,
             };
-            let p = self.projection;
             let prefix = ActivationPrefix {
                 start: window.lo,
                 end: time,
                 initial: self.bounds(old, window.lo)?,
                 forcing: self.gain
-                    * (p.coefficient * old.forcing_range(times).hull(new.forcing_range(times))
-                        + p.constant),
+                    * self.input_range(
+                        times,
+                        old.forcing_range(times).hull(new.forcing_range(times)),
+                    ),
             };
             next.output = prefix.bounds(I::point(time), self.tau)?;
             next.prefix = Some(prefix);
@@ -392,8 +473,7 @@ impl Filter {
             };
         }
         let initial = self.bounds(parent, time.lo)?;
-        let input =
-            self.projection.coefficient * parent.forcing_range(time) + self.projection.constant;
+        let input = self.input_range(time, parent.forcing_range(time));
         let hull = initial.hull(self.gain * input);
         let derivative = (self.gain * input - hull) / self.tau;
         let local = initial + derivative * (time - I::point(time.lo));
@@ -408,6 +488,7 @@ impl Filter {
             && self.gain == other.gain
             && self.tau == other.tau
             && self.projection == other.projection
+            && self.live == other.live
             && self.prefix == other.prefix
             && match (&self.prior, &other.prior) {
                 (None, None) => true,
@@ -420,6 +501,106 @@ impl Filter {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn live_filter(parent: &Transition, a: [f64; 2], b: [f64; 2], gain: f64) -> Filter {
+        let mut f = Filter::new(
+            Projection {
+                parent: 0,
+                coefficient: I::ZERO,
+                constant: I::ZERO,
+            },
+            parent,
+            &[gain],
+            &[1., 0.25],
+        )
+        .unwrap();
+        let input = input::test_bound(a, b, vec![[0., 0.], [3., 3.]]);
+        f.output = f.gain * input.range(I::ZERO, parent.value_bounds(0.).unwrap());
+        f.live = Some(Arc::new(input));
+        f
+    }
+    // Independent particular polynomial for tau*f'+f=K*(p0+p1*h+p2*h²).
+    fn polynomial_answer(initial: f64, p: [f64; 3], h: f64, gain: f64) -> f64 {
+        let [p0, p1, p2] = p;
+        let q0 = gain * (p0 - 0.25 * p1 + 0.125 * p2);
+        let qh = gain * (p0 + p1 * h + p2 * h * h - 0.25 * (p1 + 2. * p2 * h) + 0.125 * p2);
+        qh + (initial - q0) * (-h / 0.25).exp()
+    }
+    #[test]
+    fn live_quadratic_forcing_matches_independent_polynomial_and_retains_plan() {
+        for gain in [-2., 0.5] {
+            for slope in [-0.5, 2.] {
+                let mut edge = Transition::new(0.25, 0., 1., 1.).unwrap();
+                let f = live_filter(&edge, [slope, 1.], [0.25, 0.125], gain);
+                edge.advance(0., 1.25).unwrap();
+                let initial = gain * 0.375;
+                let p = [0.375, 1. + 0.25 * slope + 0.25, slope];
+                for h in [1e-6, 0.03125, 0.5, 1.] {
+                    let actual = f.bounds(&edge, h).unwrap();
+                    let expected = polynomial_answer(initial, p, h, gain);
+                    assert!((expected - (actual.lo + actual.hi) * 0.5).abs() < 1e-11);
+                    assert!(actual.hi - actual.lo < 1e-10);
+                    let range = f.range(&edge, I { lo: 0., hi: h }).unwrap();
+                    assert!(range.lo <= expected && expected <= range.hi);
+                }
+                let committed = f.committed(&edge, 0.5).unwrap();
+                assert_eq!(
+                    committed.bounds(&edge, 0.125).unwrap(),
+                    f.bounds(&edge, 0.125).unwrap()
+                );
+                let mut different = f.clone();
+                different.live = Some(Arc::new(input::test_bound(
+                    [slope + 1., 1.],
+                    [0.25, 0.125],
+                    vec![[0., 0.], [3., 3.]],
+                )));
+                assert_eq!(different.output, f.output);
+                assert!(!f.same_history(&different));
+            }
+        }
+    }
+    #[test]
+    fn live_prefix_ranges_cover_actual_event_roots_and_prior_queries() {
+        for gain in [-2., 0.5] {
+            let old = Transition::new(0., 0., 1., 1.).unwrap();
+            let f = live_filter(&old, [1., 2.], [0., 0.125], gain);
+            let window = I { lo: 1., hi: 1.001 };
+            let mut changed = old.clone();
+            changed
+                .advance_at(window.hi, window, 1., I::ONE, true)
+                .unwrap();
+            let committed = f
+                .committed_change(&old, &changed, window.hi, window)
+                .unwrap();
+            let later = committed.committed(&changed, 1.25).unwrap();
+            for time in [1., 1.00025, 1.0005, 1.001] {
+                let actual = committed.bounds(&changed, time).unwrap();
+                assert_eq!(actual, later.bounds(&changed, time).unwrap());
+                let range = committed
+                    .range(
+                        &changed,
+                        I {
+                            lo: 1.,
+                            hi: window.hi,
+                        },
+                    )
+                    .unwrap();
+                for root in [window.lo, 1.0005, window.hi] {
+                    let h = (time - root).max(0.);
+                    let expected = polynomial_answer(gain * 0.125, [0.125, 2. + root, 1.], h, gain);
+                    assert!(
+                        actual.lo <= expected && expected <= actual.hi,
+                        "{actual:?} vs {expected}"
+                    );
+                    assert!(range.lo <= expected && expected <= range.hi);
+                }
+            }
+            assert_eq!(
+                later.bounds(&changed, 0.5).unwrap(),
+                f.bounds(&old, 0.5).unwrap()
+            );
+        }
+    }
 
     #[test]
     fn zero_delay_event_retains_filter_integral_before_execution_representative() {

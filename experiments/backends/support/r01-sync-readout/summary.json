@@ -1306,5 +1306,844 @@
       "full_CI": "pending on final PR revision"
     },
     "reference_reuse": "Unmodified original VA, sources and numeric requests still match original-spectre-v2. Full EVAS response exactly matches the previously paired candidate, including all solution values and events. Actual Spectre rerun not repeated for the unchanged reference identity."
+  },
+  "filter_extension": {
+    "scope": "L3-12 live external affine coefficients times one held/constant transition parent, consumed by stable first-order filter",
+    "source": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/filter-implementation/SOURCE-filter-final.json",
+      "sha256": "1a8628c8299399d989757fa23cecf0d0d358b6f6e1124b63eb9f608220e1f1e9"
+    },
+    "release_kernel": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/filter-implementation/filter-final-release-kernel",
+      "sha256": "aa889630e90544832db6167321eb0834443405040bdc5f2c6c9685b57ce96659"
+    },
+    "checks": {
+      "parent": "5ad2217d82e4a45d69a07a87465dcc1016be2a97",
+      "source_manifest": "SOURCE-filter-final.json",
+      "source_manifest_sha256": "1a8628c8299399d989757fa23cecf0d0d358b6f6e1124b63eb9f608220e1f1e9",
+      "source_files_verified": 314,
+      "binary": {
+        "debug": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/filter-implementation/filter-final-debug-kernel",
+          "sha256": "7cb2b9cee05cf02f1c5cf89b11b82668aa47fe0994251898914dd1d016a56c32",
+          "executable": true
+        },
+        "release": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/filter-implementation/filter-final-release-kernel",
+          "sha256": "aa889630e90544832db6167321eb0834443405040bdc5f2c6c9685b57ce96659",
+          "executable": true
+        }
+      },
+      "checks": {
+        "rust": "348 passed; 1 ignored; 31.83s",
+        "python_focused": "132 passed; 35.321s",
+        "clippy": "all-targets -D warnings PASS; 3.39s",
+        "fmt": "PASS",
+        "diff_check": "PASS",
+        "workspace_visibility": "PASS"
+      },
+      "python_command": "PYTHONPATH=evas/src:evas/tests python3 -B -m unittest -v test_live_transition_coefficient test_live_transition_filter test_timed_composition test_lifecycle_closure test_semantic_invariants test_event_window_sampling test_event_accuracy test_precision_chain test_nonlinear_transient test_transition_integral test_transition test_passive_history_phase test_event_horizons",
+      "log_sha256": {
+        "rust-all-final.log": "f9fe560a722715b75cefa6081e5883a66d39288f271149e09435f9ae17efe5ae",
+        "clippy-final.log": "251de9c5467fd15caaaac19755e69c6b4336e6ae1c5aeefb0ee3c9210bb4cba1",
+        "build-debug-final.log": "91104f98cede4ccb17cfeb33c694efb2b093e90b2d90283ea5a0c37bdcb26937",
+        "build-release-final.log": "6bb9b9c49121805e8c3df979dbd819f0dd3d7d9315912260acd0e09e85dee58d",
+        "python-focused-final.log": "8d704b81d4f3ea71bd46bb77af8aac677c46e637890568b505900a02c789ce7f",
+        "workspaces-final.log": "c8748d61222c204db2ec739590ce3cecd5be2a535acecb18f97b704dd91310f3",
+        "original-filter-red.log": "42b3c5f29ee7db84d7f366e086610c08e93469c11ebb2d987139fa75988769c9",
+        "controller-final-gate-second.log": "044bde87c884f65161c80d7e06f7d4a4062e8efba1efca9e651aa019a5903875"
+      },
+      "original_filter_test_file_sha256": "0793ff77da46b68a721a3db97cef5a9c48f47b8516fbd8bc6498851a7c53c975",
+      "limits": [
+        "Full Python not rerun locally after filter changes; root assigned full suite to CI. Original prior sync full-suite FAIL preserved separately.",
+        "New filter family excludes source-controlled transition parents, selections, state coefficients, multiple parents, feedback and variable denominator.",
+        "Actual Spectre comparison, original five-card checker and numerical review belong to root and remain pending here. No qualification/alignment claim."
+      ],
+      "changed_paths": [
+        "evas/rust_core/src/continuous.rs",
+        "evas/rust_core/src/continuous_runtime.rs",
+        "evas/rust_core/src/operators.rs",
+        "evas/rust_core/src/transient_timer_boundary_tests.rs",
+        "evas/rust_core/src/transition_filter.rs",
+        "evas/tests/test_live_transition_coefficient.py",
+        "evas/rust_core/src/transition_filter_input.rs",
+        "evas/tests/test_live_transition_filter.py"
+      ]
+    },
+    "final_five_cards": [
+      {
+        "case": "ramp",
+        "response_sha256": "507932aa0c7acbae51fcd360f71835172d188651a5be01abfa99271e2f0d2f78",
+        "prior_result_sha256": "c5faab5858504123f1b758f07a0e695e0ab3f04d15d2fd2712c96c5a0e8d2278",
+        "checker_sha256": "2480f6d8546b977aae440e6eca13d0e97388c1e72be6bdec7b36cf921a2bf3a4",
+        "adapter_sha256": "1ff441fbc6bbffcd13d2e4afab926ed171323dcf781ca6cfcd7c49df4caeb4ca",
+        "saved_rows": 385,
+        "strobe_rows": 203,
+        "identical_overlap_rows": 193,
+        "unique_native_rows": 395,
+        "tiers": {
+          "Q1": {
+            "case": "ramp",
+            "tier": "Q1",
+            "budget_V": 1.01e-05,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 4.440892098500626e-16,
+              "error_lower_V": 4.440892098500626e-16,
+              "input_contribution_upper_V": 4.440892098500626e-16,
+              "input_contribution_lower_V": 4.440892098500626e-16,
+              "input_contribution_budget_V": 1.01e-07,
+              "reference_width_V": 0.0,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 1.9073486328125004e-06,
+                "node": "h",
+                "actual_V": 4.0,
+                "reference_bounds_V": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          },
+          "Q2": {
+            "case": "ramp",
+            "tier": "Q2",
+            "budget_V": 1.01e-06,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 4.440892098500626e-16,
+              "error_lower_V": 4.440892098500626e-16,
+              "input_contribution_upper_V": 4.440892098500626e-16,
+              "input_contribution_lower_V": 4.440892098500626e-16,
+              "input_contribution_budget_V": 1.01e-08,
+              "reference_width_V": 0.0,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 1.9073486328125004e-06,
+                "node": "h",
+                "actual_V": 4.0,
+                "reference_bounds_V": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          },
+          "Q3": {
+            "case": "ramp",
+            "tier": "Q3",
+            "budget_V": 1.01e-07,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 4.440892098500626e-16,
+              "error_lower_V": 4.440892098500626e-16,
+              "input_contribution_upper_V": 4.440892098500626e-16,
+              "input_contribution_lower_V": 4.440892098500626e-16,
+              "input_contribution_budget_V": 1.01e-09,
+              "reference_width_V": 0.0,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 1.9073486328125004e-06,
+                "node": "h",
+                "actual_V": 4.0,
+                "reference_bounds_V": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          }
+        },
+        "qualification": "none; original external qualification requirements retained"
+      },
+      {
+        "case": "ramp-g1000",
+        "response_sha256": "bd1a2eb54411763156ff9f272b9682d66958f26ab135b22c4f98baff5a74a44a",
+        "prior_result_sha256": "6e4f38bdb697ad79fed5c9ae8f5c61a15bcb77bca49b140aaa7439e920a8f058",
+        "checker_sha256": "2480f6d8546b977aae440e6eca13d0e97388c1e72be6bdec7b36cf921a2bf3a4",
+        "adapter_sha256": "1ff441fbc6bbffcd13d2e4afab926ed171323dcf781ca6cfcd7c49df4caeb4ca",
+        "saved_rows": 385,
+        "strobe_rows": 203,
+        "identical_overlap_rows": 193,
+        "unique_native_rows": 395,
+        "tiers": {
+          "Q1": {
+            "case": "ramp-g1000",
+            "tier": "Q1",
+            "budget_V": 1.01e-05,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 6.572520305780927e-13,
+              "error_lower_V": 6.572520305780927e-13,
+              "input_contribution_upper_V": 4.440892098500626e-13,
+              "input_contribution_lower_V": 4.440892098500626e-13,
+              "input_contribution_budget_V": 1.01e-07,
+              "reference_width_V": 0.0,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 2.86102094921875e-06,
+                "node": "y",
+                "actual_V": 4999.997902847999,
+                "reference_bounds_V": [
+                  4999.997902848,
+                  4999.997902848
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          },
+          "Q2": {
+            "case": "ramp-g1000",
+            "tier": "Q2",
+            "budget_V": 1.01e-06,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 6.572520305780927e-13,
+              "error_lower_V": 6.572520305780927e-13,
+              "input_contribution_upper_V": 4.440892098500626e-13,
+              "input_contribution_lower_V": 4.440892098500626e-13,
+              "input_contribution_budget_V": 1.01e-08,
+              "reference_width_V": 0.0,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 2.86102094921875e-06,
+                "node": "y",
+                "actual_V": 4999.997902847999,
+                "reference_bounds_V": [
+                  4999.997902848,
+                  4999.997902848
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          },
+          "Q3": {
+            "case": "ramp-g1000",
+            "tier": "Q3",
+            "budget_V": 1.01e-07,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 6.572520305780927e-13,
+              "error_lower_V": 6.572520305780927e-13,
+              "input_contribution_upper_V": 4.440892098500626e-13,
+              "input_contribution_lower_V": 4.440892098500626e-13,
+              "input_contribution_budget_V": 1.01e-09,
+              "reference_width_V": 0.0,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 2.86102094921875e-06,
+                "node": "y",
+                "actual_V": 4999.997902847999,
+                "reference_bounds_V": [
+                  4999.997902848,
+                  4999.997902848
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          }
+        },
+        "qualification": "none; original external qualification requirements retained"
+      },
+      {
+        "case": "history",
+        "response_sha256": "b6cf97cd94c3660376f95541c43fd70305e46054b821fc576be5f09645d6a02a",
+        "prior_result_sha256": "3fc7633083178266f07ba02a9eeab2d8c86c7371c388e3df64b1409d1954b5c9",
+        "checker_sha256": "2480f6d8546b977aae440e6eca13d0e97388c1e72be6bdec7b36cf921a2bf3a4",
+        "adapter_sha256": "1ff441fbc6bbffcd13d2e4afab926ed171323dcf781ca6cfcd7c49df4caeb4ca",
+        "saved_rows": 385,
+        "strobe_rows": 203,
+        "identical_overlap_rows": 193,
+        "unique_native_rows": 395,
+        "tiers": {
+          "Q1": {
+            "case": "history",
+            "tier": "Q1",
+            "budget_V": 1.01e-05,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 2.775557561562891e-16,
+              "error_lower_V": 2.775557561562891e-16,
+              "input_contribution_upper_V": 2.220446049250313e-16,
+              "input_contribution_lower_V": 2.220446049250313e-16,
+              "input_contribution_budget_V": 1.01e-07,
+              "reference_width_V": 0.0,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 1.9073486328124998e-06,
+                "node": "y",
+                "actual_V": 2.2499999999999996,
+                "reference_bounds_V": [
+                  2.249999999999999,
+                  2.249999999999999
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          },
+          "Q2": {
+            "case": "history",
+            "tier": "Q2",
+            "budget_V": 1.01e-06,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 2.775557561562891e-16,
+              "error_lower_V": 2.775557561562891e-16,
+              "input_contribution_upper_V": 2.220446049250313e-16,
+              "input_contribution_lower_V": 2.220446049250313e-16,
+              "input_contribution_budget_V": 1.01e-08,
+              "reference_width_V": 0.0,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 1.9073486328124998e-06,
+                "node": "y",
+                "actual_V": 2.2499999999999996,
+                "reference_bounds_V": [
+                  2.249999999999999,
+                  2.249999999999999
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          },
+          "Q3": {
+            "case": "history",
+            "tier": "Q3",
+            "budget_V": 1.01e-07,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 2.775557561562891e-16,
+              "error_lower_V": 2.775557561562891e-16,
+              "input_contribution_upper_V": 2.220446049250313e-16,
+              "input_contribution_lower_V": 2.220446049250313e-16,
+              "input_contribution_budget_V": 1.01e-09,
+              "reference_width_V": 0.0,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 1.9073486328124998e-06,
+                "node": "y",
+                "actual_V": 2.2499999999999996,
+                "reference_bounds_V": [
+                  2.249999999999999,
+                  2.249999999999999
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          }
+        },
+        "qualification": "none; original external qualification requirements retained"
+      },
+      {
+        "case": "filter",
+        "response_sha256": "f7f8f50ba525b80242e917842d85632fc098db38b8db4ad39ca12eef3c09a367",
+        "prior_result_sha256": "c17aa3e14dd3ff8dee3a21af1694aa4364ce3701f2ee7b920d703bd2d223ae98",
+        "checker_sha256": "2480f6d8546b977aae440e6eca13d0e97388c1e72be6bdec7b36cf921a2bf3a4",
+        "adapter_sha256": "1ff441fbc6bbffcd13d2e4afab926ed171323dcf781ca6cfcd7c49df4caeb4ca",
+        "saved_rows": 385,
+        "strobe_rows": 203,
+        "identical_overlap_rows": 193,
+        "unique_native_rows": 395,
+        "tiers": {
+          "Q1": {
+            "case": "filter",
+            "tier": "Q1",
+            "budget_V": 1.01e-05,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 1.7486313392726743e-15,
+              "error_lower_V": 1.7486313392726743e-15,
+              "input_contribution_upper_V": 4.440892098500626e-16,
+              "input_contribution_lower_V": 4.440892098500626e-16,
+              "input_contribution_budget_V": 1.01e-07,
+              "reference_width_V": 3.9402639136043365e-84,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 2.8014183044433594e-06,
+                "node": "f",
+                "actual_V": 3.298352405747857,
+                "reference_bounds_V": [
+                  3.2983524057478553,
+                  3.2983524057478553
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          },
+          "Q2": {
+            "case": "filter",
+            "tier": "Q2",
+            "budget_V": 1.01e-06,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 1.7486313392726743e-15,
+              "error_lower_V": 1.7486313392726743e-15,
+              "input_contribution_upper_V": 4.440892098500626e-16,
+              "input_contribution_lower_V": 4.440892098500626e-16,
+              "input_contribution_budget_V": 1.01e-08,
+              "reference_width_V": 3.9402639136043365e-84,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 2.8014183044433594e-06,
+                "node": "f",
+                "actual_V": 3.298352405747857,
+                "reference_bounds_V": [
+                  3.2983524057478553,
+                  3.2983524057478553
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          },
+          "Q3": {
+            "case": "filter",
+            "tier": "Q3",
+            "budget_V": 1.01e-07,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 1.7486313392726743e-15,
+              "error_lower_V": 1.7486313392726743e-15,
+              "input_contribution_upper_V": 4.440892098500626e-16,
+              "input_contribution_lower_V": 4.440892098500626e-16,
+              "input_contribution_budget_V": 1.01e-09,
+              "reference_width_V": 3.9402639136043365e-84,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 2.8014183044433594e-06,
+                "node": "f",
+                "actual_V": 3.298352405747857,
+                "reference_bounds_V": [
+                  3.2983524057478553,
+                  3.2983524057478553
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          }
+        },
+        "qualification": "none; original external qualification requirements retained",
+        "spectre_native_pairing": {
+          "reference_psf_sha256": "5b2048b383cd16c4da6f541f4e635627ebb3a098e0c645b43d5b2afb49c4e00d",
+          "native_reference_rows": 7795,
+          "paired_rows": 262,
+          "matched_evas_rows": 262,
+          "max_abs_difference_V": {
+            "h": 0.0,
+            "edge": 0.0,
+            "y": 8.470329472543003e-22,
+            "f": 2.56756096383981e-08,
+            "qout": 1.0,
+            "count": 1.0
+          },
+          "discrete_mismatch_rows": 1,
+          "time_rule": "exact binary64 equality after token parse; diagnostic, not time/export qualification",
+          "reference_reuse": "same frozen VA/stimulus; effective reference settings and precision scan retained",
+          "no_interpolation": true,
+          "excluded_windows": []
+        }
+      },
+      {
+        "case": "filter-interrupt",
+        "response_sha256": "049fd3a7a7517e6beb9670456435699cbdde7b6b5cc4c8f09353f466fed9ec79",
+        "prior_result_sha256": "aae65d7b9ba1a8b1690cf00af6b6800c7ed2f909e07c008b18c8425fbb9a6113",
+        "checker_sha256": "2480f6d8546b977aae440e6eca13d0e97388c1e72be6bdec7b36cf921a2bf3a4",
+        "adapter_sha256": "1ff441fbc6bbffcd13d2e4afab926ed171323dcf781ca6cfcd7c49df4caeb4ca",
+        "saved_rows": 385,
+        "strobe_rows": 207,
+        "identical_overlap_rows": 193,
+        "unique_native_rows": 399,
+        "tiers": {
+          "Q1": {
+            "case": "filter-interrupt",
+            "tier": "Q1",
+            "budget_V": 1.01e-05,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 4.440892098500626e-16,
+              "error_lower_V": 4.440892098500626e-16,
+              "input_contribution_upper_V": 4.440892098500626e-16,
+              "input_contribution_lower_V": 4.440892098500626e-16,
+              "input_contribution_budget_V": 1.01e-07,
+              "reference_width_V": 1.0801986504662367e-84,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 1.9073486328125004e-06,
+                "node": "h",
+                "actual_V": 4.0,
+                "reference_bounds_V": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          },
+          "Q2": {
+            "case": "filter-interrupt",
+            "tier": "Q2",
+            "budget_V": 1.01e-06,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 4.440892098500626e-16,
+              "error_lower_V": 4.440892098500626e-16,
+              "input_contribution_upper_V": 4.440892098500626e-16,
+              "input_contribution_lower_V": 4.440892098500626e-16,
+              "input_contribution_budget_V": 1.01e-08,
+              "reference_width_V": 1.0801986504662367e-84,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 1.9073486328125004e-06,
+                "node": "h",
+                "actual_V": 4.0,
+                "reference_bounds_V": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          },
+          "Q3": {
+            "case": "filter-interrupt",
+            "tier": "Q3",
+            "budget_V": 1.01e-07,
+            "scope": "finite native observations only",
+            "numerical": {
+              "status": "pass",
+              "error_upper_V": 4.440892098500626e-16,
+              "error_lower_V": 4.440892098500626e-16,
+              "input_contribution_upper_V": 4.440892098500626e-16,
+              "input_contribution_lower_V": 4.440892098500626e-16,
+              "input_contribution_budget_V": 1.01e-09,
+              "reference_width_V": 1.0801986504662367e-84,
+              "observation_uncertainty_V": 0.0,
+              "worst": {
+                "time_s": 1.9073486328125004e-06,
+                "node": "h",
+                "actual_V": 4.0,
+                "reference_bounds_V": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "history_basis": "supplied independent callback boxes or explicit nominal hypothesis"
+            },
+            "evidence": {
+              "status": "insufficient",
+              "issues": [
+                "callback producer not externally qualified",
+                "native export/time representation not externally qualified",
+                "missing external qualification/source identity receipt"
+              ]
+            },
+            "behavior": {
+              "status": "pass",
+              "errors": []
+            },
+            "Q_status": "not_qualified",
+            "status": "evidence_insufficient"
+          }
+        },
+        "qualification": "none; original external qualification requirements retained",
+        "spectre_native_pairing": {
+          "reference_psf_sha256": "357f0319f04b66bde982f70e78cb9102523a23817c4d70a8c624a7ba77076726",
+          "native_reference_rows": 9065,
+          "paired_rows": 263,
+          "matched_evas_rows": 263,
+          "max_abs_difference_V": {
+            "h": 0.0,
+            "edge": 4.440892098500626e-16,
+            "y": 1.7763568394002505e-15,
+            "f": 6.902588389756659e-09,
+            "qout": 1.0,
+            "count": 1.0
+          },
+          "discrete_mismatch_rows": 2,
+          "time_rule": "exact binary64 equality after token parse; diagnostic, not time/export qualification",
+          "reference_reuse": "same frozen VA/stimulus; effective reference settings and precision scan retained",
+          "no_interpolation": true,
+          "excluded_windows": []
+        }
+      }
+    ],
+    "analysis_adapter": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/analyze-filter-final.py",
+      "sha256": "1ff441fbc6bbffcd13d2e4afab926ed171323dcf781ca6cfcd7c49df4caeb4ca"
+    },
+    "prior_analysis": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/evas-cards-filter-final-v1/EXECUTION.json",
+      "sha256": "e593d98824fc9bfbbc728da160c61839e660a770e1b0c9b5e03a9d1f9243b150"
+    },
+    "analysis_correction": "Old runner read saved only. New analysis adds actual strobe rows, verifies every overlap exactly, and uses unchanged checker. Old scores retained.",
+    "spectre_tight_analysis": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/filter-tolerance-spectre-v1/ANALYSIS.json",
+      "sha256": "581c6eeb79e121c1cb9382c5d7b9e8831546006e22473d93ab17a3710a87aa13"
+    },
+    "spectre_precision_scan": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/SPECTRE-PRECISION-SCAN.json",
+      "sha256": "b58a0176e2c56f8cb5060cc72bf31e9b43fa18104a0ca552c45a03ce17ca7642"
+    },
+    "original_request_replay": [
+      {
+        "condition": "c0",
+        "elapsed_seconds": 76.37515391700435,
+        "status": "completed",
+        "rows": 9001,
+        "complete_response_equal_to_sync_batch": true
+      },
+      {
+        "condition": "core-boundary",
+        "elapsed_seconds": 16.455649374998757,
+        "status": "completed",
+        "rows": 9001,
+        "complete_response_equal_to_sync_batch": true
+      }
+    ],
+    "original_checker": {
+      "completed": 2,
+      "original_checker_passed": 0,
+      "finite_spectre_observation_passed": 0,
+      "finite_spectre_output_passed": 0
+    },
+    "original_checker_receipt": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/filter-implementation/original-filter-final-v1/regrade.json",
+      "sha256": "06b0b63878df10223a73a5331647d74d13a543a94ba8fa74c62b3f7921e468e8"
+    },
+    "remaining": [
+      "Q not qualified: callback producer and native export need external qualification; receipt absent.",
+      "Finite Spectre pairing retains 1/2 discrete state differences at event boundaries; no full-waveform equality claim.",
+      "Original strict-threshold c0/core-boundary checker FAIL unchanged.",
+      "Source-selected parent, state coefficients, multiple parent histories, feedback and variable denominator outside new family."
+    ],
+    "retention": "Raw output and failures local-only; hashes do not provide public downloads.",
+    "source_revalidation": {
+      "parent": "4e3c2ec5",
+      "change": "Only transition_source_plan.rs changed from frozen314 source manifest: equivalent atomic CAS replaces deprecated fetch_update and budget test added. No floating calculation change. Existing arithmetic/actual reference evidence reused by reviewed scope; final CI revalidates integration.",
+      "review": "Worker inspected equivalence of atomic saturation, Relaxed ordering and no-refund behavior; Rust1.99 clippy and source39 plus direct saturation checks pass in parent."
+    },
+    "reviews": {
+      "filter-final-standards.md": {
+        "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/review/filter-final-standards.md",
+        "sha256": "ccb417d5a1cea767cd57942d7a6a2a9f5c2e486c9322708a2dd304d9b4957e4f"
+      },
+      "filter-final-astra.md": {
+        "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/review/filter-final-astra.md",
+        "sha256": "70c0f67e5ec9aad558bef2864a4d9c7fec33efa468467c772ef50020cb7062df"
+      }
+    }
   }
 }

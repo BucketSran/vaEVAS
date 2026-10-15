@@ -887,7 +887,10 @@ fn select_network_operators(
     for (index, spec) in program.operators.iter().enumerate() {
         // The shared projector admits only a stable first-order filter or a
         // feed-forward integral of one accepted transition history.
-        if crate::operators::transition_filter::projection(program, &driven, index).is_some() {
+        if crate::operators::transition_filter::projection(program, &driven, index).is_some()
+            || crate::operators::transition_filter::live_specification(program, &driven, index)
+                .is_some()
+        {
             continue;
         }
         match spec {
@@ -918,6 +921,9 @@ fn select_network_operators(
             }
             _ => {}
         }
+    }
+    if selected.is_empty() {
+        return Ok(Vec::new());
     }
     loop {
         let before = selected.len();

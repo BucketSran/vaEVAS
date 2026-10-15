@@ -175,6 +175,25 @@ impl Continuous {
         }) {
             return Ok(None);
         }
+        // Dedicated accepted-history consumers have no jointly propagated
+        // continuous state. Use exactly the same complete structural selector
+        // as LinearContinuous before considering a generic nonlinear solver.
+        let dedicated_only = program.operators.iter().enumerate().all(|(index, op)| {
+            !matches!(
+                op,
+                OperatorSpec::Idt { .. }
+                    | OperatorSpec::LaplaceNd { .. }
+                    | OperatorSpec::Ddt { .. }
+            ) || crate::operators::transition_filter::projection(program, driven, index).is_some()
+                || crate::operators::transition_filter::live_specification(program, driven, index)
+                    .is_some()
+        });
+        if dedicated_only {
+            let driven_nodes = driven_node_indices(program, driven)?;
+            if select_network_operators(program, &driven_nodes)?.is_empty() {
+                return Ok(None);
+            }
+        }
         let prepared = Context::new(program, trajectory, driven)?;
         let program = &prepared.program;
         if selection::needed(program) {

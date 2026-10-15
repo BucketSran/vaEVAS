@@ -7,7 +7,9 @@
 [同步读出与原时限验证](../../../experiments/backends/support/r01-sync-readout/README.md)
 补充 TRANSITION、DYNAMICS、CROSS、COMPOSE、TIMER、EVENT-CONDITIONS 和 EVENT-ORDER。
 原物理请求完整执行，保持电压满足原要求；严格阈值引起的整题失败保留。
-三张独立乘积卡只有有限数值和行为证据，两个滤波消费者尚待实现，不新增Q资格。
+三张独立乘积卡及普通、中断边沿后的两个滤波消费者均有有限数值和行为证据。
+动态系数滤波的原IR准入、历史延续和最终认证失败回退见 `test_live_transition_filter.py`
+与 `transient_timer_boundary_tests.rs`；外部取证资格仍不完整，不新增Q资格。
 
 IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) 合入 main，补充 LANG、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE 和 DEV:scs-input。
 契约见[局部变量与条件支路](../../validation/ANALOG_CONDITIONS_CONTRACT.md)、
