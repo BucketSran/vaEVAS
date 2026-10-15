@@ -1,0 +1,190 @@
+{
+  "analysis_id": "implicit-event-restart-finite-v1",
+  "analysis_operation": "local curation and reanalysis of the fixed actual EVAS/Spectre runs; no new Spectre execution",
+  "capabilities": [
+    "DYNAMICS",
+    "TIMER",
+    "COMPOSE"
+  ],
+  "implementation": {
+    "base_sha": "4e04ec77223540c1fb6810214d861ce028de63a2",
+    "dirty": true,
+    "scope": "fixed exact timers changing held forcing/mesh parameters only",
+    "kernel_sha256": "9c566e8b70ee2cba4308a9828b72b47a0d6e7e07731de8225ecca78b51598b72",
+    "profile": "release",
+    "engine": "evas-implicit-0.18.0",
+    "ir_schema_version": 22,
+    "source_files_sha256": {
+      "evas/rust_core/src/implicit_dynamics.rs": "c0503256c1a493b5fd934841e6a7048256fcf5c81a1006df38a72eefe17aa7ce",
+      "evas/rust_core/src/implicit_event_restart.rs": "f045b875907abd8a2d0c556438bdd1e7839ce4f52b97eb3bc8b86472eb95e6eb",
+      "evas/tests/test_implicit_event_restart.py": "ce845ef1301e87bfb0949ea443a7ed507ddbf5a38fc877eb3a4a1d2d6582793f",
+      "evas/tests/fixtures/implicit-event-restart/dut.va": "da81ea1776a0acbabcd9c1a97e8ad3e7df0ae0caa74072ccfd148f39eaa76ce3",
+      "evas/tests/fixtures/implicit-event-restart/program.json": "a00096a0e5d6a6d7c5560ab832ba915d2eed0770f729a6b4a743a69aaf2e5c71",
+      "evas/docs/math/continuous.md": "d25e2a578d95a203528a492d676bf5bdcb4965850efaff59e20d2977986a0d90"
+    },
+    "full_source_manifest_sha256": "bbda6c49d7dd431fe2ed3d62169c8ec8e7059747d543aea48db84bc83343d5db",
+    "source_availability": "changed source is delivered in the owning implementation; complete pre-integration snapshot remains local-only; no merged/released claim"
+  },
+  "external_voltage_budget_V": "1e-7",
+  "denominator": {
+    "models": 3,
+    "backend_configurations": 6,
+    "positive_models": 1,
+    "negative_models": 2,
+    "positive_native_points_each_backend": 9,
+    "spectre_negative_native_rows_each": 9
+  },
+  "requested": {
+    "stop_s": 1,
+    "maxstep_s": 1,
+    "strobeperiod_s": "0.125",
+    "vabstol_V": "1e-9",
+    "reltol": "1e-9",
+    "source": "u=0",
+    "initial_physical_original": [
+      "0.3125",
+      "3"
+    ],
+    "rate": "1 before timer(.5);2 afterwards"
+  },
+  "spectre_tool": {
+    "version": "sub-version  21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "binary_identity_unchanged_after_execution": true,
+    "private_environment_configuration": "not retained in this public package"
+  },
+  "spectre_execution": {
+    "original": {
+      "returncode": 0,
+      "timeout": false,
+      "status": "completed",
+      "elapsed_seconds": 15.645307200029492,
+      "completed_utc": "2026-10-15T13:11:30Z",
+      "timeout_s": 90,
+      "cleanup_complete": true,
+      "resource_limits": {
+        "cpu_count": 1,
+        "address_space_bytes": 4294967296,
+        "file_size_bytes": 33554432,
+        "license_wait_s": 30
+      }
+    },
+    "singular-initial": {
+      "returncode": 0,
+      "timeout": false,
+      "status": "completed",
+      "elapsed_seconds": 15.29099384136498,
+      "completed_utc": "2026-10-15T13:11:46Z",
+      "timeout_s": 90,
+      "cleanup_complete": true,
+      "resource_limits": {
+        "cpu_count": 1,
+        "address_space_bytes": 4294967296,
+        "file_size_bytes": 33554432,
+        "license_wait_s": 30
+      }
+    },
+    "constraint-change": {
+      "returncode": 0,
+      "timeout": false,
+      "status": "completed",
+      "elapsed_seconds": 15.439350638538599,
+      "completed_utc": "2026-10-15T13:12:01Z",
+      "timeout_s": 90,
+      "cleanup_complete": true,
+      "resource_limits": {
+        "cpu_count": 1,
+        "address_space_bytes": 4294967296,
+        "file_size_bytes": 33554432,
+        "license_wait_s": 30
+      }
+    }
+  },
+  "artifacts": {
+    "availability": "compact rows and selected identities are repository-contained; raw PSF/logs/builds and complete manifests are local-only",
+    "local_archive": "current/runs/evas-night-20261014/delivery/issue-repair-20261015/directed-closure/reference/dae-event-raw",
+    "raw_inventory_sha256": "234af49a0ad6a4a0dc4be598f0c2f8f9abf78eedec82a2fcc86518d3733e99c7",
+    "input_manifest_sha256": "85ac86c8f54fc95a9f6febd9a6bd903a0de067a0d5f889a018d81948938e92f1",
+    "tool_receipt_sha256": "612d14a8e65c5d2ea6fbcb91bb32d7045c39f29cd11f4cd0e1c06e4c89596ab1",
+    "tool_after_receipt_sha256": "e2a8caea590af8458ef5738f552028106c0da50d755c54b6aaaec219fef220e9",
+    "runner_sha256": "4a7bbbd942e0ae866867594a11fed715c41a11a468e20b69c74d70e47ffc0a8d",
+    "process_runner_sha256": "f89324f3b7eda04a695cf63770ad462a5a935782526f7bf7f112c2d93b9af5dd",
+    "normalizer_path": "experiments/backends/evidence/psf.py",
+    "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+    "case_artifacts_sha256": {
+      "original": {
+        "dut.va": "da81ea1776a0acbabcd9c1a97e8ad3e7df0ae0caa74072ccfd148f39eaa76ce3",
+        "tb.scs": "8180ce27015d92c2dd9be9de029c1d912af026c1c09061469c2c885ed8889a22",
+        "psf/tran.tran.tran": "af500e09c5a6006824b3f1a8b97721c80c58ef37478554f10569c9614b9ed9ee",
+        "spectre.log": "2c9894552ebad5d0cfa97b589103c7b4d29f0d038efda5ae60206897f415f0f0",
+        "stdout.log": "65fead9ea63343c5426ae0b2ec6a81619096e79f6ef25780d875f53ce07120f2",
+        "RESULT.json": "68e9a9680415a77e04ee3a014e6d42e6bc985d6f82057083727922da401dfae4",
+        "stdout.log.EXECUTION.json": "77e1b9bbb6bc7840176f779c4a8a526a00c4e834c84a897cb74c61f66136ccad"
+      },
+      "singular-initial": {
+        "dut.va": "f39a9f450f2afd2c19ec3fa7ff8ff40e6f8f71d177d8719d1339396ec2b74d70",
+        "tb.scs": "8180ce27015d92c2dd9be9de029c1d912af026c1c09061469c2c885ed8889a22",
+        "psf/tran.tran.tran": "dea5948af686b246df605f583e6ad8378367c759c9abc1aa8323bcbac7c8cf60",
+        "spectre.log": "61ce4e0207cc5d522093a3b26a87b1ca8e17120f2b13f9f7ae688d0a6be077ba",
+        "stdout.log": "d230bf1b1da8009297a6a12bc11c168e523a036b4100d9eff710d729e1975b7d",
+        "RESULT.json": "afc532fbdfda0deb302c889edcc49e7fe08f26a6305ca95c9562b24edf1b02d1",
+        "stdout.log.EXECUTION.json": "cb89c667524738a28bff25df574eb3d2ba8d6c719608f90b225d9f83dc15a1a5"
+      },
+      "constraint-change": {
+        "dut.va": "09d7bd5806c3a647edbfa73c0c4d7c0a97420dacccabc8f7e942152a99bb6030",
+        "tb.scs": "8180ce27015d92c2dd9be9de029c1d912af026c1c09061469c2c885ed8889a22",
+        "psf/tran.tran.tran": "8fa08db7d915f3f9f4a6b20b947c90ba2d027aec7ebaf2321cc560238181e8cc",
+        "spectre.log": "6e84a5412684b9832c8ada531b0d407a6b9845d1f64456d004f860d220b51e5d",
+        "stdout.log": "dd9fe175340c82742f6558a1e38d3aa95da550a0e00e90778d3905a79a359ecc",
+        "RESULT.json": "9ed0e1c1ac4ed10840cfbe89a579cbce9860e4e655a88557479f90bd94ebf962",
+        "stdout.log.EXECUTION.json": "a8037c27fe116a5c7e1129e706c99fe8d204754cdcb262cee596973265320172"
+      }
+    }
+  },
+  "evas_execution": {
+    "original_command": "PYTHONPATH=evas/src python3 -B -m evas simulate INPUT/tb.scs --kernel FROZEN_KERNEL --timeout 120",
+    "command_note": "INPUT/FROZEN_KERNEL denote the exact hashed local files, not literal argv substitutions or public download URLs",
+    "kernel_timeout_s": 120,
+    "original_stdout_sha256": "43d0670a8bac4bd4f4f8af9475a7b7e4d2c40ab58081cdacd5413018c8407d39",
+    "original_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "negative_executions": {
+      "singular-initial": {
+        "stdout.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.json": "3c774e5a70fb7dc9fbb8f2525cbf07a4433ad561596a98ec7945d749e2fd9e45",
+        "execution.json": "fcfddd7be6a5f0de7cb7188f3b36e8d66415c3e26e21e81a000322db7627da6b"
+      },
+      "constraint-change": {
+        "stdout.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.json": "82f73aab33336dd63ad841409d663d05eb0f6ed181a0fab6a214562beea9e2a3",
+        "execution.json": "fc96944022dbc1fae20f3a49bebf00a1921de70a06f2a2f22e84bad054709fa5"
+      }
+    }
+  },
+  "limits": [
+    "Finite saved points only; no interpolation or exclusion window.",
+    "No hidden Spectre callback records; exact callback time/order and continuous-time Q remain unqualified.",
+    "Two Spectre negative rc0 completions are not passes.",
+    "Constraint-change retains missing .5 strobe and disaster-recovery warning.",
+    "Raw checksums do not make local-only waveforms or commercial tools publicly downloadable."
+  ],
+  "retained_files_sha256": {
+    "README.md": "9aa123569b978116ae25021ebf543106073cf9375156c667a69480fcfeca550a",
+    "calibration.json": "de04dd2fb4b43cbb444383348895ec6cc9bb001ad1ed87fc28b01bf0b4427d16",
+    "check.py": "0d2a05e1437f19a793924098cbb5fc4f096cb81ba0af193f3fcb82cb93995795",
+    "constraint-change/dut.va": "09d7bd5806c3a647edbfa73c0c4d7c0a97420dacccabc8f7e942152a99bb6030",
+    "constraint-change/tb.scs": "8180ce27015d92c2dd9be9de029c1d912af026c1c09061469c2c885ed8889a22",
+    "original/dut.va": "da81ea1776a0acbabcd9c1a97e8ad3e7df0ae0caa74072ccfd148f39eaa76ce3",
+    "original/tb.scs": "8180ce27015d92c2dd9be9de029c1d912af026c1c09061469c2c885ed8889a22",
+    "records.json": "dd9a7698c68233b2611ef529c90965a5f390d2f6f5d1d17a8c118ea662c75ac3",
+    "result.json": "b106181ccaa60fb4f005565ab2408d68ef7e25fc0aec511edf7d8f069ffabdcc",
+    "singular-initial/dut.va": "f39a9f450f2afd2c19ec3fa7ff8ff40e6f8f71d177d8719d1339396ec2b74d70",
+    "singular-initial/tb.scs": "8180ce27015d92c2dd9be9de029c1d912af026c1c09061469c2c885ed8889a22",
+    "test_check.py": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28"
+  },
+  "checker": {
+    "path": "check.py",
+    "sha256": "0d2a05e1437f19a793924098cbb5fc4f096cb81ba0af193f3fcb82cb93995795",
+    "calibration": "calibration.json",
+    "calibration_sha256": "de04dd2fb4b43cbb444383348895ec6cc9bb001ad1ed87fc28b01bf0b4427d16"
+  }
+}

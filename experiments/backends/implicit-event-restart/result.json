@@ -1,0 +1,70 @@
+{
+  "analysis_id": "implicit-event-restart-finite-v1",
+  "backend_matrix": [
+    {
+      "backend": "spectre",
+      "case": "original",
+      "classification": "finite_numeric_pass"
+    },
+    {
+      "backend": "evas",
+      "case": "original",
+      "classification": "finite_numeric_pass"
+    },
+    {
+      "backend": "spectre",
+      "case": "singular-initial",
+      "classification": "singular_equilibrium_observed_unqualified"
+    },
+    {
+      "backend": "evas",
+      "case": "singular-initial",
+      "classification": "expected_rejection_control"
+    },
+    {
+      "backend": "spectre",
+      "case": "constraint-change",
+      "classification": "missing_observation_and_disaster_recovery_not_pass"
+    },
+    {
+      "backend": "evas",
+      "case": "constraint-change",
+      "classification": "expected_rejection_control"
+    }
+  ],
+  "evas_expected_rejection_controls": 2,
+  "negative_observations": {
+    "constraint-change": {
+      "max_distance_to_old_rate1_flow_V": 9.8304e-12,
+      "meaning": "no real post-jump root if physical z is retained; hidden rate/shift/idt states were not exported",
+      "missing_forcing_points_s": [
+        "1/2"
+      ]
+    },
+    "singular-initial": {
+      "max_distance_to_singular_equilibrium_V": 3.7252903e-09,
+      "meaning": "F_v=0 invalidates index-one uniqueness; reference rc0 is not a pass"
+    }
+  },
+  "positive_max_error_V": {
+    "u": {
+      "evas_vs_answer": 0.0,
+      "paired": 0.0,
+      "spectre_vs_answer": 0.0
+    },
+    "w": {
+      "evas_vs_answer": 8.881784197001252e-16,
+      "paired": 2e-15,
+      "spectre_vs_answer": 2e-15
+    },
+    "y": {
+      "evas_vs_answer": 4.440892098500626e-16,
+      "paired": 6.24075837779554e-08,
+      "spectre_vs_answer": 6.2407584e-08
+    }
+  },
+  "positive_model_finite_passes": 1,
+  "positive_models": 1,
+  "qualification": "not_qualified",
+  "spectre_negative_completions_not_passes": 2
+}

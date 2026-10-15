@@ -650,11 +650,34 @@ fn solve_output_rows(rows: Vec<Vec<I>>, n: usize, width: usize) -> Result<Vec<Ve
         })
 }
 
+#[path = "implicit_event_restart.rs"]
+mod event_restart;
+
 fn initialize(
     program: &Program,
     trajectory: &Trajectory,
     driven: &[String],
     tolerances: &Tolerances,
+) -> Result<(NonlinearContinuous, Coordinates), Error> {
+    build_segment(
+        program,
+        trajectory,
+        driven,
+        tolerances,
+        None,
+        trajectory.config.stop,
+        None,
+    )
+}
+
+fn build_segment(
+    program: &Program,
+    trajectory: &Trajectory,
+    driven: &[String],
+    tolerances: &Tolerances,
+    seed: Option<(f64, Vec<I>)>,
+    horizon: f64,
+    remaining_work: Option<&mut usize>,
 ) -> Result<(NonlinearContinuous, Coordinates), Error> {
     if !program.states.is_empty() || !program.events.is_empty() {
         return Err(Error::new(
@@ -807,11 +830,34 @@ fn initialize(
     }
     // Newton selects the local initial branch; this separate certificate proves
     // a root within its box. The full box, not the point, enters dynamic history.
-    let root = joint_dc(program, driven, trajectory, &operators, &[])?;
-    initial = root.physical;
-    for &node in &unknown {
-        initial.push(root.voltages[node]);
-    }
+    let (start, initial) = if let Some((time, state)) = seed {
+        if state.len() != count || state.iter().any(|v| !v.finite()) {
+            return Err(Error::new(
+                "event_consistency",
+                "invalid implicit physical/voltage restart coordinates",
+            ));
+        }
+        // The adapter has proved the original algebraic constraints and the
+        // operator coordinate layout unchanged. Retain all certified physical
+        // and branch coordinates; never run joint DC or reuse integral ICs.
+        observe(
+            program,
+            driven,
+            &coordinates,
+            &state,
+            &trajectory.values(time),
+            &trajectory.value_bounds(time),
+            tolerances,
+        )?;
+        (time, state)
+    } else {
+        let root = joint_dc(program, driven, trajectory, &operators, &[])?;
+        let mut state = root.physical;
+        for &node in &unknown {
+            state.push(root.voltages[node]);
+        }
+        (0., state)
+    };
     let gradients = constraints
         .into_values()
         .map(|constraint| {
@@ -888,13 +934,32 @@ fn initialize(
         tolerances: tolerances.clone(),
         initial,
         steps: Arc::new(Vec::new()),
-        start: 0.0,
+        start,
         event_dependent: false,
         event_seed: None,
     };
     // The common Picard/Taylor engine validates the rational reduced field;
     // F_v inversion is mandatory even when the resulting derivative is zero.
-    flow.propagate_until(trajectory.config.stop)?;
+    // Even a terminal event with no future segment must prove F_v invertible
+    // at its retained physical seed, independently of a point residual.
+    let variables = flow
+        .initial
+        .iter()
+        .chain(&trajectory.value_bounds(start))
+        .map(|&v| vec![v])
+        .collect::<Vec<_>>();
+    let slopes = vec![I::ZERO; driven.len()];
+    flow.derivative_jets(&variables, &slopes, 0)
+        .ok_or_else(|| {
+            Error::new(
+                "waveform_accuracy",
+                "implicit restart cannot certify voltage Jacobian",
+            )
+        })?;
+    match remaining_work {
+        Some(work) => flow.propagate_with_budget(horizon, work)?,
+        None => flow.propagate_until(horizon)?,
+    }
     Ok((flow, coordinates))
 }
 
@@ -958,6 +1023,9 @@ pub(crate) fn run(
     config: TransientInputs,
     tolerances: Tolerances,
 ) -> Result<Response, Error> {
+    if !program.events.is_empty() || !program.states.is_empty() {
+        return event_restart::run(program, driven, config, tolerances);
+    }
     let trajectory = Trajectory::new(config, driven.len())?;
     let (flow, coordinates) = initialize(&program, &trajectory, &driven, &tolerances)?;
     let mut solutions = Vec::<Solution>::new();

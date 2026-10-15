@@ -1,0 +1,11 @@
+`include "disciplines.vams"
+module dae_event(u,y,w);
+input u; output y,w; electrical u,y,w; real rate,shift;
+analog begin
+@(initial_step) begin rate=1;shift=0;end
+@(timer(0.5)) begin rate=2;shift=2;end
+V(y)<+idt(rate*(1+2*V(y)),0.3125)-pow(V(y),2)-shift;
+V(w)<+idt(1,3);
+$bound_step(0.0625/rate);
+end
+endmodule

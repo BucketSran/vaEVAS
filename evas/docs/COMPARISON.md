@@ -39,6 +39,8 @@ EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候
 
 [同步读出修复](../../experiments/backends/support/r01-sync-readout/README.md)使原物理请求在原时限内完整执行；严格阈值导致的整题失败仍保留。普通和中断边沿后的动态输入滤波也已完成有限点对照；外部取证校准未齐，不增加本表Q成绩。
 
+[固定 timer 的隐式 DAE 续算](../../experiments/backends/implicit-event-restart/README.md)已通过同源实际 Spectre 九点对照，最大配对差 62.41 nV，低于原 100 nV 门槛。范围限于保持物理状态的 forcing 参数切换；一般事件窗与代数约束跳参仍拒绝，不新增下表 Q 成绩。
+
 固定零时刻 timer 的 transition 初态修正已取得[三模型实际有限配对](../../experiments/backends/support/README.md#initial-transition-seed)。
 该修复使用原 `1e-8 V` 预算；第四反馈模型仅作诊断，不新增本表 Q 成绩，也不覆盖一般历史反馈。
 [跨实例初始电压](../../experiments/backends/support/initial-node-dependencies/README.md)另有三例实际对照通过原 1 nV 门槛，尚不增加固定行的 Q 成绩。

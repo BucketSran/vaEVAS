@@ -8,3 +8,4 @@ prune rust_core/target
 prune build
 recursive-exclude src/evas/_bin *
 include rust_core/fuzz/seeds/static.json
+include tests/fixtures/implicit-event-restart/program.json

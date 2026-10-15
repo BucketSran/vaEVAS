@@ -1,0 +1,119 @@
+{
+  "calibration_id": "implicit-event-restart-checker-v1",
+  "operation": "executed standard-library unittest accept/reject controls; no simulator",
+  "passed": 26,
+  "failed": 0,
+  "controls": [
+    {
+      "name": "test_a_second_missing_negative_point_cannot_be_hidden",
+      "result": "pass"
+    },
+    {
+      "name": "test_actual_positive_and_two_negative_completions_are_distinct",
+      "result": "pass"
+    },
+    {
+      "name": "test_case_dictionary_order_does_not_change_physical_result",
+      "result": "pass"
+    },
+    {
+      "name": "test_changed_retained_file_is_rejected",
+      "result": "pass"
+    },
+    {
+      "name": "test_effective_setting_change_is_rejected",
+      "result": "pass"
+    },
+    {
+      "name": "test_evas_acceptance_cannot_count_as_a_rejection_control",
+      "result": "pass"
+    },
+    {
+      "name": "test_evas_wrong_value_is_rejected",
+      "result": "pass"
+    },
+    {
+      "name": "test_independent_exact_synthetic_answers_are_accepted",
+      "result": "pass"
+    },
+    {
+      "name": "test_lost_backend_matrix_entry_is_rejected",
+      "result": "pass"
+    },
+    {
+      "name": "test_missing_evas_observation_is_rejected",
+      "result": "pass"
+    },
+    {
+      "name": "test_missing_event_observation_is_rejected",
+      "result": "pass"
+    },
+    {
+      "name": "test_missing_initial_observation_is_rejected",
+      "result": "pass"
+    },
+    {
+      "name": "test_missing_stop_observation_is_rejected",
+      "result": "pass"
+    },
+    {
+      "name": "test_negative_case_cannot_be_relabelled_as_a_positive",
+      "result": "pass"
+    },
+    {
+      "name": "test_negative_timeout_is_not_an_expected_rejection",
+      "result": "pass"
+    },
+    {
+      "name": "test_nonfinite_token_is_rejected",
+      "result": "pass"
+    },
+    {
+      "name": "test_paired_failure_is_not_hidden_by_two_individual_passes",
+      "result": "pass"
+    },
+    {
+      "name": "test_positive_flags_cannot_be_added_to_negative_case",
+      "result": "pass"
+    },
+    {
+      "name": "test_process_error_cannot_replace_the_required_mathematical_rejection",
+      "result": "pass"
+    },
+    {
+      "name": "test_qualification_cannot_be_promoted",
+      "result": "pass"
+    },
+    {
+      "name": "test_reference_wrong_value_is_rejected",
+      "result": "pass"
+    },
+    {
+      "name": "test_repeated_native_point_is_rejected",
+      "result": "pass"
+    },
+    {
+      "name": "test_retained_disaster_recovery_warning_is_required",
+      "result": "pass"
+    },
+    {
+      "name": "test_unordered_native_points_are_rejected",
+      "result": "pass"
+    },
+    {
+      "name": "test_unrelated_history_corruption_is_rejected",
+      "result": "pass"
+    },
+    {
+      "name": "test_wrong_singular_equilibrium_classification_is_rejected",
+      "result": "pass"
+    }
+  ],
+  "checker_sha256": "0d2a05e1437f19a793924098cbb5fc4f096cb81ba0af193f3fcb82cb93995795",
+  "test_source_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+  "executed_command": "python3 -B -m unittest discover -s experiments/backends/implicit-event-restart -p 'test_check.py' -v",
+  "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "actual_log_availability": "local-only",
+  "actual_log_relative_to_directed_closure": "dynamics/dae-event-implementation/public-checker-calibration-final.log",
+  "actual_log_sha256": "84612122c83a75007f7365bf172ce8de42c24861a8a6e30bbb5c0132744db4f4"
+}

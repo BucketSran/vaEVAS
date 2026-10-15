@@ -122,7 +122,7 @@ raise SystemExit(main())
         from evas.lint import lint_manifest
         self.source.write_text(model('''@(initial_step) q=1;
             @(timer(0.5,0,1e-12)) q=2;
-            V(y,r)<+idt(q+2*V(y,r),0)-pow(V(y,r),2);''','real q;'))
+            V(y,r)<+idt(1+2*V(y,r),0)-pow(V(y,r),2)+q;''','real q;'))
         self.data['transient']=dict(sources=dict(u=[[0,0],[1,0]]),output_times=[0,1],stop=1,max_step=1)
         self.path.write_text(json.dumps(self.data))
         report=lint_manifest(self.path)
@@ -136,7 +136,7 @@ raise SystemExit(main())
         self.assertEqual(detail['kind'],'unsupported_implicit_dynamics')
         self.assertEqual(detail['category'],'unsupported')
         self.assertEqual(detail['capability'],'DYNAMICS')
-        self.assertEqual(detail['message'],'index-one polynomial DAE currently requires an event-free network')
+        self.assertIn('implicit event parameter changes algebraic constraints',detail['message'])
 
     def test_registered_messages_and_locations_preserve_original_reasons(self):
         from evas.lint import compile_manifest

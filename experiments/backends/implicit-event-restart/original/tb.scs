@@ -1,0 +1,8 @@
+simulator lang=spectre
+global 0
+ahdl_include "dut.va"
+VU (u 0) vsource dc=0
+DUT (u y w) dae_event
+opts options vabstol=1e-9 reltol=1e-9
+tran tran stop=1 maxstep=1 strobeperiod=0.125
+save u y w

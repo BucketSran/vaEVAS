@@ -110,5 +110,5 @@ class PolynomialDirectFilterContracts(unittest.TestCase):
                     run(program, {"u": [[0, 0], [1, 1]]}, [0, .5, 1])
         program = compile_model("@(initial_step) q=0; @(timer(0.5)) q=1; "
                                 "V(y,r)<+q+laplace_nd(pow(V(u,r),2),'{1,1},'{2,1});", 'integer q;')
-        with self.assertRaisesRegex(KernelError, 'event-free'):
+        with self.assertRaisesRegex(KernelError, 'implicit event parameter changes algebraic constraints'):
             run(program, {"u": [[0, 0], [1, 1]]}, [0, .5, 1])
