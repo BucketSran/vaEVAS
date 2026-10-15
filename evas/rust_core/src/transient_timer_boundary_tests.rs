@@ -276,3 +276,141 @@ fn changed_timer_failure_is_atomic_and_retryable_in_both_calendars() {
         rollback_then_retry(history);
     }
 }
+
+fn live_filter_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+    let mut p = program(false);
+    let origin = json!({"source":"live_filter_rollback.va","line":1,"column":1,"instance":"dut"});
+    p.operators=serde_json::from_value(json!([
+        {"kind":"transition","input":{"op":"state","state":2},"delay":0,"rise":0.5,"fall":0.5,"origin":origin},
+        {"kind":"laplace_nd","input":{"op":"multiply","left":{"op":"affine","constant":2,"terms":[{"node":1,"coefficient":1}]},"right":{"op":"operator","operator":0}},"numerator":[1],"denominator":[1,0.25],"origin":{"source":"live_filter_rollback.va","line":1,"column":2,"instance":"dut"}}
+    ])).unwrap();
+    p.contributions[2].rhs = serde_json::from_value(json!({"op":"operator","operator":1})).unwrap();
+    p.events[1].body.push(
+        serde_json::from_value(
+            json!({"kind":"assign","state":2,"rhs":{"op":"affine","constant":0,"terms":[]}}),
+        )
+        .unwrap(),
+    );
+    p.events.push(serde_json::from_value(json!({"trigger":{"kind":"timer","start":0.25,"period":0,"enabled":true,"time_tolerance":1e-12},"body":[{"kind":"assign","state":2,"rhs":{"op":"state","state":2}}],"origin":origin})).unwrap());
+    let model = EventModel::new(
+        p,
+        vec!["u".into()],
+        Tolerances {
+            absolute: 1e-8,
+            relative: 0.,
+        },
+    )
+    .unwrap();
+    let trajectory = trajectory(false);
+    let states = model.initial();
+    let state_bounds = states.iter().copied().map(I::point).collect::<Vec<_>>();
+    let calendar = schedule_held(&model, &trajectory, &state_bounds).unwrap();
+    let operators = Operators::new_until(
+        &model.program,
+        &trajectory,
+        &model.driven,
+        &states,
+        prediction_end(&model, &trajectory, calendar.first()),
+        &model.tolerances,
+    )
+    .unwrap();
+    let circuit = model
+        .circuit_with(&states, &operators.values(0.).unwrap())
+        .unwrap();
+    let accepted = Frame {
+        time_proofs: Default::default(),
+        time: 0.,
+        solution: circuit.solve(&trajectory.values(0.)).unwrap(),
+        circuit,
+        operators,
+        states,
+        state_bounds,
+    };
+    (
+        model,
+        trajectory,
+        Controller {
+            accepted,
+            event: 0,
+            records: vec![],
+            outputs: vec![],
+        },
+        calendar,
+    )
+}
+
+#[test]
+fn live_filter_installed_candidate_final_gate_failure_retries_same_controller() {
+    let (model, trajectory, mut controller, mut calendar) = live_filter_fixture();
+    for _ in 0..2 {
+        accept(&mut controller, &model, &trajectory, &mut calendar, false).unwrap();
+    }
+    let accepted = controller.accepted.clone();
+    assert_eq!(accepted.time, 0.25);
+    // Independent quadratic ramp response from the original source segment:
+    // at .125, e=0, u=.125, e'=2, u'=2, hence p=4.25*s+4*s².
+    let expected = -0.21875 + 0.5625 * (-0.5_f64).exp();
+    assert!((accepted.solution.voltages[4] - expected).abs() < 1e-11);
+    assert!(accepted.solution.voltages[4] > 0.);
+    let old_future = accepted.operators.bounds(0.75).unwrap();
+    let old_calendar = signature(&calendar);
+    let old_records = serde_json::to_value(&controller.records).unwrap();
+    let old_cursor = controller.event;
+    let (mut candidate, _records, end) = controller
+        .prepare_events_until(&model, &trajectory, &calendar, Some(0.5))
+        .unwrap();
+    assert_eq!(candidate.time, 0.5);
+    assert_eq!(candidate.states[2], 0.);
+    assert!(!candidate.operators.same_reset_history(&accepted.operators));
+    assert!(candidate.solution.voltages[4] > accepted.solution.voltages[4]);
+    assert!(
+        (candidate.solution.voltages[4] - candidate.operators.values(0.5).unwrap()[1]).abs()
+            < 1e-12
+    );
+    // The real candidate already consumed old forcing and installed the new
+    // parent target. Fail only its final observation certification afterwards.
+    candidate.solution.voltages[4] += 0.01;
+    let error = Controller::prepare_final_history(
+        &model,
+        &trajectory,
+        candidate,
+        event_acceptance::CalendarPlan::Held(calendar[end..].to_vec()),
+    )
+    .err()
+    .unwrap();
+    assert_eq!(error.kind, "waveform_accuracy");
+    assert!(
+        error.message.contains("same-time forward error at h:"),
+        "{}",
+        error.message
+    );
+    same_frame(&controller.accepted, &accepted);
+    assert_eq!(
+        controller.accepted.operators.bounds(0.75).unwrap(),
+        old_future
+    );
+    assert_eq!(signature(&calendar), old_calendar);
+    assert_eq!(controller.event, old_cursor);
+    assert_eq!(
+        serde_json::to_value(&controller.records).unwrap(),
+        old_records
+    );
+    accept(&mut controller, &model, &trajectory, &mut calendar, false).unwrap();
+    let (clean_model, clean_trajectory, mut clean, mut clean_calendar) = live_filter_fixture();
+    for _ in 0..3 {
+        accept(
+            &mut clean,
+            &clean_model,
+            &clean_trajectory,
+            &mut clean_calendar,
+            false,
+        )
+        .unwrap();
+    }
+    same_frame(&controller.accepted, &clean.accepted);
+    assert_eq!(signature(&calendar), signature(&clean_calendar));
+    assert_eq!(
+        controller.accepted.operators.bounds(0.75).unwrap(),
+        clean.accepted.operators.bounds(0.75).unwrap()
+    );
+}

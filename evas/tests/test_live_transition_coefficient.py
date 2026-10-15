@@ -46,6 +46,8 @@ class LiveTransitionCoefficient(unittest.TestCase):
     def test_ramp(self): self.check_card('ramp')
     def test_ramp_g1000(self): self.check_card('ramp-g1000')
     def test_history(self): self.check_card('history')
+    def test_filter(self): self.check_card('filter')
+    def test_filter_interrupt(self): self.check_card('filter-interrupt')
 
 class SourceControlledTransition(unittest.TestCase):
     def execute(self, expression, times, controls=None, zero_timer=False, zero_rhs='2', real_q=False, edge_fraction=1):
