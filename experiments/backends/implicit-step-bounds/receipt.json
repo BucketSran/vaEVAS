@@ -1,0 +1,281 @@
+{
+  "analysis_id": "implicit-step-bounds-finite-v1",
+  "capability": "DYNAMICS",
+  "purpose": "Two finite same-source implicit DAE model timestep comparisons, not original R01 recovery or full trajectory qualification",
+  "execution": "new actual Spectre and new EVAS CLI runs; this retained analysis does not rerun either simulator",
+  "independent_answer": "y+y^2=z, z_prime=1+2*y and z(0)=0 select y(0)=0. Differentiation yields y_prime=1 while 1+2*y is nonzero, hence y=t on [0,1].",
+  "observation_times_s": [
+    0.0,
+    0.03125,
+    0.0625,
+    0.09375,
+    0.125,
+    0.15625,
+    0.1875,
+    0.21875,
+    0.25,
+    0.28125,
+    0.3125,
+    0.34375,
+    0.375,
+    0.40625,
+    0.4375,
+    0.46875,
+    0.5,
+    0.53125,
+    0.5625,
+    0.59375,
+    0.625,
+    0.65625,
+    0.6875,
+    0.71875,
+    0.75,
+    0.78125,
+    0.8125,
+    0.84375,
+    0.875,
+    0.90625,
+    0.9375,
+    0.96875,
+    1.0
+  ],
+  "absolute_budget_V": 1e-07,
+  "denominator": {
+    "models": 2,
+    "backend_configurations": 4,
+    "native_observations_per_backend_per_model": 33
+  },
+  "implementation": {
+    "base_sha": "7c15c1cb06ee39fc3f868c1c27e9e099fd2f887d",
+    "dirty": true,
+    "source_snapshot_patch": "implementation.patch",
+    "source_snapshot_sha256": {
+      "evas/rust_core/src/implicit_dynamics.rs": "6cbdc20bc1552df5e18ec8408685d2bbfbcd0fa8a8b07f36326e3df49d89e869",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "f5c62737eda02c58a90c60c39eca6d0ca5d43fa1061cbbf2d1fcc408bdb2c686",
+      "evas/rust_core/src/step_bounds.rs": "7b34202c102b72aef2e19f2af1c28236cd6b3d4ba739cdbdf79e09b526331731",
+      "evas/rust_core/src/transient.rs": "fccf93aa6f3b8caf237864b1048be9efedd5efccad6a642fd93722872e79f0ae",
+      "evas/docs/math/continuous.md": "4cf25121bab49fa1314df61c5e03dc7bb0a2d1420520184a17a64ba3b3c34e91",
+      "evas/tests/test_implicit_step_bounds.py": "24882daf9c3c4cdfe707d79f5fe4a42ebd6cbf4d6ff013f3e1cb29f1a3731f59"
+    },
+    "kernel_sha256": "3d1c73877abba86855e2c65ac3b7c9a5589166b489eb893e8d958c54d929e688",
+    "post_build_changes": "Only documentation, an explanatory production comment and a cfg(test) independent formula assertion; no production behavior changed after the frozen EVAS execution build.",
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "profile": "debug",
+    "build_command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--manifest-path",
+      "evas/rust_core/Cargo.toml"
+    ],
+    "platform": {
+      "system": "Darwin",
+      "machine": "arm64"
+    },
+    "patch_format": "zero-context unified diff; apply with git apply --unidiff-zero; includes the previously separate new public test"
+  },
+  "spectre": {
+    "version": "21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f"
+  },
+  "cases": {
+    "voltage": {
+      "spectre_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.262841431424022,
+        "completed_utc": "2026-10-15T10:49:59Z",
+        "log": "stdout.log",
+        "log_sha256": "b12db7bc9e1b6a04be9f0926d104d91afae55533a1dea4c8077a32d866b0be42",
+        "label": "implicit-voltage",
+        "source_files_sha256": {
+          "dut.va": "5d56b5b214d15161fd5f6f585d9713a095b3e3173b1226afe883ff287360b01c",
+          "tb.scs": "5b0f4a99cdccdb20456ae7bdc9acf8e90c33db7821b04a28fdc832bcb635381a",
+          "contract.json": "3f696e83d52261555842e117f7aa7c203cd05fc18b7ccda8c4499f2f49f612a3"
+        },
+        "timeout_s": 90,
+        "directory_bytes": 127540
+      },
+      "spectre_effective_settings": {
+        "reltol": 1e-09,
+        "vabstol": 1e-09,
+        "maxstep_s": 1,
+        "method": "traponly",
+        "lteratio": 3.5,
+        "relref": "sigglobal"
+      },
+      "evas_requested_settings": {
+        "reltol": 1e-09,
+        "vabstol": 1e-09,
+        "max_step_s": 1,
+        "timeout_s": 120,
+        "forwarding_status": "request values; no independent backend echo"
+      },
+      "spectre_budget_s": 90,
+      "spectre_command": [
+        "spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "30",
+        "+mt=1"
+      ],
+      "evas_command": [
+        "python3",
+        "-B",
+        "-m",
+        "evas",
+        "simulate",
+        "tb.scs",
+        "--kernel",
+        "<built-debug-evas-kernel>",
+        "--timeout",
+        "120"
+      ],
+      "original_native_psf_sha256": "9e7b1e7a5dcab8c60a1b1412802c4e02e607247854119fb210e24165fca982f6"
+    },
+    "conditional": {
+      "spectre_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.25118950754404,
+        "completed_utc": "2026-10-15T10:50:09Z",
+        "log": "stdout.log",
+        "log_sha256": "48e23f8794a77ab6228c986590be7af4e2cb1029d7981957f8353323de34f606",
+        "label": "implicit-conditional",
+        "source_files_sha256": {
+          "dut.va": "25e496d5f0c5d2c7fb40a33aa83e5c687fcc44801caa6fbbf057d4d3de84cc74",
+          "tb.scs": "5b0f4a99cdccdb20456ae7bdc9acf8e90c33db7821b04a28fdc832bcb635381a",
+          "contract.json": "08aa4d67f14fe2e4867db689a087c6175f232f2f59089feecc688735d3f4e1cd"
+        },
+        "timeout_s": 90,
+        "directory_bytes": 127009
+      },
+      "spectre_effective_settings": {
+        "reltol": 1e-09,
+        "vabstol": 1e-09,
+        "maxstep_s": 1,
+        "method": "traponly",
+        "lteratio": 3.5,
+        "relref": "sigglobal"
+      },
+      "evas_requested_settings": {
+        "reltol": 1e-09,
+        "vabstol": 1e-09,
+        "max_step_s": 1,
+        "timeout_s": 120,
+        "forwarding_status": "request values; no independent backend echo"
+      },
+      "spectre_budget_s": 90,
+      "spectre_command": [
+        "spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "30",
+        "+mt=1"
+      ],
+      "evas_command": [
+        "python3",
+        "-B",
+        "-m",
+        "evas",
+        "simulate",
+        "tb.scs",
+        "--kernel",
+        "<built-debug-evas-kernel>",
+        "--timeout",
+        "120"
+      ],
+      "original_native_psf_sha256": "dbc4ea99aeabc0331a887ab9f5424643d787340df0ebe2a0bfd969f96df40a59"
+    }
+  },
+  "availability": {
+    "repository_contained": "VA/SCS, two complete small native 33-row PSFs, exact round-trip EVAS strobe extraction, implementation patch and analysis",
+    "local_only": "full execution logs, EVAS responses, remote setup profiles and build products; retained hashes are identities, not public download addresses",
+    "original_local_bundle": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/directed-closure/dynamics",
+    "spectre_local_bundle": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/directed-closure/reference/precision-raw"
+  },
+  "limits": [
+    "finite native observations only; no interpolation or hidden callback ordering claim",
+    "no general DAE/events/reset support",
+    "Spectre traponly and EVAS certified Picard/Taylor have different algorithms",
+    "no performance, public simulator availability, unseen holdout, qualification, merge or release claim"
+  ],
+  "retained_files_sha256": {
+    "result.json": "4df88f46997ff1b7c39c7b97ad5b13be6311bd169b1a8919c10744c613460e62",
+    "implementation.patch": "4573de03eae19c7f2773666c41251c27e310b794450f967fb622bf9a84ef04ef",
+    "README.md": "1d3d5599a7934acaa5bb0988b85391afe626394fb562812279a37b990b10ce13",
+    "analyze.py": "c8b9d9a45aa73293ee1d60e1979abf8dd68a46f44a316de3fdc52c0d002be876",
+    "voltage/tb.scs": "5b0f4a99cdccdb20456ae7bdc9acf8e90c33db7821b04a28fdc832bcb635381a",
+    "voltage/dut.va": "5d56b5b214d15161fd5f6f585d9713a095b3e3173b1226afe883ff287360b01c",
+    "voltage/spectre.psf": "9e7b1e7a5dcab8c60a1b1412802c4e02e607247854119fb210e24165fca982f6",
+    "voltage/evas-observations.json": "77f1221e6069930c22d8a5d4add88ba66d6985338d5d4590ad455446cd19bac9",
+    "conditional/tb.scs": "5b0f4a99cdccdb20456ae7bdc9acf8e90c33db7821b04a28fdc832bcb635381a",
+    "conditional/dut.va": "25e496d5f0c5d2c7fb40a33aa83e5c687fcc44801caa6fbbf057d4d3de84cc74",
+    "conditional/spectre.psf": "dbc4ea99aeabc0331a887ab9f5424643d787340df0ebe2a0bfd969f96df40a59",
+    "conditional/evas-observations.json": "60e6756776e2434dace12de62ee9b9d7a8a14927e3981c823fc1ab54915e623c"
+  },
+  "publication_format_update": {
+    "previous_context_patch_sha256": "ccc524586f79bde2e84e7a0b73f849fc3aaaa65817e31ffdf19ea0d2897630c5",
+    "source_snapshot_unchanged": true,
+    "all6_reconstruction_sha256_verified": true,
+    "previous_receipt_retained_locally": true
+  }
+}

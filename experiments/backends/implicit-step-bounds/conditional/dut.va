@@ -1,0 +1,9 @@
+`include "disciplines.vams"
+module mesh_dae(u,y);
+input u; output y; electrical u,y; real z;
+analog begin
+z=idt(1+2*V(y),0);
+V(y)<+z-pow(V(y),2);
+if(V(u)>0.5) $bound_step(0.015625/(1+z));
+end
+endmodule

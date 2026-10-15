@@ -947,8 +947,6 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                     .is_err_and(|error| error.kind == "unsupported_transient")
             }))
     {
-        transient.max_step =
-            crate::step_bounds::constant_cap(&request.program, transient.max_step)?;
         return crate::continuous::run_implicit(
             request.program,
             request.driven,

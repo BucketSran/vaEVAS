@@ -1647,7 +1647,9 @@ impl NonlinearContinuous {
         horizon: f64,
         remaining_work: &mut usize,
     ) -> Result<(), Error> {
-        if selection::needed(&self.context.program) {
+        // Implicit initialization rejects physical Selects. Remaining Selects
+        // are mesh requests, evaluated below from the accepted DAE coordinates.
+        if self.implicit.is_none() && selection::needed(&self.context.program) {
             let certified = self.certified_end();
             if horizon <= certified {
                 return Ok(());
@@ -1847,6 +1849,9 @@ impl NonlinearContinuous {
                     .lo
                     .max(start.next_up())
                     .min(b);
+                if let Some(implicit) = &self.implicit {
+                    end = end.min(implicit.next_time(start, step, &state, &source)?);
+                }
                 let mut accepted = None;
                 for _ in 0..MAX_REFINEMENTS {
                     if end <= start {

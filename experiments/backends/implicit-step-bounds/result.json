@@ -1,0 +1,25 @@
+{
+  "analysis": "implicit-step-bounds-finite-v1",
+  "results": {
+    "voltage": {
+      "rows": 33,
+      "max_absolute_error_V": {
+        "spectre_vs_answer": 2.954713e-09,
+        "evas_vs_answer": 6.661338147750939e-16,
+        "paired": 2.9547124559107903e-09
+      },
+      "budget_V": 1e-07,
+      "passed": true
+    },
+    "conditional": {
+      "rows": 33,
+      "max_absolute_error_V": {
+        "spectre_vs_answer": 7.350702e-10,
+        "evas_vs_answer": 4.440892098500626e-16,
+        "paired": 7.350699779553951e-10
+      },
+      "budget_V": 1e-07,
+      "passed": true
+    }
+  }
+}

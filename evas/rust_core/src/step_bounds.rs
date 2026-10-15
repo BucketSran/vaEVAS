@@ -2,6 +2,7 @@
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, Program, Solution, Term};
 
+#[derive(Clone)]
 pub(crate) struct Bounds {
     expressions: Vec<(Expression, Expression)>,
 }
@@ -164,9 +165,29 @@ impl Bounds {
                 "$bound_step requires certified node bounds",
             )
         })?;
-        let values: Vec<_> = nodes
+        let nodes = nodes
             .iter()
             .map(|b| I { lo: b[0], hi: b[1] })
+            .collect::<Vec<_>>();
+        self.next_time_from_bounds(time, max_step, &nodes, states, operators)
+    }
+
+    /// Alternative accepted-frame entry for a DAE's certified coordinate box.
+    /// The caller supplies original node and call-site bounds, never point roots.
+    pub(crate) fn next_time_from_bounds(
+        &self,
+        time: f64,
+        max_step: f64,
+        nodes: &[I],
+        states: &[I],
+        operators: &[I],
+    ) -> Result<f64, Error> {
+        if self.expressions.is_empty() {
+            return Ok(time + max_step);
+        }
+        let values: Vec<_> = nodes
+            .iter()
+            .copied()
             .chain(states.iter().copied())
             .chain(operators.iter().copied())
             .collect();
@@ -210,8 +231,8 @@ impl Bounds {
     }
 }
 
-/// The implicit trajectory builder presently accepts only unconditional constants.
-/// Its internal integration mesh is capped before construction, never after it.
+/// Extract a single global cap when every request is an unconditional constant.
+/// Dynamic requests require evaluation by the owning accepted-step builder.
 pub(crate) fn constant_cap(program: &Program, max_step: f64) -> Result<f64, Error> {
     let mut step = max_step;
     for bound in &program.step_bounds {
@@ -242,8 +263,8 @@ pub(crate) fn constant_cap(program: &Program, max_step: f64) -> Result<f64, Erro
     Ok(step)
 }
 
-/// Preconstructed numerical histories also need the model's constant cap.
-/// Dynamic requests cannot yet constrain that separate integration mesh.
+/// Preconstructed numerical histories can use a global constant cap.
+/// This helper leaves dynamic requests to their accepted-frame consumers.
 pub(crate) fn history_cap(program: &Program, max_step: f64) -> Result<f64, Error> {
     if program.step_bounds.is_empty() {
         return Ok(max_step);

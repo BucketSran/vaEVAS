@@ -1,0 +1,271 @@
+diff --git a/evas/docs/math/continuous.md b/evas/docs/math/continuous.md
+index 02ac6996..edc7c43a 100644
+--- a/evas/docs/math/continuous.md
++++ b/evas/docs/math/continuous.md
+@@ -127,0 +128,22 @@ DC 的 `t=0` 观察与 `t=0+` 的瞬态右侧极限分别求值：前者在整
++## 隐式 DAE 的模型步长请求
++
++无事件的隐式 DAE 可以按当前认证电压、输入源和算子输出请求下一步上限。
++例如 `y=idt(1+2*y,0)-y*y` 的初始分支满足 `y=t`；
++`$bound_step(1/64/(1+y))` 会随着 y 增大缩短内部步长，但不改变这条物理解。
++条件请求只在活动时约束下一段；它控制数值网格，不是新增物理切换事件。
++这项范围仍不包括隐式 DAE 与离散状态、事件或积分复位的组合。
++
++每个内部接受段从左端的完整认证包围重新计算所有请求，取有效值下界与原步长上限的最小值。
++活动条件包围两种布尔结果时，保守应用请求；数值本身不能认证有限非负时明确拒绝。
++值为零时采用下一可表示时刻作为最小时间步。请求的条件和数值都接受原 IR 结构和实例归属检查，
++不以 Newton 代表点代替电压包围，也不把未来整段按初始请求预构造。
++候选传播失败后保留已接受历史，观察查询不重新选择网格。
++
++实现由 `implicit_dynamics.rs::ImplicitField::next_time` 从 DAE 坐标构造认证读取帧，
++复用 `step_bounds.rs::Bounds` 的活动条件与数值检查；`nonlinear_dynamics.rs` 在每次内部传播前应用上限。
++[独立微例](../../tests/test_implicit_step_bounds.py)检查解析答案、活动分支、非法请求和观察网格不变性；
++[Rust 内部回归](../../rust_core/src/implicit_dynamics.rs)逐段检查上限，并验证同控制器失败后的修复重试。
++[两条实际 Spectre 有限对照](../../../experiments/backends/implicit-step-bounds/README.md)
++保留同源模型、33个原生观察点、工具身份和配对误差。它们在固定1e-7 V预算内通过，
++不代表原工程模型恢复、全时域误差证明或一般 DAE 与事件组合支持。
++
+diff --git a/evas/rust_core/src/implicit_dynamics.rs b/evas/rust_core/src/implicit_dynamics.rs
+index 5063a7fe..09ece520 100644
+--- a/evas/rust_core/src/implicit_dynamics.rs
++++ b/evas/rust_core/src/implicit_dynamics.rs
+@@ -11,0 +12 @@ pub(super) struct ImplicitField {
++    mesh_bounds: Option<(crate::step_bounds::Bounds, Coordinates)>,
+@@ -16,0 +18,35 @@ impl ImplicitField {
++    /// The reduced DAE state already carries certified original node values.
++    /// Read those and the call-site outputs at the accepted left endpoint;
++    /// neither a Newton point nor an output query may choose the internal mesh.
++    pub(super) fn next_time(
++        &self,
++        time: f64,
++        step: f64,
++        state: &[I],
++        sources: &[I],
++    ) -> Result<f64, Error> {
++        let Some((bounds, coordinates)) = &self.mesh_bounds else {
++            return Ok(time + step);
++        };
++        let variables = state
++            .iter()
++            .chain(sources)
++            .map(|&v| vec![v])
++            .collect::<Vec<_>>();
++        let nodes = coordinates
++            .nodes
++            .iter()
++            .zip(&coordinates.sources)
++            .map(|(node, source)| {
++                node.or(*source)
++                    .map_or(I::ZERO, |index| variables[index][0])
++            })
++            .collect::<Vec<_>>();
++        let operators = coordinates
++            .outputs
++            .iter()
++            .map(|p| p.jet(&variables, 0)[0])
++            .collect::<Vec<_>>();
++        bounds.next_time_from_bounds(time, step, &nodes, &[], &operators)
++    }
++
+@@ -341,0 +378 @@ fn circuit(
++#[derive(Clone)]
+@@ -830,0 +868,4 @@ fn initialize(
++            mesh_bounds: Some((
++                crate::step_bounds::Bounds::new(program)?,
++                coordinates.clone(),
++            )),
+@@ -971,0 +1013,76 @@ mod tests {
++    #[test]
++    fn accepted_implicit_segments_obey_dynamic_bounds_and_failed_retry_is_pure() {
++        let origin = json!({"source":"mesh.va","line":1,"column":1,"instance":"dut"});
++        let mut program: Program = serde_json::from_value(json!({
++            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","y"],
++            "operators":[{"kind":"idt","ic":0,"input":{"op":"affine","constant":0,"terms":[]},"origin":origin}],
++            "contributions":[{"branch":{"instance":"dut","local_positive":"p","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"origin":origin,
++                "rhs":{"op":"add","left":{"op":"add","left":{"op":"operator","operator":0},"right":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]}},
++                    "right":{"op":"multiply","left":{"op":"affine","constant":-1,"terms":[]},"right":{"op":"power","exponent":2,"base":{"op":"affine","constant":0,"terms":[{"node":2,"coefficient":1}]}}}}}],
++            "step_bounds":[{"active":{"op":"affine","constant":1,"terms":[]},
++                "value":{"op":"divide","left":{"op":"affine","constant":0.03125,"terms":[]},
++                    "right":{"op":"affine","constant":1,"terms":[{"node":2,"coefficient":1}]}},"origin":origin}]
++        })).unwrap();
++        let trajectory = Trajectory::new(
++            TransientInputs {
++                strobetimes: vec![],
++                pwl: vec![vec![[0., 0.], [0.5, 0.5]]],
++                output_times: vec![0., 0.5],
++                stop: 0.5,
++                max_step: 0.5,
++            },
++            1,
++        )
++        .unwrap();
++        let (flow, coordinates) =
++            initialize(&program, &trajectory, &["u".into()], &Tolerances::default()).unwrap();
++        assert!(flow.steps.len() > 16);
++        let field = flow.implicit.as_ref().unwrap();
++        for segment in flow.steps.iter() {
++            let state = flow.state_bounds(I::point(segment.start)).unwrap();
++            let end = field
++                .next_time(
++                    segment.start,
++                    0.5,
++                    &state,
++                    &trajectory.value_bounds(segment.start),
++                )
++                .unwrap();
++            assert!(
++                segment.end <= end,
++                "internal segment exceeded accepted model request"
++            );
++            // Independent substitution: z'=0, z(0)=0 and u=t imply
++            // y=(-1+sqrt(1+4t))/2 on the selected initial branch.
++            let y = ((1. + 4. * segment.start).sqrt() - 1.) / 2.;
++            let exact_cap = 0.03125 / (1. + y);
++            assert!(segment.end - segment.start <= exact_cap + 2e-15);
++        }
++        // Start a controller with the same accepted IC, force one invalid
++        // candidate, then repair the request and retry in that same controller.
++        let mut controller = flow.clone();
++        controller.steps = Arc::new(vec![]);
++        program.step_bounds[0].value = Expression::Affine {
++            constant: -1.,
++            terms: vec![],
++        };
++        controller.implicit.as_mut().unwrap().mesh_bounds = Some((
++            crate::step_bounds::Bounds::new(&program).unwrap(),
++            coordinates,
++        ));
++        let before = controller.state_bounds(I::ZERO).unwrap();
++        assert_eq!(
++            controller.propagate_until(0.5).unwrap_err().kind,
++            "invalid_bound_step"
++        );
++        assert!(controller.steps.is_empty());
++        assert_eq!(controller.state_bounds(I::ZERO).unwrap(), before);
++        controller.implicit = flow.implicit.clone();
++        controller.propagate_until(0.5).unwrap();
++        assert_eq!(controller.steps.len(), flow.steps.len());
++        assert_eq!(
++            controller.state_bounds(I::point(0.5)).unwrap(),
++            flow.state_bounds(I::point(0.5)).unwrap()
++        );
++    }
++
+@@ -1068,0 +1186 @@ mod tests {
++            mesh_bounds: None,
+@@ -1086,0 +1205 @@ mod tests {
++            mesh_bounds: None,
+@@ -1097,0 +1217 @@ mod tests {
++            mesh_bounds: None,
+@@ -1116,0 +1237 @@ mod tests {
++            mesh_bounds: None,
+diff --git a/evas/rust_core/src/nonlinear_dynamics.rs b/evas/rust_core/src/nonlinear_dynamics.rs
+index 955dd08f..824215fa 100644
+--- a/evas/rust_core/src/nonlinear_dynamics.rs
++++ b/evas/rust_core/src/nonlinear_dynamics.rs
+@@ -1650 +1650,3 @@ impl NonlinearContinuous {
+-        if selection::needed(&self.context.program) {
++        // Implicit initialization rejects physical Selects. Remaining Selects
++        // are mesh requests, evaluated below from the accepted DAE coordinates.
++        if self.implicit.is_none() && selection::needed(&self.context.program) {
+@@ -1849,0 +1852,3 @@ impl NonlinearContinuous {
++                if let Some(implicit) = &self.implicit {
++                    end = end.min(implicit.next_time(start, step, &state, &source)?);
++                }
+diff --git a/evas/rust_core/src/step_bounds.rs b/evas/rust_core/src/step_bounds.rs
+index 1ca26201..d32a4b98 100644
+--- a/evas/rust_core/src/step_bounds.rs
++++ b/evas/rust_core/src/step_bounds.rs
+@@ -4,0 +5 @@ use crate::ir::{Error, Expression, Program, Solution, Term};
++#[derive(Clone)]
+@@ -167 +168 @@ impl Bounds {
+-        let values: Vec<_> = nodes
++        let nodes = nodes
+@@ -169,0 +171,20 @@ impl Bounds {
++            .collect::<Vec<_>>();
++        self.next_time_from_bounds(time, max_step, &nodes, states, operators)
++    }
++
++    /// Alternative accepted-frame entry for a DAE's certified coordinate box.
++    /// The caller supplies original node and call-site bounds, never point roots.
++    pub(crate) fn next_time_from_bounds(
++        &self,
++        time: f64,
++        max_step: f64,
++        nodes: &[I],
++        states: &[I],
++        operators: &[I],
++    ) -> Result<f64, Error> {
++        if self.expressions.is_empty() {
++            return Ok(time + max_step);
++        }
++        let values: Vec<_> = nodes
++            .iter()
++            .copied()
+@@ -213,2 +234,2 @@ impl Bounds {
+-/// The implicit trajectory builder presently accepts only unconditional constants.
+-/// Its internal integration mesh is capped before construction, never after it.
++/// Extract a single global cap when every request is an unconditional constant.
++/// Dynamic requests require evaluation by the owning accepted-step builder.
+@@ -245,2 +266,2 @@ pub(crate) fn constant_cap(program: &Program, max_step: f64) -> Result<f64, Erro
+-/// Preconstructed numerical histories also need the model's constant cap.
+-/// Dynamic requests cannot yet constrain that separate integration mesh.
++/// Preconstructed numerical histories can use a global constant cap.
++/// This helper leaves dynamic requests to their accepted-frame consumers.
+diff --git a/evas/rust_core/src/transient.rs b/evas/rust_core/src/transient.rs
+index 0fae020a..59a3fab2 100644
+--- a/evas/rust_core/src/transient.rs
++++ b/evas/rust_core/src/transient.rs
+@@ -950,2 +949,0 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
+-        transient.max_step =
+-            crate::step_bounds::constant_cap(&request.program, transient.max_step)?;
+diff --git a/evas/tests/test_implicit_step_bounds.py b/evas/tests/test_implicit_step_bounds.py
+new file mode 100644
+index 00000000..97be6b7a
+--- /dev/null
++++ b/evas/tests/test_implicit_step_bounds.py
+@@ -0,0 +1,44 @@
++"""Implicit DAE model mesh requests, checked against y=t by substitution."""
++GUARDS = ["DYNAMICS"]
++
++import unittest
++from evas.runtime import KernelError
++from test_continuous_dynamics import compile_model, run, values, assert_close
++
++
++class ImplicitStepBounds(unittest.TestCase):
++    def test_dynamic_voltage_bound_is_applied_to_internal_accepted_mesh(self):
++        body = 'V(y,r)<+idt(1+2*V(y,r),0)-pow(V(y,r),2);'
++        ordinary = run(compile_model(body), times=[0, 1], stop=1,
++                       vabstol=1e-9, reltol=0)
++        bounded = compile_model(body + '$bound_step(0.015625/(1+V(y,r)));')
++        sparse = run(bounded, times=[0, .5, 1], stop=1, vabstol=1e-9, reltol=0)
++        self.assertGreater(sparse['transient']['accepted_steps'],
++                           ordinary['transient']['accepted_steps'])
++        dense = run(bounded, times=[i/32 for i in range(33)], stop=1,
++                    vabstol=1e-9, reltol=0)
++        for t, actual in zip([0, .5, 1], values(sparse)):
++            assert_close(self, actual, t, delta=1e-9)
++        self.assertEqual(values(sparse), [values(dense)[i] for i in [0, 16, 32]])
++        self.assertEqual(sparse['transient']['accepted_steps'],
++                         dense['transient']['accepted_steps'])
++
++    def test_conditional_bound_uses_implicit_operator_and_driven_frame(self):
++        # On y=t, z=idt(1+2y,0)=t+t^2. The bound is only active
++        # after the exact source corner at t=1/2.
++        body = ('z=idt(1+2*V(y,r),0); V(y,r)<+z-pow(V(y,r),2);'
++                'if(V(u,r)>0.5) $bound_step(0.015625/(1+z));')
++        result = run(compile_model(body, 'real z;'), {'u': [[0,0],[.5,.5],[1,1]]},
++                     [0, .5, 1], stop=1, vabstol=1e-9, reltol=0)
++        for t, actual in zip([0, .5, 1], values(result)):
++            assert_close(self, actual, t, delta=1e-9)
++        self.assertGreater(result['transient']['accepted_steps'], 32)
++
++    def test_inactive_invalid_bound_is_not_evaluated_but_active_invalid_rejects(self):
++        base = 'V(y,r)<+idt(1+2*V(y,r),0)-pow(V(y,r),2);'
++        inactive = compile_model(base + 'if(V(u,r)>2) $bound_step(-1-V(y,r));')
++        run(inactive, times=[0, 1], stop=1)
++        invalid = compile_model(base + '$bound_step(-1-V(y,r));')
++        with self.assertRaises(KernelError) as error:
++            run(invalid, times=[0, 1], stop=1)
++        self.assertEqual(error.exception.detail['kind'], 'invalid_bound_step')
