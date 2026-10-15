@@ -1,0 +1,8 @@
+simulator lang=spectre
+global 0
+ahdl_include "dut.va"
+VU (u 0) vsource type=pwl wave=[0 0 0.5 0.5 1 1]
+DUT (u y) mesh_dae
+opts options vabstol=1e-9 reltol=1e-9
+tran tran stop=1 maxstep=1 strobeperiod=0.03125
+save u y

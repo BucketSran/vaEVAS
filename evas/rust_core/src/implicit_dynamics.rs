@@ -9,11 +9,47 @@ use crate::solver::Circuit;
 #[derive(Clone)]
 pub(super) struct ImplicitField {
     physical: usize,
+    mesh_bounds: Option<(crate::step_bounds::Bounds, Coordinates)>,
     // Derivatives of each original constraint wrt [physical state, voltage, source].
     gradients: Vec<Vec<Polynomial>>,
 }
 
 impl ImplicitField {
+    /// The reduced DAE state already carries certified original node values.
+    /// Read those and the call-site outputs at the accepted left endpoint;
+    /// neither a Newton point nor an output query may choose the internal mesh.
+    pub(super) fn next_time(
+        &self,
+        time: f64,
+        step: f64,
+        state: &[I],
+        sources: &[I],
+    ) -> Result<f64, Error> {
+        let Some((bounds, coordinates)) = &self.mesh_bounds else {
+            return Ok(time + step);
+        };
+        let variables = state
+            .iter()
+            .chain(sources)
+            .map(|&v| vec![v])
+            .collect::<Vec<_>>();
+        let nodes = coordinates
+            .nodes
+            .iter()
+            .zip(&coordinates.sources)
+            .map(|(node, source)| {
+                node.or(*source)
+                    .map_or(I::ZERO, |index| variables[index][0])
+            })
+            .collect::<Vec<_>>();
+        let operators = coordinates
+            .outputs
+            .iter()
+            .map(|p| p.jet(&variables, 0)[0])
+            .collect::<Vec<_>>();
+        bounds.next_time_from_bounds(time, step, &nodes, &[], &operators)
+    }
+
     // A structurally constant voltage Jacobian defines a polynomial vector
     // field for each fixed PWL slope. This is a global expression check, not
     // a Jacobian evaluated at the selected initial root. Variable/rational
@@ -339,6 +375,7 @@ fn circuit(
     Circuit::new(frozen, driven, tolerances.clone())
 }
 
+#[derive(Clone)]
 struct Coordinates {
     physical: usize,
     nodes: Vec<Option<usize>>,
@@ -828,6 +865,10 @@ fn initialize(
         modes: vec![],
         implicit: Some(ImplicitField {
             physical,
+            mesh_bounds: Some((
+                crate::step_bounds::Bounds::new(program)?,
+                coordinates.clone(),
+            )),
             gradients,
         }),
         operators,
@@ -970,6 +1011,83 @@ mod tests {
     use serde_json::json;
 
     #[test]
+    fn accepted_implicit_segments_obey_dynamic_bounds_and_failed_retry_is_pure() {
+        let origin = json!({"source":"mesh.va","line":1,"column":1,"instance":"dut"});
+        let mut program: Program = serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","y"],
+            "operators":[{"kind":"idt","ic":0,"input":{"op":"affine","constant":0,"terms":[]},"origin":origin}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"p","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"origin":origin,
+                "rhs":{"op":"add","left":{"op":"add","left":{"op":"operator","operator":0},"right":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]}},
+                    "right":{"op":"multiply","left":{"op":"affine","constant":-1,"terms":[]},"right":{"op":"power","exponent":2,"base":{"op":"affine","constant":0,"terms":[{"node":2,"coefficient":1}]}}}}}],
+            "step_bounds":[{"active":{"op":"affine","constant":1,"terms":[]},
+                "value":{"op":"divide","left":{"op":"affine","constant":0.03125,"terms":[]},
+                    "right":{"op":"affine","constant":1,"terms":[{"node":2,"coefficient":1}]}},"origin":origin}]
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![vec![[0., 0.], [0.5, 0.5]]],
+                output_times: vec![0., 0.5],
+                stop: 0.5,
+                max_step: 0.5,
+            },
+            1,
+        )
+        .unwrap();
+        let (flow, coordinates) =
+            initialize(&program, &trajectory, &["u".into()], &Tolerances::default()).unwrap();
+        assert!(flow.steps.len() > 16);
+        let field = flow.implicit.as_ref().unwrap();
+        for segment in flow.steps.iter() {
+            let state = flow.state_bounds(I::point(segment.start)).unwrap();
+            let end = field
+                .next_time(
+                    segment.start,
+                    0.5,
+                    &state,
+                    &trajectory.value_bounds(segment.start),
+                )
+                .unwrap();
+            assert!(
+                segment.end <= end,
+                "internal segment exceeded accepted model request"
+            );
+            // Independent substitution: z'=0, z(0)=0 and u=t imply
+            // y=(-1+sqrt(1+4t))/2 on the selected initial branch.
+            let y = ((1. + 4. * segment.start).sqrt() - 1.) / 2.;
+            let exact_cap = 0.03125 / (1. + y);
+            assert!(segment.end - segment.start <= exact_cap + 2e-15);
+        }
+        // Start a controller with the same accepted IC, force one invalid
+        // candidate, then repair the request and retry in that same controller.
+        let mut controller = flow.clone();
+        controller.steps = Arc::new(vec![]);
+        program.step_bounds[0].value = Expression::Affine {
+            constant: -1.,
+            terms: vec![],
+        };
+        controller.implicit.as_mut().unwrap().mesh_bounds = Some((
+            crate::step_bounds::Bounds::new(&program).unwrap(),
+            coordinates,
+        ));
+        let before = controller.state_bounds(I::ZERO).unwrap();
+        assert_eq!(
+            controller.propagate_until(0.5).unwrap_err().kind,
+            "invalid_bound_step"
+        );
+        assert!(controller.steps.is_empty());
+        assert_eq!(controller.state_bounds(I::ZERO).unwrap(), before);
+        controller.implicit = flow.implicit.clone();
+        controller.propagate_until(0.5).unwrap();
+        assert_eq!(controller.steps.len(), flow.steps.len());
+        assert_eq!(
+            controller.state_bounds(I::point(0.5)).unwrap(),
+            flow.state_bounds(I::point(0.5)).unwrap()
+        );
+    }
+
+    #[test]
     fn observation_must_solve_live_filter_feedthrough_in_original_relation() {
         let origin = json!({"source":"feedthrough.va","line":1,"column":1,"instance":"dut"});
         let mut second_origin = origin.clone();
@@ -1066,6 +1184,7 @@ mod tests {
         )];
         let field = ImplicitField {
             physical: 1,
+            mesh_bounds: None,
             gradients: vec![vec![
                 constant(1.0),
                 constant(1.0),
@@ -1084,6 +1203,7 @@ mod tests {
         // with h. Pointwise invertibility cannot authorize polynomial recovery.
         let variable_field = ImplicitField {
             physical: 1,
+            mesh_bounds: None,
             gradients: vec![vec![
                 constant(1.0),
                 Polynomial::Add(Box::new(constant(0.875)), Box::new(coordinate(1))),
@@ -1095,6 +1215,7 @@ mod tests {
             .is_none());
         let singular = ImplicitField {
             physical: 1,
+            mesh_bounds: None,
             gradients: vec![vec![constant(1.0), constant(0.0), constant(-1.0)]],
         };
         assert!(singular
@@ -1114,6 +1235,7 @@ mod tests {
         let constant = |c| Polynomial::Linear(vec![I::ZERO, I::ZERO, I::point(c)]);
         let field = ImplicitField {
             physical: 1,
+            mesh_bounds: None,
             gradients: vec![vec![
                 constant(-1.0),
                 Polynomial::Add(

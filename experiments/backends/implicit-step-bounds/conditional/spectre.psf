@@ -1,0 +1,265 @@
+HEADER
+"PSFversion" "1.00"
+"simulator" "spectre"
+"version" "21.1.0.509.isr12"
+"date" "6:50:09 PM, Thur Oct 15, 2026"
+"design" "(no title)"
+"analysis type" "tran"
+"analysis name" "tran"
+"analysis description" "Transient Analysis `tran': time = (0 s -> 1 s)"
+"xVecSorted" "ascending"
+"tolerance.relative" 1.00000e-09
+"start" 0.00000
+"outputstart" 0.00000
+"stop" 1.00000
+"step" 0.00100000
+"istep" 0.00100000
+"maxstep" 1.00000
+"ic" "all"
+"useprevic" "no"
+"skipdc" "no"
+"reltol" 1.00000e-09
+"abstol(V)" 1.00000e-09
+"abstol(I)" 1.00000e-12
+"temp" 27.0000
+"tnom" 27.0000
+"tempeffects" "all"
+"errpreset" "moderate"
+"method" "traponly"
+"lteratio" 3.50000
+"relref" "sigglobal"
+"cmin" 0.00000
+"gmin" 1.00000e-12
+TYPE
+"sweep" FLOAT DOUBLE PROP(
+"key" "sweep"
+)
+"LogicV" FLOAT DOUBLE PROP(
+"key" "node"
+)
+"Real" FLOAT DOUBLE PROP(
+"units" ""
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Tau" FLOAT DOUBLE PROP(
+"units" "N*m"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Alpha" FLOAT DOUBLE PROP(
+"units" "rads/s^2"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Omega" FLOAT DOUBLE PROP(
+"units" "rads/s"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Theta" FLOAT DOUBLE PROP(
+"units" "rads"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"F" FLOAT DOUBLE PROP(
+"units" "N"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Imp" FLOAT DOUBLE PROP(
+"units" "m/s^3"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Acc" FLOAT DOUBLE PROP(
+"units" "m/s^2"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Vel" FLOAT DOUBLE PROP(
+"units" "m/s"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Pos" FLOAT DOUBLE PROP(
+"units" "m"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Phi" FLOAT DOUBLE PROP(
+"units" "Wb"
+"key" "node"
+"tolerance" 1.00000e-09
+)
+"V" FLOAT DOUBLE PROP(
+"units" "V"
+"key" "node"
+"tolerance" 1.00000e-09
+)
+"I" FLOAT DOUBLE PROP(
+"units" "A"
+"key" "branch"
+"tolerance" 1.00000e-12
+)
+"MMF" FLOAT DOUBLE PROP(
+"units" "A*turn"
+"key" "node"
+"tolerance" 1.00000e-12
+)
+"Wb" FLOAT DOUBLE PROP(
+"units" "Wb"
+"key" "node"
+"tolerance" 1.00000e-09
+)
+"Temp" FLOAT DOUBLE PROP(
+"units" "C"
+"key" "node"
+"tolerance" 0.000100000
+)
+"Pwr" FLOAT DOUBLE PROP(
+"units" "W"
+"key" "node"
+"tolerance" 1.00000e-09
+)
+"U" FLOAT DOUBLE PROP(
+"units" ""
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"V/Sec" FLOAT DOUBLE PROP(
+"units" "V/s"
+"key" "node"
+"tolerance" 0.000100000
+)
+"I/Sec" FLOAT DOUBLE PROP(
+"units" "A/s"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"1/Sec" FLOAT DOUBLE PROP(
+"units" "1/s"
+"key" "node"
+"tolerance" 0.000100000
+)
+"HOD" FLOAT DOUBLE PROP(
+"units" ""
+"key" "node"
+"tolerance" 0.0100000
+)
+"Q" FLOAT DOUBLE PROP(
+"units" "coul"
+"key" "node"
+"tolerance" 1.00000e-14
+)
+SWEEP
+"time" "sweep" PROP(
+"sweep_direction" 0
+"units" "s"
+"plot" 0
+"grid" 1
+)
+TRACE
+"u" "V"
+"y" "V"
+VALUE
+"time" 0.000000000000000e+00
+"u" 0.000000000000000e+00
+"y" 0.000000000000000e+00
+"time" 3.125000000000000e-02
+"u" 3.125000000000000e-02
+"y" 3.125000000000139e-02
+"time" 6.250000000000000e-02
+"u" 6.250000000000000e-02
+"y" 6.250000000000139e-02
+"time" 9.375000000000000e-02
+"u" 9.375000000000000e-02
+"y" 9.375000000000139e-02
+"time" 1.250000000000000e-01
+"u" 1.250000000000000e-01
+"y" 1.250000000000014e-01
+"time" 1.562500000000000e-01
+"u" 1.562500000000000e-01
+"y" 1.562500000000014e-01
+"time" 1.875000000000000e-01
+"u" 1.875000000000000e-01
+"y" 1.875000000000014e-01
+"time" 2.187500000000000e-01
+"u" 2.187500000000000e-01
+"y" 2.187500000000013e-01
+"time" 2.500000000000000e-01
+"u" 2.500000000000000e-01
+"y" 2.500000000000013e-01
+"time" 2.812500000000000e-01
+"u" 2.812500000000000e-01
+"y" 2.812500000000013e-01
+"time" 3.125000000000000e-01
+"u" 3.125000000000000e-01
+"y" 3.125000000000014e-01
+"time" 3.437500000000000e-01
+"u" 3.437500000000000e-01
+"y" 3.437500000000014e-01
+"time" 3.750000000000000e-01
+"u" 3.750000000000000e-01
+"y" 3.750000000000014e-01
+"time" 4.062500000000000e-01
+"u" 4.062500000000000e-01
+"y" 4.062500000000013e-01
+"time" 4.375000000000000e-01
+"u" 4.375000000000000e-01
+"y" 4.375000000000013e-01
+"time" 4.687500000000000e-01
+"u" 4.687500000000000e-01
+"y" 4.687500000000013e-01
+"time" 5.000000000000000e-01
+"u" 5.000000000000000e-01
+"y" 5.000000000000012e-01
+"time" 5.312500000000000e-01
+"u" 5.312500000000000e-01
+"y" 5.312500007350702e-01
+"time" 5.625000000000000e-01
+"u" 5.625000000000000e-01
+"y" 5.625000007350702e-01
+"time" 5.937500000000000e-01
+"u" 5.937500000000000e-01
+"y" 5.937500007350702e-01
+"time" 6.250000000000000e-01
+"u" 6.250000000000000e-01
+"y" 6.250000007350702e-01
+"time" 6.562500000000000e-01
+"u" 6.562500000000000e-01
+"y" 6.562500007350700e-01
+"time" 6.875000000000000e-01
+"u" 6.875000000000000e-01
+"y" 6.875000007350700e-01
+"time" 7.187500000000000e-01
+"u" 7.187500000000000e-01
+"y" 7.187500007350700e-01
+"time" 7.500000000000000e-01
+"u" 7.500000000000000e-01
+"y" 7.500000007350699e-01
+"time" 7.812500000000000e-01
+"u" 7.812500000000000e-01
+"y" 7.812500007350699e-01
+"time" 8.125000000000000e-01
+"u" 8.125000000000000e-01
+"y" 8.125000007350699e-01
+"time" 8.437500000000000e-01
+"u" 8.437500000000000e-01
+"y" 8.437500007350699e-01
+"time" 8.750000000000000e-01
+"u" 8.750000000000000e-01
+"y" 8.750000007350700e-01
+"time" 9.062500000000000e-01
+"u" 9.062500000000000e-01
+"y" 9.062500007350700e-01
+"time" 9.375000000000000e-01
+"u" 9.375000000000000e-01
+"y" 9.375000007350700e-01
+"time" 9.687500000000000e-01
+"u" 9.687500000000000e-01
+"y" 9.687500007350699e-01
+"time" 1.000000000000000e+00
+"u" 1.000000000000000e+00
+"y" 1.000000000735070e+00
+END
