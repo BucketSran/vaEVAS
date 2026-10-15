@@ -22,15 +22,33 @@ class FrontendDiagnostics(unittest.TestCase):
             self.assertEqual(error['location']['source'], 'timer.va')
             self.assertNotIn('undeclared', error['message'])
 
-    def test_implicit_event_reports_actual_combination_boundary(self):
+    def test_previous_forcing_only_dae_boundary_now_completes(self):
+        # Retain the former diagnostic request as a positive support regression.
         program = compile_sources({'dae.va': model('''@(initial_step) q=1;
             @(timer(0.5,0,1e-12)) q=2;
             V(y,r)<+idt(q+2*V(y,r),0)-pow(V(y,r),2);''', 'real q;')}, [instance()])
+        result = run(program, times=[0,.5,1])
+        column = result['nodes'].index('y')
+        values = [row['voltages'][column] for row in result['solutions']]
+        self.assertAlmostEqual(values[0],0,delta=1e-9)
+        self.assertAlmostEqual(values[1],.5,delta=1e-9)
+        # y'=1 before .5; afterwards 1<y'<=1.5 on this positive branch.
+        self.assertGreater(values[2],1)
+        self.assertLessEqual(values[2],1.25)
+        event, = result['transient']['events']
+        self.assertEqual(event['time'],.5)
+        self.assertEqual(event['before'],[1.])
+        self.assertEqual(event['after'],[2.])
+
+    def test_implicit_event_reports_actual_combination_boundary(self):
+        program = compile_sources({'dae.va': model('''@(initial_step) q=1;
+            @(timer(0.5,0,1e-12)) q=2;
+            V(y,r)<+idt(1+2*V(y,r),0)-pow(V(y,r),2)+q;''', 'real q;')}, [instance()])
         with self.assertRaises(KernelError) as caught:
             run(program, times=[0,1])
         error = caught.exception
         self.assertEqual(error.detail['kind'], 'unsupported_implicit_dynamics')
-        self.assertIn('event-free', error.detail['message'])
+        self.assertIn('implicit event parameter changes algebraic constraints', error.detail['message'])
         self.assertEqual(error.diagnostic['category'], 'unsupported')
         self.assertEqual(error.diagnostic['capability'], 'DYNAMICS')
 
