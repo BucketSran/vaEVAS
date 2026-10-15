@@ -58,6 +58,7 @@ class RoutingTests(unittest.TestCase):
 
     def test_backend_checkers_keep_calibration_without_kernel_regression(self):
         for path in ('experiments/backends/support/checker.py',
+                     'experiments/backends/implicit-event-restart/check.py',
                      'experiments/backends/evidence/archive.py',
                      'evas/validation/paper/criteria.py', 'experiments/performance/test_profile.py'):
             with self.subTest(path=path):

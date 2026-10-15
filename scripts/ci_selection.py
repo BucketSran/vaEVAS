@@ -44,7 +44,8 @@ PROVENANCE_PREFIXES = ('evas/validation/paper/', 'evas/validation/support/',
 CALIBRATION_PREFIXES = (
     'experiments/backends/evidence/', 'experiments/backends/dvs2-spectre-validation/',
     'experiments/backends/spectre-alignment/', 'experiments/backends/event-alignment/',
-    'experiments/backends/sample-edge-filter/', 'experiments/performance/',
+    'experiments/backends/sample-edge-filter/', 'experiments/backends/implicit-event-restart/',
+    'experiments/performance/',
 )
 # These are consumed by development regressions, not only by backend checkers.
 REGRESSION_INPUTS = {
