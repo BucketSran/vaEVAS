@@ -1,0 +1,8 @@
+simulator lang=spectre
+global 0
+ahdl_include "dut.va"
+D (ctrl y) load
+E (ctrl) drive
+opts options reltol=1e-10 vabstol=1e-10
+tran tran stop=1 maxstep=.1 strobeperiod=.25 strobeoutput=all
+save ctrl y

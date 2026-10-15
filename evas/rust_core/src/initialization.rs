@@ -1,9 +1,12 @@
-//! Resolve only external-input affine comparisons before any state/history exists.
+//! Resolve certified zero-time voltage comparisons before any state/history exists.
 use crate::events::check_state;
 use crate::expression::{resolve_selects, validate};
 use crate::interval::Interval as I;
-use crate::ir::{check_schema_version, Error, Expression, Program, StateInitial, StateKind};
+use crate::ir::{check_schema_version, Error, Expression, Program, StateKind};
 use std::collections::{HashMap, HashSet};
+
+#[path = "initialization_nodes.rs"]
+mod initial_nodes;
 
 fn unsupported(message: impl Into<String>) -> Error {
     Error::new("unsupported_initialization", message)
@@ -154,27 +157,7 @@ pub(crate) fn resolve(
     }
     // Collect the entire candidate before changing even this owned program.
     // No EventModel, operator history, calendar, Frame or trace has been created.
-    let values = program
-        .states
-        .iter()
-        .map(|state| {
-            let value = match &state.initial {
-                StateInitial::Constant(value) => *value,
-                StateInitial::Predicate(expression) => {
-                    predicate(expression, &state.instance, &state.kind, &nodes, &allowed).map_err(
-                        |mut error| {
-                            error
-                                .message
-                                .push_str(&format!(" for {}:{}", state.instance, state.name));
-                            error
-                        },
-                    )?
-                }
-            };
-            check_state(value, &state.kind)?;
-            Ok(value)
-        })
-        .collect::<Result<Vec<_>, Error>>()?;
+    let values = initial_nodes::resolve(&program, nodes, allowed)?;
     for (state, value) in program.states.iter_mut().zip(values) {
         state.initial = value.into();
     }
@@ -184,7 +167,7 @@ pub(crate) fn resolve(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ir::{Origin, Relation, State, Term};
+    use crate::ir::{Origin, Relation, State, StateInitial, Term};
 
     fn predicate_program() -> Program {
         let expression = Expression::Select {
@@ -253,6 +236,39 @@ mod tests {
         assert_eq!(resolved.states[0].initial.constant().unwrap(), 1.);
         let again = resolve(original, &driven, &[I::point(0.1)]).unwrap();
         assert_eq!(again.states[0].initial.constant().unwrap(), 0.);
+    }
+
+    #[test]
+    fn late_voltage_dependency_failure_does_not_publish_prior_initial_values() {
+        let mut original = predicate_program();
+        let mut second = original.states[0].clone();
+        second.name = "later".into();
+        let StateInitial::Predicate(Expression::Select { left, .. }) = &mut second.initial else {
+            unreachable!()
+        };
+        **left = Expression::Affine {
+            constant: 0.,
+            terms: vec![Term {
+                node: 2,
+                coefficient: 1.,
+            }],
+        };
+        original.states.push(second);
+        let error = resolve(original.clone(), &["u".into()], &[I::point(0.9)]).unwrap_err();
+        assert_eq!(error.kind, "unsupported_initialization");
+        assert!(error.message.contains("dut:later"));
+        assert!(original
+            .states
+            .iter()
+            .all(|s| matches!(s.initial, StateInitial::Predicate(_))));
+        let recovered = resolve(
+            original,
+            &["u".into(), "y".into()],
+            &[I::point(0.9), I::point(0.1)],
+        )
+        .unwrap();
+        assert_eq!(recovered.states[0].initial.constant().unwrap(), 1.);
+        assert_eq!(recovered.states[1].initial.constant().unwrap(), 0.);
     }
 
     #[test]
