@@ -4,6 +4,11 @@
 面向使用者的支持结论只在[四后端支持范围](../COMPARISON.md)维护，详细接受与拒绝条件由所链接的契约维护。
 收据只证明其固定执行版本；下表仅登记 ID 与证据，供追溯工具读取，不维护第二份支持状态或当前 main 通过率。
 
+[同步读出与原时限验证](../../../experiments/backends/support/r01-sync-readout/README.md)
+补充 TRANSITION、DYNAMICS、CROSS、COMPOSE、TIMER、EVENT-CONDITIONS 和 EVENT-ORDER。
+原物理请求完整执行，保持电压满足原要求；严格阈值引起的整题失败保留。
+三张独立乘积卡只有有限数值和行为证据，两个滤波消费者尚待实现，不新增Q资格。
+
 IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) 合入 main，补充 LANG、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE 和 DEV:scs-input。
 契约见[局部变量与条件支路](../../validation/ANALOG_CONDITIONS_CONTRACT.md)、
 [事件条件与输出记录](../math/events.md)、[连续选路与有理流](../math/continuous.md#selected-flow)。

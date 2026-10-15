@@ -1,7 +1,8 @@
 //! Validated polynomial ODE propagation for integral and filter call-site states.
 //! A Picard enclosure proves a finite trajectory tube. Order-p interval Taylor
 //! coefficients carry accepted uncertainty; order p+1 bounds the remainder.
-//! Polynomial ODEs try p=6/12/24; DAE keeps p=12. Dense queries are immutable.
+//! Explicit fields not proved source-only try p=6/12/24; source-only fields keep
+//! p=12/24 and DAE keeps p=12. Dense queries are immutable.
 use super::*;
 use crate::ir::Tolerances;
 
@@ -1851,7 +1852,18 @@ impl NonlinearContinuous {
                     if end <= start {
                         break;
                     }
-                    if self.implicit.is_none() {
+                    // Keep the original high-order path for a whole field
+                    // proved independent of physical states. Lower order on
+                    // a strobe-truncated source-only step can change its
+                    // representative even when the user tail budget passes.
+                    // This narrows an optimization; it is not a proof of
+                    // bitwise invariance for arbitrary solver grids.
+                    if self.implicit.is_none()
+                        && !self
+                            .functions
+                            .iter()
+                            .all(|f| f.source_only(self.initial.len()))
+                    {
                         Self::charge_trial(remaining_work, start, end, self.step_budget())?;
                         if let Some(step) = self.trial_order(
                             start,
@@ -3116,6 +3128,62 @@ mod tests {
         let v = flow.state_bounds(I::point(1. / 1024.)).unwrap()[0];
         assert!(crate::interval::sum_products_sign(&[(v.lo, 1025.), (-1024., 1.)]).unwrap() <= 0);
         assert!(crate::interval::sum_products_sign(&[(v.hi, 1025.), (-1024., 1.)]).unwrap() >= 0);
+    }
+
+    #[test]
+    fn source_only_rational_forcing_keeps_high_order_with_forced_partitions() {
+        use serde_json::json;
+        let origin = json!({"instance":"dut","source":"source-only.va","line":1,"column":1});
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","y"],
+            "operators":[{"kind":"idt","ic":0,"origin":origin,
+                "input":{"op":"divide",
+                    "left":{"op":"affine","constant":1,"terms":[]},
+                    "right":{"op":"power","exponent":2,
+                        "base":{"op":"affine","constant":1,"terms":[{"node":1,"coefficient":1}]}}}}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},
+                "positive":2,"negative":0,"origin":origin,"rhs":{"op":"operator","operator":0}}]
+        })).unwrap();
+        for strobetimes in [vec![], vec![0.03125, 0.0625, 0.09375]] {
+            let trajectory = Trajectory::new(
+                crate::ir::TransientInputs {
+                    strobetimes,
+                    pwl: vec![vec![[0., 0.], [0.125, 0.125]]],
+                    output_times: vec![0., 0.125],
+                    stop: 0.125,
+                    max_step: 0.125,
+                },
+                1,
+            )
+            .unwrap();
+            let (flow, work) = crate::diagnostics::capture(Default::default(), || {
+                NonlinearContinuous::new(&program, &trajectory, &["u".into()], &[], 0.125)
+            });
+            let flow = flow.unwrap();
+            assert_eq!(
+                work.counters
+                    .get("nonlinear_trial_order_6")
+                    .copied()
+                    .unwrap_or(0),
+                0
+            );
+            assert!(
+                work.counters
+                    .get("nonlinear_accepted_order_12")
+                    .copied()
+                    .unwrap_or(0)
+                    + work
+                        .counters
+                        .get("nonlinear_accepted_order_24")
+                        .copied()
+                        .unwrap_or(0)
+                    > 0
+            );
+            // Integral of 1/(1+t)^2, from zero to 1/8, is exactly 1/9.
+            let value = flow.state_bounds(I::point(0.125)).unwrap()[0];
+            assert!(crate::interval::sum_products_sign(&[(value.lo, 9.), (-1., 1.)]).unwrap() <= 0);
+            assert!(crate::interval::sum_products_sign(&[(value.hi, 9.), (-1., 1.)]).unwrap() >= 0);
+        }
     }
 
     #[test]
