@@ -1,0 +1,74 @@
+{
+  "source_rule": "same VA/stimulus/tolerances; remove only unsupported Spectre save-policy control; preserve explicit strobe times",
+  "va_sha256": "c2e004806fe802408e19d12d621dea05d80e754968fed9de58c932046726c459",
+  "spectre_va_same": true,
+  "kernel": {
+    "sha256": "27e5ba5c1aab354b50dae8e30f9247877c15f34fb3b94771c613afbef84a029c",
+    "reuse": "unchanged main7c15c1cb Rust tree; only SCS saving adapter modified"
+  },
+  "returncode": 0,
+  "saved_times": [
+    0.0,
+    0.25,
+    0.375,
+    0.4375,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "forced_times": [
+    0.125,
+    0.625
+  ],
+  "paired_native_rows": 6,
+  "pairs": [
+    {
+      "time": 0.25,
+      "error_V": {
+        "u": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "time": 0.375,
+      "error_V": {
+        "u": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "time": 0.4375,
+      "error_V": {
+        "u": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "time": 1.0,
+      "error_V": {
+        "u": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "time": 0.125,
+      "error_V": {
+        "u": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "time": 0.625,
+      "error_V": {
+        "u": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "reference_psf_sha256": "96f5929e18c3fec0e9d715a0bc97f240f1f2e03e50e5e46d5966abe09aaaa969",
+  "response_sha256": "d363900bf64de92a0abd02910dc97fbaf139a5759298f5f77e6a21ccef819b1e",
+  "scope": "finite source/linear gain native observations; no Q promotion",
+  "retention": "Models and compact observations are repository-contained; raw PSF, full response, runner and local review are retained in the task output; hashes are not public download links.",
+  "source_corners_receipt_sha256": "9e9d70f6a542538a42c5c2e7d15a29f3aaf67d5994a6c9f6cca333c9b5a335b0",
+  "reference_execution_sha256": "3452b3d12fe7f9e922600e2cf5f90cfa1fa52a0e0a06411e172a2363230e88c1"
+}

@@ -7,6 +7,7 @@ from pathlib import Path
 import subprocess
 import sys
 import unittest
+from unittest.mock import patch
 import warnings
 from evas import CompileError, Instance, compile_sources, transient
 from evas.scs import load_scs, simulate_scs
@@ -33,6 +34,38 @@ class ScsContracts(unittest.TestCase):
         self.assertEqual(actual['solutions'],expected['solutions'])
         self.assertEqual(actual['saved']['values'],[[0,0],[1.5,.5],[3,1],[1.5,.5],[0,0]])
         self.assertEqual(actual['testbench']['effective_tolerances'],dict(vabstol=1e-9,reltol=0))
+
+    def test_saved_grid_preserves_off_grid_source_corners_for_interpolation(self):
+        # A narrow triangle is invisible on [0, .5, 1]. Its independent
+        # answer at .3125 is .5 V at u and 1.5 V at y.
+        self.deck('Vin (u 0) vsource type=pwl wave=[0 0 .25 0 .375 1 .4375 0 2 0]',
+                  tran='tran tran stop=1 maxstep=.5')
+        actual=simulate_scs(self.path,kernel=KERNEL)
+        self.assertEqual(actual['saved']['times'],[0,.25,.375,.4375,.5,1])
+        self.assertEqual(actual['saved']['values'],[[0,0],[0,0],[3,1],[0,0],[0,0],[0,0]])
+        a,b=actual['saved']['times'][1:3]
+        left,right=actual['saved']['values'][1:3]
+        interpolated=[x+(.3125-a)/(b-a)*(y-x) for x,y in zip(left,right)]
+        self.assertEqual(interpolated,[1.5,.5])
+
+    def test_saved_grid_unions_corners_of_multiple_sources_once(self):
+        self.deck('Vin (u 0) vsource type=pwl wave=[0 0 .125 1 1 0]\n'
+                  'Vaux (aux 0) vsource type=pwl wave=[0 0 .125 2 .375 0 1 0]',
+                  tran='tran tran stop=1 maxstep=.5')
+        self.assertEqual(load_scs(self.path).manifest['transient']['output_times'],[0,.125,.375,.5,1])
+
+    def test_saved_grid_keeps_pulse_corners_without_resampling_source(self):
+        source='Vin (u 0) vsource type=pulse val0=0 val1=1 delay=.125 rise=.125 width=.125 fall=.125 period=1'
+        self.deck(source,tran='tran tran stop=1 maxstep=1')
+        actual=simulate_scs(self.path,kernel=KERNEL)
+        self.assertEqual(actual['saved']['times'],[0,.125,.25,.375,.5,1])
+        self.assertEqual([row[1] for row in actual['saved']['values']],[0,0,1,1,0,0])
+
+    def test_source_corners_count_towards_total_output_budget(self):
+        self.deck('Vin (u 0) vsource type=pwl wave=[0 0 .125 0 .25 1 .375 0 1 0]',
+                  tran='tran tran stop=1 maxstep=.5')
+        with patch('evas.scs.POINT_BUDGET',5),self.assertRaisesRegex(CompileError,'output point budget.*source corners'):
+            load_scs(self.path)
 
     def test_iabstol_warns_without_changing_voltage_request_or_solution(self):
         self.deck(extra='opts options reltol=0 vabstol=1n')
