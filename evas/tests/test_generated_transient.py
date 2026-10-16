@@ -12,6 +12,8 @@ reuses the public compile/transient boundary and classifies outcomes honestly
 GUARDS = ["TIMER", "DYNAMICS", "COMPOSE"]
 
 import importlib.util
+from contextlib import redirect_stdout
+import io
 import json
 from fractions import Fraction as Q
 import pathlib
@@ -219,6 +221,18 @@ class BatchOutcomeContracts(unittest.TestCase):
 
 
 class StrictEvidenceCalibration(unittest.TestCase):
+    def test_calibration_cli_reports_a_classified_failure_as_portable_json(self):
+        failure = gen.run_case(HAND_INTEGRAL, KERNEL, mutation={'ic_bias': Q(1, 1024)})
+        self.assertEqual(failure['outcome'], 'numerical_fail')
+        stream = io.StringIO()
+        with patch.object(gen, 'run_case', return_value=failure), redirect_stdout(stream):
+            code = gen.main(['--calibrate-only', '--seeds', '1', '--kernel', str(KERNEL)])
+        self.assertEqual(code, 1)
+        report = json.loads(stream.getvalue())
+        self.assertEqual(report['outcome'], 'numerical_fail')
+        self.assertEqual(report['failure_kind'], 'value_mismatch:y')
+        self.assertEqual(report['expectation'], gen._portable(failure['expectation']))
+
     def test_missing_malformed_and_nonfinite_response_is_not_a_pass(self):
         case=HAND_INTEGRAL; original=gen.execute(case,KERNEL);times=gen.output_times(case)
         mutations=[lambda r:r.update(transient=None),

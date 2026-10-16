@@ -697,7 +697,7 @@ def main(argv=None) -> int:
         case = generate_case(seeds[0])
         outcome = run_case(case, args.kernel)
         if outcome["outcome"] != "pass":
-            print(json.dumps(outcome, indent=1))
+            print(json.dumps(_portable(outcome), indent=1, allow_nan=False))
             return 1
         report = calibrate(case, execute(case, args.kernel), output_times(case))
         print(json.dumps(report, indent=1, sort_keys=True))
