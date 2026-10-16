@@ -1,4 +1,4 @@
-"""Version 22: voltage/event IR with pure arithmetic for isolated observers.
+"""Version 23: voltage/event IR with pure arithmetic for isolated observers.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 22
+SCHEMA_VERSION = 23
 
 
 @dataclass(frozen=True)
@@ -81,7 +81,33 @@ class EventMath:
     op: str = field(default="event_math", init=False)
 
 
-Expression = Affine | Binary | Power | Select | StateRef | OperatorRef | EventMath
+@dataclass(frozen=True)
+class CheckedIndex:
+    index: "Expression"
+    first: int
+    last: int
+    origin: Origin
+    op: str = field(default="checked_index", init=False)
+
+
+@dataclass(frozen=True)
+class CheckedInteger:
+    value: "Expression"
+    origin: Origin
+    op: str = field(default="checked_integer", init=False)
+
+
+@dataclass(frozen=True)
+class ArrayRead:
+    states: tuple[int, ...]
+    index: "Expression"
+    first: int
+    last: int
+    origin: Origin
+    op: str = field(default="array_read", init=False)
+
+
+Expression = ArrayRead | CheckedInteger | CheckedIndex | Affine | Binary | Power | Select | StateRef | OperatorRef | EventMath
 
 
 @dataclass(frozen=True)
@@ -188,6 +214,29 @@ class Conditional:
 
 
 @dataclass(frozen=True)
+class ArrayWrite:
+    states: tuple[int, ...]
+    index: Expression
+    rhs: Expression
+    first: int
+    last: int
+    origin: Origin
+    kind: str = field(default="array_write", init=False)
+
+
+@dataclass(frozen=True)
+class Loop:
+    initialize: tuple["Assignment | Conditional | Display | Loop | ArrayWrite", ...]
+    relation: Literal["lt", "le", "gt", "ge"]
+    left: Expression
+    right: Expression
+    body: tuple["Assignment | Conditional | Display | Loop | ArrayWrite", ...]
+    update: tuple["Assignment | Conditional | Display | Loop | ArrayWrite", ...]
+    origin: Origin
+    kind: str = field(default="loop", init=False)
+
+
+@dataclass(frozen=True)
 class Display:
     format: str
     args: tuple[Expression, ...]
@@ -241,7 +290,7 @@ class OrTrigger:
 @dataclass(frozen=True)
 class Event:
     trigger: CrossTrigger | TimerTrigger | HeldTimerTrigger | OrTrigger | FinalStepTrigger | InitialStepTrigger
-    body: tuple[Assignment | Conditional | Display, ...]
+    body: tuple[Assignment | Conditional | Display | Loop | ArrayWrite, ...]
     origin: Origin
 
 

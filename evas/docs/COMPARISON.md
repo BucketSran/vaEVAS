@@ -1,5 +1,8 @@
 # 四后端支持对比
 
+[有界运行期事件控制](../../experiments/backends/support/event-runtime-control/README.md)新增隔离观察者的循环和数组支持；三个实际 Spectre 控制通过原 100 nV 门槛。下表固定行范围、旧版本身份和 Q 成绩保持不变；原 CDS/MUX 整题仍未完成。
+
+
 **这张表比较固定用例中的支持和精度。** 每个行名链接到[本版必测范围](../validation/paper/COVERAGE.md#summary-scopes)。
 同一行对四个后端使用相同用例和验收要求；后端可以使用不同配置达到要求。
 

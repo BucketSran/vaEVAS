@@ -118,7 +118,10 @@ fn interval_evaluate(expr: &Expression, values: &[I]) -> Result<IntervalValue, E
     let count = values.len();
     let mut gradient = vec![I::ZERO; count];
     let value = match expr {
-        Expression::EventMath { .. }
+        Expression::ArrayRead { .. }
+        | Expression::CheckedInteger { .. }
+        | Expression::CheckedIndex { .. }
+        | Expression::EventMath { .. }
         | Expression::State { .. }
         | Expression::Operator { .. }
         | Expression::Select { .. } => {

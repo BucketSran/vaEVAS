@@ -8,7 +8,7 @@ from .errors import CompileError
 from .ir import Affine
 from .lowering import lower
 from .elaboration import elaborate_loops
-from .syntax import Assignment, Conditional, ContributionStatement, Event, Display
+from .syntax import Loop, Assignment, Conditional, ContributionStatement, Event, Display
 from .integer_constants import check_integer_model, check_integer_expression
 
 
@@ -87,7 +87,10 @@ def scalarize_nodes(model, parameters):
             if isinstance(s,Event):
                 fail('events under an analog conditional require runtime activation support',
                      s.token, code='unsupported_event_context')
-            if isinstance(s, Display):
+            if isinstance(s, Loop):
+                result.append(replace(s, start=expression(s.start), limit=expression(s.limit),
+                                      update=expression(s.update), body=body(s.body)))
+            elif isinstance(s, Display):
                 result.append(replace(s, args=tuple(expression(a) for a in s.args)))
             elif isinstance(s,Conditional):
                 result.append(replace(s,left=expression(s.left),right=expression(s.right),

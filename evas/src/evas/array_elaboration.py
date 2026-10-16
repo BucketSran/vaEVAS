@@ -12,7 +12,7 @@ from dataclasses import replace
 from .errors import CompileError
 from .ir import Affine
 from .lowering import lower
-from .syntax import Assignment, Conditional, Expr, Display
+from .syntax import Loop, Assignment, Conditional, Expr, Display
 from .elaboration import unroll_loops
 
 ARRAY_BUDGET = 4096
@@ -134,7 +134,13 @@ def scalarize_arrays(model, parameter):
     def body(statements, dynamic=False):
         result = []
         for statement in statements:
-            if isinstance(statement, Conditional):
+            if isinstance(statement, Loop):
+                if not dynamic:
+                    fail('runtime loops require an event or final_step body', statement.token)
+                result.append(replace(statement, start=expression(statement.start, dynamic),
+                    limit=expression(statement.limit, dynamic), update=expression(statement.update, dynamic),
+                    body=body(statement.body, dynamic)))
+            elif isinstance(statement, Conditional):
                 result.append(replace(statement, left=expression(statement.left, dynamic),
                                       right=expression(statement.right, dynamic),
                                       then_body=body(statement.then_body, dynamic),

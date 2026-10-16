@@ -1,0 +1,222 @@
+{
+  "analysis": "runtime-observer-finite-v1",
+  "cases": {
+    "sequential": {
+      "status": "PASS",
+      "native_reference_display": {
+        "te": 0.5,
+        "n": 3.0,
+        "i": 3.0,
+        "acc": 10.0,
+        "a0": 1.0,
+        "a1": 3.0,
+        "a2": 6.0,
+        "a3": 0.0
+      },
+      "evas_display": {
+        "te": 0.5,
+        "n": 3.0,
+        "i": 3.0,
+        "acc": 10.0,
+        "a0": 1.0,
+        "a1": 3.0,
+        "a2": 6.0,
+        "a3": 0.0
+      },
+      "exact_integer_answer": {
+        "n": 3,
+        "i": 3,
+        "acc": 10,
+        "a0": 1,
+        "a1": 3,
+        "a2": 6,
+        "a3": 0
+      },
+      "paired_integer_difference": 0,
+      "event_time_s": 0.5,
+      "reference_minus_evas_time_s": 0.0,
+      "native_rows": 5,
+      "all_required_native_times_present": true,
+      "max_voltage_error_V": {
+        "spectre_vs_one": 0.0,
+        "evas_vs_one": 0.0,
+        "paired": 0.0
+      },
+      "budget_V": 1e-07,
+      "effective_settings": {
+        "version": "21.1.0.509.isr12",
+        "reltol": "1.00000e-09",
+        "abstol(V)": "1.00000e-07",
+        "maxstep": "0.250000",
+        "stop": "1.00000",
+        "method": "traponly",
+        "lteratio": "3.50000",
+        "relref": "sigglobal"
+      },
+      "IR_items": 363,
+      "IR_depth": 16,
+      "primitive_counts": {
+        "integer": 7,
+        "timer": 2,
+        "assign": 4,
+        "affine": 7,
+        "loop": 1,
+        "state": 18,
+        "array_write": 2,
+        "checked_index": 5,
+        "checked_integer": 3,
+        "add": 5,
+        "if": 1,
+        "array_read": 3,
+        "display": 1
+      }
+    },
+    "nested": {
+      "status": "PASS",
+      "native_reference_display": {
+        "te": 0.5,
+        "n": 2.0,
+        "i": 2.0,
+        "j": 3.0,
+        "acc": 21.0,
+        "a0": 3.0,
+        "a1": 5.0,
+        "a2": 7.0
+      },
+      "evas_display": {
+        "te": 0.5,
+        "n": 2.0,
+        "i": 2.0,
+        "j": 3.0,
+        "acc": 21.0,
+        "a0": 3.0,
+        "a1": 5.0,
+        "a2": 7.0
+      },
+      "exact_integer_answer": {
+        "n": 2,
+        "i": 2,
+        "j": 3,
+        "acc": 21,
+        "a0": 3,
+        "a1": 5,
+        "a2": 7
+      },
+      "paired_integer_difference": 0,
+      "event_time_s": 0.5,
+      "reference_minus_evas_time_s": 0.0,
+      "native_rows": 5,
+      "all_required_native_times_present": true,
+      "max_voltage_error_V": {
+        "spectre_vs_one": 0.0,
+        "evas_vs_one": 0.0,
+        "paired": 0.0
+      },
+      "budget_V": 1e-07,
+      "effective_settings": {
+        "version": "21.1.0.509.isr12",
+        "reltol": "1.00000e-09",
+        "abstol(V)": "1.00000e-07",
+        "maxstep": "0.250000",
+        "stop": "1.00000",
+        "method": "traponly",
+        "lteratio": "3.50000",
+        "relref": "sigglobal"
+      },
+      "IR_items": 315,
+      "IR_depth": 16,
+      "primitive_counts": {
+        "integer": 7,
+        "timer": 2,
+        "assign": 6,
+        "affine": 8,
+        "loop": 2,
+        "state": 18,
+        "array_write": 1,
+        "checked_index": 3,
+        "add": 6,
+        "array_read": 2,
+        "checked_integer": 2,
+        "display": 1
+      }
+    },
+    "quotient": {
+      "status": "PASS",
+      "native_reference_display": {
+        "te": 0.5,
+        "n": 4.0,
+        "i": 2.0,
+        "q": 2.0,
+        "rem": 1.0,
+        "acc": 5.0,
+        "a0": 0.0,
+        "a1": 2.0,
+        "a2": 3.0,
+        "a3": 0.0
+      },
+      "evas_display": {
+        "te": 0.5,
+        "n": 4.0,
+        "i": 2.0,
+        "q": 2.0,
+        "rem": 1.0,
+        "acc": 5.0,
+        "a0": 0.0,
+        "a1": 2.0,
+        "a2": 3.0,
+        "a3": 0.0
+      },
+      "exact_integer_answer": {
+        "n": 4,
+        "i": 2,
+        "q": 2,
+        "rem": 1,
+        "acc": 5,
+        "a0": 0,
+        "a1": 2,
+        "a2": 3,
+        "a3": 0
+      },
+      "paired_integer_difference": 0,
+      "event_time_s": 0.5,
+      "reference_minus_evas_time_s": 0.0,
+      "native_rows": 5,
+      "all_required_native_times_present": true,
+      "max_voltage_error_V": {
+        "spectre_vs_one": 0.0,
+        "evas_vs_one": 0.0,
+        "paired": 0.0
+      },
+      "budget_V": 1e-07,
+      "effective_settings": {
+        "version": "21.1.0.509.isr12",
+        "reltol": "1.00000e-09",
+        "abstol(V)": "1.00000e-07",
+        "maxstep": "0.250000",
+        "stop": "1.00000",
+        "method": "traponly",
+        "lteratio": "3.50000",
+        "relref": "sigglobal"
+      },
+      "IR_items": 835,
+      "IR_depth": 21,
+      "primitive_counts": {
+        "integer": 9,
+        "timer": 2,
+        "assign": 6,
+        "affine": 52,
+        "checked_integer": 25,
+        "select": 12,
+        "add": 23,
+        "state": 30,
+        "multiply": 3,
+        "loop": 1,
+        "array_write": 1,
+        "checked_index": 2,
+        "array_read": 1,
+        "display": 1
+      }
+    }
+  },
+  "scope": "Three development fixtures at native samples/callbacks; not original CDS recovery, integrated F rerun, general operator qualification or new Q."
+}

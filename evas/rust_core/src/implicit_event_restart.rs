@@ -27,6 +27,11 @@ fn state_only(expr: &Expression) -> Result<(), Error> {
 fn body_supported(body: &[Statement]) -> Result<(), Error> {
     for statement in body {
         match statement {
+            Statement::ArrayWrite { .. } | Statement::Loop { .. } => {
+                return Err(unsupported_event(
+                    "implicit timer bodies do not execute runtime array writes or loops",
+                ))
+            }
             Statement::Assign(a) => state_only(&a.rhs)?,
             Statement::Display { args, .. } => {
                 for a in args {
@@ -471,6 +476,22 @@ pub(super) fn run(
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn runtime_loop_and_array_write_stay_outside_implicit_bridge_even_in_dead_arm() {
+        let (program, _) = fixture();
+        let origin = program.events[0].origin.clone();
+        let c = |value| json!({"op":"affine","constant":value,"terms":[]});
+        let array = json!({"kind":"array_write","states":[0],"index":c(0.),"first":0,"last":0,"rhs":c(1.),"origin":origin});
+        let looping = json!({"kind":"loop","initialize":[{"kind":"assign","state":0,"rhs":c(0.)}],"relation":"lt","left":{"op":"state","state":0},"right":c(1.),"body":[],"update":[{"kind":"assign","state":0,"rhs":c(1.)}],"origin":origin});
+        for statement in [array, looping] {
+            let guarded: Statement = serde_json::from_value(json!({"kind":"if","relation":"lt","left":c(1.),"right":c(0.),"then_body":[statement],"else_body":[],"origin":origin})).unwrap();
+            assert_eq!(
+                body_supported(&[guarded]).unwrap_err().kind,
+                "unsupported_implicit_dynamics"
+            );
+        }
+    }
 
     fn fixture() -> (Program, Trajectory) {
         let p: Program = serde_json::from_str(include_str!(

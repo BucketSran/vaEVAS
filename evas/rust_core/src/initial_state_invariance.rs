@@ -60,6 +60,7 @@ fn body(
     for s in statements {
         budget.take(1)?;
         match s {
+            Statement::ArrayWrite { .. } | Statement::Loop { .. } => return None,
             Statement::Assign(a) => local[a.state] = transfer(&a.rhs, p, local, budget)?,
             // This proof concerns state transfer only. Runtime still validates
             // and captures displays through the ordinary/candidate event path.

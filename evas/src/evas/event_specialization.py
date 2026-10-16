@@ -12,13 +12,55 @@ from .errors import CompileError
 from .ir import Affine, Binary, Origin, Power, Select
 from .limits import MAX_IR_ITEMS, check_ir
 from .lowering import lower, lower_decision
-from .syntax import Assignment, Conditional, Display, OPERATOR_NAMES, DECISION_NAMES
+from .syntax import Loop, Assignment, Conditional, Display, OPERATOR_NAMES, DECISION_NAMES
 from .display import validate_format
 
 PURE_MATH = frozenset(("sin", "cos", "exp", "ln", "sqrt"))
 VALUE_OPS = frozenset(("number", "parameter", "voltage", "time", "index", "checked",
                        "+", "-", "*", "/", "%", "power", "unary+", "unary-")) | DECISION_NAMES | PURE_MATH
 UNKNOWN = object()
+
+
+
+def parameter_value(expr, parameters, memo):
+    key = id(expr)
+    if key in memo:
+        return memo[key][1]
+    if expr.op == "number":
+        result = float(expr.value)
+    elif expr.op == "parameter":
+        result = parameters.get(str(expr.value), UNKNOWN)
+    else:
+        args = [parameter_value(arg, parameters, memo) for arg in expr.args]
+        result = UNKNOWN
+        if expr.op == "checked":
+            result = args[0]
+        elif expr.op == "&&":
+            if any(a is not UNKNOWN and not a for a in args):
+                result = 0.0
+            elif UNKNOWN not in args:
+                result = float(bool(args[0]) and bool(args[1]))
+        elif expr.op == "||":
+            if any(a is not UNKNOWN and a for a in args):
+                result = 1.0
+            elif UNKNOWN not in args:
+                result = 0.0
+        elif UNKNOWN not in args:
+            if expr.op in ("<", "<=", ">", ">=", "==", "!="):
+                a, b = args
+                result = float({"<": a < b, "<=": a <= b, ">": a > b,
+                                ">=": a >= b, "==": a == b, "!=": a != b}[expr.op])
+            elif expr.op == "unary!":
+                result = float(not args[0])
+            elif expr.op in ("unary+", "unary-"):
+                result = args[0] if expr.op == "unary+" else -args[0]
+            elif expr.op in ("+", "-", "*"):
+                a, b = args
+                result = {"+": lambda: a+b, "-": lambda: a-b, "*": lambda: a*b}[expr.op]()
+                if not math.isfinite(result):
+                    result = UNKNOWN
+    memo[key] = (expr, result)
+    return result
 
 
 def audit_event_body(compiler, statements):
@@ -62,9 +104,10 @@ def audit_event_body(compiler, statements):
             pending.extend(item.args)
         return False
 
-    def audit_lower(root, *, integer_assignment_root=False):
+    def audit_lower(root, *, integer_assignment_root=False, static_integer_audit=False):
         options = dict(preserve_structure=True, node_declarations=True,
-                       integer_assignment_root=integer_assignment_root)
+                       integer_assignment_root=integer_assignment_root,
+                       static_integer_audit=static_integer_audit)
         if needs_choices(root):
             options.update(decisions=selection,
                            validate_decision=compiler.validate_decision_expression,
@@ -150,7 +193,7 @@ def audit_event_body(compiler, statements):
         memo[id(root)] = (root, value)
         return value
 
-    def shape(root, *, integer_assignment=False):
+    def shape(root, *, integer_assignment=False, parameter_dead=False):
         nonlocal work
         pending = [root]
         while pending:
@@ -186,38 +229,55 @@ def audit_event_body(compiler, statements):
                 # The primary value may be unused mathematics. Every retained
                 # function obligation keeps its original lowering boundary.
                 for obligation in item.args[1:]:
-                    audit_lower(obligation)
+                    audit_lower(obligation, static_integer_audit=parameter_dead)
             if item.op in ("+", "-", "*", "/", "%", "unary+", "unary-") and compiler.integer_type(item):
                 # A real destination does not erase integer arithmetic in its
                 # source. Only a complete integer assignment may defer its
                 # final stored-value check to the kernel.
-                audit_lower(item, integer_assignment_root=(integer_assignment and item is root))
+                audit_lower(item, integer_assignment_root=(integer_assignment and item is root),
+                            static_integer_audit=parameter_dead)
             pending.extend(item.args)
 
-    def control(expr):
-        shape(expr)
-        audit_lower(expr)
+    def control(expr, parameter_dead=False):
+        shape(expr, parameter_dead=parameter_dead)
+        audit_lower(expr, static_integer_audit=parameter_dead)
         # Ordinary condition dependency/degree checks keep their existing
         # kernel boundary, including conditions in parameter-unselected code.
 
-    def body(items):
+    parameter_memo = {}
+
+    def parameter_predicate(statement):
+        a = parameter_value(statement.left, compiler.cache, parameter_memo)
+        b = parameter_value(statement.right, compiler.cache, parameter_memo)
+        if a is UNKNOWN or b is UNKNOWN:
+            return None
+        return {"<":a<b, "<=":a<=b, ">":a>b, ">=":a>=b}[statement.relation]
+
+    def body(items, parameter_dead=False):
         nonlocal work
         for statement in items:
             work += 1
             if work > MAX_IR_ITEMS:
                 fail("original event audit exceeds statement budget", statement, "resource_budget")
-            if isinstance(statement, Conditional):
-                control(statement.left)
-                control(statement.right)
-                body(statement.then_body)
-                body(statement.else_body)
+            if isinstance(statement, Loop):
+                compiler.validate_runtime_loop(statement)
+                for expr in (statement.start, statement.limit, statement.update):
+                    shape(expr, integer_assignment=True, parameter_dead=parameter_dead)
+                    audit_lower(expr, integer_assignment_root=True, static_integer_audit=parameter_dead)
+                body(statement.body, parameter_dead)
+            elif isinstance(statement, Conditional):
+                control(statement.left, parameter_dead)
+                control(statement.right, parameter_dead)
+                selected = parameter_predicate(statement)
+                body(statement.then_body, parameter_dead or selected is False)
+                body(statement.else_body, parameter_dead or selected is True)
             elif isinstance(statement, Display):
                 try:
                     validate_format(statement.format, len(statement.args))
                 except ValueError as error:
                     fail(str(error), statement)
                 for arg in statement.args:
-                    shape(arg)
+                    shape(arg, parameter_dead=parameter_dead)
             elif isinstance(statement, Assignment):
                 if statement.index is not None:
                     compiler._dynamic_index(statement.index, statement.token, "write", statement.name)
@@ -229,7 +289,7 @@ def audit_event_body(compiler, statements):
                     if statement.name not in compiler.state_ids:
                         fail("assignment target must be an instance state", statement)
                     kind = compiler.model.variables[statement.name]
-                shape(statement.rhs, integer_assignment=(kind == "integer"))
+                shape(statement.rhs, integer_assignment=(kind == "integer"), parameter_dead=parameter_dead)
                 if needs_choices(statement.rhs):
                     budget_value = resource_tree(statement.rhs)
                     origin = Origin(statement.token.source or compiler.model.source,
@@ -240,7 +300,8 @@ def audit_event_body(compiler, statements):
                     compiler.event_assignment(compiler.state_ids.get(statement.name, 0),
                                               budget_value, origin)
                 if kind == "integer":
-                    value = audit_lower(statement.rhs, integer_assignment_root=True)
+                    value = audit_lower(statement.rhs, integer_assignment_root=True,
+                                        static_integer_audit=parameter_dead)
                     if not compiler.integral(value):
                         fail("integer assignment requires integral state arithmetic", statement)
             else:
@@ -253,49 +314,14 @@ def specialize_event_body(statements, parameters):
     memo = {}
 
     def known(expr):
-        key = id(expr)
-        if key in memo:
-            return memo[key][1]
-        if expr.op == "number":
-            result = float(expr.value)
-        elif expr.op == "parameter":
-            result = parameters.get(str(expr.value), UNKNOWN)
-        else:
-            args = [known(arg) for arg in expr.args]
-            result = UNKNOWN
-            if expr.op == "checked":
-                result = args[0]
-            elif expr.op == "&&":
-                if any(a is not UNKNOWN and not a for a in args):
-                    result = 0.0
-                elif UNKNOWN not in args:
-                    result = float(bool(args[0]) and bool(args[1]))
-            elif expr.op == "||":
-                if any(a is not UNKNOWN and a for a in args):
-                    result = 1.0
-                elif UNKNOWN not in args:
-                    result = 0.0
-            elif UNKNOWN not in args:
-                if expr.op in ("<", "<=", ">", ">=", "==", "!="):
-                    a, b = args
-                    result = float({"<": a < b, "<=": a <= b, ">": a > b,
-                                    ">=": a >= b, "==": a == b, "!=": a != b}[expr.op])
-                elif expr.op == "unary!":
-                    result = float(not args[0])
-                elif expr.op in ("unary+", "unary-"):
-                    result = args[0] if expr.op == "unary+" else -args[0]
-                elif expr.op in ("+", "-", "*"):
-                    a, b = args
-                    result = {"+": lambda: a+b, "-": lambda: a-b, "*": lambda: a*b}[expr.op]()
-                    if not math.isfinite(result):
-                        result = UNKNOWN
-        memo[key] = (expr, result)
-        return result
+        return parameter_value(expr, parameters, memo)
 
     def body(items):
         result = []
         for statement in items:
-            if isinstance(statement, Conditional):
+            if isinstance(statement, Loop):
+                result.append(replace(statement, body=body(statement.body)))
+            elif isinstance(statement, Conditional):
                 left, right = known(statement.left), known(statement.right)
                 if left is not UNKNOWN and right is not UNKNOWN:
                     take_yes = {"<": left < right, "<=": left <= right,

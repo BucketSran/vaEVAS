@@ -1,0 +1,75 @@
+{
+  "base": "969b1b88770c03b2bc519e8397b7e0969be9947a",
+  "schema_version": 23,
+  "kernel": {
+    "kernel_sha256": "e87dac60d88a5e66e70435d67957ad8fd2bec91a15674847d943141b2d741865",
+    "source": "main969 fixed archive + minimalIR23 only",
+    "profile": "dev unoptimized; debug symbols0, CARGO_INCREMENTAL0, package0.18.0/IR23 candidate",
+    "CARGO_TARGET_DIR": {
+      "availability": "local-only",
+      "basename": "build-target-main969-ir23",
+      "private_path_string_sha256": "84cb04cfa5f9a4d04f24c56b4bdbd5b95b358f03bd58ba05c73481e430602de3"
+    },
+    "fixed_kernel": {
+      "availability": "local-only",
+      "basename": "evas-kernel",
+      "private_path_string_sha256": "23d1cce5224c0b23a154b4abad98d20ae956d873356a8744a0b4912474922883"
+    },
+    "utc": "2026-10-15T15:36:28.684103+00:00"
+  },
+  "diff_sha256": "a44a10df41b3f93e5ebf6c1c7b1df498274485b0ebda1298d1455e70f9405e79",
+  "source_manifest_sha256": "2c58f17bd7f32fdb2278afe337a8ced93a7dc95394f0788755a03ffc0277e43d",
+  "source_count": 380,
+  "changed_count": 34,
+  "fixture_regeneration": {
+    "compiler": "main969+IR23 Python candidate; true compilation from original VA and original deck instance mapping",
+    "source_VA_sha256": "da81ea1776a0acbabcd9c1a97e8ad3e7df0ae0caa74072ccfd148f39eaa76ce3",
+    "source_SCS_sha256": "8180ce27015d92c2dd9be9de029c1d912af026c1c09061469c2c885ed8889a22",
+    "old_program_sha256": "a00096a0e5d6a6d7c5560ab832ba915d2eed0770f729a6b4a743a69aaf2e5c71",
+    "new_program_sha256": "8b7e3484512ad644b1eeea4d1180bfa015fc4c754274ccfca2f487dbedc87ad7",
+    "old_schema": 22,
+    "new_schema": 23,
+    "other_fields_structurally_identical": true,
+    "float_values_and_all_origin_fields": "exact Python JSON structural equality; no normalization",
+    "sdist_manifest_entry": "include tests/fixtures/implicit-event-restart/program.json",
+    "ZOOM_fixture_source": {
+      "availability": "local-only",
+      "basename": "dut.va",
+      "private_path_string_sha256": "8c1ae2c22b143d8f8665bcf4a8a30d247e21f7a43629b457f28b7718835e8a0c"
+    },
+    "ZOOM_fixture_sha256": "112dafc4f54cc40dc4d0431aac25c59dfda9dc175c11c637d46ee29e2d96191c",
+    "ZOOM_copy_sha256": "112dafc4f54cc40dc4d0431aac25c59dfda9dc175c11c637d46ee29e2d96191c",
+    "numeric_types_and_all_f64_bits_identical": true
+  },
+  "sdist": {
+    "archive_sha256": "9d10224972d52eb4afad25899dc0f9812fe897089bc40c940b28a91317133d2d",
+    "member": "evas_rebuild-0.18.0/tests/fixtures/implicit-event-restart/program.json",
+    "fixture_sha256": "8b7e3484512ad644b1eeea4d1180bfa015fc4c754274ccfca2f487dbedc87ad7",
+    "member_exact_bytes": true,
+    "candidate_package_version": "0.18.0; root owns final 0.19.0 update",
+    "method": "isolated D venv build --sdist --no-isolation",
+    "first_environment_failures": [
+      "host Python missing build",
+      "host Python missing setuptools"
+    ]
+  },
+  "raw_assets": "Kernel, rawPSF, full stdout and private setup remain local-only. Public hashes are identities, not download availability.",
+  "Spectre_reuse": "Three reference native runs actual runtime-raw-v2, same VA/SCS hashes. Current main969 kernel repeated exact integer/te and five native u points; no new Spectre run.",
+  "excluded": [
+    "core20/28",
+    "history extensions",
+    "Unit/Dense projection",
+    "Arc/proof reuse",
+    "selected-cache",
+    "classification",
+    "phase-group static/variable test migration"
+  ],
+  "unchanged_main_tests": {
+    "test_static_loops.py": "9b1e9d685a529c8f5c03b48ab4d7a4be6d8c578c7040e25af04c1456cea01a31",
+    "test_variable_arrays.py": "39224a71f92f82a88c662a186f0d8862b0249cb01b333637b9f66e017c38e2ed"
+  },
+  "public_transcription": {
+    "original_receipt_sha256": "49962e2840ef317c0b2434e9d8f71854c9604fa7ea039b77daf46a6d8710f3c5",
+    "rule": "Machine-local path values replaced by explicit local-only locators; original receipt unchanged in local fixed package. Numerical hashes/verdicts retained."
+  }
+}

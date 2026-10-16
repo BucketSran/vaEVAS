@@ -1669,3 +1669,7 @@ python3 -B experiments/backends/support/precision_recovery_report.py \
 验证日志保存在同一运行目录。Rust 测试 234 项通过、1 项忽略；Python 选定的滤波、误差传播、
 连续动态、事件组合和历史回归 117 项通过；支持分析器校准 26 项通过，论文 checker 校准 62 项通过。
 这些回归检验此次共同数值路径的消费者，不替代上面的实际 Spectre 对照。
+
+### 有界事件循环与数组
+
+[IR23 交付与实际参考](event-runtime-control/README.md)记录有限运行期循环、integer 检查和数组事务；[独立输入与 checker](../../../evas/validation/event_runtime/README.md)保存三个原生参考控制与校准。原 CDS/MUX 整题结果及表中旧 Q 成绩不变。

@@ -127,7 +127,10 @@ pub(crate) fn bind(
     states: &[f64],
 ) -> Result<Expression, Error> {
     Ok(match expr {
-        Expression::EventMath { .. } => {
+        Expression::ArrayRead { .. }
+        | Expression::CheckedInteger { .. }
+        | Expression::CheckedIndex { .. }
+        | Expression::EventMath { .. } => {
             return Err(Error::new(
                 "unsupported_display",
                 "pure event mathematics requires event evaluation",

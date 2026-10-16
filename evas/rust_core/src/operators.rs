@@ -835,7 +835,10 @@ impl ResetExpression {
 fn reset_terms(expr: &Expression) -> Result<ResetTerms, Error> {
     let mut result = ResetTerms::default();
     match expr {
-        Expression::EventMath { .. } => {
+        Expression::ArrayRead { .. }
+        | Expression::CheckedInteger { .. }
+        | Expression::CheckedIndex { .. }
+        | Expression::EventMath { .. } => {
             return Err(Error::new(
                 "unsupported_operator",
                 "pure event mathematics cannot reset physical history",
@@ -922,7 +925,10 @@ fn reset_exact_sign(terms: &ResetTerms, states: &[I]) -> Result<Option<I>, Error
 
 fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
     let value = match expr {
-        Expression::EventMath { .. } => {
+        Expression::ArrayRead { .. }
+        | Expression::CheckedInteger { .. }
+        | Expression::CheckedIndex { .. }
+        | Expression::EventMath { .. } => {
             return Err(Error::new(
                 "unsupported_operator",
                 "pure event mathematics cannot reset physical history",
