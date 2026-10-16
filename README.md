@@ -119,6 +119,10 @@ main 保留持续维护的工具与支撑公开结论的精简证据；已结束
 EVAS 从[四后端支持范围](evas/docs/COMPARISON.md)选择问题，benchmark 从[候选登记](benchmark/material/draftbench/CANDIDATES.md)
 和[题库入口](benchmark/README.md)继续。候选与设计稿不等于已发布任务。
 
+接续本地任务时，先看主 checkout 外层项目 README 的当前任务，再按需进入组件文档。
+同级 `worktrees/README.md` 只登记工作区用途与去向；具体规则见
+[工作区交接](docs/contributing/workspaces.md#workspace-visibility-and-handoff)。
+
 共享电路仿真 harness 在独立仓库维护执行与结果回收，目标是接入当前 EVAS 和远端仿真器。
 涉及两仓修改时，按[跨仓库协作](docs/contributing/workspaces.md#cross-repository-work)加载各自指引、约定归属并完成联调。
 EVAS 算法与评分规则仍在本仓库维护；模拟电路课程和上一阶段论文按需作为外部材料查阅。

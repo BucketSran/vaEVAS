@@ -1,0 +1,120 @@
+{
+  "scope": "held-only arithmetic nested Select; not complete MUX",
+  "budget_V": 1e-07,
+  "kernel_sha256": "2150166ca5d0edd3150fbab0a974c9e7a15b1e2340ebebbe3afb42c695d9f30d",
+  "source_script_sha256": "a75b0d78dee7347a8d499cc33c216efa23a3d5fcc88a4060ad262841104b4433",
+  "reference_tool": {
+    "version": "sub-version  21.1.0.509.isr12 \n",
+    "spectre_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f"
+  },
+  "reference_output_manifest_sha256": "6588023d1eabf92cdf7b8a18b3c929f14d5875727786650d20ab063b293fe204",
+  "raw_availability": "local-only, not included in repository",
+  "profiles": "Original traponly SCS is retained and rejected by EVAS. Same VA is compiled via public API with separate explicit EVAS controls; reference effective settings above are read from PSF.",
+  "cases": [
+    {
+      "case": "held-nested-select",
+      "reference_execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "elapsed_seconds": 14.543569833040237
+      },
+      "same_VA_sha256": "3c536b8eb6526af4a7b63f3f4c44af71fa9c3648c8a77537ba26d0d881e75338",
+      "public_original_SCS_sha256": "73f2ec457bef0ca1acc46bef09dd67872a65f2c200d733d57ad318e0ae76ec3f",
+      "reference_SCS_sha256": "305b9cfc9991a44cbf01e17984b5f945098c8e945ead74eaccf58b5f7fdb8473",
+      "reference_psf_sha256": "9402af661078210d500d321fd5e21242993d3c84706acbd2a8aec624c49c3654",
+      "reference_native_count": 16,
+      "reference_native_max_math_error_V": 0.0,
+      "reference_max_print_cell_error_V": 2.5e-15,
+      "requested_forced": [
+        0,
+        0.5,
+        1,
+        1.000000001,
+        1.125,
+        1.25,
+        1.5,
+        2,
+        2.000000001,
+        2.125,
+        2.25,
+        2.5,
+        3,
+        3.000000001,
+        3.125,
+        3.25
+      ],
+      "reference_missing_exact_forced": [],
+      "reference_effective_PSF_settings": {
+        "reltol": "1.00000e-11",
+        "abstol(V)": "1.00000e-12",
+        "method": "\"traponly\"",
+        "maxstep": "0.00781250",
+        "errpreset": "\"conservative\""
+      },
+      "original_SCS_rejection": "inputs/held-nested-select/tb.scs:5:73: expected a finite numeric literal or preceding constant, got 'traponly'",
+      "EVAS_all_forced_count": 16,
+      "EVAS_max_math_error_V": 0.0,
+      "exact_common_count": 16,
+      "exact_pair_max_error_V": 0.0,
+      "EVAS_effective_controls": {
+        "absolute_V": 1e-12,
+        "relative": 1e-10,
+        "stop_s": 3.25,
+        "max_step_s": 0.01,
+        "max_step_applied": true
+      },
+      "finite_check_pass": true
+    },
+    {
+      "case": "held-hidden-feedback",
+      "reference_execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "elapsed_seconds": 13.407117672264576
+      },
+      "same_VA_sha256": "fd27d20a0d06de77b8d7f453d088c40a976f42ed532227d3a95d3c9708b4c7fa",
+      "public_original_SCS_sha256": "73f2ec457bef0ca1acc46bef09dd67872a65f2c200d733d57ad318e0ae76ec3f",
+      "reference_SCS_sha256": "305b9cfc9991a44cbf01e17984b5f945098c8e945ead74eaccf58b5f7fdb8473",
+      "reference_psf_sha256": "478bda05b8ba6dbc012ae2d9fa54d1fbe008fb8c0517fa05b06523f9b6a7324e",
+      "reference_native_count": 16,
+      "reference_native_max_math_error_V": 0.0,
+      "reference_max_print_cell_error_V": 2.5e-15,
+      "requested_forced": [
+        0,
+        0.5,
+        1,
+        1.000000001,
+        1.125,
+        1.25,
+        1.5,
+        2,
+        2.000000001,
+        2.125,
+        2.25,
+        2.5,
+        3,
+        3.000000001,
+        3.125,
+        3.25
+      ],
+      "reference_missing_exact_forced": [],
+      "reference_effective_PSF_settings": {
+        "reltol": "1.00000e-11",
+        "abstol(V)": "1.00000e-12",
+        "method": "\"traponly\"",
+        "maxstep": "0.00781250",
+        "errpreset": "\"conservative\""
+      },
+      "original_SCS_rejection": "inputs/held-hidden-feedback/tb.scs:5:73: expected a finite numeric literal or preceding constant, got 'traponly'",
+      "EVAS_structural_rejection": {
+        "type": "CompileError",
+        "message": "transition target values must be held states or constants; continuous voltage targets are unsupported"
+      },
+      "finite_check_pass": true
+    }
+  ],
+  "pass": true,
+  "original_MUX_checker": "NOT_RUN"
+}

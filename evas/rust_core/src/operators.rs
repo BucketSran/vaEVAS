@@ -504,20 +504,14 @@ fn transition_input(
             "transition input must depend only on held instance state and constants",
         ));
     }
-    fn arms(e: &Expression, p: &Program, owner: &str) -> Result<(), Error> {
-        match e {
-            Expression::Select {
-                then_value,
-                else_value,
-                ..
-            } => {
-                arms(then_value, p, owner)?;
-                arms(else_value, p, owner)
-            }
-            _ => affine(e, p, owner).map(|_| ()),
-        }
+    // Audit every value form, including Select nested under arithmetic,
+    // before resolving the currently active held branch.
+    for form in crate::transition_source_plan::forms(
+        expression,
+        &crate::transition_source_plan::Work::default(),
+    )? {
+        affine(&form, program, owner)?;
     }
-    arms(expression, program, owner)?;
     let selected = crate::continuous::resolve_selection(
         expression,
         program,
@@ -3098,5 +3092,204 @@ mod exact_deadline_review_tests {
             valid.exact_root.as_ref().unwrap().order(&root),
             std::cmp::Ordering::Equal
         );
+    }
+}
+
+#[cfg(test)]
+mod held_nested_select_audit_tests {
+    use super::*;
+
+    fn fixture() -> (Program, Expression) {
+        let program: Program = serde_json::from_value(serde_json::json!({
+            "schema_version": crate::ir::SCHEMA_VERSION,
+            "nodes": ["0", "y"],
+            "states": [{"instance":"dut","name":"q","kind":"integer","initial":1}],
+            "contributions": []
+        }))
+        .unwrap();
+        let constant = |v| {
+            Box::new(Expression::Affine {
+                constant: v,
+                terms: vec![],
+            })
+        };
+        let branch = Expression::Select {
+            relation: crate::ir::Relation::Gt,
+            left: Box::new(Expression::State { state: 0 }),
+            right: constant(0.),
+            then_value: constant(1.),
+            else_value: constant(0.),
+            origin: serde_json::from_value(serde_json::json!({
+                "source":"held-audit.va","line":1,"column":1,"instance":"dut"
+            }))
+            .unwrap(),
+        };
+        (program, branch)
+    }
+
+    #[test]
+    fn unselected_nested_forms_cannot_hide_nonlinearity_or_voltage_dependency() {
+        let (p, mut branch) = fixture();
+        if let Expression::Select { else_value, .. } = &mut branch {
+            **else_value = Expression::Multiply {
+                left: Box::new(Expression::State { state: 0 }),
+                right: Box::new(Expression::State { state: 0 }),
+            };
+        }
+        let wrapped = Expression::Add {
+            left: Box::new(Expression::State { state: 0 }),
+            right: Box::new(branch),
+        };
+        let states = vec![I::ONE; p.states.len()];
+        assert_eq!(
+            transition_input(&wrapped, &p, &states, "dut")
+                .err()
+                .unwrap()
+                .kind,
+            "unsupported_transient"
+        );
+        let (p, mut branch) = fixture();
+        if let Expression::Select { else_value, .. } = &mut branch {
+            **else_value = Expression::Multiply {
+                left: Box::new(Expression::Affine {
+                    constant: 0.,
+                    terms: vec![],
+                }),
+                right: Box::new(Expression::Affine {
+                    constant: 0.,
+                    terms: vec![crate::ir::Term {
+                        node: 1,
+                        coefficient: 1.,
+                    }],
+                }),
+            };
+        }
+        let wrapped = Expression::Add {
+            left: Box::new(Expression::State { state: 0 }),
+            right: Box::new(branch),
+        };
+        assert_eq!(
+            transition_input(&wrapped, &p, &states, "dut")
+                .err()
+                .unwrap()
+                .kind,
+            "unsupported_operator"
+        );
+    }
+
+    #[test]
+    fn nested_held_forms_retain_original_expansion_cap() {
+        let (p, branch) = fixture();
+        let mut expression = branch.clone();
+        for _ in 1..14 {
+            expression = Expression::Add {
+                left: Box::new(expression),
+                right: Box::new(branch.clone()),
+            };
+        }
+        let error = transition_input(&expression, &p, &[I::ONE], "dut")
+            .err()
+            .unwrap();
+        assert_eq!(error.kind, "step_budget");
+        assert!(error.message.contains("affine expansion exhausted"));
+    }
+
+    #[test]
+    fn accepted_nested_edge_survives_late_uncertain_target_and_retry() {
+        let (p, mut select) = fixture();
+        if let Expression::Select {
+            relation,
+            right,
+            then_value,
+            else_value,
+            ..
+        } = &mut select
+        {
+            *relation = crate::ir::Relation::Lt;
+            **right = Expression::Affine {
+                constant: 2.,
+                terms: vec![],
+            };
+            **then_value = Expression::Affine {
+                constant: 0.,
+                terms: vec![],
+            };
+            **else_value = Expression::Affine {
+                constant: 1.,
+                terms: vec![],
+            };
+        }
+        let input = Expression::Add {
+            left: Box::new(Expression::State { state: 0 }),
+            right: Box::new(Expression::Multiply {
+                left: Box::new(Expression::Affine {
+                    constant: -2.,
+                    terms: vec![],
+                }),
+                right: Box::new(select),
+            }),
+        };
+        let mut value = serde_json::to_value(p).unwrap();
+        value["operators"] = serde_json::json!([{
+            "kind":"transition", "input":input, "delay":0., "rise":0.25, "fall":0.25,
+            "origin":{"source":"held-retry.va","line":1,"column":1,"instance":"dut"}
+        }]);
+        value["contributions"] = serde_json::json!([{
+            "branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},
+            "positive":1,"negative":0,"rhs":{"op":"operator","operator":0},
+            "origin":{"source":"held-retry.va","line":1,"column":2,"instance":"dut"}
+        }]);
+        let program: Program = serde_json::from_value(value).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![],
+                output_times: vec![0., 3.25],
+                stop: 3.25,
+                max_step: 0.01,
+            },
+            0,
+        )
+        .unwrap();
+        let mut accepted = Operators::new(&program, &trajectory, &[], &[0.]).unwrap();
+        accepted
+            .advance(1., I::point(1.), &[1.], &[I::ONE], &[0])
+            .unwrap();
+        let prefix = accepted.bounds(3.25).unwrap();
+        let first_midpoint = accepted.bounds(1.125).unwrap()[0];
+        assert!(first_midpoint.lo <= 0.5 && 0.5 <= first_midpoint.hi);
+        let clean = accepted.clone();
+        for _ in 0..2 {
+            let failed = accepted.evaluation(2.).unwrap().advanced(
+                I::point(2.),
+                &[2.],
+                &[I { lo: 1., hi: 3. }],
+                &[0],
+            );
+            assert!(failed.is_err());
+            assert_eq!(accepted.bounds(3.25).unwrap(), prefix);
+            assert_eq!(accepted.bounds(0.5).unwrap()[0], I::ZERO);
+        }
+        let mut retry = accepted;
+        let mut clean = clean;
+        for history in [&mut retry, &mut clean] {
+            history
+                .advance(2., I::point(2.), &[2.], &[I::point(2.)], &[0])
+                .unwrap();
+            let second_midpoint = history.bounds(2.125).unwrap()[0];
+            assert!(second_midpoint.lo <= 0.5 && 0.5 <= second_midpoint.hi);
+            history
+                .advance(3., I::point(3.), &[3.], &[I::point(3.)], &[0])
+                .unwrap();
+        }
+        // An Operators frame owns its current edge, not earlier controller frames.
+        for time in [3., 3.125, 3.25] {
+            assert_eq!(retry.bounds(time).unwrap(), clean.bounds(time).unwrap());
+            let clip = |t: f64| (4. * t).clamp(0., 1.);
+            let exact = clip(time - 1.) - clip(time - 2.) + clip(time - 3.);
+            let bounds = retry.bounds(time).unwrap()[0];
+            assert!(bounds.lo <= exact && exact <= bounds.hi);
+        }
     }
 }

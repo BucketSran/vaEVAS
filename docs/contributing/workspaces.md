@@ -6,10 +6,13 @@ scope, branch lifecycle and delivery rules.
 
 ## Workspace visibility and handoff
 
-The primary checkout is the daily human entry, named `current` in this local workspace.
-Temporary worktrees isolate conflicting or parallel work; their results must remain discoverable
-from that entry's project directory. Reuse a suitable checkout before creating another one.
-Keep concurrent writes in the primary checkout within the [ownership rules](#parallel-work).
+The primary checkout, named `current` in this local workspace, is the default development
+directory. Switch task branches there after the previous task has handed it over; `current`
+does not stay permanently on `main`. One task or benchmark batch owns its checked-out branch
+at a time. Preserve unfinished changes and required evidence before switching branches.
+Temporary worktrees isolate work that must proceed simultaneously. Their results remain
+discoverable from the project entry. Reuse a suitable checkout before creating another one,
+and follow the [ownership rules](#parallel-work) for concurrent writes.
 
 Place temporary checkouts under the primary checkout's sibling `worktrees/` directory when the
 host supports that location. For a host-managed checkout elsewhere, create a visible directory
@@ -17,6 +20,13 @@ symlink there pointing to the actual checkout; keep the host's managed path inta
 `worktrees/README.md`, link each entry using a relative path and record its purpose, current
 handoff state and next action. Link this index from the surrounding project README. This is local
 workspace navigation, not a second issue tracker; link the existing task record when available.
+The surrounding project README is the single current-task entry: keep its outcome, owning
+checkout, stage and next action together, linking the existing PR/Issue or evidence. The
+worktree index records locations, purposes and dispositions, and points back to that task.
+Distinguish current work, retained delivery candidates and historical evidence. Do not turn
+every retained checkout into an active task or copy a historical handoff's execution instructions
+into the current queue. A missing target stays explicitly unresolved until its recovery location
+is verified; removing an active navigation link does not establish safe archival.
 
 Run `python3 -B scripts/check_workspaces.py` at the checkpoints in AGENTS.md. The check discovers
 the primary checkout through Git, then inspects its linked worktrees. Resolve missing or stale
@@ -36,8 +46,70 @@ materials; it is not an active development checkout. Archive records keep their 
 Maintain current source and contracts in the repository, and use Git's worktree inventory to
 identify active checkouts rather than recursively treating archived code copies as live projects.
 
+## Creating and handing off work
+
+Before creating a checkout, inspect the current task and worktree index for the same problem
+and acceptance outcome. Reuse its checkout across conversations and review rounds. Record the
+owner, writable paths, base, destination and acceptance outcome in that existing entry or task
+record before writing. If another conversation owns those paths, assist read-only or wait for
+an explicit handoff; changing conversations does not create a new implementation task.
+
+Each task or benchmark batch has one coordinating conversation. It assigns writable paths,
+controls shared Git operations, and coordinates validation and delivery. Another conversation
+joins through an explicit assignment or takes over through a handoff. Read-only analysis and
+review can use a fixed revision or saved diff without another checkout.
+
+The normal project limit is three active writing workspaces: `current`, one additional EVAS
+workspace, and one additional benchmark workspace. `current` can host either development line.
+These are available slots, not required permanent directories. Retained candidates and historical
+evidence do not occupy an active writing slot and do not resume automatically. Discuss a changed
+scope or priority before exceeding this limit or using another development line's extra slot.
+
+Use this table to decide whether to reuse a checkout, queue work, or isolate it:
+
+| Situation | Decision | Action |
+| --- | --- | --- |
+| Start an independent task and `current` is available | Reuse | Check the prior handoff and retained assets, then create a task branch from updated, reviewed `main`. Record a different parent only for a real dependency. |
+| Continue a task, fix review findings, or resume in another conversation | Reuse | Keep the task branch and checkout. Hand off coordination explicitly when its owner changes. |
+| Accelerate an existing EVAS task | Reuse and assign | Identify the bottleneck, then delegate analysis, reproduction, review, or a bounded implementation subtask. Keep one implementation lead. |
+| Discuss future features or benchmark scope | Discuss first | Resolve ownership, acceptance and implementation timing before allocating a branch or checkout. |
+| Implement several tasks in one benchmark batch | Reuse in parallel | Share the batch branch and checkout. Assign task directories and coordinate shared files, generation and acceptance. |
+| Writers need the same core interface, scoring rule or shared generator | Queue conflicting writes | Give the shared change one owner or an explicit order. Independent work can continue. |
+| Start an independent task while `current` is occupied, without a need for simultaneous implementation | Queue | Prepare through discussion or read-only analysis, then wait for handoff. |
+| Implement independent outcomes simultaneously with clear file, acceptance and runtime boundaries | Isolate | Use the owning development line's extra slot. Reuse a suitable idle checkout before creating one. |
+| Validation must retain one source/environment while another version changes | Isolate if necessary | First check whether a fixed binary or existing snapshot is sufficient. Use the owning line's extra slot only when two source checkouts are needed. |
+| The owning development line's extra slot is occupied | Queue or reprioritize | Resolve the active task or agree on a scope change before allocating more workspaces. |
+| A task or batch has merged into `main` | End the task and assess reuse | Check remaining changes, required evidence and running processes. Start later independent work on a new task branch; physical cleanup follows the retirement rules separately. |
+
+Create a worktree only when simultaneous work needs an independent source state or branch,
+an appropriate slot is available, and no suitable idle checkout can be reused. A new branch
+does not require a new directory. A dirty or occupied `current` remains intact while its owner
+resolves the handoff; its status does not authorize reset, stash or an incidental branch switch.
+
+At handoff or suspension, record the resulting revision or local diff, remaining acceptance
+checks, destination and reason to retain the checkout in the existing task/index. Transfer
+ownership explicitly before another writer starts. Run the visibility check; use its opt-in
+[asset report](../../scripts/README.md#只读资产报告) when deciding reuse or retirement.
+Its overlap and duplicate candidates narrow review; they do not establish semantic equivalence,
+integration or an inactive owner. Incomplete observations require follow-up, not a clean bill.
+
+## Asset lifetime
+
+Keep source changes recoverable through commits or snapshots. Preserve each required raw
+evidence set once and refer to its fixed source/binary identities from other tasks. New task
+outputs use one designated run directory; do not copy bulk runs into every worker checkout.
+Existing evidence paths remain valid until an authorized move has a verified recovery mapping.
+
+Keep build directories for active tasks rather than all retained checkouts. Before proposing
+cache removal, identify binaries required by existing receipts and retain those artifacts.
+Share dependency downloads where suitable; concurrent writers must not replace one another's
+executable through a common writable target directory. A validation result names the binary
+actually executed. Cache measurements are candidates for review, not reclaimable-space promises.
+
 ## Parallel work
 
+- EVAS defaults to one implementation lead with read-only collaborators. Assign a bounded writing subtask only when its paths and interfaces can be separated; shared IR and scheduler changes have one owner.
+- Benchmark batches normally allow parallel writes to assigned task directories. The coordinator handles overlaps and serializes shared indexes, scoring rules, common sources and generators that rewrite multiple tasks. A task directory alone does not establish independent ownership of those shared assets.
 - Before authorized delegation, the coordinator posts each worker's owner, writable paths, base and expected result in task messages. That assignment is the ownership record; no separate lock file is required.
 - Workers report path overlap before editing it. The coordinator serializes access or reassigns responsibility; workers do not resolve overlap by reverting others' changes.
 - One coordinator controls shared IR/scheduler interfaces, versions, integration and publication. Only the coordinator stages/commits in a shared checkout; independent worktrees have separate indexes.
@@ -64,6 +136,11 @@ the outcome, identities, checks, limits and remaining work through the existing 
 next independent task in a new conversation rather than replaying the full implementation discussion.
 
 ## Retiring work
+
+At the end of each task, state whether the checkout remains active, is retained for a named
+delivery blocker, or is a retirement candidate. A completed review alone is not a reason to
+keep another writing checkout indefinitely. Preserve unfinished integration at the project
+entry; perform physical cleanup only under the following checklist and its authorization.
 
 Before authorized branch deletion or worktree retirement:
 

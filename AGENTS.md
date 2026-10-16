@@ -8,11 +8,20 @@ Start from current code and component contracts; read historical material when i
 
 ## Quick workflow
 
-1. Read the current task, `git status -sb`, and the affected component README. Select the relevant skill below; they are independent entry points.
+1. Reuse the current task and still-valid context; inspect `git status -sb`. Read the affected component README when its contract or routing is needed. Select skills on demand; they are independent entry points.
 2. Identify the outcome, owning component and acceptance checks. For EVAS behavior or support/evidence changes, identify affected [capability IDs](evas/docs/development/capability-evidence.md). For work spanning sessions or handoffs, persist scope/dependencies in the existing PR/Issue; one-turn work may stay in the conversation. No mandatory plan/KPI/task file.
-3. For edits, keep the primary checkout (`current` in this workspace) as the daily entry. Reuse a suitable task branch/worktree; temporary checkouts need a visible project entry. Run `python3 -B scripts/check_workspaces.py` when starting/resuming edits, after creating a worktree, and at handoff; follow [workspace visibility](docs/contributing/workspaces.md#workspace-visibility-and-handoff). New independent work starts from reviewed `main`; use a parent branch only for an actual dependency. Keep review fixes in the existing open PR.
+3. For edits, keep the primary checkout (`current` in this workspace) as the daily entry. Check existing ownership and reuse the task checkout across conversations under the [creation and handoff rules](docs/contributing/workspaces.md#creating-and-handing-off-work); temporary checkouts need a visible project entry. Run `python3 -B scripts/check_workspaces.py` when starting/resuming edits, after creating a worktree, and at handoff; follow [workspace visibility](docs/contributing/workspaces.md#workspace-visibility-and-handoff). New independent work starts from reviewed `main`; use a parent branch only for an actual dependency. Keep review fixes in the existing open PR.
 4. Make the smallest coherent change. Use [behavior-first TDD and test selection](docs/contributing/validation.md#behavior-first-tests); for EVAS, select checks and revalidation triggers from [evas-validate](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks). Documentation-only changes need no simulator run.
 5. Update affected component contracts and evidence links; update capability rows only when EVAS support/evidence changes. Report the reviewed revision or local diff, checks, failures and limits; prepare/publish through the PR skill within the requested scope.
+
+Use the smallest sufficient context. For project routing, use the existing README and
+CONTRIBUTING index; reading lists are routes, not mandatory full reads. Search large files
+by headings or keywords, then read the matching section and necessary context. Expand only
+when evidence is missing or conflicting; stop once the next decision is supported. Do not
+reload valid context or skip applicable rules. Read current task records for resumption or
+scheduling, topic documents for contracts, and history for tracing or unresolved conflicts.
+Persist stable decisions in their owning documents and progress in the existing task record;
+keep one current-task pointer at the [local project entry](docs/contributing/workspaces.md#workspace-visibility-and-handoff).
 
 Capture reusable development failures in [benchmark candidates](benchmark/material/draftbench/CANDIDATES.md), linking existing evidence. Recording a candidate does not add a scored task or authorize benchmark construction.
 
