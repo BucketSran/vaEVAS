@@ -16,6 +16,9 @@
 动态系数滤波的原IR准入、历史延续和最终认证失败回退见 `test_live_transition_filter.py`
 与 `transient_timer_boundary_tests.rs`；外部取证资格仍不完整，不新增Q资格。
 
+[SCS 时间选择](../../../experiments/backends/support/scs-save-time/README.md)补充 LANG 与 DEV:scs-input 的有限证据；
+时间轴、电气同名节点和默认节点保存分别验收，不扩展 Spectre 的完整保存语法或固定 Q 成绩。
+
 [源折点保存修复](../../../experiments/backends/support/scs-source-observation/README.md)补充 DEV:scs-input 的有限开发证据；修复保存插值漏脉冲，不改变原Q成绩。
 
 [Pulse 源误差和保存策略](../../../experiments/backends/support/scs-source-uncertainty/README.md)补充 DEV:scs-input 与 TIMER 的有限开发证据；非零源误差仍不支持动态算子或 cross，不改变原Q成绩。

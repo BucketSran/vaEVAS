@@ -1,0 +1,666 @@
+{
+  "scope": "finite SCS save selection; no full Spectre output schema or benchmark qualification",
+  "voltage_budget_V": 1e-08,
+  "pairing": "exact shared native binary64 time only, no interpolation",
+  "reference_initial_limit": "No native zero-time record in these Spectre files; EVAS zero-time value checked analytically in public regression",
+  "spectre_runs": 8,
+  "spectre_version_queries": 2,
+  "limits": {
+    "stage_timeout_s": 90,
+    "license_timeout_s": 30,
+    "memory_bytes": 4294967296,
+    "file_bytes": 33554432,
+    "threads": 1
+  },
+  "source": {
+    "base": "217a7e4585f61e125c0f0394d6da821c71d6000f",
+    "scs_sha256": "c3909df64c64639200f44f95fa3c4e5d38feea6244b06a7ecad617541d9f5855",
+    "test_sha256": "71e14eade325a7ccb62630e9e60a2ab4c302c5e364283da6ba88df19c94d177e",
+    "kernel_sha256": "13c0da468f3a7798449fc704442aa4a03eae89f961fef76b2b5cb1c4daf034ef",
+    "kernel_rust_unchanged": true
+  },
+  "cases": [
+    {
+      "case": "duplicate",
+      "traces": [
+        {
+          "name": "time",
+          "type": "param_real"
+        },
+        {
+          "name": "y",
+          "type": "V"
+        },
+        {
+          "name": "u",
+          "type": "V"
+        }
+      ],
+      "native_rows": 21,
+      "spectre_max_analytic_error_V": 0.0,
+      "raw_psf_sha256": "0e6395824bba54b6edb73ca4e9f7f706749661764ab102b9a6ce1e70acf1a89b",
+      "spectre_result_sha256": "f2cabdf3255f643aade98bc3568c1db73239b1a24fbbcb3f9f02b2f38e0d112d",
+      "spectre_native_initial_observation": false,
+      "pairs": [
+        {
+          "time_s": 0.2,
+          "spectre_V": {
+            "y": 0.4,
+            "u": 0.2
+          },
+          "evas_V": {
+            "y": 0.4,
+            "u": 0.2
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.7,
+          "spectre_V": {
+            "y": 1.4,
+            "u": 0.7
+          },
+          "evas_V": {
+            "y": 1.4,
+            "u": 0.7
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.0,
+          "spectre_V": {
+            "y": 2.0,
+            "u": 1.0
+          },
+          "evas_V": {
+            "y": 2.0,
+            "u": 1.0
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "spectre_header": {
+        "reltol": 1e-08,
+        "vabstol": 1e-09,
+        "maxstep": 0.5,
+        "errpreset": "conservative"
+      },
+      "requested": {
+        "reltol": 1e-07,
+        "vabstol": 1e-09,
+        "maxstep": 0.5
+      },
+      "spectre_identity": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f"
+      },
+      "evas_saved_nodes": [
+        "y",
+        "u"
+      ],
+      "evas_response_sha256": "89741dc207d5386a2f369448453ca3a697564bd987986adb184c89f7e7722813",
+      "warnings": [
+        "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+        "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-07, vabstol=1e-09, max_step=0.5."
+      ]
+    },
+    {
+      "case": "mixed",
+      "traces": [
+        {
+          "name": "time",
+          "type": "param_real"
+        },
+        {
+          "name": "y",
+          "type": "V"
+        },
+        {
+          "name": "u",
+          "type": "V"
+        }
+      ],
+      "native_rows": 21,
+      "spectre_max_analytic_error_V": 0.0,
+      "raw_psf_sha256": "2238701239e7441b0e58c598cfc7ae949b124e492177ce5103a622f70a3e1235",
+      "spectre_result_sha256": "d9bd037f263f2ac46a10df43943fc8ddfb364850a2d8e2743ce15db87950ad70",
+      "spectre_native_initial_observation": false,
+      "pairs": [
+        {
+          "time_s": 0.2,
+          "spectre_V": {
+            "y": 0.4,
+            "u": 0.2
+          },
+          "evas_V": {
+            "y": 0.4,
+            "u": 0.2
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.7,
+          "spectre_V": {
+            "y": 1.4,
+            "u": 0.7
+          },
+          "evas_V": {
+            "y": 1.4,
+            "u": 0.7
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.0,
+          "spectre_V": {
+            "y": 2.0,
+            "u": 1.0
+          },
+          "evas_V": {
+            "y": 2.0,
+            "u": 1.0
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "spectre_header": {
+        "reltol": 1e-08,
+        "vabstol": 1e-09,
+        "maxstep": 0.5,
+        "errpreset": "conservative"
+      },
+      "requested": {
+        "reltol": 1e-07,
+        "vabstol": 1e-09,
+        "maxstep": 0.5
+      },
+      "spectre_identity": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f"
+      },
+      "evas_saved_nodes": [
+        "y",
+        "u"
+      ],
+      "evas_response_sha256": "5dc938414bd7c79acd0aebb9884d47b75549b46b782fae12d6680acdc170098e",
+      "warnings": [
+        "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+        "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-07, vabstol=1e-09, max_step=0.5."
+      ]
+    },
+    {
+      "case": "no-save",
+      "traces": [
+        {
+          "name": "u",
+          "type": "V"
+        },
+        {
+          "name": "y",
+          "type": "V"
+        },
+        {
+          "name": "Vu:p",
+          "type": "I"
+        }
+      ],
+      "native_rows": 21,
+      "spectre_max_analytic_error_V": 0.0,
+      "raw_psf_sha256": "6b3c84fbc9544bb55a308f0d42dd8ff96d7a509025826f6ebacef06e607e0b3f",
+      "spectre_result_sha256": "93a7a2fc9b8211e27316aac524a5ec444c58034215a7dc187c4a44f4e66c63fd",
+      "spectre_native_initial_observation": false,
+      "pairs": [
+        {
+          "time_s": 0.2,
+          "spectre_V": {
+            "u": 0.2,
+            "y": 0.4
+          },
+          "evas_V": {
+            "u": 0.2,
+            "y": 0.4
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.7,
+          "spectre_V": {
+            "u": 0.7,
+            "y": 1.4
+          },
+          "evas_V": {
+            "u": 0.7,
+            "y": 1.4
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.0,
+          "spectre_V": {
+            "u": 1.0,
+            "y": 2.0
+          },
+          "evas_V": {
+            "u": 1.0,
+            "y": 2.0
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "spectre_header": {
+        "reltol": 1e-08,
+        "vabstol": 1e-09,
+        "maxstep": 0.5,
+        "errpreset": "conservative"
+      },
+      "requested": {
+        "reltol": 1e-07,
+        "vabstol": 1e-09,
+        "maxstep": 0.5
+      },
+      "spectre_identity": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f"
+      },
+      "evas_saved_nodes": [
+        "0",
+        "u",
+        "y"
+      ],
+      "evas_response_sha256": "3e2e963074b9473da68e0de491f00121355a874567e8ba22e594c6e5c72b4a69",
+      "warnings": [
+        "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+        "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-07, vabstol=1e-09, max_step=0.5."
+      ]
+    },
+    {
+      "case": "nodes",
+      "traces": [
+        {
+          "name": "u",
+          "type": "V"
+        },
+        {
+          "name": "y",
+          "type": "V"
+        }
+      ],
+      "native_rows": 21,
+      "spectre_max_analytic_error_V": 0.0,
+      "raw_psf_sha256": "d5f40809b37c5f1c6a811b61482b59381cb3fefc775dceace86f2b9ec6b27c36",
+      "spectre_result_sha256": "baa4e1174ed9c222be3da44633bfa528ef26e13570dec988513ab2a89c71a1a0",
+      "spectre_native_initial_observation": false,
+      "pairs": [
+        {
+          "time_s": 0.2,
+          "spectre_V": {
+            "u": 0.2,
+            "y": 0.4
+          },
+          "evas_V": {
+            "u": 0.2,
+            "y": 0.4
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.7,
+          "spectre_V": {
+            "u": 0.7,
+            "y": 1.4
+          },
+          "evas_V": {
+            "u": 0.7,
+            "y": 1.4
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.0,
+          "spectre_V": {
+            "u": 1.0,
+            "y": 2.0
+          },
+          "evas_V": {
+            "u": 1.0,
+            "y": 2.0
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "spectre_header": {
+        "reltol": 1e-08,
+        "vabstol": 1e-09,
+        "maxstep": 0.5,
+        "errpreset": "conservative"
+      },
+      "requested": {
+        "reltol": 1e-07,
+        "vabstol": 1e-09,
+        "maxstep": 0.5
+      },
+      "spectre_identity": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f"
+      },
+      "evas_saved_nodes": [
+        "u",
+        "y"
+      ],
+      "evas_response_sha256": "f1187dfbef783dbee0446171b7f0648c31ab6cffce2d6c3df650d981bc1f0516",
+      "warnings": [
+        "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+        "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-07, vabstol=1e-09, max_step=0.5."
+      ]
+    },
+    {
+      "case": "time-node",
+      "traces": [
+        {
+          "name": "time",
+          "type": "V"
+        },
+        {
+          "name": "y",
+          "type": "V"
+        }
+      ],
+      "native_rows": 21,
+      "spectre_max_analytic_error_V": 0.0,
+      "raw_psf_sha256": "e839b14f1909c7b2d202737666c2e7360df1d22a36b4d077f13e73d41f5e69c2",
+      "spectre_result_sha256": "8482d6e7dbfc16496147a828484d3e5ef84bcf32d8678d64605c465ec526c0e2",
+      "spectre_native_initial_observation": false,
+      "pairs": [
+        {
+          "time_s": 0.2,
+          "spectre_V": {
+            "time": 0.2,
+            "y": 0.4
+          },
+          "evas_V": {
+            "time": 0.2,
+            "y": 0.4
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.7,
+          "spectre_V": {
+            "time": 0.7,
+            "y": 1.4
+          },
+          "evas_V": {
+            "time": 0.7,
+            "y": 1.4
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.0,
+          "spectre_V": {
+            "time": 1.0,
+            "y": 2.0
+          },
+          "evas_V": {
+            "time": 1.0,
+            "y": 2.0
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "spectre_header": {
+        "reltol": 1e-08,
+        "vabstol": 1e-09,
+        "maxstep": 0.5,
+        "errpreset": "conservative"
+      },
+      "requested": {
+        "reltol": 1e-07,
+        "vabstol": 1e-09,
+        "maxstep": 0.5
+      },
+      "spectre_identity": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f"
+      },
+      "evas_saved_nodes": [
+        "time",
+        "y"
+      ],
+      "evas_response_sha256": "fdbb0f8cab1aa93807311c2307127414335a1fc856256c4fa8e7de0d18ca3654",
+      "warnings": [
+        "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+        "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-07, vabstol=1e-09, max_step=0.5."
+      ]
+    },
+    {
+      "case": "time-only",
+      "traces": [
+        {
+          "name": "time",
+          "type": "param_real"
+        },
+        {
+          "name": "u",
+          "type": "V"
+        },
+        {
+          "name": "y",
+          "type": "V"
+        },
+        {
+          "name": "Vu:p",
+          "type": "I"
+        }
+      ],
+      "native_rows": 21,
+      "spectre_max_analytic_error_V": 0.0,
+      "raw_psf_sha256": "a807ba90300fecdc3e6079ed32bb680fbfa4dda140e7cf361f463423ac04f3de",
+      "spectre_result_sha256": "4cc3b52eee525b9c80c796484a01b039792578f92bef863fb4313f4df5e9b29e",
+      "spectre_native_initial_observation": false,
+      "pairs": [
+        {
+          "time_s": 0.2,
+          "spectre_V": {
+            "u": 0.2,
+            "y": 0.4
+          },
+          "evas_V": {
+            "u": 0.2,
+            "y": 0.4
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.7,
+          "spectre_V": {
+            "u": 0.7,
+            "y": 1.4
+          },
+          "evas_V": {
+            "u": 0.7,
+            "y": 1.4
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.0,
+          "spectre_V": {
+            "u": 1.0,
+            "y": 2.0
+          },
+          "evas_V": {
+            "u": 1.0,
+            "y": 2.0
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "spectre_header": {
+        "reltol": 1e-08,
+        "vabstol": 1e-09,
+        "maxstep": 0.5,
+        "errpreset": "conservative"
+      },
+      "requested": {
+        "reltol": 1e-07,
+        "vabstol": 1e-09,
+        "maxstep": 0.5
+      },
+      "spectre_identity": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f"
+      },
+      "evas_saved_nodes": [
+        "0",
+        "u",
+        "y"
+      ],
+      "evas_response_sha256": "20dacde1debec553a04a3976290ebc967c332a391fc8a8fd0048d090eee2c3ec",
+      "warnings": [
+        "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+        "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-07, vabstol=1e-09, max_step=0.5."
+      ]
+    },
+    {
+      "case": "upper-unknown",
+      "traces": [
+        {
+          "name": "y",
+          "type": "V"
+        }
+      ],
+      "native_rows": 21,
+      "spectre_max_analytic_error_V": 0.0,
+      "raw_psf_sha256": "ab231ff0a968708b3b1909b93f9e3d60392250f9e78bdedb784aed34b3b1a947",
+      "spectre_result_sha256": "56c7d22aec1ca4bda707896d8bddb3ace65ccb4343379b07808fc8f743754fba",
+      "spectre_native_initial_observation": false,
+      "pairs": [],
+      "spectre_header": {
+        "reltol": 1e-08,
+        "vabstol": 1e-09,
+        "maxstep": 0.5,
+        "errpreset": "conservative"
+      },
+      "requested": {
+        "reltol": 1e-07,
+        "vabstol": 1e-09,
+        "maxstep": 0.5
+      },
+      "spectre_identity": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f"
+      },
+      "evas_rejection": {
+        "diagnostic_version": 1,
+        "kind": "compile_error",
+        "code": "scs_input",
+        "category": "invalid_input",
+        "stage": "netlist",
+        "capability": "LANG",
+        "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-save-time-20261017/evas-pairs/upper-unknown/tb.scs:7:1: save names unknown scalar nodes: ['Time']",
+        "hint": "Check the netlist statement and its constant values.",
+        "location": {
+          "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-save-time-20261017/evas-pairs/upper-unknown/tb.scs",
+          "line": 7,
+          "column": 1
+        }
+      },
+      "note": "Spectre warns and ignores unknown Time; EVAS retains stricter unknown-node rejection"
+    },
+    {
+      "case": "time-node-distinct",
+      "traces": [
+        {
+          "name": "time",
+          "type": "V"
+        },
+        {
+          "name": "y",
+          "type": "V"
+        }
+      ],
+      "native_rows": 21,
+      "spectre_max_analytic_error_V": 0.0,
+      "raw_psf_sha256": "fc1ae504e5925d56a97c2f1235cb961fceb93de5ee9383ac1e084c3c529e748d",
+      "spectre_result_sha256": "1cec30ec5f46d5d22646dd58ff20f76d1a92f908f3a8b4e6a3fd7ad13f5bdeab",
+      "spectre_native_initial_observation": false,
+      "pairs": [
+        {
+          "time_s": 0.2,
+          "spectre_V": {
+            "time": 3.4,
+            "y": 6.8
+          },
+          "evas_V": {
+            "time": 3.4000000000000004,
+            "y": 6.800000000000001
+          },
+          "max_error_V": 8.881784197001252e-16
+        },
+        {
+          "time_s": 0.7,
+          "spectre_V": {
+            "time": 4.4,
+            "y": 8.8
+          },
+          "evas_V": {
+            "time": 4.4,
+            "y": 8.8
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.0,
+          "spectre_V": {
+            "time": 5.0,
+            "y": 10.0
+          },
+          "evas_V": {
+            "time": 5.0,
+            "y": 10.0
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "spectre_header": {
+        "reltol": 1e-08,
+        "vabstol": 1e-09,
+        "maxstep": 0.5,
+        "errpreset": "conservative"
+      },
+      "requested": {
+        "reltol": 1e-07,
+        "vabstol": 1e-09,
+        "maxstep": 0.5
+      },
+      "spectre_identity": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f"
+      },
+      "evas_saved_nodes": [
+        "time",
+        "y"
+      ],
+      "evas_response_sha256": "8ec8b0234289330c19085ffb06560628cae4168aa65cf5dc20ff68fe94132de5",
+      "warnings": [
+        "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+        "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-07, vabstol=1e-09, max_step=0.5."
+      ]
+    }
+  ],
+  "retention": {
+    "compact": "repository-contained",
+    "raw": "local-only runs/evas-save-time-20261017; original remote outputs retained; no public download implied"
+  },
+  "reader_limit": "Frozen generic read_waveform duplicates rows for same-named sweep/trace; positional schema-checked parsing here preserves both namespaces, raw outputs unchanged",
+  "reader_sha256": "d178852e26ec20541bcdb57d717d4e42cae5ad0b4b2bdd46e5201b14cca96a03"
+}
