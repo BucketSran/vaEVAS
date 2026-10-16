@@ -36,6 +36,14 @@ audit procedure in `show-me-your-work` rather than creating a second review log.
 
 ## Assess the relevant contracts
 
+For GLM CLI reviews, prioritize a complete scoped report. Default to USD 5 per call,
+process-local `CLAUDE_CODE_MAX_OUTPUT_TOKENS=32000` and a 15-minute timeout; size the
+task total to its obligations. The user's explicit ceiling prevails. Retain complete
+changed functions, relevant callers and evidence when removing duplicate context.
+After budget/output truncation, adjust the limiting resource before retrying; count
+actual reported turns and preserve failed responses. Archived USD 1/call and fixed
+call-count limits are historical settings. A missing report remains pending.
+
 Use [workspace ownership](../../../README.md) and the affected component's contract:
 [EVAS documentation](../../../evas/README.md) for simulator work or
 [benchmark guidance](../../../benchmark/README.md) and the task contract for benchmark work.

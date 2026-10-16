@@ -1,5 +1,6 @@
 """Select CI work from Git changes; fail closed when change identity is unavailable."""
 import argparse
+import ast
 import json
 import os
 from pathlib import Path
@@ -59,6 +60,8 @@ REGRESSION_INPUTS = {
 HISTORICAL_REPORTS = {
     'experiments/backends/sample-edge-filter/rea-boundary-receipt.json',
 }
+PROGRESS_START = '<!-- ci:progress:start -->'
+PROGRESS_END = '<!-- ci:progress:end -->'
 
 
 def flags(*enabled):
@@ -69,7 +72,10 @@ def classify(paths):
     selected = set()
     for path in paths:
         suffix = Path(path).suffix.lower()
-        if path.startswith('.github/') or path in CI_FILES:
+        if path == 'scripts/tests/test_ci_selection.py':
+            selected.add('maintenance')
+            continue
+        elif path.startswith('.github/') or path in CI_FILES:
             return flags(*CHECKS)
         # Sources and contract docs also feed generated benchmark views.
         if path.startswith(BENCHMARK_PREFIXES) or path in BENCHMARK_FILES:
@@ -138,6 +144,75 @@ def git(repo, *args):
     return subprocess.check_output(['git', *args], cwd=repo, stderr=subprocess.PIPE)
 
 
+def maintenance_registration_only(before, after):
+    """Compare executable selector syntax, allowing only audited registrations."""
+    trees, registrations = [], []
+    for source in (before, after):
+        tree = ast.parse(source)
+        matches = [node for node in tree.body if isinstance(node, ast.Assign)
+                   and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name)
+                   and node.targets[0].id == 'MAINTENANCE_FILES']
+        if len(matches) != 1:
+            return False
+        node = matches[0]
+        values = ast.literal_eval(node.value)
+        if not isinstance(values, set) or not all(isinstance(p, str) for p in values):
+            return False
+        registrations.append(values)
+        tree.body.remove(node)
+        trees.append(ast.dump(tree, include_attributes=False))
+    changed = registrations[0] ^ registrations[1]
+    # Only paths already audited in this selector can use the exemption.
+    # New/unfamiliar registrations retain the full gate until audited here.
+    return (trees[0] == trees[1] and bool(changed)
+            and changed <= MAINTENANCE_FILES
+            and all(re.fullmatch(r'scripts/(?:[a-z_]+|tests/test_[a-z_]+)\.py', p)
+                    and p not in CI_FILES | BENCHMARK_FILES | PACKAGE_FILES
+                    for p in changed))
+
+
+def without_progress(source):
+    """One explicit prose block; tables, headings and criteria stay outside it."""
+    if source.count(PROGRESS_START) != 1 or source.count(PROGRESS_END) != 1:
+        return None
+    prefix, rest = source.split(PROGRESS_START)
+    progress, suffix = rest.split(PROGRESS_END)
+    # A block is prose only. Empty blocks, table rows, headings, fences and
+    # nested comments cannot become an alternative capability table.
+    if (not progress.strip() or any(line.lstrip().startswith(('|', '#', '```', '~~~', '<!--'))
+                                    for line in progress.splitlines())):
+        return None
+    return prefix + PROGRESS_START + PROGRESS_END + suffix
+
+
+def classify_changes(repo, base, head, paths):
+    """Use full blobs for the two narrow exemptions; paths alone fail closed."""
+    selected, reasons = set(), []
+    for path in paths:
+        checks = classify([path])
+        reason = 'path contract'
+        if path in ('scripts/ci_selection.py', 'evas/docs/COMPARISON.md'):
+            try:
+                blobs = []
+                for revision in (base, head):
+                    entry = git(repo, 'ls-tree', '-z', revision, '--', path)
+                    if not entry.startswith(b'100644 blob '):
+                        raise ValueError('not an existing regular file')
+                    blobs.append(git(repo, 'show', f'{revision}:{path}').decode('utf-8'))
+                if path == 'scripts/ci_selection.py' and maintenance_registration_only(*blobs):
+                    checks, reason = flags('maintenance'), 'audited maintenance registration only'
+                elif path == 'evas/docs/COMPARISON.md':
+                    protected = [without_progress(blob) for blob in blobs]
+                    if protected[0] is not None and protected[0] == protected[1]:
+                        checks, reason = flags(), 'explicit progress prose only; protected text unchanged'
+            except (ValueError, SyntaxError, TypeError, UnicodeError, subprocess.CalledProcessError):
+                reason = 'full path contract: content identity unavailable or unsafe'
+        selected.update(key for key in CHECKS if checks[key])
+        reasons.append({'path': path, 'checks': [key for key in CHECKS if checks[key]],
+                        'reason': reason})
+    return flags(*selected), reasons
+
+
 def commit(repo, sha):
     if not isinstance(sha, str) or not re.fullmatch(r'[0-9a-fA-F]{40,64}', sha) or not int(sha, 16):
         raise ValueError('missing or invalid commit identity')
@@ -161,7 +236,8 @@ def select(repo, event_name, event):
         # Disable rename detection so both the removed and added paths are checked.
         raw = git(repo, 'diff', '--name-only', '--no-renames', '-z', base, head, '--')
         paths = [os.fsdecode(path) for path in raw.split(b'\0') if path]
-        return {**classify(paths), 'base': base, 'head': head, 'paths': paths,
+        checks, reasons = classify_changes(repo, base, head, paths)
+        return {**checks, 'base': base, 'head': head, 'paths': paths, 'reasons': reasons,
                 'reason': 'classified complete Git diff'}
     except (KeyError, TypeError, ValueError, subprocess.CalledProcessError) as error:
         return {**plan, 'reason': f'full check: change identity unavailable ({error})'}
@@ -201,6 +277,8 @@ def main():
     selection.add_argument('--event-path', type=Path,
                            default=os.environ.get('GITHUB_EVENT_PATH'))
     selection.add_argument('--output', type=Path, default=os.environ.get('GITHUB_OUTPUT'))
+    selection.add_argument('--report', type=Path, help='Save the complete plan once as JSON')
+    selection.add_argument('--json', action='store_true', help='Print the complete plan as JSON')
     commands.add_parser('gate')
     args = parser.parse_args()
     if args.command == 'gate':
@@ -219,7 +297,16 @@ def main():
             for key in (*flags(), 'base', 'head'):
                 value = str(plan[key]).lower() if key in flags() else plan[key]
                 output.write(f'{key}={value}\n')
-    print(json.dumps(plan, indent=2))
+    if args.report:
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        args.report.write_text(json.dumps(plan, indent=2) + '\n')
+    if args.json:
+        print(json.dumps(plan, indent=2))
+    else:
+        print('Selected: ' + (', '.join(key for key in CHECKS if plan[key]) or 'selection/whitespace only'))
+        print(plan['reason'])
+        print(f"Changed paths: {len(plan['paths'])}; base={plan['base']}; head={plan['head']}")
+        print(f'Evidence: {args.report}' if args.report else 'Details: --json or --report <task-path>')
     return 0
 
 

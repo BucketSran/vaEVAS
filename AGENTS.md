@@ -1,110 +1,56 @@
 # vaEVAS agent guide
 
-This repository contains a Verilog-A benchmark and the EVAS voltage-domain simulator.
-Current user instructions govern scope; support, versions and result counts live in component docs.
-EVAS and benchmark development share this repository; circuit execution orchestration belongs
-to the separate circuit harness. Course content and prior-stage papers are external references.
-Start from current code and component contracts; read historical material when its evidence is needed.
+This repository owns the Verilog-A benchmark and EVAS voltage-domain simulator.
+Circuit execution orchestration belongs to the separate circuit harness. Component
+READMEs own support, versions and result counts; history supplies evidence when needed.
 
-## Quick workflow
+## Start and resume
 
-1. Reuse the current task and still-valid context; inspect `git status -sb`. Read the affected component README when its contract or routing is needed. Select skills on demand; they are independent entry points.
-2. Identify the outcome, owning component and acceptance checks. For EVAS behavior or support/evidence changes, identify affected [capability IDs](evas/docs/development/capability-evidence.md). For work spanning sessions or handoffs, persist scope/dependencies in the existing PR/Issue; one-turn work may stay in the conversation. No mandatory plan/KPI/task file.
-3. Follow the [conversation handoff triggers](docs/contributing/workspaces.md#conversation-handoff-triggers). For edits, keep the primary checkout (`current` in this workspace) as the daily entry. Check existing ownership and reuse the task checkout across conversations under the [creation and handoff rules](docs/contributing/workspaces.md#creating-and-handing-off-work); temporary checkouts need a visible project entry. Run `python3 -B scripts/check_workspaces.py` when starting/resuming edits, after creating a worktree, and at handoff; follow [workspace visibility](docs/contributing/workspaces.md#workspace-visibility-and-handoff). New independent work starts from reviewed `main`; use a parent branch only for an actual dependency. Keep review fixes in the existing open PR.
-4. Make the smallest coherent change. Use [behavior-first TDD and test selection](docs/contributing/validation.md#behavior-first-tests); for EVAS, select checks and revalidation triggers from [evas-validate](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks). Documentation-only changes need no simulator run.
-5. Update affected component contracts and evidence links; update capability rows only when EVAS support/evidence changes. Report the reviewed revision or local diff, checks, failures and limits; prepare/publish through the PR skill within the requested scope.
+1. Recover the current request and task record; inspect `git status -sb`. Identify the
+   outcome, owning paths and acceptance checks. Carry forward valid decisions and
+   [authorization](CONTRIBUTING.md#scope-and-authorization); review remains read-only.
+2. For edits, check ownership and reuse `current` under the
+   [workspace rules](docs/contributing/workspaces.md#creating-and-handing-off-work).
+   Run `python3 -B scripts/check_workspaces.py` at start/resume, after creating a
+   worktree and at handoff. Independent work starts from reviewed `main`; review
+   fixes stay in the open task PR. Preserve other writers' files and shared history.
+3. Load the matching entry below and only the sections needed for the next decision.
+   Search headings before reading large files. Expand tool output for a failure or
+   concrete question; save complete results once in the task's existing `runs/` area
+   using [compact output and evidence](scripts/README.md#compact-tool-output).
+4. For behavior changes, load [behavior-first tests](docs/contributing/validation.md#behavior-first-tests).
+   Make the smallest coherent change and run the owning acceptance checks. Report
+   the checked revision/local diff, failures and limits. Keep one current-task pointer
+   under [visibility and handoff](docs/contributing/workspaces.md#workspace-visibility-and-handoff);
+   apply the [conversation handoff triggers](docs/contributing/workspaces.md#conversation-handoff-triggers).
 
-Use the smallest sufficient context. For project routing, use the existing README and
-CONTRIBUTING index; reading lists are routes, not mandatory full reads. Search large files
-by headings or keywords, then read the matching section and necessary context. Expand only
-when evidence is missing or conflicting; stop once the next decision is supported. Do not
-reload valid context or skip applicable rules. Read current task records for resumption or
-scheduling, topic documents for contracts, and history for tracing or unresolved conflicts.
-Persist stable decisions in their owning documents and progress in the existing task record;
-keep one current-task pointer at the [local project entry](docs/contributing/workspaces.md#workspace-visibility-and-handoff).
+## Load by task
 
-Capture reusable development failures in [benchmark candidates](benchmark/material/draftbench/CANDIDATES.md), linking existing evidence. Recording a candidate does not add a scored task or authorize benchmark construction.
-
-Carry authorization forward for the same task, target and action within its resource limits; it does not automatically extend to another PR. Implementation permits necessary local edits/checks; review alone stays read-only. Publishing, merging and cleanup need authorization covering that action. If absent, finish independent work and ask once about the concrete action. See [boundaries and examples](CONTRIBUTING.md#scope-and-authorization).
-
-## Skills
-
-| Task | Repository entry |
+| When | Entry and obligations |
 | --- | --- |
-| Select/resume work across components or stages | [vaevas-workflow](.agents/skills/vaevas-workflow/SKILL.md) |
-| Implement/refactor EVAS behavior | [evas-develop](.agents/skills/evas-develop/SKILL.md) |
-| Check EVAS behavior/evidence | [evas-validate](.agents/skills/evas-validate/SKILL.md) |
-| Review | [vaevas-review-pr](.agents/skills/vaevas-review-pr/SKILL.md) |
-| Prepare/publish a checkpoint | [vaevas-prepare-pr](.agents/skills/vaevas-prepare-pr/SKILL.md) |
+| Work spans components/stages, a spec or unattended delivery | [vaevas-workflow](.agents/skills/vaevas-workflow/SKILL.md); shared-skill routing and delivery boundaries |
+| Implement/refactor EVAS behavior | [evas-develop](.agents/skills/evas-develop/SKILL.md); capability IDs, behavior-first tests, handbook and actual Spectre alignment |
+| Select/run checks or report EVAS evidence | [evas-validate](.agents/skills/evas-validate/SKILL.md); affected regressions, revalidation and evidence identity |
+| Build or grade benchmark tasks | [benchmark contract](benchmark/README.md); task and checker acceptance |
+| Review a diff, including GLM review | [vaevas-review-pr](.agents/skills/vaevas-review-pr/SKILL.md); fixed scope, complete evidence and one concise summary |
+| Prepare a commit/PR or publish | [vaevas-prepare-pr](.agents/skills/vaevas-prepare-pr/SKILL.md); final delta, reuse of matching checks and publication authority |
+| Edit human docs / agent instructions | [documentation rules](CONTRIBUTING.md#documentation-language); `technical-writing` / `writing-for-agents` |
+| Manage checkouts, parallel writers or cross-repository work | [workspaces](docs/contributing/workspaces.md); ownership, visibility and preservation before retirement |
+| Retain/report experiment material or select main assets | [evidence policy](docs/contributing/evidence.md); receipts, retention and timing; [experiment index](experiments/README.md) |
+| Capture a reusable development failure | [candidate policy](docs/contributing/validation.md#development-bench-candidates); recording does not authorize task construction |
 
-Use the project entry and shared skills on demand; known component tasks can enter directly.
-For spec implementation, unattended work and PR delivery, follow the
-[skill routing](.agents/skills/vaevas-workflow/SKILL.md#use-shared-skills-when-needed) and
-[delivery criteria](CONTRIBUTING.md#spec-delivery-and-unattended-work).
-Shared planning skills use the [issue tracker](docs/agents/issue-tracker.md) and
-[domain documentation](docs/agents/domain.md). A full interview/spec/ticket sequence is not mandatory.
-Global vaEvas skills route here; legacy interview, KPI and multi-repository workflows do not apply.
-Use the actual checkout as the command working directory. If the host session points to another
-project and these skills are absent from its catalog, read the relevant declared `SKILL.md` through
-the resolved checkout path; this is manual loading, not confirmation of automatic discovery.
-When using a skill, name it briefly and report the checks actually run; no separate usage log is required.
-
-For GLM reviews, prioritize a complete, scoped report; the user has ample GLM quota.
-Default to USD 5 per CLI call, process-local `CLAUDE_CODE_MAX_OUTPUT_TOKENS=32000`
-and a 15-minute timeout; size the task total to its review obligations. A user's explicit ceiling prevails.
-Retain complete changed functions, relevant callers and evidence when reducing duplicate
-context. After budget/output truncation, adjust the limiting resource before retrying;
-count actual reported turns and preserve failed responses. Archived USD 1/call and fixed
-call-count limits are historical run settings, not project defaults. A missing report stays pending.
-
-For EVAS behavior changes, require relevant actual Spectre comparisons before recommending
-merge or claiming behavioral alignment. Record a justified reuse or explicit alignment gap;
-local regressions, analytical answers and model reviews do not replace this evidence.
-Follow [Spectre alignment acceptance](docs/contributing/validation.md#spectre-alignment-acceptance)
-for scope, tolerances, version identity and exceptions.
-
-## Documentation audience
-
-README files, comparison tables and evaluation standards are for human readers, even when agents also consume them.
-Human review summaries follow the [single-summary limit and check](CONTRIBUTING.md#concise-review-delivery).
-When editing them, use `technical-writing`: lead with the reader's question, the conclusion and its limits;
-explain necessary terms and use a concrete example for precision or event behavior.
-Keep pass criteria and their rationale readable in the main text. Put checker formulas, receipt fields
-and execution procedures in the existing developer or validation reference, with links; preserve requirements when moving them.
-Before handoff, read the text without relying on conversation history: a reader must be able to explain
-what is tested, what “pass” means and what remains unknown. Check readability separately from links and formatting.
-Use `writing-for-agents` for agent instructions; reuse the owning document instead of adding parallel rule lists.
+Known component tasks can enter their skill directly. Name skills briefly and report
+checks actually run. No mandatory interview, plan, KPI or separate workflow file.
+For EVAS build/run commands, use [evas/README](evas/README.md#构建与运行).
+EVAS behavior or support claims require the component's capability/evidence gates;
+documentation-only changes need no simulator run. Keep failing cases and denominators,
+source identities and local/published status truthful. Publishing, merging and cleanup
+require authorization for that action and target.
 
 ## Ownership
 
-- `evas/`: simulator code, build and developer tests.
+- `evas/`: simulator, build and developer tests.
 - `evas/docs/`: mathematics and capability status; `evas/validation/`: independent contracts, fixtures and checkers.
-- `benchmark/`: Harbor-format tasks, reference solutions, scoring and shared task environments.
-- `experiments/`: reusable execution/analysis tools and compact evidence; legacy checker paths are listed in its index. Ignored `runs/`: temporary/bulk output.
+- `benchmark/`: Harbor tasks, reference solutions, scoring and shared task environments.
+- `experiments/`: execution/analysis tools and compact evidence; ignored `runs/`: temporary/bulk output.
 - `scripts/`: repository maintenance.
-
-## Build and checks
-
-When building or running EVAS, use Python 3.10+, Rust/Cargo and the
-[build and smoke commands](evas/README.md#构建与运行). Select validation with the
-[change-to-check mapping](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks);
-static mathematics and artifact-identity checks do not run a simulator.
-Run the relevant regression after a behavioral fix; do not substitute static replay for event validation.
-
-## Guardrails
-
-- Do not rebase/force-push shared history, merge, or delete branches as incidental cleanup.
-- Do not overwrite another contributor's work or share file/index writes concurrently; [assign ownership first](docs/contributing/workspaces.md#parallel-work).
-- Do not weaken a checker or remove failures from the denominator to improve results.
-- Do not invent receipt fields, claim unrun checks, or treat branch/local evidence as merged support or public reproducibility.
-- Do not commit credentials, machine-private configuration, raw bulk runs or build products.
-- Keep main assets within the [retention rules](docs/contributing/evidence.md#main-branch-contents); link completed reports to fixed published history.
-- Do not retire a checkout before completing the [preservation checklist](docs/contributing/workspaces.md#retiring-work).
-- Report integration and worktree retention separately from implementation completion; keep unfinished integration visible at the project entry.
-
-## Detailed references
-
-Read only the sections needed for the task. [CONTRIBUTING](CONTRIBUTING.md#find-the-relevant-rules)
-routes to collaboration, test and evidence rules. For EVAS behavior documentation, use the
-[technical handbook contract](evas/docs/README.md#feature-documentation-contract);
-for retained experiment material, use the [experiment index](experiments/README.md).

@@ -45,6 +45,26 @@ python3 -B scripts/development_records.py time-summary runs/<task>/timing.jsonl
 汇总分别显示参与者阶段用时、区间并集和跨度，未结束及时间跳变单列。漏记时间保持未知。
 规则见[耗时记录](../docs/contributing/evidence.md#development-time)。
 
+<a id="compact-tool-output"></a>
+
+### 默认摘要与完整证据
+
+工作区检查、CI 选取和阶段记录默认显示紧凑状态、失败项与证据位置。
+`time-summary` 会保留失败和取消阶段的 ID、原因与证据，未结束和计时未知项单列。
+三个入口均可用 `--json` 展开完整结果，或用 `--report runs/<task>/<name>.json`
+保存一次完整结果再返回摘要。工作区的原详细文本用 `--verbose` 查看。
+没有指定 `--report` 时，工作区和 CI 选择器不写文件，摘要提示展开方式；计时原始记录仍追加到传入的 JSONL。
+
+```sh
+python3 -B scripts/check_workspaces.py --report runs/<task>/workspaces.json
+python3 -B scripts/development_records.py time-summary runs/<task>/timing.jsonl --report runs/<task>/timing-summary.json
+python3 -B scripts/ci_selection.py select --event-name push --event-path runs/<task>/event.json --report runs/<task>/selection.json
+```
+
+后续状态读取优先报告变化、失败和原证据路径，完整结果按具体问题展开。
+JSON 协议消费者使用 `--json`；CI 的 `GITHUB_OUTPUT` 布尔值不变。
+这只缩减显示内容，不减少工作区检查范围、检查项目或错误记录。
+
 ## CI 按改动选择检查
 
 CI 按改动涉及的内容选择检查。普通说明文档只检查改动行的空白并运行 CI 路由自检，
@@ -66,6 +86,14 @@ CI 按改动涉及的内容选择检查。普通说明文档只检查改动行�
 | 安装验收脚本 | 维护工具测试、两平台安装测试 |
 | Benchmark 材料与规范文档、题目、checker、登记工具 | Benchmark 登记与索引、阶段静态检查、身份与独立判据回归 |
 | CI 配置、检查选择器或未登记的非文档路径 | 全部检查 |
+
+有完整 base/head 文件内容时，选择器额外识别两种已核对的边界：
+
+- `scripts/ci_selection.py` 只有 `MAINTENANCE_FILES` 字面集合变化，且变化项已在当前选择器核对为独立维护路径时，只选维护检查。其余 Python 语法树必须相同。新路径、调度语义变化和 CI 配置仍全选；选择器回归自身选维护检查。
+- `evas/docs/COMPARISON.md` 只有唯一 `ci:progress:start` / `ci:progress:end` 注释块内的进度文字变化，块外文本完全一致时，只做快速检查。该块只记录推进进度，不放能力、成绩或验收规则；表格、标题、代码块和嵌套注释不适用。新增、删除标记或文件仍选来源校准。
+
+仅有路径的本地政策请求不能证明这些边界，继续保守选取。逐路径理由保存在完整选取结果中。
+登记独立维护路径前仍须核对消费者；共享依赖不能登记成独立维护来绕开验收。
 
 “已登记”指 [ci_selection.py](ci_selection.py) 中明确列出的路径。不能笼统地跳过实验目录：
 论文输入生成器和部分后端夹具也被 EVAS 回归读取，修改它们仍跑完整回归。
@@ -127,7 +155,7 @@ python3 -B -m unittest discover -s scripts/tests -p test_ci_selection.py -v
 这减少符合条件的改动所消耗的 runner 时间，不代表整个 CI 等待时间按同样幅度下降。
 上述三个原始 diff 均需按完整路径重新判断，不能把静态步骤耗时直接算作其加速收益。
 Python 回归仍是这些运行的最长路径，完整功能回归、测试分母与精度门槛均未缩减。
-选择器自身的修改仍触发全部检查，首次交付不会使用自身的缩减规则跳过验证。
+调度语义修改仍触发全部检查；上文所列的独立维护登记例外需要完整文件内容核对。
 
 ### 同一观察记录的多档校准
 
@@ -204,7 +232,7 @@ python3 -B scripts/check_workspaces.py --repo /path/to/checkout --base main
 
 开始或恢复编辑、新建工作区以及交接时运行同一个命令。返回值 `0` 表示可见性检查通过，
 `1` 表示入口缺失或失效，`2` 表示 Git 或文件检查未完成。命令只读，不创建、移动、提交、
-合并或删除工作区，也不访问网络。JSON 包含每个 checkout 的分支、HEAD、未提交及未跟踪
+合并或删除工作区，也不访问网络。只有显式 `--report` 会保存结果文件。JSON 包含每个 checkout 的分支、HEAD、未提交及未跟踪
 条目、忽略路径和不在比较基准中的提交数；目录条目数不是文件数。
 
 基准默认选本地 `origin/main`，其次是本地 `main`，并记录实际 SHA；也可用 `--base` 指定。
@@ -237,7 +265,7 @@ python3 -B scripts/check_workspaces.py --assets --json > runs/workspace-assets.j
 `assume-unchanged` 或 `skip-worktree` 索引标记可能隐藏修改；报告列出仍存在的隐藏路径并读取内容。
 本地不存在的隐藏路径只记数量，避免稀疏检出的大量缺席文件淹没改动列表；普通 Git 删除仍逐项保留。
 存在隐藏标记时仍将覆盖标为未完成，不生成完整源码匹配或退出候选结论。
-文本报告限制文件和匹配组展示数量，完整文件清单和匹配组保留在 `--json` 输出中。
+`--verbose` 文本限制文件和匹配组展示数量，完整清单和匹配组保留在 `--json` 或 `--report` 中。
 
 | 报告项 | 可以据此判断什么 |
 | --- | --- |

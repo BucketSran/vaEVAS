@@ -49,6 +49,16 @@ scope/head against existing authorization; neither approval nor another question
 - Keep an existing file's main language when editing it; do not translate unrelated content merely to normalize style. User-requested language takes precedence.
 - Keep API names, identifiers, commands, diagnostics and quoted sources in their original language. English terminology within Chinese explanations is allowed; parallel bilingual copies are not required.
 
+README files, comparison tables and evaluation standards are human documentation.
+Use `technical-writing` and `unslop`: lead with the reader's question, conclusion
+and limits; explain necessary terms and use concrete precision/event examples.
+Keep pass criteria and their rationale in the main text. Checker formulas, receipt
+fields and execution procedures belong in the existing developer/validation reference,
+with links that preserve the requirements. Before handoff, check readability separately
+from formatting and links: a reader without the conversation must understand what is
+tested, what passing means and what remains unknown. Agent instructions use
+`writing-for-agents`; update the owning document instead of adding parallel rules.
+
 ## Reviewing diffs
 
 Fix the comparison before reviewing: base/head or a saved before/after snapshot, included

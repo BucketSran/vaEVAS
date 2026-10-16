@@ -97,12 +97,14 @@ def stop(path: Path, identifier: str, status: str, evidence: str, reason: str) -
 
 def summarize(path: Path) -> dict:
     rows = read_events(path)
-    active, totals, intervals, unknown = {}, {}, [], []
+    active, totals, intervals, unknown, failures = {}, {}, [], [], []
     for row in rows:
         if row["kind"] == "start":
             active[row["id"]] = row
             continue
         began = active.pop(row["id"])
+        if row['status'] != 'complete':
+            failures.append({key: row[key] for key in ('id', 'status', 'evidence', 'reason')})
         elapsed = row["elapsed_s"]
         if elapsed is None:
             unknown.append(row["id"])
@@ -121,6 +123,7 @@ def summarize(path: Path) -> dict:
             "observed_union_s": sum(hi - lo for lo, hi in merged),
             "observed_span_s": merged[-1][1] - merged[0][0] if merged else 0,
             "unfinished": list(active), "unknown_duration": unknown,
+            "failures": failures,
             "scope": "Observed intervals only. Actor totals can overlap; never sum them as wall time. Unrecorded time is unknown."}
 
 
@@ -143,6 +146,9 @@ def main() -> int:
     end.add_argument("--reason", default="")
     summary = commands.add_parser("time-summary")
     summary.add_argument("path", type=Path)
+    for command in (review, begin, end, summary):
+        command.add_argument('--json', action='store_true', help='Print the full result as JSON')
+        command.add_argument('--report', type=Path, help='Save the full result as JSON')
     args = parser.parse_args()
     try:
         if args.command == "check-review":
@@ -155,7 +161,25 @@ def main() -> int:
             result = summarize(args.path)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         parser.exit(2, f"{exc}\n")
-    print(json.dumps(result, ensure_ascii=False, indent=2))
+    if args.report:
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        args.report.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
+    if args.json:
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+    elif args.command == 'check-review':
+        print(f"Review: {'PASS' if result['passed'] else 'FAIL'}; limit={result['limit']}; findings={result['findings']}")
+        for error in result['errors']:
+            print(error)
+    elif args.command == 'time-summary':
+        print(f"Observed: union={result['observed_union_s']:.3f}s; span={result['observed_span_s']:.3f}s; failures={len(result['failures'])}")
+        print(f"Unfinished: {result['unfinished']}; unknown duration: {result['unknown_duration']}")
+        for failure in result['failures']:
+            print(f"{failure['id']}: {failure['status']}; evidence={failure['evidence']}; {failure['reason']}")
+    else:
+        print(f"Timer {result['id']}: {result.get('status', result['kind'])}; evidence={result.get('evidence', args.path)}")
+    if not args.json:
+        print(f'Evidence: {args.report}' if args.report else
+              ('Details: --json' if args.command == 'check-review' else f'Timing evidence: {args.path}'))
     return 0 if result.get("passed", True) else 1
 
 

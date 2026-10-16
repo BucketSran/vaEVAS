@@ -32,6 +32,13 @@ decisions that affect the requested outcome; inspect available facts yourself.
 
 ## Select the component entry
 
+Global vaEVAS skills route to these repository entries; legacy interview, KPI and
+multi-repository workflows do not apply. Use the actual checkout as the command
+directory. If the host catalog lacks these project skills, read the declared
+`SKILL.md` through the resolved checkout path. This is manual loading, not evidence
+of automatic discovery. Planning skills use the existing
+[tracker](../../../docs/agents/issue-tracker.md) and [domain docs](../../../docs/agents/domain.md).
+
 | Requested work | Entry and owning acceptance |
 | --- | --- |
 | Implement or fix EVAS behavior | [evas-develop](../evas-develop/SKILL.md); simulator semantics and independent behavior checks |
