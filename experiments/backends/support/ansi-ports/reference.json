@@ -1,0 +1,511 @@
+{
+  "scope": "ANSI explicit per-port direction/electrical and1D range;direction-only with body discipline;finite declarations/binding,not complete LRM",
+  "voltage_budget_V": 1e-08,
+  "pairing": "exact common native binary64 times,without interpolation",
+  "source": {
+    "base": "153302729dff50084e0ce32015d675c1e4e56155 plus ANSI-only diff",
+    "syntax_sha256": "766c424ec8b6c1f8a9e6fa9416aebe91e274d52ffd9ba486fa75291e5efcd38f",
+    "test_sha256": "7417ff9b8238b4b773608142872e03fc9d82093876d0a32f0cb1c9b0d407bbe7",
+    "kernel_sha256": "13c0da468f3a7798449fc704442aa4a03eae89f961fef76b2b5cb1c4daf034ef",
+    "rust_ir_unchanged": true
+  },
+  "spectre": {
+    "version": "sub-version  21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f",
+    "runs": 7,
+    "version_queries": 1,
+    "requested": {
+      "reltol": 1e-07,
+      "vabstol": 1e-09,
+      "maxstep": 0.25
+    },
+    "effective": {
+      "reltol": 1e-08,
+      "vabstol": 1e-09,
+      "maxstep": 0.25
+    }
+  },
+  "cases": [
+    {
+      "case": "direction-only",
+      "source_sha256": "926c3d61a8ef5e818514097a533942c24d1192abf4d4ec765c8ff476ebf73a23",
+      "deck_sha256": "edf6b9260fc8417c326e32450217743aea3801ed358b101a3db1b844bc0a733a",
+      "spectre_result_sha256": "8cb66bde3d0a9e060fc8998d5cfb064d1859126175361e8a2a1a8f3381c8a579",
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre_V": {
+            "a": 0.0,
+            "y": 0.0
+          },
+          "evas_V": {
+            "a": 0.0,
+            "y": -0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.125,
+          "spectre_V": {
+            "a": 0.125,
+            "y": 0.25
+          },
+          "evas_V": {
+            "a": 0.125,
+            "y": 0.25
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.5,
+          "spectre_V": {
+            "a": 0.5,
+            "y": 1.0
+          },
+          "evas_V": {
+            "a": 0.5,
+            "y": 1.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.875,
+          "spectre_V": {
+            "a": 0.875,
+            "y": 1.75
+          },
+          "evas_V": {
+            "a": 0.875,
+            "y": 1.75
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.0,
+          "spectre_V": {
+            "a": 1.0,
+            "y": 2.0
+          },
+          "evas_V": {
+            "a": 1.0,
+            "y": 2.0
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "status": "finite_paired_pass",
+      "native_rows": 25,
+      "spectre_max_analytic_error_V": 0.0,
+      "raw_psf_sha256": "8006702bb595e4ddc250467ef8f812a175ee1365d1bc26df547b2fff137b1355",
+      "evas_response_sha256": "ca3de9c55741f02220de394ecfbf4131a06a71d93e7323b7c41ae0753d27d67f",
+      "initial_native_present": true
+    },
+    {
+      "case": "redeclared",
+      "source_sha256": "e19741f294fed3491e967371bdf98e1103a29d28081a2d5d3498666c5572f3ed",
+      "deck_sha256": "edf6b9260fc8417c326e32450217743aea3801ed358b101a3db1b844bc0a733a",
+      "spectre_result_sha256": "41c3d625df3de3283088b81c98f49b2195869e7092cf528d64776aa83f7042e5",
+      "pairs": [],
+      "status": "rejected_by_both",
+      "evas_diagnostic": {
+        "diagnostic_version": 1,
+        "kind": "compile_error",
+        "code": "syntax_error",
+        "category": "unknown",
+        "stage": "parse",
+        "capability": "LANG",
+        "message": "redeclared/dut.va:2:84: duplicate electrical/parameter name",
+        "hint": "Check the supported syntax and the source location.",
+        "location": {
+          "source": "redeclared/dut.va",
+          "line": 2,
+          "column": 84
+        }
+      },
+      "evas_diagnostic_sha256": "1aaf541d3d90cbed426c0ea9612a9060c12e6075fce4c0cc9a590e6f099e3802"
+    },
+    {
+      "case": "scalar-ansi",
+      "source_sha256": "4d73132f5d4703678eb414fb263e763f7647b4509e188feee10c1df1ac6eb7d4",
+      "deck_sha256": "eade6410149aae625f05b15064084d6d60175060de214cf9a6b8f58436e910eb",
+      "spectre_result_sha256": "90fac071733a4d74d31562ab6f4d782a7ce3fac61041d31a20461be13543acd2",
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre_V": {
+            "a": 0.0,
+            "b": 0.25,
+            "y": 1.25
+          },
+          "evas_V": {
+            "a": 0.0,
+            "b": 0.25,
+            "y": 1.25
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.125,
+          "spectre_V": {
+            "a": 0.125,
+            "b": 0.25,
+            "y": 1.625
+          },
+          "evas_V": {
+            "a": 0.125,
+            "b": 0.25,
+            "y": 1.625
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.5,
+          "spectre_V": {
+            "a": 0.5,
+            "b": 0.25,
+            "y": 2.75
+          },
+          "evas_V": {
+            "a": 0.5,
+            "b": 0.25,
+            "y": 2.75
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.875,
+          "spectre_V": {
+            "a": 0.875,
+            "b": 0.25,
+            "y": 3.875
+          },
+          "evas_V": {
+            "a": 0.875,
+            "b": 0.25,
+            "y": 3.875
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.0,
+          "spectre_V": {
+            "a": 1.0,
+            "b": 0.25,
+            "y": 4.25
+          },
+          "evas_V": {
+            "a": 1.0,
+            "b": 0.25,
+            "y": 4.25
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "status": "finite_paired_pass",
+      "native_rows": 25,
+      "spectre_max_analytic_error_V": 0.0,
+      "raw_psf_sha256": "9b2e1851c2a3423809f621e0928a60f8c8824c029f03eec3da2ad1cedd19496d",
+      "evas_response_sha256": "5292bc7505a54c842d52a301827ec6846289297413f9a08235f6c70c69dbb902",
+      "initial_native_present": true
+    },
+    {
+      "case": "scalar-nonansi",
+      "source_sha256": "f666d77fb6cc402593fc58abf0e0b68efd22aab4dc107db5113c759362709e04",
+      "deck_sha256": "eade6410149aae625f05b15064084d6d60175060de214cf9a6b8f58436e910eb",
+      "spectre_result_sha256": "bdeed3b65d2bd9993592bc36895e1ac0cd2fc96458326bc433dd11cee3d9c501",
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre_V": {
+            "a": 0.0,
+            "b": 0.25,
+            "y": 1.25
+          },
+          "evas_V": {
+            "a": 0.0,
+            "b": 0.25,
+            "y": 1.25
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.125,
+          "spectre_V": {
+            "a": 0.125,
+            "b": 0.25,
+            "y": 1.625
+          },
+          "evas_V": {
+            "a": 0.125,
+            "b": 0.25,
+            "y": 1.625
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.5,
+          "spectre_V": {
+            "a": 0.5,
+            "b": 0.25,
+            "y": 2.75
+          },
+          "evas_V": {
+            "a": 0.5,
+            "b": 0.25,
+            "y": 2.75
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.875,
+          "spectre_V": {
+            "a": 0.875,
+            "b": 0.25,
+            "y": 3.875
+          },
+          "evas_V": {
+            "a": 0.875,
+            "b": 0.25,
+            "y": 3.875
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.0,
+          "spectre_V": {
+            "a": 1.0,
+            "b": 0.25,
+            "y": 4.25
+          },
+          "evas_V": {
+            "a": 1.0,
+            "b": 0.25,
+            "y": 4.25
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "status": "finite_paired_pass",
+      "native_rows": 25,
+      "spectre_max_analytic_error_V": 0.0,
+      "raw_psf_sha256": "eae2e7752fa792261c242f03715f02057301c2f7a1a845acf0253333dde4077b",
+      "evas_response_sha256": "ea36f84fd778c98246b1f0a8a38a1f32bfaa78ea4e39db5693d492865890f35b",
+      "initial_native_present": true
+    },
+    {
+      "case": "shared-list",
+      "source_sha256": "81c1383d7ef37230b7fbb5b84d8475b71658a51a52194a4157612fbb82be2558",
+      "deck_sha256": "eade6410149aae625f05b15064084d6d60175060de214cf9a6b8f58436e910eb",
+      "spectre_result_sha256": "458d388d2918031a5756102347509ef5ca4d717cd1395f6f8a47674695e86de8",
+      "pairs": [],
+      "status": "rejected_by_both",
+      "evas_diagnostic": {
+        "diagnostic_version": 1,
+        "kind": "compile_error",
+        "code": "syntax_error",
+        "category": "unknown",
+        "stage": "parse",
+        "capability": "LANG",
+        "message": "shared-list/dut.va:2:29: each ANSI port requires an explicit direction; shared name lists are not supported",
+        "hint": "Check the supported syntax and the source location.",
+        "location": {
+          "source": "shared-list/dut.va",
+          "line": 2,
+          "column": 29
+        }
+      },
+      "evas_diagnostic_sha256": "5c11e6591deae4c860e9f1fe5817a0123d5910b0cc77f64d71bfd87f037add49"
+    },
+    {
+      "case": "vector-ansi",
+      "source_sha256": "c87a11e5f0142bdaa1baed7b993b5e4ea540347c4cffb95c47b9e596cd4b7f21",
+      "deck_sha256": "b98eabdeaf26badbcf52debea83e72541337fd15ac9c5e7eff842f85b9ce804f",
+      "spectre_result_sha256": "373ee418fd268d4e24a7bd7a6afc9835c471edf6b18dd4b87769611307efd2fb",
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre_V": {
+            "a1": 2.0,
+            "a0": 5.0,
+            "y0": 6.0,
+            "y1": 4.0
+          },
+          "evas_V": {
+            "a1": 2.0,
+            "a0": 5.0,
+            "y0": 6.0,
+            "y1": 4.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.125,
+          "spectre_V": {
+            "a1": 2.125,
+            "a0": 4.875,
+            "y0": 5.875,
+            "y1": 4.25
+          },
+          "evas_V": {
+            "a1": 2.125,
+            "a0": 4.875,
+            "y0": 5.875,
+            "y1": 4.25
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.5,
+          "spectre_V": {
+            "a1": 2.5,
+            "a0": 4.5,
+            "y0": 5.5,
+            "y1": 5.0
+          },
+          "evas_V": {
+            "a1": 2.5,
+            "a0": 4.5,
+            "y0": 5.5,
+            "y1": 5.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.875,
+          "spectre_V": {
+            "a1": 2.875,
+            "a0": 4.125,
+            "y0": 5.125,
+            "y1": 5.75
+          },
+          "evas_V": {
+            "a1": 2.875,
+            "a0": 4.125,
+            "y0": 5.125,
+            "y1": 5.75
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.0,
+          "spectre_V": {
+            "a1": 3.0,
+            "a0": 4.0,
+            "y0": 5.0,
+            "y1": 6.0
+          },
+          "evas_V": {
+            "a1": 3.0,
+            "a0": 4.0,
+            "y0": 5.0,
+            "y1": 6.0
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "status": "finite_paired_pass",
+      "native_rows": 23,
+      "spectre_max_analytic_error_V": 0.0,
+      "raw_psf_sha256": "2ec6ebd439b55215f5d25defbb9aa82f25826a51c9fdd81bbb4060a6c28f4c6d",
+      "evas_response_sha256": "18a3558802d58fcc4b6c0331aecebd7848628cbdc1bfab13ffdb1f4f9ae03b7d",
+      "initial_native_present": true
+    },
+    {
+      "case": "vector-nonansi",
+      "source_sha256": "0035477db5f93a4a0487e860e02df71ea178fcc9db3ab238569c85073820cb90",
+      "deck_sha256": "b98eabdeaf26badbcf52debea83e72541337fd15ac9c5e7eff842f85b9ce804f",
+      "spectre_result_sha256": "8335784169127dec6f5f958df5efb589e1f47c1cc4424cfa7e0d4283803d8a00",
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre_V": {
+            "a1": 2.0,
+            "a0": 5.0,
+            "y0": 6.0,
+            "y1": 4.0
+          },
+          "evas_V": {
+            "a1": 2.0,
+            "a0": 5.0,
+            "y0": 6.0,
+            "y1": 4.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.125,
+          "spectre_V": {
+            "a1": 2.125,
+            "a0": 4.875,
+            "y0": 5.875,
+            "y1": 4.25
+          },
+          "evas_V": {
+            "a1": 2.125,
+            "a0": 4.875,
+            "y0": 5.875,
+            "y1": 4.25
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.5,
+          "spectre_V": {
+            "a1": 2.5,
+            "a0": 4.5,
+            "y0": 5.5,
+            "y1": 5.0
+          },
+          "evas_V": {
+            "a1": 2.5,
+            "a0": 4.5,
+            "y0": 5.5,
+            "y1": 5.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.875,
+          "spectre_V": {
+            "a1": 2.875,
+            "a0": 4.125,
+            "y0": 5.125,
+            "y1": 5.75
+          },
+          "evas_V": {
+            "a1": 2.875,
+            "a0": 4.125,
+            "y0": 5.125,
+            "y1": 5.75
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.0,
+          "spectre_V": {
+            "a1": 3.0,
+            "a0": 4.0,
+            "y0": 5.0,
+            "y1": 6.0
+          },
+          "evas_V": {
+            "a1": 3.0,
+            "a0": 4.0,
+            "y0": 5.0,
+            "y1": 6.0
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "status": "finite_paired_pass",
+      "native_rows": 23,
+      "spectre_max_analytic_error_V": 0.0,
+      "raw_psf_sha256": "72a473ac311b77231294eaa9cba711ca04e427ce308278b96dc41c3afdc95089",
+      "evas_response_sha256": "1cd31c53979d8b2b3ef4827de941de16383cd5954f8e322017efe890677f5f60",
+      "initial_native_present": true
+    }
+  ],
+  "retention": "Compact source/decks/native pairs in repository;full raw PSF/responses/tools/logs remain local-only runs/evas-ansi-ports-20261017",
+  "reader": "Reuse previously calibrated schema-position reader from save-time comparison;negative compilation results are preserved separately"
+}

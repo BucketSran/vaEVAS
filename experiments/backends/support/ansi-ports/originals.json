@@ -1,0 +1,524 @@
+{
+  "denominator": 26,
+  "original_probe_base": "8c3ef9eecda2e202beea6e80e720b0639bff0407",
+  "new_base": "153302729dff50084e0ce32015d675c1e4e56155 plus ANSI-only diff",
+  "first_header_blocker_removed": 26,
+  "counts": {
+    "completed_old_checker_passed": 3,
+    "syntax_error": 11,
+    "kernel.event_resolution": 1,
+    "kernel.unsupported_transient": 3,
+    "resource_budget": 1,
+    "unsupported_initial_event": 3,
+    "unsupported_integer_arithmetic": 1,
+    "kernel.unsupported_source_uncertainty": 2,
+    "compile_error": 1
+  },
+  "results": [
+    {
+      "family": "001",
+      "task": "001-bang-bang-phase-detector",
+      "deck_sha256": "41cd2e820304c4e90fb9f4435e784610816520a034c8a12aae19bf06394b113c",
+      "gold_tree_sha256": "81632a9970a105cd0c207c76dfb83cbe897beb7602d781f02894d4f097ae920b",
+      "files": {
+        "submission/bbpd_ref.va": "225f74b409fcfd4801f07e46cf84dbd61a2a895f51a095239cfd5ded406ea5b2",
+        "testbench/trusted_replay_test.scs": "41cd2e820304c4e90fb9f4435e784610816520a034c8a12aae19bf06394b113c"
+      },
+      "status": "execution_completed",
+      "seconds": 4.4054976250045,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": {
+        "passed": true,
+        "note": "data_edges=6 up_edges=2 down_edges=2 overlap_frac=0.0000 direction_up=2/2 direction_down=2/2 none=2/2 wrong_direction=0 missing_direction=0 false_pulse=0 strict_pulses=4 rail_failures=0 clear_failures=0",
+        "qualification": "frozen historical checker/normalization only"
+      },
+      "rows": 3524,
+      "response_sha256": "93492c426514f065eb7ccf2db56b318d2578e7a238bebfd8cad1b1bd2f7a5ed5"
+    },
+    {
+      "family": "012",
+      "task": "012-clock-divider",
+      "deck_sha256": "91e5e3de5b106bcf1ab6fa26b7447e5682463f340d2421ec0badde44323b3bd0",
+      "gold_tree_sha256": "d5592a557b7f42b27c813a218ef8171d69f2321e26c37e26e5d88d1e3cabc356",
+      "files": {
+        "submission/clk_divider_ref.va": "a16016a244516767ffb04c82d3de8a4a81330baf0f1bdb42dfb677c99789e71e",
+        "testbench/trusted_replay_test.scs": "91e5e3de5b106bcf1ab6fa26b7447e5682463f340d2421ec0badde44323b3bd0"
+      },
+      "status": "rejected",
+      "seconds": 0.011668290972011164,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "syntax_error",
+        "message": "unsupported expression '>'"
+      }
+    },
+    {
+      "family": "017",
+      "task": "017-strongarm-style-latch-comparator",
+      "deck_sha256": "61349a3a98867908fcc17cf4a9dbc32c12c9714980dd1fb0f4d818bd12e4f8b0",
+      "gold_tree_sha256": "fecec2f7115d49b02776669576196051256ff81cb359a2c0d5f821651a34ff18",
+      "files": {
+        "submission/cmp_strongarm.va": "b52a6b93137f0bf635e7758aa959babf0b080b83562dc4c527b0fc503bd6119a",
+        "testbench/trusted_replay_test.scs": "61349a3a98867908fcc17cf4a9dbc32c12c9714980dd1fb0f4d818bd12e4f8b0"
+      },
+      "status": "rejected",
+      "seconds": 0.00650779198622331,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "syntax_error",
+        "message": "expected ';', got '='; outside affine-voltage syntax"
+      }
+    },
+    {
+      "family": "026",
+      "task": "026-digital-phase-accumulator-with-modulo-wrap",
+      "deck_sha256": "59ac05b2deb16edc71862030e341eeb02c202e136af9475917d1bb6a855054be",
+      "gold_tree_sha256": "787e57128469a27aa1f6ec6e6c5f9de7bc2cd37b99a4a44f44b65b931286b415",
+      "files": {
+        "submission/phase_accumulator_timer_wrap_ref.va": "5348e4c9eab599ab6d91aef4b17f2eb2ab09bf515251b925ccb23d040c27f9ea",
+        "testbench/trusted_replay_test.scs": "59ac05b2deb16edc71862030e341eeb02c202e136af9475917d1bb6a855054be"
+      },
+      "status": "rejected",
+      "seconds": 0.27254745800746605,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "kernel.event_resolution",
+        "message": "output query cannot certify its physical event phase"
+      }
+    },
+    {
+      "family": "047",
+      "task": "047-window-comparator-detector",
+      "deck_sha256": "540afae84037e061819e937c7f0d2bdb9e3529a4866bd86f13f2361be03d6e8f",
+      "gold_tree_sha256": "702edd6e3a88958046e882196f75212ccb37a12c5304f22776ff70f740f60a1d",
+      "files": {
+        "submission/window_comparator_ref.va": "bb81596762dfd4770dd6f1eef69cd77d1bcfca4b80b4161f53c4d38a34b39248",
+        "testbench/trusted_replay_test.scs": "540afae84037e061819e937c7f0d2bdb9e3529a4866bd86f13f2361be03d6e8f"
+      },
+      "status": "execution_completed",
+      "seconds": 0.7546035000123084,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": {
+        "passed": true,
+        "note": "below_hi=0.000 above_hi=0.000 inside_rise_hi=1.000 inside_fall_hi=1.000 span=0.900; P_INITIAL_WINDOW_STATE mismatch_count=0; P_INSIDE_WINDOW_HIGH mismatch_count=0; P_BOUNDARY_EXCLUSION mismatch_count=0; P_BIDIRECTIONAL_CROSSINGS mismatch_count=0; P_RAIL_SMOOTHING mismatch_count=0",
+        "qualification": "frozen historical checker/normalization only"
+      },
+      "rows": 251,
+      "response_sha256": "c58bb6306a72ecd8a70979a9601fb8d777223b53a3f3515c09273060b2c1559a"
+    },
+    {
+      "family": "048",
+      "task": "048-bin-to-thermometer-decoder-8b",
+      "deck_sha256": "adfcca6843a4316385da8b61363c1dddaf4ec6fbcf1fa7e9a9003f982eef2562",
+      "gold_tree_sha256": "63d1d0badf41c129132d798bca4847ba059d54af729dc88696fb8d48999431ca",
+      "files": {
+        "submission/bin_to_therm_8b.va": "3b52a0e6d61b1f2180c90eb551ceb23aadac7d16787721ee33610751452a5959",
+        "testbench/trusted_replay_test.scs": "adfcca6843a4316385da8b61363c1dddaf4ec6fbcf1fa7e9a9003f982eef2562"
+      },
+      "status": "rejected",
+      "seconds": 0.014207874977728352,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "syntax_error",
+        "message": "unsupported expression '<'"
+      }
+    },
+    {
+      "family": "049",
+      "task": "049-thermometer-to-binary-encoder-8b",
+      "deck_sha256": "bdb2024ba79112a10b18dbae07feee21d7520ef82d4d6d4c50088485c55b4507",
+      "gold_tree_sha256": "14ce608137b8506df6c86ac82bb0014f1c214aadb96a97eb3ef2d2732f947e90",
+      "files": {
+        "submission/therm_to_bin_8b.va": "c52eb0518cad226e3f7ae3719fe720728043d935c93eab39e596b55bd1465100",
+        "testbench/trusted_replay_test.scs": "bdb2024ba79112a10b18dbae07feee21d7520ef82d4d6d4c50088485c55b4507"
+      },
+      "status": "rejected",
+      "seconds": 0.13260408301721327,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "syntax_error",
+        "message": "unsupported expression '<'"
+      }
+    },
+    {
+      "family": "056",
+      "task": "056-config-latch-32b-clocked",
+      "deck_sha256": "fa3fa0897500d20fe94d426de8405e7259d53a97dafbe32fae250199a32062f5",
+      "gold_tree_sha256": "06e6b49c4266416980ff20d5d449386d92bf94e28ffdd05733a08e8abba5194c",
+      "files": {
+        "submission/config_latch_32b.va": "2e40a6c377b3f57bc921f56f442ea2a9bdf1ee92a04870daf1d22cbd36d24fd4",
+        "testbench/trusted_replay_test.scs": "fa3fa0897500d20fe94d426de8405e7259d53a97dafbe32fae250199a32062f5"
+      },
+      "status": "rejected",
+      "seconds": 0.1273978750105016,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "kernel.unsupported_transient",
+        "message": "ordinary analog conditionals are not supported in transient event equations"
+      }
+    },
+    {
+      "family": "057",
+      "task": "057-config-shift-register-64b",
+      "deck_sha256": "174da9f553b4ce9c1600c94cf35f18bcc14030de15a680f61d6607a19f5bee11",
+      "gold_tree_sha256": "ea8c6ad78528a7745adfc362a3d6d51803fa855265a01288d24cc68d25eb4e1a",
+      "files": {
+        "submission/config_shift_reg_64b.va": "123fa6794931e65dc589e347760b214e8a2f1b479850e7d683d74c602756d5f5",
+        "testbench/trusted_replay_test.scs": "174da9f553b4ce9c1600c94cf35f18bcc14030de15a680f61d6607a19f5bee11"
+      },
+      "status": "rejected",
+      "seconds": 0.060696458007441834,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "resource_budget",
+        "message": "event integer domains failed the post-fixpoint verification"
+      }
+    },
+    {
+      "family": "058",
+      "task": "058-masked-config-update-32b",
+      "deck_sha256": "407ce2eb835cc16a0224a7e35798db37be0653a61d8590991c2503030e7e6c6c",
+      "gold_tree_sha256": "2cdc96d8d9fd45c154c4036d9dea2194cf0769899115b9b9e2c5e20b4baea0e2",
+      "files": {
+        "submission/masked_config_update_32b.va": "f04d486d5371d1a5a399f4ce6ce560116f9895376d899e8716c2afd48229fbdf",
+        "testbench/trusted_replay_test.scs": "407ce2eb835cc16a0224a7e35798db37be0653a61d8590991c2503030e7e6c6c"
+      },
+      "status": "rejected",
+      "seconds": 0.11643537500640377,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "kernel.unsupported_transient",
+        "message": "ordinary analog conditionals are not supported in transient event equations"
+      }
+    },
+    {
+      "family": "072",
+      "task": "072-aperture-delay-track-and-hold",
+      "deck_sha256": "4a828a847ca56f91ab1207ff1950dfd3145c93b960c0d5cb2f333a038227a0e9",
+      "gold_tree_sha256": "a075551b4e12fad71db2c449f965afae99a9f68e93d62d1843b567b0d0fd5092",
+      "files": {
+        "submission/sample_hold_aperture_ref.va": "f74d7f1740c8ee489d3fcfc0cd2d6b15c71eab006fcc31b5952b0b659cead058",
+        "testbench/trusted_replay_test.scs": "4a828a847ca56f91ab1207ff1950dfd3145c93b960c0d5cb2f333a038227a0e9"
+      },
+      "status": "rejected",
+      "seconds": 0.007329334010137245,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "unsupported_initial_event",
+        "message": "initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "family": "077",
+      "task": "077-dither-noise-like-deterministic-source",
+      "deck_sha256": "0774c630c0a6eb22704064b845ffbff35160b83593e48f17716136e616b2b7b9",
+      "gold_tree_sha256": "76a4529ff75cd68fa07a5ce3f17fecea5420f13d2fb86a3a2d94958b0199d696",
+      "files": {
+        "submission/noise_gen_ref.va": "6955a79b9af3fe82974f10ab657c099b3501c5accb00bb3977b0c9fb7dcb2700",
+        "testbench/trusted_replay_test.scs": "0774c630c0a6eb22704064b845ffbff35160b83593e48f17716136e616b2b7b9"
+      },
+      "status": "rejected",
+      "seconds": 0.056404875009320676,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "unsupported_integer_arithmetic",
+        "message": "bounded integer division/modulo exceeds quotient-bin budget (256)"
+      }
+    },
+    {
+      "family": "078",
+      "task": "078-lfsr-prbs-generator",
+      "deck_sha256": "b2a32780c39a3f336716968e3861b9a2666b677f5d23c56d455068a940f1b33a",
+      "gold_tree_sha256": "60beb6b0bcf26b5a799d8a688103d45d7c07f6a9d2d406bde188a9bcb6253ea1",
+      "files": {
+        "submission/prbs7_ref.va": "d91582110c584095666ea9704dbd0767eeb1adf4b7e0d63aee05af0416a32fd9",
+        "testbench/trusted_replay_test.scs": "b2a32780c39a3f336716968e3861b9a2666b677f5d23c56d455068a940f1b33a"
+      },
+      "status": "rejected",
+      "seconds": 0.011590834008529782,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "syntax_error",
+        "message": "unsupported expression '>'"
+      }
+    },
+    {
+      "family": "079",
+      "task": "079-ramp-step-source",
+      "deck_sha256": "440a6cb343eeecd62fa0babe109bfb30bfcdc33c2bc2d950613f07d86e74716a",
+      "gold_tree_sha256": "9c1f8fd75d6d8a3f789b2a8c994568742d75386f09383d2f6b0d6ebedda37362",
+      "files": {
+        "submission/bound_step_period_guard_ref.va": "3d7776b27743e3fa8561a6163ef27e240f150800a3e5b4485ca0dd79b40e4c1b",
+        "testbench/trusted_replay_test.scs": "440a6cb343eeecd62fa0babe109bfb30bfcdc33c2bc2d950613f07d86e74716a"
+      },
+      "status": "rejected",
+      "seconds": 0.026735541003290564,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "kernel.unsupported_transient",
+        "message": "transient expressions must be jointly affine in voltage and state"
+      }
+    },
+    {
+      "family": "088",
+      "task": "088-cppll-tracking-reacquire-timer",
+      "deck_sha256": "adddbe8dbd895e84f48921979e2a809de33b3353f890b008a1ca88d69a47011e",
+      "gold_tree_sha256": "b403f519b505ca3c971c7607972aad0fff446f77ca62f7ffc7e81f9db55837f0",
+      "files": {
+        "submission/cppll_timer_ref.va": "bbb3cb5378b77259511fccea7493cd36fad1b178b377df6826af0a83e1ba752d",
+        "submission/ref_step_clk.va": "f8de09092ea34d34681cbf6ea2b8eddca3a43d4177abb0b42393e3150feb98db",
+        "testbench/trusted_replay_test.scs": "adddbe8dbd895e84f48921979e2a809de33b3353f890b008a1ca88d69a47011e"
+      },
+      "status": "rejected",
+      "seconds": 0.008545082993805408,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "syntax_error",
+        "message": "expected '=', got '('; outside affine-voltage syntax"
+      }
+    },
+    {
+      "family": "089",
+      "task": "089-edge-crossing-interval-timer",
+      "deck_sha256": "d1f0c7d8bc36f644349c9df7946460e8b61c1ca21a6c720198d1157b7f1cd6e2",
+      "gold_tree_sha256": "b13e22ba0c9835e3ca0061fc9dc84bb1741e30fbbf71cc918f95830f4deab3e6",
+      "files": {
+        "submission/cross_interval_163p333_ref.va": "a3c9b1aa8630a9446009793cdcd0132db40a0162c9c3147a2004f8c8b8ce3b03",
+        "testbench/trusted_replay_test.scs": "d1f0c7d8bc36f644349c9df7946460e8b61c1ca21a6c720198d1157b7f1cd6e2"
+      },
+      "status": "execution_completed",
+      "seconds": 41.50707637501182,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": {
+        "passed": true,
+        "note": "default:cycle0:delay_ps=163.333,expected_ps=165.000,err_ps=1.667 default:cycle1:delay_ps=120.000,expected_ps=125.000,err_ps=5.000 instance=default supply_span=1.000 scale_ps=200.000 seen_rail_error=0.000 override:cycle0:delay_ps=135.000,expected_ps=135.000,err_ps=0.000 override:cycle1:delay_ps=145.000,expected_ps=145.000,err_ps=0.000 instance=override supply_span=1.000 scale_ps=100.000 seen_rail_error=0.000",
+        "qualification": "frozen historical checker/normalization only"
+      },
+      "rows": 5228,
+      "response_sha256": "22bbc92dde0bc995814f1282be948f11afabd42be450902a6be3f53e2419126f"
+    },
+    {
+      "family": "098",
+      "task": "098-reference-step-clock",
+      "deck_sha256": "9bf6542fbecf67f0f2ace0c20571ca879420d994eae13301deec3e8b80b18502",
+      "gold_tree_sha256": "f8c0d68f3472ea07c8bd948c44672f6f870ab38919f66415232f11e88afc99f0",
+      "files": {
+        "submission/ref_step_clk.va": "f8de09092ea34d34681cbf6ea2b8eddca3a43d4177abb0b42393e3150feb98db",
+        "testbench/trusted_replay_test.scs": "9bf6542fbecf67f0f2ace0c20571ca879420d994eae13301deec3e8b80b18502"
+      },
+      "status": "rejected",
+      "seconds": 0.027317875006701797,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "unsupported_initial_event",
+        "message": "initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "family": "299",
+      "task": "299-sine-vco-idtmod-bound-step",
+      "deck_sha256": "0b4d1ef6c23b55ef856e9fcec26b4a0d480e8a1e1132d57e3d9209d6da332927",
+      "gold_tree_sha256": "7078af101ff0bc4971294338540662bfb6d8d72a2acfe3bf0cc50f2d03f90eac",
+      "files": {
+        "submission/sine_vco_idtmod_bound_step.va": "e7d4b7824584139fc18980b04c6c1b4d20191c0cd0436ba10251a008387e0737",
+        "testbench/trusted_replay_test.scs": "0b4d1ef6c23b55ef856e9fcec26b4a0d480e8a1e1132d57e3d9209d6da332927"
+      },
+      "status": "rejected",
+      "seconds": 0.0024639999901410192,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "syntax_error",
+        "message": "idtmod requires 4 explicit arguments"
+      }
+    },
+    {
+      "family": "300",
+      "task": "300-differential-vco-clip-idtmod",
+      "deck_sha256": "9aa2b68f509f7446ed8230e4ee2293575b277a23d2e7a90b9a6316cc832afec4",
+      "gold_tree_sha256": "5ccf08af33125f11e0a91b5ebb395eee55200d578f0ab0602836c0805138c912",
+      "files": {
+        "submission/differential_vco_clip_idtmod.va": "22c20737692188eabfa6414fc3f36a2f522cd7a0d8521eb111f6595e8e0fcbd7",
+        "testbench/trusted_replay_test.scs": "9aa2b68f509f7446ed8230e4ee2293575b277a23d2e7a90b9a6316cc832afec4"
+      },
+      "status": "rejected",
+      "seconds": 0.003160333988489583,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "syntax_error",
+        "message": "idtmod requires 4 explicit arguments"
+      }
+    },
+    {
+      "family": "301",
+      "task": "301-charge-pump-pfd-state-machine",
+      "deck_sha256": "b03baa20d95c43560487baed2f0b19fddc3ed201ac8e9e09497dee294df7b74c",
+      "gold_tree_sha256": "7d19492dfc116d47cc8b3425fa46929636885b25497685ac4a96e119798b36e7",
+      "files": {
+        "submission/charge_pump_pfd_state_machine.va": "ed4b8ad67f64d64f99bed5b80da62a754a3206e55ad17de5862839d04d1d2d3e",
+        "submission/support/ref_fb_clk.va": "2be4ce511ab257fdd8097ceaa93cfa95a8ef2b26bcbfd88d0a7c64f20a5bd614",
+        "testbench/public_support/ref_fb_clk.va": "2be4ce511ab257fdd8097ceaa93cfa95a8ef2b26bcbfd88d0a7c64f20a5bd614",
+        "testbench/trusted_replay_test.scs": "b03baa20d95c43560487baed2f0b19fddc3ed201ac8e9e09497dee294df7b74c"
+      },
+      "status": "rejected",
+      "seconds": 0.023951874987687916,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "unsupported_initial_event",
+        "message": "unknown parameter 'half'"
+      }
+    },
+    {
+      "family": "302",
+      "task": "302-fractional-n-divider-accumulator-flow",
+      "deck_sha256": "bad08439c13e5c6c125a9b4ba6d5e39f435568c4982eaa8ba526de917acb4b57",
+      "gold_tree_sha256": "6bf0e016a6d7944b6ddd023266becbae4753f2231d5464024777e692f2b944ab",
+      "files": {
+        "submission/fracn_pll_timer_ref.va": "585eeba6729ef2e8d1bf4189f98fbba992955a32943236715bb678aaad9fb814",
+        "submission/support/ref_step_clk.va": "b2903c6ad950df0b02ddaf7d078b7a41bf16e6b25e0742445971a7d90c40700b",
+        "testbench/public_support/ref_step_clk.va": "b2903c6ad950df0b02ddaf7d078b7a41bf16e6b25e0742445971a7d90c40700b",
+        "testbench/trusted_replay_test.scs": "bad08439c13e5c6c125a9b4ba6d5e39f435568c4982eaa8ba526de917acb4b57"
+      },
+      "status": "rejected",
+      "seconds": 0.010610083001665771,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "syntax_error",
+        "message": "expected '=', got '('; outside affine-voltage syntax"
+      }
+    },
+    {
+      "family": "347",
+      "task": "347-power-reset-sequencer-system",
+      "deck_sha256": "a780e9d0ee709e992a2b4962b5a079c8bdacfac300f8eb690aa664772dfe63cc",
+      "gold_tree_sha256": "068e69978ef06695616d05779adf9103be3d1f05df535a8c7e25997bdd0e50b0",
+      "files": {
+        "submission/enable_sequencer.va": "1955ff0a7575a610cfc69ca27a5ac851c34213cc44df033b4be2322d693d9764",
+        "submission/por_detector.va": "f4284e7a329d48f893dda36842b43370a078c7a09be59f89d13d872822a0a4ce",
+        "submission/power_reset_seq_top.va": "bf3796b5dadee6be331cad8f2f87142fe3f72ec8aed7c013a65b21b098d346c1",
+        "submission/ready_flag.va": "2e89160c8a0f291e245508b9bed60f1473564a3f63012d8ea5cd0c5919108894",
+        "submission/reset_synchronizer.va": "c387d13f69fcb5abc7b517a668b6ea2406b10a93691b8fb2b0a67397ad1e597d",
+        "testbench/trusted_replay_test.scs": "a780e9d0ee709e992a2b4962b5a079c8bdacfac300f8eb690aa664772dfe63cc"
+      },
+      "status": "rejected",
+      "seconds": 0.06857683300040662,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      }
+    },
+    {
+      "family": "348",
+      "task": "348-vga-gain-calibration-loop",
+      "deck_sha256": "81957c522419a4bc9cd88855917c52d3a23022550b16f1d2c523e7d0ba754870",
+      "gold_tree_sha256": "65b245d433c97001b26210237aaca5a2724b5d4ec98e39a30e0a369dcc8ff3e0",
+      "files": {
+        "submission/gain_controller.va": "5a794e840fb0ee4aae2e5a4c37e37f152c2334710dccd0fc11be8ddacf9e63ff",
+        "submission/lock_detector.va": "da76cfc18b2748bd30fd30df3fe952e85828210c663c21b0cd47f8b506f39c31",
+        "submission/peak_detector.va": "e9d4776d496bccb63f33b9b317320360999c2fe5398677424d916a1f5bdd4529",
+        "submission/vga_cal_loop_top.va": "4367db4d4c86bd6119d484847b86ffea99290d4dfacb96fa6638fce2d73c495e",
+        "submission/vga_model.va": "4f880ed6acdc65ca12091408cb03dcc0504b54a2677ff2810d90966fd3a37c57",
+        "testbench/trusted_replay_test.scs": "81957c522419a4bc9cd88855917c52d3a23022550b16f1d2c523e7d0ba754870"
+      },
+      "status": "rejected",
+      "seconds": 0.015525833005085588,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "syntax_error",
+        "message": "expected ')', got '&'; outside affine-voltage syntax"
+      }
+    },
+    {
+      "family": "349",
+      "task": "349-multichannel-sample-readout",
+      "deck_sha256": "13ac2d25756e420f70ac17fbac50cabf598c9419485c884ada101a064a02846e",
+      "gold_tree_sha256": "2b90e9fbc61dd6067b2de6ff6e11c4e137de96359ba6e2a377471b1a43784a5a",
+      "files": {
+        "submission/mux_controller.va": "662246fbd08bd30811407948363dfdccee6ea1f9ea024339bff63c2f9a9e28c9",
+        "submission/output_driver.va": "978385959e2ce966619aae1133c573a66f8de9e1b9333ee39997d40d8beebb4c",
+        "submission/sample_hold_bank.va": "5a41d645905bbedd0140a205b0a98142a36571371962eca78178030cdbb22075",
+        "submission/sample_mux_readout_top.va": "d1038e9690d3c7681d35e48c2cc1f15b43b4de885cb5d1e14f70b8696bc3f9df",
+        "testbench/trusted_replay_test.scs": "13ac2d25756e420f70ac17fbac50cabf598c9419485c884ada101a064a02846e"
+      },
+      "status": "rejected",
+      "seconds": 0.012040415982482955,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "syntax_error",
+        "message": "expected ')', got '&'; outside affine-voltage syntax"
+      }
+    },
+    {
+      "family": "354",
+      "task": "354-dfe-receiver-2tap",
+      "deck_sha256": "ae15459e12c62045e9ba386e1b9eb5591f59c5ff74f65b061de97e27aedb8ab0",
+      "gold_tree_sha256": "c580de02e2dde0b037a1f7c16a85687edec99afabce8252f76a31ab85e13eb93",
+      "files": {
+        "submission/decision_latch.va": "aaa44b9bfa1cbc3232284be806c0b17a0739d242897b62f767c72ff27c3e569f",
+        "submission/dfe_rx_top.va": "fab5139b97c8ef472eacd7c9ae922354403582c7e33c6389eb0acd04d4063052",
+        "submission/feedback_filter.va": "45773bddcc56898b68c781c0111438926eba1671c93b6dd4a3f96495034140b0",
+        "submission/slicer.va": "1a828ec5b573acd713d01081a2c7c6fbcf242694f51e4d7e34024880748d579b",
+        "testbench/trusted_replay_test.scs": "ae15459e12c62045e9ba386e1b9eb5591f59c5ff74f65b061de97e27aedb8ab0"
+      },
+      "status": "rejected",
+      "seconds": 0.0377792090002913,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      }
+    },
+    {
+      "family": "355",
+      "task": "355-pam4-tx-driver",
+      "deck_sha256": "00f1d317265601849a1a673ae7aeb4fcea6c2d049f43bf6c35f83c83a45a440e",
+      "gold_tree_sha256": "a806dfd1bc02860c7dcd5a6e6db1cc979b6e7351834b4370d4ffadd8372c75f3",
+      "files": {
+        "submission/gray_mapper.va": "146072ca1a4ce4525f07bcc6d5ded646b06712dd74394409174ed0c8c912ea51",
+        "submission/level_dac.va": "b9bb93d903d130e0cb6c9e05febc90823913ae356acc2ba2e2e7575cb8b1cffe",
+        "submission/pam4_tx_top.va": "791b7ec361bf6f43318ec36fd3fa29a5d728ee718da6ca791dccd1486a89d949",
+        "submission/preemphasis_driver.va": "bf0aaf3c40204900a75e1f754a54245af15b64abfc57ebed484a1fe7f80fc912",
+        "testbench/trusted_replay_test.scs": "00f1d317265601849a1a673ae7aeb4fcea6c2d049f43bf6c35f83c83a45a440e"
+      },
+      "status": "rejected",
+      "seconds": 0.042462707991944626,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "failure": {
+        "code": "compile_error",
+        "message": "ordinary analog if leaves local variable 'lsb_bit' unassigned"
+      }
+    }
+  ],
+  "syntax_sha256": "766c424ec8b6c1f8a9e6fa9416aebe91e274d52ffd9ba486fa75291e5efcd38f",
+  "kernel_sha256": "13c0da468f3a7798449fc704442aa4a03eae89f961fef76b2b5cb1c4daf034ef",
+  "frozen_checker_identity_sha256": "fad863fde1c4e4651480e0813fccb1fa43fd0dd023d79020f22737025c91567f",
+  "normalization_sha256": "492bab585735c4480581d8f18f54bfc7bdd58a1cb02cde49ed30808049bea541",
+  "qualification": "Unmodified original models/decks/settings/budgets;three completed requests pass frozen historical checker,23 subsequent blockers remain;no formal benchmark or Q claim",
+  "retention": "Compact identities/verdicts in repository;original inputs/full traces/checker copies/process receipts local-only"
+}

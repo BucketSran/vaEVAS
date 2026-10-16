@@ -885,18 +885,47 @@ class Parser:
                 self.fail('electrical discipline requires preceding Voltage and Current natures', token)
         self.declarations[(kind, name)] = attributes
 
+    def module_ports(self):
+        """Normalize the supported ANSI header into existing port metadata."""
+        directions, nodes, node_ranges, port_ranges = {}, set(), {}, {}
+        if self.token.text not in ('input', 'output', 'inout'):
+            return self.names(), directions, nodes, node_ranges, port_ranges
+        ports = []
+        while True:
+            direction = self.take()
+            if direction.text not in ('input', 'output', 'inout'):
+                self.fail('each ANSI port requires an explicit direction; shared name lists are not supported', direction)
+            electrical = self.token.text == 'electrical'
+            if electrical:
+                discipline = self.take()
+                if ('discipline', 'electrical') not in self.declarations:
+                    self.fail('electrical discipline is not declared; include disciplines.vams or provide its supported definition', discipline)
+            bounds = self.declared_range()
+            token = self.token
+            port = self.name()
+            if port in directions:
+                self.fail('duplicate identifier in port declaration', token)
+            ports.append(port)
+            directions[port] = direction.text
+            port_ranges[port] = bounds
+            if electrical:
+                nodes.add(port)
+                node_ranges[port] = bounds
+            if self.token.text != ',':
+                return ports, directions, nodes, node_ranges, port_ranges
+            self.take(',')
+
     def parse(self, *, eof=True) -> Model:
         while self.token.kind == "include":
             self.take()
         module_token = self.take("module")
         name = self.name()
         self.take("(")
-        ports = self.names()
+        ports, directions, nodes, node_ranges, port_ranges = self.module_ports()
         self.take(")")
         self.take(";")
-        directions, nodes, parameters, variables, functions, genvars, arrays = {}, set(), {}, {}, {}, set(), {}
+        parameters, variables, functions, genvars, arrays = {}, {}, {}, set(), {}
         parameter_types, parameter_ranges = {}, {}
-        node_ranges, port_ranges = {}, {}
         while (self.token.text in ("input", "output", "inout", "electrical", "parameter", "integer", "real", "genvar")
                or self.token.text == "analog" and self.tokens[self.index+1].text == "function"):
             if self.token.text == "analog":

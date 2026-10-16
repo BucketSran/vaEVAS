@@ -43,6 +43,38 @@ nature 的 abstol 也不改变 manifest 的求解容差。
 `standard_headers.py`；独立公开编译回归在 `tests/test_compile_admission.py`。
 该有限准入修复不等价于完整 Spectre/VAMS 语法兼容性认证。
 
+## ANSI 端口声明
+
+模块头部可逐端口声明方向，并可附 `electrical` 和一维范围。例如：
+
+```verilog
+`include "disciplines.vams"
+module m(input electrical [1:0] u, output y, inout electrical r);
+  electrical y;
+  analog V(y,r) <+ V(u[0],r) + 2*V(u[1],r);
+endmodule
+```
+
+头部只有方向的 `y` 由正文补 discipline；已在头部写 electrical 的端口不能再在正文重声明。
+同样必须显式包含或声明受支持的 electrical 环境，不默认为电气端口。
+方向、节点类型与范围归一化后进入原绑定层；端口按头部顺序连接，向量按声明方向展开。
+范围可用实例常量参数，覆盖和上下界一致性检查沿用原规则；相反方向的两个向量不会因此交换位。
+按序、按名子实例与普通 non-ANSI 模型使用同一绑定流程。
+
+依据为 VAMS 2.4 §6.2、§6.5.2.2 及 Spectre 21.1 手册的逐端口形式。
+LRM 允许共享名字列表，但本次有限实现要求每端口显式 input/output/inout；
+`input electrical a,b` 的实际 Spectre 控制也拒绝，因此本次标为不支持，不称其为非法 Verilog-A。
+混用裸端口和方向、重复端口/方向/discipline、缺 discipline、初始化式、多维端口，
+以及 wire/reg/wreal/signed 等本次未实现的类型形式均拒绝。
+这不增加参数化模块头部或完整数字端口支持。
+
+实现由 [syntax.py](../../src/evas/syntax.py) 的 module_ports 生成已有 Model 元数据，
+[node_elaboration.py](../../src/evas/node_elaboration.py) 与 [hierarchy.py](../../src/evas/hierarchy.py)
+继续负责范围、顺序和实例隔离。没有新增求解方程、历史状态或 IR 字段。
+[独立回归](../../tests/test_ansi_ports.py)覆盖标量答案、向量与层次顺序、参数实例隔离、
+timer/积分消费者及拒绝位置；[实际有限对照](../../../experiments/backends/support/ansi-ports/README.md)
+保留正反例、精度与原请求后续阻塞，不等价于完整语言合规。
+
 ## 模型编译
 
 `cos`、`exp`、`ln`、`sqrt` 接受受限连续表达式。它们是保留的数学函数名，
