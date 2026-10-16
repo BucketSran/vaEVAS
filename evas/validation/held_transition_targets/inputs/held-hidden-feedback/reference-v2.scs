@@ -1,0 +1,6 @@
+simulator lang=spectre
+simulatorOptions options reltol=1e-10 vabstol=1e-12
+ahdl_include "dut.va"
+D (y) held
+save y
+tran tran stop=3.25 maxstep=0.01 errpreset=conservative method=traponly strobetimes=[0 0.5 1 1.000000001 1.125 1.25 1.5 2 2.000000001 2.125 2.25 2.5 3 3.000000001 3.125 3.25] strobeoutput=strobeonly

@@ -142,5 +142,7 @@ EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候
 | [近邻定时事件：原整链](../validation/paper/COVERAGE.md#scope-l5-04-chain) | ✓ 1 µV | 初始化失败 | ✓ 1µV | ✓ Q3 |
 | [近邻定时事件：相邻浮点采样积分](../validation/paper/COVERAGE.md#scope-l5-04-adjacent) | 回调同刻 | 初始化失败 | 回调同刻 | ✓ Q3 |
 
+保持量条件嵌在 `transition` 目标算术中的情况已有[独立有限验收](../../experiments/backends/support/held-transition-targets/README.md)。这项补充保留原目标算式和隐藏反馈拒绝，不给完整 MUX 或历史电压谓词新增 Q 等级。
+
 未定稿的动态 timer、ADC、同刻事件、内部反馈事件与隐式复位，列在[扩展计划](../validation/paper/COVERAGE.md#exploratory-cases)，不作为当前支持结论。
 [配套清单](../validation/paper/COVERAGE.md#pending-evidence)说明原11格的核对结果与仍未完成的验收；[累计清单](../validation/paper/COVERAGE.md#先找到各批的原始成绩)保留全部历史用例、失败和原成绩。
