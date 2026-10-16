@@ -23,6 +23,80 @@ def ramp_filter(t, start=1.25, duration=.5, tau=.25):
 
 
 class SampleEdgeFilter(unittest.TestCase):
+    def test_reversal_keeps_old_edge_until_delayed_activation(self):
+        c = next(c for c in contract.CASES if c['id'] == 'SEF-INTERRUPT')
+        ports = ['u', 'clk', 'rst', 'ah', 'ae', 'af', 'an']
+        p = compile_sources({'chain.va': contract.source(c)},
+                            [Instance('dut', 'dut', {n: n for n in ports})])
+        inputs = {n: [[t*contract.T, v] for t, v in points] for n, points in
+                  [('u', contract.INPUT), ('clk', contract.CLOCK), ('rst', contract.RESET)]}
+        # q changes at 2 us; the old .25 -> .75 ramp started at 1.125 us.
+        # It must keep its +1/3 V/us slope until 2.125 us. Only then may
+        # reversal use (.1 - .75)/1.25 = -.52 V/us. No oracle segmentation
+        # routine supplies these answers.
+        probes = [2.01, 2.1, 2.124, 2.126, 2.14, 2.25]
+        grids = [[0, 2.25, 8.5], [0, *probes, 8.5],
+                 sorted({0, *probes, *[2+i/128 for i in range(33)], 8.5})]
+        answers = [run(p, inputs, [t*contract.T for t in grid],
+                       stop=contract.STOP, max_step=contract.T/64,
+                       vabstol=1e-9, reltol=0) for grid in grids]
+        self.assertEqual(answers[1]['solutions'],
+                         [answers[2]['solutions'][grids[2].index(t)] for t in grids[1]])
+        for answer, grid in zip(answers, grids):
+            self.assertEqual(answer['transient']['events'], answers[0]['transient']['events'])
+            self.assertEqual(answers[0]['solutions'],
+                             [answer['solutions'][grid.index(t)] for t in grids[0]])
+            for t in probes:
+                if t not in grid:
+                    continue
+                row = rows(answer)[grid.index(t)]
+                self.assertAlmostEqual(row['ah'], .1, delta=1e-12)
+                self.assertEqual(row['an'], 2)
+                edge = .25+(t-1.125)/3 if t < 2.125 else 7/12-.52*(t-2.125)
+                # tau*f'+f=e: response to each change of ramp slope.
+                h = t-1.125
+                filtered = .25+(h+.5*math.expm1(-h/.5))/3
+                if t > 2.125:
+                    h = t-2.125
+                    filtered -= (1/3+.52)*(h+.5*math.expm1(-h/.5))
+                self.assertAlmostEqual(row['ae'], edge, delta=1e-9)
+                self.assertAlmostEqual(row['af'], filtered, delta=1e-9)
+
+    def test_hold_reset_retains_filter_history_through_delayed_fall(self):
+        c = next(c for c in contract.CASES if c['id'] == 'SEF-RESET')
+        ports = ['u', 'clk', 'rst', 'ah', 'ae', 'af', 'an']
+        p = compile_sources({'chain.va': contract.source(c)},
+                            [Instance('dut', 'dut', {n: n for n in ports})])
+        inputs = {n: [[t*contract.T, v] for t, v in points] for n, points in
+                  [('u', contract.INPUT), ('clk', contract.CLOCK), ('rst', contract.RESET)]}
+        probes = [2.24, 2.26, 2.37, 2.38, 2.5, 3.0, 3.2, 4.0]
+        grids = [[0, 4.0, 8.5], [0, *probes, 8.5],
+                 sorted({0, *probes, *[2+i/32 for i in range(65)], 8.5})]
+        answers = [run(p, inputs, [t*contract.T for t in grid],
+                       stop=contract.STOP, max_step=contract.T/64,
+                       vabstol=1e-9, reltol=0) for grid in grids]
+        self.assertEqual(answers[1]['solutions'],
+                         [answers[2]['solutions'][grids[2].index(t)] for t in grids[1]])
+        for answer, grid in zip(answers, grids):
+            self.assertEqual(answer['transient']['events'], answers[0]['transient']['events'])
+            self.assertEqual(answers[0]['solutions'],
+                             [answer['solutions'][grid.index(t)] for t in grids[0]])
+            for t in probes:
+                if t not in grid:
+                    continue
+                row = rows(answer)[grid.index(t)]
+                self.assertAlmostEqual(row['ah'], .75 if t < 2.25 else .25, delta=1e-9)
+                edge = .75 if t <= 2.375 else max(.25, .75-(t-2.375)*2/3)
+                # Rise: slope +1 from 1.125 to 1.625 us. Reset at 2.25 us
+                # changes q, not f; delayed fall has slope -2/3 until 3.125.
+                filtered = .25
+                for start, slope_change in [(1.125, 1), (1.625, -1),
+                                             (2.375, -2/3), (3.125, 2/3)]:
+                    h = max(0., t-start)
+                    filtered += slope_change*(h+.5*math.expm1(-h/.5))
+                self.assertAlmostEqual(row['ae'], edge, delta=1e-9)
+                self.assertAlmostEqual(row['af'], filtered, delta=1e-9)
+
     def test_periodic_sample_at_stop_preserves_transition_and_filter_history(self):
         # The original issue #96 probe ends at the fourth exact timer tick.
         # A new endpoint sample changes the held state immediately, while the
