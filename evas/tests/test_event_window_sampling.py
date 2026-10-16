@@ -13,23 +13,28 @@ from test_continuous_dynamics import compile_model, run, rows, values, assert_cl
 class EventWindowSamplingContracts(unittest.TestCase):
     def test_matching_fired_guard_uses_strict_post_crossing_side(self):
         from fractions import Fraction as Q
-        root = Q(1,2)
+        root = (Q(.5)-Q(.2))/(Q(.8)-Q(.2))
         for relation, expected_state in [('>=', 2), ('<=', 3), ('>', 2), ('<', 3)]:
             program = compile_model(
                 "@(initial_step) q=0; @(cross(V(u,r)-0.5,1,1e-9,1e-8)) "
                 f"if (V(u,r){relation}0.5) q=2; else q=3; V(y,r)<+idt(q*q,0);",
                 "integer q;")
             with self.subTest(relation=relation):
-                result = run(program, {"u": [[0,.25],[1,.75]]}, [0,.25,.5,1], stop=1,
+                sources = {"u": [[0,.2],[1,.8]]}
+                result = run(program, sources, [0,1], stop=1,
                              vabstol=1e-8, reltol=0)
                 event,=result['transient']['events']
                 te=event['time']
                 self.assertGreater(Q(te),root)
                 self.assertLessEqual(Q(te)-root,Q(1e-9))
                 self.assertEqual(event['after'], [expected_state])
-                self.assertEqual(result['transient']['states'],[[0],[0],[0],[expected_state]])
-                self.assertEqual(values(result)[:3],[0,0,0])
+                self.assertEqual(result['transient']['states'],[[0],[expected_state]])
+                self.assertEqual(values(result)[0],0)
                 assert_close(self, values(result)[-1], float(expected_state**2*(1-Q(te))), delta=1e-8)
+                dense = run(program, sources, [0,.25,.5,1], stop=1,
+                            vabstol=1e-8, reltol=0)
+                self.assertEqual(result['transient']['events'],dense['transient']['events'])
+                self.assertEqual(result['solutions'],[dense['solutions'][i] for i in (0,3)])
 
     def test_or_guard_that_did_not_fire_cannot_certify_a_condition(self):
         from fractions import Fraction as Q
@@ -105,6 +110,9 @@ class EventWindowSamplingContracts(unittest.TestCase):
         exact_q=Q(1000000)*Q(te)
         expected=float(exact_q**2*(Q(10)-Q(te)))
         assert_close(self, values(result)[-1], expected, delta=2e7)
+        # The original root-reference consumer has its own unchanged budget.
+        # Agreement with the actual-execution IVP cannot replace this check.
+        assert_close(self, values(result)[-1], 2e12*(10-math.sqrt(2)), delta=2e7)
         # Input rounding fits this budget; the amplified integral does not.
         with self.assertRaises(KernelError) as caught:
             run(program, {"u": [[0,0],[10,10]]}, [0,10], stop=10, vabstol=1e-6, reltol=0)

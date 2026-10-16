@@ -230,6 +230,7 @@ fn compile(
                     origin: origin.clone(),
                     dependencies,
                     numeric: true,
+                    network_states: Default::default(),
                 });
                 let start = *next;
                 *next += states.len();
