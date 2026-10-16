@@ -12,6 +12,7 @@ import sys
 ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(ROOT/'evas/src'))
 from evas import CompileError, Instance, compile_sources, transient
+from evas.ir import SCHEMA_VERSION
 from evas.scs import load_scs
 
 TIMES=[0,.5,1,1.000000001,1.125,1.25,1.5,2,2.000000001,2.125,2.25,2.5,3,3.000000001,3.125,3.25]
@@ -56,7 +57,7 @@ def main():
             item['original_SCS_rejection']=str(e).replace(str(inputs),'inputs/'+case)
         try:
             p=compile_sources({'dut.va':(inputs/'dut.va').read_text()},[Instance('D','held',connections={'y':'y'})])
-            assert p.to_dict()['schema_version']==22
+            assert p.to_dict()['schema_version']==SCHEMA_VERSION
             result=transient(p,{},TIMES,stop=3.25,max_step=.01,kernel=a.kernel,vabstol=1e-12,reltol=1e-10)
         except CompileError as e:
             if case!='held-hidden-feedback' or 'transition target values must be held states or constants'not in str(e):raise
