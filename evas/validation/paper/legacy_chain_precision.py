@@ -4,6 +4,7 @@ Actual callback times select one common history for every native output row.
 Trace values are DUT observations only. References use frozen input operands,
 interrupted transition polygons and analytical first-order convolution.
 """
+from copy import deepcopy
 from decimal import Decimal as D, localcontext
 import math
 from pathlib import Path
@@ -267,7 +268,7 @@ def nt_phase_reference(row, answers, ordered_events, minimum_prefix, discrete, u
     return candidates[selected],prefixes[selected]
 
 
-def _assess(card,rows,callbacks,tier):
+def _assess(card,rows,callbacks,tier,_enclosures=None):
     budget=TIERS[tier];limit=budget/100
     delta=[]
     if card['kind']=='c2' and card['event_late_s']!=4e-11:
@@ -349,7 +350,14 @@ def _assess(card,rows,callbacks,tier):
             try:answers=phase_errors(row,ref(row['time']))
             except interval_math.BoundsPending as exc:
                 return {**result,'reason':'callback phase enclosure pending: '+str(exc),'time_s':row['time']}
-            enclosure=bound_reference(row['time'])
+            # Only assess_tiers owns a cache, scoped to one frozen observation
+            # history. All tier-dependent checks and row phase choices still run.
+            if _enclosures is None:
+                enclosure=bound_reference(row['time'])
+            else:
+                time=row['time']
+                if time not in _enclosures:_enclosures[time]=bound_reference(time)
+                enclosure=_enclosures[time]
             if enclosure['status']!='proved':return {**result,'reason':'callback history enclosure pending: '+enclosure['reason'],'time_s':row['time']}
             reference_error=max(reference_error,enclosure['reference_error_V'])
             for node,answer in answers.items():
@@ -379,7 +387,23 @@ def _assess(card,rows,callbacks,tier):
 
 
 def assess(card,rows,callbacks,tier):
-    result=_assess(card,rows,callbacks,tier)
+    return _classify_failure(_assess(card,rows,callbacks,tier))
+
+
+def assess_tiers(card,rows,callbacks):
+    """Grade one observation history at every Q tier; share reference math only.
+
+    The snapshot and enclosure cache live for this call. Separate simulator
+    executions (including different tier configurations) must use assess with
+    their own rows and callbacks, not substitute this batch for those runs.
+    """
+    card,rows,callbacks=deepcopy((card,rows,callbacks))
+    enclosures={}
+    return {tier:_classify_failure(_assess(card,rows,callbacks,tier,enclosures))
+            for tier in TIERS}
+
+
+def _classify_failure(result):
     # This classification names the failed check, not the responsible simulator.
     # Configuration-versus-simulator attribution requires separate experiments.
     result['failure_owner']={'pass':'none','numerical_error':'numerical_error',

@@ -86,6 +86,23 @@ class RoutingTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertEqual(ci.classify([path]), ci.flags('calibration', 'provenance'))
 
+    def test_registered_historical_receipt_keeps_static_checks(self):
+        receipt = 'experiments/backends/sample-edge-filter/rea-boundary-receipt.json'
+        self.assertEqual(ci.classify([receipt]), ci.flags('calibration', 'provenance'))
+        self.assertEqual(ci.classify([
+            receipt, 'evas/docs/development/capability-evidence.md',
+            'evas/validation/sample_edge_filter/README.md',
+            'experiments/backends/sample-edge-filter/BOUNDARY.md',
+            'benchmark/material/draftbench/CANDIDATES.md',
+            'benchmark/material/draftbench/sources/README.md',
+            'benchmark/material/draftbench/sources/cvdp-heavy-multifile.md',
+        ]), ci.flags('maintenance', 'calibration', 'provenance', 'benchmark'))
+        for other in ('experiments/backends/sample-edge-filter/unknown-receipt.json',
+                      'experiments/backends/sample-edge-filter/fixture.json',
+                      'evas/tests/shared.json'):
+            with self.subTest(path=other):
+                self.assertTrue(ci.classify([receipt, other])['regression'])
+
     def test_maintenance_and_install_checks_are_separate(self):
         self.assertEqual(ci.classify(['scripts/check_workspaces.py']), ci.flags('maintenance'))
         self.assertEqual(ci.classify(['scripts/check_installed_evas.py']),
@@ -197,6 +214,18 @@ class GitChangeTests(unittest.TestCase):
         plan = ci.select(self.repo, 'push', {'before': base, 'after': head})
         self.assertTrue(plan['regression'])
         self.assertTrue(plan['package'])
+
+    def test_receipt_rename_to_unknown_input_keeps_regression(self):
+        receipt = 'experiments/backends/sample-edge-filter/rea-boundary-receipt.json'
+        self.write(receipt, '{}\n')
+        base = self.commit()
+        self.git('mv', receipt, 'experiments/backends/sample-edge-filter/fixture.json')
+        head = self.commit()
+        plan = ci.select(self.repo, 'push', {'before': base, 'after': head})
+        self.assertTrue(plan['regression'])
+        self.git('rm', 'experiments/backends/sample-edge-filter/fixture.json')
+        deleted = self.commit()
+        self.assertTrue(ci.select(self.repo, 'push', {'before': head, 'after': deleted})['regression'])
 
     def test_missing_history_initial_push_and_manual_run_cannot_skip_checks(self):
         events = [('push', {'before': '0' * 40, 'after': self.base}),
