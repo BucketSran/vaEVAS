@@ -4,6 +4,22 @@
 具体实验的运行器与分析器在 [experiments/](../experiments/README.md)。
 以下命令均从仓库根目录执行，使用 Python 3.10+。
 
+## EVAS 本地检查政策
+
+[evas_check_policy.py](evas_check_policy.py) 定义本地迭代与交付检查、选择理由、
+缺失测试阻断和待验收项。Harness 从冻结源码执行该政策；检查命令、预算、进程结果与证据保全归 Harness。
+已有检查标识和范围保持不变，CI lane 仍由下方 `ci_selection.py` 决定。
+
+政策使用版本 1 的 JSON 请求和响应。`--request` 接收请求文件：`plan` 使用 `paths`、`stage`，
+`acceptance` 使用原 `plan` 与执行器提供的 `results`，每项结果只含 `check` 和布尔 `passed`。
+两种请求都带 `protocol_version: 1` 和 `operation`；响应含同版本标识及 `result`。
+政策不执行测试，也不核销 CI、Spectre 或原请求的外部验收。旧源码没有政策或协议不兼容时，
+自动计划明确失败，仍可使用该版本原有验证入口和历史证据。
+
+`python3 -B scripts/evas_check_policy.py --write-docs` 更新现有
+[验证技能](../.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks)中的自动规则表；
+`--check-docs` 只检查同步并由 CI 执行。表格外的语义解释和人工验收要求保留原文。
+
 ## CI 按改动选择检查
 
 CI 按改动涉及的内容选择检查。普通说明文档只检查改动行的空白并运行 CI 路由自检，
