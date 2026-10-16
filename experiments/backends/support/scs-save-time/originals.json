@@ -1,0 +1,383 @@
+{
+  "denominator": 20,
+  "first_blocker_removed": 20,
+  "results": [
+    {
+      "family": "261",
+      "task": "261-falling-edge-calibration-sampler",
+      "original_deck_sha256": "ab466d182b97ae3bc03a9c47ed577e7a234790593d5d5cbb7f755e1ec912c8f9",
+      "original_gold_tree_sha256": "806490c4be286c26d37a279480cd0ac07816c5cd2d56400d771b81a509b5cfc4",
+      "original_files": {
+        "submission/falling_edge_calibration_sampler.va": "f42e8cac70444c120cb0f0afa742cf0c0d5bc00dbc5633d4ac162988e375770b",
+        "testbench/trusted_replay_test.scs": "ab466d182b97ae3bc03a9c47ed577e7a234790593d5d5cbb7f755e1ec912c8f9"
+      },
+      "status": "rejected",
+      "next_blocker": "event_variable_division",
+      "seconds": 0.03495087500778027,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "variable division requires an ordinary analog expression"
+      }
+    },
+    {
+      "family": "262",
+      "task": "262-resettable-phase-toggle-monitor",
+      "original_deck_sha256": "72ebaa616e33f0e891117127c181008266e0cc5ca16dfcbe25dc98ad8c011a99",
+      "original_gold_tree_sha256": "b69de216c7055d9c23286a8780661d24c044123617233e64203936680f49c563",
+      "original_files": {
+        "submission/resettable_phase_toggle_monitor.va": "26f34031b6ad82c40d37e2e52f1954c949be639931d2d8cacc2d1d66e6ddded6",
+        "testbench/trusted_replay_test.scs": "72ebaa616e33f0e891117127c181008266e0cc5ca16dfcbe25dc98ad8c011a99"
+      },
+      "status": "rejected",
+      "next_blocker": "event_variable_division",
+      "seconds": 0.028015791991492733,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "variable division requires an ordinary analog expression"
+      }
+    },
+    {
+      "family": "263",
+      "task": "263-settling-progress-counter",
+      "original_deck_sha256": "d41fc3c1d053075f5f8a114924a35e4fc325cee96f7941d22f8732acc0d6f5df",
+      "original_gold_tree_sha256": "ed3f299f35744b3ea70a72ddfbfc35e9995aa9d2045de3e0b14e56511a34cfd6",
+      "original_files": {
+        "submission/settling_progress_counter.va": "b78fbde91c74ed0eaa7142aa49bd5e581e4e9cc98bdcf8a339b317e08342fc92",
+        "testbench/trusted_replay_test.scs": "d41fc3c1d053075f5f8a114924a35e4fc325cee96f7941d22f8732acc0d6f5df"
+      },
+      "status": "rejected",
+      "next_blocker": "event_variable_division",
+      "seconds": 0.03973679200862534,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "variable division requires an ordinary analog expression"
+      }
+    },
+    {
+      "family": "264",
+      "task": "264-enable-qualified-bias-hold",
+      "original_deck_sha256": "09d0bd26450fa6966e199a7c9f2b0ada30e1bc7297dc5fe68393bac883d0d746",
+      "original_gold_tree_sha256": "93c0eca665dddc27fad7f81ba374dbb3d2be85335296419da6528389ae3163ed",
+      "original_files": {
+        "submission/enable_qualified_bias_hold.va": "d13db89ca40a09426120849682680a75d12b91bb8c242a65c390fe8de38675f8",
+        "testbench/trusted_replay_test.scs": "09d0bd26450fa6966e199a7c9f2b0ada30e1bc7297dc5fe68393bac883d0d746"
+      },
+      "status": "rejected",
+      "next_blocker": "event_variable_division",
+      "seconds": 0.04633679200196639,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "variable division requires an ordinary analog expression"
+      }
+    },
+    {
+      "family": "265",
+      "task": "265-dynamic-supply-enable-driver",
+      "original_deck_sha256": "39c21f493b0bfbd87e851c9e65182527bd6a413e49b0609ff315769039b3a2a5",
+      "original_gold_tree_sha256": "38e737c9dd4722cb2cd71785098a4655f3bb70b28e2a80cbc5a37c76782d920a",
+      "original_files": {
+        "submission/dynamic_supply_enable_driver.va": "34b739a4c34531a6f3ab00e55492def283093626c843756daf654428ce46718b",
+        "testbench/trusted_replay_test.scs": "39c21f493b0bfbd87e851c9e65182527bd6a413e49b0609ff315769039b3a2a5"
+      },
+      "status": "rejected",
+      "next_blocker": "nonaffine_predicate",
+      "seconds": 0.042702083999756724,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "decision predicates and every arm must be affine or input-selected piecewise-affine"
+      }
+    },
+    {
+      "family": "266",
+      "task": "266-local-domain-buffer-translator",
+      "original_deck_sha256": "d08bf765721607ed7fdb49d47a1cf1029ece7d2a833ec6d550db872583837f92",
+      "original_gold_tree_sha256": "2c0f6164278981ca6af336a7467c76b00b913cc58969a7e76a0d648461b7c645",
+      "original_files": {
+        "submission/local_domain_buffer_translator.va": "71447eb3d9d0ceae10d162c3639be437120ce10f365ffc7af51fd18fef6e45cf",
+        "testbench/trusted_replay_test.scs": "d08bf765721607ed7fdb49d47a1cf1029ece7d2a833ec6d550db872583837f92"
+      },
+      "status": "rejected",
+      "next_blocker": "nonaffine_predicate",
+      "seconds": 0.03718329200637527,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "decision predicates and every arm must be affine or input-selected piecewise-affine"
+      }
+    },
+    {
+      "family": "267",
+      "task": "267-clocked-power-ready-sampler",
+      "original_deck_sha256": "319455e8562d24121b878c5618b7159b5158d20b53d65be3d361fef56533175d",
+      "original_gold_tree_sha256": "1e18a16e94b4151fe90d94c36f8c1ab754cdd09e69ccb253c219d60d9d2a75c9",
+      "original_files": {
+        "submission/clocked_power_ready_sampler.va": "e444f52f3da19e63c7233556694fbe33a92c1b1fb311c8f09143b36d74c1902d",
+        "testbench/trusted_replay_test.scs": "319455e8562d24121b878c5618b7159b5158d20b53d65be3d361fef56533175d"
+      },
+      "status": "rejected",
+      "next_blocker": "event_variable_division",
+      "seconds": 0.05193875002441928,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "variable division requires an ordinary analog expression"
+      }
+    },
+    {
+      "family": "268",
+      "task": "268-mode-selected-bias-driver",
+      "original_deck_sha256": "80a1b29e0e4f379138fbd0c2dd19f4a412c934490337f9f0e2d5a853c2a73441",
+      "original_gold_tree_sha256": "e61cfce01a764f8d5ab0da146b3b76c5f9ca295da152ce5d164475fd1a98f6bb",
+      "original_files": {
+        "submission/mode_selected_bias_driver.va": "f2d0a82513f809268ce6761b04c1bf0d4d265da0bfb370e9aea179c6bd8777a2",
+        "testbench/trusted_replay_test.scs": "80a1b29e0e4f379138fbd0c2dd19f4a412c934490337f9f0e2d5a853c2a73441"
+      },
+      "status": "rejected",
+      "next_blocker": "nonaffine_predicate",
+      "seconds": 0.030726833996595815,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "decision predicates and every arm must be affine or input-selected piecewise-affine"
+      }
+    },
+    {
+      "family": "269",
+      "task": "269-saturation-recovery-limiter",
+      "original_deck_sha256": "c449f596a937907768a77da6b192977c2d5b59010a5e3d4e2fbdd72abd56b55d",
+      "original_gold_tree_sha256": "e69d99781bd147878c53ab795599d7a47d570898bc09109fb4ad851ee1ea74e5",
+      "original_files": {
+        "submission/saturation_recovery_limiter.va": "7cad00720a765ecf58acf86b6f4329f0f2b892ae716de4c79c67b7eb4db1ab2e",
+        "testbench/trusted_replay_test.scs": "c449f596a937907768a77da6b192977c2d5b59010a5e3d4e2fbdd72abd56b55d"
+      },
+      "status": "execution_completed",
+      "next_blocker": "completed_old_checker_passed",
+      "seconds": 1.4416006249957718,
+      "kernel_timeout_seconds": 120,
+      "checker": {
+        "passed": true,
+        "note": "samples; P_CLAMP_THE_ENABLED_INPUT_BETWEEN_THE mismatch_count=0; P_DRIVE_A_SATURATION_FLAG_WHEN_EITHER mismatch_count=0; P_CLEAR_OUTPUT_FLAG_AND_RECOVERY_METRIC mismatch_count=0; P_COMPUTE_LIMITED_CLAMP_V_VIN_VLO mismatch_count=0; P_DRIVE_SAT_VHI_WHEN_ENABLED_AND mismatch_count=0; P_DRIVE_THE_RECOVERY_METRIC_AS mismatch_count=0; checked_property_ids=P_CLAMP_THE_ENABLED_INPUT_BETWEEN_THE,P_DRIVE_A_SATURATION_FLAG_WHEN_EITHER,P_CLEAR_OUTPUT_FLAG_AND_RECOVERY_METRIC,P_COMPUTE_LIMITED_CLAMP_V_VIN_VLO,P_DRIVE_SAT_VHI_WHEN_ENABLED_AND,P_DRIVE_THE_RECOVERY_METRIC_AS",
+        "qualification": "historical checker replay only"
+      },
+      "rows": 1312,
+      "response_sha256": "f79c8090837592300d4d1190bf158273be146ba21240e6cb19bb713209145a6a"
+    },
+    {
+      "family": "270",
+      "task": "270-sampled-error-update-monitor",
+      "original_deck_sha256": "a7669ac9fd5713fa6633f07fb7b7bee969068450f3fda803170006ca964bb488",
+      "original_gold_tree_sha256": "14fcbbfd3b96f193ee863b469be62a3f26474e69d73dc0902be827378ca0da2d",
+      "original_files": {
+        "submission/sampled_error_update_monitor.va": "531698531c09535ad3bb15b26e6029a3fa6482c8e3a0b93b57c9e81db1687f13",
+        "testbench/trusted_replay_test.scs": "a7669ac9fd5713fa6633f07fb7b7bee969068450f3fda803170006ca964bb488"
+      },
+      "status": "rejected",
+      "next_blocker": "source_uncertainty",
+      "seconds": 0.0887793340079952,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      }
+    },
+    {
+      "family": "271",
+      "task": "271-windowed-event-rate-monitor",
+      "original_deck_sha256": "14df05bf45048f15dc671f39eb33fc4b7c7f3fae4e079a9de463df4f356908f6",
+      "original_gold_tree_sha256": "cf6618a6cc462d0b67c18bd9f025e17802160da6e48c2f58308ce45512bda9a7",
+      "original_files": {
+        "submission/windowed_event_rate_monitor.va": "ecc40ab640276f1a9d1f854d240d295dd9273404498b6bd39fc8a4f2b3a51ba0",
+        "testbench/trusted_replay_test.scs": "14df05bf45048f15dc671f39eb33fc4b7c7f3fae4e079a9de463df4f356908f6"
+      },
+      "status": "rejected",
+      "next_blocker": "event_variable_division",
+      "seconds": 0.04624720898573287,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "variable division requires an ordinary analog expression"
+      }
+    },
+    {
+      "family": "272",
+      "task": "272-reset-release-sequencer",
+      "original_deck_sha256": "c9a236bbfdd577a553d59d39ff5a728452c29e70b0c605c6713057b155e02470",
+      "original_gold_tree_sha256": "406c5a8cdffc4ae4fdeb139cad4cef4b85ae001a749b25f019942d1d37e8ed51",
+      "original_files": {
+        "submission/reset_release_sequencer.va": "06fde0f44a8c4f485467ce359e76116db7d214e1c64f1d3589bbda6e940c15ad",
+        "testbench/trusted_replay_test.scs": "c9a236bbfdd577a553d59d39ff5a728452c29e70b0c605c6713057b155e02470"
+      },
+      "status": "rejected",
+      "next_blocker": "source_uncertainty",
+      "seconds": 0.06496858299942687,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      }
+    },
+    {
+      "family": "273",
+      "task": "273-adaptive-threshold-tracker",
+      "original_deck_sha256": "01c4c217c3ce0f31a2d1da16f6721109b7f685c2af61df35235988cebd3454bb",
+      "original_gold_tree_sha256": "ed0c6bb21733c7eff3cabc39db8b3ef932e93658a4cd7795bfb1d1f8a74cf80d",
+      "original_files": {
+        "submission/adaptive_threshold_tracker.va": "1ee62ca3008c9434855faaeaacb071997bd4ab04dee67745850a670b3a7be978",
+        "testbench/trusted_replay_test.scs": "01c4c217c3ce0f31a2d1da16f6721109b7f685c2af61df35235988cebd3454bb"
+      },
+      "status": "rejected",
+      "next_blocker": "source_uncertainty",
+      "seconds": 0.06870091598830186,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      }
+    },
+    {
+      "family": "274",
+      "task": "274-rail-normalized-metric-mapper",
+      "original_deck_sha256": "862055177ef3369593a6750a1131a3af434f54c59d70ee97f9f1fdca1702910a",
+      "original_gold_tree_sha256": "09d7fd6a10a946232edcc87022a25112a96fd1a8169efbf32d505d1cb2b7c9fa",
+      "original_files": {
+        "submission/rail_normalized_metric_mapper.va": "60d2316707d7df2a20ebd0d19fb733f7321472fc48f0c866f499ab1e5c1536b8",
+        "testbench/trusted_replay_test.scs": "862055177ef3369593a6750a1131a3af434f54c59d70ee97f9f1fdca1702910a"
+      },
+      "status": "rejected",
+      "next_blocker": "nonaffine_predicate",
+      "seconds": 0.02523133298382163,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "decision predicates and every arm must be affine or input-selected piecewise-affine"
+      }
+    },
+    {
+      "family": "275",
+      "task": "275-deterministic-energy-accumulator",
+      "original_deck_sha256": "af40aff6391fda1948c036c3d847fb4f8cdf36fca5dea7b652cd050d4cab5566",
+      "original_gold_tree_sha256": "a48e3577612c73957e92a76a3fb1c99a0172d6704ee4324f7febcf24dd312740",
+      "original_files": {
+        "submission/deterministic_energy_accumulator.va": "78b3cdfc067121a2a37dbec9fa1b4862b697d4602ed25db9f4d0eb58f24d9bf5",
+        "testbench/trusted_replay_test.scs": "af40aff6391fda1948c036c3d847fb4f8cdf36fca5dea7b652cd050d4cab5566"
+      },
+      "status": "rejected",
+      "next_blocker": "event_variable_division",
+      "seconds": 0.05376658300519921,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "variable division requires an ordinary analog expression"
+      }
+    },
+    {
+      "family": "276",
+      "task": "276-bounded-tail-dither-shaper",
+      "original_deck_sha256": "06bcba07ff7640f7e918ac7e04044a8ac3a12512f9355039a11d02904a4ef5ac",
+      "original_gold_tree_sha256": "e614199b869308617b35eba30d3514e1ca9e5034b7bf27bee4e10f891d47b076",
+      "original_files": {
+        "submission/bounded_tail_dither_shaper.va": "cc15ebeca90c44f1ba0c31e139992d7cd3b853411c83d485282581284fbdef9c",
+        "testbench/trusted_replay_test.scs": "06bcba07ff7640f7e918ac7e04044a8ac3a12512f9355039a11d02904a4ef5ac"
+      },
+      "status": "rejected",
+      "next_blocker": "event_variable_division",
+      "seconds": 0.06557141701341607,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "variable division requires an ordinary analog expression"
+      }
+    },
+    {
+      "family": "277",
+      "task": "277-calibration-bit-select-flag",
+      "original_deck_sha256": "4dda921bd4ba1fc3dcb8ece2f56ba47f629dbdb4dcbc7f013256de2bfdc80786",
+      "original_gold_tree_sha256": "9f153fd2035363c3e6c22c4ff89e71adcdee674a55249ddd0553b0e8d1991fff",
+      "original_files": {
+        "submission/calibration_bit_select_flag.va": "5fd4107ec3978bb14fb1de74732273647518a7eac293185f98ee249891ba9114",
+        "testbench/trusted_replay_test.scs": "4dda921bd4ba1fc3dcb8ece2f56ba47f629dbdb4dcbc7f013256de2bfdc80786"
+      },
+      "status": "rejected",
+      "next_blocker": "nonaffine_predicate",
+      "seconds": 0.041571167006623,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "decision predicates and every arm must be affine or input-selected piecewise-affine"
+      }
+    },
+    {
+      "family": "278",
+      "task": "278-lane-mask-replication-driver",
+      "original_deck_sha256": "85b1c040a5610903b4b85de2a487fb8e2165cf8acab1dcffe9bf3731357377d8",
+      "original_gold_tree_sha256": "2a2b88e1fb6ebafe809a9d73cea88b7df60b08a067ab8a9cf2178cb7e85f48e8",
+      "original_files": {
+        "submission/lane_mask_replication_driver.va": "b574e4233bc6a9a852d94c2d218adf09a27e1b8793c582aa09b3c75fc261120b",
+        "testbench/trusted_replay_test.scs": "85b1c040a5610903b4b85de2a487fb8e2165cf8acab1dcffe9bf3731357377d8"
+      },
+      "status": "rejected",
+      "next_blocker": "nonaffine_predicate",
+      "seconds": 0.04107704199850559,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "decision predicates and every arm must be affine or input-selected piecewise-affine"
+      }
+    },
+    {
+      "family": "279",
+      "task": "279-explicit-sar-slice-router",
+      "original_deck_sha256": "e75210da8b323f1777a5125c34b2460949498e249dc26a36e71c47d169870e75",
+      "original_gold_tree_sha256": "e651abf70b26249f34148366129560133995bf9af77b0cfb54c17f240b5c2341",
+      "original_files": {
+        "submission/explicit_sar_slice_router.va": "cf2a105f335ca10d053061b4d349abcaca0bdd3e131a35740ecf61bd7bc05b8b",
+        "testbench/trusted_replay_test.scs": "e75210da8b323f1777a5125c34b2460949498e249dc26a36e71c47d169870e75"
+      },
+      "status": "rejected",
+      "next_blocker": "nonaffine_predicate",
+      "seconds": 0.0373592920077499,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "decision predicates and every arm must be affine or input-selected piecewise-affine"
+      }
+    },
+    {
+      "family": "280",
+      "task": "280-ready-reduction-fault-monitor",
+      "original_deck_sha256": "96175da01888cd1616b93d629df3cbd6d495f1d1ee94f35b3f5e0427b7c5396f",
+      "original_gold_tree_sha256": "4c982742eebab773096dc6de7073e38d7eaa36b83d9be11280ff6df219f93f71",
+      "original_files": {
+        "submission/ready_reduction_fault_monitor.va": "4a433aad94de1cef3c812950fb011a714e57c2fe1cc5b0d18499a8e393fe2cd4",
+        "testbench/trusted_replay_test.scs": "96175da01888cd1616b93d629df3cbd6d495f1d1ee94f35b3f5e0427b7c5396f"
+      },
+      "status": "rejected",
+      "next_blocker": "nonaffine_predicate",
+      "seconds": 0.042332167009590194,
+      "kernel_timeout_seconds": 120,
+      "diagnostic": {
+        "code": "compile_error",
+        "message": "decision predicates and every arm must be affine or input-selected piecewise-affine"
+      }
+    }
+  ],
+  "counts": {
+    "event_variable_division": 8,
+    "nonaffine_predicate": 8,
+    "completed_old_checker_passed": 1,
+    "source_uncertainty": 3
+  },
+  "original_probe_base": "8c3ef9eecda2e202beea6e80e720b0639bff0407",
+  "new_base": "217a7e4585f61e125c0f0394d6da821c71d6000f plus scs-only patch",
+  "scs_sha256": "c3909df64c64639200f44f95fa3c4e5d38feea6244b06a7ecad617541d9f5855",
+  "kernel_sha256": "13c0da468f3a7798449fc704442aa4a03eae89f961fef76b2b5cb1c4daf034ef",
+  "frozen_checker_identity_sha256": "fad863fde1c4e4651480e0813fccb1fa43fd0dd023d79020f22737025c91567f",
+  "normalization_sha256": "492bab585735c4480581d8f18f54bfc7bdd58a1cb02cde49ed30808049bea541",
+  "qualification": "Original models/decks/settings/budgets preserved. One completed request passes frozen historical checker; 19 subsequent blockers remain. No formal benchmark/Q claim.",
+  "retention": "Compact metadata in repository; full original inputs/responses/checker copies and execution logs local-only in runs/"
+}

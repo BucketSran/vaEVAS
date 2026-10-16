@@ -1,0 +1,69 @@
+{
+  "common_model": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule m(u,y,r);\ninput u; output y; inout r; electrical u,y,r;\nanalog begin\nV(y,r)<+2*V(u,r);\nend\nendmodule\n",
+  "cases": [
+    {
+      "case": "duplicate",
+      "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave time y time u\n",
+      "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave time y time u\n",
+      "model_sha256": "acb8643bfa8449d65b634030b5ace388e00afcd0baa616f05794d8b4be069c32",
+      "spectre_deck_sha256": "b6254a7c7f02b201752f62efbf754dbbc8c87633cfb9a197d0e6ad6c8d790fda",
+      "evas_deck_sha256": "b1e23ebc78754b3e6de9a74635d27aca79c3671bfc83eea4f80ba8195a779a55"
+    },
+    {
+      "case": "mixed",
+      "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave time y u\n",
+      "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave time y u\n",
+      "model_sha256": "acb8643bfa8449d65b634030b5ace388e00afcd0baa616f05794d8b4be069c32",
+      "spectre_deck_sha256": "0751bd8f3da5f021c9dacec916c86b8afaabc3ce52e942407a067d495fb5cae3",
+      "evas_deck_sha256": "b7a596e8ae8eaeec0cedfb6292f772014f6097aa8d95dfe4c6a7c05f67171365"
+    },
+    {
+      "case": "no-save",
+      "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\n\n",
+      "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\n\n",
+      "model_sha256": "acb8643bfa8449d65b634030b5ace388e00afcd0baa616f05794d8b4be069c32",
+      "spectre_deck_sha256": "116a10951a9097dd8d5d3c43dd6236334f45cd5880ed8e48995d82a967fcaa44",
+      "evas_deck_sha256": "a55395fc63fd4fc049259ca5803798a0a540bed93c4e1b8ca95d0e9ab2894b01"
+    },
+    {
+      "case": "nodes",
+      "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave u y\n",
+      "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave u y\n",
+      "model_sha256": "acb8643bfa8449d65b634030b5ace388e00afcd0baa616f05794d8b4be069c32",
+      "spectre_deck_sha256": "1edce315fb8a042f842accde1d9c2a1cf448cd484b1a7ece96e847341bc278fa",
+      "evas_deck_sha256": "877a09e1fa4bd2da56a9398e2d69d027a0557875512bd4bf1de9e64c7f62a34c"
+    },
+    {
+      "case": "time-node",
+      "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (time 0) vsource type=pwl wave=[0 0 1 1]\nXdut (time y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave time y\n",
+      "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (time 0) vsource type=pwl wave=[0 0 1 1]\nXdut (time y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave time y\n",
+      "model_sha256": "acb8643bfa8449d65b634030b5ace388e00afcd0baa616f05794d8b4be069c32",
+      "spectre_deck_sha256": "e0d8bb1c619d9f89744ced15eb1cb1d20b11639ea9894eb566f15e0de8b643c8",
+      "evas_deck_sha256": "fd4b1c660a92334aa1458f50bf5d141c2fcb83a30d3879b7b04340e8bb9aa466"
+    },
+    {
+      "case": "time-only",
+      "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave time\n",
+      "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave time\n",
+      "model_sha256": "acb8643bfa8449d65b634030b5ace388e00afcd0baa616f05794d8b4be069c32",
+      "spectre_deck_sha256": "b5a84858ed967e096f8d0705ba836f0a0a640ae9dae43ea751c58d6de0650e5a",
+      "evas_deck_sha256": "048d0785c0509284f33d4a8853fe603922ce9a8f61d24a127d1d00d1e76bf5f4"
+    },
+    {
+      "case": "upper-unknown",
+      "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave Time y\n",
+      "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave Time y\n",
+      "model_sha256": "acb8643bfa8449d65b634030b5ace388e00afcd0baa616f05794d8b4be069c32",
+      "spectre_deck_sha256": "be77e200ebeb591aa9c5369f47ef1dc19c7f2b749408f353245339a1a23df63c",
+      "evas_deck_sha256": "50fe1065f2b56d77ccb5732883044c3f69f8f645d3d1d475e529cbb31a828379"
+    },
+    {
+      "case": "time-node-distinct",
+      "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (time 0) vsource type=pwl wave=[0 3 1 5]\nXdut (time y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave time y\n",
+      "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (time 0) vsource type=pwl wave=[0 3 1 5]\nXdut (time y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=0.5 errpreset=conservative strobetimes=[0.2 0.7] strobeoutput=all\nsave time y\n",
+      "model_sha256": "acb8643bfa8449d65b634030b5ace388e00afcd0baa616f05794d8b4be069c32",
+      "spectre_deck_sha256": "5f36771c83085e86d7f422f297cc71e487a88847d151ad403127bc2039c82b14",
+      "evas_deck_sha256": "a32d8e3179a765938a2e20cd019d224709dfe1483e378b6e1d83adf17b1af01e"
+    }
+  ]
+}

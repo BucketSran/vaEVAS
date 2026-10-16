@@ -392,8 +392,12 @@ def load_scs(path: str | Path) -> ScsTestbench:
         sources[generated_path]=generated
         generated_sha256[generated_path]=hashlib.sha256(generated.encode()).hexdigest()
     available={'0',*waveforms,*[net for i in instances for net in i['connections'].values()]}
-    if not set(saved)<=available:
-        fail(f'save names unknown scalar nodes: {sorted(set(saved)-available)}')
+    # A non-node time selector needs no voltage column: the transient axis is
+    # already exported as saved.times. A real electrical node named time still
+    # belongs to available and retains its voltage through the normal path.
+    unknown=set(saved)-{'time'}-available
+    if unknown:
+        fail(f'save names unknown scalar nodes: {sorted(unknown)}')
     manifest=dict(models=list(sources),instances=instances,tolerances=effective,
                   transient=dict(sources=waveforms,output_times=times,stop=stop,max_step=step,**strobe))
     if source_errors:
@@ -422,7 +426,7 @@ def simulate_scs(path: str | Path, *, kernel=None, timeout=DEFAULT_TIMEOUT):
                             external_nodes=bench.manifest['transient']['sources'])
     result=transient(program,kernel=kernel,timeout=timeout,
                      **bench.manifest['transient'],**bench.manifest['tolerances'])
-    saved=bench.save or list(result['nodes'])
+    saved=[n for n in bench.save if n!='time' or n in result['nodes']] or list(result['nodes'])
     indices=[result['nodes'].index(n) for n in saved]
     ordinary=bench.manifest['transient']['output_times']
     times=bench.metadata.get('saved_output_times',ordinary)

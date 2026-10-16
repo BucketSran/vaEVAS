@@ -181,7 +181,16 @@ API 为 `evas.scs.load_scs(path)`（检查测试台并返回 manifest 和模型�
 | 精度 | `options reltol=... vabstol=...`，映射到现有 EVAS 设置；未指定项使用 EVAS 默认值，不采用 Spectre 默认值 |
 | 电流容差兼容 | `options iabstol=...` 接受有限、非负标量，但发出 warning；EVAS 没有电流未知量，该值不参与求解 |
 | 精度预设兼容 | `tran` 的 `errpreset=liberal/moderate/conservative` 接受但发出 warning，不应用 Spectre 的预设调整；使用显式容差和步长，未指定容差使用 EVAS 默认值 |
-| 输出 | `save` 选择标量端口节点；`saved` 输出所选列，原 `solutions` 保留完整求解响应 |
+| 输出 | `save` 选择标量节点；无同名电气节点时接受 `time`，时间轴单独保存在 `saved.times`；原 `solutions` 保留完整求解响应 |
+
+`save time y u` 将时间保存在 `saved.times`，电压列按 `y`、`u` 排列；重复选择不增加列。
+若 `time` 是实际连接或驱动的电气节点，`save time` 仍保存其电压。
+只有非节点 `time` 时，沿用未指定节点保存的 EVAS 默认列，包括地节点；这不等于 Spectre 的完整默认保存集合。
+名称区分大小写，`Time` 仍须是已知节点。非节点 `time` 只作时间轴兼容选择，
+EVAS 不导出 Spectre 可能同时产生的 `param_real` 同名记录。
+未知节点和 `V(node)` 等范围外选择语法继续拒绝。
+[保存回归](tests/test_scs_save.py)覆盖 API、CLI、strobe 行对齐及 manifest 的完整 CSV 导出；
+后者保留全部节点，不按 SCS 的 `save` 选择裁列。
 
 所有外部 `vsource` 驱动都保留在请求中，包括未连接到 VA 端口、仅被行为源引用的节点；
 不能把它们变成待解的内部节点。独立回归见 [SCS 驱动保留](tests/test_scs_driven_nodes.py)。
