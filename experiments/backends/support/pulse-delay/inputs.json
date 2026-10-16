@@ -1,0 +1,14 @@
+[
+  {
+    "case": "base",
+    "source": "`include \"disciplines.vams\"\nmodule m(u0,u1,y0,y1); input u0,u1; output y0,y1; electrical u0,u1,y0,y1; analog begin V(y0)<+2*V(u0); V(y1)<+2*V(u1); end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVomit (u0 0) vsource type=pulse val0=-.25 val1=.75 rise=.125 fall=.125 width=.25 period=1\nVzero (u1 0) vsource type=pulse val0=-.25 val1=.75 rise=.125 fall=.125 width=.25 period=1 delay=0\nDUT (u0 u1 y0 y1) m\nopts options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=2 maxstep=0.25 strobetimes=[0 .03125 .125 .25 .375 .5 .625] strobeoutput=all\nsave u0 u1 y0 y1\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVomit (u0 0) vsource type=pulse val0=-.25 val1=.75 rise=.125 fall=.125 width=.25 period=1\nVzero (u1 0) vsource type=pulse val0=-.25 val1=.75 rise=.125 fall=.125 width=.25 period=1 delay=0\nDUT (u0 u1 y0 y1) m\nopts options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=2 maxstep=0.25 strobetimes=[0 .03125 .125 .25 .375 .5 .625] strobeoutput=all\nsave u0 u1 y0 y1\n"
+  },
+  {
+    "case": "different-controls",
+    "source": "`include \"disciplines.vams\"\nmodule m(u0,u1,y0,y1); input u0,u1; output y0,y1; electrical u0,u1,y0,y1; analog begin V(y0)<+2*V(u0); V(y1)<+2*V(u1); end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVomit (u0 0) vsource type=pulse val0=-.25 val1=.75 rise=.125 fall=.125 width=.25 period=1\nVzero (u1 0) vsource type=pulse val0=-.25 val1=.75 rise=.125 fall=.125 width=.25 period=1 delay=0\nDUT (u0 u1 y0 y1) m\nopts options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=0.75 maxstep=0.0625 strobetimes=[0 .03125 .125 .25 .375 .5 .625] strobeoutput=all\nsave u0 u1 y0 y1\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVomit (u0 0) vsource type=pulse val0=-.25 val1=.75 rise=.125 fall=.125 width=.25 period=1\nVzero (u1 0) vsource type=pulse val0=-.25 val1=.75 rise=.125 fall=.125 width=.25 period=1 delay=0\nDUT (u0 u1 y0 y1) m\nopts options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=0.75 maxstep=0.0625 strobetimes=[0 .03125 .125 .25 .375 .5 .625] strobeoutput=all\nsave u0 u1 y0 y1\n"
+  }
+]

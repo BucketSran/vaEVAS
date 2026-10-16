@@ -34,7 +34,14 @@
         "qualification": "frozen historical checker/normalization only"
       },
       "rows": 3524,
-      "response_sha256": "93492c426514f065eb7ccf2db56b318d2578e7a238bebfd8cad1b1bd2f7a5ed5"
+      "response_sha256": "93492c426514f065eb7ccf2db56b318d2578e7a238bebfd8cad1b1bd2f7a5ed5",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "b118583d9261f5c91b5891833240b4e1c740af402a40602d650cc6f36449d286"
+      }
     },
     {
       "family": "012",
@@ -52,6 +59,13 @@
       "failure": {
         "code": "syntax_error",
         "message": "unsupported expression '>'"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "8e63413a67ce36251c0c89e1e4d28740e2e09ca4e7cec99b027ab37ab082cfb9"
       }
     },
     {
@@ -70,6 +84,13 @@
       "failure": {
         "code": "syntax_error",
         "message": "expected ';', got '='; outside affine-voltage syntax"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "0be1551518141d0cfba6f7800571e8ca86f340c2ae02e4fd77f0895df6593846"
       }
     },
     {
@@ -88,6 +109,13 @@
       "failure": {
         "code": "kernel.event_resolution",
         "message": "output query cannot certify its physical event phase"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "1dc6e19b673c946cda3a4cd3e99b53c42f4423d52bc0cb46f121a5e90ce0fc2b"
       }
     },
     {
@@ -109,7 +137,14 @@
         "qualification": "frozen historical checker/normalization only"
       },
       "rows": 251,
-      "response_sha256": "c58bb6306a72ecd8a70979a9601fb8d777223b53a3f3515c09273060b2c1559a"
+      "response_sha256": "c58bb6306a72ecd8a70979a9601fb8d777223b53a3f3515c09273060b2c1559a",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "1ab6a679a75f34772bdc5edbad4795c76d73c56ee97b288d2fe0258f795af941"
+      }
     },
     {
       "family": "048",
@@ -127,6 +162,13 @@
       "failure": {
         "code": "syntax_error",
         "message": "unsupported expression '<'"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "57eefe24725f5b73b7d7fbee0a18f621ce50abff6eaa5694ca299c7765f950ae"
       }
     },
     {
@@ -145,6 +187,13 @@
       "failure": {
         "code": "syntax_error",
         "message": "unsupported expression '<'"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "7eb01dda65e545c71bc0c1589ea77b56a9342e1e6b990193667cd1eea04e55c4"
       }
     },
     {
@@ -163,6 +212,13 @@
       "failure": {
         "code": "kernel.unsupported_transient",
         "message": "ordinary analog conditionals are not supported in transient event equations"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "4329d52f9ea78898bf151664f992a7315f62723093bec06c89a146a9881cb7af"
       }
     },
     {
@@ -181,6 +237,13 @@
       "failure": {
         "code": "resource_budget",
         "message": "event integer domains failed the post-fixpoint verification"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "6c113a5c276b0f701287c035433b66f357485921e694c6127e3b1712cf45598a"
       }
     },
     {
@@ -199,6 +262,13 @@
       "failure": {
         "code": "kernel.unsupported_transient",
         "message": "ordinary analog conditionals are not supported in transient event equations"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "b6bbde748f1e255f3c30032ff06ad0b45f6a7096980f8a6c925b5ac3943d19f9"
       }
     },
     {
@@ -217,6 +287,13 @@
       "failure": {
         "code": "unsupported_initial_event",
         "message": "initial_step values require constant-valued arms selected by input predicates"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "b11e1672659e26bc3832bb06d8ed0dd427b138c9f0bb34d5e16574591ea0a846"
       }
     },
     {
@@ -235,6 +312,13 @@
       "failure": {
         "code": "unsupported_integer_arithmetic",
         "message": "bounded integer division/modulo exceeds quotient-bin budget (256)"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "cedd0a952af5ba764d70e68716174d139fdc783a961d38a77ebf1b115ced316a"
       }
     },
     {
@@ -253,6 +337,13 @@
       "failure": {
         "code": "syntax_error",
         "message": "unsupported expression '>'"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "7495d261b3f2df452c00758677b5e9b99b1666d89f0d807cd8ac4ea07543c657"
       }
     },
     {
@@ -271,6 +362,13 @@
       "failure": {
         "code": "kernel.unsupported_transient",
         "message": "transient expressions must be jointly affine in voltage and state"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "002ffddce20516b9bd4a23b3f9278ede109415329bb88e5e4b905c140fc0d6a4"
       }
     },
     {
@@ -290,6 +388,13 @@
       "failure": {
         "code": "syntax_error",
         "message": "expected '=', got '('; outside affine-voltage syntax"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "64087c4782e50884566a6c0ee2af3bcdd0802547b227e28def06eb8f4a3caac3"
       }
     },
     {
@@ -311,7 +416,14 @@
         "qualification": "frozen historical checker/normalization only"
       },
       "rows": 5228,
-      "response_sha256": "22bbc92dde0bc995814f1282be948f11afabd42be450902a6be3f53e2419126f"
+      "response_sha256": "22bbc92dde0bc995814f1282be948f11afabd42be450902a6be3f53e2419126f",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "c880ea4ca29f350706148bdefe62f84f2f1452224b975b35d084fe384a4b6151"
+      }
     },
     {
       "family": "098",
@@ -329,6 +441,13 @@
       "failure": {
         "code": "unsupported_initial_event",
         "message": "initial_step values require constant-valued arms selected by input predicates"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "447c5bce62b46e2016af25d8d88ef05849b1143b2343cb1333b05a7922c539cc"
       }
     },
     {
@@ -347,6 +466,13 @@
       "failure": {
         "code": "syntax_error",
         "message": "idtmod requires 4 explicit arguments"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "e99605c51195e89da75cf98ab34cb4736f6f4948f226e2d743877013cc93d896"
       }
     },
     {
@@ -365,6 +491,13 @@
       "failure": {
         "code": "syntax_error",
         "message": "idtmod requires 4 explicit arguments"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "ee37f7239294d8d526d2ca645d1fd5e15d69a37959d833cbf14ebc29f49a6f01"
       }
     },
     {
@@ -385,6 +518,13 @@
       "failure": {
         "code": "unsupported_initial_event",
         "message": "unknown parameter 'half'"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "744acc0b512b49df5efe6052f497338d63ff1983d0f213ed3b829dbbb9b52947"
       }
     },
     {
@@ -405,6 +545,13 @@
       "failure": {
         "code": "syntax_error",
         "message": "expected '=', got '('; outside affine-voltage syntax"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "a418ea45b4c2247a6afc57d8c4a4ed1b379c5f90e9300514b040fd6057425ec9"
       }
     },
     {
@@ -427,6 +574,13 @@
       "failure": {
         "code": "kernel.unsupported_source_uncertainty",
         "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "b558b3d7639cbb16eb0948c51cc3aa6d14781caff619f36f70d13098d1d03218"
       }
     },
     {
@@ -449,6 +603,13 @@
       "failure": {
         "code": "syntax_error",
         "message": "expected ')', got '&'; outside affine-voltage syntax"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "587902945820565764e0207c670929bd50944fbd2fb595583e3053dbd3ff7a32"
       }
     },
     {
@@ -470,6 +631,13 @@
       "failure": {
         "code": "syntax_error",
         "message": "expected ')', got '&'; outside affine-voltage syntax"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "9d1a635b27d57af3abc8858f80777f80474ba67ad691a00f314b4679cb7110e4"
       }
     },
     {
@@ -491,6 +659,13 @@
       "failure": {
         "code": "kernel.unsupported_source_uncertainty",
         "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "d273936e5ef752be647a09c754d700e26f1f8860eacc5a4ccf422a8372db828a"
       }
     },
     {
@@ -512,6 +687,13 @@
       "failure": {
         "code": "compile_error",
         "message": "ordinary analog if leaves local variable 'lsb_bit' unassigned"
+      },
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "4a5559cff7f68e76ff36e91318fbb35e793f45734c27770bd0afd12e2a28442f"
       }
     }
   ],
@@ -520,5 +702,6 @@
   "frozen_checker_identity_sha256": "fad863fde1c4e4651480e0813fccb1fa43fd0dd023d79020f22737025c91567f",
   "normalization_sha256": "492bab585735c4480581d8f18f54bfc7bdd58a1cb02cde49ed30808049bea541",
   "qualification": "Unmodified original models/decks/settings/budgets;three completed requests pass frozen historical checker,23 subsequent blockers remain;no formal benchmark or Q claim",
-  "retention": "Compact identities/verdicts in repository;original inputs/full traces/checker copies/process receipts local-only"
+  "retention": "Compact identities/verdicts in repository;original inputs/full traces/checker copies/process receipts local-only",
+  "process_limit": "Every worker returned0 without timeout, but owned-group TERM/KILL each raised PermissionError(1,Operation not permitted) and cleanup_complete is false;do not claim complete cleanup. A later process audit saw no task-owned worker/kernel;it is not retroactive proof."
 }

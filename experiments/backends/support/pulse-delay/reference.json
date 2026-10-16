@@ -1,0 +1,485 @@
+{
+  "scope": "Only omitted pulse delay defaults to0;val0,val1,rise,fall,width,period remain explicit;finite static source/2x output check,not general pulse defaults",
+  "voltage_budget_V": 1e-08,
+  "pairing": "exact common native binary64 times,no interpolation",
+  "source": {
+    "base": "8d3096f1dac5df2ef7a2e18dc9cd5c3605e1fb37",
+    "scs_sources_sha256": "73be6f9e1882b8efac0e63c8f4f75a9c49447e3999352e909d2b22542b20f2c9",
+    "test_sha256": "04609833b025f875c62e3c43b0dec79b4b8fa0d46e579188b0a6fd34aa1e861e",
+    "kernel_sha256": "13c0da468f3a7798449fc704442aa4a03eae89f961fef76b2b5cb1c4daf034ef",
+    "rust_ir_unchanged": true
+  },
+  "spectre": {
+    "version": "sub-version  21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f",
+    "numerical_runs": 2,
+    "version_queries": 1
+  },
+  "help": {
+    "version": "21.1.0.509.isr12",
+    "sha256": "081a82afe5c35adbcbab5ec689b633914fc2fa7cd9c0b27bb0de506d016a93ac",
+    "excerpt": "delay=0 s",
+    "help_calls": 1,
+    "version_queries": 1
+  },
+  "cases": [
+    {
+      "case": "base",
+      "status": "finite_paired_pass",
+      "source_sha256": "79df248c7d63e18bbc74b969cc4715def99f8986d7eab675d5138b23e141080b",
+      "spectre_deck_sha256": "17746e59f75ad66650ce2bb2b9715bec28dc65023ff00eae5f84190d781c0eb4",
+      "evas_deck_sha256": "2b3e7473d283647856551d2be396645e3e708046898bb78df5d58aaa13c2abed",
+      "raw_psf_sha256": "37fb845e7e7c71a2a06d401ca01e0731e193911c6129690caa67376e6b8988c4",
+      "spectre_result_sha256": "18b0201869f266ceb9298242b9649ad431bc5e23bf4cb76aa2a1f8dfe3c30cef",
+      "evas_response_sha256": "2b982ef300b0832c422fa48b05fb555b37492e22adab33de6098df62f778518c",
+      "native_rows": 63,
+      "evas_saved_rows": 15,
+      "spectre_omitted_vs_explicit_zero_max_difference_V": 0.0,
+      "requested": {
+        "reltol": 1e-07,
+        "vabstol": 1e-09,
+        "iabstol": 1e-12,
+        "stop": 2,
+        "maxstep": 0.25
+      },
+      "spectre_effective": {
+        "reltol": 1e-07,
+        "vabstol": 1e-09,
+        "iabstol": 1e-12,
+        "stop": 2.0,
+        "maxstep": 0.25,
+        "method": "traponly"
+      },
+      "evas_effective": {
+        "vabstol": 1e-09,
+        "reltol": 1e-07
+      },
+      "warnings": [
+        "iabstol is ignored and has no effect: EVAS has no current unknowns."
+      ],
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "evas_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.03125,
+          "spectre_V": {
+            "u0": 0.0,
+            "u1": 0.0,
+            "y0": 0.0,
+            "y1": 0.0
+          },
+          "evas_V": {
+            "u0": 0.0,
+            "u1": 0.0,
+            "y0": -0.0,
+            "y1": -0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.125,
+          "spectre_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "evas_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.25,
+          "spectre_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "evas_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.375,
+          "spectre_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "evas_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.5,
+          "spectre_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "evas_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.625,
+          "spectre_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "evas_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.0,
+          "spectre_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "evas_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.125,
+          "spectre_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "evas_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.375,
+          "spectre_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "evas_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 1.5,
+          "spectre_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "evas_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 2.0,
+          "spectre_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "evas_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "spectre_max_binary64_formula_difference_V": 0.0,
+      "evas_max_binary64_formula_difference_V": 0.0,
+      "spectre_exact_rational_error": {
+        "exact_numerator": "1",
+        "exact_denominator": "36028797018963968",
+        "upper_bound_V": 2.7755575615628914e-17,
+        "definition": "Absolute difference between binary64 native time/voltage record and exact rational physical formula at that time"
+      },
+      "evas_exact_rational_error": {
+        "exact_numerator": "0",
+        "exact_denominator": "1",
+        "upper_bound_V": 0.0,
+        "definition": "Absolute difference between binary64 native time/voltage record and exact rational physical formula at that time"
+      }
+    },
+    {
+      "case": "different-controls",
+      "status": "finite_paired_pass",
+      "source_sha256": "79df248c7d63e18bbc74b969cc4715def99f8986d7eab675d5138b23e141080b",
+      "spectre_deck_sha256": "76c0196eea23cf0dfb64096fc64679862f630ce72ed3f4f3cc65b277036111ca",
+      "evas_deck_sha256": "9bc282070f73dfa23f0bdbfa6973d91f8c4d38134af287dc651d5bfbeb9812bd",
+      "raw_psf_sha256": "9cc1f3c64ed158ce535b1086006d73006d26be738b1af04524b2e6fdf879b4a4",
+      "spectre_result_sha256": "6838f2f982e3d0f6c1ab8e4ca29419b326dbd16f43bcb1f3cfbf7d9ab1454b32",
+      "evas_response_sha256": "dc8bae84c519124f24d955805f20bf7bca1667ddd2612b15a36d1aa367a0c872",
+      "native_rows": 37,
+      "evas_saved_rows": 14,
+      "spectre_omitted_vs_explicit_zero_max_difference_V": 0.0,
+      "requested": {
+        "reltol": 1e-07,
+        "vabstol": 1e-09,
+        "iabstol": 1e-12,
+        "stop": 0.75,
+        "maxstep": 0.0625
+      },
+      "spectre_effective": {
+        "reltol": 1e-07,
+        "vabstol": 1e-09,
+        "iabstol": 1e-12,
+        "stop": 0.75,
+        "maxstep": 0.0625,
+        "method": "traponly"
+      },
+      "evas_effective": {
+        "vabstol": 1e-09,
+        "reltol": 1e-07
+      },
+      "warnings": [
+        "iabstol is ignored and has no effect: EVAS has no current unknowns."
+      ],
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "evas_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.03125,
+          "spectre_V": {
+            "u0": 0.0,
+            "u1": 0.0,
+            "y0": 0.0,
+            "y1": 0.0
+          },
+          "evas_V": {
+            "u0": 0.0,
+            "u1": 0.0,
+            "y0": -0.0,
+            "y1": -0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.125,
+          "spectre_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "evas_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.1875,
+          "spectre_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "evas_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.25,
+          "spectre_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "evas_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.375,
+          "spectre_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "evas_V": {
+            "u0": 0.75,
+            "u1": 0.75,
+            "y0": 1.5,
+            "y1": 1.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.5,
+          "spectre_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "evas_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.5625,
+          "spectre_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "evas_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.625,
+          "spectre_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "evas_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "time_s": 0.75,
+          "spectre_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "evas_V": {
+            "u0": -0.25,
+            "u1": -0.25,
+            "y0": -0.5,
+            "y1": -0.5
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "spectre_max_binary64_formula_difference_V": 0.0,
+      "evas_max_binary64_formula_difference_V": 0.0,
+      "spectre_exact_rational_error": {
+        "exact_numerator": "1",
+        "exact_denominator": "72057594037927936",
+        "upper_bound_V": 1.3877787807814457e-17,
+        "definition": "Absolute difference between binary64 native time/voltage record and exact rational physical formula at that time"
+      },
+      "evas_exact_rational_error": {
+        "exact_numerator": "0",
+        "exact_denominator": "1",
+        "upper_bound_V": 0.0,
+        "definition": "Absolute difference between binary64 native time/voltage record and exact rational physical formula at that time"
+      }
+    }
+  ],
+  "retention": "Fixed inputs and selected native pairs public;full raw PSF/responses/tool/cleanup receipts local-only runs/evas-pulse-delay-20261017",
+  "reader": "Schema-position native reader reused from save-time comparison and its positive/negative calibration;no changed checker/threshold",
+  "analytic_metrics": "Binary64 formula difference and exact rational physical-formula error are distinct;paired backend values can be equal while nonpaired records have tiny rounding error"
+}

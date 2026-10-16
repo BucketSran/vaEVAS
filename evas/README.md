@@ -174,7 +174,7 @@ API 为 `evas.scs.load_scs(path)`（检查测试台并返回 manifest 和模型�
 | --- | --- |
 | 模型与连接 | `ahdl_include "file.va"`；按 VA 声明顺序展开静态向量后逐位连接的标量节点列表；常量参数覆盖；`global 0` |
 | 数字 | 有限十进制、科学计数和单字母 SI 后缀 `T G M k K m u n p f a`；可引用先前 `parameters` 语句的常量 |
-| `vsource` | 一端接地；`dc`；从零开始、时间严格递增的 `wave=[time value ...]`；显式 `delay/rise/width/fall/period/val0/val1` 的线性 pulse |
+| `vsource` | 一端接地；`dc`；从零开始、时间严格递增的 `wave=[time value ...]`；显式 `rise/width/fall/period/val0/val1` 的线性 pulse，`delay` 缺省为 0 |
 | `bsource` 电压式 | 一端接地；`v=V(node)`，可加减一个有限常量或先前 `parameters` 常量；偏移可用一层括号包住，例如 `v=V(vin)+(-0.04)` |
 | 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、转换为浮点数后仍小于 stop 的 `k*maxstep`、一次 stop，以及 `[0, stop]` 内全部源折点的并集；可另给 [strobe 五项控制](docs/reference/strobe.md)，不改变常规观察网格 |
 | 保存策略 | 显式 `tran strobeoutput=all/strobeonly` 选择常规与强制行的并集，或强制行加终止行；周期窗口外保留常规行，详见 [strobe 保存合同](docs/reference/strobe.md#显式保存策略) |
@@ -233,6 +233,10 @@ CLI 在 stderr 输出包含 `warnings` 的 JSON，成功结果仍在 stdout。
 [公共入口回归](tests/test_scs_vectors.py)。
 
 DC 和 PWL 保留输入数值与所有拐点。PWL 末点之后保持最后的值。
+线性 pulse 的 `delay` 缺省为 0 s，依据安装版 Spectre 21.1 的源参数帮助及
+[两个实际静态对照](../experiments/backends/support/pulse-delay/README.md)。
+`val0/val1/rise/fall/width/period` 仍须显式提供，不采用其他 Spectre 默认值。
+缺省 delay 与显式零进入相同的源构造和误差检查；显式非零 delay 的意义保持。
 pulse 的第 k 次起点为 `d+kP`，四个拐点为 `d+kP`、`d+kP+r`、
 `d+kP+r+w`、`d+kP+r+w+f`；要求 `r,f,P>0`、`d,w>=0`、`r+w+f<=P`。
 拐点由已解析的 binary64 参数用有理数计算，再舍入为保存的 binary64 时刻。
