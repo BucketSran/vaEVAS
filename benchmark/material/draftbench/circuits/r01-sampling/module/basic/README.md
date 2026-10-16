@@ -86,7 +86,7 @@ ref 的注入历史进入后续窗口初值。该运行只覆盖默认参数这�
 审核对象是[英文 instruction](../../../../batches/r01-sampling-01/tasks/r01-spec-acquisition/instruction.md)、
 [独立接口与 TODO](../../../../batches/r01-sampling-01/tasks/r01-spec-acquisition/environment/starter/circuit.va)和
 [公开台架](../../../../batches/r01-sampling-01/tasks/r01-spec-acquisition/environment/starter/testbench/tb.scs)。
-参考解和 checker 暂不展开。本地草稿尚未发布，仍不计入现有 56 题。
+参考解和 checker 暂不展开。草稿已纳入 main 供审核，尚未录取正式题集，仍不计入原 v2/v3 的 56 题。
 
 **工程场景与工作边界。** 采样电容需要时间建立，短采集窗口会留下前一拍的电压。
 求解者把给定连续行为写成一个 VA 模块，供后续系统选择采集窗口。

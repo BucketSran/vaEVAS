@@ -336,7 +336,7 @@ Python 的编译与求解接口：`compile_sources(sources, instances) -> Progra
 已支持的非线性积分路径也应用动态请求来限制内部接受段；隐式 DAE 仍只接受正的无条件常数请求。
 极小步长或无法认证的累计包围会明确失败，资源上限与数学说明见
 [非线性精度控制](docs/math/continuous.md#多项式非线性积分与误差证明)。
-当前实现 Python 前端与 Rust 内核使用 IR v22；版本迁移规则见[下文](#ir-v8-migration)。
+Python 前端与 Rust 内核使用相同的 IR 版本；当前版本及迁移规则见[下文](#ir-v8-migration)。
 
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
@@ -347,7 +347,7 @@ Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 
 语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
 组装模块依赖 IR 和表达式校验，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
-内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前实现表达式、事件与算子使用 IR v22，序列化迁移规则见下文。
+内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；表达式、事件与算子的当前 IR 版本及序列化迁移规则见[下文](#ir-v8-migration)。
 
 当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
 性能基准覆盖 Rust 库内静态求解、批量并行和五类瞬态路径。
