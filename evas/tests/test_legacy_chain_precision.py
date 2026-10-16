@@ -26,12 +26,40 @@ def fixture(card):
 
 
 class LegacyChainPrecision(unittest.TestCase):
+    def test_batch_tiers_match_independent_calls_including_failed_observations(self):
+        for original in runner.cards():
+            card=copy.deepcopy(original)
+            card['times']=[0.,card['stop_s']];card['max_gap_s']=card['stop_s']
+            rows,records=fixture(card)
+            for wrong in (False,True):
+                if wrong:rows[-1][card['outputs'][0]]+=2e-6
+                with self.subTest(case=card['id'],wrong=wrong):
+                    expected={tier:q.assess(card,rows,records,tier) for tier in q.TIERS}
+                    self.assertEqual(q.assess_tiers(card,rows,records),expected)
+
+    def test_batch_does_not_reuse_changed_inputs_or_hide_uncertain_callbacks(self):
+        card=copy.deepcopy(runner.cards()[0])
+        card['times']=[0.,card['stop_s']];card['max_gap_s']=card['stop_s']
+        rows,records=fixture(card)
+        original=copy.deepcopy((card,rows,records))
+        q.assess_tiers(card,rows,records)
+        self.assertEqual((card,rows,records),original)
+        for record in records:
+            record['time_bounds_s']=[record['time_s']-1e-13,record['time_s']+1e-13]
+        expected={tier:q.assess(card,rows,records,tier) for tier in q.TIERS}
+        self.assertEqual(q.assess_tiers(card,rows,records),expected)
+        self.assertEqual(expected['Q3']['status'],'evidence_insufficient')
+        records.pop()
+        self.assertEqual(q.assess_tiers(card,rows,records),
+                         {tier:q.assess(card,rows,records,tier) for tier in q.TIERS})
+
     def test_all_twelve_conditions_and_three_tiers_accept_independent_reference(self):
         for card in runner.cards():
             rows,records=fixture(card)
+            results=q.assess_tiers(card,rows,records)
             for tier in q.TIERS:
                 with self.subTest(case=card['id'],tier=tier):
-                    self.assertEqual(q.assess(card,rows,records,tier)['status'],'pass')
+                    self.assertEqual(results[tier]['status'],'pass')
 
     def test_dut_log_value_never_becomes_gold(self):
         card=next(c for c in runner.cards() if c['kind']=='c2');rows,records=fixture(card)

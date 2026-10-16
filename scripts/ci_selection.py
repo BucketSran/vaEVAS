@@ -53,6 +53,11 @@ REGRESSION_INPUTS = {
     'experiments/backends/dvs2-spectre-validation/run_suite.py',
     'experiments/backends/dvs2-spectre-validation/check_results.py',
 }
+# Audited historical reports, not fixtures or executable inputs. Keep this an
+# exact path list: an unfamiliar JSON file still selects its regression consumers.
+HISTORICAL_REPORTS = {
+    'experiments/backends/sample-edge-filter/rea-boundary-receipt.json',
+}
 
 
 def flags(*enabled):
@@ -110,7 +115,8 @@ def classify(paths):
         elif path.startswith((*PROVENANCE_PREFIXES, *CALIBRATION_PREFIXES)):
             # Backend modules share archive/parser helpers and paper contracts.
             selected.update(('calibration', 'provenance'))
-            if path in REGRESSION_INPUTS or suffix not in ('.py', '.csv'):
+            if path in REGRESSION_INPUTS or (suffix not in ('.py', '.csv')
+                                             and path not in HISTORICAL_REPORTS):
                 selected.update(('maintenance', 'regression'))
         elif path.startswith('evas/validation/'):
             selected.update(('maintenance', 'calibration', 'provenance', 'regression'))
