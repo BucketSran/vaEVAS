@@ -43,7 +43,7 @@ class RecordsTests(unittest.TestCase):
     def test_cli_reports_failure(self):
         p = self.root / "review.md"
         p.write_text("长" * 301)
-        run = subprocess.run([sys.executable, str(SCRIPT), "check-review", str(p), "--findings", "0"], capture_output=True, text=True)
+        run = subprocess.run([sys.executable, str(SCRIPT), "check-review", str(p), "--findings", "0", '--json'], capture_output=True, text=True)
         self.assertEqual(run.returncode, 1)
         self.assertFalse(json.loads(run.stdout)["passed"])
 
@@ -64,6 +64,25 @@ class RecordsTests(unittest.TestCase):
         self.assertEqual(p.read_bytes(), before)
         self.assertEqual(records.read_events(p)[-1]["status"], "failed")
         self.assertEqual(records.summarize(p)["observed_union_s"], 10)
+        self.assertEqual(records.summarize(p)['failures'], [
+            {'id': 'one', 'status': 'failed', 'evidence': 'review.json', 'reason': 'missing evidence'}])
+
+    def test_compact_summary_surfaces_failed_and_cancelled_evidence_without_mutating_log(self):
+        p = self.root / 'timing.jsonl'
+        for status in ('failed', 'cancelled'):
+            records.start(p, status, 'validation', 'coordinator')
+            records.stop(p, status, status, status + '.log', 'preserve this failure')
+        records.start(p, 'pending', 'review', 'coordinator')
+        before = p.read_bytes()
+        report = self.root / 'summary.json'
+        run = subprocess.run([sys.executable, '-B', str(SCRIPT), 'time-summary', str(p),
+                              '--report', str(report)], capture_output=True, text=True, check=True)
+        for status in ('failed', 'cancelled'):
+            self.assertIn(status + '.log', run.stdout)
+        self.assertIn('pending', run.stdout)
+        self.assertIn(str(report), run.stdout)
+        self.assertEqual(len(json.loads(report.read_text())['failures']), 2)
+        self.assertEqual(p.read_bytes(), before)
 
     def test_parallel_time_is_not_double_counted_and_open_timer_is_visible(self):
         p = self.root / "timing.jsonl"

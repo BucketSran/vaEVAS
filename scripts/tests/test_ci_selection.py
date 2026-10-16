@@ -17,7 +17,8 @@ spec.loader.exec_module(ci)
 
 class RoutingTests(unittest.TestCase):
     def test_development_records_only_select_maintenance(self):
-        for path in ('scripts/development_records.py', 'scripts/tests/test_development_records.py'):
+        for path in ('scripts/development_records.py', 'scripts/tests/test_development_records.py',
+                     'scripts/tests/test_ci_selection.py'):
             self.assertEqual(ci.classify([path]), ci.flags('maintenance'))
         self.assertTrue(ci.classify(['scripts/development_records.py',
                                      'evas/rust_core/src/events.rs'])['regression'])
@@ -163,7 +164,7 @@ class RoutingTests(unittest.TestCase):
 
     def test_workflow_selector_or_unrecognized_code_runs_every_check(self):
         for path in ('.github/workflows/package-install.yml', '.github/actions/rust-cache/action.yml',
-                     'scripts/ci_selection.py', 'scripts/tests/test_ci_selection.py',
+                     'scripts/ci_selection.py',
                      'scripts/new_tool.py', 'experiments/new_backend/test.py', 'new_runtime/solver.py'):
             with self.subTest(path=path):
                 self.assertEqual(ci.classify([path]), ci.flags(*ci.CHECKS))
@@ -284,11 +285,79 @@ class GitChangeTests(unittest.TestCase):
         completed = subprocess.run([
             'python3', '-B', str(SCRIPT), 'select', '--repo', str(self.repo),
             '--event-name', 'push', '--event-path', str(event_file),
-            '--output', str(output_file),
+            '--output', str(output_file), '--json',
         ], text=True, capture_output=True, check=True)
         self.assertFalse(json.loads(completed.stdout)['regression'])
         self.assertIn('regression=false\n', output_file.read_text())
         self.assertIn('package=false\n', output_file.read_text())
+
+    def test_compact_cli_saves_complete_evidence_and_preserves_job_outputs(self):
+        self.write('scripts/check_workspaces.py', 'maintenance\n')
+        head = self.commit()
+        event = self.repo / 'event.json'
+        event.write_text(json.dumps({'before': self.base, 'after': head}))
+        report, output = self.repo / 'plan.json', self.repo / 'outputs'
+        run = subprocess.run(['python3', '-B', str(SCRIPT), 'select', '--repo', str(self.repo),
+                              '--event-name', 'push', '--event-path', str(event),
+                              '--output', str(output), '--report', str(report)],
+                             capture_output=True, text=True, check=True)
+        self.assertIn('Selected: maintenance', run.stdout)
+        self.assertIn(str(report), run.stdout)
+        self.assertEqual(json.loads(report.read_text())['paths'], ['scripts/check_workspaces.py'])
+        self.assertIn('maintenance=true\n', output.read_text())
+
+    def test_registration_exemption_preserves_semantics_and_unknown_inputs(self):
+        original = SCRIPT.read_text()
+        earlier = original.replace("    'scripts/development_records.py', 'scripts/tests/test_development_records.py',\n", '')
+        self.write('scripts/ci_selection.py', earlier)
+        base = self.commit()
+        self.write('scripts/ci_selection.py', original)
+        self.write('scripts/development_records.py', 'maintenance\n')
+        self.write('scripts/tests/test_ci_selection.py', 'test fixture changes\n')
+        head = self.commit()
+        plan = ci.select(self.repo, 'push', {'before': base, 'after': head})
+        self.assertEqual({key: plan[key] for key in ci.CHECKS}, ci.flags('maintenance'))
+        self.assertIn('registration only', plan['reasons'][0]['reason'])
+        for source in (original.replace("'scripts/check_workspaces.py'", "'scripts/unreviewed.py'"),
+                       original.replace("selected.add('provenance')", "selected.add('maintenance')"),
+                       'invalid python !'):
+            with self.subTest(source=source[:20]):
+                self.write('scripts/ci_selection.py', source)
+                changed = self.commit()
+                plan = ci.select(self.repo, 'push', {'before': base, 'after': changed})
+                self.assertTrue(all(plan[key] for key in ci.CHECKS))
+        self.write('scripts/ci_selection.py', original)
+        self.write('scripts/unrecognized.py', 'shared dependency\n')
+        mixed = self.commit()
+        self.assertTrue(all(ci.select(self.repo, 'push', {'before': base, 'after': mixed})[key]
+                            for key in ci.CHECKS))
+
+    def test_progress_block_exemption_does_not_cover_table_contract_or_file_removal(self):
+        path = 'evas/docs/COMPARISON.md'
+        source = '| ability | Q3 |\ncriterion unchanged\n' + ci.PROGRESS_START + '\nqueued work\n' + ci.PROGRESS_END + '\n'
+        self.write(path, source)
+        base = self.commit()
+        self.write(path, source.replace('queued work', 'new progress'))
+        head = self.commit()
+        plan = ci.select(self.repo, 'push', {'before': base, 'after': head})
+        self.assertEqual({key: plan[key] for key in ci.CHECKS}, ci.flags())
+        for altered in (source.replace('Q3', 'Q2'), source.replace('criterion unchanged', 'new criterion'),
+                        source.replace('queued work', '| hidden table | Q3 |'),
+                        source.replace(ci.PROGRESS_START, ''), source.replace('queued work', '')):
+            self.write(path, altered)
+            changed = self.commit()
+            self.assertTrue(ci.select(self.repo, 'push', {'before': base, 'after': changed})['provenance'])
+        self.write(path, source)
+        self.write('evas/src/evas/events.py', 'shared\n')
+        mixed = self.commit()
+        self.assertTrue(ci.select(self.repo, 'push', {'before': base, 'after': mixed})['regression'])
+        self.git('mv', path, 'evas/docs/renamed.md')
+        renamed = self.commit()
+        self.assertTrue(ci.select(self.repo, 'push', {'before': mixed, 'after': renamed})['provenance'])
+        self.git('rm', 'evas/docs/renamed.md')
+        self.git('rm', 'evas/src/evas/events.py')
+        deleted = self.commit()
+        self.assertTrue(ci.select(self.repo, 'push', {'before': renamed, 'after': deleted})['regression'])
 
 
 class GateTests(unittest.TestCase):

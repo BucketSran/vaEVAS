@@ -479,6 +479,25 @@ def inspect(repo, requested_base=None, assets=False, scan_seconds=2, hash_limit=
     return report
 
 
+def display_compact(report, evidence=None):
+    print('Visibility check: ' + ('FAIL' if report['errors'] else 'PASS')
+          + f"; worktrees={len(report['worktrees'])}; errors={len(report['errors'])}")
+    for row in report['worktrees']:
+        changes = None if row['changes'] is None else len(row['changes'])
+        print(f"{row['path']}: changes={changes}; commits_not_in_base={row['commits_not_in_base']}")
+    for error in report['errors']:
+        print(f"{error['code']}: {error['path']}: {error['message']}")
+    if 'assets_complete' in report:
+        print(f"Asset inspection complete: {report['assets_complete']}")
+        for row in report['worktrees']:
+            for warning in row.get('assets', {}).get('warnings', []):
+                print(f"{row['path']}: {warning}")
+            for label, disk in row.get('assets', {}).get('disk', {}).items():
+                for error in disk['errors']:
+                    print(f"{row['path']}/{label}: {error}")
+    print(f'Evidence: {evidence}' if evidence else 'Details: --json, --verbose or --report <task-path>')
+
+
 def display(report):
     print(f"Daily entry: {report['primary']}")
     if report.get("base"):
@@ -541,6 +560,8 @@ def main():
     parser.add_argument("--repo", type=Path, default=Path.cwd(), help="Any checkout of the repository")
     parser.add_argument("--base", help="Local ref for commit reachability; default origin/main, then main")
     parser.add_argument("--json", action="store_true", help="Print the full inspection as JSON")
+    parser.add_argument("--verbose", action="store_true", help="Print the detailed text inspection")
+    parser.add_argument("--report", type=Path, help="Save the full inspection as JSON at this explicit path")
     parser.add_argument("--assets", action="store_true", help="Inspect local changes, duplicate candidates and disk usage (read-only)")
     parser.add_argument("--scan-seconds", type=nonnegative, default=2,
                         help="Metadata scan time budget per checkout/category; default 2 seconds")
@@ -552,10 +573,15 @@ def main():
     except (ValueError, OSError, UnicodeError, subprocess.SubprocessError) as exc:
         report = {"primary": None, "worktrees": [], "errors": [
             {"code": "INSPECTION_FAILED", "path": str(args.repo), "message": str(exc)}]}
+    if args.report:
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))
-    else:
+    elif args.verbose:
         display(report)
+    else:
+        display_compact(report, args.report)
     if any(e["code"] == "INSPECTION_FAILED" for e in report["errors"]) or report.get("assets_complete") is False:
         return 2
     return 1 if report["errors"] else 0

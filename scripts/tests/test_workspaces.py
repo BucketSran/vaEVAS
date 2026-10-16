@@ -68,6 +68,17 @@ class WorkspaceChecks(unittest.TestCase):
         self.assertEqual(len(report["worktrees"]), 1)
         self.assertEqual(report["primary"], str(self.primary))
 
+    def test_compact_default_keeps_failures_and_full_report(self):
+        self.worktree()
+        report = self.root / 'workspace.json'
+        run = subprocess.run([sys.executable, '-B', str(SCRIPT), '--repo', str(self.primary),
+                              '--report', str(report)], env=self.env, capture_output=True, text=True)
+        self.assertEqual(run.returncode, 1)
+        self.assertIn('HIDDEN_WORKTREE', run.stdout)
+        self.assertIn(str(report), run.stdout)
+        self.assertIn('HIDDEN_WORKTREE', [e['code'] for e in json.loads(report.read_text())['errors']])
+        self.assertNotIn('Ignored paths to assess', run.stdout)
+
     def test_hidden_worktree_fails_then_visible_navigation_passes_without_mutation(self):
         worktree = self.worktree()
         (worktree / "source.txt").write_text("unfinished work\n")

@@ -114,6 +114,8 @@ Q 是验收上限：1 V 刻度的 Q1 / Q2 / Q3 为 10.1 µV / 1.01 µV / 101 nV�
 | [隐式动态与事件](../../experiments/backends/implicit-event-restart/README.md) | 已交付有限动态步长和精确固定 timer 续算；一般事件窗、复位及代数约束跳参仍不在已验收范围。 | [#66](https://github.com/BucketSran/vaEVAS/issues/66) |
 | 双向自换向 cross | 原问题尚未完成整体验收，候选中的超时和紧根预算失败继续保留。 | [#70](https://github.com/BucketSran/vaEVAS/issues/70)、[#119](https://github.com/BucketSran/vaEVAS/issues/119) |
 
+<!-- ci:progress:start -->
 v4 已有固定版本的 400 家族首阻塞探测，分类及推进顺序见[修复顺序](development/COMPARISON.md#repair-priority)。旧 checker 复核仅供定位，不是正式 benchmark 成绩。
+<!-- ci:progress:end -->
 
 原请求、独立控制和共同 Q 结论的更新条件见[每项修复与比较的验收](../validation/paper/COVERAGE.md#每项修复与每行比较一起验收)。
