@@ -88,13 +88,48 @@ class InternalDerivativeContracts(unittest.TestCase):
 
 class JointEventDynamicsContracts(unittest.TestCase):
     def test_uncertain_linear_restart_rejects_uncertified_input_branches(self):
-        # At tau=sqrt(2)<1.414214, the correct branch sets q=3.
-        # Thus y(2)=tau+3*(2-tau)=6-2*sqrt(2), not 4-sqrt(2).
+        # The certified e remains below 1.414214, so q=3 and
+        # y(2)=e+3*(2-e). Root-location error must retain that branch.
         program = compile_model(
             "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) "
             "if (V(u,r)>1.414214) q=2; else q=3; V(y,r)<+idt(q,0);", "integer q;")
-        with self.assertRaisesRegex(KernelError, "event_condition"):
-            run(program, {"u": [[0, 0], [2, 2]]}, [0, 2], stop=2, vabstol=1e-4, reltol=0)
+        # The original root window straddles the branch threshold, but
+        # bounded refinement can certify the complete root-to-execution span.
+        result = run(program, {"u": [[0, 0], [2, 2]]}, [0, 2], stop=2,
+                     vabstol=1e-4, reltol=0)
+        dense_times = [0, .25, .5, 1, 1.5, 2]
+        dense = run(program, {"u": [[0, 0], [2, 2]]}, dense_times, stop=2,
+                    vabstol=1e-4, reltol=0)
+        self.assertEqual(result['transient']['events'], dense['transient']['events'])
+        self.assertEqual(result['solutions'], [dense['solutions'][i] for i in [0, 5]])
+        event, = result['transient']['events']
+        e = Fraction(event['time'])
+        lo, hi = map(Fraction, event['observation_time_bounds'])
+        self.assertLessEqual(lo*lo, 2)
+        self.assertGreaterEqual(hi*hi, 2)
+        self.assertGreater(e*e, 2)
+        self.assertLessEqual((e-Fraction(1e-5))**2, 2)
+        self.assertLessEqual(e*e-2, Fraction(1e-4))
+        self.assertGreater(event['guard_value'], 0)
+        # This proves the branch over the entire retained root-location span,
+        # including e, rather than inspecting the callback's state afterwards.
+        threshold = Fraction(1.414214)
+        self.assertLess(max(hi, e), threshold)
+        q = 2 if e > threshold else 3
+        self.assertEqual(q, 3)
+        for answer, times in [(result, [0, 2]), (dense, dense_times)]:
+            evidence = answer['observation_evidence']
+            self.assertEqual(evidence['effective_controls']['absolute_V'], 1e-4)
+            self.assertEqual(evidence['effective_controls']['relative'], 0)
+            index = answer['nodes'].index('y')
+            for i, (t, actual) in enumerate(zip(times, values(answer))):
+                t = Fraction(t)
+                expected = t if t < e else e+q*(t-e)
+                self.assertLessEqual(abs(Fraction(actual)-expected), Fraction(1e-4))
+                lower, upper = map(Fraction, evidence['voltage_bounds_V'][i][index])
+                self.assertLessEqual(lower, expected)
+                self.assertGreaterEqual(upper, expected)
+                self.assertLessEqual(max(abs(lower-Fraction(actual)), abs(upper-Fraction(actual))), Fraction(1e-4))
 
     def test_uncertain_linear_restart_refines_sampling_and_retains_output_budget(self):
         # At tau=sqrt(2), q=tau and y(10)=10*tau-2. The old coarse
@@ -410,16 +445,49 @@ class NonlinearIntegralContracts(unittest.TestCase):
             assert_close(self, actual, expected, delta=1e-10)
 
     def test_uncertain_nonlinear_restart_rejects_uncertified_branch_selection(self):
-        # u=sqrt(2)<1.414214 at the true root; the certified representative can
-        # lie above 1.414214 and select the opposite branch. Literal RHS values
-        # do not remove that event-time-dependent choice.
+        # y'=-q*y^2 gives 1/y(t)=1+e+q*(t-e) after e.
+        # Acceptance still requires a uniform branch over the location span.
         program = compile_model(
             "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) "
             "if (V(u,r)>1.414214) q=2; else q=3; "
             "V(y,r)<+idt(-q*pow(V(y,r),2),1);", "integer q;")
-        with self.assertRaisesRegex(KernelError, "event_condition"):
-            run(program, {"u": [[0, 0], [2, 2]]}, [0, 2], stop=2,
-                vabstol=1e-4, reltol=0)
+        # The original root window straddles the branch threshold, but
+        # bounded refinement can certify the complete root-to-execution span.
+        result = run(program, {"u": [[0, 0], [2, 2]]}, [0, 2], stop=2,
+                     vabstol=1e-4, reltol=0)
+        dense_times = [0, .25, .5, 1, 1.5, 2]
+        dense = run(program, {"u": [[0, 0], [2, 2]]}, dense_times, stop=2,
+                    vabstol=1e-4, reltol=0)
+        self.assertEqual(result['transient']['events'], dense['transient']['events'])
+        self.assertEqual(result['solutions'], [dense['solutions'][i] for i in [0, 5]])
+        event, = result['transient']['events']
+        e = Fraction(event['time'])
+        lo, hi = map(Fraction, event['observation_time_bounds'])
+        self.assertLessEqual(lo*lo, 2)
+        self.assertGreaterEqual(hi*hi, 2)
+        self.assertGreater(e*e, 2)
+        self.assertLessEqual((e-Fraction(1e-5))**2, 2)
+        self.assertLessEqual(e*e-2, Fraction(1e-4))
+        self.assertGreater(event['guard_value'], 0)
+        # This proves the branch over the entire retained root-location span,
+        # including e, rather than inspecting the callback's state afterwards.
+        threshold = Fraction(1.414214)
+        self.assertLess(max(hi, e), threshold)
+        q = 2 if e > threshold else 3
+        self.assertEqual(q, 3)
+        for answer, times in [(result, [0, 2]), (dense, dense_times)]:
+            evidence = answer['observation_evidence']
+            self.assertEqual(evidence['effective_controls']['absolute_V'], 1e-4)
+            self.assertEqual(evidence['effective_controls']['relative'], 0)
+            index = answer['nodes'].index('y')
+            for i, (t, actual) in enumerate(zip(times, values(answer))):
+                t = Fraction(t)
+                expected = 1/(1+t) if t < e else 1/(1+e+q*(t-e))
+                self.assertLessEqual(abs(Fraction(actual)-expected), Fraction(1e-4))
+                lower, upper = map(Fraction, evidence['voltage_bounds_V'][i][index])
+                self.assertLessEqual(lower, expected)
+                self.assertGreaterEqual(upper, expected)
+                self.assertLessEqual(max(abs(lower-Fraction(actual)), abs(upper-Fraction(actual))), Fraction(1e-4))
 
 
 if __name__ == "__main__":

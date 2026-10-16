@@ -68,10 +68,10 @@ impl Controller {
         let result = self.prepare_events_until(model, trajectory, crossings, None)?;
         result.0.operators.check_deadline_order(
             result.0.time,
-            crossings.get(result.2).map(|e| e.bounds()),
+            crossings.get(result.2).map(|e| e.observation_bounds()),
             crossings
                 .get(result.2)
-                .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
+                .and_then(|e| crate::schedule::common_execution_root(std::slice::from_ref(e))),
         )?;
         Ok(result)
     }
@@ -200,6 +200,9 @@ impl Controller {
             if !held || !changed[index] {
                 continue;
             }
+            if batch.iter().any(|event| event.event == index) {
+                return Err(Error::new("unsupported_cross","triggering event-dependent guard depends on callback writes; an instantaneous guard closure is required"));
+            }
             let a = a.sign();
             let b = b.sign();
             if a.is_none() || b.is_none() || a != b {
@@ -244,15 +247,19 @@ impl Controller {
     }
 }
 
-// Current policy chooses the certified mathematical root as the actual cross
-// observation. Its enclosure and fired-root constraints travel together; b is
-// only a representative. No late-trigger policy is silently substituted.
+// Root identities authorize a callback, but are not callback observations.
+// An ordinary cross observes a certified post-root point; a mandatory
+// physical-knot or terminal arrival may retain its mathematical root.
+// Explicit mathematical-root probes alone may reuse predicate equalities.
 #[derive(Clone, Copy)]
 struct EventMoment<'a> {
     exact_root: Option<&'a crate::exact_source::RootTime>,
     representative: f64,
     observation: I,
     fired_roots: &'a [usize],
+    // Only these leaves certify g=0 at this observation. All fired_roots
+    // still execute, including strict post-root leaves in a mixed batch.
+    mathematical_roots: &'a [usize],
     prediction_end: f64,
 }
 
@@ -298,6 +305,7 @@ fn prepare_event_with_bounds(
             representative: time,
             observation: time_bounds,
             fired_roots: &[],
+            mathematical_roots: &[],
             prediction_end: trajectory.config.stop,
         },
         events,
@@ -322,8 +330,16 @@ fn prepare_root_window_selected(
     moment: EventMoment<'_>,
     events: &[usize],
 ) -> Result<(Frame, crate::event_conditions::Selection), Error> {
-    let ordinary =
-        prepare_root_window_selected_impl(model, trajectory, accepted, moment, events, false);
+    let ordinary = prepare_root_window_selected_impl(
+        model,
+        trajectory,
+        accepted,
+        moment,
+        events,
+        false,
+        &[],
+        None,
+    );
     match ordinary {
         Err(error)
             if error.kind == "waveform_accuracy"
@@ -337,7 +353,16 @@ fn prepare_root_window_selected(
             // Retry the entire disposable settlement from accepted history.
             // The proof refines representatives and every downstream bound;
             // neither an event/root window nor its timing is changed.
-            prepare_root_window_selected_impl(model, trajectory, accepted, moment, events, true)
+            prepare_root_window_selected_impl(
+                model,
+                trajectory,
+                accepted,
+                moment,
+                events,
+                true,
+                &[],
+                None,
+            )
         }
         result => result,
     }
@@ -359,10 +384,13 @@ fn prepare_root_window_impl(
         moment,
         events,
         refine_ordinary_phase,
+        &[],
+        None,
     )
     .map(|(frame, _)| frame)
 }
 
+#[allow(clippy::too_many_arguments)]
 fn prepare_root_window_selected_impl(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -370,6 +398,8 @@ fn prepare_root_window_selected_impl(
     moment: EventMoment<'_>,
     events: &[usize],
     refine_ordinary_phase: bool,
+    source_sides: &[(usize, i8)],
+    source_boundary_root: Option<&crate::exact_source::RootTime>,
 ) -> Result<(Frame, crate::event_conditions::Selection), Error> {
     let _timing = crate::diagnostics::span("controller.prepare_candidate");
     for (&state, proof) in &accepted.time_proofs {
@@ -390,7 +420,8 @@ fn prepare_root_window_selected_impl(
         exact_root,
         representative: time,
         observation: time_bounds,
-        fired_roots: fired_leaves,
+        fired_roots: _,
+        mathematical_roots: fired_leaves,
         prediction_end,
     } = moment;
     let copying = crate::diagnostics::span("history.clone");
@@ -411,12 +442,34 @@ fn prepare_root_window_selected_impl(
     // install the new target only in this disposable candidate history.
     let base = operators;
     let mut frozen = base.evaluation_at_root(time, exact_root, time_bounds)?;
+    frozen.set_source_boundary_root(source_boundary_root, time_bounds)?;
     frozen.bounds = base.event_bounds(time, time_bounds)?;
     let inputs = trajectory.values(time);
     let input_bounds = trajectory.range(time_bounds)?.0;
     let observation_inputs = trajectory.value_bounds(time);
     let settle = |values: &[f64], bounds: &[I]| {
-        if time_bounds.lo == time_bounds.hi {
+        if !source_sides.is_empty() {
+            let selection = model.select_conditions_on_source_side(
+                events,
+                &input_bounds,
+                fired_leaves,
+                old_bounds,
+                bounds,
+                source_sides,
+            )?;
+            crate::settlement::prepare_location_selected(
+                model,
+                (events, fired_leaves),
+                (&inputs, &input_bounds),
+                &observation_inputs,
+                &accepted.states,
+                values,
+                old_bounds,
+                bounds,
+                Some(&accepted.circuit),
+                &selection,
+            )
+        } else if time_bounds.lo == time_bounds.hi {
             crate::settlement::prepare(
                 model,
                 events,
@@ -441,10 +494,14 @@ fn prepare_root_window_selected_impl(
             )
         }
     };
-    let mut physical_selection =
-        model
-            .conditions
-            .select_at_roots(events, &input_bounds, fired_leaves, old_bounds)?;
+    let mut physical_selection = model.select_conditions_on_source_side(
+        events,
+        &input_bounds,
+        fired_leaves,
+        old_bounds,
+        &frozen.bounds,
+        source_sides,
+    )?;
     physical_selection
         .actions
         .retain(|(event, _)| !model.passive_events[*event]);
@@ -560,10 +617,14 @@ fn prepare_root_window_selected_impl(
     }
     // The physical same-time closure is complete. Its event-time operator
     // forcing covers tau; future-history/b-point bounds must not replace it.
-    let mut selection =
-        model
-            .conditions
-            .select_at_roots(events, &input_bounds, fired_leaves, old_bounds)?;
+    let mut selection = model.select_conditions_on_source_side(
+        events,
+        &input_bounds,
+        fired_leaves,
+        old_bounds,
+        &observation.1,
+        source_sides,
+    )?;
     if events.iter().any(|&event| model.passive_events[event]) {
         let selected = model.selected_program_at_roots(
             &prepared
@@ -615,18 +676,16 @@ fn prepare_root_window_selected_impl(
     );
     // Refinement belongs to this observation, never future root predictions.
     operators.refine_ordinary_phase(false);
-    Ok((
-        Frame {
-            time_proofs,
-            time,
-            states: prepared.states,
-            state_bounds: prepared.bounds,
-            solution: prepared.solution,
-            circuit: prepared.circuit,
-            operators,
-        },
-        selection,
-    ))
+    let next = Frame {
+        time_proofs,
+        time,
+        states: prepared.states,
+        state_bounds: prepared.bounds,
+        solution: prepared.solution,
+        circuit: prepared.circuit,
+        operators,
+    };
+    Ok((next, selection))
 }
 
 #[cfg(test)]
@@ -676,8 +735,10 @@ fn prepare_batch_with_bounds(
             representative: event_time,
             observation: event_bounds,
             fired_roots: ids,
+            mathematical_roots: ids,
             prediction_end: trajectory.config.stop,
         },
+        None,
     )
 }
 
@@ -686,6 +747,7 @@ fn prepare_batch_until(
     trajectory: &Trajectory,
     accepted: &Frame,
     moment: EventMoment<'_>,
+    execution_guards: Option<&[(usize, I)]>,
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
     let event_time = moment.representative;
     let event_bounds = moment.observation;
@@ -737,7 +799,14 @@ fn prepare_batch_until(
                 ..
             } = &leaf.trigger
             {
-                let value = if let Some(guard) = &model.guards[leaf_id] {
+                // Trigger tolerance belongs to the certified old epoch at te.
+                // Callback writes may change its guard afterwards; that is not
+                // permission to substitute post-write data for the trigger.
+                let value = if let Some((_, bound)) = execution_guards
+                    .and_then(|values| values.iter().find(|(leaf, _)| *leaf == leaf_id))
+                {
+                    bound.lo * 0.5 + bound.hi * 0.5
+                } else if let Some(guard) = &model.guards[leaf_id] {
                     guard.value_with(
                         &next.solution.voltages,
                         &next.states,
@@ -861,16 +930,33 @@ fn prepare_calendar_batch(
     } else {
         accepted
     };
-    let exact_root = crate::schedule::common_root(scheduled);
+    if scheduled
+        .iter()
+        .any(|event| event.is_cross() && event.execution_root().is_none())
+    {
+        return Err(Error::new(
+            "event_resolution",
+            "cross callback has no valid execution certificate",
+        ));
+    }
+    let exact_root = crate::schedule::common_execution_root(scheduled);
     let ids: Vec<_> = scheduled.iter().map(|e| e.event).collect();
-    let bounds =
-        scheduled
-            .iter()
-            .map(|event| event.bounds())
-            .fold(I::point(time), |sum, bounds| I {
-                lo: sum.lo.min(bounds.lo),
-                hi: sum.hi.max(bounds.hi),
-            });
+    let mathematical_roots: Vec<_> = scheduled
+        .iter()
+        .filter(|e| e.is_arrival())
+        .map(|e| e.event)
+        .collect();
+    let execution_guards: Vec<_> = scheduled
+        .iter()
+        .filter_map(|e| e.execution_guard().map(|guard| (e.event, guard)))
+        .collect();
+    let bounds = scheduled
+        .iter()
+        .map(|event| event.observation_bounds())
+        .fold(I::point(time), |sum, bounds| I {
+            lo: sum.lo.min(bounds.lo),
+            hi: sum.hi.max(bounds.hi),
+        });
     let (next, mut records) = prepare_batch_until(
         model,
         trajectory,
@@ -880,10 +966,23 @@ fn prepare_calendar_batch(
             representative: time,
             observation: bounds,
             fired_roots: &ids,
+            mathematical_roots: &mathematical_roots,
             prediction_end,
         },
+        Some(&execution_guards),
     )?;
     for record in &mut records {
+        if record.kind == "cross" {
+            // This public log field retains the mathematical root certificate.
+            // Settlement and history still observe the certified execution point.
+            let event = scheduled
+                .iter()
+                .find(|event| model.triggers[event.event].event == record.event)
+                .unwrap();
+            let bounds = event.bounds();
+            record.observation_time_bounds = (bounds.lo != record.time || bounds.hi != record.time)
+                .then_some([bounds.lo, bounds.hi]);
+        }
         for fired in &mut record.fired_triggers {
             let event = scheduled
                 .iter()
@@ -1114,8 +1213,10 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 representative: 0.0,
                 observation: I::point(0.0),
                 fired_roots: &initials,
+                mathematical_roots: &initials,
                 prediction_end: initial_horizon,
             },
+            None,
         )?;
         if bounded_initial {
             // An initial observer may move a default due=0 timer into the
@@ -1151,18 +1252,37 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             }
         }
     }
+    // This cache belongs only to the current accepted physical frame. Every
+    // physical commit below invalidates it, including strobes/source cuts and
+    // same-representative event batches. Read-only output queries never commit.
     let mut preflighted_event = None;
     loop {
-        if !history_calendar && !relocalize && preflighted_event != Some(controller.event) {
+        if preflighted_event != Some(controller.event)
+            && crossings.get(controller.event).is_some_and(|event| {
+                event.can_refine_input_root(&model)
+                    && controller
+                        .accepted
+                        .operators
+                        .next_breakpoint(controller.accepted.time)
+                        .is_none_or(|cut| cut > event.time)
+                    && trajectory
+                        .config
+                        .strobetimes
+                        .iter()
+                        .all(|&forced| forced <= controller.accepted.time || forced > event.time)
+            })
+        {
             controller.refine_pending_input_root(&model, &trajectory, &mut crossings)?;
             preflighted_event = Some(controller.event);
         }
         controller.accepted.operators.check_deadline_order(
             controller.accepted.time,
-            crossings.get(controller.event).map(|e| e.bounds()),
             crossings
                 .get(controller.event)
-                .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
+                .map(|e| e.observation_bounds()),
+            crossings
+                .get(controller.event)
+                .and_then(|e| crate::schedule::common_execution_root(std::slice::from_ref(e))),
         )?;
         // t=0 is processed after initial_step and before the initial observation.
         // Later events are reached by the same loop after advancing to their time.
@@ -1181,17 +1301,34 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                     event_acceptance::Strategy::Static,
                 )?;
             }
+            preflighted_event = None;
         }
-        if !history_calendar && !relocalize && preflighted_event != Some(controller.event) {
+        if preflighted_event != Some(controller.event)
+            && crossings.get(controller.event).is_some_and(|event| {
+                event.can_refine_input_root(&model)
+                    && controller
+                        .accepted
+                        .operators
+                        .next_breakpoint(controller.accepted.time)
+                        .is_none_or(|cut| cut > event.time)
+                    && trajectory
+                        .config
+                        .strobetimes
+                        .iter()
+                        .all(|&forced| forced <= controller.accepted.time || forced > event.time)
+            })
+        {
             controller.refine_pending_input_root(&model, &trajectory, &mut crossings)?;
             preflighted_event = Some(controller.event);
         }
         controller.accepted.operators.check_deadline_order(
             controller.accepted.time,
-            crossings.get(controller.event).map(|e| e.bounds()),
             crossings
                 .get(controller.event)
-                .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
+                .map(|e| e.observation_bounds()),
+            crossings
+                .get(controller.event)
+                .and_then(|e| crate::schedule::common_execution_root(std::slice::from_ref(e))),
         )?;
         while output < trace.times.len() && trace.times[output] < controller.accepted.time {
             let index = controller
@@ -1242,15 +1379,25 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             )?
         };
         let mut time = proposed_time.min(trajectory.knots[knot]);
-        if output < trace.times.len() {
-            time = time.min(trace.times[output]);
-        }
         if let Some(deadline) = controller
             .accepted
             .operators
             .next_breakpoint(controller.accepted.time)
         {
             time = time.min(deadline);
+        }
+        if let Some(forced) = trajectory
+            .config
+            .strobetimes
+            .iter()
+            .copied()
+            .find(|&forced| forced > controller.accepted.time)
+        {
+            time = time.min(forced);
+        }
+        let physical_time = time;
+        if output < trace.times.len() {
+            time = time.min(trace.times[output]);
         }
         if time <= controller.accepted.time {
             return Err(Error::new(
@@ -1264,7 +1411,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             && time == trace.times[output]
             && crossings.get(controller.event).is_some_and(|event| {
                 event.time > time
-                    && event.bounds().lo <= time
+                    && event.observation_bounds().lo <= time
                     && event
                         .physical_order_for_query(time, &model, &trajectory)
                         .is_none()
@@ -1311,6 +1458,34 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 )?;
             }
         } else {
+            if time < physical_time && output < trace.times.len() && time == trace.times[output] {
+                // Observe the immutable accepted history. Committing a query
+                // here could move accepted.time into a pending root box and
+                // suppress the source-root refinement selected for sparse output.
+                let frame = prepare_root_window(
+                    &model,
+                    &trajectory,
+                    &controller.accepted,
+                    EventMoment {
+                        exact_root: None,
+                        representative: time,
+                        observation: I::point(time),
+                        fired_roots: &[],
+                        mathematical_roots: &[],
+                        prediction_end: physical_time.min(prediction_end(
+                            &model,
+                            &trajectory,
+                            crossings.get(controller.event),
+                        )),
+                    },
+                    &[],
+                )?;
+                solutions.push(frame.solution);
+                trace.states.push(frame.states);
+                sample_origins.push("certified_causal_frame");
+                output += 1;
+                continue;
+            }
             if !model.program.operators.is_empty() {
                 let source_root = controller.accepted.operators.source_root_at(time)?;
                 let source_window = source_root
@@ -1329,6 +1504,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                             representative: time,
                             observation: source_window,
                             fired_roots: &[],
+                            mathematical_roots: &[],
                             prediction_end: prediction_end(
                                 &model,
                                 &trajectory,
@@ -1340,10 +1516,12 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 )?;
                 next.operators.check_deadline_order(
                     time,
-                    crossings.get(controller.event).map(|e| e.bounds()),
                     crossings
                         .get(controller.event)
-                        .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
+                        .map(|e| e.observation_bounds()),
+                    crossings.get(controller.event).and_then(|e| {
+                        crate::schedule::common_execution_root(std::slice::from_ref(e))
+                    }),
                 )?;
                 controller.accepted = next;
             } else {
@@ -1387,6 +1565,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 controller.accepted.time = time;
             }
         }
+        preflighted_event = None;
         trace.accepted_steps += 1;
         crate::diagnostics::record(
             "controller_step",
@@ -1420,8 +1599,10 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 representative: trajectory.config.stop,
                 observation: I::point(trajectory.config.stop),
                 fired_roots: &finals,
+                mathematical_roots: &finals,
                 prediction_end: trajectory.config.stop,
             },
+            None,
         )?;
         controller.commit_events(frame, records, controller.event);
     }
@@ -2094,6 +2275,7 @@ mod tests {
             representative: time,
             observation: I::point(time),
             fired_roots: &[],
+            mathematical_roots: &[],
             prediction_end: trajectory.config.stop,
         };
         let ordinary_bounds = before.operators.bounds(time).unwrap();
@@ -2119,6 +2301,7 @@ mod tests {
         let root_moment = EventMoment {
             exact_root: None,
             fired_roots: &[0],
+            mathematical_roots: &[0],
             ..moment
         };
         assert_eq!(
@@ -2372,6 +2555,94 @@ mod tests {
     }
 
     #[test]
+    fn mixed_arrival_and_post_root_selection_matches_the_point_settlement() {
+        let (original, _, _) = fixture(false);
+        let te = 0.5_f64.next_up();
+        let mut value = serde_json::to_value(original.program).unwrap();
+        value["states"][0]["kind"] = "real".into();
+        value["states"]
+            .as_array_mut()
+            .unwrap()
+            .push(serde_json::json!({
+            "instance":"dut","name":"b","kind":"real","initial":0}));
+        value["nodes"].as_array_mut().unwrap().push("v".into());
+        let guard = |node: usize, threshold: f64| {
+            serde_json::json!({"op":"affine","constant":-threshold,
+            "terms":[{"node":node,"coefficient":1}]})
+        };
+        let body = |state, node, threshold| {
+            serde_json::json!([{"kind":"if","relation":"gt",
+            "left":guard(node,threshold),"right":{"op":"affine","constant":0,"terms":[]},
+            "then_body":[{"kind":"assign","state":state,"rhs":{"op":"affine","constant":1,"terms":[]}}],
+            "else_body":[{"kind":"assign","state":state,"rhs":{"op":"affine","constant":2,"terms":[]}}],
+            "origin":{"source":"mixed.va","line":1,"column":1,"instance":"dut"}}])
+        };
+        value["events"][0]["body"] = body(0, 1, 0.5);
+        let mut arrival = value["events"][0].clone();
+        arrival["trigger"]["guard"] = guard(3, 0.);
+        arrival["body"] = body(1, 3, 0.);
+        value["events"].as_array_mut().unwrap().push(arrival);
+        let model = EventModel::new(
+            serde_json::from_value(value).unwrap(),
+            vec!["u".into(), "v".into()],
+            Tolerances::default(),
+        )
+        .unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                strobetimes: vec![],
+                pwl: vec![
+                    vec![[0., 0.], [1., 1.]],
+                    vec![[0., -1.], [te, 0.], [1., 1.]],
+                ],
+                pwl_errors_v: None,
+                output_times: vec![0., 1.],
+                stop: 1.,
+                max_step: 1.,
+            },
+            2,
+        )
+        .unwrap();
+        let states = model.initial();
+        let circuit = model.circuit(&states).unwrap();
+        let before = Frame {
+            time_proofs: Default::default(),
+            time: 0.,
+            state_bounds: states.iter().copied().map(I::point).collect(),
+            states,
+            solution: circuit.solve(&trajectory.values(0.)).unwrap(),
+            circuit,
+            operators: Operators::default(),
+        };
+        let scheduled = schedule(&model, &trajectory, &before.operators).unwrap();
+        assert_eq!(scheduled.len(), 2);
+        assert_eq!(scheduled[0].time, te);
+        assert_eq!(scheduled[1].time, te);
+        assert!(!scheduled[0].is_arrival());
+        assert!(scheduled[1].is_arrival());
+        let exact = crate::schedule::common_execution_root(&scheduled);
+        let (frame, selection) = prepare_root_window_selected(
+            &model,
+            &trajectory,
+            &before,
+            EventMoment {
+                exact_root: exact.as_ref(),
+                representative: te,
+                observation: I::point(te),
+                fired_roots: &[0, 1],
+                mathematical_roots: &[1],
+                prediction_end: 1.,
+            },
+            &[0, 1],
+        )
+        .unwrap();
+        assert_eq!(frame.states, [1., 2.]);
+        // The history/provenance certificate must choose the same branches as
+        // the actual point solve, rather than asserting both guards are zero.
+        assert_eq!(selection.decisions, vec![(0, true), (1, false)]);
+    }
+
+    #[test]
     fn discarded_candidate_can_be_retried_without_double_counting() {
         let (model, trajectory, before) = fixture(false);
         let discarded = prepare_event(&model, &trajectory, &before, 0.5, &[0]).unwrap();
@@ -2398,6 +2669,12 @@ mod tests {
                 "right":{"op":"affine","constant":-0.5,"terms":[]}},
             "direction":1,"time_tolerance":1e-3,"expression_tolerance":1e-3});
         value["events"][0]["body"][0]["rhs"] = input;
+        // Point callback sampling can represent u(te) exactly. Preserve the
+        // strict 1e-30 negative with a genuinely rounded consumer product,
+        // rather than treating mathematical-root width as sampled uncertainty.
+        let consumer = value["contributions"][0]["rhs"].clone();
+        value["contributions"][0]["rhs"] = serde_json::json!({"op":"multiply",
+            "left":{"op":"affine","constant":1./3.,"terms":[]},"right":consumer});
         let mut model = EventModel::new(
             serde_json::from_value(value).unwrap(),
             vec!["u".into()],

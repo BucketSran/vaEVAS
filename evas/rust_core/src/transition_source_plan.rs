@@ -522,6 +522,33 @@ pub(crate) struct Plan {
     points: Vec<Target>,
     modes: Vec<Target>,
 }
+fn separated_point(time: I, cut: &RootTime) -> bool {
+    time.lo == time.hi
+        && RootTime::point(time.lo)
+            .is_some_and(|point| point.order(cut) != std::cmp::Ordering::Equal)
+}
+
+#[cfg(test)]
+mod point_order_tests {
+    use super::*;
+
+    #[test]
+    fn touching_enclosure_endpoints_are_separate_but_boxes_and_equal_roots_are_not() {
+        // Exact zero of 3*t-1 lies strictly between these adjacent binary64 values.
+        let lo: f64 = 1.0 / 3.0;
+        let hi = f64::from_bits(lo.to_bits() + 1);
+        let bounds = I { lo, hi };
+        let root = RootTime::point_ends([0., 1.], [I::point(-1.), I::point(2.)], bounds).unwrap();
+        assert!(separated_point(I::point(lo), &root));
+        assert!(separated_point(I::point(hi), &root));
+        assert!(!separated_point(bounds, &root));
+        assert!(!separated_point(
+            I::point(0.5),
+            &RootTime::point(0.5).unwrap()
+        ));
+    }
+}
+
 impl Plan {
     fn check_states(spec: &Spec, states: &[I]) -> Result<(), Error> {
         if states.len() != spec.program.states.len()
@@ -661,14 +688,10 @@ impl Plan {
         }
         for cut in self.cuts.iter() {
             if cut.bounds.lo <= time_bounds.hi && time_bounds.lo <= cut.bounds.hi {
-                // A requested binary64 point at the lower endpoint is still
-                // strictly before a nonpoint real cut. Enclosure contact is
-                // not an event coincidence or a target change.
-                if time_bounds.lo == time_bounds.hi
-                    && time_bounds.hi < cut.time
-                    && RootTime::point(time_bounds.hi)
-                        .is_some_and(|point| point.order(&cut.exact) == std::cmp::Ordering::Less)
-                {
+                // An exact binary64 point can be strictly on either side of
+                // a nonpoint cut even while touching its discovery enclosure.
+                // Root identity is still required for actual coincidence.
+                if separated_point(time_bounds, &cut.exact) {
                     continue;
                 }
                 let same =

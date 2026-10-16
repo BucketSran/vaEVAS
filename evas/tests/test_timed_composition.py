@@ -26,14 +26,14 @@ def input_value(t):
     return 2*t if t <= 2 else (12-4*t if t <= 4 else F(-4))
 
 
-def exact(t, gain):
+def exact(t, gain, cross_time):
     ticks = [F(k) for k in [1,3,5,7] if k <= t]
-    n, c = len(ticks), int(t >= 3)
+    n, c = len(ticks), int(t >= cross_time)
     tr = sum(max(F(0), min(F(1), 2*(t-k-F(1,4)))) for k in ticks)
     limited = t if t <= F(12,5) else max(F(-4), F(36,5)-2*t)
     z = gain*(n+c+input_value(max(F(0), t-F(1,2)))+limited)
-    # At timer/cross coincidences q reads the jointly updated voltage.
-    sampled = {1: F(3), 3: F(31,5), 5: F(-14,5), 7: F(-3)}
+    # The timer at root 3 precedes the strict post-root callback.
+    sampled = {1: F(3), 3: F(26,5), 5: F(-14,5), 7: F(-3)}
     q = gain*sampled[int(ticks[-1])] if ticks else F(0)
     return (tr, z, q), (F(n), F(c), q)
 
@@ -59,7 +59,12 @@ class TimedComposition(unittest.TestCase):
                             states = [result['transient']['state_names'].index(f'{name}:{p}')
                                       for p in ['n','c','q']]
                             for k,t in enumerate(times):
-                                voltages, memory = exact(t,F(gain))
+                                cross_events = [e for e in result['transient']['events'] if e['event'] in [2,5]]
+                                self.assertEqual(len(cross_events), 2)
+                                for event in cross_events:
+                                    self.assertGreater(event['time'], 3)
+                                    self.assertLessEqual(event['time']-3, 1e-8)
+                                voltages, memory = exact(t,F(gain),F(cross_events[0]['time']))
                                 for j,answer in zip(nodes,voltages):
                                     self.assertLessEqual(abs(F(result['solutions'][k]['voltages'][j])-answer),F(2e-12))
                                 for j,answer in zip(states,memory):

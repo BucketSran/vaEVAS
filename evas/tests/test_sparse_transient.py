@@ -123,11 +123,24 @@ class SparseTransientContracts(unittest.TestCase):
             result = transient(program, {'u': [[0,0],[2,4],[4,-4],[8,-4]]}, times,
                                stop=8, max_step=step, kernel=KERNEL)
             self.assertEqual(len(result['transient']['events']), 12*9)
+            crosses = {program.events[e['event']].origin.instance:e
+                       for e in result['transient']['events'] if e['kind']=='cross'}
+            self.assertEqual(set(crosses), {f'c{i:02}' for i in range(12)})
+            for event in crosses.values():
+                te = F(event['time'])
+                self.assertGreater(te,F(3))
+                self.assertLessEqual(te-F(3),F(1e-8))
+                guard = 12-4*te
+                self.assertLess(guard,0)
+                self.assertLessEqual(abs(guard),F(1e-9))
             for time, states, solution in zip(times, result['transient']['states'], result['solutions']):
                 volts = dict(zip(result['nodes'], solution['voltages']))
                 memory = dict(zip(result['transient']['state_names'], states))
                 for i in range(12):
-                    expected_v, expected_s = exact(F(time), F(1+i%3))
+                    # This instance's certified callback time supplies only
+                    # the clock to the independent rational composition answer.
+                    cross_time = F(crosses[f'c{i:02}']['time'])
+                    expected_v, expected_s = exact(F(time), F(1+i%3), cross_time)
                     for name, expected in zip(['y','z','h'], expected_v):
                         self.assertLessEqual(abs(F(volts[f'{name}{i}'])-expected), F(3e-12))
                     for name, expected in zip(['n','c','q'], expected_s):

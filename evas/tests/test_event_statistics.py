@@ -1,6 +1,7 @@
 """Isolated event statistics are evaluated in source order by the Rust kernel."""
 GUARDS = ["LANG", "EVENT-CONDITIONS", "EVENT-ORDER", "TIMER"]
 
+from fractions import Fraction
 import os
 from pathlib import Path
 import unittest
@@ -96,14 +97,53 @@ analog begin @(initial_step)begin a=0;b=0;n=0;end
         with self.assertRaisesRegex(KernelError,'event_domain.*nonnegative'):
             self.run_body('a=sqrt(-V(x));')
 
-    def test_interval_denominator_contains_zero_is_rejected(self):
-        from evas import KernelError
+    def test_original_cross_division_has_a_positive_execution_point_denominator(self):
+        # Preserve the original VA, stimulus and cross tolerances. The actual
+        # execution point is later than the mathematical zero at 1/3.
         source='''`include "disciplines.vams"
 module measure(x);input x;electrical x;real a;
 analog begin @(initial_step)a=0;@(cross(V(x),1,0.001,0.001))a=1.0/V(x);end endmodule'''
         p=compile_sources({'zero.va':source},[Instance('M','measure',{'x':'x'})])
-        with self.assertRaisesRegex(KernelError,'event_domain'):
+        original=transient(p,{'x':[[0,-1],[1,2]]},[0,1],stop=1,max_step=1,kernel=KERNEL)
+        event,=original['transient']['events']
+        te=event['time']
+        self.assertEqual(te,0.3333333333333335)
+        exact=-1+3*Fraction(te)
+        self.assertEqual(exact,Fraction(1,2**51))
+        self.assertEqual(event['guard_value'],float(exact))
+        self.assertEqual(event['after'],[float(1/exact)])
+        observed=transient(p,{'x':[[0,-1],[1,2]]},[0,te,1],stop=1,max_step=1,kernel=KERNEL)
+        x=observed['nodes'].index('x')
+        lo,hi=observed['observation_evidence']['voltage_bounds_V'][1][x]
+        self.assertEqual([lo,hi],[float(exact),float(exact)])
+        self.assertGreater(lo,0)
+        self.assertLessEqual(Fraction(lo),exact)
+        self.assertLessEqual(exact,Fraction(hi))
+        self.assertEqual(original['transient']['events'],observed['transient']['events'])
+
+    def test_interval_denominator_contains_zero_is_rejected(self):
+        from evas import KernelError
+        # Same PWL, new fixed observation time. Its binary64 value is below
+        # exact 1/3; the retained interpolation enclosure crosses zero.
+        source='''`include "disciplines.vams"
+module measure(x);input x;electrical x;real a;
+analog begin @(initial_step)a=0;@(timer(0.3333333333333333))a=1.0/V(x);end endmodule'''
+        p=compile_sources({'zero-timer.va':source},[Instance('M','measure',{'x':'x'})])
+        with self.assertRaisesRegex(KernelError,'event_domain.*denominator enclosure contains zero'):
             transient(p,{'x':[[0,-1],[1,2]]},[0,1],stop=1,max_step=1,kernel=KERNEL)
+        # A separate read-only probe exposes the same input enclosure without
+        # executing the invalid division. This is not a replacement oracle.
+        read_source=source.replace('a=1.0/V(x);','a=V(x);')
+        read=compile_sources({'zero-read.va':read_source},[Instance('M','measure',{'x':'x'})])
+        result=transient(read,{'x':[[0,-1],[1,2]]},[0,1/3,1],stop=1,max_step=1,kernel=KERNEL)
+        x=result['nodes'].index('x')
+        lo,hi=result['observation_evidence']['voltage_bounds_V'][1][x]
+        exact=-1+3*Fraction(1/3)
+        self.assertLess(exact,0)
+        self.assertLessEqual(Fraction(lo),exact)
+        self.assertLessEqual(exact,Fraction(hi))
+        self.assertLess(lo,0)
+        self.assertGreater(hi,0)
 
     def test_math_uses_source_order_and_extra_queries_do_not_reexecute(self):
         body='a=V(x)+1;a=a*a;b=sqrt(a);a=max(-1.0,min(a,3.0));$display("math %g %g",a,b);'

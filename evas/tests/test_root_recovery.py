@@ -7,6 +7,7 @@ GUARDS = ["CROSS", "TIMER", "EVENT-ORDER", "COMPOSE", "DEV:precision-chain"]
 
 import json
 import math
+from fractions import Fraction as Q
 from pathlib import Path
 import tempfile
 import unittest
@@ -76,8 +77,14 @@ class RootRecovery(unittest.TestCase):
         self.assertIsNone(error)
         self.assertEqual(first['transient']['events'], second['transient']['events'])
         self.assertEqual(first['solutions'], [second['solutions'][dense.index(t)] for t in sparse])
-        self.assertEqual(values(second)[2], 0)
-        self.assertLessEqual(abs(values(second)[3]-math.sqrt(2)), 2.01e-6)
+        event,=second['transient']['events'];te=Q(event['time'])
+        self.assertGreater(te*te,2)
+        self.assertLessEqual((te-Q(1e-3))**2,2)
+        self.assertLessEqual(te*te-2,Q(1e-3))
+        for t,actual in zip(dense,values(second)):
+            expected=te if Q(t)>=te else Q(0)
+            self.assertLessEqual(abs(Q(actual)-expected),Q(2.01e-6))
+            if Q(t)>=te:self.assertLessEqual(abs(actual-math.sqrt(2)),2.01e-6)
 
     def test_inherited_sample_failure_does_not_refine_an_unrelated_root(self):
         request = request_for(
@@ -103,8 +110,14 @@ class RootRecovery(unittest.TestCase):
         ordinary, error, _ = observe(request)
         self.assertIsNone(error)
         self.assertEqual(values(ordinary)[:2], [0, -1])
-        for actual in values(ordinary)[2:]:
-            self.assertLessEqual(abs(actual-math.sqrt(2)), 2.01e-6)
+        cross,=[e for e in ordinary['transient']['events'] if e['kind']=='cross'];te=Q(cross['time'])
+        self.assertGreater(te*te,2)
+        self.assertLessEqual((te-Q(1e-3))**2,2)
+        self.assertLessEqual(te*te-2,Q(1e-3))
+        for t,actual in zip(request['transient']['output_times'],values(ordinary)):
+            expected=te if Q(t)>=te else Q(-1) if t>=1 else Q(0)
+            self.assertLessEqual(abs(Q(actual)-expected),Q(2.01e-6))
+            if Q(t)>=te:self.assertLessEqual(abs(actual-math.sqrt(2)),2.01e-6)
         request['transient']['strobetimes'] = [0, 1, 2, 3]
         forced, error, report = observe(request)
         self.assertIsNone(error)
@@ -188,13 +201,18 @@ class RootRecovery(unittest.TestCase):
         result, error, report = observe(request)
         self.assertIsNone(result)
         self.assertEqual(error['kind'], 'event_accuracy')
+        self.assertEqual(error['message'], 'cannot certify same-time forward error at y: bound 6.661338147750939e-16, budget 1e-30')
+        self.assertFalse(any(r['kind']=='event_batch' and r['outcome']=='committed' for r in report['records']))
         trials = details(report, 'root_refinement')
         self.assertLessEqual(len(trials), 2)
         self.assertLessEqual(sum(t['iterations'] for t in trials), 256)
         self.assertIn(trials[-1]['stop'], ['arithmetic_floor', 'stalled'])
-        failures = details(report, 'accuracy_failure')
-        self.assertTrue(any(f['consumer'] == 'y' and f['error_bound'] > f['budget']
-                            for f in failures))
+        self.assertEqual(len(trials),2)
+        self.assertTrue(all(t['stop'] in ['arithmetic_floor','stalled'] for t in trials))
+        self.assertGreater(trials[-1]['width_after'],request['tolerances']['absolute'])
+        demand,=details(report,'root_demand')
+        self.assertEqual(demand['consumer'],'y')
+        self.assertEqual(demand['budget'],request['tolerances']['absolute'])
 
     def test_later_event_amplification_keeps_legacy_recovery(self):
         request = request_for(

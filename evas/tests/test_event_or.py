@@ -17,11 +17,20 @@ from test_affine import KERNEL, instance, model
 
 
 class EventOrContracts(unittest.TestCase):
+    def assert_cross_after(self, event, root, tolerance):
+        # Root identity remains exact; callback execution is strictly later.
+        self.assertGreater(event['time'], root)
+        self.assertLessEqual(event['time']-root, tolerance)
+        for leaf in event['fired_triggers']:
+            self.assertEqual(leaf['time_bounds'], [root,root])
+
     def test_distinct_roots_execute_body_twice(self):
         trigger = 'cross(V(u,r)-0.25,1,0.001,0.001) or cross(V(u,r)-0.75,1,0.001,0.001)'
         result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.25,.5,.75,1])
-        self.assertEqual(states(result), [0,1,1,2,2])
-        self.assertEqual([e['time'] for e in result['transient']['events']], [.25,.75])
+        self.assertEqual(states(result), [0,0,1,1,2])
+        for event, root in zip(result['transient']['events'], [.25,.75]):
+            self.assert_cross_after(event, root, .001)
+        self.assertEqual(len(result['transient']['events']), 2)
 
     def test_same_root_executes_body_once_and_retains_both_sources(self):
         a = 'cross(V(u,r)-0.5,1,0.001,0.001)'
@@ -29,9 +38,10 @@ class EventOrContracts(unittest.TestCase):
         for trigger in [a+' or '+b, b+' or '+a, a+' or '+a]:
             with self.subTest(trigger=trigger):
                 result = execute(source('q=q+1;', kind='integer', trigger=trigger))
-                self.assertEqual(states(result), [0,1,1])
+                self.assertEqual(states(result), [0,0,1])
                 events = result['transient']['events']
                 self.assertEqual(len(events), 1)
+                self.assert_cross_after(events[0], .5, .001)
                 self.assertEqual([t['trigger'] for t in events[0]['fired_triggers']], [0,1])
 
     def test_nearby_distinct_roots_are_not_tolerance_clustered(self):
@@ -39,9 +49,13 @@ class EventOrContracts(unittest.TestCase):
         a = 'cross(V(u,r)-0.5,1,0.01,0.01)'
         b = 'cross(V(u,r)-0.5009765625,1,0.01,0.01)'
         for trigger in [a+' or '+b, b+' or '+a]:
-            result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.5,.5009765625,1])
-            self.assertEqual(states(result), [0,1,2,2])
-            self.assertEqual([e['time'] for e in result['transient']['events']], [.5,.5009765625])
+            result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.5,.5009765625,.52,1])
+            self.assertEqual(states(result), [0,0,1,2,2])
+            events=result['transient']['events']
+            self.assertEqual(len(events), 2)
+            for event,root in zip(events,[.5,.5009765625]):
+                self.assert_cross_after(event,root,.01)
+            self.assertLess(events[0]['time'], .5009765625)
 
     def test_output_grid_does_not_create_triggers(self):
         trigger = 'cross(V(u,r)-0.25,1,0.001,0.001) or cross(V(u,r)-0.75,1,0.001,0.001)'
@@ -78,17 +92,17 @@ class EventOrContracts(unittest.TestCase):
                     result = execute(text, times=[0,.25,.5,.75,1])
                     y = result['nodes'].index('y')
                     self.assertEqual([row['voltages'][y] for row in result['solutions']],
-                                     [0,0,111,111,111] if simultaneous else [0,1,11,111,111])
+                                     [0,0,100,111,111] if simultaneous else [0,0,1,111,111])
                     events = result['transient']['events']
                     self.assertEqual(len(events), 3)
                     self.assertEqual(sorted(e['kind'] for e in events), ['cross','or','timer'])
                     group = next(e for e in events if e['kind']=='or')
                     self.assertEqual([leaf['trigger'] for leaf in group['fired_triggers']], [0,1])
 
-    def test_simultaneous_clock_reset_obeys_source_comparison_at_exact_root(self):
+    def test_simultaneous_clock_reset_obeys_source_comparison_after_root(self):
         clock = 'cross(V(u,r)-0.5,1,0.001,0.001)'
         reset = 'cross(V(v,r)-0.5,1,0.001,0.001)'
-        for relation, expected in [('>=',1),('>',2)]:
+        for relation, expected in [('>=',1),('>',1)]:
             for trigger in [clock+' or '+reset,reset+' or '+clock]:
                 text = model('@(initial_step) q=0; @('+trigger+') '
                              f'if(V(v,r){relation}0.5) q=1; else q=2; V(y,r)<+q;',
@@ -96,36 +110,51 @@ class EventOrContracts(unittest.TestCase):
                 program = compile_sources({'reset.va':text},[instance(connections=dict(u='u',v='v',y='y',r='0'))])
                 result = transient(program,{'u':[[0,0],[1,1]],'v':[[0,0],[1,1]]},
                                    [0,.5,1],stop=1,max_step=1,kernel=KERNEL)
-                self.assertEqual(states(result),[0,expected,expected])
+                self.assertEqual(states(result),[0,0,expected])
                 self.assertEqual(len(result['transient']['events']),1)
                 self.assertEqual(len(result['transient']['events'][0]['fired_triggers']),2)
 
-    def test_timer_and_cross_or_preserve_typed_proofs_and_execute_once(self):
+    def test_timer_and_cross_or_preserve_distinct_execution_instants(self):
         cross = 'cross(V(u,r)-0.5,1,0.001,0.001)'
         timer = 'timer(0.5,0,0.001)'
         for trigger in (timer+' or '+cross, cross+' or '+timer, timer+' or '+timer):
             with self.subTest(trigger=trigger):
                 result = execute(source('q=q+1;', kind='integer', trigger=trigger))
-                self.assertEqual(states(result), [0,1,1])
-                event, = result['transient']['events']
-                self.assertEqual(event['kind'], 'or')
-                self.assertEqual([leaf['trigger'] for leaf in event['fired_triggers']], [0,1])
-                for leaf in event['fired_triggers']:
-                    self.assertEqual(leaf['time_bounds'], [.5,.5])
-                    if leaf['kind'] == 'timer':
-                        self.assertNotIn('guard_value', leaf)
-                    else:
-                        self.assertEqual(leaf['guard_value'], 0)
+                events=result['transient']['events']
+                if trigger == timer+' or '+timer:
+                    self.assertEqual(states(result), [0,1,1])
+                    event,=events
+                    self.assertEqual([leaf['trigger'] for leaf in event['fired_triggers']], [0,1])
+                else:
+                    # timer owns tau; a cross body executes again at te > tau.
+                    self.assertEqual(states(result), [0,1,2])
+                    self.assertEqual(len(events), 2)
+                    self.assertEqual(events[0]['time'], .5)
+                    self.assert_cross_after(events[1], .5, .001)
+                    self.assertEqual([leaf['kind'] for leaf in events[0]['fired_triggers']], ['timer'])
+                    self.assertEqual([leaf['kind'] for leaf in events[1]['fired_triggers']], ['cross'])
+                for event in events:
+                    self.assertEqual(event['kind'], 'or')
+                    for leaf in event['fired_triggers']:
+                        self.assertEqual(leaf['time_bounds'], [.5,.5])
+                        if leaf['kind'] == 'timer':
+                            self.assertNotIn('guard_value', leaf)
+                        else:
+                            self.assertGreater(leaf['guard_value'], 0)
 
     def test_periodic_timer_union_keeps_distinct_roots_and_disabled_leaves(self):
         trigger = 'timer(0.25,0.25,0.001) or cross(V(u,r)-0.5,1,0.001,0.001)'
         result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.25,.5,.75,1])
-        self.assertEqual(states(result), [0,1,2,3,4])
-        self.assertEqual([e['time'] for e in result['transient']['events']], [.25,.5,.75,1])
-        self.assertEqual(len(result['transient']['events'][1]['fired_triggers']), 2)
+        self.assertEqual(states(result), [0,1,2,4,5])
+        events=result['transient']['events']
+        self.assertEqual(len(events), 5)
+        self.assertEqual([events[i]['time'] for i in [0,1,3,4]], [.25,.5,.75,1])
+        self.assert_cross_after(events[2], .5, .001)
+        self.assertEqual([leaf['kind'] for leaf in events[1]['fired_triggers']], ['timer'])
         trigger = 'timer(0.5,0,0.001,0) or cross(V(u,r)-0.75,1,0.001,0.001)'
         result = execute(source('q=q+1;',kind='integer',trigger=trigger))
-        self.assertEqual([e['time'] for e in result['transient']['events']], [.75])
+        event,=result['transient']['events']
+        self.assert_cross_after(event,.75,.001)
         self.assertEqual(result['transient']['events'][0]['fired_triggers'][0]['trigger'], 1)
 
     def test_raw_ir_rejects_empty_single_nested_or(self):

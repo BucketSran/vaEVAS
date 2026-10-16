@@ -546,6 +546,7 @@ fn source_fixture(due: f64) -> (EventModel, Trajectory, Controller, Vec<Schedule
             representative: 0.25,
             observation: I::point(0.25),
             fired_roots: &[],
+            mathematical_roots: &[],
             prediction_end: 0.5,
         },
         &[],

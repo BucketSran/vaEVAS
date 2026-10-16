@@ -1009,6 +1009,9 @@ fn physical_parameters<'a, T: Copy>(
 // this same base; cached values cannot escape into a different time or history.
 pub(crate) struct Evaluation<'a> {
     exact_root: Option<crate::exact_source::RootTime>,
+    // Ordering permission for Plan::check_incoming only. This is never an
+    // observation time, transition start, or sampled-state time proof.
+    source_boundary_root: Option<crate::exact_source::RootTime>,
     base: &'a Operators,
     time: f64,
     pub(crate) values: Vec<f64>,
@@ -1016,6 +1019,20 @@ pub(crate) struct Evaluation<'a> {
 }
 
 impl Evaluation<'_> {
+    pub(crate) fn set_source_boundary_root(
+        &mut self,
+        root: Option<&crate::exact_source::RootTime>,
+        window: I,
+    ) -> Result<(), Error> {
+        if root.is_some_and(|root| root.refine(window).is_none()) {
+            return Err(Error::new(
+                "event_resolution",
+                "source boundary identity is outside the location enclosure",
+            ));
+        }
+        self.source_boundary_root = root.cloned();
+        Ok(())
+    }
     // Reset/instantaneous algebraic map only. It does not install transition
     // targets or propagate the new continuous flow to the representative.
     // Each closure solve observes the same accepted physical history.
@@ -1259,6 +1276,7 @@ impl Evaluation<'_> {
             bounds,
             changed,
             self.exact_root.as_ref(),
+            self.source_boundary_root.as_ref(),
             true,
         )?;
         Ok(candidate)
@@ -1293,6 +1311,19 @@ impl Operators {
         }
         Ok(())
     }
+    pub(crate) fn retain_unchanged_physical_certificate(&mut self, previous: &Self) -> bool {
+        if !self.same_reset_history(previous) {
+            return false;
+        }
+        match (&self.continuous, &previous.continuous) {
+            (Some(next), Some(old)) if next.same_certificate(old) => {
+                self.continuous = Some(old.clone());
+                true
+            }
+            (None, None) => self.same_reset_history(previous),
+            _ => false,
+        }
+    }
     pub(crate) fn history_certificate(&self) -> Option<Arc<Continuous>> {
         self.continuous.clone()
     }
@@ -1312,7 +1343,9 @@ impl Operators {
                 "local event certificate does not match the immutable physical mode history",
             ));
         }
-        self.continuous = Some(Arc::new(c.local_observation(observation.delta())?));
+        self.continuous = Some(Arc::new(
+            c.local_event_observation(observation.delta(), observation.consumes_cross())?,
+        ));
         Ok(())
     }
     pub(crate) fn local_range(&self, index: usize, delta: I) -> Result<(I, I), Error> {
@@ -1991,6 +2024,7 @@ impl Operators {
         }
         Ok(Evaluation {
             exact_root: exact_root.cloned(),
+            source_boundary_root: None,
             base: self,
             time,
             values: self.values(time)?,
@@ -2261,7 +2295,7 @@ impl Operators {
         bounds: &[I],
         changed: &[usize],
     ) -> Result<(), Error> {
-        self.advance_with_exact(time, time_bounds, states, bounds, changed, None, true)
+        self.advance_with_exact(time, time_bounds, states, bounds, changed, None, None, true)
     }
 
     /// Consume accepted histories to the settlement boundary without installing
@@ -2273,7 +2307,7 @@ impl Operators {
         states: &[f64],
         bounds: &[I],
     ) -> Result<(), Error> {
-        self.advance_with_exact(time, time_bounds, states, bounds, &[], None, false)
+        self.advance_with_exact(time, time_bounds, states, bounds, &[], None, None, false)
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -2285,6 +2319,7 @@ impl Operators {
         bounds: &[I],
         changed: &[usize],
         exact_root: Option<&crate::exact_source::RootTime>,
+        source_boundary_root: Option<&crate::exact_source::RootTime>,
         install_source: bool,
     ) -> Result<(), Error> {
         let _timing = crate::diagnostics::span("history.advance");
@@ -2335,7 +2370,17 @@ impl Operators {
             let (value, target_bounds, may_change, preview_bounds, preview_root) =
                 if let Some(source) = source {
                     if install_source {
-                        let next = source.prepare(time, time_bounds, bounds, exact_root)?;
+                        let next = if source_boundary_root.is_some() {
+                            source.prepare_with_boundary(
+                                time,
+                                time_bounds,
+                                bounds,
+                                exact_root,
+                                source_boundary_root,
+                            )?
+                        } else {
+                            source.prepare(time, time_bounds, bounds, exact_root)?
+                        };
                         (
                             next.target.value,
                             next.target.bounds,
@@ -2454,7 +2499,17 @@ impl Operators {
                             )?;
                             continue;
                         }
-                        let next = current.prepare(time, time_bounds, bounds, exact_root)?;
+                        let next = if source_boundary_root.is_some() {
+                            current.prepare_with_boundary(
+                                time,
+                                time_bounds,
+                                bounds,
+                                exact_root,
+                                source_boundary_root,
+                            )?
+                        } else {
+                            current.prepare(time, time_bounds, bounds, exact_root)?
+                        };
                         history.advance_at_with_exact(
                             time,
                             next.time_bounds,

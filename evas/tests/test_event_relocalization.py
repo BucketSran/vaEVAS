@@ -6,6 +6,7 @@ The timer changes both future guards and state-dependent voltage projections.
 GUARDS = ["CROSS", "TIMER", "EVENT-ORDER", "EVENT-CONDITIONS", "case:event_relocalization"]
 
 from pathlib import Path
+from fractions import Fraction as Q
 import unittest
 from evas import KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
@@ -20,11 +21,27 @@ def run(source=DUT, *, module="event_relocalization", times=None, step=1):
 
 
 class EventRelocalization(unittest.TestCase):
+    def assert_interior_cross(self, event, root):
+        te = Q(event['time'])
+        self.assertGreater(te, root)
+        self.assertLessEqual(te-root, Q(1e-9))
+        # These affine held guards all have unit slope in the new epoch.
+        self.assertGreater(te-root, 0)
+        self.assertLessEqual(te-root, Q(1e-8))
+        return te
+
     def test_changed_threshold_invalidates_original_root(self):
         result = run()
         hits = result["transient"]["events"]
-        self.assertEqual([hit["time"] for hit in hits], [.25,.5])
-        self.assertEqual([row[-1] for row in result["transient"]["states"]], [0,0,1,1,1])
+        self.assertEqual(len(hits), 2)
+        self.assertEqual(hits[0]['time'], .25)
+        te = self.assert_interior_cross(hits[1], Q(.5))
+        self.assertEqual([row[-1] for row in result['transient']['states']],
+                         [int(Q(t)>=te) for t in result['transient']['times']])
+        observed = run(times=sorted(set(result['transient']['times']+[float(te)])))
+        self.assertEqual(observed['transient']['events'], hits)
+        self.assertEqual([row[-1] for row in observed['transient']['states']],
+                         [int(Q(t)>=te) for t in observed['transient']['times']])
 
     def test_internal_voltage_projection_is_relocalized(self):
         source = model('''
@@ -35,7 +52,10 @@ class EventRelocalization(unittest.TestCase):
           V(z,r)<+V(u,r)-q;
           V(y,r)<+n;
         ''', 'real q; integer n; electrical z;')
-        self.assertEqual([e["time"] for e in run(source, module="m")["transient"]["events"]], [.25,.5])
+        result = run(source, module='m')
+        timer, cross = result['transient']['events']
+        self.assertEqual(timer['time'], .25)
+        self.assert_interior_cross(cross, Q(.5))
 
     def test_observations_and_steps_do_not_rearm_consumed_roots(self):
         a = run()
@@ -68,8 +88,14 @@ class EventRelocalization(unittest.TestCase):
         for threshold in ('0.875', '1'):
             with self.subTest(threshold=threshold):
                 result = run(DUT.replace('threshold=0.5;', f'threshold={threshold};'))
-                self.assertEqual([e['time'] for e in result['transient']['events']],
-                                 [.25, float(threshold)])
+                events = result['transient']['events']
+                if threshold == '1':
+                    # A true mathematical arrival at stop keeps its old contract.
+                    self.assertEqual([e['time'] for e in events], [.25, 1.])
+                else:
+                    self.assertEqual(len(events), 2)
+                    self.assertEqual(events[0]['time'], .25)
+                    self.assert_interior_cross(events[1], Q(float(threshold)))
 
     def test_jump_across_zero_requires_separate_same_time_event_contract(self):
         source = DUT.replace('threshold=0.5;', 'threshold=0.125;')

@@ -12,14 +12,57 @@ use std::sync::Arc;
 pub(crate) const EVENT_BUDGET: usize = 1_000_000;
 pub(crate) const CAUSAL_MICROEVENT_BUDGET: usize = 64;
 
+fn history_cross_context(
+    mut error: Error,
+    origin: &crate::ir::Origin,
+    start: f64,
+    end: f64,
+    incoming: i8,
+    requested: i8,
+    coordinates: &str,
+) -> Error {
+    error.message.push_str(&format!("; cross {}:{}:{} ({}) return {coordinates} window [{start:?}, {end:?}], incoming={incoming}, requested={requested}",origin.source,origin.line,origin.column,origin.instance));
+    error
+}
+
 #[derive(Clone)]
 pub(crate) struct ScheduledEvent {
     pub(crate) time: f64,
     pub(crate) event: usize,
     moment: Moment,
+    execution: Option<ExecutionPoint>,
     // Set only by exact fixed-clock ordering. Retaining this pending event
     // across an epoch must not discard the proof against its predecessor.
     fixed_predecessor: Option<f64>,
+}
+
+/// Constructed from a strict old-epoch post-root guard proof or an exact
+/// mandatory-knot/terminal arrival proof.
+/// Retiming a calendar representative cannot silently reuse this certificate.
+#[derive(Clone)]
+struct ExecutionPoint {
+    time: f64,
+    guard: I,
+    at_root: bool,
+    // Anchored execution is exact in its local epoch. The global binary64
+    // time is a serialization representative, as for an exact held timer.
+    physical: Option<crate::exact_source::RootTime>,
+    local_delta: Option<f64>,
+}
+
+pub(crate) fn common_execution_root(
+    events: &[ScheduledEvent],
+) -> Option<crate::exact_source::RootTime> {
+    if !events.iter().any(ScheduledEvent::is_cross) {
+        return common_root(events);
+    }
+    let first = events.first()?.execution_root()?;
+    for event in events.iter().skip(1) {
+        if first.order(&event.execution_root()?) != std::cmp::Ordering::Equal {
+            return None;
+        }
+    }
+    Some(first)
 }
 
 /// Every calendar leaf must prove the same mathematical root independently.
@@ -35,6 +78,336 @@ pub(crate) fn common_root(events: &[ScheduledEvent]) -> Option<crate::exact_sour
 }
 
 impl ScheduledEvent {
+    pub(crate) fn is_cross(&self) -> bool {
+        matches!(
+            self.moment,
+            Moment::Cross(_) | Moment::Dynamic { .. } | Moment::Anchored { .. }
+        )
+    }
+    fn execution_point(&self) -> Option<f64> {
+        self.execution
+            .as_ref()
+            .filter(|p| p.time == self.time)
+            .map(|p| p.time)
+    }
+    pub(crate) fn is_arrival(&self) -> bool {
+        self.execution
+            .as_ref()
+            .is_some_and(|p| p.time == self.time && p.at_root)
+    }
+    pub(crate) fn execution_guard(&self) -> Option<I> {
+        self.execution
+            .as_ref()
+            .filter(|p| p.time == self.time)
+            .map(|p| p.guard)
+    }
+    pub(crate) fn observation_bounds(&self) -> I {
+        self.execution
+            .as_ref()
+            .filter(|p| p.time == self.time)
+            .and_then(|p| p.physical.as_ref().and_then(|root| root.bounds()))
+            .or_else(|| self.execution_point().map(I::point))
+            .unwrap_or_else(|| self.bounds())
+    }
+    pub(crate) fn execution_root(&self) -> Option<crate::exact_source::RootTime> {
+        if self.is_cross() {
+            let point = self.execution.as_ref().filter(|p| p.time == self.time)?;
+            point
+                .physical
+                .clone()
+                .or_else(|| crate::exact_source::RootTime::point(point.time))
+        } else {
+            self.exact_root()
+        }
+    }
+    fn execution_moment(&self) -> Moment {
+        if let Some(point) = self.execution.as_ref().filter(|p| p.time == self.time) {
+            if let (
+                Some(exact),
+                Some(delta),
+                Moment::Anchored {
+                    anchor,
+                    derivative,
+                    end,
+                    history,
+                    ..
+                },
+            ) = (&point.physical, point.local_delta, &self.moment)
+            {
+                return Moment::Anchored {
+                    anchor: *anchor,
+                    delta: I::point(delta),
+                    derivative: *derivative,
+                    end: *end,
+                    bounds: exact.bounds().unwrap(),
+                    history: history.clone(),
+                    exact: Some(exact.clone()),
+                };
+            }
+            let time = point.time;
+            Moment::Timer {
+                bounds: I::point(time),
+                start: time,
+                period: 0.,
+                index: 0,
+            }
+        } else {
+            self.moment.clone()
+        }
+    }
+    fn accepts_execution(&self, time: f64, trigger: &EventTrigger) -> bool {
+        if self.is_cross() && self.execution.is_some() {
+            self.execution_point() == Some(time)
+                || (self
+                    .execution
+                    .as_ref()
+                    .is_some_and(|p| p.physical.is_some())
+                    && self.moment.accepts(time, trigger))
+        } else {
+            self.moment.accepts(time, trigger)
+        }
+    }
+    fn certify_execution(
+        &mut self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        guards: &crate::guard_trajectory::GuardTrajectory<'_>,
+    ) -> Result<bool, Error> {
+        if !self.is_cross() {
+            return Ok(true);
+        }
+        let EventTrigger::Cross {
+            guard,
+            direction,
+            time_tolerance,
+            expression_tolerance,
+        } = &model.triggers[self.event].trigger
+        else {
+            unreachable!()
+        };
+        let root = self.bounds();
+        let exact = self.exact_root();
+        let owner = &model.program.events[model.triggers[self.event].event]
+            .origin
+            .instance;
+        let arrival = root.lo == root.hi
+            && (root.hi == trajectory.config.stop
+                || trajectory
+                    .input_knots(&guards.active_inputs(guard, owner)?)
+                    .contains(&root.hi))
+            && exact.as_ref().and_then(|r| {
+                r.clock_delta_order(
+                    Clock {
+                        start: root.hi,
+                        period: 0.,
+                        index: 0,
+                    },
+                    0.,
+                )
+            }) == Some(std::cmp::Ordering::Equal);
+        if arrival {
+            self.time = root.hi;
+            self.execution = Some(ExecutionPoint {
+                time: root.hi,
+                guard: I::ZERO,
+                at_root: true,
+                physical: None,
+                local_delta: None,
+            });
+            return Ok(true);
+        }
+        if let Moment::Anchored {
+            anchor, delta, end, ..
+        } = &self.moment
+        {
+            let anchor = *anchor;
+            let root = *delta;
+            let domain_end = anchor
+                .delta(*end)
+                .ok_or_else(|| unresolved("local execution domain is uncertifiable"))?
+                .lo;
+            // Retain the original global representative/ttol admission. Local
+            // precision must not silently bypass the public representability cap.
+            if !self
+                .moment
+                .accepts(self.time, &model.triggers[self.event].trigger)
+            {
+                return Err(unresolved(
+                    "local cross representative exceeds original tolerances",
+                ));
+            }
+            for attempt in 0..53_u32 {
+                let bits = root
+                    .hi
+                    .to_bits()
+                    .checked_add(1_u64 << attempt)
+                    .unwrap_or(f64::INFINITY.to_bits());
+                let selected = f64::from_bits(bits);
+                if !selected.is_finite() || selected > domain_end {
+                    break;
+                }
+                let point = I::point(selected);
+                let delay = point - root;
+                if delay.hi > *time_tolerance {
+                    break;
+                }
+                let value = guards.local_range_impl(guard, point, owner)?.0;
+                let derivative = guards
+                    .local_range_impl(
+                        guard,
+                        I {
+                            lo: root.lo,
+                            hi: selected,
+                        },
+                        owner,
+                    )?
+                    .1;
+                if derivative.sign().is_some_and(|sign| {
+                    sign != 0
+                        && (*direction == 0 || sign == *direction)
+                        && value.sign() == Some(sign)
+                }) && (derivative * delay).finite()
+                    && (derivative * delay).magnitude() <= *expression_tolerance
+                    && value.magnitude() <= *expression_tolerance
+                {
+                    let exact = crate::exact_source::RootTime::point(selected)
+                        .and_then(|r| r.shifted_clock(anchor))
+                        .ok_or_else(|| {
+                            unresolved("exact local execution exceeds bounded arithmetic")
+                        })?;
+                    let stop =
+                        crate::exact_source::RootTime::point(trajectory.config.stop).unwrap();
+                    if exact.order(&stop) == std::cmp::Ordering::Greater {
+                        break;
+                    }
+                    self.execution = Some(ExecutionPoint {
+                        time: self.time,
+                        guard: value,
+                        at_root: false,
+                        physical: Some(exact),
+                        local_delta: Some(selected),
+                    });
+                    return Ok(true);
+                }
+            }
+            return Err(unresolved("cross has no certified strict local post-root execution point within original tolerances"));
+        }
+        let initial = self.execution_point().unwrap_or(self.time.max(root.hi));
+        let mut exact_fallback = None;
+        for attempt in 0..53_u32 {
+            let time = if attempt == 0 {
+                initial
+            } else {
+                f64::from_bits(
+                    initial
+                        .to_bits()
+                        .checked_add(1_u64 << (attempt - 1))
+                        .unwrap_or(f64::INFINITY.to_bits()),
+                )
+            };
+            if !time.is_finite() || time > trajectory.config.stop {
+                break;
+            }
+            let local = if let Moment::Anchored { anchor, .. } = &self.moment {
+                Some((
+                    anchor.delta(time).ok_or_else(|| {
+                        unresolved("execution point exceeds exact local clock arithmetic")
+                    })?,
+                    self.local_bounds(*anchor)
+                        .ok_or_else(|| unresolved("execution root lacks its local time proof"))?,
+                ))
+            } else {
+                None
+            };
+            let delay = local.map_or_else(|| I::point(time) - root, |(point, root)| point - root);
+            if delay.hi > *time_tolerance {
+                break;
+            }
+            // The original isolated root exists in this box. A strictly
+            // monotone derivative over [root.lo, te] and a strict post-side
+            // guard enclosure at te prove tau < te even when te == box.hi.
+            // Enclosure endpoint equality alone is never this proof.
+            if time < root.lo {
+                continue;
+            }
+            let (value, raw_value, derivative) = if let Some((point, root)) = local {
+                // Global binary64 enclosure contact may straddle the last local
+                // event even though the exact clock/root order is strict. The
+                // old local epoch proves this segment without querying a
+                // fictitious span across two physical modes.
+                let value = guards.local_range_impl(guard, point, owner)?.0;
+                let derivative = guards
+                    .local_range_impl(
+                        guard,
+                        I {
+                            lo: root.lo,
+                            hi: point.hi,
+                        },
+                        owner,
+                    )?
+                    .1;
+                (value, value, derivative)
+            } else {
+                let raw_value = guards.range(guard, I::point(time), owner)?.0;
+                let mut value = raw_value;
+                if let Moment::Cross(root) = &self.moment {
+                    if let Some(exact) = root.exact_guard_value(time) {
+                        value = I {
+                            lo: value.lo.max(exact.lo),
+                            hi: value.hi.min(exact.hi),
+                        };
+                        if value.lo > value.hi {
+                            return Err(unresolved(
+                                "original affine guard contradicts its interval enclosure",
+                            ));
+                        }
+                    }
+                }
+                let derivative = guards
+                    .range(
+                        guard,
+                        I {
+                            lo: root.lo,
+                            hi: time,
+                        },
+                        owner,
+                    )?
+                    .1;
+                (value, raw_value, derivative)
+            };
+            let sign = derivative.sign().filter(|s| *s != 0);
+            if sign.is_some_and(|sign| {
+                (*direction == 0 || sign == *direction) && value.sign() == Some(sign)
+            }) && (derivative * delay).finite()
+                && (derivative * delay).magnitude() <= *expression_tolerance
+                && value.magnitude() <= *expression_tolerance
+            {
+                let point = ExecutionPoint {
+                    time,
+                    guard: value,
+                    at_root: false,
+                    physical: None,
+                    local_delta: None,
+                };
+                if raw_value.sign() == sign {
+                    self.time = time;
+                    self.execution = Some(ExecutionPoint {
+                        guard: raw_value,
+                        ..point
+                    });
+                    return Ok(true);
+                }
+                exact_fallback.get_or_insert(point);
+            }
+        }
+        if let Some(point) = exact_fallback {
+            self.time = point.time;
+            self.execution = Some(point);
+            return Ok(true);
+        }
+        Err(unresolved("cross has no certified strict post-root execution point within its original tolerances and old epoch"))
+    }
+
     pub(crate) fn record_ambiguous_query(&self, site: &str, query: f64) {
         let (kind, clock, exact) = match &self.moment {
             Moment::HeldTimer { clock, exact, .. } => {
@@ -60,8 +433,14 @@ impl ScheduledEvent {
             root.clone()
         } else if let Moment::Cross(root) = &self.moment {
             root.rational_time()?
+        } else if let Some(clock) = self.moment.clock() {
+            crate::exact_source::RootTime::from_clock(clock, self.bounds())?
+        } else if self.bounds().lo == self.bounds().hi {
+            // A certified zero-width isolated root contains exactly this point,
+            // including a nonlinear source guard with no affine root formula.
+            crate::exact_source::RootTime::point(self.bounds().lo)?
         } else {
-            crate::exact_source::RootTime::from_clock(self.moment.clock()?, self.bounds())?
+            return None;
         };
         root.refine(self.bounds())?;
         Some(root)
@@ -92,7 +471,7 @@ impl ScheduledEvent {
             && !model.relocalized_guards[self.event]
             && self.fixed_predecessor.is_none()
             && matches!(self.moment, Moment::Dynamic { exact: None, bounds, .. }
-                if bounds.lo < bounds.hi && self.time == bounds.hi)
+                if bounds.lo < bounds.hi && (self.time == bounds.hi || self.execution_point().is_some()))
     }
 
     /// Refine only a source-driven root, using its original proof and guard.
@@ -155,10 +534,17 @@ impl ScheduledEvent {
         *bounds = root.root.bounds;
         *derivative = root.root.derivative;
         candidate.time = root.root.bounds.hi;
+        candidate.execution = None;
         if !candidate.moment.accepts(candidate.time, &leaf.trigger) {
             return Err(unresolved(
                 "refined root exceeds the original cross tolerances",
             ));
+        }
+        // A finer mathematical root does not authorize retaining or moving
+        // the old callback point. Reprove the execution observation in this
+        // same old physical epoch and against the original public tolerances.
+        if !candidate.certify_execution(model, trajectory, &guards)? {
+            return Err(unresolved("refined root has no in-domain execution"));
         }
         Ok((candidate, root))
     }
@@ -189,6 +575,16 @@ impl ScheduledEvent {
     /// Compare the proved physical event with an exact binary64 query, never
     /// with its delayed execution representative. Equality observes post-event.
     pub(crate) fn physical_order_at(&self, time: f64) -> Option<std::cmp::Ordering> {
+        if self.execution_point().is_some() {
+            return self.execution_root()?.clock_delta_order(
+                Clock {
+                    start: time,
+                    period: 0.,
+                    index: 0,
+                },
+                0.,
+            );
+        }
         let query = Moment::Timer {
             bounds: I::point(time),
             start: time,
@@ -285,6 +681,11 @@ impl ScheduledEvent {
         if self.moment.exact_order(&prior.moment) != Some(std::cmp::Ordering::Greater) {
             return Ok(false);
         }
+        if self.execution.is_some() && self.time <= prior.time {
+            return Err(unresolved(
+                "retained cross execution requires fresh old-epoch certification",
+            ));
+        }
         self.time = self.time.max(prior.time.next_up());
         if !self
             .moment
@@ -315,8 +716,12 @@ pub(crate) struct OrderedObservation {
     anchor: Clock,
     delta: I,
     proofs: Vec<Arc<Continuous>>,
+    consumes_cross: bool,
 }
 impl OrderedObservation {
+    pub(crate) fn consumes_cross(&self) -> bool {
+        self.consumes_cross
+    }
     pub(crate) fn delta(&self) -> I {
         self.delta
     }
@@ -347,7 +752,9 @@ pub(crate) fn ordered_observation(
     let mut delta = None;
     for event in events {
         let bound = event
-            .local_bounds(clock)
+            .execution_root()
+            .and_then(|root| root.local_bounds(clock))
+            .or_else(|| event.local_bounds(clock))
             .ok_or_else(|| unresolved("local event has no exact physical time certificate"))?;
         delta = Some(delta.map_or(bound, |old: I| old.hull(bound)));
         match &event.moment {
@@ -364,6 +771,20 @@ pub(crate) fn ordered_observation(
         anchor: clock,
         delta: delta.unwrap(),
         proofs,
+        consumes_cross: events.iter().any(ScheduledEvent::is_cross),
+    })
+}
+fn mathematical_order(
+    a: &ScheduledEvent,
+    b: &ScheduledEvent,
+    model: &EventModel,
+) -> Option<std::cmp::Ordering> {
+    a.moment.exact_order(&b.moment).or_else(|| {
+        let x = a.bounds(); let y = b.bounds();
+        if x.hi < y.lo { return Some(std::cmp::Ordering::Less); }
+        if x.lo > y.hi { return Some(std::cmp::Ordering::Greater); }
+        let same_guard = matches!((&model.triggers[a.event].trigger,&model.triggers[b.event].trigger),(EventTrigger::Cross {guard:x,..},EventTrigger::Cross {guard:y,..}) if x==y);
+        a.moment.coincides(&b.moment, same_guard).then_some(std::cmp::Ordering::Equal)
     })
 }
 fn certified_order(
@@ -371,10 +792,21 @@ fn certified_order(
     b: &ScheduledEvent,
     model: &EventModel,
 ) -> Option<std::cmp::Ordering> {
-    a.moment.exact_order(&b.moment).or_else(|| {
-        let same_guard=matches!((&model.triggers[a.event].trigger,&model.triggers[b.event].trigger),(EventTrigger::Cross {guard:x,..},EventTrigger::Cross {guard:y,..}) if x==y);
-        (same_guard && a.moment.coincides(&b.moment,true)).then_some(std::cmp::Ordering::Equal)
-    })
+    if a.execution.is_some() || b.execution.is_some() {
+        let order = a.execution_moment().exact_order(&b.execution_moment())?;
+        if a.is_cross() && b.is_cross() {
+            let roots = mathematical_order(a, b, model)?;
+            if roots != std::cmp::Ordering::Equal
+                && order != std::cmp::Ordering::Equal
+                && roots != order
+            {
+                return None;
+            }
+        }
+        Some(order)
+    } else {
+        mathematical_order(a, b, model)
+    }
 }
 
 #[derive(Clone)]
@@ -706,6 +1138,7 @@ fn order_fixed_timers(
     model: &EventModel,
     stop: f64,
     next_lower: Option<f64>,
+    execution: Option<(&Trajectory, &crate::guard_trajectory::GuardTrajectory<'_>)>,
 ) -> Result<(), Error> {
     let mut uncertified = false;
     events.sort_by(|a, b| {
@@ -732,7 +1165,6 @@ fn order_fixed_timers(
                 format!("bounded exact event cluster exceeds {CAUSAL_MICROEVENT_BUDGET} subsequent microevents"),
             ));
         }
-        groups += 1;
         let mut end = start + 1;
         while end < events.len() {
             match certified_order(&events[start], &events[end], model) {
@@ -741,6 +1173,7 @@ fn order_fixed_timers(
                 None => return Err(unresolved("cannot certify exact fixed timer group")),
             }
         }
+        groups += 1;
         // All equal nominal times must share one representative, including
         // when their different arithmetic decompositions have different bounds.
         let zero_time = contract_zero_timer_group(&mut events[start..end], model)?;
@@ -770,13 +1203,28 @@ fn order_fixed_timers(
             ));
         }
         for event in &mut events[start..end] {
-            if !event
-                .moment
-                .accepts(time, &model.triggers[event.event].trigger)
-            {
-                return Err(unresolved(
-                    "ordered timer representative exceeds its original time tolerance",
-                ));
+            if !event.accepts_execution(time, &model.triggers[event.event].trigger) {
+                if event.execution.is_some() {
+                    let (trajectory, guards) = execution.ok_or_else(|| {
+                        unresolved(
+                            "ordered cross retiming lacks its old-epoch execution proof context",
+                        )
+                    })?;
+                    event.execution = None;
+                    event.time = time;
+                    if !event.certify_execution(model, trajectory, guards)? || event.time != time {
+                        return Err(unresolved(
+                            "ordered cross has no common certified execution point",
+                        ));
+                    }
+                } else {
+                    return Err(unresolved(
+                        "ordered timer representative exceeds its original time tolerance",
+                    ));
+                }
+            }
+            if let Some(point) = event.execution.as_mut().filter(|p| p.physical.is_some()) {
+                point.time = time;
             }
             event.time = time;
             if previous.is_some() {
@@ -956,7 +1404,8 @@ fn add_timer(
                 None => {}
             }
         }
-        let time = bounds.hi;
+        let mut time = bounds.hi;
+        let mut certified_after = false;
         if (index as f64).mul_add(period.lo, start.lo) == f64::INFINITY {
             // The rounded lower-operand sum overflowing proves every possible
             // nominal time is beyond finite stop. An infinite interval upper
@@ -990,14 +1439,29 @@ fn add_timer(
                     }
                     continue;
                 }
-                if after.is_some_and(|time| bounds.lo <= time) {
+                let candidate = Moment::HeldTimer {
+                    exact: exact.clone(),
+                    bounds,
+                    index,
+                    clock,
+                };
+                certified_after = boundary.certifies_strict_successor(&candidate);
+                if after.is_some_and(|time| bounds.lo <= time) && !certified_after {
                     return Err(unresolved(
                         "future held timer cannot be ordered after the accepted representative",
                     ));
                 }
+                if certified_after {
+                    time = time.max(after.unwrap().next_up());
+                    if time > stop || !candidate.accepts(time, trigger) {
+                        return Err(unresolved(
+                            "future exact held timer representative exceeds original tolerances",
+                        ));
+                    }
+                }
             }
         }
-        if let Some(after) = after {
+        if let Some(after) = after.filter(|_| !certified_after) {
             if bounds.hi <= after {
                 if period.hi <= 0. {
                     break;
@@ -1020,7 +1484,8 @@ fn add_timer(
             ));
         }
         events.push(ScheduledEvent {
-            fixed_predecessor: None,
+            fixed_predecessor: after.filter(|_| certified_after),
+            execution: None,
             time,
             event,
             moment: if held {
@@ -1201,6 +1666,7 @@ pub(crate) struct HistoryEpoch<'a> {
     pub(crate) until: f64,
     pub(crate) consumed: &'a [(usize, i8)],
     pub(crate) pending: &'a [ScheduledEvent],
+    pub(crate) retained_history: &'a [usize],
 }
 
 #[allow(dead_code)] // Retain the existing no-provenance entry for compatibility.
@@ -1265,7 +1731,8 @@ pub(crate) fn history_epoch_with_time_proofs(
     let changed: Vec<_> = model
         .guard_operators
         .iter()
-        .map(|ops| !ops.is_empty())
+        .enumerate()
+        .map(|(index, ops)| !ops.is_empty() && !epoch.retained_history.contains(&index))
         .collect();
     schedule_with_history(
         model,
@@ -1291,7 +1758,7 @@ pub(crate) fn history_epoch_with_time_proofs(
 struct TimerBoundary<'a> {
     observation: I,
     consumed: std::collections::BTreeMap<usize, &'a ScheduledEvent>,
-    common_moment: Option<&'a Moment>,
+    common_moment: Option<Moment>,
 }
 
 impl<'a> TimerBoundary<'a> {
@@ -1313,7 +1780,7 @@ impl<'a> TimerBoundary<'a> {
                     "held timer boundary does not identify the current batch",
                 ));
             }
-            observation = observation.hull(event.bounds());
+            observation = observation.hull(event.observation_bounds());
             if matches!(
                 model.triggers[event.event].trigger,
                 EventTrigger::HeldTimer { .. }
@@ -1325,11 +1792,11 @@ impl<'a> TimerBoundary<'a> {
                 ));
             }
         }
-        let first = &batch[0].moment;
+        let first = batch[0].execution_moment();
         let common_moment = batch
             .iter()
             .all(|event| {
-                first.exact_order(&event.moment) == Some(std::cmp::Ordering::Equal)
+                first.exact_order(&event.execution_moment()) == Some(std::cmp::Ordering::Equal)
                     || (first.bounds().lo == first.bounds().hi && first.bounds() == event.bounds())
             })
             .then_some(first);
@@ -1338,6 +1805,13 @@ impl<'a> TimerBoundary<'a> {
             consumed,
             common_moment,
         })
+    }
+
+    fn certifies_strict_successor(&self, candidate: &Moment) -> bool {
+        matches!(candidate, Moment::HeldTimer { exact: Some(_), .. })
+            && self.common_moment.as_ref().is_some_and(|prior| {
+                candidate.exact_order(prior) == Some(std::cmp::Ordering::Greater)
+            })
     }
 
     fn already_past_or_consumed(
@@ -1359,7 +1833,7 @@ impl<'a> TimerBoundary<'a> {
             clock,
             exact: exact.cloned(),
         };
-        if let Some(old) = self.common_moment {
+        if let Some(old) = &self.common_moment {
             if exact.is_some() {
                 match candidate.exact_order(old) {
                     Some(std::cmp::Ordering::Less) => return Ok(true),
@@ -1368,7 +1842,7 @@ impl<'a> TimerBoundary<'a> {
                 }
             }
         }
-        if let (Some(clock), Some(old)) = (clock, self.common_moment) {
+        if let (Some(clock), Some(old)) = (clock, self.common_moment.as_ref()) {
             let candidate = Moment::HeldTimer {
                 exact: exact.cloned(),
                 bounds,
@@ -1438,7 +1912,12 @@ impl HeldCalendar<'_> {
                 || !pending[start..end].iter().all(|event| {
                     !self.changed[event.event]
                         && (event.moment.clock().is_some()
-                            || matches!(event.moment, Moment::Cross(_) | Moment::Anchored { .. }))
+                            || matches!(
+                                event.moment,
+                                Moment::Cross(_)
+                                    | Moment::Anchored { .. }
+                                    | Moment::HeldTimer { exact: Some(_), .. }
+                            ))
                         && event.fixed_predecessor == Some(anchor)
                 })
             {
@@ -1560,6 +2039,7 @@ fn schedule_with_history(
                 }
                 events.push(ScheduledEvent {
                     fixed_predecessor: None,
+                    execution: None,
                     time: root.bounds.hi,
                     event: index,
                     moment: Moment::Cross(root),
@@ -1609,7 +2089,7 @@ fn schedule_with_history(
                 unreachable!()
             };
             let origin = &model.program.events[leaf.event].origin;
-            if let Some((anchor, mut start)) = operators.and_then(Operators::local_epoch) {
+            if let Some((anchor, start)) = operators.and_then(Operators::local_epoch) {
                 let CalendarScope::History { until, consumed } = &scope else {
                     return Err(unresolved(
                         "local closure requires a bounded history calendar",
@@ -1625,25 +2105,40 @@ fn schedule_with_history(
                     continue;
                 }
                 let precision = (*time_tolerance).min((end - start) * f64::EPSILON * 8.);
-                if let Some((_, incoming)) = consumed.iter().find(|(event, _)| *event == index) {
-                    start = crate::dynamic_roots::depart_consumed(
+                let roots = if let Some((_, incoming)) =
+                    consumed.iter().find(|(event, _)| *event == index)
+                {
+                    crate::dynamic_roots::isolate_consumed_history(
                         start,
                         end,
                         &mut |t| Ok(guards.local_range_impl(guard, t, &origin.instance)?.0),
                         &mut |t| Ok(guards.local_range_impl(guard, t, &origin.instance)?.1),
                         precision,
+                        *expression_tolerance,
                         (*incoming, *direction),
-                    )?;
-                }
-                let roots = crate::dynamic_roots::isolate_history(
-                    start,
-                    end,
-                    &mut |t| Ok(guards.local_range_impl(guard, t, &origin.instance)?.0),
-                    &mut |t| Ok(guards.local_range_impl(guard, t, &origin.instance)?.1),
-                    *direction,
-                    precision,
-                    *expression_tolerance,
-                )?;
+                    )
+                    .map_err(|error| {
+                        history_cross_context(
+                            error,
+                            origin,
+                            start,
+                            end,
+                            *incoming,
+                            *direction,
+                            "local delta",
+                        )
+                    })?
+                } else {
+                    crate::dynamic_roots::isolate_history(
+                        start,
+                        end,
+                        &mut |t| Ok(guards.local_range_impl(guard, t, &origin.instance)?.0),
+                        &mut |t| Ok(guards.local_range_impl(guard, t, &origin.instance)?.1),
+                        *direction,
+                        precision,
+                        *expression_tolerance,
+                    )?
+                };
                 for root in roots {
                     if events.len() >= EVENT_BUDGET {
                         return Err(Error::new(
@@ -1699,6 +2194,7 @@ fn schedule_with_history(
                     }
                     events.push(ScheduledEvent {
                         fixed_predecessor: None,
+                        execution: None,
                         time,
                         event: index,
                         moment,
@@ -1717,25 +2213,36 @@ fn schedule_with_history(
                 if *until > start && knots.last().copied() != Some(*until) {
                     knots.push(*until);
                 }
-                if let Some((_, incoming)) = consumed
-                    .iter()
-                    .find(|(event, _)| *event == index)
-                    .filter(|_| *until > start)
-                {
-                    let departed = crate::dynamic_roots::depart_consumed(
-                        start,
-                        *until,
-                        &mut |t| Ok(guards.range(guard, t, &origin.instance)?.0),
-                        &mut |t| Ok(guards.range(guard, t, &origin.instance)?.1),
-                        *time_tolerance,
-                        (*incoming, *direction),
-                    )?;
-                    knots.retain(|&t| t > departed);
-                    knots.insert(0, departed);
+                if consumed.iter().any(|(event, _)| *event == index) && *until > start {
+                    knots.retain(|&t| t > start);
+                    knots.insert(0, start);
                 }
             }
             for segment in knots.windows(2) {
-                let roots = if !matches!(scope, CalendarScope::All) {
+                let incoming = match &scope {
+                    CalendarScope::History { consumed, .. } => {
+                        consumed.iter().find(|(event, _)| *event == index)
+                    }
+                    _ => None,
+                }
+                .filter(|_| held.as_ref().and_then(|h| h.after) == Some(segment[0]));
+                let roots = if let Some((_, incoming)) = incoming {
+                    crate::dynamic_roots::isolate_consumed_history(
+                        segment[0],
+                        segment[1],
+                        &mut |t| Ok(guards.range(guard, t, &origin.instance)?.0),
+                        &mut |t| Ok(guards.range(guard, t, &origin.instance)?.1),
+                        *time_tolerance,
+                        *expression_tolerance,
+                        (*incoming, *direction),
+                    )
+                    .map_err(|error| {
+                        history_cross_context(
+                            error, origin, segment[0], segment[1], *incoming, *direction,
+                            "absolute",
+                        )
+                    })?
+                } else if !matches!(scope, CalendarScope::All) {
                     crate::dynamic_roots::isolate_history(
                         segment[0],
                         segment[1],
@@ -1779,6 +2286,7 @@ fn schedule_with_history(
                     }
                     events.push(ScheduledEvent {
                         fixed_predecessor: None,
+                        execution: None,
                         time,
                         event: index,
                         moment,
@@ -1809,11 +2317,54 @@ fn schedule_with_history(
             held.as_ref().and_then(|h| h.time_proofs),
         )?;
     }
+    let execution_guards = events
+        .iter()
+        .any(ScheduledEvent::is_cross)
+        .then(|| {
+            crate::guard_trajectory::GuardTrajectory::new_held(
+                model,
+                trajectory,
+                operators,
+                held.as_ref().map(|h| h.states),
+            )
+        })
+        .transpose()?;
+    if let Some(execution_guards) = &execution_guards {
+        let mut certified = Vec::with_capacity(events.len());
+        for mut event in events {
+            if event.certify_execution(model, trajectory, execution_guards)? {
+                certified.push(event);
+            }
+        }
+        events = certified;
+    }
+    // The joint map executes each body once. Distinct occurrences cannot
+    // silently disappear when their certified execution points coincide.
+    let mut body_instants = std::collections::BTreeMap::new();
+    for (index, event) in events.iter().enumerate() {
+        let Some(execution) = event.execution_root() else {
+            continue;
+        };
+        let key = (model.triggers[event.event].event, execution);
+        if let Some(&prior) = body_instants.get(&key) {
+            let previous: &ScheduledEvent = &events[prior];
+            if (previous.is_cross() || event.is_cross())
+                && certified_order(previous, event, model) == Some(std::cmp::Ordering::Equal)
+                && mathematical_order(previous, event, model) != Some(std::cmp::Ordering::Equal)
+            {
+                return Err(unresolved("distinct roots for one callback body share an execution point; logical multiplicity requires sequential event semantics"));
+            }
+        } else {
+            body_instants.insert(key, index);
+        }
+    }
     if let Some(after) = held.as_ref().and_then(|h| h.after) {
         let retained = held.as_ref().unwrap().retained_fixed_prefix(after);
         if events.iter().any(|event| {
-            event.bounds().lo <= after
+            event.observation_bounds().lo <= after
                 && !matches!(event.moment, Moment::Anchored {delta,..} if delta.lo > operators.and_then(Operators::local_epoch).map_or(f64::INFINITY,|(_,start)|start) && event.time>after)
+                && !(event.fixed_predecessor==Some(after) && event.time>after && held.as_ref().and_then(|h|h.boundary)
+                    .is_some_and(|boundary|boundary.certifies_strict_successor(&event.moment)))
                 && !(event.fixed_predecessor.is_some()
                     && retained
                         .binary_search_by(|time| time.total_cmp(&event.time))
@@ -1824,10 +2375,9 @@ fn schedule_with_history(
         }
     }
     events.sort_by(|a, b| {
-        a.moment
-            .bounds()
+        a.bounds()
             .lo
-            .total_cmp(&b.moment.bounds().lo)
+            .total_cmp(&b.bounds().lo)
             .then(a.event.cmp(&b.event))
     });
     let mut start = 0;
@@ -1836,7 +2386,10 @@ fn schedule_with_history(
         // exact ordering certificate. Moments without that proof retain the
         // existing simultaneous-root and ambiguity checks below.
         let mut cluster_end = start + 1;
-        let mut cluster_hi = events[start].bounds().hi.max(events[start].time);
+        let mut cluster_hi = events[start]
+            .observation_bounds()
+            .hi
+            .max(events[start].time);
         while cluster_end < events.len() && events[cluster_end].bounds().lo <= cluster_hi {
             cluster_hi = cluster_hi
                 .max(events[cluster_end].bounds().hi)
@@ -1846,7 +2399,13 @@ fn schedule_with_history(
         if cluster_end > start + 1
             && events[start..cluster_end].iter().all(|e| {
                 e.moment.clock().is_some()
-                    || matches!(e.moment, Moment::Cross(_) | Moment::Anchored { .. })
+                    || e.is_cross()
+                    || matches!(
+                        e.moment,
+                        Moment::Cross(_)
+                            | Moment::Anchored { .. }
+                            | Moment::HeldTimer { exact: Some(_), .. }
+                    )
             })
             && events[start..cluster_end].iter().all(|a| {
                 events[start..cluster_end]
@@ -1860,6 +2419,7 @@ fn schedule_with_history(
                     model,
                     trajectory.config.stop,
                     None,
+                    execution_guards.as_ref().map(|guards| (trajectory, guards)),
                 )?;
                 // Strict representatives may extend beyond the original
                 // connected enclosures. Include the next physical event only
@@ -1892,7 +2452,13 @@ fn schedule_with_history(
                 for index in cluster_end..extension_end {
                     let next = &events[index];
                     if !(next.moment.clock().is_some()
-                        || matches!(next.moment, Moment::Cross(_) | Moment::Anchored { .. }))
+                        || next.is_cross()
+                        || matches!(
+                            next.moment,
+                            Moment::Cross(_)
+                                | Moment::Anchored { .. }
+                                | Moment::HeldTimer { exact: Some(_), .. }
+                        ))
                         || events[start..index]
                             .iter()
                             .any(|event| certified_order(event, next, model).is_none())
@@ -1907,11 +2473,33 @@ fn schedule_with_history(
             start = cluster_end;
             continue;
         }
+        for a in &events[start..cluster_end] {
+            for b in &events[start..cluster_end] {
+                if a.event == b.event
+                    || !a.is_cross()
+                    || !b.is_cross()
+                    || certified_order(a, b, model).is_some()
+                {
+                    continue;
+                }
+                let same_guard = matches!((&model.triggers[a.event].trigger,&model.triggers[b.event].trigger),(EventTrigger::Cross {guard:x,..},EventTrigger::Cross {guard:y,..}) if x==y)
+                    || (!model.dynamic_guards[a.event]
+                        && !model.dynamic_guards[b.event]
+                        && bounds
+                            .as_ref()
+                            .is_some_and(|p| p.same_zero_set(a.event, b.event)));
+                if !a.moment.coincides(&b.moment, same_guard) {
+                    return Err(unresolved(
+                        "cannot certify ordering of cross roots with overlapping discovery bounds",
+                    ));
+                }
+            }
+        }
         let mut end = start + 1;
         let mut time = events[start].time;
         // Include uncertain nominal times on either side of the chosen time.
-        let mut hi = events[start].moment.bounds().hi;
-        while end < events.len() && events[end].moment.bounds().lo <= hi.max(time) {
+        let mut hi = events[start].observation_bounds().hi;
+        while end < events.len() && events[end].observation_bounds().lo <= hi.max(time) {
             let first = &events[start];
             let next = &events[end];
             let same_guard = match (
@@ -1946,13 +2534,13 @@ fn schedule_with_history(
                 ));
             }
             time = time.max(next.time);
-            hi = hi.max(next.moment.bounds().hi);
+            hi = hi.max(next.observation_bounds().hi);
             end += 1;
         }
         for event in &mut events[start..end] {
             let leaf = &model.triggers[event.event];
             let spec = &model.program.events[leaf.event];
-            if !event.moment.accepts(time, &leaf.trigger) {
+            if !event.accepts_execution(time, &leaf.trigger) {
                 return Err(unresolved(&format!(
                     "event uncertainty or representable time exceeds tolerances at {}",
                     spec.origin.label()
@@ -1967,6 +2555,25 @@ fn schedule_with_history(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn history_return_diagnostic_preserves_kind_and_sample() {
+        let mut error = crate::ir::Error::new("event_resolution", "original reason");
+        error.sample = Some(17);
+        let origin = crate::ir::Origin {
+            source: "return.va".into(),
+            line: 8,
+            column: 2,
+            instance: "dut".into(),
+            expansion: vec![],
+        };
+        let error = super::history_cross_context(error, &origin, 0.5, 1.5, 1, 0, "absolute");
+        assert_eq!(error.kind, "event_resolution");
+        assert_eq!(error.sample, Some(17));
+        assert!(error.message.starts_with("original reason"));
+        assert!(error.message.contains("return.va:8:2 (dut)"));
+        assert!(error.message.contains("incoming=1, requested=0"));
+    }
+
     use super::*;
     use crate::ir::{Program, Tolerances, SCHEMA_VERSION};
     use serde_json::json;
@@ -1988,6 +2595,7 @@ mod tests {
     fn event(start: f64, lo: f64, hi: f64) -> ScheduledEvent {
         ScheduledEvent {
             fixed_predecessor: None,
+            execution: None,
             time: hi,
             event: 0,
             moment: Moment::Timer {
@@ -2000,11 +2608,136 @@ mod tests {
     }
 
     #[test]
+    fn common_execution_must_cover_inherited_guard_uncertainty_and_return_roots() {
+        // z=t+eta, eta in [-eps,eps]. The numerical uncertainty is real;
+        // selecting an exact execution time cannot make eta disappear.
+        let origin = json!({"source":"inherited.va","line":1,"column":1,"instance":"dut"});
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":SCHEMA_VERSION,"nodes":["0","u","y"],
+            "states":[{"instance":"dut","name":"eta","kind":"real","initial":0}],
+            "events":[{"trigger":{"kind":"cross","guard":{"op":"add",
+                "left":{"op":"affine","constant":-1.,"terms":[{"node":1,"coefficient":1.}]},
+                "right":{"op":"state","state":0}},"direction":1,
+                "time_tolerance":0.01,"expression_tolerance":0.01},"origin":origin,
+                "body":[{"kind":"assign","state":0,"rhs":{"op":"state","state":0}}]}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"r","local_negative":"y","kind":"voltage"},
+                "positive":0,"negative":2,"origin":origin,"rhs":{"op":"state","state":0}}]
+        })).unwrap();
+        let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
+        let eps = 2_f64.powi(-20);
+        let held = [I { lo: -eps, hi: eps }];
+        let config: crate::ir::TransientInputs = serde_json::from_value(json!({
+            "pwl":[[[0.,0.],[2.,2.]]],"output_times":[0.,2.],
+            "stop":2.,"max_step":0.1
+        }))
+        .unwrap();
+        let trajectory = Trajectory::new(config, 1).unwrap();
+        let guards = crate::guard_trajectory::GuardTrajectory::new_held(
+            &model,
+            &trajectory,
+            None,
+            Some(&held),
+        )
+        .unwrap();
+        let EventTrigger::Cross { guard, .. } = &model.triggers[0].trigger else {
+            unreachable!()
+        };
+        // A prescribed common e too early for the full family cannot certify a
+        // strict post side, although its nominal eta=0 trajectory has crossed.
+        let insufficient = 1. + eps * 0.5;
+        assert_eq!(
+            guards
+                .range(guard, I::point(insufficient), "dut")
+                .unwrap()
+                .0
+                .sign(),
+            None
+        );
+        let mut short_config = trajectory.config.clone();
+        short_config.stop = insufficient;
+        short_config.output_times = vec![0., insufficient];
+        let short_trajectory = Trajectory::new(short_config, 1).unwrap();
+        let short_guards = crate::guard_trajectory::GuardTrajectory::new_held(
+            &model,
+            &short_trajectory,
+            None,
+            Some(&held),
+        )
+        .unwrap();
+        let mut too_early = ScheduledEvent {
+            fixed_predecessor: None,
+            execution: None,
+            time: insufficient,
+            event: 0,
+            moment: Moment::Dynamic {
+                history: None,
+                exact: None,
+                bounds: I {
+                    lo: 1. - eps,
+                    hi: 1. + eps,
+                },
+                derivative: I::ONE,
+                end: insufficient,
+            },
+        };
+        assert_eq!(
+            too_early
+                .certify_execution(&model, &short_trajectory, &short_guards)
+                .unwrap_err()
+                .kind,
+            "event_resolution"
+        );
+        assert!(too_early.execution_root().is_none());
+        let e = 1. + 4. * eps;
+        let mut event = ScheduledEvent {
+            fixed_predecessor: None,
+            execution: None,
+            time: e,
+            event: 0,
+            moment: Moment::Dynamic {
+                history: None,
+                exact: None,
+                bounds: I {
+                    lo: 1. - eps,
+                    hi: 1. + eps,
+                },
+                derivative: I::ONE,
+                end: 2.,
+            },
+        };
+        event
+            .certify_execution(&model, &trajectory, &guards)
+            .unwrap();
+        assert_eq!(event.time, e);
+        let post = event.execution_guard().unwrap();
+        assert!(post.lo > 0. && post.lo <= 3. * eps && post.hi >= 5. * eps);
+        // Reflect the same old family at this common e. Every returning root
+        // is r=e+(e-1)+eta, not the singleton nominal r=2e-1.
+        let mut range = |t: I| Ok(post - (t - I::point(e)));
+        let mut derivative = |_: I| Ok(-I::ONE);
+        let roots = crate::dynamic_roots::isolate_history(
+            e,
+            e + 8. * eps,
+            &mut range,
+            &mut derivative,
+            0,
+            4. * eps,
+            4. * eps,
+        )
+        .unwrap();
+        assert_eq!(roots.len(), 1);
+        assert!(roots[0].bounds.lo <= 2. * e - 1. - eps);
+        assert!(roots[0].bounds.hi >= 2. * e - 1. + eps);
+        assert!(roots[0].bounds.lo > e);
+        assert!(post.magnitude() >= 5. * eps);
+    }
+
+    #[test]
     fn exact_groups_keep_original_enclosures_and_joint_representative() {
         let m = model();
         // The three enclosures form a transitive chain, with an equal-time subgroup.
         let mut events = vec![event(2., 1.5, 3.), event(1., 0.5, 1.5), event(2., 2., 4.)];
-        order_fixed_timers(&mut events, &m, 10., None).unwrap();
+        order_fixed_timers(&mut events, &m, 10., None, None).unwrap();
         assert_eq!(
             events.iter().map(|e| e.time).collect::<Vec<_>>(),
             [1.5, 4., 4.]
@@ -2031,7 +2764,7 @@ mod tests {
                 "ordered timer representatives reach the next event boundary",
             ),
         ] {
-            let error = order_fixed_timers(&mut close(), &m, stop, next)
+            let error = order_fixed_timers(&mut close(), &m, stop, next, None)
                 .err()
                 .unwrap();
             assert_eq!(error.kind, "event_resolution");
@@ -2046,14 +2779,14 @@ mod tests {
         if let EventTrigger::Timer { time_tolerance, .. } = &mut wide.triggers[0].trigger {
             *time_tolerance = f64::MAX;
         }
-        let error = order_fixed_timers(&mut overflow, &wide, f64::MAX, None)
+        let error = order_fixed_timers(&mut overflow, &wide, f64::MAX, None, None)
             .err()
             .unwrap();
         assert_eq!(error.kind, "event_resolution");
         assert_eq!(error.message, "ordered timer representative is not finite");
         let mut invalid = vec![event(f64::NAN, 0., 1.), event(1., 1., 1.)];
         assert_eq!(
-            order_fixed_timers(&mut invalid, &m, 2., None)
+            order_fixed_timers(&mut invalid, &m, 2., None, None)
                 .err()
                 .unwrap()
                 .kind,
@@ -2136,6 +2869,7 @@ mod common_exact_root_tests {
             time: 0.4,
             event: 0,
             fixed_predecessor: None,
+            execution: None,
             moment: Moment::Dynamic {
                 history: None,
                 exact,
@@ -2177,6 +2911,7 @@ mod common_exact_root_tests {
             time: 0.4,
             event: 1,
             fixed_predecessor: None,
+            execution: None,
             moment: Moment::Timer {
                 bounds: window,
                 start: 0.1,
@@ -2248,6 +2983,7 @@ mod exact_deadline_review_tests {
             time: window.hi,
             event: 0,
             fixed_predecessor: None,
+            execution: None,
             moment: Moment::Anchored {
                 anchor,
                 delta: local.bounds().unwrap(),
@@ -2262,6 +2998,7 @@ mod exact_deadline_review_tests {
             time: window.hi,
             event: 1,
             fixed_predecessor: None,
+            execution: None,
             moment: Moment::Dynamic {
                 history: None,
                 exact: Some(expected.clone()),
@@ -2327,6 +3064,7 @@ mod held_review_tests {
             time: 0.4,
             event: 2,
             fixed_predecessor: None,
+            execution: None,
             moment: Moment::HeldTimer {
                 bounds,
                 index: 0,
@@ -2339,7 +3077,7 @@ mod held_review_tests {
         let boundary = TimerBoundary {
             observation: bounds,
             consumed: std::collections::BTreeMap::from([(2, &old)]),
-            common_moment: Some(&old.moment),
+            common_moment: Some(old.moment.clone()),
         };
         assert!(boundary
             .already_past_or_consumed(2, bounds, None, Some(&a))

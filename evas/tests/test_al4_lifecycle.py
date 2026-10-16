@@ -3,6 +3,7 @@
 GUARDS = ["DYNAMICS", "CROSS", "TRANSITION", "COMPOSE"]
 
 import math
+from fractions import Fraction as Q
 import unittest
 
 from test_continuous_dynamics import compile_model, run, rows, assert_close
@@ -25,13 +26,18 @@ class BoundedLifecycleContracts(unittest.TestCase):
             events = result['transient']['events']
             self.assertEqual(len(events), 2)
             self.assertAlmostEqual(events[0]['time'], .25, delta=1e-12)
-            self.assertAlmostEqual(events[1]['time'], .5, delta=1e-10)
+            te = Q(events[1]['time'])
+            self.assertLess(Q(.5), te)
+            self.assertLessEqual(te-Q(.5), Q(1e-10))
+            self.assertLessEqual(abs(2*te-1), Q(1e-10))
+            lo, hi = map(Q, events[1]['observation_time_bounds'])
+            self.assertLessEqual(lo, Q(.5)); self.assertGreaterEqual(hi, Q(.5))
             if baseline is not None:
                 self.assertEqual(events, baseline)
             baseline = events
             for t, row in zip(times, rows(result)):
                 assert_close(self, row['dut:z'], t if t<=.25 else 2*t-.25, delta=1e-8)
-                assert_close(self, row['y'], int(t>=.5), delta=1e-8)
+                assert_close(self, row['y'], int(Q(t)>=te), delta=1e-8)
 
     def test_interrupted_edge_keeps_integral_and_nonzero_filter_continuation(self):
         # q changes 0->1 at .25 then 1->0 at .5. The unit-time ramp

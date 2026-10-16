@@ -430,10 +430,13 @@ mod tests {
                 representative: 0.5,
                 observation: I::point(0.5),
                 fired_roots: &[0],
+                mathematical_roots: &[0],
                 prediction_end: 1.,
             },
             &[0],
             false,
+            &[],
+            None,
         )
         .unwrap();
         assert_ne!(candidate.time_proofs, before);

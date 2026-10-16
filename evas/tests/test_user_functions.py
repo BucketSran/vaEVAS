@@ -2,6 +2,7 @@
 GUARDS = ["LANG", "LIN", "CROSS", "COMPOSE", "case:pure_function"]
 
 from pathlib import Path
+from fractions import Fraction as Q
 import unittest
 from evas import CompileError, compile_sources, solve, transient
 from test_affine import KERNEL, instance
@@ -48,7 +49,20 @@ endfunction
 '''
         p = compiled('@(initial_step) n=0; @(cross(guard(V(u,r)),0,1e-9,1e-8)) n=n+1; V(y,r)<+n;',prefix)
         r = transient(p,{'u':[[0,0],[1,1]]},[0,1],stop=1,max_step=1,kernel=KERNEL)
-        self.assertEqual([e['time'] for e in r['transient']['events']],[.25,.75])
+        events = r['transient']['events']
+        self.assertEqual(len(events), 2)
+        for event,root,direction in zip(events,[Q(.25),Q(.75)],[-1,1]):
+            te = Q(event['time'])
+            self.assertGreater(te,root)
+            self.assertLessEqual(te-root,Q(1e-9))
+            guard = (te-Q(.25))*(te-Q(.75))
+            self.assertGreater(direction*guard,0)
+            self.assertLessEqual(abs(guard),Q(1e-8))
+        times = sorted(set([0,.25,.75,1]+[e['time'] for e in events]))
+        observed = transient(p,{'u':[[0,0],[1,1]]},times,stop=1,max_step=1,kernel=KERNEL)
+        self.assertEqual(observed['transient']['events'],events)
+        self.assertEqual(observed['transient']['states'],
+                         [[sum(t>=e['time'] for e in events)] for t in times])
 
     def test_nested_calls_keep_instance_parameter_isolation(self):
         prefix = PREFIX+'''analog function real twice;

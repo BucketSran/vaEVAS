@@ -10,6 +10,7 @@ GUARDS = ["EVENT-ORDER", "EVENT-CONDITIONS"]
 import copy
 from fractions import Fraction as Q
 import json
+import math
 import subprocess
 import unittest
 
@@ -68,15 +69,31 @@ class ConditionalEvents(unittest.TestCase):
             self.assertEqual(states(result), [3,3,0,1.5,1.5,0,1.5])
 
     def test_cross_selects_at_actual_event_time(self):
-        text = source('if (V(u,r)>=0.5) q=2; else q=3;',
-                      trigger='cross(V(u,r)-0.5,1,0.001,0.001)')
-        self.assertEqual(states(execute(text)), [0,2,2])
-        # The exact root is 1/3, where u=1. The representative may be later;
-        # an exact matching-guard certificate still proves u>1 is false at tau.
-        text = source('if (V(u,r)>1) q=2; else q=3;',
-                      trigger='cross(V(u,r)-1,1,0.001,0.001)')
-        result = execute(text, points=[[0,0],[1,3]])
-        self.assertEqual(result['transient']['events'][0]['after'], [3])
+        for threshold, relation, slope in [(.5, '>=', 1), (1, '>', 3)]:
+            text = source(f'if (V(u,r){relation}{threshold}) q=2; else q=3;',
+                          trigger=f'cross(V(u,r)-{threshold},1,0.001,0.001)')
+            points = [[0,0],[1,slope]]
+            result = execute(text, points=points)
+            event = result['transient']['events'][0]
+            te, root = Q(event['time']), Q(threshold)/slope
+            self.assertGreater(te, root)
+            self.assertLessEqual(te-root, Q(.001))
+            sampled = slope*te
+            self.assertGreater(sampled-Q(threshold), 0)
+            self.assertLessEqual(sampled-Q(threshold), Q(.001))
+            expected = 2 if (sampled >= Q(threshold) if relation == '>='
+                             else sampled > Q(threshold)) else 3
+            self.assertEqual(event['after'], [expected])
+            # Original queries stay in the denominator; add pre-root/root and
+            # actual callback observations without fixing the selected te.
+            before = float(root)
+            while Q(before) >= root:
+                before = math.nextafter(before, -math.inf)
+            times = sorted(set([0., .5, 1., before, float(root), event['time']]))
+            observed = execute(text, points=points, times=times)
+            self.assertEqual(states(observed),
+                             [expected if Q(t) >= te else 0 for t in times])
+            self.assertEqual(observed['transient']['events'], result['transient']['events'])
 
     def test_rounded_equality_is_not_a_truth_certificate(self):
         controls = [(.1,.9,'>',True), (.2,.7999999999999999,'>=',False)]
@@ -128,10 +145,31 @@ class ConditionalEvents(unittest.TestCase):
             with self.subTest(rhs=rhs), self.assertRaisesRegex(KernelError, 'unsupported_condition'):
                 execute(text)
 
-    def test_history_dependent_predicate_rejected(self):
+    def test_history_dependent_predicate_observes_unchanged_forcing(self):
         text = source('if (V(z,r)>0) q=2; else q=3;', extra='V(z,r)<+absdelay(V(u,r),0.125);')
+        result = execute(text)
+        # At the two original callbacks, z(t)=u(t-.125)>0.
+        self.assertEqual(states(result), [0,2,2])
+        for event in result['transient']['events']:
+            delayed = max(Q(event['time'])-Q(.125), Q(0))
+            self.assertGreater(delayed, 0)
+            self.assertEqual(event['after'], [2])
+        self.assertEqual(states(execute(text, points=[[0,-1],[1,-1]])), [0,3,3])
+
+    def test_history_predicate_keeps_hidden_callback_and_other_writer_rejections(self):
+        # These are new independent controls; the original history model above
+        # remains unchanged. Structural state reads survive a zero multiplier.
+        feedback = source('if (V(z,r)>0) q=2; else q=3;',
+                          extra='V(z,r)<+absdelay(V(u,r)+0*q,0.125);')
         with self.assertRaisesRegex(KernelError, 'unsupported_condition'):
-            execute(text)
+            execute(feedback)
+        other = source('if (V(z,r)>0) q=2; else q=3;',
+                       extra='@(timer(0.5,0,0.001)) s=1; V(z,r)<+absdelay(V(u,r)+0*s,0.125);')
+        other = other.replace('real q;', 'real q,s;')
+        with self.assertRaises(KernelError) as caught:
+            execute(other)
+        self.assertEqual(caught.exception.detail['kind'], 'unsupported_operator')
+        self.assertIn('absdelay cannot depend on event state', caught.exception.detail['message'])
 
     def test_integer_intermediate_overflow_is_checked_only_on_selected_path(self):
         body = 'if (V(u,r)>0.5) begin q=q+1; q=q-1; end else q=4;'

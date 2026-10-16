@@ -212,6 +212,82 @@ pub(crate) fn dedup_exact_roots(roots: &mut Vec<CertifiedRoot>) {
     });
 }
 
+/// Isolate a consumed history's complete future with the ordinary bounded
+/// isolator. Its subdivision certifies the earliest return prefix even when
+/// the remaining horizon is not monotone; later roots are retained unchanged.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn isolate_consumed_history(
+    start: f64,
+    end: f64,
+    range: &mut impl FnMut(I) -> Result<I, Error>,
+    derivative: &mut impl FnMut(I) -> Result<I, Error>,
+    ttol: f64,
+    etol: f64,
+    directions: (i8, i8),
+) -> Result<Vec<CertifiedRoot>, Error> {
+    let (incoming, requested) = directions;
+    let value = endpoint_value(start, range)?;
+    let operation = (|| {
+        let departed = depart_consumed(start, end, range, derivative, ttol, directions)?;
+        let mut roots = isolate_history(departed, end, range, derivative, requested, ttol, etol)?;
+        if value.sign() == Some(incoming) && root_matches(requested, -incoming) {
+            if let Some(first) = roots.first_mut() {
+                if first.derivative.sign() != Some(-incoming) {
+                    return Err(unresolved(
+                        "first return lacks the opposite transverse direction",
+                    ));
+                }
+                let separation = if first.bounds.lo > start {
+                    first.bounds - I::point(start)
+                } else {
+                    // A positive time offset can be smaller than a global
+                    // binary64 ULP. Retain the MVT separation proof rather than
+                    // requiring its outward-rounded absolute lower bound to
+                    // advance. This changes no root or execution time.
+                    let slope = derivative_bounds(
+                        I {
+                            lo: start,
+                            hi: first.bounds.hi,
+                        },
+                        derivative,
+                    )?;
+                    if slope.sign() != Some(-incoming) {
+                        return Err(unresolved(
+                            "return prefix lacks a transverse separation certificate",
+                        ));
+                    }
+                    -value / slope
+                };
+                if !separation.finite() || separation.lo <= 0. {
+                    return Err(unresolved(&format!(
+                        "first return root window {:?} cannot be separated from accepted execution {start:?}: offset={separation:?}", first.bounds)));
+                }
+                crate::diagnostics::detail(
+                    "callback_return_admission",
+                    "certified",
+                    Some(start),
+                    &serde_json::json!({
+                        "window":[start,end], "post_guard":[value.lo,value.hi],
+                        "first_root":[first.bounds.lo,first.bounds.hi],
+                        "derivative":[first.derivative.lo,first.derivative.hi],
+                        "incoming":incoming,"requested":requested,"separation_offset":[separation.lo,separation.hi],"retained_roots":roots.len()
+                    }),
+                );
+            }
+        }
+        Ok(roots)
+    })();
+    operation.map_err(|mut error: Error| {
+        error.message.push_str(&format!("; consumed-return isolation horizon [{start:?}, {end:?}], post_guard={value:?}, incoming={incoming}, requested={requested}"));
+        error
+    })
+}
+
+fn departure_width(start: f64, end: f64, ttol: f64) -> f64 {
+    ttol.max((end - start) * f64::EPSILON * 8.)
+        .max(start.abs() * f64::EPSILON * 8.)
+}
+
 /// Leave an already executed root without treating its retained uncertainty as
 /// a new crossing. The caller must prove that the event preserves guard value.
 /// A strictly signed derivative alone proves at most one root, not that this
@@ -230,12 +306,10 @@ pub(crate) fn depart_consumed(
         return Err(unresolved("missing consumed cross direction certificate"));
     }
     let value = endpoint_value(start, range)?;
+    let mut width = departure_width(start, end, ttol);
     if matches!(value.sign(), Some(-1 | 1)) {
         return Ok(start);
     }
-    let mut width = ttol
-        .max((end - start) * f64::EPSILON * 8.0)
-        .max(start.abs() * f64::EPSILON * 8.0);
     for _ in 0..MAX_BISECTIONS {
         let next = (start + width).min(end);
         if next <= start {
@@ -432,6 +506,20 @@ fn isolate_box(
 
     let start_value = endpoint_value(start, range)?;
     let end_value = endpoint_value(end, range)?;
+    let slope = derivative_bounds(interval, derivative)?;
+    let slope_sign = slope.sign();
+    // A complete signed starting enclosure and a derivative of the same
+    // strict sign prove that the entire future box stays away from zero.
+    // A wider endpoint history enclosure cannot invalidate that proof.
+    if matches!(slope_sign, Some(-1 | 1)) && start_value.sign() == slope_sign {
+        let propagated = start_value + (I::point(end) - I::point(start)) * slope;
+        if propagated.lo > end_value.hi || propagated.hi < end_value.lo {
+            return Err(unresolved(
+                "dynamic cross endpoint and derivative certificates are inconsistent",
+            ));
+        }
+        return Ok(());
+    }
     let start_sign = strict_sign(
         start_value,
         "cannot determine dynamic cross sign at interval start",
@@ -439,9 +527,16 @@ fn isolate_box(
     let end_sign = strict_sign(
         end_value,
         "cannot determine dynamic cross sign at interval end",
-    )?;
-    let slope = derivative_bounds(interval, derivative)?;
-    let slope_sign = slope.sign();
+    )
+    .map_err(|error| {
+        Error::new(
+            error.kind,
+            format!(
+                "{}: interval [{start:e}, {end:e}], endpoint [{:e}, {:e}]",
+                error.message, end_value.lo, end_value.hi
+            ),
+        )
+    })?;
 
     if start_sign == 0 {
         if end_sign == 0 {
@@ -614,6 +709,71 @@ fn isolate_with_reserve(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn signed_departure_and_monotonicity_exclude_a_spurious_uncertain_endpoint_root() {
+        let start = 1.0_f64;
+        let end = start.next_up();
+        for sign in [-1., 1.] {
+            // g(t)=sign*(1e-15+t-start). The endpoint enclosure is deliberately
+            // loose across zero; its uncertainty is not a second root.
+            let mut range = |t: I| {
+                Ok(if t.lo == start && t.hi == start {
+                    I::point(sign * 1e-15)
+                } else {
+                    I {
+                        lo: -2e-15,
+                        hi: 2e-15,
+                    }
+                })
+            };
+            let mut derivative = |_: I| Ok(I::point(sign));
+            assert!(
+                isolate_history(start, end, &mut range, &mut derivative, 0, 1e-9, 1e-8)
+                    .unwrap()
+                    .is_empty()
+            );
+        }
+        // Opposite start sign does not authorize exclusion: keep a real root.
+        let root = 1e-10;
+        let mut range = |t: I| Ok(t - I::point(root));
+        let mut derivative = |_: I| Ok(I::ONE);
+        let roots =
+            isolate_history(0., 1e-8, &mut range, &mut derivative, 0, 1e-12, 1e-12).unwrap();
+        assert_eq!(roots.len(), 1);
+        assert!(roots[0].bounds.lo <= root && roots[0].bounds.hi >= root);
+        // A positive starting value alone cannot skip the two future roots
+        // of (t-1)^2-1/4: its derivative changes sign inside the box.
+        let mut range = |t: I| Ok(square_shift_range(t, 1., -0.25));
+        let mut derivative = |t: I| {
+            Ok(I {
+                lo: 2. * (t.lo - 1.),
+                hi: 2. * (t.hi - 1.),
+            })
+        };
+        let roots = isolate_history(0., 2., &mut range, &mut derivative, 0, 1e-9, 1e-9).unwrap();
+        assert_eq!(roots.len(), 2);
+        for (root, exact) in roots.iter().zip([0.5, 1.5]) {
+            assert!(root.bounds.lo <= exact && root.bounds.hi >= exact);
+        }
+        // With an unsigned derivative, an uncertain endpoint remains unresolved.
+        let mut range = |_: I| {
+            Ok(I {
+                lo: -2e-15,
+                hi: 2e-15,
+            })
+        };
+        assert!(isolate_history(
+            start,
+            end,
+            &mut range,
+            &mut |_| Ok(I { lo: -1., hi: 1. }),
+            0,
+            1e-9,
+            1e-8
+        )
+        .is_err());
+    }
 
     #[test]
     fn demanded_width_work_limit_and_stall_preserve_the_certificate() {
@@ -834,6 +994,56 @@ mod tests {
         assert_eq!(error.kind, "unsupported_cross");
         // A falling return is not selected by an outward/rising-only guard.
         assert!(depart_consumed(0., 1., &mut range, &mut derivative, 1e-9, (1, 1)).unwrap() > 0.);
+    }
+
+    #[test]
+    fn positive_return_offset_survives_outward_absolute_time_rounding() {
+        let mut range = |t: I| Ok(I::point(1e-16) - (t - I::point(1.)));
+        let mut derivative = |_: I| Ok(-I::ONE);
+        let roots = isolate_consumed_history(
+            1.,
+            1. + 1e-8,
+            &mut range,
+            &mut derivative,
+            1e-9,
+            1e-8,
+            (1, 0),
+        )
+        .unwrap();
+        assert_eq!(roots.len(), 1);
+        assert_eq!(roots[0].bounds.lo, 1.);
+        assert!(roots[0].bounds.hi > 1.);
+        // Absolute lower bounds coincide after rounding, but the MVT offset
+        // remains strictly positive; no root is shifted or merged.
+    }
+
+    #[test]
+    fn separated_return_prefix_retains_later_root_in_nonmonotone_horizon() {
+        let mut range = |t: I| Ok(square_shift_range(t, 1., -0.25));
+        let mut derivative = |t: I| Ok(iv(2. * (t.lo - 1.), 2. * (t.hi - 1.)));
+        let roots =
+            isolate_consumed_history(0., 2., &mut range, &mut derivative, 1e-9, 1e-8, (1, 0))
+                .unwrap();
+        assert_eq!(roots.len(), 2);
+        for (root, expected, direction) in [(roots[0], 0.5, -1), (roots[1], 1.5, 1)] {
+            assert!(root.bounds.lo <= expected && root.bounds.hi >= expected);
+            assert_eq!(root.derivative.sign(), Some(direction));
+        }
+        let mut uncertain = |t: I| Ok(iv(-1e-12, 1e-12) - t);
+        let error = isolate_consumed_history(
+            0.,
+            1.,
+            &mut uncertain,
+            &mut |_| Ok(-I::ONE),
+            1e-9,
+            1e-8,
+            (1, 0),
+        )
+        .unwrap_err();
+        assert_eq!(error.kind, "unsupported_cross");
+        assert!(error.message.contains("incoming=1"));
+        assert!(error.message.contains("horizon [0.0, 1.0]"));
+        assert!(error.message.contains("post_guard"));
     }
 
     #[test]

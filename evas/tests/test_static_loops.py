@@ -2,6 +2,7 @@
 GUARDS = ["LANG", "LIN", "COMPOSE", "TIMER", "CROSS", "EVENT-ORDER", "case:static_loop"]
 
 import unittest
+from fractions import Fraction as Q
 from pathlib import Path
 from evas import CompileError, Instance, KernelError, compile_sources, solve, transient
 from test_affine import KERNEL, instance, model
@@ -45,8 +46,29 @@ class StaticLoops(unittest.TestCase):
           'genvar i; electrical [0:1] bus; integer n[0:1];')
         result=transient(p,{'u':[[0,0],[1,1]]},[0,.25,.5,1],stop=1,max_step=1,kernel=KERNEL)
         self.assertEqual([r['voltages'][p.nodes.index('y')] for r in result['solutions']],[0,1,21,21])
-        self.assertEqual([e['time'] for e in result['transient']['events']],[.25,.5])
-        self.assertTrue(all(len(e['fired_triggers'])==2 for e in result['transient']['events']))
+        events=result['transient']['events']
+        self.assertEqual(len(events),4)
+        for i,root in enumerate([Q(.25),Q(.5)]):
+            timer,cross=events[2*i:2*i+2]
+            self.assertEqual((timer['event'],cross['event']),(i,i))
+            self.assertEqual(timer['time'],float(root))
+            self.assertEqual([f['kind'] for f in timer['fired_triggers']],['timer'])
+            self.assertEqual([f['trigger'] for f in timer['fired_triggers']],[1])
+            self.assertEqual([f['kind'] for f in cross['fired_triggers']],['cross'])
+            self.assertEqual([f['trigger'] for f in cross['fired_triggers']],[0])
+            te=Q(cross['time'])
+            self.assertGreater(te,root)
+            self.assertLessEqual(te-root,Q(1e-12))
+            guard=te-root # bus[i]=u=t
+            self.assertGreater(guard,0)
+            self.assertLessEqual(abs(guard),Q(1e-9))
+            self.assertEqual(cross['fired_triggers'][0]['time_bounds'],[float(root)]*2)
+            before=[0,0] if i==0 else [1,0]
+            after=[1,0] if i==0 else [1,2]
+            self.assertEqual(timer['before'],before)
+            self.assertEqual(timer['after'],after)
+            self.assertEqual(cross['before'],after)
+            self.assertEqual(cross['after'],after)
 
     def test_loop_guard_operators_have_distinct_call_sites(self):
         p=compiled('''@(initial_step) begin n[0]=0; n[1]=0; end

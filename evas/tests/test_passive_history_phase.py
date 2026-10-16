@@ -85,26 +85,50 @@ analog begin @(initial_step) begin due=100;seen=0;count=0;end
 
 class PassiveHistoryPhase(unittest.TestCase):
     def check_flow(self, result, times, nonlinear=True):
+        cross=next(e for e in result['transient']['events']
+                   if e['kind']=='cross' and e['origin'].endswith('(M)'))
+        te=F(cross['time'])
+        self.assertGreater(te,F(1,3))
+        self.assertLessEqual(te-F(1,3),F(1e-9))
+        self.assertGreater(3*te-1,0)
+        self.assertLessEqual(3*te-1,F(1e-9))
+        due=te+F(.1)
         z = result["nodes"].index("z")
         for t, row, states in zip(times, result["solutions"], result["transient"]["states"]):
             expected = math.atan(3*t)/3 if nonlinear else math.expm1(t)
             self.assertLessEqual(abs(row["voltages"][z]-expected), 1e-8)
-            self.assertEqual(states[-1], int(F(t) >= DUE))
-            if F(t) >= DUE:
-                sample = math.atan(3*float(DUE))/3 if nonlinear else math.expm1(float(DUE))
+            self.assertEqual(states[-1], int(F(t) >= due))
+            if F(t) >= due:
+                sample = math.atan(3*float(due))/3 if nonlinear else math.expm1(float(due))
                 self.assertLessEqual(abs(states[-2]-sample), 1e-8)
         self.assertEqual([r["text"] for r in result["transient"]["display_records"]], ["sample 1"])
 
-    def test_nonlinear_observer_neighbours_dense_and_forced(self):
+    def test_readonly_dense_queries_keep_common_values_bitexact(self):
         plain, times = execute("nonlinear-plain")
+        dense, dense_times = execute("nonlinear-dense", dense=True)
         self.check_flow(plain, times)
-        for name, options in [("nonlinear-dense", {"dense": True}),
-                              ("nonlinear-forced", {"forced": True})]:
-            other, other_times = execute(name, **options)
-            self.check_flow(other, other_times)
-            self.assertEqual(plain["transient"]["events"], other["transient"]["events"])
-            for time, row in zip(times, plain["solutions"]):
-                self.assertEqual(row, other["solutions"][other_times.index(time)])
+        self.check_flow(dense, dense_times)
+        self.assertEqual(plain["transient"]["events"], dense["transient"]["events"])
+        for time, row in zip(times, plain["solutions"]):
+            self.assertEqual(row, dense["solutions"][dense_times.index(time)])
+
+    def test_forced_segmentation_keeps_events_and_the_original_math_budget(self):
+        # Strong strobe accepts frames and can split numerical integration.
+        # Its public contract promises the original error budget, not identical
+        # rounding to the readonly-query segmentation (whose test stays above).
+        plain, times = execute("nonlinear-plain")
+        forced, forced_times = execute("nonlinear-forced", forced=True)
+        self.assertEqual(times,forced_times)
+        self.check_flow(plain,times)
+        self.check_flow(forced,forced_times)
+        self.assertEqual(plain["transient"]["events"],forced["transient"]["events"])
+        receipt=forced["strobe_evidence"]
+        self.assertEqual(receipt["times"],forced_times)
+        self.assertEqual(receipt["sample_origins"],["accepted_controller_frame"]*len(forced_times))
+        self.assertEqual(receipt["voltages_V"],[row["voltages"] for row in forced["solutions"]])
+        z=forced["nodes"].index("z")
+        for t,voltages in zip(forced_times,receipt["voltages_V"]):
+            self.assertLessEqual(abs(voltages[z]-math.atan(3*t)/3),1e-8)
 
     def test_autonomous_affine_flow_observer(self):
         result, times = execute("autonomous", nonlinear=False)
@@ -125,10 +149,10 @@ class PassiveHistoryPhase(unittest.TestCase):
                               ("mixed", {"mixed": True}),
                               ("stepbound", {"observer": "$bound_step(0.05);"})]:
             with self.subTest(name=name):
-                with self.assertRaises(KernelError) as caught:
-                    execute(name, **options)
-                self.assertEqual(caught.exception.detail["kind"], "event_resolution")
-                self.assertIn("exact fixed-clock physical anchor", caught.exception.detail["message"])
+                # These original sources do not feed the observer's writes
+                # back into z. Its exact due is now derived from certified te.
+                result,times=execute(name, **options)
+                self.check_flow(result,times)
 
     def test_zero_foreign_physical_state_reference_stays_invalid(self):
         with self.assertRaises(KernelError) as caught:

@@ -17,7 +17,7 @@ pub(crate) struct Budget(pub(crate) usize);
 
 /// An immutable time proved from original affine source arithmetic. Construction
 /// is bounded and must agree with the interval discovery that found the root.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub(crate) struct RootTime(R);
 
 pub(crate) fn enclosure(value: &R) -> Option<I> {
@@ -282,6 +282,58 @@ pub(crate) fn predicate_sign(
     Some(if difference.is_zero() {
         0
     } else if difference.is_positive() {
+        1
+    } else {
+        -1
+    })
+}
+
+/// Compare at a bounded exact rational interior witness. The caller must
+/// separately prove that every predicate is root-free on this open span.
+pub(crate) fn predicate_sign_open(
+    left: &Expression,
+    right: &Expression,
+    nodes: &[usize],
+    sources: &[Option<Curve>],
+    span: I,
+    states: &TimeProofs,
+) -> Option<i8> {
+    if !span.finite() || span.lo >= span.hi {
+        return None;
+    }
+    let mut budget = Budget(0);
+    let lo = binary(span.lo)?;
+    let hi = binary(span.hi)?;
+    let sum = budget.check(lo.clone() + hi.clone())?;
+    let time = budget.check(sum / R::from_integer(2.into()))?;
+    if !(lo < time && time < hi) {
+        return None;
+    }
+    let mut count = 0;
+    let a = evaluate_states(
+        left,
+        nodes,
+        sources,
+        &time,
+        &mut budget,
+        0,
+        &mut count,
+        states,
+    )?;
+    let b = evaluate_states(
+        right,
+        nodes,
+        sources,
+        &time,
+        &mut budget,
+        0,
+        &mut count,
+        states,
+    )?;
+    let value = budget.check(a - b)?;
+    Some(if value.is_zero() {
+        0
+    } else if value.is_positive() {
         1
     } else {
         -1

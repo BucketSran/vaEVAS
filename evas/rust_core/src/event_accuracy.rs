@@ -233,6 +233,26 @@ impl GuardBounds {
             })
     }
 
+    pub(crate) fn source_zero_set_orientation(&self, first: usize, second: usize) -> Option<i8> {
+        if self.state_coefficients[first]
+            .iter()
+            .chain(&self.state_coefficients[second])
+            .any(|v| !v.zero())
+            || !self.same_zero_set(first, second)
+        {
+            return None;
+        }
+        let a = &self.coefficients[first];
+        let b = &self.coefficients[second];
+        let pivot = a.iter().position(|v| !v.zero())?;
+        Some(
+            if a[pivot].lo.is_sign_positive() == b[pivot].lo.is_sign_positive() {
+                1
+            } else {
+                -1
+            },
+        )
+    }
     pub(crate) fn same_zero_set(&self, first: usize, second: usize) -> bool {
         let a = &self.coefficients[first];
         let b = &self.coefficients[second];

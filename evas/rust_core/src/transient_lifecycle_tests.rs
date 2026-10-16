@@ -3,6 +3,18 @@ use super::*;
 use crate::ir::{Program, Tolerances, TransientInputs};
 use serde_json::json;
 
+// Mathematical root identity and callback observation are distinct contracts.
+fn assert_half_root_execution(event: &ScheduledEvent) {
+    assert!(event.bounds().lo <= 0.5 && event.bounds().hi >= 0.5);
+    if event.is_cross() {
+        assert!(event.time > 0.5);
+        assert!(event.time - 0.5 <= 1e-9);
+        assert_eq!(event.observation_bounds(), I::point(event.time));
+    } else {
+        assert_eq!(event.time, 0.5);
+    }
+}
+
 fn relocalization_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
     let origin = json!({"source":"relocalization.va","line":1,"column":1,"instance":"dut"});
     let program: Program = serde_json::from_value(json!({
@@ -242,7 +254,7 @@ fn failed_new_timer_flow_horizon_rolls_back_then_corrected_retry_matches_clean()
         serde_json::to_value(records).unwrap()
     );
     assert_eq!(end, 1);
-    assert_eq!(calendar[0].time, 0.5);
+    assert_half_root_execution(&calendar[0]);
     let bound = controller.accepted.operators.bounds(0.5).unwrap()[0];
     assert!(bound.lo <= 2. && bound.hi >= 2.);
 }
@@ -315,8 +327,8 @@ fn check_failed_future_guard_ordering(
             .collect::<Vec<_>>()
     );
     assert_eq!(calendar.len(), 2);
-    assert_eq!(calendar[0].time, 0.5);
-    assert_eq!(calendar[1].time, 0.5);
+    assert_half_root_execution(&calendar[0]);
+    assert_half_root_execution(&calendar[1]);
 }
 
 #[test]
@@ -371,7 +383,7 @@ fn held_polynomial_jump_rejects_without_consuming_calendar_then_retries() {
     assert_eq!(controller.accepted.states, vec![0.5]);
     assert_eq!(controller.records.len(), 1);
     assert_eq!(calendar.len(), 2);
-    assert_eq!(calendar[0].time, 0.5);
+    assert_half_root_execution(&calendar[0]);
     assert!(
         calendar[1].bounds().lo <= 2f64.sqrt() / 2. && calendar[1].bounds().hi >= 2f64.sqrt() / 2.
     );
@@ -462,6 +474,11 @@ fn failed_reset_closure_and_discard_leave_calendar_records_and_queue_unchanged()
     )
     .unwrap();
     assert_eq!(candidate.states, vec![1., 1.]);
+    // A changed reset map must never acquire the preceding physical root's
+    // immutable certificate, even if it is presented as a retention candidate.
+    let mut reset_candidate = candidate.operators.clone();
+    assert!(!reset_candidate.retain_unchanged_physical_certificate(&controller.accepted.operators));
+
     assert_eq!(candidate.operators.next_breakpoint(0.5), Some(0.625));
     assert_eq!(records.len(), 1);
     drop(candidate);
@@ -790,7 +807,7 @@ fn history_calendar_failure_preserves_frame_and_retry_matches_clean() {
             .map(|e| (e.time, e.event, e.bounds()))
             .collect::<Vec<_>>()
     );
-    assert_eq!(calendar[0].time, 0.5);
+    assert_half_root_execution(&calendar[0]);
 }
 
 #[test]
@@ -1060,6 +1077,8 @@ fn later_microevent_failure_rolls_back_entire_sequence_and_same_controller_retry
     controller
         .accept_history_events(&bad, &trajectory, &mut calendar)
         .unwrap();
+    // Local execution preserves the hidden roots inside this next timer
+    // transaction; its later failure must roll back the whole transaction.
     let before = controller.accepted.clone();
     let records = serde_json::to_value(&controller.records).unwrap();
     let original: Vec<_> = calendar
@@ -1070,7 +1089,7 @@ fn later_microevent_failure_rolls_back_entire_sequence_and_same_controller_retry
         let error = controller
             .accept_history_events(&bad, &trajectory, &mut calendar)
             .unwrap_err();
-        assert_eq!(error.kind, "singular_system");
+        assert_eq!(error.kind, "singular_system", "{:?}", error);
         // The first microevent is valid. Only the later event introduces the
         // amplified joint voltage/state equation and fails its uniqueness gate.
         assert_eq!(controller.accepted.time, before.time);
@@ -1156,7 +1175,12 @@ fn local_event_permission_rejects_missing_distinct_and_stale_physical_certificat
             &calendar[end..],
         )
         .unwrap();
-    let event_acceptance::CalendarPlan::History { pending, consumed } = plan else {
+    let event_acceptance::CalendarPlan::History {
+        pending,
+        consumed,
+        retained_history,
+    } = plan
+    else {
         panic!("history plan required")
     };
     let future = history_epoch(
@@ -1169,6 +1193,7 @@ fn local_event_permission_rejects_missing_distinct_and_stale_physical_certificat
             until: trajectory.config.stop,
             consumed: &consumed,
             pending: &pending,
+            retained_history: &retained_history,
         },
     )
     .unwrap();
@@ -1260,6 +1285,8 @@ fn later_same_time_writer_conflict_rolls_back_whole_sequence_and_same_controller
     controller
         .accept_history_events(&bad, &trajectory, &mut calendar)
         .unwrap();
+    // Local execution preserves the hidden roots inside this next timer
+    // transaction; its later failure must roll back the whole transaction.
     let before = controller.accepted.clone();
     let records = serde_json::to_value(&controller.records).unwrap();
     let original: Vec<_> = calendar
@@ -1270,7 +1297,7 @@ fn later_same_time_writer_conflict_rolls_back_whole_sequence_and_same_controller
         let error = controller
             .accept_history_events(&bad, &trajectory, &mut calendar)
             .unwrap_err();
-        assert_eq!(error.kind, "event_conflict");
+        assert_eq!(error.kind, "event_conflict", "{:?}", error);
         // The first hidden-root microevent is valid. Two distinct event
         // blocks at the later physical root select the same writer state.
         assert_eq!(controller.accepted.time, before.time);
@@ -1531,15 +1558,33 @@ fn raw_pwl_roots_mixed_timer_held_epoch_failure_rolls_back_then_same_controller_
     };
     assert_eq!(
         calendar.iter().map(|e| e.event).collect::<Vec<_>>(),
-        [0, 1, 2, 3]
+        [1, 0, 2, 3]
     );
     // Exact answers follow original binary64 knots .1/.9, not rounded guard ends:
     // (.5-.1)/(.9-.1) < .5; the second source root is after the fixed timer.
-    assert_eq!(calendar[0].physical_order_at(0.5), Some(Ordering::Less));
+    let first = calendar.iter().find(|e| e.event == 0).unwrap();
+    let second = calendar.iter().find(|e| e.event == 2).unwrap();
     assert_eq!(
-        calendar[2].physical_order_at(0.5000000000000001),
-        Some(Ordering::Greater)
+        crate::schedule::common_root(std::slice::from_ref(first))
+            .unwrap()
+            .order(&crate::exact_source::RootTime::point(0.5).unwrap()),
+        Ordering::Less
     );
+    assert_eq!(
+        crate::schedule::common_root(std::slice::from_ref(second))
+            .unwrap()
+            .order(&crate::exact_source::RootTime::point(0.5000000000000001).unwrap()),
+        Ordering::Greater
+    );
+    // The timer's tau is before the certified callback te of source 0.
+    // Commit that legal prefix before testing the later rejected transaction.
+    assert!(calendar[0].time < first.time);
+    controller
+        .accept_relocalized(&model, &trajectory, &mut calendar)
+        .unwrap();
+    assert_eq!(calendar[0].event, 0);
+    assert_eq!(controller.records.len(), 1);
+    assert_eq!(controller.records[0].event, 1);
     let before = controller.accepted.clone();
     let original_calendar = signature(&calendar);
     let original_records = serde_json::to_value(&controller.records).unwrap();
@@ -1561,34 +1606,48 @@ fn raw_pwl_roots_mixed_timer_held_epoch_failure_rolls_back_then_same_controller_
             &calendar[controller.event..end],
         )
         .unwrap();
+    assert_eq!(future.iter().map(|e| e.event).collect::<Vec<_>>(), [2, 3]);
+    assert_eq!(future[1].time, 0.75);
+    assert_eq!(signature(&future[..1]), signature(&calendar[1..2]));
     assert_eq!(
-        future.iter().map(|e| e.event).collect::<Vec<_>>(),
-        [1, 2, 3]
-    );
-    assert_eq!(future[2].time, 0.75);
-    assert_eq!(signature(&future[..2]), signature(&calendar[1..3]));
-    assert_eq!(
-        future[1].physical_order_at(0.5000000000000001),
+        future[0].physical_order_at(0.5000000000000001),
         Some(Ordering::Greater)
     );
-    assert_eq!(next.states, [0.75, 1., 0., 0., 0.]);
+    assert_eq!(next.states, [0.75, 1., 1., 0., 0.]);
 
     let mut bad_program = model.program.clone();
-    // Failure injection changes only the proposed held start. Its affine
-    // sampling enclosure straddles the already-near future roots. It must not
-    // acquire an arbitrary event priority or consume this first source cross.
+    // z=idt(1)=t is exactly sampled as a point by itself. Keep two binary64
+    // products separate: (1/3)*z+(2/3)*z has a nonpoint arithmetic enclosure
+    // crossing te and no original-source time identity. Its exact binary64
+    // coefficient sum is slightly below one, not an algebraic q=te identity.
+    // The held start therefore cannot invent a priority at this boundary.
+    // The original (u+1)/3 failure injection is preserved in the task archive;
+    // a point te sample no longer has its old root-window uncertainty.
     bad_program.events[0].body[0] = serde_json::from_value(json!({"kind":"assign","state":0,
-        "rhs":{"op":"affine","constant":1./3.,"terms":[{"node":1,"coefficient":1./3.}]}}))
+        "rhs":{"op":"add",
+            "left":{"op":"multiply","left":{"op":"affine","constant":1./3.,"terms":[]},
+                "right":{"op":"affine","constant":0.,"terms":[{"node":3,"coefficient":1.}]}},
+            "right":{"op":"multiply","left":{"op":"affine","constant":2./3.,"terms":[]},
+                "right":{"op":"affine","constant":0.,"terms":[{"node":3,"coefficient":1.}]}}}}))
     .unwrap();
     let bad = EventModel::new(bad_program, model.driven.clone(), model.tolerances.clone()).unwrap();
+    let (sample, _, _) = controller
+        .prepare_events_until(&bad, &trajectory, &calendar, Some(calendar[0].time))
+        .unwrap();
+    assert!(sample.state_bounds[0].lo < sample.state_bounds[0].hi);
+    assert!(sample.state_bounds[0].lo <= sample.time && sample.time <= sample.state_bounds[0].hi);
+    assert!(!sample.time_proofs.contains_key(&0));
+    use num_rational::BigRational as R;
+    let scale = R::from_float(1. / 3.).unwrap() + R::from_float(2. / 3.).unwrap();
+    assert!(scale < R::from_integer(1.into()));
+    let exact = scale * R::from_float(sample.time).unwrap();
+    assert!(R::from_float(sample.state_bounds[0].lo).unwrap() <= exact);
+    assert!(exact <= R::from_float(sample.state_bounds[0].hi).unwrap());
+    drop(sample);
     for _ in 0..2 {
         let error = controller
             .accept_relocalized(&bad, &trajectory, &mut calendar)
             .unwrap_err();
-        eprintln!(
-            "raw-source held epoch failure injection: {}: {}",
-            error.kind, error.message
-        );
         assert_eq!(error.kind, "event_resolution");
         assert!(
             error
@@ -1612,6 +1671,10 @@ fn raw_pwl_roots_mixed_timer_held_epoch_failure_rolls_back_then_same_controller_
 
     let (clean_model, clean_trajectory, mut clean, mut clean_calendar) =
         raw_source_held_epoch_fixture();
+    clean
+        .accept_relocalized(&clean_model, &clean_trajectory, &mut clean_calendar)
+        .unwrap();
+    assert_raw_source_frame_same(&controller.accepted, &clean.accepted);
     while !calendar.is_empty() {
         controller
             .accept_relocalized(&model, &trajectory, &mut calendar)
@@ -1639,7 +1702,7 @@ fn raw_pwl_roots_mixed_timer_held_epoch_failure_rolls_back_then_same_controller_
             .iter()
             .map(|record| record.event)
             .collect::<Vec<_>>(),
-        [0, 1, 2, 3]
+        [1, 0, 2, 3]
     );
     assert_eq!(controller.records.last().unwrap().time, 0.75);
     assert_eq!(controller.accepted.solution.voltages[2], 4.);
@@ -1648,7 +1711,23 @@ fn raw_pwl_roots_mixed_timer_held_epoch_failure_rolls_back_then_same_controller_
 #[test]
 fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_retries() {
     let (model, trajectory, mut controller, mut calendar) = raw_source_held_epoch_fixture_at(0.5);
+    // Distinct execution instants are separate transactions. Preserve both
+    // legal prefix events before injecting failure at the second source te.
+    while calendar[0].event != 2 {
+        controller
+            .accept_relocalized(&model, &trajectory, &mut calendar)
+            .unwrap();
+    }
+    assert_eq!(
+        controller
+            .records
+            .iter()
+            .map(|r| r.event)
+            .collect::<Vec<_>>(),
+        [1, 0]
+    );
     let before = controller.accepted.clone();
+    let original_records = serde_json::to_value(&controller.records).unwrap();
     let signature = |events: &[ScheduledEvent]| {
         events
             .iter()
@@ -1658,9 +1737,9 @@ fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_r
     let original_calendar = signature(&calendar);
     let original_outputs = controller.outputs.clone();
     let mut bad_program = model.program.clone();
-    // Fail during the second source root, after the first root and intervening
-    // timer have succeeded inside the candidate transaction. The uncertain
-    // held start touches the accepted boundary and cannot choose a priority.
+    // Fail at the second source execution after the first cross and timer
+    // have formed an accepted prefix. The uncertain held start touches this
+    // candidate boundary and still cannot choose an arbitrary priority.
     bad_program.events[2].body.push(
         serde_json::from_value(json!({"kind":"assign","state":0,
             "rhs":{"op":"affine","constant":-1.,
@@ -1678,7 +1757,10 @@ fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_r
             .contains("dynamic timer window overlaps the accepted boundary"));
         assert_raw_source_frame_same(&controller.accepted, &before);
         assert_eq!(signature(&calendar), original_calendar);
-        assert!(controller.records.is_empty());
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            original_records
+        );
         assert_eq!(controller.event, 0);
         assert_eq!(controller.outputs.len(), original_outputs.len());
         for (actual, expected) in controller.outputs.iter().zip(&original_outputs) {
@@ -1687,6 +1769,12 @@ fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_r
     }
     let (clean_model, clean_trajectory, mut clean, mut clean_calendar) =
         raw_source_held_epoch_fixture_at(0.5);
+    while clean_calendar[0].event != 2 {
+        clean
+            .accept_relocalized(&clean_model, &clean_trajectory, &mut clean_calendar)
+            .unwrap();
+    }
+    assert_raw_source_frame_same(&controller.accepted, &clean.accepted);
     while !calendar.is_empty() {
         controller
             .accept_relocalized(&model, &trajectory, &mut calendar)
@@ -1713,6 +1801,597 @@ fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_r
             .iter()
             .map(|r| r.event)
             .collect::<Vec<_>>(),
-        [0, 1, 2, 3]
+        [1, 0, 2, 3]
     );
+}
+
+#[test]
+fn distinct_or_roots_at_one_execution_point_preserve_logical_multiplicity() {
+    let (base, trajectory, _, _) = delayed_timer_root_fixture(1e-18);
+    let make_program = |second: f64| {
+        let mut data = serde_json::to_value(&base.program).unwrap();
+        data["states"]
+            .as_array_mut()
+            .unwrap()
+            .push(json!({"instance":"dut","name":"calls","kind":"integer","initial":0}));
+        let first = data["events"][1]["trigger"].clone();
+        let mut later = first.clone();
+        later["guard"]["constant"] = json!(-second);
+        data["events"][1]["trigger"] = json!({"kind":"or","triggers":[first,later]});
+        data["events"][1]["body"] = json!([{"kind":"assign","state":2,"rhs":{"op":"add","left":{"op":"state","state":2},"right":{"op":"affine","constant":1,"terms":[]}}}]);
+        data
+    };
+    // Independent source roots at .2+1e-18 and .2+3e-18 have distinct exact
+    // identities but the same certified binary64 execution point. The calendar
+    // must reject that unsupported same-body multiplicity before committing.
+    let mut source = make_program(3e-18);
+    source["operators"] = json!([]);
+    for contribution in source["contributions"].as_array_mut().unwrap() {
+        contribution["rhs"] = json!({"op":"affine","constant":0,"terms":[]});
+    }
+    let guard = |offset: f64| json!({"op":"add","left":{"op":"affine","constant":-0.2,"terms":[{"node":1,"coefficient":1}]},"right":{"op":"affine","constant":-offset,"terms":[]}});
+    source["events"][1]["trigger"]["triggers"][0]["guard"] = guard(1e-18);
+    source["events"][1]["trigger"]["triggers"][1]["guard"] = guard(3e-18);
+    let source = EventModel::new(
+        serde_json::from_value(source).unwrap(),
+        base.driven.clone(),
+        base.tolerances.clone(),
+    )
+    .unwrap();
+    for _ in 0..2 {
+        let error = independent_schedule(&source, &trajectory)
+            .err()
+            .expect("two distinct callbacks cannot be silently merged");
+        assert_eq!(error.kind, "event_resolution");
+        assert!(
+            error.message.contains("logical multiplicity"),
+            "{:?}",
+            error
+        );
+    }
+    // The local epoch can represent distinct execution instants even when their
+    // global representations overlap. Both local OR occurrences must execute.
+    for second in [3e-18, 1e-6] {
+        let model = EventModel::new(
+            serde_json::from_value(make_program(second)).unwrap(),
+            base.driven.clone(),
+            base.tolerances.clone(),
+        )
+        .unwrap();
+        let states = model.initial();
+        let (operators, mut calendar) =
+            history_calendar::initialize(&model, &trajectory, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.).unwrap())
+            .unwrap();
+        let mut controller = Controller {
+            accepted: Frame {
+                time_proofs: Default::default(),
+                time: 0.,
+                state_bounds: states.iter().copied().map(I::point).collect(),
+                solution: circuit.solve(&trajectory.values(0.)).unwrap(),
+                states,
+                circuit,
+                operators,
+            },
+            event: 0,
+            records: vec![],
+            outputs: vec![],
+        };
+        while !calendar.is_empty() {
+            controller
+                .accept_history_events(&model, &trajectory, &mut calendar)
+                .unwrap();
+        }
+        assert_eq!(controller.accepted.states[2], 2.);
+        let callbacks: Vec<_> = controller.records.iter().filter(|r| r.event == 1).collect();
+        assert_eq!(callbacks.len(), 2);
+        assert!(callbacks[0].time < callbacks[1].time);
+    }
+}
+
+#[test]
+fn issue70_certified_return_late_failure_and_same_controller_retry() {
+    fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+        let request: serde_json::Value =
+            serde_json::from_str(include_str!("issue70_self_request.json")).unwrap();
+        let model = EventModel::new(
+            serde_json::from_value(request["program"].clone()).unwrap(),
+            serde_json::from_value(request["driven"].clone()).unwrap(),
+            serde_json::from_value(request["tolerances"].clone()).unwrap(),
+        )
+        .unwrap();
+        let mut config: TransientInputs =
+            serde_json::from_value(request["transient"].clone()).unwrap();
+        config.output_times.insert(2, 0.50000000001); // Actual retained pre-return phase query.
+        let trajectory = Trajectory::new(config, model.driven.len()).unwrap();
+        let prepared = initialization::prepare(&model, &trajectory).unwrap();
+        let states = prepared
+            .as_ref()
+            .map_or_else(|| model.initial(), |p| p.states.clone());
+        let state_bounds = prepared.map_or_else(
+            || states.iter().copied().map(I::point).collect(),
+            |p| p.bounds,
+        );
+        let (operators, calendar) =
+            history_calendar::initialize(&model, &trajectory, &states).unwrap();
+        let circuit = model
+            .circuit_at(
+                &states,
+                &operators.values(0.).unwrap(),
+                &trajectory.value_bounds(0.),
+            )
+            .unwrap();
+        let accepted = Frame {
+            time_proofs: Default::default(),
+            time: 0.,
+            solution: circuit.solve(&trajectory.values(0.)).unwrap(),
+            state_bounds,
+            states,
+            circuit,
+            operators,
+        };
+        (
+            model,
+            trajectory,
+            Controller {
+                accepted,
+                event: 0,
+                records: vec![],
+                outputs: vec![],
+            },
+            calendar,
+        )
+    }
+    fn calendar_identity(calendar: &[ScheduledEvent]) -> Vec<(f64, usize, I)> {
+        calendar
+            .iter()
+            .map(|e| (e.time, e.event, e.bounds()))
+            .collect()
+    }
+    let (model, trajectory, mut controller, mut calendar) = fixture();
+    let (clean_model, clean_trajectory, mut clean, mut clean_calendar) = fixture();
+    while controller.records.len() < 2 {
+        controller
+            .accept_history_events(&model, &trajectory, &mut calendar)
+            .unwrap();
+        clean
+            .accept_history_events(&clean_model, &clean_trajectory, &mut clean_calendar)
+            .unwrap();
+    }
+    assert!(controller.records.len() >= 2);
+    assert!(!calendar.is_empty());
+    let time = controller.accepted.time;
+    let cursor = controller.event;
+    let states = controller.accepted.states.clone();
+    let bounds = controller.accepted.state_bounds.clone();
+    let solution = controller.accepted.solution.voltages.clone();
+    let history = controller.accepted.operators.clone();
+    let records = serde_json::to_value(&controller.records).unwrap();
+    let calendar_before = calendar_identity(&calendar);
+    let outputs = controller
+        .outputs
+        .iter()
+        .map(|f| (f.time, f.states.clone(), f.solution.voltages.clone()))
+        .collect::<Vec<_>>();
+    assert!(
+        !outputs.is_empty(),
+        "rollback must include actual retained phase outputs"
+    );
+    println!(
+        "accepted feedback prefix: {} records, {} outputs, time {:?}",
+        controller.records.len(),
+        outputs.len(),
+        time
+    );
+    let bad = EventModel::new(
+        model.program.clone(),
+        model.driven.clone(),
+        Tolerances {
+            absolute: 1e-30,
+            relative: 0.,
+        },
+    )
+    .unwrap();
+    for _ in 0..2 {
+        let error = controller
+            .accept_history_events(&bad, &trajectory, &mut calendar)
+            .unwrap_err();
+        println!("late rejection: {:?}", error);
+        assert_eq!(error.kind, "waveform_accuracy", "{:?}", error);
+        assert_eq!(controller.event, cursor);
+        assert_eq!(controller.accepted.time, time);
+        assert_eq!(controller.accepted.states, states);
+        assert_eq!(controller.accepted.state_bounds, bounds);
+        assert_eq!(controller.accepted.solution.voltages, solution);
+        assert!(controller.accepted.operators.same_reset_history(&history));
+        assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
+        assert_eq!(calendar_identity(&calendar), calendar_before);
+        assert_eq!(
+            controller
+                .outputs
+                .iter()
+                .map(|f| (f.time, f.states.clone(), f.solution.voltages.clone()))
+                .collect::<Vec<_>>(),
+            outputs
+        );
+    }
+    for _ in 0..3 {
+        controller
+            .accept_history_events(&model, &trajectory, &mut calendar)
+            .unwrap();
+        clean
+            .accept_history_events(&clean_model, &clean_trajectory, &mut clean_calendar)
+            .unwrap();
+        assert_eq!(controller.accepted.time, clean.accepted.time);
+        assert_eq!(controller.accepted.states, clean.accepted.states);
+        assert_eq!(
+            controller.accepted.state_bounds,
+            clean.accepted.state_bounds
+        );
+        assert_eq!(
+            controller.accepted.solution.voltages,
+            clean.accepted.solution.voltages
+        );
+        assert!(controller
+            .accepted
+            .operators
+            .same_reset_history(&clean.accepted.operators));
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            serde_json::to_value(&clean.records).unwrap()
+        );
+        assert_eq!(
+            calendar_identity(&calendar),
+            calendar_identity(&clean_calendar)
+        );
+        assert_eq!(
+            controller
+                .outputs
+                .iter()
+                .map(|f| (f.time, f.states.clone(), f.solution.voltages.clone()))
+                .collect::<Vec<_>>(),
+            clean
+                .outputs
+                .iter()
+                .map(|f| (f.time, f.states.clone(), f.solution.voltages.clone()))
+                .collect::<Vec<_>>()
+        );
+    }
+}
+
+#[test]
+fn issue70_return_isolator_failure_retries_same_controller_after_feedback_prefix() {
+    use num_rational::BigRational as R;
+    use num_traits::{ToPrimitive, Zero};
+    fn fixture(
+        request: &str,
+        query: f64,
+    ) -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+        let request: serde_json::Value = serde_json::from_str(request).unwrap();
+        let model = EventModel::new(
+            serde_json::from_value(request["program"].clone()).unwrap(),
+            serde_json::from_value(request["driven"].clone()).unwrap(),
+            serde_json::from_value(request["tolerances"].clone()).unwrap(),
+        )
+        .unwrap();
+        let mut config: TransientInputs =
+            serde_json::from_value(request["transient"].clone()).unwrap();
+        config.output_times.insert(2, query); // Actual retained pre-return phase query.
+        let trajectory = Trajectory::new(config, model.driven.len()).unwrap();
+        let prepared = initialization::prepare(&model, &trajectory).unwrap();
+        let states = prepared
+            .as_ref()
+            .map_or_else(|| model.initial(), |p| p.states.clone());
+        let state_bounds = prepared.map_or_else(
+            || states.iter().copied().map(I::point).collect(),
+            |p| p.bounds,
+        );
+        let (operators, calendar) =
+            history_calendar::initialize(&model, &trajectory, &states).unwrap();
+        let circuit = model
+            .circuit_at(
+                &states,
+                &operators.values(0.).unwrap(),
+                &trajectory.value_bounds(0.),
+            )
+            .unwrap();
+        let accepted = Frame {
+            time_proofs: Default::default(),
+            time: 0.,
+            solution: circuit.solve(&trajectory.values(0.)).unwrap(),
+            state_bounds,
+            states,
+            circuit,
+            operators,
+        };
+        (
+            model,
+            trajectory,
+            Controller {
+                accepted,
+                event: 0,
+                records: vec![],
+                outputs: vec![],
+            },
+            calendar,
+        )
+    }
+    fn calendar_identity(calendar: &[ScheduledEvent]) -> Vec<(f64, usize, I)> {
+        calendar
+            .iter()
+            .map(|e| (e.time, e.event, e.bounds()))
+            .collect()
+    }
+
+    for (request, query) in [
+        (
+            include_str!("issue70_self_plus1_original.json"),
+            0.50000000001,
+        ),
+        (
+            include_str!("issue70_self_minus1_original.json"),
+            0.50000000001,
+        ),
+        (
+            include_str!("issue70_self_plus3_original.json"),
+            0.16666666667,
+        ),
+        (
+            include_str!("issue70_self_minus3_original.json"),
+            0.16666666667,
+        ),
+    ] {
+        let (model, trajectory, mut controller, mut calendar) = fixture(request, query);
+        let (clean_model, clean_trajectory, mut clean, mut clean_calendar) =
+            fixture(request, query);
+        let initial_float = controller.accepted.states[0];
+        while controller.records.len() < 2 {
+            controller
+                .accept_history_events(&model, &trajectory, &mut calendar)
+                .unwrap();
+            clean
+                .accept_history_events(&clean_model, &clean_trajectory, &mut clean_calendar)
+                .unwrap();
+        }
+        assert_eq!(controller.records.len(), 2);
+        let q = |t: f64| R::from_float(t).unwrap();
+        let mut z = R::zero();
+        let mut t = R::zero();
+        let mut slope = q(initial_float);
+        for record in &controller.records {
+            z += &slope * (q(record.time) - &t);
+            t = q(record.time);
+            slope = -slope;
+        }
+        let next = q(calendar[0].time);
+        z += &slope * (&next - &t);
+        slope = -slope;
+        let first_return = &next
+            + (R::new(
+                if initial_float > 0. {
+                    1.into()
+                } else {
+                    (-1).into()
+                },
+                2.into(),
+            ) - &z)
+                / &slope;
+        let bad_stop = first_return.to_f64().unwrap();
+        assert!(bad_stop > calendar[0].time);
+        let mut config = trajectory.config.clone();
+        config.stop = bad_stop;
+        config.output_times.retain(|&u| u < bad_stop);
+        config.output_times.push(bad_stop);
+        let bad_trajectory = Trajectory::new(config, model.driven.len()).unwrap();
+        let accepted = controller.accepted.clone();
+        let cursor = controller.event;
+        let records = serde_json::to_value(&controller.records).unwrap();
+        let before_calendar = calendar_identity(&calendar);
+        let outputs = controller
+            .outputs
+            .iter()
+            .map(|f| (f.time, f.states.clone(), f.solution.voltages.clone()))
+            .collect::<Vec<_>>();
+        assert!(!outputs.is_empty());
+        println!("accepted prefix {} events; next execution {:?}; independently integrated return={:?}; failing stop={:?}",controller.records.len(),calendar[0].time,first_return,bad_stop);
+        for _ in 0..2 {
+            let error = controller
+                .accept_history_events(&model, &bad_trajectory, &mut calendar)
+                .unwrap_err();
+            println!("return isolation rejection: {:?}", error);
+            assert_eq!(error.kind, "event_resolution", "{:?}", error);
+            assert!(
+                error.message.contains("consumed-return isolation horizon"),
+                "{:?}",
+                error
+            );
+            assert!(error.message.contains("interval end"), "{:?}", error);
+            assert!(error.message.contains("incoming=1"));
+            assert!(error.message.contains("requested=0"));
+            assert!(error.message.contains("cross "));
+            assert!(error.message.contains("mathematical_root_bounds="));
+            assert!(error.message.contains("observation_bounds="));
+            assert!(error.message.contains("actual callback time="));
+            assert_eq!(controller.event, cursor);
+            assert_eq!(controller.accepted.time, accepted.time);
+            assert_eq!(controller.accepted.states, accepted.states);
+            assert_eq!(controller.accepted.state_bounds, accepted.state_bounds);
+            assert_eq!(
+                controller.accepted.solution.voltages,
+                accepted.solution.voltages
+            );
+            assert!(controller
+                .accepted
+                .operators
+                .same_reset_history(&accepted.operators));
+            assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
+            assert_eq!(calendar_identity(&calendar), before_calendar);
+            assert_eq!(
+                controller
+                    .outputs
+                    .iter()
+                    .map(|f| (f.time, f.states.clone(), f.solution.voltages.clone()))
+                    .collect::<Vec<_>>(),
+                outputs
+            );
+        }
+        for _ in 0..3 {
+            controller
+                .accept_history_events(&model, &trajectory, &mut calendar)
+                .unwrap();
+            clean
+                .accept_history_events(&clean_model, &clean_trajectory, &mut clean_calendar)
+                .unwrap();
+            assert_eq!(controller.accepted.time, clean.accepted.time);
+            assert_eq!(controller.accepted.states, clean.accepted.states);
+            assert_eq!(
+                controller.accepted.state_bounds,
+                clean.accepted.state_bounds
+            );
+            assert_eq!(
+                controller.accepted.solution.voltages,
+                clean.accepted.solution.voltages
+            );
+            assert!(controller
+                .accepted
+                .operators
+                .same_reset_history(&clean.accepted.operators));
+            assert_eq!(
+                serde_json::to_value(&controller.records).unwrap(),
+                serde_json::to_value(&clean.records).unwrap()
+            );
+            assert_eq!(
+                calendar_identity(&calendar),
+                calendar_identity(&clean_calendar)
+            );
+            assert_eq!(
+                controller
+                    .outputs
+                    .iter()
+                    .map(|f| (f.time, f.states.clone(), f.solution.voltages.clone()))
+                    .collect::<Vec<_>>(),
+                clean
+                    .outputs
+                    .iter()
+                    .map(|f| (f.time, f.states.clone(), f.solution.voltages.clone()))
+                    .collect::<Vec<_>>()
+            );
+        }
+    }
+}
+
+#[test]
+fn issue70_nonmonotone_remaining_horizon_accepts_two_feedback_events_each_direction() {
+    use num_rational::BigRational as R;
+    use num_traits::{Signed, ToPrimitive, Zero};
+    fn fixture(request: &str) -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+        let request: serde_json::Value = serde_json::from_str(request).unwrap();
+        let model = EventModel::new(
+            serde_json::from_value(request["program"].clone()).unwrap(),
+            serde_json::from_value(request["driven"].clone()).unwrap(),
+            serde_json::from_value(request["tolerances"].clone()).unwrap(),
+        )
+        .unwrap();
+        let mut config: TransientInputs =
+            serde_json::from_value(request["transient"].clone()).unwrap();
+        config.stop = 3.;
+        config.output_times = vec![0., 3.];
+        for wave in &mut config.pwl {
+            let value = wave.last().unwrap()[1];
+            wave.push([3., value]);
+        }
+        let trajectory = Trajectory::new(config, model.driven.len()).unwrap();
+        let prepared = initialization::prepare(&model, &trajectory).unwrap();
+        let states = prepared
+            .as_ref()
+            .map_or_else(|| model.initial(), |p| p.states.clone());
+        let state_bounds = prepared.map_or_else(
+            || states.iter().copied().map(I::point).collect(),
+            |p| p.bounds,
+        );
+        let (operators, calendar) =
+            history_calendar::initialize(&model, &trajectory, &states).unwrap();
+        let circuit = model
+            .circuit_at(
+                &states,
+                &operators.values(0.).unwrap(),
+                &trajectory.value_bounds(0.),
+            )
+            .unwrap();
+        let accepted = Frame {
+            time_proofs: Default::default(),
+            time: 0.,
+            solution: circuit.solve(&trajectory.values(0.)).unwrap(),
+            state_bounds,
+            states,
+            circuit,
+            operators,
+        };
+        (
+            model,
+            trajectory,
+            Controller {
+                accepted,
+                event: 0,
+                records: vec![],
+                outputs: vec![],
+            },
+            calendar,
+        )
+    }
+
+    for (request, speed) in [
+        (include_str!("issue70_self_plus1_original.json"), 1.),
+        (include_str!("issue70_self_minus1_original.json"), -1.),
+        (include_str!("issue70_self_plus3_original.json"), 3.),
+        (include_str!("issue70_self_minus3_original.json"), -3.),
+    ] {
+        let (model, trajectory, mut controller, mut calendar) = fixture(request);
+        let q = |t: f64| R::from_float(t).unwrap();
+        let mut t = R::zero();
+        let mut z = R::zero();
+        let mut slope = q(speed);
+        for n in 1..=2 {
+            let mut candidates = [R::new((-1).into(), 2.into()), R::new(1.into(), 2.into())]
+                .into_iter()
+                .map(|a| &t + (a - &z) / &slope)
+                .filter(|r| r > &t)
+                .collect::<Vec<_>>();
+            candidates.sort();
+            let root = candidates[0].clone();
+            controller
+                .accept_history_events(&model, &trajectory, &mut calendar)
+                .unwrap();
+            let e = q(controller.accepted.time);
+            assert!(e > root && &e - &root <= q(1e-9));
+            z += &slope * (&e - &t);
+            t = e;
+            slope = -slope;
+            let guard = &z * &z - R::new(1.into(), 4.into());
+            assert!(guard.abs() <= q(1e-8));
+            assert_eq!(guard.is_positive(), n == 1);
+            assert_eq!(
+                controller.accepted.states,
+                vec![slope.to_f64().unwrap(), n as f64]
+            );
+            let index = model.program.nodes.iter().position(|n| n == "z").unwrap();
+            let actual = q(controller.accepted.solution.voltages[index]);
+            let budget = q(model.tolerances.absolute) + q(model.tolerances.relative) * z.abs();
+            assert!((actual - &z).abs() <= budget);
+            assert_eq!(controller.records.len(), n);
+            let mut next_roots = [R::new((-1).into(), 2.into()), R::new(1.into(), 2.into())]
+                .into_iter()
+                .map(|a| &t + (a - &z) / &slope)
+                .filter(|r| r > &t)
+                .collect::<Vec<_>>();
+            next_roots.sort();
+            let box_ = calendar[0].bounds();
+            assert!(q(box_.lo) <= next_roots[0] && next_roots[0] <= q(box_.hi));
+            if n == 1 {
+                assert_eq!(calendar.len(), 2, "later root must remain in calendar");
+            }
+            println!("speed={speed:?} accepted={n} mathematical_root={root:?}, execution={:?}, future_roots={}",controller.accepted.time,calendar.len());
+        }
+    }
 }

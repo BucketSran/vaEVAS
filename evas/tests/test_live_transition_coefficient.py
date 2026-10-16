@@ -2,6 +2,7 @@
 GUARDS = ["TIMED-OPERATOR", "LANG"]
 from pathlib import Path
 import math
+from fractions import Fraction
 import unittest
 from evas import CompileError, Instance, KernelError, compile_sources, transient
 from test_affine import KERNEL
@@ -229,9 +230,36 @@ end endmodule'''
         for row,want in zip(result['solutions'],[0,0,0,0,0,-1/6]):
             self.assertAlmostEqual(row['voltages'][index],want,delta=1e-8)
 
-    def test_capture_without_time_provenance_still_refuses_overlapping_roots(self):
-        with self.assertRaisesRegex(KernelError,'condition_precision'):
-            self.execute_clock(capture_extra=True)
+    def test_capture_without_time_provenance_keeps_point_sample_and_piecewise_integral(self):
+        original = self.execute_clock(capture_extra=True)
+        events = original['transient']['events']
+        self.assertEqual(len(events), 4)
+        by_owner = {event['origin'].split('(')[-1].rstrip(')'): event for event in events}
+        root = Fraction(.5)/3
+        additions = [math.nextafter(float(root), -math.inf), float(root)]
+        for event in events:
+            additions.extend([event['time'], math.nextafter(event['time'], math.inf)])
+        expanded = self.execute_clock(capture_extra=True,
+            times=sorted(set(original['transient']['times']+additions)))
+        self.assertEqual(expanded['transient']['events'], events)
+        for k in range(4):
+            event = by_owner['C'+str(k)]
+            te = Fraction(event['time'])
+            self.assertGreater(te, root)
+            self.assertLessEqual(te-root, Fraction(1e-12))
+            self.assertLessEqual(abs(3*te-Fraction(.5)), Fraction(1e-10))
+            self.assertEqual(event['after'][k], event['time'])
+            deadline = te+Fraction(.25)
+            for result in [original,expanded]:
+                index = result['nodes'].index('y'+str(k))
+                for t,row,state in zip(result['transient']['times'], result['solutions'],
+                                       result['transient']['states']):
+                    exact = Fraction(t) if Fraction(t) <= deadline else 2*deadline-Fraction(t)
+                    self.assertAlmostEqual(row['voltages'][index], float(exact), delta=1e-8)
+                    self.assertEqual(state[k], event['time'] if Fraction(t) >= te else 0)
+        # Missing optional time provenance is legal for this point sample.
+        # SourceControlledTransition keeps the independent genuinely touching
+        # nonpoint-root rejection, rather than inferring ambiguity from syntax.
 
     def test_clock_capture_and_live_mux_are_invariant_to_output_queries(self):
         sparse=self.execute_clock(independent_mux=True)

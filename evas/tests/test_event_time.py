@@ -2,6 +2,7 @@
 GUARDS = ["LANG", "CROSS", "EVENT-ORDER"]
 
 import unittest
+from fractions import Fraction as Q
 from evas import compile_sources, transient, KernelError
 from test_affine import KERNEL, model, instance
 
@@ -19,11 +20,26 @@ class EventTime(unittest.TestCase):
         p = compile_sources({'time.va': model('''@(initial_step) q=0;
             @(cross(V(u,r)-0.5,+1)) q=$abstime;
             V(y,r)<+$abstime-q;''', 'real q;')}, [instance()])
-        answers=[]
-        for times in [[0,.5,1], [0,.1,.4,.5,.7,1]]:
-            r=transient(p, {'u': [[0,0],[1,1]]}, times, stop=1,max_step=.3,kernel=KERNEL)
-            answers.append(r['solutions'][-1]['voltages'][r['nodes'].index('y')])
-        self.assertEqual(answers,[.5,.5])
+        baseline = None
+        trigger = next(event.trigger for event in p.events if event.trigger.kind=='cross')
+        for original in [[0,.5,1], [0,.1,.4,.5,.7,1]]:
+            seed=transient(p, {'u': [[0,0],[1,1]]}, original, stop=1,max_step=.3,kernel=KERNEL)
+            event, = seed['transient']['events']
+            te = Q(event['time'])
+            self.assertGreater(te, Q(.5))
+            self.assertLessEqual(te-Q(.5), Q(trigger.time_tolerance))
+            self.assertLessEqual(te-Q(.5), Q(trigger.expression_tolerance))
+            self.assertEqual(event['after'], [event['time']])
+            times = sorted(set(original+[event['time']]))
+            result=transient(p, {'u': [[0,0],[1,1]]}, times, stop=1,max_step=.3,kernel=KERNEL)
+            for t,row,state in zip(times,result['solutions'],result['transient']['states']):
+                held = te if Q(t) >= te else Q(0)
+                self.assertEqual(state, [float(held)])
+                self.assertEqual(row['voltages'][result['nodes'].index('y')], float(Q(t)-held))
+            self.assertEqual(result['transient']['events'], seed['transient']['events'])
+            if baseline is not None:
+                self.assertEqual(result['transient']['events'], baseline)
+            baseline = result['transient']['events']
 
     def test_caller_cannot_override_absolute_time(self):
         p=compile_sources({'time.va':model('V(y,r)<+$abstime;')}, [instance()])

@@ -3,6 +3,7 @@ GUARDS = ["EVENT-CONDITIONS", "EVENT-ORDER", "CROSS", "TIMER", "COMPOSE"]
 import os
 from pathlib import Path
 import unittest
+from fractions import Fraction as Q
 
 from evas import Instance, KernelError, compile_sources, transient
 
@@ -56,8 +57,11 @@ class PassiveEvents(unittest.TestCase):
 
     def test_own_contribution_preserves_physical_dependency_rejection(self):
         p=program('if(V(y)>0.5) seen=V(y);',extra='V(y)<+0*seen;')
-        with self.assertRaisesRegex(KernelError,'event condition may depend on state through the voltage network'):
+        with self.assertRaises(KernelError) as caught:
             run(p)
+        self.assertEqual(caught.exception.detail['kind'],'unsupported_condition')
+        self.assertIn('event condition reads a voltage affected by its callback writes',
+                      caught.exception.detail['message'])
 
     def test_cross_block_state_reader_remains_rejected(self):
         p=program('seen=V(y);',extra='@(cross(V(u)-0.5,1,0.001,0.001)) if(seen>0.5) due=0.75;')
@@ -66,8 +70,22 @@ class PassiveEvents(unittest.TestCase):
 
     def test_uncertain_voltage_condition_remains_rejected(self):
         p=program('if(V(y)>0.5) seen=1;',dut_rhs='V(u)')
-        with self.assertRaisesRegex(KernelError,'event_condition'):
-            run(p,points=[[0,.1],[1,.9]])
+        result=run(p,points=[[0,.1],[1,.9]])
+        events=result['transient']['events']
+        self.assertEqual(len(events),2)
+        root=(Q(.5)-Q(.1))/(Q(.9)-Q(.1))
+        te=Q(events[0]['time'])
+        self.assertTrue(all(Q(e['time'])==te for e in events))
+        self.assertGreater(te,root)
+        self.assertLessEqual(te-root,Q(.001))
+        sample=Q(.1)+(Q(.9)-Q(.1))*te
+        self.assertGreater(sample-Q(.5),0)
+        self.assertLessEqual(sample-Q(.5),Q(.001))
+        # Both original guards fire at this certified post-root point;
+        # y=u, so the formerly root-window-ambiguous branch is now true.
+        expected=[[int(Q(t)>=te),int(Q(t)>=te),100,0]
+                  for t in result['transient']['times']]
+        self.assertEqual(result['transient']['states'],expected)
 
     def test_nonrepresentable_root_retains_tau_sample_interval(self):
         p=program('seen=V(y);due=$abstime+0.25;',dut_rhs='q+V(u)',
@@ -94,11 +112,26 @@ analog begin @(initial_step) seen=0;
                     instances.append(Instance('M','obs',{'u':'u','y':'y'}))
                 p=compile_sources({'no-observer.va':physical_source+'\n'+(observer_source if observer else '')},instances)
                 r=run(p,[0,.25,.5,.75,1],points=[[0,1],[1,1]])
-                self.assertEqual([row[0] for row in r['transient']['states']],[0,0,1,2,2])
-                y=r['nodes'].index('y')
-                self.assertEqual([row['voltages'][y] for row in r['solutions']],[0,.25,1.5,2.75,3])
-                if observer:
-                    self.assertEqual([row[1] for row in r['transient']['states']],[0,0,1.5,2.75,3])
+                crosses=[e for e in r['transient']['events'] if e['kind']=='cross']
+                self.assertEqual(len(crosses),2)
+                for event,root in zip(crosses,[Q(.5),Q(.75)]):
+                    te=Q(event['time'])
+                    self.assertGreater(te,root)
+                    self.assertLessEqual(te-root,Q(.001))
+                    guard=te-root # idt(1)-root at the same execution point
+                    self.assertGreater(guard,0)
+                    self.assertLessEqual(abs(guard),Q(.001))
+                for t,row,state in zip(r['transient']['times'],r['solutions'],r['transient']['states']):
+                    q=sum(Q(t)>=Q(e['time']) for e in crosses)
+                    self.assertEqual(state[0],q)
+                    self.assertEqual(row['voltages'][r['nodes'].index('y')],float(Q(t)+q))
+                    if observer:
+                        seen=Q(0)
+                        for tick in [Q(.5),Q(.75),Q(1)]:
+                            if tick<=Q(t):
+                                value=tick+sum(tick>=Q(e['time']) for e in crosses)
+                                if value>1:seen=value
+                        self.assertEqual(state[1],float(seen))
 
     def test_operator_zero_is_not_the_constant_column_of_passive_root_identity(self):
         source = '`include "disciplines.vams"\nmodule dut(u,y);input u;output y;electrical u,y;real q;\nanalog begin @(initial_step)q=0;@(cross(idt(1,0)-0.5,1,0.001,0.001))q=1;V(y)<+q;end endmodule\nmodule obs(u,y);input u,y;electrical u,y;real seen;\nanalog begin @(initial_step)seen=0;@(timer(0.5,0,0.001))begin if(V(u)-V(u)>-1)seen=1;else seen=-1;$display("seen %g",seen);end end endmodule'

@@ -92,14 +92,15 @@ class SampledIntegralStrobe(unittest.TestCase):
         result=transient(program,{'u':[[0,0],[2.25*period,2.25]]},times,
                          stop=2.25*period,max_step=period/64,strobetimes=times,
                          vabstol=1e-14,reltol=1e-10,kernel=KERNEL)
-        for t,state in zip(times,result['transient']['states']):
-            self.assertEqual(state[1],int((F(t)/F(period))**2>=2))
-        with localcontext() as context:
-            context.prec=80
-            root=Decimal(2).sqrt()
-            for t,row in zip(times,result['solutions']):
-                tau=Decimal.from_float(t)/Decimal.from_float(period)
-                exact=Decimal(5)+4*min(tau,root)+(2*root+1)**2*max(Decimal(0),tau-root)
-                self.assert_request_accuracy(row['voltages'][result['nodes'].index('dut:z')],exact,1e-14,1e-10)
+        event,=result['transient']['events']
+        te=F(event['time']);sample=te/F(period)
+        self.assertGreater(sample*sample,2)
+        self.assertLessEqual(sample*sample-2,F(0.0005))
+        self.assertLessEqual(((te-F(1e-10))/F(period))**2,2)
+        for t,state,row in zip(times,result['transient']['states'],result['solutions']):
+            self.assertEqual(state[1],int(F(t)>=te))
+            # h=2 before te; afterwards h=2*u(te)+1, in VA statement order.
+            exact=5+4*min(F(t),te)/F(period)+(2*sample+1)**2*max(F(0),F(t)-te)/F(period)
+            self.assert_request_accuracy(row['voltages'][result['nodes'].index('dut:z')],exact,1e-14,1e-10)
         self.assertEqual(result['strobe_evidence']['sample_origins'],
                          ['accepted_controller_frame']*len(times))

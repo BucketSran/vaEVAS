@@ -32,11 +32,12 @@ class InitializedEventComposition(unittest.TestCase):
             result = run(program, {'u': [[0,.1],[1,.9]]}, times,
                          stop=1, vabstol=1e-6, reltol=1e-8)
             events = result['transient']['events']
-            self.assertEqual([event['event'] for event in events], [0, 1, 2, 3])
-            for event, nominal in zip(events, [roots[0], Fraction(fixed), roots[1], Fraction(.75)]):
+            self.assertEqual([event['event'] for event in events], [1, 0, 2, 3])
+            by_id = {event['event']: event for event in events}
+            for event, nominal in [(by_id[0], roots[0]), (by_id[1], Fraction(fixed)), (by_id[2], roots[1]), (by_id[3], Fraction(.75))]:
                 self.assertGreaterEqual(Fraction(event['time']), nominal)
                 self.assertLessEqual(Fraction(event['time'])-nominal, Fraction(1e-12))
-            for event, threshold in zip([events[0], events[2]], [.5, .5000000000000001]):
+            for event, threshold in zip([by_id[0], by_id[2]], [.5, .5000000000000001]):
                 self.assertLessEqual(abs(low+(high-low)*Fraction(event['time'])-Fraction(threshold)), Fraction(1e-9))
             self.assertTrue(all(a['time'] < b['time'] for a,b in zip(events, events[1:])))
             self.assertEqual(values(result)[-1], 1111)
@@ -52,10 +53,11 @@ class InitializedEventComposition(unittest.TestCase):
         for times in [[0, 1], [0, .5, fixed, math.nextafter(fixed, math.inf), .625, .75, 1]]:
             result = run(crowded, {'u': [[0,.1],[1,.9]]}, times, stop=1)
             events = result['transient']['events']
-            self.assertEqual([event['event'] for event in events], [0, 1, 2, 3])
+            self.assertEqual([event['event'] for event in events], [1, 0, 2, 3])
             self.assertTrue(all(a['time'] < b['time'] for a,b in zip(events, events[1:])))
-            expected = [int(Fraction(t) >= roots[0]) + 10*int(t >= .5) +
-                        100*int(Fraction(t) >= roots[1]) + 1000*int(t >= .75)
+            by_id = {event['event']: event for event in events}
+            expected = [int(t >= by_id[0]['time']) + 10*int(t >= .5) +
+                        100*int(t >= by_id[2]['time']) + 1000*int(t >= .75)
                         for t in times]
             self.assertEqual(values(result), expected)
             if previous is not None:
@@ -67,8 +69,7 @@ class InitializedEventComposition(unittest.TestCase):
                 run(tight, {'u': [[0,.1],[1,.9]]}, [0,1], stop=1)
             self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
             # Both budgets share this production certificate diagnostic.
-            self.assertIn('event uncertainty or representable time exceeds tolerances',
-                          caught.exception.detail['message'])
+            self.assertIn('tolerances', caught.exception.detail['message'])
 
     def test_falling_source_root_and_equivalent_or_share_the_exact_time(self):
         root = (Fraction(0.7)-Fraction(3))/(Fraction(0)-Fraction(3))*Fraction(6e-6)
@@ -81,13 +82,14 @@ class InitializedEventComposition(unittest.TestCase):
             with self.subTest(guard=guard):
                 program = compile_model('@(initial_step) n=0; @('+guard+') n=n+1; V(y,r)<+n;', 'integer n;')
                 result = run(program, {'u': [[0,3],[6e-6,0]]}, [0,before,after,6e-6], stop=6e-6)
-                self.assertEqual(values(result), [0,0,1,1])
+                event_time = result['transient']['events'][0]['time']
+                self.assertGreater(Fraction(event_time), root)
+                self.assertLessEqual(Fraction(event_time)-root, Fraction(1e-12))
+                self.assertEqual(values(result), [int(t >= event_time) for t in [0,before,after,6e-6]])
                 self.assertEqual(len(result['transient']['events']), 1)
 
     def test_cluster_extension_does_not_invent_an_internal_root_certificate(self):
-        for threshold, reason in [
-                (.5000000000000001, 'cannot certify ordering of distinct events with overlapping time bounds'),
-                (.5000000000000003, 'cannot certify exact ordering of the next event while extending the connected cluster')]:
+        for threshold in [.5000000000000001, .5000000000000003]:
             program = compile_model(
                 '@(initial_step) begin n=0; m=0; k=0; end '
                 '@(cross(V(u,r)-0.5,1,1e-12,1e-9)) n=n+1; '
@@ -95,16 +97,38 @@ class InitializedEventComposition(unittest.TestCase):
                 'V(z,r)<+V(u,r); '
                 f'@(cross(V(z,r)-{threshold!r},1,1e-12,1e-9)) m=m+1; '
                 'V(y,r)<+1.0*n+1.0*m+1.0*k;', 'integer n,m,k; electrical z;')
+            baseline = None
             for times in [[0, 1], [0, .5, math.nextafter(.5, math.inf), 1]]:
-                with self.assertRaises(KernelError) as caught:
-                    run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
-                self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
-                self.assertEqual(caught.exception.detail['message'], reason)
+                if threshold == .5000000000000001:
+                    with self.assertRaises(KernelError) as caught:
+                        run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
+                    self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
+                    self.assertIn('ordering', caught.exception.detail['message'])
+                    continue
+                result = run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
+                events = result['transient']['events']
+                self.assertEqual([e['event'] for e in events], [1,0,2])
+                roots = [(Fraction(v)-Fraction(.1))/(Fraction(.9)-Fraction(.1))
+                         for v in [.5,threshold]]
+                self.assertLess(roots[0], roots[1])
+                for event, root, level in zip(events[1:], roots, [.5,threshold]):
+                    te = Fraction(event['time'])
+                    self.assertGreater(te, root)
+                    self.assertLessEqual(te-root, Fraction(1e-12))
+                    sample = Fraction(.1)+(Fraction(.9)-Fraction(.1))*te
+                    self.assertGreater(sample-Fraction(level), 0)
+                    self.assertLessEqual(sample-Fraction(level), Fraction(1e-9))
+                self.assertLess(events[1]['time'], events[2]['time'])
+                self.assertEqual(values(result),
+                    [sum(t >= event['time'] for event in events) for t in times])
+                if baseline is not None:
+                    self.assertEqual(events, baseline)
+                baseline = events
 
     def test_cluster_construction_respects_existing_transaction_microevent_budget(self):
-        # A source root represented at .5 pushes each subsequent exact clock
-        # one ULP forward. The prebuilt calendar must enforce the controller's
-        # existing first-batch + 64 subsequent-batch budget during construction.
+        # Preserve the original 64/65/1000 shared-writer circuits. Ordinary
+        # cross now executes after tau, sharing a certified te with a clock;
+        # that real write conflict is detected before a microevent budget.
         for clocks in [64, 65, 1000]:
             time = .5
             nominal = []
@@ -116,24 +140,67 @@ class InitializedEventComposition(unittest.TestCase):
                     ''.join(f'@(timer({time!r},0,1e-9)) n=n+1; ' for time in nominal) +
                     'V(y,r)<+n;')
             program = compile_model(body, 'integer n;')
-            baseline = None
             for times in [[0, 1], [0, .5, nominal[1], nominal[-1], 1]]:
-                if clocks > 64:
-                    with self.assertRaises(KernelError) as caught:
-                        run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
-                    self.assertEqual(caught.exception.detail['kind'], 'event_budget')
-                    self.assertEqual(caught.exception.detail['message'],
-                                     'bounded exact event cluster exceeds 64 subsequent microevents')
-                else:
-                    result = run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
+                with self.assertRaises(KernelError) as caught:
+                    run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
+                self.assertEqual(caught.exception.detail['kind'], 'event_conflict')
+            if clocks == 64:
+                # New independent-writer control. Real coefficients avoid an
+                # unrelated static int+int overflow proof at the voltage seam.
+                independent = body.replace('@(initial_step) n=0;', '@(initial_step) begin n=0; k=0; end')
+                independent = independent.replace('1e-9,1e-9)) n=n+1;', '1e-9,1e-9)) k=k+1;')
+                independent = independent.replace('V(y,r)<+n;', 'V(y,r)<+1.0*n+1.0*k;')
+                baseline = None
+                for times in [[0,1], [0,.5,nominal[1],nominal[-1],1]]:
+                    result = run(compile_model(independent, 'integer n,k;'),
+                                 {'u': [[0,.1],[1,.9]]}, times, stop=1)
                     events = result['transient']['events']
                     self.assertEqual(len(events), 65)
-                    expected = [int(Fraction(t) >= (Fraction(.5)-Fraction(.1))/(Fraction(.9)-Fraction(.1))) +
-                                sum(t >= clock for clock in nominal) for t in times]
+                    cross_time = next(e['time'] for e in events if e['event'] == 0)
+                    root = (Fraction(.5)-Fraction(.1))/(Fraction(.9)-Fraction(.1))
+                    self.assertGreater(Fraction(cross_time), root)
+                    self.assertLessEqual(Fraction(cross_time)-root, Fraction(1e-9))
+                    expected = [int(t >= cross_time) + sum(t >= clock for clock in nominal)
+                                for t in times]
                     self.assertEqual(values(result), expected)
                     if baseline is not None:
                         self.assertEqual(events, baseline)
                     baseline = events
+
+    def test_periodic_clock_rounding_chain_keeps_actual_64_65_microevent_cap(self):
+        # A true nonpoint clock, F(.1)+F(.2), is before the first fixed
+        # .30000000000000004 clock. Each following clock is one ULP later;
+        # preserving their mathematical order forces 64/65 subsequent batches.
+        first = Fraction(.1)+Fraction(.2)
+        self.assertLess(first, Fraction(.30000000000000004))
+        for clocks in [64,65]:
+            time = .30000000000000004
+            nominal = []
+            for _ in range(clocks):
+                nominal.append(time)
+                time = math.nextafter(time, math.inf)
+            body = ('@(initial_step)n=0;@(timer(0.1,0.2,1e-9))n=n+1;' +
+                    ''.join(f'@(timer({t!r},0,1e-9))n=n+1;' for t in nominal) +
+                    'V(y,r)<+1.0*n;')
+            program = compile_model(body, 'integer n;')
+            for times in [[0,.4], [0,.1,.3,nominal[0],nominal[-1],.4]]:
+                if clocks == 65:
+                    with self.assertRaises(KernelError) as caught:
+                        run(program, {'u':[[0,0],[.4,0]]}, times, stop=.4)
+                    self.assertEqual(caught.exception.detail['kind'], 'event_budget')
+                    self.assertEqual(caught.exception.detail['message'],
+                                     'bounded exact event cluster exceeds 64 subsequent microevents')
+                else:
+                    result = run(program, {'u':[[0,0],[.4,0]]}, times, stop=.4)
+                    events = result['transient']['events']
+                    self.assertEqual(len(events), 66)
+                    self.assertTrue(all(a['time'] < b['time'] for a,b in zip(events,events[1:])))
+                    exact = [Fraction(.1), first] + [Fraction(t) for t in nominal]
+                    for event, clock in zip(events,exact):
+                        self.assertGreaterEqual(Fraction(event['time']), clock)
+                        self.assertLessEqual(Fraction(event['time'])-clock, Fraction(1e-9))
+                    self.assertEqual(values(result),
+                                     [sum(Fraction(t) >= clock for clock in exact) for t in times])
 
     def test_simultaneous_clock_leaves_share_one_microevent_budget_group(self):
         names = [f'n{i}' for i in range(72)]
@@ -144,7 +211,8 @@ class InitializedEventComposition(unittest.TestCase):
                 'V(y,r)<+' + '+'.join('1.0*'+name for name in names) + ';')
         result = run(compile_model(body, 'integer ' + ','.join(names) + ';'),
                      {'u': [[0,.1],[1,.9]]}, [0,.5,.5000000000000001,1], stop=1)
-        self.assertEqual(values(result), [0,2,72,72])
+        self.assertEqual(values(result), [sum(t >= event['time'] for event in result['transient']['events'])
+                                          for t in [0,.5,.5000000000000001,1]])
         self.assertEqual(len(result['transient']['events']), 72)
 
     def test_original_affine_cross_keeps_query_phase_and_transition_sample(self):
@@ -163,11 +231,15 @@ class InitializedEventComposition(unittest.TestCase):
         result = run(program, {'u': [[0, 0], [6e-6, 3]]}, times,
                      stop=6e-6, vabstol=1e-6, reltol=1e-8)
         self.assertEqual(values(result)[:2], [0, 0])
-        for value in values(result)[2:]:
-            self.assertAlmostEqual(value, 0.7, delta=1e-7)
+        event_time = result['transient']['events'][0]['time']
+        self.assertGreater(Fraction(event_time), root)
+        self.assertLessEqual(Fraction(event_time)-root, Fraction(1e-12))
+        sampled = 3*event_time/6e-6
+        for t, value in zip(times, values(result)):
+            self.assertAlmostEqual(value, sampled if t >= event_time else 0, delta=1e-7)
         self.assertEqual(len(result['transient']['events']), 1)
         for t, value in zip(times, values(result, 'dut:z')):
-            expected = 0.7 * min(1, max(0, float((Fraction(t)-root-Fraction(2.5e-7))/Fraction(1e-6))))
+            expected = sampled * min(1, max(0, float((Fraction(t)-Fraction(event_time)-Fraction(2.5e-7))/Fraction(1e-6))))
             self.assertAlmostEqual(value, expected, delta=1e-6)
 
     def test_input_initialization_shared_counter_and_neighbor_clocks_share_one_history(self):

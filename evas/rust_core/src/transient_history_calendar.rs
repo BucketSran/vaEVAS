@@ -31,6 +31,7 @@ pub(super) fn initialize(
             until,
             consumed: &[],
             pending: &pending,
+            retained_history: &[],
         },
     )?;
     Ok((operators, calendar))
@@ -61,9 +62,9 @@ impl Controller {
     ) -> Result<(), Error> {
         let time = batch[0].time;
         let consumed: Vec<_> = batch.iter().map(|event| event.event).collect();
-        let window = batch
-            .iter()
-            .fold(I::point(time), |window, event| window.hull(event.bounds()));
+        let window = batch.iter().fold(I::point(time), |window, event| {
+            window.hull(event.observation_bounds())
+        });
         let physical_anchor = batch.iter().find_map(ScheduledEvent::clock);
         if next.operators.local_epoch().is_none()
             && window.lo != window.hi
@@ -150,9 +151,9 @@ impl Controller {
             .iter()
             .filter_map(|e| e.dynamic_direction().map(|direction| (e.event, direction)))
             .collect();
-        let window = batch
-            .iter()
-            .fold(I::point(time), |window, event| window.hull(event.bounds()));
+        let window = batch.iter().fold(I::point(time), |window, event| {
+            window.hull(event.observation_bounds())
+        });
         let fixed_batch = batch.iter().all(ScheduledEvent::is_fixed_timer);
         let before = GuardTrajectory::new_held(
             model,
@@ -220,6 +221,11 @@ impl Controller {
             )?;
             self.prepare_physical_history(model, trajectory, next, batch, &physical_pending)?;
         }
+        let unchanged_physical = event_acceptance::passive_batch(model, batch)
+            && next
+                .operators
+                .retain_unchanged_physical_certificate(&self.accepted.operators);
+        let mut retained_history = Vec::new();
         let after = GuardTrajectory::new_held(
             model,
             trajectory,
@@ -266,6 +272,20 @@ impl Controller {
             )?;
             if model.guard_operators[index].is_empty() {
                 changed[index] = direct_change;
+            }
+            if unchanged_physical
+                && !direct_change
+                && !consumed.contains(&index)
+                && before
+                    .held_dependencies(guard, owner, next.state_bounds.len())?
+                    .iter()
+                    .all(|state| {
+                        self.accepted.time_proofs.get(state) == next.time_proofs.get(state)
+                    })
+                && remaining.iter().any(|event| event.event == index)
+            {
+                changed[index] = false;
+                retained_history.push(index);
             }
             let mut keeps_history = true;
             for &operator in &model.guard_operators[index] {
@@ -326,7 +346,8 @@ impl Controller {
                 prior = event.clone();
             }
         }
-        let pending = crate::schedule::reschedule_independent_with_time_proofs(
+        retained.retain(|event| !retained_history.contains(&event.event));
+        let mut pending = crate::schedule::reschedule_independent_with_time_proofs(
             model,
             trajectory,
             &next.state_bounds,
@@ -336,9 +357,17 @@ impl Controller {
             batch,
             Some(&next.time_proofs),
         )?;
+        pending.extend(
+            remaining
+                .iter()
+                .filter(|event| retained_history.contains(&event.event))
+                .cloned(),
+        );
+        pending.sort_by(|a, b| a.time.total_cmp(&b.time));
         Ok(event_acceptance::CalendarPlan::History {
             pending,
             consumed: consumed_history,
+            retained_history,
         })
     }
 }

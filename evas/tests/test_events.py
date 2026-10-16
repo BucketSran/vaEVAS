@@ -36,6 +36,20 @@ def execute_event(source=COUNTER, *, instances=None, sources=None, times=None,
 
 
 class EventContracts(unittest.TestCase):
+    def test_true_cross_keeps_old_state_through_root_and_updates_after_execution(self):
+        text=model('@(initial_step) n=0; @(cross(V(u,r)-0.5,1,0.001,0.001)) n=1; V(y,r)<+n;',
+                   'integer n;')
+        # u(t)=t has exact root .5. The independent .75 query is beyond
+        # every allowed callback time because ttol=.001.
+        r=execute_event(text,sources={'u':[[0,0],[1,1]]},
+                        times=[0,.25,.5,.75,1],stop=1,max_step=1)
+        event,=r['transient']['events']
+        self.assertGreater(event['time'],.5)
+        self.assertLessEqual(event['time'],.501)
+        self.assertEqual(r['transient']['states'],[[0],[0],[0],[1],[1]])
+        y=r['nodes'].index('y')
+        self.assertEqual([row['voltages'][y] for row in r['solutions']],[0,0,0,1,1])
+
     def test_event_state_defaults_to_zero_without_explicit_initial_step(self):
         text = model('@(cross(V(u,r)-0.5,1)) n=n+1; V(y,r)<+n;', 'integer n;')
         result = execute_event(text)
@@ -129,11 +143,14 @@ class EventContracts(unittest.TestCase):
                             r = execute_event(source, sources={'u':[[0,before],[1.5e-6,.5],[3e-6,after]]},
                                               times=times, max_step=step)
                             events = r['transient']['events']
+                            # A mandatory PWL knot owns its exact arrival,
+                            # including continuation through the other side.
                             self.assertEqual([e['time'] for e in events], [1.5e-6]*expected)
                             self.assertEqual([e['guard_value'] for e in events], [0.]*expected)
-                            self.assertEqual(r['transient']['states'], [[0],[0]]+[[expected]]*3)
+                            expected_states=[0,0,expected,expected,expected]
+                            self.assertEqual(r['transient']['states'], [[v] for v in expected_states])
                             y = r['nodes'].index('y')
-                            self.assertEqual([s['voltages'][y] for s in r['solutions']], [0,0]+[expected]*3)
+                            self.assertEqual([s['voltages'][y] for s in r['solutions']], expected_states)
 
     def test_separate_touches_rearm_without_departure_events(self):
         times = [0, .75e-6, 1.5e-6, 2.25e-6, 3e-6]

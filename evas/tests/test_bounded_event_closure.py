@@ -13,17 +13,22 @@ class BoundedEventClosure(unittest.TestCase):
 @(timer(0.30000000000000004,0,1e-6)) j=j+1;
 V(y,r)<+1.0*n+1.0*k+1.0*j;""", "integer n,k,j;")
         root=Q(.4)*Q(.3)/(Q(.3)+Q(.1))
-        physical=sorted([(Q(.1),0),(Q(.1)+Q(.2),0),(root,1),(Q(.30000000000000004),2)])
         baseline=None
         for times,step in [([0,.49],.49),([0,.15,.29,.3,.30000000000000004,.3000000000000001,.49],.012)]:
             result=transient(compile_sources({"mixed.va":source},[instance()]),{"u":[[0,-.3],[.4,.1],[.49,.1]]},times,stop=.49,max_step=step,kernel=KERNEL)
             self.assertEqual(result["transient"]["states"][-1],[2,1,1])
             events=result["transient"]["events"]
+            cross, = [e for e in events if e["kind"]=="cross"]
+            te=Q(cross["time"])
+            self.assertLess(root,te);self.assertLessEqual(te-root,Q(1e-6))
+            guard=-Q(.3)+te*(Q(.3)+Q(.1))/Q(.4)
+            self.assertGreater(guard,0);self.assertLessEqual(guard,Q(1e-6))
+            physical=sorted([(Q(.1),0),(Q(.1)+Q(.2),0),(te,1),(Q(.30000000000000004),2)])
             self.assertEqual([e["event"] for e in events],[i for _,i in physical])
             self.assertTrue(all(a["time"]<b["time"] for a,b in zip(events,events[1:])))
             for query,state in zip(times,result["transient"]["states"]):
                 t=Q(query)
-                self.assertEqual(state,[int(t>=Q(.1))+int(t>=Q(.1)+Q(.2)),int(t>=root),int(t>=Q(.30000000000000004))])
+                self.assertEqual(state,[int(t>=Q(.1))+int(t>=Q(.1)+Q(.2)),int(t>=te),int(t>=Q(.30000000000000004))])
             if baseline is not None:self.assertEqual(events,baseline)
             baseline=events
 

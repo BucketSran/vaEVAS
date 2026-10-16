@@ -370,42 +370,51 @@ pub(super) fn build(
             continue;
         }
         let mid = begin * 0.5 + pair[1].lo * 0.5;
-        if mid <= begin || mid >= pair[1].lo {
-            return Err(Error::new(
-                "condition_precision",
-                "no representable interior of selected mode",
-            ));
-        }
-        let mut nodes = vec![I::ZERO; program.nodes.len()];
-        for (name, v) in context
-            .driven
-            .iter()
-            .zip(context.trajectory.value_bounds(mid))
-        {
-            nodes[program.nodes.iter().position(|n| n == name).unwrap()] = v;
-        }
-        let mut frozen = program.clone();
-        for c in &mut frozen.contributions {
-            c.rhs = resolve_selection(&c.rhs, program, &context.driven, &nodes, &parameters)?;
-        }
-        for o in &mut frozen.operators {
-            match o {
-                OperatorSpec::Idt { input, .. }
-                | OperatorSpec::LaplaceNd { input, .. }
-                | OperatorSpec::Ddt { input, .. }
-                | OperatorSpec::Math { input, .. } => {
-                    *input =
-                        resolve_selection(input, program, &context.driven, &nodes, &parameters)?
-                }
-                _ => {}
+        let frozen = if mid <= begin || mid >= pair[1].lo {
+            freeze_open_context(
+                &context,
+                &parameters,
+                I {
+                    lo: begin,
+                    hi: pair[1].lo,
+                },
+            )?
+            .program
+            .clone()
+        } else {
+            let mut nodes = vec![I::ZERO; program.nodes.len()];
+            for (name, v) in context
+                .driven
+                .iter()
+                .zip(context.trajectory.value_bounds(mid))
+            {
+                nodes[program.nodes.iter().position(|n| n == name).unwrap()] = v;
             }
-        }
-        for b in &mut frozen.step_bounds {
-            b.active = crate::step_bounds::possible_activation(&b.active, &|e| {
-                resolve_selection(e, program, &context.driven, &nodes, &parameters)
-            })?;
-            b.value = resolve_selection(&b.value, program, &context.driven, &nodes, &parameters)?;
-        }
+            let mut frozen = program.clone();
+            for c in &mut frozen.contributions {
+                c.rhs = resolve_selection(&c.rhs, program, &context.driven, &nodes, &parameters)?;
+            }
+            for o in &mut frozen.operators {
+                match o {
+                    OperatorSpec::Idt { input, .. }
+                    | OperatorSpec::LaplaceNd { input, .. }
+                    | OperatorSpec::Ddt { input, .. }
+                    | OperatorSpec::Math { input, .. } => {
+                        *input =
+                            resolve_selection(input, program, &context.driven, &nodes, &parameters)?
+                    }
+                    _ => {}
+                }
+            }
+            for b in &mut frozen.step_bounds {
+                b.active = crate::step_bounds::possible_activation(&b.active, &|e| {
+                    resolve_selection(e, program, &context.driven, &nodes, &parameters)
+                })?;
+                b.value =
+                    resolve_selection(&b.value, program, &context.driven, &nodes, &parameters)?;
+            }
+            frozen
+        };
         let mut trajectory = context.trajectory.clone();
         trajectory.solver_points.retain(|&t| t >= begin && t <= end);
         trajectory.solver_points.extend([begin, end]);
@@ -588,15 +597,94 @@ pub(super) fn freeze_context(
             time,
         )
     };
+    freeze_context_with(context, parameters, &nodes, &exact)
+}
+
+/// Use an ordinary interior point where available, preserving that arithmetic
+/// path. Adjacent floats instead require a bounded exact rational witness.
+pub(super) fn freeze_mode_context(
+    context: &Arc<Context>,
+    parameters: &[I],
+    span: I,
+) -> Result<Arc<Context>, Error> {
+    let probe = span.lo * 0.5 + span.hi * 0.5;
+    if span.lo < probe && probe < span.hi {
+        freeze_context(context, parameters, probe)
+    } else {
+        freeze_open_context(context, parameters, span)
+    }
+}
+
+/// Only for a root-free open part returned by nonlinear_parts. Exact rational
+/// comparison chooses a branch; original PWL forcing, ODE state and interval
+/// propagation remain unchanged. Endpoints are not observations of this mode.
+pub(super) fn freeze_open_context(
+    context: &Arc<Context>,
+    parameters: &[I],
+    span: I,
+) -> Result<Arc<Context>, Error> {
+    if !span.finite() || span.lo >= span.hi {
+        return Err(Error::new(
+            "condition_precision",
+            "invalid open physical mode",
+        ));
+    }
+    let mut nodes = vec![I::ZERO; context.program.nodes.len()];
+    let input_nodes: Vec<_> = context
+        .driven
+        .iter()
+        .map(|name| {
+            context
+                .program
+                .nodes
+                .iter()
+                .position(|n| n == name)
+                .unwrap()
+        })
+        .collect();
+    for (&node, value) in input_nodes.iter().zip(context.trajectory.range(span)?.0) {
+        nodes[node] = value;
+    }
+    let mut states = context.time_proofs.clone();
+    states.retain(|k, proof| {
+        parameters
+            .get(*k)
+            .is_some_and(|b| proof.refine(*b).is_some())
+    });
+    for (k, b) in parameters.iter().enumerate() {
+        if b.lo == b.hi && !states.contains_key(&k) {
+            if let Some(value) = crate::exact_source::RootTime::point(b.lo) {
+                states.insert(k, value);
+            }
+        }
+    }
+    let exact = |left: &Expression, right: &Expression| {
+        crate::exact_source::predicate_sign_open(
+            left,
+            right,
+            &input_nodes,
+            &context.trajectory.exact_sources,
+            span,
+            &states,
+        )
+    };
+    freeze_context_with(context, parameters, &nodes, &exact)
+}
+fn freeze_context_with(
+    context: &Arc<Context>,
+    parameters: &[I],
+    nodes: &[I],
+    exact: &SourceSign<'_>,
+) -> Result<Arc<Context>, Error> {
     let mut frozen = step_simplify::program(context, parameters)?;
     for c in &mut frozen.contributions {
         c.rhs = resolve_with_source(
             &c.rhs,
             &context.program,
             &context.driven,
-            &nodes,
+            nodes,
             parameters,
-            Some(&exact),
+            Some(exact),
         )?;
     }
     for o in &mut frozen.operators {
@@ -609,9 +697,9 @@ pub(super) fn freeze_context(
                     input,
                     &context.program,
                     &context.driven,
-                    &nodes,
+                    nodes,
                     parameters,
-                    Some(&exact),
+                    Some(exact),
                 )?
             }
             _ => {}
@@ -623,18 +711,18 @@ pub(super) fn freeze_context(
                 e,
                 &context.program,
                 &context.driven,
-                &nodes,
+                nodes,
                 parameters,
-                Some(&exact),
+                Some(exact),
             )
         })?;
         b.value = resolve_with_source(
             &b.value,
             &context.program,
             &context.driven,
-            &nodes,
+            nodes,
             parameters,
-            Some(&exact),
+            Some(exact),
         )?;
     }
     Ok(Arc::new(Context {

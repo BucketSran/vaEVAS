@@ -341,7 +341,16 @@ class IdtContracts(unittest.TestCase):
         program = compiled(body, 'real q; integer n; electrical z;')
         for step in [3, .125]:
             result = execute(program, [[0, 0], [3, 3]], [0, 1, 2, 3], step)
-            self.assertEqual(values(result), [0, 4.5, 4.5, 4.5])
+            events=result['transient']['events']
+            timer,=[e for e in events if e['kind']=='timer']
+            cross,=[e for e in events if e['kind']=='cross']
+            te=F(cross['time'])
+            self.assertEqual(timer['time'],1)
+            self.assertLess(F(1),te);self.assertLessEqual(te-1,F(1e-12))
+            self.assertGreater(te-1,0);self.assertLessEqual(te-1,F(1e-9))
+            # The timer samples z(1)=2+1/2, then adds one; n changes at te.
+            expected=[float((F(7,2) if F(t)>=1 else 0)+int(F(t)>=te)) for t in [0,1,2,3]]
+            self.assertEqual(values(result), expected)
             self.assertEqual(len(result['transient']['events']), 2)
         result = execute(program, [[0, 0], [3, 3]], [0, 3], 3)
         self.assertGreater(result['transient']['discarded_trials'], 0)

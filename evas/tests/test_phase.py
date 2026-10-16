@@ -195,7 +195,15 @@ V(total,r)<+count;
                            {"f": [[0, 0], [end, 1]]}, times,
                            stop=times[-1], max_step=end, strobetimes=times,
                            kernel=KERNEL, vabstol=1e-14, reltol=1e-10)
-        self.assertEqual(voltages(result, "total"), [0, 0, 1, 1])
+        cross,=result['transient']['events']
+        te=F(cross['time'])
+        root=F(event)
+        self.assertGreater(te,root)
+        self.assertLessEqual(te-root,F(1e-12))
+        guard=te/F(end)-F(.625)
+        self.assertGreater(guard,0)
+        self.assertLessEqual(guard,F(1e-12))
+        self.assertEqual(voltages(result, "total"), [int(F(t)>=te) for t in times])
         for time, actual in zip(times, voltages(result, "out")):
             phase = (F(1,8) + F(750000)*F.from_float(time)) % 1
             angle = F.from_float(2*math.pi)*phase

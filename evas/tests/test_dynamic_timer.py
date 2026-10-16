@@ -2,6 +2,7 @@
 GUARDS = ["TIMER", "EVENT-ORDER", "LANG", "DYNAMICS"]
 
 import unittest
+from fractions import Fraction as Q
 import copy
 import json
 import subprocess
@@ -62,10 +63,19 @@ class DynamicTimer(unittest.TestCase):
           @(timer(next,0,1e-12) or cross(V(u,r)-0.5,1,1e-12,1e-9)) n=n+1;
           V(y,r)<+n;''', 'real next; integer n;')
         r=run_timer(source,stop=1,times=[0,1])
-        event,=r['transient']['events']
-        self.assertEqual(event['time'],.5)
-        self.assertEqual([leaf['kind'] for leaf in event['fired_triggers']],['timer','cross'])
-        self.assertEqual(r['transient']['states'][-1],[.5,1])
+        # OR executes once per physical occurrence: timer at tau, cross at te.
+        timer,cross=r['transient']['events']
+        self.assertEqual(timer['time'],.5)
+        te=Q(cross['time'])
+        self.assertLess(Q(.5),te);self.assertLessEqual(te-Q(.5),Q(1e-12))
+        self.assertLessEqual(te-Q(.5),Q(1e-9))
+        self.assertEqual([leaf['kind'] for leaf in timer['fired_triggers']],['timer'])
+        self.assertEqual([leaf['kind'] for leaf in cross['fired_triggers']],['cross'])
+        self.assertEqual(timer['fired_triggers'][0]['time_bounds'],[.5,.5])
+        self.assertEqual(cross['fired_triggers'][0]['time_bounds'],[.5,.5])
+        self.assertEqual(timer['before'],[.5,0]);self.assertEqual(timer['after'],[.5,1])
+        self.assertEqual(cross['before'],[.5,1]);self.assertEqual(cross['after'],[.5,2])
+        self.assertEqual(r['transient']['states'][-1],[.5,2])
 
     def test_uncertainty_and_raw_dependency_are_not_silently_dropped(self):
         source=model('''@(initial_step) begin next=0.75; n=0; end

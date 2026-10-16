@@ -59,6 +59,7 @@ pub(super) enum CalendarPlan {
     History {
         pending: Vec<ScheduledEvent>,
         consumed: Vec<(usize, i8)>,
+        retained_history: Vec<usize>,
     },
 }
 
@@ -82,7 +83,11 @@ impl CalendarPlan {
     ) -> Result<Vec<ScheduledEvent>, Error> {
         match self {
             Self::Held(future) => Ok(future),
-            Self::History { pending, consumed } => crate::schedule::history_epoch_with_time_proofs(
+            Self::History {
+                pending,
+                consumed,
+                retained_history,
+            } => crate::schedule::history_epoch_with_time_proofs(
                 model,
                 trajectory,
                 &next.operators,
@@ -92,6 +97,7 @@ impl CalendarPlan {
                     until,
                     consumed: &consumed,
                     pending: &pending,
+                    retained_history: &retained_history,
                 },
                 Some(&next.time_proofs),
             ),
@@ -123,6 +129,22 @@ impl PreparedEvents {
         calendar: &[ScheduledEvent],
         strategy: Strategy,
     ) -> Result<Self, Error> {
+        // A source-only root can retain the original refinement policy even
+        // when unrelated held clocks select the transactional calendar path.
+        // Keep any refined certificate local until the whole batch publishes.
+        let refined_calendar;
+        let calendar = if !matches!(strategy, Strategy::Static)
+            && calendar
+                .get(controller.event)
+                .is_some_and(|event| event.can_refine_input_root(model))
+        {
+            let mut trial = calendar.to_vec();
+            controller.refine_pending_input_root(model, trajectory, &mut trial)?;
+            refined_calendar = trial;
+            refined_calendar.as_slice()
+        } else {
+            calendar
+        };
         // Close old-flow observation/reset before predicting changed flow.
         // All subsequent work owns a candidate; the accepted frame, event
         // cursor, records and old calendar remain intact on every error.
@@ -177,6 +199,7 @@ impl PreparedEvents {
                             representative: time,
                             observation: I::point(time),
                             fired_roots: &[],
+                            mathematical_roots: &[],
                             prediction_end: prediction_end(model, trajectory, future.first()),
                         },
                         &[],
@@ -186,7 +209,7 @@ impl PreparedEvents {
             }
             if !future
                 .first()
-                .is_some_and(|event| event.bounds().lo <= next.time)
+                .is_some_and(|event| event.observation_bounds().lo <= next.time)
             {
                 break;
             }
@@ -254,6 +277,7 @@ impl PreparedEvents {
                     representative: time,
                     observation: I::point(time),
                     fired_roots: &[],
+                    mathematical_roots: &[],
                     prediction_end: time,
                 },
                 &[],
@@ -376,7 +400,12 @@ impl Controller {
                 &calendar[end..],
             )?,
         };
-        let (frame, future) = Self::prepare_final_history(model, trajectory, next, plan)?;
+        let (frame, future) = Self::prepare_final_history(model, trajectory, next, plan).map_err(|mut error| {
+            for event in &calendar[self.event..end] {
+                error.message.push_str(&format!("; consumed leaf {} mathematical_root_bounds={:?}, observation_bounds={:?}, actual callback time={:?}",event.event,event.bounds(),event.observation_bounds(),event.time));
+            }
+            error
+        })?;
         Ok(PreparedBatch {
             frame,
             records,
@@ -422,10 +451,10 @@ impl Controller {
         let future = plan.resolve(model, trajectory, &next, until)?;
         next.operators.check_deadline_order(
             next.time,
-            future.first().map(|event| event.bounds()),
+            future.first().map(|event| event.observation_bounds()),
             future
                 .first()
-                .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
+                .and_then(|e| crate::schedule::common_execution_root(std::slice::from_ref(e))),
         )?;
         // Nonlinear extension can widen the endpoint enclosure. Certify the
         // stored observation against the final history, not just reset closure.
@@ -925,11 +954,20 @@ mod tests {
             .unwrap();
         assert_eq!(calendar.len(), 1);
         assert_eq!(calendar[0].event, 1);
-        assert_eq!(calendar[0].time, 0.625);
+        assert!(calendar[0].time > 0.625);
         assert_eq!(calendar[0].bounds(), I::point(0.625));
+        let EventTrigger::Cross { time_tolerance, .. } = model.triggers[calendar[0].event].trigger
+        else {
+            panic!("cross")
+        };
+        assert!(calendar[0].time - 0.625 <= time_tolerance);
+        assert_eq!(
+            calendar[0].physical_order_at(calendar[0].time),
+            Some(std::cmp::Ordering::Equal)
+        );
         assert_eq!(
             calendar[0].physical_order_at(0.625),
-            Some(std::cmp::Ordering::Equal)
+            Some(std::cmp::Ordering::Greater)
         );
         assert_eq!(
             calendar[0].physical_order_at(0.625_f64.next_down()),
@@ -1309,6 +1347,7 @@ mod passive_seed_review {
                     representative: 0.75,
                     observation: I::point(0.75),
                     fired_roots: &[],
+                    mathematical_roots: &[],
                     prediction_end: 0.75,
                 },
                 &[],
@@ -1325,6 +1364,7 @@ mod passive_seed_review {
                     representative: 1.5,
                     observation: I::point(1.5),
                     fired_roots: &[],
+                    mathematical_roots: &[],
                     prediction_end: 1.5,
                 },
                 &[],
@@ -1363,6 +1403,7 @@ mod passive_seed_review {
                 representative: f64::NAN,
                 observation: I::point(f64::NAN),
                 fired_roots: &[],
+                mathematical_roots: &[],
                 prediction_end: 2.5
             },
             &[]

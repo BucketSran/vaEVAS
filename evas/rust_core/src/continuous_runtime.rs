@@ -16,6 +16,7 @@ pub(crate) struct Anchored {
     prior: Continuous,
     start: f64,
     observation: Option<I>,
+    preserve_unchanged_cursor: bool,
     cursor: f64,
 }
 impl Anchored {
@@ -66,6 +67,23 @@ impl Anchored {
                 self.delta(I::point(horizon))?.hi,
             )?
         };
+        // A fixed timer with no physical map must not consume roots whose
+        // mathematical times precede its representative but whose callbacks
+        // are still pending. Restrict this reuse to an unchanged linear
+        // parameter/proof history, including the original reset map.
+        let same_parameters =
+            matches!(&self.inner, Continuous::Linear(v) if v.parameters == states);
+        if self.preserve_unchanged_cursor && same_parameters && self.inner.same_history(&next.inner)
+        {
+            next.cursor = self.cursor;
+            next.start = self.start;
+            next.prior = self.prior.clone();
+        } else {
+            next.preserve_unchanged_cursor = false;
+        }
+        if !map {
+            next.preserve_unchanged_cursor = false;
+        }
         // A reset observation remains frozen at its physical instant. Future
         // propagation becomes visible only when advanced_until closes the map.
         if map {
@@ -101,6 +119,7 @@ impl Continuous {
             prior: self.clone(),
             start,
             observation: None,
+            preserve_unchanged_cursor: false,
             cursor: 0.,
         })))
     }
@@ -122,7 +141,11 @@ impl Continuous {
             v.inner.derivative_bounds(delta)?,
         ))
     }
-    pub(crate) fn local_observation(&self, delta: I) -> Result<Self, Error> {
+    pub(crate) fn local_event_observation(
+        &self,
+        delta: I,
+        consumes_cross: bool,
+    ) -> Result<Self, Error> {
         let Self::Anchored(v) = self else {
             return Err(Error::new(
                 "event_resolution",
@@ -137,6 +160,7 @@ impl Continuous {
         }
         let mut next = v.clone();
         next.observation = Some(delta);
+        next.preserve_unchanged_cursor = !consumes_cross;
         Ok(Self::Anchored(next))
     }
 
@@ -363,11 +387,30 @@ impl Continuous {
                     && a.start == b.start
                     && a.cursor == b.cursor
                     && a.observation == b.observation
+                    && a.preserve_unchanged_cursor == b.preserve_unchanged_cursor
                     && a.inner.same_history(&b.inner)
                     && a.prior.same_history(&b.prior)
             }
             _ => false,
         }
+    }
+    // History equality alone does not include the exact held-time evidence.
+    // This stronger identity is used only for retaining an existing certificate
+    // across an isolated observer callback in the same source context.
+    pub(crate) fn same_certificate(&self, other: &Self) -> bool {
+        self.same_history(other)
+            && match (self, other) {
+                (Self::Linear(a), Self::Linear(b)) => {
+                    a.context.time_proofs == b.context.time_proofs
+                }
+                (Self::Nonlinear(a), Self::Nonlinear(b)) => {
+                    a.context.time_proofs == b.context.time_proofs
+                }
+                (Self::Anchored(a), Self::Anchored(b)) => {
+                    a.inner.same_certificate(&b.inner) && a.prior.same_certificate(&b.prior)
+                }
+                _ => false,
+            }
     }
     pub(crate) fn needs_extension(&self, horizon: f64) -> bool {
         match self {

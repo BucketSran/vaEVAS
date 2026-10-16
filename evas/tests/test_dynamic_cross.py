@@ -3,6 +3,7 @@
 # Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["CROSS", "EVENT-CONDITIONS", "DYNAMICS"]
 
+from fractions import Fraction
 import math
 import unittest
 
@@ -61,9 +62,9 @@ class DynamicCrossContracts(unittest.TestCase):
             self.assertAlmostEqual(event["time"], root, delta=1e-9)
 
     def test_directed_integral_reversal_at_exact_stop_preserves_query_phase(self):
-        # z'=sign/2, z(0)=0: the increasing arrival is at 1 and the
-        # decreasing arrival is at stop=3. Both roots are exact binary64
-        # values even when the prediction interval uses non-dyadic splits.
+        # z'=sign/2, z(0)=0. The first mathematical root is 1.
+        # Reversal at certified te>1 gives z(t)=te-t/2 afterwards;
+        # the next root is 2*te+1>stop=3, so it must not fire early.
         source = model("""
           @(initial_step) begin sign=1; n=0; end
           V(z,r)<+idt(0.5*sign*V(u,r),0);
@@ -82,15 +83,19 @@ class DynamicCrossContracts(unittest.TestCase):
                                stop=3, max_step=.005, vabstol=1e-8,
                                reltol=0, kernel=KERNEL)
             events = result["transient"]["events"]
-            self.assertEqual([event["time"] for event in events], [1, 3])
+            self.assertEqual(len(events), 1)
+            te = events[0]["time"]
+            self.assertGreater(te, 1)
+            self.assertLessEqual(te-1, 1e-10)
+            self.assertGreater(2*Fraction(te)+1, Fraction(3))
             if baseline is not None:
                 self.assertEqual(events, baseline)
             baseline = events
             y = result["nodes"].index("y")
             self.assertEqual([row["voltages"][y]
                               for row in result["solutions"]],
-                             [int(time >= 1) + int(time >= 3) for time in times])
-            self.assertEqual(result["transient"]["states"][-1], [1, 2])
+                             [int(time >= te) for time in times])
+            self.assertEqual(result["transient"]["states"][-1], [-1, 1])
 
     def test_sine_guard_uses_a_continuous_certified_operator_trajectory(self):
         result = run_guard("sin(V(u,r))-0.5")

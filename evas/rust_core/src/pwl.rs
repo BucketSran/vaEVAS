@@ -32,6 +32,30 @@ impl Root {
         })
     }
 
+    /// Exact affine interpolation is available only when both original
+    /// endpoint guard enclosures are points; no sampled-voltage rounding is
+    /// substituted for this certificate.
+    pub(crate) fn exact_guard_value(&self, time: f64) -> Option<I> {
+        use crate::exact_source::{binary, enclosure, Budget};
+        if time < self.segment[0]
+            || time > self.segment[1]
+            || self.ends.iter().any(|v| v.lo != v.hi)
+        {
+            return None;
+        }
+        let mut budget = Budget(0);
+        let start = binary(self.segment[0])?;
+        let width = budget.check(binary(self.segment[1])? - &start)?;
+        if width <= num_rational::BigRational::from_integer(0.into()) {
+            return None;
+        }
+        let dt = budget.check(binary(time)? - start)?;
+        let a = binary(self.ends[0].lo)?;
+        let slope = budget.check((binary(self.ends[1].lo)? - &a) / width)?;
+        let delta = budget.check(slope * dt)?;
+        enclosure(&budget.check(a + delta)?)
+    }
+
     /// Search representable times using an exact sign predicate on the original
     /// numerator a*t1 - a*t + b*t - b*t0. No rounded time differences enter it.
     fn refine_representable(&mut self) {

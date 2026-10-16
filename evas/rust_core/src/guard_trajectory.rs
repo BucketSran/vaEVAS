@@ -227,6 +227,36 @@ impl<'a> GuardTrajectory<'a> {
         Ok(result)
     }
 
+    pub(crate) fn active_inputs(
+        &self,
+        expression: &Expression,
+        owner: &str,
+    ) -> Result<Vec<usize>, Error> {
+        let (nodes, operators) = self.checked_dependencies(expression, owner)?;
+        if !operators.is_empty() {
+            return Ok(Vec::new());
+        }
+        let n = self.model.driven.len();
+        let mut active = BTreeSet::new();
+        for node in nodes {
+            let row = &self.nodes[node];
+            let op_start = n + self.model.program.states.len();
+            if row[op_start..op_start + self.model.program.operators.len()]
+                .iter()
+                .any(|c| !c.zero())
+            {
+                return Ok(Vec::new());
+            }
+            active.extend(
+                row[..n]
+                    .iter()
+                    .enumerate()
+                    .filter_map(|(i, c)| (!c.zero()).then_some(i)),
+            );
+        }
+        Ok(active.into_iter().collect())
+    }
+
     pub(crate) fn exact_affine_root(
         &self,
         expression: &Expression,
@@ -320,20 +350,28 @@ impl<'a> GuardTrajectory<'a> {
         before: &[I],
         after: &[I],
     ) -> Result<bool, Error> {
+        Ok(self
+            .held_dependencies(expression, owner, before.len())?
+            .iter()
+            .any(|&index| before[index] != after[index]))
+    }
+    pub(crate) fn held_dependencies(
+        &self,
+        expression: &Expression,
+        owner: &str,
+        count: usize,
+    ) -> Result<std::collections::BTreeSet<usize>, Error> {
         let mut states = state_dependencies(expression);
         let (nodes, _) = self.checked_dependencies(expression, owner)?;
         let start = self.model.driven.len();
         for node in nodes {
-            for (index, c) in self.nodes[node][start..start + before.len()]
-                .iter()
-                .enumerate()
-            {
+            for (index, c) in self.nodes[node][start..start + count].iter().enumerate() {
                 if !c.zero() {
                     states.insert(index);
                 }
             }
         }
-        Ok(states.iter().any(|&index| before[index] != after[index]))
+        Ok(states)
     }
     pub(crate) fn range(
         &self,

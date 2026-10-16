@@ -120,6 +120,36 @@ fn same_numeric_state_enclosure_with_a_different_real_time_proof_cannot_reuse_fl
     controller
         .accept_relocalized(&model, &trajectory, &mut calendar)
         .unwrap();
+    // The actual cross callback now captures a point te. Build the flow's
+    // nonpoint parameter contract explicitly instead of pretending te is tau.
+    let parameter = I {
+        lo: 1. / 6.,
+        hi: (1. / 6_f64).next_up(),
+    };
+    let root = R::new(1.into(), 6.into());
+    let proof =
+        crate::exact_source::RootTime::affine(-root, R::from_integer(1.into()), parameter).unwrap();
+    let proofs: crate::exact_source::TimeProofs = (0..2).map(|k| (k, proof.clone())).collect();
+    let bounds = vec![parameter; 2];
+    let states = vec![1. / 6.; 2];
+    controller.accepted.operators = controller
+        .accepted
+        .operators
+        .evaluation(controller.accepted.time)
+        .unwrap()
+        .advanced_until_with_time_proofs(
+            I::point(controller.accepted.time),
+            &states,
+            &bounds,
+            &[0, 1],
+            1.,
+            None,
+            Some(&proofs),
+        )
+        .unwrap();
+    controller.accepted.states = states;
+    controller.accepted.state_bounds = bounds;
+    controller.accepted.time_proofs = proofs;
     let original = controller.accepted.time_proofs[&0].clone();
     assert_eq!(original, controller.accepted.time_proofs[&1]);
     let r = R::new(1.into(), 6.into()) + R::new(1.into(), (1u64 << 60).into());
@@ -144,6 +174,7 @@ fn same_numeric_state_enclosure_with_a_different_real_time_proof_cannot_reuse_fl
             representative: 0.2,
             observation: I::point(0.2),
             fired_roots: &[],
+            mathematical_roots: &[],
             prediction_end: 1.,
         },
         &[],
@@ -179,6 +210,7 @@ fn nonlinear_time_proof_removal_or_update_preserves_physical_history_and_discard
         .restarted_with_time_proofs(0.25, I::point(0.25), &bounds, 0.5, &proofs)
         .unwrap();
     assert!(matches!(&flow, crate::continuous::Continuous::Nonlinear(_)));
+    assert!(flow.same_certificate(&flow.clone()));
     let prefix = flow.bounds(0.4).unwrap();
     let r = R::new(1.into(), 8.into()) + R::new(1.into(), (1u64 << 60).into());
     let shifted =
@@ -194,6 +226,7 @@ fn nonlinear_time_proof_removal_or_update_preserves_physical_history_and_discard
         let mapped = flow
             .mapped_event_with_time_proofs(0.4, I::point(0.4), &bounds, &changed_proofs)
             .unwrap();
+        assert!(!flow.same_certificate(&mapped));
         // A changed proof map creates a new seed. A stale flow clone would
         // incorrectly retain pre-map queries from its earlier proof epoch.
         assert_eq!(mapped.bounds(0.3).err().unwrap().kind, "event_resolution");

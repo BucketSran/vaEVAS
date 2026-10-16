@@ -57,9 +57,24 @@ class SettlementContracts(unittest.TestCase):
                             source=model(f'''@(initial_step) n={initial};
                                 @({trigger}) begin {actions} end V(y,r)<+n;''',f'{kind} n;')
                             r=run_timer(source,stop=1,times=[0,0.5,1])
-                            self.assertEqual(r['transient']['states'],
-                                             [[initial],[initial+count],[initial+count]])
                             self.assertEqual(len(r['transient']['events']),1)
+                            event=r['transient']['events'][0]
+                            te=Q(event['time'])
+                            if event['kind']=='timer':
+                                self.assertEqual(te,Q(.5))
+                            else:
+                                self.assertGreater(te,Q(.5))
+                                self.assertLessEqual(te-Q(.5),Q(.001))
+                                guard=te-Q(.5) # original u=t guard
+                                self.assertGreater(guard,0)
+                                self.assertLessEqual(abs(guard),Q(.001))
+                            self.assertEqual(event['before'],[initial])
+                            self.assertEqual(event['after'],[initial+count])
+                            times=sorted(set([0,.5,1,event['time']]))
+                            observed=run_timer(source,stop=1,times=times)
+                            self.assertEqual(observed['transient']['events'],r['transient']['events'])
+                            self.assertEqual(observed['transient']['states'],
+                                [[initial+count if Q(t)>=te else initial] for t in times])
 
     def test_repeated_integer_writes_expose_intermediate_values(self):
         cases=[('n=n+1; tmp=n; n=n+1;', [2,1]),

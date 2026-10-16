@@ -1,6 +1,7 @@
 """Array scalarization preserves ordered assignments and state ownership."""
 GUARDS = ['LANG', 'COMPOSE', 'EVENT-ORDER', 'case:variable_array']
 import unittest
+from fractions import Fraction as Q
 from evas import CompileError, KernelError, compile_sources, solve, transient
 from test_affine import KERNEL, instance, model
 
@@ -72,9 +73,32 @@ class VariableArrays(unittest.TestCase):
             @(timer(0.25,0,1e-12)) q[0]=10*q[0]+1;
             @(cross(V(u,r)-0.25,1,1e-12,1e-6)) q[0]=10*q[0]+1;
             V(y,r)<+q[0];''', 'real q[0:0];')
-        with self.assertRaisesRegex(KernelError, 'event_conflict'):
-            transient(p, {'u': [[0,0],[1,1]]}, [0,1],
-                      stop=1, max_step=1, kernel=KERNEL)
+        result=transient(p, {'u': [[0,0],[1,1]]}, [0,1],
+                         stop=1, max_step=1, kernel=KERNEL)
+        timer,cross=result['transient']['events']
+        self.assertEqual(timer['time'],.25)
+        te=Q(cross['time'])
+        self.assertGreater(te,Q(.25))
+        self.assertLessEqual(te-Q(.25),Q(1e-12))
+        self.assertLessEqual(te-Q(.25),Q(1e-6))
+        # Original source order now spans two physical callbacks: 1 -> 11 -> 111.
+        self.assertEqual(timer['before'],[1])
+        self.assertEqual(timer['after'],[11])
+        self.assertEqual(cross['before'],[11])
+        self.assertEqual(cross['after'],[111])
+        observed=transient(p, {'u':[[0,0],[1,1]]}, [0,.25,float(te),1],
+                           stop=1,max_step=1,kernel=KERNEL)
+        self.assertEqual(observed['transient']['events'],result['transient']['events'])
+        self.assertEqual(observed['transient']['states'],[[1],[11],[111],[111]])
+
+    def test_truly_simultaneous_array_writers_still_conflict(self):
+        # New independent controls retain the original shared-writer obligation.
+        for trigger in ['timer(0.25,0,1e-12)', 'cross(V(u,r)-0.25,1,1e-12,1e-6)']:
+            p=self.compile('@(initial_step) q[0]=1;'+
+                ''.join('@('+trigger+') q[0]=10*q[0]+1;' for _ in range(2))+
+                'V(y,r)<+q[0];','real q[0:0];')
+            with self.subTest(trigger=trigger),self.assertRaisesRegex(KernelError,'event_conflict'):
+                transient(p,{'u':[[0,0],[1,1]]},[0,1],stop=1,max_step=1,kernel=KERNEL)
 
     def test_instance_array_sizes_and_states_are_private(self):
         source = model('@(initial_step) begin a[0]=0; a[1]=1; end @(timer(0.5,0,1e-9)) a[0]=a[1]+1; V(y,r)<+a[0];', 'real a[0:1];')

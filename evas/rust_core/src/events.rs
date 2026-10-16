@@ -456,6 +456,7 @@ pub(crate) struct EventModel {
     pub(crate) numeric_actions: Vec<Vec<bool>>,
     pub(crate) conditions: Conditions,
     pub(crate) passive_conditions: Conditions,
+    pub(crate) node_conditions: Conditions,
     pub(crate) passive_events: Vec<bool>,
     pub(crate) driven: Vec<String>,
     pub(crate) tolerances: Tolerances,
@@ -715,9 +716,12 @@ impl EventModel {
         let (projected, node_inputs) =
             crate::event_accuracy::GuardBounds::passive_program(&program);
         passive_conditions.prepare(&projected, &node_inputs)?;
+        let mut node_conditions = Conditions::new_with_numeric(&program, &passive_events)?;
+        node_conditions.restrict_events(&passive_events.iter().map(|p| !p).collect::<Vec<_>>());
         let mut model = Self {
             conditions,
             passive_conditions,
+            node_conditions,
             passive_events,
             program,
             rhs,
@@ -736,6 +740,7 @@ impl EventModel {
         };
         model.check_guard_dependencies()?;
         model.conditions.prepare(&model.program, &model.driven)?;
+        model.node_conditions.prepare(&projected, &node_inputs)?;
         Ok(model)
     }
 
@@ -982,6 +987,8 @@ impl EventModel {
         self.conditions
             .check_selection_readers(selection, &writers)?;
         self.passive_conditions
+            .check_selection_readers(selection, &writers)?;
+        self.node_conditions
             .check_selection_readers(selection, &writers)?;
         for (event, indices) in &selection.actions {
             for &index in indices {
@@ -1493,6 +1500,18 @@ impl EventModel {
                 self.guard_operators.push(BTreeSet::new());
             }
         }
+        let node_states = self.condition_node_states(&self.rhs, &groups, &assembled)?;
+        let observed =
+            self.node_conditions
+                .network_observers(&affected, &node_states, &self.program)?;
+        self.node_conditions.restrict_events(&observed);
+        self.conditions.restrict_events(
+            &observed
+                .iter()
+                .zip(&self.passive_events)
+                .map(|(observed, passive)| !observed && !passive)
+                .collect::<Vec<_>>(),
+        );
         self.conditions.check_dependencies(&affected)?;
         crate::reset_dependencies::check(
             &self.program,

@@ -306,15 +306,9 @@ impl Roots {
                 ));
             }
         }
-        // Every consumer freezes one mode using a representable interior point.
-        // Enforce this here for both linear and nonlinear propagation.
+        // Distinct cuts above prove a nonempty real open interval. Mode
+        // freezing can use an exact rational witness when no f64 lies inside.
         cuts.dedup();
-        for pair in cuts.windows(2) {
-            let midpoint = pair[0].hi * 0.5 + pair[1].lo * 0.5;
-            if midpoint <= pair[0].hi || midpoint >= pair[1].lo {
-                return Err(precision("no representable interior of selected mode"));
-            }
-        }
         Ok(())
     }
 }

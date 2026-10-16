@@ -181,12 +181,27 @@ class LifecycleClosureContracts(unittest.TestCase):
                                            ([i/32 for i in range(33)],1/32)]:
                             result=run(program,{'u':[[0,0],[1,1]]},times,stop=1,max_step=step,
                                        vabstol=1e-7,reltol=1e-7)
-                            at_reset=.5+math.exp(-.5)
-                            at_release=1+(at_reset-1)*math.exp(-.25)
+                            reset,release=result['transient']['events']
+                            e=Q(reset['time'])
+                            self.assertEqual(release['time'],.75)
+                            if cross:
+                                lo,hi=reset['observation_time_bounds']
+                                self.assertLessEqual(Q(lo),Q(1,2))
+                                self.assertGreaterEqual(Q(hi),Q(1,2))
+                                self.assertGreater(e,Q(1,2))
+                                self.assertLessEqual(e-Q(1,2),Q(1e-8))
+                                self.assertGreater(reset['guard_value'],0)
+                                self.assertLessEqual(abs(e-Q(1,2)),Q(1e-8))
+                            else:
+                                self.assertEqual(e,Q(1,2))
+                            # q=z after the simultaneous reset is 1 in either
+                            # source assignment order. The filter stays continuous.
+                            at_reset=float(e)+math.exp(-float(e))
+                            at_release=1+(at_reset-1)*math.exp(-float(Q(3,4)-e))
                             for t,row in zip(times,rows(result)):
-                                z=1+t if t<.5 else 1 if t<=.75 else 1+t-.75
-                                y=(t+math.exp(-t) if t<.5 else
-                                   1+(at_reset-1)*math.exp(-(t-.5)) if t<=.75 else
+                                z=1+Q(t) if Q(t)<e else Q(1) if t<=.75 else 1+Q(t)-Q(3,4)
+                                y=(t+math.exp(-t) if Q(t)<e else
+                                   1+(at_reset-1)*math.exp(-float(Q(t)-e)) if t<=.75 else
                                    (t-.75)+(at_release)*math.exp(-(t-.75)))
                                 assert_close(self,row['dut:z'],z,delta=1e-7)
                                 assert_close(self,row['y'],y,delta=1e-7)
@@ -219,8 +234,14 @@ class LifecycleClosureContracts(unittest.TestCase):
         lo,hi=event['observation_time_bounds']
         self.assertLessEqual(Q(lo),root)
         self.assertGreaterEqual(Q(hi),root)
-        self.assertEqual(event['time'],hi)
-        self.assertTrue(lo<=rows(result)[1]['stamp']<=hi)
+        e=Q(event['time'])
+        self.assertGreater(e,root)
+        self.assertLessEqual(e-root,Q(1e-9))
+        guard=(Q(.8)-Q(.2))*(e-root)
+        self.assertGreater(guard,0)
+        self.assertLessEqual(guard,Q(1e-8))
+        # clock=t, so its held observation is the actual callback coordinate.
+        self.assertEqual(Q(rows(result)[1]['stamp']),e)
         assert_close(self,rows(result)[1]['y'],1,delta=1e-8)
         assert_close(self,rows(result)[-1]['dut:z'],1.25,delta=1e-8)
 

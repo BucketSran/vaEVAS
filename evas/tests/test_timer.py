@@ -32,6 +32,15 @@ def run_timer(source=None, *, stop=19, times=None, step=100, instances=None):
 
 
 class TimerContracts(unittest.TestCase):
+    def assert_cross_execution(self, event, root, ttol, etol, guard):
+        te = Q(event['time'])
+        self.assertGreater(te, root)
+        self.assertLessEqual(te-root, Q(ttol))
+        value = guard(te)
+        self.assertGreater(value, 0)
+        self.assertLessEqual(value, Q(etol))
+        return te
+
     def test_representable_pwl_roots_coincide_despite_rounded_division(self):
         for exponent in [-30, 0, 20]:
             unit = 2.0**exponent
@@ -47,8 +56,17 @@ class TimerContracts(unittest.TestCase):
                 program=compile_sources({'timer.va':source},[instance()])
                 result=transient(program,{'u':[[0,0],[stop,19]]},[0,stop],
                                  stop=stop,max_step=stop,kernel=KERNEL)
-                self.assertEqual([e['time'] for e in result['transient']['events']], [start,start])
+                timer,cross = result['transient']['events']
+                self.assertEqual(timer['time'], start)
+                te = self.assert_cross_execution(cross, root, unit/1024, .001,
+                    lambda t: Q(19)*t/Q(stop)-Q(threshold))
                 self.assertEqual(result['transient']['states'][-1], [1,1])
+                observed_times = [0,start,float(te),stop]
+                observed = transient(program,{'u':[[0,0],[stop,19]]},observed_times,
+                                     stop=stop,max_step=stop,kernel=KERNEL)
+                self.assertEqual(observed['transient']['events'],result['transient']['events'])
+                self.assertEqual(observed['transient']['states'],
+                                 [[int(Q(t)>=root),int(Q(t)>=te)] for t in observed_times])
 
     def test_representable_root_outside_three_rounded_guesses_is_found(self):
         # 22*(15/22) rounds down; neither outward endpoint equals the exact 15.
@@ -59,7 +77,9 @@ class TimerContracts(unittest.TestCase):
             @(cross(V(u,r)-15,1,0.01,0.01)) m=m+1;
             V(y,r)<+1.0*n+m;''','integer n,m;')
         result=run_timer(source,stop=22,times=[0,22])
-        self.assertEqual([e['time'] for e in result['transient']['events']],[15.,15.])
+        timer,cross = result['transient']['events']
+        self.assertEqual(timer['time'], 15.)
+        self.assert_cross_execution(cross, Q(15), .01, .01, lambda t:t-15)
 
     def test_one_ulp_neighbors_of_certified_root_remain_distinct(self):
         for start in [math.nextafter(8.,0.), math.nextafter(8.,math.inf)]:
@@ -68,7 +88,13 @@ class TimerContracts(unittest.TestCase):
               @(cross(V(u,r)-8,1,0.1,0.1)) m=m+1;
               V(y,r)<+1.0*n+m;''','integer n,m;')
             result=run_timer(source,stop=19,times=[0,19])
-            self.assertEqual([e['time'] for e in result['transient']['events']],sorted([8.,start]))
+            events=result['transient']['events']
+            timer=next(e for e in events if e['event']==0)
+            cross=next(e for e in events if e['event']==1)
+            self.assertEqual(timer['time'],start)
+            te=self.assert_cross_execution(cross,Q(8),.1,.1,lambda t:t-8)
+            self.assertEqual(cross['observation_time_bounds'],[8.,8.])
+            self.assertEqual([e['time'] for e in events],sorted([start,float(te)]))
             self.assertEqual(result['transient']['states'][-1], [1,1])
 
     def test_periodic_independent_count_answers_and_typed_records(self):
@@ -162,10 +188,19 @@ class TimerContracts(unittest.TestCase):
                 ''' + ''.join(order) + 'V(y,r)<+n; V(z,r)<+held;',
                 'electrical z; integer n; real held;')
             result = run_timer(source, stop=1, times=[0, 0.5, 1])
-            self.assertEqual(result['transient']['states'], [[0, -1], [1, 1], [1, 1]])
+            timer = next(e for e in result['transient']['events'] if e['kind']=='timer')
+            cross = next(e for e in result['transient']['events'] if e['kind']=='cross')
+            self.assertEqual(timer['time'], .5)
+            te = self.assert_cross_execution(cross, Q(.5), .001, .001, lambda t:t-Q(.5))
+            self.assertEqual(result['transient']['states'], [[0,-1],[1,-1],[1,1]])
             self.assertEqual({e['kind'] for e in result['transient']['events']}, {'cross', 'timer'})
-            self.assertEqual([e['before'] for e in result['transient']['events']], [[0, -1]]*2)
-            self.assertEqual([e['after'] for e in result['transient']['events']], [[1, 1]]*2)
+            self.assertEqual(timer['before'], [0,-1])
+            self.assertEqual(timer['after'], [1,-1])
+            self.assertEqual(cross['before'], [1,-1])
+            self.assertEqual(cross['after'], [1,1])
+            observed = run_timer(source,stop=1,times=[0,.5,float(te),1])
+            self.assertEqual(observed['transient']['events'],result['transient']['events'])
+            self.assertEqual(observed['transient']['states'],[[0,-1],[1,-1],[1,1],[1,1]])
 
     def test_distinct_nearby_events_are_not_merged_by_time_tolerance(self):
         source = model('''@(initial_step) begin n=0; held=-1; end
@@ -173,7 +208,10 @@ class TimerContracts(unittest.TestCase):
           @(cross(V(u,r)-0.5,1,0.1,0.1)) n=n+1;
           V(y,r)<+n; V(z,r)<+held;''', 'electrical z; integer n; real held;')
         result = run_timer(source, stop=1, times=[0, 1])
-        self.assertEqual([e['time'] for e in result['transient']['events']], [0.5, 0.5001])
+        cross,timer = result['transient']['events']
+        self.assert_cross_execution(cross, Q(.5), .1, .1, lambda t:t-Q(.5))
+        self.assertEqual(timer['time'], .5001)
+        self.assertLess(cross['time'],timer['time'])
         self.assertEqual(result['transient']['states'][-1], [1, 1])
 
     def test_fraction_clock_bounds_long_history_and_large_absolute_time(self):
@@ -241,7 +279,13 @@ class TimerContracts(unittest.TestCase):
             with self.subTest(statement=statement):
                 result = run_timer(source, stop=1, times=[0, 1])
                 self.assertEqual(result['transient']['states'], [[1,0],[2,0]])
-                self.assertEqual([event['time'] for event in result['transient']['events']], [0,.5])
+                first,second = result['transient']['events']
+                self.assertEqual(first['time'],0)
+                if second['kind']=='timer':
+                    self.assertEqual(second['time'],.5)
+                else:
+                    # Original omitted cross settings retain frontend defaults.
+                    self.assert_cross_execution(second,Q(.5),1e-12,1e-9,lambda t:t-Q(.5))
 
     def test_later_block_reads_accepted_state_from_prior_timer(self):
         source = model('''@(initial_step) begin n=0; m=0; end

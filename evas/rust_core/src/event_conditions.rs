@@ -75,6 +75,21 @@ mod tests {
             .err()
             .expect("same interval is not proof that q=-q preserves the old value");
         assert_eq!(error.kind, "event_condition");
+        // A post-side certificate also cannot survive this earlier write.
+        assert_eq!(
+            conditions
+                .select_with_source_sides(
+                    &[0],
+                    &[I { lo: -1., hi: 1. }],
+                    &[],
+                    &[I { lo: -1., hi: 1. }],
+                    &[(0, 1)]
+                )
+                .err()
+                .unwrap()
+                .kind,
+            "event_condition"
+        );
     }
 
     #[test]
@@ -127,6 +142,7 @@ struct Predicate {
     origin: Origin,
     dependencies: AffineState,
     numeric: bool,
+    network_states: std::collections::BTreeSet<usize>,
 }
 
 pub(crate) struct Conditions {
@@ -135,6 +151,7 @@ pub(crate) struct Conditions {
     bounds: Option<GuardBounds>,
     // Exact zero-set certificates, indexed by calendar leaf, not event body.
     root_predicates: Vec<Vec<usize>>,
+    source_root_sides: Vec<Vec<(usize, i8)>>,
     assignments: Vec<Vec<AssignmentBounds>>,
     action_identity: Vec<Vec<ActionIdentity>>,
     stateful_events: Vec<bool>,
@@ -158,6 +175,7 @@ struct AssignmentBounds {
     dependencies: AffineState,
     row: usize,
     numeric: bool,
+    network_states: std::collections::BTreeSet<usize>,
 }
 
 fn compile(
@@ -230,6 +248,7 @@ fn compile(
                     origin: origin.clone(),
                     dependencies,
                     numeric,
+                    network_states: Default::default(),
                 });
                 Ok(Step::If {
                     predicate,
@@ -309,6 +328,7 @@ impl Conditions {
                             numeric: general[index]
                                 && affine(&a.rhs, program, &event.origin.instance).is_err(),
                             row: usize::MAX,
+                            network_states: Default::default(),
                         })
                     })
                     .collect::<Result<Vec<_>, Error>>()?;
@@ -354,6 +374,7 @@ impl Conditions {
             predicates,
             bounds: None,
             root_predicates: Vec::new(),
+            source_root_sides: Vec::new(),
             assignments,
             action_identity,
             stateful_events,
@@ -396,6 +417,7 @@ impl Conditions {
                 .dependencies
                 .state_dependencies
                 .iter()
+                .chain(&predicate.network_states)
                 .any(|&state| writers[state].is_some_and(|writer| writer != predicate.event))
             {
                 return Err(Error::new("unsupported_cross", format!(
@@ -403,7 +425,80 @@ impl Conditions {
                     predicate.origin.label())));
             }
         }
+        for (event, indices) in &selection.actions {
+            for &index in indices {
+                if let Some(assignment) = self.assignments[*event].get(index) {
+                    if assignment
+                        .network_states
+                        .iter()
+                        .any(|&state| writers[state].is_some_and(|writer| writer != *event))
+                    {
+                        return Err(Error::new("unsupported_cross",
+                            "simultaneous event condition replay reads a voltage affected by another selected block"));
+                    }
+                }
+            }
+        }
         Ok(())
+    }
+
+    /// Only unchanged external node forcing may be observed before the joint solve.
+    /// All syntactic upstream state reads survive cancellation and current values.
+    pub(crate) fn network_observers(
+        &mut self,
+        affected: &[bool],
+        states: &[std::collections::BTreeSet<usize>],
+        program: &Program,
+    ) -> Result<Vec<bool>, Error> {
+        let mut events = vec![false; self.active_events.len()];
+        for predicate in &mut self.predicates {
+            if !self.active_events[predicate.event] {
+                continue;
+            }
+            for &node in &predicate.dependencies.node_dependencies {
+                predicate.network_states.extend(&states[node]);
+                events[predicate.event] |= affected[node];
+            }
+            if program.events[predicate.event]
+                .assignments()
+                .iter()
+                .any(|a| predicate.network_states.contains(&a.state))
+            {
+                return Err(Error::new(
+                    "unsupported_condition",
+                    format!(
+                        "event condition reads a voltage affected by its callback writes at {}",
+                        predicate.origin.label()
+                    ),
+                ));
+            }
+        }
+        for (event, assignments) in self.assignments.iter_mut().enumerate() {
+            if !self.active_events[event] {
+                continue;
+            }
+            for assignment in assignments.iter_mut().filter(|a| a.row != usize::MAX) {
+                for &node in &assignment.dependencies.node_dependencies {
+                    assignment.network_states.extend(&states[node]);
+                    events[event] |= affected[node];
+                }
+                if program.events[event]
+                    .assignments()
+                    .iter()
+                    .any(|a| assignment.network_states.contains(&a.state))
+                {
+                    return Err(Error::new(
+                        "unsupported_condition",
+                        "event condition replay reads a voltage affected by its callback writes",
+                    ));
+                }
+            }
+        }
+        Ok(events)
+    }
+
+    pub(crate) fn has_active_event(&self, events: &[usize]) -> bool {
+        events.iter().any(|&e| self.active_events[e])
     }
 
     pub(crate) fn check_dependencies(&self, affected: &[bool]) -> Result<(), Error> {
@@ -452,6 +547,7 @@ impl Conditions {
 
     pub(crate) fn prepare(&mut self, program: &Program, driven: &[String]) -> Result<(), Error> {
         self.root_predicates.clear();
+        self.source_root_sides.clear();
         if self.enabled() {
             let mut expressions: Vec<_> = self
                 .predicates
@@ -476,7 +572,7 @@ impl Conditions {
             // Projection must be exact; rounded matching is never a proof.
             for event in &program.events {
                 for trigger in event.trigger.leaves()? {
-                    let matches = if let EventTrigger::Cross { guard, .. } = trigger {
+                    let (matches, sides) = if let EventTrigger::Cross { guard, .. } = trigger {
                         let expressions: Vec<_> = std::iter::once(Some(guard))
                             .chain(self.predicates.iter().map(|p| {
                                 (self.active_events[p.event] && !p.numeric).then_some(&p.expression)
@@ -484,14 +580,24 @@ impl Conditions {
                             .collect();
                         GuardBounds::stateful_expressions(program, driven, &expressions)
                             .map(|bounds| {
-                                (0..self.predicates.len())
-                                    .filter(|&i| bounds.same_zero_set(0, i + 1))
-                                    .collect()
+                                (
+                                    (0..self.predicates.len())
+                                        .filter(|&i| bounds.same_zero_set(0, i + 1))
+                                        .collect(),
+                                    (0..self.predicates.len())
+                                        .filter_map(|i| {
+                                            bounds
+                                                .source_zero_set_orientation(0, i + 1)
+                                                .map(|sign| (i, sign))
+                                        })
+                                        .collect(),
+                                )
                             })
                             .unwrap_or_default()
                     } else {
-                        vec![]
+                        (vec![], vec![])
                     };
+                    self.source_root_sides.push(sides);
                     self.root_predicates.push(matches);
                 }
             }
@@ -510,6 +616,17 @@ impl Conditions {
         fired_leaves: &[usize],
         before_bounds: &[I],
     ) -> Result<Selection, Error> {
+        self.select_with_source_sides(events, inputs, fired_leaves, before_bounds, &[])
+    }
+
+    pub(crate) fn select_with_source_sides(
+        &self,
+        events: &[usize],
+        inputs: &[I],
+        fired_leaves: &[usize],
+        before_bounds: &[I],
+        source_sides: &[(usize, i8)],
+    ) -> Result<Selection, Error> {
         if events
             .iter()
             .any(|&event| event >= self.active_events.len())
@@ -527,12 +644,22 @@ impl Conditions {
             .as_ref()
             .map(|b| b.values(inputs))
             .unwrap_or_default();
-        let mut at_root = vec![false; self.predicates.len()];
+        let mut at_root = vec![None; self.predicates.len()];
         for &leaf in fired_leaves {
             if let Some(predicates) = self.root_predicates.get(leaf) {
                 for &predicate in predicates {
                     values[predicate] = I::ZERO;
-                    at_root[predicate] = true;
+                    at_root[predicate] = Some(0);
+                }
+            }
+        }
+        for &(leaf, side) in source_sides {
+            if !matches!(side, -1 | 1) {
+                return Err(Error::new("invalid_ir", "invalid source root side"));
+            }
+            if let Some(predicates) = self.source_root_sides.get(leaf) {
+                for &(predicate, orientation) in predicates {
+                    at_root[predicate] = Some(side * orientation);
                 }
             }
         }
@@ -550,7 +677,7 @@ impl Conditions {
             inputs: &[I],
             states: &mut [I],
             written: &mut [bool],
-            at_root: &[bool],
+            at_root: &[Option<i8>],
             proof_attempts: &mut usize,
         ) -> Result<(), Error> {
             let bounds = context.bounds.as_ref();
@@ -585,7 +712,7 @@ impl Conditions {
                             crate::event_numeric::bounds(&p.expression, &numeric_nodes, states)?
                         } else if p.dependencies.state_dependencies.is_empty() {
                             values[*predicate]
-                        } else if at_root[*predicate]
+                        } else if at_root[*predicate] == Some(0)
                             && p.dependencies
                                 .state_dependencies
                                 .iter()
@@ -597,11 +724,29 @@ impl Conditions {
                                 .unwrap()
                                 .value_with_states(*predicate, inputs, states)
                         };
-                        let (yes_proved, no_proved) = match p.relation {
-                            Relation::Lt => (value.hi < 0.0, value.lo >= 0.0),
-                            Relation::Le => (value.hi <= 0.0, value.lo > 0.0),
-                            Relation::Gt => (value.lo > 0.0, value.hi <= 0.0),
-                            Relation::Ge => (value.lo >= 0.0, value.hi < 0.0),
+                        let sign_proof = at_root[*predicate].filter(|_| {
+                            !p.numeric
+                                && p.dependencies
+                                    .state_dependencies
+                                    .iter()
+                                    .all(|&state| !written[state])
+                                && p.network_states.iter().all(|&state| !written[state])
+                        });
+                        let (yes_proved, no_proved) = if let Some(sign) = sign_proof {
+                            let yes = match p.relation {
+                                Relation::Lt => sign < 0,
+                                Relation::Le => sign <= 0,
+                                Relation::Gt => sign > 0,
+                                Relation::Ge => sign >= 0,
+                            };
+                            (yes, !yes)
+                        } else {
+                            match p.relation {
+                                Relation::Lt => (value.hi < 0.0, value.lo >= 0.0),
+                                Relation::Le => (value.hi <= 0.0, value.lo > 0.0),
+                                Relation::Gt => (value.lo > 0.0, value.hi <= 0.0),
+                                Relation::Ge => (value.lo >= 0.0, value.hi < 0.0),
+                            }
                         };
                         if !value.finite() || !(yes_proved || no_proved) {
                             let original = Error::new("event_condition", format!("cannot certify {:?} condition at {}: difference in [{:e}, {:e}]", p.relation, p.origin.label(), value.lo, value.hi));

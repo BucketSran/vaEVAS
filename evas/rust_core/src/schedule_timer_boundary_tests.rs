@@ -33,6 +33,7 @@ fn fixed(clock: Clock, time: f64) -> ScheduledEvent {
             index: clock.index,
         },
         fixed_predecessor: None,
+        execution: None,
     }
 }
 fn held(clock: Option<Clock>, bounds: I, time: f64) -> ScheduledEvent {
@@ -46,6 +47,7 @@ fn held(clock: Option<Clock>, bounds: I, time: f64) -> ScheduledEvent {
             clock,
         },
         fixed_predecessor: None,
+        execution: None,
     }
 }
 fn point(t: f64) -> Clock {

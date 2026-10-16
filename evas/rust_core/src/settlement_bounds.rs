@@ -406,6 +406,29 @@ impl Bounds {
         })
     }
 
+    /// A chosen callback path projected over an independent event-location
+    /// enclosure. This is a demand bound, not permission to change its branch.
+    pub(crate) fn sampled_state_enclosures(
+        &self,
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+    ) -> Option<Vec<I>> {
+        let parameters: Vec<_> = inputs
+            .iter()
+            .chain(before)
+            .chain(operators)
+            .copied()
+            .chain([I::ONE])
+            .collect();
+        let states: Vec<_> = self
+            .states
+            .iter()
+            .map(|row| dot(row, &parameters))
+            .collect();
+        states.iter().all(|state| state.finite()).then_some(states)
+    }
+
     /// Event-time voltage forcing, distinct from the later b observation.
     pub(crate) fn node_enclosures(
         &self,

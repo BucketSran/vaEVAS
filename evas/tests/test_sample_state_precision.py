@@ -37,10 +37,14 @@ class SampleStatePrecision(unittest.TestCase):
                 second = run(program, times=dense, max_step=1, vabstol=1e-8, reltol=0)
                 self.assertEqual(first['solutions'],
                                  [second['solutions'][dense.index(t)] for t in sparse])
-                self.assertEqual(values(first), [0, 0, 1, 1, 1, 1])
                 events = first['transient']['events']
                 self.assertEqual(events, second['transient']['events'])
-                self.assertEqual([event['time'] for event in events], [.25, .5])
+                self.assertEqual(events[0]['time'], .25)
+                te=Fraction(events[1]['time'])
+                self.assertLess(Fraction(1,2),te)
+                self.assertLessEqual(te-Fraction(1,2),Fraction(1e-10))
+                self.assertLessEqual(abs(2*te-1),Fraction(1e-10))
+                self.assertEqual(values(first),[int(Fraction(t)>=te) for t in sparse])
                 for t, actual in zip(dense, values(second, 'dut:z'), strict=True):
                     expected = Fraction(t) if t <= .25 else 2*Fraction(t)-Fraction(1, 4)
                     self.assertLessEqual(abs(Fraction(actual)-expected), Fraction(1e-8))
@@ -64,10 +68,16 @@ class SampleStatePrecision(unittest.TestCase):
                          {'threshold':1.25, 'gain':-8, 'direction':-1}),
             ])
         result = run(program, times=[0, .5, .75, 1], vabstol=1e-8, reltol=0)
-        self.assertEqual(values(result, 'left'), [0, 1, 1, 1])
-        self.assertEqual(values(result, 'right'), [0, 0, 1, 1])
         crosses = [e for e in result['transient']['events'] if e['kind']=='cross']
-        self.assertEqual([e['time'] for e in crosses], [.5, .75])
+        self.assertEqual(len(crosses),2)
+        for event,name,root,gain,threshold in zip(crosses,['left','right'],[Fraction(1,2),Fraction(3,4)],[4,-8],[Fraction(3,4),Fraction(5,4)]):
+            self.assertIn('('+name+')',event['origin'])
+            te=Fraction(event['time'])
+            self.assertLess(root,te);self.assertLessEqual(te-root,Fraction(1e-10))
+            guard=gain*(2*te-Fraction(1,4)-threshold)
+            self.assertEqual(1 if guard>0 else -1,1 if gain>0 else -1)
+            self.assertLessEqual(abs(guard),Fraction(1e-10))
+            self.assertEqual(values(result,name),[int(Fraction(t)>=te) for t in [0,.5,.75,1]])
 
     def test_guard_depending_on_filter_keeps_an_inexact_root_enclosure(self):
         # z=t until .25 and 2*t-.25 afterwards. Its proper filter has

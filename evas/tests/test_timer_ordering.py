@@ -100,7 +100,14 @@ class TimerOrdering(unittest.TestCase):
         for times, step in [([0,.35],.35), ([0,.15,.25,.3,.35],.012)]:
             result = run_timer(source, stop=.35, times=times, step=step)
             events = result['transient']['events']
-            self.assertEqual([e['event'] for e in events], [0,0,1,0])
+            cross,=[e for e in events if e['kind']=='cross']
+            te=Q(cross['time'])
+            self.assertLess(Q(.3),te);self.assertLessEqual(te-Q(.3),Q(1e-9))
+            self.assertLessEqual(te-Q(.3),Q(1e-8))
+            # The mathematical source root precedes the clock, but its actual
+            # strict-post callback follows that exact physical clock.
+            self.assertLess(3*Q(.1),te)
+            self.assertEqual([e['event'] for e in events], [0,0,0,1])
             self.assertLess(events[-2]['time'], events[-1]['time'])
             self.assertEqual(result['transient']['states'][-1], [3,1])
             if baseline is not None:

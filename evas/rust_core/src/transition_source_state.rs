@@ -77,6 +77,24 @@ impl Source {
         states: &[I],
         root: Option<&RootTime>,
     ) -> Result<Prepared, Error> {
+        self.prepare_with_boundary(time, bounds, states, root, None)
+    }
+    pub(crate) fn prepare_with_boundary(
+        &self,
+        time: f64,
+        bounds: I,
+        states: &[I],
+        root: Option<&RootTime>,
+        source_boundary_root: Option<&RootTime>,
+    ) -> Result<Prepared, Error> {
+        // This proof only authorizes the relation to the mathematical source
+        // cut. It must not become effective_root or Prepared.exact_root.
+        if source_boundary_root.is_some_and(|root| root.refine(bounds).is_none()) {
+            return Err(Error::new(
+                "event_resolution",
+                "source boundary identity is outside the incoming enclosure",
+            ));
+        }
         if !time.is_finite()
             || !bounds.finite()
             || bounds.lo > time
@@ -97,7 +115,7 @@ impl Source {
                 .flatten()
         });
         self.plan
-            .check_incoming(self.time, bounds, effective_root)?;
+            .check_incoming(self.time, bounds, effective_root.or(source_boundary_root))?;
         if self
             .plan
             .next_after(self.time)
@@ -124,7 +142,7 @@ impl Source {
             certified.push(next.clone());
         }
 
-        next.check_incoming(self.time, bounds, effective_root)?;
+        next.check_incoming(self.time, bounds, effective_root.or(source_boundary_root))?;
         let unchanged = self.plan.same_proof(&next);
         if time == self.time && !unchanged {
             return Err(Error::new(
@@ -189,5 +207,88 @@ impl Source {
                 .all(|(a, b)| a.same_proof(b))
             && self.last_root == other.last_root
             && self.last_window == other.last_window
+    }
+}
+
+#[cfg(test)]
+mod boundary_identity_tests {
+    use super::*;
+    use crate::ir::{Expression, Program, TransientInputs};
+    use crate::pwl::Trajectory;
+    use crate::transition_source_plan::Work;
+    use serde_json::json;
+
+    #[test]
+    fn boundary_identity_is_only_order_permission_and_never_a_sampling_root() {
+        let origin = json!({"source":"boundary.va","line":1,"column":1,"instance":"M"});
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u"],
+            "states":[],"events":[],"operators":[],"contributions":[]
+        }))
+        .unwrap();
+        let source = json!({"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]});
+        let constant = |value: f64| json!({"op":"affine","constant":value,"terms":[]});
+        let expression: Expression = serde_json::from_value(json!({"op":"select","relation":"gt","left":source,"right":constant(0.75),"origin":origin,
+            "then_value":constant(2.),"else_value":{"op":"select","relation":"gt","left":source,"right":constant(0.5),"origin":origin,
+                "then_value":constant(1.),"else_value":constant(0.)}})).unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl_errors_v: None,
+                pwl: vec![vec![[0., 0.], [1., 1.]]],
+                output_times: vec![0., 1.],
+                stop: 1.,
+                max_step: 0.1,
+                strobetimes: vec![],
+            },
+            1,
+        )
+        .unwrap();
+        let spec = Spec::new(
+            &expression,
+            &program,
+            &trajectory,
+            &["u".into()],
+            "M",
+            Work::default(),
+        )
+        .unwrap()
+        .unwrap();
+        let (initial, _, _) = Source::initialized(spec, &[]).unwrap();
+        let root = RootTime::point(0.5).unwrap();
+        let consumed = initial
+            .prepare(0.5, I::point(0.5), &[], Some(&root))
+            .unwrap()
+            .source;
+        let e = 0.5_f64.next_up();
+        let location = I { lo: 0.5, hi: e };
+        assert_eq!(
+            consumed.prepare(e, location, &[], None).err().unwrap().kind,
+            "event_resolution"
+        );
+        let candidate = consumed
+            .prepare_with_boundary(e, location, &[], None, Some(&root))
+            .unwrap();
+        assert!(candidate.exact_root.is_none());
+        assert!(candidate.source.last_root.is_none());
+        assert_eq!(candidate.time_bounds, location);
+        assert_eq!(candidate.source.time, e);
+        // The same root cannot authorize crossing a different source cut.
+        let error = consumed
+            .prepare_with_boundary(0.8, I { lo: 0.5, hi: 0.8 }, &[], None, Some(&root))
+            .err()
+            .unwrap();
+        assert_eq!(error.kind, "event_resolution");
+        assert!(error.message.contains("unproved source-target boundary"));
+        // Identity also cannot be supplied for a window excluding that root.
+        assert_eq!(
+            consumed
+                .prepare_with_boundary(0.6, I::point(0.6), &[], None, Some(&root))
+                .err()
+                .unwrap()
+                .kind,
+            "event_resolution"
+        );
+        assert_eq!(consumed.time, 0.5);
+        assert_eq!(consumed.last_root.as_ref(), Some(&root));
     }
 }

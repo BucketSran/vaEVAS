@@ -875,18 +875,21 @@ impl NonlinearContinuous {
         if selection::needed(&context.program) {
             let stop = context.trajectory.config.stop;
             let parts = selection::nonlinear_parts(&context, &parameters, start, stop)?;
-            let probe = match parts.first() {
-                Some((_, Some(root))) => root.lo.next_down(),
-                Some((span, None)) => span.lo * 0.5 + span.hi * 0.5,
-                None => start,
+            let frozen = match parts.first() {
+                Some((span, None)) => selection::freeze_mode_context(&context, &parameters, *span)?,
+                part => {
+                    let probe = part
+                        .and_then(|(_, r)| *r)
+                        .map_or(start, |r| r.lo.next_down());
+                    if probe < 0. || probe > stop {
+                        return Err(Error::new(
+                            "condition_precision",
+                            "no physical mode witness at initialization",
+                        ));
+                    }
+                    selection::freeze_context(&context, &parameters, probe)?
+                }
             };
-            if probe < 0.0 || probe > stop {
-                return Err(Error::new(
-                    "condition_precision",
-                    "no physical mode witness at initialization",
-                ));
-            }
-            let frozen = selection::freeze_context(&context, &parameters, probe)?;
             let mut result = Self::initialized(frozen, parameters, start, restart, tolerances)?;
             result.context = context;
             result.event_dependent = true;
@@ -1688,14 +1691,11 @@ impl NonlinearContinuous {
                     }
                     ((*prior).clone(), mode_begin, prior.steps.len())
                 } else {
-                    let probe = begin * 0.5 + end * 0.5;
-                    if probe <= begin || probe >= end {
-                        return Err(Error::new(
-                            "condition_precision",
-                            "no representable interior of physical mode",
-                        ));
-                    }
-                    let frozen = selection::freeze_context(&self.context, &self.parameters, probe)?;
+                    let frozen = selection::freeze_mode_context(
+                        &self.context,
+                        &self.parameters,
+                        I { lo: begin, hi: end },
+                    )?;
                     let mode = Self::initialized(
                         frozen,
                         self.parameters.clone(),
@@ -2305,18 +2305,31 @@ impl NonlinearContinuous {
             let witnesses = if let Some(root) = root {
                 selection::isolated_root_witnesses(&self.context, &self.parameters, root)?.to_vec()
             } else {
-                let probe = span.lo * 0.5 + span.hi * 0.5;
-                if probe <= span.lo || probe >= span.hi {
-                    return Err(fail());
-                }
-                vec![probe]
+                vec![]
             };
+            let frozen = if root.is_none() {
+                vec![selection::freeze_mode_context(
+                    &self.context,
+                    &self.parameters,
+                    span,
+                )?]
+            } else {
+                vec![]
+            };
+            let mut contexts = frozen;
             for probe in witnesses {
                 if probe < 0. || probe > self.context.trajectory.config.stop {
                     return Err(fail());
                 }
+                contexts.push(selection::freeze_context(
+                    &self.context,
+                    &self.parameters,
+                    probe,
+                )?);
+            }
+            for context in contexts {
                 let next = Self::initialized(
-                    selection::freeze_context(&self.context, &self.parameters, probe)?,
+                    context,
                     self.parameters.clone(),
                     window.lo,
                     Some(initial.to_vec()),

@@ -1,7 +1,26 @@
 //! Query-independent, best-effort recovery of an event voltage certificate.
 //! A single sample/edge/filter path can also request refinement before a local
-//! failure. Later history/output certificates remain mandatory in every case.
+//! failure. These are additional mathematical-root reference requirements.
+//! Physical history/output certificates remain centered on actual execution e
+//! and must retain all true input, inherited-state and numerical uncertainty.
+//! Unknown root-reference demand is not a root-reference accuracy certificate.
 use super::*;
+
+/// The additional root-reference assessment is independent of physical
+/// acceptance. Unknown never denotes a passed root-reference requirement.
+enum RootReferenceAssessment {
+    Certified,
+    Failed(Error),
+    Unknown,
+}
+impl RootReferenceAssessment {
+    fn failure(self) -> Option<Error> {
+        match self {
+            Self::Failed(error) => Some(error),
+            Self::Certified | Self::Unknown => None,
+        }
+    }
+}
 
 impl Controller {
     fn filter_root_budget(
@@ -14,14 +33,20 @@ impl Controller {
             return None;
         }
         let path = self.accepted.operators.single_filter_budget(event.time)?;
-        let (inputs, slopes) = trajectory.range(event.bounds()).ok()?;
+        let location = event.bounds().hull(I::point(event.time));
+        let (inputs, slopes) = trajectory.range(location).ok()?;
+        let point_inputs = trajectory.value_bounds(event.time);
         let blocks = [model.triggers[event.event].event];
-        let roots = [event.event];
+        let roots = if event.is_arrival() {
+            vec![event.event]
+        } else {
+            vec![]
+        };
         let evaluation = self.accepted.operators.evaluation(event.time).ok()?;
         let prepared = crate::settlement::prepare_window(
             model,
             (&blocks, &roots),
-            (&trajectory.values(event.time), &inputs),
+            (&trajectory.values(event.time), &point_inputs),
             &trajectory.value_bounds(event.time),
             &self.accepted.states,
             &evaluation.values,
@@ -32,12 +57,11 @@ impl Controller {
         .ok()?;
         let selection = model
             .conditions
-            .select_at_roots(&blocks, &inputs, &roots, &self.accepted.state_bounds)
+            .select_at_roots(&blocks, &point_inputs, &roots, &self.accepted.state_bounds)
             .ok()?;
-        let point_inputs = trajectory.value_bounds(event.time);
         let observation = model.conditions.select(&[], &point_inputs).ok()?;
         let sampled_program = model
-            .selected_program_at_roots(&prepared.bounds, &inputs, &roots)
+            .selected_program_at_roots(&prepared.bounds, &point_inputs, &roots)
             .ok()?;
         let observed_program = model
             .selected_program(&prepared.bounds, &point_inputs)
@@ -58,7 +82,7 @@ impl Controller {
             &self.accepted.state_bounds,
             &self.accepted.states,
             *prepared.states.first()?,
-            I::point(event.bounds().hi) - I::point(event.bounds().lo),
+            I::point(location.hi) - I::point(location.lo),
         )
     }
 
@@ -75,13 +99,19 @@ impl Controller {
             return None;
         }
         let _timing = crate::diagnostics::span("root.assessment");
-        let (inputs, slopes) = trajectory.range(event.bounds()).ok()?;
+        let location = event.bounds().hull(I::point(event.time));
+        let (inputs, slopes) = trajectory.range(location).ok()?;
+        let point_inputs = trajectory.value_bounds(event.time);
         let blocks = [model.triggers[event.event].event];
-        let roots = [event.event];
+        let roots = if event.is_arrival() {
+            vec![event.event]
+        } else {
+            vec![]
+        };
         let prepared = crate::settlement::prepare_window(
             model,
             (&blocks, &roots),
-            (&trajectory.values(event.time), &inputs),
+            (&trajectory.values(event.time), &point_inputs),
             &trajectory.value_bounds(event.time),
             &self.accepted.states,
             &[],
@@ -92,12 +122,11 @@ impl Controller {
         .ok()?;
         let selection = model
             .conditions
-            .select_at_roots(&blocks, &inputs, &roots, &self.accepted.state_bounds)
+            .select_at_roots(&blocks, &point_inputs, &roots, &self.accepted.state_bounds)
             .ok()?;
-        let point_inputs = trajectory.value_bounds(event.time);
         let observation = model.conditions.select(&[], &point_inputs).ok()?;
         let sampled_program = model
-            .selected_program_at_roots(&prepared.bounds, &inputs, &roots)
+            .selected_program_at_roots(&prepared.bounds, &point_inputs, &roots)
             .ok()?;
         let observed_program = model
             .selected_program(&prepared.bounds, &point_inputs)
@@ -108,6 +137,7 @@ impl Controller {
         let output =
             crate::settlement_bounds::Bounds::for_program(model, &observation, &observed_program)
                 .ok()?;
+        let sampled = sample.sampled_state_enclosures(&inputs, &self.accepted.state_bounds, &[])?;
         sample.input_root_demand(
             &output,
             model,
@@ -116,9 +146,41 @@ impl Controller {
             &slopes,
             &self.accepted.state_bounds,
             &self.accepted.states,
-            &prepared.bounds,
+            &sampled,
             &prepared.solution.voltages,
         )
+    }
+
+    fn root_reference_assessment(
+        &self,
+        chain: Option<&crate::settlement_bounds::FilterBudget>,
+        demand: Option<&crate::accuracy::Demand>,
+    ) -> RootReferenceAssessment {
+        if let Some(chain) = chain.filter(|chain| chain.predicted_error_bound > chain.budget) {
+            return RootReferenceAssessment::Failed(Error::new(
+                "waveform_accuracy",
+                format!(
+                    "event location error at {}: {:e} exceeds voltage budget {:e}",
+                    chain.consumer, chain.predicted_error_bound, chain.budget
+                ),
+            ));
+        }
+        if let Some(demand) = demand.filter(|d| d.assessment.error_bound > d.assessment.budget) {
+            return RootReferenceAssessment::Failed(Error::new(
+                "waveform_accuracy",
+                format!(
+                    "event location error at {}: {:e} exceeds voltage budget {:e}",
+                    demand.assessment.consumer,
+                    demand.assessment.error_bound,
+                    demand.assessment.budget
+                ),
+            ));
+        }
+        if chain.is_some() || demand.is_some() {
+            RootReferenceAssessment::Certified
+        } else {
+            RootReferenceAssessment::Unknown
+        }
     }
 
     // Inspect the event and its first physical history deadline. In particular,
@@ -150,6 +212,7 @@ impl Controller {
                     representative: time,
                     observation: I::point(time),
                     fired_roots: &[],
+                    mathematical_roots: &[],
                     prediction_end: prediction_end(model, trajectory, crossings.get(end)),
                 },
                 &[],
@@ -198,22 +261,26 @@ impl Controller {
                     event.bounds().lo + (event.bounds().hi - event.bounds().lo) * 0.5,
                 )
                 .is_some();
-        let proactive = exact_source
-            || chain
-                .as_ref()
-                .is_some_and(|d| d.target_width.is_some() && d.predicted_error_bound > d.budget);
-        let failure = match self.preflight_root_consumer(model, trajectory, crossings) {
-            Ok(_) if !proactive => return Ok(()),
-            Ok(_) => None,
-            Err(error) if matches!(error.kind, "waveform_accuracy" | "event_accuracy") => {
-                Some(error)
-            }
-            Err(error) => return Err(error),
-        };
         let demand = if chain.is_none() {
             self.input_root_demand(model, trajectory, event)
         } else {
             None
+        };
+        let location_failure = self
+            .root_reference_assessment(chain.as_ref(), demand.as_ref())
+            .failure();
+        // Preserve the existing source-only root-reference recovery strategy.
+        // Full contraction alone does not grant an unknown root-reference certificate.
+        let proactive = exact_source
+            || location_failure.is_some()
+            || (chain.is_none() && !model.program.operators.is_empty());
+        let failure = match self.preflight_root_consumer(model, trajectory, crossings) {
+            Ok(_) if !proactive => return Ok(()),
+            Ok(_) => location_failure,
+            Err(error) if matches!(error.kind, "waveform_accuracy" | "event_accuracy") => {
+                Some(error)
+            }
+            Err(error) => return Err(error),
         };
         if let Some(chain) = &chain {
             crate::diagnostics::detail("filter_root_budget", "proposed", Some(event.time), chain);
@@ -272,10 +339,19 @@ impl Controller {
                 remaining,
             )?;
             remaining = remaining.saturating_sub(work.iterations);
-            let changed = refined.bounds() != candidate[self.event].bounds();
+            let changed = refined.bounds() != candidate[self.event].bounds()
+                || refined.execution_root() != candidate[self.event].execution_root();
             candidate[self.event] = refined;
             let result = if changed {
                 self.preflight_root_consumer(model, trajectory, &candidate)
+                    .and_then(|_| {
+                        let event = &candidate[self.event];
+                        let chain = self.filter_root_budget(model, trajectory, event);
+                        let demand = self.input_root_demand(model, trajectory, event);
+                        self.root_reference_assessment(chain.as_ref(), demand.as_ref())
+                            .failure()
+                            .map_or(Ok(()), Err)
+                    })
             } else {
                 last_failure.map_or(Ok(()), Err)
             };
