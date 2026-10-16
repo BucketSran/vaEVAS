@@ -148,6 +148,16 @@ TIMER、CROSS、EVENT-ORDER、TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE�
 另有 [30 条件回调诊断](../../../experiments/backends/sample-edge-filter/BOUNDARY.md#回调规则的后续实测)，
 验证显式正容差下的接受点触发规则；只读回放支持差异归因，不证明 EVAS 独立生成了同一网格，也不需要为本批复制该网格。
 
+[定向生命周期回归](../../validation/sample_edge_filter/README.md#定向生命周期回归)
+补充 TIMER、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE 的开发测试：非零计数经过复位闭包、候选丢弃及精度拒绝后只提交一次；
+旧边沿持续到延迟激活；保持量复位后滤波状态续存。局部预期由手算给出，不扩大支持范围或 Spectre 边界资格。
+
+[REA 四行边界核对](../../../experiments/backends/sample-edge-filter/BOUNDARY.md#rea-four-boundaries)
+保存 EVAS 0.15.0 / IR19、`ff5d0fd9` 本地树的历史诊断，不作为当前 IR23 对齐证据。
+该记录涉及 TIMER、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE：原始内存确认 Spectre 在正容差内提前回调，
+EVAS 的全部 6,366 行计数符合名义时钟，四行严格差异仍保留；未发现需要修改调度或历史的生产缺口。
+该结论限于所测原链路，不授予依赖跳变瞬间先后顺序的新消费者同源码资格。
+
 2026-10-10 增加[按失败原因选择根细化](../../../experiments/backends/sample-edge-filter/BOUNDARY.md#directed-root-recovery)，
 补充 CROSS、EVENT-ORDER、COMPOSE 及 DEV:precision-chain 的开发证据。
 [恢复测试](../../tests/test_root_recovery.py)检查原预算重验和继承误差保留；

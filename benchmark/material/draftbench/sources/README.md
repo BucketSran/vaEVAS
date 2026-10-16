@@ -8,7 +8,7 @@
 | [Analog Design Bench：LDO 启动测量](analog-design-bench-ldo.md) | [case-0002](../cases/testing-characterization/power/case-0002-ldo-startup/README.md) |
 | [Analog Design Bench 的 starter 与题面分工](analog-task-package.md) | 尚无 Case |
 | [Cadence 安装库：VA 测量与激励示例](cadence-measurement.md) | [case-0003](../cases/testing-characterization/amplifiers/case-0003-opamp-slew/README.md) |
-| [CVDP heavy 1.1 的多文件交付约定](cvdp-heavy-multifile.md) | 尚无 Case |
+| [CVDP heavy 1.1 的交付约定与验收质量](cvdp-heavy-multifile.md) | 尚无 Case |
 | [JKU：SKY130 transmission-gate 采样级](jku-sampling-stage.md) | [case-0006](../cases/data-modeling/adc/case-0006-sampling-identification/README.md) |
 | [BMAS 2000：SC 滤波器中的运放规格](sc-filter-bmas2000.md) | [case-0005](../cases/spec-modeling/filters/case-0005-sc-opamp/README.md) |
 | [ajcci：SKY130 可编程 POR](sky130-ajc-por.md) | [case-0001](../cases/testing-characterization/power/case-0001-por-sequence/README.md) |

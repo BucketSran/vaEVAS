@@ -62,3 +62,32 @@ python3 -B -m unittest discover -s evas/validation/sample_edge_filter -v
 ```
 
 运行入口和实际证据见[对照报告](../../../experiments/backends/sample-edge-filter/README.md)。
+
+## 定向生命周期回归
+
+以下三项回归已由 [#193](https://github.com/BucketSran/vaEVAS/pull/193) 合入；本节补充其独立验收范围。
+
+[公开链路测试](../../tests/test_sample_edge_filter.py)另用手算数值检查两个容易混淆的时段。
+它们复用上述 VA 和刺激，独立写出局部解析答案，不调用 `segments` 或 `filter_value` 生成预期值。
+
+| 回归 | 要区分的行为 |
+| --- | --- |
+| `test_reversal_keeps_old_edge_until_delayed_activation` | SEF-INTERRUPT 在 2 µs 采到 0.1 V，旧边沿仍以 +1/3 V/µs 上升到 2.125 µs，此后才按 −0.52 V/µs 反向；滤波器继续积分这段旧边沿 |
+| `test_hold_reset_retains_filter_history_through_delayed_fall` | SEF-RESET 在 2.25 µs 将保持值复位为 0.25 V，边沿在 2.375 µs 才下降；滤波输出从原有非零状态续算，不能重置为保持值或当前边沿值 |
+
+两项都比较跨过整个关注区间的稀疏查询、局部查询和加密查询，并核对共同点及事件记录一致。
+局部边沿和滤波答案使用 1 nV 的 EVAS 回归容差；这不替换上文 Spectre 工程比较的 100 µV 预算。
+
+候选状态另由 [Rust 控制器回归](../../rust_core/src/transient_lifecycle_tests.rs)
+`reset_closure_retries_q_and_nonzero_count_from_the_accepted_frame` 检查。
+它在同一控制器中重复准备、丢弃候选，再经历精度拒绝和重试。
+复位使积分输出从事件前的 2 变为 1，同刻重算必须令 `q=1`，而计数只从 7 增为 8。
+第二个事件再增为 9。该测试补充已有普通计数重试测试，不声称覆盖全部事务失败路径。
+
+这些是开发回归，不扩大支持范围或同源码兼容资格。运行：
+
+```sh
+cargo build --locked --manifest-path evas/rust_core/Cargo.toml
+cargo test --locked --manifest-path evas/rust_core/Cargo.toml reset_closure_retries_q_and_nonzero_count_from_the_accepted_frame
+PYTHONPATH=evas/src:evas/tests python3 -B -m unittest -v test_sample_edge_filter
+```
