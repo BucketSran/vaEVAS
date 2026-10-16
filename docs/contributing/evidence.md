@@ -95,3 +95,21 @@ from `complete`. Retain raw bundles in the owning project's ignored output area;
 publish curated summaries and necessary provenance without customer source or bulk
 artifacts. Reanalysis produces a new analysis identity and preserves the original
 execution and failure records.
+
+## Development time
+
+Record research, implementation, validation, review, rework, CI waiting and publication when
+each phase starts and ends. Use [development_records.py](../../scripts/README.md#development-records)
+in the task's existing ignored output directory. One coordinator owns the append-only timing
+record; workers return their observed intervals and existing tool receipts. A research decision
+belongs in the existing task record, not in another narrative report.
+
+Keep status, evidence and a short reason for rework or waiting. Retain failures and interrupted
+phases. Reuse MCP action durations, test receipts and CI timestamps when available; identify
+whether timing covers a tool call, a phase or the whole task. Unmeasured time remains unknown.
+The sum of parallel workers is recorded participant time, not elapsed or CPU time. Report their interval union and
+the observed span separately. Clock discontinuities and unclosed intervals remain visible.
+
+At handoff, report measured phase totals and the largest delay, with the timing coverage limit.
+A later `retro` can compare review, repeated checks and rework without reconstructing a story.
+Do not infer a speedup from one task or equate model usage with wall-clock time.

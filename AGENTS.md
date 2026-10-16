@@ -10,7 +10,7 @@ Start from current code and component contracts; read historical material when i
 
 1. Reuse the current task and still-valid context; inspect `git status -sb`. Read the affected component README when its contract or routing is needed. Select skills on demand; they are independent entry points.
 2. Identify the outcome, owning component and acceptance checks. For EVAS behavior or support/evidence changes, identify affected [capability IDs](evas/docs/development/capability-evidence.md). For work spanning sessions or handoffs, persist scope/dependencies in the existing PR/Issue; one-turn work may stay in the conversation. No mandatory plan/KPI/task file.
-3. For edits, keep the primary checkout (`current` in this workspace) as the daily entry. Check existing ownership and reuse the task checkout across conversations under the [creation and handoff rules](docs/contributing/workspaces.md#creating-and-handing-off-work); temporary checkouts need a visible project entry. Run `python3 -B scripts/check_workspaces.py` when starting/resuming edits, after creating a worktree, and at handoff; follow [workspace visibility](docs/contributing/workspaces.md#workspace-visibility-and-handoff). New independent work starts from reviewed `main`; use a parent branch only for an actual dependency. Keep review fixes in the existing open PR.
+3. Follow the [conversation handoff triggers](docs/contributing/workspaces.md#conversation-handoff-triggers). For edits, keep the primary checkout (`current` in this workspace) as the daily entry. Check existing ownership and reuse the task checkout across conversations under the [creation and handoff rules](docs/contributing/workspaces.md#creating-and-handing-off-work); temporary checkouts need a visible project entry. Run `python3 -B scripts/check_workspaces.py` when starting/resuming edits, after creating a worktree, and at handoff; follow [workspace visibility](docs/contributing/workspaces.md#workspace-visibility-and-handoff). New independent work starts from reviewed `main`; use a parent branch only for an actual dependency. Keep review fixes in the existing open PR.
 4. Make the smallest coherent change. Use [behavior-first TDD and test selection](docs/contributing/validation.md#behavior-first-tests); for EVAS, select checks and revalidation triggers from [evas-validate](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks). Documentation-only changes need no simulator run.
 5. Update affected component contracts and evidence links; update capability rows only when EVAS support/evidence changes. Report the reviewed revision or local diff, checks, failures and limits; prepare/publish through the PR skill within the requested scope.
 
@@ -66,6 +66,7 @@ for scope, tolerances, version identity and exceptions.
 ## Documentation audience
 
 README files, comparison tables and evaluation standards are for human readers, even when agents also consume them.
+Human review summaries follow the [single-summary limit and check](CONTRIBUTING.md#concise-review-delivery).
 When editing them, use `technical-writing`: lead with the reader's question, the conclusion and its limits;
 explain necessary terms and use a concrete example for precision or event behavior.
 Keep pass criteria and their rationale readable in the main text. Put checker formulas, receipt fields

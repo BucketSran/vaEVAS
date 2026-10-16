@@ -55,35 +55,54 @@ Fix the comparison before reviewing: base/head or a saved before/after snapshot,
 paths and relevant staged, unstaged and new files. For mixed local work, isolate the requested
 change so earlier edits do not enter its review. Include affected consumers when needed.
 
-Assess requirements, repository standards and correctness evidence separately. Report actionable
-findings first, ordered by severity. For each finding, give the location, trigger, impact,
-supporting evidence and focused repair. Label confirmed defects, inferences and pending checks.
-State the reviewed scope, actual checks and remaining limits; do not invent findings to fill a format.
+Assess requirements, repository standards and correctness evidence separately. A passing
+category cannot hide a failing one. Use fresh-context independent review for new numerical
+mechanisms, semantic behavior and grading logic. Give reviewers the fixed diff, acceptance
+criteria and evidence; let them inspect relevant callers. Reuse matching review. New code,
+changed assumptions, failed checks or unresolved findings trigger review of the affected delta.
+Do not add a second complete pass just because the work reaches commit, PR or merge.
+The coordinator verifies findings and reruns affected checks. Distinguish confirmed defects,
+inferences and missing evidence. Escalate disputed acceptance or a changed research direction;
+report missing independent review as a limitation. No fixed reviewer count or clean-round quota applies.
 
-Use a fresh-context independent review for new numerical mechanisms, semantic behavior and grading
-logic. Give the reviewer the agreed requirements, exact revision or local diff, and evidence to inspect.
-The coordinator verifies findings, organizes fixes and reruns affected checks. New changes or unresolved
-findings determine follow-up review; a fixed number of clean rounds is not required. Describe any missing
-independent review as a limitation. Involve the user when scope changes, acceptance criteria are disputed,
-an algorithm choice needs a research trade-off, or evidence overturns the agreed research direction.
+### Concise review delivery
 
-Explain each material change with its before/after behavior, reason, observed verification and
-limits. Scale detail to the change; a formatting-only diff does not need a mathematical explanation.
+Each task has one human review summary in its existing PR/task record. Reviewers return
+findings to the coordinator; they do not create per-round Markdown reports. Preserve all
+findings, resolutions, reviewer scopes and evidence references in that task's structured
+record. Keep existing frozen reports and required raw external-review responses unchanged.
 
-Use these plain-language rules for diff explanations, PR descriptions and review reports:
+The human summary contains the conclusion, actionable findings, reviewed scope and material
+limits. With no findings it is at most 300 visible non-whitespace characters; with findings,
+at most 800. Link evidence instead of pasting hashes, commands, pass tables or the execution
+story. Report every open finding by ID and severity; if their descriptions exceed the budget,
+link the complete list and state its count. Never discard a finding to pass the length check.
+Run the [review-output check](scripts/README.md#development-records) before handoff or PR
+preparation. A failing check blocks that handoff until the summary is condensed. Length and
+file count are mechanical limits; readability and correctness still need review. The check
+cannot inspect undeclared files, chat text or whether a claimed review actually happened.
 
-- Use short, active sentences. Give each sentence one action or claim. Put a condition before its action.
-- Use the same term for the same concept. Keep code identifiers, necessary equations and technical terms.
-- Use simple Chinese for user-facing explanations unless the user requests another language.
-  Keep existing agent/skill files in their main language; these rules do not require translation.
+For each finding, keep its trigger, impact, location, evidence and proposed correction in the
+structured record. No-finding reviews need only their fixed scope, evidence and limitations.
+Independent review does not recursively require another reviewer. Routine document and lint
+corrections use focused checks; new semantic questions retain independent review.
 
-These conventions borrow writing principles from ASD-STE100. The user's "80%" preference is
-a style goal, not a measured compliance score or formal STE qualification.
+### Prepare one delivery candidate
 
-Before publication, check new local references against the intended commit files and their base,
-not only the working tree. Include an authorized new target in the change or point to an existing
-published dependency. An untracked or omitted target is a publication gap even when local link
-checks pass. Local installation changes outside the repository must be reported separately.
+Run formatting, lint and changed-link checks before freezing behavioral acceptance. Keep one
+source/build identity for the original request and required reference comparisons. At delivery,
+compare the final delta with that identity and reuse matching evidence. Recheck only affected
+claims; a shared dependency change still triggers its required consumers and regressions.
+
+Before publication, check new local references against files included in the commit or a fixed
+published dependency. Keep local-only evidence explicitly labelled and report local installation
+changes outside the repository separately. Finish independent work
+before any unresolved approval question. PR prose is a short problem/result/validation/limits
+briefing; link the canonical review and evidence rather than duplicating them.
+
+Use plain Chinese for human-facing review unless requested otherwise. Read it once without
+conversation history: the reader must understand what changed, what passed and what remains
+unknown. Apply `technical-writing` and `unslop`; agent instructions use `writing-for-agents`.
 
 ## Branch lifecycle
 

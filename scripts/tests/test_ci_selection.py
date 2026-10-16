@@ -16,6 +16,12 @@ spec.loader.exec_module(ci)
 
 
 class RoutingTests(unittest.TestCase):
+    def test_development_records_only_select_maintenance(self):
+        for path in ('scripts/development_records.py', 'scripts/tests/test_development_records.py'):
+            self.assertEqual(ci.classify([path]), ci.flags('maintenance'))
+        self.assertTrue(ci.classify(['scripts/development_records.py',
+                                     'evas/rust_core/src/events.rs'])['regression'])
+
     def test_plain_prose_only_needs_selection_and_whitespace(self):
         self.assertEqual(ci.classify(['README.md', 'evas/README.md',
                                       'docs/contributing/workspaces.md']), ci.flags())

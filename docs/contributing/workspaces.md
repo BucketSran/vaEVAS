@@ -93,6 +93,35 @@ ownership explicitly before another writer starts. Run the visibility check; use
 Its overlap and duplicate candidates narrow review; they do not establish semantic equivalence,
 integration or an inactive owner. Incomplete observations require follow-up, not a clean bill.
 
+## Conversation handoff triggers
+
+Move coordination to a fresh main conversation at these checkpoints:
+
+| Trigger | Handoff point |
+| --- | --- |
+| A complete task reaches its agreed delivery endpoint | Start the next independent task in a new conversation. |
+| The same task reaches its second observable context compaction in the current conversation | Hand off at the next safe checkpoint before taking another implementation step. |
+| Repeated evidence reads, confused authorization or omitted settled decisions show lost context | Correct the immediate ambiguity, preserve work and hand off early. |
+
+Count only observed compaction events in the existing task record. Preserve the count across
+summaries; if earlier events cannot be recovered, mark the count unknown rather than inventing
+it. Repeated reads needed for new evidence are not themselves a context failure. A fresh
+review subagent does not replace the coordinating conversation.
+
+A safe checkpoint has saved edits, fixed evidence identities and explicit ownership of running
+jobs. Finish or identify an in-flight Git operation; do not interrupt it blindly. The handoff
+in the existing PR/Issue or local current-task entry states the outcome, checkout/branch and
+revision or local diff, reusable checks, remaining work, running jobs, authorization and limits.
+Keep it within 300 visible characters and link detailed evidence; add no separate process file.
+The receiving conversation reads that entry and the affected contract, then resumes the first
+unfinished step without rereading the entire history or repeating matching checks.
+
+Reuse `current`. Continue the same task on its existing branch; for a new independent task,
+create a task branch from reviewed, updated `main` after the prior owner releases the checkout.
+A new conversation does not require a new worktree, branch for an ongoing task, or cleanup.
+After handoff, the old conversation stops writing. Preparing a handoff does not itself create
+or message another task; follow the user's requested transition.
+
 ## Asset lifetime
 
 Keep source changes recoverable through commits or snapshots. Preserve each required raw
