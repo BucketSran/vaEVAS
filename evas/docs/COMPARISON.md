@@ -100,7 +100,7 @@ Q 是验收上限：1 V 刻度的 Q1 / Q2 / Q3 为 10.1 µV / 1.01 µV / 101 nV�
 
 ## 6. 工程请求与扩展范围
 
-下表按已有交付和原请求证据分类，记录截至 `main@8c3ef9ee` 已核对的范围，没有重跑全部 R01 请求。
+下表按各自交付证据记录已核对的范围，历史基线与本次有限修复分别见链接，没有重跑全部 R01 请求。
 工程请求采用各自的原判据；通过不自动增加上方的 Q 等级。独立控制通过，也不代表完整工程请求通过。
 
 | 工程范围与证据 | 已交付或仍缺什么 | 对应 issue |
@@ -112,6 +112,7 @@ Q 是验收上限：1 V 刻度的 Q1 / Q2 / Q3 为 10.1 µV / 1.01 µV / 101 nV�
 | [R01 同步读出](../../experiments/backends/support/r01-sync-readout/README.md) | 已交付实现能完整执行两条原请求，但原 checker 仍为 0/2，严格阈值下的读出差异保留；未合并候选另行验收。 | [#119](https://github.com/BucketSran/vaEVAS/issues/119)、[#96](https://github.com/BucketSran/vaEVAS/issues/96) |
 | [ANSI 端口](../../experiments/backends/support/ansi-ports/README.md) | 接受逐端口方向、可选 electrical/一维范围及正文补 discipline，复用原绑定。原26请求推进到后续阶段，3项完成并通过冻结旧 checker，23项仍拒绝；不新增Q成绩。 | LANG |
 | [SCS 时间选择](../../experiments/backends/support/scs-save-time/README.md) | `save time` 不再误报未知节点；保留时间轴、同名电气节点与默认节点保存。原 20 请求移除首阻塞，1 项完成并通过冻结旧 checker，19 项仍有后续拒绝；不新增 Q 成绩。 | LANG、DEV:scs-input |
+| [Pulse delay 缺省值](../../experiments/backends/support/pulse-delay/README.md) | 仅缺省 delay 取 0，其他六字段保持显式。原 22 请求移除缺 delay 首阻塞，18 项源不确定性组合、4 项编译/语法拒绝保留，无整题完成；不新增 Q 成绩。 | DEV:scs-input |
 | [源误差与动态组合](../../experiments/backends/support/scs-source-uncertainty/README.md) | 非零源误差已能随代数关系和固定 timer 采样传播；与连续算子、cross 或状态 timer 的组合仍明确拒绝。 | [#96](https://github.com/BucketSran/vaEVAS/issues/96)、[#119](https://github.com/BucketSran/vaEVAS/issues/119) |
 | [隐式动态与事件](../../experiments/backends/implicit-event-restart/README.md) | 已交付有限动态步长和精确固定 timer 续算；一般事件窗、复位及代数约束跳参仍不在已验收范围。 | [#66](https://github.com/BucketSran/vaEVAS/issues/66) |
 | 双向自换向 cross | 原问题尚未完成整体验收，候选中的超时和紧根预算失败继续保留。 | [#70](https://github.com/BucketSran/vaEVAS/issues/70)、[#119](https://github.com/BucketSran/vaEVAS/issues/119) |

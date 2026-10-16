@@ -1,7 +1,7 @@
 # 追溯矩阵（自动生成，勿手编）
 
 由 `scripts/traceability.py` 读取测试 `GUARDS`、能力 ID 与证据索引及 DUT 目录生成。
-流程与标签语义见 [PROCESS.md](PROCESS.md)。共 170 个测试文件。
+流程与标签语义见 [PROCESS.md](PROCESS.md)。共 171 个测试文件。
 标签是人工审查的文件级关联，不证明完整覆盖、测试通过或先红后绿。
 证据链接沿用开发索引中的检查点，不自动认证当前代码；实现入口见数学章节的代码地图。
 
@@ -80,7 +80,7 @@
 | DEV:precision-breadth | [test_precision_breadth_composition](../../tests/test_precision_breadth_composition.py) [test_precision_breadth_core](../../tests/test_precision_breadth_core.py) [test_precision_breadth_foundation](../../tests/test_precision_breadth_foundation.py) [test_precision_breadth_runner](../../tests/test_precision_breadth_runner.py) |
 | DEV:precision-chain | [test_accuracy](../../tests/test_accuracy.py) [test_filter_budget](../../tests/test_filter_budget.py) [test_precision_chain](../../tests/test_precision_chain.py) [test_root_recovery](../../tests/test_root_recovery.py) [test_sample_state_precision](../../tests/test_sample_state_precision.py) [test_transient_accuracy_control](../../tests/test_transient_accuracy_control.py) |
 | DEV:runtime-protocol | [test_runtime_contracts](../../tests/test_runtime_contracts.py) |
-| DEV:scs-input | [test_r01_language](../../tests/test_r01_language.py) [test_scs](../../tests/test_scs.py) [test_scs_bsource](../../tests/test_scs_bsource.py) [test_scs_driven_nodes](../../tests/test_scs_driven_nodes.py) [test_scs_save](../../tests/test_scs_save.py) [test_scs_vectors](../../tests/test_scs_vectors.py) [test_source_uncertainty](../../tests/test_source_uncertainty.py) |
+| DEV:scs-input | [test_r01_language](../../tests/test_r01_language.py) [test_scs](../../tests/test_scs.py) [test_scs_bsource](../../tests/test_scs_bsource.py) [test_scs_driven_nodes](../../tests/test_scs_driven_nodes.py) [test_scs_pulse_delay](../../tests/test_scs_pulse_delay.py) [test_scs_save](../../tests/test_scs_save.py) [test_scs_vectors](../../tests/test_scs_vectors.py) [test_source_uncertainty](../../tests/test_source_uncertainty.py) |
 | DEV:sparse-reuse | [test_reuse](../../tests/test_reuse.py) [test_sparse](../../tests/test_sparse.py) [test_sparse_transient](../../tests/test_sparse_transient.py) |
 
 ## 关联缺口

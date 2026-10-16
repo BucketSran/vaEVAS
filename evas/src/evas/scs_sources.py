@@ -29,7 +29,7 @@ def voltage_points(settings, stop, fail):
     if unknown:
         fail(f'unsupported {kind} source settings: {sorted(unknown)}', unsupported=True)
     required = {'dc':{'dc'}, 'pwl':{'wave'},
-                'pulse':{'val0','val1','delay','rise','fall','width','period'}}[kind]
+                'pulse':{'val0','val1','rise','fall','width','period'}}[kind]
     if required-set(settings):
         fail(f'{kind} source requires explicit {sorted(required)}')
     for name,value in settings.items():
@@ -50,7 +50,8 @@ def voltage_points(settings, stop, fail):
 
     if settings.get('edgetype','linear') != 'linear':
         fail('pulse only supports linear edges', unsupported=True)
-    delay,rise,fall,width,period = (Q(settings[n]) for n in ('delay','rise','fall','width','period'))
+    delay = Q(settings.get('delay', 0.))
+    rise,fall,width,period = (Q(settings[n]) for n in ('rise','fall','width','period'))
     if delay<0 or rise<=0 or fall<=0 or width<0 or period<=0 or rise+width+fall>period:
         fail('pulse requires delay/width >= 0, rise/fall/period > 0 and rise+width+fall <= period')
     count = max(0, int((Q(stop)-delay)//period)+1)

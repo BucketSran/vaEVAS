@@ -26,6 +26,8 @@
 
 [Pulse 源误差和保存策略](../../../experiments/backends/support/scs-source-uncertainty/README.md)补充 DEV:scs-input 与 TIMER 的有限开发证据；非零源误差仍不支持动态算子或 cross，不改变原Q成绩。
 
+[Pulse delay 缺省值](../../../experiments/backends/support/pulse-delay/README.md)补充 DEV:scs-input 的有限开发证据；仅省略 delay 取 0，其他源参数与误差约束保持，原 22 请求仍有后续拒绝。
+
 [隐式 DAE 的动态模型步长](../../../experiments/backends/implicit-step-bounds/README.md)补充 DYNAMICS 的有限开发证据；两条实际参考各33点通过原100nV门槛，不宣称原R01请求新增恢复。
 
 [固定 timer 的隐式 DAE 续算](../../../experiments/backends/implicit-event-restart/README.md)补充 DYNAMICS、TIMER、EVENT-ORDER 和 COMPOSE 的有限开发证据；物理 seed、步长与同控制器回退由独立测试核对，实际参考九点通过原 100 nV 门槛。一般事件窗/约束跳参仍拒绝，不新增 Q 资格。

@@ -1,0 +1,651 @@
+{
+  "denominator": 22,
+  "original_probe_base": "8c3ef9eecda2e202beea6e80e720b0639bff0407",
+  "new_base": "8d3096f1dac5df2ef7a2e18dc9cd5c3605e1fb37 plus pulse-delay-only diff",
+  "first_missing_delay_blocker_removed": 22,
+  "completed_old_checker_passed": 0,
+  "counts": {
+    "kernel.unsupported_source_uncertainty": 18,
+    "compile_error": 2,
+    "syntax_error": 2
+  },
+  "results": [
+    {
+      "family": "020",
+      "task": "020-bandgap-reference-macro-model",
+      "deck_sha256": "44fbe4f6047fe075f92a26f593e0d45aa2b75a9240c93c60eeba5ba9aed01afb",
+      "gold_tree_sha256": "01c6b2c96b324af65455a27140bdde44c7a22167156b2389834d3cff3c52f6bb",
+      "files": {
+        "submission/bandgap_reference_macro_model.va": "2680f7db93ac15103fcc5e337201d6bd65591a709ff5c610f23a42412d25a8cd",
+        "testbench/trusted_replay_test.scs": "44fbe4f6047fe075f92a26f593e0d45aa2b75a9240c93c60eeba5ba9aed01afb"
+      },
+      "status": "rejected",
+      "seconds": 0.0369155420048628,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "525cb48113d6b619a38b64095da89cecee570a95fdd301efd5f09e7121e6cfba",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "3c0a47fae1b33130c020084a5777b904383b1d845bf0ffb628cac33936516ee0"
+      }
+    },
+    {
+      "family": "021",
+      "task": "021-calibration-deadband-controller",
+      "deck_sha256": "bf259989776410d90a6f005e8fcc9b4a5c60386587821c46316fcf1f0689aa7a",
+      "gold_tree_sha256": "d9b885ebd74b5ef4f82f8ecef8fff7a5fe58878e95d98745ca7eb9ad913b3b40",
+      "files": {
+        "submission/calibration_deadband_controller.va": "86f3bf1f50880197a3fbc55181836c51d631122469761c79cdf55379ad2e1020",
+        "testbench/trusted_replay_test.scs": "bf259989776410d90a6f005e8fcc9b4a5c60386587821c46316fcf1f0689aa7a"
+      },
+      "status": "rejected",
+      "seconds": 0.018434124998748302,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "95335ce97b92bff020cfb3c8c887a68cb89c5936218f167af25dd3cde7f8ab7e",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "16b76e2245680c9e4f979371a034758b22ccf4068ad025e3be5256711c9c3a5d"
+      }
+    },
+    {
+      "family": "022",
+      "task": "022-charge-pump-abstraction",
+      "deck_sha256": "5b01a6bd62ab5fc48641c3c700a63a3842df17e6591f5531fe1fedeef5ca2b6d",
+      "gold_tree_sha256": "2226107fa83a8be71e023a8140fc5781c9aadda44dcb6b6a41913182ba608797",
+      "files": {
+        "submission/charge_pump_abstraction.va": "eabf4fe3aac4fe59046c6940e9fe894c938ed0b655ac1feb794daa0b0f87fb7a",
+        "testbench/trusted_replay_test.scs": "5b01a6bd62ab5fc48641c3c700a63a3842df17e6591f5531fe1fedeef5ca2b6d"
+      },
+      "status": "rejected",
+      "seconds": 0.024149291013600305,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "98374c3e06ea6a0594d42467a11d6bec307fe5a658a9ab7445f153e69121c159",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "186137c65666c14cc76de75efc3336f9699be4c452e375096df0eba780468a26"
+      }
+    },
+    {
+      "family": "028",
+      "task": "028-higher-order-filter",
+      "deck_sha256": "b583ccbd61f065044ed38ffff0506dd0727655c3352838214c64462ad052b844",
+      "gold_tree_sha256": "59ccf9fc4e919c6d72fcbffd8e85f1e76b26544f312deaaf982c68bec3cb150e",
+      "files": {
+        "submission/higher_order_filter.va": "d0ffbf066e28c51c10e01244dc1cde9620ea240802c34e516aa837002e83f085",
+        "testbench/trusted_replay_test.scs": "b583ccbd61f065044ed38ffff0506dd0727655c3352838214c64462ad052b844"
+      },
+      "status": "rejected",
+      "seconds": 0.02001270800246857,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "64ba1837353a8ae66fe2ffa983b32f550d6d11bdc123a6e5eef375e5d59fba40",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "d0df1546aea8a6c67baf05fda033050ed48e269569bce47e2c1acb8a48e3c808"
+      }
+    },
+    {
+      "family": "030",
+      "task": "030-ldo-regulator-macro-model",
+      "deck_sha256": "caeac09c6f7e26adf26b8925b36909e07c8d031eb82b52b235f46c387d22033f",
+      "gold_tree_sha256": "fd4ccd4c6cf987195a3bd3a188c9e5b0687eeb99628de82846b7f8e508d0f81c",
+      "files": {
+        "submission/ldo_regulator_macro_model.va": "1114ad55792c5292a9a63babb1b5766845d2b03137afedf3da3498c6ec4cc92a",
+        "testbench/trusted_replay_test.scs": "caeac09c6f7e26adf26b8925b36909e07c8d031eb82b52b235f46c387d22033f"
+      },
+      "status": "rejected",
+      "seconds": 0.022751917014829814,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "b424bee8a7d833ea60c92ccc54f14c8184d3111333b67cab4f0a13c38524d923",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "f9c91d72a5bd482175b4cd0a19f8f5645b167a0e38a59c4f38b0a0282b72f00b"
+      }
+    },
+    {
+      "family": "031",
+      "task": "031-limiting-amplifier-frontend",
+      "deck_sha256": "d35ecbb260320e052f858412e8f37b3d390f74d1c5d9d6e9874101065ce09491",
+      "gold_tree_sha256": "1c9c065801a768f7ae62e36be06592037356dc523545694887196e17639cd427",
+      "files": {
+        "submission/limiting_amplifier_frontend.va": "a2f1abd849c3f148c1c15951f205b7d3aa9daef72c22e885402b2730c71e4f1a",
+        "testbench/trusted_replay_test.scs": "d35ecbb260320e052f858412e8f37b3d390f74d1c5d9d6e9874101065ce09491"
+      },
+      "status": "rejected",
+      "seconds": 0.0272149590018671,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "cfab636a806eb0bb72fbbfb902afbd6702422c96596a2d00ffb7614f97ae59a9",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "4130237bba1670309d4677e9e56b7c5d511259eaa4f9cee909ad43da2ed390b5"
+      }
+    },
+    {
+      "family": "032",
+      "task": "032-lna-gain-compression-macro",
+      "deck_sha256": "ca69cd746c16223372dfefeadcb010818cba4d6cb902424001964b138a350248",
+      "gold_tree_sha256": "0af71f500faf1821181f5e7c2e5fbc6c09caa731cd8de1394cf9782262373a58",
+      "files": {
+        "submission/lna_gain_compression_macro.va": "625392c8e7328ca4fd4a1f29e6307bc17ad0c536bc333de4bf48149849d05a92",
+        "testbench/trusted_replay_test.scs": "ca69cd746c16223372dfefeadcb010818cba4d6cb902424001964b138a350248"
+      },
+      "status": "rejected",
+      "seconds": 0.03494216699618846,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "f16fc92d47fd8ea903107aa425697786d553a7a1c5811182ad5ef4613f65686a",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "d1cb630b02f0236e76f9dd1822752520be7b132f9bd5b5a36d434e3432721650"
+      }
+    },
+    {
+      "family": "033",
+      "task": "033-log-rssi-power-detector",
+      "deck_sha256": "3dd21f3f945dba500cc2054e0239a1ab0b1fccf5bc534078a05a839fd1763fbc",
+      "gold_tree_sha256": "3b2729f64c1be3f9e3d7f2786e51f0af9874d43b92a1fb7e6978d23c724d2bf6",
+      "files": {
+        "submission/log_rssi_power_detector.va": "d9a414c8c18d1b38c138cb1668ff460f0b6d0a86937d54a3034ac0d2e1ebd8ba",
+        "testbench/trusted_replay_test.scs": "3dd21f3f945dba500cc2054e0239a1ab0b1fccf5bc534078a05a839fd1763fbc"
+      },
+      "status": "rejected",
+      "seconds": 0.02414616700843908,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "6e8fe088da084f8c116ed3ec851413a254c572704440203e5392b3a9ab25c01c",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "9fbbe6c169b6a43e3b8b9adc7fe656959f5e64a5f97a5f5d804f0cc065c7eb38"
+      }
+    },
+    {
+      "family": "034",
+      "task": "034-loop-filter-abstraction",
+      "deck_sha256": "f9e03e5f478e222fff1dd67d430d616dd0ab784dd4bb69c140db82950dfaceef",
+      "gold_tree_sha256": "3ee2d3f9625e007e509deca6ef9944dce3e509a9387a8b81b1fccd4d89cd040d",
+      "files": {
+        "submission/loop_filter_abstraction.va": "cc323e4273bdfaab6683d78d05b9a3d76db38684ae296007578fb2db83777ddd",
+        "testbench/trusted_replay_test.scs": "f9e03e5f478e222fff1dd67d430d616dd0ab784dd4bb69c140db82950dfaceef"
+      },
+      "status": "rejected",
+      "seconds": 0.03195658398908563,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "17646c1517fa8a7620dc508cda39384f88489f524f5c45ed8ae5cec02a61865f",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "1737ed293a6949b6b6679b7d92732aab0eaafcd782ba6705fa5888c37247ce79"
+      }
+    },
+    {
+      "family": "035",
+      "task": "035-pa-compression-macro",
+      "deck_sha256": "5b0674d2f4b9427147e657dcc0de54f667fafa7f755571a27d8566b683ba3faf",
+      "gold_tree_sha256": "a5dcef151bcd2a6c7847343a782f835d3c1a9d7c2a60fc4e6bc27db0d9db5acd",
+      "files": {
+        "submission/pa_compression_macro.va": "386d42d9d77bb2594cca35e9530bf03a33e1af14327ccfa12a2f1544e6c34e98",
+        "testbench/trusted_replay_test.scs": "5b0674d2f4b9427147e657dcc0de54f667fafa7f755571a27d8566b683ba3faf"
+      },
+      "status": "rejected",
+      "seconds": 0.020765833993209526,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "a891881beab53b761b7693e4babb30e81846dea518c0f2d041aa8f31b9d66420",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "c9f5655421c8518406f78657d0afeef89b28296b20232690c61fdcc6975b881c"
+      }
+    },
+    {
+      "family": "036",
+      "task": "036-power-on-reset-detector",
+      "deck_sha256": "1482cd574928f17ea0f78e1063537598305d010c83ed8abc53807b1993f23762",
+      "gold_tree_sha256": "9732307d2b463f1013e3388f5cbd2109d7fd536c7a609fb00741a906ac06ecc2",
+      "files": {
+        "submission/power_on_reset_detector.va": "9c9528620f51d8469bb108d8c550678af90d4aa3da0170756cf562ac43bca99e",
+        "testbench/trusted_replay_test.scs": "1482cd574928f17ea0f78e1063537598305d010c83ed8abc53807b1993f23762"
+      },
+      "status": "rejected",
+      "seconds": 0.017006417008815333,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "compile_error",
+        "message": "case/036/submission/power_on_reset_detector.va:20: ordinary analog assignment target must be a local variable"
+      },
+      "raw_result_sha256": "4c8f76ee5c64f4f4fedfe1b2d431286f93ef8f3f73ae28706d7bb033482e1093",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "a48d4dfe327c6ca05c89f5342923270ec969152606b7e6ab0418c83744d7abda"
+      }
+    },
+    {
+      "family": "046",
+      "task": "046-uvlo-brownout-detector",
+      "deck_sha256": "10c360a9478268184f8e8104702ca7f7d0592d1fd5449ef46e7f117b760d8e1e",
+      "gold_tree_sha256": "db310b9ee5b3f5d98094737bbc5a8ecee1e1dfbdd75e0bb075f18a1b24ab547d",
+      "files": {
+        "submission/uvlo_brownout_detector.va": "60fa91ebfedf02dc4f98eeb393c6cfce1b22db121159cedae22e3d300ef5d55e",
+        "testbench/trusted_replay_test.scs": "10c360a9478268184f8e8104702ca7f7d0592d1fd5449ef46e7f117b760d8e1e"
+      },
+      "status": "rejected",
+      "seconds": 0.023623207991477102,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "74a2979987a0ad80d63a284a60d319d569bc6e1d227be6fa36cae751b118d2b3",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "0562153cbc630fad6914570623b0322ef6480ff4bb7d58d322d6ef6fcaa80fe4"
+      }
+    },
+    {
+      "family": "073",
+      "task": "073-bias-voltage-generator-with-enable-trim",
+      "deck_sha256": "32da791be08c7cb531a7ac04cb3932696578ea9febf504643bca6a622cb10de2",
+      "gold_tree_sha256": "5058b0f72e3d9ed2c9582e0455ee79bb91a965e887bb9b907b8a7d24114421ac",
+      "files": {
+        "submission/bias_voltage_generator_with_enable_trim.va": "ee31fa1900d11bcf2761152a9edcac86ce0d54a32a6b2fe32ff93fcd33d2209e",
+        "testbench/trusted_replay_test.scs": "32da791be08c7cb531a7ac04cb3932696578ea9febf504643bca6a622cb10de2"
+      },
+      "status": "rejected",
+      "seconds": 0.026032625028165057,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "2e1de6149811f510a4d07303136e6731f7c3859b1cedf66d76d709d2b2d62a7c",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "5097630925d18408146466f8fc124d7714ce63b6d54a21f971cf0df5c087b0da"
+      }
+    },
+    {
+      "family": "076",
+      "task": "076-burst-clock-source",
+      "deck_sha256": "48e0cf3d1827da8473bf3484829fd4abe7311a69413561ccb906ff15d25c6bea",
+      "gold_tree_sha256": "59dc24cd5dca48b2493119d780aae5540e5d9d00525e053908ebd3298eaa58f3",
+      "files": {
+        "submission/clk_burst_gen.va": "bbd6ece2d9db07e93f472c279d023776d367e47742231d148437937eaaa1a181",
+        "testbench/trusted_replay_test.scs": "48e0cf3d1827da8473bf3484829fd4abe7311a69413561ccb906ff15d25c6bea"
+      },
+      "status": "rejected",
+      "seconds": 0.012108583003282547,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "compile_error",
+        "message": "case/076/submission/clk_burst_gen.va:4:1: undefined or unsupported macro 'default_transition'"
+      },
+      "raw_result_sha256": "99a422c86c809ffd447f424a304af7d3973b6b7d7c2613c08b57125accea7ac4",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "538764f8950afb8ffc53dea085d482eeb4ccbe7ebe9ae07be867f2b96832aa40"
+      }
+    },
+    {
+      "family": "081",
+      "task": "081-adpll-ratio-hop-timer",
+      "deck_sha256": "014f4517f4c107ad638af7ecf45b901b8519d86ab41b0e0142ca71a0cfd61249",
+      "gold_tree_sha256": "a180a720d5a361c2680948566e09b4edec01e9fbafad023bff9ed91814adcd3c",
+      "files": {
+        "submission/adpll_ratio_hop_ref.va": "c8531b00892fc9d5d511b1c738dac790c25736a27779d5ed5f1abc4f79266a8b",
+        "testbench/trusted_replay_test.scs": "014f4517f4c107ad638af7ecf45b901b8519d86ab41b0e0142ca71a0cfd61249"
+      },
+      "status": "rejected",
+      "seconds": 0.04612712498055771,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "syntax_error",
+        "message": "case/081/submission/adpll_ratio_hop_ref.va:172:13: expected a non-reserved identifier"
+      },
+      "raw_result_sha256": "dab565481a4a7f648f9b8ff55f4710da6f44e46035311dd93113dca542934650",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "4a52203791af53b566e69293171ad8914b149261780bea6250283f83a69a2817"
+      }
+    },
+    {
+      "family": "082",
+      "task": "082-agc-receiver-leveling-loop",
+      "deck_sha256": "5eb5cbf8311e1a4c75ab7a0e6d3bed0daa6dfadc6aa28681d1ad0a143dd906f0",
+      "gold_tree_sha256": "37e1d772475698c2867a860645cc68efd82e942760ccd80637dd5609ec1bb850",
+      "files": {
+        "submission/agc_receiver_leveling_loop.va": "6496caf8b8feb4c6cd6872fb115db2cf20b856c603328ccc824f3ee90d401391",
+        "testbench/trusted_replay_test.scs": "5eb5cbf8311e1a4c75ab7a0e6d3bed0daa6dfadc6aa28681d1ad0a143dd906f0"
+      },
+      "status": "rejected",
+      "seconds": 0.036336958000902086,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "5f873749b58f0d117afa95b7dcea31a69b3d196414faa528a1ffe53648df2fa7",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "5c89628296ac871ba4ea8bf7ae4e4a622f23d585c4b8268afb84946fb89dab8b"
+      }
+    },
+    {
+      "family": "083",
+      "task": "083-amplifier-filter-chain",
+      "deck_sha256": "ff60439578ac1ea3c8b7f13c91df29aa965feb46563ab848118991459d86aea8",
+      "gold_tree_sha256": "db44cc8787e04beae60230c24331470f8ab35f4ced462aac869a74a2ef2640a9",
+      "files": {
+        "submission/amplifier_filter_chain.va": "a223c277a14fb21d3b6207aad9a4b603e2ffd0143b38ef96bd779cd5a105df4b",
+        "testbench/trusted_replay_test.scs": "ff60439578ac1ea3c8b7f13c91df29aa965feb46563ab848118991459d86aea8"
+      },
+      "status": "rejected",
+      "seconds": 0.038235000014537945,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "57d6809750a115da78092415c10a0091647a7f36ceddb10cc7ec82b61689fb4f",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "9b3854435afbd8163d01da7420f706b4e1e638d59cc48f61855f7b907105b1ee"
+      }
+    },
+    {
+      "family": "086",
+      "task": "086-complete-calibration-loop",
+      "deck_sha256": "94f55054305902ee1bbd56744937dbeb7cbe307245e95f066b43cde337a33983",
+      "gold_tree_sha256": "1e76be7a9234bf154bbb0b3baf71127298c713a1e34c414258cfeac52acf719d",
+      "files": {
+        "submission/complete_calibration_loop.va": "98ddf6d8214ab2cfd0ccea018383998065ff0632ccd9ff667a966f1f5cff9021",
+        "testbench/trusted_replay_test.scs": "94f55054305902ee1bbd56744937dbeb7cbe307245e95f066b43cde337a33983"
+      },
+      "status": "rejected",
+      "seconds": 0.046272499981569126,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "80f7a412c066a1a1e6d99bb16127d0fd05773c39f0fc4b71c9445bb5c3c0c1e5",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "fa35a637836334a25864298b3589093531d5707d480f9e68744d02304e1c2a02"
+      }
+    },
+    {
+      "family": "094",
+      "task": "094-iq-downconversion-chain",
+      "deck_sha256": "762f6c934bb056870a12ac6a5885cb59c91028a2f668e6dd452f9da17414bd0b",
+      "gold_tree_sha256": "bf087121bfeaf4041f638a109d7d6fb1e05ebcf1812f94a0bf686a77053aca13",
+      "files": {
+        "submission/iq_downconversion_chain.va": "f66b798bcfabb432e3f3d6e1c14440d650587d2160e042b5a4ac15030cb7bd15",
+        "testbench/trusted_replay_test.scs": "762f6c934bb056870a12ac6a5885cb59c91028a2f668e6dd452f9da17414bd0b"
+      },
+      "status": "rejected",
+      "seconds": 0.05658779200166464,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "1617e917e6dc1546412704b154a77f8a788f1fadb72419d54175b6feb9ce65e6",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "a9c79a19472ad51b63fec4811d6569cc438c1131a6ffdbe06ed1298b413de1c9"
+      }
+    },
+    {
+      "family": "095",
+      "task": "095-ldo-load-step-recovery",
+      "deck_sha256": "322d6e5b3812389898db66002fe0176e4781bd1c679275f875699f1824a7852a",
+      "gold_tree_sha256": "582913525e4f0d36a6ff53ab8545ebfd2bd72a016b2ebfc3436146e49ec82028",
+      "files": {
+        "submission/ldo_load_step_recovery_flow.va": "c2d509378d4dad0d2c237c64b7f90221c35cfaea765b772b83d738954904483e",
+        "testbench/trusted_replay_test.scs": "322d6e5b3812389898db66002fe0176e4781bd1c679275f875699f1824a7852a"
+      },
+      "status": "rejected",
+      "seconds": 0.03918404201976955,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "d141bae22efa434565ad7201c0e0ecc15fe390aa0e5816beb3a3c5ac12d0d684",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "5dbc3db1fcb1193bce8502672e87052cadd8222b4a482ed1226ff69aa1465a86"
+      }
+    },
+    {
+      "family": "097",
+      "task": "097-programmable-stimulus-sequencer",
+      "deck_sha256": "94f0dc24ab8214bb92b0553c17498def8c0fc1f23c29ac16f85d2ed5fc23ed0f",
+      "gold_tree_sha256": "223e15d877100e1942f730378d6bb586c2758bee2d1f9b2dc2f9e8c203d5f5c7",
+      "files": {
+        "submission/programmable_stimulus_sequencer.va": "e921949c1c6798a2961c51c7d86dc766a705247e2547d9061902eb51d3bc462b",
+        "testbench/trusted_replay_test.scs": "94f0dc24ab8214bb92b0553c17498def8c0fc1f23c29ac16f85d2ed5fc23ed0f"
+      },
+      "status": "rejected",
+      "seconds": 0.005023500008974224,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "syntax_error",
+        "message": "case/097/submission/programmable_stimulus_sequencer.va:24:38: unsupported expression '>'"
+      },
+      "raw_result_sha256": "c715271d01970faac9fa1e91abcdddc00dfe838995128e92878af06602fd9cf2",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "9f28ad276138ff4a64f3852314ed042be5e01d6514a8b652e14c49430255ada4"
+      }
+    },
+    {
+      "family": "099",
+      "task": "099-reference-startup-enable-flow",
+      "deck_sha256": "2371a608c46b50b1cd623e70ca672823dc8505c53060d21c0576e11a7741a424",
+      "gold_tree_sha256": "54584cd149041c874ea3bdab4970ba3b556072cf2fbde550481b518cdda31595",
+      "files": {
+        "submission/reference_startup_enable_flow.va": "9d45fc7aec2aaabba5f1cbf4566c75bdf8996de37dd02ee0421d7b2c9dc8d3d4",
+        "testbench/trusted_replay_test.scs": "2371a608c46b50b1cd623e70ca672823dc8505c53060d21c0576e11a7741a424"
+      },
+      "status": "rejected",
+      "seconds": 0.03398362500593066,
+      "kernel_timeout_seconds": 120,
+      "worker_limit_seconds": 150,
+      "checker": "not_run",
+      "failure": {
+        "code": "kernel.unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "raw_result_sha256": "0a4e2baf07bb8d6db1a1604f08c2a263a187065e1c1042cde09d804fdd7107f0",
+      "process_receipt": {
+        "status": "cleanup_incomplete",
+        "returncode": 0,
+        "timeout": false,
+        "cleanup_complete": false,
+        "sha256": "d95d309edf731017cc829b6877996d74a4f4f1613fc01a3ac4167944bd3a98df"
+      }
+    }
+  ],
+  "execution_source_files": {
+    "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+    "evas/src/evas/__main__.py": "03467610db7d5563c99f2ffcf65c8f258175575fff18a38ca89dc5854439d651",
+    "evas/src/evas/array_elaboration.py": "922fd600f57b039b4f2e2b2242af03dd7830a464e0b31272260c82d11217d278",
+    "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+    "evas/src/evas/display.py": "c53802f643b2405e1f3da36596a8d4674aebf409635232ded3dc52f852f38b5c",
+    "evas/src/evas/elaboration.py": "a7a435e8d2361e7abf2b047b68210b1b25f656e24b40155fe969e9b4c593bc4a",
+    "evas/src/evas/errors.py": "4716787d137c2232e13d9b9b7231b407d5c87a38c755345c63bc9df91a45a158",
+    "evas/src/evas/event_index_domains.py": "c5558bdff652f64b5ddfdc72e32230f8a8330f9fa4798e1c09b7e95344bcaa39",
+    "evas/src/evas/event_specialization.py": "b33b4cb4f9f2997a6c25db6d15d918bb8ca9b362ec4cc9dd4e643c9c3b60b4d6",
+    "evas/src/evas/frontend.py": "310159f89cea075ff3f35a7d46e7177dfd8888eb8841528ddb924be45768854a",
+    "evas/src/evas/hierarchy.py": "ec8cd24105bfb646f28874dd40fe0923ae51ca5d22b45b1be0e6153347a7a10b",
+    "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+    "evas/src/evas/instance_compiler.py": "b7a8a38eeceb70e929848654e85d5a48dc6fef12fdc6bef17c8fc798f7154a12",
+    "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+    "evas/src/evas/ir.py": "edc5c01ca80d4af613851854ae8b3d9d25b07780f66de1f6ca263b9529823437",
+    "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+    "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+    "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+    "evas/src/evas/lowering.py": "ed41ea48b5175d5e39c702a51cd4a5f296de5c425f9fa708846c7864b19059b1",
+    "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+    "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+    "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+    "evas/src/evas/node_elaboration.py": "eaa06faf21bea22a2ef477605c2d4c2c167b5f99a2083f356733e08eae1a5cf5",
+    "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+    "evas/src/evas/predicate_structure.py": "0f145fafcf1a926877f555207da48d54e6334e8ffbde1d9b385499ea74d11543",
+    "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+    "evas/src/evas/protocol.py": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+    "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+    "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+    "evas/src/evas/runtime.py": "6c13d7a03fb4d5f36d5c53e51621e37ccfc40ff28e9386218697c3a8b2b5bf12",
+    "evas/src/evas/scs.py": "c3909df64c64639200f44f95fa3c4e5d38feea6244b06a7ecad617541d9f5855",
+    "evas/src/evas/scs_sources.py": "73be6f9e1882b8efac0e63c8f4f75a9c49447e3999352e909d2b22542b20f2c9",
+    "evas/src/evas/standard_headers.py": "efe0b2421d400ac723cfdf71c5d406cdef510dc89d3556ad999e2253600ec88e",
+    "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+    "evas/src/evas/syntax.py": "766c424ec8b6c1f8a9e6fa9416aebe91e274d52ffd9ba486fa75291e5efcd38f"
+  },
+  "kernel_sha256": "13c0da468f3a7798449fc704442aa4a03eae89f961fef76b2b5cb1c4daf034ef",
+  "original_inputs_unchanged": true,
+  "claim": "Diagnostic first-blocker replay only;all22 subsequent rejections preserved,no formal benchmark or new Q scores",
+  "retention": "Raw original identities/requests/results/process receipts remain local-only runs/evas-pulse-delay-20261017 and frozen original probe",
+  "diagnostic_paths": "Public messages use case-relative paths;full original diagnostics remain unchanged in local raw RESULT.json with recorded hashes",
+  "process_limit": "Every worker returned0 without timeout, but owned-group TERM/KILL each raised PermissionError(1,Operation not permitted) and cleanup_complete is false;do not claim complete cleanup. A later process audit saw no task-owned worker/kernel;it is not retroactive proof."
+}
