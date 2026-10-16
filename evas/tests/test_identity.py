@@ -27,10 +27,10 @@ class IdentityCLI(unittest.TestCase):
         identity = json.loads(result.stdout)
         self.assertEqual(identity['identity_version'], 1)
         self.assertEqual(identity['package']['name'], 'evas-rebuild')
-        self.assertEqual(identity['package']['version'], '0.18.0')
+        self.assertEqual(identity['package']['version'], '0.19.0')
         self.assertIsNone(identity['package']['build_revision'])
         self.assertEqual(identity['kernel']['status'], 'not_requested')
-        self.assertEqual(identity['compatibility']['ir_schema_version'], 22)
+        self.assertEqual(identity['compatibility']['ir_schema_version'], 23)
         self.assertIsNone(identity['compatibility']['request_protocol_version'])
 
     def test_real_kernel_query_does_not_wait_for_stdin(self):
@@ -47,9 +47,9 @@ class IdentityCLI(unittest.TestCase):
             self.assertEqual(process.returncode, 0, process.stderr.read())
         self.assertEqual(identity['identity_version'], 1)
         self.assertEqual(identity['name'], 'evas-kernel')
-        self.assertEqual(identity['version'], '0.18.0')
+        self.assertEqual(identity['version'], '0.19.0')
         self.assertIsNone(identity['build_revision'])
-        self.assertEqual(identity['ir_schema_version'], 22)
+        self.assertEqual(identity['ir_schema_version'], 23)
         self.assertIsNone(identity['request_protocol_version'])
         result = self.cli('--kernel', KERNEL)
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -112,7 +112,7 @@ class IdentityCLI(unittest.TestCase):
         manifest = ROOT / 'validation/smoke/idt.json'
         compiled = invoke('compile', manifest)
         self.assertEqual(compiled.returncode, 0, compiled.stderr)
-        self.assertEqual(json.loads(compiled.stdout)['schema_version'], 22)
+        self.assertEqual(json.loads(compiled.stdout)['schema_version'], 23)
         solved = invoke('transient', manifest, '--kernel', KERNEL)
         self.assertEqual(solved.returncode, 0, solved.stderr)
         response = json.loads(solved.stdout)
@@ -143,7 +143,7 @@ class IdentityCLI(unittest.TestCase):
                                     env=dict(os.environ, PYTHONPATH=str(ROOT / 'src') + os.pathsep + directory))
             self.assertEqual(result.returncode, 0, result.stderr)
             package = json.loads(result.stdout)['package']
-            self.assertEqual(package['version'], '0.18.0')
+            self.assertEqual(package['version'], '0.19.0')
             self.assertEqual(package['metadata_source'], 'source_pyproject')
 
     def test_identity_bypasses_simulation_configuration_and_artifacts(self):

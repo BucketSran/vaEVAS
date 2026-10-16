@@ -26,7 +26,8 @@ class R01RuntimeFrontend(unittest.TestCase):
             '@(initial_step) begin n=2147483647; flag=(n+1)>0; end V(y,r)<+flag;',
             '@(timer(0.5)) n=(2147483647+1)-1; V(y,r)<+n;',
             '@(timer(0.5)) flag=(2147483647+1)>0; V(y,r)<+flag;',
-            '@(initial_step) n=0; @(timer(0.5)) n=(n+1)-1; V(y,r)<+n;',
+            '@(initial_step) n=2147483647; @(timer(0.5)) n=(n+1)-1; V(y,r)<+n;',
+            '@(initial_step) n=0; @(timer(0.25)) n=2147483647; @(timer(0.5)) n=(n+1)-1; V(y,r)<+n;',
             '@(initial_step) n=0; @(timer(0.5)) begin n=n+1; flag=(n+1)>0; end V(y,r)<+flag;',
         ]
         for body in bodies:
@@ -41,6 +42,15 @@ class R01RuntimeFrontend(unittest.TestCase):
             body = prefix+'n=2147483647; flag=(n+1)>0; n=(n+1)-1;'+suffix+' V(y,r)<+n;'
             expected = [0,2147483647,2147483647] if 'timer' in prefix else [2147483647]*3
             self.assertEqual(output(run(body, 'real n; integer flag;')), expected)
+
+    def test_closed_integer_invariant_proves_safe_intermediate_arithmetic(self):
+        # n is unchanged by the event. Its closed lifetime range proves n+1
+        # stays signed32; the upper-bound and additional-writer controls above
+        # retain rejection when that proof does not hold.
+        for n in (0, 2147483646, -2147483647):
+            body = f'@(initial_step) n={n}; @(timer(0.5)) n=(n+1)-1; V(y,r)<+n;'
+            with self.subTest(n=n):
+                self.assertEqual(output(run(body, 'integer n;')), [n]*3)
 
     def test_initial_condition_reads_prior_write_and_repeated_write(self):
         body = '''@(initial_step) begin n=1; n=n+1;

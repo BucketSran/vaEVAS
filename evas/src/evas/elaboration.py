@@ -458,6 +458,16 @@ def elaborate_loops(model: Model, parameter):
         for statement in statements:
             if isinstance(statement, Loop):
                 validate_loop(statement, active)
+                # Retained runtime loops receive full original-tree admission
+                # after scalarization; never substitute an invented control.
+                pending = [statement.start, statement.limit]
+                dynamic = False
+                while pending:
+                    item = pending.pop()
+                    dynamic |= item.op == 'parameter' and item.value in model.variables
+                    pending.extend(item.args)
+                if dynamic:
+                    continue
                 start = constant(statement.start, active)
                 scope = {**active, statement.name: start}
                 expression(substitute(statement.start, active), True)
@@ -592,7 +602,7 @@ def elaborate_loops(model: Model, parameter):
     validate_initial_body(model.initial, {})
     event_bodies = []
 
-    def body(statements, indices, depth=0):
+    def body(statements, indices, depth=0, runtime=False, in_runtime_loop=False):
         nonlocal count, iterations
         if depth > MAX_SOURCE_NESTING:
             fail('static loop nesting budget exceeded', statements[0].token, code="resource_budget")
@@ -600,6 +610,23 @@ def elaborate_loops(model: Model, parameter):
         for statement in statements:
             if isinstance(statement, Loop):
                 integer_local = validate_loop(statement, indices)
+                # State-dependent event controls execute against the candidate
+                # frame. Static genvars retain the original elaboration path.
+                dynamic = in_runtime_loop and integer_local
+                if runtime and integer_local:
+                    pending = [statement.start, statement.limit]
+                    while pending:
+                        item = pending.pop()
+                        dynamic |= item.op == 'parameter' and item.value in model.variables
+                        pending.extend(item.args)
+                if dynamic:
+                    result.append(replace(statement,
+                        start=substitute(statement.start, indices),
+                        limit=substitute(statement.limit, indices),
+                        update=substitute(statement.update, indices),
+                        body=body(statement.body, indices, depth+1, runtime=True, in_runtime_loop=True),
+                        token=origin(statement.token, indices)))
+                    continue
                 value = constant(statement.start, indices)
                 seen = set()
                 while True:
@@ -620,7 +647,7 @@ def elaborate_loops(model: Model, parameter):
                         if count > budget:
                             fail('elaborated statement budget (4096) exceeded', statement.token, code="resource_budget")
                         result.append(Assignment(statement.name, Expr('number', float(value), (), statement.token), origin(statement.token, scope)))
-                    result.extend(body(statement.body, scope, depth+1))
+                    result.extend(body(statement.body, scope, depth+1, runtime=runtime, in_runtime_loop=in_runtime_loop))
                     value = constant(statement.update, scope)
                 if integer_local:
                     count += 1
@@ -629,8 +656,8 @@ def elaborate_loops(model: Model, parameter):
                     result.append(Assignment(statement.name, Expr('number', float(value), (), statement.token), origin(statement.token, indices)))
             elif isinstance(statement, Conditional):
                 result.append(replace(statement, left=substitute(statement.left,indices), right=substitute(statement.right,indices),
-                                      then_body=body(statement.then_body,indices,depth+1),
-                                      else_body=body(statement.else_body,indices,depth+1), token=origin(statement.token,indices)))
+                                      then_body=body(statement.then_body,indices,depth+1,runtime=runtime,in_runtime_loop=in_runtime_loop),
+                                      else_body=body(statement.else_body,indices,depth+1,runtime=runtime,in_runtime_loop=in_runtime_loop), token=origin(statement.token,indices)))
             else:
                 if isinstance(statement, Assignment) and statement.name in model.genvars:
                     fail('genvar can only be assigned in its for control',statement.token)
@@ -640,7 +667,8 @@ def elaborate_loops(model: Model, parameter):
                 if isinstance(statement, Event):
                     event_bodies.append((statement.body, indices))
                     result.append(replace(statement, token=origin(statement.token,indices),
-                        body=body(statement.body,indices,depth+1), triggers=tuple(
+                        body=body(statement.body,indices,depth+1,runtime=all(t.kind in ("timer", "cross", "final_step") for t in statement.triggers),
+                                  in_runtime_loop=has_runtime_control(statement.body)), triggers=tuple(
                             replace(leaf, token=origin(leaf.token,indices), arguments=tuple(
                                 substitute(arg,indices) if arg is not None else None for arg in leaf.arguments))
                             for leaf in statement.triggers)))
@@ -656,6 +684,17 @@ def elaborate_loops(model: Model, parameter):
                     updates['branch'] = substitute(statement.branch, indices)
                 result.append(replace(statement, **updates))
         return tuple(result)
+
+    def has_runtime_control(statements):
+        def held(expr):
+            return (expr.op == 'parameter' and expr.value in model.variables or
+                    any(held(arg) for arg in expr.args))
+        for item in statements:
+            if isinstance(item, Loop) and (held(item.start) or held(item.limit) or has_runtime_control(item.body)):
+                return True
+            if isinstance(item, Conditional) and (has_runtime_control(item.then_body) or has_runtime_control(item.else_body)):
+                return True
+        return False
 
     expanded_initial = body(model.initial,{})
     expanded = body(model.analog,{})

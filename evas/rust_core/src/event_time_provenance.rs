@@ -124,7 +124,7 @@ pub(crate) fn apply(
         let mut local = before.clone();
         let assignments = model.program.events[*event].assignments();
         for &index in indices {
-            let assignment = assignments[index];
+            let assignment = &assignments[index];
             let proof = expression_value(&assignment.rhs, &local, root, &identity);
             local.remove(&assignment.state);
             result.remove(&assignment.state);

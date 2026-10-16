@@ -1,0 +1,16 @@
+{
+  "source": "native PSF HEADER",
+  "fields": {
+    "version": "21.1.0.509.isr12",
+    "reltol": "1.00000e-09",
+    "abstol(V)": "1.00000e-07",
+    "maxstep": "0.250000",
+    "stop": "1.00000",
+    "method": "traponly",
+    "lteratio": "3.50000",
+    "relref": "sigglobal"
+  },
+  "requested_strobeperiod_s": 0.25,
+  "native_strobeperiod_header_field": null,
+  "note": "No strobeperiod header field was present; exact native grid verified independently, no field inferred."
+}

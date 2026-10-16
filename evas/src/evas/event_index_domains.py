@@ -3,8 +3,8 @@
 The entry invariant is one exact integer interval per integer state, computed
 over the default/initialization values, every event and final_step writer in
 sequential use-site order, branch fork/join narrowing and weak dynamic-slot
-updates. Iteration is bounded; states that fail to converge are widened to the
-full signed-32 TOP interval and the result is verified with an explicit
+updates. Iteration is bounded; interval endpoints that fail to converge are widened to the
+corresponding signed-32 limit and the result is verified with an explicit
 post-fixpoint check (every event transformer maps the reported invariant into
 itself). TOP is an overapproximation for stored values, never a legal index.
 
@@ -18,7 +18,7 @@ overflow obligations at the actual lowering site stay untouched.
 from dataclasses import dataclass
 from typing import Callable, Mapping
 
-from .syntax import Assignment, Conditional, Display
+from .syntax import Assignment, Conditional, Display, Loop
 
 SIGNED32_MIN, SIGNED32_MAX = -2147483648, 2147483647
 #: Conservative domain of a successfully stored integer state.
@@ -125,6 +125,10 @@ def evaluate(expr, env, parameters, arrays, on_read=None):
     if expr.op == 'checked':
         return evaluate(expr.args[0], env, parameters, arrays, on_read)
     args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]
+    if expr.op in ('<', '<=', '>', '>=', '==', '!=', '&&', '||', 'unary!'):
+        return (0, 1)
+    if expr.op == 'ternary':
+        return None if args[1] is None or args[2] is None else hull(args[1], args[2])
     if expr.op == 'unary+':
         return args[0]
     if expr.op == 'unary-':
@@ -203,7 +207,7 @@ def refine(relation, left, right, env, parameters, arrays):
     return yes, no
 
 
-def flow(statements, env, *, arrays, parameters, on_use=None):
+def flow(statements, env, *, arrays, parameters, on_use=None, on_state=None):
     """Abstract one event body from `env`; returns the exit environment.
 
     Scalar assignments strong-update their target; dynamic array writes
@@ -216,7 +220,30 @@ def flow(statements, env, *, arrays, parameters, on_use=None):
 
     def execute(statements, current):
         for statement in statements:
-            if isinstance(statement, Conditional):
+            if on_state is not None:
+                on_state(current)
+            if isinstance(statement, Loop):
+                # No static trip-count assumption. Every loop writer may hold
+                # any signed32 value on a successful firing. Runtime checking
+                # owns actual indices and the event-wide iteration budget.
+                def writers(items):
+                    for item in items:
+                        if isinstance(item, Assignment):
+                            if item.index is None:
+                                yield item.name
+                            else:
+                                yield from (f'{item.name}[{k}]' for k in arrays.get(item.name, ()))
+                        elif isinstance(item, Conditional):
+                            yield from writers(item.then_body)
+                            yield from writers(item.else_body)
+                        elif isinstance(item, Loop):
+                            yield item.name
+                            yield from writers(item.body)
+                for name in (statement.name, *writers(statement.body)):
+                    if name in current:
+                        current[name] = TOP
+                execute(statement.body, dict(current))
+            elif isinstance(statement, Conditional):
                 def branch_reads(expr, env=current):
                     if on_use is not None:
                         on_use('read', expr, env)
@@ -259,6 +286,8 @@ def flow(statements, env, *, arrays, parameters, on_use=None):
                             current[name] = hull(current[name], value)
                 elif statement.name in current:
                     current[statement.name] = TOP if value is None else clamp(value)
+            if on_state is not None:
+                on_state(current)
         return current
 
     return execute(statements, env)
@@ -298,9 +327,11 @@ def entry_domains(event_bodies, initial_bounds, *, arrays, parameters,
             break
         domains = nxt
     else:
-        # Budget exhausted without closure: widen every still-moving state.
+        # Preserve stable endpoints, e.g. a nonnegative counter stays nonnegative.
+        # Only an endpoint still moving outwards is widened to its signed32 limit.
         probe = step(domains)
-        domains = {name: TOP if probe[name] != domains[name] else domains[name]
+        domains = {name: (SIGNED32_MIN if probe[name][0] < domains[name][0] else domains[name][0],
+                          SIGNED32_MAX if probe[name][1] > domains[name][1] else domains[name][1])
                    for name in domains}
         widened = True
     if not verify(domains):
@@ -308,7 +339,7 @@ def entry_domains(event_bodies, initial_bounds, *, arrays, parameters,
     return domains, widened
 
 
-def use_site_facts(event_bodies, entry, *, arrays, parameters, location_of):
+def use_site_facts(event_bodies, entry, *, arrays, parameters, location_of, partitioned=None, reachable=None):
     """Walk every event body once and collect FlowFacts per dynamic use site.
 
     Keyed by `id()` of the residual index expression (writes: the statement's
@@ -331,6 +362,10 @@ def use_site_facts(event_bodies, entry, *, arrays, parameters, location_of):
         return tuple(states)
 
     def record(access, key, site, states_expr, array, env, index):
+        previous = facts.get(id(key))
+        if previous is not None:
+            env = {name: hull(value, previous[1].entry[name]) for name, value in env.items()}
+            index = hull(TOP if index is None else index, previous[1].index)
         facts[id(key)] = (key, FlowFacts(
             entry=dict(env),
             exit=dict(env),
@@ -355,5 +390,116 @@ def use_site_facts(event_bodies, entry, *, arrays, parameters, location_of):
 
     for body in event_bodies:
         flow(body, entry, arrays=arrays, parameters=parameters, on_use=on_use)
+    if partitioned is not None:
+        # The original-tree audit still checks unreachable syntax. Retain those
+        # sites explicitly, using BOTTOM only after the closed invariant proves
+        # that no path reaches the site, rather than borrowing a nearby proof.
+        from dataclasses import replace
+        original = facts
+        facts = {}
+        paths, execute = partitioned
+        for body in event_bodies:
+            execute(body, paths, on_use, reachable)
+        for identity, (node, fact) in original.items():
+            if identity not in facts:
+                facts[identity] = (node, replace(fact, index=BOTTOM))
     holder.extend(node for node, _ in facts.values())
     return facts, holder
+
+
+def boolean_partitions(event_bodies, initial_bounds, *, arrays, parameters, states, passes=32):
+    """Inductive finite partitions by source-proven boolean scalar states.
+
+    Each partition retains intervals conditioned on its boolean key. Thus an
+    event that sets a flag after incrementing a counter can communicate that
+    counter's lower bound to a later event testing the flag. No event order or
+    stimulus is assumed. All writers participate; at most six boolean states
+    are selected, so the finite key space has at most 64 entries.
+    """
+    def contains_loop(body):
+        return any(isinstance(item, Loop) or isinstance(item, Conditional) and
+                   (contains_loop(item.then_body) or contains_loop(item.else_body)) for item in body)
+    if any(contains_loop(body) for body in event_bodies):
+        return None
+    writers = {}
+    def collect(body):
+        for item in body:
+            if isinstance(item, Conditional):
+                collect(item.then_body)
+                collect(item.else_body)
+            elif isinstance(item, Assignment) and item.index is None:
+                writers.setdefault(item.name, []).append(item.rhs)
+    for body in event_bodies:
+        collect(body)
+    def boolean_value(expr):
+        if expr.op in ('<','<=','>','>=','==','!=','&&','||','unary!'):
+            return True
+        if expr.op == 'ternary':
+            return all(boolean_value(a) for a in expr.args[1:])
+        if expr.op == 'checked':
+            return boolean_value(expr.args[0])
+        value = evaluate(expr, {}, parameters, arrays)
+        return value is not None and within(value, 0, 1)
+    keys = tuple(name for name in states if name in writers
+                 and within(initial_bounds.get(name, TOP), 0, 1)
+                 and all(boolean_value(rhs) for rhs in writers[name]))[:6]
+    if not keys:
+        return None
+
+    def split(env):
+        result = [env]
+        for name in keys:
+            result = [{**path, name: (value, value)} for path in result
+                      for value in (0,1) if path[name][0] <= value <= path[name][1]]
+        return result
+
+    def merge(paths):
+        result = {}
+        for env in paths:
+            key = tuple(env[name][0] for name in keys)
+            old = result.get(key)
+            result[key] = env if old is None else {name: hull(old[name], env[name]) for name in old}
+        return result
+
+    def execute(body, paths, on_use=None, reachable=None):
+        for item in body:
+            if paths and reachable is not None:
+                reachable.add(id(item))
+            outgoing = []
+            for env in paths:
+                if isinstance(item, Conditional):
+                    # Preserve callbacks for predicate reads before splitting.
+                    def reads(expr):
+                        if on_use is not None:
+                            on_use('read', expr, env)
+                    evaluate(item.left, env, parameters, arrays, reads)
+                    evaluate(item.right, env, parameters, arrays, reads)
+                    yes, no = refine(item.relation, item.left, item.right, env, parameters, arrays)
+                    for branch, narrowed in ((item.then_body, yes), (item.else_body, no)):
+                        if all(low <= high for low, high in narrowed.values()):
+                            outgoing.extend(execute(branch, [narrowed], on_use, reachable))
+                else:
+                    outgoing.extend(split(flow((item,), env, arrays=arrays, parameters=parameters,
+                                               on_use=on_use)))
+            paths = list(merge(outgoing).values())
+        return paths
+
+    initial = {name: initial_bounds.get(name, TOP) for name in states}
+    invariant = merge(split(initial))
+    for iteration in range(passes + 1):
+        outgoing = list(invariant.values())
+        for body in event_bodies:
+            outgoing.extend(execute(body, list(invariant.values())))
+        nxt = merge(outgoing)
+        if nxt == invariant:
+            return list(invariant.values()), execute
+        if iteration == passes - 1:
+            for key, env in nxt.items():
+                old = invariant.get(key)
+                if old is not None:
+                    nxt[key] = {name: (SIGNED32_MIN if env[name][0] < old[name][0] else env[name][0],
+                                       SIGNED32_MAX if env[name][1] > old[name][1] else env[name][1])
+                                for name in env}
+        invariant = nxt
+    # Failed post-fixpoint: callers retain the unpartitioned conservative facts.
+    return None

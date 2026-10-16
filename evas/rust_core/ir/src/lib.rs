@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 22;
+pub const SCHEMA_VERSION: u32 = 23;
 
 pub fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -83,6 +83,23 @@ pub enum ContributionKind {
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[serde(tag = "op", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Expression {
+    ArrayRead {
+        states: Vec<usize>,
+        index: Box<Expression>,
+        first: i32,
+        last: i32,
+        origin: Origin,
+    },
+    CheckedInteger {
+        value: Box<Expression>,
+        origin: Origin,
+    },
+    CheckedIndex {
+        index: Box<Expression>,
+        first: i32,
+        last: i32,
+        origin: Origin,
+    },
     EventMath {
         function: EventMathFunction,
         args: Vec<Expression>,
@@ -419,6 +436,23 @@ pub struct Event {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Statement {
+    ArrayWrite {
+        states: Vec<usize>,
+        index: Box<Expression>,
+        rhs: Expression,
+        first: i32,
+        last: i32,
+        origin: Origin,
+    },
+    Loop {
+        initialize: Vec<Statement>,
+        relation: Relation,
+        left: Box<Expression>,
+        right: Box<Expression>,
+        body: Vec<Statement>,
+        update: Vec<Statement>,
+        origin: Origin,
+    },
     Assign(Assignment),
     Display {
         format: String,
@@ -446,11 +480,27 @@ pub enum Relation {
 
 impl Event {
     /// Static validation visits both arms; execution uses only the selected arm.
-    pub fn assignments(&self) -> Vec<&Assignment> {
-        fn visit<'a>(body: &'a [Statement], out: &mut Vec<&'a Assignment>) {
+    pub fn assignments(&self) -> Vec<Assignment> {
+        fn visit(body: &[Statement], out: &mut Vec<Assignment>) {
             for statement in body {
                 match statement {
-                    Statement::Assign(a) => out.push(a),
+                    Statement::ArrayWrite { states, rhs, .. } => {
+                        out.extend(states.iter().map(|&state| Assignment {
+                            state,
+                            rhs: rhs.clone(),
+                        }));
+                    }
+                    Statement::Loop {
+                        initialize,
+                        body,
+                        update,
+                        ..
+                    } => {
+                        visit(initialize, out);
+                        visit(body, out);
+                        visit(update, out);
+                    }
+                    Statement::Assign(a) => out.push(a.clone()),
                     Statement::Display { .. } => {}
                     Statement::If {
                         then_body,

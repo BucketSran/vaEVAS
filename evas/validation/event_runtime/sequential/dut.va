@@ -1,0 +1,16 @@
+`include "disciplines.vams"
+module runtime_observer(u);
+input u; electrical u;
+integer n,i,acc,a[0:3];
+analog begin
+ @(timer(0.25,0,1e-12)) n=3;
+ @(timer(0.5,0,1e-12)) begin
+for(i=0;i<n;i=i+1) begin
+ a[i]=i+1;
+ if(i>0) a[i]=a[i]+a[i-1];
+ acc=acc+a[i];
+end
+ $display("IR23_RESULT te=%.17g n=%.17g i=%.17g acc=%.17g a0=%.17g a1=%.17g a2=%.17g a3=%.17g",$abstime,n,i,acc,a[0],a[1],a[2],a[3]);
+ end
+end
+endmodule

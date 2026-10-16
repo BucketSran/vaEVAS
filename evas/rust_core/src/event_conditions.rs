@@ -126,6 +126,21 @@ pub(crate) enum SelectedStep {
 }
 
 enum Step {
+    ArrayWrite {
+        index: Expression,
+        first: i32,
+        last: i32,
+        start: usize,
+        predicate: usize,
+        origin: Origin,
+    },
+    Loop {
+        initialize: Vec<Step>,
+        predicate: usize,
+        body: Vec<Step>,
+        update: Vec<Step>,
+        origin: Origin,
+    },
     Assign(usize),
     Display(usize),
     If {
@@ -189,6 +204,85 @@ fn compile(
 ) -> Result<Vec<Step>, Error> {
     body.iter()
         .map(|statement| match statement {
+            Statement::ArrayWrite {
+                states,
+                index,
+                first,
+                last,
+                origin,
+                ..
+            } => {
+                if !general {
+                    return Err(Error::new(
+                        "unsupported_transient",
+                        "array writes require an isolated observer event",
+                    ));
+                }
+                crate::event_numeric::validate_array(
+                    states, index, *first, *last, origin, p, owner,
+                )?;
+                let dependencies = crate::event_numeric::dependencies(index, p, owner)?;
+                let predicate = predicates.len();
+                predicates.push(Predicate {
+                    event: usize::MAX,
+                    relation: Relation::Ge,
+                    expression: *index.clone(),
+                    origin: origin.clone(),
+                    dependencies,
+                    numeric: true,
+                });
+                let start = *next;
+                *next += states.len();
+                Ok(Step::ArrayWrite {
+                    index: *index.clone(),
+                    first: *first,
+                    last: *last,
+                    start,
+                    predicate,
+                    origin: origin.clone(),
+                })
+            }
+            Statement::Loop {
+                initialize,
+                relation,
+                left,
+                right,
+                body,
+                update,
+                origin,
+            } => {
+                if !general {
+                    return Err(Error::new(
+                        "unsupported_loop",
+                        "runtime loops require an isolated observer event",
+                    ));
+                }
+                validate_loop(
+                    initialize, *relation, left, right, body, update, origin, p, owner,
+                )?;
+                let init = compile(initialize, p, owner, next, displays, predicates, general)?;
+                let wrapped = Statement::If {
+                    relation: *relation,
+                    left: left.clone(),
+                    right: right.clone(),
+                    then_body: body.clone(),
+                    else_body: vec![],
+                    origin: origin.clone(),
+                };
+                let mut compiled =
+                    compile(&[wrapped], p, owner, next, displays, predicates, general)?;
+                let Step::If { predicate, yes, .. } = compiled.pop().unwrap() else {
+                    unreachable!()
+                };
+                let update = compile(update, p, owner, next, displays, predicates, general)?;
+                Ok(Step::Loop {
+                    initialize: init,
+                    predicate,
+                    body: yes,
+                    update,
+                    origin: origin.clone(),
+                })
+            }
             Statement::Assign(_) => {
                 let index = *next;
                 *next += 1;
@@ -679,6 +773,7 @@ impl Conditions {
             written: &mut [bool],
             at_root: &[Option<i8>],
             proof_attempts: &mut usize,
+            loop_iterations: &mut usize,
         ) -> Result<(), Error> {
             let bounds = context.bounds.as_ref();
             let numeric_nodes: Vec<I> = std::iter::once(I::ZERO)
@@ -686,6 +781,133 @@ impl Conditions {
                 .collect();
             for step in body {
                 match step {
+                    Step::ArrayWrite {
+                        index,
+                        first,
+                        last,
+                        start,
+                        predicate,
+                        origin,
+                    } => {
+                        let value = crate::event_numeric::checked_index(
+                            crate::event_numeric::bounds(index, &numeric_nodes, states)?,
+                            *first,
+                            *last,
+                            origin,
+                        )?;
+                        decisions.push((*predicate, true));
+                        let slot = *start + (value.lo - f64::from(*first)) as usize;
+                        walk(
+                            &[Step::Assign(slot)],
+                            values,
+                            predicates,
+                            actions,
+                            decisions,
+                            ordered,
+                            assignments,
+                            identity,
+                            context,
+                            inputs,
+                            states,
+                            written,
+                            at_root,
+                            proof_attempts,
+                            loop_iterations,
+                        )?;
+                    }
+                    Step::Loop {
+                        initialize,
+                        predicate,
+                        body,
+                        update,
+                        origin,
+                    } => {
+                        walk(
+                            initialize,
+                            values,
+                            predicates,
+                            actions,
+                            decisions,
+                            ordered,
+                            assignments,
+                            identity,
+                            context,
+                            inputs,
+                            states,
+                            written,
+                            at_root,
+                            proof_attempts,
+                            loop_iterations,
+                        )?;
+                        loop {
+                            let p = &predicates[*predicate];
+                            let value = if p.numeric {
+                                crate::event_numeric::bounds(&p.expression, &numeric_nodes, states)?
+                            } else {
+                                bounds
+                                    .unwrap()
+                                    .value_with_states(*predicate, inputs, states)
+                            };
+                            let (yes, no) = crate::event_numeric::sign(p.relation, value);
+                            if !value.finite() || !(yes || no) {
+                                return Err(Error::new(
+                                    "event_condition",
+                                    format!(
+                                        "cannot certify loop continuation at {}",
+                                        origin.label()
+                                    ),
+                                ));
+                            }
+                            decisions.push((*predicate, yes));
+                            if no {
+                                break;
+                            }
+                            if *loop_iterations >= 4096 {
+                                return Err(Error::new(
+                                    "event_loop_budget",
+                                    format!(
+                                        "event exceeds 4096 total loop iterations at {}",
+                                        origin.label()
+                                    ),
+                                ));
+                            }
+                            *loop_iterations += 1;
+                            walk(
+                                body,
+                                values,
+                                predicates,
+                                actions,
+                                decisions,
+                                ordered,
+                                assignments,
+                                identity,
+                                context,
+                                inputs,
+                                states,
+                                written,
+                                at_root,
+                                proof_attempts,
+                                loop_iterations,
+                            )?;
+                            walk(
+                                update,
+                                values,
+                                predicates,
+                                actions,
+                                decisions,
+                                ordered,
+                                assignments,
+                                identity,
+                                context,
+                                inputs,
+                                states,
+                                written,
+                                at_root,
+                                proof_attempts,
+                                loop_iterations,
+                            )?;
+                        }
+                    }
                     Step::Assign(index) => {
                         actions.push(*index);
                         ordered.push(SelectedStep::Assign(*index));
@@ -782,6 +1004,7 @@ impl Conditions {
                                 &mut yw,
                                 at_root,
                                 proof_attempts,
+                                loop_iterations,
                             );
                             let nr = walk(
                                 no,
@@ -798,6 +1021,7 @@ impl Conditions {
                                 &mut nw,
                                 at_root,
                                 proof_attempts,
+                                loop_iterations,
                             );
                             // Never turn an invalid domain/IR/resource diagnostic
                             // into an alternative certificate or a cache miss.
@@ -865,6 +1089,7 @@ impl Conditions {
                             written,
                             at_root,
                             proof_attempts,
+                            loop_iterations,
                         )?;
                     }
                 }
@@ -883,6 +1108,7 @@ impl Conditions {
                     "event condition accepted state bounds length mismatch",
                 ));
             }
+            let mut loop_iterations = 0;
             let mut actions = Vec::new();
             let mut ordered = Vec::new();
             let mut states = before_bounds.to_vec();
@@ -902,6 +1128,7 @@ impl Conditions {
                 &mut written,
                 &at_root,
                 &mut proof_attempts,
+                &mut loop_iterations,
             )?;
             result.actions.push((event, actions));
             result.ordered_steps.push((event, ordered));
@@ -960,4 +1187,86 @@ mod branch_review_tests {
         assert_eq!(r.err().unwrap().kind, "event_condition");
         assert!(!d.counters.contains_key("event_branch_proof_attempts"));
     }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn validate_loop(
+    init: &[Statement],
+    relation: Relation,
+    left: &Expression,
+    right: &Expression,
+    body: &[Statement],
+    update: &[Statement],
+    origin: &Origin,
+    p: &Program,
+    owner: &str,
+) -> Result<(), Error> {
+    let invalid = || {
+        Error::new(
+            "invalid_ir",
+            format!("invalid bounded integer loop at {}", origin.label()),
+        )
+    };
+    if origin.instance != owner
+        || origin.source.is_empty()
+        || origin.line == 0
+        || origin.column == 0
+        || !origin.valid_expansion()
+    {
+        return Err(invalid());
+    }
+    let ([Statement::Assign(start)], [Statement::Assign(end)]) = (init, update) else {
+        return Err(invalid());
+    };
+    if start.state != end.state
+        || p.states
+            .get(start.state)
+            .is_none_or(|s| s.instance != owner || s.kind != crate::ir::StateKind::Integer)
+        || !matches!(left,Expression::State{state} if *state==start.state)
+    {
+        return Err(invalid());
+    }
+    crate::event_numeric::validate(&start.rhs, p, owner)?;
+    crate::event_numeric::validate(right, p, owner)?;
+    if !crate::event_numeric::integral(&start.rhs, p) || !crate::event_numeric::integral(right, p) {
+        return Err(invalid());
+    }
+    fn strip(e: &Expression) -> Expression {
+        match e {
+            Expression::CheckedInteger { value, .. } => strip(value),
+            Expression::Add { left, right } => Expression::Add {
+                left: Box::new(strip(left)),
+                right: Box::new(strip(right)),
+            },
+            Expression::Multiply { left, right } => Expression::Multiply {
+                left: Box::new(strip(left)),
+                right: Box::new(strip(right)),
+            },
+            _ => e.clone(),
+        }
+    }
+    let step = affine(&strip(&end.rhs), p, owner)?;
+    if !step.constant.is_finite()
+        || step.constant == 0.
+        || step.constant.fract() != 0.
+        || step.nodes.iter().any(|v| *v != 0.)
+        || !step.operator_dependencies.is_empty()
+        || step
+            .states
+            .iter()
+            .enumerate()
+            .any(|(i, v)| *v != if i == start.state { 1. } else { 0. })
+        || matches!(relation, Relation::Lt | Relation::Le) != (step.constant > 0.)
+    {
+        return Err(invalid());
+    }
+    let event = crate::ir::Event {
+        trigger: EventTrigger::FinalStep {},
+        body: body.to_vec(),
+        origin: origin.clone(),
+    };
+    if event.assignments().iter().any(|a| a.state == start.state) {
+        return Err(invalid());
+    }
+    Ok(())
 }

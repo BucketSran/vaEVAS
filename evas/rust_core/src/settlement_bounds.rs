@@ -214,7 +214,7 @@ impl Bounds {
             let assignments = p.events[*event].assignments();
             let mut local = initial.clone();
             for &index in indices {
-                let action = assignments[index];
+                let action = &assignments[index];
                 local[action.state] = substitute(&affine(&action.rhs, p)?, &local, count);
                 updates[action.state] = local[action.state].clone();
             }
@@ -260,10 +260,18 @@ impl Bounds {
         let p = &model.program;
         let assignments = selection.actions.iter().flat_map(|(event, indices)| {
             let actions = p.events[*event].assignments();
-            indices.iter().map(move |&index| &actions[index].rhs)
+            indices
+                .iter()
+                .map(move |&index| actions[index].rhs.clone())
+                .collect::<Vec<_>>()
         });
-        for expression in p.contributions.iter().map(|c| &c.rhs).chain(assignments) {
-            if let Err(error) = affine(expression, p) {
+        for expression in p
+            .contributions
+            .iter()
+            .map(|c| c.rhs.clone())
+            .chain(assignments)
+        {
+            if let Err(error) = affine(&expression, p) {
                 if error.kind == "event_resolution"
                     && matches!(
                         error.message.as_str(),
@@ -332,7 +340,7 @@ impl Bounds {
             let assignments = p.events[*event].assignments();
             let mut local = initial.clone();
             for &index in indices {
-                let action = assignments[index];
+                let action = &assignments[index];
                 local[action.state] = substitute(&bind(&action.rhs)?, &local, count);
                 updates[action.state] = local[action.state].clone();
             }

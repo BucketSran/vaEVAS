@@ -5,7 +5,12 @@ use std::collections::{BTreeSet, HashSet};
 
 pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
     match expr {
-        Expression::EventMath { .. } | Expression::State { .. } | Expression::Operator { .. } => {
+        Expression::ArrayRead { .. }
+        | Expression::CheckedInteger { .. }
+        | Expression::CheckedIndex { .. }
+        | Expression::EventMath { .. }
+        | Expression::State { .. }
+        | Expression::Operator { .. } => {
             return Err(Error::new(
                 "unsupported_analysis",
                 "state requires transient execution",
@@ -89,6 +94,9 @@ fn predicate_nodes(expr: &Expression, nodes: &mut BTreeSet<usize>) {
             predicate_nodes(then_value, nodes);
             predicate_nodes(else_value, nodes);
         }
+        Expression::CheckedIndex { index, .. }
+        | Expression::CheckedInteger { value: index, .. } => predicate_nodes(index, nodes),
+        Expression::ArrayRead { index, .. } => predicate_nodes(index, nodes),
         Expression::State { .. } | Expression::Operator { .. } => {}
     }
 }
@@ -122,7 +130,10 @@ fn predicate_degree(expr: &Expression) -> Option<u8> {
                 .max(predicate_degree(then_value)?)
                 .max(predicate_degree(else_value)?),
         ),
-        Expression::EventMath { .. }
+        Expression::ArrayRead { .. }
+        | Expression::CheckedInteger { .. }
+        | Expression::CheckedIndex { .. }
+        | Expression::EventMath { .. }
         | Expression::State { .. }
         | Expression::Operator { .. }
         | Expression::Divide { .. } => None,
@@ -134,7 +145,10 @@ pub(crate) fn validate_select_predicates(
     allowed_nodes: &HashSet<usize>,
 ) -> Result<(), Error> {
     match expr {
-        Expression::EventMath { .. } => {
+        Expression::ArrayRead { .. }
+        | Expression::CheckedInteger { .. }
+        | Expression::CheckedIndex { .. }
+        | Expression::EventMath { .. } => {
             return Err(Error::new(
                 "unsupported_analysis",
                 "pure event mathematics requires isolated event execution",
@@ -257,7 +271,10 @@ impl Accumulator {
         nodes: &[f64],
     ) -> Result<(), Error> {
         match expr {
-            Expression::EventMath { .. }
+            Expression::ArrayRead { .. }
+            | Expression::CheckedInteger { .. }
+            | Expression::CheckedIndex { .. }
+            | Expression::EventMath { .. }
             | Expression::State { .. }
             | Expression::Operator { .. } => {
                 return Err(Error::new(
@@ -448,12 +465,15 @@ fn affine_product_terms(
 
 fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
     match expr {
-        Expression::EventMath { .. } | Expression::State { .. } | Expression::Operator { .. } => {
-            Err(Error::new(
-                "unsupported_analysis",
-                "unbound state in static expression",
-            ))
-        }
+        Expression::ArrayRead { .. }
+        | Expression::CheckedInteger { .. }
+        | Expression::CheckedIndex { .. }
+        | Expression::EventMath { .. }
+        | Expression::State { .. }
+        | Expression::Operator { .. } => Err(Error::new(
+            "unsupported_analysis",
+            "unbound state in static expression",
+        )),
         Expression::Affine { constant, terms } => {
             let mut value = I::point(*constant);
             for term in terms {

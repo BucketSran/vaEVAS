@@ -185,7 +185,10 @@ class IndependentIndexCounterexamples(unittest.TestCase):
 
 
 class Rejections(unittest.TestCase):
-    def assert_rejects(self, declarations, events, code, contribution=None):
+    def assert_rejects(self, declarations, events, code, contribution='V(y,r)<+1.0;'):
+        # Static proof remains the physical-expression contract. The original
+        # no-contribution observer bodies execute unchanged in the inherited
+        # cases of test_event_runtime_loops, including the real first failures.
         return expect_reject(self, declarations, events, code, contribution)
 
     def test_index_of_index_rejected_before_scalarization(self):
@@ -261,7 +264,10 @@ class Rejections(unittest.TestCase):
 
 
 class BranchAndModulo(unittest.TestCase):
-    def assert_rejects(self, declarations, events, code, contribution=None):
+    def assert_rejects(self, declarations, events, code, contribution='V(y,r)<+1.0;'):
+        # Static proof remains the physical-expression contract. The original
+        # no-contribution observer bodies execute unchanged in the inherited
+        # cases of test_event_runtime_loops, including the real first failures.
         return expect_reject(self, declarations, events, code, contribution)
     def test_branch_join_toggle_keeps_closed_domain(self):
         p = compiled('integer a[0:1],b;',
@@ -271,6 +277,55 @@ class BranchAndModulo(unittest.TestCase):
         states, _ = final_states(p)
         self.assertEqual((states['dut:a[0]'], states['dut:a[1]'], states['dut:b']),
                          (1., 1., 0.))
+
+    def test_growing_counter_keeps_nonnegative_bound_after_widening(self):
+        p = compiled('integer a[1:4],b;',
+                     ['@(initial_step) b=0;',
+                      '@(timer(0.25,0.25,1e-12)) begin '
+                      'b=b+1; if(b<=4) a[b]=b; end'],
+                     contribution='V(y,r)<+1.0;')
+        states, _ = final_states(p)
+        self.assertEqual([states[f'dut:a[{i}]'] for i in range(1,5)], [1.,2.,3.,4.])
+
+    def test_boolean_and_ternary_assignment_keep_integer_domains(self):
+        p = compiled('integer a[0:1],b;',
+                     ['@(initial_step) b=0;',
+                      '@(timer(0.25,0.25,1e-12)) begin '
+                      'b=(V(u,r)>0 ? 1 : 0); a[b]=1; end'])
+        states, _ = final_states(p)
+        self.assertEqual(states['dut:a[0]'], 1.)
+
+    def test_flag_carries_counter_lower_bound_between_events(self):
+        # The write can occur before any acquisition event. Its flag gate must
+        # make that path unreachable without assuming a particular event order.
+        p = compiled('integer a[1:4],counter,target,pending;',
+                     ['@(initial_step) begin counter=0; target=0; pending=0; end',
+                      '@(timer(0.25,0.25,1e-12)) begin '
+                      'pending=0; target=(V(u,r)>=0); '
+                      'if(target) counter=counter+1; end',
+                      '@(timer(0.3,0.25,1e-12)) if(target) pending=1;',
+                      '@(timer(0.1,0.25,1e-12)) '
+                      'if(pending) begin if(counter<=4) a[counter]=counter; pending=0; end'],
+                     contribution='V(y,r)<+1.0;')
+        states, _ = final_states(p)
+        self.assertEqual([states[f'dut:a[{i}]'] for i in range(1,5)], [1.,2.,3.,0.])
+
+    def test_extra_writer_invalidates_flag_counter_relation(self):
+        self.assert_rejects('integer a[1:4],counter,target,pending;',
+                     ['@(initial_step) begin counter=0; target=0; pending=0; end',
+                      '@(timer(0.25,0.25,1e-12)) begin '
+                      'target=(V(u,r)>=0); if(target) counter=counter+1; end',
+                      '@(timer(0.3,0.25,1e-12)) if(target) pending=1;',
+                      '@(timer(0.1,0.25,1e-12)) if(pending) if(counter<=4) a[counter]=1;',
+                      '@(timer(0.5)) counter=0;'], 'array_index_range')
+
+    def test_boolean_state_bound_supports_continuous_integer_division(self):
+        p = compiled('integer a[0:1],b;',
+                     ['@(initial_step) b=0;',
+                      '@(timer(0.5)) b=(V(u,r)>0 ? 2 : 3);'],
+                     contribution='V(y,r)<+b/2;')
+        _, result = final_states(p)
+        self.assertEqual(result['solutions'][-1]['voltages'][result['nodes'].index('y')], 1.)
 
     def test_singleton_modulo_index_admits(self):
         p = compiled('integer a[0:2],b;',

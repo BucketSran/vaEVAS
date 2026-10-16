@@ -195,3 +195,7 @@ TIMER、CROSS、EVENT-ORDER、TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE�
 新增 16 次外部后端运行，EVAS 复用首轮相同实现及原生记录；Q 档位、实际配置和验收要求已绑定。
 数值、行为与证据状态分别保存，EVAS 阈值采样的回调缺证及极严配置拒绝继续保留。
 原 v1/v2 判据与成绩未改写，#131 未动。
+
+[有界运行期事件控制](../../../experiments/backends/support/event-runtime-control/README.md)补充 LANG、EVENT-CONDITIONS 和 EVENT-ORDER：三个实际 Spectre 控制按原 100 nV 门槛及精确整数答案验收；4096 迭代、signed32 中间检查、数组边界及晚失败回退见 test_event_runtime_loops.py。原 CDS 整题尚未完成，不新增 Q 成绩。
+
+保持目标中的嵌套 held `Select` 补充 TRANSITION 与 EVENT-CONDITIONS，见[原算式、结构负控与有限参考](../../../experiments/backends/support/held-transition-targets/README.md)。这里只验证保持量目标的分支展开，不表示完整 MUX 模型或历史谓词已经支持。

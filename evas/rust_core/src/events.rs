@@ -140,7 +140,10 @@ pub(crate) fn affine(
         has_variables: false,
     };
     match expr {
-        Expression::EventMath { .. } => {
+        Expression::ArrayRead { .. }
+        | Expression::CheckedInteger { .. }
+        | Expression::CheckedIndex { .. }
+        | Expression::EventMath { .. } => {
             return Err(Error::new(
                 "unsupported_transient",
                 "pure event mathematics requires an isolated observer",
@@ -471,6 +474,7 @@ impl EventModel {
         driven: Vec<String>,
         tolerances: Tolerances,
     ) -> Result<Self, Error> {
+        crate::event_control::validate(&program)?;
         let initial_values = program
             .states
             .iter()
@@ -542,6 +546,16 @@ impl EventModel {
                             }
                         }
                     }
+                    crate::ir::Statement::Loop {
+                        initialize,
+                        body,
+                        update,
+                        ..
+                    } => {
+                        validate_displays(initialize, program, owner, numeric)?;
+                        validate_displays(body, program, owner, numeric)?;
+                        validate_displays(update, program, owner, numeric)?;
+                    }
                     crate::ir::Statement::If {
                         then_body,
                         else_body,
@@ -549,6 +563,25 @@ impl EventModel {
                     } => {
                         validate_displays(then_body, program, owner, numeric)?;
                         validate_displays(else_body, program, owner, numeric)?;
+                    }
+                    crate::ir::Statement::ArrayWrite {
+                        states,
+                        index,
+                        rhs,
+                        first,
+                        last,
+                        origin,
+                    } => {
+                        if !numeric {
+                            return Err(Error::new(
+                                "unsupported_transient",
+                                "array writes require an isolated observer event",
+                            ));
+                        }
+                        crate::event_numeric::validate_array(
+                            states, index, *first, *last, origin, program, owner,
+                        )?;
+                        crate::event_numeric::validate(rhs, program, owner)?;
                     }
                     crate::ir::Statement::Assign(_) => {}
                 }
@@ -927,6 +960,16 @@ impl EventModel {
     pub(crate) fn check_selection_writers(&self, selection: &Selection) -> Result<(), Error> {
         fn reads_other_writer(expr: &Expression, event: usize, writers: &[Option<usize>]) -> bool {
             match expr {
+                Expression::CheckedIndex { index, .. }
+                | Expression::CheckedInteger { value: index, .. } => {
+                    reads_other_writer(index, event, writers)
+                }
+                Expression::ArrayRead { states, index, .. } => {
+                    states
+                        .iter()
+                        .any(|&state| writers[state].is_some_and(|w| w != event))
+                        || reads_other_writer(index, event, writers)
+                }
                 Expression::EventMath { args, .. } => {
                     args.iter().any(|e| reads_other_writer(e, event, writers))
                 }
@@ -955,6 +998,16 @@ impl EventModel {
         fn display_args<'a>(body: &'a [crate::ir::Statement], out: &mut Vec<&'a [Expression]>) {
             for statement in body {
                 match statement {
+                    crate::ir::Statement::Loop {
+                        initialize,
+                        body,
+                        update,
+                        ..
+                    } => {
+                        display_args(initialize, out);
+                        display_args(body, out);
+                        display_args(update, out);
+                    }
                     crate::ir::Statement::Display { args, .. } => out.push(args),
                     crate::ir::Statement::If {
                         then_body,
@@ -1534,6 +1587,16 @@ impl EventModel {
         fn collect<'a>(body: &'a [crate::ir::Statement], out: &mut Vec<&'a crate::ir::Statement>) {
             for statement in body {
                 match statement {
+                    crate::ir::Statement::Loop {
+                        initialize,
+                        body,
+                        update,
+                        ..
+                    } => {
+                        collect(initialize, out);
+                        collect(body, out);
+                        collect(update, out);
+                    }
                     crate::ir::Statement::Display { .. } => out.push(statement),
                     crate::ir::Statement::If {
                         then_body,

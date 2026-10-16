@@ -137,7 +137,7 @@ fn bind(expr: &Expression, states: &[I], work: &Work) -> Result<Expression, Erro
 }
 
 // Enumerate all affine candidates before evaluation, including masked arms.
-fn forms(expr: &Expression, work: &Work) -> Result<Vec<Expression>, Error> {
+pub(crate) fn forms(expr: &Expression, work: &Work) -> Result<Vec<Expression>, Error> {
     work.step()?;
     match expr {
         Expression::Select {

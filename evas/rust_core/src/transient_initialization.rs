@@ -25,6 +25,11 @@ fn check_expression(e: &Expression, model: &EventModel, owner: &str) -> Result<(
 fn check_body(body: &[Statement], model: &EventModel, owner: &str) -> Result<(), Error> {
     for statement in body {
         match statement {
+            Statement::ArrayWrite { .. } | Statement::Loop { .. } => {
+                return Err(unsupported(
+                    "runtime loop is not supported in bootstrap initialization",
+                ))
+            }
             Statement::Assign(a) => check_expression(&a.rhs, model, owner)?,
             Statement::Display { args, .. } => {
                 // Bootstrap has no solved internal node or operator history.

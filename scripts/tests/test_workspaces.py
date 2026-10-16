@@ -1,11 +1,13 @@
 """Exercise workspace visibility and handoff reporting with real temporary Git repos."""
 import json
+import importlib.util
 import os
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from urllib.parse import quote
 
 
@@ -184,6 +186,163 @@ class WorkspaceChecks(unittest.TestCase):
         result, report = self.run_check(None, "--base", "missing-ref")
         self.assertEqual(result.returncode, 2)
         self.assertIn("INSPECTION_FAILED", [e["code"] for e in report["errors"]])
+
+    def test_assets_find_duplicate_local_content_without_changing_assets_or_index(self):
+        (self.primary / '.gitignore').write_text('/runs/\n/evas/rust_core/target/\n')
+        self.git(self.primary, 'commit', '-am', 'ignore generated assets')
+        worktree = self.worktree()
+        self.register(worktree)
+        for root in (self.primary, worktree):
+            (root / 'source.txt').write_text('same local change\n')
+            (root / 'new.txt').write_text('same untracked asset\n')
+        cache = worktree / 'evas/rust_core/target'
+        cache.mkdir(parents=True)
+        (cache / 'binary').write_bytes(b'x' * 2048)
+        runs = worktree / 'runs'; runs.mkdir()
+        (runs / 'evidence').write_bytes(b'y' * 3072)
+        index = Path(self.git(worktree, 'rev-parse', '--path-format=absolute', '--git-path', 'index').strip())
+        before = index.read_bytes()
+        result, report = self.run_check(None, '--assets')
+        self.assertEqual(result.returncode, 0, report)
+        self.assertEqual(index.read_bytes(), before)
+        row = report['worktrees'][1]['assets']
+        self.assertEqual(row['recommendation']['code'], 'preserve_local_changes')
+        self.assertIn('new.txt', [f['path'] for f in row['files']])
+        self.assertEqual(row['disk']['build']['logical_bytes'], 2048)
+        self.assertEqual(row['disk']['runs']['logical_bytes'], 3072)
+        self.assertTrue(row['complete'])
+        groups = report['asset_summary']['matching_source_states']
+        self.assertEqual(len(groups), 1)
+        self.assertEqual(set(groups[0]['worktrees']), {str(self.primary), str(worktree)})
+        self.assertEqual((runs / 'evidence').read_bytes(), b'y' * 3072)
+
+    def test_assets_keep_staged_changes_even_if_working_file_matches_head(self):
+        worktree = self.worktree(); self.register(worktree)
+        (worktree / 'source.txt').write_text('staged only\n')
+        self.git(worktree, 'add', 'source.txt')
+        (worktree / 'source.txt').write_text('baseline\n')
+        result, report = self.run_check(None, '--assets')
+        self.assertEqual(result.returncode, 0, report)
+        row = report['worktrees'][1]['assets']
+        self.assertTrue(row['staged_diff_sha256'])
+        self.assertEqual(row['recommendation']['code'], 'preserve_local_changes')
+        self.assertEqual(report['asset_summary']['matching_source_states'], [])
+
+    def test_assets_mark_patch_equivalence_as_candidate_not_integration(self):
+        worktree = self.worktree(); self.register(worktree)
+        for root, message in ((worktree, 'worker change'), (self.primary, 'independent main change')):
+            (root / 'source.txt').write_text('same change\n')
+            self.git(root, 'commit', '-am', message)
+        result, report = self.run_check(None, '--assets')
+        self.assertEqual(result.returncode, 0, report)
+        row = report['worktrees'][1]
+        self.assertEqual(row['commits_not_in_base'], 1)
+        self.assertTrue(row['assets']['commits'][0]['patch_equivalent_in_base'])
+        self.assertEqual(row['assets']['recommendation']['code'], 'review_commits')
+
+    def test_assets_do_not_follow_links_or_count_hardlinks_twice(self):
+        worktree = self.worktree(); self.register(worktree)
+        runs = worktree / 'runs'; runs.mkdir()
+        outside = self.root / 'outside'; outside.mkdir()
+        (outside / 'large').write_bytes(b'o' * 16384)
+        (runs / 'external').symlink_to(outside, target_is_directory=True)
+        (runs / 'one').write_bytes(b'a' * 1024)
+        os.link(runs / 'one', runs / 'two')
+        result, report = self.run_check(None, '--assets')
+        self.assertEqual(result.returncode, 0, report)
+        disk = report['worktrees'][1]['assets']['disk']['runs']
+        self.assertEqual(disk['symlinks'], 1)
+        self.assertEqual(disk['logical_bytes'], 1024 + len(os.fsencode(outside)))
+        self.assertEqual(disk['hardlinks_skipped'], 1)
+
+    def test_asset_limits_remain_unknown_and_suppress_exact_duplicate_claims(self):
+        worktree = self.worktree(); self.register(worktree)
+        for root in (self.primary, worktree):
+            (root / 'new.txt').write_text('unhashed data')
+        result, report = self.run_check(None, '--assets', '--hash-limit-mib', '0', '--scan-seconds', '0')
+        self.assertEqual(result.returncode, 2, report)
+        self.assertEqual(report['errors'], [])
+        row = report['worktrees'][1]['assets']
+        self.assertFalse(row['complete'])
+        self.assertIsNone(row['source_state_sha256'])
+        self.assertEqual(row['recommendation']['code'], 'inspect_incomplete')
+        self.assertFalse(row['disk']['other']['complete'])
+        self.assertEqual(report['asset_summary']['matching_source_states'], [])
+
+    def test_git_hidden_changes_cannot_become_matching_or_retirement_candidates(self):
+        worktree = self.worktree(); self.register(worktree)
+        for flag in ('assume-unchanged', 'skip-worktree'):
+            with self.subTest(flag=flag):
+                self.git(worktree, 'update-index', '--' + flag, 'source.txt')
+                (worktree / 'source.txt').write_text('unique hidden result\n')
+                result, report = self.run_check(None, '--assets')
+                self.assertEqual(result.returncode, 2, report)
+                row = report['worktrees'][1]['assets']
+                self.assertEqual(row['index_hidden_paths'], ['source.txt'])
+                self.assertIsNone(row['source_state_sha256'])
+                self.assertEqual(row['recommendation']['code'], 'inspect_incomplete')
+                self.assertEqual(report['asset_summary']['matching_source_states'], [])
+                self.git(worktree, 'update-index', '--no-' + flag, 'source.txt')
+
+    def test_directory_replacement_during_scan_never_reads_external_target(self):
+        spec = importlib.util.spec_from_file_location('workspace_probe', SCRIPT)
+        module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        folder = self.primary / 'switched'; folder.mkdir()
+        (folder / 'local').write_bytes(b'l' * 1024)
+        outside = self.root / 'outside'; outside.mkdir()
+        (outside / 'external').write_bytes(b'e' * 16384)
+        inode = folder.stat().st_ino
+        original = os.scandir
+        switched = False
+
+        def replacing(path):
+            nonlocal switched
+            target = os.fstat(path).st_ino == inode if isinstance(path, int) else Path(path) == folder
+            if target and not switched:
+                switched = True
+                folder.rename(self.primary / 'retained')
+                folder.symlink_to(outside, target_is_directory=True)
+            return original(path)
+
+        with patch.object(module.os, 'scandir', side_effect=replacing) as mocked:
+            with patch.object(module.os, 'supports_fd', os.supports_fd | {mocked}):
+                result = module.disk_usage(self.primary, 5)
+        self.assertTrue(switched)
+        self.assertFalse(result['complete'])
+        self.assertLess(result['logical_bytes'], 16384)
+
+    def test_absent_hidden_paths_do_not_flood_overlap_but_real_deletions_remain(self):
+        worktree = self.worktree(); self.register(worktree)
+        for root in (self.primary, worktree):
+            self.git(root, 'update-index', '--skip-worktree', 'source.txt')
+            (root / 'source.txt').unlink()
+            (root / '.gitignore').unlink()
+        result, report = self.run_check(None, '--assets')
+        self.assertEqual(result.returncode, 2, report)
+        for row in report['worktrees']:
+            assets = row['assets']
+            self.assertEqual(assets['index_hidden_paths'], [])
+            self.assertEqual(assets['index_hidden_path_count'], 1)
+            self.assertEqual(assets['index_hidden_missing_count'], 1)
+            self.assertEqual([f['path'] for f in assets['files']], ['.gitignore'])
+            self.assertIsNone(assets['source_state_sha256'])
+        self.assertEqual([g['path'] for g in report['asset_summary']['overlapping_paths']], ['.gitignore'])
+
+    def test_untracked_mutation_after_hashing_invalidates_source_match(self):
+        spec = importlib.util.spec_from_file_location('workspace_probe', SCRIPT)
+        module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        (self.primary / 'new.txt').write_text('original')
+        original = module.disk_usage
+
+        def changing(*args, **kwargs):
+            (self.primary / 'new.txt').write_text('changed after hash')
+            return original(*args, **kwargs)
+
+        with patch.object(module, 'disk_usage', side_effect=changing):
+            report = module.inspect(self.primary, assets=True)
+        row = report['worktrees'][0]['assets']
+        self.assertIsNone(row['source_state_sha256'])
+        self.assertFalse(row['complete'])
 
 
 if __name__ == "__main__":

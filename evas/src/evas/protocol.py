@@ -2,7 +2,7 @@
 import math
 
 from .errors import KernelError
-from .ir import SCHEMA_VERSION, OrTrigger, Display, Conditional
+from .ir import SCHEMA_VERSION, OrTrigger, Display, Conditional, Loop
 
 
 def _invalid(message):
@@ -273,6 +273,10 @@ def validate_response(response, program, count, output_times=None, *, strobetime
             if isinstance(statement, Display):
                 origin = statement.origin
                 result.add(f'{origin.source}:{origin.line}:{origin.column} ({origin.instance})')
+            elif isinstance(statement, Loop):
+                result.update(display_origins(statement.initialize))
+                result.update(display_origins(statement.body))
+                result.update(display_origins(statement.update))
             elif isinstance(statement, Conditional):
                 result.update(display_origins(statement.then_body))
                 result.update(display_origins(statement.else_body))

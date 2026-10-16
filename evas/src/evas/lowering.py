@@ -102,7 +102,9 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
                                decisions, validate_decision, decision_scope, indices,
                                memo=memo, node_declarations=node_declarations)
         if validator is not None:
-            validator(expr, value, root=depth == 0 and getattr(parameters, "allow_integer_assignment_root", False))
+            checked = validator(expr, value, root=depth == 0 and getattr(parameters, "allow_integer_assignment_root", False))
+            if checked is not None:
+                value = checked
         return value
     finally:
         if validator is not None:

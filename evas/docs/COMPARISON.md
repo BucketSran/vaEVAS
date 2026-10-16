@@ -1,5 +1,8 @@
 # 四后端支持对比
 
+[有界运行期事件控制](../../experiments/backends/support/event-runtime-control/README.md)新增隔离观察者的循环和数组支持；三个实际 Spectre 控制通过原 100 nV 门槛。下表固定行范围、旧版本身份和 Q 成绩保持不变；原 CDS/MUX 整题仍未完成。
+
+
 **这张表比较固定用例中的支持和精度。** 每个行名链接到[本版必测范围](../validation/paper/COVERAGE.md#summary-scopes)。
 同一行对四个后端使用相同用例和验收要求；后端可以使用不同配置达到要求。
 
@@ -141,6 +144,8 @@ EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候
 | [事件改变动态：Riccati 滤波](../validation/paper/COVERAGE.md#scope-l5-03-riccati) | ✓ Q3 | 初始化失败 | 误差超限 | ✓ Q3 |
 | [近邻定时事件：原整链](../validation/paper/COVERAGE.md#scope-l5-04-chain) | ✓ 1 µV | 初始化失败 | ✓ 1µV | ✓ Q3 |
 | [近邻定时事件：相邻浮点采样积分](../validation/paper/COVERAGE.md#scope-l5-04-adjacent) | 回调同刻 | 初始化失败 | 回调同刻 | ✓ Q3 |
+
+保持量条件嵌在 `transition` 目标算术中的情况已有[独立有限验收](../../experiments/backends/support/held-transition-targets/README.md)。这项补充保留原目标算式和隐藏反馈拒绝，不给完整 MUX 或历史电压谓词新增 Q 等级。
 
 未定稿的动态 timer、ADC、同刻事件、内部反馈事件与隐式复位，列在[扩展计划](../validation/paper/COVERAGE.md#exploratory-cases)，不作为当前支持结论。
 [配套清单](../validation/paper/COVERAGE.md#pending-evidence)说明原11格的核对结果与仍未完成的验收；[累计清单](../validation/paper/COVERAGE.md#先找到各批的原始成绩)保留全部历史用例、失败和原成绩。

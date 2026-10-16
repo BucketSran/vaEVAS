@@ -39,15 +39,37 @@ class RoutingTests(unittest.TestCase):
                 self.assertEqual(ci.classify([path]), ci.flags(*expected))
 
     def test_production_and_build_changes_keep_all_evas_checks(self):
-        for path in ('evas/src/evas/compiler.py', 'evas/rust_core/src/main.rs',
-                     'evas/rust_core/ir/src/lib.rs', 'evas/rust_core/Cargo.lock',
+        for path in ('evas/src/evas/compiler.py', 'evas/rust_core/Cargo.lock',
                      'evas/rust_core/build.rs', 'evas/rust_core/.cargo/config.toml',
                      'evas/pyproject.toml', 'evas/MANIFEST.in', 'evas/setup.py'):
             with self.subTest(path=path):
                 self.assertEqual(ci.classify([path]), ci.flags(*ci.CHECKS[:-1]))
 
+    def test_rust_implementation_keeps_producer_identity_but_not_checker_calibration(self):
+        for path in ('evas/rust_core/src/main.rs', 'evas/rust_core/ir/src/lib.rs'):
+            with self.subTest(path=path):
+                self.assertEqual(ci.classify([path]), ci.flags(
+                    'maintenance', 'provenance', 'regression', 'differential', 'fuzz', 'package'))
+
+    def test_development_tests_keep_regression_and_source_identity(self):
+        self.assertEqual(ci.classify(['evas/tests/test_events.py']),
+                         ci.flags('maintenance', 'provenance', 'regression'))
+        self.assertEqual(ci.classify(['evas/rust_core/tests/properties.rs']),
+                         ci.flags('maintenance', 'provenance', 'regression'))
+        self.assertEqual(ci.classify(['evas/tests/test_events.py',
+                                     'experiments/backends/support/checker.py']),
+                         ci.flags('maintenance', 'regression', 'calibration', 'provenance'))
+        self.assertEqual(ci.classify(['evas/tests/test_events.py', 'evas/src/evas/compiler.py']),
+                         ci.flags(*ci.CHECKS[:-1]))
+
+    def test_narrow_routes_do_not_apply_to_other_fixture_or_build_inputs(self):
+        self.assertEqual(ci.classify(['evas/tests/shared.json']),
+                         ci.flags('maintenance', 'calibration', 'provenance', 'regression'))
+        self.assertEqual(ci.classify(['evas/rust_core/src/generated.json']),
+                         ci.flags(*ci.CHECKS[:-1]))
+
     def test_fixtures_keep_regression_without_unrelated_fuzz_or_install(self):
-        for path in ('evas/tests/test_events.py', 'evas/validation/strobe/cases.json',
+        for path in ('evas/validation/strobe/cases.json',
                      'evas/validation/paper/dut/hold.va',
                      'experiments/backends/event-alignment/vco-controls/original--tight/dut.va',
                      'evas/validation/paper/core-v1.json', 'experiments/backends/paper/inputs.py',

@@ -9,7 +9,7 @@ from fractions import Fraction
 from typing import TYPE_CHECKING
 
 from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
-                 EventMath, Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
+                 ArrayRead, ArrayWrite, CheckedInteger, CheckedIndex, Loop as RuntimeLoop, EventMath, Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
 from .lowering import lower, scale
 from .limits import check_ir
 from .parameters import bind_parameters
@@ -120,6 +120,7 @@ class InstanceCompiler:
                     yield from writes(statement.then_body)
                     yield from writes(statement.else_body)
                 elif isinstance(statement, Loop):
+                    yield statement.name
                     yield from writes(statement.body)
 
         persistent = set(writes(self.model.initial))
@@ -168,12 +169,20 @@ class InstanceCompiler:
         from .event_specialization import audit_event_body, specialize_event_body
         self.array_audit_dispatch_leaves = 0
         for event in self.model.events:
+            self.runtime_event_checks = self.checked_event_context(event)
             audit_event_body(self, event.body)
         for event in self.model.events:
+            self.runtime_event_checks = self.checked_event_context(event)
             triggers = tuple(self.trigger(leaf) for leaf in event.triggers)
             event_trigger = triggers[0] if len(triggers) == 1 else OrTrigger(triggers)
             origin = Origin(event.token.source or self.model.source, event.token.line, event.token.column, self.instance.name, event.token.expansion)
-            execution = specialize_event_body(event.body, self.cache)
+            def retained(body):
+                if self.event_reachable_statements is None:
+                    return body
+                return tuple(replace(item, then_body=retained(item.then_body), else_body=retained(item.else_body))
+                             if isinstance(item, SyntaxConditional) else item
+                             for item in body if id(item) in self.event_reachable_statements)
+            execution = specialize_event_body(retained(event.body), self.cache)
             self.compilation.events.append(Event(event_trigger, self.body(execution), origin))
         statements = unroll_loops(self.model, self.parameter)
         self.validate_branch_presence(statements)
@@ -301,8 +310,11 @@ class InstanceCompiler:
     def lower_event(self, expr, resolve, nodes, *args, **kwargs):
         assignment_root = kwargs.pop("integer_assignment_root", False)
         event_values = kwargs.pop("event_values", False)
+        static_integer_audit = kwargs.pop("static_integer_audit", False)
         typed = self.typed_resolve(resolve, allow_integer_assignment_root=assignment_root)
         if event_values:
+            if getattr(self, "runtime_event_checks", False) and not static_integer_audit:
+                typed.validate_integer_operation = self.checked_event_integer
             def math_value(item, args):
                 origin = Origin(item.token.source or self.model.source, item.token.line,
                     item.token.column, self.instance.name, item.expansion)
@@ -330,6 +342,10 @@ class InstanceCompiler:
         # Do not introduce an implicit real-to-integer rounding rule.
         if isinstance(expression, Affine):
             return not expression.terms and expression.constant.is_integer()
+        if isinstance(expression, (CheckedIndex, CheckedInteger)):
+            return True
+        if isinstance(expression, ArrayRead):
+            return all(self.compilation.states[state].kind == "integer" for state in expression.states)
         if isinstance(expression, StateRef):
             return self.compilation.states[expression.state].kind == "integer"
         if isinstance(expression, EventMath):
@@ -341,6 +357,21 @@ class InstanceCompiler:
         return isinstance(expression, Binary) and expression.op in ("add", "multiply") and self.integral(expression.left) and self.integral(expression.right)
 
     def integral_bounds(self, expression):
+        if isinstance(expression, ArrayRead):
+            bounds = [self.integral_bounds(StateRef(state)) for state in expression.states]
+            return min(a for a,b in bounds), max(b for a,b in bounds)
+        if isinstance(expression, CheckedInteger):
+            low, high = self.integral_bounds(expression.value)
+            # A successful checked node is both in its source-proven range
+            # and in signed32. The runtime check remains in the expression.
+            low, high = max(low, -2147483648), min(high, 2147483647)
+            if low > high:
+                raise CompileError("checked integer arithmetic has no signed 32-bit result",
+                                   code="unsupported_integer_arithmetic", token=expression.origin,
+                                   instance=self.instance.name)
+            return low, high
+        if isinstance(expression, CheckedIndex):
+            return expression.first, expression.last
         if isinstance(expression, Affine) and not expression.terms:
             return expression.constant, expression.constant
         if isinstance(expression, StateRef):
@@ -371,6 +402,26 @@ class InstanceCompiler:
             context = "initial" if initial else "ordinary local"
             raise CompileError(f"{context} integer intermediate may exceed signed 32-bit range",
                                token=token, instance=self.instance.name)
+
+    def checked_event_integer(self, expr, value, *, root=False):
+        if (expr.op not in ("+", "-", "*", "/", "%", "unary-", "unary+") or
+                not self.integer_type(expr) or not self.integral(value)):
+            return None
+        # Keep all existing static errors for constant expressions. A runtime
+        # observer preserves each arithmetic node, so overflow cannot disappear
+        # in a later cancellation or an unused Select arm.
+        pending = [expr]
+        state_dependent = False
+        while pending:
+            item = pending.pop()
+            state_dependent |= item.op in ("parameter", "index") and item.value in self.model.variables
+            pending.extend(item.args)
+        if not state_dependent:
+            self.validate_integer_operation(expr, value, root=root)
+            return None
+        origin = Origin(expr.token.source or self.model.source, expr.token.line,
+                        expr.token.column, self.instance.name, expr.expansion)
+        return CheckedInteger(value, origin)
 
     def typed_resolve(self, resolve, *, allow_integer_assignment_root=False):
         def lookup(name):
@@ -452,6 +503,11 @@ class InstanceCompiler:
                     else:
                         targets = (statement.name,)
                     yield targets, statement.rhs
+                elif isinstance(statement, Loop):
+                    # The control is assigned repeatedly at runtime. Its
+                    # initializer alone is not a lifetime range proof.
+                    yield (statement.name,), statement.update
+                    yield from writes(statement.body)
                 elif isinstance(statement, SyntaxConditional):
                     yield from writes(statement.then_body)
                     yield from writes(statement.else_body)
@@ -556,12 +612,30 @@ class InstanceCompiler:
             domains, _widened = event_index_domains.entry_domains(
                 bodies, initial, arrays=self.array_elements,
                 parameters=parameters, states=states)
+            partitions = event_index_domains.boolean_partitions(
+                bodies, initial, arrays=self.array_elements,
+                parameters=parameters, states=states)
+            reachable = set() if partitions is not None else None
             facts, holder = event_index_domains.use_site_facts(
                 bodies, domains, arrays=self.array_elements,
-                parameters=parameters, location_of=location_of)
+                parameters=parameters, location_of=location_of, partitioned=partitions, reachable=reachable)
         except ValueError as error:
             raise CompileError(f'{self.model.source}: {error}', code='resource_budget',
                                instance=self.instance.name)
+        # A closed event invariant also bounds persistent integers read by
+        # continuous expressions, e.g. a selector divided into bus bits. Keep
+        # unbounded endpoints under the existing checked-assignment policy.
+        lifetime_domains = dict(domains)
+        def retain_intermediates(env):
+            for name, value in env.items():
+                lifetime_domains[name] = event_index_domains.hull(lifetime_domains[name], value)
+        for body in bodies:
+            event_index_domains.flow(body, domains, arrays=self.array_elements,
+                                     parameters=parameters, on_state=retain_intermediates)
+        for name, (low, high) in lifetime_domains.items():
+            if -2147483648 < low <= high < 2147483647:
+                self.integer_state_ranges[self.state_ids[name]] = (low, high)
+        self.event_reachable_statements = reachable
         self.event_entry_domains = domains
         self.array_flow = facts
         self._array_flow_holder = holder
@@ -581,21 +655,28 @@ class InstanceCompiler:
         if not self.integer_type(expr):
             raise CompileError(f'{location}: dynamic array index of {array!r} requires a typed integer expression',
                                code='array_index_type', token=token, instance=self.instance.name)
-        value = self.lower_event(expr, self.symbol, self.node_ids, preserve_structure=True)
+        value = self.lower_event_value(expr, self.symbol, self.node_ids, preserve_structure=True)
         if not self.integral(value):
             raise CompileError(f'{location}: dynamic array index of {array!r} requires integral arithmetic',
                                code='array_index_type', token=token, instance=self.instance.name)
         low, high = elements[0], elements[-1]
-        if not event_index_domains.within(facts.index, low, high):
-            raise CompileError(f'{location}: dynamic {access} index of {array!r} is not provably within '
-                               f'[{low}:{high}]; interval [{facts.index[0]},{facts.index[1]}]',
-                               code='array_index_range', token=token, instance=self.instance.name)
+        if facts.index != event_index_domains.BOTTOM and not event_index_domains.within(facts.index, low, high):
+            if not self.compact_event_candidate():
+                raise CompileError(f'{location}: dynamic {access} index of {array!r} is not provably within '
+                                   f'[{low}:{high}]; interval [{facts.index[0]},{facts.index[1]}]',
+                                   code='array_index_range', token=token, instance=self.instance.name)
+            origin = Origin(token.source or self.model.source, token.line, token.column,
+                            self.instance.name, token.expansion)
+            return CheckedIndex(value, low, high, origin)
         return value
 
     def _array_read_tree(self, array, elements, index_value, token, *, register=True):
         """Complete balanced Select over every declared slot (no fallback arm)."""
         origin = Origin(token.source or self.model.source, token.line, token.column,
                         self.instance.name, token.expansion)
+        if self.compact_event_candidate():
+            return ArrayRead(tuple(self.state_ids[f'{array}[{k}]'] for k in elements),
+                             index_value, elements[0], elements[-1], origin)
         def tree(items):
             if len(items) == 1:
                 return StateRef(self.state_ids[f'{array}[{items[0]}]'])
@@ -604,6 +685,8 @@ class InstanceCompiler:
             return Select("lt", index_value, Affine(boundary, ()),
                           tree(items[:middle]), tree(items[middle:]), origin)
         result = tree(elements)
+        if len(elements) == 1 and isinstance(index_value, CheckedIndex):
+            result = Select("lt", index_value, Affine(elements[0]+0.5, ()), result, result, origin)
         check_ir(result, origin)
         if register:
             self.expression_decision_origins.add(origin)
@@ -614,6 +697,10 @@ class InstanceCompiler:
         array = str(expr.value)
         elements = self.array_elements.get(array, ())
         index_value = self._dynamic_index(expr.args[0], expr.token, 'read', array)
+        interval = self.array_flow[id(expr.args[0])][1].index
+        if (interval != event_index_domains.BOTTOM and
+                event_index_domains.within(interval, elements[0], elements[-1])):
+            elements = tuple(k for k in elements if interval[0] <= k <= interval[1])
         return self._array_read_tree(array, elements, index_value, expr.token)
 
     def conservative_array_read(self, expr):
@@ -636,6 +723,14 @@ class InstanceCompiler:
         if kind == "integer" and not self.integral(value):
             raise CompileError("integer assignment requires integral state arithmetic",
                                token=statement.token, instance=self.instance.name)
+        if self.compact_event_candidate():
+            self.array_dispatch_leaves += len(elements)
+            if self.array_dispatch_leaves > ARRAY_BUDGET:
+                raise CompileError('dynamic array dispatch budget (4096 leaves) exceeded',
+                                   code='resource_budget', token=statement.token,
+                                   instance=self.instance.name)
+            return (ArrayWrite(tuple(self.state_ids[f'{array}[{k}]'] for k in elements),
+                               index_value, value, elements[0], elements[-1], origin),)
         def dispatch(items):
             if len(items) == 1:
                 self.array_dispatch_leaves += 1
@@ -648,7 +743,10 @@ class InstanceCompiler:
             boundary = items[middle - 1] + 0.5
             return (Conditional("lt", index_value, Affine(boundary, ()),
                                 tuple(dispatch(items[:middle])), tuple(dispatch(items[middle:])), origin),)
-        return dispatch(elements)
+        result = dispatch(elements)
+        if len(elements) == 1 and isinstance(index_value, CheckedIndex):
+            result = (Conditional("lt", index_value, Affine(elements[0]+0.5, ()), result, result, origin),)
+        return result
 
     def waveform(self, expr, resolve):
         resolve = self.typed_resolve(resolve)
@@ -829,15 +927,75 @@ class InstanceCompiler:
             return False
         return not physical(self.model.analog)
 
+    def checked_event_context(self, event):
+        for trigger in event.triggers:
+            if trigger.kind == "initial_step":
+                return False
+            if trigger.kind == "timer":
+                try:
+                    start = lower(trigger.arguments[0], self.parameter, {}, self.model.source)
+                except CompileError:
+                    continue
+                if isinstance(start, Affine) and not start.terms and start.constant == 0:
+                    return False
+        return True
+
+    def compact_event_candidate(self):
+        return getattr(self, "runtime_event_checks", False) and self.numeric_observer_candidate()
+
     def lower_event_value(self, expr, resolve, nodes, *args, **kwargs):
         return self.lower_event(expr, resolve, nodes, *args,
                                 event_values=self.numeric_observer_candidate(), **kwargs)
+
+    def validate_runtime_loop(self, statement):
+        def fail(message):
+            raise CompileError(message, token=statement.token, instance=self.instance.name,
+                               code="unsupported_event_loop")
+        if not self.numeric_observer_candidate():
+            fail("runtime loops require an isolated numeric observer")
+        if self.model.variables.get(statement.name) != "integer" or statement.name in self.array_elements:
+            fail("runtime loop control must be a declared scalar integer")
+        if not self.integer_type(statement.start) or not self.integer_type(statement.limit):
+            fail("runtime loop bounds require typed integer values")
+        expr = statement.update
+        if (expr.op not in ("+", "-") or expr.args[0].op != "parameter" or
+                expr.args[0].value != statement.name):
+            fail("runtime loop update requires its control plus a constant signed step")
+        step = lower(expr.args[1], self.parameter, {}, self.model.source)
+        if not isinstance(step, Affine) or step.terms or not step.constant.is_integer():
+            fail("runtime loop step must be an instance-constant integer")
+        step = step.constant * (1 if expr.op == "+" else -1)
+        if step == 0 or (step > 0) != (statement.relation in ("<", "<=")):
+            fail("runtime loop step direction does not match its relation")
+        def audit(items):
+            for item in items:
+                if isinstance(item, SyntaxAssignment) and item.name == statement.name:
+                    fail("runtime loop body cannot write its control")
+                if isinstance(item, Loop):
+                    if item.name == statement.name:
+                        fail("runtime loops cannot share an active control")
+                    audit(item.body)
+                elif isinstance(item, SyntaxConditional):
+                    audit(item.then_body)
+                    audit(item.else_body)
+                elif not isinstance(item, (SyntaxAssignment, SyntaxDisplay)):
+                    fail("runtime loop body requires event assignments, displays or conditionals")
+        audit(statement.body)
 
     def body(self, statements):
         result = []
         for statement in statements:
             origin = Origin(statement.token.source or self.model.source, statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
-            if isinstance(statement, SyntaxDisplay):
+            if isinstance(statement, Loop):
+                self.validate_runtime_loop(statement)
+                initialize = SyntaxAssignment(statement.name, statement.start, statement.token)
+                update = SyntaxAssignment(statement.name, statement.update, statement.token)
+                result.append(RuntimeLoop(self.body((initialize,)),
+                    {"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation],
+                    StateRef(self.state_ids[statement.name]),
+                    self.lower_event_value(statement.limit, self.symbol, self.node_ids, preserve_structure=True),
+                    self.body(statement.body), self.body((update,)), origin))
+            elif isinstance(statement, SyntaxDisplay):
                 arguments = tuple(self.lower_event_value(arg, self.symbol, self.node_ids,
                     preserve_structure=True, decisions=self.expression_select,
                     validate_decision=self.validate_decision_expression, node_declarations=True,
@@ -898,6 +1056,8 @@ class InstanceCompiler:
         return None
 
     def event_conditional(self, relation, left, right, yes, no, origin):
+        if self.compact_event_candidate():
+            return (Conditional(relation, left, right, yes, no, origin),)
         for field, expression in (("left", left), ("right", right)):
             choice = self.split_selection(expression)
             if choice is not None:
@@ -910,6 +1070,8 @@ class InstanceCompiler:
         return (Conditional(relation, left, right, yes, no, origin),)
 
     def event_assignment(self, state, value, origin):
+        if self.compact_event_candidate():
+            return (Assignment(state, value),)
         # Select RHS decisions before installing the assignment. Distribute
         # enclosing arithmetic so the ordered event solver keeps affine leaves.
         count = 0
