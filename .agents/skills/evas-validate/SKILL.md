@@ -60,20 +60,42 @@ When executing, run commands from the repository root. Before simulator tests,
 rebuild the debug kernel using the [build command](../../../evas/README.md#构建与运行);
 those tests use that binary. Checks that do not invoke the kernel need no build.
 
+The checkout-owned [check policy](../../../scripts/evas_check_policy.py) selects
+local iteration and delivery checks. Its executable mappings are generated below;
+run `python3 -B scripts/evas_check_policy.py --write-docs` after changing them.
+CI checks this block with `--check-docs`. Harness evaluates the captured policy,
+records actual execution facts and preserves the remaining acceptance obligations.
+Missing or incompatible policy stops automatic planning for an older checkout;
+use that revision's original validation entry and retain its historical evidence.
+
+<!-- evas-check-policy:begin -->
+
+| Source paths | Iteration modules | Delivery modules |
+| --- | --- | --- |
+| `evas/rust_core/src/linear.rs`, `evas/rust_core/src/linear/` | `test_affine` `test_sparse` | `test_affine` `test_reuse` `test_accuracy` `test_sparse` `test_sparse_transient` |
+| `evas/rust_core/src/nonlinear.rs`, `evas/rust_core/src/nonlinear/` | `test_affine` `test_nonlinear` | `test_affine` `test_nonlinear` `test_accuracy` `test_precision_chain` |
+| `evas/src/evas/syntax.py`, `evas/src/evas/parameters.py` | `test_affine` `test_contracts` | `test_affine` `test_contracts` `test_parameter_constraints` |
+| `evas/rust_core/src/schedule.rs` | `test_affine` `test_timer` | `test_affine` `test_timer` `test_event_horizons` `test_lifecycle_closure` `test_semantic_invariants` |
+
+<!-- evas-check-policy:end -->
+
+The table below retains semantic requirements and guidance for other changes.
+Generated mappings do not establish complete consumer coverage or backend alignment.
+
 | Changed area | Python test modules / check | Additional requirement |
 | --- | --- | --- |
 | Documentation or skills | `git diff --check`; local links/anchors; skill YAML frontmatter | No simulator run. Check staged diff before commit. |
-| Syntax or parameter/instance binding | `test_affine test_contracts` | Accepted and rejected syntax/binding regression; include affected event/operator consumers. |
+| Syntax or parameter/instance binding | Generated syntax/parameter mapping above; other binding paths need consumer review | Accepted and rejected syntax/binding regression; include affected event/operator consumers. |
 | Python/Rust IR or JSON transport | All Python tests, command below | Rust tests; version rejection, malformed input and public request/response coverage. |
 | Shared assembly or voltage relations | `test_affine test_reuse test_accuracy test_nonlinear test_events` | Rust tests; original relation residuals and affected continuous/settlement consumers. |
-| Dense/sparse dispatch, factorization or reuse | `test_affine test_reuse test_accuracy test_sparse test_sparse_transient` | Rust tests; singular/scaled systems, changing sparsity and original relations. |
-| Newton or point polynomial evaluation | `test_nonlinear test_accuracy test_precision_chain` | Rust tests; independent roots, scaling, failure and forward voltage error. |
+| Dense/sparse dispatch, factorization or reuse | Generated linear mapping above | Rust tests; singular/scaled systems, changing sparsity and original relations. |
+| Newton or point polynomial evaluation | Generated nonlinear mapping above | Rust tests; independent roots, scaling, failure and forward voltage error. |
 | Continuous relations, feedback or derivative lowering | `test_continuous_dynamics test_dynamic_closure` | Rust tests; joint states, initialization, derivative/impulse boundaries and affected event/reset consumers. |
 | Implicit DAE continuation | `test_implicit_dynamics` | Initial root, algebraic branch/singularity, history accuracy and query-grid invariance. |
 | Nonlinear integral/filter composition | `test_dynamic_closure test_mixed_dynamics` | Preserve every live state, DC/direct terms and precision through event restarts. |
 | History ownership, initialization or commit/rollback | `test_lifecycle_closure test_semantic_invariants` | Rust lifecycle/rollback tests; same-engine rejected-trial retry and unaffected state preservation. |
 | PWL or cross localization | `test_events test_event_accuracy` | Add `test_dynamic_cross` for internal/operator trajectories and affected sampling consumers. |
-| Scheduling or prediction horizons | `test_timer test_event_horizons` | Known events must bound propagation; adding observations must not change physical history. |
+| Scheduling or prediction horizons | Generated schedule mapping above; other horizon paths need consumer review | Known events must bound propagation; adding observations must not change physical history. |
 | Same-time settlement, event conditions, writers or OR | `test_settlement`; affected `test_event_conditions test_event_writers test_event_or` | Program order, selected writers, original relations and rejected ambiguous solutions. |
 | Event-window sampling or reset observation | `test_event_window_sampling test_lifecycle_closure` | Certify all possible root times and retain sample uncertainty in future history. |
 | Error propagation or voltage acceptance | `test_precision_chain`; affected operator accuracy tests | Check history/time error after amplification, not only equation residual. |
