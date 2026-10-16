@@ -1,4 +1,5 @@
 """Calibration of the two independent validation verdicts."""
+GUARDS = ["QUALIFICATION"]
 import copy
 import unittest
 from reference_verdicts import Verdict as V, LayeredVerdict, assess_layers
