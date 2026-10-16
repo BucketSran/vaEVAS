@@ -2,6 +2,8 @@
 
 [同步读出修复与剩余差异](r01-sync-readout/README.md)记录物理请求在原时限内完整执行、仍失败的严格阈值状态，以及三张独立乘积卡的有限对照。原成绩不变，两个滤波组合继续保留为缺口。
 
+[原 CDS 三例验收](event-runtime-control/README.md#original-cds)记录原预算内的完整执行、原 checker 及实际 Spectre 有限配对；保留旧失败和参考告警，不增加 Q 等级。
+
 <a id="event-statistics"></a>
 
 ## 隔离事件统计与原 gain 请求

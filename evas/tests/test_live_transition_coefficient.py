@@ -50,6 +50,30 @@ class LiveTransitionCoefficient(unittest.TestCase):
     def test_filter_interrupt(self): self.check_card('filter-interrupt')
 
 class SourceControlledTransition(unittest.TestCase):
+    def test_nonpoint_timer_reentry_retains_source_event_window(self):
+        for start,period,stop,times,expected in [
+            (.1,.2,.4,[0,.15,.25,.35,.4],[0,2,1,2,2]),
+            (.1,0,.4,[0,.15,.25,.35,.4],[0,2,1,1,1]),
+            (.125,.25,.5,[0,.17,.25,.34,.44,.5],[0,2,1,1,2,2]),
+        ]:
+            with self.subTest(start=start,period=period):
+                source=f'''`include "disciplines.vams"
+module source_timer(u,y); input u; output y; electrical u,y;
+real q; analog begin
+@(initial_step) q=0;
+@(timer({start},{period})) q=q+1.0;
+V(y)<+transition((V(u)>0.2 ? q : 2*q),0,0.03125,0.03125);
+end endmodule'''
+                p=compile_sources({'source_timer.va':source},
+                    [Instance('M','source_timer',dict(u='u',y='y'))])
+                result=transient(p,{'u':[[0,0],[stop,stop]]},times,
+                    stop=stop,max_step=.01,vabstol=1e-9,reltol=1e-6,kernel=KERNEL)
+                y=result['nodes'].index('y')
+                # Each query follows the last target change by more than the
+                # complete .03125 edge; only settled plateaux are asserted.
+                for row,want in zip(result['solutions'],expected):
+                    self.assertAlmostEqual(row['voltages'][y],want,delta=1e-8)
+
     def execute(self, expression, times, controls=None, zero_timer=False, zero_rhs='2', real_q=False, edge_fraction=1):
         source = """`include "disciplines.vams"
 module source_card(ctrl,y,count);input ctrl;output y,count;electrical ctrl,y,count;

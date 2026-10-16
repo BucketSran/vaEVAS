@@ -26,6 +26,71 @@ checker和证据身份。以下数据集状态描述该历史批次；后续记�
 已接受差异及重新调查条件遵循[对齐验收](../../../docs/contributing/validation.md#classify-differences-before-selecting-a-repair)。
 候选证据须标明未合并，不能升级 main 的支持范围。
 
+<a id="table-evidence"></a>
+
+## 支持表的来源与补充证据
+
+支持表汇总固定用例的已有结果，各行按自己的源码、内核、配置和观察方式解释。
+它不是当前 main 的一次全量复验。完整范围与来源见
+[固定行清单](../../validation/paper/COVERAGE.md#summary-scopes)；本节只解释证据边界，不另判等级。
+
+### 固定行的版本与观察边界
+
+| 结果 | 适用身份与限制 | 原始依据 |
+| --- | --- | --- |
+| 两类 `ddt`、采样后积分与局部 strobe | 两类导数及八张组合卡实际构建源为 `e2d8cbf8`，实现经 #167 合入 `e028f96d`。 | [PR #167](https://github.com/BucketSran/vaEVAS/pull/167)、[范围与来源](../../validation/paper/COVERAGE.md#summary-scopes) |
+| 新版根窗口的两模型、三格 Q3 | 18 次运行复用经逐文件核对的同一内核；新 checker 使用原有限导出分辨率。严格“没有提前触发”仍未决，不改写旧判定。 | [root-window-v3](../../../experiments/backends/support/README.md#root-window-v3) |
+| 四条旧整链的 EVAS Q3 | `main@7344e4db` 的三档 36 次完整验收。中断边沿积分另随 0.15.0 / IR19 纳入实现，该行 Q3 来自发布前候选。 | [旧整链记录](../../../experiments/backends/support/README.md#legacy-chain-q) |
+| 定时积分、采样边沿链、滤波后采样、中断边沿积分的 Spectre Q3 | 仅属于单独加入只读回调记录的源码；原未插桩源码缺回调取证，不能继承新 Q。近邻整链保留原 1 µV 成绩，新 Q 尚缺边界观察及配置格式校准。 | [旧整链记录](../../../experiments/backends/support/README.md#legacy-chain-q) |
+| 五个数学函数、事件与相位 | 数学函数使用收据固定的 IR19 构建；事件和相位部分使用已合入 #162 的早期候选 `519d5e28` 的实际运行。 | [数学函数补证](../../../experiments/backends/support/README.md#q3-closure)、[PR #162](https://github.com/BucketSran/vaEVAS/pull/162) |
+
+原 11 格的补证及未完成项见[后续核对](../../../experiments/backends/support/README.md#evidence-followup)
+和[缺证清单](../../validation/paper/COVERAGE.md#pending-evidence)。
+[补证前表格](https://github.com/BucketSran/vaEVAS/blob/8f7d911fe42f0692774ba388846d5dbf50f1bc34/evas/docs/COMPARISON.md)
+与[本次整理前说明](https://github.com/BucketSran/vaEVAS/blob/8c3ef9eecda2e202beea6e80e720b0639bff0407/evas/docs/COMPARISON.md)
+保留历史结论；原失败、分母和成绩继续保留在[批次索引](../../validation/paper/COVERAGE.md#先找到各批的原始成绩)。
+
+<a id="supplemental-evidence"></a>
+
+### 表外能力与尚未完成的验收
+
+以下开发证据使用各自的模型和预算，不增加支持表的 Q 等级。
+例如，静态下标数组通过不能证明跨事件下标通过，电压表达式中的数学函数通过也不能证明事件统计通过。
+新增工程用例仍按[覆盖缺口](../../validation/paper/COVERAGE.md#engineering-gap-audit)单独验收。
+
+| 能力与证据入口 | 已有证据 | 仍受什么限制 |
+| --- | --- | --- |
+| [0.17.0 / IR21 运行基础](../../../experiments/backends/support/r01-root-windows/final-controls/README.md) | 顺序初始化、默认零状态、可证明整型的局部运算、受限状态谓词、事件输出、合成时间驱动、有理连续流、受限 exp forcing、保持物理状态的条件选路；七项基础和三项初态有实际有限对照。动态 [`$bound_step`](../math/events.md#bound-step) 已传入受支持的非线性内部积分段。 | 控制模型使用独立预算，R01 工程复验使用原任务判据；一般数学函数与非线性电压代数耦合及更广组合仍有缺口。 |
+| [事件数组与独立测量](../../../experiments/backends/support/r01-timing-observers/README.md) | 受限动态下标、参数裁剪和测量器读取物理输出有实际证据，预算为 1e-9 V。 | 不替换固定必测集。 |
+| [连续状态与测量组合](../../../experiments/backends/support/r01-causal-timing/README.md) | 原 `timing-0` 在 120 秒内完成 9001 行，通过原 checker 与当轮 2219 项保护检查；实际 Spectre 有限配对最大差 19.90 µV。 | 对照仍用原边沿窗口与插值，不能证明全时域一致；其他原任务结果各自保留。 |
+| [0.18.0 / IR22 隔离事件统计](../../../experiments/backends/support/README.md#event-statistics) | 三条原 gain 请求通过原 checker 和实际 Spectre 有限配对；四项手算控制通过。 | [L3-13](../../validation/paper/COVERAGE.md#event-statistics-development) 只有开发证据，尚未完成四后端共同 Q 验收。 |
+| [0.19.0 / IR23 有界运行期事件控制](../../../experiments/backends/support/event-runtime-control/README.md) | 隔离观察者的循环和数组已支持，三个实际 Spectre 控制通过原 100 nV 门槛。 | 本行的已交付证据不包含原 CDS / MUX 整题；后续候选与工程验收见[当前状态](../COMPARISON.md#engineering-status)，不能由隔离控制推定整题通过。 |
+| [同步读出与动态输入滤波](../../../experiments/backends/support/r01-sync-readout/README.md) | 原物理请求在原时限内完整执行；普通及中断边沿后的动态输入滤波有有限点对照。 | 严格阈值导致的整题失败保留；滤波的外部取证校准未齐。 |
+| [固定 timer 的隐式 DAE 续算](../../../experiments/backends/implicit-event-restart/README.md) | 同源实际 Spectre 九点对照最大差 62.41 nV，低于原 100 nV 门槛。 | 仅限保持物理状态的 forcing 参数切换；一般事件窗与代数约束跳参仍拒绝。 |
+| [零时刻 timer 的 transition 初态](../../../experiments/backends/support/README.md#initial-transition-seed) | 三模型实际有限配对通过原 1e-8 V 预算。 | 第四反馈模型仅作诊断，不覆盖一般历史反馈。 |
+| [跨实例初始电压](../../../experiments/backends/support/initial-node-dependencies/README.md) | 三例实际对照通过原 1 nV 门槛。 | 结论限于这三例，不扩大固定行的验收范围。 |
+| [空循环声明与当前 timer](../../../experiments/backends/support/retained-safety/README.md) | 已消除错误接受。 | 新生成的当前 timer 仍需同刻闭包。 |
+| [保持量条件嵌入 transition 目标算术](../../../experiments/backends/support/held-transition-targets/README.md) | 独立有限验收保留原目标算式与隐藏反馈拒绝。 | 不代表完整 MUX 或历史电压谓词已验收。 |
+
+动态 timer、ADC、同刻事件、内部反馈事件和隐式复位的未定稿用例见
+[扩展计划](../../validation/paper/COVERAGE.md#exploratory-cases)，不作为当前支持结论。
+
+### v4 代表家族探测的边界
+
+2026-10-16 在 `main@8c3ef9ee`、EVAS 0.19.0 / IR23 上选择 12 个 v4 gold 家族做缺口定位。
+原样编译预检通过 7/12，原样执行完成 0/12；047 仅转换端口声明后执行完成，尚无独立波形验收。
+这不是 400 家族的复验，也不是三种题型的正式评分。首轮 111 的 support 漏挂属于探测工具错误，已纠正。
+
+| 分类 | 已观察到的家族与限制 | 后续依据 |
+| --- | --- | --- |
+| 源误差与动态组合 | 原样 071、308、375 在内核明确拒绝；024、272 的适配派生也遇到该限制。 | [#96](https://github.com/BucketSran/vaEVAS/issues/96)，分别验采样、历史和事件的误差传播。 |
+| 事件与网络状态 | 307 的内部有效状态条件被拒绝；186 无法认证算子 deadline 先后。 | 保留原模型，先缩小拒绝机制，不能仅靠删除检查恢复。 |
+| 前端准入 | 024/047/349 的 ANSI 端口、023/349 的整数位运算、182 与 111 支持模块的部分 initial_step 读取被拒绝。 | [#65](https://github.com/BucketSran/vaEVAS/issues/65)，按具体语法与消费者验收。 |
+| 历史兼容与调用适配 | 旧 CLI 参数、浮动源、`save time`；旧版专门支持的 `default_transition` 在新版未接续。 | v0.8.7 固定源码 `6cb6fa7a` 仅作语义参考，不使用旧 dirty checkout。 |
+
+逐家族原输入、派生差异、命令与失败保存在本地 `runs/r01-main-20261016/v4-probe/`。
+GLM 的四份建议与实际运行结果分开保存；没有 Spectre 配对、题目准入或新增 Q 结论。
+
 ## 下一版检查器与运行要求
 
 以下细节供实现检查器、形成测试条件和复验时使用。对比表读者从

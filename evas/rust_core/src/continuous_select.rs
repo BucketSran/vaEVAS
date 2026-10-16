@@ -414,7 +414,7 @@ pub(super) fn build(
         // End construction at this mode boundary, never extrapolate its flow through another regime.
         trajectory.config.stop = end;
         let branch_context = Arc::new(Context {
-            program: frozen,
+            program: Arc::new(frozen),
             trajectory,
             driven: context.driven.clone(),
             force_integrals: true,
@@ -638,7 +638,7 @@ pub(super) fn freeze_context(
         )?;
     }
     Ok(Arc::new(Context {
-        program: frozen,
+        program: Arc::new(frozen),
         trajectory: context.trajectory.clone(),
         driven: context.driven.clone(),
         force_integrals: true,

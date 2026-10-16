@@ -4,6 +4,11 @@
 面向使用者的支持结论只在[四后端支持范围](../COMPARISON.md)维护，详细接受与拒绝条件由所链接的契约维护。
 收据只证明其固定执行版本；下表仅登记 ID 与证据，供追溯工具读取，不维护第二份支持状态或当前 main 通过率。
 
+[原 CDS 三例验收](../../../experiments/backends/support/event-runtime-control/README.md#original-cds)
+补充 LIN、TIMER、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE、PERFORMANCE 的开发证据。
+三条原请求通过原 checker 与实际 Spectre 有限配对；重复工作优化和时间来源修复的执行身份、原失败与限制由收据固定。
+有限配对不增加 Q 等级，单次耗时不证明稳定加速。
+
 [同步读出与原时限验证](../../../experiments/backends/support/r01-sync-readout/README.md)
 补充 TRANSITION、DYNAMICS、CROSS、COMPOSE、TIMER、EVENT-CONDITIONS 和 EVENT-ORDER。
 原物理请求完整执行，保持电压满足原要求；严格阈值引起的整题失败保留。
@@ -40,7 +45,7 @@ IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) �
 [事件数组](../../tests/test_r01_event_arrays.py)、[测量事务](../../tests/test_passive_events.py)。
 这些控制不增加固定 Q 成绩；原完整 timing 请求的后续连续耦合拒绝单列。
 
-[原70请求的同版复验摘要](../../../experiments/backends/support/r01-main70-summary.json)保留当前main的工程完成、拒绝与原判据身份，完整资产仍是local-only，不能转为论文Q成绩。[覆盖缺口](../../validation/paper/COVERAGE.md#engineering-gap-audit)将LANG、DYNAMICS、TRANSITION、COMPOSE及事件需求对应到独立卡规划，尚无新增支持声明。
+[原70请求的同版复验摘要](../../../experiments/backends/support/r01-main70-summary.json)保留固定 `main@efd17ed6`、0.17.0 / IR21 的工程完成、拒绝与原判据身份，完整资产仍是local-only，不能转为当前 main 的总通过率或论文Q成绩。后续具名交付与未完成项见[工程请求与扩展范围](../COMPARISON.md#engineering-status)。[覆盖缺口](../../validation/paper/COVERAGE.md#engineering-gap-audit)将LANG、DYNAMICS、TRANSITION、COMPOSE及事件需求对应到独立卡规划，不单独授予支持结论。
 
 [隔离事件统计](../../../experiments/backends/support/README.md#event-statistics)补充 LANG、EVENT-CONDITIONS、EVENT-ORDER、TIMER：IR22 的状态分母及 sqrt/abs/min/max 纯事件数学只扩展完整 IR 证明隔离的观察实例。三条原 gain 请求及四个手算控制已实际验收，不新增论文 Q 成绩。合同见[事件数学](../math/events.md#event-math)，独立输入见[统计控制](../../validation/event_statistics/README.md)，回归见[test_event_statistics.py](../../tests/test_event_statistics.py)。
 

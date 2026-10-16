@@ -3,7 +3,7 @@ use crate::event_conditions::Selection;
 use crate::events::EventModel;
 use crate::exact_source::RootTime;
 use crate::interval::Interval as I;
-use crate::ir::{Expression, StateKind, Term};
+use crate::ir::{EventMathFunction, Expression, StateKind, Term};
 use crate::pwl::Trajectory;
 use std::collections::BTreeSet;
 
@@ -90,6 +90,24 @@ fn expression_value(
                 None
             }
         }
+        Expression::EventMath { function, args, .. }
+            if matches!(function, EventMathFunction::Min | EventMathFunction::Max)
+                && args.len() == 2 =>
+        {
+            let exact = |arg| {
+                expression_value(arg, states, root, identity)
+                    .or_else(|| RootTime::point(literal(arg)?))
+            };
+            let a = exact(&args[0])?;
+            let b = exact(&args[1])?;
+            let order = a.order(&b);
+            let first = if matches!(function, EventMathFunction::Min) {
+                order != std::cmp::Ordering::Greater
+            } else {
+                order != std::cmp::Ordering::Less
+            };
+            Some(if first { a } else { b })
+        }
         // No zero cancellation or unknown scalar equivalence is a provenance proof.
         _ => None,
     }
@@ -125,7 +143,15 @@ pub(crate) fn apply(
         let assignments = model.program.events[*event].assignments();
         for &index in indices {
             let assignment = &assignments[index];
-            let proof = expression_value(&assignment.rhs, &local, root, &identity);
+            let proof = expression_value(&assignment.rhs, &local, root, &identity).or_else(|| {
+                // A literal reset of an already tracked time is still exact.
+                // Never seed all observer constants, or restore a proof cleared
+                // by an earlier unsupported write in this same callback.
+                local
+                    .contains_key(&assignment.state)
+                    .then(|| RootTime::point(literal(&assignment.rhs)?))
+                    .flatten()
+            });
             local.remove(&assignment.state);
             result.remove(&assignment.state);
             if let Some(proof) = proof
@@ -157,6 +183,15 @@ fn state_refs(expr: &Expression, refs: &mut BTreeSet<usize>) {
             state_refs(right, refs);
         }
         Expression::Power { base, .. } => state_refs(base, refs),
+        Expression::EventMath {
+            function: EventMathFunction::Min | EventMathFunction::Max,
+            args,
+            ..
+        } => {
+            for arg in args {
+                state_refs(arg, refs);
+            }
+        }
         Expression::Select {
             left,
             right,
@@ -236,6 +271,256 @@ mod tests {
         )
         .unwrap();
         (m, t)
+    }
+
+    fn extremum(
+        function: crate::ir::EventMathFunction,
+        a: Expression,
+        b: Expression,
+    ) -> Expression {
+        Expression::EventMath {
+            function,
+            args: vec![a, b],
+            origin: serde_json::from_value(
+                json!({"source":"time.va","line":1,"column":1,"instance":"dut"}),
+            )
+            .unwrap(),
+        }
+    }
+    fn constant(value: f64) -> Expression {
+        Expression::Affine {
+            constant: value,
+            terms: vec![],
+        }
+    }
+    fn assignments(values: Vec<(usize, Expression)>) -> (EventModel, Trajectory) {
+        let (base, trajectory) = fixture();
+        let mut program = base.program;
+        program.contributions.clear();
+        program.nodes.truncate(2);
+        program.events[0].body = serde_json::from_value(json!(values
+            .into_iter()
+            .map(|(state, rhs)| json!({"kind":"assign","state":state,"rhs":rhs}))
+            .collect::<Vec<_>>()))
+        .unwrap();
+        (
+            EventModel::new(program, base.driven, Tolerances::default()).unwrap(),
+            trajectory,
+        )
+    }
+
+    #[test]
+    fn tracked_literal_sentinel_preserves_min_without_tagging_other_constants() {
+        let (model, trajectory) = assignments(vec![
+            (0, constant(1e30)),
+            (1, constant(42.)),
+            (
+                1,
+                extremum(
+                    crate::ir::EventMathFunction::Min,
+                    Expression::State { state: 0 },
+                    Expression::State { state: 2 },
+                ),
+            ),
+        ]);
+        let early = root(R::new(1.into(), 4.into()));
+        let later = root(R::new(1.into(), 3.into()));
+        let before = TimeProofs::from([(0, early), (2, later.clone())]);
+        let old_bounds = [I::point(0.25), I::ZERO, I { lo: 0.3, hi: 0.4 }];
+        let after_bounds = [
+            I::point(1e30),
+            I { lo: 0.3, hi: 0.4 },
+            I { lo: 0.3, hi: 0.4 },
+        ];
+        let result = apply(
+            &model,
+            &trajectory,
+            &Selection {
+                actions: vec![(0, vec![0, 1, 2])],
+                ..Default::default()
+            },
+            &before,
+            None,
+            &old_bounds,
+            &after_bounds,
+        );
+        assert_eq!(result.get(&0), Some(&RootTime::point(1e30).unwrap()));
+        assert_eq!(result.get(&1), Some(&later));
+        assert_eq!(result.len(), 3);
+        let select = Selection {
+            actions: vec![(0, vec![1])],
+            ..Default::default()
+        };
+        let literal = apply(
+            &model,
+            &trajectory,
+            &select,
+            &before,
+            None,
+            &old_bounds,
+            &[old_bounds[0], I::point(42.), old_bounds[2]],
+        );
+        assert!(!literal.contains_key(&1));
+        let invalid_before = [I::ZERO, old_bounds[1], old_bounds[2]];
+        let cleared = apply(
+            &model,
+            &trajectory,
+            &Selection {
+                actions: vec![(0, vec![0])],
+                ..Default::default()
+            },
+            &before,
+            None,
+            &invalid_before,
+            &after_bounds,
+        );
+        assert!(
+            !cleared.contains_key(&0),
+            "an already invalidated proof cannot authorize a literal reset"
+        );
+    }
+
+    #[test]
+    fn unsupported_write_clears_before_literal_reset_and_unknown_min_max_stay_unproved() {
+        let (model, trajectory) = assignments(vec![
+            (
+                0,
+                Expression::Multiply {
+                    left: Box::new(Expression::State { state: 0 }),
+                    right: Box::new(constant(1.)),
+                },
+            ),
+            (0, constant(1e30)),
+            (
+                1,
+                extremum(
+                    crate::ir::EventMathFunction::Min,
+                    Expression::State { state: 0 },
+                    Expression::State { state: 2 },
+                ),
+            ),
+        ]);
+        let later = root(R::new(1.into(), 3.into()));
+        let before = TimeProofs::from([(0, root(R::new(1.into(), 4.into()))), (2, later.clone())]);
+        let result = apply(
+            &model,
+            &trajectory,
+            &Selection {
+                actions: vec![(0, vec![0, 1, 2])],
+                ..Default::default()
+            },
+            &before,
+            None,
+            &[I::point(0.25), I::ZERO, I { lo: 0.3, hi: 0.4 }],
+            &[
+                I::point(1e30),
+                I { lo: 0.3, hi: 0.4 },
+                I { lo: 0.3, hi: 0.4 },
+            ],
+        );
+        assert_eq!(result, TimeProofs::from([(2, later)]));
+        for function in [
+            crate::ir::EventMathFunction::Min,
+            crate::ir::EventMathFunction::Max,
+        ] {
+            assert!(value(
+                &extremum(function, Expression::State { state: 0 }, constant(0.)),
+                &result
+            )
+            .is_none());
+        }
+        assert_eq!(before.len(), 2);
+    }
+
+    #[test]
+    fn min_max_compare_exact_roots_with_equal_boxes_and_require_both_proofs() {
+        use crate::ir::EventMathFunction::{Max, Min};
+        let a = root(R::new(1.into(), 3.into()));
+        let b = root(R::new(1.into(), 3.into()) + R::new(1.into(), (1_u64 << 60).into()));
+        assert_eq!(a.bounds(), b.bounds());
+        let states = TimeProofs::from([(0, a.clone()), (1, b.clone())]);
+        for (function, expected) in [(Min, a.clone()), (Max, b.clone())] {
+            let expression = extremum(
+                function,
+                Expression::State { state: 0 },
+                Expression::State { state: 1 },
+            );
+            assert_eq!(value(&expression, &states), Some(expected));
+            assert_eq!(
+                value(
+                    &expression,
+                    &TimeProofs::from([(0, a.clone()), (1, a.clone())])
+                ),
+                Some(a.clone())
+            );
+            assert!(value(&expression, &TimeProofs::from([(0, a.clone())])).is_none());
+        }
+        assert_eq!(
+            value(
+                &extremum(Min, Expression::State { state: 0 }, constant(0.)),
+                &states
+            ),
+            RootTime::point(0.)
+        );
+        assert_eq!(
+            value(
+                &extremum(Max, Expression::State { state: 0 }, constant(1e30)),
+                &states
+            ),
+            RootTime::point(1e30)
+        );
+        assert!(
+            value(&constant(1e30), &states).is_none(),
+            "standalone literals do not seed provenance"
+        );
+        assert!(value(
+            &extremum(Min, Expression::State { state: 0 }, constant(f64::INFINITY)),
+            &states
+        )
+        .is_none());
+    }
+
+    #[test]
+    fn min_max_proof_changes_invalidate_nested_start_period_and_enable() {
+        for function in [
+            crate::ir::EventMathFunction::Min,
+            crate::ir::EventMathFunction::Max,
+        ] {
+            let expression = extremum(function, Expression::State { state: 0 }, constant(0.5));
+            let triggers: Vec<_> = (0..3)
+                .map(|field| crate::events::TriggerLeaf {
+                    event: 0,
+                    index: field,
+                    trigger: EventTrigger::HeldTimer {
+                        start: Box::new(if field == 0 {
+                            expression.clone()
+                        } else {
+                            constant(0.)
+                        }),
+                        period: Box::new(if field == 1 {
+                            expression.clone()
+                        } else {
+                            constant(0.)
+                        }),
+                        enabled: Box::new(if field == 2 {
+                            expression.clone()
+                        } else {
+                            constant(1.)
+                        }),
+                        time_tolerance: 0.001,
+                    },
+                })
+                .collect();
+            let a = root(R::new(1.into(), 3.into()));
+            let b = root(R::new(1.into(), 3.into()) + R::new(1.into(), (1_u64 << 60).into()));
+            assert_eq!(a.bounds(), b.bounds());
+            let before = TimeProofs::from([(0, a)]);
+            for after in [TimeProofs::from([(0, b)]), TimeProofs::new()] {
+                let mut changed = vec![false; 3];
+                invalidate_timers(&triggers, &before, &after, &mut changed);
+                assert_eq!(changed, vec![true; 3]);
+            }
+        }
     }
     #[test]
     fn selected_order_and_cross_block_before_are_distinct() {
