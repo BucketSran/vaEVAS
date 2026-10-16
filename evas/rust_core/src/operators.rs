@@ -977,14 +977,25 @@ fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
     }
 }
 
+// Candidate and replay frames share every immutable entry through `Arc`.
+// An entry is deep-copied only when a trial actually mutates it in place
+// (`Arc::make_mut`), so unchanged operator histories are never cloned.
 #[derive(Clone, Default)]
 pub(crate) struct Operators {
-    entries: Vec<Runtime>,
-    changes_on_advance: Vec<bool>,
-    direct: Vec<Option<DirectInput>>,
+    entries: Vec<Arc<Runtime>>,
+    changes_on_advance: Arc<[bool]>,
+    direct: Arc<[Option<DirectInput>]>,
     continuous: Option<Arc<Continuous>>,
     horizon: f64,
-    isolated_parameters: Vec<(usize, f64)>,
+    isolated_parameters: Arc<[(usize, f64)]>,
+}
+
+// Materialize a mutable entry only when the immutable base still shares it.
+fn make_mut_entry(entry: &mut Arc<Runtime>) -> &mut Runtime {
+    if Arc::strong_count(entry) > 1 {
+        crate::diagnostics::counter("history_entry_copy_on_write", 1);
+    }
+    Arc::make_mut(entry)
 }
 
 // Only structurally isolated instance slots are normalized here. The
@@ -1049,7 +1060,7 @@ impl Evaluation<'_> {
                     }
                 }
                 let mut physical = proofs.clone();
-                for &(state, _) in &self.base.isolated_parameters {
+                for &(state, _) in self.base.isolated_parameters.iter() {
                     physical.remove(&state);
                 }
                 Ok(physical)
@@ -1070,10 +1081,13 @@ impl Evaluation<'_> {
             }));
         }
         for entry in &mut observed.entries {
+            if !matches!(entry.as_ref(), Runtime::Idt { reset: Some(_), .. }) {
+                continue;
+            }
             if let Runtime::Idt {
                 history,
                 reset: Some(reset),
-            } = entry
+            } = make_mut_entry(entry)
             {
                 history.advance_reset(self.time, time_bounds, reset.active(parameters)?)?;
             }
@@ -1081,6 +1095,7 @@ impl Evaluation<'_> {
         let mut values = observed.values_reusing(self.time, Some(&self.values))?;
         let mut bounds = observed.event_bounds(self.time, time_bounds)?;
         for (i, entry) in observed.entries.iter().enumerate() {
+            let entry = entry.as_ref();
             match entry {
                 Runtime::Continuous(slot)
                     if observed
@@ -1197,7 +1212,7 @@ impl Evaluation<'_> {
                     }
                 }
                 let mut physical = proofs.clone();
-                for &(state, _) in &self.base.isolated_parameters {
+                for &(state, _) in self.base.isolated_parameters.iter() {
                     physical.remove(&state);
                 }
                 Ok(physical)
@@ -1220,6 +1235,21 @@ impl Evaluation<'_> {
                 ));
             }
             for (entry, evidence) in candidate.entries.iter_mut().zip(&proven.entries) {
+                if !matches!(
+                    (entry.as_ref(), evidence.as_ref()),
+                    (
+                        Runtime::Transition {
+                            source: Some(_),
+                            ..
+                        },
+                        Runtime::Transition {
+                            source: Some(_),
+                            ..
+                        },
+                    )
+                ) {
+                    continue;
+                }
                 if let (
                     Runtime::Transition {
                         source: Some(source),
@@ -1229,7 +1259,7 @@ impl Evaluation<'_> {
                         source: Some(proof),
                         ..
                     },
-                ) = (entry, evidence)
+                ) = (make_mut_entry(entry), evidence.as_ref())
                 {
                     source.reuse_certificates(proof)?;
                 }
@@ -1237,6 +1267,8 @@ impl Evaluation<'_> {
         }
         crate::diagnostics::counter("history_clone_calls", 1);
         crate::diagnostics::counter("history_clone_operator_slots", self.base.entries.len());
+        // Slots are shared until an in-place mutation copies them; the
+        // history_entry_copy_on_write counter reports those actual copies.
         candidate.horizon = horizon;
         if let Some(continuous) = &candidate.continuous {
             if proofs.is_some() || continuous.has_local_observation() {
@@ -1317,20 +1349,22 @@ impl Operators {
     }
     pub(crate) fn local_range(&self, index: usize, delta: I) -> Result<(I, I), Error> {
         self.check_guard(index)?;
-        let Runtime::Continuous(slot) = self.entries[index] else {
+        let Runtime::Continuous(slot) = self.entries[index].as_ref() else {
             return Err(Error::new(
                 "event_resolution",
                 "local causal guard requires continuous network operators",
             ));
         };
         let (values, derivatives) = self.continuous.as_ref().unwrap().local_range(delta)?;
-        Ok((values[slot], derivatives[slot]))
+        Ok((values[*slot], derivatives[*slot]))
     }
 
     pub(crate) fn refine_ordinary_phase(&mut self, enabled: bool) {
         for entry in &mut self.entries {
-            if let Runtime::IdtMod(history) = entry {
-                history.refine_ordinary(enabled);
+            if matches!(entry.as_ref(), Runtime::IdtMod(_)) {
+                if let Runtime::IdtMod(history) = make_mut_entry(entry) {
+                    history.refine_ordinary(enabled);
+                }
             }
         }
     }
@@ -1348,7 +1382,7 @@ impl Operators {
         // it also covers reset histories and need not provide a derivative.
         let mut bounds = Vec::with_capacity(self.entries.len());
         for (index, entry) in self.entries.iter().enumerate() {
-            let bound = match entry {
+            let bound = match entry.as_ref() {
                 Runtime::DirectDerivative(history) => history.range(window)?,
                 Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                 Runtime::Idt { history, .. } => history.value_range(window)?,
@@ -1841,12 +1875,12 @@ impl Operators {
             changes_on_advance.push(changes);
         }
         Ok(Self {
-            entries,
-            changes_on_advance,
-            direct,
+            entries: entries.into_iter().map(Arc::new).collect(),
+            changes_on_advance: changes_on_advance.into(),
+            direct: direct.into(),
             continuous,
             horizon,
-            isolated_parameters,
+            isolated_parameters: isolated_parameters.into(),
         })
     }
 
@@ -1855,17 +1889,17 @@ impl Operators {
             .entries
             .get(index)
             .ok_or_else(|| Error::new("invalid_ir", "guard operator index out of range"))?;
-        if self.changes_on_advance[index] && !matches!(entry, Runtime::Continuous(_)) {
+        if self.changes_on_advance[index] && !matches!(entry.as_ref(), Runtime::Continuous(_)) {
             return Err(Error::new("unsupported_cross",
                 "cross requires a continuous epoch history; reset/transition history is unsupported"));
         }
-        if let Runtime::Continuous(slot) = entry {
+        if let Runtime::Continuous(slot) = entry.as_ref() {
             if !self.continuous.as_ref().unwrap().is_continuous(*slot) {
                 return Err(Error::new("unsupported_cross",
                     "ddt or its feedthrough can jump at DC/source corners; continuous cross trajectory required"));
             }
         }
-        match entry {
+        match entry.as_ref() {
             Runtime::Continuous(_)
             | Runtime::Idt { .. }
             | Runtime::LaplaceNd(_)
@@ -1883,7 +1917,7 @@ impl Operators {
 
     pub(crate) fn keeps_guard_value(&self, index: usize) -> Result<bool, Error> {
         self.check_guard(index)?;
-        match &self.entries[index] {
+        match self.entries[index].as_ref() {
             Runtime::Continuous(slot) => self
                 .continuous
                 .as_ref()
@@ -1896,7 +1930,7 @@ impl Operators {
     pub(crate) fn range(&self, index: usize, time: I) -> Result<(I, I), Error> {
         self.check_guard(index)?;
         let entry = &self.entries[index];
-        let result = match entry {
+        let result = match entry.as_ref() {
             Runtime::Continuous(slot) => {
                 let c = self.continuous.as_ref().unwrap();
                 if !c.is_continuous(*slot) {
@@ -1964,7 +1998,7 @@ impl Operators {
     }
 
     fn transition(&self, parent: usize) -> Result<&Transition, Error> {
-        match self.entries.get(parent) {
+        match self.entries.get(parent).map(|entry| entry.as_ref()) {
             Some(Runtime::Transition { history, .. }) => Ok(history),
             _ => Err(Error::new(
                 "invalid_ir",
@@ -2013,7 +2047,7 @@ impl Operators {
                         return Ok(values);
                     }
                 }
-                let value = match entry {
+                let value = match entry.as_ref() {
                     Runtime::DirectDerivative(history) => history.value(time)?,
                     Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                     Runtime::Idt { history, .. } => history.value(time)?,
@@ -2053,7 +2087,7 @@ impl Operators {
         time: f64,
     ) -> Result<Option<crate::exact_source::RootTime>, Error> {
         let mut root: Option<crate::exact_source::RootTime> = None;
-        for entry in &self.entries {
+        for entry in self.entries.iter().map(|entry| entry.as_ref()) {
             if let Runtime::Transition {
                 source: Some(source),
                 ..
@@ -2079,7 +2113,7 @@ impl Operators {
     pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
         self.entries
             .iter()
-            .filter_map(|entry| match entry {
+            .filter_map(|entry| match entry.as_ref() {
                 Runtime::DirectDerivative(history) => history.next_breakpoint(after),
                 Runtime::Continuous(_) => self.continuous.as_ref().unwrap().next_breakpoint(after),
                 Runtime::Idt { history, .. } => history.next_breakpoint(after),
@@ -2123,7 +2157,7 @@ impl Operators {
                         return Ok(bounds);
                     }
                 }
-                let bound = match entry {
+                let bound = match entry.as_ref() {
                     Runtime::DirectDerivative(history) => history.bounds(time)?,
                     Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                     Runtime::Idt { history, .. } => history.value_bounds(time)?,
@@ -2143,7 +2177,7 @@ impl Operators {
                             constant_bounds,
                             ..
                         } => {
-                            if let Runtime::IdtMod(history) = &self.entries[*operator] {
+                            if let Runtime::IdtMod(history) = self.entries[*operator].as_ref() {
                                 history
                                     .value_bounds_segments(time)?
                                     .into_iter()
@@ -2186,7 +2220,7 @@ impl Operators {
         next_root: Option<crate::exact_source::RootTime>,
     ) -> Result<(), Error> {
         if let Some(event) = next_event {
-            for entry in &self.entries {
+            for entry in self.entries.iter().map(|entry| entry.as_ref()) {
                 if let Runtime::Transition {
                     source: Some(source),
                     ..
@@ -2199,7 +2233,7 @@ impl Operators {
         let deadlines: Vec<_> = self
             .entries
             .iter()
-            .flat_map(|entry| match entry {
+            .flat_map(|entry| match entry.as_ref() {
                 Runtime::DirectDerivative(_) => Vec::new(),
                 Runtime::Continuous(_) => Vec::new(),
                 Runtime::Idt { .. } => Vec::new(),
@@ -2212,7 +2246,7 @@ impl Operators {
                 Runtime::Slew(_) | Runtime::SlewCascade(_) => Vec::new(),
             })
             .collect();
-        for entry in &self.entries {
+        for entry in self.entries.iter().map(|entry| entry.as_ref()) {
             if let Runtime::Transition {
                 source: Some(source),
                 ..
@@ -2309,6 +2343,7 @@ impl Operators {
         // this collection. The owning frame still controls atomic commit.
         let mut predictions = Vec::new();
         for (i, entry) in self.entries.iter().enumerate() {
+            let entry = entry.as_ref();
             let (parent, reaches_deadline) = match entry {
                 Runtime::TransitionFilter { parent, history } => (
                     *parent,
@@ -2328,7 +2363,7 @@ impl Operators {
                 program,
                 owner,
                 source,
-            } = &self.entries[parent]
+            } = self.entries[parent].as_ref()
             else {
                 unreachable!()
             };
@@ -2405,7 +2440,7 @@ impl Operators {
             predictions.push((i, prediction));
         }
         for (i, prediction) in predictions {
-            self.entries[i] = prediction;
+            self.entries[i] = Arc::new(prediction);
         }
 
         if let Some(continuous) = &self.continuous {
@@ -2419,29 +2454,44 @@ impl Operators {
             }
         }
         for entry in &mut self.entries {
-            match entry {
+            match entry.as_ref() {
                 Runtime::DirectDerivative(_) => {}
                 Runtime::Continuous(_) => {}
-                Runtime::Idt { history, reset } => {
-                    if let Some(reset) = reset {
+                Runtime::Idt {
+                    history: _,
+                    reset: Some(_),
+                } => {
+                    if let Runtime::Idt {
+                        history,
+                        reset: Some(reset),
+                    } = make_mut_entry(entry)
+                    {
                         history.advance_reset(time, time_bounds, reset.active(bounds)?)?;
                     }
                 }
+                Runtime::Idt { reset: None, .. } => {}
                 Runtime::IdtMod(_) => {}
                 Runtime::Math(_, _) => {}
                 Runtime::AbsDelay(_) => {}
                 Runtime::LaplaceNd(_) => {}
                 Runtime::TransitionFilter { .. } | Runtime::TransitionIntegral { .. } => {}
-                Runtime::Transition {
-                    input,
-                    input_bounds,
-                    history,
-                    expression,
-                    program,
-                    owner,
-                    source,
-                } => {
-                    if let Some(current) = source {
+                Runtime::Transition { .. } => {
+                    // Every branch below advances the transition history in
+                    // place, so this entry is always materialized for a trial.
+                    let Runtime::Transition {
+                        input,
+                        input_bounds,
+                        history,
+                        expression,
+                        program,
+                        owner,
+                        source,
+                    } = make_mut_entry(entry)
+                    else {
+                        unreachable!()
+                    };
+                    let current = source.as_mut();
+                    if let Some(current) = current {
                         if !install_source {
                             let old = current.target();
                             history.advance_at_with_exact(
@@ -2506,11 +2556,8 @@ impl Operators {
             _ => {}
         }
         self.entries.len() == other.entries.len()
-            && self
-                .entries
-                .iter()
-                .zip(&other.entries)
-                .all(|(a, b)| match (a, b) {
+            && self.entries.iter().zip(&other.entries).all(|(a, b)| {
+                match (a.as_ref(), b.as_ref()) {
                     (Runtime::Idt { history: a, .. }, Runtime::Idt { history: b, .. }) => {
                         a.same_reset_history(b)
                     }
@@ -2531,7 +2578,8 @@ impl Operators {
                         _ => false,
                     },
                     _ => true,
-                })
+                }
+            })
     }
 
     pub(crate) fn permits_same_time_change(&self, previous: &[f64], current: &[f64]) -> bool {
@@ -2539,7 +2587,13 @@ impl Operators {
             return false;
         }
         let mut permitted_changes = Vec::with_capacity(self.entries.len());
-        for ((entry, &before), &after) in self.entries.iter().zip(previous).zip(current) {
+        for ((entry, &before), &after) in self
+            .entries
+            .iter()
+            .map(|e| e.as_ref())
+            .zip(previous)
+            .zip(current)
+        {
             let permitted = match entry {
                 Runtime::Continuous(_) => self
                     .continuous

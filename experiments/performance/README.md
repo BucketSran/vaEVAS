@@ -47,6 +47,29 @@
 python3 -B -m unittest discover -s experiments/performance -p 'test_*.py' -v
 ```
 
+<a id="history-entry-sharing"></a>
+
+## 算子条目写时复制
+
+P14 第二切片把 `Operators` 的 `entries` 改为逐条目 `Arc` 共享，trial 只在真正
+就地修改某条目时才深拷贝该条目（`Arc::make_mut`），并把构造后不可变的
+`changes_on_advance`、`direct`、`isolated_parameters` 改为共享切片。
+数值运算、认证、事件推进及历史验收保持原样。[本次收据](history-entry-sharing.json)
+记录配对结果；原始证据在本仓库忽略的 `runs/performance-p14-20261017/`。
+
+六例（pwl/idt/pwl_idt/nonlinear_idt/timer/cross，各 8193 观察点）交替五轮共 120 次配置
+（最终内核），另有同规模探索批保留在原始证据中。每例新旧内核及诊断开关的完整
+JSON 响应逐字节一致（含事件与误差区间）；三角波案例由检查器用精确有理数积分验收包含性。
+诊断计数确认求解与认证次数不变；新增 `history_entry_copy_on_write` 计数器报告实际发生的
+条目深拷贝（上述六例均为 0，即全部条目在 trial 间共享；带 idt 复位的路径由 Rust 回归覆盖）。
+
+端到端计时没有测到稳定差异：上一切片后每次 trial 的 `base.clone()` 只剩约
+0.05–0.09 ms（`history.clone` 全程约 1–2 ms，占端到端约 1%），消除这部分复制
+低于本机波动，按验收规则记为无可测差异，不宣称提速。主机同期有其他任务
+（负载 5–10），各例范围互相重叠、中位数方向不稳定，全部慢样本保留在收据中。
+当前 pwl_idt 剩余热点在 trial 内 `settlement::prepare` 重建整个 `Circuit`
+（`circuit.prepare` 每次 trial 约 1.1 ms），属于 P05（事件后重建）范围，不在本切片内。
+
 ## 固定矩阵复用与稀疏消元实测
 
 [紧凑收据](results.json)保存配对结果、阶段、次数、内存和执行身份。相同请求与容差在基线/候选 release 内核上各运行五次独立进程，交替顺序。诊断开关及两个内核的输出逐字节相同，并通过基准内的独立答案。

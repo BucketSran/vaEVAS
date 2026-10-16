@@ -145,14 +145,14 @@ impl super::Operators {
             return None;
         }
         for (filter, entry) in self.entries.iter().enumerate() {
-            let super::Runtime::TransitionFilter { parent, history } = entry else {
+            let super::Runtime::TransitionFilter { parent, history } = entry.as_ref() else {
                 continue;
             };
             let super::Runtime::Transition {
                 input_bounds,
                 history: edge,
                 ..
-            } = &self.entries[*parent]
+            } = self.entries[*parent].as_ref()
             else {
                 return None;
             };
