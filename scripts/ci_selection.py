@@ -34,6 +34,7 @@ CHILD_RESULTS = {'package': ('install_result',),
 MAINTENANCE_FILES = {
     'scripts/traceability.py', 'scripts/diagnostic_inventory.py',
     'scripts/verify_validation_version.py', 'scripts/check_workspaces.py',
+    'scripts/development_records.py', 'scripts/tests/test_development_records.py',
     'scripts/tests/test_traceability.py',
     'scripts/tests/test_diagnostic_inventory.py', 'scripts/tests/test_workspaces.py',
 }

@@ -20,6 +20,31 @@
 [验证技能](../.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks)中的自动规则表；
 `--check-docs` 只检查同步并由 CI 执行。表格外的语义解释和人工验收要求保留原文。
 
+<a id="development-records"></a>
+
+## 精简审查与阶段计时
+
+[development_records.py](development_records.py) 检查本轮唯一的人读摘要。无问题上限 300 字，
+有问题上限 800 字。按去空白后的字符计数，Markdown 链接只计标签；正文、代码块和哈希均计入。
+多份摘要、空摘要或超长均返回非零状态。检查不会改写、截断或删除报告。
+所有发现和详细证据保留在原任务的结构化记录中，短摘要必须说明未解决数量及读取位置。
+
+```bash
+python3 -B scripts/development_records.py check-review runs/<task>/review.md --findings 0
+python3 -B scripts/development_records.py time-start runs/<task>/timing.jsonl --id check-1 --phase validation
+python3 -B scripts/development_records.py time-stop runs/<task>/timing.jsonl --id check-1 --status complete --evidence runs/<task>/checks.json
+python3 -B scripts/development_records.py time-summary runs/<task>/timing.jsonl
+```
+
+`review.md` 是 PR 或任务记录中摘要的本地草稿，不是另一份审查报告。交付只呈现一个入口。
+检查只约束传入的草稿；不会自动抓取聊天或判断文风。审查技能和提交技能要求在交付前运行它。
+检查器测试纳入现有维护 CI，不新增仿真检查，也不扫描或重判旧报告。
+
+计时器追加 UTC 起止时间和单调时钟耗时。阶段包括调研、实现、验证、审查、返工、CI 等待与发布。
+失败用 `--status failed`，返工或等待可附 `--reason`。不同 worker 用 `--actor` 区分；协调者统一写入。
+汇总分别显示参与者阶段用时、区间并集和跨度，未结束及时间跳变单列。漏记时间保持未知。
+规则见[耗时记录](../docs/contributing/evidence.md#development-time)。
+
 ## CI 按改动选择检查
 
 CI 按改动涉及的内容选择检查。普通说明文档只检查改动行的空白并运行 CI 路由自检，

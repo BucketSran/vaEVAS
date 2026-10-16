@@ -108,20 +108,13 @@ verification gap instead of claiming it passed.
 
 ## Deliver the review
 
-Use the [diff review format](../../../CONTRIBUTING.md#reviewing-diffs), including its
-plain-language rules and publication dependency checks. Lead with actionable
-findings ordered by severity. Identify which review question each finding concerns;
-one passing category cannot hide a failure in another.
-Avoid speculative architecture preferences and unrelated pre-existing issues.
-Use this review format for findings; the shared `pr` skill applies when writing
-a PR body, not when reporting a review. Include actionable trail findings and any
-missing trail-review coverage in the same report when applicable.
+Follow [concise review delivery](../../../CONTRIBUTING.md#concise-review-delivery).
+Return findings, fixed scope, evidence references and material limits to the coordinator.
+Use the task's existing structured record; create no per-reviewer or per-round Markdown report.
+Preserve all actionable findings and required raw external responses. The coordinator owns
+one human summary and runs the [output check](../../../scripts/README.md#development-records).
+Combine applicable trail findings with the same review; no separate trail report is needed.
 
-If no actionable defects are found, say so and describe the review scope and
-material verification limits. Complete one review unless new changes, a specific
-unresolved question, or the user's request warrants another pass. Reuse review
-that covers the same requirements and diff; changed behavior, dependencies or
-claims require checking the affected scope again. There is no fixed reviewer
-count or clean-round quota.
-Describe direct and independently delegated review accurately; a readiness assessment
-does not authorize merge or claim an independent review that did not happen.
+A new diff, failed check or unresolved question calls for a focused follow-up. Reuse completed
+review at PR preparation and merge when its code, assumptions and evidence still match.
+State whether review was direct or independent; do not imply a reviewer or test ran when it did not.

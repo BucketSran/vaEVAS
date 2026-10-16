@@ -13,6 +13,29 @@ Deliver the requested behavior as a coherent, reviewable change. The user's
 scope and stopping point govern the work; this skill does not start subsequent
 roadmap stages.
 
+## Select and research the next fix
+
+Unless the user selects a particular blocker, follow the
+[three-layer priority queue](../../../evas/docs/development/COMPARISON.md#repair-priority).
+Start with independently verifiable input adaptation, standard syntax and local expressions;
+then shared capabilities; then complex compositions. Rank by distinct affected gold families,
+blocking dependencies and acceptance cost. Counts describe observed first blockers, not predicted
+passes. Reuse the frozen gold probe; old checker replay is diagnostic evidence, not a benchmark score.
+
+Before every EVAS fix, check the relevant standard, the fixed legacy EVAS source, a relevant
+public implementation and related papers through the [reference routes](../../../docs/agents/domain.md#prior-art).
+Reuse a still-applicable prior search by linking its source/version and conclusion. Search the
+specific mechanism, not every reference project. Default to 15 minutes total; a cross-cutting
+numerical design may use 30 minutes if the task record states why before extending the search.
+At the limit, record what is known and missing. Never resolve an unsettled semantic question by guessing.
+
+Record the choice in the existing task record: sources inspected, reuse/adapt/implement decision,
+architecture or license constraints, and the distinguishing acceptance check. Evaluate a mature
+component's integration cost, maintained API and numerical guarantees before choosing integration.
+Different architectures can still supply algorithms, state/history ownership and regression cases.
+No separate research report is required. Record observed research time under the
+[timing policy](../../../docs/contributing/evidence.md#development-time).
+
 ## Establish the contract
 
 Use the relevant interface/build guidance in [EVAS README](../../../evas/README.md)

@@ -70,6 +70,12 @@ whether it belongs in the commit. Use [vaevas-review-pr](../vaevas-review-pr/SKI
 to cover any required trail review together with the change review. The trail
 supports review; it does not replace observed checks or independent review.
 
+Before drafting, reuse the canonical review and run the
+[concise review output check](../../../scripts/README.md#development-records).
+Follow [one delivery candidate](../../../CONTRIBUTING.md#prepare-one-delivery-candidate):
+publication does not require another full code review or repeated matching tests.
+Record publication and CI waiting time in the existing task timing record.
+
 ## Draft the PR description
 
 When writing a PR body, load the shared `pr` skill for presentation. This skill

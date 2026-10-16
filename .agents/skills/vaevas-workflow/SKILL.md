@@ -97,6 +97,14 @@ Use the project review skill for the required review scope, including any
 decision-trail review. Reuse review of the same requirements and evidence;
 several matching skills do not by themselves require several review rounds.
 
+For EVAS fixes, use the component skill's layered selection and time-bounded prior-art search.
+Keep one human review summary under [the delivery limits](../../../CONTRIBUTING.md#concise-review-delivery).
+Record phase time with [the existing evidence policy](../../../docs/contributing/evidence.md#development-time),
+including rework and CI waiting; reuse tool timings rather than reconstructing estimates later.
+
+Apply the [conversation handoff triggers](../../../docs/contributing/workspaces.md#conversation-handoff-triggers)
+when a task ends, after repeated compaction or when context is lost. A fresh review agent does not reset the main conversation.
+
 ## Complete the requested stage
 
 Keep maintained results in their [owning component](../../../AGENTS.md#ownership).
