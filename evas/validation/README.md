@@ -101,6 +101,13 @@ PYTHONPATH=evas/src python3 -B evas/validation/generated_transient.py \
 
 ### 当前源码与执行检查点
 
+当前源码版本与 IR 契约见 [EVAS 入口](../README.md)；支持结论见[比较表](../docs/COMPARISON.md)，
+实际验证按[分项证据](../../experiments/backends/support/README.md)所绑定的版本、模型和设置解释。
+0.19.0 / IR23 的[循环与数组验收](../../experiments/backends/support/event-runtime-control/README.md)
+只覆盖隔离观察事件的有限配对，不表示原 CDS/MUX 整题通过，也不代表下列历史矩阵在当前源码上重跑。
+
+### 历史 EVAS 矩阵检查点
+
 PR61 的 EVAS 0.13.0 / IR17 检查点 `d68d3db4` 已重跑原矩阵，两档各 **31/31**；
 既有七案例确认复跑共 **14/14**。构建、源码、检查器和有限资格范围见
 [提交前收据](../../experiments/runs/capability-completion/review-receipt.json)。
@@ -110,7 +117,7 @@ PR61 的 EVAS 0.13.0 / IR17 检查点 `d68d3db4` 已重跑原矩阵，两档各 
 EVAS 0.12.3 / IR16）：原矩阵两档各 **31/31**，62 份 CSV 与 PR33 收据中的哈希一致。
 模型、条件与设置也逐文件匹配历史收据。检查器保留原判断公式和阈值；
 目录迁移后的当前文件身份单独记录。源码、内核、逐配置判定及限制见
-[本轮收据](../../experiments/runs/parallel-gap-integration/results/main-0.12.3-matrix.json)。
+[0.12.3 收据](../../experiments/runs/parallel-gap-integration/results/main-0.12.3-matrix.json)。
 
 PR33 / 0.12.2 的历史结果仍见[原收据](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json)，
 不改写为新版本成绩。开发回归、ngspice 共同子集与原矩阵分别计数。
@@ -120,7 +127,7 @@ PR33 / 0.12.2 的历史结果仍见[原收据](../../experiments/runs/parallel-g
 达标表示满足所列有限观测判据。误差预算与判定依据见
 [精度方案](PROTOCOL.md#精度方案候选指标不冻结统一阈值)。完整观察不确定度与连续时间资格尚未完成，
 **正式 DVS 资格仍为 I（未决）**。这些条件已用于开发，不能再称为未见确认集。
-上述矩阵收据只有本地 EVAS 执行，没有新运行 Spectre，也没有重判旧 Spectre 波形。
+上述历史矩阵复跑只有本地 EVAS 执行，没有新运行 Spectre，也没有重判旧 Spectre 波形。
 GitHub CI 的 ngspice 共同子集是另一项检查，不能替代原矩阵的后端对照。
 
 <a id="historical-four-backend-baseline"></a>
