@@ -8,6 +8,7 @@ GUARDS = ["DEV:precision-chain", "EVENT-CONDITIONS", "DYNAMICS", "CROSS", "COMPO
 
 from fractions import Fraction
 from decimal import Decimal, localcontext
+from reference_verdicts import assess_layers, LayeredVerdict, Verdict
 import math
 import unittest
 
@@ -277,9 +278,24 @@ class SampleStatePrecision(unittest.TestCase):
         self.assertEqual(wide_sparse['solutions'],
                          [wide_dense['solutions'][wide_dense_times.index(t)] for t in times])
         self.assertEqual(wide_sparse['transient']['events'], wide_dense['transient']['events'])
-        # Root recovery does not bypass the nonlinear output certificate.
-        with self.assertRaisesRegex(KernelError, 'waveform_accuracy.*nonlinear accumulated history'):
-            run(wide, sources, times, vabstol=1e-14, reltol=0)
+        # Keep the original tight request and check both independent IVPs.
+        # Exact sampling at e must still retain the full numerical enclosure.
+        tight = run(wide, sources, times, vabstol=1e-14, reltol=0)
+        e = Fraction(tight['transient']['events'][0]['time'])
+        with localcontext() as context:
+            context.prec = 90
+            tau = Decimal(2).sqrt()
+            for i, t in enumerate(times):
+                t = Fraction(t)
+                physical = 5+4*t if t <= e else 5+4*e+(2*e+1)**2*(t-e)
+                dt = Decimal(t.numerator)/Decimal(t.denominator)
+                reference = 5+4*dt if dt <= tau else 5+4*tau+(2*tau+1)**2*(dt-tau)
+                sample = dict(tight, solutions=[tight['solutions'][i]],
+                    observation_evidence=dict(tight['observation_evidence'],
+                        voltage_bounds_V=[tight['observation_evidence']['voltage_bounds_V'][i]]))
+                self.assertEqual(assess_layers(sample, physical_expected=physical,
+                    root_expected=reference, budget=1e-14),
+                    LayeredVerdict(Verdict.PASS, Verdict.PASS))
 
     def test_reset_sample_keeps_unrelated_nonlinear_integral(self):
         root = math.sqrt(2)
@@ -334,5 +350,31 @@ class SampleStatePrecision(unittest.TestCase):
                 baseline = events
                 wide = compile_model(template.replace('TTOL', '1e-5').replace('ETOL', '1e-4'),
                                      'real q; integer n; electrical z;')
-                with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
-                    run(wide, {'u': [[0,0], [2,2]]}, times, vabstol=1e-7, reltol=0)
+                wide_result = run(wide, {'u': [[0,0], [2,2]]}, times, vabstol=1e-7, reltol=0)
+                self.assertEqual(values(wide_result), [0,0,0,1])
+                wide_events = wide_result['transient']['events']
+                self.assertEqual(len(wide_events), 2)
+                e = Fraction(wide_events[0]['time'])
+                second_root = e+1/(e*e)
+                lo, hi = map(Fraction, wide_events[1]['observation_time_bounds'])
+                second_e = Fraction(wide_events[1]['time'])
+                self.assertLessEqual(lo, second_root)
+                self.assertGreaterEqual(hi, second_root)
+                self.assertGreater(second_e, second_root)
+                self.assertLessEqual(second_e-second_root, Fraction(1e-9))
+                self.assertLessEqual(e*e*(second_e-e)-1, Fraction(1e-8))
+                self.assertAlmostEqual(float(second_e), root+.5, delta=1e-9)
+                with localcontext() as context:
+                    context.prec = 90
+                    tau = Decimal(2).sqrt()
+                    for i, t in enumerate(times):
+                        t = Fraction(t)
+                        physical = e*e*max(0,t-e)
+                        dt = Decimal(t.numerator)/Decimal(t.denominator)
+                        reference = 2*max(0,dt-tau)
+                        sample = dict(wide_result, solutions=[wide_result['solutions'][i]],
+                            observation_evidence=dict(wide_result['observation_evidence'],
+                                voltage_bounds_V=[wide_result['observation_evidence']['voltage_bounds_V'][i]]))
+                        self.assertEqual(assess_layers(sample, physical_expected=physical,
+                            root_expected=reference, budget=1e-7, node='dut:z'),
+                            LayeredVerdict(Verdict.PASS, Verdict.PASS))

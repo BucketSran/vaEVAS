@@ -2,6 +2,7 @@
 GUARDS = ["CROSS", "DYNAMICS", "EVENT-ORDER", "DEV:history-relocalization"]
 
 from pathlib import Path
+from fractions import Fraction as Q
 import unittest
 from evas import Instance, KernelError, compile_sources, transient
 from evas.manifest import parse_manifest
@@ -128,15 +129,31 @@ class HistoryRelocalization(unittest.TestCase):
         row=dict(zip(result["nodes"],result["solutions"][-1]["voltages"]))
         self.assertAlmostEqual(row["y"],3,delta=1e-8)
 
-    def test_new_threshold_must_be_safe_over_the_entire_event_window(self):
-        # The rounded threshold is above sqrt(1/8), but below the accepted
-        # representative. A point-only check would silently overlook the jump.
-        with self.assertRaisesRegex(KernelError, "unsupported_cross"):
-            run("""@(initial_step) begin q=-1; n=0; end
+    def test_new_threshold_is_checked_at_actual_execution(self):
+        # The rounded threshold lies after the mathematical root but before e.
+        # Both the old and new guard are positive at the actual callback.
+        result = run("""@(initial_step) begin q=-1; n=0; end
               @(cross(V(u,r)*V(u,r)-0.125,1,1e-9,1e-8)) q=0.3535533905932738;
               V(z,r)<+idt(0,0);
               @(cross(V(z,r)+V(u,r)-q,1,1e-9,1e-8)) n=n+1;
               V(y,r)<+n;""", "real q; integer n;", stop=1)
+        self.assertEqual(len(result['transient']['events']), 1)
+        event = result['transient']['events'][0]
+        self.assertEqual(event['before'], [-1,0])
+        self.assertEqual(event['after'], [0.3535533905932738,0])
+        self.assertEqual(result['transient']['states'][-1], event['after'])
+        e = Q(event['time'])
+        lo, hi = map(Q, event['observation_time_bounds'])
+        self.assertLessEqual(lo*lo, Q(1,8))
+        self.assertGreaterEqual(hi*hi, Q(1,8))
+        self.assertLessEqual(e-lo, Q(1e-9))
+        self.assertGreater(e*e, Q(1,8))
+        self.assertLessEqual(e*e-Q(1,8), Q(1e-8))
+        self.assertGreater(e-Q(event['before'][0]), 0)
+        self.assertGreater(e-Q(event['after'][0]), 0)
+        self.assertEqual([row['voltages'][result['nodes'].index('y')]
+                          for row in result['solutions']], [0,0])
+        # The existing history_guard_jump case still rejects a real sign jump.
 
 
 if __name__ == "__main__":

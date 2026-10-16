@@ -5,6 +5,8 @@ GUARDS = ["DYNAMICS"]
 import math
 import unittest
 from fractions import Fraction as Q
+from decimal import Decimal, localcontext
+from reference_verdicts import assess_layers, LayeredVerdict, Verdict
 from evas.runtime import KernelError
 
 from test_continuous_dynamics import compile_model, run, rows, assert_close
@@ -30,9 +32,18 @@ class LifecycleClosureContracts(unittest.TestCase):
                     self.assertLessEqual(lo, math.sqrt(2))
                     self.assertGreaterEqual(hi, math.sqrt(2))
                     self.assertLess(hi-lo, 1e-12)
-                    with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
-                        run(program, {'u': [[0,0],[2,2]]}, [0,2], stop=2,
-                            vabstol=1e-20, reltol=0)
+                    tight = run(program, {'u': [[0,0],[2,2]]}, [0,2], stop=2,
+                                vabstol=1e-20, reltol=0)
+                    e = Q(tight['transient']['events'][-1]['time'])
+                    with localcontext() as context:
+                        context.prec = 90
+                        root_answer = (Decimal(2).sqrt()-Decimal('.25'))/4
+                    # The original 1e-20 mathematical-root requirement still
+                    # FAILS. A physical PASS at e does not discharge that debt.
+                    self.assertEqual(assess_layers(tight,
+                        physical_expected=(e-Q(1,4))/4,
+                        root_expected=root_answer, budget=1e-20),
+                        LayeredVerdict(Verdict.PASS, Verdict.FAIL))
 
     def test_direct_integral_release_keeps_the_same_event_sample(self):
         program = compile_model('@(initial_step) begin rst=1; q=0; end '
@@ -43,7 +54,7 @@ class LifecycleClosureContracts(unittest.TestCase):
         assert_close(self, rows(result)[-1]['y'], 3, delta=2e-7)
         assert_close(self, rows(result)[-1]['dut:z'], 4, delta=2e-7)
 
-    def test_uncertified_history_window_is_explicitly_rejected(self):
+    def test_history_sampling_checks_execution_and_original_root(self):
         for history in ['absdelay(V(u,r),0.25)', 'slew(V(u,r),2,-2)',
                         'idtmod(V(u,r),0,8,0)']:
             with self.subTest(history=history):
@@ -51,8 +62,20 @@ class LifecycleClosureContracts(unittest.TestCase):
                         f'V(z,r)<+{history}; V(y,r)<+q;')
                 uncertain = compile_model(body.replace('TRIGGER', 'cross(pow(V(u,r),2)-2,1,1e-10,1e-9)'),
                                           'real q; electrical z;')
-                with self.assertRaisesRegex(KernelError, 'event_resolution.*certified observation'):
-                    run(uncertain, {'u': [[0,0],[2,2]]}, [0,2], stop=2)
+                sampled = run(uncertain, {'u': [[0,0],[2,2]]}, [0,2], stop=2)
+                self.assertEqual(len(sampled['transient']['events']), 1)
+                e = Q(sampled['transient']['events'][0]['time'])
+                self.assertGreater(e*e, 2)
+                self.assertLessEqual(e*e-2, Q(1e-9))
+                with localcontext() as context:
+                    context.prec = 90
+                    tau = Decimal(2).sqrt()
+                    physical = e-Q(1,4) if history.startswith('absdelay') else e if history.startswith('slew') else e*e/2
+                    reference = tau-Decimal('.25') if history.startswith('absdelay') else tau if history.startswith('slew') else Decimal(1)
+                    budget = Q(1e-12)+Q(1e-10)*abs(physical)
+                    self.assertEqual(assess_layers(sampled, physical_expected=physical,
+                        root_expected=reference, budget=budget),
+                        LayeredVerdict(Verdict.PASS, Verdict.PASS))
                 exact = compile_model(body.replace('TRIGGER', 'timer(1,0,1e-12)'),
                                       'real q; electrical z;')
                 result = run(exact, {'u': [[0,0],[2,2]]}, [0,2], stop=2)

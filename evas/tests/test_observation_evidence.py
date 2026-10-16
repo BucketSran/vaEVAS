@@ -3,6 +3,9 @@ GUARDS = ["QUALIFICATION", "DEV:observation-evidence"]
 
 import copy
 import math
+from fractions import Fraction as Q
+from decimal import Decimal, localcontext
+from reference_verdicts import assess_layers, LayeredVerdict, Verdict
 import unittest
 from evas import KernelError, transient
 from evas.protocol import validate_response
@@ -58,7 +61,7 @@ class ObservationEvidence(unittest.TestCase):
         missing['observation_evidence']['voltage_bounds_V'][0]=None
         self.assertEqual(validate_response(missing,program,2,[0,1]),missing)
 
-    def test_event_sample_exposes_history_error_after_amplification(self):
+    def test_event_sample_distinguishes_delay_from_numerical_error(self):
         program=compile_sources({'test.va':model(
             '@(initial_step) q=0; @(cross(pow(V(u,r),2)-2,1,1e-6,1e-5)) q=V(u,r); '
             'V(y,r)<+1e6*q;', 'real q;')},[instance()])
@@ -67,12 +70,20 @@ class ObservationEvidence(unittest.TestCase):
         evidence=result['observation_evidence']
         self.assertTrue(evidence['effective_controls']['max_step_applied'])
         self.assertTrue(evidence['initial_settled'])
-        self.assertEqual(evidence['sample_origins'],['accepted_controller_frame']*4)
-        lo,hi=evidence['voltage_bounds_V'][-1][result['nodes'].index('y')]
-        self.assertGreater(hi,lo)
-        self.assertLessEqual(lo,1e6*math.sqrt(2));self.assertGreaterEqual(hi,1e6*math.sqrt(2))
-        # This uncertainty is real history/input uncertainty. A perfect residual
-        # cannot be used to replace it with a fabricated zero-width enclosure.
+        self.assertEqual(evidence['sample_origins'],
+                         ['accepted_controller_frame']*2+['certified_causal_frame','accepted_controller_frame'])
+        self.assertEqual(len(result['transient']['events']),1)
+        e=Q(result['transient']['events'][0]['time'])
+        self.assertGreater(e*e,2)
+        self.assertLessEqual(e*e-2,Q(1e-5))
+        with localcontext() as context:
+            context.prec=90
+            tau=Decimal(2).sqrt()
+            self.assertLessEqual(Decimal(e.numerator)/Decimal(e.denominator)-tau,Decimal('1e-6'))
+            self.assertEqual(assess_layers(result,physical_expected=1000000*e,
+                root_expected=1000000*tau,budget=10),LayeredVerdict(Verdict.PASS,Verdict.PASS))
+        # u(t)=t has no input uncertainty here. Genuine inherited uncertainty
+        # is separately guarded by ExecutionAccuracyReference's 1e16 negative control.
         self.assertEqual(result['solutions'][-1]['max_residual_v'],0)
 
     def test_causal_frame_keeps_distinct_physical_timer_phases(self):

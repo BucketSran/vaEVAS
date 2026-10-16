@@ -1255,6 +1255,9 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
     // This cache belongs only to the current accepted physical frame. Every
     // physical commit below invalidates it, including strobes/source cuts and
     // same-representative event batches. Read-only output queries never commit.
+    // Refine independent source roots before a forced observation can commit
+    // a prefix inside the old root box. Strobes do not change the source root
+    // or its consumers; real history deadlines still defer this preflight.
     let mut preflighted_event = None;
     loop {
         if preflighted_event != Some(controller.event)
@@ -1265,11 +1268,6 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                         .operators
                         .next_breakpoint(controller.accepted.time)
                         .is_none_or(|cut| cut > event.time)
-                    && trajectory
-                        .config
-                        .strobetimes
-                        .iter()
-                        .all(|&forced| forced <= controller.accepted.time || forced > event.time)
             })
         {
             controller.refine_pending_input_root(&model, &trajectory, &mut crossings)?;
@@ -1311,11 +1309,6 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                         .operators
                         .next_breakpoint(controller.accepted.time)
                         .is_none_or(|cut| cut > event.time)
-                    && trajectory
-                        .config
-                        .strobetimes
-                        .iter()
-                        .all(|&forced| forced <= controller.accepted.time || forced > event.time)
             })
         {
             controller.refine_pending_input_root(&model, &trajectory, &mut crossings)?;
