@@ -1,10 +1,12 @@
 """Exercise CI routing against real Git changes and failed job dependencies."""
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / 'ci_selection.py'
@@ -169,6 +171,11 @@ class GitChangeTests(unittest.TestCase):
         self.git('init', '-q')
         self.git('config', 'user.email', 'ci-test@example.invalid')
         self.git('config', 'user.name', 'CI Test')
+        # Fixture commits must not invoke a developer's signing keys or hooks.
+        self.git('config', 'commit.gpgsign', 'false')
+        hooks = self.repo / '.git/fixture-hooks'
+        hooks.mkdir()
+        self.git('config', 'core.hooksPath', str(hooks))
         self.write('evas/docs/old.md', 'original\n')
         self.base = self.commit()
 
@@ -184,6 +191,32 @@ class GitChangeTests(unittest.TestCase):
         self.git('add', '-A')
         self.git('commit', '-qm', 'fixture')
         return self.git('rev-parse', 'HEAD')
+
+    def test_fixture_ignores_host_signing_and_hooks(self):
+        hooks = self.repo / 'host-hooks'
+        hooks.mkdir()
+        reject = hooks / 'pre-commit'
+        reject.write_text('#!/bin/sh\necho host-policy-rejected >&2\nexit 1\n')
+        reject.chmod(0o755)
+        config = self.repo / 'host.gitconfig'
+        policies = {
+            'signing': '[commit]\n gpgsign = true\n[gpg]\n program = '
+                       + json.dumps(str(reject)) + '\n',
+            'hooks': '[core]\n hooksPath = ' + json.dumps(str(hooks)) + '\n',
+        }
+        for policy, settings in policies.items():
+            with self.subTest(policy=policy):
+                config.write_text(settings)
+                fixture = GitChangeTests()
+                with patch.dict(os.environ, {'GIT_CONFIG_GLOBAL': str(config),
+                                             'GIT_CONFIG_NOSYSTEM': '1'}):
+                    try:
+                        fixture.setUp()
+                        fixture.write('evas/docs/new.md', 'maintenance fixture\n')
+                        self.assertNotEqual(fixture.commit(), fixture.base)
+                        self.assertEqual(fixture.git('status', '--porcelain'), '')
+                    finally:
+                        fixture.doCleanups()
 
     def test_pr_uses_merge_base_and_excludes_base_branch_only_changes(self):
         self.git('checkout', '-qb', 'feature')
