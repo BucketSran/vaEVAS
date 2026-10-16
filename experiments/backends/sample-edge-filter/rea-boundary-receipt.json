@@ -1,0 +1,357 @@
+{
+  "kind": "rea_four_boundary_diagnosis",
+  "availability": "local-only raw observations and one-off scripts; compact receipt in repository",
+  "scope": "TIMER, EVENT-ORDER, TRANSITION, DYNAMICS, COMPOSE; SEF-INTERRUPT only; no new acceptance waiver",
+  "original": {
+    "root": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-rea-lifecycle-round2-20261013",
+    "manifest_sha256": "b22d1064341d05edd15575c2f7b68a0082820048b260356e2e38d90d29ae2097",
+    "verified_files": 373,
+    "spectre": {
+      "spectre_elf_path": "/edamgr/Spectre/SPECTRE211Hotfix/tools.lnx86/spectre/bin/64bit/spectre",
+      "spectre_elf_sha256": "95c8a935433c802543d1b25813d2ded3d7281aa603ac6ec350d31780cbbd8cf8",
+      "spectre_build_id": "7b561cb1d761638150fb82e2de8069f7b4865486",
+      "spectre_version": "21.1.0.509.isr12",
+      "spectre_wrapper_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f"
+    },
+    "rea_commit": "9928f357fb9c420e6384e155d74586dfe37d4533"
+  },
+  "evas": {
+    "base": "ff5d0fd9bc4dbeafe7fc91e233ad97880155a233",
+    "dirty": true,
+    "production_changes": false,
+    "kernel_identity": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 19,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.15.0"
+    },
+    "kernel_sha256": "ccffa3342fee7858d176fab952cba399248e8464f77f3c92a99d1ab2200dbc31",
+    "source_manifest_path": "/Users/bucketsran/.codex/worktrees/rea-lifecycle-regressions/current/runs/rea-timer-boundaries-20261013/source-manifest.json",
+    "source_manifest_sha256": "75c11bf9c7719f2a8ee36d3ac20729da572d4090832ccda427fbde6b27c1ef5e",
+    "patch_path": "/Users/bucketsran/.codex/worktrees/rea-lifecycle-regressions/current/runs/rea-timer-boundaries-20261013/review.diff",
+    "patch_sha256": "06e56339fbdc04a4457b4e2cb9d6a39d35033c0dba46a77c47146d21b0fbf565"
+  },
+  "reanalysis": {
+    "path": "/Users/bucketsran/.codex/worktrees/rea-lifecycle-regressions/current/runs/rea-timer-boundaries-20261013/analysis.json",
+    "sha256": "a1d813e97f283859ab33a8838c268c54d51b1d8ff5b51e2eae9e2432db4df4f0",
+    "prior_replay": "/Users/bucketsran/.codex/worktrees/rea-lifecycle-regressions/current/runs/rea-lifecycle-regressions-20261013/reference-replay.json",
+    "prior_replay_sha256": "357b875f27ab2508e1bc57fe376670dbcff99c619f91caa22e7f9d72a3b37478",
+    "frozen_response_sha256": "a3fecb5d307bad3fb3ca6fc4c394993afa9eba4f1d22aa8a4ea4496536c34875",
+    "prior_verified_files": 36,
+    "rows": 6366,
+    "events": 8,
+    "mismatch_rows": 4,
+    "other_rows": 6362,
+    "other_rows_max_held_difference_V": 7.494005416219807e-16,
+    "exact_clock_count_mismatches": 0,
+    "conditional_grid_policy_count_mismatches": 0,
+    "nominal_reference_outside_evas_reported_bounds": {
+      "h": 0,
+      "e": 0,
+      "f": 0
+    },
+    "maximum_terms": {
+      "h": {
+        "reference_residual": {
+          "absolute_V": "1.47627678311057691222518937280799920884413242E-16",
+          "signed_V": "1.47627678311057691222518937280799920884413242E-16",
+          "row": 4660,
+          "time_s": 6.000006000000001e-06,
+          "time_hex": "0x1.92a7517474871p-18"
+        },
+        "callback_shift": {
+          "absolute_V": "1.14999999999999887870998169919742858866704785187239723058663",
+          "signed_V": "-1.14999999999999887870998169919742858866704785187239723058663",
+          "row": 2609,
+          "time_s": 3.999999999999999e-06,
+          "time_hex": "0x1.0c6f7a0b5ed8cp-18"
+        },
+        "candidate_residual": {
+          "absolute_V": "1.44328993201270350255072116851806640625E-15",
+          "signed_V": "1.44328993201270350255072116851806640625E-15",
+          "row": 2610,
+          "time_s": 4.000000049999999e-06,
+          "time_hex": "0x1.0c6f7a43aa5d9p-18"
+        },
+        "direct_difference": {
+          "absolute_V": "1.14999999999999846789222601728397421538829803466796875",
+          "signed_V": "-1.14999999999999846789222601728397421538829803466796875",
+          "row": 2609,
+          "time_s": 3.999999999999999e-06,
+          "time_hex": "0x1.0c6f7a0b5ed8cp-18"
+        },
+        "reconstruction_error": {
+          "absolute_V": "0.00",
+          "signed_V": "0.00",
+          "row": 0,
+          "time_s": 0.0,
+          "time_hex": "0x0.0p+0"
+        }
+      },
+      "e": {
+        "reference_residual": {
+          "absolute_V": "7.72017887817761049981974354826029438769137780E-16",
+          "signed_V": "-7.72017887817761049981974354826029438769137780E-16",
+          "row": 2767,
+          "time_s": 4.163488773732503e-06,
+          "time_hex": "0x1.176831467c593p-18"
+        },
+        "callback_shift": {
+          "absolute_V": "1.139259281869781981217135091592858735306810449E-15",
+          "signed_V": "-1.139259281869781981217135091592858735306810449E-15",
+          "row": 2705,
+          "time_s": 4.125000049999999e-06,
+          "time_hex": "0x1.14d2f61405545p-18"
+        },
+        "candidate_residual": {
+          "absolute_V": "3.693615589918416060417988676208225164216768291E-15",
+          "signed_V": "3.693615589918416060417988676208225164216768291E-15",
+          "row": 3707,
+          "time_s": 5.0824375737393425e-06,
+          "time_hex": "0x1.55139cd6ce7bep-18"
+        },
+        "direct_difference": {
+          "absolute_V": "4.8017145815038020373322069644927978515625E-15",
+          "signed_V": "-4.8017145815038020373322069644927978515625E-15",
+          "row": 3684,
+          "time_s": 5.050586115916979e-06,
+          "time_hex": "0x1.52f068a5695d2p-18"
+        },
+        "reconstruction_error": {
+          "absolute_V": "0.00",
+          "signed_V": "0.00",
+          "row": 0,
+          "time_s": 0.0,
+          "time_hex": "0x0.0p+0"
+        }
+      },
+      "f": {
+        "reference_residual": {
+          "absolute_V": "8.7490188389986206724915562902351838583799724553540478E-8",
+          "signed_V": "8.7490188389986206724915562902351838583799724553540478E-8",
+          "row": 3710,
+          "time_s": 5.085326000054036e-06,
+          "time_hex": "0x1.55453c45b9a79p-18"
+        },
+        "callback_shift": {
+          "absolute_V": "6.34650806310668267271095786924739782428966629E-16",
+          "signed_V": "-6.34650806310668267271095786924739782428966629E-16",
+          "row": 3555,
+          "time_s": 4.908262128998529e-06,
+          "time_hex": "0x1.49634d21cc729p-18"
+        },
+        "candidate_residual": {
+          "absolute_V": "3.729906460982369505181594394944227896331091895E-15",
+          "signed_V": "-3.729906460982369505181594394944227896331091895E-15",
+          "row": 2710,
+          "time_s": 4.125003149999997e-06,
+          "time_hex": "0x1.14d303b64f7ebp-18"
+        },
+        "direct_difference": {
+          "absolute_V": "8.7490187983263467685901559889316558837890625000E-8",
+          "signed_V": "8.7490187983263467685901559889316558837890625000E-8",
+          "row": 3710,
+          "time_s": 5.085326000054036e-06,
+          "time_hex": "0x1.55453c45b9a79p-18"
+        },
+        "reconstruction_error": {
+          "absolute_V": "0E-60",
+          "signed_V": "0E-60",
+          "row": 0,
+          "time_s": 0.0,
+          "time_hex": "0x0.0p+0"
+        }
+      }
+    },
+    "dependencies": {
+      "runs/rea-timer-boundaries-20261013/analyze_boundaries.py": "f810206602d20e21b07a0b6a469176cf894845156500b22d851929821a5557c5",
+      "experiments/backends/sample-edge-filter/error_decomposition.py": "d7cf2611af79edc0ccce8af8dcc873c87258a7824ac70df0ff68aca8b6c043e3",
+      "experiments/backends/sample-edge-filter/callback_policy.py": "f22112900e0f4af68e5b8e366b04a2e667281495d37f184d0b63c1ab2ed5b775",
+      "evas/validation/sample_edge_filter/contract.py": "b34319644d00238316a4a898ba125f7a6ada2f88656a14a8966ecfc8d8eabb90"
+    }
+  },
+  "boundary_rows": [
+    {
+      "event": 2,
+      "row": 809,
+      "raw_time_token": "1.9999999999999995e-06",
+      "time_hex": "0x1.0c6f7a0b5ed8cp-19",
+      "nominal_rational_s": "4722366482869645/2361183241434822606848",
+      "offset_rational_s": "-1/2361183241434822606848",
+      "offset_s": -4.235164736271502e-22,
+      "offset_ulp": "-1",
+      "spectre_count": 2.0,
+      "evas_count": 1.0,
+      "spectre_held_V": 0.10000000000000031,
+      "evas_held_V": 0.75,
+      "next_native_time_s": 2.0000000499999995e-06,
+      "next_native_gap_s": 4.999999996961645e-14,
+      "next_native_counts": [
+        2.0,
+        2.0
+      ]
+    },
+    {
+      "event": 4,
+      "row": 2609,
+      "raw_time_token": "3.999999999999999e-06",
+      "time_hex": "0x1.0c6f7a0b5ed8cp-18",
+      "nominal_rational_s": "4722366482869645/1180591620717411303424",
+      "offset_rational_s": "-1/1180591620717411303424",
+      "offset_s": -8.470329472543003e-22,
+      "offset_ulp": "-1",
+      "spectre_count": 4.0,
+      "evas_count": 3.0,
+      "spectre_held_V": -0.249999999999999,
+      "evas_held_V": 0.8999999999999995,
+      "next_native_time_s": 4.000000049999999e-06,
+      "next_native_gap_s": 4.999999996961645e-14,
+      "next_native_counts": [
+        4.0,
+        4.0
+      ]
+    },
+    {
+      "event": 5,
+      "row": 3632,
+      "raw_time_token": "4.9999999999999996e-06",
+      "time_hex": "0x1.4f8b588e368f0p-18",
+      "nominal_rational_s": "23611832414348225/4722366482869645213696",
+      "offset_rational_s": "-1/4722366482869645213696",
+      "offset_s": -2.117582368135751e-22,
+      "offset_ulp": "-1/4",
+      "spectre_count": 5.0,
+      "evas_count": 4.0,
+      "spectre_held_V": 0.6,
+      "evas_held_V": -0.24999999999999856,
+      "next_native_time_s": 5.0000000499999995e-06,
+      "next_native_gap_s": 4.999999996961645e-14,
+      "next_native_counts": [
+        5.0,
+        5.0
+      ]
+    },
+    {
+      "event": 6,
+      "row": 4658,
+      "raw_time_token": "5.9999999999999993e-06",
+      "time_hex": "0x1.92a737110e453p-18",
+      "nominal_rational_s": "14167099448608935/2361183241434822606848",
+      "offset_rational_s": "-1/2361183241434822606848",
+      "offset_s": -4.235164736271502e-22,
+      "offset_ulp": "-1/2",
+      "spectre_count": 6.0,
+      "evas_count": 5.0,
+      "spectre_held_V": 0.25000000000000033,
+      "evas_held_V": 0.5999999999999996,
+      "next_native_time_s": 6.000002e-06,
+      "next_native_gap_s": 2.000000000478724e-12,
+      "next_native_counts": [
+        6.0,
+        6.0
+      ]
+    }
+  ],
+  "probe": {
+    "path": "/Users/bucketsran/.codex/worktrees/rea-lifecycle-regressions/current/runs/rea-timer-boundaries-20261013/neighbors.json",
+    "sha256": "358bb84702a44757c28a8c5c591a9974ac6ffaf712c6ae3fa3aab9d03aeb56d1",
+    "source_sha256": "8210ec9608d7f9e18e8745aff4c07640429cddf6bce73fa4beff0524a67d9b7e",
+    "request_sha256": "ea3aa579215b16162704017b2e1966c99ef9d34957a78850f39ea738a4a52664",
+    "unique_configurations": 4,
+    "observations_per_configuration": 30,
+    "executions_in_this_turn": 8,
+    "final_runs": [
+      {
+        "mode": "query",
+        "max_step_s": 1.5625e-08,
+        "rows": 30,
+        "maximum_nominal_reference_error_V": {
+          "h": 1.4432899320127035e-15,
+          "e": 3.570695209477082e-15,
+          "f": 1.0749027239805403e-15
+        },
+        "count_mismatches": 0,
+        "response_sha256": "a7f28b7c9b9f22431bc551590b71ce2467909e49c23493869b5c34b48502ec61"
+      },
+      {
+        "mode": "query",
+        "max_step_s": 1e-06,
+        "rows": 30,
+        "maximum_nominal_reference_error_V": {
+          "h": 1.4432899320127035e-15,
+          "e": 3.570695209477082e-15,
+          "f": 1.0749027239805403e-15
+        },
+        "count_mismatches": 0,
+        "response_sha256": "4ffdfb0cc5be47065649bba22f1afc7daf8e638906f426cbebd355f795fab767"
+      },
+      {
+        "mode": "strobe",
+        "max_step_s": 1.5625e-08,
+        "rows": 30,
+        "maximum_nominal_reference_error_V": {
+          "h": 2.5895152450279573e-16,
+          "e": 8.393680519998243e-16,
+          "f": 8.53131746566673e-16
+        },
+        "count_mismatches": 0,
+        "response_sha256": "43b6ed63cde19fe5dfd9401cf43383768aa8096ad2fa683854d0557740738ad6"
+      },
+      {
+        "mode": "strobe",
+        "max_step_s": 1e-06,
+        "rows": 30,
+        "maximum_nominal_reference_error_V": {
+          "h": 2.5895152450279573e-16,
+          "e": 8.393680519998243e-16,
+          "f": 8.53131746566673e-16
+        },
+        "count_mismatches": 0,
+        "response_sha256": "9fd5f4cdf669485e490f5b7e74ee6f2f8ba6285077bd5f02792b7bbab644fa68"
+      }
+    ],
+    "voltage_limits_V": {
+      "h": 1e-12,
+      "e": 1e-07,
+      "f": 1e-07
+    }
+  },
+  "execution": {
+    "new_spectre_starts": 0,
+    "calibration_methods": 11,
+    "timer_regression_methods": 4,
+    "command_logs": {
+      "build.log": "4cf86278c1e6d659943a46a3d7e3da429ac15be90f0f17742e24ef85228e7d3e",
+      "callback-policy-tests.log": "e95d96d1ff3b6eb38dba10f7fb91c3481c9c2646a209c0984a23372cba516c9c",
+      "decomposition-tests.log": "1c13a765bd8d47c55db7e08e8956a5d3cf3a2e5dd7475962529a0f025b6dbefb",
+      "timer-tests.log": "dbe7578f449f8fe13c4e391cf388fdf8bdc29e9380d87c272bef8b852e5dddbc",
+      "neighbors.log": "4dfa8c538ced1265c02b00a24e980882b4280bca82fc65cc14ec0e8d005c6eb7"
+    },
+    "commands": [
+      "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+      "python3 -B runs/rea-timer-boundaries-20261013/analyze_boundaries.py",
+      "python3 -B runs/rea-timer-boundaries-20261013/probe_evas_neighbors.py",
+      "python3 -B -m unittest discover -s experiments/backends/sample-edge-filter -p 'test_error_decomposition.py' -v",
+      "python3 -B -m unittest discover -s experiments/backends/sample-edge-filter -p 'test_callback_policy.py' -v",
+      "PYTHONPATH=evas/src:evas/tests python3 -B -m unittest -v test_timer.TimerContracts.test_decimal_period_stop_uses_exact_clock_not_interval_padding test_timer.TimerContracts.test_timer_representatives_are_not_early test_timer.TimerContracts.test_event_calendar_does_not_depend_on_step_or_output_grid test_timer.TimerContracts.test_one_ulp_neighbors_of_certified_root_remain_distinct"
+    ],
+    "python": "3.14.6",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)"
+  },
+  "diagnosis": "Actual callback-time selection inside positive explicit timer tolerance; no EVAS exact-nominal behavior defect found. Strict same-time q/count equality is not achieved.",
+  "limitations": [
+    "Finite native rows and eight model callback groups; no universal backend schedule equivalence",
+    "Conditioned reference uses observed callback times, not a predictor of Spectre adaptive grid",
+    "No new acceptance waiver; four strict same-time q/count differences remain",
+    "Metadata numeric time differs from raw time bytes at callbacks 2, 4, 6; raw bytes match native rows exactly; serialization/conversion cause unknown.",
+    "Probe is a development diagnostic, not an unseen benchmark or general same-source qualification.",
+    "Initial analysis assertions incorrectly assumed metadata time and model q always bit-match native solver values; two failed attempts retained, corrected by selecting raw time bytes and recording model-to-node residuals. No EVAS failure or checker budget change."
+  ]
+}
