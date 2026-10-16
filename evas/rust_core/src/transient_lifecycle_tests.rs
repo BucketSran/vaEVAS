@@ -448,6 +448,82 @@ pub(super) fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEve
 }
 
 #[test]
+fn reset_closure_retries_q_and_nonzero_count_from_the_accepted_frame() {
+    let (base, trajectory, mut controller, calendar) = fixture();
+    let mut program = serde_json::to_value(base.program).unwrap();
+    program["states"].as_array_mut().unwrap().push(json!({
+        "instance":"dut", "name":"count", "kind":"integer", "initial":7
+    }));
+    for event in program["events"].as_array_mut().unwrap() {
+        event["body"].as_array_mut().unwrap().push(json!({
+            "kind":"assign", "state":2, "rhs":{"op":"add",
+                "left":{"op":"state","state":2},
+                "right":{"op":"affine","constant":1,"terms":[]}}
+        }));
+    }
+    let model = EventModel::new(
+        serde_json::from_value(program).unwrap(),
+        base.driven,
+        base.tolerances,
+    )
+    .unwrap();
+    // The added counter does not drive the existing circuit or operators.
+    controller.accepted.states.push(7.);
+    controller.accepted.state_bounds.push(I::point(7.));
+    let strict = EventModel::new(
+        model.program.clone(),
+        model.driven.clone(),
+        Tolerances {
+            absolute: 1e-20,
+            relative: 0.,
+        },
+    )
+    .unwrap();
+
+    // At .5 the old integral is 2, but reset maps it to 1. Sampling q therefore
+    // requires a second settlement. Replaying count=count+1 must still give 8.
+    for expected in [vec![1., 1., 8.], vec![1., 0., 9.]] {
+        let before = controller.accepted.states.clone();
+        let bounds = controller.accepted.state_bounds.clone();
+        let history = controller.accepted.operators.bounds(1.).unwrap();
+        let cursor = controller.event;
+        let records = serde_json::to_value(&controller.records).unwrap();
+        for _ in 0..3 {
+            let (candidate, pending_records, end) = controller
+                .prepare_events(&model, &trajectory, &calendar)
+                .unwrap();
+            assert_eq!(candidate.states, expected);
+            assert_eq!(candidate.state_bounds[2], I::point(expected[2]));
+            assert_eq!(pending_records.len(), 1);
+            assert_eq!(end, cursor + 1);
+            drop(candidate);
+            assert_eq!(controller.accepted.states, before);
+            assert_eq!(controller.accepted.state_bounds, bounds);
+            assert_eq!(controller.accepted.operators.bounds(1.).unwrap(), history);
+            assert_eq!(controller.event, cursor);
+            assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
+        }
+        if cursor == 0 {
+            let error = controller
+                .accept_events(&strict, &trajectory, &calendar)
+                .unwrap_err();
+            assert_eq!(error.kind, "waveform_accuracy");
+            assert_eq!(controller.accepted.states, before);
+            assert_eq!(controller.accepted.state_bounds, bounds);
+            assert_eq!(controller.accepted.operators.bounds(1.).unwrap(), history);
+            assert_eq!(controller.event, cursor);
+            assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
+        }
+        controller
+            .accept_events(&model, &trajectory, &calendar)
+            .unwrap();
+        assert_eq!(controller.accepted.states, expected);
+        assert_eq!(controller.event, cursor + 1);
+        assert_eq!(controller.records.len(), cursor + 1);
+    }
+}
+
+#[test]
 fn failed_reset_closure_and_discard_leave_calendar_records_and_queue_unchanged() {
     let (model, trajectory, mut controller, calendar) = fixture();
     let original = controller.accepted.operators.bounds(1.).unwrap();

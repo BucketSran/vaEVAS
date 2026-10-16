@@ -52,6 +52,7 @@
 | 检查两级固定 slew 的独立公式与实际配对 | [输入生成与检查器](slew_cascade/compare.py)、[范围和实测](../../experiments/backends/slew-cascade/README.md) |
 | 查看模型源码与条件对应关系 | [共同 DUT](cases/README.md) |
 | 理解原条件的刺激、答案与错误对照 | [起步案例卡](CASE_CARDS.md)、[补充案例卡](NEXT_CASE_CARDS.md) |
+| 核对已存波形、回调和查询点的证据来源 | [观察证据工具](observation_evidence.py)、[独立错误对照](../tests/test_observation_evidence_helper.py)；只整理证据，不给行为通过判定 |
 | 理解误差、事件历史与正式资格 | [范围与判定协议](PROTOCOL.md)、[观察资格协议](METHOD_QUALIFICATION.md) |
 | 查看当前实现的组合边界 | [四后端支持范围](../docs/COMPARISON.md)、[连续动态手册](../docs/math/continuous.md) |
 | 找到执行结果、版本与原始材料说明 | [实验目录](../../experiments/README.md) |
@@ -59,7 +60,19 @@
 | 检查两类事件路径重构是否保持行为 | [共同事件验收](event_acceptance/README.md)：六模型、十二配置，原数学失败与观察限制单列 |
 | 运行新增功能组合的有限确认 | [确认集及冻结检查器](confirmation/README.md) |
 | 核验历史输入没有被改写 | [冻结 v1](versions/v1/README.md) |
+| 检查有界长序列的积分、滤波和复位 | [长序列回归](../tests/test_long_sequence_accuracy.py)、[独立有理数与高精度答案](../tests/long_sequence_oracle.py)；规则边沿和直接输入复位，不含中断边沿或性能结论 |
 | 用小模型定位 timer 保持值或积分回归 | [有界生成器](generated_transient.py)、[独立答案与错误控制](../tests/test_generated_transient.py)；开发检查，不计入支持表 |
+
+观察证据工具的 `build_evidence_report` 读取已归档的内核响应，保留回调、显示记录、
+请求与实际控制，以及每个查询点来自原保存值、线性插值还是缺失的说明。
+例如，原文件只在 0 秒和 1 秒保存了电压，查询 0.5 秒得到的是插值，不能据此称为原生观测。
+工具区分结构非法、记录不完整和精度资格未确定；非法数据不进入数值汇总。
+它不运行仿真、不设默认容差，也不把保存点或已有参考记录自动判为精度合格。
+调用方式与手算 PWL、缺行、NaN、重复时间等错误对照见上述测试，可单独执行：
+
+```sh
+python3 -B -m unittest discover -s evas/tests -p 'test_observation_evidence_helper.py' -v
+```
 
 固定外部多项式滤波的直接通路见 [C4 同源码检查器](filter_direct/compare.py)，
 [判据、命令与实测](../../experiments/backends/filter-direct/README.md)保留全部配置。
