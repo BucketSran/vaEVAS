@@ -33,6 +33,231 @@ fn bits(values: &[I]) -> Vec<(u64, u64)> {
         .collect()
 }
 
+fn assert_certificate_bits(
+    actual: Result<(Vec<I>, Vec<I>), Error>,
+    expected: Result<(Vec<I>, Vec<I>), Error>,
+) {
+    match (actual, expected) {
+        (Ok(actual), Ok(expected)) => {
+            assert_eq!(bits(&actual.0), bits(&expected.0));
+            assert_eq!(bits(&actual.1), bits(&expected.1));
+        }
+        (Err(actual), Err(expected)) => {
+            assert_eq!(actual.kind, expected.kind);
+            assert_eq!(actual.message, expected.message);
+        }
+        _ => panic!("cached and freshly built certificates disagree"),
+    }
+}
+
+#[test]
+fn sampled_binding_cache_uses_interval_bits_and_rechecks_failed_trials() {
+    let model = fixture(true, false);
+    let selection = Selection::default();
+    let before = [I::point(2.)];
+    let initial_map =
+        Bounds::for_program_with_operators(&model, &selection, &model.program, &[I::point(0.25)])
+            .unwrap();
+    assert!(!initial_map.matches_operator_bindings(&[]));
+    let cases = [
+        (I::point(0.25), 0.5),
+        (I::point(0.25), 0.5),
+        (I { lo: 0.24, hi: 0.26 }, 0.5),
+        (I { lo: 0.24, hi: 0.26 }, 0.5),
+        (I::point(0.25), 0.5),
+        (I::point(-0.), -0.),
+        (I::ZERO, 0.),
+        (I::point(f64::INFINITY), 0.),
+        (I::point(0.25), 0.5),
+    ];
+    let expected: Vec<_> = cases
+        .iter()
+        .map(|&(operator, value)| {
+            Bounds::for_program_with_operators(&model, &selection, &model.program, &[operator])
+                .and_then(|bounds| {
+                    bounds.check_observation(
+                        &model,
+                        &[I::ZERO],
+                        &before,
+                        &[operator],
+                        &[0., 0., value],
+                        &[2.],
+                    )
+                })
+        })
+        .collect();
+    assert!(expected[2].is_err());
+    assert!(expected[3].is_err());
+    assert!(expected[7].is_err());
+    let (result, report) = crate::diagnostics::capture(Default::default(), || {
+        for (&(operator, value), expected) in cases.iter().zip(expected) {
+            assert_certificate_bits(
+                model.certify_observation_at_roots(
+                    &selection,
+                    &[],
+                    &[I::ZERO],
+                    &before,
+                    &[operator],
+                    &[0., 0., value],
+                    &[2.],
+                ),
+                expected,
+            );
+            if !operator.finite() {
+                assert!(model
+                    .certificate
+                    .borrow()
+                    .as_ref()
+                    .is_some_and(|(path, bounds)| {
+                        path == &selection && bounds.matches_operator_bindings(&[I::ZERO])
+                    }));
+            }
+        }
+        let states = model.certify_event_states(
+            &selection,
+            &[],
+            &[I::ZERO],
+            &before,
+            &[I::point(0.25)],
+            &[0., 0., 0.5],
+            &[2.],
+        )?;
+        assert_eq!(bits(&states), bits(&before));
+        Ok(())
+    });
+    result.unwrap();
+    assert_eq!(report.counters["certificate_bounds_builds"], 7);
+    assert_eq!(
+        report
+            .counters
+            .get("certificate_cache_hits")
+            .copied()
+            .unwrap_or(0),
+        3
+    );
+}
+
+#[test]
+fn sampled_binding_cache_keeps_linear_operator_forcing_live() {
+    for same_rhs in [false, true] {
+        let base = fixture(true, false);
+        let mut program = base.program.clone();
+        program.operators.push(program.operators[0].clone());
+        let mut linear = program.contributions[0].clone();
+        linear.rhs = Expression::Operator { operator: 1 };
+        if same_rhs {
+            program.contributions[0].rhs = Expression::Add {
+                left: Box::new(program.contributions[0].rhs.clone()),
+                right: Box::new(linear.rhs),
+            };
+        } else {
+            program.contributions.push(linear);
+        }
+        let model = EventModel::new(program, base.driven, base.tolerances).unwrap();
+        let selection = Selection::default();
+        let before = [I::point(2.)];
+        let cases = [
+            (I::point(0.5), 1.),
+            (I::point(0.75), 1.25),
+            (I { lo: 0.4, hi: 0.6 }, 1.),
+        ];
+        let expected: Vec<_> = cases
+            .iter()
+            .map(|&(linear, value)| {
+                let operators = [I::point(0.25), linear];
+                Bounds::for_program_with_operators(&model, &selection, &model.program, &operators)
+                    .and_then(|bounds| {
+                        bounds.check_observation(
+                            &model,
+                            &[I::ZERO],
+                            &before,
+                            &operators,
+                            &[0., 0., value],
+                            &[2.],
+                        )
+                    })
+            })
+            .collect();
+        assert!(expected[2].is_err());
+        let (result, report) = crate::diagnostics::capture(Default::default(), || {
+            for (&(linear, value), expected) in cases.iter().zip(expected) {
+                assert_certificate_bits(
+                    model.certify_observation_at_roots(
+                        &selection,
+                        &[],
+                        &[I::ZERO],
+                        &before,
+                        &[I::point(0.25), linear],
+                        &[0., 0., value],
+                        &[2.],
+                    ),
+                    expected,
+                );
+            }
+            Ok(())
+        });
+        result.unwrap();
+        // The fallback binds every Operator it reads in one failed-affine RHS.
+        // A separate affine RHS instead keeps operator1 as live forcing.
+        assert_eq!(
+            report.counters["certificate_bounds_builds"],
+            if same_rhs { 3 } else { 1 }
+        );
+        assert_eq!(
+            report
+                .counters
+                .get("certificate_cache_hits")
+                .copied()
+                .unwrap_or(0),
+            if same_rhs { 0 } else { 2 }
+        );
+    }
+}
+
+#[test]
+fn resolved_graph_bypasses_binding_cache() {
+    let base = fixture(false, false);
+    let mut program = base.program.clone();
+    let original = program.contributions[0].rhs.clone();
+    program.contributions[0].rhs = Expression::Select {
+        relation: crate::ir::Relation::Gt,
+        left: Box::new(Expression::Affine {
+            constant: 0.,
+            terms: vec![Term {
+                node: 1,
+                coefficient: 1.,
+            }],
+        }),
+        right: Box::new(Expression::Affine {
+            constant: 0.,
+            terms: vec![],
+        }),
+        then_value: Box::new(original),
+        else_value: Box::new(Expression::State { state: 0 }),
+        origin: program.contributions[0].origin.clone(),
+    };
+    let model = EventModel::new(program, base.driven, base.tolerances).unwrap();
+    let selection = Selection::default();
+    let (result, report) = crate::diagnostics::capture(Default::default(), || {
+        for _ in 0..2 {
+            model.certify_observation_at_roots(
+                &selection,
+                &[],
+                &[I::ONE],
+                &[I::point(2.)],
+                &[I::point(0.25)],
+                &[0., 1., 1.25],
+                &[2.],
+            )?;
+        }
+        Ok(())
+    });
+    result.unwrap();
+    assert_eq!(report.counters["certificate_bounds_builds"], 2);
+    assert!(!report.counters.contains_key("certificate_cache_hits"));
+    assert!(model.certificate.borrow().is_none());
+}
+
 #[test]
 fn live_samples_cached_and_old_certificates_match_bit_for_bit() {
     let model = fixture(false, false);
@@ -156,7 +381,7 @@ fn ordered_feedback_selection_changes_the_cache_key() {
 }
 
 #[test]
-fn sampled_product_is_not_cached_even_if_hidden_by_exact_zero() {
+fn sampled_binding_cache_tracks_hidden_zero_coefficients() {
     let model = fixture(true, false);
     let selection = Selection::default();
     assert!(!Bounds::sample_independent(&model, &selection).unwrap());
@@ -177,7 +402,7 @@ fn sampled_product_is_not_cached_even_if_hidden_by_exact_zero() {
     result.unwrap();
     assert_eq!(report.counters["certificate_bounds_builds"], 2);
     assert!(!report.counters.contains_key("certificate_cache_hits"));
-    assert!(model.certificate.borrow().is_none());
+    assert!(model.certificate.borrow().is_some());
     let mut hidden = model.program.clone();
     hidden.contributions[0].rhs = Expression::Multiply {
         left: Box::new(Expression::Affine {
@@ -189,6 +414,30 @@ fn sampled_product_is_not_cached_even_if_hidden_by_exact_zero() {
     // Probe the original expression tree, without eliminating zero references.
     let model = EventModel::new(hidden, vec!["u".into()], Tolerances::default()).unwrap();
     assert!(!Bounds::sample_independent(&model, &selection).unwrap());
+    let (result, report) = crate::diagnostics::capture(Default::default(), || {
+        for sample in [0.25, 0.75, 0.75] {
+            model.certify_observation_at_roots(
+                &selection,
+                &[],
+                &[I::ZERO],
+                &[I::point(2.)],
+                &[I::point(sample)],
+                &[0., 0., 0.],
+                &[2.],
+            )?;
+        }
+        Ok(())
+    });
+    result.unwrap();
+    assert_eq!(report.counters["certificate_bounds_builds"], 2);
+    assert_eq!(
+        report
+            .counters
+            .get("certificate_cache_hits")
+            .copied()
+            .unwrap_or(0),
+        1
+    );
 }
 
 #[test]

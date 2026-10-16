@@ -55,7 +55,7 @@ fn enclose(e: &Expression, nodes: &[I], states: &[I]) -> Option<I> {
 }
 
 pub(super) fn program(context: &Context, parameters: &[I]) -> Result<Program, Error> {
-    let original = &context.program;
+    let original = context.program.as_ref();
     let mut result = original.clone();
     if original.step_bounds.is_empty() {
         return Ok(result);
@@ -151,7 +151,7 @@ mod tests {
             "output_times":[0.,1.],"stop":1.,"max_step":0.125}))
             .unwrap();
         Context {
-            program: p,
+            program: Arc::new(p),
             trajectory: Trajectory::new(t, 1).unwrap(),
             driven: vec!["u".to_owned()],
             force_integrals: false,
@@ -163,7 +163,7 @@ mod tests {
     #[test]
     fn redundant_conditional_cap_is_private_and_epoch_specific() {
         let c = context(json!({"op":"state","state":0}));
-        let before = serde_json::to_string(&c.program).unwrap();
+        let before = serde_json::to_string(c.program.as_ref()).unwrap();
         let rewritten = program(&c, &[I::point(0.25)]).unwrap();
         assert_eq!(
             rewritten.step_bounds[0].active,
@@ -179,7 +179,7 @@ mod tests {
             c.program.step_bounds[0].active
         );
         assert_eq!(tighter.step_bounds[0].value, c.program.step_bounds[0].value);
-        assert_eq!(before, serde_json::to_string(&c.program).unwrap());
+        assert_eq!(before, serde_json::to_string(c.program.as_ref()).unwrap());
     }
     #[test]
     fn all_values_and_predicate_domains_must_be_valid() {

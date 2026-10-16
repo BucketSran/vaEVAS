@@ -2648,7 +2648,7 @@ mod tests {
         .unwrap();
         NonlinearContinuous {
             context: Arc::new(Context {
-                program,
+                program: Arc::new(program),
                 trajectory,
                 force_integrals: false,
                 detached_timed: false,

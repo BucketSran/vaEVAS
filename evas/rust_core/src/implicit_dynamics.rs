@@ -900,7 +900,7 @@ fn build_segment(
             detached_timed: false,
             live_parameters: None,
             time_proofs: Default::default(),
-            program: program.clone(),
+            program: Arc::new(program.clone()),
             trajectory: trajectory.clone(),
             driven: driven.to_vec(),
         }),

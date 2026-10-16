@@ -8,7 +8,7 @@ use crate::pwl::Trajectory;
 use std::collections::BTreeSet;
 use std::sync::{
     atomic::{AtomicU64, Ordering},
-    Arc,
+    Arc, Mutex,
 };
 
 fn invalid(message: &str) -> Error {
@@ -185,7 +185,13 @@ pub(crate) fn forms(expr: &Expression, work: &Work) -> Result<Vec<Expression>, E
     }
 }
 
-#[derive(Clone)]
+struct ProvenSign {
+    left: Expression,
+    right: Expression,
+    root: Option<RootTime>,
+    sign: i8,
+}
+
 pub(crate) struct Spec {
     expression: Expression,
     program: Arc<Program>,
@@ -195,6 +201,10 @@ pub(crate) struct Spec {
     pub(crate) dependencies: BTreeSet<usize>,
     pub(crate) predicate_dependencies: BTreeSet<usize>,
     work: Work,
+    // Pure exact results belong to this original program/source context, never
+    // to the shared Work or an accepted target/cursor. Each insertion already
+    // reserved 200_000 work; the request's 1e9 limit permits at most 5000.
+    proofs: Mutex<Vec<ProvenSign>>,
 }
 impl Spec {
     /// None means the old held-only implementation owns this input.
@@ -304,10 +314,57 @@ impl Spec {
             dependencies,
             predicate_dependencies,
             work,
+            proofs: Mutex::new(Vec::new()),
         })))
     }
     pub(crate) fn equal_targets(&self, a: &Target, b: &Target) -> Result<bool, Error> {
-        a.proven_equal(b, &self.work)
+        a.proven_equal(b, self)
+    }
+    fn proof_sign(
+        &self,
+        left: &Expression,
+        right: &Expression,
+        root: Option<&RootTime>,
+        failure: &str,
+    ) -> Result<i8, Error> {
+        let mut proofs = self.proofs.lock().unwrap();
+        if let Some(proof) = proofs
+            .iter()
+            .find(|p| p.left == *left && p.right == *right && p.root.as_ref() == root)
+        {
+            // Equality has no bind/step of its own. Even a pure proof hit must
+            // refuse once another shared reservation exhausted this request.
+            self.work.debit(2, 0)?;
+            crate::diagnostics::counter("source_exact_proof_hits", 1);
+            return Ok(proof.sign);
+        }
+        self.work.exact()?;
+        crate::diagnostics::counter("source_exact_proof_builds", 1);
+        let sign = match root {
+            Some(root) => {
+                let guard = Expression::Add {
+                    left: Box::new(left.clone()),
+                    right: Box::new(Expression::Multiply {
+                        left: Box::new(constant(-1.)),
+                        right: Box::new(right.clone()),
+                    }),
+                };
+                self.trajectory
+                    .original_guard_curve(&guard, &self.input_nodes)
+                    .and_then(|curve| curve.sign_at_root(root))
+            }
+            None => crate::exact_source::predicate_sign(left, right, &[], &[], 0.),
+        }
+        .ok_or_else(|| invalid(failure))?;
+        if proofs.len() < 5000 {
+            proofs.push(ProvenSign {
+                left: left.clone(),
+                right: right.clone(),
+                root: root.cloned(),
+                sign,
+            });
+        }
+        Ok(sign)
     }
     fn sign(
         &self,
@@ -319,18 +376,12 @@ impl Spec {
         let left = bind(left, states, &self.work)?;
         let right = bind(right, states, &self.work)?;
         crate::diagnostics::counter("source_predicate_sign_calls", 1);
-        self.work.exact()?;
-        let guard = Expression::Add {
-            left: Box::new(left),
-            right: Box::new(Expression::Multiply {
-                left: Box::new(constant(-1.)),
-                right: Box::new(right),
-            }),
-        };
-        self.trajectory
-            .original_guard_curve(&guard, &self.input_nodes)
-            .and_then(|curve| curve.sign_at_root(&time.exact))
-            .ok_or_else(|| invalid("cannot prove source-target predicate at original real root"))
+        self.proof_sign(
+            &left,
+            &right,
+            Some(&time.exact),
+            "cannot prove source-target predicate at original real root",
+        )
     }
     fn resolve(&self, e: &Expression, states: &[I], time: &Cut) -> Result<Expression, Error> {
         self.work.step()?;
@@ -439,9 +490,12 @@ impl Spec {
         let affine = crate::events::affine(&selected, &self.program, &self.owner)?;
         let proof = bind(&selected, states, &self.work)?;
         crate::diagnostics::counter("source_leaf_proof_calls", 1);
-        self.work.exact()?;
-        crate::exact_source::predicate_sign(&proof, &constant(0.), &[], &[], 0.)
-            .ok_or_else(|| invalid("cannot prove source-target leaf arithmetic"))?;
+        self.proof_sign(
+            &proof,
+            &constant(0.),
+            None,
+            "cannot prove source-target leaf arithmetic",
+        )?;
         let row = crate::affine_bounds::affine(&selected, &self.program)?;
         let coefficients: Vec<I> = row
             [self.program.nodes.len()..self.program.nodes.len() + self.program.states.len()]
@@ -477,12 +531,15 @@ pub(crate) struct Target {
     pub(crate) coefficients: Vec<I>,
 }
 impl Target {
-    pub(crate) fn proven_equal(&self, other: &Self, work: &Work) -> Result<bool, Error> {
+    fn proven_equal(&self, other: &Self, spec: &Spec) -> Result<bool, Error> {
         crate::diagnostics::counter("source_target_equality_calls", 1);
-        work.exact()?;
-        crate::exact_source::predicate_sign(&self.proof, &other.proof, &[], &[], 0.)
-            .map(|v| v == 0)
-            .ok_or_else(|| invalid("cannot compare source-target boundary values"))
+        spec.proof_sign(
+            &self.proof,
+            &other.proof,
+            None,
+            "cannot compare source-target boundary values",
+        )
+        .map(|v| v == 0)
     }
     pub(crate) fn same_certificate(&self, other: &Self) -> bool {
         self.value == other.value
@@ -579,8 +636,8 @@ impl Plan {
         // This preliminary check uses one frozen held epoch. The runtime must
         // additionally call prepare with OLD accepted target after settlement.
         for k in 1..cuts.len() - 1 {
-            if !points[k].proven_equal(&modes[k - 1], &spec.work)?
-                && !points[k].proven_equal(&modes[k], &spec.work)?
+            if !points[k].proven_equal(&modes[k - 1], &spec)?
+                && !points[k].proven_equal(&modes[k], &spec)?
             {
                 return Err(invalid(
                     "isolated source-target point or third boundary value",
@@ -707,9 +764,7 @@ impl Plan {
         } else {
             point
         };
-        if !point.proven_equal(old, &self.spec.work)?
-            && !point.proven_equal(right, &self.spec.work)?
-        {
+        if !point.proven_equal(old, &self.spec)? && !point.proven_equal(right, &self.spec)? {
             return Err(invalid(
                 "final source-target point is neither old nor right target",
             ));
@@ -718,9 +773,9 @@ impl Plan {
         // still select the new epoch's already proved left mode. An isolated
         // endpoint value remains rejected; no source extrapolation is used.
         if i == self.modes.len()
-            && !point.proven_equal(old, &self.spec.work)?
+            && !point.proven_equal(old, &self.spec)?
             && !match self.modes.last() {
-                Some(left) => point.proven_equal(left, &self.spec.work)?,
+                Some(left) => point.proven_equal(left, &self.spec)?,
                 None => false,
             }
         {
@@ -744,5 +799,311 @@ impl Plan {
                 .iter()
                 .zip(&other.modes)
                 .all(|(a, b)| a.same_certificate(b))
+    }
+}
+
+#[cfg(test)]
+mod proof_cache_tests {
+    use super::*;
+    use crate::ir::{Term, TransientInputs, SCHEMA_VERSION};
+    use serde_json::json;
+
+    fn source() -> Expression {
+        Expression::Affine {
+            constant: 0.,
+            terms: vec![Term {
+                node: 1,
+                coefficient: 1.,
+            }],
+        }
+    }
+    fn selected(yes: Expression, no: Expression) -> Expression {
+        serde_json::from_value(json!({
+            "op":"select", "relation":"gt", "left":source(), "right":constant(0.5),
+            "then_value":yes, "else_value":no,
+            "origin":{"source":"proof.va","line":1,"column":1,"instance":"M"}
+        }))
+        .unwrap()
+    }
+    fn spec(expression: Expression, values: [f64; 2], work: Work) -> Arc<Spec> {
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":SCHEMA_VERSION, "nodes":["0","u"], "contributions":[],
+            "states":[{"instance":"M","name":"q","kind":"real","initial":2}]
+        }))
+        .unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![vec![[0., values[0]], [1., values[1]]]],
+                output_times: vec![0., 1.],
+                stop: 1.,
+                max_step: 1.,
+            },
+            1,
+        )
+        .unwrap();
+        Spec::new(&expression, &program, &trajectory, &["u".into()], "M", work)
+            .unwrap()
+            .unwrap()
+    }
+    fn used(work: &Work) -> u64 {
+        work.0.work.load(Ordering::Relaxed)
+    }
+
+    #[test]
+    fn successful_leaf_and_equality_reuse_recomputes_current_target() {
+        let work = Work::default();
+        let spec = spec(
+            selected(Expression::State { state: 0 }, constant(2.)),
+            [0., 1.],
+            work.clone(),
+        );
+        let states = [I::point(2.)];
+        let late = Cut::point(1.).unwrap();
+        spec.sign(&source(), &constant(0.5), &states, &late)
+            .unwrap();
+        let literal = spec.target(&states, &Cut::point(0.).unwrap()).unwrap();
+        let before = used(&work);
+        let held = spec.target(&states, &late).unwrap();
+        assert_eq!(literal.proof, held.proof);
+        assert_eq!(literal.value, held.value);
+        assert_ne!(literal.coefficients, held.coefficients);
+        assert!(
+            used(&work) - before < 200_000,
+            "same closed leaf must reuse only its exact proof"
+        );
+        assert!(spec.equal_targets(&literal, &held).unwrap());
+        let before = used(&work);
+        assert!(spec.equal_targets(&literal, &held).unwrap());
+        assert_eq!(
+            used(&work),
+            before,
+            "successful equality should not reserve exact arithmetic again"
+        );
+        let changed = spec.target(&[I::point(3.)], &late).unwrap();
+        assert_eq!(changed.value, 3.);
+        assert!(changed.bounds.lo <= 3. && 3. <= changed.bounds.hi);
+        assert!(!spec.equal_targets(&literal, &changed).unwrap());
+        for state in [
+            I { lo: 2., hi: 3. },
+            I::point(f64::INFINITY),
+            I::point(f64::NAN),
+        ] {
+            assert_eq!(
+                spec.target(&[state], &late).err().unwrap().kind,
+                "condition_precision"
+            );
+        }
+    }
+
+    #[test]
+    fn nominally_equal_targets_keep_distinct_exact_expression_proofs() {
+        let exact_plus_one = Expression::Add {
+            left: Box::new(constant(1e16)),
+            right: Box::new(constant(1.)),
+        };
+        let spec = spec(
+            selected(exact_plus_one, constant(1e16)),
+            [0., 1.],
+            Work::default(),
+        );
+        let a = spec.target(&[I::ZERO], &Cut::point(0.).unwrap()).unwrap();
+        let b = spec.target(&[I::ZERO], &Cut::point(1.).unwrap()).unwrap();
+        assert_eq!(a.value, b.value);
+        assert!(!spec.equal_targets(&a, &b).unwrap());
+        assert!(!spec.equal_targets(&a, &b).unwrap());
+        assert!(!spec.equal_targets(&b, &a).unwrap());
+    }
+
+    #[test]
+    fn sign_reuse_rebinds_threshold_and_preserves_operand_order() {
+        let work = Work::default();
+        let spec = spec(selected(constant(1.), constant(0.)), [0., 1.], work.clone());
+        let cut = Cut::point(0.5).unwrap();
+        let held = Expression::State { state: 0 };
+        assert_eq!(
+            spec.sign(&source(), &held, &[I::point(0.5)], &cut).unwrap(),
+            0
+        );
+        let before = used(&work);
+        assert_eq!(
+            spec.sign(&source(), &held, &[I::point(0.5)], &cut).unwrap(),
+            0
+        );
+        assert!(
+            used(&work) - before < 200_000,
+            "same bound expressions and original root should hit"
+        );
+        let threshold = I::point(0.5_f64.next_up());
+        assert_eq!(spec.sign(&source(), &held, &[threshold], &cut).unwrap(), -1);
+        assert_eq!(spec.sign(&held, &source(), &[threshold], &cut).unwrap(), 1);
+        for states in [
+            vec![I {
+                lo: 0.5,
+                hi: threshold.hi,
+            }],
+            vec![I::point(f64::INFINITY)],
+            vec![I::point(f64::NAN)],
+            vec![],
+        ] {
+            assert_eq!(
+                spec.sign(&source(), &held, &states, &cut).unwrap_err().kind,
+                "condition_precision"
+            );
+        }
+    }
+
+    #[test]
+    fn sign_reuse_requires_exact_root_even_when_enclosures_match() {
+        let work = Work::default();
+        let spec = spec(selected(constant(1.), constant(0.)), [0., 3.], work.clone());
+        let enclosure = I {
+            lo: 1. / 6.,
+            hi: (1. / 6.0_f64).next_up(),
+        };
+        let root = RootTime::affine(
+            num_rational::BigRational::from_integer((-1).into()),
+            num_rational::BigRational::from_integer(6.into()),
+            enclosure,
+        )
+        .unwrap();
+        let later = root.shifted_fixed(2.0_f64.powi(-60), enclosure).unwrap();
+        assert_ne!(root, later);
+        let a = Cut::new(root).unwrap();
+        let b = Cut::new(later).unwrap();
+        assert_eq!(a.bounds, b.bounds);
+        assert_eq!(a.time.to_bits(), b.time.to_bits());
+        assert_eq!(
+            spec.sign(&source(), &constant(0.5), &[I::ZERO], &a)
+                .unwrap(),
+            0
+        );
+        assert_eq!(
+            spec.sign(&source(), &constant(0.5), &[I::ZERO], &b)
+                .unwrap(),
+            1
+        );
+        assert_eq!(
+            spec.sign(&constant(0.5), &source(), &[I::ZERO], &b)
+                .unwrap(),
+            -1
+        );
+        let before = used(&work);
+        assert_eq!(
+            spec.sign(&source(), &constant(0.5), &[I::ZERO], &a)
+                .unwrap(),
+            0
+        );
+        assert!(used(&work) - before < 200_000);
+    }
+
+    #[test]
+    fn exact_failures_are_retried_and_failed_reservations_are_not_refunded() {
+        let work = Work::default();
+        let spec = spec(selected(constant(1.), constant(0.)), [0., 1.], work.clone());
+        let cut = Cut::point(0.5).unwrap();
+        for _ in 0..2 {
+            let before = used(&work);
+            assert_eq!(
+                spec.sign(&source(), &constant(f64::INFINITY), &[I::ZERO], &cut)
+                    .unwrap_err()
+                    .kind,
+                "condition_precision"
+            );
+            assert_eq!(used(&work) - before, 200_002);
+        }
+        let before = used(&work);
+        assert_eq!(
+            work.debit(2, 1_000_000_000).unwrap_err().kind,
+            "step_budget"
+        );
+        assert_eq!(used(&work), before + 1_000_000_000);
+        assert_eq!(
+            spec.sign(&source(), &constant(0.), &[I::ZERO], &cut)
+                .unwrap_err()
+                .kind,
+            "step_budget"
+        );
+        assert_eq!(used(&work), before + 1_000_000_001);
+
+        let work = Work::limited([128, 8192, 200_100]);
+        let spec = self::spec(selected(constant(1.), constant(0.)), [0., 1.], work.clone());
+        spec.sign(&source(), &constant(0.), &[I::ZERO], &cut)
+            .unwrap();
+        let before = used(&work);
+        assert_eq!(
+            spec.sign(&source(), &constant(1.), &[I::ZERO], &cut)
+                .unwrap_err()
+                .kind,
+            "step_budget"
+        );
+        assert_eq!(
+            used(&work) - before,
+            200_002,
+            "failed exact reservation stays charged"
+        );
+    }
+
+    #[test]
+    fn cached_equality_still_refuses_after_shared_work_exhaustion() {
+        let work = Work::default();
+        let spec = spec(selected(constant(1.), constant(0.)), [0., 1.], work.clone());
+        let a = spec.target(&[I::ZERO], &Cut::point(0.).unwrap()).unwrap();
+        assert!(spec.equal_targets(&a, &a).unwrap());
+        let before = used(&work);
+        assert!(spec.equal_targets(&a, &a).unwrap());
+        assert_eq!(used(&work), before);
+        assert_eq!(
+            work.debit(2, 1_000_000_000).unwrap_err().kind,
+            "step_budget"
+        );
+        let exhausted = used(&work);
+        assert_eq!(spec.equal_targets(&a, &a).unwrap_err().kind, "step_budget");
+        assert_eq!(
+            used(&work),
+            exhausted,
+            "a hit must check sticky exhaustion without a new reservation"
+        );
+    }
+
+    #[test]
+    fn independent_specs_keep_trajectory_proofs_separate_and_share_work() {
+        let work = Work::default();
+        let expression = selected(constant(1.), constant(0.));
+        let positive = spec(expression.clone(), [1., 2.], work.clone());
+        let negative = spec(expression.clone(), [-1., -2.], work.clone());
+        let same_source_new_spec = spec(expression, [1., 2.], work.clone());
+        let cut = Cut::point(0.5).unwrap();
+        assert_eq!(
+            positive
+                .sign(&source(), &constant(0.), &[I::ZERO], &cut)
+                .unwrap(),
+            1
+        );
+        let before = used(&work);
+        assert_eq!(
+            negative
+                .sign(&source(), &constant(0.), &[I::ZERO], &cut)
+                .unwrap(),
+            -1
+        );
+        assert_eq!(used(&work) - before, 200_002);
+        let before = used(&work);
+        assert_eq!(
+            same_source_new_spec
+                .sign(&source(), &constant(0.), &[I::ZERO], &cut)
+                .unwrap(),
+            1
+        );
+        assert_eq!(used(&work) - before, 200_002);
+        let before = used(&work);
+        assert_eq!(
+            positive
+                .sign(&source(), &constant(0.), &[I::ZERO], &cut)
+                .unwrap(),
+            1
+        );
+        assert_eq!(used(&work) - before, 2);
     }
 }

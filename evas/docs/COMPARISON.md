@@ -1,65 +1,14 @@
 # 四后端支持对比
 
-[有界运行期事件控制](../../experiments/backends/support/event-runtime-control/README.md)新增隔离观察者的循环和数组支持；三个实际 Spectre 控制通过原 100 nV 门槛。下表固定行范围、旧版本身份和 Q 成绩保持不变；原 CDS/MUX 整题仍未完成。
-
-
-**这张表比较固定用例中的支持和精度。** 每个行名链接到[本版必测范围](../validation/paper/COVERAGE.md#summary-scopes)。
-同一行对四个后端使用相同用例和验收要求；后端可以使用不同配置达到要求。
+比较范围固定为每个行名所链接的模型与配置，四个后端使用相同用例和验收要求。
+结果来自不同版本，**不代表当前 main 的一次全量验收，也不覆盖所有合法写法**。
+前五节列固定 Q 用例；[第六节](#engineering-status)列工程请求的交付与缺口，两者分别验收。
 
 <a id="table-design"></a>
 
-- **✓ Q3**：本行全部必测用例完整通过 Q3。只通过 Q2 就写 **✓ Q2**；更严档位的失败仍保留。
-- **具体原因**：已测配置失败，或某项原验收要求尚未满足。边界、回调和观测限制不等于整个算子不支持。
-
-精度标记是验收上限，不是实测最大误差。1 V 刻度的 Q1、Q2、Q3 分别为 **10.1 µV、1.01 µV、101 nV**；
-1 mV 小信号 Q3 为 **1.1 nV**。时间、状态和关键边界也须通过，详见[评测标准](COMPARISON-METHODOLOGY.md)。
-只检查窗外、只有正确数字或只有运行成功，都不能打勾。
-
-**本表尚未覆盖全部工程写法。** 静态下标数组通过，不代表跨事件下标已通过；电压表达式中的数学函数通过，也不代表事件块中的统计计算已通过。新增需求与独立必测用例见[覆盖缺口与修复交付](../validation/paper/COVERAGE.md#engineering-gap-audit)。旧行范围和成绩保留，扩展项须另行验收。
-
-[#167](https://github.com/BucketSran/vaEVAS/pull/167) 已合入 main，补齐两类 `ddt`、采样后积分和局部 strobe。
-本轮用独立新版 checker 重新验收旧窗口冲突的两个模型，三格取得 **✓ Q3**。
-时间判断采用原有限导出分辨率，严格“没有提前触发”仍单列为未决；详见[新版结果](../../experiments/backends/support/README.md#root-window-v3)。
-
-四条旧整链已在 main `7344e4db` 取得 EVAS 三档36次完整验收，全部达到 Q3。
-本轮定时积分、采样边沿链、滤波后采样和中断边沿积分的 Spectre Q3，属于单独加入只读回调记录的源码；
-原源码缺回调取证，未取得新 Q 资格。近邻整链保留原1 µV成绩，新 Q 尚缺边界观察及配置格式校准。
-EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候选的实际运行。
-原预算和历史成绩继续保留，实际对照见[本轮记录](../../experiments/backends/support/README.md#legacy-chain-q)。
-
-0.17.0 / IR21 开发代码增加顺序初始化与默认零状态、可证明整型的局部运算、
-受限状态谓词、事件输出记录、合成时间驱动、有理连续流、受限 exp forcing 及保持物理状态的条件选路，
-并将动态 [`$bound_step`](math/events.md#bound-step) 传入已支持的非线性内部积分段。
-最终候选已取得[七项基础和三项初态的实际有限对照](../../experiments/backends/support/r01-root-windows/final-controls/README.md)，
-它们使用独立控制预算，R01 工程复验也使用原任务判据，均不属于下表固定 Q 用例，
-因此不改下表历史成绩。一般数学函数与非线性电压代数耦合及更广组合仍有缺口。
-
-[事件数组和独立测量控制](../../experiments/backends/support/r01-timing-observers/README.md)
-补充受限动态下标、参数裁剪和测量器读取物理输出的实际证据，使用独立 1e-9 V 预算。
-它们不替换本表必测集。后续[连续状态与测量组合修复](../../experiments/backends/support/r01-causal-timing/README.md)已使原 `timing-0` 在原 120 秒内完成 9001 行，并通过原 checker 与 2219 项保护检查。与实际 Spectre 的原有限配对最大电压差 19.90 µV，仍采用原边沿窗口与插值，不能记作本表的新 Q 成绩或全时域一致。其他原任务的结果分别保留。
-
-0.18.0 / IR22 的[隔离事件统计修复](../../experiments/backends/support/README.md#event-statistics)使三条原 gain 请求通过原 checker及实际 Spectre有限配对；四项手算控制另行通过。它补出 [L3-13 的开发证据](../validation/paper/COVERAGE.md#event-statistics-development)，尚未完成四后端共同 Q 验收，本表旧行和成绩保持。
-
-[同步读出修复](../../experiments/backends/support/r01-sync-readout/README.md)使原物理请求在原时限内完整执行；严格阈值导致的整题失败仍保留。普通和中断边沿后的动态输入滤波也已完成有限点对照；外部取证校准未齐，不增加本表Q成绩。
-
-[固定 timer 的隐式 DAE 续算](../../experiments/backends/implicit-event-restart/README.md)已通过同源实际 Spectre 九点对照，最大配对差 62.41 nV，低于原 100 nV 门槛。范围限于保持物理状态的 forcing 参数切换；一般事件窗与代数约束跳参仍拒绝，不新增下表 Q 成绩。
-
-固定零时刻 timer 的 transition 初态修正已取得[三模型实际有限配对](../../experiments/backends/support/README.md#initial-transition-seed)。
-该修复使用原 `1e-8 V` 预算；第四反馈模型仅作诊断，不新增本表 Q 成绩，也不覆盖一般历史反馈。
-[跨实例初始电压](../../experiments/backends/support/initial-node-dependencies/README.md)另有三例实际对照通过原 1 nV 门槛，尚不增加固定行的 Q 成绩。
-
-[空循环声明与当前 timer 修复](../../experiments/backends/support/retained-safety/README.md)只消除错误接受。
-新生成当前 timer 仍需同刻闭包，本轮没有改动下面各行的历史精度结论。
-
-结果来自不同版本，**不是当前 main 的一次全量验收**。
-五个数学函数的修复见[更新记录](../../experiments/backends/support/README.md#q3-closure)，
-原11格的补证见[后续核对](../../experiments/backends/support/README.md#evidence-followup)，
-旧表保存在[更新前的固定版本](https://github.com/BucketSran/vaEVAS/blob/8f7d911fe42f0692774ba388846d5dbf50f1bc34/evas/docs/COMPARISON.md)。
-两类导数及八张组合卡的实际构建源为 `e2d8cbf8`，实现已随 #167 合入 `e028f96d`。
-新版窗口的18次运行复用经逐文件核对的同一内核；其他行保留各自固定身份。
-五个数学函数使用 IR19 构建，源码与内核身份由收据固定；事件和相位部分复用
-[已合入的 #162](https://github.com/BucketSran/vaEVAS/pull/162) 的早期候选 `519d5e28` 的实际运行，其他身份见
-[范围与来源](../validation/paper/COVERAGE.md#summary-scopes)。通过限于所列模型、观察、配置和执行版本，不外推到所有合法写法或全时域。
+**✓ Qn** 表示本行全部必测用例的数值、时间、状态和关键边界均通过该档；其他格写出失败原因或未完成的验收。
+Q 是验收上限：1 V 刻度的 Q1 / Q2 / Q3 为 10.1 µV / 1.01 µV / 101 nV，1 mV 刻度的 Q3 为 1.1 nV。
+判据见[评测标准](COMPARISON-METHODOLOGY.md)，执行版本与表外能力见[来源和补充证据](development/COMPARISON.md#table-evidence)。
 
 <a id="支持矩阵"></a><a id="precision-binding-results"></a><a id="新精度测试"></a><a id="precision-breadth-results"></a>
 
@@ -145,7 +94,26 @@ EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候
 | [近邻定时事件：原整链](../validation/paper/COVERAGE.md#scope-l5-04-chain) | ✓ 1 µV | 初始化失败 | ✓ 1µV | ✓ Q3 |
 | [近邻定时事件：相邻浮点采样积分](../validation/paper/COVERAGE.md#scope-l5-04-adjacent) | 回调同刻 | 初始化失败 | 回调同刻 | ✓ Q3 |
 
-保持量条件嵌在 `transition` 目标算术中的情况已有[独立有限验收](../../experiments/backends/support/held-transition-targets/README.md)。这项补充保留原目标算式和隐藏反馈拒绝，不给完整 MUX 或历史电压谓词新增 Q 等级。
+表外需求和待验收项见[覆盖缺口](../validation/paper/COVERAGE.md#engineering-gap-audit)；原失败与旧成绩见[历史批次索引](../validation/paper/COVERAGE.md#先找到各批的原始成绩)。
 
-未定稿的动态 timer、ADC、同刻事件、内部反馈事件与隐式复位，列在[扩展计划](../validation/paper/COVERAGE.md#exploratory-cases)，不作为当前支持结论。
-[配套清单](../validation/paper/COVERAGE.md#pending-evidence)说明原11格的核对结果与仍未完成的验收；[累计清单](../validation/paper/COVERAGE.md#先找到各批的原始成绩)保留全部历史用例、失败和原成绩。
+<a id="engineering-status"></a>
+
+## 6. 工程请求与扩展范围
+
+下表按已有交付和原请求证据分类，记录截至 `main@8c3ef9ee` 已核对的范围，没有重跑全部 R01 请求。
+工程请求采用各自的原判据；通过不自动增加上方的 Q 等级。独立控制通过，也不代表完整工程请求通过。
+
+| 工程范围与证据 | 已交付或仍缺什么 | 对应 issue |
+| --- | --- | --- |
+| [R01 gain 统计](../../experiments/backends/support/README.md#event-statistics) | 已交付。三条原请求通过原 checker 和实际 Spectre 有限配对；共同 Q 验收未完成。 | [#65](https://github.com/BucketSran/vaEVAS/issues/65)、[#96](https://github.com/BucketSran/vaEVAS/issues/96) |
+| [R01 timing 连续状态与测量](../../experiments/backends/support/r01-causal-timing/README.md) | 原 `timing-0` 已在原时限内完成并通过 checker；配对仍采用原边沿窗口和插值，不增加 Q 等级。 | [#66](https://github.com/BucketSran/vaEVAS/issues/66)、[#96](https://github.com/BucketSran/vaEVAS/issues/96) |
+| [R01 CDS 双采样](../../experiments/backends/support/event-runtime-control/README.md#original-cds) | 本次修复的三条原请求均在原预算内完成，通过原 checker 与实际 Spectre 有限配对；执行绑定固定 v9，不增加 Q 等级。修复重复计算、根窗口和定时来源传递，保留原 `cds-0` 超时及参考告警。 | [#65](https://github.com/BucketSran/vaEVAS/issues/65)、[#119](https://github.com/BucketSran/vaEVAS/issues/119) |
+| [R01 MUX 共享采样](../../experiments/backends/support/held-transition-targets/README.md) | 原三条均被事件条件经电压网络读取状态的检查拒绝，原 checker 未运行。仍缺历史采样与根处条件的认证；初态和部分保持量目标表达式已交付。本轮先修 CDS。 | [#65](https://github.com/BucketSran/vaEVAS/issues/65)、[#66](https://github.com/BucketSran/vaEVAS/issues/66) |
+| [R01 同步读出](../../experiments/backends/support/r01-sync-readout/README.md) | 已交付实现能完整执行两条原请求，但原 checker 仍为 0/2，严格阈值下的读出差异保留；未合并候选另行验收。 | [#119](https://github.com/BucketSran/vaEVAS/issues/119)、[#96](https://github.com/BucketSran/vaEVAS/issues/96) |
+| [源误差与动态组合](../../experiments/backends/support/scs-source-uncertainty/README.md) | 非零源误差已能随代数关系和固定 timer 采样传播；与连续算子、cross 或状态 timer 的组合仍明确拒绝。 | [#96](https://github.com/BucketSran/vaEVAS/issues/96)、[#119](https://github.com/BucketSran/vaEVAS/issues/119) |
+| [隐式动态与事件](../../experiments/backends/implicit-event-restart/README.md) | 已交付有限动态步长和精确固定 timer 续算；一般事件窗、复位及代数约束跳参仍不在已验收范围。 | [#66](https://github.com/BucketSran/vaEVAS/issues/66) |
+| 双向自换向 cross | 原问题尚未完成整体验收，候选中的超时和紧根预算失败继续保留。 | [#70](https://github.com/BucketSran/vaEVAS/issues/70)、[#119](https://github.com/BucketSran/vaEVAS/issues/119) |
+
+v4 的 12 个代表家族已完成首阻塞探测，范围和分类见[探测边界](development/COMPARISON.md#v4-代表家族探测的边界)。这不是全库评分。
+
+原请求、独立控制和共同 Q 结论的更新条件见[每项修复与比较的验收](../validation/paper/COVERAGE.md#每项修复与每行比较一起验收)。

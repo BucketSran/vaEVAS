@@ -815,14 +815,16 @@ impl EventModel {
             .iter()
             .zip(&self.program.contributions)
             .any(|(a, b)| a.rhs != b.rhs);
-        // An unchanged original graph may retain operator outputs as live
-        // forcing columns. Its map depends on Selection, not their samples.
+        // Linear operator outputs remain live forcing. A sampled coefficient
+        // may reuse its map only with the same full interval endpoint bits.
         let cached = self
             .certificate
             .borrow()
             .as_ref()
-            .is_some_and(|(path, _)| path == selection);
-        if resolved || !(cached || Bounds::sample_independent(self, selection)?) {
+            .is_some_and(|(path, bounds)| {
+                path == selection && bounds.matches_operator_bindings(operators)
+            });
+        if resolved {
             let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
             let result =
                 bounds.check_observation(self, inputs, before, operators, voltages, states)?;
@@ -841,8 +843,13 @@ impl EventModel {
             return Ok(result);
         }
         let mut cache = self.certificate.borrow_mut();
-        if !cache.as_ref().is_some_and(|(path, _)| path == selection) {
-            *cache = Some((selection.clone(), Bounds::new(self, selection)?));
+        if !cached {
+            let bounds = if Bounds::sample_independent(self, selection)? {
+                Bounds::new(self, selection)?
+            } else {
+                Bounds::for_program_with_operators(self, selection, &selected, operators)?
+            };
+            *cache = Some((selection.clone(), bounds));
         } else {
             crate::diagnostics::counter("certificate_cache_hits", 1);
         }
@@ -892,14 +899,16 @@ impl EventModel {
             .iter()
             .zip(&self.program.contributions)
             .any(|(a, b)| a.rhs != b.rhs);
-        // An unchanged original graph may retain operator outputs as live
-        // forcing columns. Its map depends on Selection, not their samples.
+        // Linear operator outputs remain live forcing. A sampled coefficient
+        // may reuse its map only with the same full interval endpoint bits.
         let cached = self
             .certificate
             .borrow()
             .as_ref()
-            .is_some_and(|(path, _)| path == selection);
-        if resolved || !(cached || Bounds::sample_independent(self, selection)?) {
+            .is_some_and(|(path, bounds)| {
+                path == selection && bounds.matches_operator_bindings(operators)
+            });
+        if resolved {
             let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
             let result = bounds.check_states(self, inputs, before, operators, voltages, states)?;
             let replay = self.selected_program_at_roots(&result, inputs, fired)?;
@@ -917,8 +926,13 @@ impl EventModel {
             return Ok(result);
         }
         let mut cache = self.certificate.borrow_mut();
-        if !cache.as_ref().is_some_and(|(path, _)| path == selection) {
-            *cache = Some((selection.clone(), Bounds::new(self, selection)?));
+        if !cached {
+            let bounds = if Bounds::sample_independent(self, selection)? {
+                Bounds::new(self, selection)?
+            } else {
+                Bounds::for_program_with_operators(self, selection, &selected, operators)?
+            };
+            *cache = Some((selection.clone(), bounds));
         } else {
             crate::diagnostics::counter("certificate_cache_hits", 1);
         }

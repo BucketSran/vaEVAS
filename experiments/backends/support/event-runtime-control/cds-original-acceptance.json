@@ -1,0 +1,2031 @@
+{
+  "scope": "R01 original CDS acceptance, fixed candidate-v9; no MUX implementation or new Q grade",
+  "date": "2026-10-17",
+  "availability": {
+    "this_summary": "repository-contained",
+    "source": "The tracked implementation and tests are included in this change. The full build-source hashes below identify the exact executed source bytes.",
+    "original_requests_and_checkers": "local-only",
+    "complete_evas_responses_and_spectre_raw": "local-only",
+    "review_reports_and_canonical_trail": "local-only",
+    "public_download": null
+  },
+  "build": {
+    "base": "8c3ef9eecda2e202beea6e80e720b0639bff0407",
+    "dirty_at_execution": true,
+    "kernel_sha256": "a30930475dbba4cb6cd9d15c7c9c6d8378c7fa60199f9804812431c85e7abfbd",
+    "kernel_version": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 23,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.19.0"
+    },
+    "build_command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release",
+      "--manifest-path",
+      "evas/rust_core/Cargo.toml"
+    ],
+    "source_manifest": {
+      "evas/pyproject.toml": "31f84287c6257f2f424e850df9451aac643aea94636eb4de4829785ea9b1de9e",
+      "evas/rust_core/Cargo.lock": "a60ef97b215300e2665d2e9864d6bbbdb7b2bce468873f8c3cdba0fec858f5c5",
+      "evas/rust_core/Cargo.toml": "750f906a7ae10f2c6e0ae9cbee5787c1c286d66e1aad88a285bd9684c7ba1ad5",
+      "evas/rust_core/benches/static_solver.rs": "cb7e8f046aa8cde417b94e6e52bf3cd59c714dba19de48ab2c0050a70cefaaa8",
+      "evas/rust_core/benches/transient_solver.rs": "07c249e600cfcbe4b2eae5f6398f3bf65c689f63846ef11c7cbbaec2737c2520",
+      "evas/rust_core/fuzz/.gitignore": "cb87e9b76f0127d713e4ef0679f207de6cf74a4b6d116e9a5a66ac88eaf19c8f",
+      "evas/rust_core/fuzz/Cargo.lock": "73066eeca7edc897b74437b0270c407eb1b0f5b1182b4246cb46be6a865ea42b",
+      "evas/rust_core/fuzz/Cargo.toml": "d21f7d8969051ba0c5dbdfaf7bfb510c6a3d8e073a7947b413a0077a7c775e12",
+      "evas/rust_core/fuzz/README.md": "116892fb8a1c638bb709f37726b039b67a1ba41e2254c685af02b2790ff8fc80",
+      "evas/rust_core/fuzz/fuzz_targets/parse_request.rs": "ab9d99942c6e7c7079ad3d78646ea2657277997b67686208d9398cf5548987d5",
+      "evas/rust_core/fuzz/fuzz_targets/run.rs": "6dba9b211200fce17a36129ecbebf4332b50964abd63b829893a8940d0ac33bb",
+      "evas/rust_core/fuzz/seeds/static.json": "d8564b414f2f2cf197451d642184a9c105d315e236c5c026bd0fe401ec9abb9f",
+      "evas/rust_core/fuzz/seeds/static.va": "9d7669e2edc6556f376d3757a4c51755fafae8bb37be79481568e97de4ee427d",
+      "evas/rust_core/ir/Cargo.toml": "ee626ead9fe9620b9b48c956bef41d283578683d25bc879b20f25730adf325f0",
+      "evas/rust_core/ir/README.md": "fd759dcf9182456001306a0daa5fd08a3226c547fcbfc5b99bb3f086b6e39eab",
+      "evas/rust_core/ir/src/lib.rs": "efe969e68d06a8ffed50f5ac8deaa968a009ac036e0603a64a290a47d25c320a",
+      "evas/rust_core/ir/tests/transport.rs": "4199c2369bf3ed486612d8bbe1fbc46ee64e75409eb834abc6e15cfa74078cf1",
+      "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+      "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+      "evas/rust_core/src/affine_bounds.rs": "074445000a0dc47246b9f7bcd4d299062668fc5d7772e958e95587f2e7b6edee",
+      "evas/rust_core/src/analog.rs": "1505d79dc24df924c7544da0a0fdfa9a6280bffb67f5ee191dad0ff2f13ad484",
+      "evas/rust_core/src/assembly.rs": "beab047ea57b6510e00e897b1caf02e437f3a30bd1567f92bc39c0a7e40b62f9",
+      "evas/rust_core/src/batch.rs": "ba227471ba388b4efd361e9a523352b7626bb80cd51141a00ca2b1c97eed2888",
+      "evas/rust_core/src/continuous.rs": "517d6574c6594857f8bc77bf829c714afe9a6f2bb5bc693dabf997ec432112fe",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "90d3fd2b904f5aece03b56fae587776d281cfc0e24348272e15597fc145bc46f",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_readout.rs": "637028c3dd24d06665ea5849d3e90666a3e41585b96cffb692910b041e135e84",
+      "evas/rust_core/src/continuous_runtime.rs": "6df2d30f8f67cf9039425b820abc614232e2a7ed02c973b99f18d6899f570403",
+      "evas/rust_core/src/continuous_select.rs": "8d6ac91199f325c78382da900debdf12504db7dd488869104b1a246a16cac111",
+      "evas/rust_core/src/continuous_select_cache_tests.rs": "2e9fe77ecd33b3d1ddcf5c1ab6834e5d9ea8abff9900db9f41bc1e5f2a2f0423",
+      "evas/rust_core/src/continuous_select_candidates.rs": "88017ad10779a666d82873230413ffbebaf95d13610c7c7795f100f2e1f1635b",
+      "evas/rust_core/src/continuous_step_simplify.rs": "70094c4ce51e296a92523cbe7bc7f83318f10798fd8aa81b105ce83bd413e0de",
+      "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+      "evas/rust_core/src/direct_derivative.rs": "606fa88155ae14278fef573f9c9c9615206ec58bd150ffaf12fb9577f0f56940",
+      "evas/rust_core/src/display.rs": "041ff1a89745233cd060578c91f34eb5c9979223f42535af1dca401180b94075",
+      "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+      "evas/rust_core/src/event_accuracy.rs": "9401f2794f1ddc20250a2ea7f5ec8a3d158df40533b12671c620daa81e4e7b6d",
+      "evas/rust_core/src/event_conditions.rs": "ca98eeb18ad9165ce1d1264079e7371e6d118327dfdde473252d43a1da4307cd",
+      "evas/rust_core/src/event_control.rs": "37e728c2ab5493f378ae6653744605c44d78a7ce806df3fd6b21497d4274b098",
+      "evas/rust_core/src/event_numeric.rs": "7c48b8670ce0c205a92c04e54be845ba26e59ae8424e9e75638a5be4a0ba2da9",
+      "evas/rust_core/src/event_time_provenance.rs": "18a9a6dbbcde012e1b55171e47a98fe77772708e50fc75f3d6da9ea15c49e711",
+      "evas/rust_core/src/events.rs": "ce338f7c89d02d1f8c7048ecfa041526de46546e72df9ee8e8a093ea8a1c379e",
+      "evas/rust_core/src/events_certificate_cache_tests.rs": "14ab51d88a83a18d82a0534e88978539292f2cc434c362a51c6d5358a957485f",
+      "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+      "evas/rust_core/src/exact_source.rs": "2062784cc9665d3e9716ed89ecef7924ca401a62829c210f6914058a84ea48f9",
+      "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+      "evas/rust_core/src/expression.rs": "81c1eb4bd3fc122006d7feb9841f1ad19f2e71a296ddad1fef45dfa8c5d41f4a",
+      "evas/rust_core/src/filter_budget.rs": "94807ee47a346648b5eb4d7d4af03366c0f1f1b79a0e67f636fc279c90b67656",
+      "evas/rust_core/src/guard_trajectory.rs": "464d4e799464179c4332ec4cd74a2dd63fd88dbd013281665035a622618a60a3",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "acdbdc83beef8cae53188c6335d7b99f9fe56ebb75d5318bbbd7a1f8e92fd2a1",
+      "evas/rust_core/src/implicit_dynamics.rs": "b30206f4dde77fc2220a942c896e8a5d5673a6f8efdd7f49f45db717597469a8",
+      "evas/rust_core/src/implicit_event_restart.rs": "d8b45dc327f0675ee2463c5047364716a4b692812e21ca44afca4b6d2bad5bd0",
+      "evas/rust_core/src/initial_state_invariance.rs": "74f5c1c625dbf19e4d653e85c649a668f590421018549c29a9cca83e62463438",
+      "evas/rust_core/src/initialization.rs": "209ad8ccdda14057fa2aa7b4d744c27ebb9d9df14d95141025c34dcfe23d2fc9",
+      "evas/rust_core/src/initialization_nodes.rs": "61aee737fbcf29bd236649d4532b7364503cf59bb1a56ed8ea1614a8de25d6e4",
+      "evas/rust_core/src/input_clamp.rs": "5c3010afc080801aabd1bbe6b839dac21c714d8f49eaf0ad4aee6fa413f1ac59",
+      "evas/rust_core/src/interval.rs": "75b04de91716ce2bbb523dc3c703036081bec4909f154a277b973bbccf9ef785",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/interval_zero_product_tests.rs": "882420755b22f048f6cc88b643ce2a07eb2ec44fa4510193c731b793b9c77afd",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "8f211b465b19d062033392ef6defbc1bdc66b34c7be9172ab3c41e32a9e7b3d1",
+      "evas/rust_core/src/lib.rs": "7a90526151df30205e50228114a31a9ca974f83bca9de4b6f03edc7bbdbfb98c",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+      "evas/rust_core/src/math_functions.rs": "a57b876344f203b03d3dc0a2bb8f49bce673abd35619f55552c0a0d29b7f13a0",
+      "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "b9c44deb78ec185e6209754736454a761cdd69f92114c67a04bed3b4e4796647",
+      "evas/rust_core/src/nonlinear_root_window.rs": "7341efc680fc3f1a247803651875bdc115791426f587acdcb8b10d9386e302dd",
+      "evas/rust_core/src/nonlinear_value_memo_tests.rs": "0b065a2b0bc8694ac0de2aa232b6dfc261ffaa68c3fcf29a2c7b0fe255d57679",
+      "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+      "evas/rust_core/src/operators.rs": "51c9d57e54c25d4149f7188a257c7e391b9537d883785928b96f9ba5ba622db6",
+      "evas/rust_core/src/passive_events.rs": "1843badd4a4f4c6ef63e79df58d2d6fa72634b116d56d1d25f7147f819574339",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/portability.rs": "c101c1075de370d3622ad270bb0ca7bdf73c6ba2b3ed6ddd940a45a3c8134cb4",
+      "evas/rust_core/src/pwl.rs": "41aca761db7584a4f0c2ecfe71086f5f56820194ec95f2f59a023f95dd79dd0e",
+      "evas/rust_core/src/reset_dependencies.rs": "3f894fe282b3e22b7d07e7022a9e9aa9e6e06dc641591bdae25c0a7acf26f51f",
+      "evas/rust_core/src/schedule.rs": "5adbab34f66db8761e056fca62638943f8d2d282374581767a34dbabf00fddb7",
+      "evas/rust_core/src/schedule_timer_boundary_tests.rs": "99b19e3b98cb05226b8548de2b621172fe069b7a1fbf36f7451c1ec493fb0c32",
+      "evas/rust_core/src/settlement.rs": "df2caef2ae17243231a6749504f60ab663545304ca8df4c9fed501277fcc3897",
+      "evas/rust_core/src/settlement_bounds.rs": "b597865d41187a586bda5c7b47297749c87e8e51c5867f250e29d972d3eb4686",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/slew_cascade.rs": "26b9cedd714dd24893d2076818d84c8905525da29c900c4df97bf9a7c40cc7b8",
+      "evas/rust_core/src/solver.rs": "71a06b3980a0dfdd5d0112edfa47de5113a68d16b5331ffc903bfbe3e7dbaa82",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "bc791c33b49c78259c0efa4b89203758830b6f90b461058d6a526ada5e1b2a94",
+      "evas/rust_core/src/step_bounds.rs": "7b34202c102b72aef2e19f2af1c28236cd6b3d4ba739cdbdf79e09b526331731",
+      "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+      "evas/rust_core/src/transient.rs": "c1bb20d96ba54aed9b972ed02660ae9dc87da5ad745330f217ee751880e8a97f",
+      "evas/rust_core/src/transient_condition_tests.rs": "1c7de7721c9129223cc219905cf6fc4f555a5abdc5da1e088b31e5cf65e7f5ed",
+      "evas/rust_core/src/transient_event_acceptance.rs": "75588a2d70e566cea6b719f18b49fef8057eac6fd1130eefc6b129a9c65d6b6a",
+      "evas/rust_core/src/transient_event_control_tests.rs": "2ee00602eb07c425e3839eea96d61542fb0862ce15b0e4eedc0b3aee64e26755",
+      "evas/rust_core/src/transient_history_calendar.rs": "a444c9555a0b63ea72d2ae82b5a309494825e90a321b29c44fc5a9bd649676cf",
+      "evas/rust_core/src/transient_idt_tests.rs": "d135bf706aac38f89190842caf11237cfbbcbf9801206881ea64a6c07237d4df",
+      "evas/rust_core/src/transient_initialization.rs": "57f21b3df0fa1b4f5a5c6f9e2a517c8f4b57f9a632e6d4f1c2235dac91449728",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "dd6f8d119302dc401bee3303b19fad1d8326a1b627f7c9b1b93b61b04884ee46",
+      "evas/rust_core/src/transient_passive_tests.rs": "d12e4a043c1f1fd5a9e5f2157fd38b957be15cf258de8ef0688621b0b29a5cf9",
+      "evas/rust_core/src/transient_root_refinement.rs": "b7d46ad7ad240d5a01e53d49e09d942387b0a39d43775f633d1abcd685419d31",
+      "evas/rust_core/src/transient_time_proof_tests.rs": "197b746e2c51a4d1986d410f7eb4eed5eb6b45c5453faa0c3bbfe789f7fba93b",
+      "evas/rust_core/src/transient_timer_boundary_tests.rs": "9572ac6e749ce4c62f4ad789a9d36407225a6dd306a029b89c8edf94293e8a37",
+      "evas/rust_core/src/transient_window_tests.rs": "1282d5467d8be686b7e9d31019f698b76d23ae09ccaaf46e6fd904c126730dcd",
+      "evas/rust_core/src/transition.rs": "ba7d697a5ddb0f4e6cf06d17afb6210aba014baeb9eb7d33f034421a6e511c5a",
+      "evas/rust_core/src/transition_filter.rs": "94b63ec1985c3eeb376216cd7501e1caef177411260d61519849b53035e982b4",
+      "evas/rust_core/src/transition_filter_input.rs": "845679115ff39c13cfb951ea93786070a4a142b57af2aa28480efcf5d46b5e42",
+      "evas/rust_core/src/transition_integral.rs": "e5e32e03013915527e80c646ceecfba86d65161dbfa4c6df6c1ad0f8282447ed",
+      "evas/rust_core/src/transition_source_plan.rs": "825fe86294a86bc93db12e88a317b1271c013215b00daa95d1b506d6d9228b6e",
+      "evas/rust_core/src/transition_source_state.rs": "dfce14e32661c0731bc7b31e61021714e0d91ed74b4395332f110145300af4b5",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "03467610db7d5563c99f2ffcf65c8f258175575fff18a38ca89dc5854439d651",
+      "evas/src/evas/array_elaboration.py": "922fd600f57b039b4f2e2b2242af03dd7830a464e0b31272260c82d11217d278",
+      "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+      "evas/src/evas/display.py": "c53802f643b2405e1f3da36596a8d4674aebf409635232ded3dc52f852f38b5c",
+      "evas/src/evas/elaboration.py": "a7a435e8d2361e7abf2b047b68210b1b25f656e24b40155fe969e9b4c593bc4a",
+      "evas/src/evas/errors.py": "4716787d137c2232e13d9b9b7231b407d5c87a38c755345c63bc9df91a45a158",
+      "evas/src/evas/event_index_domains.py": "c5558bdff652f64b5ddfdc72e32230f8a8330f9fa4798e1c09b7e95344bcaa39",
+      "evas/src/evas/event_specialization.py": "b33b4cb4f9f2997a6c25db6d15d918bb8ca9b362ec4cc9dd4e643c9c3b60b4d6",
+      "evas/src/evas/frontend.py": "310159f89cea075ff3f35a7d46e7177dfd8888eb8841528ddb924be45768854a",
+      "evas/src/evas/hierarchy.py": "ec8cd24105bfb646f28874dd40fe0923ae51ca5d22b45b1be0e6153347a7a10b",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/instance_compiler.py": "b7a8a38eeceb70e929848654e85d5a48dc6fef12fdc6bef17c8fc798f7154a12",
+      "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/src/evas/ir.py": "edc5c01ca80d4af613851854ae8b3d9d25b07780f66de1f6ca263b9529823437",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/src/evas/lowering.py": "ed41ea48b5175d5e39c702a51cd4a5f296de5c425f9fa708846c7864b19059b1",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/node_elaboration.py": "eaa06faf21bea22a2ef477605c2d4c2c167b5f99a2083f356733e08eae1a5cf5",
+      "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/src/evas/predicate_structure.py": "0f145fafcf1a926877f555207da48d54e6334e8ffbde1d9b385499ea74d11543",
+      "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+      "evas/src/evas/protocol.py": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+      "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+      "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+      "evas/src/evas/runtime.py": "6c13d7a03fb4d5f36d5c53e51621e37ccfc40ff28e9386218697c3a8b2b5bf12",
+      "evas/src/evas/scs.py": "79559dab2e3ad680a57b145405920c5605603b08d2d2bda554bfbd4f2765b52a",
+      "evas/src/evas/scs_sources.py": "ceb199cc2cda9fbcce5ae770c8b5eca6184cd29f186e921df922ce726d99feae",
+      "evas/src/evas/standard_headers.py": "efe0b2421d400ac723cfdf71c5d406cdef510dc89d3556ad999e2253600ec88e",
+      "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+      "evas/src/evas/syntax.py": "15b49e6573ef8fa52eaa9703e026044f484f6659350367b70c548ceb01498b09"
+    },
+    "source_manifest_receipt": {
+      "path": "runs/r01-main-20261016/cds-projection/v9/build-source-manifest.json",
+      "sha256": "7a248a22f63a473a13c341c872df928129d94089a10cdd4325b3998e428e578b",
+      "availability": "local-only"
+    },
+    "source_patch_receipt": {
+      "path": "runs/r01-main-20261016/cds-projection/v9/source.patch",
+      "sha256": "1ccc740d92bf99c9667801249fa853c66c05f4720e088d44b85f36ccfd85656b",
+      "availability": "local-only"
+    },
+    "identity_receipt": {
+      "path": "runs/r01-main-20261016/candidate-v9/identity.json",
+      "sha256": "989534d2c81cd1aacbcc78c0d4069009df551ad9706db9b8968b948b3b0f0842",
+      "availability": "local-only"
+    },
+    "changed_source_hashes": {
+      "evas/rust_core/src/event_accuracy.rs": "9401f2794f1ddc20250a2ea7f5ec8a3d158df40533b12671c620daa81e4e7b6d",
+      "evas/rust_core/src/event_time_provenance.rs": "18a9a6dbbcde012e1b55171e47a98fe77772708e50fc75f3d6da9ea15c49e711",
+      "evas/rust_core/src/events.rs": "ce338f7c89d02d1f8c7048ecfa041526de46546e72df9ee8e8a093ea8a1c379e",
+      "evas/rust_core/src/events_certificate_cache_tests.rs": "14ab51d88a83a18d82a0534e88978539292f2cc434c362a51c6d5358a957485f",
+      "evas/rust_core/src/settlement_bounds.rs": "b597865d41187a586bda5c7b47297749c87e8e51c5867f250e29d972d3eb4686",
+      "evas/rust_core/src/transition_source_plan.rs": "825fe86294a86bc93db12e88a317b1271c013215b00daa95d1b506d6d9228b6e",
+      "evas/rust_core/src/transition_source_state.rs": "dfce14e32661c0731bc7b31e61021714e0d91ed74b4395332f110145300af4b5",
+      "evas/rust_core/src/continuous.rs": "517d6574c6594857f8bc77bf829c714afe9a6f2bb5bc693dabf997ec432112fe",
+      "evas/rust_core/src/continuous_select.rs": "8d6ac91199f325c78382da900debdf12504db7dd488869104b1a246a16cac111",
+      "evas/rust_core/src/continuous_step_simplify.rs": "70094c4ce51e296a92523cbe7bc7f83318f10798fd8aa81b105ce83bd413e0de",
+      "evas/rust_core/src/implicit_dynamics.rs": "b30206f4dde77fc2220a942c896e8a5d5673a6f8efdd7f49f45db717597469a8",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "b9c44deb78ec185e6209754736454a761cdd69f92114c67a04bed3b4e4796647",
+      "evas/tests/test_live_transition_coefficient.py": "e0e949b365847487413578d74c780aba4bc5a3e73a44340f8d47384ac23db91f"
+    },
+    "source_reuse": "147 of 150 tracked build sources match the executed v9 bytes; one min/max enum-pattern lint rewrite is separately reviewed and tested, and two files exactly match rustfmt replay of their frozen v9 sources. Original request acceptance is reused, not rerun on new bytes.",
+    "delivery_source_differences": {
+      "evas/rust_core/src/event_accuracy.rs": {
+        "executed_sha256": "9401f2794f1ddc20250a2ea7f5ec8a3d158df40533b12671c620daa81e4e7b6d",
+        "delivery_sha256": "7947dbe53b21a9e3d44d3d48c7510a357e2d89a10cfd22cfcfe1f346703dd403"
+      },
+      "evas/rust_core/src/event_time_provenance.rs": {
+        "executed_sha256": "18a9a6dbbcde012e1b55171e47a98fe77772708e50fc75f3d6da9ea15c49e711",
+        "delivery_sha256": "13556213b2efa987ca5c5bd4df07145e820a1d8c78cfbc9d5581cc67e57ff6dd"
+      },
+      "evas/rust_core/src/events_certificate_cache_tests.rs": {
+        "executed_sha256": "14ab51d88a83a18d82a0534e88978539292f2cc434c362a51c6d5358a957485f",
+        "delivery_sha256": "6f0900e6e8149c49a230a527719e34ae2d95f28eaac09b9d423961bf222c7938"
+      }
+    }
+  },
+  "analysis": {
+    "receipt": {
+      "path": "runs/r01-main-20261016/candidate-v9-analysis/report.json",
+      "sha256": "2cbec26b25c97c83f4e88e776ab8c6a7bd7bd135bc1917fa71e334c6471f9793",
+      "availability": "local-only"
+    },
+    "adapter": {
+      "path": "runs/r01-main-20261016/check_original.py",
+      "sha256": "83af5c90d7e93da8cc9cd323b9bfe6a4abaa15ac2315430cb30a21bb4ca6999f",
+      "availability": "local-only"
+    },
+    "input_index": {
+      "path": "runs/r01-main-20261016/original-input-index.json",
+      "sha256": "b789797061fb6afce2c4bc3173c06ca604aa8174e96895af8543f87c88e4c06e",
+      "availability": "local-only"
+    },
+    "fixed_cases": 6,
+    "selected_cases": [
+      "cds-0",
+      "cds-1",
+      "cds-2"
+    ],
+    "summary": {
+      "fixed_cases": 6,
+      "executed_receipts": 3,
+      "completed_responses": 3,
+      "original_checker_passed": 3,
+      "finite_waveform_pair_passed": 3,
+      "finite_report_pair_passed": 3,
+      "uncompleted_cases": [
+        "mux-0",
+        "mux-1",
+        "mux-2"
+      ]
+    },
+    "adapter_exit_code": 1,
+    "adapter_exit_reason": "The adapter retains all six CDS/MUX slots and exits 1 unless all six pass. All three selected CDS pass; three unselected MUX slots are NOT_RUN.",
+    "calibration": {
+      "adapter_sha256": "83af5c90d7e93da8cc9cd323b9bfe6a4abaa15ac2315430cb30a21bb4ca6999f",
+      "input_index_sha256_before_calibration": "c63e3ffd47cb84544089441b70498d26723a97248c36c96de38826af0411ace9",
+      "fixed_cases": 6,
+      "positive_cases_passed": 6,
+      "negative_controls_rejected": 66,
+      "simulators_executed": 0,
+      "qualification": "Adapter calibration only. No new EVAS original-request passes or Q results."
+    }
+  },
+  "cases": [
+    {
+      "case": "cds-0",
+      "task_id": "r01-measure-cds",
+      "status": "COMPLETED",
+      "request": {
+        "files_sha256": {
+          "tb.scs": "2d1881dd9c785835a6891cdda7223e734f3fa5c0046904200167b3024ef4f6bd",
+          "dut.va": "f6c31c5aa1c0f61ae7a97cc81cecd042ead1ee5310233a82eda8f557f5d493eb",
+          "circuit.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+          "core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15"
+        },
+        "command_template": [
+          "python3",
+          "-B",
+          "-m",
+          "evas",
+          "simulate",
+          "<original/cds-0>/tb.scs",
+          "--kernel",
+          "<fixed-v9-kernel>",
+          "--timeout",
+          "120"
+        ],
+        "literal_receipt": {
+          "path": "runs/r01-main-20261016/candidate-v9/cds-0/receipt.json",
+          "sha256": "7c2a806aad7b3a46523f198148d62e335808ea7629ec292bdf8492a35f014377",
+          "availability": "local-only"
+        },
+        "kernel_timeout_s": 120,
+        "parent_timeout_s": 135,
+        "effective_controls": {
+          "vabstol": 1e-09,
+          "reltol": 1e-06,
+          "stop": 8.86e-07,
+          "max_step": 1e-10
+        },
+        "output_grid": "union of 0, k*maxstep below stop, stop, source corners within stop",
+        "warnings": [
+          {
+            "code": "ignored_scs_option",
+            "severity": "warning",
+            "option": "iabstol",
+            "requested_value": 1e-15,
+            "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+            "location": {
+              "source": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/inputs/cds-0/tb.scs",
+              "line": 3,
+              "column": 51
+            }
+          },
+          {
+            "code": "ignored_scs_option",
+            "severity": "warning",
+            "option": "errpreset",
+            "requested_value": "conservative",
+            "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+            "location": {
+              "source": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/inputs/cds-0/tb.scs",
+              "line": 18,
+              "column": 38
+            },
+            "effective_controls": {
+              "vabstol": 1e-09,
+              "reltol": 1e-06,
+              "max_step": 1e-10
+            }
+          }
+        ]
+      },
+      "execution": {
+        "exit_code": 0,
+        "cli_elapsed_s": 114.1048510420078,
+        "kernel_run_s": 104.388674208,
+        "diagnostics": {
+          "path": "runs/r01-main-20261016/candidate-v9/cds-0/diagnostics.json",
+          "sha256": "61a97bf96f6ca537b2961bc28ba164a8957cad49e6d9d3177820efd7f9cd84e1",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/r01-main-20261016/candidate-v9/cds-0/stdout.json",
+          "sha256": "83165e507b08be29268dee5f61ac079391c5f6e0d5f72ccaca01eecc6f8b6586"
+        },
+        "waveform_rows": 8875,
+        "display_records": 69,
+        "transported_display_log_sha256": "efaf97da753f6658faf2776d3d788f0cd4ad70173b990199ab6c24ec25de6831"
+      },
+      "original_checker": {
+        "passed": true,
+        "expected_records": {
+          "B": 12,
+          "H": 12,
+          "P": 6,
+          "R": 18,
+          "D": 9,
+          "X": 3,
+          "U": 1,
+          "W": 6,
+          "C": 2
+        },
+        "actual_records": {
+          "B": 12,
+          "H": 12,
+          "P": 6,
+          "R": 18,
+          "D": 9,
+          "X": 3,
+          "U": 1,
+          "W": 6,
+          "C": 2
+        },
+        "failures": [],
+        "protected_circuit": {
+          "passed": true,
+          "lanes": [
+            {
+              "passed": true,
+              "checks": 1404,
+              "max_abs_error": {
+                "held_ref": 1.361424143753176e-06,
+                "held_sig": 5.091462476070063e-06,
+                "vout": 2.219172623441068e-10,
+                "valid": 0
+              },
+              "failures": []
+            },
+            {
+              "passed": true,
+              "checks": 1404,
+              "max_abs_error": {
+                "held_ref": 1.8733203783760644e-06,
+                "held_sig": 4.909673890329813e-06,
+                "vout": 3.063975739792113e-10,
+                "valid": 0
+              },
+              "failures": []
+            }
+          ]
+        }
+      },
+      "original_checker_source_hashes": {
+        "adc_linearity.py": {
+          "expected_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "circuit_task.py": {
+          "expected_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "harbor_entry.py": {
+          "expected_sha256": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "r01_characterization.py": {
+          "expected_sha256": "c5b337a4cdd7b9c53334d20f5456e8b8165cf492976a81470e7d475738975eeb",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "r01_measurements.py": {
+          "expected_sha256": "5df8763a26265dd5b702758fc5b51b0813c8919f4473bef10641b76de38d857f",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "r01_sampling.py": {
+          "expected_sha256": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "v2_runtime.py": {
+          "expected_sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "verify.py": {
+          "expected_sha256": "df8d23f54fe3c17432e77d2e06f28f4d31bc1d73ac9f199164656706a41fdd56",
+          "archive_matches": true,
+          "frozen_matches": true
+        }
+      },
+      "spectre": {
+        "reuse": "Existing actual Spectre execution; identical four original input file hashes. No new Spectre execution.",
+        "version": "sub-version  21.1.0.509.isr12",
+        "invoked_spectre_file_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "tool_identity_receipt": {
+          "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/raw/TOOL_IDENTITY.json",
+          "sha256": "10cdb2e928951fa8ceeebfc1bcd92cc100e9c38b443bafdc12f7c8b1c6c6c4d7",
+          "bytes": 1027
+        },
+        "files": {
+          "wave": {
+            "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/raw/cds-0/psf/tran.tran.tran",
+            "sha256": "7d79705e3d120869fbd3235435a765053860a186955498f4eb1992f6d922945a",
+            "bytes": 6308226
+          },
+          "stdout": {
+            "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/raw/cds-0/stdout.log",
+            "sha256": "e4091662c528121e64dcbec36e4732e3b1d56b5e42946475b283660f6c617f77",
+            "bytes": 16979
+          },
+          "spectre_log": {
+            "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/raw/cds-0/spectre.log",
+            "sha256": "18f7093e2c0ea650fd885adf46b3954e6febab9e1082a8ab1fcca47d97832a3f",
+            "bytes": 18047
+          }
+        },
+        "effective_controls": {
+          "version": "\"21.1.0.509.isr12\"",
+          "date": "\"3:09:30 AM, Thur Oct 15, 2026\"",
+          "stop": "8.86000e-07",
+          "maxstep": "1.00000e-10",
+          "reltol": "1.00000e-07",
+          "abstol(V)": "1.00000e-09",
+          "abstol(I)": "1.00000e-15",
+          "errpreset": "\"conservative\"",
+          "method": "\"gear2only\""
+        },
+        "warnings": [
+          "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+        ],
+        "execution_completed_utc": "2026-10-14T19:09:31Z",
+        "input_hashes": {
+          "tb.scs": "2d1881dd9c785835a6891cdda7223e734f3fa5c0046904200167b3024ef4f6bd",
+          "dut.va": "f6c31c5aa1c0f61ae7a97cc81cecd042ead1ee5310233a82eda8f557f5d493eb",
+          "circuit.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+          "core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15"
+        },
+        "before_after_tool_match": true
+      },
+      "finite_waveform_pair": {
+        "passed": true,
+        "input_passed": true,
+        "output_passed": true,
+        "candidate_count": 501,
+        "excluded_count": 176,
+        "control_edge_window_s": 5e-09,
+        "max_abs_difference_V": {
+          "held_ref": 9.762309526206714e-06,
+          "held_ref_b": 1.1367090898328769e-05,
+          "held_sig": 2.204739753342011e-05,
+          "held_sig_b": 2.124959168248175e-05,
+          "rst": 0.0,
+          "track0": 0.0,
+          "track1": 0.0,
+          "ur0": 0.0,
+          "ur1": 0.0,
+          "us0": 2.0023660507462182e-08,
+          "us1": 2.0023660507462182e-08,
+          "valid": 0.0,
+          "valid_b": 0.0,
+          "vin": 2.0023660507462182e-08,
+          "vout": 1.3107672591106123e-05,
+          "vout_b": 1.2042673913859048e-05
+        },
+        "tolerances_V": {
+          "held_ref": 0.002,
+          "held_ref_b": 0.002,
+          "held_sig": 0.002,
+          "held_sig_b": 0.002,
+          "rst": 0.002,
+          "track0": 0.002,
+          "track1": 0.002,
+          "ur0": 0.002,
+          "ur1": 0.002,
+          "us0": 0.002,
+          "us1": 0.002,
+          "valid": 0.002,
+          "valid_b": 0.002,
+          "vin": 0.002,
+          "vout": 0.002,
+          "vout_b": 0.002
+        },
+        "method_source": {
+          "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/directed-closure/dynamics/check_original.py",
+          "sha256": "501fd4de541f219a4a9e3ac1878f3eba800912cd65c6b7b07fcafcaf6c2b6540"
+        },
+        "sampling_source": {
+          "path": "runs/r01-evas-compat-20261013/frozen/r01_sampling.py",
+          "sha256": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d"
+        },
+        "scope": "Finite observations with the original linear interpolation/endpoint convention; not a whole-trajectory bound.",
+        "endpoint_representation_clamps": {
+          "candidate": [
+            8.860000000000001e-07
+          ],
+          "spectre": []
+        },
+        "effective_observation_count": 325
+      },
+      "reported_record_pair": {
+        "passed": true,
+        "expected_records": {
+          "B": 12,
+          "H": 12,
+          "P": 6,
+          "R": 18,
+          "D": 9,
+          "X": 3,
+          "U": 1,
+          "W": 6,
+          "C": 2
+        },
+        "actual_records": {
+          "B": 12,
+          "H": 12,
+          "P": 6,
+          "R": 18,
+          "D": 9,
+          "X": 3,
+          "U": 1,
+          "W": 6,
+          "C": 2
+        },
+        "failures": [],
+        "tolerances": {
+          "B": [
+            0,
+            0,
+            2.5e-10,
+            0.002,
+            0.002
+          ],
+          "H": [
+            0,
+            0,
+            2.5e-10,
+            0.002,
+            0.002,
+            0.002,
+            0.002
+          ],
+          "P": [
+            0,
+            0,
+            2.5e-10,
+            2.5e-10,
+            2.5e-10,
+            2.5e-10
+          ],
+          "R": [
+            0,
+            0,
+            0,
+            2.5e-10,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            2.5e-10,
+            2.5e-10
+          ],
+          "D": [
+            0,
+            0,
+            0.002,
+            0.002,
+            0.02,
+            0
+          ],
+          "X": [
+            0,
+            0,
+            2.5e-10,
+            0
+          ],
+          "A": [
+            0,
+            0,
+            2.5e-10,
+            0
+          ],
+          "U": [
+            0,
+            2.5e-10
+          ],
+          "W": [
+            0,
+            0,
+            2.5e-10,
+            0.002,
+            0.002,
+            0.002,
+            0.002
+          ],
+          "C": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            2.5e-10,
+            2.5e-10,
+            0.002,
+            0.002,
+            0.002
+          ]
+        },
+        "method": "Frozen compare(actual reports, Spectre reports, original per-field tolerance arrays).",
+        "tolerance_source": {
+          "path": "runs/r01-evas-compat-20261013/frozen/r01_characterization.py",
+          "sha256": "c5b337a4cdd7b9c53334d20f5456e8b8165cf492976a81470e7d475738975eeb"
+        },
+        "scope": "Per-type record count/order and reported finite values, including reported cross/timer times. No hidden exact callback claim."
+      }
+    },
+    {
+      "case": "cds-1",
+      "task_id": "r01-measure-cds",
+      "status": "COMPLETED",
+      "request": {
+        "files_sha256": {
+          "tb.scs": "ba357a3cd44e21cb5f8957dcc590bec4ed393ce3881926bdbf086264befb47eb",
+          "dut.va": "f6c31c5aa1c0f61ae7a97cc81cecd042ead1ee5310233a82eda8f557f5d493eb",
+          "circuit.va": "5c48f67e2bd5451727ff43d0df37b85fcd69c3f6d8ad4c368addb8161a085479",
+          "core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15"
+        },
+        "command_template": [
+          "python3",
+          "-B",
+          "-m",
+          "evas",
+          "simulate",
+          "<original/cds-1>/tb.scs",
+          "--kernel",
+          "<fixed-v9-kernel>",
+          "--timeout",
+          "120"
+        ],
+        "literal_receipt": {
+          "path": "runs/r01-main-20261016/candidate-v9/cds-1/receipt.json",
+          "sha256": "1f6e1c6a9b4cea519e3134a30e6243e9dbe0fc81efcb627d4b7e353393f88116",
+          "availability": "local-only"
+        },
+        "kernel_timeout_s": 120,
+        "parent_timeout_s": 135,
+        "effective_controls": {
+          "vabstol": 1e-09,
+          "reltol": 1e-06,
+          "stop": 9.03e-07,
+          "max_step": 1e-10
+        },
+        "output_grid": "union of 0, k*maxstep below stop, stop, source corners within stop",
+        "warnings": [
+          {
+            "code": "ignored_scs_option",
+            "severity": "warning",
+            "option": "iabstol",
+            "requested_value": 1e-15,
+            "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+            "location": {
+              "source": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/inputs/cds-1/tb.scs",
+              "line": 3,
+              "column": 51
+            }
+          },
+          {
+            "code": "ignored_scs_option",
+            "severity": "warning",
+            "option": "errpreset",
+            "requested_value": "conservative",
+            "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+            "location": {
+              "source": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/inputs/cds-1/tb.scs",
+              "line": 18,
+              "column": 38
+            },
+            "effective_controls": {
+              "vabstol": 1e-09,
+              "reltol": 1e-06,
+              "max_step": 1e-10
+            }
+          }
+        ]
+      },
+      "execution": {
+        "exit_code": 0,
+        "cli_elapsed_s": 122.86391083299532,
+        "kernel_run_s": 113.213838375,
+        "diagnostics": {
+          "path": "runs/r01-main-20261016/candidate-v9/cds-1/diagnostics.json",
+          "sha256": "cf38f68daeb82dbeea4dbeab55d73f8642987c90947b5893aeeecf720d17988c",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/r01-main-20261016/candidate-v9/cds-1/stdout.json",
+          "sha256": "3bfa4407a0b8cb7730eebfa1740c34b0363a948a3e151240e567374f10794f2e"
+        },
+        "waveform_rows": 9054,
+        "display_records": 69,
+        "transported_display_log_sha256": "3603be407950a0244455599b399eed134be0ac4bd8868b8d489f22cc5655d832"
+      },
+      "original_checker": {
+        "passed": true,
+        "expected_records": {
+          "B": 12,
+          "H": 12,
+          "P": 6,
+          "R": 18,
+          "D": 9,
+          "X": 3,
+          "U": 1,
+          "W": 6,
+          "C": 2
+        },
+        "actual_records": {
+          "B": 12,
+          "H": 12,
+          "P": 6,
+          "R": 18,
+          "D": 9,
+          "X": 3,
+          "U": 1,
+          "W": 6,
+          "C": 2
+        },
+        "failures": [],
+        "protected_circuit": {
+          "passed": true,
+          "lanes": [
+            {
+              "passed": true,
+              "checks": 1440,
+              "max_abs_error": {
+                "held_ref": 9.16969023490033e-07,
+                "held_sig": 4.685817828087302e-06,
+                "vout": 2.1401325156489293e-10,
+                "valid": 0
+              },
+              "failures": []
+            },
+            {
+              "passed": true,
+              "checks": 1440,
+              "max_abs_error": {
+                "held_ref": 2.2573734853592597e-06,
+                "held_sig": 3.996806710149237e-06,
+                "vout": 4.1595438204922175e-10,
+                "valid": 0
+              },
+              "failures": []
+            }
+          ]
+        }
+      },
+      "original_checker_source_hashes": {
+        "adc_linearity.py": {
+          "expected_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "circuit_task.py": {
+          "expected_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "harbor_entry.py": {
+          "expected_sha256": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "r01_characterization.py": {
+          "expected_sha256": "c5b337a4cdd7b9c53334d20f5456e8b8165cf492976a81470e7d475738975eeb",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "r01_measurements.py": {
+          "expected_sha256": "5df8763a26265dd5b702758fc5b51b0813c8919f4473bef10641b76de38d857f",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "r01_sampling.py": {
+          "expected_sha256": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "v2_runtime.py": {
+          "expected_sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "verify.py": {
+          "expected_sha256": "df8d23f54fe3c17432e77d2e06f28f4d31bc1d73ac9f199164656706a41fdd56",
+          "archive_matches": true,
+          "frozen_matches": true
+        }
+      },
+      "spectre": {
+        "reuse": "Existing actual Spectre execution; identical four original input file hashes. No new Spectre execution.",
+        "version": "sub-version  21.1.0.509.isr12",
+        "invoked_spectre_file_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "tool_identity_receipt": {
+          "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/raw/TOOL_IDENTITY.json",
+          "sha256": "10cdb2e928951fa8ceeebfc1bcd92cc100e9c38b443bafdc12f7c8b1c6c6c4d7",
+          "bytes": 1027
+        },
+        "files": {
+          "wave": {
+            "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/raw/cds-1/psf/tran.tran.tran",
+            "sha256": "ef69813ef3d12511a17535ca4987f8a170526722fd70c38140e58c3d8ba293e9",
+            "bytes": 6400769
+          },
+          "stdout": {
+            "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/raw/cds-1/stdout.log",
+            "sha256": "14abe4baeb1f46c482d21e052a3f6205550f2df95e103b44b4ace2103b9264cc",
+            "bytes": 16794
+          },
+          "spectre_log": {
+            "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/raw/cds-1/spectre.log",
+            "sha256": "b8e05deb996043c0b6730e56785b55750ecc5dde31cc238315fa075dfc8a4567",
+            "bytes": 17880
+          }
+        },
+        "effective_controls": {
+          "version": "\"21.1.0.509.isr12\"",
+          "date": "\"3:10:21 AM, Thur Oct 15, 2026\"",
+          "stop": "9.03000e-07",
+          "maxstep": "1.00000e-10",
+          "reltol": "1.00000e-07",
+          "abstol(V)": "1.00000e-09",
+          "abstol(I)": "1.00000e-15",
+          "errpreset": "\"conservative\"",
+          "method": "\"gear2only\""
+        },
+        "warnings": [
+          "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+        ],
+        "execution_completed_utc": "2026-10-14T19:10:22Z",
+        "input_hashes": {
+          "tb.scs": "ba357a3cd44e21cb5f8957dcc590bec4ed393ce3881926bdbf086264befb47eb",
+          "dut.va": "f6c31c5aa1c0f61ae7a97cc81cecd042ead1ee5310233a82eda8f557f5d493eb",
+          "circuit.va": "5c48f67e2bd5451727ff43d0df37b85fcd69c3f6d8ad4c368addb8161a085479",
+          "core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15"
+        },
+        "before_after_tool_match": true
+      },
+      "finite_waveform_pair": {
+        "passed": true,
+        "input_passed": true,
+        "output_passed": true,
+        "candidate_count": 501,
+        "excluded_count": 167,
+        "control_edge_window_s": 5e-09,
+        "max_abs_difference_V": {
+          "held_ref": 9.833983516283062e-06,
+          "held_ref_b": 1.0351063511215841e-05,
+          "held_sig": 1.8494849610917186e-05,
+          "held_sig_b": 1.5000394224085056e-05,
+          "rst": 0.0,
+          "track0": 0.0,
+          "track1": 0.0,
+          "ur0": 0.0,
+          "ur1": 0.0,
+          "us0": 0.0,
+          "us1": 2.220446049250313e-16,
+          "valid": 0.0,
+          "valid_b": 0.0,
+          "vin": 0.0,
+          "vout": 7.335156866350445e-06,
+          "vout_b": 6.073189101396537e-06
+        },
+        "tolerances_V": {
+          "held_ref": 0.002,
+          "held_ref_b": 0.002,
+          "held_sig": 0.002,
+          "held_sig_b": 0.002,
+          "rst": 0.002,
+          "track0": 0.002,
+          "track1": 0.002,
+          "ur0": 0.002,
+          "ur1": 0.002,
+          "us0": 0.002,
+          "us1": 0.002,
+          "valid": 0.002,
+          "valid_b": 0.002,
+          "vin": 0.002,
+          "vout": 0.002,
+          "vout_b": 0.002
+        },
+        "method_source": {
+          "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/directed-closure/dynamics/check_original.py",
+          "sha256": "501fd4de541f219a4a9e3ac1878f3eba800912cd65c6b7b07fcafcaf6c2b6540"
+        },
+        "sampling_source": {
+          "path": "runs/r01-evas-compat-20261013/frozen/r01_sampling.py",
+          "sha256": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d"
+        },
+        "scope": "Finite observations with the original linear interpolation/endpoint convention; not a whole-trajectory bound.",
+        "endpoint_representation_clamps": {
+          "candidate": [
+            9.030000000000001e-07
+          ],
+          "spectre": []
+        },
+        "effective_observation_count": 334
+      },
+      "reported_record_pair": {
+        "passed": true,
+        "expected_records": {
+          "B": 12,
+          "H": 12,
+          "P": 6,
+          "R": 18,
+          "D": 9,
+          "X": 3,
+          "U": 1,
+          "W": 6,
+          "C": 2
+        },
+        "actual_records": {
+          "B": 12,
+          "H": 12,
+          "P": 6,
+          "R": 18,
+          "D": 9,
+          "X": 3,
+          "U": 1,
+          "W": 6,
+          "C": 2
+        },
+        "failures": [],
+        "tolerances": {
+          "B": [
+            0,
+            0,
+            2.5e-10,
+            0.002,
+            0.002
+          ],
+          "H": [
+            0,
+            0,
+            2.5e-10,
+            0.002,
+            0.002,
+            0.002,
+            0.002
+          ],
+          "P": [
+            0,
+            0,
+            2.5e-10,
+            2.5e-10,
+            2.5e-10,
+            2.5e-10
+          ],
+          "R": [
+            0,
+            0,
+            0,
+            2.5e-10,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            2.5e-10,
+            2.5e-10
+          ],
+          "D": [
+            0,
+            0,
+            0.002,
+            0.002,
+            0.02,
+            0
+          ],
+          "X": [
+            0,
+            0,
+            2.5e-10,
+            0
+          ],
+          "A": [
+            0,
+            0,
+            2.5e-10,
+            0
+          ],
+          "U": [
+            0,
+            2.5e-10
+          ],
+          "W": [
+            0,
+            0,
+            2.5e-10,
+            0.002,
+            0.002,
+            0.002,
+            0.002
+          ],
+          "C": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            2.5e-10,
+            2.5e-10,
+            0.002,
+            0.002,
+            0.002
+          ]
+        },
+        "method": "Frozen compare(actual reports, Spectre reports, original per-field tolerance arrays).",
+        "tolerance_source": {
+          "path": "runs/r01-evas-compat-20261013/frozen/r01_characterization.py",
+          "sha256": "c5b337a4cdd7b9c53334d20f5456e8b8165cf492976a81470e7d475738975eeb"
+        },
+        "scope": "Per-type record count/order and reported finite values, including reported cross/timer times. No hidden exact callback claim."
+      }
+    },
+    {
+      "case": "cds-2",
+      "task_id": "r01-measure-cds",
+      "status": "COMPLETED",
+      "request": {
+        "files_sha256": {
+          "tb.scs": "c30880d83c2d2ef5b8ef3b065722cf72245672bf27f9d9540b9478984703bbe3",
+          "dut.va": "f6c31c5aa1c0f61ae7a97cc81cecd042ead1ee5310233a82eda8f557f5d493eb",
+          "circuit.va": "c069492366e708856c1e79b529dbb1240aee042bffcb42908e5d5245f1fe6a35",
+          "core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15"
+        },
+        "command_template": [
+          "python3",
+          "-B",
+          "-m",
+          "evas",
+          "simulate",
+          "<original/cds-2>/tb.scs",
+          "--kernel",
+          "<fixed-v9-kernel>",
+          "--timeout",
+          "120"
+        ],
+        "literal_receipt": {
+          "path": "runs/r01-main-20261016/candidate-v9/cds-2/receipt.json",
+          "sha256": "8f2a98552f573eb2c170acdb9fd483ca6b90ca378ddeeff6adc4560226956bd7",
+          "availability": "local-only"
+        },
+        "kernel_timeout_s": 120,
+        "parent_timeout_s": 135,
+        "effective_controls": {
+          "vabstol": 1e-09,
+          "reltol": 1e-06,
+          "stop": 9.2e-07,
+          "max_step": 1e-10
+        },
+        "output_grid": "union of 0, k*maxstep below stop, stop, source corners within stop",
+        "warnings": [
+          {
+            "code": "ignored_scs_option",
+            "severity": "warning",
+            "option": "iabstol",
+            "requested_value": 1e-15,
+            "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+            "location": {
+              "source": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/inputs/cds-2/tb.scs",
+              "line": 3,
+              "column": 51
+            }
+          },
+          {
+            "code": "ignored_scs_option",
+            "severity": "warning",
+            "option": "errpreset",
+            "requested_value": "conservative",
+            "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+            "location": {
+              "source": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/inputs/cds-2/tb.scs",
+              "line": 18,
+              "column": 37
+            },
+            "effective_controls": {
+              "vabstol": 1e-09,
+              "reltol": 1e-06,
+              "max_step": 1e-10
+            }
+          }
+        ]
+      },
+      "execution": {
+        "exit_code": 0,
+        "cli_elapsed_s": 125.73340987501433,
+        "kernel_run_s": 115.37757975,
+        "diagnostics": {
+          "path": "runs/r01-main-20261016/candidate-v9/cds-2/diagnostics.json",
+          "sha256": "6f2bf3498995f039a72dbc2299580d83dbc1d6795c37f38c8ccb39f706aef11c",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/r01-main-20261016/candidate-v9/cds-2/stdout.json",
+          "sha256": "1d0e774b711dc69077b00845256c1b1cd850ca8ad24d6ea3779ac09b89a6d005"
+        },
+        "waveform_rows": 9219,
+        "display_records": 69,
+        "transported_display_log_sha256": "2fe58f71175fae8cbb5d8a722fee0b6a66333024fdd786e44c1b5c725dfd0fd2"
+      },
+      "original_checker": {
+        "passed": true,
+        "expected_records": {
+          "B": 12,
+          "H": 12,
+          "P": 6,
+          "R": 18,
+          "D": 9,
+          "X": 3,
+          "U": 1,
+          "W": 6,
+          "C": 2
+        },
+        "actual_records": {
+          "B": 12,
+          "H": 12,
+          "P": 6,
+          "R": 18,
+          "D": 9,
+          "X": 3,
+          "U": 1,
+          "W": 6,
+          "C": 2
+        },
+        "failures": [],
+        "protected_circuit": {
+          "passed": true,
+          "lanes": [
+            {
+              "passed": true,
+              "checks": 1452,
+              "max_abs_error": {
+                "held_ref": 5.926588761973051e-07,
+                "held_sig": 4.581038287154726e-06,
+                "vout": 2.138391685946317e-10,
+                "valid": 0
+              },
+              "failures": []
+            },
+            {
+              "passed": true,
+              "checks": 1452,
+              "max_abs_error": {
+                "held_ref": 4.5893082123438234e-07,
+                "held_sig": 4.701325598377437e-06,
+                "vout": 1.1695422408308787e-10,
+                "valid": 0
+              },
+              "failures": []
+            }
+          ]
+        }
+      },
+      "original_checker_source_hashes": {
+        "adc_linearity.py": {
+          "expected_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "circuit_task.py": {
+          "expected_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "harbor_entry.py": {
+          "expected_sha256": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "r01_characterization.py": {
+          "expected_sha256": "c5b337a4cdd7b9c53334d20f5456e8b8165cf492976a81470e7d475738975eeb",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "r01_measurements.py": {
+          "expected_sha256": "5df8763a26265dd5b702758fc5b51b0813c8919f4473bef10641b76de38d857f",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "r01_sampling.py": {
+          "expected_sha256": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "v2_runtime.py": {
+          "expected_sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+          "archive_matches": true,
+          "frozen_matches": true
+        },
+        "verify.py": {
+          "expected_sha256": "df8d23f54fe3c17432e77d2e06f28f4d31bc1d73ac9f199164656706a41fdd56",
+          "archive_matches": true,
+          "frozen_matches": true
+        }
+      },
+      "spectre": {
+        "reuse": "Existing actual Spectre execution; identical four original input file hashes. No new Spectre execution.",
+        "version": "sub-version  21.1.0.509.isr12",
+        "invoked_spectre_file_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "tool_identity_receipt": {
+          "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/raw/TOOL_IDENTITY.json",
+          "sha256": "10cdb2e928951fa8ceeebfc1bcd92cc100e9c38b443bafdc12f7c8b1c6c6c4d7",
+          "bytes": 1027
+        },
+        "files": {
+          "wave": {
+            "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/raw/cds-2/psf/tran.tran.tran",
+            "sha256": "8305aae845331ff88ac19ec9f655db57eb1e4ecb0976e054b428ec5b4307529b",
+            "bytes": 6457122
+          },
+          "stdout": {
+            "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/raw/cds-2/stdout.log",
+            "sha256": "a9f2ea4699b6cf3a71e0db32f54849affa8bc884016b3501b91adce289d79f79",
+            "bytes": 17309
+          },
+          "spectre_log": {
+            "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-cds/original-spectre-v1/raw/cds-2/spectre.log",
+            "sha256": "96f83fe9976180eb114ffa52118b5ccf6c5e56a60ba0f87134fc868855fc651c",
+            "bytes": 18370
+          }
+        },
+        "effective_controls": {
+          "version": "\"21.1.0.509.isr12\"",
+          "date": "\"3:11:12 AM, Thur Oct 15, 2026\"",
+          "stop": "9.20000e-07",
+          "maxstep": "1.00000e-10",
+          "reltol": "1.00000e-07",
+          "abstol(V)": "1.00000e-09",
+          "abstol(I)": "1.00000e-15",
+          "errpreset": "\"conservative\"",
+          "method": "\"gear2only\""
+        },
+        "warnings": [
+          "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow.",
+          "WARNING (SPECTRE-16780): LTE tolerance was temporarily relaxed to step over a discontinuity in the signal: X_B.ref_sh:idt0. Check the design or use '+diagnose' to get more information."
+        ],
+        "execution_completed_utc": "2026-10-14T19:11:13Z",
+        "input_hashes": {
+          "tb.scs": "c30880d83c2d2ef5b8ef3b065722cf72245672bf27f9d9540b9478984703bbe3",
+          "dut.va": "f6c31c5aa1c0f61ae7a97cc81cecd042ead1ee5310233a82eda8f557f5d493eb",
+          "circuit.va": "c069492366e708856c1e79b529dbb1240aee042bffcb42908e5d5245f1fe6a35",
+          "core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15"
+        },
+        "before_after_tool_match": true
+      },
+      "finite_waveform_pair": {
+        "passed": true,
+        "input_passed": true,
+        "output_passed": true,
+        "candidate_count": 501,
+        "excluded_count": 164,
+        "control_edge_window_s": 5e-09,
+        "max_abs_difference_V": {
+          "held_ref": 1.7422738140315808e-05,
+          "held_ref_b": 1.668468962101599e-05,
+          "held_sig": 3.4500137022108746e-05,
+          "held_sig_b": 3.583135101958845e-05,
+          "rst": 0.0,
+          "track0": 0.0,
+          "track1": 0.0,
+          "ur0": 0.0,
+          "ur1": 0.0,
+          "us0": 0.0,
+          "us1": 0.0,
+          "valid": 0.0,
+          "valid_b": 0.0,
+          "vin": 0.0,
+          "vout": 2.3530438274965704e-05,
+          "vout_b": 2.486285286229517e-05
+        },
+        "tolerances_V": {
+          "held_ref": 0.002,
+          "held_ref_b": 0.002,
+          "held_sig": 0.002,
+          "held_sig_b": 0.002,
+          "rst": 0.002,
+          "track0": 0.002,
+          "track1": 0.002,
+          "ur0": 0.002,
+          "ur1": 0.002,
+          "us0": 0.002,
+          "us1": 0.002,
+          "valid": 0.002,
+          "valid_b": 0.002,
+          "vin": 0.002,
+          "vout": 0.002,
+          "vout_b": 0.002
+        },
+        "method_source": {
+          "path": "runs/evas-night-20261014/delivery/issue-repair-20261015/directed-closure/dynamics/check_original.py",
+          "sha256": "501fd4de541f219a4a9e3ac1878f3eba800912cd65c6b7b07fcafcaf6c2b6540"
+        },
+        "sampling_source": {
+          "path": "runs/r01-evas-compat-20261013/frozen/r01_sampling.py",
+          "sha256": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d"
+        },
+        "scope": "Finite observations with the original linear interpolation/endpoint convention; not a whole-trajectory bound.",
+        "endpoint_representation_clamps": {
+          "candidate": [
+            9.200000000000001e-07
+          ],
+          "spectre": []
+        },
+        "effective_observation_count": 337
+      },
+      "reported_record_pair": {
+        "passed": true,
+        "expected_records": {
+          "B": 12,
+          "H": 12,
+          "P": 6,
+          "R": 18,
+          "D": 9,
+          "X": 3,
+          "U": 1,
+          "W": 6,
+          "C": 2
+        },
+        "actual_records": {
+          "B": 12,
+          "H": 12,
+          "P": 6,
+          "R": 18,
+          "D": 9,
+          "X": 3,
+          "U": 1,
+          "W": 6,
+          "C": 2
+        },
+        "failures": [],
+        "tolerances": {
+          "B": [
+            0,
+            0,
+            2.5e-10,
+            0.002,
+            0.002
+          ],
+          "H": [
+            0,
+            0,
+            2.5e-10,
+            0.002,
+            0.002,
+            0.002,
+            0.002
+          ],
+          "P": [
+            0,
+            0,
+            2.5e-10,
+            2.5e-10,
+            2.5e-10,
+            2.5e-10
+          ],
+          "R": [
+            0,
+            0,
+            0,
+            2.5e-10,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            0.002,
+            2.5e-10,
+            2.5e-10
+          ],
+          "D": [
+            0,
+            0,
+            0.002,
+            0.002,
+            0.02,
+            0
+          ],
+          "X": [
+            0,
+            0,
+            2.5e-10,
+            0
+          ],
+          "A": [
+            0,
+            0,
+            2.5e-10,
+            0
+          ],
+          "U": [
+            0,
+            2.5e-10
+          ],
+          "W": [
+            0,
+            0,
+            2.5e-10,
+            0.002,
+            0.002,
+            0.002,
+            0.002
+          ],
+          "C": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            2.5e-10,
+            2.5e-10,
+            0.002,
+            0.002,
+            0.002
+          ]
+        },
+        "method": "Frozen compare(actual reports, Spectre reports, original per-field tolerance arrays).",
+        "tolerance_source": {
+          "path": "runs/r01-evas-compat-20261013/frozen/r01_characterization.py",
+          "sha256": "c5b337a4cdd7b9c53334d20f5456e8b8165cf492976a81470e7d475738975eeb"
+        },
+        "scope": "Per-type record count/order and reported finite values, including reported cross/timer times. No hidden exact callback claim."
+      }
+    }
+  ],
+  "preserved_execution_history": [
+    {
+      "phase": "baseline",
+      "case": "cds-0",
+      "receipt": {
+        "path": "runs/r01-main-20261016/baseline/cds-0/receipt.json",
+        "sha256": "1e9426badff12182631ba8bca3e02b15aab155efec2ece95e8de1657062b2823",
+        "availability": "local-only"
+      },
+      "kernel_sha256": "ec66b862e95df747c2cc3e04e42f37cc07b353de9e869d4ceeb16ed5f830ea5d",
+      "exit_code": 2,
+      "elapsed_s": 121.75615141700837,
+      "kernel_timeout_s": 120,
+      "stderr": {
+        "path": "runs/r01-main-20261016/baseline/cds-0/stderr.log",
+        "sha256": "82264188acabe372aa047c23c17c42ee274d6242838e0b9d0b9821f92fa9306f",
+        "availability": "local-only"
+      }
+    },
+    {
+      "phase": "candidate",
+      "case": "cds-0",
+      "receipt": {
+        "path": "runs/r01-main-20261016/candidate/cds-0/receipt.json",
+        "sha256": "e2b89d7f41e8b8145d932bebb86ebe73d213a926a0855122b795b9271f8ea42c",
+        "availability": "local-only"
+      },
+      "kernel_sha256": "7b542910388ae97276fbf064dec4112b97d43a21328ad4ffeb80a176458da046",
+      "exit_code": 2,
+      "elapsed_s": 121.99168629100313,
+      "kernel_timeout_s": 120,
+      "stderr": {
+        "path": "runs/r01-main-20261016/candidate/cds-0/stderr.log",
+        "sha256": "82264188acabe372aa047c23c17c42ee274d6242838e0b9d0b9821f92fa9306f",
+        "availability": "local-only"
+      }
+    },
+    {
+      "phase": "candidate-v2",
+      "case": "cds-0",
+      "receipt": {
+        "path": "runs/r01-main-20261016/candidate-v2/cds-0/receipt.json",
+        "sha256": "27ac4a69a095887b5b1579aec0a678c470210b6dbba19e49823fc71aa136a7c6",
+        "availability": "local-only"
+      },
+      "kernel_sha256": "1a15546536392b856adf2035de240473ddee2cf5ac55531510ac800de2708ae5",
+      "exit_code": 2,
+      "elapsed_s": 121.68032529199263,
+      "kernel_timeout_s": 120,
+      "stderr": {
+        "path": "runs/r01-main-20261016/candidate-v2/cds-0/stderr.log",
+        "sha256": "82264188acabe372aa047c23c17c42ee274d6242838e0b9d0b9821f92fa9306f",
+        "availability": "local-only"
+      }
+    },
+    {
+      "phase": "candidate-v3",
+      "case": "cds-0",
+      "receipt": {
+        "path": "runs/r01-main-20261016/candidate-v3/cds-0/receipt.json",
+        "sha256": "3dc3f9e8a4a8c5ad305df492f6ada7fe7d7d177487658d8fecc46c1e4fba1a2f",
+        "availability": "local-only"
+      },
+      "kernel_sha256": "fe18a140be8c62411b47a6035e5bdb463e08a111afb49d17cdd388daea942bcb",
+      "exit_code": 2,
+      "elapsed_s": 74.5711480829923,
+      "kernel_timeout_s": 120,
+      "stderr": {
+        "path": "runs/r01-main-20261016/candidate-v3/cds-0/stderr.log",
+        "sha256": "33f78238dd1144fc4aefc60f9880749c704effe75ba39e019579879e3c0dd802",
+        "availability": "local-only"
+      }
+    },
+    {
+      "phase": "candidate-v4",
+      "case": "cds-0",
+      "receipt": {
+        "path": "runs/r01-main-20261016/candidate-v4/cds-0/receipt.json",
+        "sha256": "aa5fbd81825096dd1ad995fe179a1fee49152f0ee999e97740ad0a884edbc689",
+        "availability": "local-only"
+      },
+      "kernel_sha256": "9199513f2c30d5475e3ec5c8d9bbced166ec9509083c0ae649a398a66c00735c",
+      "exit_code": 2,
+      "elapsed_s": 122.39470212499145,
+      "kernel_timeout_s": 120,
+      "stderr": {
+        "path": "runs/r01-main-20261016/candidate-v4/cds-0/stderr.log",
+        "sha256": "82264188acabe372aa047c23c17c42ee274d6242838e0b9d0b9821f92fa9306f",
+        "availability": "local-only"
+      }
+    },
+    {
+      "phase": "candidate-v5",
+      "case": "cds-0",
+      "receipt": {
+        "path": "runs/r01-main-20261016/candidate-v5/cds-0/receipt.json",
+        "sha256": "9b8206561f5ac16f00e1c46a73518ea185b797ae03554876201c233d82f3f1c5",
+        "availability": "local-only"
+      },
+      "kernel_sha256": "c0a02c472671ef083742dd2a29e5331963a0d6ce93ce08641dec0a1cccfe9d35",
+      "exit_code": 2,
+      "elapsed_s": 24.691442167008063,
+      "kernel_timeout_s": 120,
+      "stderr": {
+        "path": "runs/r01-main-20261016/candidate-v5/cds-0/stderr.log",
+        "sha256": "78ac8e1a7e0ef09e36c3a898da868c0c8270576f6251842268422ec17041e230",
+        "availability": "local-only"
+      }
+    },
+    {
+      "phase": "candidate-v6",
+      "case": "cds-0",
+      "receipt": {
+        "path": "runs/r01-main-20261016/candidate-v6/cds-0/receipt.json",
+        "sha256": "77010eaa8023c1fffe5ce30aea5901c8166be68a4bd1756bcd4ea0f96e2083e0",
+        "availability": "local-only"
+      },
+      "kernel_sha256": "dd07cf95d76935f893b3b79d731b29e3a95d33beffc3f8703b40940ee5beae5b",
+      "exit_code": 2,
+      "elapsed_s": 28.20137004199205,
+      "kernel_timeout_s": 120,
+      "stderr": {
+        "path": "runs/r01-main-20261016/candidate-v6/cds-0/stderr.log",
+        "sha256": "c077170c162927a3b47217648af4f7258c4464616b13814c69f41ac2d2831214",
+        "availability": "local-only"
+      }
+    },
+    {
+      "phase": "candidate-v7",
+      "case": "cds-0",
+      "receipt": {
+        "path": "runs/r01-main-20261016/candidate-v7/cds-0/receipt.json",
+        "sha256": "4a84cceebad39f09147e1f4226584665546e395790c00f795f5d016510221905",
+        "availability": "local-only"
+      },
+      "kernel_sha256": "fcb9117b9bd36d9e7af63b751a9ccd562fd4ede750e1846cc2676440791806dd",
+      "exit_code": 2,
+      "elapsed_s": 122.03769024999929,
+      "kernel_timeout_s": 120,
+      "stderr": {
+        "path": "runs/r01-main-20261016/candidate-v7/cds-0/stderr.log",
+        "sha256": "82264188acabe372aa047c23c17c42ee274d6242838e0b9d0b9821f92fa9306f",
+        "availability": "local-only"
+      }
+    },
+    {
+      "phase": "candidate-v8",
+      "case": "cds-0",
+      "receipt": {
+        "path": "runs/r01-main-20261016/candidate-v8/cds-0/receipt.json",
+        "sha256": "6e0f8720f13705ec3f594d6974533da78ca74081d059ada8dc2a6b55ae29a095",
+        "availability": "local-only"
+      },
+      "kernel_sha256": "2f39037ce694b03e984c6b5a234fdafa236552ced00a54b25ac57bc791ef1fa2",
+      "exit_code": 0,
+      "elapsed_s": 123.94357041700277,
+      "kernel_timeout_s": 120,
+      "stderr": {
+        "path": "runs/r01-main-20261016/candidate-v8/cds-0/stderr.log",
+        "sha256": "089f34bcf8a33ef2728e5f7a6752fac597639508d35bc093bb2c1475e370ba0d",
+        "availability": "local-only"
+      }
+    },
+    {
+      "phase": "candidate-v8",
+      "case": "cds-1",
+      "receipt": {
+        "path": "runs/r01-main-20261016/candidate-v8/cds-1/receipt.json",
+        "sha256": "d394dca78683a04ee9b6473ce078604d71d6b319b1a7ca7a2e9f446984dde2cf",
+        "availability": "local-only"
+      },
+      "kernel_sha256": "2f39037ce694b03e984c6b5a234fdafa236552ced00a54b25ac57bc791ef1fa2",
+      "exit_code": 2,
+      "elapsed_s": 121.66245895798784,
+      "kernel_timeout_s": 120,
+      "stderr": {
+        "path": "runs/r01-main-20261016/candidate-v8/cds-1/stderr.log",
+        "sha256": "300c2ff9f00107445e598df879b3af264f8cc5c337d84649903362b6cf04b8d5",
+        "availability": "local-only"
+      }
+    }
+  ],
+  "directed_validation": {
+    "records": [
+      "cargo test projection: original candidate 8 passed",
+      "Python test_event_accuracy test_event_conditions test_settlement test_passive_events test_event_runtime_loops: original candidate 79 passed",
+      "v2: cargo projection 9/9 and dot 1/1; same five Python modules 79/79, fixed patch 2df946facc4fcb779f213b46226f43801ccbe62a663be97aa5d29f49cab2e3f5",
+      "v3: certificate-cache Rust8 + retry2 + actual binding read1; reviewer-selected Python14, all passed; projection v2 evidence reused",
+      "v4: source_plan Rust8/8 + same-controller rollback1/1; reviewer-selected public Python16/16; original four-source three-context Plan probe used772045692 of unchanged1e9 Work; complete transient acceptance pending",
+      "v5: Bounds4 + Source sharing1 + source rollback1 + certificate-cache8 Rust passed; Python8 public consumers passed. v4 unchanged source-plan16 and v2 projection79 evidence reused. v5 original request refused root/window mismatch.",
+      "v6: Source reentry Rust3 + unchanged transition strict guard1 + controller rollback1; public Python SourceControlledTransition14 + query invariant1 passed. Earlier unchanged projection/cache evidence reused.",
+      "v7: time_provenance Rust11 + held calendar invalidation1 + phase failure/controller rollback1 passed; Python dynamic timer4 + captured clock3 + HeldTimeProvenance4 passed. No unrelated modules rerun.",
+      "v8: Context restart/ownership1 + timeproof rollback/retry2 + selected budget1 + private step_simplify3 Rust passed; 6 selected public Python branch/history/query/implicit controls passed. No unrelated modules rerun.",
+      "v9: sampled coefficient6 + certificate-cache8 + phase failure/rollback1 + source rollback1 Rust passed; 6 selected public same-time/state/loop/query consumer Python checks passed. Existing v1-v8 evidence reused."
+    ],
+    "counting": "Rounds overlap; do not sum these into unique tests or full-regression coverage.",
+    "final_v9_receipts": [
+      {
+        "name": "green-0-sampled_coefficient_tests",
+        "argv": [
+          "cargo",
+          "test",
+          "--locked",
+          "--manifest-path",
+          "evas/rust_core/Cargo.toml",
+          "sampled_coefficient_tests",
+          "--",
+          "--nocapture"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 7.449178458016831,
+        "source_sha256": "b597865d41187a586bda5c7b47297749c87e8e51c5867f250e29d972d3eb4686"
+      },
+      {
+        "name": "green-1-certificate_cache_tests",
+        "argv": [
+          "cargo",
+          "test",
+          "--locked",
+          "--manifest-path",
+          "evas/rust_core/Cargo.toml",
+          "certificate_cache_tests",
+          "--",
+          "--nocapture"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 0.14199633299722336,
+        "source_sha256": "b597865d41187a586bda5c7b47297749c87e8e51c5867f250e29d972d3eb4686"
+      },
+      {
+        "name": "green-2-phase_query_failure_preserves_prior_outputs_and_retries_same_controller",
+        "argv": [
+          "cargo",
+          "test",
+          "--locked",
+          "--manifest-path",
+          "evas/rust_core/Cargo.toml",
+          "phase_query_failure_preserves_prior_outputs_and_retries_same_controller",
+          "--",
+          "--nocapture"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 0.08789020898984745,
+        "source_sha256": "b597865d41187a586bda5c7b47297749c87e8e51c5867f250e29d972d3eb4686"
+      },
+      {
+        "name": "debug-build",
+        "argv": [
+          "cargo",
+          "build",
+          "--locked",
+          "--manifest-path",
+          "evas/rust_core/Cargo.toml"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 0.43575599999167025
+      },
+      {
+        "name": "python-state-six",
+        "argv": [
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_event_conditions.ConditionalEvents.test_selected_assignments_keep_joint_voltage_state_solution",
+          "test_event_conditions.ConditionalEvents.test_missing_else_and_null_statement_leave_state_unchanged",
+          "test_settlement.SettlementContracts.test_inactive_event_state_is_held_during_another_event",
+          "test_settlement.SettlementContracts.test_repeated_writes_preserve_statement_order",
+          "test_event_runtime_loops.RuntimeLoopExecution.test_compact_array_statement_reads_previous_writes_with_descending_declaration",
+          "test_event_runtime_loops.RuntimeLoopExecution.test_zero_one_and_source_order_are_query_independent"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 1.7660331660008524
+      },
+      {
+        "name": "source-rollback",
+        "argv": [
+          "cargo",
+          "test",
+          "--locked",
+          "--manifest-path",
+          "evas/rust_core/Cargo.toml",
+          "failed_source_target_epoch_and_memo_roll_back_then_same_controller_retries",
+          "--",
+          "--nocapture"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 0.09096466697519645
+      },
+      {
+        "name": "rustfmt",
+        "argv": [
+          "rustfmt",
+          "--check",
+          "--edition",
+          "2021",
+          "evas/rust_core/src/settlement_bounds.rs"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 0.08523345799767412
+      },
+      {
+        "name": "diff-check",
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 0.1345539589819964
+      },
+      {
+        "name": "workspace-check",
+        "argv": [
+          "python3",
+          "-B",
+          "scripts/check_workspaces.py"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 8.79072783299489
+      }
+    ],
+    "all_prior_unchanged_evidence_reused": true,
+    "full_local_regression_rerun_for_publication": false
+  },
+  "delivery_checks": {
+    "time_provenance": {
+      "log": {
+        "path": "runs/r01-main-20261016/delivery/time-provenance-lint-test.log",
+        "sha256": "1ea2b8e408b70c3a9531684a36ce745a20b69b9925cc608af8864a5892ac710a",
+        "availability": "local-only"
+      },
+      "passed": 14,
+      "failed": 0,
+      "filtered": 379
+    },
+    "clippy": {
+      "log": {
+        "path": "runs/r01-main-20261016/delivery/clippy.log",
+        "sha256": "2067bd3a65c5d5604e8a14164d32d815a2bd9ee012be7dca0d7968ad5eb7b6ac",
+        "availability": "local-only"
+      },
+      "exit_code": 0
+    },
+    "formatting_replay": [
+      {
+        "path": "evas/rust_core/src/event_accuracy.rs",
+        "old_sha256": "9401f2794f1ddc20250a2ea7f5ec8a3d158df40533b12671c620daa81e4e7b6d",
+        "delivery_sha256": "7947dbe53b21a9e3d44d3d48c7510a357e2d89a10cfd22cfcfe1f346703dd403",
+        "rustfmt_exit": 0,
+        "rustfmt_stdout": "",
+        "rustfmt_stderr": "",
+        "formatted_v9_equals_delivery": true
+      },
+      {
+        "path": "evas/rust_core/src/events_certificate_cache_tests.rs",
+        "old_sha256": "14ab51d88a83a18d82a0534e88978539292f2cc434c362a51c6d5358a957485f",
+        "delivery_sha256": "6f0900e6e8149c49a230a527719e34ae2d95f28eaac09b9d423961bf222c7938",
+        "rustfmt_exit": 0,
+        "rustfmt_stdout": "",
+        "rustfmt_stderr": "",
+        "formatted_v9_equals_delivery": true
+      }
+    ],
+    "final_static_checks": [
+      {
+        "argv": [
+          "cargo",
+          "fmt",
+          "--manifest-path",
+          "evas/rust_core/Cargo.toml",
+          "--check"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 0.67,
+        "log": "runs/r01-main-20261016/delivery/final-check-0.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "argv": [
+          "python3",
+          "-B",
+          "scripts/diagnostic_inventory.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 1.003,
+        "log": "runs/r01-main-20261016/delivery/final-check-1.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "argv": [
+          "python3",
+          "-B",
+          "scripts/traceability.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 0.475,
+        "log": "runs/r01-main-20261016/delivery/final-check-2.log",
+        "log_sha256": "a35d52f71ac4cb60fe569b152cd1911577295b589e08655dbbd8110f65d0fba1"
+      },
+      {
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 0.121,
+        "log": "runs/r01-main-20261016/delivery/final-check-3.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "pre_publication_standards_review": {
+      "path": "runs/r01-main-20261016/delivery/r01-standards-review-pre-publication.md",
+      "sha256": "0f6afecf46a79a98c0612bd2c1ddb74a92c9ff61ebafc32c2cf596dc650575c3",
+      "availability": "local-only"
+    }
+  },
+  "review": {
+    "method": "Independent gpt-6.1-sol/max code and acceptance reviews, reused for matching fixed deltas; publication checks are recorded in the PR.",
+    "outstanding_actionable_findings": 0,
+    "reports": [
+      {
+        "path": "runs/r01-main-20261016/projection-integration-review.md",
+        "sha256": "f5f8fc449f1f632c38da300a517190fcc256a8a69811240899a9b54fceaebcb3",
+        "availability": "local-only"
+      },
+      {
+        "path": "runs/r01-main-20261016/projection-v2-review.md",
+        "sha256": "db77fb94aca98377d0f4e885264df00a8e6e9924a84c56d31083668ceacaa22c",
+        "availability": "local-only"
+      },
+      {
+        "path": "runs/r01-main-20261016/projection-v3-review.md",
+        "sha256": "8a4b8da1da77333245dcbaf93e3a7df703c8dfa695c9d3f7b8a943e7a7b33a0b",
+        "availability": "local-only"
+      },
+      {
+        "path": "runs/r01-main-20261016/projection-v4-review.md",
+        "sha256": "9429d479983a2e1b01bbd0a58b1130434615c673ce8d64359068f1f74a3ed14a",
+        "availability": "local-only"
+      },
+      {
+        "path": "runs/r01-main-20261016/projection-v5-review.md",
+        "sha256": "7860281d2904aebd703b8b1f7c860a731741a8b6bdd3cea51309207bb4c36abc",
+        "availability": "local-only"
+      },
+      {
+        "path": "runs/r01-main-20261016/source-window-review.md",
+        "sha256": "9def3505b95946d644e3d14a6ed6a7990d83fbd2981e35a4a8d11e0439452a36",
+        "availability": "local-only"
+      },
+      {
+        "path": "runs/r01-main-20261016/timer-provenance-review.md",
+        "sha256": "95c1b4f039d8950187166ab74809334733638c27a54e3c1960bd4028cc0831be",
+        "availability": "local-only"
+      },
+      {
+        "path": "runs/r01-main-20261016/continuous-context-review.md",
+        "sha256": "ccc63c9104b80ab3f1ea67b44257e4767cc9e4f61f6e2e0430b55739c70d5647",
+        "availability": "local-only"
+      },
+      {
+        "path": "runs/r01-main-20261016/bounds-construction-review.md",
+        "sha256": "156181d8eb11f9da82e3cc3fcdbdef242463ac3a68eb5680ca813117f3600269",
+        "availability": "local-only"
+      },
+      {
+        "path": "runs/r01-main-20261016/r01-standards-review.md",
+        "sha256": "6405bbe903bd38b8d1b8042e1c758fee760134840de8a147948d087f1a658ac3",
+        "availability": "local-only"
+      },
+      {
+        "path": "runs/r01-main-20261016/cds-projection/v7-phase-diagnostic/independent-timer-analysis.md",
+        "sha256": "b567d6aa015dec342ac9cd4170298fb39d6ed86785ef0899b4303f48e7cb66aa",
+        "availability": "local-only"
+      }
+    ],
+    "trail": {
+      "path": "runs/workspace-retirement-20261016/decisions.tsv",
+      "scope": "r01-start through cds-v9-original-accepted; append-only canonical local trail",
+      "availability": "local-only"
+    },
+    "history_limit": "The full earlier transcript was unavailable to the final Standards reviewer; review covered accessible records and fixed evidence."
+  },
+  "limits": [
+    "Only the three original CDS requests are accepted. Baseline MUX refusals and other language gaps remain.",
+    "Finite waveforms exclude the original 5ns edge windows and use original interpolation and endpoint-representation clamps; not whole-trajectory or hidden callback alignment.",
+    "CDS2 actual Spectre reference retained SPECTRE-16780 LTE tolerance relaxation. EVAS reltol1e-6 differs from the reference effective1e-7.",
+    "Single executions near the original timeout are acceptance evidence, not a repeatable speedup or a Spectre performance comparison.",
+    "No new Q grade; F30 and #131 remain frozen.",
+    "Raw inputs, complete outputs, original checker bundle and review logs remain local-only; hashes do not provide a public download."
+  ]
+}

@@ -1,31 +1,37 @@
 //! Forward-error enclosure of the original binary64 event IR.
 //! Inputs, old states and operator history carry their supplied enclosures.
-//! A cached map never freezes a particular operator sample.
+//! Linear operator forcing stays live; bound coefficients retain their sample key.
 use crate::affine_bounds::{affine, eliminate};
 use crate::event_conditions::Selection;
 use crate::events::EventModel;
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, StateKind};
-use std::collections::BTreeMap;
+use std::cell::RefCell;
+use std::collections::{BTreeMap, BTreeSet};
 
 #[path = "filter_budget.rs"]
 mod filter_budget;
 pub(crate) use filter_budget::FilterBudget;
 
 // Preserve operator history uncertainty as interval coefficients. State and
-// voltage columns remain live, so a sampled state can still participate in
-// the same-time joint equations. This map is rebuilt for each operator sample.
+// voltage columns remain live for the same-time joint equations. Reuse requires
+// identical endpoint bits for every operator sample read by this binding.
 fn affine_with_operators(
     expr: &Expression,
     p: &crate::ir::Program,
     operators: &[I],
+    bindings: &RefCell<BTreeSet<(usize, u64, u64)>>,
 ) -> Result<Vec<I>, Error> {
     let n = p.nodes.len() + p.states.len() + p.operators.len();
-    let recurse = |e: &Expression| affine_with_operators(e, p, operators);
+    let recurse = |e: &Expression| affine_with_operators(e, p, operators, bindings);
     match expr {
         Expression::Operator { operator } => {
             let mut result = vec![I::ZERO; n + 1];
-            result[n] = operators[*operator];
+            let sample = operators[*operator];
+            bindings
+                .borrow_mut()
+                .insert((*operator, sample.lo.to_bits(), sample.hi.to_bits()));
+            result[n] = sample;
             Ok(result)
         }
         Expression::Add { left, right } => Ok(recurse(left)?
@@ -67,9 +73,85 @@ mod initial_state_invariance;
 pub(crate) use initial_state_invariance::unchanged as unchanged_initial_states;
 
 fn dot(row: &[I], values: &[I]) -> I {
-    row.iter()
-        .zip(values)
-        .fold(I::ZERO, |sum, (&a, &b)| sum + a * b)
+    let dense = || {
+        row.iter()
+            .zip(values)
+            .fold(I::ZERO, |sum, (&a, &b)| sum + a * b)
+    };
+    let mut sum = I::ZERO;
+    for (&a, &b) in row.iter().zip(values) {
+        #[cfg(test)]
+        projection_work::add(1, 0);
+        // Even an omitted zero coefficient must not hide nonfinite forcing.
+        if !a.finite() || !b.finite() {
+            return dense();
+        }
+        if !a.zero() {
+            sum = sum + a * b;
+        }
+    }
+    // The +0 base preserves signed-zero results when finite zero products are
+    // omitted. Overflow needs the original zero additions and normalization.
+    if sum.finite() {
+        sum
+    } else {
+        dense()
+    }
+}
+
+// Some records a complete finite-coefficient check and ascending nonzero
+// indices for an immutable row. Dense/nonfinite rows keep the original dot.
+fn nonzero_indices(row: &[I]) -> Option<Vec<usize>> {
+    if row.iter().any(|v| !v.finite()) || row.iter().all(|v| !v.zero()) {
+        None
+    } else {
+        Some(
+            row.iter()
+                .enumerate()
+                .filter_map(|(k, v)| (!v.zero()).then_some(k))
+                .collect(),
+        )
+    }
+}
+
+fn prepared_dot(row: &[I], indices: Option<&[usize]>, values: &[I], values_finite: bool) -> I {
+    if let Some(indices) = indices.filter(|_| values_finite && row.len() == values.len()) {
+        let sum = indices
+            .iter()
+            .fold(I::ZERO, |sum, &k| sum + row[k] * values[k]);
+        if sum.finite() {
+            return sum;
+        }
+    }
+    // Preserve the original zip tails, zero/nonfinite products and overflow
+    // normalization instead of rejecting at the eligibility check.
+    dot(row, values)
+}
+
+#[cfg(test)]
+mod projection_work {
+    use std::cell::Cell;
+    thread_local! { static WORK: Cell<(usize, usize)> = const { Cell::new((0, 0)) }; }
+    thread_local! { static STATE_ROWS: Cell<usize> = const { Cell::new(0) }; }
+    pub(super) fn state_row() {
+        STATE_ROWS.with(|work| work.set(work.get() + 1));
+    }
+    pub(super) fn state_rows() -> usize {
+        STATE_ROWS.with(Cell::get)
+    }
+    pub(super) fn add(pairs: usize, parameters: usize) {
+        WORK.with(|work| {
+            let (p, v) = work.get();
+            work.set((p + pairs, v + parameters));
+        });
+    }
+    pub(super) fn reset() {
+        WORK.with(|work| work.set((0, 0)));
+        STATE_ROWS.with(|work| work.set(0));
+    }
+    pub(super) fn get() -> (usize, usize) {
+        WORK.with(Cell::get)
+    }
 }
 
 fn substitute(row: &[I], updates: &[Vec<I>], nodes: usize) -> Vec<I> {
@@ -90,9 +172,34 @@ fn substitute(row: &[I], updates: &[Vec<I>], nodes: usize) -> Vec<I> {
 pub(crate) struct Bounds {
     nodes: Vec<Vec<I>>,
     states: Vec<Vec<I>>,
+    node_nonzero: Vec<Option<Vec<usize>>>,
+    state_nonzero: Vec<Option<Vec<usize>>>,
+    operator_bindings: Vec<(usize, u64, u64)>,
 }
 
 impl Bounds {
+    fn from_rows(
+        nodes: Vec<Vec<I>>,
+        states: Vec<Vec<I>>,
+        operator_bindings: Vec<(usize, u64, u64)>,
+    ) -> Self {
+        Self {
+            node_nonzero: nodes.iter().map(|row| nonzero_indices(row)).collect(),
+            state_nonzero: states.iter().map(|row| nonzero_indices(row)).collect(),
+            nodes,
+            states,
+            operator_bindings,
+        }
+    }
+
+    pub(crate) fn matches_operator_bindings(&self, operators: &[I]) -> bool {
+        self.operator_bindings.iter().all(|&(operator, lo, hi)| {
+            operators
+                .get(operator)
+                .is_some_and(|sample| sample.lo.to_bits() == lo && sample.hi.to_bits() == hi)
+        })
+    }
+
     /// Separate sampling time from the later voltage read. Combining these
     /// two affine maps first would incorrectly cancel q(tau)-u(b).
     #[allow(clippy::too_many_arguments)]
@@ -243,10 +350,7 @@ impl Bounds {
                     .collect(),
             );
         }
-        Ok(Self {
-            nodes: Vec::new(),
-            states,
-        })
+        Ok(Self::from_rows(Vec::new(), states, Vec::new()))
     }
 
     /// Only affinity-shape failures permit sampled-coefficient fallback. All
@@ -308,13 +412,14 @@ impl Bounds {
         operators: &[I],
     ) -> Result<Self, Error> {
         crate::diagnostics::counter("certificate_bounds_builds", 1);
+        let bindings = RefCell::new(BTreeSet::new());
         let bind = |expr: &Expression| {
             if operators.is_empty() {
                 affine(expr, p)
             } else {
                 // Keep linear operator columns and their exact cancellations.
                 // Only bilinear coefficients require per-sample interval binding.
-                affine(expr, p).or_else(|_| affine_with_operators(expr, p, operators))
+                affine(expr, p).or_else(|_| affine_with_operators(expr, p, operators, &bindings))
             }
         };
         let count = p.nodes.len();
@@ -336,6 +441,7 @@ impl Bounds {
             })
             .collect();
         let mut updates = initial.clone();
+        let mut written = vec![false; p.states.len()];
         for (event, indices) in &selection.actions {
             let assignments = p.events[*event].assignments();
             let mut local = initial.clone();
@@ -343,6 +449,7 @@ impl Bounds {
                 let action = &assignments[index];
                 local[action.state] = substitute(&bind(&action.rhs)?, &local, count);
                 updates[action.state] = local[action.state].clone();
+                written[action.state] = true;
             }
         }
         let mut grouped = BTreeMap::new();
@@ -386,21 +493,24 @@ impl Bounds {
                 values[unknown[r]][k] = rows[r][n + k] - rest;
             }
         }
+        crate::event_accuracy::validate_projection(&values, variables, width)
+            .map_err(|_| Error::new("event_accuracy", "nonfinite same-time enclosure"))?;
         let states = updates
             .iter()
-            .map(|row| {
-                (0..width)
-                    .map(|k| {
-                        let base = if k == width - 1 {
-                            row[variables]
-                        } else {
-                            I::ZERO
-                        };
-                        (0..variables).fold(base, |sum, j| sum + row[j] * values[j][k])
-                    })
-                    .collect::<Vec<_>>()
+            .enumerate()
+            .map(|(state, row)| {
+                if !written[state] {
+                    // No selected write touched this exact +0/+1 initial row.
+                    // The complete map above is finite; its corresponding
+                    // state forcing row is the same canonical unit projection.
+                    return Ok(values[count + state].clone());
+                }
+                #[cfg(test)]
+                projection_work::state_row();
+                crate::event_accuracy::project_row(row, &values, width)
+                    .map_err(|_| Error::new("event_accuracy", "nonfinite same-time enclosure"))
             })
-            .collect::<Vec<_>>();
+            .collect::<Result<Vec<_>, _>>()?;
         values.truncate(count);
         if values.iter().chain(&states).flatten().any(|v| !v.finite()) {
             return Err(Error::new(
@@ -408,10 +518,11 @@ impl Bounds {
                 "nonfinite same-time enclosure",
             ));
         }
-        Ok(Self {
-            nodes: values,
+        Ok(Self::from_rows(
+            values,
             states,
-        })
+            bindings.into_inner().into_iter().collect(),
+        ))
     }
 
     /// Event-time voltage forcing, distinct from the later b observation.
@@ -481,17 +592,25 @@ impl Bounds {
             .collect();
         let mut state_bounds = Vec::new();
         let mut voltage_bounds = Vec::new();
-        for (rows, actual, voltage) in
-            [(&self.nodes, voltages, true), (&self.states, states, false)]
-        {
+        let parameters_finite = parameters.iter().all(|value| {
+            #[cfg(test)]
+            projection_work::add(0, 1);
+            value.finite()
+        });
+        for (rows, nonzero, actual, voltage) in [
+            (&self.nodes, &self.node_nonzero, voltages, true),
+            (&self.states, &self.state_nonzero, states, false),
+        ] {
             if voltage && !check_voltages {
                 continue;
             }
             for (k, (row, &value)) in rows.iter().zip(actual).enumerate() {
-                let exact = row
-                    .iter()
-                    .zip(&parameters)
-                    .fold(I::ZERO, |sum, (&a, &b)| sum + a * b);
+                let exact = prepared_dot(
+                    row,
+                    nonzero.get(k).and_then(|v| v.as_deref()),
+                    &parameters,
+                    parameters_finite,
+                );
                 if !voltage {
                     state_bounds.push(exact);
                 } else {
@@ -558,6 +677,437 @@ mod sampled_coefficient_tests {
     use super::*;
     use serde_json::json;
 
+    fn identity_projection_fixture(count: usize) -> EventModel {
+        let origin = json!({"source":"identity.va","line":1,"column":1,"instance":"M"});
+        let states: Vec<_> = (0..count)
+            .map(|k| json!({"instance":"M","name":format!("q{k}"),"kind":"real","initial":0}))
+            .collect();
+        let p = serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","y","u","v"],"states":states,
+            "operators":[{"kind":"transition","input":{"op":"affine","constant":1,"terms":[]},
+                "delay":0,"rise":1,"fall":1,"origin":origin},
+                {"kind":"transition","input":{"op":"affine","constant":1,"terms":[]},
+                "delay":0,"rise":1,"fall":1,"origin":origin}],
+            "events":[{"origin":origin,"trigger":{"kind":"timer","start":1,"period":0,"enabled":true,"time_tolerance":0.001},
+                "body":[{"kind":"assign","state":0,"rhs":{"op":"add","left":{"op":"state","state":0},"right":{"op":"affine","constant":1,"terms":[]}}},
+                    {"kind":"assign","state":0,"rhs":{"op":"add","left":{"op":"state","state":0},"right":{"op":"affine","constant":-1,"terms":[]}}},
+                    {"kind":"assign","state":1,"rhs":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]}}]}],
+            "contributions":[{"origin":origin,"branch":{"instance":"M","local_positive":"out","local_negative":"ref","kind":"voltage"},
+                "positive":1,"negative":0,"rhs":{"op":"add","left":{"op":"multiply","left":{"op":"state","state":0},"right":{"op":"operator","operator":0}},
+                    "right":{"op":"add","left":{"op":"multiply","left":{"op":"affine","constant":0.5,"terms":[]},"right":{"op":"state","state":1}},
+                        "right":{"op":"affine","constant":0,"terms":[{"node":3,"coefficient":1}]}}}}]
+        })).unwrap();
+        EventModel::new(
+            p,
+            vec!["v".into(), "u".into()],
+            crate::ir::Tolerances::default(),
+        )
+        .unwrap()
+    }
+
+    fn original_dense_state_rows(
+        model: &EventModel,
+        selection: &Selection,
+        bounds: &Bounds,
+    ) -> Vec<Vec<I>> {
+        let p = &model.program;
+        let count = p.nodes.len();
+        let parameters = p.states.len() + p.operators.len();
+        let variables = count + parameters;
+        let width = model.driven.len() + parameters + 1;
+        let initial: Vec<_> = (0..p.states.len())
+            .map(|k| {
+                let mut row = vec![I::ZERO; variables + 1];
+                row[count + k] = I::ONE;
+                row
+            })
+            .collect();
+        let mut updates = initial.clone();
+        for (event, indices) in &selection.actions {
+            let assignments = p.events[*event].assignments();
+            let mut local = initial.clone();
+            for &index in indices {
+                let action = &assignments[index];
+                local[action.state] = substitute(&affine(&action.rhs, p).unwrap(), &local, count);
+                updates[action.state] = local[action.state].clone();
+            }
+        }
+        let mut values = bounds.nodes.clone();
+        for k in 0..parameters {
+            let mut row = vec![I::ZERO; width];
+            row[model.driven.len() + k] = I::ONE;
+            values.push(row);
+        }
+        updates
+            .iter()
+            .map(|row| {
+                (0..width)
+                    .map(|column| {
+                        let base = if column == width - 1 {
+                            row[variables]
+                        } else {
+                            I::ZERO
+                        };
+                        (0..variables).fold(base, |sum, j| sum + row[j] * values[j][column])
+                    })
+                    .collect()
+            })
+            .collect()
+    }
+
+    #[test]
+    fn unchanged_state_projection_work_does_not_scale_with_held_state_rows() {
+        let model = identity_projection_fixture(64);
+        for operator in [I::ZERO, I::point(0.25), I { lo: 0.24, hi: 0.26 }] {
+            projection_work::reset();
+            let bounds = Bounds::for_program_with_operators(
+                &model,
+                &Selection::default(),
+                &model.program,
+                &[operator, I::ONE],
+            )
+            .unwrap();
+            assert_eq!(
+                projection_work::state_rows(),
+                0,
+                "unwritten states must not repeat a known identity projection"
+            );
+            assert_eq!(bounds.states.len(), 64);
+            assert!(bounds.matches_operator_bindings(&[operator, I::ONE]));
+        }
+        for indices in [vec![0, 1], vec![0, 2]] {
+            let selection = Selection {
+                actions: vec![(0, indices.clone())],
+                ..Selection::default()
+            };
+            projection_work::reset();
+            Bounds::for_program_with_operators(
+                &model,
+                &selection,
+                &model.program,
+                &[I::point(0.25), I::ONE],
+            )
+            .unwrap();
+            assert_eq!(
+                projection_work::state_rows(),
+                if indices == [0, 1] { 1 } else { 2 }
+            );
+        }
+    }
+
+    #[test]
+    fn unwritten_projection_keeps_dense_bits_live_forcing_and_full_matrix_rejection() {
+        let model = identity_projection_fixture(4);
+        for indices in [vec![], vec![0], vec![0, 1], vec![2], vec![0, 2]] {
+            let selection = Selection {
+                actions: vec![(0, indices.clone())],
+                ..Selection::default()
+            };
+            for operator in [I::point(-0.), I::point(0.25), I { lo: 0.24, hi: 0.26 }] {
+                projection_work::reset();
+                let bounds = Bounds::for_program_with_operators(
+                    &model,
+                    &selection,
+                    &model.program,
+                    &[operator, I::ONE],
+                )
+                .unwrap();
+                let dense_rows = original_dense_state_rows(&model, &selection, &bounds);
+                for (actual, expected) in bounds
+                    .states
+                    .iter()
+                    .flatten()
+                    .zip(dense_rows.iter().flatten())
+                {
+                    assert_eq!(
+                        (actual.lo.to_bits(), actual.hi.to_bits()),
+                        (expected.lo.to_bits(), expected.hi.to_bits())
+                    );
+                }
+                let mut dense = Bounds::from_rows(bounds.nodes.clone(), dense_rows, Vec::new());
+                dense.state_nonzero.clear();
+                for last in [
+                    I::point(-0.),
+                    I { lo: -0., hi: 0. },
+                    I { lo: -1., hi: 1. },
+                    I::point(f64::INFINITY),
+                    I::point(f64::NAN),
+                ] {
+                    let before = [I::ONE, I::ZERO, I::point(f64::from_bits(1)), last];
+                    let a = bounds.check_states(
+                        &model,
+                        &[I::point(-0.), I::ONE],
+                        &before,
+                        &[operator, I::ONE],
+                        &[],
+                        &[0.; 4],
+                    );
+                    let b = dense.check_states(
+                        &model,
+                        &[I::point(-0.), I::ONE],
+                        &before,
+                        &[operator, I::ONE],
+                        &[],
+                        &[0.; 4],
+                    );
+                    match (a, b) {
+                        (Ok(a), Ok(b)) => {
+                            for (a, b) in a.iter().zip(b) {
+                                assert_eq!(
+                                    (a.lo.to_bits(), a.hi.to_bits()),
+                                    (b.lo.to_bits(), b.hi.to_bits())
+                                );
+                            }
+                        }
+                        (Err(a), Err(b)) => assert_eq!((a.kind, a.message), (b.kind, b.message)),
+                        _ => panic!("prepared and original dense state checks disagree"),
+                    }
+                }
+            }
+        }
+        for nonfinite in [f64::INFINITY, f64::NAN] {
+            let error = Bounds::for_program_with_operators(
+                &model,
+                &Selection::default(),
+                &model.program,
+                &[I::point(nonfinite), I::ONE],
+            )
+            .err()
+            .unwrap();
+            assert_eq!(error.kind, "event_accuracy");
+        }
+    }
+
+    #[test]
+    fn repeated_state_checks_scan_live_parameters_once_and_keep_dense_results() {
+        let count = 64;
+        let states: Vec<_> = (0..count)
+            .map(|i| json!({"instance":"M","name":format!("q{i}"),"kind":"real","initial":0}))
+            .collect();
+        let program = serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u"],
+            "states":states,"contributions":[],
+            "events":[{"origin":{"source":"rows.va","line":1,"column":1,"instance":"M"},
+                "trigger":{"kind":"timer","start":1,"period":0,"enabled":true,"time_tolerance":0.001},
+                "body":[{"kind":"assign","state":0,"rhs":{"op":"affine","constant":0,"terms":[]}}]}]
+        }))
+        .unwrap();
+        let model =
+            EventModel::new(program, vec!["u".into()], crate::ir::Tolerances::default()).unwrap();
+        let bounds = Bounds::held_inputs(&model, &Selection::default()).unwrap();
+        let mut fresh_dense = Bounds::from_rows(Vec::new(), bounds.states.clone(), Vec::new());
+        fresh_dense.state_nonzero.clear();
+        for sample in 0..2 {
+            let before: Vec<_> = (0..count)
+                .map(|i| I {
+                    lo: (i + sample) as f64 / 64.,
+                    hi: (i + sample) as f64 / 64. + sample as f64 / 256.,
+                })
+                .collect();
+            let inputs = [I::point(sample as f64)];
+            let parameters: Vec<_> = inputs
+                .iter()
+                .chain(&before)
+                .copied()
+                .chain([I::ONE])
+                .collect();
+            let expected: Vec<_> = bounds
+                .states
+                .iter()
+                .map(|row| {
+                    row.iter()
+                        .zip(&parameters)
+                        .fold(I::ZERO, |sum, (&a, &b)| sum + a * b)
+                })
+                .collect();
+            projection_work::reset();
+            let actual = bounds
+                .check_states(&model, &inputs, &before, &[], &[], &vec![0.; count])
+                .unwrap();
+            let (pairs, parameter_visits) = projection_work::get();
+            assert_eq!(
+                pairs, 0,
+                "prepared unit rows must not rescan the full dense width"
+            );
+            assert_eq!(
+                parameter_visits,
+                parameters.len(),
+                "one current finite gate per check"
+            );
+            for (actual, expected) in actual.iter().zip(&expected) {
+                assert_eq!(
+                    (actual.lo.to_bits(), actual.hi.to_bits()),
+                    (expected.lo.to_bits(), expected.hi.to_bits())
+                );
+            }
+            let dense = fresh_dense
+                .check_states(&model, &inputs, &before, &[], &[], &vec![0.; count])
+                .unwrap();
+            assert_eq!(actual, dense);
+        }
+        let mut before = vec![I::ZERO; count];
+        for nonfinite in [f64::INFINITY, f64::NAN] {
+            before[count - 1] = I::point(nonfinite);
+            let err = bounds
+                .check_states(&model, &[I::ZERO], &before, &[], &[], &vec![0.; count])
+                .unwrap_err();
+            assert_eq!(err.kind, "event_accuracy");
+            assert!(
+                err.message.contains("M:q0"),
+                "zero-weight nonfinite forcing still reaches the original first-row error"
+            );
+            let dense = fresh_dense
+                .check_states(&model, &[I::ZERO], &before, &[], &[], &vec![0.; count])
+                .unwrap_err();
+            assert_eq!((err.kind, err.message), (dense.kind, dense.message));
+        }
+        before[count - 1] = I::ZERO;
+        assert_eq!(
+            bounds
+                .check_states(&model, &[I::ZERO], &before, &[], &[], &vec![0.; count])
+                .unwrap(),
+            vec![I::ZERO; count]
+        );
+    }
+
+    #[test]
+    fn sparse_dot_keeps_dense_edge_bits_and_skips_exact_zero_terms() {
+        let dense = |row: &[I], values: &[I]| {
+            row.iter()
+                .zip(values)
+                .fold(I::ZERO, |sum, (&a, &b)| sum + a * b)
+        };
+        let cases = [
+            (vec![], vec![]),
+            (vec![], vec![I::point(f64::INFINITY), I::point(f64::NAN)]),
+            (vec![I::ONE], vec![]),
+            (vec![I::ZERO; 4], vec![I::ONE; 4]),
+            (vec![I::ONE, -I::ONE], vec![I::ONE; 2]),
+            (vec![I::ONE, I::ZERO], vec![I::ONE]),
+            (
+                vec![I::ONE, I::ZERO],
+                vec![I::ONE, I::ONE, I::point(f64::INFINITY)],
+            ),
+            (vec![I::ZERO], vec![I::point(f64::INFINITY)]),
+            (vec![I::ZERO], vec![I::point(f64::NAN)]),
+            (vec![I::point(f64::INFINITY)], vec![I::ZERO]),
+            (
+                vec![
+                    I {
+                        lo: 0.0,
+                        hi: f64::MAX,
+                    },
+                    I {
+                        lo: 0.0,
+                        hi: f64::MAX,
+                    },
+                    I::ZERO,
+                ],
+                vec![I::ONE; 3],
+            ),
+            (
+                vec![I::point(-0.0), I::ZERO, I { lo: -0.0, hi: 0.0 }],
+                vec![-I::ONE, I::point(-0.0), I::ONE],
+            ),
+            (vec![I::point(f64::from_bits(1))], vec![I::point(0.5)]),
+            (
+                vec![I::point(1e16), I::ZERO, I::ONE, -I::ONE, -I::point(1e16)],
+                vec![I::ONE; 5],
+            ),
+            (vec![I::ONE], vec![I::ONE, I::point(f64::INFINITY)]),
+            (vec![I::ONE, I::point(f64::NAN)], vec![I::ONE]),
+        ];
+        for (row, values) in cases {
+            let actual = dot(&row, &values);
+            let expected = dense(&row, &values);
+            assert_eq!(
+                (actual.lo.to_bits(), actual.hi.to_bits()),
+                (expected.lo.to_bits(), expected.hi.to_bits())
+            );
+            let indices = nonzero_indices(&row);
+            let prepared = prepared_dot(
+                &row,
+                indices.as_deref(),
+                &values,
+                values.iter().all(|v| v.finite()),
+            );
+            assert_eq!(
+                (prepared.lo.to_bits(), prepared.hi.to_bits()),
+                (expected.lo.to_bits(), expected.hi.to_bits())
+            );
+        }
+        let mut row = vec![I::ZERO; 64];
+        row[31] = I::ONE;
+        let values = vec![I::ONE; row.len()];
+        crate::interval::zero_product_tests::reset_work();
+        assert_eq!(dot(&row, &values), I::ONE);
+        let (products, _) = crate::interval::zero_product_tests::work();
+        assert_eq!(products, 4);
+    }
+
+    #[test]
+    fn state_update_projection_matches_dense_after_joint_elimination() {
+        let origin = json!({"source":"projection.va","line":1,"column":1,"instance":"dut"});
+        let p: crate::ir::Program = serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","y"],
+            "states":[{"instance":"dut","name":"q","kind":"real","initial":2},
+                {"instance":"dut","name":"r","kind":"real","initial":-0.0}],
+            "events":[{"origin":origin,"trigger":{"kind":"timer","start":1,"period":0,"enabled":true,"time_tolerance":0.001},
+                "body":[{"kind":"assign","state":0,"rhs":{"op":"add","left":{"op":"state","state":0},
+                    "right":{"op":"affine","constant":0.1,"terms":[{"node":1,"coefficient":0.3}]}}},
+                    {"kind":"assign","state":1,"rhs":{"op":"add","left":{"op":"state","state":0},"right":{"op":"state","state":1}}}]}],
+            "contributions":[{"origin":origin,"branch":{"instance":"dut","local_positive":"out","local_negative":"ref","kind":"voltage"},
+                "positive":2,"negative":0,"rhs":{"op":"multiply","left":{"op":"affine","constant":0.1,"terms":[]},"right":{"op":"state","state":0}}}]
+        })).unwrap();
+        let model = EventModel::new(p, vec!["u".into()], crate::ir::Tolerances::default()).unwrap();
+        let p = &model.program;
+        let variables = p.nodes.len() + p.states.len();
+        let width = 1 + p.states.len() + 1;
+        let initial: Vec<_> = (0..p.states.len())
+            .map(|i| {
+                let mut row = vec![I::ZERO; variables + 1];
+                row[p.nodes.len() + i] = I::ONE;
+                row
+            })
+            .collect();
+        for indices in [vec![], vec![0], vec![0, 1]] {
+            let selection = Selection {
+                actions: vec![(0, indices.clone())],
+                ..Selection::default()
+            };
+            let actual = Bounds::for_program(&model, &selection, p).unwrap();
+            let mut values = actual.nodes.clone();
+            for i in 0..p.states.len() {
+                let mut row = vec![I::ZERO; width];
+                row[1 + i] = I::ONE;
+                values.push(row);
+            }
+            let mut updates = initial.clone();
+            let actions = p.events[0].assignments();
+            for index in indices {
+                updates[actions[index].state] = substitute(
+                    &affine(&actions[index].rhs, p).unwrap(),
+                    &updates,
+                    p.nodes.len(),
+                );
+            }
+            for (row, actual) in updates.iter().zip(&actual.states) {
+                for k in 0..width {
+                    let base = if k == width - 1 {
+                        row[variables]
+                    } else {
+                        I::ZERO
+                    };
+                    let dense = (0..variables).fold(base, |sum, j| sum + row[j] * values[j][k]);
+                    assert_eq!(
+                        (actual[k].lo.to_bits(), actual[k].hi.to_bits()),
+                        (dense.lo.to_bits(), dense.hi.to_bits())
+                    );
+                }
+            }
+        }
+    }
+
     #[test]
     fn sampled_operator_uncertainty_remains_in_state_coefficient() {
         let origin = json!({"source":"coefficient.va","line":1,"column":1,"instance":"dut"});
@@ -573,7 +1123,12 @@ mod sampled_coefficient_tests {
             left: Box::new(Expression::State { state: 0 }),
             right: Box::new(Expression::Operator { operator: 0 }),
         };
-        let row = affine_with_operators(&expr, &p, &[I { lo: 0.4, hi: 0.6 }]).unwrap();
+        let bindings = RefCell::new(BTreeSet::new());
+        let row = affine_with_operators(&expr, &p, &[I { lo: 0.4, hi: 0.6 }], &bindings).unwrap();
+        assert_eq!(
+            bindings.into_inner(),
+            BTreeSet::from([(0, 0.4_f64.to_bits(), 0.6_f64.to_bits())])
+        );
         assert!(row[2].lo <= 0.4 && row[2].hi >= 0.6);
         assert!(row[3].zero());
         let value = dot(

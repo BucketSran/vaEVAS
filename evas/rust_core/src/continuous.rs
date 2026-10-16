@@ -142,7 +142,8 @@ pub(crate) struct LinearContinuous {
 
 #[derive(Clone)]
 struct Context {
-    program: Program,
+    // Immutable model storage is shared; candidate time proofs stay below.
+    program: Arc<Program>,
     trajectory: Trajectory,
     driven: Vec<String>,
     force_integrals: bool,
@@ -163,7 +164,7 @@ impl Context {
             time_proofs: Default::default(),
             detached_timed: projected.is_some(),
             live_parameters,
-            program: projected.unwrap_or_else(|| program.clone()),
+            program: Arc::new(projected.unwrap_or_else(|| program.clone())),
             trajectory: trajectory.clone(),
             driven: driven.to_vec(),
             force_integrals: false,
@@ -2378,5 +2379,79 @@ mod tests {
 
         let t = 1.0_f64;
         assert_close(continuous.values(t).unwrap()[0], 1.0 - (-t).exp(), 1e-9);
+    }
+
+    #[test]
+    fn candidate_context_shares_model_but_keeps_proofs_and_rewrites_private() {
+        let mut program = program_with_idt(Expression::State { state: 0 }, 0.);
+        program.states.push(
+            serde_json::from_value(serde_json::json!({
+                "instance":"uut", "name":"q", "kind":"real", "initial":0
+            }))
+            .unwrap(),
+        );
+        let trajectory = no_source_trajectory(1.);
+        let accepted = Continuous::new(&program, &trajectory, &[], &[0.])
+            .unwrap()
+            .unwrap();
+        let original = accepted.bounds(1.).unwrap();
+        let Continuous::Linear(base) = &accepted else {
+            panic!("held linear input should use the linear history");
+        };
+        let mut tentative = (*base.context).clone();
+        tentative
+            .time_proofs
+            .insert(0, crate::exact_source::RootTime::point(0.25).unwrap());
+        assert!(base.context.time_proofs.is_empty());
+        assert_eq!(tentative.time_proofs.len(), 1);
+
+        assert!(accepted
+            .restarted_with_time_proofs(
+                0.5,
+                I { lo: 0.25, hi: 0.75 },
+                &[I::ONE],
+                1.,
+                &Default::default(),
+            )
+            .is_err());
+        assert_eq!(accepted.bounds(1.).unwrap(), original);
+        let candidate = accepted
+            .restarted_with_time_proofs(0.25, I::point(0.25), &[I::ONE], 1., &Default::default())
+            .unwrap();
+        assert_eq!(accepted.bounds(1.).unwrap(), original);
+        let at_stop = candidate.bounds(1.).unwrap()[0];
+        assert!(at_stop.lo <= 0.75 && at_stop.hi >= 0.75);
+
+        // A rewriting consumer still receives an owned, detached Program.
+        let frozen =
+            selection::freeze_context(&Arc::new(tentative), &[I::point(0.25)], 0.25).unwrap();
+        let frozen_program: &Program = &frozen.program;
+        let mut rewritten = frozen_program.clone();
+        if let OperatorSpec::Idt { input, .. } = &mut rewritten.operators[0] {
+            *input = Expression::Multiply {
+                left: Box::new(Expression::Affine {
+                    constant: 2.,
+                    terms: vec![],
+                }),
+                right: Box::new(Expression::State { state: 0 }),
+            };
+        }
+        let independent = Continuous::new(&rewritten, &trajectory, &[], &[1.])
+            .unwrap()
+            .unwrap();
+        let rewritten_stop = independent.bounds(1.).unwrap()[0];
+        assert!(rewritten_stop.lo <= 2. && rewritten_stop.hi >= 2.);
+        assert_eq!(accepted.bounds(1.).unwrap(), original);
+
+        let Continuous::Linear(next) = candidate else {
+            panic!("held linear input should retain the linear history");
+        };
+        // Observe actual AST storage, rather than the Arc wrapper: replacing
+        // candidate parameters must not allocate another copy of model names.
+        assert_eq!(
+            next.context.program.nodes[1].as_ptr(),
+            base.context.program.nodes[1].as_ptr(),
+            "candidate restart copied the immutable Program AST"
+        );
     }
 }

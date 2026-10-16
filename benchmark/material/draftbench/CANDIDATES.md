@@ -171,6 +171,17 @@ Spectre 有 bug。本分支修复前的离根检查缺少进入方向，不能�
 
 ## BC-0003：多时钟采样、复位与边界观测
 
+2026-10-16 的 R01 MUX 核对补充了一项变体。原模型在
+`cross(V(track)-vth,+1)` 内又要求 `V(track)>vth`，才建立采集及通道身份。
+`main@8c3ef9ee` 的独立 PWL 控制在数学根上将严格比较判假；原 MUX 则先被网络状态条件检查拒绝，
+尚无完整当前波形。冻结 Spectre 的读出为 valid=1.8 V、owner=通道 2；
+将 valid 或 owner 置零且让测量报告忠实记录该值，六个反例均被原物理 checker 拒绝。
+这区分了事件观察语义、测量忠实性和物理结果正确性，不能归为同一个“checker 通过”。
+候选题可考察如何用明确的边沿与状态条件表达采集启动；原模型继续保留，不以改写模型掩盖兼容缺口。
+状态仍为待改造，需补各后端实际事件取值及未见参数，F30 不在本轮恢复范围。
+来源见 [#65](https://github.com/BucketSran/vaEVAS/issues/65)；完整输入与反例仍本地保留于
+`runs/r01-main-20261016/original-input-index.json` 和 `mux-diagnosis/REPORT.md`，未新增正式题目。
+
 首轮四后端开发验证暴露近零采样状态、复位与 transition 组合、独立时钟接近同刻时的
 执行缺口。相关修复及三例新 Spectre 有限对照见
 [紧凑证据](../../../experiments/backends/transient-accuracy/core-followup.json)和
@@ -206,6 +217,18 @@ Gnucap 的阈值采样在密集观察下只触发 3 次，移除独立观察源�
 停止边界还需检查最终一次读取是否发生：[原周期采样探针](../../../experiments/backends/sample-edge-filter/BOUNDARY.md#timer-stop)
 曾因时间包围跨过 stop 被拒绝。候选可检查终点计数、保持值和延迟下游历史，
 同时在不请求终点输出时核对事件记录；这仍是候选素材，不增加评分任务。
+
+2026-10-17 的 R01 CDS 修复还暴露了同刻重入丢失时间包围的问题。周期 timer 与源控制
+`transition` 的公开小例在固定 v5 内核上被拒绝；精确根虽被保留，对应窗口却被压成代表点。
+候选应同时检查目标值、事件次数、查询不变性和时间证据的传递，不能只判断最终平台电压。
+这是已复现的引擎缺陷，尚不能据此判原 VA 有错。小例与原 CDS 数值诊断暂存本地
+`runs/r01-main-20261016/` 下的 `source-window-probe/` 和 `cds-projection/v6-root-diagnostic/`，
+修复及原题验收由 [#65](https://github.com/BucketSran/vaEVAS/issues/65) 跟踪；没有新增题目或成绩。
+
+同轮原 CDS 的 `due0=1e30; next_due=min(due0,due1)` 还暴露了精确时间来源丢失。
+候选可检查常量重置、最早期限选择、邻近查询和未知来源拒绝；原 145.1 ns 查询实际位于 timer 根前四分之一 ULP。
+证据在同一运行目录的 `cds-projection/v7-time-provenance-diagnostic/` 和 `v7-phase-diagnostic/`。
+三个简化公开夹具均通过旧内核，未复现该失败；不能将它们当成修复红例或原题通过证据。
 
 这里只记录候选，不建设或新增正式任务，不改变任何成绩分母。已用于修复的输入不能
 重新标为未见确认集。
