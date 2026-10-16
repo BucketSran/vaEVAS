@@ -59,9 +59,28 @@
 | 检查两类事件路径重构是否保持行为 | [共同事件验收](event_acceptance/README.md)：六模型、十二配置，原数学失败与观察限制单列 |
 | 运行新增功能组合的有限确认 | [确认集及冻结检查器](confirmation/README.md) |
 | 核验历史输入没有被改写 | [冻结 v1](versions/v1/README.md) |
+| 用小模型定位 timer 保持值或积分回归 | [有界生成器](generated_transient.py)、[独立答案与错误控制](../tests/test_generated_transient.py)；开发检查，不计入支持表 |
 
 固定外部多项式滤波的直接通路见 [C4 同源码检查器](filter_direct/compare.py)，
 [判据、命令与实测](../../experiments/backends/filter-direct/README.md)保留全部配置。
+
+有界生成器只产生 timer 驱动的保持值及其积分，以精确有理数计算电压、状态和事件答案。
+例如，初值为 0.5、在 1 秒变为 -1 时，积分到 1.5 秒的增量应为 0。
+每个种子最多 5 个 timer、16 个观察点；失败缩减须保留原错误的对象、时刻和方向。
+它不代表随机语言覆盖或 Spectre 对照，开发测试数也不加入上方固定条件的分母。
+
+构建内核后，在仓库根目录执行：
+
+```sh
+PYTHONPATH=evas/src python3 -B evas/validation/generated_transient.py \
+  --kernel evas/rust_core/target/debug/evas-kernel \
+  --seeds 1-12 --out runs/generated-transient-check-01
+```
+
+输出目录必须尚不存在，种子不得重复。`seed-N.json` 保留原输入、答案、响应、判定及
+内核和 checker 哈希，缩减结果另存 `seed-N-reduction.json`。`summary.json` 出现表示
+批次结束，是否通过仍看其中的结果计数。正式验收另需按[执行收据](../../docs/contributing/evidence.md#execution-receipts)
+绑定前端源码、构建来源和环境；这些开发输出本身不证明构建来源或跨后端一致性。
 
 ## 当前结果与历史比较
 
