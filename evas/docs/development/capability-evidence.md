@@ -16,6 +16,9 @@
 动态系数滤波的原IR准入、历史延续和最终认证失败回退见 `test_live_transition_filter.py`
 与 `transient_timer_boundary_tests.rs`；外部取证资格仍不完整，不新增Q资格。
 
+[ANSI 端口声明](../../../experiments/backends/support/ansi-ports/README.md)补充 LANG 的有限证据；
+五个正控制共25原生配对点及两个实际拒绝控制保留。原26请求中三项完成并通过冻结旧 checker，23项仍有后续阻塞，不新增Q成绩。
+
 [SCS 时间选择](../../../experiments/backends/support/scs-save-time/README.md)补充 LANG 与 DEV:scs-input 的有限证据；
 时间轴、电气同名节点和默认节点保存分别验收，不扩展 Spectre 的完整保存语法或固定 Q 成绩。
 

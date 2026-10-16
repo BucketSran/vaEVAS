@@ -1,0 +1,44 @@
+[
+  {
+    "case": "direction-only",
+    "source": "`include \"disciplines.vams\"\nmodule m(input a, output y, inout r); electrical a,y,r; analog begin V(y,r)<+2*V(a,r); end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa (a 0) vsource type=pwl wave=[0 0 1 1]\nXdut (a y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a y\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa (a 0) vsource type=pwl wave=[0 0 1 1]\nXdut (a y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a y\n"
+  },
+  {
+    "case": "redeclared",
+    "source": "`include \"disciplines.vams\"\nmodule m(input electrical a, output electrical y, inout electrical r); electrical a; analog begin V(y,r)<+2*V(a,r); end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa (a 0) vsource type=pwl wave=[0 0 1 1]\nXdut (a y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a y\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa (a 0) vsource type=pwl wave=[0 0 1 1]\nXdut (a y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a y\n"
+  },
+  {
+    "case": "scalar-ansi",
+    "source": "`include \"disciplines.vams\"\nmodule m(input electrical a, input electrical b, output electrical y, inout electrical r); analog begin V(y,r)<+3*V(a,r)+5*V(b,r); end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa (a 0) vsource type=pwl wave=[0 0 1 1]\nVb (b 0) vsource dc=.25\nXdut (a b y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a b y\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa (a 0) vsource type=pwl wave=[0 0 1 1]\nVb (b 0) vsource dc=.25\nXdut (a b y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a b y\n"
+  },
+  {
+    "case": "scalar-nonansi",
+    "source": "`include \"disciplines.vams\"\nmodule m(a,b,y,r); input a,b; output y; inout r; electrical a,b,y,r; analog begin V(y,r)<+3*V(a,r)+5*V(b,r); end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa (a 0) vsource type=pwl wave=[0 0 1 1]\nVb (b 0) vsource dc=.25\nXdut (a b y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a b y\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa (a 0) vsource type=pwl wave=[0 0 1 1]\nVb (b 0) vsource dc=.25\nXdut (a b y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a b y\n"
+  },
+  {
+    "case": "shared-list",
+    "source": "`include \"disciplines.vams\"\nmodule m(input electrical a,b, output electrical y, inout electrical r); analog begin V(y,r)<+3*V(a,r)+5*V(b,r); end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa (a 0) vsource type=pwl wave=[0 0 1 1]\nVb (b 0) vsource dc=.25\nXdut (a b y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a b y\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa (a 0) vsource type=pwl wave=[0 0 1 1]\nVb (b 0) vsource dc=.25\nXdut (a b y 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a b y\n"
+  },
+  {
+    "case": "vector-ansi",
+    "source": "`include \"disciplines.vams\"\nmodule m(input electrical [1:0] u, output electrical [0:1] y, inout electrical r); analog begin V(y[0],r)<+V(u[0],r)+1; V(y[1],r)<+2*V(u[1],r); end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa1 (a1 0) vsource type=pwl wave=[0 2 1 3]\nVa0 (a0 0) vsource type=pwl wave=[0 5 1 4]\nXdut (a1 a0 y0 y1 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a1 a0 y0 y1\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa1 (a1 0) vsource type=pwl wave=[0 2 1 3]\nVa0 (a0 0) vsource type=pwl wave=[0 5 1 4]\nXdut (a1 a0 y0 y1 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a1 a0 y0 y1\n"
+  },
+  {
+    "case": "vector-nonansi",
+    "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input [1:0] u; output [0:1] y; inout r; electrical [1:0] u; electrical [0:1] y; electrical r; analog begin V(y[0],r)<+V(u[0],r)+1; V(y[1],r)<+2*V(u[1],r); end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa1 (a1 0) vsource type=pwl wave=[0 2 1 3]\nVa0 (a0 0) vsource type=pwl wave=[0 5 1 4]\nXdut (a1 a0 y0 y1 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12 precision=\"%24.17g\"\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a1 a0 y0 y1\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVa1 (a1 0) vsource type=pwl wave=[0 2 1 3]\nVa0 (a0 0) vsource type=pwl wave=[0 5 1 4]\nXdut (a1 a0 y0 y1 0) m\nsimulatorOptions options reltol=1e-7 vabstol=1e-9 iabstol=1e-12\ntran tran stop=1 maxstep=.25 strobetimes=[0 .125 .5 .875 1] strobeoutput=all\nsave a1 a0 y0 y1\n"
+  }
+]

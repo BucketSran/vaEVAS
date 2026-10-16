@@ -289,6 +289,7 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 <a id="实现范围"></a>
 
 语法和参数的详细约束见[模型编译](docs/reference/frontend-admission.md#模型编译)。
+逐端口方向的 ANSI 头部、正文补 discipline 及拒绝边界见 [ANSI 端口声明](docs/reference/frontend-admission.md#ansi-端口声明)。
 
 <a id="frontend-boundaries"></a>
 
