@@ -10,9 +10,11 @@ Arcadia-1/analog-design-bench 的 `sky130-bottom-plate-sampler-pvt`（gold 解 =
 
 - 链路打通：同一份 VA 在 Xyce 7.10（ADMS 插件，`Y` 前缀实例 + `.model ... level=1`）与
   ngspice 46（OpenVAF→OSDI，`N` 前缀实例 + `.control pre_osdi` 加载）下均**零改写**编译并联合求解成功。
-- 工具差（gold 解，tt 点，同容差 `method=gear reltol=5e-4`）：SFDR −1.9 dB（谱底差异，非谐波
-  偏移）、held sample 最大差 0.705 mV，均为判据余量的一小部分；唯一有直接证据的来源是
-  sky130 模型卡声明 BSIM4.5 而 Xyce 只按 4.6.1 方程求值（逐器件运行时告警）。
+- 工具差（gold 解，tt 点，同容差 `method=gear reltol=5e-4`）：SFDR −1.9 dB、held sample 最大差
+  0.705 mV。80 点差分样本的独立 DFT 显示，ngspice 最大杂散为三次谐波（bin 12），Xyce
+  为二次谐波（bin 8），分别决定 99.004 与 97.119 dB 的 SFDR，不能归因为非谐波谱底。
+  sky130 卡声明 BSIM4.5、Xyce 按 4.6.1 求值的逐器件告警只证明模型版本处理不同，未证明
+  它就是 SFDR 差异的原因。复算见 [频谱核对](results/spectrum-recheck.json)。
 - VA 替换差：增益误差 0.40%→0.014%（约 29×，常数 Ron 消除信号依赖衰减）、SFDR 97.1→108.6 dB
   （开关 Ron 非线性这一谐波源头消失）；存储共模偏移**反向** +2.5 mV（推断：gold 中 MOS 关断
   电荷注入与 CM 支路偏移部分抵消，理想化后净偏移显现），仍远低于 25 mV 判据。
@@ -41,7 +43,8 @@ worst 值见 [RECEIPTS.md](RECEIPTS.md) R1）。steep=20→100 四项指标几�
 | tt 点墙钟（含 docker 启动） | gold 13.9 s / VA 20.9 s | gold 22.7 s / VA 72.4 s |
 | 输出时间点 | 16043（14 变量，`.save` 限定） | 30448（`-r` 全量 483 变量 / 239 MB） |
 
-Xyce 慢的主因是 1.9 倍密的时间网格（每点成本反而略低），且其 `-r` 输出器无条件转储全部节点。
+这些单次墙钟包含 Docker 启动，未作交替重复，不作为稳定的工具速度比较。Xyce 的时间网格
+约密 1.9 倍，且 `-r` 转储全部节点；尚未分离积分、器件与输出开销，不能据此确定慢的主因。
 已实测收窄配方：`.print ... format=raw` 只写所列变量（239 MB→7.09 MB，34×），点数与指标
 逐位不变（RECEIPTS.md R7），后续批量实验应采用。
 
@@ -57,7 +60,11 @@ Xyce 慢的主因是 1.9 倍密的时间网格（每点成本反而略低），�
 - [2026-10-17-open-source-va-scs-joint-survey.md](2026-10-17-open-source-va-scs-joint-survey.md) — 立项调研（开源生态无单点联合方案）
 
 大波形（.raw，5–244 MB/份）与构建日志按仓库惯例留在 ignored `runs/xyce-va-pilot-20261017/`，
-指标 JSON 已足够复算全部结论。
+公开 JSON 保留的 80 个差分 held samples 可复算 SFDR、差分增益及两工具的 held-sample 差。
+共模仅保存最大误差，功率仅保存积分结果，重算这两项、时间网格或逐位输出一致性仍需本地
+原波形；BSIM 告警需本地日志。原始材料为 **local-only**，不是公开数据集。
+输入、原 checker、工具产物和原始输出的清单/哈希见 [身份收据](results/input-identity.json)；
+原外部 benchmark commit 未保留，不能由本仓库的 Git HEAD 推断上游版本。
 
 ## 范围与下一步
 

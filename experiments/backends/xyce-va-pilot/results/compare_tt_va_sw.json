@@ -43,5 +43,26 @@
     "clock_source_power_w": 5.616983784856202e-07,
     "total_source_power_w": 0.0003844807008170724
   },
-  "ngspice_va_ideal_sw": "N/A: ngspice \u65e0 ADMS \u63d2\u4ef6\u80fd\u529b\uff08\u9700 OpenVAF/OSDI \u5de5\u5177\u94fe\uff0c\u8bd5\u70b9\u955c\u50cf\u672a\u542b\uff0c\u5355\u72ec\u5bb9\u5668\u4efb\u52a1\uff09"
+  "ngspice_va_ideal_sw": {
+    "sfdr_db": 73.56445663359077,
+    "gain_error": 2.1733680934499233e-05,
+    "stored_common_mode_error_v": 0.020525330886302928,
+    "vdd_source_power_w": 0.0003295103839373974,
+    "vcm_source_power_w": 2.160234655186144e-05,
+    "vinp_source_power_w": 1.5064041181638595e-05,
+    "vinn_source_power_w": 1.5066503577870736e-05,
+    "clock_source_power_w": 6.227722661299955e-07,
+    "total_source_power_w": 0.0003818660475148982
+  },
+  "ngspice_va_ideal_sw_tight": {
+    "sfdr_db": 106.74549152441777,
+    "gain_error": 0.00013642852365147728,
+    "stored_common_mode_error_v": 0.020534356164468526,
+    "vdd_source_power_w": 0.0003395497022136417,
+    "vcm_source_power_w": 2.1779057378906516e-05,
+    "vinp_source_power_w": 1.5070137308236309e-05,
+    "vinn_source_power_w": 1.5070110779447064e-05,
+    "clock_source_power_w": 5.022307904416897e-07,
+    "total_source_power_w": 0.0003919712384706733
+  }
 }

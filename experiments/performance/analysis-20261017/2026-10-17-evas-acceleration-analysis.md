@@ -12,9 +12,14 @@
 
 ## 现有测量入口与本轮实测
 
-入口：`experiments/performance/README.md`（static_solver / transient_solver bench + `profile_requests.py` 交替五轮配对协议 + `measure_build.py`）。计时边界为 Python 序列化 → 进程启动 → 内核解析/求解/编码 → Python 解析，**不含 VA 编译、checker 与答案检查**——因此"加速 checker"不影响正式分母（见 B6）。
+入口见 `experiments/performance/README.md`。这里有两种计时边界，不能混用：
 
-本轮在 main `e2c7aac7` 实测（`EVAS_BENCH_OUTPUTS=4097 cargo bench --locked --bench transient_solver`，release，五轮，单位 ms）：
+- 下表的 Rust `transient_solver` 微基准只计 `run(input)`；请求在计时前构造，不含 Python、进程启动或 JSON 编解码。
+- `profile_requests.py` 才计完整 JSON 请求：Python 序列化、进程启动、内核读入/解析/求解/编码及 Python 解析。不含 VA 编译、checker 与答案检查，因此 checker 优化不计入该分母。
+
+本表仅是内核微基准基线，不能直接与完整请求耗时相减来报告端到端提速。
+
+本轮内核微基准在 main `e2c7aac7` 实测（`EVAS_BENCH_OUTPUTS=4097 cargo bench --locked --bench transient_solver`，release，五轮，单位 ms）：
 
 | 案例 | 中位 | 范围 |
 | --- | ---: | --- |

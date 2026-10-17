@@ -1,0 +1,159 @@
+{
+  "analysis_id": "review-spectrum-20261017",
+  "operation": "Independent direct DFT of public80heldsamples; no new simulator execution",
+  "baseline_source_commit": "d71cf1981b36a92e073850e7a644cc24423536d0",
+  "method": "X[k]=sum(x[i]*exp(-2j*pi*k*i/N)); SFDR=10log10(P[4]/max(P[k],1<=k<N/2,k!=4)); DC/Nyquist excluded as original checker",
+  "results": [
+    {
+      "metric_file": "metrics_tt_ngspice.json",
+      "sha256": "5808fa02c3527866728c95d454185897c4178431d01d172f8bfef06c765d9a7e",
+      "samples": 80,
+      "fundamental_bin": 4,
+      "largest_spurs": [
+        {
+          "bin": 12,
+          "harmonic_multiple": 3.0,
+          "dbc": -99.00402731558925
+        },
+        {
+          "bin": 20,
+          "harmonic_multiple": 5.0,
+          "dbc": -100.37780775512516
+        },
+        {
+          "bin": 28,
+          "harmonic_multiple": 7.0,
+          "dbc": -112.86775777854716
+        }
+      ],
+      "sfdr_db": 99.00402731558925,
+      "stored_sfdr_equal": true
+    },
+    {
+      "metric_file": "metrics_tt_va_ngspice.json",
+      "sha256": "64218e5da457f9d4383f43d5c00626d6c22366b8498bc6ec0bda562fa743af88",
+      "samples": 80,
+      "fundamental_bin": 4,
+      "largest_spurs": [
+        {
+          "bin": 12,
+          "harmonic_multiple": 3.0,
+          "dbc": -73.56445663359077
+        },
+        {
+          "bin": 20,
+          "harmonic_multiple": 5.0,
+          "dbc": -91.31732027193387
+        },
+        {
+          "bin": 36,
+          "harmonic_multiple": 9.0,
+          "dbc": -94.55168197038452
+        }
+      ],
+      "sfdr_db": 73.56445663359077,
+      "stored_sfdr_equal": true
+    },
+    {
+      "metric_file": "metrics_tt_va_ngspice_tight.json",
+      "sha256": "957ed332ae7d8bf726885bd32eb45bb377088ab3c3f6f36bd248d53be4f134b2",
+      "samples": 80,
+      "fundamental_bin": 4,
+      "largest_spurs": [
+        {
+          "bin": 12,
+          "harmonic_multiple": 3.0,
+          "dbc": -106.74549152441777
+        },
+        {
+          "bin": 20,
+          "harmonic_multiple": 5.0,
+          "dbc": -119.51523367767388
+        },
+        {
+          "bin": 28,
+          "harmonic_multiple": 7.0,
+          "dbc": -120.76124054776473
+        }
+      ],
+      "sfdr_db": 106.74549152441777,
+      "stored_sfdr_equal": true
+    },
+    {
+      "metric_file": "metrics_tt_va_steep100_xyce.json",
+      "sha256": "1bba2ff46682014577d202cf7a5d97dac6259e1055954a7903e28992f01b7842",
+      "samples": 80,
+      "fundamental_bin": 4,
+      "largest_spurs": [
+        {
+          "bin": 28,
+          "harmonic_multiple": 7.0,
+          "dbc": -108.73177338248225
+        },
+        {
+          "bin": 20,
+          "harmonic_multiple": 5.0,
+          "dbc": -110.36113318697204
+        },
+        {
+          "bin": 36,
+          "harmonic_multiple": 9.0,
+          "dbc": -112.02586368452471
+        }
+      ],
+      "sfdr_db": 108.73177338248225,
+      "stored_sfdr_equal": true
+    },
+    {
+      "metric_file": "metrics_tt_va_xyce.json",
+      "sha256": "a207f6c7ac4db5c172bb4f97e785c9422f503b4152f838cf02c71da8396ea91f",
+      "samples": 80,
+      "fundamental_bin": 4,
+      "largest_spurs": [
+        {
+          "bin": 28,
+          "harmonic_multiple": 7.0,
+          "dbc": -108.64587899140182
+        },
+        {
+          "bin": 36,
+          "harmonic_multiple": 9.0,
+          "dbc": -109.6042540258881
+        },
+        {
+          "bin": 20,
+          "harmonic_multiple": 5.0,
+          "dbc": -113.2964171159731
+        }
+      ],
+      "sfdr_db": 108.64587899140182,
+      "stored_sfdr_equal": true
+    },
+    {
+      "metric_file": "metrics_tt_xyce.json",
+      "sha256": "0409d5ae57819b127096d1c1bc305deb9ee86a7d42849e3428b430e93f6a2f1c",
+      "samples": 80,
+      "fundamental_bin": 4,
+      "largest_spurs": [
+        {
+          "bin": 8,
+          "harmonic_multiple": 2.0,
+          "dbc": -97.1190936711807
+        },
+        {
+          "bin": 28,
+          "harmonic_multiple": 7.0,
+          "dbc": -104.6909839785719
+        },
+        {
+          "bin": 12,
+          "harmonic_multiple": 3.0,
+          "dbc": -105.51876423163428
+        }
+      ],
+      "sfdr_db": 97.1190936711807,
+      "stored_sfdr_equal": true
+    }
+  ],
+  "conclusion": "Gold SFDR limiting spurs are third/second harmonics for ngspice/Xyce; BSIM warning demonstrates version handling, not causal attribution"
+}

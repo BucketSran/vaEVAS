@@ -5,7 +5,7 @@
 ## R1 gold 解 ngspice 基线（步骤 1 前半）
 
 - 环境：`ghcr.io/arcadia-1/circuit-bench-sky130-ngspice@sha256:bd5c425675eb99fc1a2c3bca10b63a871c457613767e2c6984d6c207b3160500`（Docker, linux）
-- 输入：bench = Arcadia-1/analog-design-bench @ `sky130-bottom-plate-sampler-pvt`（clone depth 1, 2026-10-17），gold = `solution/circuit.spi`
+- 输入：Arcadia-1/analog-design-bench 的 `sky130-bottom-plate-sampler-pvt` 本地任务快照，gold = `solution/circuit.spi`。原上游 commit 未保留；2026-10-17 是旧记录的取用日期，不能代替版本身份。输入、原 verifier 与原始输出的逐文件 SHA256 见 [身份收据](results/input-identity.json)，可回取范围见 R8。
 - 命令：容器内 `python3 verify.py`（bench 自带 verifier，9 PVT 点并行 4 worker）
 - 结果：6/6 通过
   - bipolar_acquisition: 2.937 mV（判据 5 mV）
@@ -52,8 +52,9 @@
   | 存储共模误差 (mV) | 17.976 | 17.972 | -0.004 |
   | 总源功率 (mW) | 0.401 | 0.404 | +0.003 |
   | 80 held-sample 最大差 | — | — | 0.705 mV（rms 0.529 mV） |
-- 结论：两器 tt 点一致性良好（采样误差 < 0.71 mV，共模/功率差 < 1%）；SFDR 差 1.9 dB
-  来源于 80 点谱底噪声水平差异，均远高于 80 dB 判据。Xyce 基线可用于后续 VA 器件对比。
+- 结论：两器 tt 点一致性良好（采样误差 < 0.71 mV，共模/功率差 < 1%）；SFDR 分别为 99.004 与 97.119 dB，均高于 80 dB 判据。独立 DFT 确认最大杂散
+  分别位于三次/二次谐波，旧“谱底噪声差异”归因撤回，见 R8；未证明 BSIM 版本是因果来源。
+  Xyce 基线可用于本试点后续 VA 器件对比。
 
 ### R2 复核补记（主会话独立验证）
 
@@ -61,7 +62,7 @@
   的规范化步骤原收据未记录。已由主会话独立执行（`run/_normalized_tt_xyce.raw`），
   用 `analyze_raw.py` 重算四项指标与 `metrics_tt_xyce.json` 逐位一致
   （sfdr 97.119093671 / gain 0.003987124 / CM 0.017972358 / power 0.000404349）。
-- R2 数据链完整成立。
+- 对这份本地 raw 的指标重提取一致。原外部 commit 缺失与公开材料可复算范围另见 R8。
 
 ## R3 理想 VA 开关替换 XM_P/XM_N——Xyce 7.10 联合仿真（步骤 2 + 步骤 3 tt 点）
 
@@ -173,3 +174,20 @@
   - 文件体积 34× 缩减；计时未在受控条件下重测（本次 41–50 s 属冷页缓存，不与 R2 的 22.7 s 比）
 - 结论：后续 PVT/批量实验统一用 `.print format=raw`（ASCII 需配 `-a`）或 std/CSV 格式，`-r` 仅在
   需要全节点波形诊断时使用
+
+
+## R8 审核后的身份补记与结论修正
+
+本次为原实验材料的重新分析，没有新跑仿真、修改 gold、原 verifier、容差或原始波形。
+[身份收据](results/input-identity.json) 固定本地任务快照的 gold、testbench、原 verifier、
+观测提取器、网表、插件和波形/日志文件清单及 SHA256。`bench/` 没有自己的 Git 元数据；
+在该目录执行 `git rev-parse` 会返回外层 vaEVAS 的提交，不能据此填写外部 benchmark commit。
+上游 commit 保持 unknown。所列输入和原始波形仍为 local-only，公共哈希不是下载地址。
+
+[频谱核对](results/spectrum-recheck.json) 从已入库的 80 个 held samples 独立作 DFT，
+基波 bin 4，ngspice-gold 的最大杂散为 bin 12，Xyce-gold 为 bin 8。两者是三次/二次
+谐波，原“非谐波谱底”说明已纠正；BSIM 版本告警仍保留为差异线索，不作因果证明。
+
+[对比汇总](results/compare_tt_va_sw.json) 已补 ngspice-VA 宽容差及紧容差结果；R3 的 N/A
+是 R4 链路完成前的历史状态。公开差分样本可重算 SFDR、增益和 held 差，不能重算只存聚合值
+的共模、功率或验证时间网格/逐位输出；这些结论依赖身份清单所列的本地原件。
