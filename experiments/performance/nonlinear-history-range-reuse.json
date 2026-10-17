@@ -1,0 +1,566 @@
+{
+  "schema_version": 1,
+  "analysis": "complete-request-review-20261017",
+  "status": "complete",
+  "pr": 205,
+  "source": {
+    "base": "e2c7aac73def4e505d9a8910a741244dd2d5604e",
+    "head": "f0d297207f2e49fbbac04a2b7d7b137232c5e8d2",
+    "baseline_sha256": "2811849ac510a1e29870cbbeaf62754e87301cd3f027af864336db61582f77da",
+    "candidate_sha256": "6c8c1310b81424a12fc42fd810479152807ad0cb0885fa2c64d345e2b161dfc9",
+    "request_hashes": {
+      "cross-129.json": "48f7c5cf6cb97698ae2ca769b493e7df662c222092e2bd9572628ceb6efbf200",
+      "nonlinear_idt-4097.json": "2a0dfcdd3491453edc35d73382fa8a9d88ae25ac2325237f0ee42d00da3fa9dd",
+      "idt-129.json": "6d48c87600bddbe2bea41b09bcde8c7d9cb38c0a1d76d6bdffc0ccc0f37d282c",
+      "pwl-129.json": "34dad6028779e5e831a8591f4e646612e01f4b78e3c266b46c524ee8b1200461",
+      "timer-129.json": "b7c206ec8f327e8404e1ebe5f60513fd517f78dffc9175f86033572ed7fd3ee5",
+      "nonlinear_idt-129.json": "d52e118e66918ca07c2809545c0f434c77a04d91495bda277ae2ebebad738c34",
+      "nonlinear_idt-8193.json": "80cb274fa22f13d16940886c07d0efac4d1cc9ff63f5c7ea78cc0850704d343f"
+    }
+  },
+  "environment": {
+    "system": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+    "logical_cpus": "10",
+    "uptime_before": "19:41  up 3 days,  5:30, 5 users, load averages: 4.28 4.43 4.51",
+    "method": "Reuse maintained profile_requests.py; five alternating rounds, diagnostics false/true; no concurrent benchmark/build launched by this coordinator",
+    "timing_profile": "release; canonical complete JSON boundary with macOS /usr/bin/time -l"
+  },
+  "profile_script_sha256": "eb855df5b904127c2b0d78211ce2007e53393a19baa7c8ce4fb63e50eb4f349f",
+  "measurement": {
+    "repeats_per_side": 5,
+    "boundary": "Python JSON serialization + spawn /usr/bin/time -l + child read/decode/run/encode + Python JSON parse; excludes VA compilation, checker, raw file writes and diagnostic sidecar parse",
+    "official_timings": "diagnostics=false only",
+    "peak": "macOS /usr/bin/time -l kernel child max RSS, bytes; Python whole-profiler highwater is recorded in raw but not added to child RSS",
+    "order": "baseline,candidate for even repeats; reverse for odd, diagnostic modes also captured for equality/counters",
+    "contention": "shared10logicalCPU host; no concurrent benchmark/build launched by this coordinator; small source-identity capture overlapped the first205 control cases, no speed claim for short controls",
+    "uptime_after": "19:43  up 3 days,  5:32, 5 users, load averages: 3.05 4.00 4.33"
+  },
+  "counts": {
+    "cases": 7,
+    "executions": 140,
+    "success": 140,
+    "failures": 0,
+    "full_response_identical_cases": 7
+  },
+  "results": [
+    {
+      "case": "cross-129",
+      "outputs": 129,
+      "input_sha256": "48f7c5cf6cb97698ae2ca769b493e7df662c222092e2bd9572628ceb6efbf200",
+      "output_sha256": "1cceecd3a64aba935c88b2721321aadf5b26b5ec16cd11e85ad1bc643fe8d30a",
+      "full_response_identical": true,
+      "roles": {
+        "baseline": {
+          "end_to_end_ms": {
+            "median": 8.657249971292913,
+            "min": 7.7864580089226365,
+            "max": 17.36612495733425,
+            "samples": [
+              17.36612495733425,
+              7.7864580089226365,
+              7.9157090513035655,
+              8.657249971292913,
+              8.827375015243888
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 4390912,
+            "min": 4374528,
+            "max": 4407296,
+            "samples": [
+              4407296,
+              4374528,
+              4390912,
+              4407296,
+              4390912
+            ]
+          }
+        },
+        "candidate": {
+          "end_to_end_ms": {
+            "median": 8.187708037439734,
+            "min": 8.14370799344033,
+            "max": 15.68108395440504,
+            "samples": [
+              15.68108395440504,
+              8.160583034623414,
+              8.14370799344033,
+              8.187708037439734,
+              8.267082972452044
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 4521984,
+            "min": 4505600,
+            "max": 4571136,
+            "samples": [
+              4521984,
+              4505600,
+              4505600,
+              4571136,
+              4521984
+            ]
+          }
+        }
+      },
+      "median_time_reduction_fraction": 0.0542368460435082
+    },
+    {
+      "case": "idt-129",
+      "outputs": 129,
+      "input_sha256": "6d48c87600bddbe2bea41b09bcde8c7d9cb38c0a1d76d6bdffc0ccc0f37d282c",
+      "output_sha256": "ca1190212605f1f3cc2232741215ef8c565f690f785f076fa2a198c0d0db6152",
+      "full_response_identical": true,
+      "roles": {
+        "baseline": {
+          "end_to_end_ms": {
+            "median": 8.389166032429785,
+            "min": 8.13324999762699,
+            "max": 9.606082981918007,
+            "samples": [
+              9.606082981918007,
+              8.655000012367964,
+              8.389166032429785,
+              8.13324999762699,
+              8.272000006400049
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 4325376,
+            "min": 4308992,
+            "max": 4341760,
+            "samples": [
+              4325376,
+              4308992,
+              4341760,
+              4341760,
+              4325376
+            ]
+          }
+        },
+        "candidate": {
+          "end_to_end_ms": {
+            "median": 8.578957989811897,
+            "min": 8.251332968939096,
+            "max": 9.189457981847227,
+            "samples": [
+              9.189457981847227,
+              8.635541016701609,
+              8.578957989811897,
+              8.251332968939096,
+              8.456667012069374
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 4292608,
+            "min": 4259840,
+            "max": 4308992,
+            "samples": [
+              4292608,
+              4292608,
+              4259840,
+              4276224,
+              4308992
+            ]
+          }
+        }
+      },
+      "median_time_reduction_fraction": -0.022623459429511605
+    },
+    {
+      "case": "nonlinear_idt-129",
+      "outputs": 129,
+      "input_sha256": "d52e118e66918ca07c2809545c0f434c77a04d91495bda277ae2ebebad738c34",
+      "output_sha256": "bdebd92ad5ff1ad6bea2cc5ca1c8bc658ff31238ac17e1b15db86e00f0016484",
+      "full_response_identical": true,
+      "roles": {
+        "baseline": {
+          "end_to_end_ms": {
+            "median": 18.469457980245352,
+            "min": 18.13520898576826,
+            "max": 19.63150000665337,
+            "samples": [
+              18.469457980245352,
+              18.285457976162434,
+              18.13520898576826,
+              19.63150000665337,
+              18.48441595211625
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 4997120,
+            "min": 4898816,
+            "max": 5029888,
+            "samples": [
+              4997120,
+              4997120,
+              4898816,
+              5029888,
+              4980736
+            ]
+          }
+        },
+        "candidate": {
+          "end_to_end_ms": {
+            "median": 15.654624963644892,
+            "min": 15.282084001228213,
+            "max": 16.39179198537022,
+            "samples": [
+              15.494459017645568,
+              15.282084001228213,
+              15.654624963644892,
+              16.39179198537022,
+              16.34362497134134
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 5046272,
+            "min": 5029888,
+            "max": 5062656,
+            "samples": [
+              5046272,
+              5029888,
+              5062656,
+              5046272,
+              5029888
+            ]
+          }
+        }
+      },
+      "median_time_reduction_fraction": 0.15240474407051696
+    },
+    {
+      "case": "nonlinear_idt-4097",
+      "outputs": 4097,
+      "input_sha256": "2a0dfcdd3491453edc35d73382fa8a9d88ae25ac2325237f0ee42d00da3fa9dd",
+      "output_sha256": "2f221396b6d3cee27e7a1481c6a61775603eb1f452266e81d32cf7f8d0921e60",
+      "full_response_identical": true,
+      "roles": {
+        "baseline": {
+          "end_to_end_ms": {
+            "median": 265.17829101067036,
+            "min": 261.2390830181539,
+            "max": 269.5458750240505,
+            "samples": [
+              261.2390830181539,
+              269.5458750240505,
+              266.9161249650642,
+              263.501167006325,
+              265.17829101067036
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 7077888,
+            "min": 6995968,
+            "max": 7077888,
+            "samples": [
+              7077888,
+              7077888,
+              6995968,
+              7077888,
+              7077888
+            ]
+          }
+        },
+        "candidate": {
+          "end_to_end_ms": {
+            "median": 168.67554100463167,
+            "min": 167.39183303434402,
+            "max": 174.87404198618606,
+            "samples": [
+              168.90895797405392,
+              168.67554100463167,
+              167.39183303434402,
+              168.2082079933025,
+              174.87404198618606
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 8110080,
+            "min": 8028160,
+            "max": 8126464,
+            "samples": [
+              8028160,
+              8077312,
+              8126464,
+              8110080,
+              8126464
+            ]
+          }
+        }
+      },
+      "median_time_reduction_fraction": 0.36391647912896297
+    },
+    {
+      "case": "nonlinear_idt-8193",
+      "outputs": 8193,
+      "input_sha256": "80cb274fa22f13d16940886c07d0efac4d1cc9ff63f5c7ea78cc0850704d343f",
+      "output_sha256": "1042d20b5f78bf59a5fa445e6f44a133dfc8d83971ab56eceb18daddeb420ea4",
+      "full_response_identical": true,
+      "roles": {
+        "baseline": {
+          "end_to_end_ms": {
+            "median": 538.9084999915212,
+            "min": 527.0954580046237,
+            "max": 569.0161669626832,
+            "samples": [
+              527.0954580046237,
+              569.0161669626832,
+              538.9084999915212,
+              541.1432919790968,
+              536.4250829443336
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 9322496,
+            "min": 9256960,
+            "max": 9355264,
+            "samples": [
+              9355264,
+              9256960,
+              9256960,
+              9322496,
+              9322496
+            ]
+          }
+        },
+        "candidate": {
+          "end_to_end_ms": {
+            "median": 343.08750001946464,
+            "min": 341.1373340059072,
+            "max": 348.8861249643378,
+            "samples": [
+              348.8861249643378,
+              343.08750001946464,
+              341.9607499963604,
+              341.1373340059072,
+              348.3470000210218
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 11501568,
+            "min": 11403264,
+            "max": 11632640,
+            "samples": [
+              11632640,
+              11550720,
+              11403264,
+              11501568,
+              11501568
+            ]
+          }
+        }
+      },
+      "median_time_reduction_fraction": 0.3633659516877865
+    },
+    {
+      "case": "pwl-129",
+      "outputs": 129,
+      "input_sha256": "34dad6028779e5e831a8591f4e646612e01f4b78e3c266b46c524ee8b1200461",
+      "output_sha256": "52638869d8ba258d4b84893484c50cdbf822ef9945352f2458bf6b820f2cd99a",
+      "full_response_identical": true,
+      "roles": {
+        "baseline": {
+          "end_to_end_ms": {
+            "median": 7.015000039245933,
+            "min": 6.914792000316083,
+            "max": 12.147457979153842,
+            "samples": [
+              12.147457979153842,
+              6.988250010181218,
+              6.914792000316083,
+              7.015000039245933,
+              7.462000008672476
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 3653632,
+            "min": 3653632,
+            "max": 3670016,
+            "samples": [
+              3653632,
+              3653632,
+              3670016,
+              3653632,
+              3653632
+            ]
+          }
+        },
+        "candidate": {
+          "end_to_end_ms": {
+            "median": 7.015999988652766,
+            "min": 6.945334025658667,
+            "max": 8.459707954898477,
+            "samples": [
+              8.459707954898477,
+              7.037583040073514,
+              6.96875003632158,
+              6.945334025658667,
+              7.015999988652766
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 3637248,
+            "min": 3620864,
+            "max": 3670016,
+            "samples": [
+              3637248,
+              3620864,
+              3653632,
+              3637248,
+              3670016
+            ]
+          }
+        }
+      },
+      "median_time_reduction_fraction": -0.00014254446204398086
+    },
+    {
+      "case": "timer-129",
+      "outputs": 129,
+      "input_sha256": "b7c206ec8f327e8404e1ebe5f60513fd517f78dffc9175f86033572ed7fd3ee5",
+      "output_sha256": "175a933052fc66be7d05136b7e6a7cccd7d4dbdd92eaf0bf9087ae1ed29536a3",
+      "full_response_identical": true,
+      "roles": {
+        "baseline": {
+          "end_to_end_ms": {
+            "median": 9.173042024485767,
+            "min": 9.03741701040417,
+            "max": 9.193375008180737,
+            "samples": [
+              9.03741701040417,
+              9.176124993246049,
+              9.193375008180737,
+              9.173042024485767,
+              9.071249980479479
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 4521984,
+            "min": 4472832,
+            "max": 4554752,
+            "samples": [
+              4472832,
+              4554752,
+              4521984,
+              4521984,
+              4538368
+            ]
+          }
+        },
+        "candidate": {
+          "end_to_end_ms": {
+            "median": 8.886249968782067,
+            "min": 8.834625012241304,
+            "max": 9.91962500847876,
+            "samples": [
+              8.834625012241304,
+              8.883999951649457,
+              9.91962500847876,
+              9.362500044517219,
+              8.886249968782067
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 4669440,
+            "min": 4653056,
+            "max": 4685824,
+            "samples": [
+              4669440,
+              4653056,
+              4685824,
+              4669440,
+              4653056
+            ]
+          }
+        }
+      },
+      "median_time_reduction_fraction": 0.0312646617052621
+    }
+  ],
+  "availability": {
+    "compact": "repository-contained",
+    "raw": "local-only",
+    "raw_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.claude/worktrees/agent-ac1ffb100f250bc57/runs/performance-p03-20261017/review-complete-request",
+    "receipt_sha256": "105c08297298bf5fc67da96d1b4074ad7afedf51765f696e4300f2bead086625"
+  },
+  "limits": [
+    "fixedsyntheticrequests,notgeneralEVASorSpectrespeedclaim",
+    "OnlykernelchildRSS,notcombinedfrontend/childequaltimepeak",
+    "Allslowoutliersandpreviousrunsretained",
+    "Nochangeinmodels,budgets,operators,eventsoracceptancepaths"
+  ],
+  "independent_answers": {
+    "method": "Exact Fraction arithmetic; y=t, y=t^2/2, y=1/(1+t), piecewise exact triangle integral; integertimer/crosscounts at exact dyadic event times",
+    "checks": "exact answer contained in reported V(y) interval; nominal contained; interval radius within original absolute+relative budget; unchanged event history",
+    "results": [
+      {
+        "pr": 205,
+        "case": "cross-129",
+        "points": 129,
+        "exact_fraction_containment": true,
+        "original_budget": true,
+        "events_match": true,
+        "identical_full_response_executions": 20
+      },
+      {
+        "pr": 205,
+        "case": "idt-129",
+        "points": 129,
+        "exact_fraction_containment": true,
+        "original_budget": true,
+        "events_match": true,
+        "identical_full_response_executions": 20
+      },
+      {
+        "pr": 205,
+        "case": "nonlinear_idt-129",
+        "points": 129,
+        "exact_fraction_containment": true,
+        "original_budget": true,
+        "events_match": true,
+        "identical_full_response_executions": 20
+      },
+      {
+        "pr": 205,
+        "case": "nonlinear_idt-4097",
+        "points": 4097,
+        "exact_fraction_containment": true,
+        "original_budget": true,
+        "events_match": true,
+        "identical_full_response_executions": 20
+      },
+      {
+        "pr": 205,
+        "case": "nonlinear_idt-8193",
+        "points": 8193,
+        "exact_fraction_containment": true,
+        "original_budget": true,
+        "events_match": true,
+        "identical_full_response_executions": 20
+      },
+      {
+        "pr": 205,
+        "case": "pwl-129",
+        "points": 129,
+        "exact_fraction_containment": true,
+        "original_budget": true,
+        "events_match": true,
+        "identical_full_response_executions": 20
+      },
+      {
+        "pr": 205,
+        "case": "timer-129",
+        "points": 129,
+        "exact_fraction_containment": true,
+        "original_budget": true,
+        "events_match": true,
+        "identical_full_response_executions": 20
+      }
+    ],
+    "script_sha256": "2c1729a71f676bc4ffcdf6c46e3ad6eab23887b54992f231d4abb4397ac12d74",
+    "script_and_full_report_availability": "local-only primarycurrent/runs/pr-review-20261017/check_performance_answers.py andperformance-independent-answers.json",
+    "diagnostic_execution": "all cases androlesdiagnostics false/true, everyrecordcountverified",
+    "limitations": "NonewgeneralSpectreclaim; applies onlyfixedrequests"
+  }
+}
