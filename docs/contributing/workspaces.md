@@ -20,8 +20,9 @@ symlink there pointing to the actual checkout; keep the host's managed path inta
 `worktrees/README.md`, link each entry using a relative path and record its purpose, current
 handoff state and next action. Link this index from the surrounding project README. This is local
 workspace navigation, not a second issue tracker; link the existing task record when available.
-The surrounding project README is the single current-task entry: keep its outcome, owning
-checkout, stage and next action together, linking the existing PR/Issue or evidence. The
+The surrounding project README is the fixed current-task entry: keep its outcome, owning
+main conversation, checkout, stage and next action together, linking the existing PR/Issue,
+progress table and evidence. Update this entry in place across milestones and handoffs. The
 worktree index records locations, purposes and dispositions, and points back to that task.
 Distinguish current work, retained delivery candidates and historical evidence. Do not turn
 every retained checkout into an active task or copy a historical handoff's execution instructions
@@ -54,7 +55,7 @@ owner, writable paths, base, destination and acceptance outcome in that existing
 record before writing. If another conversation owns those paths, assist read-only or wait for
 an explicit handoff; changing conversations does not create a new implementation task.
 
-Each task or benchmark batch has one coordinating conversation. It assigns writable paths,
+Each task or benchmark batch keeps one coordinating main conversation. It assigns writable paths,
 controls shared Git operations, and coordinates validation and delivery. Another conversation
 joins through an explicit assignment or takes over through a handoff. Read-only analysis and
 review can use a fixed revision or saved diff without another checkout.
@@ -95,24 +96,28 @@ integration or an inactive owner. Incomplete observations require follow-up, not
 
 ## Conversation handoff triggers
 
-Move coordination to a fresh main conversation at these checkpoints:
+Keep the same main conversation for an ongoing task. Context compaction, its count, a new
+implementation phase, or a test/review round does not require a new conversation. Recover
+settled decisions, authorization and progress from the existing task entry before continuing.
 
-| Trigger | Handoff point |
+| Situation | Action |
 | --- | --- |
-| A complete task reaches its agreed delivery endpoint | Start the next independent task in a new conversation. |
-| The same task reaches its second observable context compaction in the current conversation | Hand off at the next safe checkpoint before taking another implementation step. |
-| Repeated evidence reads, confused authorization or omitted settled decisions show lost context | Correct the immediate ambiguity, preserve work and hand off early. |
+| Context was compacted or a settled detail is missing | Read the fixed progress entry and relevant evidence; continue in the same main conversation. |
+| The user requests a transfer, or a context/access problem still prevents reliable continuation after recovery | Hand off at a safe checkpoint. |
+| A complete task reaches its agreed endpoint and independent work starts | Record the result in the existing entry; use a separate conversation when the new task needs one. |
 
-Count only observed compaction events in the existing task record. Preserve the count across
-summaries; if earlier events cannot be recovered, mark the count unknown rather than inventing
-it. Repeated reads needed for new evidence are not themselves a context failure. A fresh
-review subagent does not replace the coordinating conversation.
+A fresh review subagent does not replace the coordinating main conversation. Repeated reads
+needed for new evidence are not themselves a context failure. Keep the existing progress table
+as the task record; link detailed results there instead of creating another tracker.
 
 A safe checkpoint has saved edits, fixed evidence identities and explicit ownership of running
 jobs. Finish or identify an in-flight Git operation; do not interrupt it blindly. The handoff
 in the existing PR/Issue or local current-task entry states the outcome, checkout/branch and
 revision or local diff, reusable checks, remaining work, running jobs, authorization and limits.
-Keep it within 300 visible characters and link detailed evidence; add no separate process file.
+Keep the handoff summary within 300 visible characters and link detailed evidence; add no
+separate process file. Link the receiving conversation from the old conversation and link
+the old conversation from the receiving one. Update the fixed progress entry with the new
+owner and both conversation links, preserving earlier milestones and evidence links.
 The receiving conversation reads that entry and the affected contract, then resumes the first
 unfinished step without rereading the entire history or repeating matching checks.
 
@@ -161,8 +166,8 @@ in addition to component checks. Integration success does not establish a publis
 
 Use the ownership rules above for each checkout. A worktree for one repository does not isolate the
 other. Keep commits and PRs separate, linking their exact dependencies and merge order. Handoffs carry
-the outcome, identities, checks, limits and remaining work through the existing task record; start the
-next independent task in a new conversation rather than replaying the full implementation discussion.
+the outcome, identities, checks, limits and remaining work through the fixed task entry. Continue
+ongoing work in its main conversation under the conversation handoff rules above.
 
 ## Retiring work
 

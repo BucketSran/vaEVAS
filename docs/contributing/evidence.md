@@ -74,6 +74,24 @@ a working retrieval address and inventory/hash; machine paths and checksums alon
 Publication still requires task authorization. Before workspace cleanup, preserve needed ignored evidence
 and its verified old-to-new path mapping. Package versions alone do not identify development branches.
 
+### Reuse CI regression evidence
+
+The regression cache is an execution record, separate from Cargo's build cache. Its key covers
+all tracked file bytes and modes, the actual kernel hash, Python/Rust/Cargo versions, runner
+platform/image, declared build environment and shard identity. Only the exact generated
+`evas/docs/development/diagnostic-inventory.json` is excluded: fast/static jobs recheck it,
+while EVAS Python/Rust regressions do not consume it. If a new consumer reads it, include it
+in the key and update the exclusion test before reusing evidence.
+
+A matching cache entry also needs a successful, complete report and a receipt binding its
+hash, original run and input identity. Missing, corrupt or mismatched evidence executes the
+checks again. Input changes during execution prevent recording a success. The coverage job
+requires all four compatible shard reports and accounts for disjoint execution identities and
+explicit fixture-level skips against the complete planned set; skips never count as execution.
+Partial successes never establish complete regression. Cached evidence is labelled with its
+producer run. Scheduled full checks execute afresh. Other platform/reference checks retain
+their own identities and cannot inherit a Python regression result.
+
 ### Complete local run bundles
 
 The [results command](../../evas/docs/reference/results.md) writes a local execution bundle.

@@ -20,9 +20,10 @@ READMEs own support, versions and result counts; history supplies evidence when 
    using [compact output and evidence](scripts/README.md#compact-tool-output).
 4. For behavior changes, load [behavior-first tests](docs/contributing/validation.md#behavior-first-tests).
    Make the smallest coherent change and run the owning acceptance checks. Report
-   the checked revision/local diff, failures and limits. Keep one current-task pointer
-   under [visibility and handoff](docs/contributing/workspaces.md#workspace-visibility-and-handoff);
-   apply the [conversation handoff triggers](docs/contributing/workspaces.md#conversation-handoff-triggers).
+   the checked revision/local diff, failures and limits. Keep one main conversation and fixed
+   [current-task entry](docs/contributing/workspaces.md#workspace-visibility-and-handoff).
+   Compaction alone does not trigger a transfer; necessary
+   [handoffs](docs/contributing/workspaces.md#conversation-handoff-triggers) retain links in both directions.
 
 ## Load by task
 
