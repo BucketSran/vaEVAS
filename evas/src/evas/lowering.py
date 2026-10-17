@@ -140,6 +140,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
                            code=code, token=expr.token)
 
     event_math = getattr(parameters, "event_math", None)
+    sampled_values = getattr(parameters, "sampled_values", False)
     if event_math is not None and expr.op in ("sqrt", "abs", "min", "max"):
         args = tuple(lower(arg, parameters, nodes, source, None, True,
                            decisions, validate_decision, False, indices,
@@ -277,10 +278,10 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
             if expr.op == "%":
                 fail("modulo requires integer typed operands and a supported constant divisor")
             if not isinstance(b, Affine) or b.terms:
-                if operators is None and event_math is None:
+                if operators is None and event_math is None and not sampled_values:
                     fail("variable division requires an ordinary analog expression")
                 return Binary("divide", a, b)
-            if b.constant == 0 and event_math is not None:
+            if b.constant == 0 and (event_math is not None or sampled_values):
                 return Binary("divide", a, b)
             if b.constant == 0:
                 fail("division requires a nonzero constant denominator")

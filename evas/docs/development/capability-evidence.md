@@ -25,6 +25,7 @@
 [源折点保存修复](../../../experiments/backends/support/scs-source-observation/README.md)补充 DEV:scs-input 的有限开发证据；修复保存插值漏脉冲，不改变原Q成绩。
 
 [Pulse 源误差和保存策略](../../../experiments/backends/support/scs-source-uncertainty/README.md)补充 DEV:scs-input 与 TIMER 的有限开发证据；该历史执行仅支持幅度界。新的[物理源曲线证据](../../../experiments/backends/support/source-shape/README.md)扩展 CROSS、EVENT-ORDER、EVENT-CONDITIONS、TIMED-OPERATOR 与 COMPOSE 的有限组合；347 的已解释兼容差异和未合并状态保留；不改变原Q成绩。[P0逐项收据](../../../experiments/backends/support/source-shape/p0.json)补充同步两例、400五例及#119旧精度反例的当前核销，[固定112家族收据](../../../experiments/backends/support/source-shape/replay112.json)保留完整执行、拒绝与清理分母；[091/320收据](../../../experiments/backends/support/source-shape/diagnosis-091-320.json)补独立完整递推与原件实际参考。分类与后续验收由[统一清单](../COMPARISON.md#replay112)维护，拒绝项继续未支持。
+[GAP06有限除法采样](../../../experiments/backends/support/source-shape/gap06.json)补充EVENT-CONDITIONS、TIMED-OPERATOR与COMPOSE：八例独立递推及全部保存量通过，原checker3/8，五例严格根处复位差异及参考观察缺证保留。实际原deck参考8/8通过，有限稳定观察与完整原生波形分别记录；当前112分母及剩余拒绝见[唯一清单](../COMPARISON.md#gap06-sampling)。
 
 [Pulse delay 缺省值](../../../experiments/backends/support/pulse-delay/README.md)补充 DEV:scs-input 的有限开发证据；仅省略 delay 取 0，其他源参数与误差约束保持，原 22 请求仍有后续拒绝。
 

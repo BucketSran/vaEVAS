@@ -310,8 +310,10 @@ class InstanceCompiler:
     def lower_event(self, expr, resolve, nodes, *args, **kwargs):
         assignment_root = kwargs.pop("integer_assignment_root", False)
         event_values = kwargs.pop("event_values", False)
+        sampled_values = kwargs.pop("sampled_values", False)
         static_integer_audit = kwargs.pop("static_integer_audit", False)
         typed = self.typed_resolve(resolve, allow_integer_assignment_root=assignment_root)
+        typed.sampled_values = sampled_values
         if event_values:
             if getattr(self, "runtime_event_checks", False) and not static_integer_audit:
                 typed.validate_integer_operation = self.checked_event_integer
@@ -944,8 +946,14 @@ class InstanceCompiler:
         return getattr(self, "runtime_event_checks", False) and self.numeric_observer_candidate()
 
     def lower_event_value(self, expr, resolve, nodes, *args, **kwargs):
+        observer = self.numeric_observer_candidate()
+        if not observer and kwargs.get("decisions") is not None:
+            # Execution uses causal dependency/domain certification. The
+            # original-tree audit keeps its own decision callbacks instead.
+            kwargs["decisions"] = self.event_select
+            kwargs.pop("validate_decision", None)
         return self.lower_event(expr, resolve, nodes, *args,
-                                event_values=self.numeric_observer_candidate(), **kwargs)
+                                event_values=observer, sampled_values=not observer, **kwargs)
 
     def validate_runtime_loop(self, statement):
         def fail(message):

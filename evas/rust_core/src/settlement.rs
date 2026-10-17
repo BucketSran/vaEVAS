@@ -150,8 +150,15 @@ fn prepare_impl(
     // Constant/integer event updates can change mode predicates in this same
     // batch. Evaluate those updates first, retaining voltage-dependent updates
     // as affine unknowns in the actual joint solve.
-    let predicate_states =
-        model.apply(&selection, &vec![0.0; model.program.nodes.len()], before)?;
+    // Causal sampled actions read actual driven values even in this preview.
+    // Unknown electrical nodes remain placeholders; predicates depending on
+    // voltage-assigned states were rejected above and the joint solve owns them.
+    let mut predicate_nodes = vec![0.0; model.program.nodes.len()];
+    for (name, &value) in model.driven.iter().zip(inputs) {
+        let node = model.program.nodes.iter().position(|n| n == name).unwrap();
+        predicate_nodes[node] = value;
+    }
+    let predicate_states = model.apply(&selection, &predicate_nodes, before)?;
     let predicate_bounds: Vec<_> = predicate_states.iter().copied().map(I::point).collect();
     let selected = model.selected_program_with_parameters(
         &predicate_bounds,

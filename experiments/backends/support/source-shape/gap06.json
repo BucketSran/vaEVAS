@@ -1,0 +1,2676 @@
+{
+  "build_environment": {
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+    "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "build_commands": [
+      [
+        "cargo",
+        "build",
+        "--locked",
+        "--manifest-path",
+        "evas/rust_core/Cargo.toml"
+      ],
+      [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "--manifest-path",
+        "evas/rust_core/Cargo.toml"
+      ]
+    ],
+    "rustflags": null,
+    "cargotarget": null,
+    "identity_boundary": "toolchain observations on same unchanged host at finalization; full tool output/source/build logs remain local-only"
+  },
+  "scope": "GAP06 finite event-local real division/clipped sampling; eight unchanged originals, not ordinary continuous division or electrical nonlinear feedback",
+  "identity": {
+    "base": "7956ace72bf472b365c5b6becf16640f36aaa99d",
+    "production_files_verified": 142,
+    "production_tree_sha256": "3e67780e33aaf4960da9cbe11cfcb407c32be5f15e39d408933a1d8aa6dd1508",
+    "changed_production_files": {
+      "evas/src/evas/lowering.py": "8b95c03b9d4b3bd86fb3cf853bc45a878f7a15a8e04a5798102487defc26ed03",
+      "evas/src/evas/instance_compiler.py": "64f2df1c52327645a6b5c010ce41c92507298cbae317ff486c6fc5edd0b65b0c",
+      "evas/src/evas/event_specialization.py": "e62efc8b23dc8a3d0b28adad005c3ce31b057fa77fe0171df9e5d7c65ada7b3b",
+      "evas/rust_core/src/settlement.rs": "5cf1fa2ede0cc0805f6418d76706adabae35b98eb25f4a264838d7add893a289"
+    },
+    "production_diff_sha256": "408c79b4152f8a98db00808e1975e864464dd8384c02d0408a84283ffa3e4874",
+    "debug_kernel_sha256": "4d0c26c45aca262a43b1e4103f1f792a5fec7ecc3c907401d3f90b27a947a7c6",
+    "release_kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+    "source_archive_sha256": "fb92444ecc6c143eda885e9cbb23d7c9e8598d53ff0452e773ebc387ca9a6c41",
+    "source_archive_availability": "local-only archive; listed four production hashes identify the PR208 delta from the fixed base"
+  },
+  "cause": "Contribution-selection preview applied selected event assignments to zero voltages before joint solve. Actual positive driven denominators became zero. Frontend additionally lacked sampled-scalar division lowering. Sequential updates and lazy selected-arm evaluation were already correct.",
+  "repair": "Lower sampled scalar Divide/Select separately from observer-only EventMath; preview reads actual driven values. Existing causal dependency audit, interval denominator-domain guard, exact-state proofs, voltage budgets and candidate commit/rollback remain.",
+  "cases": [
+    {
+      "family": "261",
+      "input_identity": {
+        "family_id": "261",
+        "task_name": "261-falling-edge-calibration-sampler",
+        "checker_id": "v4_261_falling_edge_calibration_sampler",
+        "deck_sha256": "ab466d182b97ae3bc03a9c47ed577e7a234790593d5d5cbb7f755e1ec912c8f9",
+        "gold_tree_sha256": "806490c4be286c26d37a279480cd0ac07816c5cd2d56400d771b81a509b5cfc4",
+        "source_files": {
+          "submission/falling_edge_calibration_sampler.va": "f42e8cac70444c120cb0f0afa742cf0c0d5bc00dbc5633d4ac162988e375770b",
+          "testbench/trusted_replay_test.scs": "ab466d182b97ae3bc03a9c47ed577e7a234790593d5d5cbb7f755e1ec912c8f9"
+        }
+      },
+      "evas_original_checker": {
+        "passed": false,
+        "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_261_falling_edge_calibration_sampler: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_OUT_FLAG_AND_METRIC_TO",
+        "checker_id": "v4_261_falling_edge_calibration_sampler",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "spectre_original_checker": {
+        "passed": true,
+        "note": "v4_261_falling_edge_calibration_sampler:; P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE mismatch_count=0; P_INITIALIZE_OUT_FLAG_AND_METRIC_TO mismatch_count=0; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_OUT_FLAG_AND_METRIC_TO"
+      },
+      "independent": {
+        "family": "261",
+        "event_count": 15,
+        "saved_rows": 1662,
+        "scalar_observations": 23268,
+        "max_state_error": 1.7284803966419401e-16,
+        "max_saved_error_V": {
+          "clk": 5.1884299087924754e-17,
+          "rst": 7.17823153352595e-17,
+          "in0": 1.193620194545825e-16,
+          "in1": 7.913523894332365e-17,
+          "in2": 4.683685622495002e-17,
+          "in3": 8.768214019430997e-17,
+          "ctrl0": 7.397087906401772e-17,
+          "ctrl1": 7.397087906401772e-17,
+          "vdd": 1.39169207298869e-16,
+          "vss": 1.1617903904480865e-17,
+          "en": 4.9445887108989976e-17,
+          "out": 3.022888042580589e-14,
+          "flag": 3.022888042580589e-14,
+          "metric": 1.7504494753230276e-14
+        },
+        "response_sha256": "8e86c4efb0febf74f7be6feba7e2fc28b01854d3155587cda203ced98c2e2c6b",
+        "oracle_sha256": "7bb8e75e97ea85186a67bc3f8e7f4a736ed96c49fc79c76c2d74504f0b9bcd15",
+        "geometry_sha256": "0ce31edef7e448cf8f03131ffc4849cd28d42379e0bcb2f8f16b7adb34dad9ab",
+        "verdict": "pass independent finite source/root/recurrence/ramp oracle; historical checker separate"
+      },
+      "finite_division_reference": [
+        {
+          "requested_time_s": 9.075e-10,
+          "native_time_s": 9.099999999999996e-10,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 2.0575e-09,
+          "native_time_s": 2.060055803571426e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.4775510204081633
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.4775510204081632
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 3.2075e-09,
+          "native_time_s": 3.20750625001389e-09,
+          "expected": {
+            "out": 0.9,
+            "flag": 0.9,
+            "metric": 0.42244897959183675
+          },
+          "spectre": {
+            "out": 0.9,
+            "flag": 0.9,
+            "metric": 0.4224489795918367
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 4.3574999999999995e-09,
+          "native_time_s": 4.357506250013887e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.47586206896551725
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.4758620689655174
+          },
+          "max_error_V": 1.6653345369377348e-16
+        },
+        {
+          "requested_time_s": 5.5075e-09,
+          "native_time_s": 5.507506250013889e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.372972972972973
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.372972972972973
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 6.657499999999999e-09,
+          "native_time_s": 6.65750625001389e-09,
+          "expected": {
+            "out": 0.9,
+            "flag": 0.9,
+            "metric": 0.48648648648648657
+          },
+          "spectre": {
+            "out": 0.9,
+            "flag": 0.9,
+            "metric": 0.4864864864864866
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 7.807499999999999e-09,
+          "native_time_s": 7.81293101851853e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 8.9575e-09,
+          "native_time_s": 8.95750625001389e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39000000000000007
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39
+          },
+          "max_error_V": 5.551115123125783e-17
+        }
+      ],
+      "post_reset_observations": [
+        {
+          "root_time_s": 9.025000000000001e-09,
+          "root_rst_minus_vth": "0",
+          "expected_state": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39000000000000007
+          },
+          "native_time_s": 9.145012500027778e-09,
+          "root_oracle_outputs": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39000000000000007
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          }
+        }
+      ],
+      "spectre_execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 15.261165864765644,
+        "completed_utc": "2026-10-17T12:32:10Z",
+        "log_sha256": "bcfd5dcac84df42759180e70ce11924640838eb84a84970c4ad944fcd6bde9ac",
+        "stage": "simulate",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      },
+      "spectre_settings": {
+        "reltol": {
+          "value": 0.001,
+          "line": 126,
+          "raw": "    reltol = 1e-03"
+        },
+        "abstol(V)": {
+          "value": 1e-06,
+          "line": 127,
+          "raw": "    abstol(V) = 1 uV"
+        },
+        "abstol(I)": {
+          "value": 1e-12,
+          "line": 128,
+          "raw": "    abstol(I) = 1 pA"
+        },
+        "stop": {
+          "value": 1.6e-08,
+          "line": 120,
+          "raw": "    stop = 16 ns"
+        },
+        "maxstep": {
+          "value": 1e-11,
+          "line": 122,
+          "raw": "    maxstep = 10 ps"
+        },
+        "method": {
+          "value": "traponly",
+          "line": 133,
+          "raw": "    method = traponly"
+        },
+        "errpreset": {
+          "value": "moderate",
+          "line": 132,
+          "raw": "    errpreset = moderate"
+        }
+      },
+      "spectre_tool": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "setup_sha256": {
+          "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+          "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+        }
+      },
+      "spectre_raw_sha256": "1ba871adf6f75d6de6c325bef5cea90f8bbbeb954da522a9ecbc0f6e33b4f084",
+      "spectre_rows_sha256": "c1793e1f46e5f2d062e8339f9dc6778c106915355044b2643a3d7546a770c5c2",
+      "spectre_original_analysis_failure": "wrong dimension for voltage: 1 uV",
+      "full_native_vs_root_oracle": {
+        "scalar_mismatch_count": 282,
+        "max_gap_V": 0.39000000000000007,
+        "first": {
+          "time": 1.937506250013889e-09,
+          "node": "metric",
+          "expected_root": 5.9694010206463456e-05,
+          "spectre": 0.0,
+          "gap": 5.9694010206463456e-05
+        }
+      },
+      "classification": "strict-root reset semantic difference; checker mismatch retained; callback qualification missing"
+    },
+    {
+      "family": "262",
+      "input_identity": {
+        "family_id": "262",
+        "task_name": "262-resettable-phase-toggle-monitor",
+        "checker_id": "v4_262_resettable_phase_toggle_monitor",
+        "deck_sha256": "72ebaa616e33f0e891117127c181008266e0cc5ca16dfcbe25dc98ad8c011a99",
+        "gold_tree_sha256": "b69de216c7055d9c23286a8780661d24c044123617233e64203936680f49c563",
+        "source_files": {
+          "submission/resettable_phase_toggle_monitor.va": "26f34031b6ad82c40d37e2e52f1954c949be639931d2d8cacc2d1d66e6ddded6",
+          "testbench/trusted_replay_test.scs": "72ebaa616e33f0e891117127c181008266e0cc5ca16dfcbe25dc98ad8c011a99"
+        }
+      },
+      "evas_original_checker": {
+        "passed": false,
+        "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_262_resettable_phase_toggle_monitor: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_ALL_OBSERVABLE_STATE_TO_0",
+        "checker_id": "v4_262_resettable_phase_toggle_monitor",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "spectre_original_checker": {
+        "passed": true,
+        "note": "v4_262_resettable_phase_toggle_monitor:; P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE mismatch_count=0; P_INITIALIZE_ALL_OBSERVABLE_STATE_TO_0 mismatch_count=0; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_ALL_OBSERVABLE_STATE_TO_0"
+      },
+      "independent": {
+        "family": "262",
+        "event_count": 15,
+        "saved_rows": 1662,
+        "scalar_observations": 23268,
+        "max_state_error": 1.7284803966419401e-16,
+        "max_saved_error_V": {
+          "clk": 5.1884299087924754e-17,
+          "rst": 7.17823153352595e-17,
+          "in0": 1.193620194545825e-16,
+          "in1": 7.913523894332365e-17,
+          "in2": 4.683685622495002e-17,
+          "in3": 8.768214019430997e-17,
+          "ctrl0": 7.397087906401772e-17,
+          "ctrl1": 7.397087906401772e-17,
+          "vdd": 1.39169207298869e-16,
+          "vss": 1.1617903904480865e-17,
+          "en": 4.9445887108989976e-17,
+          "out": 2.2523163820158766e-14,
+          "flag": 2.2523163820158766e-14,
+          "metric": 1.2978234010330196e-14
+        },
+        "response_sha256": "39c971f7f3ebc658f60a1bd5f86993c23fdb4f42402727dd977804b74891d9e4",
+        "oracle_sha256": "7bb8e75e97ea85186a67bc3f8e7f4a736ed96c49fc79c76c2d74504f0b9bcd15",
+        "geometry_sha256": "0ce31edef7e448cf8f03131ffc4849cd28d42379e0bcb2f8f16b7adb34dad9ab",
+        "verdict": "pass independent finite source/root/recurrence/ramp oracle; historical checker separate"
+      },
+      "finite_division_reference": [
+        {
+          "requested_time_s": 4.625e-10,
+          "native_time_s": 4.650000000000002e-10,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 1.6125e-09,
+          "native_time_s": 1.612506250013889e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.4775510204081633
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.4775510204081632
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 2.7625e-09,
+          "native_time_s": 2.76250625001389e-09,
+          "expected": {
+            "out": 0.9,
+            "flag": 0.9,
+            "metric": 0.42244897959183675
+          },
+          "spectre": {
+            "out": 0.9,
+            "flag": 0.9,
+            "metric": 0.4224489795918367
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 3.9124999999999995e-09,
+          "native_time_s": 3.912506250013887e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.42244897959183675
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.4224489795918367
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 5.0625e-09,
+          "native_time_s": 5.062506250013889e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.47586206896551725
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.4758620689655174
+          },
+          "max_error_V": 1.6653345369377348e-16
+        },
+        {
+          "requested_time_s": 6.212499999999999e-09,
+          "native_time_s": 6.212506250013887e-09,
+          "expected": {
+            "out": 0.9,
+            "flag": 0.9,
+            "metric": 0.48648648648648657
+          },
+          "spectre": {
+            "out": 0.9,
+            "flag": 0.9,
+            "metric": 0.4864864864864866
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 7.3625e-09,
+          "native_time_s": 7.362506250013887e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 8.5125e-09,
+          "native_time_s": 8.512506250013887e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39000000000000007
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39
+          },
+          "max_error_V": 5.551115123125783e-17
+        }
+      ],
+      "post_reset_observations": [
+        {
+          "root_time_s": 9.025000000000001e-09,
+          "root_rst_minus_vth": "0",
+          "expected_state": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39000000000000007
+          },
+          "native_time_s": 9.145012500027778e-09,
+          "root_oracle_outputs": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39000000000000007
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          }
+        }
+      ],
+      "spectre_execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 15.19793976843357,
+        "completed_utc": "2026-10-17T12:32:29Z",
+        "log_sha256": "a2fd9d1cf9315ffd2f344ad8373c0b38db3da8728e5845f1acf3e207129c6cbe",
+        "stage": "simulate",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      },
+      "spectre_settings": {
+        "reltol": {
+          "value": 0.001,
+          "line": 126,
+          "raw": "    reltol = 1e-03"
+        },
+        "abstol(V)": {
+          "value": 1e-06,
+          "line": 127,
+          "raw": "    abstol(V) = 1 uV"
+        },
+        "abstol(I)": {
+          "value": 1e-12,
+          "line": 128,
+          "raw": "    abstol(I) = 1 pA"
+        },
+        "stop": {
+          "value": 1.6e-08,
+          "line": 120,
+          "raw": "    stop = 16 ns"
+        },
+        "maxstep": {
+          "value": 1e-11,
+          "line": 122,
+          "raw": "    maxstep = 10 ps"
+        },
+        "method": {
+          "value": "traponly",
+          "line": 133,
+          "raw": "    method = traponly"
+        },
+        "errpreset": {
+          "value": "moderate",
+          "line": 132,
+          "raw": "    errpreset = moderate"
+        }
+      },
+      "spectre_tool": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "setup_sha256": {
+          "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+          "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+        }
+      },
+      "spectre_raw_sha256": "2813a2ba6cc276590d2954c25b948d8c4f87f9c3d9f27e04d5cae1e592bf516d",
+      "spectre_rows_sha256": "a4c3ad411ceed6a9c5023ddbdf93cf6ee9a4aba392add1beda9cd8b225baae04",
+      "spectre_original_analysis_failure": "wrong dimension for voltage: 1 uV",
+      "full_native_vs_root_oracle": {
+        "scalar_mismatch_count": 220,
+        "max_gap_V": 0.39000000000000007,
+        "first": {
+          "time": 1.492506250013889e-09,
+          "node": "metric",
+          "expected_root": 5.9694010206309154e-05,
+          "spectre": 0.0,
+          "gap": 5.9694010206309154e-05
+        }
+      },
+      "classification": "strict-root reset semantic difference; checker mismatch retained; callback qualification missing"
+    },
+    {
+      "family": "263",
+      "input_identity": {
+        "family_id": "263",
+        "task_name": "263-settling-progress-counter",
+        "checker_id": "v4_263_settling_progress_counter",
+        "deck_sha256": "d41fc3c1d053075f5f8a114924a35e4fc325cee96f7941d22f8732acc0d6f5df",
+        "gold_tree_sha256": "ed3f299f35744b3ea70a72ddfbfc35e9995aa9d2045de3e0b14e56511a34cfd6",
+        "source_files": {
+          "submission/settling_progress_counter.va": "b78fbde91c74ed0eaa7142aa49bd5e581e4e9cc98bdcf8a339b317e08342fc92",
+          "testbench/trusted_replay_test.scs": "d41fc3c1d053075f5f8a114924a35e4fc325cee96f7941d22f8732acc0d6f5df"
+        }
+      },
+      "evas_original_checker": {
+        "passed": false,
+        "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_263_settling_progress_counter: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_A_SAMPLED_PROGRESS_COUNT_TO",
+        "checker_id": "v4_263_settling_progress_counter",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "spectre_original_checker": {
+        "passed": true,
+        "note": "v4_263_settling_progress_counter:; P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE mismatch_count=0; P_INITIALIZE_A_SAMPLED_PROGRESS_COUNT_TO mismatch_count=0; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_A_SAMPLED_PROGRESS_COUNT_TO"
+      },
+      "independent": {
+        "family": "263",
+        "event_count": 15,
+        "saved_rows": 1662,
+        "scalar_observations": 23268,
+        "max_state_error": 1.7284803966419401e-16,
+        "max_saved_error_V": {
+          "clk": 5.1884299087924754e-17,
+          "rst": 7.17823153352595e-17,
+          "in0": 1.193620194545825e-16,
+          "in1": 7.913523894332365e-17,
+          "in2": 4.683685622495002e-17,
+          "in3": 8.768214019430997e-17,
+          "ctrl0": 7.397087906401772e-17,
+          "ctrl1": 7.397087906401772e-17,
+          "vdd": 1.39169207298869e-16,
+          "vss": 1.1617903904480865e-17,
+          "en": 4.9445887108989976e-17,
+          "out": 7.64617529018167e-15,
+          "flag": 7.64617529018167e-15,
+          "metric": 1.2978234010330196e-14
+        },
+        "response_sha256": "5ea2f23fe9dfdafe3a7669aaa0eb21dea8d68a60026070b2c77c516dceeda7bd",
+        "oracle_sha256": "7bb8e75e97ea85186a67bc3f8e7f4a736ed96c49fc79c76c2d74504f0b9bcd15",
+        "geometry_sha256": "0ce31edef7e448cf8f03131ffc4849cd28d42379e0bcb2f8f16b7adb34dad9ab",
+        "verdict": "pass independent finite source/root/recurrence/ramp oracle; historical checker separate"
+      },
+      "finite_division_reference": [
+        {
+          "requested_time_s": 4.625e-10,
+          "native_time_s": 4.650000000000002e-10,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 1.6125e-09,
+          "native_time_s": 1.612506250013889e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.4775510204081633
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.4775510204081632
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 2.7625e-09,
+          "native_time_s": 2.76250625001389e-09,
+          "expected": {
+            "out": 0.225,
+            "flag": 0.0,
+            "metric": 0.42244897959183675
+          },
+          "spectre": {
+            "out": 0.225,
+            "flag": 0.0,
+            "metric": 0.4224489795918367
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 3.9124999999999995e-09,
+          "native_time_s": 3.912506250013887e-09,
+          "expected": {
+            "out": 0.45,
+            "flag": 0.0,
+            "metric": 0.42244897959183675
+          },
+          "spectre": {
+            "out": 0.45,
+            "flag": 0.0,
+            "metric": 0.4224489795918367
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 5.0625e-09,
+          "native_time_s": 5.062506250013889e-09,
+          "expected": {
+            "out": 0.675,
+            "flag": 0.9,
+            "metric": 0.47586206896551725
+          },
+          "spectre": {
+            "out": 0.675,
+            "flag": 0.9,
+            "metric": 0.4758620689655174
+          },
+          "max_error_V": 1.6653345369377348e-16
+        },
+        {
+          "requested_time_s": 6.212499999999999e-09,
+          "native_time_s": 6.212506250013887e-09,
+          "expected": {
+            "out": 0.9,
+            "flag": 0.9,
+            "metric": 0.48648648648648657
+          },
+          "spectre": {
+            "out": 0.9,
+            "flag": 0.9,
+            "metric": 0.4864864864864866
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 7.3625e-09,
+          "native_time_s": 7.362506250013887e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 8.5125e-09,
+          "native_time_s": 8.512506250013887e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39000000000000007
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39
+          },
+          "max_error_V": 5.551115123125783e-17
+        }
+      ],
+      "post_reset_observations": [
+        {
+          "root_time_s": 9.025000000000001e-09,
+          "root_rst_minus_vth": "0",
+          "expected_state": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39000000000000007
+          },
+          "native_time_s": 9.145012500027778e-09,
+          "root_oracle_outputs": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39000000000000007
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          }
+        }
+      ],
+      "spectre_execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 15.223807375878096,
+        "completed_utc": "2026-10-17T12:32:47Z",
+        "log_sha256": "abe748fbeac375585801816b9a4b2cb294ca048c7b35ccdb1fa039d1470a73e3",
+        "stage": "simulate",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      },
+      "spectre_settings": {
+        "reltol": {
+          "value": 0.001,
+          "line": 126,
+          "raw": "    reltol = 1e-03"
+        },
+        "abstol(V)": {
+          "value": 1e-06,
+          "line": 127,
+          "raw": "    abstol(V) = 1 uV"
+        },
+        "abstol(I)": {
+          "value": 1e-12,
+          "line": 128,
+          "raw": "    abstol(I) = 1 pA"
+        },
+        "stop": {
+          "value": 1.6e-08,
+          "line": 120,
+          "raw": "    stop = 16 ns"
+        },
+        "maxstep": {
+          "value": 1e-11,
+          "line": 122,
+          "raw": "    maxstep = 10 ps"
+        },
+        "method": {
+          "value": "traponly",
+          "line": 133,
+          "raw": "    method = traponly"
+        },
+        "errpreset": {
+          "value": "moderate",
+          "line": 132,
+          "raw": "    errpreset = moderate"
+        }
+      },
+      "spectre_tool": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "setup_sha256": {
+          "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+          "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+        }
+      },
+      "spectre_raw_sha256": "951d48253c411c14d0a3e5432fd8142b824282510c769caf3a8e10ed2aaa66fe",
+      "spectre_rows_sha256": "7551454525e41f6ba6728ddc56ba50c71fa2438479394c46fc1f3a74f37dd658",
+      "spectre_original_analysis_failure": "wrong dimension for voltage: 1 uV",
+      "full_native_vs_root_oracle": {
+        "scalar_mismatch_count": 154,
+        "max_gap_V": 0.39000000000000007,
+        "first": {
+          "time": 1.492506250013889e-09,
+          "node": "metric",
+          "expected_root": 5.9694010206309154e-05,
+          "spectre": 0.0,
+          "gap": 5.9694010206309154e-05
+        }
+      },
+      "classification": "strict-root reset semantic difference; checker mismatch retained; callback qualification missing"
+    },
+    {
+      "family": "264",
+      "input_identity": {
+        "family_id": "264",
+        "task_name": "264-enable-qualified-bias-hold",
+        "checker_id": "v4_264_enable_qualified_bias_hold",
+        "deck_sha256": "09d0bd26450fa6966e199a7c9f2b0ada30e1bc7297dc5fe68393bac883d0d746",
+        "gold_tree_sha256": "93c0eca665dddc27fad7f81ba374dbb3d2be85335296419da6528389ae3163ed",
+        "source_files": {
+          "submission/enable_qualified_bias_hold.va": "d13db89ca40a09426120849682680a75d12b91bb8c242a65c390fe8de38675f8",
+          "testbench/trusted_replay_test.scs": "09d0bd26450fa6966e199a7c9f2b0ada30e1bc7297dc5fe68393bac883d0d746"
+        }
+      },
+      "evas_original_checker": {
+        "passed": false,
+        "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_264_enable_qualified_bias_hold: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_THE_HELD_BIAS_OUTPUT_FLAG",
+        "checker_id": "v4_264_enable_qualified_bias_hold",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "spectre_original_checker": {
+        "passed": true,
+        "note": "v4_264_enable_qualified_bias_hold:; P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE mismatch_count=0; P_INITIALIZE_THE_HELD_BIAS_OUTPUT_FLAG mismatch_count=0; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_THE_HELD_BIAS_OUTPUT_FLAG"
+      },
+      "independent": {
+        "family": "264",
+        "event_count": 15,
+        "saved_rows": 1662,
+        "scalar_observations": 23268,
+        "max_state_error": 1.7284803966419401e-16,
+        "max_saved_error_V": {
+          "clk": 5.1884299087924754e-17,
+          "rst": 7.17823153352595e-17,
+          "in0": 1.193620194545825e-16,
+          "in1": 7.913523894332365e-17,
+          "in2": 4.683685622495002e-17,
+          "in3": 8.768214019430997e-17,
+          "ctrl0": 7.397087906401772e-17,
+          "ctrl1": 7.397087906401772e-17,
+          "vdd": 1.39169207298869e-16,
+          "vss": 1.1617903904480865e-17,
+          "en": 4.9445887108989976e-17,
+          "out": 1.3629369684516425e-14,
+          "flag": 2.2523163820158766e-14,
+          "metric": 2.889095299914161e-15
+        },
+        "response_sha256": "75656d01f4b1734602af1e5311de14130c9afb6418a879b42d4ab5afc8e7af44",
+        "oracle_sha256": "7bb8e75e97ea85186a67bc3f8e7f4a736ed96c49fc79c76c2d74504f0b9bcd15",
+        "geometry_sha256": "0ce31edef7e448cf8f03131ffc4849cd28d42379e0bcb2f8f16b7adb34dad9ab",
+        "verdict": "pass independent finite source/root/recurrence/ramp oracle; historical checker separate"
+      },
+      "finite_division_reference": [
+        {
+          "requested_time_s": 4.625e-10,
+          "native_time_s": 4.650000000000002e-10,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 1.6125e-09,
+          "native_time_s": 1.612506250013889e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.42244897959183675
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.4224489795918367
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 2.7625e-09,
+          "native_time_s": 2.765000000000002e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.42244897959183675
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.4224489795918367
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 3.9124999999999995e-09,
+          "native_time_s": 3.912506250013887e-09,
+          "expected": {
+            "out": 0.5895918367346938,
+            "flag": 0.9,
+            "metric": 0.23693877551020412
+          },
+          "spectre": {
+            "out": 0.5895918367346937,
+            "flag": 0.9,
+            "metric": 0.2369387755102042
+          },
+          "max_error_V": 1.1102230246251565e-16
+        },
+        {
+          "requested_time_s": 5.0625e-09,
+          "native_time_s": 5.062506250013889e-09,
+          "expected": {
+            "out": 0.44275862068965516,
+            "flag": 0.9,
+            "metric": 0.37448275862068975
+          },
+          "spectre": {
+            "out": 0.4427586206896552,
+            "flag": 0.9,
+            "metric": 0.3744827586206897
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 6.212499999999999e-09,
+          "native_time_s": 6.212506250013887e-09,
+          "expected": {
+            "out": 0.44275862068965516,
+            "flag": 0.0,
+            "metric": 0.3373532152842497
+          },
+          "spectre": {
+            "out": 0.4427586206896552,
+            "flag": 0.0,
+            "metric": 0.3373532152842498
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 7.3625e-09,
+          "native_time_s": 7.362506250013887e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 8.5125e-09,
+          "native_time_s": 8.512506250013887e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.165
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.165
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "post_reset_observations": [
+        {
+          "root_time_s": 9.025000000000001e-09,
+          "root_rst_minus_vth": "0",
+          "expected_state": {
+            "out": 0.312,
+            "flag": 0.9,
+            "metric": 0.004499999999999994
+          },
+          "native_time_s": 9.145012500027778e-09,
+          "root_oracle_outputs": {
+            "out": 0.312,
+            "flag": 0.9,
+            "metric": 0.004499999999999994
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          }
+        }
+      ],
+      "spectre_execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 15.162670785561204,
+        "completed_utc": "2026-10-17T12:33:06Z",
+        "log_sha256": "fb663f1540b8e1cb76477a9d832c1107b696142a7caf2d75ef8425e0581de82b",
+        "stage": "simulate",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      },
+      "spectre_settings": {
+        "reltol": {
+          "value": 0.001,
+          "line": 126,
+          "raw": "    reltol = 1e-03"
+        },
+        "abstol(V)": {
+          "value": 1e-06,
+          "line": 127,
+          "raw": "    abstol(V) = 1 uV"
+        },
+        "abstol(I)": {
+          "value": 1e-12,
+          "line": 128,
+          "raw": "    abstol(I) = 1 pA"
+        },
+        "stop": {
+          "value": 1.6e-08,
+          "line": 120,
+          "raw": "    stop = 16 ns"
+        },
+        "maxstep": {
+          "value": 1e-11,
+          "line": 122,
+          "raw": "    maxstep = 10 ps"
+        },
+        "method": {
+          "value": "traponly",
+          "line": 133,
+          "raw": "    method = traponly"
+        },
+        "errpreset": {
+          "value": "moderate",
+          "line": 132,
+          "raw": "    errpreset = moderate"
+        }
+      },
+      "spectre_tool": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "setup_sha256": {
+          "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+          "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+        }
+      },
+      "spectre_raw_sha256": "a8c2693a9d8324744a181b61c5d61924d246935eae72475dc5186d5bcafe8c17",
+      "spectre_rows_sha256": "aa91747718eca96668cf5b856eab060f597d576b3018e6de30ae64c9d3437ddd",
+      "spectre_original_analysis_failure": "wrong dimension for voltage: 1 uV",
+      "full_native_vs_root_oracle": {
+        "scalar_mismatch_count": 315,
+        "max_gap_V": 0.9,
+        "first": {
+          "time": 1.492506250013889e-09,
+          "node": "metric",
+          "expected_root": 5.2806239797888864e-05,
+          "spectre": 0.0,
+          "gap": 5.2806239797888864e-05
+        }
+      },
+      "classification": "strict-root reset semantic difference; checker mismatch retained; callback qualification missing"
+    },
+    {
+      "family": "267",
+      "input_identity": {
+        "family_id": "267",
+        "task_name": "267-clocked-power-ready-sampler",
+        "checker_id": "v4_267_clocked_power_ready_sampler",
+        "deck_sha256": "319455e8562d24121b878c5618b7159b5158d20b53d65be3d361fef56533175d",
+        "gold_tree_sha256": "1e18a16e94b4151fe90d94c36f8c1ab754cdd09e69ccb253c219d60d9d2a75c9",
+        "source_files": {
+          "submission/clocked_power_ready_sampler.va": "e444f52f3da19e63c7233556694fbe33a92c1b1fb311c8f09143b36d74c1902d",
+          "testbench/trusted_replay_test.scs": "319455e8562d24121b878c5618b7159b5158d20b53d65be3d361fef56533175d"
+        }
+      },
+      "evas_original_checker": {
+        "passed": false,
+        "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_267_clocked_power_ready_sampler: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_THE_READY_COUNT_AND_ALL",
+        "checker_id": "v4_267_clocked_power_ready_sampler",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "spectre_original_checker": {
+        "passed": true,
+        "note": "v4_267_clocked_power_ready_sampler:; P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE mismatch_count=0; P_INITIALIZE_THE_READY_COUNT_AND_ALL mismatch_count=0; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_THE_READY_COUNT_AND_ALL"
+      },
+      "independent": {
+        "family": "267",
+        "event_count": 15,
+        "saved_rows": 1662,
+        "scalar_observations": 23268,
+        "max_state_error": 1.7284803966419401e-16,
+        "max_saved_error_V": {
+          "clk": 5.1884299087924754e-17,
+          "rst": 7.17823153352595e-17,
+          "in0": 1.193620194545825e-16,
+          "in1": 7.913523894332365e-17,
+          "in2": 4.683685622495002e-17,
+          "in3": 8.768214019430997e-17,
+          "ctrl0": 7.397087906401772e-17,
+          "ctrl1": 7.397087906401772e-17,
+          "vdd": 1.39169207298869e-16,
+          "vss": 1.1617903904480865e-17,
+          "en": 4.9445887108989976e-17,
+          "out": 7.64617529018167e-15,
+          "flag": 7.64617529018167e-15,
+          "metric": 1.2978234010330196e-14
+        },
+        "response_sha256": "d37d74147c9a8a65cf64941bab63622867aee1a30f780c94810bfcabac340c0d",
+        "oracle_sha256": "7bb8e75e97ea85186a67bc3f8e7f4a736ed96c49fc79c76c2d74504f0b9bcd15",
+        "geometry_sha256": "0ce31edef7e448cf8f03131ffc4849cd28d42379e0bcb2f8f16b7adb34dad9ab",
+        "verdict": "pass independent finite source/root/recurrence/ramp oracle; historical checker separate"
+      },
+      "finite_division_reference": [
+        {
+          "requested_time_s": 4.625e-10,
+          "native_time_s": 4.650000000000002e-10,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 1.6125e-09,
+          "native_time_s": 1.612506250013889e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.4775510204081633
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.4775510204081632
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 2.7625e-09,
+          "native_time_s": 2.76250625001389e-09,
+          "expected": {
+            "out": 0.225,
+            "flag": 0.0,
+            "metric": 0.42244897959183675
+          },
+          "spectre": {
+            "out": 0.225,
+            "flag": 0.0,
+            "metric": 0.4224489795918367
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 3.9124999999999995e-09,
+          "native_time_s": 3.912506250013887e-09,
+          "expected": {
+            "out": 0.45,
+            "flag": 0.0,
+            "metric": 0.42244897959183675
+          },
+          "spectre": {
+            "out": 0.45,
+            "flag": 0.0,
+            "metric": 0.4224489795918367
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 5.0625e-09,
+          "native_time_s": 5.062506250013889e-09,
+          "expected": {
+            "out": 0.675,
+            "flag": 0.9,
+            "metric": 0.47586206896551725
+          },
+          "spectre": {
+            "out": 0.675,
+            "flag": 0.9,
+            "metric": 0.4758620689655174
+          },
+          "max_error_V": 1.6653345369377348e-16
+        },
+        {
+          "requested_time_s": 6.212499999999999e-09,
+          "native_time_s": 6.212506250013887e-09,
+          "expected": {
+            "out": 0.9,
+            "flag": 0.9,
+            "metric": 0.48648648648648657
+          },
+          "spectre": {
+            "out": 0.9,
+            "flag": 0.9,
+            "metric": 0.4864864864864866
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 7.3625e-09,
+          "native_time_s": 7.362506250013887e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 8.5125e-09,
+          "native_time_s": 8.512506250013887e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39000000000000007
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39
+          },
+          "max_error_V": 5.551115123125783e-17
+        }
+      ],
+      "post_reset_observations": [
+        {
+          "root_time_s": 9.025000000000001e-09,
+          "root_rst_minus_vth": "0",
+          "expected_state": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39000000000000007
+          },
+          "native_time_s": 9.145012500027778e-09,
+          "root_oracle_outputs": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.39000000000000007
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          }
+        }
+      ],
+      "spectre_execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 15.613314127549529,
+        "completed_utc": "2026-10-17T12:33:26Z",
+        "log_sha256": "1a2abc95df9e98a57405f10a497415b069c5739e547bab77c05f920c18bb9f5d",
+        "stage": "simulate",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      },
+      "spectre_settings": {
+        "reltol": {
+          "value": 0.001,
+          "line": 126,
+          "raw": "    reltol = 1e-03"
+        },
+        "abstol(V)": {
+          "value": 1e-06,
+          "line": 127,
+          "raw": "    abstol(V) = 1 uV"
+        },
+        "abstol(I)": {
+          "value": 1e-12,
+          "line": 128,
+          "raw": "    abstol(I) = 1 pA"
+        },
+        "stop": {
+          "value": 1.6e-08,
+          "line": 120,
+          "raw": "    stop = 16 ns"
+        },
+        "maxstep": {
+          "value": 1e-11,
+          "line": 122,
+          "raw": "    maxstep = 10 ps"
+        },
+        "method": {
+          "value": "traponly",
+          "line": 133,
+          "raw": "    method = traponly"
+        },
+        "errpreset": {
+          "value": "moderate",
+          "line": 132,
+          "raw": "    errpreset = moderate"
+        }
+      },
+      "spectre_tool": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "setup_sha256": {
+          "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+          "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+        }
+      },
+      "spectre_raw_sha256": "ea4bb82e7ef37378433d3cda9b966eddd8cbb25f826944e0952de3c99f63da46",
+      "spectre_rows_sha256": "7551454525e41f6ba6728ddc56ba50c71fa2438479394c46fc1f3a74f37dd658",
+      "spectre_original_analysis_failure": "wrong dimension for voltage: 1 uV",
+      "full_native_vs_root_oracle": {
+        "scalar_mismatch_count": 154,
+        "max_gap_V": 0.39000000000000007,
+        "first": {
+          "time": 1.492506250013889e-09,
+          "node": "metric",
+          "expected_root": 5.9694010206309154e-05,
+          "spectre": 0.0,
+          "gap": 5.9694010206309154e-05
+        }
+      },
+      "classification": "strict-root reset semantic difference; checker mismatch retained; callback qualification missing"
+    },
+    {
+      "family": "271",
+      "input_identity": {
+        "family_id": "271",
+        "task_name": "271-windowed-event-rate-monitor",
+        "checker_id": "v4_271_windowed_event_rate_monitor",
+        "deck_sha256": "14df05bf45048f15dc671f39eb33fc4b7c7f3fae4e079a9de463df4f356908f6",
+        "gold_tree_sha256": "cf6618a6cc462d0b67c18bd9f025e17802160da6e48c2f58308ce45512bda9a7",
+        "source_files": {
+          "submission/windowed_event_rate_monitor.va": "ecc40ab640276f1a9d1f854d240d295dd9273404498b6bd39fc8a4f2b3a51ba0",
+          "testbench/trusted_replay_test.scs": "14df05bf45048f15dc671f39eb33fc4b7c7f3fae4e079a9de463df4f356908f6"
+        }
+      },
+      "evas_original_checker": {
+        "passed": true,
+        "note": "samples; P_INITIALIZE_EVENT_COUNT_SAMPLE_COUNT_RATE mismatch_count=0; P_FOR_THE_SAME_GATED_SAMPLE_WINDOW mismatch_count=0; checked_property_ids=P_INITIALIZE_EVENT_COUNT_SAMPLE_COUNT_RATE,P_FOR_THE_SAME_GATED_SAMPLE_WINDOW",
+        "checker_id": "v4_271_windowed_event_rate_monitor",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "spectre_original_checker": {
+        "passed": true,
+        "note": "samples; P_INITIALIZE_EVENT_COUNT_SAMPLE_COUNT_RATE mismatch_count=0; P_FOR_THE_SAME_GATED_SAMPLE_WINDOW mismatch_count=0; checked_property_ids=P_INITIALIZE_EVENT_COUNT_SAMPLE_COUNT_RATE,P_FOR_THE_SAME_GATED_SAMPLE_WINDOW"
+      },
+      "independent": {
+        "family": "271",
+        "event_count": 15,
+        "saved_rows": 1573,
+        "scalar_observations": 9438,
+        "max_state_error": 3.700743415417188e-17,
+        "max_saved_error_V": {
+          "clk": 5.46200037493185e-17,
+          "rst": 6.661338147750939e-17,
+          "event_in": 7.397087906401772e-17,
+          "gate": 7.17823153352595e-17,
+          "rate": 1.363658000178633e-14,
+          "average": 1.1345312951078188e-14
+        },
+        "response_sha256": "0c0b062e05dd67bb26781bfca9a8db7969ba74494b382a2382bf8201ce673dbb",
+        "oracle_sha256": "7bb8e75e97ea85186a67bc3f8e7f4a736ed96c49fc79c76c2d74504f0b9bcd15",
+        "geometry_sha256": "0ce31edef7e448cf8f03131ffc4849cd28d42379e0bcb2f8f16b7adb34dad9ab",
+        "verdict": "pass independent finite source/root/recurrence/ramp oracle; historical checker separate"
+      },
+      "finite_division_reference": [
+        {
+          "requested_time_s": 3.825e-10,
+          "native_time_s": 3.850000000000002e-10,
+          "expected": {
+            "rate": 0.0,
+            "average": 0.0
+          },
+          "spectre": {
+            "rate": 0.0,
+            "average": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 1.3825000000000001e-09,
+          "native_time_s": 1.385e-09,
+          "expected": {
+            "rate": 0.0,
+            "average": 0.0
+          },
+          "spectre": {
+            "rate": 0.0,
+            "average": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 2.3825e-09,
+          "native_time_s": 2.38250625001389e-09,
+          "expected": {
+            "rate": 0.18,
+            "average": 0.9
+          },
+          "spectre": {
+            "rate": 0.18,
+            "average": 0.9
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 3.3825000000000003e-09,
+          "native_time_s": 3.38250625001389e-09,
+          "expected": {
+            "rate": 0.18,
+            "average": 0.45
+          },
+          "spectre": {
+            "rate": 0.18,
+            "average": 0.45
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 4.3825000000000005e-09,
+          "native_time_s": 4.382506250013888e-09,
+          "expected": {
+            "rate": 0.36,
+            "average": 0.6
+          },
+          "spectre": {
+            "rate": 0.36,
+            "average": 0.6
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 5.3825e-09,
+          "native_time_s": 5.38250625001389e-09,
+          "expected": {
+            "rate": 0.54,
+            "average": 0.675
+          },
+          "spectre": {
+            "rate": 0.54,
+            "average": 0.675
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 6.3825e-09,
+          "native_time_s": 6.382506250013888e-09,
+          "expected": {
+            "rate": 0.54,
+            "average": 0.54
+          },
+          "spectre": {
+            "rate": 0.54,
+            "average": 0.54
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 7.3825e-09,
+          "native_time_s": 7.38293101851853e-09,
+          "expected": {
+            "rate": 0.54,
+            "average": 0.45
+          },
+          "spectre": {
+            "rate": 0.54,
+            "average": 0.45
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 8.3825e-09,
+          "native_time_s": 8.382506250013892e-09,
+          "expected": {
+            "rate": 0.0,
+            "average": 0.0
+          },
+          "spectre": {
+            "rate": 0.0,
+            "average": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 9.3825e-09,
+          "native_time_s": 9.385e-09,
+          "expected": {
+            "rate": 0.0,
+            "average": 0.0
+          },
+          "spectre": {
+            "rate": 0.0,
+            "average": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 1.03825e-08,
+          "native_time_s": 1.0385e-08,
+          "expected": {
+            "rate": 0.0,
+            "average": 0.0
+          },
+          "spectre": {
+            "rate": 0.0,
+            "average": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 1.1382500000000001e-08,
+          "native_time_s": 1.138293101851853e-08,
+          "expected": {
+            "rate": 0.0,
+            "average": 0.0
+          },
+          "spectre": {
+            "rate": 0.0,
+            "average": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 1.23825e-08,
+          "native_time_s": 1.238250625001389e-08,
+          "expected": {
+            "rate": 0.18,
+            "average": 0.9
+          },
+          "spectre": {
+            "rate": 0.18,
+            "average": 0.9
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 1.3382500000000001e-08,
+          "native_time_s": 1.338250625001389e-08,
+          "expected": {
+            "rate": 0.36,
+            "average": 0.9
+          },
+          "spectre": {
+            "rate": 0.36,
+            "average": 0.9
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 1.4382500000000002e-08,
+          "native_time_s": 1.438250625001389e-08,
+          "expected": {
+            "rate": 0.54,
+            "average": 0.9
+          },
+          "spectre": {
+            "rate": 0.54,
+            "average": 0.9
+          },
+          "max_error_V": 0.0
+        }
+      ],
+      "post_reset_observations": [],
+      "spectre_execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 15.040065350010991,
+        "completed_utc": "2026-10-17T12:33:44Z",
+        "log_sha256": "3ec9ab14d5fca76e5fa283a765f25ca0b788a1529fc9a472c91098ca7de781d6",
+        "stage": "simulate",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      },
+      "spectre_settings": {
+        "reltol": {
+          "value": 0.001,
+          "line": 125,
+          "raw": "    reltol = 1e-03"
+        },
+        "abstol(V)": {
+          "value": 1e-06,
+          "line": 126,
+          "raw": "    abstol(V) = 1 uV"
+        },
+        "abstol(I)": {
+          "value": 1e-12,
+          "line": 127,
+          "raw": "    abstol(I) = 1 pA"
+        },
+        "stop": {
+          "value": 1.5000000000000002e-08,
+          "line": 119,
+          "raw": "    stop = 15 ns"
+        },
+        "maxstep": {
+          "value": 1e-11,
+          "line": 121,
+          "raw": "    maxstep = 10 ps"
+        },
+        "method": {
+          "value": "traponly",
+          "line": 132,
+          "raw": "    method = traponly"
+        },
+        "errpreset": {
+          "value": "moderate",
+          "line": 131,
+          "raw": "    errpreset = moderate"
+        }
+      },
+      "spectre_tool": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "setup_sha256": {
+          "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+          "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+        }
+      },
+      "spectre_raw_sha256": "5693676fc49a7dfe89d61c0e75bc0ca07be5ed3e183e4bde102c8d32a89533d6",
+      "spectre_rows_sha256": "7e24c983bfc03be3d27dba673a0b42e2bb55dd988f279668296ce613e82f362f",
+      "spectre_original_analysis_failure": "wrong dimension for voltage: 1 uV",
+      "full_native_vs_root_oracle": {
+        "scalar_mismatch_count": 91,
+        "max_gap_V": 9.375020840579618e-05,
+        "first": {
+          "time": 2.262506250013889e-09,
+          "node": "rate",
+          "expected_root": 1.8750041666901048e-05,
+          "spectre": 0.0,
+          "gap": 1.8750041666901048e-05
+        }
+      },
+      "classification": "original checker pass; finite recurrence certified"
+    },
+    {
+      "family": "275",
+      "input_identity": {
+        "family_id": "275",
+        "task_name": "275-deterministic-energy-accumulator",
+        "checker_id": "v4_275_deterministic_energy_accumulator",
+        "deck_sha256": "af40aff6391fda1948c036c3d847fb4f8cdf36fca5dea7b652cd050d4cab5566",
+        "gold_tree_sha256": "a48e3577612c73957e92a76a3fb1c99a0172d6704ee4324f7febcf24dd312740",
+        "source_files": {
+          "submission/deterministic_energy_accumulator.va": "78b3cdfc067121a2a37dbec9fa1b4862b697d4602ed25db9f4d0eb58f24d9bf5",
+          "testbench/trusted_replay_test.scs": "af40aff6391fda1948c036c3d847fb4f8cdf36fca5dea7b652cd050d4cab5566"
+        }
+      },
+      "evas_original_checker": {
+        "passed": true,
+        "note": "v4_275_deterministic_energy_accumulator_edges; P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE mismatch_count=0; P_INITIALIZE_THE_ACCUMULATOR_STATE_AND_ALL mismatch_count=0; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_THE_ACCUMULATOR_STATE_AND_ALL",
+        "checker_id": "v4_275_deterministic_energy_accumulator",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "spectre_original_checker": {
+        "passed": true,
+        "note": "v4_275_deterministic_energy_accumulator_edges; P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE mismatch_count=0; P_INITIALIZE_THE_ACCUMULATOR_STATE_AND_ALL mismatch_count=0; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_THE_ACCUMULATOR_STATE_AND_ALL"
+      },
+      "independent": {
+        "family": "275",
+        "event_count": 17,
+        "saved_rows": 1676,
+        "scalar_observations": 23464,
+        "max_state_error": 1.2867062141016866e-16,
+        "max_saved_error_V": {
+          "clk": 5.292223208566529e-17,
+          "rst": 7.17823153352595e-17,
+          "in0": 1.193620194545825e-16,
+          "in1": 7.913523894332365e-17,
+          "in2": 4.683685622495002e-17,
+          "in3": 8.768214019430997e-17,
+          "ctrl0": 7.397087906401772e-17,
+          "ctrl1": 7.397087906401772e-17,
+          "vdd": 1.5481119533010255e-16,
+          "vss": 6.564420637932849e-18,
+          "en": 4.9445887108989976e-17,
+          "out": 7.895838937189208e-15,
+          "flag": 1.7588824173494978e-16,
+          "metric": 1.7033793829050897e-14
+        },
+        "response_sha256": "69440b8750dbf250d585c9e3ea2d036ff527bee55af27065720e5e4e5005d5d2",
+        "oracle_sha256": "7bb8e75e97ea85186a67bc3f8e7f4a736ed96c49fc79c76c2d74504f0b9bcd15",
+        "geometry_sha256": "0ce31edef7e448cf8f03131ffc4849cd28d42379e0bcb2f8f16b7adb34dad9ab",
+        "verdict": "pass independent finite source/root/recurrence/ramp oracle; historical checker separate"
+      },
+      "finite_division_reference": [
+        {
+          "requested_time_s": 3.425e-10,
+          "native_time_s": 3.450000000000002e-10,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 1.3425e-09,
+          "native_time_s": 1.342931018518517e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 2.3425e-09,
+          "native_time_s": 2.34250625001389e-09,
+          "expected": {
+            "out": 0.14885393258426965,
+            "flag": 0.0,
+            "metric": 0.4651685393258427
+          },
+          "spectre": {
+            "out": 0.1488539325842697,
+            "flag": 0.0,
+            "metric": 0.4651685393258426
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 3.3425e-09,
+          "native_time_s": 3.34250625001389e-09,
+          "expected": {
+            "out": 0.3419433707865168,
+            "flag": 0.0,
+            "metric": 0.7801685393258426
+          },
+          "spectre": {
+            "out": 0.3419433707865168,
+            "flag": 0.0,
+            "metric": 0.7801685393258426
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 4.3425e-09,
+          "native_time_s": 4.342506250013887e-09,
+          "expected": {
+            "out": 0.4479885633570282,
+            "flag": 0.0,
+            "metric": 0.7374489795918366
+          },
+          "spectre": {
+            "out": 0.4479885633570282,
+            "flag": 0.0,
+            "metric": 0.7374489795918368
+          },
+          "max_error_V": 1.1102230246251565e-16
+        },
+        {
+          "requested_time_s": 5.3425000000000005e-09,
+          "native_time_s": 5.342506250013887e-09,
+          "expected": {
+            "out": 0.49082409572203545,
+            "flag": 0.0,
+            "metric": 0.6658474576271186
+          },
+          "spectre": {
+            "out": 0.4908240957220354,
+            "flag": 0.0,
+            "metric": 0.6658474576271185
+          },
+          "max_error_V": 1.1102230246251565e-16
+        },
+        {
+          "requested_time_s": 6.3425e-09,
+          "native_time_s": 6.342506250013887e-09,
+          "expected": {
+            "out": 0.4507516173137637,
+            "flag": 0.0,
+            "metric": 0.4576271186440678
+          },
+          "spectre": {
+            "out": 0.4507516173137636,
+            "flag": 0.0,
+            "metric": 0.4576271186440677
+          },
+          "max_error_V": 1.1102230246251565e-16
+        },
+        {
+          "requested_time_s": 7.3425e-09,
+          "native_time_s": 7.342506250013887e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 8.3425e-09,
+          "native_time_s": 8.342506250013888e-09,
+          "expected": {
+            "out": 0.13614545454545454,
+            "flag": 0.0,
+            "metric": 0.4254545454545454
+          },
+          "spectre": {
+            "out": 0.1361454545454545,
+            "flag": 0.0,
+            "metric": 0.4254545454545454
+          },
+          "max_error_V": 5.551115123125783e-17
+        }
+      ],
+      "post_reset_observations": [
+        {
+          "root_time_s": 9.025000000000001e-09,
+          "root_rst_minus_vth": "0",
+          "expected_state": {
+            "out": 0.27095563636363634,
+            "flag": 0.0,
+            "metric": 0.5829545454545454
+          },
+          "native_time_s": 9.145012500027778e-09,
+          "root_oracle_outputs": {
+            "out": 0.27095563636363634,
+            "flag": 0.0,
+            "metric": 0.5829545454545454
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          }
+        }
+      ],
+      "spectre_execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 15.525660008192062,
+        "completed_utc": "2026-10-17T12:34:03Z",
+        "log_sha256": "1ef938cf0d754e65fd871b9cdaff8d8c609e4009ef9a125949f670f98bb1c216",
+        "stage": "simulate",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      },
+      "spectre_settings": {
+        "reltol": {
+          "value": 0.001,
+          "line": 126,
+          "raw": "    reltol = 1e-03"
+        },
+        "abstol(V)": {
+          "value": 1e-06,
+          "line": 127,
+          "raw": "    abstol(V) = 1 uV"
+        },
+        "abstol(I)": {
+          "value": 1e-12,
+          "line": 128,
+          "raw": "    abstol(I) = 1 pA"
+        },
+        "stop": {
+          "value": 1.6e-08,
+          "line": 120,
+          "raw": "    stop = 16 ns"
+        },
+        "maxstep": {
+          "value": 1e-11,
+          "line": 122,
+          "raw": "    maxstep = 10 ps"
+        },
+        "method": {
+          "value": "traponly",
+          "line": 133,
+          "raw": "    method = traponly"
+        },
+        "errpreset": {
+          "value": "moderate",
+          "line": 132,
+          "raw": "    errpreset = moderate"
+        }
+      },
+      "spectre_tool": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "setup_sha256": {
+          "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+          "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+        }
+      },
+      "spectre_raw_sha256": "05042b0704a2a81c9485f6b2624ee4f8c7b98d1c0cc6ffe3bc58a3f2af6ed1fe",
+      "spectre_rows_sha256": "7b8fd65fe05cd34f8b2725783463e6242ced9c93d99fe1db144ba708353ac38b",
+      "spectre_original_analysis_failure": "wrong dimension for voltage: 1 uV",
+      "full_native_vs_root_oracle": {
+        "scalar_mismatch_count": 156,
+        "max_gap_V": 0.5829545454545454,
+        "first": {
+          "time": 2.222506250013889e-09,
+          "node": "out",
+          "expected_root": 1.8606782920811347e-05,
+          "spectre": 0.0,
+          "gap": 1.8606782920811347e-05
+        }
+      },
+      "classification": "original checker pass; finite recurrence certified"
+    },
+    {
+      "family": "276",
+      "input_identity": {
+        "family_id": "276",
+        "task_name": "276-bounded-tail-dither-shaper",
+        "checker_id": "v4_276_bounded_tail_dither_shaper",
+        "deck_sha256": "06bcba07ff7640f7e918ac7e04044a8ac3a12512f9355039a11d02904a4ef5ac",
+        "gold_tree_sha256": "e614199b869308617b35eba30d3514e1ca9e5034b7bf27bee4e10f891d47b076",
+        "source_files": {
+          "submission/bounded_tail_dither_shaper.va": "cc15ebeca90c44f1ba0c31e139992d7cd3b853411c83d485282581284fbdef9c",
+          "testbench/trusted_replay_test.scs": "06bcba07ff7640f7e918ac7e04044a8ac3a12512f9355039a11d02904a4ef5ac"
+        }
+      },
+      "evas_original_checker": {
+        "passed": true,
+        "note": "v4_276_bounded_tail_dither_shaper_edges; P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE mismatch_count=0; P_FOR_EACH_VALID_UPDATE_COMPUTE mismatch_count=0; P_TEXT_X0_CLIP01_V_IN0_V mismatch_count=0; P_RESET_DISABLED_AND_OUT_OF_RANGE mismatch_count=0; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_FOR_EACH_VALID_UPDATE_COMPUTE,P_TEXT_X0_CLIP01_V_IN0_V,P_RESET_DISABLED_AND_OUT_OF_RANGE",
+        "checker_id": "v4_276_bounded_tail_dither_shaper",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "spectre_original_checker": {
+        "passed": true,
+        "note": "v4_276_bounded_tail_dither_shaper_edges; P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE mismatch_count=0; P_FOR_EACH_VALID_UPDATE_COMPUTE mismatch_count=0; P_TEXT_X0_CLIP01_V_IN0_V mismatch_count=0; P_RESET_DISABLED_AND_OUT_OF_RANGE mismatch_count=0; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_FOR_EACH_VALID_UPDATE_COMPUTE,P_TEXT_X0_CLIP01_V_IN0_V,P_RESET_DISABLED_AND_OUT_OF_RANGE"
+      },
+      "independent": {
+        "family": "276",
+        "event_count": 17,
+        "saved_rows": 1676,
+        "scalar_observations": 23464,
+        "max_state_error": 1.2867062141016866e-16,
+        "max_saved_error_V": {
+          "clk": 5.292223208566529e-17,
+          "rst": 7.17823153352595e-17,
+          "in0": 1.193620194545825e-16,
+          "in1": 7.913523894332365e-17,
+          "in2": 4.683685622495002e-17,
+          "in3": 8.768214019430997e-17,
+          "ctrl0": 7.397087906401772e-17,
+          "ctrl1": 7.397087906401772e-17,
+          "vdd": 1.5481119533010255e-16,
+          "vss": 6.564420637932849e-18,
+          "en": 4.9445887108989976e-17,
+          "out": 7.895838937189208e-15,
+          "flag": 1.7588824173494978e-16,
+          "metric": 1.7033793829050897e-14
+        },
+        "response_sha256": "6085cdd81044a3f48c81188f456841f32ca797e5c81ce2caec588f62296d8b64",
+        "oracle_sha256": "7bb8e75e97ea85186a67bc3f8e7f4a736ed96c49fc79c76c2d74504f0b9bcd15",
+        "geometry_sha256": "0ce31edef7e448cf8f03131ffc4849cd28d42379e0bcb2f8f16b7adb34dad9ab",
+        "verdict": "pass independent finite source/root/recurrence/ramp oracle; historical checker separate"
+      },
+      "finite_division_reference": [
+        {
+          "requested_time_s": 3.425e-10,
+          "native_time_s": 3.450000000000002e-10,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 1.3425e-09,
+          "native_time_s": 1.342931018518517e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 2.3425e-09,
+          "native_time_s": 2.34250625001389e-09,
+          "expected": {
+            "out": 0.14885393258426965,
+            "flag": 0.0,
+            "metric": 0.4651685393258427
+          },
+          "spectre": {
+            "out": 0.1488539325842697,
+            "flag": 0.0,
+            "metric": 0.4651685393258426
+          },
+          "max_error_V": 5.551115123125783e-17
+        },
+        {
+          "requested_time_s": 3.3425e-09,
+          "native_time_s": 3.34250625001389e-09,
+          "expected": {
+            "out": 0.3419433707865168,
+            "flag": 0.0,
+            "metric": 0.7801685393258426
+          },
+          "spectre": {
+            "out": 0.3419433707865168,
+            "flag": 0.0,
+            "metric": 0.7801685393258426
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 4.3425e-09,
+          "native_time_s": 4.342506250013887e-09,
+          "expected": {
+            "out": 0.4479885633570282,
+            "flag": 0.0,
+            "metric": 0.7374489795918366
+          },
+          "spectre": {
+            "out": 0.4479885633570282,
+            "flag": 0.0,
+            "metric": 0.7374489795918368
+          },
+          "max_error_V": 1.1102230246251565e-16
+        },
+        {
+          "requested_time_s": 5.3425000000000005e-09,
+          "native_time_s": 5.342506250013887e-09,
+          "expected": {
+            "out": 0.49082409572203545,
+            "flag": 0.0,
+            "metric": 0.6658474576271186
+          },
+          "spectre": {
+            "out": 0.4908240957220354,
+            "flag": 0.0,
+            "metric": 0.6658474576271185
+          },
+          "max_error_V": 1.1102230246251565e-16
+        },
+        {
+          "requested_time_s": 6.3425e-09,
+          "native_time_s": 6.342506250013887e-09,
+          "expected": {
+            "out": 0.4507516173137637,
+            "flag": 0.0,
+            "metric": 0.4576271186440678
+          },
+          "spectre": {
+            "out": 0.4507516173137636,
+            "flag": 0.0,
+            "metric": 0.4576271186440677
+          },
+          "max_error_V": 1.1102230246251565e-16
+        },
+        {
+          "requested_time_s": 7.3425e-09,
+          "native_time_s": 7.342506250013887e-09,
+          "expected": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          },
+          "max_error_V": 0.0
+        },
+        {
+          "requested_time_s": 8.3425e-09,
+          "native_time_s": 8.342506250013888e-09,
+          "expected": {
+            "out": 0.13614545454545454,
+            "flag": 0.0,
+            "metric": 0.4254545454545454
+          },
+          "spectre": {
+            "out": 0.1361454545454545,
+            "flag": 0.0,
+            "metric": 0.4254545454545454
+          },
+          "max_error_V": 5.551115123125783e-17
+        }
+      ],
+      "post_reset_observations": [
+        {
+          "root_time_s": 9.025000000000001e-09,
+          "root_rst_minus_vth": "0",
+          "expected_state": {
+            "out": 0.27095563636363634,
+            "flag": 0.0,
+            "metric": 0.5829545454545454
+          },
+          "native_time_s": 9.145012500027778e-09,
+          "root_oracle_outputs": {
+            "out": 0.27095563636363634,
+            "flag": 0.0,
+            "metric": 0.5829545454545454
+          },
+          "spectre": {
+            "out": 0.0,
+            "flag": 0.0,
+            "metric": 0.0
+          }
+        }
+      ],
+      "spectre_execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 15.171799564734101,
+        "completed_utc": "2026-10-17T12:34:22Z",
+        "log_sha256": "5f5219ab4f99e43b6ae0294d2d273295693b0f69434fea81b3d79cf33c487120",
+        "stage": "simulate",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      },
+      "spectre_settings": {
+        "reltol": {
+          "value": 0.001,
+          "line": 126,
+          "raw": "    reltol = 1e-03"
+        },
+        "abstol(V)": {
+          "value": 1e-06,
+          "line": 127,
+          "raw": "    abstol(V) = 1 uV"
+        },
+        "abstol(I)": {
+          "value": 1e-12,
+          "line": 128,
+          "raw": "    abstol(I) = 1 pA"
+        },
+        "stop": {
+          "value": 1.6e-08,
+          "line": 120,
+          "raw": "    stop = 16 ns"
+        },
+        "maxstep": {
+          "value": 1e-11,
+          "line": 122,
+          "raw": "    maxstep = 10 ps"
+        },
+        "method": {
+          "value": "traponly",
+          "line": 133,
+          "raw": "    method = traponly"
+        },
+        "errpreset": {
+          "value": "moderate",
+          "line": 132,
+          "raw": "    errpreset = moderate"
+        }
+      },
+      "spectre_tool": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "setup_sha256": {
+          "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+          "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+        }
+      },
+      "spectre_raw_sha256": "20de6e127f5d3278d8f5da1ece192ff81221cb010ce301802458a6bf1c39328e",
+      "spectre_rows_sha256": "7b8fd65fe05cd34f8b2725783463e6242ced9c93d99fe1db144ba708353ac38b",
+      "spectre_original_analysis_failure": "wrong dimension for voltage: 1 uV",
+      "full_native_vs_root_oracle": {
+        "scalar_mismatch_count": 156,
+        "max_gap_V": 0.5829545454545454,
+        "first": {
+          "time": 2.222506250013889e-09,
+          "node": "out",
+          "expected_root": 1.8606782920811347e-05,
+          "spectre": 0.0,
+          "gap": 1.8606782920811347e-05
+        }
+      },
+      "classification": "original checker pass; finite recurrence certified"
+    }
+  ],
+  "original_requests": {
+    "fixed112_counts": {
+      "pass": 58,
+      "refused": 47,
+      "mismatch": 7
+    },
+    "fixed_count": 112,
+    "unrun": [],
+    "cleanup_confirmed": 112,
+    "other104_status_checker_notes_diagnostics_equal": true,
+    "other57_complete_responses_equal": [
+      "001",
+      "002",
+      "004",
+      "006",
+      "008",
+      "010",
+      "040",
+      "043",
+      "044",
+      "047",
+      "051",
+      "055",
+      "071",
+      "084",
+      "089",
+      "091",
+      "104",
+      "106",
+      "178",
+      "184",
+      "191",
+      "198",
+      "199",
+      "200",
+      "204",
+      "205",
+      "206",
+      "207",
+      "208",
+      "209",
+      "210",
+      "213",
+      "214",
+      "269",
+      "284",
+      "293",
+      "294",
+      "306",
+      "309",
+      "320",
+      "321",
+      "322",
+      "327",
+      "341",
+      "342",
+      "345",
+      "352",
+      "353",
+      "367",
+      "375",
+      "376",
+      "379",
+      "382",
+      "394",
+      "395",
+      "397",
+      "399"
+    ],
+    "selected8": [
+      {
+        "family": "261",
+        "original_checker": {
+          "passed": false,
+          "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_261_falling_edge_calibration_sampler: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_OUT_FLAG_AND_METRIC_TO",
+          "checker_id": "v4_261_falling_edge_calibration_sampler",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "debug_release_complete_response_equal": true
+      },
+      {
+        "family": "262",
+        "original_checker": {
+          "passed": false,
+          "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_262_resettable_phase_toggle_monitor: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_ALL_OBSERVABLE_STATE_TO_0",
+          "checker_id": "v4_262_resettable_phase_toggle_monitor",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "debug_release_complete_response_equal": true
+      },
+      {
+        "family": "263",
+        "original_checker": {
+          "passed": false,
+          "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_263_settling_progress_counter: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_A_SAMPLED_PROGRESS_COUNT_TO",
+          "checker_id": "v4_263_settling_progress_counter",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "debug_release_complete_response_equal": true
+      },
+      {
+        "family": "264",
+        "original_checker": {
+          "passed": false,
+          "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_264_enable_qualified_bias_hold: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_THE_HELD_BIAS_OUTPUT_FLAG",
+          "checker_id": "v4_264_enable_qualified_bias_hold",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "debug_release_complete_response_equal": true
+      },
+      {
+        "family": "267",
+        "original_checker": {
+          "passed": false,
+          "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_267_clocked_power_ready_sampler: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_THE_READY_COUNT_AND_ALL",
+          "checker_id": "v4_267_clocked_power_ready_sampler",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "debug_release_complete_response_equal": true
+      },
+      {
+        "family": "271",
+        "original_checker": {
+          "passed": true,
+          "note": "samples; P_INITIALIZE_EVENT_COUNT_SAMPLE_COUNT_RATE mismatch_count=0; P_FOR_THE_SAME_GATED_SAMPLE_WINDOW mismatch_count=0; checked_property_ids=P_INITIALIZE_EVENT_COUNT_SAMPLE_COUNT_RATE,P_FOR_THE_SAME_GATED_SAMPLE_WINDOW",
+          "checker_id": "v4_271_windowed_event_rate_monitor",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "debug_release_complete_response_equal": true
+      },
+      {
+        "family": "275",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_275_deterministic_energy_accumulator_edges; P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE mismatch_count=0; P_INITIALIZE_THE_ACCUMULATOR_STATE_AND_ALL mismatch_count=0; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_THE_ACCUMULATOR_STATE_AND_ALL",
+          "checker_id": "v4_275_deterministic_energy_accumulator",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "debug_release_complete_response_equal": true
+      },
+      {
+        "family": "276",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_276_bounded_tail_dither_shaper_edges; P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE mismatch_count=0; P_FOR_EACH_VALID_UPDATE_COMPUTE mismatch_count=0; P_TEXT_X0_CLIP01_V_IN0_V mismatch_count=0; P_RESET_DISABLED_AND_OUT_OF_RANGE mismatch_count=0; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_FOR_EACH_VALID_UPDATE_COMPUTE,P_TEXT_X0_CLIP01_V_IN0_V,P_RESET_DISABLED_AND_OUT_OF_RANGE",
+          "checker_id": "v4_276_bounded_tail_dither_shaper",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "debug_release_complete_response_equal": true
+      }
+    ],
+    "original23_complete_responses_equal": [
+      "270",
+      "272",
+      "273",
+      "347",
+      "354",
+      "020",
+      "021",
+      "022",
+      "028",
+      "030",
+      "031",
+      "032",
+      "033",
+      "034",
+      "035",
+      "046",
+      "073",
+      "082",
+      "083",
+      "086",
+      "094",
+      "095",
+      "099"
+    ],
+    "original23_checker_pass": 22,
+    "original23_checker_fail": [
+      "347"
+    ],
+    "all135_cleanup_confirmed": true,
+    "source_files_verified": 142,
+    "debug_kernel_sha256": "4d0c26c45aca262a43b1e4103f1f792a5fec7ecc3c907401d3f90b27a947a7c6",
+    "release_kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+    "manifest_unchanged": true
+  },
+  "protocol": {
+    "kernel_timeout_s": 120,
+    "worker_limit_s": 150,
+    "guardian": "circuit-harness; unchanged from frozen original identity",
+    "harness_revision": "f2cba93cec5e2412a9a7461a7248cc983e6218c8",
+    "harness_source_files": {
+      "circuit_harness/execution/runtime/process.py": "d0833e133f10d95e4433c993afa5580e2da194dd13514d2cff7997dfb43daf6b",
+      "circuit_harness/execution/runtime/journal.py": "31785f6e2cd4cef1c25e52ed55cac54c1484e6ee97d8f91a76a8946e3dafc66d"
+    },
+    "checker_files_sha256": "0ab258032a732d4028a93987af67ad901674e016efa56efc811da26c22feea13",
+    "normalization_sha256": "492bab585735c4480581d8f18f54bfc7bdd58a1cb02cde49ed30808049bea541",
+    "checker_qualification": "unchanged historical checkers; not new formal Q score",
+    "reference_contract": {
+      "selection": [
+        "261",
+        "262",
+        "263",
+        "264",
+        "267",
+        "271",
+        "275",
+        "276"
+      ],
+      "originals": "All VA/SCS inputs and checker/normalization identities frozen before execution, unchanged. Original defaults and maxstep remain unchanged.",
+      "evas_independent": "Every recorded event and every original saved value against manual Fraction source/root/recurrence/ramp formulas, 1e-12 absolute plus 1e-10 relative, no changed observation grid.",
+      "spectre_original": "Actual original decks, original checker and normalization, no modified requested precision. Native ASCII format and callback uncertainty qualification gaps remain.",
+      "finite_division_reference": "Supplementary stable pre-reset plateaus at each analytic clock root+120ps, compare each backend to independently derived held-state levels; absolute 10uV. These points exclude transition intervals by contract before analysis, not by observed error. Post-reset points remain in original full checker and discrepancy denominator. No time shift, stimulus change or threshold change.",
+      "classification": "All original checker failures retained. Different strict-root reset/read semantics are separately investigated; successful compilation/execution alone is not a pass or general support claim.",
+      "limitations": "No full native/callback Q qualification, no general nonlinear electrical feedback, no ordinary continuous division expansion, no assumption that nominal positive divisor certifies an uncertain denominator."
+    },
+    "spectre_limits": {
+      "stage_timeout_s": 90,
+      "license_timeout_s": 30,
+      "memory_limit_bytes": 4294967296,
+      "file_limit_bytes": 33554432,
+      "threads": 1
+    }
+  },
+  "checks": {
+    "directed_public_tests": 9,
+    "prior_mechanism_replays": {
+      "rows": [
+        {
+          "case": "cross-transition",
+          "entire_response_equal": true,
+          "previous_sha256": "cde343e6ca07a79478c78fcc7bdd8b3a2fe326655ab88346e9c48a6e3f1c5c6e",
+          "response_sha256": "cde343e6ca07a79478c78fcc7bdd8b3a2fe326655ab88346e9c48a6e3f1c5c6e",
+          "kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+          "cleanup_confirmed": true
+        },
+        {
+          "case": "reverse-held-reset",
+          "entire_response_equal": true,
+          "previous_sha256": "a4c1eb17146ed0d546255d448066834e5c2a6272725e862581c9a08014784e96",
+          "response_sha256": "a4c1eb17146ed0d546255d448066834e5c2a6272725e862581c9a08014784e96",
+          "kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+          "cleanup_confirmed": true
+        },
+        {
+          "case": "causal-retarget-correlation",
+          "entire_response_equal": true,
+          "previous_sha256": "f9b83c37220ef458c9cfbbd1efaa852caeeb3970241f3ad1977ca34f957f747e",
+          "response_sha256": "f9b83c37220ef458c9cfbbd1efaa852caeeb3970241f3ad1977ca34f957f747e",
+          "kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+          "cleanup_confirmed": true
+        },
+        {
+          "case": "transition-network-condition",
+          "entire_response_equal": true,
+          "previous_sha256": "139eb518e08872f00c9ea5023028cb5f019ccb750207280f3bce860277bb85f4",
+          "response_sha256": "139eb518e08872f00c9ea5023028cb5f019ccb750207280f3bce860277bb85f4",
+          "kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+          "cleanup_confirmed": true
+        },
+        {
+          "case": "adjacent-internal-transition-roots",
+          "entire_response_equal": true,
+          "previous_sha256": "acdd39b5bc8ef5fadaa02fd134282297bc5d0274ae75e4f5167a834d319ed97a",
+          "response_sha256": "acdd39b5bc8ef5fadaa02fd134282297bc5d0274ae75e4f5167a834d319ed97a",
+          "kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+          "cleanup_confirmed": true
+        },
+        {
+          "case": "independent-interrupted-continuous-ends",
+          "entire_response_equal": true,
+          "previous_sha256": "a05ad9508e48044ec61f20050e0a810eddebeaaf7dfa309f40ad30b6c38e9e17",
+          "response_sha256": "a05ad9508e48044ec61f20050e0a810eddebeaaf7dfa309f40ad30b6c38e9e17",
+          "kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+          "cleanup_confirmed": true
+        },
+        {
+          "case": "internal-conditioned-cascade",
+          "entire_response_equal": true,
+          "previous_sha256": "e5dad534ccff34e3d8dc79c87487b9691fbb512aee9780dc87ebf3ab915a53da",
+          "response_sha256": "e5dad534ccff34e3d8dc79c87487b9691fbb512aee9780dc87ebf3ab915a53da",
+          "kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+          "cleanup_confirmed": true
+        }
+      ],
+      "complete_count": 7,
+      "source_files_verified": 142,
+      "scope": "Revalidate changed shared settlement consumer; exact response equality reuses existing finite actual references, no new remote execution"
+    },
+    "rust_passed": 403,
+    "rust_ignored": 1,
+    "python_full": {
+      "schema_version": 1,
+      "complete": true,
+      "successful": true,
+      "tests_run": 1869,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "seconds": 1624.6952195420163,
+      "report_sha256": "1040ce078c5f21a2344aa8a9e8f41f36de9fb3cddd2f85e42e265519ba3b66c0",
+      "command": "PYTHONPATH=evas/src python3 -B scripts/run_regression.py --report <local-report>",
+      "source_and_kernel_before_after_unchanged": true
+    },
+    "original_audit_rework": {
+      "red": "existing input/inout negative control failed on first candidate",
+      "original_full_tests_run": 738,
+      "original_full_failures": 1,
+      "original_full_complete": false,
+      "overrestrictive_attempt": "restoring ordinary affine audit rejected valid clip; preserved as development failure",
+      "repair": "execution decision callback separated; original-tree audit retains input scope, names/types, checked obligations, IR/resource budgets",
+      "focused_tests": 28,
+      "independent_delta_reviews": "Spec and Standards no open findings"
+    },
+    "rust_reuse": "Rust production and frozen kernels unchanged between final1 and final2;403pass/1ignored retained",
+    "mcp_action": "gap06-delivery-20261017-run1",
+    "mcp_result": "not a pass: captured-source inventory guard failure; 3470 captured files unchanged, extra Cargo outputs; local checked runner used"
+  },
+  "availability": {
+    "inputs": "repository-contained gap06-inputs.json",
+    "compact_receipt": "repository-contained gap06.json",
+    "raw": "local-only runs/evas-source-shape-20261017/gap06-sampling; remote original outputs retained; no public raw commercial data claim",
+    "oracles": "manual Fraction recurrence plus analytic Input/Ramp geometry, hashes recorded per case; runnable scripts local-only, handbook states equations"
+  },
+  "limits": [
+    "All8 independent finite event states and saved values pass; original checker3/8, failures261/262/263/264/267 retained. Spectre originalchecker8/8 does not change EVAS grades.",
+    "The five mismatches are at9.145ns after root reset9.025ns: original strict rst>vth is false at EVAS tau. Exact callback side/time on these8 Spectre originals was not instrumented; late-side explanation is an inference.",
+    "Full native comparisons retain transition-window and reset discrepancies for every case. The10uV stable plateau check certifies only its fixed finite division observations, not general transient alignment or native/callback Q.",
+    "All8 Spectre executions succeeded at original slice reference identity, reused for final2 because complete physical inputs and settings are unchanged; fresh final2 EVAS outputs checked independently.  Existing settings parser failed on1uV and native reader confused param_real time with sweep; original failures/rows retained. TRACE-based local reanalysis separates native sweep and voltage columns without reexecution or settings changes.",
+    "Original104 other family verdicts and57 full responses unchanged; original23 full responses unchanged,22 checkerpass and347 failure retained.112 denominator now58pass/7mismatch/47refused, all135 cleanup confirmed.",
+    "F30/#131 frozen; no physical feedback, observer-only math/control, general continuous division or nonpoint projection expansion. No merge or release support claim."
+  ]
+}

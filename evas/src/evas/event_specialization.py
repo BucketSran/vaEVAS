@@ -79,8 +79,11 @@ def audit_event_body(compiler, statements):
                                          item.token, register=False)
 
     def selection(item, relation, left, right, yes, no):
-        return compiler.expression_select(item, relation, left, right, yes, no,
-                                          register=False)
+        # Sampled scalar guards need not be affine, but parameter pruning must
+        # not erase the original input/inout scope of nested decisions.
+        if not (compiler.expression_nodes(left) | compiler.expression_nodes(right)).issubset(compiler.allowed_condition_nodes):
+            fail("decision predicates must depend only on input/inout ports", item)
+        return compiler.event_select(item, relation, left, right, yes, no)
 
     def budget_select(item, relation, left, right, yes, no):
         # A resource-only shape, never an admission or dependency proof.
@@ -109,9 +112,7 @@ def audit_event_body(compiler, statements):
                        integer_assignment_root=integer_assignment_root,
                        static_integer_audit=static_integer_audit)
         if needs_choices(root):
-            options.update(decisions=selection,
-                           validate_decision=compiler.validate_decision_expression,
-                           indices=index_read)
+            options.update(decisions=selection, indices=index_read)
         else:
             # One fixed binding, no registration/index/decision callbacks.
             # The existing memo contract keeps shared function obligations
@@ -120,7 +121,8 @@ def audit_event_body(compiler, statements):
         if compiler.numeric_observer_candidate():
             options.pop("memo", None)
             return compiler.lower_event_value(root, compiler.symbol, compiler.node_ids, **options)
-        return compiler.lower_event(root, compiler.symbol, compiler.node_ids, **options)
+        return compiler.lower_event(root, compiler.symbol, compiler.node_ids,
+                                    sampled_values=True, **options)
 
     def resource_tree(root, memo=None):
         # Only split_selection/event_assignment consume this private tree.
