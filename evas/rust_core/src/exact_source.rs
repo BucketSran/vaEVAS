@@ -74,6 +74,17 @@ impl RootTime {
     pub(crate) fn point(time: f64) -> Option<Self> {
         Some(Self(binary(time)?))
     }
+    /// A bounded real witness, including cells without a binary64 interior.
+    /// Callers must separately prove the complete root partition.
+    pub(crate) fn between(left: &Self, right: &Self) -> Option<Self> {
+        if left.order(right) != std::cmp::Ordering::Less {
+            return None;
+        }
+        let mut budget = Budget(0);
+        let sum = budget.check(&left.0 + &right.0)?;
+        let middle = budget.check(sum / R::from_integer(2.into()))?;
+        (left.0 < middle && middle < right.0).then_some(Self(middle))
+    }
     /// Original fixed-clock arithmetic; the proof must fit discovery unchanged.
     pub(crate) fn from_clock(clock: crate::exact_time::Clock, discovery: I) -> Option<Self> {
         if clock.index > crate::schedule::EVENT_BUDGET {

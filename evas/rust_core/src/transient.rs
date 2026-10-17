@@ -22,6 +22,10 @@ mod initialization;
 #[path = "transient_root_refinement.rs"]
 mod root_refinement;
 
+#[cfg(test)]
+#[path = "transient_root_window_tests.rs"]
+mod root_window_tests;
+
 #[path = "event_time_provenance.rs"]
 pub(crate) mod time_provenance;
 
@@ -412,26 +416,41 @@ fn prepare_root_window_selected_impl(
     // Every trial starts from accepted uncertainty, regardless of whether the
     // program has conditional statements or history operators.
     let old_bounds = accepted.state_bounds.as_slice();
-    operators.advance_old(time, time_bounds, &accepted.states, old_bounds)?;
+    operators.advance_old(time, time_bounds, &accepted.states, old_bounds, exact_root)?;
     // Positive edge durations make transition continuous at a target change.
     // Freeze its current value for the same-time state/voltage solve, then
     // install the new target only in this disposable candidate history.
     let base = operators;
     let mut frozen = base.evaluation_at_root(time, exact_root, time_bounds)?;
-    frozen.bounds = base.event_bounds(time, time_bounds)?;
-    let inputs = trajectory.values(time);
+    // The exact root narrows sampling, while the complete discovery window
+    // still belongs to every installed history and recorded event below.
+    // In particular an OLD source cut may precede the root inside that window.
+    frozen.bounds = base.event_bounds_at_root(time, time_bounds, exact_root)?;
+    let mut inputs = trajectory.values(time);
     let mut input_bounds = trajectory.range(time_bounds)?.0;
     if let Some(root) = exact_root {
         for (index, bounds) in input_bounds.iter_mut().enumerate() {
-            if let Some(proved) = trajectory
+            if let Some(value) = trajectory
                 .exact_sources
                 .get(index)
                 .and_then(Option::as_ref)
                 .and_then(|c| c.at_root(root))
-                .and_then(|r| crate::exact_source::enclosure(&r))
-                .filter(|v| bounds.lo <= v.lo && v.hi <= bounds.hi)
             {
-                *bounds = proved;
+                use num_traits::ToPrimitive;
+                if let Some((proved, nominal)) = crate::exact_source::enclosure(&value)
+                    .zip(value.to_f64())
+                    .filter(|(v, nominal)| {
+                        bounds.lo <= v.lo
+                            && v.hi <= bounds.hi
+                            && v.lo <= *nominal
+                            && *nominal <= v.hi
+                    })
+                {
+                    *bounds = proved;
+                    // Settlement reads the physical root. Observation at the
+                    // execution representative keeps its separate inputs below.
+                    inputs[index] = nominal;
+                }
             }
         }
     }

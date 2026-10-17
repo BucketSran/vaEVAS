@@ -131,6 +131,25 @@ impl Deadline {
         };
         proof().unwrap_or(false)
     }
+    /// Root identity plus a usable history representative. In particular an
+    /// interrupted edge can have an exact end even without a symbolic sum.
+    pub(crate) fn ordered_with_root(&self, root: &crate::exact_source::RootTime) -> bool {
+        if !self.continuous_end {
+            return false;
+        }
+        let Some(end) = self.exact_time() else {
+            return false;
+        };
+        let Some(bounds) = root.bounds() else {
+            return false;
+        };
+        match end.order(root) {
+            std::cmp::Ordering::Less => bounds.lo == bounds.hi || self.bounds.hi <= bounds.lo,
+            std::cmp::Ordering::Greater => crate::exact_source::RootTime::point(bounds.hi)
+                .is_some_and(|point| end.order(&point) == std::cmp::Ordering::Greater),
+            std::cmp::Ordering::Equal => false,
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -699,11 +718,13 @@ impl Transition {
             let (deadline, target, target_bounds) = self.pending.pop_front().unwrap();
             self.target(deadline, target, target_bounds)?;
         }
-        if self
-            .edge
-            .as_ref()
-            .is_some_and(|edge| edge.end.bounds.hi <= time)
-        {
+        if self.edge.as_ref().is_some_and(|edge| {
+            exact_root
+                .zip(edge.end.exact_time().as_ref())
+                .map_or(edge.end.bounds.hi <= time, |(root, end)| {
+                    end.order(root) != std::cmp::Ordering::Greater
+                })
+        }) {
             let edge = self.edge.take().unwrap();
             self.settled = edge.target;
             self.settled_bounds = edge.target_bounds;

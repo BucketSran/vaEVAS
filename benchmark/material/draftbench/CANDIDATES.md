@@ -315,7 +315,7 @@ PR208 的101/314排查补充了源目标观察游标的开发反例：真实 tim
 只有全区间位于阈值同一侧才能选择transition目标，跨阈值时取中点属于错误模型或错误实现。
 314的52ns角点与timer根严格相异，但两根之间没有binary64内部点，按窗口代表值采样可能偏离物理根读数。
 [区间谓词回归](../../../evas/tests/test_source_state_predicates.py)和[设计与独立正反例](../../../experiments/backends/support/source-shape/gap20-state-predicates.json)
-保留触发、Fraction答案和当前拒绝。后续任务可考察误差传递、根序与历史移交；314证书尚未实现，
+保留触发、Fraction答案和当前拒绝。后续任务可考察误差传递、根序与历史移交；314根窗证书已有后续实现，见[执行收据](../../../experiments/backends/support/source-shape/root-window-certificate.json)；更广多阶段滤波与sub-ULP中断边沿仍受限，
 新实际后端对照及未见输入待准备，当前只登记开发来源，不把合法VA误记为模型缺陷。
 
 ### BC-0003 增补：cross 采样与原始输入的时间信息

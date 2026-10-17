@@ -599,6 +599,12 @@ idt、ddt、laplace、slew、absdelay。普通幅度带的拒绝边界保持，#
 零宽脉冲、实例隔离、反馈、timer 复位及查询网格；内核测试检查全分区范围、到零与资源边界。
 实际参考及原请求结果见[物理源曲线证据](../../../experiments/backends/support/source-shape/README.md)。
 
+相异源切点与timer的发现窗口重叠时，限定根窗证书按精确根次序消费完整源模式，
+事件体仍按现行`te=tau`合同读取物理根，原窗口保留给历史和事件记录。
+旧保持阶段前缀、新目标安装和未来边沿须一起认证；有理内部见证、根处采样、
+查询／回滚与残余拒绝边界见[源目标历史合同](operators.md#外部源选择目标与实时电压读出)。
+这不是仅凭根序对一般近根组合的准入，也没有更改既有Spectre兼容差异。
+
 <a id="causal-transition-composition"></a>
 
 ### 物理采样算术与 transition 组合

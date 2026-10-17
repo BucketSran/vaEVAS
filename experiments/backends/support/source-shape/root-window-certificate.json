@@ -1,0 +1,2465 @@
+{
+  "status": "unmerged draftPR208; scoped development evidence, no benchmark/alignment/Q qualification",
+  "base_head": "0c100a879e3a87ca37eafb5d214a1c49901b4b5f",
+  "source_files": {
+    "evas/pyproject.toml": "31f84287c6257f2f424e850df9451aac643aea94636eb4de4829785ea9b1de9e",
+    "evas/rust_core/Cargo.lock": "a60ef97b215300e2665d2e9864d6bbbdb7b2bce468873f8c3cdba0fec858f5c5",
+    "evas/rust_core/Cargo.toml": "750f906a7ae10f2c6e0ae9cbee5787c1c286d66e1aad88a285bd9684c7ba1ad5",
+    "evas/rust_core/ir/Cargo.toml": "ee626ead9fe9620b9b48c956bef41d283578683d25bc879b20f25730adf325f0",
+    "evas/rust_core/ir/src/lib.rs": "79137934a1fe7dcc35c95e317961902218a7e6ef7248a9cdb51be8fc5d61e55c",
+    "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+    "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+    "evas/rust_core/src/affine_bounds.rs": "074445000a0dc47246b9f7bcd4d299062668fc5d7772e958e95587f2e7b6edee",
+    "evas/rust_core/src/analog.rs": "1505d79dc24df924c7544da0a0fdfa9a6280bffb67f5ee191dad0ff2f13ad484",
+    "evas/rust_core/src/assembly.rs": "beab047ea57b6510e00e897b1caf02e437f3a30bd1567f92bc39c0a7e40b62f9",
+    "evas/rust_core/src/batch.rs": "ba227471ba388b4efd361e9a523352b7626bb80cd51141a00ca2b1c97eed2888",
+    "evas/rust_core/src/causal_event.rs": "907e6c283a281e9f07d022a44e6ad53ba91484f938e4a0d9e5d1b23ab032ef79",
+    "evas/rust_core/src/causal_voltage.rs": "8eab2a5a636f43999f51f015b2fd3bb82cc1e73b50ac389c0e0412de65d75da6",
+    "evas/rust_core/src/continuous.rs": "517d6574c6594857f8bc77bf829c714afe9a6f2bb5bc693dabf997ec432112fe",
+    "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+    "evas/rust_core/src/continuous_history.rs": "90d3fd2b904f5aece03b56fae587776d281cfc0e24348272e15597fc145bc46f",
+    "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+    "evas/rust_core/src/continuous_readout.rs": "637028c3dd24d06665ea5849d3e90666a3e41585b96cffb692910b041e135e84",
+    "evas/rust_core/src/continuous_runtime.rs": "6df2d30f8f67cf9039425b820abc614232e2a7ed02c973b99f18d6899f570403",
+    "evas/rust_core/src/continuous_select.rs": "8d6ac91199f325c78382da900debdf12504db7dd488869104b1a246a16cac111",
+    "evas/rust_core/src/continuous_select_cache_tests.rs": "2e9fe77ecd33b3d1ddcf5c1ab6834e5d9ea8abff9900db9f41bc1e5f2a2f0423",
+    "evas/rust_core/src/continuous_select_candidates.rs": "88017ad10779a666d82873230413ffbebaf95d13610c7c7795f100f2e1f1635b",
+    "evas/rust_core/src/continuous_step_simplify.rs": "70094c4ce51e296a92523cbe7bc7f83318f10798fd8aa81b105ce83bd413e0de",
+    "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+    "evas/rust_core/src/direct_derivative.rs": "606fa88155ae14278fef573f9c9c9615206ec58bd150ffaf12fb9577f0f56940",
+    "evas/rust_core/src/display.rs": "041ff1a89745233cd060578c91f34eb5c9979223f42535af1dca401180b94075",
+    "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+    "evas/rust_core/src/event_accuracy.rs": "e82c0b5ef998211b01af0ec3fab69ac833432b4a26dd908af392b514b170d43e",
+    "evas/rust_core/src/event_conditions.rs": "ce7c29bd2d38c7faeb67efcbdc471d9c6c9ac476e277312965b9668b542f73d4",
+    "evas/rust_core/src/event_control.rs": "37e728c2ab5493f378ae6653744605c44d78a7ce806df3fd6b21497d4274b098",
+    "evas/rust_core/src/event_numeric.rs": "7c48b8670ce0c205a92c04e54be845ba26e59ae8424e9e75638a5be4a0ba2da9",
+    "evas/rust_core/src/event_time_provenance.rs": "15833c15b5f8cc2481988887c7976120c85848aa2042e8746603d60a5647c2d3",
+    "evas/rust_core/src/event_value_proof.rs": "db427243c8bb11f14c9743f10eb2290cfd4150d1a5f273dbc8ee1580fa069f96",
+    "evas/rust_core/src/events.rs": "500431a4b310086761d2a2cef9cd68187ff08f242dd9fb5f7ef0c070ece59622",
+    "evas/rust_core/src/events_certificate_cache_tests.rs": "6f0900e6e8149c49a230a527719e34ae2d95f28eaac09b9d423961bf222c7938",
+    "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+    "evas/rust_core/src/exact_source.rs": "f803b2d815e29cbc1b99913c417a4bac90d4fb4fb6e9c67ae9b553c7815f8e0f",
+    "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+    "evas/rust_core/src/expression.rs": "81c1eb4bd3fc122006d7feb9841f1ad19f2e71a296ddad1fef45dfa8c5d41f4a",
+    "evas/rust_core/src/filter_budget.rs": "94807ee47a346648b5eb4d7d4af03366c0f1f1b79a0e67f636fc279c90b67656",
+    "evas/rust_core/src/guard_trajectory.rs": "e9db1cd8db29d735f5ba84cb9b0432711f7db3ba312b9932a63a84cba41b4147",
+    "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+    "evas/rust_core/src/idtmod.rs": "acdbdc83beef8cae53188c6335d7b99f9fe56ebb75d5318bbbd7a1f8e92fd2a1",
+    "evas/rust_core/src/implicit_dynamics.rs": "b30206f4dde77fc2220a942c896e8a5d5673a6f8efdd7f49f45db717597469a8",
+    "evas/rust_core/src/implicit_event_restart.rs": "d8b45dc327f0675ee2463c5047364716a4b692812e21ca44afca4b6d2bad5bd0",
+    "evas/rust_core/src/initial_state_invariance.rs": "74f5c1c625dbf19e4d653e85c649a668f590421018549c29a9cca83e62463438",
+    "evas/rust_core/src/initialization.rs": "209ad8ccdda14057fa2aa7b4d744c27ebb9d9df14d95141025c34dcfe23d2fc9",
+    "evas/rust_core/src/initialization_nodes.rs": "61aee737fbcf29bd236649d4532b7364503cf59bb1a56ed8ea1614a8de25d6e4",
+    "evas/rust_core/src/input_clamp.rs": "5c3010afc080801aabd1bbe6b839dac21c714d8f49eaf0ad4aee6fa413f1ac59",
+    "evas/rust_core/src/interval.rs": "75b04de91716ce2bbb523dc3c703036081bec4909f154a277b973bbccf9ef785",
+    "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+    "evas/rust_core/src/interval_zero_product_tests.rs": "882420755b22f048f6cc88b643ce2a07eb2ec44fa4510193c731b793b9c77afd",
+    "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+    "evas/rust_core/src/laplace.rs": "8f211b465b19d062033392ef6defbc1bdc66b34c7be9172ab3c41e32a9e7b3d1",
+    "evas/rust_core/src/lib.rs": "2e7a3e61bde0c2aae696eff4aa588e02d0663926cc7e101b2f38abfa1fcb2b07",
+    "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+    "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+    "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+    "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+    "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+    "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+    "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+    "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+    "evas/rust_core/src/math_functions.rs": "a57b876344f203b03d3dc0a2bb8f49bce673abd35619f55552c0a0d29b7f13a0",
+    "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+    "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+    "evas/rust_core/src/nonlinear_dynamics.rs": "b9c44deb78ec185e6209754736454a761cdd69f92114c67a04bed3b4e4796647",
+    "evas/rust_core/src/nonlinear_root_window.rs": "7341efc680fc3f1a247803651875bdc115791426f587acdcb8b10d9386e302dd",
+    "evas/rust_core/src/nonlinear_value_memo_tests.rs": "0b065a2b0bc8694ac0de2aa232b6dfc261ffaa68c3fcf29a2c7b0fe255d57679",
+    "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+    "evas/rust_core/src/operators.rs": "8cb92fa917f3ebbf86d3c3d41828c72be0b4ec628ccfb20ded81e9613aaedc89",
+    "evas/rust_core/src/passive_events.rs": "1843badd4a4f4c6ef63e79df58d2d6fa72634b116d56d1d25f7147f819574339",
+    "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+    "evas/rust_core/src/portability.rs": "c101c1075de370d3622ad270bb0ca7bdf73c6ba2b3ed6ddd940a45a3c8134cb4",
+    "evas/rust_core/src/pwl.rs": "8c17bd4cf3121989b9591c1a17390c3a18451b96fafca754368973df498d4ff5",
+    "evas/rust_core/src/reset_dependencies.rs": "3f894fe282b3e22b7d07e7022a9e9aa9e6e06dc641591bdae25c0a7acf26f51f",
+    "evas/rust_core/src/schedule.rs": "d18c68fb5efcd068bb0b4cb6946dfb246ea9184cd0297f91551fddf1588847ef",
+    "evas/rust_core/src/schedule_timer_boundary_tests.rs": "99b19e3b98cb05226b8548de2b621172fe069b7a1fbf36f7451c1ec493fb0c32",
+    "evas/rust_core/src/settlement.rs": "5cf1fa2ede0cc0805f6418d76706adabae35b98eb25f4a264838d7add893a289",
+    "evas/rust_core/src/settlement_bounds.rs": "b597865d41187a586bda5c7b47297749c87e8e51c5867f250e29d972d3eb4686",
+    "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+    "evas/rust_core/src/slew_cascade.rs": "26b9cedd714dd24893d2076818d84c8905525da29c900c4df97bf9a7c40cc7b8",
+    "evas/rust_core/src/solver.rs": "71a06b3980a0dfdd5d0112edfa47de5113a68d16b5331ffc903bfbe3e7dbaa82",
+    "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+    "evas/rust_core/src/state_space.rs": "bc791c33b49c78259c0efa4b89203758830b6f90b461058d6a526ada5e1b2a94",
+    "evas/rust_core/src/step_bounds.rs": "7b34202c102b72aef2e19f2af1c28236cd6b3d4ba739cdbdf79e09b526331731",
+    "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+    "evas/rust_core/src/transient.rs": "bccdce107f0504aebe76385fbd7cc8a5fbb7b1fbc2c5e74ad89708466a4f532a",
+    "evas/rust_core/src/transient_condition_tests.rs": "0a8dfc626381785993cdf3476e808a12ee6688cbeae81495451f312f0266d10c",
+    "evas/rust_core/src/transient_event_acceptance.rs": "1857edfebd39d1e6ccab9619220535398fc687b79c19985e399820d45020f33a",
+    "evas/rust_core/src/transient_event_control_tests.rs": "49f5f3c4c829bbd1a063446921898b7ad936f88ab20ef3e0b023613d6590e47a",
+    "evas/rust_core/src/transient_history_calendar.rs": "a444c9555a0b63ea72d2ae82b5a309494825e90a321b29c44fc5a9bd649676cf",
+    "evas/rust_core/src/transient_idt_tests.rs": "caaf846459e576549a5cf53e6b8f715c0d32b33496b241f419d5a2f3e2771530",
+    "evas/rust_core/src/transient_initialization.rs": "57f21b3df0fa1b4f5a5c6f9e2a517c8f4b57f9a632e6d4f1c2235dac91449728",
+    "evas/rust_core/src/transient_lifecycle_tests.rs": "584b2c1bb2043265b8708bbde1b34a8a8251e00dad45d41859f068e16616f698",
+    "evas/rust_core/src/transient_passive_tests.rs": "85eb5d501a7a06eae676ebcfb0ec426e5de0b89eff9dd43de449835f0d5bdd9b",
+    "evas/rust_core/src/transient_root_refinement.rs": "6bbb6b7df5676fe65038b227284d811666f105c01a7848480f81c95962fe466c",
+    "evas/rust_core/src/transient_root_window_tests.rs": "ee5a255e6f92591846bfd1581e354afaba1ca738c5c49446ffd3c2d84abb2fb0",
+    "evas/rust_core/src/transient_time_proof_tests.rs": "70ef120b678cb4cb05908c4b5c9bde2db87a0eafb78507b09239d2b681c9e95f",
+    "evas/rust_core/src/transient_timer_boundary_tests.rs": "f5ea68af5178dc6c22ce112df1ae9e9523d1d3e12c8658de4b5d8ce1f601be28",
+    "evas/rust_core/src/transient_window_tests.rs": "b56afa40d9683445c745455dd19a9d35a4ab9247e5a184a3dfb6246c2ca628ad",
+    "evas/rust_core/src/transition.rs": "2fab0db2acb9bfce417c499f6ccee8e306e9c430efa96194818c529e7cec50f4",
+    "evas/rust_core/src/transition_filter.rs": "94b63ec1985c3eeb376216cd7501e1caef177411260d61519849b53035e982b4",
+    "evas/rust_core/src/transition_filter_input.rs": "845679115ff39c13cfb951ea93786070a4a142b57af2aa28480efcf5d46b5e42",
+    "evas/rust_core/src/transition_history_target.rs": "6ea098b83c6e72ee2454919934d2b1bf53ffb477a1dec5368acb534bd0c7ad38",
+    "evas/rust_core/src/transition_integral.rs": "e5e32e03013915527e80c646ceecfba86d65161dbfa4c6df6c1ad0f8282447ed",
+    "evas/rust_core/src/transition_source_plan.rs": "785436eec4ae00e81f9d2425e095dc30132db1803fc823fff8d6ac6235023d7b",
+    "evas/rust_core/src/transition_source_state.rs": "51dd449ad2c4f22c2de9e2ac8b5afa0b98caf8ee018234f6e06716048f5a8577",
+    "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+    "evas/src/evas/__main__.py": "03467610db7d5563c99f2ffcf65c8f258175575fff18a38ca89dc5854439d651",
+    "evas/src/evas/array_elaboration.py": "922fd600f57b039b4f2e2b2242af03dd7830a464e0b31272260c82d11217d278",
+    "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+    "evas/src/evas/display.py": "c53802f643b2405e1f3da36596a8d4674aebf409635232ded3dc52f852f38b5c",
+    "evas/src/evas/elaboration.py": "a7a435e8d2361e7abf2b047b68210b1b25f656e24b40155fe969e9b4c593bc4a",
+    "evas/src/evas/errors.py": "4716787d137c2232e13d9b9b7231b407d5c87a38c755345c63bc9df91a45a158",
+    "evas/src/evas/event_index_domains.py": "c5558bdff652f64b5ddfdc72e32230f8a8330f9fa4798e1c09b7e95344bcaa39",
+    "evas/src/evas/event_specialization.py": "e62efc8b23dc8a3d0b28adad005c3ce31b057fa77fe0171df9e5d7c65ada7b3b",
+    "evas/src/evas/frontend.py": "310159f89cea075ff3f35a7d46e7177dfd8888eb8841528ddb924be45768854a",
+    "evas/src/evas/hierarchy.py": "ec8cd24105bfb646f28874dd40fe0923ae51ca5d22b45b1be0e6153347a7a10b",
+    "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+    "evas/src/evas/instance_compiler.py": "c5c6d74aa0933926f6a69e02dd82de9454d9171b815a3417013d597bfe777642",
+    "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+    "evas/src/evas/ir.py": "b55291f1ae7cf3725f5480739cf7f8830513a1ef00fba0de9b588a2bfcc45b45",
+    "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+    "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+    "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+    "evas/src/evas/lowering.py": "8b95c03b9d4b3bd86fb3cf853bc45a878f7a15a8e04a5798102487defc26ed03",
+    "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+    "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+    "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+    "evas/src/evas/node_elaboration.py": "eaa06faf21bea22a2ef477605c2d4c2c167b5f99a2083f356733e08eae1a5cf5",
+    "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+    "evas/src/evas/predicate_structure.py": "0f145fafcf1a926877f555207da48d54e6334e8ffbde1d9b385499ea74d11543",
+    "evas/src/evas/preprocessor.py": "96d6525154bdc0f83d80cc177faa49e1a836497afb3bb82a9ec1a5a321695a08",
+    "evas/src/evas/protocol.py": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+    "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+    "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+    "evas/src/evas/runtime.py": "f7fb4d7d4b46facce3422e646a53845e782338e7ae1494cf7f957d9e6e722d10",
+    "evas/src/evas/scs.py": "647b3b4e34fe130860fce20634fbb30a01e4c0110bc5fa9e20f092fb12356283",
+    "evas/src/evas/scs_sources.py": "1fab2c390f33c4c6221969bbbb192265636caf5063d20fd735e5e247b22cfb8d",
+    "evas/src/evas/standard_headers.py": "efe0b2421d400ac723cfdf71c5d406cdef510dc89d3556ad999e2253600ec88e",
+    "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+    "evas/src/evas/syntax.py": "4047cd499814946e1ff07e77e00d37bb18cb3ed479905cd55d72d70102c324bb"
+  },
+  "kernel_sha256": "f8222686139ac61b5d6e9073af8d8618e59b300a83ca95bd424277748807f6c6",
+  "source_archive_sha256": "e2c75297d633f95fdf82a6d0d61e9c54d1a80a894652cb1ee4488556ad7b876f",
+  "source_diff_sha256": "8eda55419cfdf27b0655f4e0b190de58273918b1a7c435943e1c92b947b953de",
+  "build": {
+    "command": "cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml",
+    "compiler": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2\n",
+    "availability": "local-only"
+  },
+  "capability_ids": [
+    "EVENT-ORDER",
+    "EVENT-CONDITIONS",
+    "TIMED-OPERATOR",
+    "TRANSITION",
+    "COMPOSE"
+  ],
+  "invariants": {
+    "checker": "427 captured original checker files and normalization verified unchanged",
+    "checker_identity_sha256": "fad863fde1c4e4651480e0813fccb1fa43fd0dd023d79020f22737025c91567f",
+    "normalization_sha256": "492bab585735c4480581d8f18f54bfc7bdd58a1cb02cde49ed30808049bea541",
+    "inputs_precision_output_grid": "originals unchanged; identity source_files per original",
+    "kernel_timeout_s": 120,
+    "guardian_timeout_s": 150,
+    "source_plan_limits": {
+      "plans": 128,
+      "cuts": 8192,
+      "total_work": 1000000000
+    },
+    "exact_operation_debit": 200000,
+    "exact_limits": {
+      "curve_points": 512,
+      "bits": 4096,
+      "operations": 200000,
+      "depth": 64,
+      "expression_nodes": 512
+    },
+    "historical400_and213": "not rerun or relabelled; original553eb83b identity retained"
+  },
+  "certificate": {
+    "partition": "complete immutable source cuts, exact points and open-cell targets; bounded rational midpoint when no binary64 interior",
+    "history": "OLD prefix cuts before root; physical-root event read and new held target; NEW suffix cuts up to original representative; distinct consumed cursor and original root/window provenance",
+    "sampling": "exact source input nominal/enclosure at root; Transition exact affine sample over proven root cell; downstream math nominal and bounds recomputed in dependency order; continuous networks keep original local clock certificates",
+    "plan_reuse": "all source-guard dependencies unchanged, structural leaf dependencies unchanged, every root/mode target certificate revalidated; otherwise charged rebind",
+    "rollback": "disposable prefix/history candidate; atomic accepted history/state/calendar/cursor/records/output commit; same-controller injected final rejection and corrected retry"
+  },
+  "originals": {
+    "selection": "previous fixed125 affected originals; no denominator change",
+    "summary": {
+      "fixed_count": 125,
+      "executed": 125,
+      "completed": 70,
+      "checker_passed": 62,
+      "checker_failed": 8,
+      "rejected": 55,
+      "cleanup_confirmed": 125,
+      "newly_completed": [
+        "101",
+        "314"
+      ],
+      "changed_completed_responses": [
+        "001",
+        "002",
+        "004",
+        "006",
+        "008",
+        "010",
+        "040",
+        "043",
+        "044",
+        "047",
+        "051",
+        "055",
+        "071",
+        "084",
+        "089",
+        "090",
+        "091",
+        "104",
+        "106",
+        "178",
+        "184",
+        "191",
+        "198",
+        "199",
+        "200",
+        "204",
+        "205",
+        "206",
+        "207",
+        "208",
+        "209",
+        "210",
+        "213",
+        "214",
+        "261",
+        "262",
+        "263",
+        "264",
+        "267",
+        "271",
+        "275",
+        "276",
+        "284",
+        "293",
+        "294",
+        "306",
+        "309",
+        "320",
+        "321",
+        "322",
+        "327",
+        "341",
+        "342",
+        "345",
+        "347",
+        "352",
+        "353",
+        "367",
+        "375",
+        "376",
+        "379",
+        "382",
+        "394",
+        "395",
+        "397",
+        "399"
+      ]
+    },
+    "selected_originals": [
+      {
+        "family": "101",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "vout_samples; P_INITIAL_ZERO_STATE mismatch_count=0; P_FIRST_ORDER_UPDATE mismatch_count=0; P_RESPONSE_CONVERGENCE mismatch_count=0; P_DONE_TIME_GATE mismatch_count=0; P_DONE_SETTLED_GATE mismatch_count=0"
+        },
+        "response_sha256": "af723fe62663abff132b4b83b700f0d4e80a3bb619b2a49f5027b9551858bca5",
+        "original_input_identity_sha256": "04b9081f94c853901d733e927b9530fb5298ae92206ec9ee3360931c7d362ca3",
+        "source_files": {
+          "submission/settling_time_measurement_tb.va": "4a49bef6f64d4da2d4c5f510aa3fa414dda0fd9c5d8939e111ad8a9b2a7bd42c",
+          "testbench/trusted_replay_test.scs": "f217ecf38e20b6af3bc3c34f2a8a7b2473d6720bee6c02b7a89180ba5c1c5b58"
+        },
+        "cleanup_confirmed": true,
+        "baseline_status": "rejected"
+      },
+      {
+        "family": "314",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_314 checked=848 reset_samples=43 disabled_samples=58 inside=True outside=True low_hold=True high_hold=True state_errors=0 metric_errors=0 clear_errors=0 toggle_width_errors=0 missing_toggle_count=0"
+        },
+        "response_sha256": "25d567fa6428f88ebbe84eab627a2d92f8f6b5417cabb37ea53966f27173332d",
+        "original_input_identity_sha256": "7496c2542ce0aef2858fb0b80cf88c289a9e4b48aa53ed8d40eb67b28fc0ad0f",
+        "source_files": {
+          "submission/hysteretic_window_comparator.va": "0c4eb5bd49730e92095128cf4255fe6f3f7bca0e5bd99296d0f88a7367c91cb6",
+          "testbench/trusted_replay_test.scs": "fc4c7fa63506e314fe7f04e3f6d6707b83590b6a680cf306ed3fc7fb73a4f561"
+        },
+        "cleanup_confirmed": true,
+        "baseline_status": "rejected"
+      }
+    ],
+    "cases": [
+      {
+        "family": "001",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "002",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "003",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "004",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "006",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "008",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "010",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "011",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "012",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "017",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "023",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "026",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "027",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "036",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "039",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "040",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "043",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "044",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "045",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "047",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "048",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "049",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "051",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "055",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "056",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "057",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "058",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "065",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "071",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "072",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "076",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "077",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "078",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "079",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "081",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "084",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "088",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "089",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "090",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "091",
+        "status": "completed",
+        "checker": "failed",
+        "baseline_status": "completed",
+        "baseline_checker": "failed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "092",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "096",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "097",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "098",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "100",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "101",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "102",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "103",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "104",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "106",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "109",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "117",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "178",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "184",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "191",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "198",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "199",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "200",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "204",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "205",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "206",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "207",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "208",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "209",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "210",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "213",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "214",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "261",
+        "status": "completed",
+        "checker": "failed",
+        "baseline_status": "completed",
+        "baseline_checker": "failed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "262",
+        "status": "completed",
+        "checker": "failed",
+        "baseline_status": "completed",
+        "baseline_checker": "failed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "263",
+        "status": "completed",
+        "checker": "failed",
+        "baseline_status": "completed",
+        "baseline_checker": "failed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "264",
+        "status": "completed",
+        "checker": "failed",
+        "baseline_status": "completed",
+        "baseline_checker": "failed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "265",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "266",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "267",
+        "status": "completed",
+        "checker": "failed",
+        "baseline_status": "completed",
+        "baseline_checker": "failed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "268",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "269",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "271",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "274",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "275",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "276",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "277",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "278",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "279",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "280",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "284",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "293",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "294",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "299",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "300",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "301",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "302",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "306",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "308",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "309",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "310",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "311",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "312",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "314",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "320",
+        "status": "completed",
+        "checker": "failed",
+        "baseline_status": "completed",
+        "baseline_checker": "failed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "321",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "322",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "327",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "331",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "341",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "342",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "345",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "347",
+        "status": "completed",
+        "checker": "failed",
+        "baseline_status": "completed",
+        "baseline_checker": "failed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "348",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "349",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "352",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "353",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "355",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "356",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "357",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "361",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "363",
+        "status": "rejected",
+        "checker": "not_run",
+        "baseline_status": "rejected",
+        "baseline_checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "367",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "375",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "376",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "379",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "382",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "394",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "395",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "397",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "399",
+        "status": "completed",
+        "checker": "passed",
+        "baseline_status": "completed",
+        "baseline_checker": "passed",
+        "complete_response_unchanged": false,
+        "cleanup_confirmed": true
+      }
+    ],
+    "response_changes": [
+      {
+        "family": "001",
+        "changed_fields": 8,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].fired_triggers[0].guard_value",
+          ".transient.events[1].fired_triggers[0].guard_value",
+          ".transient.events[4].fired_triggers[0].guard_value",
+          ".transient.events[5].fired_triggers[0].guard_value",
+          ".transient.events[6].fired_triggers[0].guard_value"
+        ]
+      },
+      {
+        "family": "002",
+        "changed_fields": 10,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "004",
+        "changed_fields": 27,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "006",
+        "changed_fields": 12,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "008",
+        "changed_fields": 33,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "010",
+        "changed_fields": 7,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "040",
+        "changed_fields": 31,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "043",
+        "changed_fields": 30,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "044",
+        "changed_fields": 10,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "047",
+        "changed_fields": 2,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value"
+        ]
+      },
+      {
+        "family": "051",
+        "changed_fields": 5,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "055",
+        "changed_fields": 48,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "071",
+        "changed_fields": 1126,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 4.440892098500626e-16,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[39][5][1]",
+          ".observation_evidence.voltage_bounds_V[40][5][1]",
+          ".observation_evidence.voltage_bounds_V[41][5][1]",
+          ".observation_evidence.voltage_bounds_V[42][5][1]",
+          ".observation_evidence.voltage_bounds_V[45][5][1]"
+        ]
+      },
+      {
+        "family": "084",
+        "changed_fields": 14798,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 9.61564161627848e-13,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[82][3][0]",
+          ".observation_evidence.voltage_bounds_V[82][6][0]",
+          ".observation_evidence.voltage_bounds_V[103][2][0]",
+          ".observation_evidence.voltage_bounds_V[287][3][1]",
+          ".observation_evidence.voltage_bounds_V[287][6][0]"
+        ]
+      },
+      {
+        "family": "089",
+        "changed_fields": 20036,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 3.6415315207705135e-14,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[2044][6][0]",
+          ".observation_evidence.voltage_bounds_V[2044][6][1]",
+          ".observation_evidence.voltage_bounds_V[2045][6][0]",
+          ".observation_evidence.voltage_bounds_V[2045][6][1]",
+          ".observation_evidence.voltage_bounds_V[2046][6][0]"
+        ]
+      },
+      {
+        "family": "090",
+        "changed_fields": 1,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[1].guard_value"
+        ]
+      },
+      {
+        "family": "091",
+        "changed_fields": 13139,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 7.327471962526033e-15,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[1255][1][0]",
+          ".observation_evidence.voltage_bounds_V[1255][2][0]",
+          ".observation_evidence.voltage_bounds_V[1255][2][1]",
+          ".observation_evidence.voltage_bounds_V[1256][1][0]",
+          ".observation_evidence.voltage_bounds_V[1256][2][0]"
+        ]
+      },
+      {
+        "family": "104",
+        "changed_fields": 2026,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 3.9968028886505635e-15,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[101][1][0]",
+          ".observation_evidence.voltage_bounds_V[102][3][1]",
+          ".observation_evidence.voltage_bounds_V[103][3][1]",
+          ".observation_evidence.voltage_bounds_V[104][3][1]",
+          ".observation_evidence.voltage_bounds_V[105][3][1]"
+        ]
+      },
+      {
+        "family": "106",
+        "changed_fields": 7,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 3.9968028886505635e-15,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[101][1][0]",
+          ".solutions[101].voltages[1]",
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value"
+        ]
+      },
+      {
+        "family": "178",
+        "changed_fields": 16,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "184",
+        "changed_fields": 17,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "191",
+        "changed_fields": 21,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 8.659739592076221e-15,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[228][2][1]",
+          ".observation_evidence.voltage_bounds_V[419][2][1]",
+          ".solutions[228].voltages[2]",
+          ".solutions[419].voltages[2]",
+          ".transient.events[0].guard_value"
+        ]
+      },
+      {
+        "family": "198",
+        "changed_fields": 4,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value"
+        ]
+      },
+      {
+        "family": "199",
+        "changed_fields": 4,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value"
+        ]
+      },
+      {
+        "family": "200",
+        "changed_fields": 3,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value"
+        ]
+      },
+      {
+        "family": "204",
+        "changed_fields": 4,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value"
+        ]
+      },
+      {
+        "family": "205",
+        "changed_fields": 6,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "206",
+        "changed_fields": 9,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 7.771561172376096e-16,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[72][1][0]",
+          ".solutions[72].voltages[1]",
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value"
+        ]
+      },
+      {
+        "family": "207",
+        "changed_fields": 7,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 7.771561172376096e-16,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[72][1][0]",
+          ".solutions[72].voltages[1]",
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value"
+        ]
+      },
+      {
+        "family": "208",
+        "changed_fields": 9,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 7.771561172376096e-16,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[72][1][0]",
+          ".solutions[72].voltages[1]",
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value"
+        ]
+      },
+      {
+        "family": "209",
+        "changed_fields": 5,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "210",
+        "changed_fields": 5,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "213",
+        "changed_fields": 7,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 1.5543122344752192e-15,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[72][6][0]",
+          ".solutions[72].voltages[6]",
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value"
+        ]
+      },
+      {
+        "family": "214",
+        "changed_fields": 9,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 1.5543122344752192e-15,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[72][1][0]",
+          ".solutions[72].voltages[1]",
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value"
+        ]
+      },
+      {
+        "family": "261",
+        "changed_fields": 14,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].fired_triggers[0].guard_value",
+          ".transient.events[1].fired_triggers[0].guard_value",
+          ".transient.events[2].fired_triggers[0].guard_value",
+          ".transient.events[3].fired_triggers[0].guard_value",
+          ".transient.events[4].fired_triggers[0].guard_value"
+        ]
+      },
+      {
+        "family": "262",
+        "changed_fields": 14,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].fired_triggers[0].guard_value",
+          ".transient.events[1].fired_triggers[0].guard_value",
+          ".transient.events[2].fired_triggers[0].guard_value",
+          ".transient.events[3].fired_triggers[0].guard_value",
+          ".transient.events[4].fired_triggers[0].guard_value"
+        ]
+      },
+      {
+        "family": "263",
+        "changed_fields": 14,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].fired_triggers[0].guard_value",
+          ".transient.events[1].fired_triggers[0].guard_value",
+          ".transient.events[2].fired_triggers[0].guard_value",
+          ".transient.events[3].fired_triggers[0].guard_value",
+          ".transient.events[4].fired_triggers[0].guard_value"
+        ]
+      },
+      {
+        "family": "264",
+        "changed_fields": 14,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].fired_triggers[0].guard_value",
+          ".transient.events[1].fired_triggers[0].guard_value",
+          ".transient.events[2].fired_triggers[0].guard_value",
+          ".transient.events[3].fired_triggers[0].guard_value",
+          ".transient.events[4].fired_triggers[0].guard_value"
+        ]
+      },
+      {
+        "family": "267",
+        "changed_fields": 14,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].fired_triggers[0].guard_value",
+          ".transient.events[1].fired_triggers[0].guard_value",
+          ".transient.events[2].fired_triggers[0].guard_value",
+          ".transient.events[3].fired_triggers[0].guard_value",
+          ".transient.events[4].fired_triggers[0].guard_value"
+        ]
+      },
+      {
+        "family": "271",
+        "changed_fields": 15,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "275",
+        "changed_fields": 16,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].fired_triggers[0].guard_value",
+          ".transient.events[1].fired_triggers[0].guard_value",
+          ".transient.events[2].fired_triggers[0].guard_value",
+          ".transient.events[3].fired_triggers[0].guard_value",
+          ".transient.events[4].fired_triggers[0].guard_value"
+        ]
+      },
+      {
+        "family": "276",
+        "changed_fields": 16,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].fired_triggers[0].guard_value",
+          ".transient.events[1].fired_triggers[0].guard_value",
+          ".transient.events[2].fired_triggers[0].guard_value",
+          ".transient.events[3].fired_triggers[0].guard_value",
+          ".transient.events[4].fired_triggers[0].guard_value"
+        ]
+      },
+      {
+        "family": "284",
+        "changed_fields": 13,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "293",
+        "changed_fields": 18,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "294",
+        "changed_fields": 16,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "306",
+        "changed_fields": 704,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 1.4876988529977098e-14,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[670][5][0]",
+          ".observation_evidence.voltage_bounds_V[670][5][1]",
+          ".observation_evidence.voltage_bounds_V[715][5][0]",
+          ".observation_evidence.voltage_bounds_V[715][5][1]",
+          ".solutions[670].voltages[5]"
+        ]
+      },
+      {
+        "family": "309",
+        "changed_fields": 2167,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 1.4876988529977098e-14,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[443][5][0]",
+          ".observation_evidence.voltage_bounds_V[444][5][0]",
+          ".observation_evidence.voltage_bounds_V[445][5][0]",
+          ".observation_evidence.voltage_bounds_V[446][5][0]",
+          ".observation_evidence.voltage_bounds_V[447][5][0]"
+        ]
+      },
+      {
+        "family": "320",
+        "changed_fields": 30,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].fired_triggers[0].guard_value",
+          ".transient.events[2].fired_triggers[0].guard_value",
+          ".transient.events[3].fired_triggers[0].guard_value",
+          ".transient.events[4].fired_triggers[0].guard_value",
+          ".transient.events[5].fired_triggers[0].guard_value"
+        ]
+      },
+      {
+        "family": "321",
+        "changed_fields": 15,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].fired_triggers[0].guard_value",
+          ".transient.events[1].fired_triggers[0].guard_value",
+          ".transient.events[2].fired_triggers[0].guard_value",
+          ".transient.events[3].fired_triggers[0].guard_value",
+          ".transient.events[4].fired_triggers[0].guard_value"
+        ]
+      },
+      {
+        "family": "322",
+        "changed_fields": 57,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 7.44462551297725e-14,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[46][8][0]",
+          ".observation_evidence.voltage_bounds_V[101][2][0]",
+          ".observation_evidence.voltage_bounds_V[137][1][0]",
+          ".observation_evidence.voltage_bounds_V[188][7][1]",
+          ".observation_evidence.voltage_bounds_V[197][8][0]"
+        ]
+      },
+      {
+        "family": "327",
+        "changed_fields": 1399,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 7.105427357601002e-15,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[124][2][1]",
+          ".observation_evidence.voltage_bounds_V[125][2][1]",
+          ".observation_evidence.voltage_bounds_V[126][2][1]",
+          ".observation_evidence.voltage_bounds_V[127][2][0]",
+          ".observation_evidence.voltage_bounds_V[127][2][1]"
+        ]
+      },
+      {
+        "family": "341",
+        "changed_fields": 570,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 6.661338147750939e-16,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[439][4][0]",
+          ".observation_evidence.voltage_bounds_V[442][4][1]",
+          ".observation_evidence.voltage_bounds_V[443][4][1]",
+          ".observation_evidence.voltage_bounds_V[444][4][1]",
+          ".observation_evidence.voltage_bounds_V[445][4][1]"
+        ]
+      },
+      {
+        "family": "342",
+        "changed_fields": 43,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value",
+          ".transient.events[5].guard_value"
+        ]
+      },
+      {
+        "family": "345",
+        "changed_fields": 35,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "347",
+        "changed_fields": 98,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 4.163336342344337e-14,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[927][5][0]",
+          ".observation_evidence.voltage_bounds_V[927][5][1]",
+          ".observation_evidence.voltage_bounds_V[1559][3][0]",
+          ".observation_evidence.voltage_bounds_V[1559][3][1]",
+          ".observation_evidence.voltage_bounds_V[1559][5][0]"
+        ]
+      },
+      {
+        "family": "352",
+        "changed_fields": 15,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "353",
+        "changed_fields": 18,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "367",
+        "changed_fields": 66,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "375",
+        "changed_fields": 19,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[8].guard_value",
+          ".transient.events[29].guard_value",
+          ".transient.events[50].guard_value",
+          ".transient.events[71].guard_value",
+          ".transient.events[92].guard_value"
+        ]
+      },
+      {
+        "family": "376",
+        "changed_fields": 446,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 5.551115123125783e-16,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[435][3][1]",
+          ".observation_evidence.voltage_bounds_V[436][3][1]",
+          ".observation_evidence.voltage_bounds_V[437][3][1]",
+          ".observation_evidence.voltage_bounds_V[438][3][1]",
+          ".observation_evidence.voltage_bounds_V[439][3][1]"
+        ]
+      },
+      {
+        "family": "379",
+        "changed_fields": 5248,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 3.608224830031759e-16,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[146][6][1]",
+          ".observation_evidence.voltage_bounds_V[147][6][1]",
+          ".observation_evidence.voltage_bounds_V[148][6][1]",
+          ".observation_evidence.voltage_bounds_V[149][6][1]",
+          ".observation_evidence.voltage_bounds_V[150][6][1]"
+        ]
+      },
+      {
+        "family": "382",
+        "changed_fields": 36,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 5.956346527113965e-14,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[1001][3][1]",
+          ".solutions[1001].voltages[3]",
+          ".transient.events[0].fired_triggers[0].guard_value",
+          ".transient.events[1].fired_triggers[0].guard_value",
+          ".transient.events[2].fired_triggers[0].guard_value"
+        ]
+      },
+      {
+        "family": "394",
+        "changed_fields": 21,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 2.9753977059954195e-14,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[1153][2][0]",
+          ".observation_evidence.voltage_bounds_V[1153][2][1]",
+          ".observation_evidence.voltage_bounds_V[1153][7][0]",
+          ".observation_evidence.voltage_bounds_V[1153][7][1]",
+          ".solutions[1153].voltages[2]"
+        ]
+      },
+      {
+        "family": "395",
+        "changed_fields": 33,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 2.9781732635569824e-14,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[44][3][0]",
+          ".observation_evidence.voltage_bounds_V[44][3][1]",
+          ".observation_evidence.voltage_bounds_V[1236][5][0]",
+          ".observation_evidence.voltage_bounds_V[1236][5][1]",
+          ".observation_evidence.voltage_bounds_V[1236][7][0]"
+        ]
+      },
+      {
+        "family": "397",
+        "changed_fields": 17,
+        "guard_value_only": true,
+        "max_nominal_voltage_delta_V": 0.0,
+        "paths_preview": [
+          ".transient.events[0].guard_value",
+          ".transient.events[1].guard_value",
+          ".transient.events[2].guard_value",
+          ".transient.events[3].guard_value",
+          ".transient.events[4].guard_value"
+        ]
+      },
+      {
+        "family": "399",
+        "changed_fields": 39,
+        "guard_value_only": false,
+        "max_nominal_voltage_delta_V": 5.956346527113965e-14,
+        "paths_preview": [
+          ".observation_evidence.voltage_bounds_V[1618][1][0]",
+          ".observation_evidence.voltage_bounds_V[1618][1][1]",
+          ".observation_evidence.voltage_bounds_V[1618][3][0]",
+          ".observation_evidence.voltage_bounds_V[1618][3][1]",
+          ".observation_evidence.voltage_bounds_V[1618][5][0]"
+        ]
+      }
+    ],
+    "all_changed_responses_guard_value_only": false,
+    "independent_settled_controls": {
+      "derivation": "Independent settled controls on actual original save rows; never move time.",
+      "samples": [
+        {
+          "family": "101",
+          "time_s": 5.05e-08,
+          "node": "vout",
+          "expected": 0.5649138854154357,
+          "actual": 0.5649138854154352,
+          "budget_v": 5.749138854154358e-11
+        },
+        {
+          "family": "314",
+          "time_s": 1.496e-08,
+          "node": "inside_flag",
+          "expected": 0.9,
+          "actual": 0.9,
+          "budget_v": 9.1e-11
+        },
+        {
+          "family": "314",
+          "time_s": 1.5039999999999998e-08,
+          "node": "inside_flag",
+          "expected": 0.9,
+          "actual": 0.9,
+          "budget_v": 9.1e-11
+        },
+        {
+          "family": "314",
+          "time_s": 4.8479999999999995e-08,
+          "node": "inside_flag",
+          "expected": 0,
+          "actual": -0.0,
+          "budget_v": 1e-12
+        },
+        {
+          "family": "314",
+          "time_s": 4.856e-08,
+          "node": "inside_flag",
+          "expected": 0,
+          "actual": -0.0,
+          "budget_v": 1e-12
+        },
+        {
+          "family": "314",
+          "time_s": 5.744e-08,
+          "node": "inside_flag",
+          "expected": 0.9,
+          "actual": 0.9,
+          "budget_v": 9.1e-11
+        },
+        {
+          "family": "314",
+          "time_s": 5.7519999999999995e-08,
+          "node": "inside_flag",
+          "expected": 0.9,
+          "actual": 0.9,
+          "budget_v": 9.1e-11
+        },
+        {
+          "family": "314",
+          "time_s": 5.76e-08,
+          "node": "inside_flag",
+          "expected": 0.9,
+          "actual": 0.9,
+          "budget_v": 9.1e-11
+        },
+        {
+          "family": "314",
+          "time_s": 7.696e-08,
+          "node": "inside_flag",
+          "expected": 0,
+          "actual": -0.0,
+          "budget_v": 1e-12
+        },
+        {
+          "family": "314",
+          "time_s": 7.704e-08,
+          "node": "inside_flag",
+          "expected": 0,
+          "actual": -0.0,
+          "budget_v": 1e-12
+        }
+      ]
+    }
+  },
+  "independent_tests": {
+    "source": "evas/tests/test_source_root_windows.py",
+    "source_sha256": "27f016410e01069b8a58b2db5cb0331d96e9baad1059d0d90ea1f70ba5029005",
+    "debug_kernel_sha256": "12e500c574b98df9d6bfca59f8b07908dc1333ebb303002419432aec9c8c2ab1",
+    "public_methods": [
+      {
+        "method": "test_101_timer_before_time_cut_preserves_both_transition_histories",
+        "returncode": 0,
+        "cleanup_confirmed": true
+      },
+      {
+        "method": "test_314_timer_after_source_corner_keeps_phase_and_interrupted_history",
+        "returncode": 0,
+        "cleanup_confirmed": true
+      },
+      {
+        "method": "test_physical_root_read_differs_from_upper_representative",
+        "returncode": 0,
+        "cleanup_confirmed": true
+      },
+      {
+        "method": "test_equal_source_corner_and_timer_remain_one_settlement",
+        "returncode": 0,
+        "cleanup_confirmed": true
+      },
+      {
+        "method": "test_changed_source_prefix_is_sampled_at_root_before_timer_update",
+        "returncode": 0,
+        "cleanup_confirmed": true
+      },
+      {
+        "method": "test_sine_of_old_transition_prefix_recomputes_at_physical_root",
+        "returncode": 0,
+        "cleanup_confirmed": true
+      },
+      {
+        "method": "test_sub_ulp_interrupted_source_pulse_remains_explicitly_unsupported",
+        "returncode": 0,
+        "cleanup_confirmed": true
+      },
+      {
+        "method": "test_uncertified_held_clock_over_source_cut_still_rejects",
+        "returncode": 0,
+        "cleanup_confirmed": true
+      },
+      {
+        "method": "test_isolated_third_boundary_value_still_rejects",
+        "returncode": 0,
+        "cleanup_confirmed": true
+      },
+      {
+        "method": "test_unidentified_source_uncertainty_still_rejects",
+        "returncode": 0,
+        "cleanup_confirmed": true
+      }
+    ],
+    "oracles": [
+      "Fraction of actual binary64 inputs; complete independent linear transition/ramp and held recurrence answers",
+      "q=2 prefix a=(104*Fraction(500ps)-Fraction(52ns))/Fraction(200ps), output1e6*a*clip((t-r)/d)",
+      "sin prefix: exact Fraction alternating Taylor20-term upper/lower enclosure; output1e6*sin(a)*clip((t-r)/d)",
+      "unchanged requested nominal precision1e-12+1e-10*scale; full rational oracle enclosure required inside reported output bounds"
+    ],
+    "controls": [
+      "unproved held clock over source cut",
+      "isolated third boundary target",
+      "unidentified nonzero source uncertainty",
+      "legal sub-ULP reverse interrupted pulse explicitly unsupported"
+    ],
+    "query_contract": "ordinary/dense physical records and common samples identical; forced windows may refine, require same callbacks/states and independent answer with nested certified enclosures",
+    "baseline": "baseline0c100 independent red: original positive root-window cases rejected; fix2 amplified root-read,fix5 old-prefix andfix11 sine red preserved local-only",
+    "rollback": "evas/rust_core/src/transient_root_window_tests.rs; original frame/history/calendar/records/output unchanged after two failures; corrected retry equals clean control"
+  },
+  "checks": {
+    "release_python": "106 focused passed:55 core/history/root-window plus51 additional event/precision/deadline consumers; integration/python-final-release.log/python-final-additional.log",
+    "rust": "408 kernel +2 IR passed,1 prior ignored; rust-final.log/rust-ir.log",
+    "fmt": "pass",
+    "clippy": "all targets -Dwarnings pass",
+    "diagnostics_traceability": "regenerated and checked; frozen validation identity checked"
+  },
+  "limitations": [
+    "Different nonpoint exact roots with identical minimal float enclosure still conservatively rejected",
+    "Sub-ULP interrupted transition edges may fail target-relative or representable-time certification",
+    "Multiphase changing prefix for transition filter/integral consumers remains unsupported",
+    "Unknown roots/source shape, uncertified nonpoint source predicates and isolated third targets still reject",
+    "No new actual Spectre run or general callback/full-domain/commonQ qualification",
+    "All original models/responses,bulk logs,process receipts,build/source archives are local-only; maintained independent public regression sources are repository-contained",
+    "DraftPR208 unmerged and conflicting with current main; no merge/rebase/main synchronization"
+  ],
+  "local_evidence": "runs/evas-source-shape-20261017/root-window-certificate",
+  "runners": {
+    "originals_sha256": "6b0c07b1bca68f21f0fe0b17d7d2e07a5454cd5c91f50d61f65e675098337312",
+    "frozen_worker_sha256": "f158c308dd1c6f78c869f7abc6ca87ae6d0a3e002f6ae893ea684994f6c65db9"
+  }
+}

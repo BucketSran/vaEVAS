@@ -6,6 +6,8 @@
 
 [GAP20与101后续收据](gap20-state-predicates.json)保留标准默认边沿、确定区间谓词、受影响原件复验及314证书设计。新旧运行身份分开，未重标历史400/213结果；314的数学夹具和缩减模型控制不代表新证书已实现。原件结果只在[统一进度表](../../../../evas/docs/COMPARISON.md#progress-board)维护；实际Spectre对齐仍缺证。
 
+[101/314共用根窗证书收据](root-window-certificate.json)保留有理区间见证、按物理根排序的旧／新目标阶段、采样和回滚证据。原模型、checker、精度、120秒内核与150秒guardian上限保持；公开缩减正反例与local-only原件分开登记。最新原件结果和未完成项见[统一进度表](../../../../evas/docs/COMPARISON.md#progress-board)，原400/213执行不改写，没有新增实际Spectre对齐。
+
 IR24 为有限连续 PWL 提供原始有理角点。内核验证物理曲线始终位于名义 PWL 的原非零电压误差带内，再用物理曲线求值、导数及完整 cross 分区；转浮点的舍入界仍进入下游验收。有限采样算术、无环 transition 条件和中断直线证明的范围见[数学合同](../../../../evas/docs/math/events.md#causal-transition-composition)，字段及资源边界见[源曲线合同](../../../../evas/docs/math/events.md#physical-source-shape)。仅有幅度界时，原动态拒绝边界保持。候选未合并，包版本沿用 0.19.0；IR1–23须从原 VA 重编译。
 
 七项机制对照覆盖 pulse 到 cross/transition、反向接地与保持 timer 复位、采样乘法与数值关联、冻结 transition 网络条件、内部条件级联、相邻内部根，以及两个独立中断边沿的连续结束点。五项使用保留的实际 Spectre 原始数据，两项为新增实际执行；全部 EVAS 输出在同一最终冻结内核上重新运行。

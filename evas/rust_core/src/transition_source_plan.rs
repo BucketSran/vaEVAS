@@ -624,6 +624,19 @@ impl Cut {
     fn point(time: f64) -> Result<Self, Error> {
         Self::new(RootTime::point(time).ok_or_else(|| invalid("invalid source point"))?)
     }
+    fn between(left: &Self, right: &Self, work: &Work) -> Result<Self, Error> {
+        work.step()?;
+        let t = left.bounds.hi + (right.bounds.lo - left.bounds.hi) / 2.;
+        if left.bounds.hi < t && t < right.bounds.lo {
+            Self::point(t)
+        } else {
+            work.exact()?;
+            Self::new(
+                RootTime::between(&left.exact, &right.exact)
+                    .ok_or_else(|| invalid("cannot prove source open-cell witness"))?,
+            )
+        }
+    }
 }
 
 #[derive(Clone)]
@@ -672,12 +685,8 @@ impl Plan {
             points.push(spec.target(states, t)?);
         }
         for pair in cuts.windows(2) {
-            spec.work.step()?;
-            let t = pair[0].bounds.hi + (pair[1].bounds.lo - pair[0].bounds.hi) / 2.;
-            if !(pair[0].bounds.hi < t && t < pair[1].bounds.lo) {
-                return Err(invalid("source cuts have no representable interior"));
-            }
-            modes.push(spec.target(states, &Cut::point(t)?)?);
+            let witness = Cut::between(&pair[0], &pair[1], &spec.work)?;
+            modes.push(spec.target(states, &witness)?);
         }
         // This preliminary check uses one frozen held epoch. The runtime must
         // additionally call prepare with OLD accepted target after settlement.
@@ -726,11 +735,96 @@ impl Plan {
     pub(crate) fn same_context(&self, states: &[I]) -> Result<bool, Error> {
         Self::check_states(&self.spec, states)?;
         self.spec.work.step()?;
-        Ok(self
+        if self
             .spec
             .dependencies
             .iter()
-            .all(|&k| states[k] == self.states[k]))
+            .all(|&k| states[k] == self.states[k])
+        {
+            return Ok(true);
+        }
+        // Reuse one immutable target partition when only a held-only guard
+        // changes its enclosure, and every selected target certificate stays
+        // identical. This performs the proof again; it does not reserve a new
+        // plan or pretend the old state enclosure contains the new one.
+        let unchanged = |dependencies: &BTreeSet<usize>| {
+            dependencies.iter().all(|&k| states[k] == self.states[k])
+        };
+        fn fixed_cuts(e: &Expression, p: &Plan, states: &[I]) -> Result<bool, Error> {
+            p.spec.work.step()?;
+            match e {
+                Expression::Select {
+                    left,
+                    right,
+                    then_value,
+                    else_value,
+                    ..
+                } => {
+                    let (mut nodes, mut held, _) = crate::continuous::integral_dependency_edges(
+                        left,
+                        &p.spec.program,
+                        &p.spec.owner,
+                    )?;
+                    let (rn, rh, _) = crate::continuous::integral_dependency_edges(
+                        right,
+                        &p.spec.program,
+                        &p.spec.owner,
+                    )?;
+                    nodes.extend(rn);
+                    held.extend(rh);
+                    if nodes.iter().any(|&n| n != 0)
+                        && held.iter().any(|&k| states[k] != p.states[k])
+                    {
+                        return Ok(false);
+                    }
+                    for x in [left, right, then_value, else_value] {
+                        if !fixed_cuts(x, p, states)? {
+                            return Ok(false);
+                        }
+                    }
+                }
+                Expression::Add { left, right }
+                | Expression::Multiply { left, right }
+                | Expression::Divide { left, right } => {
+                    return Ok(fixed_cuts(left, p, states)? && fixed_cuts(right, p, states)?);
+                }
+                _ => {}
+            }
+            Ok(true)
+        }
+        if !fixed_cuts(&self.spec.expression, self, states)? {
+            return Ok(false);
+        }
+        for leaf in forms(&self.spec.expression, &self.spec.work)? {
+            if !unchanged(
+                &crate::continuous::integral_dependency_edges(
+                    &leaf,
+                    &self.spec.program,
+                    &self.spec.owner,
+                )?
+                .1,
+            ) {
+                return Ok(false);
+            }
+        }
+        for (cut, old) in self.cuts.iter().zip(&self.points) {
+            match self.spec.target(states, cut) {
+                Ok(target) if target.same_certificate(old) => {}
+                Ok(_) => return Ok(false),
+                Err(e) if e.kind == "condition_precision" => return Ok(false),
+                Err(e) => return Err(e),
+            }
+        }
+        for (pair, old) in self.cuts.windows(2).zip(&self.modes) {
+            let cut = Cut::between(&pair[0], &pair[1], &self.spec.work)?;
+            match self.spec.target(states, &cut) {
+                Ok(target) if target.same_certificate(old) => {}
+                Ok(_) => return Ok(false),
+                Err(e) if e.kind == "condition_precision" => return Ok(false),
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(true)
     }
     pub(crate) fn seed(&self) -> Target {
         self.points[0].clone()
@@ -740,9 +834,6 @@ impl Plan {
     }
     pub(crate) fn next_after(&self, time: f64) -> Option<f64> {
         self.cuts.iter().find(|t| t.time > time).map(|cut| cut.time)
-    }
-    pub(crate) fn due_at(&self, time: f64) -> bool {
-        self.cut_at(time).is_some()
     }
     pub(crate) fn cut_at(&self, time: f64) -> Option<&Cut> {
         self.cuts
@@ -769,6 +860,7 @@ impl Plan {
         }
         for cut in self.cuts.iter() {
             if cut.bounds.lo <= time_bounds.hi && time_bounds.lo <= cut.bounds.hi {
+                self.spec.work.step()?;
                 // The source boundary is already at/before the lower endpoint,
                 // while the proved physical event is strictly later. Closed
                 // enclosure contact cannot reverse this exact ordering.
@@ -790,6 +882,13 @@ impl Plan {
                 let same =
                     root.is_some_and(|root| root.order(&cut.exact) == std::cmp::Ordering::Equal);
                 if !same && time_bounds != cut.bounds {
+                    // This is a phase certificate over a complete immutable
+                    // cut partition, not permission to choose by representative.
+                    // Source::prepare consumes old/new held epochs in this
+                    // exact order and hands every target change to history.
+                    if root.is_some() {
+                        continue;
+                    }
                     return Err(Error::new(
                         "event_resolution",
                         format!("user event overlaps an unproved source-target boundary: incoming [{:.17e},{:.17e}], cut [{:.17e},{:.17e}], root order {:?}",time_bounds.lo,time_bounds.hi,cut.bounds.lo,cut.bounds.hi,root.map(|root|root.order(&cut.exact))),
@@ -808,12 +907,21 @@ impl Plan {
     /// Called only after final settlement. The caller commits this target and
     /// cursor atomically with old-history consumption and downstream histories.
     pub(crate) fn prepare(&self, time: f64, old: &Target) -> Result<Target, Error> {
-        let k = self.cuts.partition_point(|t| t.time <= time);
-        if k == 0 || time > self.cuts.last().unwrap().time {
+        self.prepare_root(
+            &RootTime::point(time).ok_or_else(|| invalid("invalid source point"))?,
+            old,
+        )
+    }
+    pub(crate) fn prepare_root(&self, root: &RootTime, old: &Target) -> Result<Target, Error> {
+        self.spec.work.step()?;
+        let k = self
+            .cuts
+            .partition_point(|t| t.exact.order(root) != std::cmp::Ordering::Greater);
+        if k == 0 || root.order(&self.cuts.last().unwrap().exact) == std::cmp::Ordering::Greater {
             return Err(invalid("source-target time outside proven domain"));
         }
         let i = k - 1;
-        let point = if self.cuts[i].time == time {
+        let point = if self.cuts[i].exact.order(root) == std::cmp::Ordering::Equal {
             &self.points[i]
         } else {
             &self.modes[i]
@@ -841,6 +949,9 @@ impl Plan {
             return Err(invalid("unproved terminal source-target change"));
         }
         Ok(right.clone())
+    }
+    pub(crate) fn debit_boundary(&self) -> Result<(), Error> {
+        self.spec.work.step()
     }
     pub(crate) fn same_proof(&self, other: &Self) -> bool {
         Arc::ptr_eq(&self.spec, &other.spec)
@@ -1035,6 +1146,43 @@ mod proof_cache_tests {
             .rebind(&[I { lo: 0.1, hi: 0.2 }])
             .unwrap()
             .same_proof(&before));
+    }
+
+    #[test]
+    fn held_guard_contexts_reuse_one_partition_without_raising_plan_budget() {
+        let work = Work::limited([1, 8192, 1_000_000_000]);
+        let spec = spec(
+            selected(held_selected("gt", 0.5), constant(0.)),
+            [1., 1.],
+            work.clone(),
+        );
+        let plan = Plan::build(spec, &[I { lo: 0.8, hi: 0.9 }]).unwrap();
+        for k in 0..200 {
+            let q = 1. + k as f64;
+            assert!(plan.same_context(&[I { lo: q, hi: q + 0.1 }]).unwrap());
+        }
+        assert_eq!(work.0.plans.load(Ordering::Relaxed), 1);
+        assert!(!plan.same_context(&[I { lo: 0.1, hi: 0.2 }]).unwrap());
+        assert!(!plan.same_context(&[I { lo: 0.4, hi: 0.6 }]).unwrap());
+    }
+
+    #[test]
+    fn unrepresentable_source_cell_has_a_strict_rational_witness() {
+        let a = Cut::point(0.5).unwrap();
+        let b = Cut::point(0.5_f64.next_up()).unwrap();
+        let work = Work::default();
+        let middle = Cut::between(&a, &b, &work).unwrap();
+        assert_eq!(a.exact.order(&middle.exact), std::cmp::Ordering::Less);
+        assert_eq!(middle.exact.order(&b.exact), std::cmp::Ordering::Less);
+        assert_eq!(
+            middle.bounds,
+            I {
+                lo: 0.5,
+                hi: 0.5_f64.next_up()
+            }
+        );
+        assert!(RootTime::between(&b.exact, &a.exact).is_none());
+        assert!(RootTime::between(&a.exact, &a.exact).is_none());
     }
 
     #[test]

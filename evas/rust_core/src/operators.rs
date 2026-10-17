@@ -1082,8 +1082,19 @@ impl Evaluation<'_> {
                 history.advance_reset(self.time, time_bounds, reset.active(parameters)?)?;
             }
         }
-        let mut values = observed.values_reusing(self.time, Some(&self.values))?;
-        let mut bounds = observed.event_bounds(self.time, time_bounds)?;
+        let sampling_window = self
+            .exact_root
+            .as_ref()
+            .and_then(|root| root.refine(time_bounds))
+            .unwrap_or(time_bounds);
+        let mut values = observed.values_at_root(
+            self.time,
+            self.exact_root.as_ref(),
+            sampling_window,
+            Some(&self.values),
+        )?;
+        let mut bounds =
+            observed.event_bounds_at_root(self.time, time_bounds, self.exact_root.as_ref())?;
         for (i, entry) in observed.entries.iter().enumerate() {
             match entry {
                 Runtime::Continuous(slot)
@@ -1441,12 +1452,26 @@ impl Operators {
     }
 
     pub(crate) fn event_bounds(&self, time: f64, window: I) -> Result<Vec<I>, Error> {
-        if window.lo == window.hi {
-            return self.bounds(time);
+        self.event_bounds_with_root(time, window, None)
+    }
+
+    fn event_bounds_with_root(
+        &self,
+        time: f64,
+        window: I,
+        root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<Vec<I>, Error> {
+        let point = (window.lo == window.hi)
+            .then(|| self.bounds(time))
+            .transpose()?;
+        if window.lo == window.hi && root.is_none() {
+            return Ok(point.unwrap());
         }
+        let transition_window = root.and_then(|root| root.refine(window)).unwrap_or(window);
         let continuous = self
             .continuous
             .as_ref()
+            .filter(|_| point.is_none())
             .map(|c| c.event_bounds(window))
             .transpose()?;
         // Value observation has a different contract from a cross guard:
@@ -1454,6 +1479,10 @@ impl Operators {
         let mut bounds = Vec::with_capacity(self.entries.len());
         for (index, entry) in self.entries.iter().enumerate() {
             let bound = match entry {
+                Runtime::Transition { history, .. } => {
+                    history.observation_range(transition_window)?
+                }
+                _ if point.is_some() => point.as_ref().unwrap()[index],
                 Runtime::DirectDerivative(history) => history.range(window)?,
                 Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                 Runtime::Idt { history, .. } => history.value_range(window)?,
@@ -1483,7 +1512,6 @@ impl Operators {
                         ..
                     },
                 ) => function.bounds(*constant_bounds + *coefficient_bounds * bounds[*operator])?,
-                Runtime::Transition { history, .. } => history.observation_range(window)?,
                 _ => {
                     return Err(Error::new(
                         "event_resolution",
@@ -2156,9 +2184,111 @@ impl Operators {
             exact_root: exact_root.cloned(),
             base: self,
             time,
-            values: self.values(time)?,
+            values: self.values_at_root(
+                time,
+                exact_root,
+                exact_root
+                    .and_then(|root| root.refine(window))
+                    .unwrap_or(window),
+                None,
+            )?,
             bounds: self.bounds(time)?,
         })
+    }
+
+    fn values_at_root(
+        &self,
+        time: f64,
+        root: Option<&crate::exact_source::RootTime>,
+        window: I,
+        previous: Option<&[f64]>,
+    ) -> Result<Vec<f64>, Error> {
+        let Some(root) = root else {
+            return self.values_reusing(time, previous);
+        };
+        let mut values = self.values_reusing(time, previous)?;
+        for index in 0..values.len() {
+            if let Some((nominal, _)) = self.root_affine_sample(index, root, window) {
+                values[index] = nominal;
+            } else if let Runtime::Math(
+                function,
+                SinInput::Operator {
+                    operator,
+                    coefficient,
+                    constant,
+                    ..
+                },
+            ) = &self.entries[index]
+            {
+                // Entries are in dependency order. Recompute downstream math
+                // after replacing its parent's representative sample.
+                values[index] = function.value(*constant + *coefficient * values[*operator]);
+                if !values[index].is_finite() {
+                    return Err(Error::new("numerical_failure", "nonfinite operator value"));
+                }
+            }
+        }
+        Ok(values)
+    }
+    fn root_affine_sample(
+        &self,
+        index: usize,
+        root: &crate::exact_source::RootTime,
+        window: I,
+    ) -> Option<(f64, I)> {
+        root.refine(window)?;
+        // Continuous networks retain their own local clock and observation
+        // certificates. Only transition histories use this absolute-time form.
+        if !matches!(self.entries.get(index)?, Runtime::Transition { .. }) {
+            return None;
+        }
+        use num_traits::ToPrimitive;
+        let (a, b) = self.exact_affine_value(index, false, window)?;
+        let mut budget = crate::exact_source::Budget(0);
+        let product = budget.check(b * root.rational())?;
+        let value = budget.check(a + product)?;
+        let bounds = crate::exact_source::enclosure(&value)?;
+        let nominal = value.to_f64()?;
+        (bounds.lo <= nominal && nominal <= bounds.hi).then_some((nominal, bounds))
+    }
+    pub(crate) fn event_bounds_at_root(
+        &self,
+        time: f64,
+        window: I,
+        root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<Vec<I>, Error> {
+        if root.is_some_and(|root| root.refine(window).is_none()) {
+            return Err(Error::new(
+                "event_resolution",
+                "operator sample root is outside its proven window",
+            ));
+        }
+        let mut bounds = self.event_bounds_with_root(time, window, root)?;
+        if let Some(root) = root {
+            for index in 0..bounds.len() {
+                if let Some((_, exact)) = self
+                    .root_affine_sample(index, root, root.refine(window).unwrap())
+                    .filter(|(_, exact)| {
+                        bounds[index].lo <= exact.lo && exact.hi <= bounds[index].hi
+                    })
+                {
+                    bounds[index] = exact;
+                } else if let Runtime::Math(
+                    function,
+                    SinInput::Operator {
+                        operator,
+                        coefficient_bounds,
+                        constant_bounds,
+                        ..
+                    },
+                ) = &self.entries[index]
+                {
+                    bounds[index] = function
+                        .bounds(*constant_bounds + *coefficient_bounds * bounds[*operator])?;
+                }
+            }
+        }
+        Ok(bounds)
     }
 
     fn values_reusing(&self, time: f64, previous: Option<&[f64]>) -> Result<Vec<f64>, Error> {
@@ -2481,6 +2611,7 @@ impl Operators {
                         if deadline.overlaps(point)
                             && !deadline.coincides_root(&cut.exact)
                             && !deadline.ordered_with_point(point)
+                            && !deadline.ordered_with_root(&cut.exact)
                         {
                             return Err(Error::new("event_resolution","cannot certify transition deadline ordering relative to source-target cut"));
                         }
@@ -2538,8 +2669,9 @@ impl Operators {
         time_bounds: I,
         states: &[f64],
         bounds: &[I],
+        exact_root: Option<&crate::exact_source::RootTime>,
     ) -> Result<(), Error> {
-        self.advance_with_exact(time, time_bounds, states, bounds, &[], None, false)
+        self.advance_with_exact(time, time_bounds, states, bounds, &[], exact_root, false)
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -2598,43 +2730,56 @@ impl Operators {
             else {
                 unreachable!()
             };
-            let (value, target_bounds, may_change, preview_bounds, preview_root) =
-                if let Some(source) = source {
-                    if install_source {
-                        let next = source.prepare(time, time_bounds, bounds, exact_root)?;
-                        (
-                            next.target.value,
-                            next.target.bounds,
-                            next.changed,
-                            next.time_bounds,
-                            next.exact_root,
-                        )
-                    } else {
-                        let old = source.target();
-                        (
-                            old.value,
-                            old.bounds,
-                            false,
-                            time_bounds,
-                            exact_root.cloned(),
-                        )
+            let (value, target_bounds, may_change, preview_bounds, preview_root) = if let Some(
+                source,
+            ) = source
+            {
+                if install_source {
+                    let next = source.prepare(time, time_bounds, bounds, exact_root)?;
+                    if next.steps.iter().filter(|step| step.changed).count() > 1
+                        || next
+                            .steps
+                            .iter()
+                            .any(|step| step.changed && step.root.as_ref() != exact_root)
+                    {
+                        return Err(Error::new("unsupported_operator", "source-window multiple target phases need a joint filter/integral history certificate"));
                     }
-                } else {
-                    let may_change = changed.iter().any(|s| input.state_dependencies.contains(s));
-                    let (input, input_bounds) =
-                        transition_input(expression, program, bounds, owner)?;
-                    let target_bounds = input_bounds
-                        .iter()
-                        .zip(bounds.iter().copied().chain([I::ONE]))
-                        .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
                     (
-                        input.value(&[], states)?,
-                        target_bounds,
-                        may_change,
+                        next.target.value,
+                        next.target.bounds,
+                        next.changed,
+                        next.time_bounds,
+                        next.exact_root,
+                    )
+                } else {
+                    let (prefix, steps) = source.prepare_prefix(time_bounds, exact_root)?;
+                    if steps.iter().any(|step| step.changed) {
+                        return Err(Error::new("unsupported_operator", "source-window prefix needs a joint filter/integral history certificate"));
+                    }
+                    let old = prefix.target();
+                    (
+                        old.value,
+                        old.bounds,
+                        false,
                         time_bounds,
                         exact_root.cloned(),
                     )
-                };
+                }
+            } else {
+                let may_change = changed.iter().any(|s| input.state_dependencies.contains(s));
+                let (input, input_bounds) = transition_input(expression, program, bounds, owner)?;
+                let target_bounds = input_bounds
+                    .iter()
+                    .zip(bounds.iter().copied().chain([I::ONE]))
+                    .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
+                (
+                    input.value(&[], states)?,
+                    target_bounds,
+                    may_change,
+                    time_bounds,
+                    exact_root.cloned(),
+                )
+            };
             if !may_change && !reaches_deadline {
                 continue;
             }
@@ -2715,7 +2860,19 @@ impl Operators {
                 } => {
                     if let Some(current) = source {
                         if !install_source {
-                            let old = current.target();
+                            let (prefix, steps) =
+                                current.prepare_prefix(time_bounds, exact_root)?;
+                            for step in &steps {
+                                history.advance_at_with_exact(
+                                    time,
+                                    step.window,
+                                    step.target.value,
+                                    step.target.bounds,
+                                    step.changed,
+                                    step.root.as_ref(),
+                                )?;
+                            }
+                            let old = prefix.target();
                             history.advance_at_with_exact(
                                 time,
                                 time_bounds,
@@ -2724,17 +2881,31 @@ impl Operators {
                                 false,
                                 exact_root,
                             )?;
+                            **current = prefix;
                             continue;
                         }
                         let next = current.prepare(time, time_bounds, bounds, exact_root)?;
-                        history.advance_at_with_exact(
-                            time,
-                            next.time_bounds,
-                            next.target.value,
-                            next.target.bounds,
-                            next.changed,
-                            next.exact_root.as_ref(),
-                        )?;
+                        if next.steps.is_empty() {
+                            history.advance_at_with_exact(
+                                time,
+                                next.time_bounds,
+                                next.target.value,
+                                next.target.bounds,
+                                false,
+                                next.exact_root.as_ref(),
+                            )?;
+                        } else {
+                            for step in &next.steps {
+                                history.advance_at_with_exact(
+                                    time,
+                                    step.window,
+                                    step.target.value,
+                                    step.target.bounds,
+                                    step.changed,
+                                    step.root.as_ref(),
+                                )?;
+                            }
+                        }
                         *input = next.target.affine;
                         *input_bounds = next.target.coefficients;
                         **current = next.source;
