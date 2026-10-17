@@ -23,6 +23,36 @@ pub(crate) fn prepare(
     operator_bounds: &[I],
     previous: Option<&Circuit>,
 ) -> Result<Prepared, Error> {
+    let mut scratch = None;
+    prepare_with_scratch(
+        model,
+        events,
+        inputs,
+        before,
+        operators,
+        before_bounds,
+        operator_bounds,
+        previous,
+        &mut scratch,
+    )
+}
+
+/// `prepare` sharing one assembly scratch across a window's settlement
+/// trials. The scratch holds only candidate-independent structure (nodes,
+/// branch grouping, labels); all trial voltages, states, operator values and
+/// certificates are recomputed from this call's inputs.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn prepare_with_scratch(
+    model: &EventModel,
+    events: &[usize],
+    inputs: (&[f64], &[I]),
+    before: &[f64],
+    operators: &[f64],
+    before_bounds: &[I],
+    operator_bounds: &[I],
+    previous: Option<&Circuit>,
+    scratch: &mut Option<crate::assembly::AssemblyPlan>,
+) -> Result<Prepared, Error> {
     prepare_impl(
         model,
         (events, &[]),
@@ -34,6 +64,7 @@ pub(crate) fn prepare(
         operator_bounds,
         previous,
         true,
+        scratch,
     )
 }
 
@@ -49,6 +80,35 @@ pub(crate) fn prepare_window(
     operator_bounds: &[I],
     previous: Option<&Circuit>,
 ) -> Result<Prepared, Error> {
+    let mut scratch = None;
+    prepare_window_with_scratch(
+        model,
+        events_and_roots,
+        inputs,
+        observation_inputs,
+        before,
+        operators,
+        before_bounds,
+        operator_bounds,
+        previous,
+        &mut scratch,
+    )
+}
+
+/// `prepare_window` sharing one assembly scratch across a window's trials.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn prepare_window_with_scratch(
+    model: &EventModel,
+    events_and_roots: (&[usize], &[usize]),
+    inputs: (&[f64], &[I]),
+    observation_inputs: &[I],
+    before: &[f64],
+    operators: &[f64],
+    before_bounds: &[I],
+    operator_bounds: &[I],
+    previous: Option<&Circuit>,
+    scratch: &mut Option<crate::assembly::AssemblyPlan>,
+) -> Result<Prepared, Error> {
     prepare_impl(
         model,
         events_and_roots,
@@ -60,6 +120,7 @@ pub(crate) fn prepare_window(
         operator_bounds,
         previous,
         false,
+        scratch,
     )
 }
 
@@ -76,7 +137,9 @@ fn prepare_impl(
     operator_bounds: &[I],
     previous: Option<&Circuit>,
     check_voltages: bool,
+    scratch: &mut Option<crate::assembly::AssemblyPlan>,
 ) -> Result<Prepared, Error> {
+    crate::diagnostics::counter("settlement_scratch_calls", 1);
     let (inputs, input_bounds) = inputs;
     let selection = model.conditions.select_at_roots(
         events_and_roots.0,
@@ -96,7 +159,8 @@ fn prepare_impl(
     let predicate_bounds: Vec<_> = predicate_states.iter().copied().map(I::point).collect();
     let selected =
         model.selected_program_at_roots(&predicate_bounds, input_bounds, events_and_roots.1)?;
-    let mut joint = model.event_circuit_program(&selected, &selection, before, operators)?;
+    let mut joint = model
+        .event_circuit_program_with_scratch(&selected, &selection, before, operators, scratch)?;
     if let Some(previous) = previous {
         joint.reuse_affine_factor_from(previous);
     }
@@ -120,7 +184,8 @@ fn prepare_impl(
     }
     // Validate the original, unsubstituted voltage constraints with the replayed
     // state. Substitution roundoff must not replace the physical residual check.
-    let mut circuit = model.circuit_at(&states, operators, observation_inputs)?;
+    let mut circuit =
+        model.circuit_at_with_scratch(&states, operators, observation_inputs, scratch)?;
     if let Some(previous) = previous {
         circuit.reuse_affine_factor_from(previous);
     }

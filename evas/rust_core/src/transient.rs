@@ -415,9 +415,13 @@ fn prepare_root_window_selected_impl(
     let inputs = trajectory.values(time);
     let input_bounds = trajectory.range(time_bounds)?.0;
     let observation_inputs = trajectory.value_bounds(time);
-    let settle = |values: &[f64], bounds: &[I]| {
+    // One assembly scratch per event window: every trial in the closure loop
+    // rebuilds the same circuit structure, so only the first build pays for
+    // validation and grouping. The scratch carries no candidate data.
+    let mut assembly_scratch = None;
+    let mut settle = |values: &[f64], bounds: &[I]| {
         if time_bounds.lo == time_bounds.hi {
-            crate::settlement::prepare(
+            crate::settlement::prepare_with_scratch(
                 model,
                 events,
                 (&inputs, &input_bounds),
@@ -426,9 +430,10 @@ fn prepare_root_window_selected_impl(
                 old_bounds,
                 bounds,
                 Some(&accepted.circuit),
+                &mut assembly_scratch,
             )
         } else {
-            crate::settlement::prepare_window(
+            crate::settlement::prepare_window_with_scratch(
                 model,
                 (events, fired_leaves),
                 (&inputs, &input_bounds),
@@ -438,6 +443,7 @@ fn prepare_root_window_selected_impl(
                 old_bounds,
                 bounds,
                 Some(&accepted.circuit),
+                &mut assembly_scratch,
             )
         }
     };
