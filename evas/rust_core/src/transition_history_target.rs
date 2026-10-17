@@ -97,7 +97,8 @@ impl TargetPlan {
                     .iter()
                     .any(|v| !v.zero())
             {
-                return Err(failure(
+                return Err(Error::new(
+                    "unsupported_operator",
                     "transition target leaves must contain held state and constants only",
                 ));
             }

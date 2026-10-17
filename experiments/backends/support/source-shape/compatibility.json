@@ -105,17 +105,17 @@
   "independent_minimal_va": "`include \"disciplines.vams\"\nmodule m(u,en,y,r); input u,en; output y; inout r; electrical u,en,y,r; integer q; analog begin @(initial_step) q=0; @(cross(V(u,r)-0.45,+1,1e-12,1e-9)) begin if(V(en,r)>0.45) q=1; else q=0; end V(y,r)<+q; end endmodule",
   "independent_answer": "Use exact Fraction clock tau=F(5e-9)+13F(10e-9)+F(100e-12)/2 and originalenablePWL. Threshold time-tau=5.4089857242725325e-24s; enable(tau)-F(.45)=4.868087151844914e-14V>0, so originalEVASmodel releasesreset. Checker uses first saved highclock135.1ns, whereenable=0, and wrongly predictsold_coreFalse atnextcycle.",
   "availability": "Compact sources, configurations, selected native rows and analytic proof are repository-contained; complete PSF, response and logs local-only.",
+  "diagnosis_reuse": "Earlier analytic/minimal diagnosis retained with its original kernel identity. Exact physical inputs and te=tau unchanged. Final347 execution receipt and current public cross-condition regression revalidate the same difference on final-candidate3.",
   "final_evas": {
-    "kernel_sha256": "af9cda53a81cbf40fb231ea6b54464fbe0d21d987cfb3c6ac9332faa74f2b147",
+    "kernel_sha256": "006b04de47dd9de9b0278ba0481b64a3597655e7bb68d7e616f2eb68c97cd193",
     "checker": {
       "passed": false,
       "note": "v4_347 checked=20 mismatch_count=2 startup_seen=True brownout_seen=True async_clear=True async_checks=394 mismatch_detail=P_PWR_SEQUENCE_ORDER mismatch_count=1 sample_time=1.351e-07 expected=rst_n_core=0 observed=rst_n_core=1 metric_gap=1; P_PWR_SEQUENCE_ORDER mismatch_count=1 sample_time=1.451e-07 expected=en_ana=0 observed=en_ana=1 metric_gap=1",
       "qualification": "unchanged frozen historical checker/normalization;not newQ score"
     },
     "status": "execution_completed",
-    "seconds": 43.26165837497683,
+    "seconds": 37.69828329200391,
     "csv_sha256": "c7ba0f15be43c08e86162dbadc256e6a2f6f815add61f2e3b881538b7f0a814e",
     "response_sha256": "986851df65b16fbf3d87964d954938bb0ef46b0be05278f581c658d6b67be2ef"
-  },
-  "diagnosis_reuse": "Earlier analytic/minimal diagnosis retained with its original kernel identity. Exact physical inputs and te=tau unchanged. Final347 execution receipt and current public cross-condition regression revalidate the same difference on final-candidate2."
+  }
 }

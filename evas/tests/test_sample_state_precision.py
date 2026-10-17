@@ -19,6 +19,20 @@ POINTS = [[0, 1], [3, math.nextafter(1, math.inf)]]
 SAMPLE = Fraction(1, 3 * 2**52)
 
 
+def sampled_filter_answer(t):
+    """Solve y'+y=q with y(0)=q(0)=1 and q(k)=k*1e16/(3*2^52)."""
+    with localcontext() as context:
+        context.prec = 100
+        time = Decimal.from_float(t)
+        drive = Decimal(10**16)/Decimal(3*2**52)
+        if time <= 1:
+            return Decimal(1)
+        if time <= 2:
+            return drive+(1-drive)*(1-time).exp()
+        at_two = drive+(1-drive)*Decimal(-1).exp()
+        return 2*drive+(at_two-2*drive)*(2-time).exp()
+
+
 class SampleStatePrecision(unittest.TestCase):
     def test_unrelated_filter_preserves_exact_affine_root_after_flow_change(self):
         # z=t until .25, then z=2*t-.25. Its z=.75 root is exactly .5.
@@ -141,13 +155,13 @@ class SampleStatePrecision(unittest.TestCase):
                             self.assertLessEqual(abs(Decimal.from_float(actual)-expected),
                                                  Decimal.from_float(1e-7))
 
-    def test_filter_consumes_sample_uncertainty_after_an_accepted_event(self):
+    def test_filter_consumes_exact_sample_after_an_accepted_event(self):
         program = compile_model(
             '@(initial_step) q=1; @(timer(1,1,1e-12)) q=1e16*(V(u,r)-1); '
             "V(y,r)<+laplace_nd(q,'{1},'{1,1});", 'real q;')
         # The exact first-event voltage is 1. Its binary64 representative may
         # round; the returned enclosure must contain 1 within the same budget.
-        # Later its uncertain drive (~.74015 V) matters despite rounded q=0.
+        # Later the exact PWL drive (~.74015 V) matters despite rounded q=0.
         prefix = run(program, {'u': POINTS}, [0, 1], stop=1, max_step=1,
                      vabstol=1e-7, reltol=0)
         node = prefix['nodes'].index('y')
@@ -160,9 +174,28 @@ class SampleStatePrecision(unittest.TestCase):
         self.assertEqual([event['time'] for event in prefix['transient']['events']], [1])
         for step in [3, 1/16]:
             with self.subTest(step=step):
-                with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
-                    run(program, {'u': POINTS}, [0, 1, 1.5, 3], max_step=step,
-                        vabstol=1e-7, reltol=0)
+                times = [0, 1, 1.5, 3]
+                result = run(program, {'u': POINTS}, times, max_step=step,
+                             vabstol=1e-7, reltol=0)
+                node = result['nodes'].index('y')
+                bounds = result['observation_evidence']['voltage_bounds_V']
+                for t, actual, row in zip(times, values(result), bounds, strict=True):
+                    expected = sampled_filter_answer(t)
+                    lo, hi = map(Decimal.from_float, row[node])
+                    self.assertLessEqual(lo, expected)
+                    self.assertLessEqual(expected, hi)
+                    self.assertLessEqual(abs(Decimal.from_float(actual)-expected), Decimal('1e-7'))
+
+    def test_filter_retains_uncertainty_from_a_sampled_integral_history(self):
+        # z=t^2/2, so q(1)=0. Unlike a direct PWL sample, z's numerical
+        # history has no exact value proof; amplification must retain its band.
+        program = compile_model(
+            '@(initial_step) q=1; @(timer(1,1,1e-12)) q=1e16*(V(z,r)-0.5); '
+            "V(z,r)<+idt(V(u,r),0); V(y,r)<+laplace_nd(q,'{1},'{1,1});",
+            'real q; electrical z;')
+        with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
+            run(program, {'u': [[0,0], [3,3]]}, [0,1,1.5,3], max_step=3,
+                vabstol=1e-7, reltol=0)
 
     def test_near_zero_sample_is_certified_by_its_voltage_consumer(self):
         # The exact PWL sample at t=1 is 1+2^-52/3. Subtraction rounds
@@ -204,15 +237,34 @@ class SampleStatePrecision(unittest.TestCase):
         with self.assertRaisesRegex(KernelError, "unsupported_condition"):
             run(program, {"u": POINTS}, [0, 1, 2, 3], vabstol=1e-7, reltol=1e-5)
 
-    def test_later_integral_amplification_keeps_the_original_state_enclosure(self):
+    def test_later_integral_amplification_uses_the_exact_source_sample(self):
         program = compile_model(
             "@(initial_step) q=0; @(timer(1,0,1e-12)) q=V(u,r)-1; "
             "V(y,r)<+idt(1e16*q,0);", "real q;")
         result = run(program, {"u": POINTS}, [0, 1], stop=1,
                      vabstol=1e-7, reltol=1e-5)
         self.assertEqual(values(result), [0, 0])
-        with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
-            run(program, {"u": POINTS}, [0, 1, 2, 3], vabstol=1e-7, reltol=1e-5)
+        times = [0, 1, 2, 3]
+        result = run(program, {"u": POINTS}, times, vabstol=1e-7, reltol=1e-5)
+        node = result['nodes'].index('y')
+        bounds = result['observation_evidence']['voltage_bounds_V']
+        for t, actual, row in zip(times, values(result), bounds, strict=True):
+            expected = 10**16*SAMPLE*max(0, Fraction(t)-1)
+            lo, hi = map(Fraction, row[node])
+            self.assertLessEqual(lo, expected)
+            self.assertLessEqual(expected, hi)
+            self.assertLessEqual(abs(Fraction(actual)-expected), Fraction(1e-7))
+
+    def test_later_integral_amplification_retains_sampled_history_uncertainty(self):
+        # z=t^2/2, q samples z(1)-.5=0, and the exact output y stays zero.
+        # The unresolved physical-history band must survive the sampled state.
+        program = compile_model(
+            '@(initial_step) q=0; @(timer(1,0,1e-12)) q=V(z,r)-0.5; '
+            'V(z,r)<+idt(V(u,r),0); V(y,r)<+idt(1e16*q,0);',
+            'real q; electrical z;')
+        with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
+            run(program, {'u': [[0,0], [3,3]]}, [0,1,1.5,3], max_step=3,
+                vabstol=1e-7, reltol=0)
 
     def test_future_cross_threshold_keeps_sample_uncertainty(self):
         program = compile_model(

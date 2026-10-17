@@ -10,11 +10,13 @@ import math
 from pathlib import Path
 import tempfile
 import unittest
+from decimal import Decimal
 
 from evas import KernelError
 from evas.runtime import _invoke
 from test_affine import KERNEL
 from test_continuous_dynamics import compile_model, values
+from test_sample_state_precision import sampled_filter_answer
 
 
 def request_for(body, declarations='real q;', *, sources=None, times=None,
@@ -173,6 +175,19 @@ class RootRecovery(unittest.TestCase):
             "V(y,r)<+laplace_nd(q,'{1},'{1,1});",
             sources={'u': [[0, 1], [3, math.nextafter(1, math.inf)]]},
             times=[0, 1, 1.5, 3], budget=1.01e-6)
+        result, error, report = observe(request)
+        self.assertIsNone(error)
+        for t, actual in zip([0, 1, 1.5, 3], values(result), strict=True):
+            self.assertLessEqual(abs(Decimal.from_float(actual)-sampled_filter_answer(t)),
+                                 Decimal('1.01e-6'))
+
+        # An integral history cannot borrow the exact direct-source proof.
+        # Its retained numerical uncertainty must still fail without refining
+        # an unrelated root or discarding the first accepted event.
+        request = request_for(
+            '@(initial_step) q=1; @(timer(1,1,1e-12)) q=1e16*(V(z,r)-0.5); '
+            "V(z,r)<+idt(V(u,r),0); V(y,r)<+laplace_nd(q,'{1},'{1,1});",
+            'real q; electrical z;', times=[0, 1, 1.5, 3], budget=1.01e-6)
         result, error, report = observe(request)
         self.assertIsNone(result)
         self.assertEqual(error['kind'], 'waveform_accuracy')

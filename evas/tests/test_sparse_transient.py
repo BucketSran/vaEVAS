@@ -150,14 +150,16 @@ class SparseTransientContracts(unittest.TestCase):
             self.assertEqual(result['transient']['events'], [])
             self.assertEqual(result['transient']['states'], [[0],[0]])
             self.assertEqual(result['solutions'][-1]['voltages'][result['nodes'].index('y39')],0)
-            # A history relay remains outside the relocalization contract even
-            # when its input cancels or underflows numerically.
+            # A zero-initialized transition relay has no forcing change or
+            # crossing. Exact history proof must preserve every sparse node.
             driver = driver.replace(f'V(y,r)<+{expression};',
                                     f'V(y,r)<+transition({expression},0,0.1,0.1);')
             program = compile_sources({'cell.va': cell, 'driver.va': driver}, cells)
-            with self.assertRaises(KernelError) as caught:
-                transient(program, {}, [0,1], stop=1, max_step=1, kernel=KERNEL)
-            self.assertEqual(caught.exception.detail['kind'], 'unsupported_cross')
+            result=transient(program, {}, [0,1], stop=1, max_step=1, kernel=KERNEL)
+            self.assertEqual(result['transient']['events'],[])
+            self.assertEqual(result['transient']['states'],[[0],[0]])
+            for row in result['solutions']:
+                self.assertTrue(all(v==0 for v in row['voltages']))
 
 
 if __name__ == '__main__':
