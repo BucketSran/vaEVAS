@@ -63,6 +63,68 @@ HISTORICAL_REPORTS = {
 PROGRESS_START = '<!-- ci:progress:start -->'
 PROGRESS_END = '<!-- ci:progress:end -->'
 
+# Only inspected numerical boundaries may omit installation. Path-only plans
+# remain conservative; the exemption also requires both actual Git blobs.
+ALGORITHM_PATHS = tuple('evas/rust_core/src/' + name for name in (
+    'linear.rs', 'linear/', 'nonlinear.rs', 'nonlinear/', 'interval.rs',
+    'affine_bounds.rs', 'exact_time.rs', 'state_space.rs', 'input_clamp.rs',
+    'math_functions.rs', 'direct_derivative.rs', 'operators.rs', 'transition.rs',
+    'transition_filter.rs', 'transition_integral.rs', 'transition_filter_input.rs',
+    'transient.rs', 'transient_event_acceptance.rs', 'transient_history_calendar.rs',
+    'transient_root_refinement.rs', 'transient_initialization.rs',
+    'event_conditions.rs', 'event_control.rs', 'event_accuracy.rs',
+    'event_numeric.rs', 'event_time_provenance.rs', 'schedule.rs',
+))
+INSTALL_SIGNALS = re.compile(
+    r'\b(?:unsafe|extern|macro_rules|include|include_str|include_bytes|env|option_env|'
+    r'cfg|cfg_attr|feature|'
+    r'fs|os|io|process|thread|net|ffi|arch|asm|global_asm|Command|File|OpenOptions|'
+    r'Path|PathBuf|read_to_string|read_to_end|write_all|read_exact|'
+    r'Serialize|Deserialize|SCHEMA_VERSION|CARGO_PKG_VERSION)\b'
+    r'|\btarget_\w+\b|\br#'
+)
+NUMERIC_MACROS = {'assert', 'assert_eq', 'assert_ne', 'debug_assert', 'debug_assert_eq',
+                  'debug_assert_ne', 'vec', 'format', 'panic', 'matches', 'unreachable',
+                  'todo', 'unimplemented', 'json'}
+NUMERIC_DERIVES = {'Debug', 'Clone', 'Copy', 'PartialEq', 'Eq', 'Hash', 'Default', 'Ord', 'PartialOrd'}
+
+
+def numeric_attributes_only(source):
+    if re.search(r'#\s*!?\s*/[/*]', source):
+        return False
+    for attribute in re.findall(r'#\s*!?\s*\[([^\]]*)\]', source):
+        attribute = attribute.strip()
+        derive = re.fullmatch(r'derive\s*\(([^()]*)\)', attribute)
+        if derive and {name.strip() for name in derive[1].split(',') if name.strip()} <= NUMERIC_DERIVES:
+            continue
+        if re.fullmatch(r'(?:inline(?:\s*\(\s*(?:always|never)\s*\))?|cold|must_use|track_caller|test|ignore)', attribute):
+            continue
+        if re.fullmatch(r'allow\s*\(\s*[\w:]+(?:\s*,\s*[\w:]+)*\s*,?\s*\)', attribute):
+            continue
+        return False
+    return True
+
+
+def source_algorithm_only(path, before, after):
+    if not any(path.startswith(p) if p.endswith('/') else path == p for p in ALGORITHM_PATHS):
+        return False
+    for source in (before, after):
+        # Only this exact test-only attribute is exempt. Any other cfg/path
+        # token, including attributes separated by Rust comments, stays unsafe.
+        source = re.sub(r'#\s*\[\s*cfg\s*\(\s*test\s*\)\s*\]', '', source)
+        if INSTALL_SIGNALS.search(source) or not numeric_attributes_only(source):
+            return False
+        # Rust comments can separate macro tokens. Such spelling is outside
+        # this small audit; retain installation instead of parsing Rust here.
+        if re.search(r'\*/\s*(?:!|::)|::\s*/[/*]|//[^\n]*\n\s*(?:!|::)', source):
+            return False
+        macros = {re.sub(r'\s+', '', name) for name in
+                  re.findall(r'\b((?:\w+\s*::\s*)*\w+)\s*!(?!=)', source)}
+        allowed = NUMERIC_MACROS | {'std::' + name for name in NUMERIC_MACROS} | {'serde_json::json'}
+        if macros - allowed:
+            return False
+    return True
+
 
 def flags(*enabled):
     return {key: key in enabled for key in CHECKS}
@@ -186,12 +248,14 @@ def without_progress(source):
 
 
 def classify_changes(repo, base, head, paths):
-    """Use full blobs for the two narrow exemptions; paths alone fail closed."""
+    """Use complete blobs for audited exemptions; paths alone fail closed."""
     selected, reasons = set(), []
     for path in paths:
         checks = classify([path])
         reason = 'path contract'
-        if path in ('scripts/ci_selection.py', 'evas/docs/COMPARISON.md'):
+        numeric_candidate = any(path.startswith(p) if p.endswith('/') else path == p
+                                for p in ALGORITHM_PATHS)
+        if path in ('scripts/ci_selection.py', 'evas/docs/COMPARISON.md') or numeric_candidate:
             try:
                 blobs = []
                 for revision in (base, head):
@@ -205,6 +269,9 @@ def classify_changes(repo, base, head, paths):
                     protected = [without_progress(blob) for blob in blobs]
                     if protected[0] is not None and protected[0] == protected[1]:
                         checks, reason = flags(), 'explicit progress prose only; protected text unchanged'
+                elif source_algorithm_only(path, *blobs):
+                    checks['package'] = False
+                    reason = 'audited numerical source delta; installation contract unchanged'
             except (ValueError, SyntaxError, TypeError, UnicodeError, subprocess.CalledProcessError):
                 reason = 'full path contract: content identity unavailable or unsafe'
         selected.update(key for key in CHECKS if checks[key])

@@ -19,6 +19,14 @@ _DOC_SUFFIXES = (".md", ".rst")
 # full Python coverage until their owning tests and consumers have been checked.
 _RULES = (
     (
+        ("evas/src/evas/scs.py", "evas/src/evas/scs_sources.py"),
+        ("scs", "scs_pulse_delay", "scs_save", "scs_bsource", "scs_driven_nodes",
+         "scs_vectors", "source_uncertainty", "ansi_ports", "case_statements",
+         "held_transition_targets", "r01_language", "strobe"),
+        ("*",),
+        "SCS loading/source generation and all direct public consumers; full delivery retained",
+    ),
+    (
         tuple("evas/rust_core/src/" + name for name in (
             "operators.rs", "transition.rs", "transition_source_plan.rs",
             "transition_source_state.rs", "transition_filter.rs", "transition_integral.rs",

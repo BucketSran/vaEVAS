@@ -75,6 +75,10 @@ Before drafting, reuse the canonical review and run the
 Follow [one delivery candidate](../../../CONTRIBUTING.md#prepare-one-delivery-candidate):
 publication does not require another full code review or repeated matching tests.
 Record publication and CI waiting time in the existing task timing record.
+Prepare the PR and evidence while fixed-candidate CI/review runs under the
+[waiting boundaries](../../../CONTRIBUTING.md#keep-iteration-feedback-short).
+Continue independent authorized work; close required pending results before claiming
+acceptance or merging. A matching merge tree does not require idle waiting for duplicate main CI.
 
 ## Draft the PR description
 

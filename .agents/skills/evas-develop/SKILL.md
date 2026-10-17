@@ -109,6 +109,9 @@ the distinct fault each added regression detects. Include a relevant rejection o
 compatibility case. Select
 checks from [the validation mapping](../evas-validate/SKILL.md#select-the-necessary-checks); static replay cannot establish transient
 or event correctness. Preserve the original validation cases and thresholds.
+Use the [waiting boundaries](../../../CONTRIBUTING.md#keep-iteration-feedback-short):
+obtain the local failure/consumer feedback needed for the next edit, then run stable-candidate
+acceptance in the background while independent authorized work continues.
 When a shared mechanism changes, use the [composition triggers](../evas-validate/SKILL.md#composition-triggers)
 to select affected feedback, event/reset, sampling and retry regressions. An
 operator-only pass cannot establish those combinations.
