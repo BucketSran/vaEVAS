@@ -1,6 +1,6 @@
 {
   "status": "unmerged draftPR208; scoped development evidence, no benchmark/alignment/Q qualification",
-  "base_head": "0c100a879e3a87ca37eafb5d214a1c49901b4b5f",
+  "base_head": "51824db335792b4bfac090d3a50d1a3863fa685e",
   "source_files": {
     "evas/pyproject.toml": "31f84287c6257f2f424e850df9451aac643aea94636eb4de4829785ea9b1de9e",
     "evas/rust_core/Cargo.lock": "a60ef97b215300e2665d2e9864d6bbbdb7b2bce468873f8c3cdba0fec858f5c5",
@@ -89,7 +89,7 @@
     "evas/rust_core/src/state_space.rs": "bc791c33b49c78259c0efa4b89203758830b6f90b461058d6a526ada5e1b2a94",
     "evas/rust_core/src/step_bounds.rs": "7b34202c102b72aef2e19f2af1c28236cd6b3d4ba739cdbdf79e09b526331731",
     "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
-    "evas/rust_core/src/transient.rs": "bccdce107f0504aebe76385fbd7cc8a5fbb7b1fbc2c5e74ad89708466a4f532a",
+    "evas/rust_core/src/transient.rs": "11ad74ec047fc90b8d8c9f32aab9a61515c05819c40b1c33ef90f6e0af772e50",
     "evas/rust_core/src/transient_condition_tests.rs": "0a8dfc626381785993cdf3476e808a12ee6688cbeae81495451f312f0266d10c",
     "evas/rust_core/src/transient_event_acceptance.rs": "1857edfebd39d1e6ccab9619220535398fc687b79c19985e399820d45020f33a",
     "evas/rust_core/src/transient_event_control_tests.rs": "49f5f3c4c829bbd1a063446921898b7ad936f88ab20ef3e0b023613d6590e47a",
@@ -146,13 +146,14 @@
     "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
     "evas/src/evas/syntax.py": "4047cd499814946e1ff07e77e00d37bb18cb3ed479905cd55d72d70102c324bb"
   },
-  "kernel_sha256": "f8222686139ac61b5d6e9073af8d8618e59b300a83ca95bd424277748807f6c6",
-  "source_archive_sha256": "e2c75297d633f95fdf82a6d0d61e9c54d1a80a894652cb1ee4488556ad7b876f",
-  "source_diff_sha256": "8eda55419cfdf27b0655f4e0b190de58273918b1a7c435943e1c92b947b953de",
+  "kernel_sha256": "a1bf051f2b288300e4a3c674935d4e2ce8eef8c29c2ee4a3abb201fa912bd753",
+  "source_archive_sha256": "d28a4a43d4762c4ca329e5f4d6fe9469343f26b73dd91289408cbb4f636d55da",
+  "source_diff_sha256": "593c43e3129a6c56062a7a05e46f3be2472d00cf31f30c813657bc144c7cc111",
   "build": {
     "command": "cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml",
     "compiler": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2\n",
-    "availability": "local-only"
+    "availability": "local-only",
+    "debug_compatibility_kernel_sha256": "5527e7447e64963e57aae587a1a8ee5492b40922a31ce442e054b79a287d6941"
   },
   "capability_ids": [
     "EVENT-ORDER",
@@ -205,71 +206,21 @@
         "314"
       ],
       "changed_completed_responses": [
-        "001",
-        "002",
-        "004",
-        "006",
-        "008",
-        "010",
-        "040",
-        "043",
-        "044",
-        "047",
-        "051",
-        "055",
         "071",
         "084",
         "089",
-        "090",
         "091",
         "104",
-        "106",
-        "178",
-        "184",
-        "191",
-        "198",
-        "199",
-        "200",
-        "204",
-        "205",
-        "206",
-        "207",
-        "208",
-        "209",
-        "210",
-        "213",
-        "214",
-        "261",
-        "262",
-        "263",
-        "264",
-        "267",
-        "271",
-        "275",
-        "276",
-        "284",
-        "293",
-        "294",
         "306",
         "309",
-        "320",
-        "321",
         "322",
         "327",
         "341",
-        "342",
-        "345",
         "347",
-        "352",
-        "353",
-        "367",
-        "375",
         "376",
         "379",
-        "382",
         "394",
         "395",
-        "397",
         "399"
       ]
     },
@@ -307,6 +258,91 @@
         "baseline_status": "rejected"
       }
     ],
+    "independent_settled_controls": {
+      "derivation": "Independent settled controls on actual original save rows; never move time.",
+      "samples": [
+        {
+          "family": "101",
+          "time_s": 5.05e-08,
+          "node": "vout",
+          "expected": 0.5649138854154357,
+          "actual": 0.5649138854154352,
+          "budget_v": 5.749138854154358e-11
+        },
+        {
+          "family": "314",
+          "time_s": 1.496e-08,
+          "node": "inside_flag",
+          "expected": 0.9,
+          "actual": 0.9,
+          "budget_v": 9.1e-11
+        },
+        {
+          "family": "314",
+          "time_s": 1.5039999999999998e-08,
+          "node": "inside_flag",
+          "expected": 0.9,
+          "actual": 0.9,
+          "budget_v": 9.1e-11
+        },
+        {
+          "family": "314",
+          "time_s": 4.8479999999999995e-08,
+          "node": "inside_flag",
+          "expected": 0,
+          "actual": -0.0,
+          "budget_v": 1e-12
+        },
+        {
+          "family": "314",
+          "time_s": 4.856e-08,
+          "node": "inside_flag",
+          "expected": 0,
+          "actual": -0.0,
+          "budget_v": 1e-12
+        },
+        {
+          "family": "314",
+          "time_s": 5.744e-08,
+          "node": "inside_flag",
+          "expected": 0.9,
+          "actual": 0.9,
+          "budget_v": 9.1e-11
+        },
+        {
+          "family": "314",
+          "time_s": 5.7519999999999995e-08,
+          "node": "inside_flag",
+          "expected": 0.9,
+          "actual": 0.9,
+          "budget_v": 9.1e-11
+        },
+        {
+          "family": "314",
+          "time_s": 5.76e-08,
+          "node": "inside_flag",
+          "expected": 0.9,
+          "actual": 0.9,
+          "budget_v": 9.1e-11
+        },
+        {
+          "family": "314",
+          "time_s": 7.696e-08,
+          "node": "inside_flag",
+          "expected": 0,
+          "actual": -0.0,
+          "budget_v": 1e-12
+        },
+        {
+          "family": "314",
+          "time_s": 7.704e-08,
+          "node": "inside_flag",
+          "expected": 0,
+          "actual": -0.0,
+          "budget_v": 1e-12
+        }
+      ]
+    },
     "cases": [
       {
         "family": "001",
@@ -314,7 +350,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -323,7 +359,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -341,7 +377,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -350,7 +386,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -359,7 +395,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -368,7 +404,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -449,7 +485,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -458,7 +494,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -467,7 +503,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -485,7 +521,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -512,7 +548,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -521,7 +557,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -656,7 +692,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -755,7 +791,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -782,7 +818,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -791,7 +827,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -800,7 +836,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -809,7 +845,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -818,7 +854,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -827,7 +863,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -836,7 +872,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -845,7 +881,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -854,7 +890,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -863,7 +899,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -872,7 +908,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -881,7 +917,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -890,7 +926,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -899,7 +935,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -908,7 +944,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -917,7 +953,7 @@
         "checker": "failed",
         "baseline_status": "completed",
         "baseline_checker": "failed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -926,7 +962,7 @@
         "checker": "failed",
         "baseline_status": "completed",
         "baseline_checker": "failed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -935,7 +971,7 @@
         "checker": "failed",
         "baseline_status": "completed",
         "baseline_checker": "failed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -944,7 +980,7 @@
         "checker": "failed",
         "baseline_status": "completed",
         "baseline_checker": "failed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -971,7 +1007,7 @@
         "checker": "failed",
         "baseline_status": "completed",
         "baseline_checker": "failed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -998,7 +1034,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1016,7 +1052,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1025,7 +1061,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1070,7 +1106,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1079,7 +1115,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1088,7 +1124,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1196,7 +1232,7 @@
         "checker": "failed",
         "baseline_status": "completed",
         "baseline_checker": "failed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1205,7 +1241,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1250,7 +1286,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1259,7 +1295,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1295,7 +1331,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1304,7 +1340,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1358,7 +1394,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1367,7 +1403,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1394,7 +1430,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1421,7 +1457,7 @@
         "checker": "passed",
         "baseline_status": "completed",
         "baseline_checker": "passed",
-        "complete_response_unchanged": false,
+        "complete_response_unchanged": true,
         "cleanup_confirmed": true
       },
       {
@@ -1436,163 +1472,12 @@
     ],
     "response_changes": [
       {
-        "family": "001",
-        "changed_fields": 8,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].fired_triggers[0].guard_value",
-          ".transient.events[1].fired_triggers[0].guard_value",
-          ".transient.events[4].fired_triggers[0].guard_value",
-          ".transient.events[5].fired_triggers[0].guard_value",
-          ".transient.events[6].fired_triggers[0].guard_value"
-        ]
-      },
-      {
-        "family": "002",
-        "changed_fields": 10,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "004",
-        "changed_fields": 27,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "006",
-        "changed_fields": 12,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "008",
-        "changed_fields": 33,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "010",
-        "changed_fields": 7,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "040",
-        "changed_fields": 31,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "043",
-        "changed_fields": 30,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "044",
-        "changed_fields": 10,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "047",
-        "changed_fields": 2,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value"
-        ]
-      },
-      {
-        "family": "051",
-        "changed_fields": 5,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "055",
-        "changed_fields": 48,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
         "family": "071",
-        "changed_fields": 1126,
+        "changed_fields": 1119,
         "guard_value_only": false,
         "max_nominal_voltage_delta_V": 4.440892098500626e-16,
+        "accepted_steps_before": 384,
+        "accepted_steps_after": 384,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[39][5][1]",
           ".observation_evidence.voltage_bounds_V[40][5][1]",
@@ -1603,22 +1488,26 @@
       },
       {
         "family": "084",
-        "changed_fields": 14798,
+        "changed_fields": 13480,
         "guard_value_only": false,
-        "max_nominal_voltage_delta_V": 9.61564161627848e-13,
+        "max_nominal_voltage_delta_V": 0.0,
+        "accepted_steps_before": 3508,
+        "accepted_steps_after": 3508,
         "paths_preview": [
-          ".observation_evidence.voltage_bounds_V[82][3][0]",
-          ".observation_evidence.voltage_bounds_V[82][6][0]",
-          ".observation_evidence.voltage_bounds_V[103][2][0]",
-          ".observation_evidence.voltage_bounds_V[287][3][1]",
-          ".observation_evidence.voltage_bounds_V[287][6][0]"
+          ".transient.states[286][4]",
+          ".transient.states[287][4]",
+          ".transient.states[288][4]",
+          ".transient.states[289][4]",
+          ".transient.states[290][4]"
         ]
       },
       {
         "family": "089",
-        "changed_fields": 20036,
+        "changed_fields": 20029,
         "guard_value_only": false,
         "max_nominal_voltage_delta_V": 3.6415315207705135e-14,
+        "accepted_steps_before": 6119,
+        "accepted_steps_after": 6119,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[2044][6][0]",
           ".observation_evidence.voltage_bounds_V[2044][6][1]",
@@ -1628,19 +1517,12 @@
         ]
       },
       {
-        "family": "090",
-        "changed_fields": 1,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[1].guard_value"
-        ]
-      },
-      {
         "family": "091",
-        "changed_fields": 13139,
+        "changed_fields": 13014,
         "guard_value_only": false,
         "max_nominal_voltage_delta_V": 7.327471962526033e-15,
+        "accepted_steps_before": 4308,
+        "accepted_steps_after": 4308,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[1255][1][0]",
           ".observation_evidence.voltage_bounds_V[1255][2][0]",
@@ -1651,368 +1533,26 @@
       },
       {
         "family": "104",
-        "changed_fields": 2026,
+        "changed_fields": 2018,
         "guard_value_only": false,
-        "max_nominal_voltage_delta_V": 3.9968028886505635e-15,
+        "max_nominal_voltage_delta_V": 1.1102230246251565e-16,
+        "accepted_steps_before": 647,
+        "accepted_steps_after": 647,
         "paths_preview": [
-          ".observation_evidence.voltage_bounds_V[101][1][0]",
           ".observation_evidence.voltage_bounds_V[102][3][1]",
           ".observation_evidence.voltage_bounds_V[103][3][1]",
           ".observation_evidence.voltage_bounds_V[104][3][1]",
-          ".observation_evidence.voltage_bounds_V[105][3][1]"
-        ]
-      },
-      {
-        "family": "106",
-        "changed_fields": 7,
-        "guard_value_only": false,
-        "max_nominal_voltage_delta_V": 3.9968028886505635e-15,
-        "paths_preview": [
-          ".observation_evidence.voltage_bounds_V[101][1][0]",
-          ".solutions[101].voltages[1]",
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value"
-        ]
-      },
-      {
-        "family": "178",
-        "changed_fields": 16,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "184",
-        "changed_fields": 17,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "191",
-        "changed_fields": 21,
-        "guard_value_only": false,
-        "max_nominal_voltage_delta_V": 8.659739592076221e-15,
-        "paths_preview": [
-          ".observation_evidence.voltage_bounds_V[228][2][1]",
-          ".observation_evidence.voltage_bounds_V[419][2][1]",
-          ".solutions[228].voltages[2]",
-          ".solutions[419].voltages[2]",
-          ".transient.events[0].guard_value"
-        ]
-      },
-      {
-        "family": "198",
-        "changed_fields": 4,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value"
-        ]
-      },
-      {
-        "family": "199",
-        "changed_fields": 4,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value"
-        ]
-      },
-      {
-        "family": "200",
-        "changed_fields": 3,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value"
-        ]
-      },
-      {
-        "family": "204",
-        "changed_fields": 4,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value"
-        ]
-      },
-      {
-        "family": "205",
-        "changed_fields": 6,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "206",
-        "changed_fields": 9,
-        "guard_value_only": false,
-        "max_nominal_voltage_delta_V": 7.771561172376096e-16,
-        "paths_preview": [
-          ".observation_evidence.voltage_bounds_V[72][1][0]",
-          ".solutions[72].voltages[1]",
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value"
-        ]
-      },
-      {
-        "family": "207",
-        "changed_fields": 7,
-        "guard_value_only": false,
-        "max_nominal_voltage_delta_V": 7.771561172376096e-16,
-        "paths_preview": [
-          ".observation_evidence.voltage_bounds_V[72][1][0]",
-          ".solutions[72].voltages[1]",
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value"
-        ]
-      },
-      {
-        "family": "208",
-        "changed_fields": 9,
-        "guard_value_only": false,
-        "max_nominal_voltage_delta_V": 7.771561172376096e-16,
-        "paths_preview": [
-          ".observation_evidence.voltage_bounds_V[72][1][0]",
-          ".solutions[72].voltages[1]",
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value"
-        ]
-      },
-      {
-        "family": "209",
-        "changed_fields": 5,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "210",
-        "changed_fields": 5,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "213",
-        "changed_fields": 7,
-        "guard_value_only": false,
-        "max_nominal_voltage_delta_V": 1.5543122344752192e-15,
-        "paths_preview": [
-          ".observation_evidence.voltage_bounds_V[72][6][0]",
-          ".solutions[72].voltages[6]",
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value"
-        ]
-      },
-      {
-        "family": "214",
-        "changed_fields": 9,
-        "guard_value_only": false,
-        "max_nominal_voltage_delta_V": 1.5543122344752192e-15,
-        "paths_preview": [
-          ".observation_evidence.voltage_bounds_V[72][1][0]",
-          ".solutions[72].voltages[1]",
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value"
-        ]
-      },
-      {
-        "family": "261",
-        "changed_fields": 14,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].fired_triggers[0].guard_value",
-          ".transient.events[1].fired_triggers[0].guard_value",
-          ".transient.events[2].fired_triggers[0].guard_value",
-          ".transient.events[3].fired_triggers[0].guard_value",
-          ".transient.events[4].fired_triggers[0].guard_value"
-        ]
-      },
-      {
-        "family": "262",
-        "changed_fields": 14,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].fired_triggers[0].guard_value",
-          ".transient.events[1].fired_triggers[0].guard_value",
-          ".transient.events[2].fired_triggers[0].guard_value",
-          ".transient.events[3].fired_triggers[0].guard_value",
-          ".transient.events[4].fired_triggers[0].guard_value"
-        ]
-      },
-      {
-        "family": "263",
-        "changed_fields": 14,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].fired_triggers[0].guard_value",
-          ".transient.events[1].fired_triggers[0].guard_value",
-          ".transient.events[2].fired_triggers[0].guard_value",
-          ".transient.events[3].fired_triggers[0].guard_value",
-          ".transient.events[4].fired_triggers[0].guard_value"
-        ]
-      },
-      {
-        "family": "264",
-        "changed_fields": 14,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].fired_triggers[0].guard_value",
-          ".transient.events[1].fired_triggers[0].guard_value",
-          ".transient.events[2].fired_triggers[0].guard_value",
-          ".transient.events[3].fired_triggers[0].guard_value",
-          ".transient.events[4].fired_triggers[0].guard_value"
-        ]
-      },
-      {
-        "family": "267",
-        "changed_fields": 14,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].fired_triggers[0].guard_value",
-          ".transient.events[1].fired_triggers[0].guard_value",
-          ".transient.events[2].fired_triggers[0].guard_value",
-          ".transient.events[3].fired_triggers[0].guard_value",
-          ".transient.events[4].fired_triggers[0].guard_value"
-        ]
-      },
-      {
-        "family": "271",
-        "changed_fields": 15,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "275",
-        "changed_fields": 16,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].fired_triggers[0].guard_value",
-          ".transient.events[1].fired_triggers[0].guard_value",
-          ".transient.events[2].fired_triggers[0].guard_value",
-          ".transient.events[3].fired_triggers[0].guard_value",
-          ".transient.events[4].fired_triggers[0].guard_value"
-        ]
-      },
-      {
-        "family": "276",
-        "changed_fields": 16,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].fired_triggers[0].guard_value",
-          ".transient.events[1].fired_triggers[0].guard_value",
-          ".transient.events[2].fired_triggers[0].guard_value",
-          ".transient.events[3].fired_triggers[0].guard_value",
-          ".transient.events[4].fired_triggers[0].guard_value"
-        ]
-      },
-      {
-        "family": "284",
-        "changed_fields": 13,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "293",
-        "changed_fields": 18,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "294",
-        "changed_fields": 16,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
+          ".observation_evidence.voltage_bounds_V[105][3][1]",
+          ".observation_evidence.voltage_bounds_V[106][3][1]"
         ]
       },
       {
         "family": "306",
-        "changed_fields": 704,
+        "changed_fields": 689,
         "guard_value_only": false,
         "max_nominal_voltage_delta_V": 1.4876988529977098e-14,
+        "accepted_steps_before": 1218,
+        "accepted_steps_after": 1218,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[670][5][0]",
           ".observation_evidence.voltage_bounds_V[670][5][1]",
@@ -2023,9 +1563,11 @@
       },
       {
         "family": "309",
-        "changed_fields": 2167,
+        "changed_fields": 2137,
         "guard_value_only": false,
         "max_nominal_voltage_delta_V": 1.4876988529977098e-14,
+        "accepted_steps_before": 1218,
+        "accepted_steps_after": 1218,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[443][5][0]",
           ".observation_evidence.voltage_bounds_V[444][5][0]",
@@ -2035,49 +1577,27 @@
         ]
       },
       {
-        "family": "320",
-        "changed_fields": 30,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].fired_triggers[0].guard_value",
-          ".transient.events[2].fired_triggers[0].guard_value",
-          ".transient.events[3].fired_triggers[0].guard_value",
-          ".transient.events[4].fired_triggers[0].guard_value",
-          ".transient.events[5].fired_triggers[0].guard_value"
-        ]
-      },
-      {
-        "family": "321",
-        "changed_fields": 15,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].fired_triggers[0].guard_value",
-          ".transient.events[1].fired_triggers[0].guard_value",
-          ".transient.events[2].fired_triggers[0].guard_value",
-          ".transient.events[3].fired_triggers[0].guard_value",
-          ".transient.events[4].fired_triggers[0].guard_value"
-        ]
-      },
-      {
         "family": "322",
-        "changed_fields": 57,
+        "changed_fields": 33,
         "guard_value_only": false,
-        "max_nominal_voltage_delta_V": 7.44462551297725e-14,
+        "max_nominal_voltage_delta_V": 5.1514348342607263e-14,
+        "accepted_steps_before": 768,
+        "accepted_steps_after": 753,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[46][8][0]",
-          ".observation_evidence.voltage_bounds_V[101][2][0]",
-          ".observation_evidence.voltage_bounds_V[137][1][0]",
           ".observation_evidence.voltage_bounds_V[188][7][1]",
-          ".observation_evidence.voltage_bounds_V[197][8][0]"
+          ".observation_evidence.voltage_bounds_V[197][8][0]",
+          ".observation_evidence.voltage_bounds_V[308][7][0]",
+          ".observation_evidence.voltage_bounds_V[308][8][1]"
         ]
       },
       {
         "family": "327",
-        "changed_fields": 1399,
+        "changed_fields": 1367,
         "guard_value_only": false,
         "max_nominal_voltage_delta_V": 7.105427357601002e-15,
+        "accepted_steps_before": 880,
+        "accepted_steps_after": 880,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[124][2][1]",
           ".observation_evidence.voltage_bounds_V[125][2][1]",
@@ -2088,9 +1608,11 @@
       },
       {
         "family": "341",
-        "changed_fields": 570,
+        "changed_fields": 545,
         "guard_value_only": false,
         "max_nominal_voltage_delta_V": 6.661338147750939e-16,
+        "accepted_steps_before": 1596,
+        "accepted_steps_after": 1596,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[439][4][0]",
           ".observation_evidence.voltage_bounds_V[442][4][1]",
@@ -2100,36 +1622,12 @@
         ]
       },
       {
-        "family": "342",
-        "changed_fields": 43,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value",
-          ".transient.events[5].guard_value"
-        ]
-      },
-      {
-        "family": "345",
-        "changed_fields": 35,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
         "family": "347",
-        "changed_fields": 98,
+        "changed_fields": 9,
         "guard_value_only": false,
         "max_nominal_voltage_delta_V": 4.163336342344337e-14,
+        "accepted_steps_before": 2342,
+        "accepted_steps_after": 2341,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[927][5][0]",
           ".observation_evidence.voltage_bounds_V[927][5][1]",
@@ -2139,62 +1637,12 @@
         ]
       },
       {
-        "family": "352",
-        "changed_fields": 15,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "353",
-        "changed_fields": 18,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "367",
-        "changed_fields": 66,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
-        "family": "375",
-        "changed_fields": 19,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[8].guard_value",
-          ".transient.events[29].guard_value",
-          ".transient.events[50].guard_value",
-          ".transient.events[71].guard_value",
-          ".transient.events[92].guard_value"
-        ]
-      },
-      {
         "family": "376",
-        "changed_fields": 446,
+        "changed_fields": 424,
         "guard_value_only": false,
         "max_nominal_voltage_delta_V": 5.551115123125783e-16,
+        "accepted_steps_before": 1341,
+        "accepted_steps_after": 1341,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[435][3][1]",
           ".observation_evidence.voltage_bounds_V[436][3][1]",
@@ -2205,9 +1653,11 @@
       },
       {
         "family": "379",
-        "changed_fields": 5248,
+        "changed_fields": 5236,
         "guard_value_only": false,
         "max_nominal_voltage_delta_V": 3.608224830031759e-16,
+        "accepted_steps_before": 869,
+        "accepted_steps_after": 869,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[146][6][1]",
           ".observation_evidence.voltage_bounds_V[147][6][1]",
@@ -2217,23 +1667,12 @@
         ]
       },
       {
-        "family": "382",
-        "changed_fields": 36,
-        "guard_value_only": false,
-        "max_nominal_voltage_delta_V": 5.956346527113965e-14,
-        "paths_preview": [
-          ".observation_evidence.voltage_bounds_V[1001][3][1]",
-          ".solutions[1001].voltages[3]",
-          ".transient.events[0].fired_triggers[0].guard_value",
-          ".transient.events[1].fired_triggers[0].guard_value",
-          ".transient.events[2].fired_triggers[0].guard_value"
-        ]
-      },
-      {
         "family": "394",
-        "changed_fields": 21,
+        "changed_fields": 8,
         "guard_value_only": false,
         "max_nominal_voltage_delta_V": 2.9753977059954195e-14,
+        "accepted_steps_before": 1712,
+        "accepted_steps_after": 1712,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[1153][2][0]",
           ".observation_evidence.voltage_bounds_V[1153][2][1]",
@@ -2244,9 +1683,11 @@
       },
       {
         "family": "395",
-        "changed_fields": 33,
+        "changed_fields": 14,
         "guard_value_only": false,
         "max_nominal_voltage_delta_V": 2.9781732635569824e-14,
+        "accepted_steps_before": 1853,
+        "accepted_steps_after": 1853,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[44][3][0]",
           ".observation_evidence.voltage_bounds_V[44][3][1]",
@@ -2256,23 +1697,12 @@
         ]
       },
       {
-        "family": "397",
-        "changed_fields": 17,
-        "guard_value_only": true,
-        "max_nominal_voltage_delta_V": 0.0,
-        "paths_preview": [
-          ".transient.events[0].guard_value",
-          ".transient.events[1].guard_value",
-          ".transient.events[2].guard_value",
-          ".transient.events[3].guard_value",
-          ".transient.events[4].guard_value"
-        ]
-      },
-      {
         "family": "399",
-        "changed_fields": 39,
+        "changed_fields": 16,
         "guard_value_only": false,
         "max_nominal_voltage_delta_V": 5.956346527113965e-14,
+        "accepted_steps_before": 2034,
+        "accepted_steps_after": 2034,
         "paths_preview": [
           ".observation_evidence.voltage_bounds_V[1618][1][0]",
           ".observation_evidence.voltage_bounds_V[1618][1][1]",
@@ -2282,97 +1712,12 @@
         ]
       }
     ],
-    "all_changed_responses_guard_value_only": false,
-    "independent_settled_controls": {
-      "derivation": "Independent settled controls on actual original save rows; never move time.",
-      "samples": [
-        {
-          "family": "101",
-          "time_s": 5.05e-08,
-          "node": "vout",
-          "expected": 0.5649138854154357,
-          "actual": 0.5649138854154352,
-          "budget_v": 5.749138854154358e-11
-        },
-        {
-          "family": "314",
-          "time_s": 1.496e-08,
-          "node": "inside_flag",
-          "expected": 0.9,
-          "actual": 0.9,
-          "budget_v": 9.1e-11
-        },
-        {
-          "family": "314",
-          "time_s": 1.5039999999999998e-08,
-          "node": "inside_flag",
-          "expected": 0.9,
-          "actual": 0.9,
-          "budget_v": 9.1e-11
-        },
-        {
-          "family": "314",
-          "time_s": 4.8479999999999995e-08,
-          "node": "inside_flag",
-          "expected": 0,
-          "actual": -0.0,
-          "budget_v": 1e-12
-        },
-        {
-          "family": "314",
-          "time_s": 4.856e-08,
-          "node": "inside_flag",
-          "expected": 0,
-          "actual": -0.0,
-          "budget_v": 1e-12
-        },
-        {
-          "family": "314",
-          "time_s": 5.744e-08,
-          "node": "inside_flag",
-          "expected": 0.9,
-          "actual": 0.9,
-          "budget_v": 9.1e-11
-        },
-        {
-          "family": "314",
-          "time_s": 5.7519999999999995e-08,
-          "node": "inside_flag",
-          "expected": 0.9,
-          "actual": 0.9,
-          "budget_v": 9.1e-11
-        },
-        {
-          "family": "314",
-          "time_s": 5.76e-08,
-          "node": "inside_flag",
-          "expected": 0.9,
-          "actual": 0.9,
-          "budget_v": 9.1e-11
-        },
-        {
-          "family": "314",
-          "time_s": 7.696e-08,
-          "node": "inside_flag",
-          "expected": 0,
-          "actual": -0.0,
-          "budget_v": 1e-12
-        },
-        {
-          "family": "314",
-          "time_s": 7.704e-08,
-          "node": "inside_flag",
-          "expected": 0,
-          "actual": -0.0,
-          "budget_v": 1e-12
-        }
-      ]
-    }
+    "all_changed_responses_guard_value_only": false
   },
   "independent_tests": {
     "source": "evas/tests/test_source_root_windows.py",
     "source_sha256": "27f016410e01069b8a58b2db5cb0331d96e9baad1059d0d90ea1f70ba5029005",
-    "debug_kernel_sha256": "12e500c574b98df9d6bfca59f8b07908dc1333ebb303002419432aec9c8c2ab1",
+    "public_kernel_sha256": "a1bf051f2b288300e4a3c674935d4e2ce8eef8c29c2ee4a3abb201fa912bd753",
     "public_methods": [
       {
         "method": "test_101_timer_before_time_cut_preserves_both_transition_histories",
@@ -2425,6 +1770,7 @@
         "cleanup_confirmed": true
       }
     ],
+    "ci_rework": "51824db3 full1890 CI exposed4 output-frame compatibility failures; fix14 retains physical-root settlement/passive reads, rebuilds representative output solution/circuit and certifies separately; original4 tests unchanged",
     "oracles": [
       "Fraction of actual binary64 inputs; complete independent linear transition/ramp and held recurrence answers",
       "q=2 prefix a=(104*Fraction(500ps)-Fraction(52ns))/Fraction(200ps), output1e6*a*clip((t-r)/d)",
@@ -2442,8 +1788,9 @@
     "rollback": "evas/rust_core/src/transient_root_window_tests.rs; original frame/history/calendar/records/output unchanged after two failures; corrected retry equals clean control"
   },
   "checks": {
-    "release_python": "106 focused passed:55 core/history/root-window plus51 additional event/precision/deadline consumers; integration/python-final-release.log/python-final-additional.log",
-    "rust": "408 kernel +2 IR passed,1 prior ignored; rust-final.log/rust-ir.log",
+    "python": "37 focused default-debug regressions passed, including4CI failures and10newpublicmethods;10publicmethods also passed frozen release2 under120/150s guardian; Full1890 acceptance is not asserted by this execution receipt;see exacthead PR CI for separate result;localpartial not counted;local fullpartial cancelled withoutpassclaim",
+    "build_label_correction": "First candidate called106focused tests release, but test_affine.KERNEL is hardcoded debug;that label was inaccurate;final source/debug identity and explicit release public/original results now separated",
+    "rust": "408 kernel +2 IR passed,1 prior ignored; rust-rework14.log/rust-ir.log",
     "fmt": "pass",
     "clippy": "all targets -Dwarnings pass",
     "diagnostics_traceability": "regenerated and checked; frozen validation identity checked"

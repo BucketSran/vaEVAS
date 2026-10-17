@@ -635,21 +635,6 @@ fn prepare_root_window_selected_impl(
             "closed event state or future history changed during replay",
         ));
     }
-    if time_bounds.lo != time_bounds.hi {
-        // Sampling at tau and observing the committed frame at b are distinct
-        // obligations. Do not resample the event using post-event history.
-        let (_, nodes) = model.certify_observation(
-            &model
-                .conditions
-                .select(&[], &trajectory.value_bounds(time))?,
-            &trajectory.value_bounds(time),
-            &prepared.bounds,
-            &operators.bounds(time)?,
-            &prepared.solution.voltages,
-            &prepared.states,
-        )?;
-        crate::observation::retain_bounds(&mut prepared.solution, nodes);
-    }
     // The physical same-time closure is complete. Its event-time operator
     // forcing covers tau; future-history/b-point bounds must not replace it.
     let mut selection = model.conditions.select_with_proofs(
@@ -699,6 +684,27 @@ fn prepare_root_window_selected_impl(
         selection.actions.sort_by_key(|(event, _)| *event);
         selection.ordered_steps.sort_by_key(|(event, _)| *event);
         model.check_selection_writers(&selection)?;
+    }
+    if time_bounds.lo != time_bounds.hi {
+        // The physical event read is complete, including passive observers.
+        // A committed/query frame observes b with its own driven inputs and
+        // advanced operators. Never publish the root's nominal circuit as b.
+        let values = operators.values(time)?;
+        let bounds = operators.bounds(time)?;
+        let mut circuit = model.circuit_at(&prepared.states, &values, &observation_inputs)?;
+        circuit.reuse_affine_factor_from(&prepared.circuit);
+        let mut solution = circuit.solve(&trajectory.values(time))?;
+        let (_, nodes) = model.certify_observation(
+            &model.conditions.select(&[], &observation_inputs)?,
+            &observation_inputs,
+            &prepared.bounds,
+            &bounds,
+            &solution.voltages,
+            &prepared.states,
+        )?;
+        crate::observation::retain_bounds(&mut solution, nodes);
+        prepared.solution = solution;
+        prepared.circuit = circuit;
     }
     let time_proofs = time_provenance::apply(
         model,

@@ -138,7 +138,7 @@ Q 是验收上限：1 V 刻度的 Q1 / Q2 / Q3 为 10.1 µV / 1.01 µV / 101 nV�
 | 101 | 独立实现者持有源目标计划和新区间谓词测试；协调者负责共享接口及原件验收。 | 谓词与根窗证书验收完成，未合并 | 原101完整执行，原checker全部门通过；区间条件、缓存、历史与同控制器回滚均有正反例。 |
 | 314 | 协调者实现共享证书；独立测试者提供Fraction正反例，Spec与Standards分别复核。 | 实现及本地验收完成，未合并 | 原314完整执行并通过原checker；10项公开方法含放大采样与sin组合，同控制器失败重试通过。 |
 
-[本轮根窗证书收据](../../experiments/backends/support/source-shape/root-window-certificate.json)绑定统一143文件源码与release核。固定125原件全部执行，70完成，其中原checker62通过、8失败，55拒绝，125项清理确认。相对前轮新增101、314完整通过，其他123项的完成／拒绝状态和原checker判定保持。既有68份完成响应中2份逐字节相同，42份仅guard记录变化，24份有微小状态或波形变化；最大名义电压差约9.62e-13 V，逐例差异保留。106项release Python、408项内核及2项IR Rust通过，原1项忽略保留。10项公开方法含独立Fraction/Taylor包围和4项拒绝控制。原checker、normalization、精度、输出网格、120秒内核／150秒guardian及请求级证明预算保持。
+[本轮根窗证书收据](../../experiments/backends/support/source-shape/root-window-certificate.json)绑定统一143文件源码与release核。固定125原件全部执行，70完成，其中原checker62通过、8失败，55拒绝，125项清理确认。相对前轮新增101、314完整通过，其他123项的完成／拒绝状态和原checker判定保持。既有68份完成响应中52份逐字节相同，16份有微小状态、事件数值、波形或内部步数变化；最大名义电压差约5.96e-14 V，322／347的accepted_steps分别为768→753、2342→2341，逐例差异保留且不作性能结论。37项针对性Python、408项内核及2项IR Rust通过，完整Python以PR的精确提交CI记录为准，原1项Rust忽略保留。10项公开方法含独立Fraction/Taylor包围和4项拒绝控制。原checker、normalization、精度、输出网格、120秒内核／150秒guardian及请求级证明预算保持。
 
 [前轮GAP20收据](../../experiments/backends/support/source-shape/gap20-state-predicates.json)保留090/092新增通过及101/314当时拒绝。GAP20其余9件中，003/011/045/096仍受初始化限制，023/027/039/076/102仍受语法限制。原400/213未重跑，不换算新全量成绩；本切片实际Spectre对齐、完整回调与共同Q仍缺证。
 
