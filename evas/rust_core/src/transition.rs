@@ -371,6 +371,14 @@ impl Transition {
     }
 
     pub(crate) fn value_bounds(&self, time: f64) -> Result<I, Error> {
+        // A retained rational line preserves the dependence on its exact start.
+        // The nominal value still pays its full error against this enclosure.
+        if let Some(bounds) = crate::exact_source::RootTime::point(time)
+            .and_then(|time| self.exact_at(&time))
+            .and_then(|value| crate::exact_source::enclosure(&value))
+        {
+            return Ok(bounds);
+        }
         let held = self.bounds_at(I::point(time));
         if let Some((deadline, target, bounds)) = self.pending.front().cloned() {
             if deadline.bounds.lo < time && time < deadline.bounds.hi {
@@ -501,6 +509,17 @@ impl Transition {
     }
 
     pub(crate) fn value(&self, time: f64) -> Result<f64, Error> {
+        use num_traits::ToPrimitive;
+        if let Some(value) = crate::exact_source::RootTime::point(time)
+            .and_then(|time| self.exact_at(&time))
+            .and_then(|value| {
+                let bounds = crate::exact_source::enclosure(&value)?;
+                let nearest = value.to_f64()?;
+                (bounds.lo <= nearest && nearest <= bounds.hi).then_some(nearest)
+            })
+        {
+            return Ok(value);
+        }
         let value = match &self.edge {
             Some(edge) if time < edge.end.bounds.hi => {
                 let raw = edge.value + edge.slope * (time - edge.start);
@@ -883,6 +902,91 @@ mod exact_transition_line_tests {
     use crate::exact_source::{binary, RootTime};
     use num_rational::BigRational as R;
 
+    fn falling_at(root: R) -> (Transition, RootTime) {
+        let window = crate::exact_source::enclosure(&root).unwrap();
+        let proof = RootTime::affine(-root, binary(1.).unwrap(), window).unwrap();
+        let mut history = Transition::new(0.9, 0., 1e-11, 1e-11).unwrap();
+        history
+            .advance_at_with_exact(window.hi, window, 0., I::ZERO, true, Some(&proof))
+            .unwrap();
+        (history, proof)
+    }
+
+    // Independent physical ramp answer, before any binary64 time representative
+    // is selected. Clipping also supplies the exact constant pieces.
+    fn falling_answer(root: &RootTime, time: f64) -> R {
+        let duration = binary(1e-11).unwrap();
+        let remaining = root.rational() + &duration - binary(time).unwrap();
+        let level = binary(0.9).unwrap();
+        (level.clone() * remaining / duration)
+            .max(binary(0.).unwrap())
+            .min(level)
+    }
+
+    #[test]
+    fn proved_nonbinary_start_encloses_independent_point_answer() {
+        let root = binary(65e-9).unwrap() + binary(0.11e-9).unwrap();
+        let (history, proof) = falling_at(root);
+        let time = (65.12e-9_f64).next_down();
+        let exact = falling_answer(&proof, time);
+        let nominal = history.value(time).unwrap();
+        let bounds = history.value_bounds(time).unwrap();
+        assert!(binary(bounds.lo).unwrap() <= exact && exact <= binary(bounds.hi).unwrap());
+        use num_traits::ToPrimitive;
+        assert_eq!(nominal.to_bits(), exact.to_f64().unwrap().to_bits());
+        assert!((I::point(nominal) - bounds).magnitude() <= 1e-12);
+    }
+
+    #[test]
+    fn proved_start_repairs_nominal_displacement_without_relaxing_voltage_budget() {
+        let lo = 65.11e-9_f64;
+        let root = binary(lo).unwrap()
+            + (binary(lo.next_up()).unwrap() - binary(lo).unwrap()) / R::from_integer(100.into());
+        let (history, proof) = falling_at(root);
+        let time = 65.12e-9;
+        let exact = falling_answer(&proof, time);
+        let bounds = history.value_bounds(time).unwrap();
+        assert!(binary(bounds.lo).unwrap() <= exact && exact <= binary(bounds.hi).unwrap());
+        use num_traits::ToPrimitive;
+        let nominal = history.value(time).unwrap();
+        assert_eq!(nominal.to_bits(), exact.to_f64().unwrap().to_bits());
+        assert!((I::point(nominal) - bounds).magnitude() <= 1e-12);
+    }
+
+    #[test]
+    fn point_proof_encloses_both_sides_of_clipped_end_and_leaves_history_unchanged() {
+        let root = binary(65e-9).unwrap() + binary(0.11e-9).unwrap();
+        let (history, proof) = falling_at(root);
+        let mut rising = Transition::new(0., 0., 1e-11, 1e-11).unwrap();
+        let window = proof.bounds().unwrap();
+        rising
+            .advance_at_with_exact(window.hi, window, 0.9, I::point(0.9), true, Some(&proof))
+            .unwrap();
+        let saved = (history.clone(), rising.clone());
+        let end =
+            crate::exact_source::enclosure(&(proof.rational() + binary(1e-11).unwrap())).unwrap();
+        for time in [
+            proof.bounds().unwrap().hi,
+            65.115e-9,
+            end.lo,
+            end.hi,
+            end.hi.next_up(),
+        ] {
+            let exact = falling_answer(&proof, time);
+            let bounds = history.value_bounds(time).unwrap();
+            history.value(time).unwrap();
+            rising.value(time).unwrap();
+            assert!(binary(bounds.lo).unwrap() <= exact && exact <= binary(bounds.hi).unwrap());
+            let exact_rising = binary(0.9).unwrap() - exact;
+            let bounds_rising = rising.value_bounds(time).unwrap();
+            assert!(
+                binary(bounds_rising.lo).unwrap() <= exact_rising
+                    && exact_rising <= binary(bounds_rising.hi).unwrap()
+            );
+        }
+        assert_eq!((history, rising), saved);
+    }
+
     #[test]
     fn nonbinary_start_proves_the_physical_line_only_on_one_retained_piece() {
         let root = RootTime::affine(
@@ -980,7 +1084,7 @@ mod exact_deadline_tests {
     }
 
     #[test]
-    fn fresh_exact_proof_changes_no_time_or_waveform_bits() {
+    fn fresh_exact_proof_preserves_deadlines_and_improves_only_proved_point_values() {
         let root = root();
         let window = root.bounds().unwrap();
         for delay in [0., 0.125] {
@@ -993,11 +1097,33 @@ mod exact_deadline_tests {
             assert!(new.deadlines(0.)[0].exact.is_some());
             assert!(!old.deadlines(0.)[0].coincides(&new.deadlines(0.)[0]));
             for t in [window.hi, 0.4, 0.5, 0.6] {
-                assert_eq!(
-                    old.value(t).unwrap().to_bits(),
-                    new.value(t).unwrap().to_bits()
-                );
-                assert_eq!(old.value_bounds(t).unwrap(), new.value_bounds(t).unwrap());
+                if delay > 0. {
+                    assert_eq!(
+                        old.value(t).unwrap().to_bits(),
+                        new.value(t).unwrap().to_bits()
+                    );
+                }
+                let broad = old.value_bounds(t).unwrap();
+                let tight = new.value_bounds(t).unwrap();
+                assert!(broad.lo <= tight.lo && tight.hi <= broad.hi);
+                if delay == 0. {
+                    // Physical start is 1/3, independently of its upper
+                    // execution representative. The rise lasts exactly 1/8.
+                    let exact = ((crate::exact_source::binary(t).unwrap()
+                        - R::new(1.into(), 3.into()))
+                        * R::from_integer(8.into()))
+                    .max(R::from_integer(0.into()))
+                    .min(R::one());
+                    assert!(
+                        crate::exact_source::binary(tight.lo).unwrap() <= exact
+                            && exact <= crate::exact_source::binary(tight.hi).unwrap()
+                    );
+                    use num_traits::ToPrimitive;
+                    assert_eq!(
+                        new.value(t).unwrap().to_bits(),
+                        exact.to_f64().unwrap().to_bits()
+                    );
+                }
             }
             if delay > 0. {
                 let time = new.next_breakpoint(0.).unwrap();

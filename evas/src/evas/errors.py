@@ -26,6 +26,7 @@ RULES = {
     'unsupported_timer_dependency': ('unsupported', 'lowering', 'TIMER', 'Use constant or held-state timer start/period/enable and constant time_tol.'),
     'parameter_type': ('unsupported', 'binding', 'LANG', 'Use an exact signed 32-bit integer parameter value.'),
     'unsupported_integer_arithmetic': ('unsupported', 'binding', 'LANG', 'Use explicit real operands if real arithmetic is intended; typed integer division/overflow are not supported.'),
+    'unsupported_integer_bitwise': ('unsupported', 'binding', 'LANG', 'Use typed signed32 operands with small proven domains and instance-constant shift counts; arithmetic and index checks must remain provable.'),
     'parameter_range': ('invalid_input', 'binding', 'LANG', 'Check the effective instance value and from/exclude constraints.'),
     'vector_declaration': ('invalid_input', 'binding', 'LANG', 'Use matching one-dimensional electrical and port ranges.'),
     'unsupported_vector': ('unsupported', 'binding', 'LANG', 'Use static scalar bit connections and instance-constant indices.'),

@@ -19,6 +19,7 @@ from dataclasses import dataclass
 from typing import Callable, Mapping
 
 from .syntax import Assignment, Conditional, Display, Loop
+from . import integer_bits
 
 SIGNED32_MIN, SIGNED32_MAX = -2147483648, 2147483647
 #: Conservative domain of a successfully stored integer state.
@@ -125,6 +126,8 @@ def evaluate(expr, env, parameters, arrays, on_read=None):
     if expr.op == 'checked':
         return evaluate(expr.args[0], env, parameters, arrays, on_read)
     args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]
+    if expr.op in integer_bits.OPS:
+        return integer_bits.bounds(expr.op, args)
     if expr.op in ('<', '<=', '>', '>=', '==', '!=', '&&', '||', 'unary!'):
         return (0, 1)
     if expr.op == 'ternary':

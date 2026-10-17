@@ -31,12 +31,12 @@ _TOKEN = re.compile(
     r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)|(?P<task>\$(?:bound_step|display)\b)"
     r'|(?P<directive>`[A-Za-z_][A-Za-z_0-9]*)|(?P<string>"[^"\n]*")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
-    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|==|!=|&&|\|\||'\{|[\[\]:<>(){}+*/%;,=@#.?!\-])"
+    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<<<|>>>|<<|>>|<=|>=|==|!=|&&|\|\||'\{|[\[\]:<>(){}+*/%;,=@#.?!&|^~\-])"
 )
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
-OPERATOR_ARITIES = {"transition": (3, 4), "absdelay": (2,), "slew": (3,),
-                    "idt": (2, 3), "laplace_nd": (3,), "laplace_np": (3, 4), "idtmod": (4,), "ddt": (1,)}
+OPERATOR_ARITIES = {"transition": (3, 4), "absdelay": (2,), "slew": (2, 3),
+                    "idt": (2, 3), "laplace_nd": (3,), "laplace_np": (3, 4), "idtmod": (3, 4), "ddt": (1,)}
 OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin", "cos", "exp", "ln", "sqrt"}
 DECISION_NAMES = frozenset(("<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!", "ternary", "abs", "min", "max"))
 _KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
@@ -81,7 +81,7 @@ def _tokens(source: str, name: str, *, tolerant=False) -> list[Token]:
 @dataclass(frozen=True)
 class Expr:
     op: Literal["number", "parameter", "node", "voltage", "array", "unary+", "unary-",
-                "+", "-", "*", "/", "%", "power", "sin", "cos", "exp", "ln", "sqrt", "transition", "absdelay", "slew",
+                "+", "-", "*", "/", "%", "&", "|", "^", "unary~", "<<", ">>", "power", "sin", "cos", "exp", "ln", "sqrt", "transition", "absdelay", "slew",
                 "idt", "laplace_nd", "laplace_np", "idtmod", "ddt", "call", "index",
                 "<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!", "ternary", "abs", "min", "max", "checked"]
     value: str | float | None
@@ -333,7 +333,7 @@ class Parser:
 
     def _expression(self, minimum: int = 0) -> Expr:
         token = self.take()
-        if token.text in ("+", "-", "!"):
+        if token.text in ("+", "-", "!", "~"):
             left = Expr("unary" + token.text, None, (self.expression(30),), token)
         elif token.text == "(":
             left = self.expression()
@@ -428,8 +428,9 @@ class Parser:
                 left = Expr("parameter", token.text, (), token)
         else:
             self.fail(f"unsupported expression {token.text!r}", token)
-        precedence_table = {"||": 1, "&&": 2, "==": 3, "!=": 3, "<": 4, "<=": 4, ">": 4, ">=": 4,
-                            "+": 10, "-": 10, "*": 20, "/": 20, "%": 20}
+        precedence_table = {"||": 1, "&&": 2, "|": 3, "^": 4, "&": 5,
+                            "==": 6, "!=": 6, "<": 7, "<=": 7, ">": 7, ">=": 7,
+                            "<<": 8, ">>": 8, "+": 10, "-": 10, "*": 20, "/": 20, "%": 20}
         while self.token.text in precedence_table or self.token.text == "?":
             op = self.token
             if op.text == "?":
@@ -586,11 +587,11 @@ class Parser:
             self.take("=")
             start = self.expression()
             self.take(";")
-            left = self.expression(5)
+            left = self.expression(8)
             relation = self.take()
             if left.op != "parameter" or left.value != name or relation.text not in ("<", "<=", ">", ">="):
                 self.fail("static for condition requires its genvar and <, <=, > or >=", relation)
-            limit = self.expression(4)
+            limit = self.expression(7)
             self.take(";")
             if self.name() != name:
                 self.fail("for initialization and update must write the same genvar", token)

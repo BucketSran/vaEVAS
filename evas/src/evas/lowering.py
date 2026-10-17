@@ -247,6 +247,12 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
                     node_declarations=node_declarations)
               for i, arg in enumerate(expr.args)]
     a = values[0]
+    from .integer_bits import OPS
+    if expr.op in OPS:
+        bitwise = getattr(parameters, "integer_bitwise", None)
+        if bitwise is None:
+            fail("bitwise expression requires typed integer binding", code="unsupported_integer_bitwise")
+        return bitwise(expr, values)
     if expr.op.startswith("unary"):
         result = scale(a, -1.0 if expr.op == "unary-" else 1.0)
     else:

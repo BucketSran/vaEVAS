@@ -149,8 +149,8 @@ class SlewContracts(unittest.TestCase):
                 for actual, t in zip(values(result, node), times):
                     self.assertAlmostEqual(actual, reflection*float(expected('reverse', t)), delta=2e-13)
 
-    def test_limits_must_be_explicit_fixed_and_have_correct_sign(self):
-        for call in ['slew(V(u,r))', 'slew(V(u,r),1)', 'slew(V(u,r),0,-1)',
+    def test_limits_must_be_fixed_and_have_correct_sign(self):
+        for call in ['slew(V(u,r))', 'slew(V(u,r),0,-1)',
                      'slew(V(u,r),1,0)', 'slew(V(u,r),-1,-2)',
                      'slew(V(u,r),1,2)', 'slew(V(u,r),V(u,r),-1)']:
             with self.subTest(call=call), self.assertRaises(CompileError):

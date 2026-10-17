@@ -14,10 +14,11 @@ from .limits import MAX_IR_ITEMS, check_ir
 from .lowering import lower, lower_decision
 from .syntax import Loop, Assignment, Conditional, Display, OPERATOR_NAMES, DECISION_NAMES
 from .display import validate_format
+from .integer_bits import OPS as BIT_OPS
 
 PURE_MATH = frozenset(("sin", "cos", "exp", "ln", "sqrt"))
 VALUE_OPS = frozenset(("number", "parameter", "voltage", "time", "index", "checked",
-                       "+", "-", "*", "/", "%", "power", "unary+", "unary-")) | DECISION_NAMES | PURE_MATH
+                       "+", "-", "*", "/", "%", "power", "unary+", "unary-")) | DECISION_NAMES | PURE_MATH | BIT_OPS
 UNKNOWN = object()
 
 
@@ -101,7 +102,7 @@ def audit_event_body(compiler, statements):
             if id(item) in visited:
                 continue
             visited.add(id(item))
-            if (item.op in DECISION_NAMES or item.op == "index" or
+            if (item.op in DECISION_NAMES or item.op in BIT_OPS or item.op == "index" or
                     item.op in ("/", "%") and compiler.integer_type(item)):
                 return True
             pending.extend(item.args)
@@ -136,7 +137,7 @@ def audit_event_body(compiler, statements):
             value = resource_tree(root.args[0], memo)
         elif root.op == "index":
             value = index_read(root)
-        elif root.op in ("/", "%") and compiler.integer_type(root):
+        elif root.op in BIT_OPS or root.op in ("/", "%") and compiler.integer_type(root):
             # The typed lowerer introduces quotient-bin decisions even when
             # there is no explicit source decision. Retain their real shape.
             value = audit_lower(root)
@@ -232,7 +233,7 @@ def audit_event_body(compiler, statements):
                 # function obligation keeps its original lowering boundary.
                 for obligation in item.args[1:]:
                     audit_lower(obligation, static_integer_audit=parameter_dead)
-            if item.op in ("+", "-", "*", "/", "%", "unary+", "unary-") and compiler.integer_type(item):
+            if item.op in BIT_OPS or item.op in ("+", "-", "*", "/", "%", "unary+", "unary-") and compiler.integer_type(item):
                 # A real destination does not erase integer arithmetic in its
                 # source. Only a complete integer assignment may defer its
                 # final stored-value check to the kernel.

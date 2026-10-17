@@ -1,0 +1,88 @@
+{
+  "review_items": [
+    "INIT-R1",
+    "INIT-R2"
+  ],
+  "status": "fixed in design/standalone fixtures only; production source unchanged",
+  "fixed_source_revision": "891fa1b948d05b7877f97d3a0e7e30236d361356",
+  "kernel_profile": "release, same frozen kernel as historical baseline",
+  "kernel_sha256": "4e7927e14e7ce22789b0563d67a847ec8215c88e41c24115313e88f9cca656d8",
+  "runner_sha256": "6df7549c3fc8a3884648cac312d5f845a6e1129842a0409edf07138ad20cd368",
+  "historical_baseline_sha256_unchanged": "b9179376e703bdfa16ef54fc10c232d4620afe1e72679ff7680678b9af8cceab",
+  "historical_runner_sha256": "46c4c191056102af7d5845dc980cb4f92e8d7ff0990c073b6c9ac8d8c829b707",
+  "root_entry": "Delegates to fixtures/runner.py through runpy; no duplicated checker.",
+  "post_review_counts": {
+    "total": 27,
+    "contract_pass": 17,
+    "red": 10
+  },
+  "calibration": {
+    "checker": "answers_match, shared by public and raw IR checks",
+    "control_origin": "actual constant nonzero-reference release-kernel response",
+    "cases": [
+      {
+        "name": "complete",
+        "actual": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "expected": [
+          "1",
+          "1",
+          "1"
+        ],
+        "accepted": true,
+        "expected_accept": true,
+        "passed": true
+      },
+      {
+        "name": "empty",
+        "actual": [],
+        "expected": [
+          "1",
+          "1",
+          "1"
+        ],
+        "accepted": false,
+        "expected_accept": false,
+        "passed": true
+      },
+      {
+        "name": "one_sample_only",
+        "actual": [
+          1.0
+        ],
+        "expected": [
+          "1",
+          "1",
+          "1"
+        ],
+        "accepted": false,
+        "expected_accept": false,
+        "passed": true
+      },
+      {
+        "name": "missing_last_sample",
+        "actual": [
+          1.0,
+          1.0
+        ],
+        "expected": [
+          "1",
+          "1",
+          "1"
+        ],
+        "accepted": false,
+        "expected_accept": false,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "calibration_input_response_sha256": "535240010db52ec1627e0d842960384f20a39d0f517aa30fde32f889de5a9140",
+  "require_contract_exit_code": 1,
+  "diagnostic_design": "Keep IR24. Guarantee instance/state identity; append source location only if existing metadata supplies it.",
+  "original_gold_simulations": 0,
+  "new_implementation": false
+}

@@ -1,0 +1,365 @@
+{
+  "scope": "Standalone development controls for a design proposal; no implementation, original replay or new Spectre run.",
+  "source_revision": "891fa1b948d05b7877f97d3a0e7e30236d361356",
+  "source_identity_basis": "Python files copied by git archive of fixed revision and hashed in local source snapshot identity; all runtime imports used that frozen source path.",
+  "kernel_profile": "release",
+  "kernel_sha256": "4e7927e14e7ce22789b0563d67a847ec8215c88e41c24115313e88f9cca656d8",
+  "kernel_reused_identity": "experiments/backends/support/source-shape/root-window-certificate.json:149",
+  "runner_sha256": "46c4c191056102af7d5845dc980cb4f92e8d7ff0990c073b6c9ac8d8c829b707",
+  "counts": {
+    "total": 27,
+    "contract_pass": 17,
+    "red": 10
+  },
+  "results": [
+    {
+      "name": "control-constant-nonzero-reference",
+      "stage": "kernel",
+      "expected": "accept",
+      "observed": "accept",
+      "contract_pass": true,
+      "matches_answer": true,
+      "actual": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "name": "sample-direct-held",
+      "stage": "compiler",
+      "expected": "accept",
+      "observed": "reject",
+      "contract_pass": false,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "sample-affine-held",
+      "stage": "compiler",
+      "expected": "accept",
+      "observed": "reject",
+      "contract_pass": false,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "sample-selected-voltage-arm",
+      "stage": "compiler",
+      "expected": "accept",
+      "observed": "reject",
+      "contract_pass": false,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "sample-source-order",
+      "stage": "compiler",
+      "expected": "accept",
+      "observed": "reject",
+      "contract_pass": false,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "sample-strict-tie",
+      "stage": "compiler",
+      "expected": "accept",
+      "observed": "reject",
+      "contract_pass": false,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "sample-timer-zero-consumer",
+      "stage": "compiler",
+      "expected": "accept",
+      "observed": "reject",
+      "contract_pass": false,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "sample-timer-held-consumer",
+      "stage": "compiler",
+      "expected": "accept",
+      "observed": "reject",
+      "contract_pass": false,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "sample-transition-consumer",
+      "stage": "compiler",
+      "expected": "accept",
+      "observed": "reject",
+      "contract_pass": false,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "sample-idt-consumer",
+      "stage": "compiler",
+      "expected": "accept",
+      "observed": "reject",
+      "contract_pass": false,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "control-integer-predicate",
+      "stage": "kernel",
+      "expected": "accept",
+      "observed": "accept",
+      "contract_pass": true,
+      "matches_answer": true,
+      "actual": [
+        1.25,
+        1.25,
+        1.25
+      ]
+    },
+    {
+      "name": "reject-implicit-real-integer",
+      "stage": "compiler",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "reject-fractional-integer",
+      "stage": "compiler",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: integer assignment requires provably integral arithmetic"
+      }
+    },
+    {
+      "name": "reject-integer-overflow",
+      "stage": "compiler",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial integer intermediate may exceed signed 32-bit range"
+      }
+    },
+    {
+      "name": "reject-nonlinear-initial",
+      "stage": "compiler",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial comparison operands must be structurally affine"
+      }
+    },
+    {
+      "name": "reject-undriven-sampled-input",
+      "stage": "compiler",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "reject-state-voltage-cycle",
+      "stage": "compiler",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial comparison depends on a non-input voltage"
+      }
+    },
+    {
+      "name": "reject-uncertain-selector",
+      "stage": "kernel",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "initialization_precision",
+        "message": "ordinary analog if predicate cannot be certified from the original PWL input enclosure at dut.va:2:121 (dut) for dut:q"
+      }
+    },
+    {
+      "name": "reject-uncertain-sampled-value",
+      "stage": "compiler",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "reject-exact-but-nonrepresentable-sum",
+      "stage": "compiler",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "reject-uncertainty-after-amplification",
+      "stage": "compiler",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "reject-initial-abstime-separate-scope",
+      "stage": "compiler",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "compile_error",
+        "code": "unsupported_initial_event",
+        "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates"
+      }
+    },
+    {
+      "name": "raw-direct-exact",
+      "stage": "kernel_raw_ir",
+      "expected": "accept",
+      "observed": "reject",
+      "contract_pass": false,
+      "diagnostic": {
+        "kind": "unsupported_initialization",
+        "message": "initial expression must select constant values for dut:q"
+      }
+    },
+    {
+      "name": "raw-uncertain-sample",
+      "stage": "kernel_raw_ir",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "unsupported_initialization",
+        "message": "initial expression must select constant values for dut:q"
+      }
+    },
+    {
+      "name": "raw-undriven-sample",
+      "stage": "kernel_raw_ir",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "unsupported_initialization",
+        "message": "initial comparison depends on an undriven voltage for dut:q"
+      }
+    },
+    {
+      "name": "raw-cycle-sample",
+      "stage": "kernel_raw_ir",
+      "expected": "reject",
+      "observed": "reject",
+      "contract_pass": true,
+      "diagnostic": {
+        "kind": "unsupported_initialization",
+        "message": "cyclic initial state/voltage dependency for dut:q"
+      }
+    },
+    {
+      "name": "public-retry",
+      "expected": "reject_then_accept_twice",
+      "observed": [
+        {
+          "accept": false,
+          "detail": {
+            "kind": "initialization_precision",
+            "message": "ordinary analog if predicate cannot be certified from the original PWL input enclosure at retry.va:2:116 (dut) for dut:q"
+          }
+        },
+        {
+          "accept": true,
+          "states": [
+            [
+              0.0
+            ]
+          ]
+        },
+        {
+          "accept": true,
+          "states": [
+            [
+              0.0
+            ]
+          ]
+        }
+      ],
+      "contract_pass": true,
+      "program_unchanged": true,
+      "same_engine": false
+    }
+  ],
+  "limits": [
+    "Nine intended sampling positives fail at frontend; raw-direct-exact fails at runtime.",
+    "Two existing accepted controls, fourteen rejection controls and public-program retry satisfy their present contracts.",
+    "Many rejection controls fail before new sampling admission; they do not prove future runtime precision diagnostics.",
+    "Public retry invokes distinct kernel processes; same-engine sampled-state rollback remains unverified.",
+    "Source-unattributed debug unit-test results are excluded.",
+    "Raw records and executable/source snapshots remain local-only and are not part of this minimal package."
+  ]
+}

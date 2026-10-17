@@ -7,6 +7,7 @@ use the existing real arithmetic. Legacy real-only expressions are unchanged.
 from dataclasses import fields, is_dataclass
 from .errors import CompileError
 from .syntax import Expr, Token
+from . import integer_bits
 
 
 def check_integer_expression(expr, model, values, *, check_literals=False):
@@ -39,6 +40,11 @@ def check_integer_expression(expr, model, values, *, check_literals=False):
         # beyond the signed range. Computed negation/overflow still rejects.
         if e.op == 'unary-' and e.args[0].op == 'number' and args[0] == 2147483648:
             return -2147483648
+        if e.op in integer_bits.OPS:
+            try:
+                return integer_bits.evaluate(e.op, *args)
+            except ValueError:
+                fail(e)
         if e.op == '+': value = args[0]+args[1]
         elif e.op == '-': value = args[0]-args[1]
         elif e.op == '*': value = args[0]*args[1]

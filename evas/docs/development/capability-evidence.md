@@ -43,6 +43,14 @@
 
 [初始化节点依赖](../../../experiments/backends/support/initial-node-dependencies/README.md)补充 LANG、LIN 和 COMPOSE 的有限开发证据；三个同源实际 Spectre 对照通过，不宣称原 MUX 任务完成。
 
+[有限整数位运算](../../../experiments/backends/support/integer-bitops/README.md)补充LANG、EVENT-ORDER和EVENT-CONDITIONS的分支开发证据。
+IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和普通掩码的独立回归见
+[test_integer_bitops.py](../../tests/test_integer_bitops.py)。原件完整请求及实际Spectre验收独立记录，不从局部通过推导一般整数支持。
+同一[分支收据](../../../experiments/backends/support/integer-bitops/evidence.json)补充TRANSITION、CROSS、SLEW和DYNAMICS：
+有理点值证明保留真实误差验收，标准算子缺省参数复用原IR；公开正反例分别见
+[点值回归](../../tests/test_transition_point_proof.py)和[默认参数回归](../../tests/test_operator_defaults.py)。
+核心400与后续三原件分开绑定源码，初始化采样仅有[设计](../../../experiments/backends/support/initial-voltage-sampling/proposal.md)。
+
 IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) 合入 main，补充 LANG、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE 和 DEV:scs-input。
 契约见[局部变量与条件支路](../../validation/ANALOG_CONDITIONS_CONTRACT.md)、
 [事件条件与输出记录](../math/events.md)、[连续选路与有理流](../math/continuous.md#selected-flow)。

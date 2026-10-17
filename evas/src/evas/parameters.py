@@ -5,6 +5,8 @@ from .limits import MAX_PARAMETER_DEPTH
 from .lowering import lower
 from .syntax import contains_operator, contains_decision
 from .integer_constants import check_integer_expression
+from . import integer_bits
+from .ir import Affine
 
 
 def bind_parameters(model, overrides, instance_name):
@@ -29,6 +31,22 @@ def bind_parameters(model, overrides, instance_name):
         raise CompileError(f'{instance_name}: unknown parameter override',
                            code='parameter_override', instance=instance_name)
     dependencies, cache, active, depths = {}, {}, set(), {}
+    def lookup(name):
+        return cache[name]
+    def bitwise(expr, values):
+        if not all(integer_bits.integer_type(arg, {}, model.parameter_types, model.genvars)
+                   and isinstance(value, Affine) and not value.terms and value.constant.is_integer()
+                   for arg, value in zip(expr.args, values)):
+            raise CompileError('bitwise operands require typed integer expressions',
+                               code='unsupported_integer_bitwise', token=expr.token, instance=instance_name)
+        try:
+            value = integer_bits.evaluate(expr.op, *(int(value.constant) for value in values))
+        except ValueError as error:
+            raise CompileError(str(error), code='unsupported_integer_bitwise',
+                               token=expr.token, instance=instance_name) from error
+        return Affine(float(value), ())
+    lookup.integer_bitwise = bitwise
+
     for name, expr in model.parameters.items():
         refs, pending = [], [] if name in overrides else [expr]
         while pending:
@@ -69,7 +87,7 @@ def bind_parameters(model, overrides, instance_name):
             else:
                 check_integer_expression(model.parameters[name], model, cache,
                                          check_literals=model.parameter_types.get(name) == 'integer')
-                value = lower(model.parameters[name], lambda n: cache[n], {}, model.source).constant
+                value = lower(model.parameters[name], lookup, {}, model.source).constant
             if not math.isfinite(value):
                 raise CompileError(f'{instance_name}: nonfinite parameter {name!r}',
                                    code='parameter_override' if name in overrides else 'parameter_dependency',
@@ -86,7 +104,7 @@ def bind_parameters(model, overrides, instance_name):
             def evaluate(endpoint):
                 if not isinstance(endpoint, float):
                     check_integer_expression(endpoint, model, cache, check_literals=True)
-                return endpoint if isinstance(endpoint, float) else lower(endpoint, cache.__getitem__, {}, model.source).constant
+                return endpoint if isinstance(endpoint, float) else lower(endpoint, lookup, {}, model.source).constant
             lo = evaluate(interval.lower)
             hi = lo if interval.upper is None else evaluate(interval.upper)
             if interval.upper is not None and not lo < hi:

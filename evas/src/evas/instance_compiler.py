@@ -15,7 +15,7 @@ from .limits import check_ir
 from .parameters import bind_parameters
 from .elaboration import unroll_loops
 from .array_elaboration import scalarize_arrays, ARRAY_BUDGET
-from . import event_index_domains
+from . import event_index_domains, integer_bits
 from .syntax import (CompileError, Model, contains_operator, contains_decision,
                      Assignment as SyntaxAssignment, Conditional as SyntaxConditional, Display as SyntaxDisplay,
                      Loop, ContributionStatement, BoundStep, OPERATOR_NAMES, DECISION_NAMES)
@@ -325,6 +325,9 @@ class InstanceCompiler:
             kwargs["decisions"] = self.event_select
             kwargs.pop("validate_decision", None)
         try:
+            table = self.integer_expression_table(expr, resolve, nodes, args, kwargs)
+            if table is not None:
+                return table
             return lower(expr, typed, nodes, self.model.source, *args, **kwargs)
         except CompileError as error:
             if (error.diagnostic['code'] in ('unsupported_local_event', 'unsupported_event_state_dependency')
@@ -429,6 +432,7 @@ class InstanceCompiler:
         def lookup(name):
             return resolve(name)
         lookup.integer_arithmetic = self.integer_arithmetic
+        lookup.integer_bitwise = self.integer_bitwise
         lookup.validate_integer_operation = self.validate_integer_operation
         lookup.allow_integer_assignment_root = allow_integer_assignment_root
         return lookup
@@ -463,25 +467,8 @@ class InstanceCompiler:
                            token=expr.token, instance=self.instance.name)
 
     def integer_type(self, expr):
-        if expr.result_type == "real":
-            return False
-        if expr.result_type == "integer":
-            return True
-        if expr.op == "number":
-            text = expr.token.text
-            return text.isdecimal() or text in self.model.genvars
-        if expr.op == "parameter":
-            return (self.model.variables.get(expr.value) == "integer" or
-                    self.model.parameter_types.get(expr.value) == "integer")
-        if expr.op == "checked":
-            return self.integer_type(expr.args[0])
-        if expr.op in ("<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!"):
-            return True
-        if expr.op == "ternary":
-            return self.integer_type(expr.args[1]) and self.integer_type(expr.args[2])
-        if expr.op in ("+", "-", "*", "/", "%", "unary+", "unary-"):
-            return all(self.integer_type(arg) for arg in expr.args)
-        return False
+        return integer_bits.integer_type(expr, self.model.variables,
+                                         self.model.parameter_types, self.model.genvars)
 
     def infer_integer_state_ranges(self):
         # Only state-independent writers tighten a declaration's full domain.
@@ -536,6 +523,165 @@ class InstanceCompiler:
                     break
             ranges[state] = min(a for a, _ in bounds), max(b for _, b in bounds)
         self.integer_state_ranges = ranges
+
+    def integer_expression_table(self, expr, resolve, nodes, args, options):
+        """One bounded table for a pure bitwise RHS, preserving state reads."""
+        if not self.integer_type(expr):
+            return None
+        allowed = integer_bits.OPS | {"number", "parameter", "+", "-", "*", "/", "%", "unary+", "unary-"}
+        pending, references, has_bits = [expr], {}, False
+        while pending:
+            item = pending.pop()
+            if item.op not in allowed:
+                return None
+            has_bits |= item.op in integer_bits.OPS
+            if item.op in ("<<", ">>", "/", "%"):
+                # Binding a state to a table row must not turn a runtime
+                # divisor or shift count into an instance constant.
+                count = [item.args[1]]
+                while count:
+                    part = count.pop()
+                    if part.op == "parameter" and part.value in self.model.variables:
+                        return None
+                    count.extend(part.args)
+            if item.op == "parameter" and item.value in self.model.variables:
+                value = resolve(item.value)
+                if isinstance(value, StateRef):
+                    references[item.value] = value
+                elif not isinstance(value, Affine) or value.terms:
+                    return None
+            pending.extend(item.args)
+        if not has_bits or not references:
+            return None
+        states = tuple(dict.fromkeys(references.values()))
+        bounds = [tuple(map(int, self.integral_bounds(state))) for state in states]
+        if not integer_bits.small_domain(bounds):
+            return None
+        origin = Origin(expr.token.source or self.model.source, expr.token.line,
+                        expr.token.column, self.instance.name, expr.expansion)
+        options = dict(options)
+        options.pop("memo", None)  # A binding owns its memo; never reuse across rows.
+        def table(operand, bindings):
+            if operand == len(states):
+                def lookup(name):
+                    return bindings[references[name]] if name in references else resolve(name)
+                typed = self.typed_resolve(lookup)
+                # Every grid row uses the existing strict arithmetic observer,
+                # not the successful-range clipping of runtime checked nodes.
+                try:
+                    value = lower(expr, typed, nodes, self.model.source, *args, **options)
+                except CompileError as error:
+                    raise CompileError("bitwise expression cannot prove every integer intermediate: " + str(error),
+                        code="unsupported_integer_bitwise", token=expr.token,
+                        instance=self.instance.name) from error
+                # Modulo deliberately retains arithmetic IR even for constant
+                # arguments. Prove that the strict lowering left only constant
+                # arithmetic, rather than adding another expression evaluator.
+                pending, constant = [value], True
+                while pending:
+                    item = pending.pop()
+                    if isinstance(item, Affine):
+                        constant &= not item.terms
+                    elif isinstance(item, Binary) and item.op in ("add", "multiply"):
+                        pending.extend((item.left, item.right))
+                    elif isinstance(item, Select):
+                        pending.extend((item.left, item.right, item.then_value, item.else_value))
+                    else:
+                        # Includes StateRef, ArrayRead, OperatorRef, and checked
+                        # nodes: none may disappear behind a point bound.
+                        constant = False
+                if constant and self.integral(value):
+                    low, high = self.integral_bounds(value)
+                    if low == high and -2147483648 <= low <= 2147483647:
+                        return Affine(float(low), ())
+                raise CompileError("finite integer binding did not produce proven constant integer IR",
+                    code="unsupported_integer_bitwise", token=expr.token,
+                    instance=self.instance.name)
+            state = states[operand]
+            low, high = bounds[operand]
+            def leaf(number):
+                return table(operand + 1, bindings | {state: float(number)})
+            def split(first, last):
+                if first == last:
+                    return leaf(first)
+                middle = (first + last + 1) // 2
+                return Select("lt", state, Affine(float(middle), ()),
+                              split(first, middle - 1), split(middle, last), origin)
+            if low == high:
+                value = leaf(low)
+                return Select("lt", state, Affine(low + 0.5, ()), value, value, origin)
+            return split(low, high)
+        value = table(0, {})
+        check_ir(value, origin)
+        self.expression_decision_origins.add(origin)
+        return value
+
+    def integer_bitwise(self, expr, values):
+        def fail(message):
+            raise CompileError(message, token=expr.token, instance=self.instance.name,
+                               code="unsupported_integer_bitwise")
+        if not all(self.integer_type(arg) and self.integral(value)
+                   for arg, value in zip(expr.args, values)):
+            fail("bitwise operands require typed integer expressions")
+        # A checked node's successful interval is clipped to signed32. A
+        # finite table may fold that interval to a constant and discard the
+        # node, so require the original arithmetic to be safe independently.
+        pending = list(values)
+        while pending:
+            item = pending.pop()
+            if isinstance(item, CheckedInteger):
+                low, high = self.integral_bounds(item.value)
+                if low < -2147483648 or high > 2147483647:
+                    fail("bitwise operand has an unproven checked integer intermediate")
+                pending.append(item.value)
+            elif isinstance(item, CheckedIndex):
+                low, high = self.integral_bounds(item.index)
+                if low < item.first or high > item.last:
+                    fail("bitwise operand has an unproven checked array index")
+                pending.append(item.index)
+            elif isinstance(item, Binary):
+                pending.extend((item.left, item.right))
+            elif isinstance(item, Select):
+                pending.extend((item.left, item.right, item.then_value, item.else_value))
+            elif isinstance(item, Power):
+                pending.append(item.base)
+            elif isinstance(item, EventMath):
+                pending.extend(item.args)
+            elif isinstance(item, ArrayRead):
+                pending.append(item.index)
+        bounds = [tuple(map(int, self.integral_bounds(value))) for value in values]
+        if expr.op in ("<<", ">>") and bounds[1][0] != bounds[1][1]:
+            fail("bitwise shift count requires an instance-constant integer")
+        if expr.op in ("<<", ">>") and not isinstance(values[1], Affine):
+            fail("bitwise shift count requires an instance-constant integer")
+        if not integer_bits.small_domain(bounds):
+            fail("bounded integer bitwise operation exceeds finite-domain budget (256)")
+        origin = Origin(expr.token.source or self.model.source, expr.token.line,
+                        expr.token.column, self.instance.name, expr.expansion)
+        def tree(operand, args):
+            if operand == len(values):
+                return Affine(float(integer_bits.evaluate(expr.op, *args)), ())
+            low, high = bounds[operand]
+            if low == high:
+                value = tree(operand + 1, args + [low])
+                if isinstance(values[operand], Affine) and not values[operand].terms:
+                    return value
+                # Range proof does not erase an original source read, even
+                # when every successful value is the same integer. The kernel
+                # retains predicate reads for equivalent Select arms.
+                return Select("lt", values[operand], Affine(low + 0.5, ()), value, value, origin)
+            def split(first, last):
+                if first == last:
+                    return tree(operand + 1, args + [first])
+                middle = (first + last + 1) // 2
+                return Select("lt", values[operand], Affine(float(middle), ()),
+                              split(first, middle - 1), split(middle, last), origin)
+            return split(low, high)
+        value = tree(0, [])
+        check_ir(value, origin)
+        if any(low != high for low, high in bounds):
+            self.expression_decision_origins.add(origin)
+        return value
 
     def integer_arithmetic(self, expr, numerator, denominator):
         if not all(self.integer_type(arg) for arg in expr.args):
@@ -817,7 +963,8 @@ class InstanceCompiler:
         elif expr.op in ("laplace_nd", "laplace_np"):
             self.compilation.operators.append(LaplaceNd(value, numerator, denominator, origin))
         elif expr.op == "idtmod":
-            ic, modulus, offset = (v.constant for v in settings)
+            ic, modulus = (v.constant for v in settings[:2])
+            offset = settings[2].constant if len(settings) == 3 else 0.0
             if modulus <= 0:
                 raise CompileError("idtmod requires positive explicit modulus")
             self.compilation.operators.append(IdtMod(value, ic, modulus, offset, origin))
@@ -858,7 +1005,8 @@ class InstanceCompiler:
                                    instance=self.instance.name)
             self.compilation.operators.append(Transition(value, delay, rise, fall, origin))
         elif expr.op == "slew":
-            rise, fall = (v.constant for v in settings)
+            rise = settings[0].constant
+            fall = settings[1].constant if len(settings) == 2 else -rise
             if rise <= 0 or fall >= 0:
                 raise CompileError("slew requires explicit rise > 0 and fall < 0")
             self.compilation.operators.append(Slew(value, rise, fall, origin))
