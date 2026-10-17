@@ -60,6 +60,7 @@ jobs:
           python3 -B scripts/evas_check_policy.py --check-docs
           python3 -B -m unittest discover -s scripts/tests -p test_evas_check_policy.py -v
           python3 -B -m unittest discover -s scripts/tests -p test_fast_feedback.py -v
+          python3 -B -m unittest discover -s scripts/tests -p test_independent_ci.py -v
           python3 -B -m unittest discover -s scripts/tests -p test_regression_runner.py -v
           if [ -n "$CI_BASE" ] && [ -n "$CI_HEAD" ]; then
             git diff --check "$CI_BASE" "$CI_HEAD" --
@@ -193,6 +194,11 @@ jobs:
           targets: evas/rust_core/target
       - name: Build the kernel used by Python regressions
         run: cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
+      - name: Verify the new release kernel for source-only delivery
+        if: matrix.shard == 0 && needs.selection.outputs.package != 'true'
+        run: |
+          cargo +stable build --locked --release --manifest-path evas/rust_core/Cargo.toml
+          python3 -B scripts/check_source_kernel.py --kernel evas/rust_core/target/release/evas-kernel --report runs/source-kernel.json
       - name: Identify complete regression inputs and actual toolchain
         id: evidence
         env:
@@ -239,6 +245,7 @@ jobs:
           path: |
             runs/regression-evidence
             runs/regression-identity.json
+            runs/source-kernel.json
           if-no-files-found: error
           retention-days: 14
   regression-coverage:

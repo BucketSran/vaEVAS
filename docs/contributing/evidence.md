@@ -78,10 +78,12 @@ and its verified old-to-new path mapping. Package versions alone do not identify
 
 The regression cache is an execution record, separate from Cargo's build cache. Its key covers
 all tracked file bytes and modes, the actual kernel hash, Python/Rust/Cargo versions, runner
-platform/image, declared build environment and shard identity. Only the exact generated
-`evas/docs/development/diagnostic-inventory.json` is excluded: fast/static jobs recheck it,
-while EVAS Python/Rust regressions do not consume it. If a new consumer reads it, include it
-in the key and update the exclusion test before reusing evidence.
+platform/image, declared build environment and shard identity. The exact exclusions in
+`scripts/ci_evidence.py` cover generated diagnostic registration and audited workflow prose
+(agent skills, CONTRIBUTING and named coordination/evidence guides). Fast/static checks and
+text review cover those files; numerical regressions do not consume them. Unknown Markdown,
+mathematical contracts and arbitrary data remain inputs. If a new regression consumer reads
+an excluded file, include it in the key and update the exclusion test before reuse.
 
 A matching cache entry also needs a successful, complete report and a receipt binding its
 hash, original run and input identity. Missing, corrupt or mismatched evidence executes the
@@ -91,6 +93,14 @@ explicit fixture-level skips against the complete planned set; skips never count
 Partial successes never establish complete regression. Cached evidence is labelled with its
 producer run. Scheduled full checks execute afresh. Other platform/reference checks retain
 their own identities and cannot inherit a Python regression result.
+
+Reuse rule text, references, executions and reviews separately. Unchanged skill text does not
+remove the need to assess a new delta. A fixed independent reference can be reused after a DUT
+change, but compare the new DUT against it. A changed checker needs calibration and reanalysis;
+new simulation is needed only if the recorded observations are insufficient. Independent prose
+changes preserve numerical execution evidence while changed claims still require text review.
+Background execution retains its fixed source/kernel; pending, cancelled or partial results
+remain incomplete under the [waiting boundaries](../../CONTRIBUTING.md#keep-iteration-feedback-short).
 
 ### Complete local run bundles
 

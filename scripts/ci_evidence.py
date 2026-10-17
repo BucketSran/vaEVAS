@@ -10,9 +10,17 @@ import stat
 import subprocess
 import sys
 
-# This generated audit is checked afresh by the fast/static jobs. It is not
-# consumed by EVAS Python/Rust regressions. All other tracked files participate.
-EXCLUDED = {"evas/docs/development/diagnostic-inventory.json"}
+# Audited workflow prose and generated registration are checked separately.
+# Unknown Markdown remains an input: fixtures may use arbitrary extensions.
+EXCLUDED = {
+    "evas/docs/development/diagnostic-inventory.json",
+    "AGENTS.md", "CONTRIBUTING.md", "docs/contributing/workspaces.md",
+    "docs/contributing/evidence.md",
+    *('.agents/skills/' + skill + '/SKILL.md' for skill in (
+        'evas-develop', 'evas-validate', 'vaevas-workflow',
+        'vaevas-prepare-pr', 'vaevas-review-pr',
+    )),
+}
 ENVIRONMENT = (
     "RUSTFLAGS",
     "CARGO_ENCODED_RUSTFLAGS",
@@ -58,7 +66,7 @@ def fingerprint(repo, environment):
         )
     if not entries:
         raise ValueError("no tracked inputs")
-    payload = dict(version=1, files=entries, environment=environment)
+    payload = dict(version=2, files=entries, environment=environment)
     digest = hashlib.sha256(
         json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()

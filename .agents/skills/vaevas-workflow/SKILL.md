@@ -58,6 +58,8 @@ Load only the skills matching the current work. Resolve them from the client's
 available skills and respect explicit-invocation settings. If a shared skill is
 unavailable, use the project contracts for work they cover and report any actual
 gap; do not claim the skill ran or require a library-wide setup for a small task.
+Reuse unchanged skill text and recorded decisions already available in this context;
+reassess applicability for the new delta and read only missing or changed sections.
 
 | Condition | Shared skill |
 | --- | --- |
@@ -108,6 +110,9 @@ For EVAS fixes, use the component skill's layered selection and time-bounded pri
 Keep one human review summary under [the delivery limits](../../../CONTRIBUTING.md#concise-review-delivery).
 Record phase time with [the existing evidence policy](../../../docs/contributing/evidence.md#development-time),
 including rework and CI waiting; reuse tool timings rather than reconstructing estimates later.
+Apply [development and delivery waiting boundaries](../../../CONTRIBUTING.md#keep-iteration-feedback-short):
+continue independent authorized work while fixed-candidate CI/review runs. Track pending
+results in the existing entry; wait when the next step actually depends on them.
 
 Keep the same main conversation and fixed progress entry for an ongoing task. Compaction
 alone never requires a transfer; recover settled decisions from the task record first.

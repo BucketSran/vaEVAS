@@ -118,6 +118,25 @@ CI verify reusable evidence identities; an earlier green commit alone is insuffi
 changed consumers after a meaningful delta. See [CI stages](scripts/README.md#ci-按改动选择检查)
 and [evidence reuse](docs/contributing/evidence.md#reuse-ci-regression-evidence).
 
+Wait during development for feedback that determines the next implementation step:
+the distinguishing failure, the changed path and its direct consumers. Full CI,
+broader regressions and independent review can run against a fixed candidate while
+the coordinator continues independent authorized work. Identify each job's commit,
+owner and pending result in the existing task entry. A shared correctness finding
+blocks work that depends on it; unrelated work can continue. Preserve the source and
+binary used by running local checks instead of overwriting their inputs.
+
+Collect results at task checkpoints or on completion/failure events. Avoid repeated
+status polling when independent work is available. Required checks and review must
+finish before claiming acceptance or merging. After a merge whose tree matches the
+accepted candidate, automatic main CI does not by itself block the next independent
+development step. Reconcile a changed merge tree before reusing affected evidence.
+
+Reuse already-read skill text and settled decisions when their versions and context
+remain applicable. Reassess each new delta's scope and risks; load only missing or
+changed sections. Independent reviewers receive their own necessary context. Entering
+commit, PR or merge stages does not restart research, review or numerical acceptance.
+
 ### Prepare one delivery candidate
 
 Run formatting, lint and changed-link checks before freezing behavioral acceptance. Keep one
