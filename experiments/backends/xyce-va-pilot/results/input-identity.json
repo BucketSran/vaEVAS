@@ -1,0 +1,360 @@
+{
+  "schema_version": 1,
+  "analysis_id": "review-provenance-20261017",
+  "operation": "reanalysis of existing input/output snapshot; no new simulator execution",
+  "external_source": {
+    "repository": "https://github.com/Arcadia-1/analog-design-bench",
+    "task": "sky130-bottom-plate-sampler-pvt",
+    "upstream_commit": null,
+    "upstream_commit_status": "unknown: copied task has no own .git; parent vaEVAS HEAD is not benchmark identity",
+    "original_recorded_fetch_date": "2026-10-17",
+    "local_snapshot_identity": "per-file SHA256 below; not a claim that the current upstream tree is identical"
+  },
+  "availability": {
+    "compact": "repository-contained",
+    "inputs_and_raw": "local-only",
+    "archive": "primary current checkout: runs/xyce-va-pilot-20261017/",
+    "public_download": null,
+    "limits": "Hashes identify retained local bytes, not publicly downloadable raw data. R1 external commit cannot be reconstructed from parent Git identity."
+  },
+  "input_snapshot": [
+    {
+      "path": "Dockerfile",
+      "bytes": 4268,
+      "sha256": "592b60f9696d5b5a82825f0fd3045e8c85059cb435c1f5c8a5efb9b6ede78a8f"
+    },
+    {
+      "path": "Dockerfile.openvaf",
+      "bytes": 1450,
+      "sha256": "7f3ee66d52934ad0a442521f96790bb831bc9c0e56bfc164aac443228ad400cc"
+    },
+    {
+      "path": "analyze_raw.py",
+      "bytes": 4679,
+      "sha256": "c90f0df17a35921a26b75aa10a58f414ac12e3a210432fd6fa522b45b42cf008"
+    },
+    {
+      "path": "bench/analog_arena_tests/Dockerfile",
+      "bytes": 323,
+      "sha256": "531c77e007a7f0b87710c253d40a3240a97c6bec02fc0496cc2ddaa92c81fe48"
+    },
+    {
+      "path": "bench/analog_arena_tests/benches/tb_fft.spi",
+      "bytes": 682,
+      "sha256": "1739aef2dcd618bcc8250311693c624937a3f023832abe6715c3a475b9971a4d"
+    },
+    {
+      "path": "bench/analog_arena_tests/benches/tb_hold.spi",
+      "bytes": 1261,
+      "sha256": "56fadee44b340c2a91a2491befe8e648dea82048934c24c681045aedeb451aec"
+    },
+    {
+      "path": "bench/analog_arena_tests/benches/tb_static.spi",
+      "bytes": 766,
+      "sha256": "c053858d7fa4205ec445468b3d1334d0f79289ca7b3637721f2692f474d62a0e"
+    },
+    {
+      "path": "bench/analog_arena_tests/test.sh",
+      "bytes": 372,
+      "sha256": "47a0afc03a884664d038a3d2c1069c2bc69dc87820ccfe19d36e5fcc749ee6ae"
+    },
+    {
+      "path": "bench/analog_arena_tests/utils.py",
+      "bytes": 2634,
+      "sha256": "8f9909aa283429e11d3d5b55b33d5e55d5c54f4bad33aaa599f1c8a35a99e299"
+    },
+    {
+      "path": "bench/analog_arena_tests/verify.py",
+      "bytes": 19915,
+      "sha256": "410a6407ac79250df505a699238b615199bb19f8e7d4adfc22d1a131bb669df4"
+    },
+    {
+      "path": "bench/circuit.spi",
+      "bytes": 2833,
+      "sha256": "5f7590d5ae876a508cdaf205cbbee6f85cc56d2850799af2ea2616f321dcb014"
+    },
+    {
+      "path": "bench/instruction.md",
+      "bytes": 5631,
+      "sha256": "1686d3bbd46643d1af27d7b0d65b6cbd9bff43084c3c8a188a0df64fa4c443b9"
+    },
+    {
+      "path": "bench/solution/circuit.spi",
+      "bytes": 2833,
+      "sha256": "5f7590d5ae876a508cdaf205cbbee6f85cc56d2850799af2ea2616f321dcb014"
+    },
+    {
+      "path": "bench/task.toml",
+      "bytes": 517,
+      "sha256": "556c7e136778d034a004ef575ba829350f0111efd73e3715426e47bfd57d0e50"
+    },
+    {
+      "path": "bench/tests/Dockerfile",
+      "bytes": 323,
+      "sha256": "531c77e007a7f0b87710c253d40a3240a97c6bec02fc0496cc2ddaa92c81fe48"
+    },
+    {
+      "path": "bench/tests/benches/tb_fft.spi",
+      "bytes": 682,
+      "sha256": "1739aef2dcd618bcc8250311693c624937a3f023832abe6715c3a475b9971a4d"
+    },
+    {
+      "path": "bench/tests/benches/tb_hold.spi",
+      "bytes": 1261,
+      "sha256": "56fadee44b340c2a91a2491befe8e648dea82048934c24c681045aedeb451aec"
+    },
+    {
+      "path": "bench/tests/benches/tb_static.spi",
+      "bytes": 766,
+      "sha256": "c053858d7fa4205ec445468b3d1334d0f79289ca7b3637721f2692f474d62a0e"
+    },
+    {
+      "path": "bench/tests/test.sh",
+      "bytes": 372,
+      "sha256": "47a0afc03a884664d038a3d2c1069c2bc69dc87820ccfe19d36e5fcc749ee6ae"
+    },
+    {
+      "path": "bench/tests/utils.py",
+      "bytes": 2634,
+      "sha256": "8f9909aa283429e11d3d5b55b33d5e55d5c54f4bad33aaa599f1c8a35a99e299"
+    },
+    {
+      "path": "bench/tests/verify.py",
+      "bytes": 19915,
+      "sha256": "410a6407ac79250df505a699238b615199bb19f8e7d4adfc22d1a131bb669df4"
+    },
+    {
+      "path": "va/ideal_sw.va",
+      "bytes": 2046,
+      "sha256": "4055bb7f779c40bc64d2db8c864b81173e11a923b1e44126191361697248ba14"
+    }
+  ],
+  "raw_inventory": [
+    {
+      "path": "build-summary.txt",
+      "bytes": 2549,
+      "sha256": "f83a63f6899fcd53be087ede7e1c46812baab09fb12a9ae621df1b2423632540"
+    },
+    {
+      "path": "build-xyce.log",
+      "bytes": 517680,
+      "sha256": "fb5c55be7838f38a8c85ae7cc83de1801fefe0f8e168d7e9469414d2bfa50001"
+    },
+    {
+      "path": "run/_gold_osdi_test",
+      "bytes": 3014,
+      "sha256": "8abde052144900093182aad7add0eeebe4fdff03d610eae575ac8a18285486dc"
+    },
+    {
+      "path": "run/_gold_rerun.log",
+      "bytes": 39358,
+      "sha256": "d56367e987088ac65d19e183f7680bbad18b8f2df29c7d5a53b30e3d41045784"
+    },
+    {
+      "path": "run/_normalized_tt_va_steep100_xyce.raw",
+      "bytes": 243854659,
+      "sha256": "51e9878902c65e2d38b0e2d453104e39df0da9f1670df00615695a436a6fdd5c"
+    },
+    {
+      "path": "run/_normalized_tt_va_xyce.raw",
+      "bytes": 240990764,
+      "sha256": "23daa341ab54ba126b30908ce2fc6eebd0be7611ba3f9f149e242ae9a5ad82bf"
+    },
+    {
+      "path": "run/_normalized_tt_xyce.raw",
+      "bytes": 239002990,
+      "sha256": "b74c86cf58e0ae876eb8bb3be17001ab8cd75ac2fef22f735082c0dc1ec11a5a"
+    },
+    {
+      "path": "run/_verify_rerun.json",
+      "bytes": 2423,
+      "sha256": "ef5b07cc10489b1995d581335e98ac9b9ff967c30ee87a01e0e32077ba3ffc14"
+    },
+    {
+      "path": "run/_verify_va.json",
+      "bytes": 2425,
+      "sha256": "c21e8aef6bf92fba45591e41caa7587f417ad82cc182b28693ce6071f61fd7f4"
+    },
+    {
+      "path": "run/bsim4v5.out",
+      "bytes": 188,
+      "sha256": "983e4834b035e1fde4c50d6422498cdb65b02e112433b1a3d334b75b03a74f71"
+    },
+    {
+      "path": "run/circuit.spi",
+      "bytes": 2833,
+      "sha256": "5f7590d5ae876a508cdaf205cbbee6f85cc56d2850799af2ea2616f321dcb014"
+    },
+    {
+      "path": "run/circuit_va_tt_ngspice.spi",
+      "bytes": 2825,
+      "sha256": "7749ec24550a92512d578633d9aa232b80afd80c7ebbdbef03c0f8f78b7be353"
+    },
+    {
+      "path": "run/circuit_va_tt_xyce.spi",
+      "bytes": 2850,
+      "sha256": "5429dbd8ddacd2ff491ac1213bad7f0b229a28b66a8eed8706b0ac2d79856716"
+    },
+    {
+      "path": "run/circuit_va_tt_xyce_steep100.spi",
+      "bytes": 2851,
+      "sha256": "f0b045869ede36104630f2c7df1e7e479c98278d17de012a863354b8ab97ba1b"
+    },
+    {
+      "path": "run/compare_tt_ngspice_xyce.json",
+      "bytes": 1044,
+      "sha256": "b316deb2fd590f5c56b85a9d9b0907ab879aef9548fbd99207470231456046c6"
+    },
+    {
+      "path": "run/compare_tt_va_sw.json",
+      "bytes": 2068,
+      "sha256": "789a356f2b7c4cf5c39c93fb44e45cefd00d55818c13c97c62b51514ff2e9e76"
+    },
+    {
+      "path": "run/ideal_sw.osdi",
+      "bytes": 72376,
+      "sha256": "1c1a12ac4daccac200429b3ed86d3d0ef692ec7096acf531f65d1a1ca4e2588c"
+    },
+    {
+      "path": "run/metrics_tt_ngspice.json",
+      "bytes": 2408,
+      "sha256": "5808fa02c3527866728c95d454185897c4178431d01d172f8bfef06c765d9a7e"
+    },
+    {
+      "path": "run/metrics_tt_va_ngspice.json",
+      "bytes": 2416,
+      "sha256": "64218e5da457f9d4383f43d5c00626d6c22366b8498bc6ec0bda562fa743af88"
+    },
+    {
+      "path": "run/metrics_tt_va_ngspice_tight.json",
+      "bytes": 2420,
+      "sha256": "957ed332ae7d8bf726885bd32eb45bb377088ab3c3f6f36bd248d53be4f134b2"
+    },
+    {
+      "path": "run/metrics_tt_va_steep100_xyce.json",
+      "bytes": 2421,
+      "sha256": "1bba2ff46682014577d202cf7a5d97dac6259e1055954a7903e28992f01b7842"
+    },
+    {
+      "path": "run/metrics_tt_va_xyce.json",
+      "bytes": 2427,
+      "sha256": "a207f6c7ac4db5c172bb4f97e785c9422f503b4152f838cf02c71da8396ea91f"
+    },
+    {
+      "path": "run/metrics_tt_xyce.json",
+      "bytes": 2419,
+      "sha256": "0409d5ae57819b127096d1c1bc305deb9ee86a7d42849e3428b430e93f6a2f1c"
+    },
+    {
+      "path": "run/tb_fft_tt_ngspice.raw",
+      "bytes": 5301632,
+      "sha256": "75b933a5852aaf05234b50f6f35c05920a3e67d8317c86716c51c8b88f8b00f4"
+    },
+    {
+      "path": "run/tb_fft_tt_ngspice.spi",
+      "bytes": 682,
+      "sha256": "05f3d5858b4aa0c6b38713e7739374a6028ca54e31db15b2e968e4898a35d7d2"
+    },
+    {
+      "path": "run/tb_fft_tt_va_ngspice",
+      "bytes": 6661,
+      "sha256": "e3fffb97be743e02adf7d24df3d43e9b03289ba79c78be9224320cad861d9b3d"
+    },
+    {
+      "path": "run/tb_fft_tt_va_ngspice.raw",
+      "bytes": 5270989,
+      "sha256": "60c7eba22d9160bf5eba4b88239f99761c6f20a2942ea4adf1559944b6986f5f"
+    },
+    {
+      "path": "run/tb_fft_tt_va_ngspice.spi",
+      "bytes": 739,
+      "sha256": "dcccaaa4c0fa0d91713dfd5fb9d2c93f0c1c3aca0a808f1997fb7ebb3d94a0d4"
+    },
+    {
+      "path": "run/tb_fft_tt_va_ngspice_tight.raw",
+      "bytes": 56074014,
+      "sha256": "d7aee0fbecccf0161ccf7fb841d53fa0f7f1c3de60c8bccc6fafe614f9b162db"
+    },
+    {
+      "path": "run/tb_fft_tt_va_ngspice_tight.spi",
+      "bytes": 739,
+      "sha256": "7220f27037e6e120eeb3de7c1771c6d40fb1df35f486951bc7269f289e4a3034"
+    },
+    {
+      "path": "run/tb_fft_tt_va_steep100_xyce.log",
+      "bytes": 39606,
+      "sha256": "169b5368feb6fe60d14e414c348250aefc68cfd9d4a35371bbeac7fa83611290"
+    },
+    {
+      "path": "run/tb_fft_tt_va_steep100_xyce.raw",
+      "bytes": 243854655,
+      "sha256": "044ae426fd7836aff4c49bead2ea1b3ec1b92a1754d208aa392122f6d512260e"
+    },
+    {
+      "path": "run/tb_fft_tt_va_steep100_xyce.spi",
+      "bytes": 698,
+      "sha256": "de4fafb80a1eb0b40fe5b2ee2ab2275883cfb08497f0dfc16d8cdef6436c9fae"
+    },
+    {
+      "path": "run/tb_fft_tt_va_xyce.log",
+      "bytes": 39590,
+      "sha256": "4d70b136e87bf3d9c78282bfcd1191c4fd363a0c287cdfc51056daff1eed8d70"
+    },
+    {
+      "path": "run/tb_fft_tt_va_xyce.raw",
+      "bytes": 240990760,
+      "sha256": "b5fb5e23eb7efd5813bf284d08bdba3fd8783ac8a05400ba0870c63e2e0692e8"
+    },
+    {
+      "path": "run/tb_fft_tt_va_xyce.spi",
+      "bytes": 689,
+      "sha256": "8cf070de2989bcc8867842a0ff360c0d360c500ec485309bd1989bc28258fbc7"
+    },
+    {
+      "path": "run/tb_fft_tt_xyce.raw",
+      "bytes": 239003469,
+      "sha256": "95e934bff463901a0cf83bc2c3ef7be54e75c2253deea4657a93b223e2d3d04b"
+    },
+    {
+      "path": "run/tb_fft_tt_xyce.spi",
+      "bytes": 674,
+      "sha256": "7fd968eb4b777d0bcbaafcffc70b44d7572f18a445501047d6288a678a99e228"
+    },
+    {
+      "path": "run/tb_fft_tt_xyce_rawfmt.spi",
+      "bytes": 685,
+      "sha256": "163adb5bf9c7a9cbb44feea707c071a29174e364d561c74d8bf5b820848d9e6c"
+    },
+    {
+      "path": "run/tb_fft_tt_xyce_rawfmt.spi.raw",
+      "bytes": 7090482,
+      "sha256": "2549f2fc60015e1a8c43a88113336b1f513e21a6fd55ea685e1b318a5de37c41"
+    },
+    {
+      "path": "va/build/Xyce_Plugin_ideal_sw.so",
+      "bytes": 144544,
+      "sha256": "e5419ef5ef237bfc753609a3371a8360dbbf6199a1902cfb19d3f4ac80844ee8"
+    }
+  ],
+  "checker": {
+    "original_verifier": "bench/tests/verify.py",
+    "executed_copy": "bench/analog_arena_tests/verify.py",
+    "executed_copy_equals_original": true,
+    "extractor": "analyze_raw.py",
+    "extractor_matches_repository": true
+  },
+  "public_recomputation": {
+    "can": [
+      "SFDR from held_samples",
+      "differential gain from held_samples",
+      "held-sample differences between public metric rows"
+    ],
+    "requires_local_originals": [
+      "stored common-mode samples/max error",
+      "source-power integrals",
+      "raw time grids and output bit identity",
+      "BSIM runtime warnings",
+      "R1 verifier execution completeness"
+    ]
+  }
+}

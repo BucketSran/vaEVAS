@@ -38,6 +38,7 @@
 | Spectre 的事件与历史行为有何差异？ | [Spectre 对照](backends/dvs2-spectre-validation/README.md)、[共同生命周期历史报告](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#shared-lifecycle-review) |
 | 旧四后端的结果与失败是什么？ | [历史矩阵](backends/dvs2-four-backend-validation/results/MATRIX.md)、[故障归因](backends/dvs2-four-backend-validation/DIAGNOSIS.md) |
 | 当前电压共同子集与 ngspice 是否一致？ | [ngspice 差分对照](backends/ngspice-differential/README.md) |
+| 真实晶体管网表 + VA 器件在开源仿真器下联合求解的差异有多大？ | [sky130 VA 开关试点](backends/xyce-va-pilot/README.md) |
 | 静态并行、矩阵规模和瞬态路径的局部耗时？ | [计时边界与结果](../evas/docs/math/solving.md#稀疏分支与性能边界)、[0.12.3 收据](runs/solver-performance.json) |
 | 求解各阶段、完整请求成本及拆 crate 的依据？ | [配对测量与架构决定](performance/README.md) |
 | 怎样重新运行或取得原材料？ | 各专题目录的协议与资产说明；0.12.3 历史矩阵见[对应复现入口](runs/parallel-gap-integration/README.md#复现入口) |

@@ -1,0 +1,40 @@
+// 理想采样开关（第一版：纯连续，无事件语义）— issue #200 步骤 2 草稿
+//
+// 用途：替换 gold 解 bottom_plate_sampler 中的输入采样开关管 XM_P / XM_N
+//   XM_P vsp vgp vinp vss sky130_fd_pr__nfet_01v8 w=16 l=0.15 nf=8
+//   XM_N vsn vgn vinn vss sky130_fd_pr__nfet_01v8 w=16 l=0.15 nf=8
+// 替换后：XSW_P vsp vgp vinp vss ideal_sw  （栅电压语义保留：V(g) 仍是自举驱动输出）
+//
+// 语义：压控电导。V(g) 高 → Ron（近似导通电阻），V(g) 低 → Roff（近似关断泄漏）。
+// 过渡用 tanh 平滑，不含 cross/transition/timer，ADMS/Xyce 当前支持范围内。
+//
+// 与真实 MOS 开关的预期差异（对比时要解析核对的方向）：
+//   - 消失：沟道电荷注入、时钟馈通（存储 CM 偏移应显著下降，gold 解 worst 21.3 mV）
+//   - 消失：导通电阻随输入信号变化（Ron 非线性）→ 采样精度应改善
+//   - 保留：由自举驱动决定的开关沿速度（g 节点波形未动）
+//   - 参数选择依据：w=16u/nf=8 的 sky130 nfet_01v8 在 VGS≈VDD 时 Ron 约 200-500 Ω，
+//     先用 500 Ω，与替换管同数量级；Roff 用 1 GΩ（MOS 关断泄漏的合理近似量级）
+
+`include "disciplines.vams"
+
+module ideal_sw(d, g, s, b);
+  inout d, g, s, b;
+  electrical d, g, s, b;
+
+  parameter real ron    = 500.0 from (0:inf);   // 导通电阻 [Ω]
+  parameter real roff   = 1e9    from (0:inf);  // 关断电阻 [Ω]
+  parameter real vth    = 0.9    from (0:inf);  // 栅阈值 [V]（栅摆幅约 0~1.8V，取中点）
+  parameter real steep  = 20.0   from (0:inf);  // tanh 斜率 [1/V]，越大越接近理想跳变
+
+  real gcond;
+
+  analog begin
+    // 平滑电导：V(g) 远高于/低于 vth 时分别饱和到 1/ron 与 1/roff
+    gcond = 0.5 * ( (1.0/ron + 1.0/roff)
+                  + (1.0/ron - 1.0/roff) * tanh( steep * (V(g) - vth) ) );
+
+    I(d, s) <+ V(d, s) * gcond;
+    I(g, d) <+ 0.0;   // 显式声明栅极不取电流，保持端口完整
+    I(b, s) <+ 0.0;
+  end
+endmodule

@@ -1,0 +1,38 @@
+Xyce 7.10 + ADMS 镜像构建摘要（完整日志：build-xyce.log）
+=========================================================
+镜像：xyce-7.10-adms:arm64（linux/arm64，宿主机 Apple M5 原生）
+基础：ubuntu:20.04（apt: build-essential gfortran cmake bison flex libfl-dev
+      libblas-dev liblapack-dev libfftw3-dev libsuitesparse-dev autoconf automake
+      libtool git python3 perl libxml-libxml-perl）
+/opt/sky130 多阶段拷贝自 ghcr.io/arcadia-1/circuit-bench-sky130-ngspice@sha256:bd5c4256...
+
+源码与哈希（原件在 src/）：
+  Xyce-7.10.tar.gz      93027b1e7dc195538bfb1886f07057ccd6d4be19b7b45943475108c7fb1e587b
+    来源 https://xyce.sandia.gov/download/1812/（官网 Xyce 7.10 source）
+  trilinos-12.12.1.tar.gz  fc8c65f192f6dc9a754069919e3fc040640d547ceb4dd8d7efdfb214207ce949
+    来源 https://github.com/trilinos/Trilinos/archive/refs/tags/trilinos-release-12-12-1.tar.gz
+  adms-release-2.3.7.tar.gz  04208628962ef552ef5d2b943a264b34bc8c75142d3f3e59604e8adab8d3a160
+    来源 https://github.com/Qucs/ADMS tag release-2.3.7（commit 06e1a6cbe1979db94c49e34bc47c0dbe304883db）
+
+Trilinos 12.12.1 serial：按官方 Building Guide 最小包集（NOX/LOCA、EpetraExt+BTF、
+  Ifpack、AztecOO、Belos、Teuchos、Amesos+KLU、Sacado、CXX11、COMPLEX_DOUBLE、
+  TrilinosCouplings、Kokkos；TPL 仅 BLAS/LAPACK/AMD），-O3 -fPIC，装 /opt/XyceLibs/Serial。
+  编译 ~4 分钟（M5 10 核）。
+Xyce 7.10 serial：源码包无 configure，先 ./bootstrap（注意：configure 会打印
+  “autotools 已弃用”警告，仍可用）；configure --enable-shared --enable-xyce-shareable
+  --prefix=/opt/Xyce-7.10，ARCHDIR=/opt/XyceLibs/Serial。编译 ~23 分钟。
+ADMS：Qucs release-2.3.7，cmake 装到 /usr/local（admsXml 2.3.7）。
+
+产物校验（容器内）：
+  Xyce -v     -> Xyce Release 7.10-opensource
+  admsXml     -> 2.3.7（date Oct 16 2026）
+  /opt/Xyce-7.10/bin：Xyce, buildxyceplugin（VA 插件路径可用）
+  /opt/Xyce-7.10/share/xml：xyce*Templates_nosac.xml 等 ADMS 模板齐全
+
+构建踩坑（已修复进 Dockerfile）：
+  1. Qucs/ADMS 仓库根目录无 autogen.sh，改用 cmake；需 libxml-libxml-perl。
+  2. Xyce 7.10 源码包只带 configure.ac，必须先 ./bootstrap。
+  3. 编译 N_DEV_ReactionNetwork.C 需 FlexLexer.h -> 加 libfl-dev。
+  4. 两次网络抖动（github clone、docker hub pull），改为本地打包 ADMS tarball COPY。
+
+总构建时长（最终一次）：约 30 分钟；前序失败尝试见 git 之外的 build-xyce.log 历史。
