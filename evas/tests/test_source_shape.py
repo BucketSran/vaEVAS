@@ -77,6 +77,85 @@ class SourceShapeContracts(unittest.TestCase):
         y=result['saved']['nodes'].index('y')
         self.assertEqual(result['saved']['values'][-1][y],1)
 
+    def test_equivalent_shape_keeps_internal_affine_root_sample_and_strict_tie(self):
+        # B1: z=2u has its unique rising root at 1/2. An identical source
+        # description must preserve that root, z(tau)=1 and strict z>1=false.
+        program=compile_sources({'internal.va':model('''@(initial_step) begin q=0; sample=0; tie=0; end
+            @(cross(V(z,r)-1,+1,1e-9,1e-9)) begin
+              q=q+1; sample=V(z,r); tie=(V(u,r)>0.5)?1:0;
+            end V(z,r)<+2*V(u,r); V(y,r)<+q+sample+tie;''',
+            'real q,sample; integer tie; electrical z;')},[instance()])
+        shape=[dict(time_numerator=str(t),time_denominator='1',value_V=t) for t in [0,1]]
+        observations=[]
+        for extra in [{},{'source_shapes':{'u':shape}}]:
+            result=transient(program,{'u':[[0,0],[1,1]]},[0,.5,1],
+                             stop=1,max_step=1,kernel=KERNEL,**extra)
+            event=result['transient']['events'][0]
+            self.assertEqual(len(result['transient']['events']),1)
+            self.assertEqual(event['time'],.5)
+            self.assertEqual(dict(zip(result['transient']['state_names'],event['after'])),
+                             {'dut:q':1,'dut:sample':1,'dut:tie':0})
+            y=program.nodes.index('y')
+            values=[row['voltages'][y] for row in result['solutions']]
+            self.assertEqual(values,[0,2,2]);observations.append(values)
+        self.assertEqual(*observations)
+
+    def test_shaped_pulse_internal_affine_guard_reaches_transition_history(self):
+        # Real SCS pulses automatically attach nonzero projection-error shapes.
+        # The root u=.2 drives a finite ramp; verify all saved outputs against
+        # rational pulse geometry and show that extra queries do not move it.
+        (self.root/'dut.va').write_text(model('''@(initial_step) q=0;
+            @(cross(V(z,r)-0.4,+1,1e-14,1e-9)) q=1-q;
+            V(z,r)<+2*V(u,r); V(y,r)<+transition(q,0,8e-11,1.2e-10);''',
+            'real q; electrical z;'))
+        path=self.deck();bench=load_scs(path)
+        self.assertGreater(bench.manifest['transient']['source_errors']['u'],0)
+        result=simulate_scs(path,kernel=KERNEL)
+        roots=[Q(1e-10)+k*Q(1e-9)+Q(.4)/2*Q(3e-11) for k in range(4)]
+        events=result['transient']['events'];self.assertEqual(len(events),4)
+        for event,root in zip(events,roots):
+            lo,hi=event.get('observation_time_bounds',[event['time']]*2)
+            self.assertLessEqual(Q(lo),root);self.assertGreaterEqual(Q(hi),root)
+        y=result['saved']['nodes'].index('y')
+        for t,values in zip(result['saved']['times'],result['saved']['values']):
+            time=Q(t);k=sum(root<=time for root in roots)-1
+            expected=Q(0) if k<0 else min(Q(1),(time-roots[k])/Q(8e-11)) if k%2==0 else max(Q(0),1-(time-roots[k])/Q(1.2e-10))
+            self.assertLessEqual(abs(Q(values[y])-expected),Q(1e-12)+Q(1e-10)*abs(Q(values[y])))
+        path.write_text(path.read_text().replace('strobetimes=[0 ','strobetimes=[0 1.07e-10 1.11e-10 '))
+        queried=simulate_scs(path,kernel=KERNEL)
+        self.assertEqual(events,queried['transient']['events'])
+
+    def test_shaped_internal_affine_projection_keeps_branch_sign_and_feedback(self):
+        # Equivalent branch equations still give V(z,w)=2u. This exercises
+        # the certified circuit solve, not just substitution of one RHS.
+        branches=[
+            'V(r,z)<+-2*V(u,r); V(w,r)<+0;',
+            'V(z,r)<+0.5*V(z,r)+V(u,r); V(w,r)<+0;',
+            'V(z,w)<+2*V(u,r); V(w,r)<+0.25;',
+        ]
+        shape=[dict(time_numerator=str(t),time_denominator='1',value_V=t) for t in [0,1]]
+        for branch in branches:
+            with self.subTest(branch=branch):
+                program=compile_sources({'branches.va':model('''@(initial_step) q=0;
+                    @(cross(V(z,w)-1,+1,1e-9,1e-9)) q=q+1;
+                    V(y,r)<+q;'''+branch,'real q; electrical z,w;')},[instance()])
+                result=transient(program,{'u':[[0,0],[1,1]]},[0,.5,1],stop=1,
+                                 max_step=1,kernel=KERNEL,source_shapes={'u':shape})
+                self.assertEqual([e['time'] for e in result['transient']['events']],[.5])
+                self.assertEqual([row['voltages'][program.nodes.index('y')] for row in result['solutions']],[0,1,1])
+
+    def test_shaped_internal_guard_does_not_round_uncertain_network_projection(self):
+        # z=u-2z gives z=u/3. Its certified projection coefficient is an
+        # interval: choosing a midpoint would invent exact source provenance.
+        program=compile_sources({'uncertain-map.va':model('''@(initial_step) q=0;
+            @(cross(V(z,r)-0.25,+1,1e-9,1e-9)) q=1;
+            V(z,r)<+V(u,r)-2*V(z,r); V(y,r)<+q;''',
+            'real q; electrical z;')},[instance()])
+        shape=[dict(time_numerator=str(t),time_denominator='1',value_V=t) for t in [0,1]]
+        with self.assertRaisesRegex(KernelError,'event_resolution'):
+            transient(program,{'u':[[0,0],[1,1]]},[0,1],stop=1,max_step=1,
+                      kernel=KERNEL,source_shapes={'u':shape})
+
     def test_physical_corner_partition_replaces_displaced_nominal_crossing(self):
         # The nominal ramp ends at .3; the actual ramp ends at 1/3. Its
         # 15/16 crossing is exactly 5/16, after the nominal corner.

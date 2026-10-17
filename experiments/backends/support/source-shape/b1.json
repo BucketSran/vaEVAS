@@ -1,0 +1,5178 @@
+{
+  "scope": "B1 bounded repair after5f5bbae7; original091/320 semantic classifications preserved; PR208 draft unmerged",
+  "source_identity": {
+    "parent": "5f5bbae70781a46c9b33d56658e2a215f4a595da",
+    "production_files": 142,
+    "changed_production_files": {
+      "evas/rust_core/src/event_accuracy.rs": "e82c0b5ef998211b01af0ec3fab69ac833432b4a26dd908af392b514b170d43e",
+      "evas/rust_core/src/pwl.rs": "8c17bd4cf3121989b9591c1a17390c3a18451b96fafca754368973df498d4ff5",
+      "evas/rust_core/src/schedule.rs": "d18c68fb5efcd068bb0b4cb6946dfb246ea9184cd0297f91551fddf1588847ef"
+    },
+    "build_sources_sha256": "b7b7ee50b5005556ff8e59e97e04ec4913c5dad5acdb57f7509c4f50bff352b1",
+    "debug_kernel_sha256": "a0cac150f11a6704d35f065dcd0dc3cd26f585a0cf13ab1523d57a72e1e21c93",
+    "release_kernel_sha256": "b9d10e2488239596987fc7dbbd8a5e2304d17ac64925e4ada65096b4f388f4d6"
+  },
+  "cause": "Physical source root path received raw internalnode expression; omitted already certified affine circuitprojection. Exact-equivalent shape changed successful ordinary request into event_resolution refusal.",
+  "repair": "Reuse GuardBounds only for point coefficients andzero unresolvedstate/operator columns; reconstruct expression on original driveninputs, then existing Curve/root/timeproof. Direct curve path takes precedence; nonpoint maps remain refused. No IR/schema/precision/eventcondition change.",
+  "baseline": {
+    "valid_red": "b1/red-final.log",
+    "new_positive_contracts": 2,
+    "positive_results": "event_resolution failures",
+    "negative_control": "uncertain u/3 network remains refused",
+    "initial_test_setup_failures": "unsupportedinternalpredicate ternary andVA .25 literal retained before validred"
+  },
+  "checks": {
+    "debug_python_consumers": 149,
+    "branch_sign_feedback_supplemental": 1,
+    "release_affected_regressions": 69,
+    "rust_kernel_passed": 401,
+    "rust_kernel_ignored": 1,
+    "traceability": "pass175testfiles",
+    "original_b1_repro": "ordinary andidenticalshape both[-0,1,1]",
+    "source_shape_new_tests": 4
+  },
+  "fixed112": {
+    "count": 112,
+    "counts": {
+      "original_checker_pass": 55,
+      "original_checker_mismatch": 2,
+      "rejected": 55
+    },
+    "unrun": [],
+    "timeouts": 0,
+    "cleanup_confirmed": 112,
+    "all_112_status_checker_notes_and_rejection_diagnostics_equal": true,
+    "all_57_complete_responses_equal": [
+      "001",
+      "002",
+      "004",
+      "006",
+      "008",
+      "010",
+      "040",
+      "043",
+      "044",
+      "047",
+      "051",
+      "055",
+      "071",
+      "084",
+      "089",
+      "091",
+      "104",
+      "106",
+      "178",
+      "184",
+      "191",
+      "198",
+      "199",
+      "200",
+      "204",
+      "205",
+      "206",
+      "207",
+      "208",
+      "209",
+      "210",
+      "213",
+      "214",
+      "269",
+      "284",
+      "293",
+      "294",
+      "306",
+      "309",
+      "320",
+      "321",
+      "322",
+      "327",
+      "341",
+      "342",
+      "345",
+      "352",
+      "353",
+      "367",
+      "375",
+      "376",
+      "379",
+      "382",
+      "394",
+      "395",
+      "397",
+      "399"
+    ],
+    "manifest_unchanged": true,
+    "kernel_timeout_s": 120,
+    "worker_limit_s": 150,
+    "manifest_sha256": "30f6dc0e262cd287e0149ccf04c699712fb4a496c3e77ac50ef8e39c072a3b5e",
+    "original23_complete_response_equal": [
+      "270",
+      "272",
+      "273",
+      "347",
+      "354",
+      "020",
+      "021",
+      "022",
+      "028",
+      "030",
+      "031",
+      "032",
+      "033",
+      "034",
+      "035",
+      "046",
+      "073",
+      "082",
+      "083",
+      "086",
+      "094",
+      "095",
+      "099"
+    ],
+    "original23_checker_passed": 22,
+    "cases": [
+      {
+        "family": "001",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "data_edges=6 up_edges=2 down_edges=2 overlap_frac=0.0000 direction_up=2/2 direction_down=2/2 none=2/2 wrong_direction=0 missing_direction=0 false_pulse=0 strict_pulses=4 rail_failures=0 clear_failures=0",
+          "checker_id": "v4_001_bang_bang_phase_detector",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "f9eb9fa7001a711e0422ad6a877bb8b4d9142bd0dc92ed3f4a881d1c6b5a2fc8",
+        "input_identity_sha256": "33dcce19170a3edf951612d838ce0e1eb7828fc0d5841d377e6d3a9633b9268a",
+        "result_sha256": "34c3e4eb1cb45e470df51de217f5a6f60125e2cf70553e54d2e7d928d04a5c73",
+        "process_sha256": "b7e65ad646492c7c1a38f62ee2c57de65cff414484963209861985905f1a6cd2",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "002",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "samples=10 main_codes=10 cal_codes=[0, 1, 2, 3] mismatches=0 monotonic_errors=0 diff_span=0.6188 max_diff_error=0.0000 max_cm_error=0.0000 hold_intervals=9 hold_violations=0 max_hold_span=0.0000",
+          "checker_id": "v4_002_capacitive_weighted_sar_feedback_dac",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "d8519c8274f68e0499770a082b2b0cbed91f2e7029bde7908a13836b595504f3",
+        "input_identity_sha256": "b55c58942a753af729c562a124c2eee379509703bd0e4d2973061c81120e3a0e",
+        "result_sha256": "77e045ecacacfcede7330466b956b87967d5162be414b4ce93e2cb4d2dc62f95",
+        "process_sha256": "1e66c4716ea4bc3484b20ee62b4a782991e038f682ca5801ff6e28a85d1414e7",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "004",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "clock_edges=27 initial=0.45 edge_mismatches=0 hold_intervals=26 hold_violations=0 async_hold_failures=0 range=(0.050,0.850) coverage={'reset': 2, 'increment': 11, 'decrement': 14, 'upper_clamp': 3, 'lower_clamp': 1}",
+          "checker_id": "v4_004_trim_calibration_controller",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "87ca5e735c7884fdbaf835a8f974099a138055e6cb1d923e573f92afa963a1fa",
+        "input_identity_sha256": "7fb5d0a985c4bce8db4cfbbe3a8d8c91ce967d12915ab45eb2043a7fe7126f4f",
+        "result_sha256": "1f751f2c4d9b641bea0d018d72f282b9667e9065fff56ac6b60f9100a3d500c0",
+        "process_sha256": "a73f4a94e147aabba23d696aa2b4958706abf41da64cc6e7eb82437149e7dde8",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "006",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "active_clocks=11 reset_samples=1 active_sequence=2,0,3,1,2,0,3,1,2,0,3,1 failures=0",
+          "checker_id": "v4_006_element_shuffler",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "93003ea58965928cfeaab34ab23eb481d3bb591d620d5020dcd3c949ff42cca5",
+        "input_identity_sha256": "ba18e57784ce00eaa86480209628106f94aa4ccbeeb224ce6079335267045fe2",
+        "result_sha256": "e2576202b4726ea8b370069c8d3f8e898fb044580ae4dbd77b1fe86ac7ec061a",
+        "process_sha256": "4f5ac923a3e23722271742570b65633da73287ca22739bff75761fe7d689c1a3",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "008",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "clock_edges=33 initial=0.3 edge_mismatches=0 hold_intervals=32 hold_violations=0 range=(0.050,0.850) coverage={'reset': 1, 'increase': 12, 'decrease': 18, 'deadband': 2, 'upper_clamp': 2, 'lower_clamp': 3}",
+          "checker_id": "v4_008_gain_trim_controller",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "d5ba1f3aae98ebfd1b28d42cf7709c9f1bab27db70c7fb67b805156ff84ce994",
+        "input_identity_sha256": "6e20d5023ccbe5b926fa1affe1d64c558335e3231a519bb015d6bb27e7388887",
+        "result_sha256": "6f19de6f1fe708a8743dc40b4700ec9c2ed050c6430d024c4b95da676b8b8dc8",
+        "process_sha256": "46f1b4af7f19dc0486a62ffff5f6fe11638ddf08ae7195b60cbdf401ebb99229",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "010",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "offset_decisions=LLLHHLL expected=LLLHHLL diffs_mv=[-12.0,-1.0,4.0,8.0,16.0,-1.0,-13.0] mismatches=0 below_offset_positive=True above_offset_positive=True strict_samples=LLLLLHLHHLHLL properties_checked=P_RISING_EDGE_SAMPLE,P_OFFSET_DECISION,P_LATCH_HOLD,P_RAIL_REFERENCE",
+          "checker_id": "v4_010_offset_comparator",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "5e2e4b8ce25924a1b702ee9aa876df000783f9b2bc53695620fa3eccd4ecab7d",
+        "input_identity_sha256": "893b442cd9fdb71b337fc91542ed23432f07157165accf0cd413f19c3cec1a71",
+        "result_sha256": "f23e906bb6efc8af801aec0ae03b06477440834770eacf7250a90827b824d63a",
+        "process_sha256": "111e389742a4788cfa277461f3a5a69c4e122f3aae91254753b67800cec06106",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "012",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/012/submission/clk_divider_ref.va:98:30: unsupported expression '>'",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/012/submission/clk_divider_ref.va",
+            "line": 98,
+            "column": 30
+          }
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "fe87d20a68407110b157d76a20101c5ec3666f9b68a7bf9265ee6dd39d9bdef6",
+        "result_sha256": "6de7701cb649d9c18b4ca8d30adbaddfce865bb5cb99e327cd497a3a75afb993",
+        "process_sha256": "27f4d09a72f8465c4e17ee202b0eb64a04f93849bb88e0e43c03feccffaed236",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "017",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/017/submission/cmp_strongarm.va:22:12: expected ';', got '='; outside affine-voltage syntax",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/017/submission/cmp_strongarm.va",
+            "line": 22,
+            "column": 12
+          }
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "33a4c746c0847ae06f04af5b0e623c3d33817a2a162e774492082fa9637d69d3",
+        "result_sha256": "638278764eedc9e98d6105a56f78f0c335c6b19fe05d397f8bccdfab9a26ff70",
+        "process_sha256": "e5451292dba70b0721bf216f39b9b6908b87136ec02984884c48a7b6056e8d73",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "026",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "event_resolution",
+          "message": "output query cannot certify its physical event phase",
+          "diagnostic_version": 1,
+          "code": "kernel.event_resolution",
+          "stage": "kernel",
+          "category": "numerical",
+          "capability": null
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "3e7d387f5f3abb469d72656aa696a1557a93dadda4005196d9d6c013962a9b32",
+        "result_sha256": "83e2514ea4300f010b4512674123ca7e5901db9b76459b7cc34e89b3cb0f8197",
+        "process_sha256": "4eb7bd5598f44490e8adbbb8428c54ef1d0af71b4613dcfb5543ffe701dfc996",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "036",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/036/submission/power_on_reset_detector.va:20: ordinary analog assignment target must be a local variable",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "d7335c22d0842e614902c528e13e0deb3705091ae781cb3e40b48e850440ca5f",
+        "result_sha256": "a99f880ffef055f8627581754b63cab67d0a2e7d230cac72b0fc4e4de504a698",
+        "process_sha256": "edc7f5358e4dab2070fa601722268a8d7e2f3427baed8295815e814ccd3512b2",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "040",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "ptat_ctat edge_checks=31; P_RESET_REFERENCE mismatch_count=0; P_INPUT_CLAMP mismatch_count=0; P_PTAT_TREND mismatch_count=0; P_CTAT_PTAT_AVERAGE mismatch_count=0; P_REFERENCE_BOUNDS mismatch_count=0",
+          "checker_id": "v4_040_ptat_ctat_reference_generator",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "902c6a2a8f686602fd22bada312254b57188055c29dc354adc3889863956fe93",
+        "input_identity_sha256": "6075f7d23f586f827740d4ab6d0a81ab4c9f88569f945df9b8bc9da50ed2c218",
+        "result_sha256": "6180656ac8f91900a752fa9c388c31e4eb9e54231ae69cb5d625d936cd940446",
+        "process_sha256": "a546d6867223a6e7ad4f897d0fbe17c3b900d8b9cd00c8503fed03c18fed5b05",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "043",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_043 checked=117 mismatch_count=0 coverage=clock_rises=30 regions=['high', 'low'] memory=['high', 'low']; P_RESET_NEUTRAL checked=4 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_HYSTERESIS_STATE_UPDATE checked=29 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_GAINED_LIMITER_TRANSFER checked=28 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_OUTPUT_LIMITS checked=28 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_STATE_METRIC checked=28 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0",
+          "checker_id": "v4_043_soft_hysteretic_limiter",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "c044548878bb267f2eeb227ea8063afd7740f38eea70d594a9b902a3d8edff2f",
+        "input_identity_sha256": "b1d2cff33d625b9f75d1f19c8fdbee2d72a2ff3f1f54a817cf1dae1d7c9e9abe",
+        "result_sha256": "b5dac216a01470f419c096ee842afa7ec67cbe13f6a0b337982dc0c489621f64",
+        "process_sha256": "82b3f782d096407ac5fc61606bc2bab84a978553497944f6a6e4123865ebd072",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "044",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "reset=True updates=4 positive=2 negative=2 post_done_holds=4 update_errors=0 metric_errors=0 clamp_errors=0; P_RESET_SEARCH_STATE mismatch_count=0; P_SIGNED_TRIAL_UPDATE mismatch_count=0; P_SUCCESSIVE_STEP_HALVING mismatch_count=0; P_FOUR_STEP_DONE mismatch_count=0; P_TRIM_CLAMP mismatch_count=0",
+          "checker_id": "v4_044_successive_approximation_calibration_search_fsm",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "1305e82e117c59503240643462c3bc4b242d6306d557643eca834c79cb07654e",
+        "input_identity_sha256": "ebac1b768be6c701dc89e8497a284f295f83bbd590164e42419567b539e21bd2",
+        "result_sha256": "f9f79d6af769663459915778b1df1cd5f1a97e2f84f7d5c55e136a65b9a13ffc",
+        "process_sha256": "1c059fba81ea423d42e8f580565619180ec1ec6ee2e3a2ae917dda7b25393d4a",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "047",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "below_hi=0.000 above_hi=0.000 inside_rise_hi=1.000 inside_fall_hi=1.000 span=0.900; P_INITIAL_WINDOW_STATE mismatch_count=0; P_INSIDE_WINDOW_HIGH mismatch_count=0; P_BOUNDARY_EXCLUSION mismatch_count=0; P_BIDIRECTIONAL_CROSSINGS mismatch_count=0; P_RAIL_SMOOTHING mismatch_count=0",
+          "checker_id": "v4_047_window_comparator_detector",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "10e5f532bfb3bd2d07055bb86a7bc40b7568b0884a74a7789345dabe7d845372",
+        "input_identity_sha256": "f43ee25a1a162aaccfeea8fa7689d0fa002cbb0b57b21a7ec77d5da0c289a997",
+        "result_sha256": "9f07dc9c04100682f07494967ae7867b32ed1ad05e55144458fa581e16ba7a39",
+        "process_sha256": "b179fd76d10b1dcc8b0f02b1c11402840cc4798ba239d3c54b4abb71962f61d3",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "048",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/048/submission/bin_to_therm_8b.va:19:50: unsupported expression '<'",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/048/submission/bin_to_therm_8b.va",
+            "line": 19,
+            "column": 50
+          }
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "5af502c726cdae993faff1dbf532ea6dd4d1ca0001ae874654d4cedb3877e6f8",
+        "result_sha256": "6b8231ae942c8634364695c023ae18c3689c9e6e4fe4e558a8a0de915e2117ed",
+        "process_sha256": "250572c21bc782ff56ce2fd3babdf37092732bc5ac3abc82ecf45baf7b4fbdbe",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "049",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/049/submission/therm_to_bin_8b.va:36:50: unsupported expression '<'",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/049/submission/therm_to_bin_8b.va",
+            "line": 36,
+            "column": 50
+          }
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "0ce48f270808fbba96cd273acd2e8bea5877ec0b62b23f5f8463477c57fb3b74",
+        "result_sha256": "581d62c39d80dcaabd08e49f0628e225de3f0ec3e9290a691cde819fe170cdfe",
+        "process_sha256": "70a6c75a87d18730436c9039db56aa87a7a1af2d713667dfc7a2acbb540daced",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "051",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "edges=5 hold=5 codes=[0, 90, 195, 60, 167] max_err=0.0000 max_hold_err=0.0000",
+          "checker_id": "v4_051_latched_bus_dac8",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "bf92a31a504675d831c9ea58b347007836e296ca023c498b6d4d0b3131dbab86",
+        "input_identity_sha256": "f31051de6ed44525c4a97d895a0d464a1b996fda3285f965f82d793f30a7830a",
+        "result_sha256": "f15c97dd04b9d669301c34480b9085dce5f1cf75eac394c89f5cdb84900d7240",
+        "process_sha256": "acff2e68da9fb2bcb48bbc3895b70f4f939b0867d95eba0a4c4e75861351f87d",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "055",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "edges=48 low_density=0.300 high_density=0.750",
+          "checker_id": "v4_055_first_order_sigma_delta_modulator",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "46422913aaec168ed26a3bf505068fd987c72427fb00a7588723a90ba87ddec1",
+        "input_identity_sha256": "63bb0e9fb636f47e14b78d7d784e1d5d2ebf82e76f03bdbb44174a345a707faf",
+        "result_sha256": "33fc2579713017fad29a79d8643cf82b46cfcc2179fdcfa5bd00e7d7d0b77a05",
+        "process_sha256": "869749adbf30605b86741b23b69ad768a4fad69e8b3753f66ae1bcb0d81a1f5f",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "056",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "unsupported_transient",
+          "message": "ordinary analog conditionals are not supported in transient event equations",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_transient",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": null
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "48e466cdfd19125b0e29754a301829e668694956f4d947fa2c86713ad5e939c5",
+        "result_sha256": "1f4c23b23de7a56bb81c424928638934525b4e42b04aebf6a99a7c437b7fb294",
+        "process_sha256": "dba00d53a11eb7987c4fd16e93e7647611733f262089a5ede173b86de556709d",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "057",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "resource_budget",
+          "category": "resource",
+          "stage": "compile",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/057/submission/config_shift_reg_64b.va: event integer domains failed the post-fixpoint verification",
+          "hint": "Reduce compiler expansion or depth; this is an implementation budget.",
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "4b3b55fac50a466f774ba56637da53fbf8ae70ef893995e73f33c6fc5b69cc06",
+        "result_sha256": "ffb7325b167e260a0161e466237965883a03e6fbe9b27a031c6cf649b7a56e47",
+        "process_sha256": "d39713e8bae6d2d5149969c3a6ef2b554816686c979f2871bc0cc8b6a0753566",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "058",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "unsupported_transient",
+          "message": "ordinary analog conditionals are not supported in transient event equations",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_transient",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": null
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "38aaff7edb501ebc0883372ac71b37109b10b401f6a5ce51e52a2fafa15cf558",
+        "result_sha256": "0ad0534396a71f55899ae9a8c14c962d89e7c0fd8225b5cb10e7d315a1ccb8eb",
+        "process_sha256": "3ec7d37927b880b6aa770b27e58d15697cb839cab7487a52318b09b8ece589fe",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "065",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "unsupported_source_uncertainty",
+          "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_source_uncertainty",
+          "stage": "kernel",
+          "category": "unknown",
+          "capability": null
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "6d93b7d7e9ac84af9b1fff064966069151e6b4377436f09d866a72bd51956cea",
+        "result_sha256": "92822c1dfadb728200814aa767e6c1d9ab29587b92fddf5ae2859bd7f2e452ec",
+        "process_sha256": "783159a1bec1c04cf8910d019ab20ac58b6980c091c47a2322e4f32f4a26e5e9",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "071",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "acquisition_limited_sample_hold finite_windows=3 settling_windows=3 hold_windows=3 hold_failures=0 metric=3/3 max_late_error=0.093; P_RESET mismatch_count=0; P_ACQUISITION_ENABLE mismatch_count=0; P_FINITE_ACQUISITION mismatch_count=0; P_ACQUISITION_CONVERGENCE mismatch_count=0; P_HOLD mismatch_count=0",
+          "checker_id": "v4_071_acquisition_limited_sample_and_hold",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "719742c6076b08155f03f22f9900bb513dfa0c10e07874b121957f5cb3ff2650",
+        "input_identity_sha256": "06e62c0efa5354d9b21a9b511b7d5a172cd99deda8b80a9529d80d5651245cc2",
+        "result_sha256": "cfe08dcf156603a78b711ffa3b2484adba672cd2395cfded922d245c0696afad",
+        "process_sha256": "1c099eb49ee4ce3446514173465176910569526713888be6e476d9480102c239",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "072",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "unsupported_initial_event",
+          "category": "unsupported",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates",
+          "hint": "Use an unqualified initialization leaf and constant values or a real driven-input comparison.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/072/submission/sample_hold_aperture_ref.va",
+            "line": 26,
+            "column": 13
+          },
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "f9e2e60bf26c882559f48306294eb507dbc53d69099ace0e871cc7a190bf898a",
+        "result_sha256": "a18a0d358529d08205ab450598dd6e33c97d322b03318ad8239371a647293c6b",
+        "process_sha256": "50984d04489f936f5509c020cbe46c2b6c6b4679a1b0d322b12d30e9e1d9b7d2",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "076",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/076/submission/clk_burst_gen.va:4:1: undefined or unsupported macro 'default_transition'",
+          "hint": null,
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/076/submission/clk_burst_gen.va",
+            "line": 4,
+            "column": 1
+          }
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "ef500c3c409debd6fd9500c0526821cf961f65de2a9b326095b7fcfcfa37b1b4",
+        "result_sha256": "f9f43e4967f26334f1a8c844d3e853614c0a7cfe37ec06f22c65802b546d28aa",
+        "process_sha256": "a733a6a804687651c901c3ee46a6cd19d2493b5599ba9eae0d8cf24481cd862c",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "077",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "unsupported_integer_arithmetic",
+          "category": "unsupported",
+          "stage": "binding",
+          "capability": "LANG",
+          "message": "bounded integer division/modulo exceeds quotient-bin budget (256)",
+          "hint": "Use explicit real operands if real arithmetic is intended; typed integer division/overflow are not supported.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/077/submission/noise_gen_ref.va",
+            "line": 27,
+            "column": 29
+          },
+          "instance": "IDUT_DEFAULT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "4bfd283f95d9e2dba3fda430901ed06b10b1f08a7704485339ee6b9013e92ce4",
+        "result_sha256": "5cba4e7161ab219b44ca46b16cdb602c2674e5b10d6e369aecf3b93202f50539",
+        "process_sha256": "18ece0045fb834a37425ab71e106d469fb1ee0f00ab68253bf1f32ec7510188a",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "078",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/078/submission/prbs7_ref.va:39:28: unsupported expression '>'",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/078/submission/prbs7_ref.va",
+            "line": 39,
+            "column": 28
+          }
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "ec60a4e7606a9a1cdddba8375efbfb9453246ba43cfa83ce9dd626cec3c80937",
+        "result_sha256": "50836679b14bd06a239e1d96632268ed6b19283d2630779ef28eb8d6a6e025b7",
+        "process_sha256": "92038d4e8226874f0d463688f167bebdd68f05d943799243b36b79973c6e5b0e",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "079",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "unsupported_transient",
+          "message": "transient expressions must be jointly affine in voltage and state",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_transient",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": null,
+          "warnings": [
+            {
+              "code": "ignored_scs_option",
+              "severity": "warning",
+              "option": "errpreset",
+              "requested_value": "conservative",
+              "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-10, vabstol=1e-12, max_step=2e-08.",
+              "location": {
+                "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/079/testbench/trusted_replay_test.scs",
+                "line": 11,
+                "column": 32
+              },
+              "effective_controls": {
+                "vabstol": 1e-12,
+                "reltol": 1e-10,
+                "max_step": 2e-08
+              }
+            }
+          ]
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "b1fe6da12b631fc9608cd6e4342e7f399c86831c38264bd781cce4dc431e45c7",
+        "result_sha256": "b32743d947f4b7d0330622943c7efc255fb4e31768883ee85684632d9b002c8d",
+        "process_sha256": "19326a7f52db26e6049e2c7761a0aabc7c7958e44dba09619d8816c067d61e5d",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "081",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/081/submission/adpll_ratio_hop_ref.va:172:13: expected a non-reserved identifier",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/081/submission/adpll_ratio_hop_ref.va",
+            "line": 172,
+            "column": 13
+          }
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "26fc28404cbe56b46ab070e4fefe132556c9d291d8fdefeac63bf050b7c5a925",
+        "result_sha256": "6a3fe109a3943be2d30b9d1f415ad8457669f7ebb7c38f7aa133948deceea833",
+        "process_sha256": "2ea73edbaf5bd9fb5d9524a819e75b55214d826998cee24619af97d9f9cc6bf8",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "084",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "data_edges=8 clk_period=2.000e-08 up=4/4 dn=4/4 none=0/0 overlap_frac=0.0000 retimed_checks=16 retimed_max_error=0.0000 supply_span=0.900",
+          "checker_id": "v4_084_bbpd_data_edge_alignment",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "cffa2cbbb09ac0f28e4934164e9fb6b479aa8ea79f4d753f986d8feaefca0ff3",
+        "input_identity_sha256": "b35d7215ccb8f5e57337be6b959f9b9024ba707d6bbaa7fa7944335e6dc82c42",
+        "result_sha256": "5854f7dae004392e4c1dbbb731d04d96c168666f20e410249a128c7a2aa6608e",
+        "process_sha256": "41b5fb9658b7406b2ad98948e9bbe432d0e6923da006aa3a5644e9d7b6d32697",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "088",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/088/submission/cppll_timer_ref.va:88:31: expected '=', got '('; outside affine-voltage syntax",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/088/submission/cppll_timer_ref.va",
+            "line": 88,
+            "column": 31
+          },
+          "warnings": [
+            {
+              "code": "ignored_scs_option",
+              "severity": "warning",
+              "option": "errpreset",
+              "requested_value": "conservative",
+              "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-10, vabstol=1e-12, max_step=5e-09.",
+              "location": {
+                "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/088/testbench/trusted_replay_test.scs",
+                "line": 16,
+                "column": 30
+              },
+              "effective_controls": {
+                "vabstol": 1e-12,
+                "reltol": 1e-10,
+                "max_step": 5e-09
+              }
+            }
+          ]
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "e81bbc7c3f5f3e1c2d573496ae2c9612d78a7e461a95411ed2dea0667993b15e",
+        "result_sha256": "23a031d9dec37d3699878335f7c8980352a7b1dd60bc15a6706992f5bf553cff",
+        "process_sha256": "67aee2e1cd8806b3dcf0ae9212e3516fb81f1129a1c042babc79d6aeced0d20e",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "089",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "default:cycle0:delay_ps=163.333,expected_ps=165.000,err_ps=1.667 default:cycle1:delay_ps=120.000,expected_ps=125.000,err_ps=5.000 instance=default supply_span=1.000 scale_ps=200.000 seen_rail_error=0.000 override:cycle0:delay_ps=135.000,expected_ps=135.000,err_ps=0.000 override:cycle1:delay_ps=145.000,expected_ps=145.000,err_ps=0.000 instance=override supply_span=1.000 scale_ps=100.000 seen_rail_error=0.000",
+          "checker_id": "v4_089_edge_crossing_interval_timer",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "a23290679ebc3fdee7b07d14e5cbefee13e131c2edd3867f61dd60e6fe367c34",
+        "input_identity_sha256": "b518b9dac5b24f846dcff6d13e07bd5e33d1820be28a55d0f0c7ac5d442b52a9",
+        "result_sha256": "48f7dc9b54b92fc227a43af9481d3c114e99ea41bf52708aa7b5505afd87f15c",
+        "process_sha256": "16eb80b24f6da9e93a5794d49837e9e59f5c8957454e7c296747bef926745ee3",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "091",
+        "status": "completed",
+        "original_checker": {
+          "passed": false,
+          "note": "checked=230 active=1 hold_edges=0 clears=2 polarity=+1/-0 settled_rows=0 errors=5 first=voutp@4.480ns=0.45750 expected=0.47250",
+          "checker_id": "v4_091_chopper_stabilized_differential_amplifier",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "c544904d5176f447f466b5e9c0fdbffbafe113634da9f28ba70897fefdaa690b",
+        "input_identity_sha256": "65c98583d20a0c155994acab0a01bff90f37491e909c73b890fcc9a7cf269492",
+        "result_sha256": "b52159020181a3bdc202d1914ee88b220ca4306d4fb41fa3a47d3daf3c209e4b",
+        "process_sha256": "e3f9f9ab3faa6c79a1e1c570a96d012c3df47cdc5eb108c814ccbb1d37d8ce05",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "097",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/097/submission/programmable_stimulus_sequencer.va:24:38: unsupported expression '>'",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/097/submission/programmable_stimulus_sequencer.va",
+            "line": 24,
+            "column": 38
+          }
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "67ae831d87e80d34e447555b475b21e8359b9a4e15cf0b6923d3dd30f5612e4f",
+        "result_sha256": "7f7338542f8d2ef29ee31d372fe8c4f9918ff484351dbf4fd0481a0051d83b8c",
+        "process_sha256": "701ef57b3bc8f50674ecc44391c644e28688a23afa6024dbb4ac33a87d2fa39b",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "098",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "unsupported_initial_event",
+          "category": "unsupported",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates",
+          "hint": "Use an unqualified initialization leaf and constant values or a real driven-input comparison.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/098/submission/ref_step_clk.va",
+            "line": 25,
+            "column": 13
+          },
+          "instance": "XREF",
+          "warnings": [
+            {
+              "code": "ignored_scs_option",
+              "severity": "warning",
+              "option": "errpreset",
+              "requested_value": "conservative",
+              "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-10, vabstol=1e-12, max_step=2.5e-10.",
+              "location": {
+                "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/098/testbench/trusted_replay_test.scs",
+                "line": 12,
+                "column": 32
+              },
+              "effective_controls": {
+                "vabstol": 1e-12,
+                "reltol": 1e-10,
+                "max_step": 2.5e-10
+              }
+            }
+          ]
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "277465cac9d103e4a74ab08daf981c2dad88cde1d6b8a4df28259fcf7e748e89",
+        "result_sha256": "4fc0673277ff54178a63618489d23e67a3e5536f6350ed7516f02ec00769167d",
+        "process_sha256": "c0add777acc1fcc64ffe67f9840a74b49393861daa4f7caf4b3b92f5dcf1434e",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "100",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "unsupported_initial_history",
+          "message": "changed initial transition seeds require a calendar independent of held state and histories",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_initial_history",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": "COMPOSE"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "7f222ecef0ce82cc2928d39bfba6c886cc38594f183659d786b0c324e618bf79",
+        "result_sha256": "777c629812f613f5419c7e9d96411bbd53851b02da12214854967ccea9a41dfb",
+        "process_sha256": "cc1dce30a307e2a87077251824efe55c26ed58ae9e96409a2c07d5e50a676f4f",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "103",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "waveform_accuracy",
+          "message": "cannot certify same-time forward error at dcmpn: bound 1.7867101231145404e-12, budget 1e-12",
+          "diagnostic_version": 1,
+          "code": "kernel.waveform_accuracy",
+          "stage": "kernel",
+          "category": "numerical",
+          "capability": null
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "5e0c3bfa4e1f01350025c1a38b8822cf81902c7fde552c6bd204e84b5c277350",
+        "result_sha256": "11778539473b8b80d0ed267d40a6122eb93960278926dbd736c8cf0d791a690e",
+        "process_sha256": "fc6b33b52480212c40e3746d9309ee93a1154bd8981d5731ca9ea25fee93652d",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "104",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "edges; P_RISING_EDGE_CAPTURE mismatch_count=0; P_INTEREDGE_HOLD mismatch_count=0; P_NO_FALLING_EDGE_CAPTURE mismatch_count=0; P_UNITY_SAMPLE_GAIN mismatch_count=0; P_PARAMETERIZED_THRESHOLD mismatch_count=0",
+          "checker_id": "v4_104_sample_and_hold_ideal",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "a33a72793842db1b017f7e30813d4aa8bb881c9b6e2658a3fecca856c825ddec",
+        "input_identity_sha256": "5d2d29f007ccc8f94307b3ceb1204f5a269e9745b874518af968f54e988683f9",
+        "result_sha256": "65c345f349d61133731427bba3e6a7d2cad9ef6cb8fc66ec7b4c551c5d6b15a3",
+        "process_sha256": "2568d991ff83c71858ca4c8974b03cb7c98787a0e1ebcd1061ece1f9c2a685ee",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "106",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "reset_checks; P_INITIAL_RESET_LOW mismatch_count=0; P_FALLING_EDGE_RESET_LOW mismatch_count=0; P_POSITIVE_DIFFERENTIAL_DECISION mismatch_count=0; P_NEGATIVE_DIFFERENTIAL_DECISION mismatch_count=0; P_EQUAL_INPUT_RESET_STATE mismatch_count=0; P_LATCHED_HOLD_AND_TIMING mismatch_count=0",
+          "checker_id": "v4_106_clocked_comparator_reset_low",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "5b8db89a6017ee506112c1c5276cd96ccf697407f090c785b13b0bedc7019e37",
+        "input_identity_sha256": "0e271c3bd4e51e066ab58ac91e40e789a9bb03891ec0b5c81350009ea917cb2d",
+        "result_sha256": "49fde815902d10e35d5bc7533827eda65df8b742510a18340fcbaa6b0db471b4",
+        "process_sha256": "ba0b97df024a8c9cb4407a78f357508363bfdc29420f06f9691f62eae6778f24",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "109",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "event_condition",
+          "message": "cannot certify jointly affine event expression",
+          "diagnostic_version": 1,
+          "code": "kernel.event_condition",
+          "stage": "kernel",
+          "category": "unknown",
+          "capability": null
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "13277d67ff647e7a190976131260dc46f6c11da59ce2ef0b5d2aced9aacf1f23",
+        "result_sha256": "2aeaa62aa1607ac084e73e65276600b29b756b934631fbf7d0c555dae040d407",
+        "process_sha256": "04adf830f84a862990ece3b2692e3096f012d662bea6ce02e7fe8b2694f38f88",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "117",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "waveform_accuracy",
+          "message": "cannot certify same-time forward error at vout: bound 2.9778502051909e-12, budget 1e-12",
+          "diagnostic_version": 1,
+          "code": "kernel.waveform_accuracy",
+          "stage": "kernel",
+          "category": "numerical",
+          "capability": null
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "85cf76fe52c3a3b2bc1e624dedc20377676b59bdc39583645655ad9a01e0fb74",
+        "result_sha256": "58519f38bf6c1d84b94229a11db212146426dc8297b8891e8ebd6867ed3b3d37",
+        "process_sha256": "a3519f615eaa758f021b69ee54799e094b59f17c9462e0672e3bd4e6f946853f",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "178",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "sum; P_PROGRESS_INITIAL_STATE mismatch_count=0; P_SEQUENTIAL_ONEHOT_ASSERTION mismatch_count=0; P_ACCUMULATING_PROGRESS_BITS mismatch_count=0; P_SUM_COUNT_OUTPUT mismatch_count=0; checked_property_ids=P_PROGRESS_INITIAL_STATE,P_SEQUENTIAL_ONEHOT_ASSERTION,P_ACCUMULATING_PROGRESS_BITS,P_SUM_COUNT_OUTPUT",
+          "checker_id": "v4_178_onehot_progress_encoder",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "3b67380210c92998c509c2577a54ddf26627720562ccad7eef4808aafa3fc11a",
+        "input_identity_sha256": "df8cff3f62ea88e0fd872806a97e6e84d7bedfb1919db1040e7db7ddb98d6f61",
+        "result_sha256": "3f904f49c05d8de35d33b1a552cccf0338621d9f28369a27f3203dfa0de5a725",
+        "process_sha256": "fcc7990482a48adce8e6b9164a008422567a70a77d8e3580407fe58259577d06",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "184",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_184 checked=388 mismatch_count=0 coverage=clock_rises=17 decisions=[0, 1] offset_steps=8 phase_transitions=2; P_TWO_PHASE_CLOCKED_FLOW checked=210 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_REFERENCE_AND_CODE_INITIALIZATION checked=11 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_RDAC_REFINEMENT_SEQUENCE checked=78 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_OFFSET_SEARCH_BISECTION checked=89 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0",
+          "checker_id": "v4_184_offset_rdac_search_flow",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "6b40ce02f728439f39fb3d1ee3ec89f19471e2d306f230171cbbf6099913e8fb",
+        "input_identity_sha256": "faca9f03ead198acf22ec81e7be4c3fe9a9892b28e89173126f1301a4acfd42d",
+        "result_sha256": "f0ff5932351c5d2b3198ffbf5589627159439ee8a84be6ec24e79dace7eabb57",
+        "process_sha256": "4efa30409b50867f724f93505ceeaa2a3a9428d1b426d8d817963c2e6f9d2a7d",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "191",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "checked=30 sar_rises=7 final_bit=0",
+          "checker_id": "v4_191_sar_das_logic_6b",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "f4329131fc772a2c547185e0464ec231722726b5c9ab3276cac48477c23b850b",
+        "input_identity_sha256": "ba7033b4b01b648470be49be68dce35fbf9daf9b69d7aa4dfdfe7a4998ef69c2",
+        "result_sha256": "822b0a38f96f414643c2478b60e3ea34eb15f3e0708c5e18b918b5456c775bb1",
+        "process_sha256": "3e6dcbe75392f65b3c91684b296a2872a05dcea6d111a47d6002859c52d87260",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "198",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "checked=4 low_codes=2 high_codes=2 max_error=0.0000",
+          "checker_id": "v4_198_qtz_differential_2level",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "25a79cdb7a058253b981c30b4d4bf0dcc5854def7d09e793bb928222c55c3a6c",
+        "input_identity_sha256": "ee9fa34bb7d90d40b2b63510b6cc8d8ece18f94656425701007466206f9230c8",
+        "result_sha256": "38fd09fc952f0e35a39560a60d60ce9ce870bc606d8fbea44a93355816cfc7d8",
+        "process_sha256": "bdd28f53cf006c869a23b27715de621005226c5c17f8bcd58c56b3400d983790",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "199",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "checked=364 ready_edges=4 max_ready_dac_error=0.00000",
+          "checker_id": "v4_199_l2_7b_dac_ready",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "d6cfd9e46d6e707a5ff6d9d0428ffffacd2185f4faf9830c0ff8157bf141adc0",
+        "input_identity_sha256": "5febfa488a10c5631b6864b23a63af53c7c54bfbc372107dfee6b7c5e9bf3a03",
+        "result_sha256": "560cf05bae78c38ebc91415d12b7c157afa728df5296dca7c5fffbe6b4d50983",
+        "process_sha256": "55df344e389a20d1a01f4ccf0024d7dac3cb846aa480f19e4f0ae6b97cb1ac41",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "200",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "P_FIRST_READY_EDGE_ARMS_ONLY mismatch_count=0; P_READY_SAMPLES_FOUR_BITS mismatch_count=0; P_SWITCHED_WEIGHT_DENOMINATOR mismatch_count=0; P_BIPOLAR_CDAC_OUTPUT mismatch_count=0; ready_edges=3; checked_edges=3; distinct_codes=2; max_err=0",
+          "checker_id": "v4_200_l2_cdac_4b_switch",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "1a986edd860c37bb0da4ca7cb5874e8ab7705dd71e1764a24182d764b8980d5f",
+        "input_identity_sha256": "2aec5e4e890a7dd14f3207f1e7f0bfdfdeac33406eda69adb554a211b22228ea",
+        "result_sha256": "6806a092c72475b83309b61262518cc9952c79f31bda9f65a7dd6fadad2b5e7c",
+        "process_sha256": "da72faeba7c7b47dd138afd7bc7d3d1e602f6ae4464574258fec83f360719e1c",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "204",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "all_samples_match checked=4 tol=0.0200; P_ON_EACH_RISING_RDY_CROSSING_SAMPLE mismatch_count=0; P_TEXT_WEIGHTED_CODE_16_DIN5_8 mismatch_count=0; P_EACH_DIN_TERM_IS_1_WHEN mismatch_count=0",
+          "checker_id": "v4_204_va_dac_6b_se",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "85975b2866157b47032cbf2fa4406ac9d08f0b9f182bfd3c709f9e6889f37677",
+        "input_identity_sha256": "d2103d08a6b9530ea093f8478e83f69feef11f4516c3855c17e806f6ebc872dc",
+        "result_sha256": "f1ff027664d1a22f52806d64942e10f9aad0654a5e7e309eaa1ef0a0159d188b",
+        "process_sha256": "5fa72ad0af625b19176efbbb5c57452dbf8bde7c2c5d97adbedac61e82d3bc07",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "205",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "checked=6 decisions=[0, 1, 1, 0] max_error=0.00000",
+          "checker_id": "v4_205_offset_halving_search",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "bcfc8c327548e8d7f05dd6b6137521d95fd063ca8ec1cbea18ffb9eedfdc1f31",
+        "input_identity_sha256": "d48e83c16acd76abeac43d875dc45554182756c02fd4595b383b6799fd803ded",
+        "result_sha256": "50f7bf25712f7694ed0eb38989301f69c136778a30efb8200373ba49ec993034",
+        "process_sha256": "ad31027b8f3a16d98f012161d633c02c4864e884a63c72495ba049182f2e825a",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "206",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "cmpck_events=6 errors=0 coverage=True falling=3 positive=1 negative=1 equal=1; P_INITIALIZE_BOTH_DECISION_OUTPUTS_HIGH_WHENEVER mismatch_count=0; diagnostic_schema=v4-checker-diagnostic-v1 status=pass category=behavior_pass event=stimulus_relative event_context=stimulus_relative expected=public_contract observed=trace",
+          "checker_id": "v4_206_sar_comparator_reset_high",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "9d919ca122d820d138a5cfc5d3821100765f1bff39877fba7cbead36e28bdef4",
+        "input_identity_sha256": "87f2fb20ff28867a879b3aa6109d54d891dadfeb774a2d26ad180d0d1b8b219f",
+        "result_sha256": "70b64f2d874708aa2c6fca282926021c3a3b0ca770f96a909ae39f16e3c56d3c",
+        "process_sha256": "e8ea547115e19a253d84c96ac80207c03efbdbadfcc6d454041c204f997599ef",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "207",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "vout=-0.844,-0.281,0.281,0.844 d0=0.900,0.000,0.900 d1=0.900,0.900 d2=0.900,0.000,0.900 d3=0.900,0.900 hold_checks=6",
+          "checker_id": "v4_207_dac_restore_4bit_clocked",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "f24fc225909039fa6d87bf9e39b60a2eedb35fa688d0cb6905f59a7dfa7fc34e",
+        "input_identity_sha256": "e73f53ee65ed3f808bde6da0d6d9cd7689a1eaadfdabc7f17374e7a3a5df6a39",
+        "result_sha256": "50e4e53c33d4de54894ec648fae13d5612d5c740ab3d1b52dff57222464fa2b0",
+        "process_sha256": "30f24c45fb40953a3e8dcf91f408f1b61a43326631e85df6a2814ef0d7d456df",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "208",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "checked=7 codes=[1, 31, 112, 6, 127] max_error=0.00000",
+          "checker_id": "v4_208_dac_restore_7bit_clocked",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "b87d0834219434069f4be5b06ea54e75c4a5a1b3418432b8ad8eeac3c8e85dec",
+        "input_identity_sha256": "e37f32a1f4540ec6c63dc7238d67d26d4ebc4b8fcec348132a5a92330e6c6465",
+        "result_sha256": "badbb36f37c07c259b4e707b94a7a7c60f540b1ff960407dbcec829ba6eaab45",
+        "process_sha256": "0b361bf77aaed1b958913b37fd5b4a6f8e6697e7fd59298c5927881a751a4494",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "209",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "restore6_edges=5 codes=[0, 63, 12, 45, 18] max_err=0.0000",
+          "checker_id": "v4_209_dac_restore_6bit_1p8",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "b624481a99b417cb0eefdbb1af1431732beaec0273fff3a163fe67ac1a06f895",
+        "input_identity_sha256": "9e2a3e619370b79a9db809beee629604f30af9d69316e83f5a0b926ef3462e8a",
+        "result_sha256": "cd178864056bafa9d52a998b2087872afc89d3861847f9b0f05e26af34ca5f46",
+        "process_sha256": "cbbe788ffec0851e025f6addd0d72c4000471eedfe57fc314f6067214e386003",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "210",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "edges=5 max_sample_err=0.0000 max_hold_err=0.0000 nontracking=3",
+          "checker_id": "v4_210_sample_hold_5v_clock",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "1cf5d1b90ae45622e20669484befd9bf4f88430d719798dfd0f561180ac13816",
+        "input_identity_sha256": "ece73355ed93547ab2656a52cee7ac9982f8836f42d8bb6821191616c8a4529e",
+        "result_sha256": "d75f1c4ded1e311bccac13ef3a8b590c4f5111ce6e3dbd566cdce32140010727",
+        "process_sha256": "14eee362e6360bb107c3334f514232e56c20d149d25bf100b57dbf935b7655dd",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "213",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "signed_dac_samples=4 hold_checks=3 max_err=0.0000",
+          "checker_id": "v4_213_tool_4bit_sar_signed_dac",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "622b334a6122e8cc07303ae24085d7646fe2410f4df259338fb1c05b1962b58e",
+        "input_identity_sha256": "dc65d77651d9171a6f9a0968050881174f6419893031ff1aeda8797ab395c6fe",
+        "result_sha256": "788fb6362a2b87b7e4189e4e35be2d9e4ac9197537c23e5e40e2c20e55c3e2a7",
+        "process_sha256": "8935ae15709c3e22161f159c2642de3a22aa5a1c29693d498903f4764d9a0927",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "214",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "decisions=3 resets=3 positive=True negative=True equal=True",
+          "checker_id": "v4_214_comparator_reset_low_1p8",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "e2d591747358ebaa0fcf1330b6146f8bd8ba8821875d58db9b416844b058ebf9",
+        "input_identity_sha256": "e023d88f187063964966e16c1030e3962fbd9a098537408f30b94a12a0dc4529",
+        "result_sha256": "caaa41358183c2a058a7be2bd1636a1e174a7875a5bcd1bcfa51dd514e5376d5",
+        "process_sha256": "bb12a08be480de9cc20a01f9eb938fae8c9093f1e98a1b33c66ace11cbc86f86",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "261",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/261/submission/falling_edge_calibration_sampler.va:47:39: variable division requires an ordinary analog expression",
+          "hint": null,
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/261/submission/falling_edge_calibration_sampler.va",
+            "line": 47,
+            "column": 39
+          },
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "107727fe79510825bc11a0d12b9d30853b4c894ac491ea4f73599af2a1e61c38",
+        "result_sha256": "5d7494ee7dd4988d8cbe685d0561647c8617b07ceebed3cb1a6b2b7852ea8fd4",
+        "process_sha256": "ecc74d0a5f0feac03f863c2e0c4b7f418a3ba855dbb3f69ce271d366488c3cf4",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "262",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/262/submission/resettable_phase_toggle_monitor.va:47:39: variable division requires an ordinary analog expression",
+          "hint": null,
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/262/submission/resettable_phase_toggle_monitor.va",
+            "line": 47,
+            "column": 39
+          },
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "c59b17cf1c51e84e6d092d60ca8bee464d7df23edebe6a16047b00f7b0c779c4",
+        "result_sha256": "693a1ad5e5d9c53f33e90a2d087b27695e59ec62c1819cef1891f20094c45137",
+        "process_sha256": "520482d31500539e0074439b3b5be174a5c240115b529314c9895f6c8961a070",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "263",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/263/submission/settling_progress_counter.va:47:39: variable division requires an ordinary analog expression",
+          "hint": null,
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/263/submission/settling_progress_counter.va",
+            "line": 47,
+            "column": 39
+          },
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "d62c9a181c19256f81802d424a0fd93163336cad4d7d5b56dcf157bef6169eab",
+        "result_sha256": "958ae8bf0744c86fc45514ec603b5a4ce84e2650ae74a3d26258bf0853bee1de",
+        "process_sha256": "e44e7d2c3c83fb0fb384e5692dac02d23b1228b6feee5c51b5bdb6626a9787e1",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "264",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/264/submission/enable_qualified_bias_hold.va:47:39: variable division requires an ordinary analog expression",
+          "hint": null,
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/264/submission/enable_qualified_bias_hold.va",
+            "line": 47,
+            "column": 39
+          },
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "6c7f7dfa53e8d6ef2f175f721801cf08f1dd190678c27d53962cc0745e4f8a46",
+        "result_sha256": "23c8861cf5a0c78aed4660c1dedc06af69d7ebf3a2c2269aee40a50094091c56",
+        "process_sha256": "cc394a8aec92da95ed458d7233bbcdd84056b4431968fcb20e6d9445eb4650bb",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "265",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/265/submission/dynamic_supply_enable_driver.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "1e550c04bab9f355231c04cf562d7d45cd792d42bb4596adf6221d1ec57e59a4",
+        "result_sha256": "67a0fba85ee2d0c9d113758f117861e54cd4cb50124ab3a90f72490bd6419f48",
+        "process_sha256": "19ed117d85d9ce91654320d9942d5d694f0a49ed632df0809a536b4bbce6c8ae",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "266",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/266/submission/local_domain_buffer_translator.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "f72bec67d7c9e998ea37199dd97d8d7709f6b5f665e8b9241899c88add751008",
+        "result_sha256": "71f43ec39005cbcfe1ba40f3452cdff11bf23d748825db8a7ede94fb0aa212be",
+        "process_sha256": "19390ad3ecced9a5908b864409c624e5ef29ece310ec87ba1dd5b9f490e7c0a0",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "267",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/267/submission/clocked_power_ready_sampler.va:47:39: variable division requires an ordinary analog expression",
+          "hint": null,
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/267/submission/clocked_power_ready_sampler.va",
+            "line": 47,
+            "column": 39
+          },
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "9f3eca8bf02155a6a12b319faac16e4ebb56f4fc36f036538db13a3ea4dbc28d",
+        "result_sha256": "e54bdc3d21cf3effff170f1bd380a0a3e1eb25014ccc594267286deae84408fb",
+        "process_sha256": "80108e783a5e10ae826e36e63e6af020beb42623c3a99d870868429e681f0d63",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "268",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/268/submission/mode_selected_bias_driver.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "74fa0bd7a94d9dd8d45776d18b79e10dc46c0cbffb6426d4f39b99d79e8a9d47",
+        "result_sha256": "f0d84c7f990b7af6eb509a950333ef08d2267e6827f71dd42cac3fce3f7ed6aa",
+        "process_sha256": "c978b71825d5516aaad367ea48a0d2b91afa6e8ae2fd237486294ccdf3f4cfc8",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "269",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "samples; P_CLAMP_THE_ENABLED_INPUT_BETWEEN_THE mismatch_count=0; P_DRIVE_A_SATURATION_FLAG_WHEN_EITHER mismatch_count=0; P_CLEAR_OUTPUT_FLAG_AND_RECOVERY_METRIC mismatch_count=0; P_COMPUTE_LIMITED_CLAMP_V_VIN_VLO mismatch_count=0; P_DRIVE_SAT_VHI_WHEN_ENABLED_AND mismatch_count=0; P_DRIVE_THE_RECOVERY_METRIC_AS mismatch_count=0; checked_property_ids=P_CLAMP_THE_ENABLED_INPUT_BETWEEN_THE,P_DRIVE_A_SATURATION_FLAG_WHEN_EITHER,P_CLEAR_OUTPUT_FLAG_AND_RECOVERY_METRIC,P_COMPUTE_LIMITED_CLAMP_V_VIN_VLO,P_DRIVE_SAT_VHI_WHEN_ENABLED_AND,P_DRIVE_THE_RECOVERY_METRIC_AS",
+          "checker_id": "v4_269_saturation_recovery_limiter",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "06caecd5ef6c7d0dc3886df2e3b38211aa70768442a01ab353e6bfcbad1788c6",
+        "input_identity_sha256": "ac7a83def9bda69173c18ea94935ddbee2ff7588add90a14cc0e0cbea717db49",
+        "result_sha256": "bb29f6a28e03bef56d9c8423153cdbaa6100d9bb4b0db182c10345ed29a1907b",
+        "process_sha256": "90e3cdd6c6d6a5527c9bf291e6e5ab5cfdea5baea9deae25501a06ccfb417f40",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "271",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/271/submission/windowed_event_rate_monitor.va:60:47: variable division requires an ordinary analog expression",
+          "hint": null,
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/271/submission/windowed_event_rate_monitor.va",
+            "line": 60,
+            "column": 47
+          },
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "186553f00701b807c73cc73199f6426cc1f6cfb97331b50b6d630930b866910c",
+        "result_sha256": "5171e92d7cd6cc9149982dcd313ce14b9f1bd02057b0ee0fc194ff33952382cc",
+        "process_sha256": "0e8139ce86a2bdd5a1b74c5201a1988be582e56e99495072fcb3e1ac52df6a6d",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "274",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/274/submission/rail_normalized_metric_mapper.va:24:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "bf048608ee378138e1736de31073fe8853969432e65034bfc0434b229237e708",
+        "result_sha256": "d742b825caeffd3097f34f154ab55b16019e143b5e2292994cfbe790eb9d30d8",
+        "process_sha256": "ebfb8c02d5605136a52d96dc7c0d13983c3e1c0946c1c070ff0de8b4f02ebdd0",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "275",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/275/submission/deterministic_energy_accumulator.va:47:39: variable division requires an ordinary analog expression",
+          "hint": null,
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/275/submission/deterministic_energy_accumulator.va",
+            "line": 47,
+            "column": 39
+          },
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "9f745fe24d6101f32aaf2f5cad6441a71cf9b94b639a3e7cc9344de701546565",
+        "result_sha256": "46849d6068b0346b334004660791e0d20206935e8a9d51b5bbaae53d20478a46",
+        "process_sha256": "19ba7100c4b50352ae23e865ae47c98281498d07db222a6967eb29c4786e6906",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "276",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/276/submission/bounded_tail_dither_shaper.va:47:39: variable division requires an ordinary analog expression",
+          "hint": null,
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/276/submission/bounded_tail_dither_shaper.va",
+            "line": 47,
+            "column": 39
+          },
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "c9c9934ccf62a3bb54be17d8b23447633844028b71f675798d879000c9d912e3",
+        "result_sha256": "3d7bf985b8ae05b108f0e666c52e22d30bc7fe12a65709c1a3e511e3ca5af9c3",
+        "process_sha256": "309ac75b6d7e76d2939f213bb60250c33ce64819ff27d2865a85c1204371ef54",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "277",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/277/submission/calibration_bit_select_flag.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "048980fdce97045222b98c99721f58b3e475e66fb27c009501da534be5c89ce7",
+        "result_sha256": "50f6963b6c5f49b1c7c80a6c1bc958dd0bcb79a8330971958756b208bd6078c6",
+        "process_sha256": "6fb0f1f3ddb8f56c0deac70d52b042e37088bddc628fd01fd16813f46928d112",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "278",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/278/submission/lane_mask_replication_driver.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "648ac9a126f889ff87e5dcd103d3809e8cfc7110913e9ecd198607a32bffbbbf",
+        "result_sha256": "ecceea0f0b53f66945b965cf9609fbabe319513d17309510b78992917bf8bb54",
+        "process_sha256": "b1eb0e70e832b1586be9d2745afdaa73933bce76b1a777e90cd7a29eca6134bb",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "279",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/279/submission/explicit_sar_slice_router.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "0c608ccdbb73512f719b229412fd8be4e2bf5fb5369dcc8ec85dd4944e2fcdd6",
+        "result_sha256": "39c939e20a6ef16cc655350bee6d4f497b161547567de9b0bc5f120254171c28",
+        "process_sha256": "60a788e4da421e2d6d83328ed2c7e9c478ecd5d87a120b2d85679235ba332ec9",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "280",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/280/submission/ready_reduction_fault_monitor.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "922f57a54751a1b1daa2063457ad5098f99162fddb8b2484a29bf8beacf48b6b",
+        "result_sha256": "9b568e5870d080b6b9a7779e9486e34236a7a956b72d5b92b0a7ca278addf22d",
+        "process_sha256": "db7c2cbd283c31e2627ba8e7813039dfbd64c47a8d92107bbfa14de5b447168b",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "284",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "samples=13 max_err=0.0000",
+          "checker_id": "v4_284_calibration_affine_transform",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "f53f30327dc29c910d8e83015fa87a3431f1ad4c0bdc684996910cc16242c0da",
+        "input_identity_sha256": "dddcb52f97ca92f71f7def785bc91877bbc9e61161e685df19d12a3e02e2d11f",
+        "result_sha256": "6ffedb790d13db4244aa9bf0b1e29ec22fa32b68fd15ba87d10b91c313183a4c",
+        "process_sha256": "b2db75d00a2ada55a0495c40d0f90344d9c790de1d1a78747864f8fe20b7eaac",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "293",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "samples=18 max_err=0.0000",
+          "checker_id": "v4_293_reference_settling_window_monitor",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "19dbfc280ce353794c0c9bb8c3e4cee6429c98a0107588b0277b424b52948650",
+        "input_identity_sha256": "798894e935bdf957a0c01cc33242b1aa25681573961bc7cc4baf8419de5e9b52",
+        "result_sha256": "49667371b44ba4dec15460f45bad0243421a440a49f07d0c6ff860fce34d9f8d",
+        "process_sha256": "4d5f50f6a95751912ffe9d9e9b8cefe5bb362341023203564eae35996a6d2a7e",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "294",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "samples=16 max_err=0.0000",
+          "checker_id": "v4_294_power_enable_turnon_delay_gate",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "d284132785a3cce3d7b43014f10dc152982ea859cf3f6f2066f12be058da1e17",
+        "input_identity_sha256": "75fe9df0e3d073e9bf64df0fe2ba07694f98f00ebe58754866078f0be6330314",
+        "result_sha256": "631ead241ceaf16c0ce014fa6b01cef4cbe274532a664b14b08ab8c05b1f0e6f",
+        "process_sha256": "9c3f470f4261a54584ad0c35f79626ae28a72dbfbe565d034ed6384bed835795",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "299",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/299/submission/sine_vco_idtmod_bound_step.va:23:19: idtmod requires 4 explicit arguments",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/299/submission/sine_vco_idtmod_bound_step.va",
+            "line": 23,
+            "column": 19
+          }
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "d36c7924e9c696889e263a131ab1089686ee154251012f73559bd79b3552b162",
+        "result_sha256": "28b75fd49153f96655bce08e9d231bf21bdbc0c15859a8df55d7e8d8d649ec43",
+        "process_sha256": "83470625ea3c80ba8067ba0275030d94498ff6da426baff9eb53b533d3fefb2c",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "300",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/300/submission/differential_vco_clip_idtmod.va:29:19: idtmod requires 4 explicit arguments",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/300/submission/differential_vco_clip_idtmod.va",
+            "line": 29,
+            "column": 19
+          }
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "aabf373e84e51377eaf68eef706b367b1436047d07af552bac1e1ee06a7e1cda",
+        "result_sha256": "30c833f7b938d7a67c48a7d0a7e0463eb455c4309ea8f962f49a22d1792003c3",
+        "process_sha256": "5b74613eea51e5414b9b0fc2bcf37bf9be68ca268c53b19b4a3ed533116af2bb",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "301",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "unsupported_initial_event",
+          "category": "unsupported",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "unsupported initial_step value: /Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/301/testbench/public_support/ref_fb_clk.va: unknown parameter 'half'",
+          "hint": "Use an unqualified initialization leaf and constant values or a real driven-input comparison.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/301/testbench/public_support/ref_fb_clk.va",
+            "line": 29,
+            "column": 13
+          },
+          "instance": "XREF"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "35bb7b4629084a545857ed1fc86d64e93bdfd9211c5a67148004cd80ad4548e7",
+        "result_sha256": "6749706eb7dda3dd5094be8b92a9704ca3692b83c5a148da67199377726f8007",
+        "process_sha256": "4c809e084d6add286b282e77d232a74e89c1c12559b97079d392734a3fd7b8a8",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "302",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/302/submission/fracn_pll_timer_ref.va:94:31: expected '=', got '('; outside affine-voltage syntax",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/302/submission/fracn_pll_timer_ref.va",
+            "line": 94,
+            "column": 31
+          }
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "9d9840d6c1649643fddbebac4fa13bf472e36f964ce8973e27b27fb098f6e785",
+        "result_sha256": "2b1d821bb99e9e3a65ec8933d079639c965b2d161804ce883b7fbd2dbabd23bb",
+        "process_sha256": "bb82292fe0ca16aca143b0f720afe19bcb44b0a70570a59a622fa2f93b7525ae",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "306",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_306 checked=12 reset_checked=48 reset_errors=0 late_reset_checked=33 late_reset_errors=0 ready_seen=True metric_dynamic=True trim_response=True premature_ready=0 vout_errors=0 metric_errors=0; P_ON_RESET_CLEAR_THE_TRIM_STATE mismatch_count=0; P_DECODE_TRIM_2_TRIM_0_AS mismatch_count=0; P_WHILE_CAL_EN_IS_HIGH_UPDATE mismatch_count=0; P_DRIVE_VOUT_FROM_THE_CORRECTED_DIFFERENTIAL mismatch_count=0; P_EXPOSE_THE_ACTIVE_CORRECTION_ON_OFFSET mismatch_count=0; P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE mismatch_count=0",
+          "checker_id": "v4_306_instrumentation_amplifier_offset_trim",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "8e2813388935423c3389d65e0578de6b121a18066fa32e77f72e983926541603",
+        "input_identity_sha256": "3a2b233b4055ec4729334d918006ba436279fb56c0e71fcf7fbd0d9f171fde3a",
+        "result_sha256": "b703c5f6075ca69bbcdf6c7f6aad5b17be946fa603b6e1e3aa3d4b247749c65c",
+        "process_sha256": "73bccca462ec614681131f17dccf829f3656013c6cc904320d6a3c97b8fe9226",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "308",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "event_condition",
+          "message": "cannot certify Lt condition at /Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/308/submission/signal_sample_latch.va:21:13 (XDUT/XSIG): difference in [-1.1102230246251565e-16, 1.1102230246251565e-16]",
+          "diagnostic_version": 1,
+          "code": "kernel.event_condition",
+          "stage": "kernel",
+          "category": "unknown",
+          "capability": null
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "beed14ed9ef8c47bf3431e2ef6ec0b4e86c26e78e18dd5f67df23a781990984d",
+        "result_sha256": "2a3969daddbb945b7d9f1dfb3be4f32cfb6ef6ea9c3ab5cf4c35459c35f80f6e",
+        "process_sha256": "4b323e86b2aaaa8075dfddde06bdc0a017a643868a6f686437c404fb52a912e5",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "309",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_309 reset_edges=1 autozero_edges=3 evaluation_edges=7 order_errors=0 edge_errors=0 hold_checked=765 hold_errors=0 offset_span=0.244 high_expected=True low_expected=True; P_ON_RESET_CLEAR_STORED_OFFSET_DECISION mismatch_count=0; P_DURING_AN_AUTO_ZERO_CLOCK_UPDATE mismatch_count=0; P_DURING_AN_EVALUATION_CLOCK_UPDATE_WITH mismatch_count=0; P_DRIVE_DECISION_HIGH_FOR_CORRECTED_NONNEGATIVE mismatch_count=0; P_EXPOSE_STORED_OFFSET_ON_OFFSET_STORE mismatch_count=0; P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE mismatch_count=0",
+          "checker_id": "v4_309_autozero_comparator_preamplifier",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "931b590ec4c1f813c9f710147f4aa7087b40140744b128192041e74d5bd95d13",
+        "input_identity_sha256": "6072f922faabc5660c5056b6f0ffae04f4f529af2e35f991f84e820f6c931a4c",
+        "result_sha256": "123b903061db5f0710b1cbd259799dfd7f2172ccbc58c650e89d87c75c35a9c5",
+        "process_sha256": "90dacc6042044e88cab45ddfbca125d03559e20b5b7a9d777b82fd6bb3f6df6b",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "310",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "event_resolution",
+          "message": "cannot certify ordering of operator deadlines: Deadline { continuous_end: true, bounds: Interval { lo: 2.522441363729718e-8, hi: 2.5224413637297194e-8 }, sum: None, exact: None } and Deadline { continuous_end: true, bounds: Interval { lo: 2.522441363729718e-8, hi: 2.5224413637297194e-8 }, sum: None, exact: None }",
+          "diagnostic_version": 1,
+          "code": "kernel.event_resolution",
+          "stage": "kernel",
+          "category": "numerical",
+          "capability": null
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "6a78bea9419fecb040dfaa71520e52cfcf095db92534a8d683a5fcb42065ce9a",
+        "result_sha256": "53729e422dcdc8c5c510700e0569f5d7854d4be4b2c66d3d2ef7dfe257ddfeeb",
+        "process_sha256": "81801c5e4d8881d677308b6b2bebc0b396699eb300c604d55ae71305fac414f7",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "311",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "unsupported_initial_history",
+          "message": "transition bootstrap events must read only held state and directly driven inputs",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_initial_history",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": "COMPOSE"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "c380c3acd5362091e14e5c18a24f4a4c08e4d0385f340378dd629ab6863d5d64",
+        "result_sha256": "75472066cf0e2c162dd49e378c045a92711407821f95257441d918751877930e",
+        "process_sha256": "38792780ae8904ac119b1d83ecb7aa4302e448101dd16289e05a2486fc636036",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "312",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "unsupported_initial_history",
+          "message": "transition bootstrap events must read only held state and directly driven inputs",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_initial_history",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": "COMPOSE"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "dae58fb4ba5636c0efdc21d883f78317329f86ddd6bc33952f66bb834d57535e",
+        "result_sha256": "a3d3db13d37162e6119648778986a0ec4351618ff85a7eb2df89022464906c62",
+        "process_sha256": "4247fcfd6a30f52447fe47e3892ccd4b010242bce0f13ade577d22e6cb3514ea",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "320",
+        "status": "completed",
+        "original_checker": {
+          "passed": false,
+          "note": "v4_320 checked=15 codes=[0, 3, 12, 15] reset_clear=True disabled_clear=True metric_errors=11 settled_errors=0 target_errors=12 clear_errors=0 step_errors=0 edge_update_errors=9 settled_seen=True early_settled_errors=0 missing_settled_errors=0; P_ON_RESET_OR_WHEN_DISABLED_CLEAR mismatch_count=0; P_ON_EACH_ENABLED_RISING_CLK_EDGE mismatch_count=9; P_APPLY_A_CODE_DEPENDENT_SETTLING_STEP mismatch_count=0; P_EXPOSE_THE_CURRENT_TARGET_ON_TARGET mismatch_count=23; P_ASSERT_SETTLED_AFTER_THE_REMAINING_ERROR mismatch_count=0",
+          "checker_id": "v4_320_code_dependent_dac_buffer_settling",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "728079e110b57fa30276b4acf9cecd9a7be370c52ad00b598e22a7648d87b419",
+        "input_identity_sha256": "460ab3e9fb56a2c9784712d92181e876bec39fa1491bd1129757c14b646c038c",
+        "result_sha256": "de562cc3fb259c3616a7a70578e3bb44855c5afc89e83342cccad648e6574997",
+        "process_sha256": "39529e8bf03b7f7981579496b097ef3d935c805553b6b732a56744ba16035391",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "321",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_321 checked=10 up_only=4 dn_only=4 holds=2 reset_clear=True disabled_clear=True step_errors=0 metric_errors=0 balance_errors=0; P_ON_RESET_OR_WHEN_DISABLED_DRIVE mismatch_count=0; P_ON_EACH_RISING_CLK_EDGE_OBSERVE mismatch_count=0; P_INCREASE_VCTRL_FOR_UP_ONLY_DECREASE mismatch_count=0; P_DRIVE_IMBALANCE_METRIC_FROM_THE_ACCUMULATED mismatch_count=0; P_ASSERT_BALANCED_ONLY_WHEN_THE_RECENT mismatch_count=0",
+          "checker_id": "v4_321_charge_pump_pulse_balancer",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "2dadaf65327907eb097c5d8618b43167ee2201d53f9f1c11be61ca6cece83a0c",
+        "input_identity_sha256": "e36be5f82c5b3c744592a8431f3fc1154f44aa70d4c8db081e36a55fe36107ec",
+        "result_sha256": "be1001460205cffc02b0f342603e4047154668b6301e81b92d7986f52cd57e67",
+        "process_sha256": "40ff9569777ab20cec6244d4d2f18216db41acbd5426b63f9f82b2c49c80cf32",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "322",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_1020 checked=304 sources=[0, 1] reset_clear=True disabled_clear=True switch_seen=True out_errors=16 glitch_errors=0 metric_errors=0 metric_high_outside_window_errors=0 valid_errors=2 valid_early_errors=0 clear_errors=0; P_ON_RESET_OR_WHEN_DISABLED_DRIVE mismatch_count=0; P_ROUTE_CLK_A_WHEN_SEL_IS mismatch_count=0; P_WHEN_SEL_CHANGES_WAIT_UNTIL_BOTH mismatch_count=0; P_EXPOSE_A_SWITCH_EVENT_ON_SWITCH mismatch_count=0; P_ASSERT_VALID_AFTER_THE_SELECTED_SOURCE mismatch_count=0",
+          "checker_id": "v4_322_glitchless_clock_mux_selector",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "d09d7f5bab7db2c27e00a61543f8e91964ace610ff586fdad5c70ab028a32691",
+        "input_identity_sha256": "eb95df65358ff90168f94dfda7a0480a7cf028e9e17675a672e37e819eb44bb8",
+        "result_sha256": "93da515191074ef0373e1d3ec0a34b9eacbfe8f72b7c4b3cf2dfa6eb92f9b32c",
+        "process_sha256": "8e460f6d1f645ed667d8951fccd0ce07c7b9cacf11962322baade2a6e67713e1",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "327",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_327 checked=12 early_events=1 late_events=1 early_misses=0 late_misses=0 lock_seen=True early_edge_misses=0 late_edge_misses=0 early_false_positives=0 late_false_positives=0 open_streak_reached=True eye_max=0.900 early_lock_errors=0 missing_lock_errors=0 mutex_errors=0 range_errors=0 valid_misses=0 reset_clear=True disabled_clear=True clear_errors=0; P_ON_RESET_OR_WHEN_DISABLED_CLEAR mismatch_count=0; P_ON_EACH_SAMPLING_CLOCK_EDGE_COMPARE mismatch_count=0; P_RAISE_EARLY_OR_LATE_ACCORDING_TO mismatch_count=0; P_DRIVE_EYE_METRIC_FROM_RECENT_TRANSITION mismatch_count=0; P_ASSERT_LOCK_HINT_AFTER_FOUR_CONSECUTIVE mismatch_count=0",
+          "checker_id": "v4_327_cdr_eye_monitor",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "f98dadc4f71165a9c07a4518b6be01d3e3acae4c6d998dcf0dd696d75b8f1bc7",
+        "input_identity_sha256": "e39dcd09d86eb960562406b10f4a0bbb869d2793a965a00392b4af737092fbca",
+        "result_sha256": "72cae84a73be56dfbb38709945e661e65ba1565919d1d3e9a058a7d3bd370f46",
+        "process_sha256": "2ed5fe49433a6a82880ea6a3a490accbb76ccbd18877bd89394ff977f33aab20",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "331",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "condition_precision",
+          "message": "all source-target predicate state must be point-valued",
+          "diagnostic_version": 1,
+          "code": "kernel.condition_precision",
+          "stage": "kernel",
+          "category": "unknown",
+          "capability": null
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "c0e3db06bd48657073daa9480eeb7b2262e3a4e03286ff977cf3041de38dab14",
+        "result_sha256": "dd14bd5e66849100c1f540a7cb116fe9acb293aa9edaddb6735e95ac7037e90a",
+        "process_sha256": "bc4128aa4f943ad36156a8cd7275338efc00cc0901f38a83be6d6844aa4bcc37",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "341",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_1039 checked=22 reset_clear=True disabled_clear=True done_seen=True not_done_seen=True ramp_seen=True target_drop_seen=True soft_errors=0 metric_errors=0 done_errors=0 clear_errors=0 step_errors=0 clamp_errors=0",
+          "checker_id": "v4_341_buck_soft_start_ramp_controller",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "8ab7375d45d2da9464d410604680dcf3aa8ba11855b41e433a6cb5c948bdff64",
+        "input_identity_sha256": "c281649e27379b3d573b5af8f4a8046a93db27582d572196eed0bf0c1963bf94",
+        "result_sha256": "98611c555a7932aced80f6dec1051a038702a630ac3684c40490fd4dd08ef2bf",
+        "process_sha256": "ee5e6fbc134ff13631f98ff05fc7bf3637a234819f7821d1e00ea537612cebd4",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "342",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_342 checked=3 mismatch_count=0 reset_clear=True reset_checks=14 trial_checks=15 completion_hold_checks=621 codes=[0, 7, 15]",
+          "checker_id": "v4_342_sar_adc_system_4b",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "3fb7f775a5f6255cfae0c2e0a9a764fad4727bb1034583497bfa8b684dc507dd",
+        "input_identity_sha256": "575038f28e1d9ca3a1304a49c432e67c378f69658908afdb4451c002f47b0e7f",
+        "result_sha256": "5e1eeafa20fa86a5bb5c6f4fc0842c4efbda0c43d172d2be6014d484782a4fc2",
+        "process_sha256": "7f1e43733576edeeda66fd28202136db209d138ddb7d0e40e3809d30857b0b36",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "345",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_345 checked=35 mismatch_count=0 reset_clear=True directions=['down', 'up'] final_code=0",
+          "checker_id": "v4_345_offset_calibrated_comparator_system",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "86c73d73187a1bbf12a4e3d465e2b702dd76fccc6296975277465bda70686c76",
+        "input_identity_sha256": "eaf5b90e21f88f716093b674b363438cd62771d49891ebe13331307e534135e8",
+        "result_sha256": "d40e6a636e1c0b88c98dad31fe8b486b4a3134620de452765eed325f7ec6cc68",
+        "process_sha256": "2f8b79a9ac6f4c2a3ba316e46611469b8a04a87b4d5e84ccd48154b977a533fb",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "348",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/348/submission/gain_controller.va:52:35: expected ')', got '&'; outside affine-voltage syntax",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/348/submission/gain_controller.va",
+            "line": 52,
+            "column": 35
+          }
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "997bb4299cee249e373daba4505e14cf7b95d9adb274a4d6fd57db7da1d6d21b",
+        "result_sha256": "81eb92672973bbae32f1633945afdffde525f72df33dde764126995bca46f6b4",
+        "process_sha256": "e67e75734df85c85c8958113184ff29ac77c268e39e26dd3813ebff0ce91cc21",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "349",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/349/submission/mux_controller.va:54:34: expected ')', got '&'; outside affine-voltage syntax",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/349/submission/mux_controller.va",
+            "line": 54,
+            "column": 34
+          }
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "518c9777564609975865b557aed49c402cf0611be7cda5f38dd1a426c3995c6a",
+        "result_sha256": "0728a349825e8a119b85a27e98b8951fd2c58cf153c6d6e55d247350b97e9125",
+        "process_sha256": "987ea47d4d59374bc18e7ffe284babc4a66aaa955b24267e6179f84df0e33a1d",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "352",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "P_OUTPUT_TRANSFER checked=15 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_EDGE_METRIC checked=15 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_SATURATION checked=15 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_EXCITATION checked=1 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0",
+          "checker_id": "v4_352_ctle_equalizer_macro",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "4e19de08db48ba0e66695853690d4f0d72d0cb0ab640f6066de41509cfc04acf",
+        "input_identity_sha256": "d98f9e72eea18da90b43d6c738f732e152a1be6573c9d12852d4d53421654142",
+        "result_sha256": "a9450123e415ced655c39f26dda1fa6cb7b09a791a0eb58398a2e23fd197f18f",
+        "process_sha256": "2ca032a0ce6d8f3877d956417ebb058272ee34463fc109d7255b4d1db53863e5",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "353",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "P_MAIN_TAP checked=18 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_PRE_TAP checked=18 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_POST_TAP checked=18 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_OUTPUT_SUM checked=18 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_RESET_HISTORY_CLEAR checked=1 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_EXCITATION checked=1 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0",
+          "checker_id": "v4_353_ffe_transmitter_3tap",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "8469207351a434eba72e17131b1c97e12f700af9c3cab94cfedfed8e6f07520e",
+        "input_identity_sha256": "5db23b618c7aacef59f09d92f069e01c79e4776a72f6eb59a0b0e9a2d8ddf545",
+        "result_sha256": "7c92113797626eef54c8a75a3d1d49c2a2c776d348934decd894f1d00e8c5b54",
+        "process_sha256": "9ea47938d41e68eb7c73355968d4f3ac3898cf7cb0508491ba75670c3516cd01",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "355",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/355/submission/gray_mapper.va:23: ordinary analog if leaves local variable 'lsb_bit' unassigned",
+          "hint": null,
+          "instance": "XDUT/u_gray_mapper"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "f86e4409afeb28f779fc971709deb0386eb4d1ea1a3d2a9e65cfe0435c1296f1",
+        "result_sha256": "e0b892f916bca000fb85260f49f53bfd7fc0b6a9e14418d740a5c43c18c8290c",
+        "process_sha256": "1d9de2f9810e94882882f8138c911379742436b916a4a6e89ef0e875c136c78e",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "356",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "condition_precision",
+          "message": "isolated source-target point or third boundary value",
+          "diagnostic_version": 1,
+          "code": "kernel.condition_precision",
+          "stage": "kernel",
+          "category": "unknown",
+          "capability": null
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "b108b9e29599b9c06c1fb4327e0d42ef5493d9f92323caa4cb74f98a19753730",
+        "result_sha256": "e91327dd8926d35bfd7b01651dcd3a25c9b4e012439c9bbf99b49520bcb33ad3",
+        "process_sha256": "bca38b1d62b1feda57aa58b024779456a87c22f2c9570bf28af6488439f44c59",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "357",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "unsupported_cross",
+          "message": "simultaneous event condition reads state written by another selected block at /Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/357/submission/bbpd.va:70:13 (XDUT/u_bbpd)",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_cross",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": "CROSS"
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "057170e816a3e5a4091852fc51da8c6f051d0446624079f0ea9fa2481535afa8",
+        "result_sha256": "3749c5cc76e5565226ab2b79eac1dae3021630212bc618ed3287bf5c3a786145",
+        "process_sha256": "d5d0efb92d27ca39765b139b8e91a125718a69f3601f672f77f112c4c3c4be98",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "361",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "waveform_accuracy",
+          "message": "cannot certify same-time forward error at XDUT:edge_error: bound 1.605321431341622e-11, budget 1.0999999998544504e-11",
+          "diagnostic_version": 1,
+          "code": "kernel.waveform_accuracy",
+          "stage": "kernel",
+          "category": "numerical",
+          "capability": null
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "03c6a63427b8eccc5c06a72b37cb26a0eda6fe6199f40d90306f57fccfd56d7c",
+        "result_sha256": "3c16514ff831cf5f3e8f729781a64dab0be9f7a69277ce42ca5645c0262ec69e",
+        "process_sha256": "4cd33b8741203820f3aaa666a1028ca00de246bb98f9fe0735b3c982cef749e3",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "363",
+        "status": "rejected",
+        "original_checker": "not_run",
+        "diagnostic": {
+          "kind": "unsupported_source_uncertainty",
+          "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_source_uncertainty",
+          "stage": "kernel",
+          "category": "unknown",
+          "capability": null
+        },
+        "response_sha256": null,
+        "input_identity_sha256": "4b5d7aed8b121d22b954b37d08aae5757fcbb4e0adf7b5a3cf2211f04654736b",
+        "result_sha256": "f2648ca06b533b1f6a51b11b7addbc5edca6cb6521dd06e24693b40b64e1d02f",
+        "process_sha256": "22f644071640d1e6f66ed9b524ef22c64a17a00d6064d3a5401407a621d64441",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "367",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "P_RESET_DISABLE_CLEAR status=PASS mismatch_count=0 allowed=0 checks=3 expected=gain=4,vout=vcm,metrics_flags=0 observed=max_clear_gap=0 time=0 gap=0 | P_LEVEL_GAIN_CONTROL status=PASS mismatch_count=0 allowed=2 checks=18 expected=level=abs(vin-vcm),gain_moves_to_target observed=clock_checks=18 time=0 gap=0 | P_VGA_FILTER_RESPONSE status=PASS mismatch_count=0 allowed=1 checks=18 expected=alpha=0.25_toward_unclamped_vga_then_rail_clip observed=samples=18 time=0 gap=0 | P_CLIP_AND_SETTLE status=PASS mismatch_count=1 allowed=1 checks=18 expected=clip_on_raw_excursion,settled_after_three observed=clip_seen=True settled_seen=True time=5.9025e-08 gap=1",
+          "checker_id": "v4_367_baseband_agc_filter_chain",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "961c6c8295bc0ec25909f7b77579c146d9af5b06c07573a41bc3cc4508cff0e4",
+        "input_identity_sha256": "390dc48c11cdf3bfc56ad493dead55463b2ffcd9b4b852c0812f237240d8812d",
+        "result_sha256": "1aca01e503370c3b639c361f2693e634f3130ff7ab53bb4bac216a753b0ddc25",
+        "process_sha256": "a271ec9565784ef39a50c24d44cd99dded26eb0a52b852f03279f326cf2d44c2",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "375",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_nonoverlap_clock rise=8 fall=7 errors=0 overlap=0 dead_seen=True valid_seen=True reset_clear=True disabled_clear=True disable_clears=True clear_errors=0 valid_errors=0",
+          "checker_id": "v4_375_nonoverlap_clock_generator",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "dfe367511d510b0d4a6fbcc1ea1e9706ee0860d4fbe1bd4e1279aee9b4b7007b",
+        "input_identity_sha256": "2d23524e968b8ed5fef456f169b89249330cb31a8e71a3d71dea6a58df37614c",
+        "result_sha256": "a2a8af32d8ff08f87fe6ec20091d5d5a8017855847c6fe060b6155e9daa08108",
+        "process_sha256": "fa0fd80adf3c0afa13fd5a1d8a99c4725dd059683607d9d2d6591bf86630b3ed",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "376",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_pwm_ramp checked=21 wraps=2 highs=13 lows=5 errors=0 reset_clear=True disabled_clear=True clear_errors=0",
+          "checker_id": "v4_376_pwm_ramp_modulator_front_end",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "f7b97fbcafefd886dc8e152b72534d96e49cddc8b9a8a33d27418c39385fb507",
+        "input_identity_sha256": "f7607c32d93ee14f9fc0d7bdebb716708df5325d3896efe2d57c290591db01e0",
+        "result_sha256": "efa0fccac4e54103152403b9e324c0454225aa8c38d4277c1d096473cd44f020",
+        "process_sha256": "d2ae0bd5667ce024f19100bc27a3adb22ff07b04e0ceaf8a7531901ac76f3910",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "379",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_periodic_sampler checked=12 disabled_hold_checks=2 metric_nonzero=True errors=0",
+          "checker_id": "v4_379_periodic_sampler_aperture_metric",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "3f0d3d6e56a6acb8ee2fc20af87b7bbcf96f06a40ed5c9ca711b2ed486a1c260",
+        "input_identity_sha256": "e9fbc6cbb792fce26a6c1fab6727972233d39bca95f5026d91dac6e4dda480a0",
+        "result_sha256": "ee12020452076547f678a357ce75df1df5cfbbbe3dde6ec8b5006d08961570e0",
+        "process_sha256": "77d468393269b5e2dd4be370a980675350a53763a7bdbca05cb80e7a641760a7",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "382",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_programmable_divider checked=32 toggles=9 divisors=[1, 2, 3, 6, 8, 9, 11] clk_errors=0 metric_errors=0 valid_errors=0 first_error_time=None reset_clear=True disabled_clear=True clear_errors=0",
+          "checker_id": "v4_382_programmable_frequency_divider",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "94fe4280f6bb32e24b0f89aad90899e8ef2b06b30e5d6c44bcfa58d0aaf47dc0",
+        "input_identity_sha256": "fc5ea3c606a33a51f549bef7dfce1c1a458df06f025a27ce7804c976eb131bcc",
+        "result_sha256": "6475d40285409240648d2f4e96995c4dee975fbd6fb0a6c209847be4f7fbfa20",
+        "process_sha256": "be6f893a9c25e9edde7e0feb6f9b0b853c735d2ebf789506a4a796ef2db8638e",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "394",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "task=v4_394_pam4_slicer_gray_decoder | P_RESET_DISABLE_CLEAR:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_RISING_EDGE_SAMPLE_HOLD:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_PAM4_THRESHOLDS:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_GRAY_MAPPING:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_LEVEL_METRIC:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | coverage=hold_checks:3,inactive_rows:150,levels:4,samples:10",
+          "checker_id": "v4_394_pam4_slicer_gray_decoder",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "02d11fb9a3afb9237cdd44dfd60d48f53479f99f69039de4eb97b98d464dec1e",
+        "input_identity_sha256": "c72a5d2585bb5112490ea69876a9fd8c4b7dcf8a7db1840e5f35922deb5c9a2d",
+        "result_sha256": "69ed6d55249fb56290097adad505dec1ee6565531ac68d76acc04290f2bb741c",
+        "process_sha256": "5426f8e6ae9ef40584ff108458feeae273365cf95e1be0793635d27b7ee4e50e",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "395",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "task=v4_395_clock_data_valid_qualifier | P_RESET_DISABLE_CLEAR:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_DATA_EDGE_RESTART:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_CLOCKED_AGE:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_INCLUSIVE_WINDOW:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_REGISTERED_METRIC:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | coverage=age3_samples:2,clock_edges:13,data_edges:4,expired_samples:4,inactive_rows:149",
+          "checker_id": "v4_395_clock_data_valid_qualifier",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "984b7b494a937747859e9655acba31316d405d063daa0e8be7c2fce86c3fed12",
+        "input_identity_sha256": "dace4f408de434e4cd2d34b014297ef7543d200529a150b5a6228b736beaba03",
+        "result_sha256": "66313ecda3412b846a541e8d5871e01490841012e60276006e4db2268e6bedfc",
+        "process_sha256": "3020c5f25423b701d65d5a6566d3996e2d8fd956f24d49fbf32e0cece861170f",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "397",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "v4_baseband_trim checked=17 gain_codes=[0, 1, 2, 4, 5, 6, 7] offset_codes=[1, 2, 3, 4, 6, 7] clipped=True disabled=True errors=0 hold_checked=16 hold_errors=0",
+          "checker_id": "v4_397_baseband_offset_gain_trim_macro",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "4a41aeadb56abafa19c7ebd4553475e6db6a56923ee018717b6c53105ec7ba7b",
+        "input_identity_sha256": "f10218e47bd42f4ed995ef08117b4ad9ae3f286805f1507b1459bb8fefa0ef0a",
+        "result_sha256": "ca83620c8bc9456223f9f2c0435be00f8e3ab307745a2652cb913a0208fdb411",
+        "process_sha256": "23dd3ba637f39203e8f8a5c7bd69270c9f6961c1758b2428eb5a5a51fb11868b",
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "399",
+        "status": "completed",
+        "original_checker": {
+          "passed": true,
+          "note": "task=v4_399_supply_supervisor_brownout_por | P_RESET_DISABLE_SAFE:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_UVLO_HYSTERESIS:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_RELEASE_DELAY:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_DIP_RESTART:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_STATE_METRICS:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | coverage=clock_edges:17,fall_crossings:1,inactive_rows:175,released_samples:556,rise_crossings:2; diagnostic_schema=v4-checker-diagnostic-v1 status=pass category=behavior_pass event=stimulus_relative event_context=stimulus_relative expected=public_contract observed=trace",
+          "checker_id": "v4_399_supply_supervisor_brownout_por",
+          "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+        },
+        "diagnostic": null,
+        "response_sha256": "6bfe553335ea30e551658301a563466900a264df582adbdefb763146f724f248",
+        "input_identity_sha256": "cb0457bcad3d8ae637fd27273478db8acc738359b42d37227453ffe024b20e2c",
+        "result_sha256": "239b81638526d61c246c6d4a8275c43c249b9ef440d242f1f1e70af55f88f06c",
+        "process_sha256": "e0908f9448da547e4b21b77034bf7c180458f0c9bd0441030556ba770042fe8b",
+        "cleanup_confirmed": true
+      }
+    ]
+  },
+  "347": {
+    "checker": {
+      "passed": false,
+      "note": "v4_347 checked=20 mismatch_count=2 startup_seen=True brownout_seen=True async_clear=True async_checks=394 mismatch_detail=P_PWR_SEQUENCE_ORDER mismatch_count=1 sample_time=1.351e-07 expected=rst_n_core=0 observed=rst_n_core=1 metric_gap=1; P_PWR_SEQUENCE_ORDER mismatch_count=1 sample_time=1.451e-07 expected=en_ana=0 observed=en_ana=1 metric_gap=1",
+      "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+    },
+    "full_response_equal": true,
+    "cleanup_confirmed": true,
+    "te_equals_tau_preserved": true
+  },
+  "reference": {
+    "plan": {
+      "cases": [
+        "internal-affine"
+      ],
+      "source_sha256": "39e96858f79f4401e7492f712f111b4e431d4a4d41daa741fea0a48be341ef93",
+      "deck_sha256": "6d9d0fb469f52cc946378e409cac6bd5a2b95a7d336ed65cc7a38cb576479dfb",
+      "denominator": "all seven exact requested strobe times plus all exact shared native rows",
+      "answer": "z=2t; q switches0to1 at1/2; y=clamp(8(t-1/2),0,1)",
+      "comparison_budget_V": 1e-08,
+      "event_window_s": 1e-12,
+      "initials": {
+        "q": 0,
+        "y": 0
+      },
+      "authority": "bounded necessary reference for explicitly routed B1; existing90s/4GiB/32MiB/1thread/30slicense retained; no fullmatrix"
+    },
+    "inputs": {
+      "va": "`include \"disciplines.vams\"\nmodule m(u,z,y); input u; output z,y; electrical u,z,y; real q;\nanalog begin @(initial_step) q=0;\n@(cross(V(z)-1,+1,1e-9,1e-9)) q=1;\nV(z)<+2*V(u); V(y)<+transition(q,0,0.125,0.125);\nend endmodule\n",
+      "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=pwl wave=[0 0 1 1]\nDUT (u z y) m\nsimulatorOptions options precision=\"%.17g\" reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=1 maxstep=0.00390625 errpreset=conservative method=traponly strobetimes=[0 0.25 0.5 0.5625 0.625 0.75 1] strobeoutput=all compression=no skipcount=1\nsave u z y\n"
+    },
+    "source_sha256": "39e96858f79f4401e7492f712f111b4e431d4a4d41daa741fea0a48be341ef93",
+    "deck_sha256": "6d9d0fb469f52cc946378e409cac6bd5a2b95a7d336ed65cc7a38cb576479dfb",
+    "spectre_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "spectre_version": "sub-version  21.1.0.509.isr12",
+    "actual_settings": {
+      "actual": {
+        "reltol": 1e-11,
+        "vabstol": 1e-12,
+        "iabstol": 1e-15,
+        "stop": 1.0,
+        "maxstep": 0.00390625,
+        "method": "traponly"
+      },
+      "requested": {
+        "reltol": 1e-10,
+        "vabstol": 1e-12,
+        "iabstol": 1e-15,
+        "stop": 1,
+        "maxstep": 0.00390625
+      },
+      "mismatches": [
+        "reltol"
+      ],
+      "scoped_readback": {
+        "effective": {
+          "stop_s": {
+            "value": 1.0,
+            "line": 123,
+            "raw": "    stop = 1 s",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 0.00390625,
+            "line": 125,
+            "raw": "    maxstep = 3.90625 ms",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-11,
+            "line": 129,
+            "raw": "    reltol = 10e-12",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-12,
+            "line": 130,
+            "raw": "    abstol(V) = 1 pV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-15,
+            "line": 131,
+            "raw": "    abstol(I) = 1 fA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 136,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-12,
+            "line": 86,
+            "raw": "            vabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-15,
+            "line": 87,
+            "raw": "            iabstol = 1e-15",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-10,
+            "line": 88,
+            "raw": "             reltol = 1e-10",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 1.0,
+            "line": 14,
+            "raw": "\"stop\" 1.00000",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 0.00390625,
+            "line": 17,
+            "raw": "\"maxstep\" 0.00390625",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-11,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-11",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-12,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-15,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-15",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-10,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-10",
+            "scope": "psf_header"
+          }
+        }
+      },
+      "status": "I",
+      "claim": "scoped controls do not establish mathematical or native provenance qualification; actual/requested differences remain"
+    },
+    "execution": {
+      "returncode": 0,
+      "timeout": false,
+      "status": "completed",
+      "cleanup": {
+        "signals": [
+          "SIGTERM",
+          "SIGKILL"
+        ],
+        "errors": [],
+        "complete": true
+      },
+      "elapsed_seconds": 8.000529924407601,
+      "completed_utc": "2026-10-17T11:49:37Z",
+      "log": "simulate.log",
+      "log_sha256": "25be79e8cfabb4f8cfdc33c367c760c238d3840efc78557a2d5b081a9544c6f7",
+      "stage": "simulate",
+      "resource_caps": {
+        "memory_limit_bytes": 4294967296,
+        "file_limit_bytes": 33554432,
+        "threads": 1
+      }
+    },
+    "shared_native_times": 285,
+    "fixed_strobes_found": [
+      0,
+      0.25,
+      0.5,
+      0.5625,
+      0.625,
+      0.75,
+      1
+    ],
+    "max_pair_difference_V": 0,
+    "max_evas_math_error_V": 0,
+    "max_spectre_math_error_V": 0,
+    "native_rows_sha256": "416e5e4b1f2faa697bd03369151a831922c69592def6b39deb120b023fdbc943",
+    "evas_response_sha256": "bdb5b7966766f96b9c9305c07cbe56aa2f331917126c91b06c6c9b52f8d2ce90",
+    "paired_columns": [
+      "time_s",
+      "spectre_u",
+      "spectre_z",
+      "spectre_y",
+      "evas_u",
+      "evas_z",
+      "evas_y"
+    ],
+    "pairs": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.0,
+        -0.0
+      ],
+      [
+        8.416666666666668e-10,
+        8.416666666666668e-10,
+        1.6833333333333335e-09,
+        0.0,
+        8.416666666666668e-10,
+        1.6833333333333335e-09,
+        -0.0
+      ],
+      [
+        2.5250000000000003e-09,
+        2.5250000000000003e-09,
+        5.0500000000000006e-09,
+        0.0,
+        2.5250000000000003e-09,
+        5.0500000000000006e-09,
+        -0.0
+      ],
+      [
+        5.891666666666667e-09,
+        5.891666666666667e-09,
+        1.1783333333333335e-08,
+        0.0,
+        5.891666666666667e-09,
+        1.1783333333333335e-08,
+        -0.0
+      ],
+      [
+        1.2625000000000002e-08,
+        1.2625000000000002e-08,
+        2.5250000000000004e-08,
+        0.0,
+        1.2625000000000002e-08,
+        2.5250000000000004e-08,
+        -0.0
+      ],
+      [
+        2.609166666666667e-08,
+        2.609166666666667e-08,
+        5.218333333333334e-08,
+        0.0,
+        2.609166666666667e-08,
+        5.218333333333334e-08,
+        -0.0
+      ],
+      [
+        5.3025000000000007e-08,
+        5.3025000000000007e-08,
+        1.0605000000000001e-07,
+        0.0,
+        5.3025000000000007e-08,
+        1.0605000000000001e-07,
+        -0.0
+      ],
+      [
+        1.0689166666666669e-07,
+        1.0689166666666669e-07,
+        2.1378333333333337e-07,
+        0.0,
+        1.0689166666666669e-07,
+        2.1378333333333337e-07,
+        -0.0
+      ],
+      [
+        2.1462500000000003e-07,
+        2.1462500000000003e-07,
+        4.2925000000000006e-07,
+        0.0,
+        2.1462500000000003e-07,
+        4.2925000000000006e-07,
+        -0.0
+      ],
+      [
+        4.300916666666667e-07,
+        4.300916666666667e-07,
+        8.601833333333334e-07,
+        0.0,
+        4.300916666666667e-07,
+        8.601833333333334e-07,
+        -0.0
+      ],
+      [
+        8.610250000000002e-07,
+        8.610250000000002e-07,
+        1.7220500000000003e-06,
+        0.0,
+        8.610250000000002e-07,
+        1.7220500000000003e-06,
+        -0.0
+      ],
+      [
+        1.7228916666666671e-06,
+        1.7228916666666671e-06,
+        3.4457833333333343e-06,
+        0.0,
+        1.7228916666666671e-06,
+        3.4457833333333343e-06,
+        -0.0
+      ],
+      [
+        3.446625000000001e-06,
+        3.446625000000001e-06,
+        6.893250000000002e-06,
+        0.0,
+        3.446625000000001e-06,
+        6.893250000000002e-06,
+        -0.0
+      ],
+      [
+        6.894091666666669e-06,
+        6.894091666666669e-06,
+        1.3788183333333338e-05,
+        0.0,
+        6.894091666666669e-06,
+        1.3788183333333338e-05,
+        -0.0
+      ],
+      [
+        1.3789025000000005e-05,
+        1.3789025000000005e-05,
+        2.757805000000001e-05,
+        0.0,
+        1.3789025000000005e-05,
+        2.757805000000001e-05,
+        -0.0
+      ],
+      [
+        2.7578891666666676e-05,
+        2.7578891666666676e-05,
+        5.515778333333335e-05,
+        0.0,
+        2.7578891666666676e-05,
+        5.515778333333335e-05,
+        -0.0
+      ],
+      [
+        5.515862500000002e-05,
+        5.515862500000002e-05,
+        0.00011031725000000004,
+        0.0,
+        5.515862500000002e-05,
+        0.00011031725000000004,
+        -0.0
+      ],
+      [
+        0.0001103180916666667,
+        0.0001103180916666667,
+        0.0002206361833333334,
+        0.0,
+        0.0001103180916666667,
+        0.0002206361833333334,
+        -0.0
+      ],
+      [
+        0.00022063702500000004,
+        0.00022063702500000004,
+        0.0004412740500000001,
+        0.0,
+        0.00022063702500000004,
+        0.0004412740500000001,
+        -0.0
+      ],
+      [
+        0.00044127489166666674,
+        0.00044127489166666674,
+        0.0008825497833333335,
+        0.0,
+        0.00044127489166666674,
+        0.0008825497833333335,
+        -0.0
+      ],
+      [
+        0.0008825506250000001,
+        0.0008825506250000001,
+        0.0017651012500000001,
+        0.0,
+        0.0008825506250000001,
+        0.0017651012500000001,
+        -0.0
+      ],
+      [
+        0.0017651020916666666,
+        0.0017651020916666666,
+        0.0035302041833333332,
+        0.0,
+        0.0017651020916666666,
+        0.0035302041833333332,
+        -0.0
+      ],
+      [
+        0.0035302050249999997,
+        0.0035302050249999997,
+        0.007060410049999999,
+        0.0,
+        0.0035302050249999997,
+        0.007060410049999999,
+        -0.0
+      ],
+      [
+        0.0070604108916666655,
+        0.0070604108916666655,
+        0.014120821783333331,
+        0.0,
+        0.0070604108916666655,
+        0.014120821783333331,
+        -0.0
+      ],
+      [
+        0.010966660891666665,
+        0.010966660891666665,
+        0.02193332178333333,
+        0.0,
+        0.010966660891666665,
+        0.02193332178333333,
+        -0.0
+      ],
+      [
+        0.014872910891666665,
+        0.014872910891666665,
+        0.02974582178333333,
+        0.0,
+        0.014872910891666665,
+        0.02974582178333333,
+        -0.0
+      ],
+      [
+        0.018779160891666667,
+        0.018779160891666667,
+        0.037558321783333334,
+        0.0,
+        0.018779160891666667,
+        0.037558321783333334,
+        -0.0
+      ],
+      [
+        0.022685410891666667,
+        0.022685410891666667,
+        0.045370821783333334,
+        0.0,
+        0.022685410891666667,
+        0.045370821783333334,
+        -0.0
+      ],
+      [
+        0.026591660891666667,
+        0.026591660891666667,
+        0.053183321783333334,
+        0.0,
+        0.026591660891666667,
+        0.053183321783333334,
+        -0.0
+      ],
+      [
+        0.030497910891666667,
+        0.030497910891666667,
+        0.060995821783333334,
+        0.0,
+        0.030497910891666667,
+        0.060995821783333334,
+        -0.0
+      ],
+      [
+        0.03440416089166667,
+        0.03440416089166667,
+        0.06880832178333333,
+        0.0,
+        0.03440416089166667,
+        0.06880832178333333,
+        -0.0
+      ],
+      [
+        0.03831041089166667,
+        0.03831041089166667,
+        0.07662082178333333,
+        0.0,
+        0.03831041089166667,
+        0.07662082178333333,
+        -0.0
+      ],
+      [
+        0.04221666089166667,
+        0.04221666089166667,
+        0.08443332178333333,
+        0.0,
+        0.04221666089166667,
+        0.08443332178333333,
+        -0.0
+      ],
+      [
+        0.04612291089166667,
+        0.04612291089166667,
+        0.09224582178333333,
+        0.0,
+        0.04612291089166667,
+        0.09224582178333333,
+        -0.0
+      ],
+      [
+        0.05002916089166667,
+        0.05002916089166667,
+        0.10005832178333333,
+        0.0,
+        0.05002916089166667,
+        0.10005832178333333,
+        -0.0
+      ],
+      [
+        0.05393541089166667,
+        0.05393541089166667,
+        0.10787082178333333,
+        0.0,
+        0.05393541089166667,
+        0.10787082178333333,
+        -0.0
+      ],
+      [
+        0.05784166089166667,
+        0.05784166089166667,
+        0.11568332178333333,
+        0.0,
+        0.05784166089166667,
+        0.11568332178333333,
+        -0.0
+      ],
+      [
+        0.06174791089166667,
+        0.06174791089166667,
+        0.12349582178333333,
+        0.0,
+        0.06174791089166667,
+        0.12349582178333333,
+        -0.0
+      ],
+      [
+        0.06565416089166667,
+        0.06565416089166667,
+        0.13130832178333335,
+        0.0,
+        0.06565416089166667,
+        0.13130832178333335,
+        -0.0
+      ],
+      [
+        0.06956041089166667,
+        0.06956041089166667,
+        0.13912082178333335,
+        0.0,
+        0.06956041089166667,
+        0.13912082178333335,
+        -0.0
+      ],
+      [
+        0.07346666089166667,
+        0.07346666089166667,
+        0.14693332178333335,
+        0.0,
+        0.07346666089166667,
+        0.14693332178333335,
+        -0.0
+      ],
+      [
+        0.07737291089166667,
+        0.07737291089166667,
+        0.15474582178333335,
+        0.0,
+        0.07737291089166667,
+        0.15474582178333335,
+        -0.0
+      ],
+      [
+        0.08127916089166667,
+        0.08127916089166667,
+        0.16255832178333335,
+        0.0,
+        0.08127916089166667,
+        0.16255832178333335,
+        -0.0
+      ],
+      [
+        0.08518541089166667,
+        0.08518541089166667,
+        0.17037082178333335,
+        0.0,
+        0.08518541089166667,
+        0.17037082178333335,
+        -0.0
+      ],
+      [
+        0.08909166089166667,
+        0.08909166089166667,
+        0.17818332178333335,
+        0.0,
+        0.08909166089166667,
+        0.17818332178333335,
+        -0.0
+      ],
+      [
+        0.09299791089166667,
+        0.09299791089166667,
+        0.18599582178333335,
+        0.0,
+        0.09299791089166667,
+        0.18599582178333335,
+        -0.0
+      ],
+      [
+        0.09690416089166667,
+        0.09690416089166667,
+        0.19380832178333335,
+        0.0,
+        0.09690416089166667,
+        0.19380832178333335,
+        -0.0
+      ],
+      [
+        0.10081041089166667,
+        0.10081041089166667,
+        0.20162082178333335,
+        0.0,
+        0.10081041089166667,
+        0.20162082178333335,
+        -0.0
+      ],
+      [
+        0.10471666089166667,
+        0.10471666089166667,
+        0.20943332178333335,
+        0.0,
+        0.10471666089166667,
+        0.20943332178333335,
+        -0.0
+      ],
+      [
+        0.10862291089166667,
+        0.10862291089166667,
+        0.21724582178333335,
+        0.0,
+        0.10862291089166667,
+        0.21724582178333335,
+        -0.0
+      ],
+      [
+        0.11252916089166667,
+        0.11252916089166667,
+        0.22505832178333335,
+        0.0,
+        0.11252916089166667,
+        0.22505832178333335,
+        -0.0
+      ],
+      [
+        0.11643541089166667,
+        0.11643541089166667,
+        0.23287082178333335,
+        0.0,
+        0.11643541089166667,
+        0.23287082178333335,
+        -0.0
+      ],
+      [
+        0.12034166089166667,
+        0.12034166089166667,
+        0.24068332178333335,
+        0.0,
+        0.12034166089166667,
+        0.24068332178333335,
+        -0.0
+      ],
+      [
+        0.12424791089166667,
+        0.12424791089166667,
+        0.24849582178333335,
+        0.0,
+        0.12424791089166667,
+        0.24849582178333335,
+        -0.0
+      ],
+      [
+        0.12815416089166667,
+        0.12815416089166667,
+        0.25630832178333335,
+        0.0,
+        0.12815416089166667,
+        0.25630832178333335,
+        -0.0
+      ],
+      [
+        0.13206041089166667,
+        0.13206041089166667,
+        0.26412082178333335,
+        0.0,
+        0.13206041089166667,
+        0.26412082178333335,
+        -0.0
+      ],
+      [
+        0.13596666089166667,
+        0.13596666089166667,
+        0.27193332178333335,
+        0.0,
+        0.13596666089166667,
+        0.27193332178333335,
+        -0.0
+      ],
+      [
+        0.13987291089166667,
+        0.13987291089166667,
+        0.27974582178333335,
+        0.0,
+        0.13987291089166667,
+        0.27974582178333335,
+        -0.0
+      ],
+      [
+        0.14377916089166667,
+        0.14377916089166667,
+        0.28755832178333335,
+        0.0,
+        0.14377916089166667,
+        0.28755832178333335,
+        -0.0
+      ],
+      [
+        0.14768541089166667,
+        0.14768541089166667,
+        0.29537082178333335,
+        0.0,
+        0.14768541089166667,
+        0.29537082178333335,
+        -0.0
+      ],
+      [
+        0.15159166089166667,
+        0.15159166089166667,
+        0.30318332178333335,
+        0.0,
+        0.15159166089166667,
+        0.30318332178333335,
+        -0.0
+      ],
+      [
+        0.15549791089166667,
+        0.15549791089166667,
+        0.31099582178333335,
+        0.0,
+        0.15549791089166667,
+        0.31099582178333335,
+        -0.0
+      ],
+      [
+        0.15940416089166667,
+        0.15940416089166667,
+        0.31880832178333335,
+        0.0,
+        0.15940416089166667,
+        0.31880832178333335,
+        -0.0
+      ],
+      [
+        0.16331041089166667,
+        0.16331041089166667,
+        0.32662082178333335,
+        0.0,
+        0.16331041089166667,
+        0.32662082178333335,
+        -0.0
+      ],
+      [
+        0.16721666089166667,
+        0.16721666089166667,
+        0.33443332178333335,
+        0.0,
+        0.16721666089166667,
+        0.33443332178333335,
+        -0.0
+      ],
+      [
+        0.17112291089166667,
+        0.17112291089166667,
+        0.34224582178333335,
+        0.0,
+        0.17112291089166667,
+        0.34224582178333335,
+        -0.0
+      ],
+      [
+        0.17502916089166667,
+        0.17502916089166667,
+        0.35005832178333335,
+        0.0,
+        0.17502916089166667,
+        0.35005832178333335,
+        -0.0
+      ],
+      [
+        0.17893541089166667,
+        0.17893541089166667,
+        0.35787082178333335,
+        0.0,
+        0.17893541089166667,
+        0.35787082178333335,
+        -0.0
+      ],
+      [
+        0.18284166089166667,
+        0.18284166089166667,
+        0.36568332178333335,
+        0.0,
+        0.18284166089166667,
+        0.36568332178333335,
+        -0.0
+      ],
+      [
+        0.18674791089166667,
+        0.18674791089166667,
+        0.37349582178333335,
+        0.0,
+        0.18674791089166667,
+        0.37349582178333335,
+        -0.0
+      ],
+      [
+        0.19065416089166667,
+        0.19065416089166667,
+        0.38130832178333335,
+        0.0,
+        0.19065416089166667,
+        0.38130832178333335,
+        -0.0
+      ],
+      [
+        0.19456041089166667,
+        0.19456041089166667,
+        0.38912082178333335,
+        0.0,
+        0.19456041089166667,
+        0.38912082178333335,
+        -0.0
+      ],
+      [
+        0.19846666089166667,
+        0.19846666089166667,
+        0.39693332178333335,
+        0.0,
+        0.19846666089166667,
+        0.39693332178333335,
+        -0.0
+      ],
+      [
+        0.20237291089166667,
+        0.20237291089166667,
+        0.40474582178333335,
+        0.0,
+        0.20237291089166667,
+        0.40474582178333335,
+        -0.0
+      ],
+      [
+        0.20627916089166667,
+        0.20627916089166667,
+        0.41255832178333335,
+        0.0,
+        0.20627916089166667,
+        0.41255832178333335,
+        -0.0
+      ],
+      [
+        0.21018541089166667,
+        0.21018541089166667,
+        0.42037082178333335,
+        0.0,
+        0.21018541089166667,
+        0.42037082178333335,
+        -0.0
+      ],
+      [
+        0.21409166089166667,
+        0.21409166089166667,
+        0.42818332178333335,
+        0.0,
+        0.21409166089166667,
+        0.42818332178333335,
+        -0.0
+      ],
+      [
+        0.21799791089166667,
+        0.21799791089166667,
+        0.43599582178333335,
+        0.0,
+        0.21799791089166667,
+        0.43599582178333335,
+        -0.0
+      ],
+      [
+        0.22190416089166667,
+        0.22190416089166667,
+        0.44380832178333335,
+        0.0,
+        0.22190416089166667,
+        0.44380832178333335,
+        -0.0
+      ],
+      [
+        0.22581041089166667,
+        0.22581041089166667,
+        0.45162082178333335,
+        0.0,
+        0.22581041089166667,
+        0.45162082178333335,
+        -0.0
+      ],
+      [
+        0.22971666089166667,
+        0.22971666089166667,
+        0.45943332178333335,
+        0.0,
+        0.22971666089166667,
+        0.45943332178333335,
+        -0.0
+      ],
+      [
+        0.23362291089166667,
+        0.23362291089166667,
+        0.46724582178333335,
+        0.0,
+        0.23362291089166667,
+        0.46724582178333335,
+        -0.0
+      ],
+      [
+        0.23752916089166667,
+        0.23752916089166667,
+        0.47505832178333335,
+        0.0,
+        0.23752916089166667,
+        0.47505832178333335,
+        -0.0
+      ],
+      [
+        0.24143541089166667,
+        0.24143541089166667,
+        0.48287082178333335,
+        0.0,
+        0.24143541089166667,
+        0.48287082178333335,
+        -0.0
+      ],
+      [
+        0.24534166089166667,
+        0.24534166089166667,
+        0.49068332178333335,
+        0.0,
+        0.24534166089166667,
+        0.49068332178333335,
+        -0.0
+      ],
+      [
+        0.24767083044583332,
+        0.24767083044583332,
+        0.49534166089166665,
+        0.0,
+        0.24767083044583332,
+        0.49534166089166665,
+        -0.0
+      ],
+      [
+        0.25,
+        0.25,
+        0.5,
+        0.0,
+        0.25,
+        0.5,
+        -0.0
+      ],
+      [
+        0.25390625,
+        0.25390625,
+        0.5078125,
+        0.0,
+        0.25390625,
+        0.5078125,
+        -0.0
+      ],
+      [
+        0.2578125,
+        0.2578125,
+        0.515625,
+        0.0,
+        0.2578125,
+        0.515625,
+        -0.0
+      ],
+      [
+        0.26171875,
+        0.26171875,
+        0.5234375,
+        0.0,
+        0.26171875,
+        0.5234375,
+        -0.0
+      ],
+      [
+        0.265625,
+        0.265625,
+        0.53125,
+        0.0,
+        0.265625,
+        0.53125,
+        -0.0
+      ],
+      [
+        0.26953125,
+        0.26953125,
+        0.5390625,
+        0.0,
+        0.26953125,
+        0.5390625,
+        -0.0
+      ],
+      [
+        0.2734375,
+        0.2734375,
+        0.546875,
+        0.0,
+        0.2734375,
+        0.546875,
+        -0.0
+      ],
+      [
+        0.27734375,
+        0.27734375,
+        0.5546875,
+        0.0,
+        0.27734375,
+        0.5546875,
+        -0.0
+      ],
+      [
+        0.28125,
+        0.28125,
+        0.5625,
+        0.0,
+        0.28125,
+        0.5625,
+        -0.0
+      ],
+      [
+        0.28515625,
+        0.28515625,
+        0.5703125,
+        0.0,
+        0.28515625,
+        0.5703125,
+        -0.0
+      ],
+      [
+        0.2890625,
+        0.2890625,
+        0.578125,
+        0.0,
+        0.2890625,
+        0.578125,
+        -0.0
+      ],
+      [
+        0.29296875,
+        0.29296875,
+        0.5859375,
+        0.0,
+        0.29296875,
+        0.5859375,
+        -0.0
+      ],
+      [
+        0.296875,
+        0.296875,
+        0.59375,
+        0.0,
+        0.296875,
+        0.59375,
+        -0.0
+      ],
+      [
+        0.30078125,
+        0.30078125,
+        0.6015625,
+        0.0,
+        0.30078125,
+        0.6015625,
+        -0.0
+      ],
+      [
+        0.3046875,
+        0.3046875,
+        0.609375,
+        0.0,
+        0.3046875,
+        0.609375,
+        -0.0
+      ],
+      [
+        0.30859375,
+        0.30859375,
+        0.6171875,
+        0.0,
+        0.30859375,
+        0.6171875,
+        -0.0
+      ],
+      [
+        0.3125,
+        0.3125,
+        0.625,
+        0.0,
+        0.3125,
+        0.625,
+        -0.0
+      ],
+      [
+        0.31640625,
+        0.31640625,
+        0.6328125,
+        0.0,
+        0.31640625,
+        0.6328125,
+        -0.0
+      ],
+      [
+        0.3203125,
+        0.3203125,
+        0.640625,
+        0.0,
+        0.3203125,
+        0.640625,
+        -0.0
+      ],
+      [
+        0.32421875,
+        0.32421875,
+        0.6484375,
+        0.0,
+        0.32421875,
+        0.6484375,
+        -0.0
+      ],
+      [
+        0.328125,
+        0.328125,
+        0.65625,
+        0.0,
+        0.328125,
+        0.65625,
+        -0.0
+      ],
+      [
+        0.33203125,
+        0.33203125,
+        0.6640625,
+        0.0,
+        0.33203125,
+        0.6640625,
+        -0.0
+      ],
+      [
+        0.3359375,
+        0.3359375,
+        0.671875,
+        0.0,
+        0.3359375,
+        0.671875,
+        -0.0
+      ],
+      [
+        0.33984375,
+        0.33984375,
+        0.6796875,
+        0.0,
+        0.33984375,
+        0.6796875,
+        -0.0
+      ],
+      [
+        0.34375,
+        0.34375,
+        0.6875,
+        0.0,
+        0.34375,
+        0.6875,
+        -0.0
+      ],
+      [
+        0.34765625,
+        0.34765625,
+        0.6953125,
+        0.0,
+        0.34765625,
+        0.6953125,
+        -0.0
+      ],
+      [
+        0.3515625,
+        0.3515625,
+        0.703125,
+        0.0,
+        0.3515625,
+        0.703125,
+        -0.0
+      ],
+      [
+        0.35546875,
+        0.35546875,
+        0.7109375,
+        0.0,
+        0.35546875,
+        0.7109375,
+        -0.0
+      ],
+      [
+        0.359375,
+        0.359375,
+        0.71875,
+        0.0,
+        0.359375,
+        0.71875,
+        -0.0
+      ],
+      [
+        0.36328125,
+        0.36328125,
+        0.7265625,
+        0.0,
+        0.36328125,
+        0.7265625,
+        -0.0
+      ],
+      [
+        0.3671875,
+        0.3671875,
+        0.734375,
+        0.0,
+        0.3671875,
+        0.734375,
+        -0.0
+      ],
+      [
+        0.37109375,
+        0.37109375,
+        0.7421875,
+        0.0,
+        0.37109375,
+        0.7421875,
+        -0.0
+      ],
+      [
+        0.375,
+        0.375,
+        0.75,
+        0.0,
+        0.375,
+        0.75,
+        -0.0
+      ],
+      [
+        0.37890625,
+        0.37890625,
+        0.7578125,
+        0.0,
+        0.37890625,
+        0.7578125,
+        -0.0
+      ],
+      [
+        0.3828125,
+        0.3828125,
+        0.765625,
+        0.0,
+        0.3828125,
+        0.765625,
+        -0.0
+      ],
+      [
+        0.38671875,
+        0.38671875,
+        0.7734375,
+        0.0,
+        0.38671875,
+        0.7734375,
+        -0.0
+      ],
+      [
+        0.390625,
+        0.390625,
+        0.78125,
+        0.0,
+        0.390625,
+        0.78125,
+        -0.0
+      ],
+      [
+        0.39453125,
+        0.39453125,
+        0.7890625,
+        0.0,
+        0.39453125,
+        0.7890625,
+        -0.0
+      ],
+      [
+        0.3984375,
+        0.3984375,
+        0.796875,
+        0.0,
+        0.3984375,
+        0.796875,
+        -0.0
+      ],
+      [
+        0.40234375,
+        0.40234375,
+        0.8046875,
+        0.0,
+        0.40234375,
+        0.8046875,
+        -0.0
+      ],
+      [
+        0.40625,
+        0.40625,
+        0.8125,
+        0.0,
+        0.40625,
+        0.8125,
+        -0.0
+      ],
+      [
+        0.41015625,
+        0.41015625,
+        0.8203125,
+        0.0,
+        0.41015625,
+        0.8203125,
+        -0.0
+      ],
+      [
+        0.4140625,
+        0.4140625,
+        0.828125,
+        0.0,
+        0.4140625,
+        0.828125,
+        -0.0
+      ],
+      [
+        0.41796875,
+        0.41796875,
+        0.8359375,
+        0.0,
+        0.41796875,
+        0.8359375,
+        -0.0
+      ],
+      [
+        0.421875,
+        0.421875,
+        0.84375,
+        0.0,
+        0.421875,
+        0.84375,
+        -0.0
+      ],
+      [
+        0.42578125,
+        0.42578125,
+        0.8515625,
+        0.0,
+        0.42578125,
+        0.8515625,
+        -0.0
+      ],
+      [
+        0.4296875,
+        0.4296875,
+        0.859375,
+        0.0,
+        0.4296875,
+        0.859375,
+        -0.0
+      ],
+      [
+        0.43359375,
+        0.43359375,
+        0.8671875,
+        0.0,
+        0.43359375,
+        0.8671875,
+        -0.0
+      ],
+      [
+        0.4375,
+        0.4375,
+        0.875,
+        0.0,
+        0.4375,
+        0.875,
+        -0.0
+      ],
+      [
+        0.44140625,
+        0.44140625,
+        0.8828125,
+        0.0,
+        0.44140625,
+        0.8828125,
+        -0.0
+      ],
+      [
+        0.4453125,
+        0.4453125,
+        0.890625,
+        0.0,
+        0.4453125,
+        0.890625,
+        -0.0
+      ],
+      [
+        0.44921875,
+        0.44921875,
+        0.8984375,
+        0.0,
+        0.44921875,
+        0.8984375,
+        -0.0
+      ],
+      [
+        0.453125,
+        0.453125,
+        0.90625,
+        0.0,
+        0.453125,
+        0.90625,
+        -0.0
+      ],
+      [
+        0.45703125,
+        0.45703125,
+        0.9140625,
+        0.0,
+        0.45703125,
+        0.9140625,
+        -0.0
+      ],
+      [
+        0.4609375,
+        0.4609375,
+        0.921875,
+        0.0,
+        0.4609375,
+        0.921875,
+        -0.0
+      ],
+      [
+        0.46484375,
+        0.46484375,
+        0.9296875,
+        0.0,
+        0.46484375,
+        0.9296875,
+        -0.0
+      ],
+      [
+        0.46875,
+        0.46875,
+        0.9375,
+        0.0,
+        0.46875,
+        0.9375,
+        -0.0
+      ],
+      [
+        0.47265625,
+        0.47265625,
+        0.9453125,
+        0.0,
+        0.47265625,
+        0.9453125,
+        -0.0
+      ],
+      [
+        0.4765625,
+        0.4765625,
+        0.953125,
+        0.0,
+        0.4765625,
+        0.953125,
+        -0.0
+      ],
+      [
+        0.48046875,
+        0.48046875,
+        0.9609375,
+        0.0,
+        0.48046875,
+        0.9609375,
+        -0.0
+      ],
+      [
+        0.484375,
+        0.484375,
+        0.96875,
+        0.0,
+        0.484375,
+        0.96875,
+        -0.0
+      ],
+      [
+        0.48828125,
+        0.48828125,
+        0.9765625,
+        0.0,
+        0.48828125,
+        0.9765625,
+        -0.0
+      ],
+      [
+        0.4921875,
+        0.4921875,
+        0.984375,
+        0.0,
+        0.4921875,
+        0.984375,
+        -0.0
+      ],
+      [
+        0.49609375,
+        0.49609375,
+        0.9921875,
+        0.0,
+        0.49609375,
+        0.9921875,
+        -0.0
+      ],
+      [
+        0.5,
+        0.5,
+        1.0,
+        0.0,
+        0.5,
+        1.0,
+        -0.0
+      ],
+      [
+        0.50048828125,
+        0.50048828125,
+        1.0009765625,
+        0.00390625,
+        0.50048828125,
+        1.0009765625,
+        0.00390625
+      ],
+      [
+        0.50146484375,
+        0.50146484375,
+        1.0029296875,
+        0.01171875,
+        0.50146484375,
+        1.0029296875,
+        0.01171875
+      ],
+      [
+        0.50341796875,
+        0.50341796875,
+        1.0068359375,
+        0.02734375,
+        0.50341796875,
+        1.0068359375,
+        0.02734375
+      ],
+      [
+        0.50732421875,
+        0.50732421875,
+        1.0146484375,
+        0.05859375,
+        0.50732421875,
+        1.0146484375,
+        0.05859375
+      ],
+      [
+        0.51123046875,
+        0.51123046875,
+        1.0224609375,
+        0.08984375,
+        0.51123046875,
+        1.0224609375,
+        0.08984375
+      ],
+      [
+        0.51513671875,
+        0.51513671875,
+        1.0302734375,
+        0.12109375,
+        0.51513671875,
+        1.0302734375,
+        0.12109375
+      ],
+      [
+        0.51904296875,
+        0.51904296875,
+        1.0380859375,
+        0.15234375,
+        0.51904296875,
+        1.0380859375,
+        0.15234375
+      ],
+      [
+        0.52294921875,
+        0.52294921875,
+        1.0458984375,
+        0.18359375,
+        0.52294921875,
+        1.0458984375,
+        0.18359375
+      ],
+      [
+        0.52685546875,
+        0.52685546875,
+        1.0537109375,
+        0.21484375,
+        0.52685546875,
+        1.0537109375,
+        0.21484375
+      ],
+      [
+        0.53076171875,
+        0.53076171875,
+        1.0615234375,
+        0.24609375,
+        0.53076171875,
+        1.0615234375,
+        0.24609375
+      ],
+      [
+        0.53466796875,
+        0.53466796875,
+        1.0693359375,
+        0.27734375,
+        0.53466796875,
+        1.0693359375,
+        0.27734375
+      ],
+      [
+        0.53857421875,
+        0.53857421875,
+        1.0771484375,
+        0.30859375,
+        0.53857421875,
+        1.0771484375,
+        0.30859375
+      ],
+      [
+        0.54248046875,
+        0.54248046875,
+        1.0849609375,
+        0.33984375,
+        0.54248046875,
+        1.0849609375,
+        0.33984375
+      ],
+      [
+        0.54638671875,
+        0.54638671875,
+        1.0927734375,
+        0.37109375,
+        0.54638671875,
+        1.0927734375,
+        0.37109375
+      ],
+      [
+        0.55029296875,
+        0.55029296875,
+        1.1005859375,
+        0.40234375,
+        0.55029296875,
+        1.1005859375,
+        0.40234375
+      ],
+      [
+        0.55419921875,
+        0.55419921875,
+        1.1083984375,
+        0.43359375,
+        0.55419921875,
+        1.1083984375,
+        0.43359375
+      ],
+      [
+        0.55810546875,
+        0.55810546875,
+        1.1162109375,
+        0.46484375,
+        0.55810546875,
+        1.1162109375,
+        0.46484375
+      ],
+      [
+        0.560302734375,
+        0.560302734375,
+        1.12060546875,
+        0.482421875,
+        0.560302734375,
+        1.12060546875,
+        0.482421875
+      ],
+      [
+        0.5625,
+        0.5625,
+        1.125,
+        0.5,
+        0.5625,
+        1.125,
+        0.5
+      ],
+      [
+        0.56640625,
+        0.56640625,
+        1.1328125,
+        0.53125,
+        0.56640625,
+        1.1328125,
+        0.53125
+      ],
+      [
+        0.5703125,
+        0.5703125,
+        1.140625,
+        0.5625,
+        0.5703125,
+        1.140625,
+        0.5625
+      ],
+      [
+        0.57421875,
+        0.57421875,
+        1.1484375,
+        0.59375,
+        0.57421875,
+        1.1484375,
+        0.59375
+      ],
+      [
+        0.578125,
+        0.578125,
+        1.15625,
+        0.625,
+        0.578125,
+        1.15625,
+        0.625
+      ],
+      [
+        0.58203125,
+        0.58203125,
+        1.1640625,
+        0.65625,
+        0.58203125,
+        1.1640625,
+        0.65625
+      ],
+      [
+        0.5859375,
+        0.5859375,
+        1.171875,
+        0.6875,
+        0.5859375,
+        1.171875,
+        0.6875
+      ],
+      [
+        0.58984375,
+        0.58984375,
+        1.1796875,
+        0.71875,
+        0.58984375,
+        1.1796875,
+        0.71875
+      ],
+      [
+        0.59375,
+        0.59375,
+        1.1875,
+        0.75,
+        0.59375,
+        1.1875,
+        0.75
+      ],
+      [
+        0.59765625,
+        0.59765625,
+        1.1953125,
+        0.78125,
+        0.59765625,
+        1.1953125,
+        0.78125
+      ],
+      [
+        0.6015625,
+        0.6015625,
+        1.203125,
+        0.8125,
+        0.6015625,
+        1.203125,
+        0.8125
+      ],
+      [
+        0.60546875,
+        0.60546875,
+        1.2109375,
+        0.84375,
+        0.60546875,
+        1.2109375,
+        0.84375
+      ],
+      [
+        0.609375,
+        0.609375,
+        1.21875,
+        0.875,
+        0.609375,
+        1.21875,
+        0.875
+      ],
+      [
+        0.61328125,
+        0.61328125,
+        1.2265625,
+        0.90625,
+        0.61328125,
+        1.2265625,
+        0.90625
+      ],
+      [
+        0.6171875,
+        0.6171875,
+        1.234375,
+        0.9375,
+        0.6171875,
+        1.234375,
+        0.9375
+      ],
+      [
+        0.62109375,
+        0.62109375,
+        1.2421875,
+        0.96875,
+        0.62109375,
+        1.2421875,
+        0.96875
+      ],
+      [
+        0.625,
+        0.625,
+        1.25,
+        1.0,
+        0.625,
+        1.25,
+        1.0
+      ],
+      [
+        0.62548828125,
+        0.62548828125,
+        1.2509765625,
+        1.0,
+        0.62548828125,
+        1.2509765625,
+        1.0
+      ],
+      [
+        0.62646484375,
+        0.62646484375,
+        1.2529296875,
+        1.0,
+        0.62646484375,
+        1.2529296875,
+        1.0
+      ],
+      [
+        0.62841796875,
+        0.62841796875,
+        1.2568359375,
+        1.0,
+        0.62841796875,
+        1.2568359375,
+        1.0
+      ],
+      [
+        0.63232421875,
+        0.63232421875,
+        1.2646484375,
+        1.0,
+        0.63232421875,
+        1.2646484375,
+        1.0
+      ],
+      [
+        0.63623046875,
+        0.63623046875,
+        1.2724609375,
+        1.0,
+        0.63623046875,
+        1.2724609375,
+        1.0
+      ],
+      [
+        0.64013671875,
+        0.64013671875,
+        1.2802734375,
+        1.0,
+        0.64013671875,
+        1.2802734375,
+        1.0
+      ],
+      [
+        0.64404296875,
+        0.64404296875,
+        1.2880859375,
+        1.0,
+        0.64404296875,
+        1.2880859375,
+        1.0
+      ],
+      [
+        0.64794921875,
+        0.64794921875,
+        1.2958984375,
+        1.0,
+        0.64794921875,
+        1.2958984375,
+        1.0
+      ],
+      [
+        0.65185546875,
+        0.65185546875,
+        1.3037109375,
+        1.0,
+        0.65185546875,
+        1.3037109375,
+        1.0
+      ],
+      [
+        0.65576171875,
+        0.65576171875,
+        1.3115234375,
+        1.0,
+        0.65576171875,
+        1.3115234375,
+        1.0
+      ],
+      [
+        0.65966796875,
+        0.65966796875,
+        1.3193359375,
+        1.0,
+        0.65966796875,
+        1.3193359375,
+        1.0
+      ],
+      [
+        0.66357421875,
+        0.66357421875,
+        1.3271484375,
+        1.0,
+        0.66357421875,
+        1.3271484375,
+        1.0
+      ],
+      [
+        0.66748046875,
+        0.66748046875,
+        1.3349609375,
+        1.0,
+        0.66748046875,
+        1.3349609375,
+        1.0
+      ],
+      [
+        0.67138671875,
+        0.67138671875,
+        1.3427734375,
+        1.0,
+        0.67138671875,
+        1.3427734375,
+        1.0
+      ],
+      [
+        0.67529296875,
+        0.67529296875,
+        1.3505859375,
+        1.0,
+        0.67529296875,
+        1.3505859375,
+        1.0
+      ],
+      [
+        0.67919921875,
+        0.67919921875,
+        1.3583984375,
+        1.0,
+        0.67919921875,
+        1.3583984375,
+        1.0
+      ],
+      [
+        0.68310546875,
+        0.68310546875,
+        1.3662109375,
+        1.0,
+        0.68310546875,
+        1.3662109375,
+        1.0
+      ],
+      [
+        0.68701171875,
+        0.68701171875,
+        1.3740234375,
+        1.0,
+        0.68701171875,
+        1.3740234375,
+        1.0
+      ],
+      [
+        0.69091796875,
+        0.69091796875,
+        1.3818359375,
+        1.0,
+        0.69091796875,
+        1.3818359375,
+        1.0
+      ],
+      [
+        0.69482421875,
+        0.69482421875,
+        1.3896484375,
+        1.0,
+        0.69482421875,
+        1.3896484375,
+        1.0
+      ],
+      [
+        0.69873046875,
+        0.69873046875,
+        1.3974609375,
+        1.0,
+        0.69873046875,
+        1.3974609375,
+        1.0
+      ],
+      [
+        0.70263671875,
+        0.70263671875,
+        1.4052734375,
+        1.0,
+        0.70263671875,
+        1.4052734375,
+        1.0
+      ],
+      [
+        0.70654296875,
+        0.70654296875,
+        1.4130859375,
+        1.0,
+        0.70654296875,
+        1.4130859375,
+        1.0
+      ],
+      [
+        0.71044921875,
+        0.71044921875,
+        1.4208984375,
+        1.0,
+        0.71044921875,
+        1.4208984375,
+        1.0
+      ],
+      [
+        0.71435546875,
+        0.71435546875,
+        1.4287109375,
+        1.0,
+        0.71435546875,
+        1.4287109375,
+        1.0
+      ],
+      [
+        0.71826171875,
+        0.71826171875,
+        1.4365234375,
+        1.0,
+        0.71826171875,
+        1.4365234375,
+        1.0
+      ],
+      [
+        0.72216796875,
+        0.72216796875,
+        1.4443359375,
+        1.0,
+        0.72216796875,
+        1.4443359375,
+        1.0
+      ],
+      [
+        0.72607421875,
+        0.72607421875,
+        1.4521484375,
+        1.0,
+        0.72607421875,
+        1.4521484375,
+        1.0
+      ],
+      [
+        0.72998046875,
+        0.72998046875,
+        1.4599609375,
+        1.0,
+        0.72998046875,
+        1.4599609375,
+        1.0
+      ],
+      [
+        0.73388671875,
+        0.73388671875,
+        1.4677734375,
+        1.0,
+        0.73388671875,
+        1.4677734375,
+        1.0
+      ],
+      [
+        0.73779296875,
+        0.73779296875,
+        1.4755859375,
+        1.0,
+        0.73779296875,
+        1.4755859375,
+        1.0
+      ],
+      [
+        0.74169921875,
+        0.74169921875,
+        1.4833984375,
+        1.0,
+        0.74169921875,
+        1.4833984375,
+        1.0
+      ],
+      [
+        0.74560546875,
+        0.74560546875,
+        1.4912109375,
+        1.0,
+        0.74560546875,
+        1.4912109375,
+        1.0
+      ],
+      [
+        0.747802734375,
+        0.747802734375,
+        1.49560546875,
+        1.0,
+        0.747802734375,
+        1.49560546875,
+        1.0
+      ],
+      [
+        0.75,
+        0.75,
+        1.5,
+        1.0,
+        0.75,
+        1.5,
+        1.0
+      ],
+      [
+        0.75390625,
+        0.75390625,
+        1.5078125,
+        1.0,
+        0.75390625,
+        1.5078125,
+        1.0
+      ],
+      [
+        0.7578125,
+        0.7578125,
+        1.515625,
+        1.0,
+        0.7578125,
+        1.515625,
+        1.0
+      ],
+      [
+        0.76171875,
+        0.76171875,
+        1.5234375,
+        1.0,
+        0.76171875,
+        1.5234375,
+        1.0
+      ],
+      [
+        0.765625,
+        0.765625,
+        1.53125,
+        1.0,
+        0.765625,
+        1.53125,
+        1.0
+      ],
+      [
+        0.76953125,
+        0.76953125,
+        1.5390625,
+        1.0,
+        0.76953125,
+        1.5390625,
+        1.0
+      ],
+      [
+        0.7734375,
+        0.7734375,
+        1.546875,
+        1.0,
+        0.7734375,
+        1.546875,
+        1.0
+      ],
+      [
+        0.77734375,
+        0.77734375,
+        1.5546875,
+        1.0,
+        0.77734375,
+        1.5546875,
+        1.0
+      ],
+      [
+        0.78125,
+        0.78125,
+        1.5625,
+        1.0,
+        0.78125,
+        1.5625,
+        1.0
+      ],
+      [
+        0.78515625,
+        0.78515625,
+        1.5703125,
+        1.0,
+        0.78515625,
+        1.5703125,
+        1.0
+      ],
+      [
+        0.7890625,
+        0.7890625,
+        1.578125,
+        1.0,
+        0.7890625,
+        1.578125,
+        1.0
+      ],
+      [
+        0.79296875,
+        0.79296875,
+        1.5859375,
+        1.0,
+        0.79296875,
+        1.5859375,
+        1.0
+      ],
+      [
+        0.796875,
+        0.796875,
+        1.59375,
+        1.0,
+        0.796875,
+        1.59375,
+        1.0
+      ],
+      [
+        0.80078125,
+        0.80078125,
+        1.6015625,
+        1.0,
+        0.80078125,
+        1.6015625,
+        1.0
+      ],
+      [
+        0.8046875,
+        0.8046875,
+        1.609375,
+        1.0,
+        0.8046875,
+        1.609375,
+        1.0
+      ],
+      [
+        0.80859375,
+        0.80859375,
+        1.6171875,
+        1.0,
+        0.80859375,
+        1.6171875,
+        1.0
+      ],
+      [
+        0.8125,
+        0.8125,
+        1.625,
+        1.0,
+        0.8125,
+        1.625,
+        1.0
+      ],
+      [
+        0.81640625,
+        0.81640625,
+        1.6328125,
+        1.0,
+        0.81640625,
+        1.6328125,
+        1.0
+      ],
+      [
+        0.8203125,
+        0.8203125,
+        1.640625,
+        1.0,
+        0.8203125,
+        1.640625,
+        1.0
+      ],
+      [
+        0.82421875,
+        0.82421875,
+        1.6484375,
+        1.0,
+        0.82421875,
+        1.6484375,
+        1.0
+      ],
+      [
+        0.828125,
+        0.828125,
+        1.65625,
+        1.0,
+        0.828125,
+        1.65625,
+        1.0
+      ],
+      [
+        0.83203125,
+        0.83203125,
+        1.6640625,
+        1.0,
+        0.83203125,
+        1.6640625,
+        1.0
+      ],
+      [
+        0.8359375,
+        0.8359375,
+        1.671875,
+        1.0,
+        0.8359375,
+        1.671875,
+        1.0
+      ],
+      [
+        0.83984375,
+        0.83984375,
+        1.6796875,
+        1.0,
+        0.83984375,
+        1.6796875,
+        1.0
+      ],
+      [
+        0.84375,
+        0.84375,
+        1.6875,
+        1.0,
+        0.84375,
+        1.6875,
+        1.0
+      ],
+      [
+        0.84765625,
+        0.84765625,
+        1.6953125,
+        1.0,
+        0.84765625,
+        1.6953125,
+        1.0
+      ],
+      [
+        0.8515625,
+        0.8515625,
+        1.703125,
+        1.0,
+        0.8515625,
+        1.703125,
+        1.0
+      ],
+      [
+        0.85546875,
+        0.85546875,
+        1.7109375,
+        1.0,
+        0.85546875,
+        1.7109375,
+        1.0
+      ],
+      [
+        0.859375,
+        0.859375,
+        1.71875,
+        1.0,
+        0.859375,
+        1.71875,
+        1.0
+      ],
+      [
+        0.86328125,
+        0.86328125,
+        1.7265625,
+        1.0,
+        0.86328125,
+        1.7265625,
+        1.0
+      ],
+      [
+        0.8671875,
+        0.8671875,
+        1.734375,
+        1.0,
+        0.8671875,
+        1.734375,
+        1.0
+      ],
+      [
+        0.87109375,
+        0.87109375,
+        1.7421875,
+        1.0,
+        0.87109375,
+        1.7421875,
+        1.0
+      ],
+      [
+        0.875,
+        0.875,
+        1.75,
+        1.0,
+        0.875,
+        1.75,
+        1.0
+      ],
+      [
+        0.87890625,
+        0.87890625,
+        1.7578125,
+        1.0,
+        0.87890625,
+        1.7578125,
+        1.0
+      ],
+      [
+        0.8828125,
+        0.8828125,
+        1.765625,
+        1.0,
+        0.8828125,
+        1.765625,
+        1.0
+      ],
+      [
+        0.88671875,
+        0.88671875,
+        1.7734375,
+        1.0,
+        0.88671875,
+        1.7734375,
+        1.0
+      ],
+      [
+        0.890625,
+        0.890625,
+        1.78125,
+        1.0,
+        0.890625,
+        1.78125,
+        1.0
+      ],
+      [
+        0.89453125,
+        0.89453125,
+        1.7890625,
+        1.0,
+        0.89453125,
+        1.7890625,
+        1.0
+      ],
+      [
+        0.8984375,
+        0.8984375,
+        1.796875,
+        1.0,
+        0.8984375,
+        1.796875,
+        1.0
+      ],
+      [
+        0.90234375,
+        0.90234375,
+        1.8046875,
+        1.0,
+        0.90234375,
+        1.8046875,
+        1.0
+      ],
+      [
+        0.90625,
+        0.90625,
+        1.8125,
+        1.0,
+        0.90625,
+        1.8125,
+        1.0
+      ],
+      [
+        0.91015625,
+        0.91015625,
+        1.8203125,
+        1.0,
+        0.91015625,
+        1.8203125,
+        1.0
+      ],
+      [
+        0.9140625,
+        0.9140625,
+        1.828125,
+        1.0,
+        0.9140625,
+        1.828125,
+        1.0
+      ],
+      [
+        0.91796875,
+        0.91796875,
+        1.8359375,
+        1.0,
+        0.91796875,
+        1.8359375,
+        1.0
+      ],
+      [
+        0.921875,
+        0.921875,
+        1.84375,
+        1.0,
+        0.921875,
+        1.84375,
+        1.0
+      ],
+      [
+        0.92578125,
+        0.92578125,
+        1.8515625,
+        1.0,
+        0.92578125,
+        1.8515625,
+        1.0
+      ],
+      [
+        0.9296875,
+        0.9296875,
+        1.859375,
+        1.0,
+        0.9296875,
+        1.859375,
+        1.0
+      ],
+      [
+        0.93359375,
+        0.93359375,
+        1.8671875,
+        1.0,
+        0.93359375,
+        1.8671875,
+        1.0
+      ],
+      [
+        0.9375,
+        0.9375,
+        1.875,
+        1.0,
+        0.9375,
+        1.875,
+        1.0
+      ],
+      [
+        0.94140625,
+        0.94140625,
+        1.8828125,
+        1.0,
+        0.94140625,
+        1.8828125,
+        1.0
+      ],
+      [
+        0.9453125,
+        0.9453125,
+        1.890625,
+        1.0,
+        0.9453125,
+        1.890625,
+        1.0
+      ],
+      [
+        0.94921875,
+        0.94921875,
+        1.8984375,
+        1.0,
+        0.94921875,
+        1.8984375,
+        1.0
+      ],
+      [
+        0.953125,
+        0.953125,
+        1.90625,
+        1.0,
+        0.953125,
+        1.90625,
+        1.0
+      ],
+      [
+        0.95703125,
+        0.95703125,
+        1.9140625,
+        1.0,
+        0.95703125,
+        1.9140625,
+        1.0
+      ],
+      [
+        0.9609375,
+        0.9609375,
+        1.921875,
+        1.0,
+        0.9609375,
+        1.921875,
+        1.0
+      ],
+      [
+        0.96484375,
+        0.96484375,
+        1.9296875,
+        1.0,
+        0.96484375,
+        1.9296875,
+        1.0
+      ],
+      [
+        0.96875,
+        0.96875,
+        1.9375,
+        1.0,
+        0.96875,
+        1.9375,
+        1.0
+      ],
+      [
+        0.97265625,
+        0.97265625,
+        1.9453125,
+        1.0,
+        0.97265625,
+        1.9453125,
+        1.0
+      ],
+      [
+        0.9765625,
+        0.9765625,
+        1.953125,
+        1.0,
+        0.9765625,
+        1.953125,
+        1.0
+      ],
+      [
+        0.98046875,
+        0.98046875,
+        1.9609375,
+        1.0,
+        0.98046875,
+        1.9609375,
+        1.0
+      ],
+      [
+        0.984375,
+        0.984375,
+        1.96875,
+        1.0,
+        0.984375,
+        1.96875,
+        1.0
+      ],
+      [
+        0.98828125,
+        0.98828125,
+        1.9765625,
+        1.0,
+        0.98828125,
+        1.9765625,
+        1.0
+      ],
+      [
+        0.9921875,
+        0.9921875,
+        1.984375,
+        1.0,
+        0.9921875,
+        1.984375,
+        1.0
+      ],
+      [
+        0.99609375,
+        0.99609375,
+        1.9921875,
+        1.0,
+        0.99609375,
+        1.9921875,
+        1.0
+      ],
+      [
+        1.0,
+        1.0,
+        2.0,
+        1.0,
+        1.0,
+        2.0,
+        1.0
+      ]
+    ]
+  },
+  "seven_prior_reference_requests": [
+    {
+      "case": "cross-transition",
+      "previous_response": "runs/evas-source-shape-20261017/reference-pairs-final3/cross-transition/response.json",
+      "previous_sha256": "cde343e6ca07a79478c78fcc7bdd8b3a2fe326655ab88346e9c48a6e3f1c5c6e",
+      "new_response_sha256": "cde343e6ca07a79478c78fcc7bdd8b3a2fe326655ab88346e9c48a6e3f1c5c6e",
+      "entire_response_equal": true
+    },
+    {
+      "case": "reverse-held-reset",
+      "previous_response": "runs/evas-source-shape-20261017/reference-pairs-final3/reverse-held-reset/response.json",
+      "previous_sha256": "a4c1eb17146ed0d546255d448066834e5c2a6272725e862581c9a08014784e96",
+      "new_response_sha256": "a4c1eb17146ed0d546255d448066834e5c2a6272725e862581c9a08014784e96",
+      "entire_response_equal": true
+    },
+    {
+      "case": "causal-retarget-correlation",
+      "previous_response": "runs/evas-source-shape-20261017/mechanism-pairs-final3/causal-retarget-correlation/response.json",
+      "previous_sha256": "f9b83c37220ef458c9cfbbd1efaa852caeeb3970241f3ad1977ca34f957f747e",
+      "new_response_sha256": "f9b83c37220ef458c9cfbbd1efaa852caeeb3970241f3ad1977ca34f957f747e",
+      "entire_response_equal": true
+    },
+    {
+      "case": "transition-network-condition",
+      "previous_response": "runs/evas-source-shape-20261017/mechanism-pairs-final3/transition-network-condition/response.json",
+      "previous_sha256": "139eb518e08872f00c9ea5023028cb5f019ccb750207280f3bce860277bb85f4",
+      "new_response_sha256": "139eb518e08872f00c9ea5023028cb5f019ccb750207280f3bce860277bb85f4",
+      "entire_response_equal": true
+    },
+    {
+      "case": "adjacent-internal-transition-roots",
+      "previous_response": "runs/evas-source-shape-20261017/diagnosis-pairs-final3/adjacent-internal-transition-roots/response.json",
+      "previous_sha256": "acdd39b5bc8ef5fadaa02fd134282297bc5d0274ae75e4f5167a834d319ed97a",
+      "new_response_sha256": "acdd39b5bc8ef5fadaa02fd134282297bc5d0274ae75e4f5167a834d319ed97a",
+      "entire_response_equal": true
+    },
+    {
+      "case": "independent-interrupted-continuous-ends",
+      "previous_response": "runs/evas-source-shape-20261017/diagnosis-pairs-final3/independent-interrupted-continuous-ends/response.json",
+      "previous_sha256": "a05ad9508e48044ec61f20050e0a810eddebeaaf7dfa309f40ad30b6c38e9e17",
+      "new_response_sha256": "a05ad9508e48044ec61f20050e0a810eddebeaaf7dfa309f40ad30b6c38e9e17",
+      "entire_response_equal": true
+    },
+    {
+      "case": "internal-conditioned-cascade",
+      "previous_response": "runs/evas-source-shape-20261017/cascade-pilot-final3/response.json",
+      "previous_sha256": "e5dad534ccff34e3d8dc79c87487b9691fbb512aee9780dc87ebf3ab915a53da",
+      "new_response_sha256": "e5dad534ccff34e3d8dc79c87487b9691fbb512aee9780dc87ebf3ab915a53da",
+      "entire_response_equal": true
+    }
+  ],
+  "limits": [
+    "Finite exact projection recovery; interval networkprojection suchasz=u/3 staysrefused, no generalnewaffine/cyclic support guarantee",
+    "091/320 originalchecker failures remain semanticdifferences; their all finite response states/saved observations exactlysame onfinalkernel permit reuse of independentmath andoriginalSpectre; remaining nativequalification gaps preserved",
+    "New actual Spectre onecase, not fullmatrix. 10nV/1ps fixedbeforeexecution, all285nativepoints retained, noalignmentshift orwindowdeletion. Fullnative uncertainty/commonQ notestablished",
+    "Original failed settingsparser4runs from091/320 andearlierdebugtimeouts retain prioridentities",
+    "Setup failures retained: initial consumer importmissingPYTHONPATH; original347relativekernel rejected before corrected absolute frozenpath; six reference response globs missedroot-levelcascade then added seventh; neitherDUTnororiginalchecker changed",
+    "Raw/VA archives/fullresponses/SpectrePSF/guardian receipts/trail local-only runs/evas-source-shape-20261017/b1; hashnotpublicdownload"
+  ]
+}

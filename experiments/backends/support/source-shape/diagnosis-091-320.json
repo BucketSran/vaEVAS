@@ -1,0 +1,536 @@
+{
+  "scope": "091/320 original finite requests; independent EVAS recurrence and newly executed original Spectre plus separately identified callback-only controls",
+  "source_commit": "82284d9736906f6f83421408ec580d41d6bdbf55",
+  "documentation_parent": "5f5bbae70781a46c9b33d56658e2a215f4a595da",
+  "kernel_sha256": "37ecd43d88f86233112ff8ee9580197ff08b81a77e74a80da029e1769026e1c6",
+  "production_sources_verified": 142,
+  "oracle_sha256": "0ce31edef7e448cf8f03131ffc4849cd28d42379e0bcb2f8f16b7adb34dad9ab",
+  "original_checker_tree": "unchanged; frozen112 identity",
+  "normalization_sha256": "492bab585735c4480581d8f18f54bfc7bdd58a1cb02cde49ed30808049bea541",
+  "limits": [
+    "EVAS source and frozen kernel unchanged in this diagnosis; finite exact-root/linear-history contract only, no LRM nonconformance assertion",
+    "Original112 count remains55 checkerpass/2 checkerfail/55refused. New Spectre2/2 originalcheckerpass does not change EVAS grade",
+    "Four actual Spectre executions (two original plus two separately identified callback controls), same original precision/maxstep/deck bytes and existing90s/4GiB/32MiB/singlethread/30slicense envelope",
+    "All default-format PSF/log records local-only; complete native provenance/full callback numeric uncertainty certificates and general commonQ not established",
+    "Original settings reader returned analysis_failure on all four completed runs; retained, local manual unit reading is separate reanalysis",
+    "Initial oracle320 output-voltage mapping was corrected from boolean1 to original0.9V; first failure retained, no DUT correction",
+    "159 observed callback recurrences agree;091 initial/control-clear blocks not instrumented. This does not establish complete callback/native qualification"
+  ],
+  "cases": {
+    "091": {
+      "classification": "semantic compatibility difference; no independent EVAS defect found in these finite originals",
+      "evas_original_checker": {
+        "passed": false,
+        "note": "checked=230 active=1 hold_edges=0 clears=2 polarity=+1/-0 settled_rows=0 errors=5 first=voutp@4.480ns=0.45750 expected=0.47250",
+        "checker_id": "v4_091_chopper_stabilized_differential_amplifier",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "independent_math": {
+        "family": "091",
+        "scope": "All original recorded event states and original finite saved observations, independently derived from original source recurrence and exact original scalar inputs",
+        "event_count": 125,
+        "saved_rows": 3637,
+        "scalar_observations": 36370,
+        "max_state_error": 7.178596004977688e-15,
+        "max_saved_error_V": {
+          "vinp": 5.002449531541142e-17,
+          "vinn": 4.782983294907286e-17,
+          "chop_clk": 5.470452704954394e-17,
+          "rst": 1.0823024893430278e-16,
+          "enable": 1.048910544738203e-16,
+          "hold": 7.17823153352595e-17,
+          "voutp": 8.901180905229078e-16,
+          "voutn": 8.346069392916501e-16,
+          "settled": 0.0,
+          "offset_residual": 5.394890376979919e-15
+        },
+        "response_sha256": "c544904d5176f447f466b5e9c0fdbffbafe113634da9f28ba70897fefdaa690b",
+        "original_checker": "FAIL preserved; no checker or normalization changes"
+      },
+      "math_sha256": "66a15b63455d9174f0b3121cd14b38fddbfb8362676571680d5bb27a202849e9",
+      "callback_control_native_rows_equal": true,
+      "callbacks": {
+        "counts": {
+          "DIAG091_CHOP": 68,
+          "DIAG091_LP": 55
+        },
+        "recurrences_checked": 123,
+        "max_recurrence_error": 1.3877787807814457e-17,
+        "sha256": "e3fb3835cd58f7b786afb2826e905b43a5eb6980e15fa2b150683a6e1cb88270"
+      },
+      "original_identity": {
+        "family_id": "091",
+        "task_name": "091-chopper-stabilized-differential-amplifier",
+        "checker_id": "v4_091_chopper_stabilized_differential_amplifier",
+        "deck_sha256": "41f0ba7c3094fd58a68fe01f9d0018c6a3c4275c4e898974a6bb8ff87491fa7d",
+        "gold_tree_sha256": "5721b1434c489db12e4e6f9ec10baae0ebb316572396dd444a3bcd853c46b702",
+        "source_files": {
+          "submission/chopper_gain_core.va": "a187940becd8e0cd1f6b84b6f0efa22f692d432b5c7355b68ea3d09514025053",
+          "submission/chopper_stabilized_differential_amplifier.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
+          "submission/synchronous_lp_state.va": "73863b2313e1b959bebb84be44a4f5bda974edd1b0e9299f5319f42b5402ece8",
+          "testbench/trusted_replay_test.scs": "41f0ba7c3094fd58a68fe01f9d0018c6a3c4275c4e898974a6bb8ff87491fa7d"
+        }
+      },
+      "spectre": {
+        "original": {
+          "rows": 3791,
+          "checker": {
+            "passed": true,
+            "note": "checked=7516 active=55 hold_edges=8 clears=6 polarity=+27/-28 settled_rows=666 errors=0"
+          },
+          "settings": {
+            "actual_transient_log": {
+              "reltol": {
+                "value": 0.0001,
+                "line": 138,
+                "raw": "    reltol = 100e-06"
+              },
+              "abstol(V)": {
+                "value": 1e-06,
+                "line": 139,
+                "raw": "    abstol(V) = 1 uV"
+              },
+              "abstol(I)": {
+                "value": 1e-12,
+                "line": 140,
+                "raw": "    abstol(I) = 1 pA"
+              },
+              "stop": {
+                "value": 7e-08,
+                "line": 132,
+                "raw": "    stop = 70 ns"
+              },
+              "maxstep": {
+                "value": 2e-11,
+                "line": 134,
+                "raw": "    maxstep = 20 ps"
+              },
+              "method": {
+                "value": "gear2only",
+                "line": 145,
+                "raw": "    method = gear2only"
+              },
+              "errpreset": {
+                "value": "conservative",
+                "line": 144,
+                "raw": "    errpreset = conservative"
+              }
+            },
+            "global_user_options": "empty original default block; no invented requested tolerance values",
+            "original_parser_failure": "wrong dimension for voltage:1uV; rows and raw data already saved; manual local dimensional reading only; no tool rerun",
+            "format_limit": "original default ASCII PSF precision, no calibrated 17digit log format or full pointwise/native error certificate"
+          },
+          "rows_sha256": "61d14f30eab177d46a4202de0fda187a6d6654b271484591499b5ba6bcdc5014",
+          "raw_sha256": "80b3e021fde30f9a99772bd5d6935e2b345169e79f071c381e4cb4587de325cc",
+          "manifest_sha256": "ce24e3f499191fafbaf5dceed3d054aed7e45211fd8a442f910d8f787e6d0c39",
+          "tool_identity_sha256": "0867e7f0879cb420254d111e6efb98214a21d78f3b67b3fb084ab1c34d6b1330",
+          "execution": {
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            },
+            "elapsed_seconds": 31.252850456163287,
+            "completed_utc": "2026-10-17T11:37:24Z",
+            "resource_caps": {
+              "memory_limit_bytes": 4294967296,
+              "file_limit_bytes": 33554432,
+              "threads": 1
+            }
+          }
+        },
+        "instrumented": {
+          "rows": 3791,
+          "checker": {
+            "passed": true,
+            "note": "checked=7516 active=55 hold_edges=8 clears=6 polarity=+27/-28 settled_rows=666 errors=0"
+          },
+          "settings": {
+            "actual_transient_log": {
+              "reltol": {
+                "value": 0.0001,
+                "line": 138,
+                "raw": "    reltol = 100e-06"
+              },
+              "abstol(V)": {
+                "value": 1e-06,
+                "line": 139,
+                "raw": "    abstol(V) = 1 uV"
+              },
+              "abstol(I)": {
+                "value": 1e-12,
+                "line": 140,
+                "raw": "    abstol(I) = 1 pA"
+              },
+              "stop": {
+                "value": 7e-08,
+                "line": 132,
+                "raw": "    stop = 70 ns"
+              },
+              "maxstep": {
+                "value": 2e-11,
+                "line": 134,
+                "raw": "    maxstep = 20 ps"
+              },
+              "method": {
+                "value": "gear2only",
+                "line": 145,
+                "raw": "    method = gear2only"
+              },
+              "errpreset": {
+                "value": "conservative",
+                "line": 144,
+                "raw": "    errpreset = conservative"
+              }
+            },
+            "global_user_options": "empty original default block; no invented requested tolerance values",
+            "original_parser_failure": "wrong dimension for voltage:1uV; rows and raw data already saved; manual local dimensional reading only; no tool rerun",
+            "format_limit": "original default ASCII PSF precision, no calibrated 17digit log format or full pointwise/native error certificate"
+          },
+          "rows_sha256": "61d14f30eab177d46a4202de0fda187a6d6654b271484591499b5ba6bcdc5014",
+          "raw_sha256": "cb900166c97fc00dfd36d2edc8c92d8612e27b94d60d727e2f99d8b86cd6d07a",
+          "manifest_sha256": "ed3fc342ae466897a07d65c76a4f0d66ee40e7943f1ab816d3d2352f14e78cb0",
+          "tool_identity_sha256": "5852532e996b791b8536eeb641ee8a0939d5dd287ea1c51d8e152259d47ae10a",
+          "execution": {
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            },
+            "elapsed_seconds": 41.40644451417029,
+            "completed_utc": "2026-10-17T11:39:20Z",
+            "resource_caps": {
+              "memory_limit_bytes": 4294967296,
+              "file_limit_bytes": 33554432,
+              "threads": 1
+            }
+          }
+        }
+      },
+      "selected_callbacks": [
+        {
+          "kind": "DIAG091_CHOP",
+          "values": [
+            4.025012500027778e-09,
+            0.00022500049999724103,
+            -0.45,
+            0.45,
+            -0.45,
+            1.0,
+            0.17999999999999994,
+            0.11999999999999994,
+            0.9
+          ]
+        },
+        {
+          "kind": "DIAG091_LP",
+          "values": [
+            4.275037500083336e-09,
+            0.0002250005000040689,
+            0.17999999999999994,
+            0.11999999999999994,
+            0.044999999999999984,
+            -0.07499999999999996,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "observation_gap": "091 uninstrumented initial/control-clear blocks; original native outputs and original checker retain their actual coverage, no full callback or pointwise uncertainty qualification"
+    },
+    "320": {
+      "classification": "semantic compatibility difference; no independent EVAS defect found in these finite originals",
+      "evas_original_checker": {
+        "passed": false,
+        "note": "v4_320 checked=15 codes=[0, 3, 12, 15] reset_clear=True disabled_clear=True metric_errors=11 settled_errors=0 target_errors=12 clear_errors=0 step_errors=0 edge_update_errors=9 settled_seen=True early_settled_errors=0 missing_settled_errors=0; P_ON_RESET_OR_WHEN_DISABLED_CLEAR mismatch_count=0; P_ON_EACH_ENABLED_RISING_CLK_EDGE mismatch_count=9; P_APPLY_A_CODE_DEPENDENT_SETTLING_STEP mismatch_count=0; P_EXPOSE_THE_CURRENT_TARGET_ON_TARGET mismatch_count=23; P_ASSERT_SETTLED_AFTER_THE_REMAINING_ERROR mismatch_count=0",
+        "checker_id": "v4_320_code_dependent_dac_buffer_settling",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "independent_math": {
+        "family": "320",
+        "scope": "All original recorded event states and original finite saved observations, independently derived from original source recurrence and exact original scalar inputs",
+        "event_count": 35,
+        "saved_rows": 1004,
+        "scalar_observations": 11044,
+        "max_state_error": 1.1009711660866136e-16,
+        "max_saved_error_V": {
+          "clk": 5.26341685328689e-17,
+          "rst": 3.51460651353633e-17,
+          "enable": 5.885998069088423e-17,
+          "code_3": 6.532114801307186e-17,
+          "code_2": 6.197231855246017e-18,
+          "code_1": 6.197231855246017e-18,
+          "code_0": 4.9445887108989976e-17,
+          "vout": 1.3591497752308547e-15,
+          "target_dbg": 1.290341252899421e-14,
+          "settling_metric": 7.744726714562127e-15,
+          "settled": 1.442954896236787e-14
+        },
+        "response_sha256": "728079e110b57fa30276b4acf9cecd9a7be370c52ad00b598e22a7648d87b419",
+        "original_checker": "FAIL preserved; no checker or normalization changes"
+      },
+      "math_sha256": "4f2d4f84a56192be0a1469a2e94a43313ea77740a20983491f71608c28e87eb1",
+      "callback_control_native_rows_equal": true,
+      "callbacks": {
+        "counts": {
+          "DIAG320_DAC": 17,
+          "DIAG320_BUFFER": 19
+        },
+        "recurrences_checked": 36,
+        "max_recurrence_error": 0.0,
+        "sha256": "0ed77baf79dc41215e7e451d2f04f211790e59755a18178c8ed6ad5b73db35f6"
+      },
+      "original_identity": {
+        "family_id": "320",
+        "task_name": "320-code-dependent-dac-buffer-settling",
+        "checker_id": "v4_320_code_dependent_dac_buffer_settling",
+        "deck_sha256": "91c9631ff2a85b0a552dec315a11930a2ab54a6743780c9125cac24401d0fe0f",
+        "gold_tree_sha256": "fb33fe77f5c781bfa9891f8280e8c555dcb154c4bbf863432062e7915b0d8a9a",
+        "source_files": {
+          "submission/code_dependent_dac_buffer_top.va": "bc0255ce852f524c294f41f4f4cc4717f6c6db8c212d0f5e141d98a9fe559919",
+          "submission/ideal_code_dac.va": "0459ab51a8fb1a6b6329ec6b0ccf4026a77789c3da8b8dbbc09126711d923be4",
+          "submission/settling_buffer_state.va": "d76eeeda2151bef77ff56da6cdaf2756e7b9a654632b4cdc2071b4584a106093",
+          "testbench/trusted_replay_test.scs": "91c9631ff2a85b0a552dec315a11930a2ab54a6743780c9125cac24401d0fe0f"
+        }
+      },
+      "spectre": {
+        "original": {
+          "rows": 1210,
+          "checker": {
+            "passed": true,
+            "note": "v4_320 checked=15 codes=[0, 4, 11, 15] reset_clear=True disabled_clear=True metric_errors=0 settled_errors=0 target_errors=3 clear_errors=0 step_errors=0 edge_update_errors=0 settled_seen=True early_settled_errors=0 missing_settled_errors=0; P_ON_RESET_OR_WHEN_DISABLED_CLEAR mismatch_count=0; P_ON_EACH_ENABLED_RISING_CLK_EDGE mismatch_count=0; P_APPLY_A_CODE_DEPENDENT_SETTLING_STEP mismatch_count=0; P_EXPOSE_THE_CURRENT_TARGET_ON_TARGET mismatch_count=3; P_ASSERT_SETTLED_AFTER_THE_REMAINING_ERROR mismatch_count=0"
+          },
+          "settings": {
+            "actual_transient_log": {
+              "reltol": {
+                "value": 0.001,
+                "line": 140,
+                "raw": "    reltol = 1e-03"
+              },
+              "abstol(V)": {
+                "value": 1e-06,
+                "line": 141,
+                "raw": "    abstol(V) = 1 uV"
+              },
+              "abstol(I)": {
+                "value": 1e-12,
+                "line": 142,
+                "raw": "    abstol(I) = 1 pA"
+              },
+              "stop": {
+                "value": 1.08e-07,
+                "line": 134,
+                "raw": "    stop = 108 ns"
+              },
+              "maxstep": {
+                "value": 1.2e-10,
+                "line": 136,
+                "raw": "    maxstep = 120 ps"
+              },
+              "method": {
+                "value": "traponly",
+                "line": 147,
+                "raw": "    method = traponly"
+              },
+              "errpreset": {
+                "value": "moderate",
+                "line": 146,
+                "raw": "    errpreset = moderate"
+              }
+            },
+            "global_user_options": "empty original default block; no invented requested tolerance values",
+            "original_parser_failure": "wrong dimension for voltage:1uV; rows and raw data already saved; manual local dimensional reading only; no tool rerun",
+            "format_limit": "original default ASCII PSF precision, no calibrated 17digit log format or full pointwise/native error certificate"
+          },
+          "rows_sha256": "885540ce38aa117929b34bd431544558d18748d725d4534f37e9d937f4c39fd8",
+          "raw_sha256": "b24df190d2a3e0f357cd01fe4d0c493316cfb3954c54d188acb1c3a800d7db10",
+          "manifest_sha256": "6d983e33481d5773a088ba871d7f13343c64cc832610ff07333dfefc01d44bd2",
+          "tool_identity_sha256": "48a376d21d829daf7ef226626ffcc68771eed3d1e4f2978111dbb3cd0fb1a7dc",
+          "execution": {
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            },
+            "elapsed_seconds": 39.24263742938638,
+            "completed_utc": "2026-10-17T11:38:36Z",
+            "resource_caps": {
+              "memory_limit_bytes": 4294967296,
+              "file_limit_bytes": 33554432,
+              "threads": 1
+            }
+          }
+        },
+        "instrumented": {
+          "rows": 1210,
+          "checker": {
+            "passed": true,
+            "note": "v4_320 checked=15 codes=[0, 4, 11, 15] reset_clear=True disabled_clear=True metric_errors=0 settled_errors=0 target_errors=3 clear_errors=0 step_errors=0 edge_update_errors=0 settled_seen=True early_settled_errors=0 missing_settled_errors=0; P_ON_RESET_OR_WHEN_DISABLED_CLEAR mismatch_count=0; P_ON_EACH_ENABLED_RISING_CLK_EDGE mismatch_count=0; P_APPLY_A_CODE_DEPENDENT_SETTLING_STEP mismatch_count=0; P_EXPOSE_THE_CURRENT_TARGET_ON_TARGET mismatch_count=3; P_ASSERT_SETTLED_AFTER_THE_REMAINING_ERROR mismatch_count=0"
+          },
+          "settings": {
+            "actual_transient_log": {
+              "reltol": {
+                "value": 0.001,
+                "line": 141,
+                "raw": "    reltol = 1e-03"
+              },
+              "abstol(V)": {
+                "value": 1e-06,
+                "line": 142,
+                "raw": "    abstol(V) = 1 uV"
+              },
+              "abstol(I)": {
+                "value": 1e-12,
+                "line": 143,
+                "raw": "    abstol(I) = 1 pA"
+              },
+              "stop": {
+                "value": 1.08e-07,
+                "line": 135,
+                "raw": "    stop = 108 ns"
+              },
+              "maxstep": {
+                "value": 1.2e-10,
+                "line": 137,
+                "raw": "    maxstep = 120 ps"
+              },
+              "method": {
+                "value": "traponly",
+                "line": 148,
+                "raw": "    method = traponly"
+              },
+              "errpreset": {
+                "value": "moderate",
+                "line": 147,
+                "raw": "    errpreset = moderate"
+              }
+            },
+            "global_user_options": "empty original default block; no invented requested tolerance values",
+            "original_parser_failure": "wrong dimension for voltage:1uV; rows and raw data already saved; manual local dimensional reading only; no tool rerun",
+            "format_limit": "original default ASCII PSF precision, no calibrated 17digit log format or full pointwise/native error certificate"
+          },
+          "rows_sha256": "885540ce38aa117929b34bd431544558d18748d725d4534f37e9d937f4c39fd8",
+          "raw_sha256": "f24762a0823fc821678cd6cde0b8b56834088c024434145c6d592582116fdc7f",
+          "manifest_sha256": "262be6c2300afef52f220ee0e6da68cb283bfe45c8d04524d5c3a17bf38509d8",
+          "tool_identity_sha256": "4556eed4c00da1f4b79661ce2c4afdbe3df9e10ddc120e5cc1e92f1990381592",
+          "execution": {
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            },
+            "elapsed_seconds": 30.76155192963779,
+            "completed_utc": "2026-10-17T11:40:12Z",
+            "resource_caps": {
+              "memory_limit_bytes": 4294967296,
+              "file_limit_bytes": 33554432,
+              "threads": 1
+            }
+          }
+        }
+      },
+      "selected_callbacks": [
+        {
+          "kind": "DIAG320_DAC",
+          "values": [
+            8.050025000055554e-09,
+            -0.45,
+            0.45,
+            -0.45,
+            -0.45,
+            0.00022500049998580574,
+            -0.45,
+            4.0,
+            0.24000000000000002
+          ]
+        },
+        {
+          "kind": "DIAG320_DAC",
+          "values": [
+            9.050025000055555e-09,
+            -0.45,
+            0.45,
+            -0.45,
+            -0.45,
+            0.45,
+            0.00022500049998580574,
+            12.0,
+            0.7200000000000001
+          ]
+        },
+        {
+          "kind": "DIAG320_DAC",
+          "values": [
+            1.0050025000055555e-08,
+            -0.45,
+            0.45,
+            0.00022500050000068272,
+            -0.45,
+            0.45,
+            0.45,
+            13.0,
+            0.78
+          ]
+        },
+        {
+          "kind": "DIAG320_DAC",
+          "values": [
+            1.1050025000055554e-08,
+            -0.45,
+            0.45,
+            0.45,
+            0.00022500049998580574,
+            0.45,
+            0.45,
+            15.0,
+            0.9
+          ]
+        },
+        {
+          "kind": "DIAG320_DAC",
+          "values": [
+            6.205002500005556e-08,
+            -0.45,
+            0.0002250005000229982,
+            0.45,
+            0.45,
+            0.45,
+            0.45,
+            15.0,
+            0.9
+          ]
+        }
+      ],
+      "observation_gap": "Original native precision has no calibrated pointwise error certificate; 36 callback tokens include initial DAC and35 runtime events"
+    }
+  },
+  "attribution": {
+    "091": "At exact4.025ns rising root chop_clk==.45, VA strict> isfalse:polarity-1,sample.06,LPbase.015,outp.4575,residual-.105. Originalchecker selects+1 bydirection andexpectsoutp.4725/residual-.075. ActualSpectre callback4.025012500027778ns guard+0.000225000499997241V selects+1. No EVAS defect found in full125states/3637rows.",
+    "320": "At exact8.05ns bit2equals.45, strict>excludesnewbit:target0; subsequentrises9.05/10.05/11.05ns yield.24/.72/.78. At62.05ns enabling==.45 keeps target0 with no laterbit events. ActualSpectre callbackpositiveguard includesnewbit, yields.24/.72/.78/.9 and.9 onreenable. Complete35states/1004rowsagreeindependently. Checkerusespostedgependingcode, EVASfailsretained."
+  },
+  "local_evidence": "runs/evas-source-shape-20261017/diagnosis-091-320; source/PSF/log/receipts and independent math local-only, remote originals retained"
+}

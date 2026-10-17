@@ -372,6 +372,7 @@ impl Trajectory {
     pub(crate) fn shaped_roots(
         &self,
         guard: &crate::ir::Expression,
+        projected_guard: Option<&crate::ir::Expression>,
         input_nodes: &[usize],
         active: &[usize],
         direction: i8,
@@ -382,6 +383,7 @@ impl Trajectory {
         }
         let curve = self
             .original_guard_curve(guard, input_nodes)
+            .or_else(|| self.original_guard_curve(projected_guard?, input_nodes))
             .ok_or_else(|| unresolved("cannot certify guard on shaped original sources"))?;
         let crossings = curve
             .crossings(direction, self.config.stop)

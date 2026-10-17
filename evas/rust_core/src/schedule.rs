@@ -1589,8 +1589,10 @@ fn schedule_with_history(
                         .unwrap()
                 })
                 .collect::<Vec<_>>();
+            let projected_guard = bounds.exact_input_expression(index);
             let physical = trajectory.shaped_roots(
                 guard,
+                projected_guard.as_ref(),
                 &input_nodes,
                 &active_inputs,
                 *direction,
@@ -1608,6 +1610,7 @@ fn schedule_with_history(
                 .iter()
                 .map(|&time| bounds.values(&trajectory.value_bounds(time))[index])
                 .collect();
+            let shaped = physical.is_some();
             let roots = physical
                 .map_or_else(|| trajectory.roots(&knots, &values, *direction), Ok)
                 .map_err(|mut error| {
@@ -1631,7 +1634,15 @@ fn schedule_with_history(
                             .unwrap()
                     })
                     .collect::<Vec<_>>();
-                trajectory.original_guard_curve(guard, &input_nodes)
+                trajectory
+                    .original_guard_curve(guard, &input_nodes)
+                    .or_else(|| {
+                        if shaped {
+                            trajectory.original_guard_curve(projected_guard.as_ref()?, &input_nodes)
+                        } else {
+                            None
+                        }
+                    })
             };
             for root in roots {
                 let root = root.with_source_time(source_curve.as_ref());

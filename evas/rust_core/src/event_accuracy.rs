@@ -245,6 +245,35 @@ impl GuardBounds {
             .collect()
     }
 
+    /// Reuse the certified circuit projection as an exact source expression.
+    /// A non-point coefficient or remaining state/operator column cannot be
+    /// rounded into the unique physical curve required for root provenance.
+    pub(crate) fn exact_input_expression(&self, expression: usize) -> Option<Expression> {
+        if self.symbolic[expression].is_some() {
+            return None;
+        }
+        let row = &self.coefficients[expression];
+        if row.iter().any(|v| v.lo != v.hi)
+            || row[self.driven_count..row.len() - 1]
+                .iter()
+                .any(|v| !v.zero())
+        {
+            return None;
+        }
+        Some(Expression::Affine {
+            constant: row.last()?.lo,
+            terms: row[..self.driven_count]
+                .iter()
+                .zip(&self.input_nodes)
+                .filter(|(v, _)| !v.zero())
+                .map(|(v, &node)| crate::ir::Term {
+                    node,
+                    coefficient: v.lo,
+                })
+                .collect(),
+        })
+    }
+
     pub(crate) fn values(&self, inputs: &[I]) -> Vec<I> {
         self.coefficients
             .iter()
