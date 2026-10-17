@@ -5,6 +5,7 @@ use std::collections::VecDeque;
 
 #[derive(Clone, Debug, PartialEq)]
 pub(crate) struct Deadline {
+    continuous_end: bool,
     pub(crate) bounds: I,
     // Exact symbolic sum when available; equal enclosures alone do not prove
     // coincident real deadlines. Interrupted-edge endpoints have no sum key.
@@ -12,6 +13,68 @@ pub(crate) struct Deadline {
     exact: Option<crate::exact_source::RootTime>,
 }
 impl Deadline {
+    pub(crate) fn independent_end_checkpoints(&self, other: &Self) -> bool {
+        self.continuous_end
+            && other.continuous_end
+            && self.exact_time().is_some()
+            && other.exact_time().is_some()
+    }
+    pub(crate) fn serial_representatives(&self, other: &Self) -> bool {
+        let strictly_after = |later: &Self, earlier: f64| {
+            later
+                .exact_time()
+                .zip(crate::exact_source::RootTime::point(earlier))
+                .is_some_and(|(a, b)| a.order(&b) == std::cmp::Ordering::Greater)
+        };
+        (self.bounds.hi < other.bounds.hi && strictly_after(other, self.bounds.hi))
+            || (other.bounds.hi < self.bounds.hi && strictly_after(self, other.bounds.hi))
+    }
+    fn exact_time(&self) -> Option<crate::exact_source::RootTime> {
+        let root = self
+            .exact
+            .clone()
+            .or_else(|| {
+                let terms = self.sum?;
+                let mut root = crate::exact_source::RootTime::point(terms[0])?;
+                for term in &terms[1..] {
+                    root = root.shifted_fixed(*term, root.bounds()? + I::point(*term))?;
+                }
+                Some(root)
+            })
+            .or_else(|| {
+                (self.bounds.lo == self.bounds.hi)
+                    .then(|| crate::exact_source::RootTime::point(self.bounds.lo))
+                    .flatten()
+            })?;
+        root.refine(self.bounds)?;
+        Some(root)
+    }
+    pub(crate) fn strictly_ordered_with(&self, event: I) -> bool {
+        let proof = self
+            .exact
+            .clone()
+            .or_else(|| {
+                let terms = self.sum?;
+                let mut root = crate::exact_source::RootTime::point(terms[0])?;
+                for term in &terms[1..] {
+                    root = root.shifted_fixed(*term, root.bounds()? + I::point(*term))?;
+                }
+                Some(root)
+            })
+            .or_else(|| {
+                (self.bounds.lo == self.bounds.hi)
+                    .then(|| crate::exact_source::RootTime::point(self.bounds.lo))
+                    .flatten()
+            });
+        proof
+            .filter(|r| r.refine(self.bounds).is_some())
+            .is_some_and(|r| {
+                crate::exact_source::RootTime::point(event.lo)
+                    .is_some_and(|lo| r.order(&lo) == std::cmp::Ordering::Less)
+                    || crate::exact_source::RootTime::point(event.hi)
+                        .is_some_and(|hi| r.order(&hi) == std::cmp::Ordering::Greater)
+            })
+    }
     pub(crate) fn coincides(&self, other: &Self) -> bool {
         (self.bounds.lo == self.bounds.hi && self.bounds == other.bounds)
             || (self.sum.is_some() && self.sum == other.sum)
@@ -72,6 +135,9 @@ impl Deadline {
 
 #[derive(Clone, Debug, PartialEq)]
 struct Edge {
+    exact_line: Option<(num_rational::BigRational, num_rational::BigRational)>,
+    exact_start: Option<crate::exact_source::RootTime>,
+    prior_slope: I,
     start: f64,
     start_bounds: I,
     value: f64,
@@ -83,6 +149,9 @@ struct Edge {
     slope: f64,
     slope_bounds: I,
     end: Deadline,
+    // A settled symmetric retarget has a fixed duration even when old and
+    // new level boxes overlap. It does not claim a single signed slope.
+    symmetric_blend: Option<f64>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -92,6 +161,7 @@ pub(crate) struct Transition {
     fall: f64,
     input: f64,
     input_bounds: I,
+    input_revision: u64,
     settled: f64,
     settled_bounds: I,
     edge: Option<Edge>,
@@ -118,6 +188,7 @@ fn deadline(bounds: I, scale: f64, sum: Option<[f64; 3]>) -> Result<Deadline, Er
         terms
     });
     Ok(Deadline {
+        continuous_end: false,
         bounds,
         sum,
         exact: None,
@@ -125,6 +196,65 @@ fn deadline(bounds: I, scale: f64, sum: Option<[f64; 3]>) -> Result<Deadline, Er
 }
 
 impl Transition {
+    fn exact_at(&self, time: &crate::exact_source::RootTime) -> Option<num_rational::BigRational> {
+        use crate::exact_source::{binary, Budget};
+        if self.pending.front().is_some_and(|(d, _, _)| {
+            d.exact_time()
+                .is_none_or(|t| t.order(time) != std::cmp::Ordering::Greater)
+        }) {
+            return None;
+        }
+        if let Some(edge) = &self.edge {
+            if time.order(&edge.end.exact_time()?) != std::cmp::Ordering::Less {
+                return (edge.target_bounds.lo == edge.target_bounds.hi)
+                    .then(|| binary(edge.target_bounds.lo))
+                    .flatten();
+            }
+            if time.order(edge.exact_start.as_ref()?) == std::cmp::Ordering::Less {
+                return None;
+            }
+            let (a, b) = edge.exact_line.as_ref()?;
+            let mut budget = Budget(0);
+            let product = budget.check(b * time.rational())?;
+            return budget.check(a + product);
+        }
+        (self.settled_bounds.lo == self.settled_bounds.hi)
+            .then(|| binary(self.settled_bounds.lo))
+            .flatten()
+    }
+
+    pub(crate) fn exact_affine_on(
+        &self,
+        bounds: I,
+    ) -> Option<(num_rational::BigRational, num_rational::BigRational)> {
+        use crate::exact_source::{binary, RootTime};
+        if self
+            .pending
+            .front()
+            .is_some_and(|(d, _, _)| d.bounds.lo <= bounds.hi)
+        {
+            return None;
+        }
+        if let Some(edge) = &self.edge {
+            let lo = RootTime::point(bounds.lo)?;
+            let hi = RootTime::point(bounds.hi)?;
+            let end = edge.end.exact_time()?;
+            if lo.order(&end) != std::cmp::Ordering::Less {
+                return (edge.target_bounds.lo == edge.target_bounds.hi)
+                    .then(|| Some((binary(edge.target_bounds.lo)?, binary(0.)?)))
+                    .flatten();
+            }
+            if lo.order(edge.exact_start.as_ref()?) == std::cmp::Ordering::Less
+                || hi.order(&end) == std::cmp::Ordering::Greater
+            {
+                return None;
+            }
+            return edge.exact_line.clone();
+        }
+        (self.settled_bounds.lo == self.settled_bounds.hi)
+            .then(|| Some((binary(self.settled_bounds.lo)?, binary(0.)?)))
+            .flatten()
+    }
     /// A budget for one future edge is valid only before any active or queued
     /// edge. Return the retained plateau, never a point replacement for it.
     pub(crate) fn idle_level(&self) -> Option<(f64, I, f64)> {
@@ -136,7 +266,7 @@ impl Transition {
     }
 
     pub(crate) fn input_changed_from(&self, old: &Self) -> bool {
-        self.input != old.input
+        self.input_revision != old.input_revision
     }
 
     /// Advance a private prediction through queued targets, without changing
@@ -213,6 +343,7 @@ impl Transition {
             fall,
             input: initial,
             input_bounds: bounds,
+            input_revision: 0,
             settled: initial,
             settled_bounds: bounds,
             edge: None,
@@ -240,30 +371,84 @@ impl Transition {
         Ok(held)
     }
 
-    pub(crate) fn value_range(&self, times: I) -> Result<I, Error> {
+    /// Value observation may cover an activation enclosure. Keep both old
+    /// and activated ramps; this supplies no derivative/root certificate.
+    pub(crate) fn observation_range(&self, times: I) -> Result<I, Error> {
         if !times.finite()
             || times.lo > times.hi
             || self
                 .edge
                 .as_ref()
-                .is_some_and(|edge| times.lo < edge.start_bounds.hi)
-            || self
-                .pending
-                .front()
-                .is_some_and(|(deadline, _, _)| deadline.bounds.lo <= times.hi)
+                .is_some_and(|e| times.lo < e.start_bounds.lo)
         {
-            return Err(invalid(
-                "cannot certify transition observation across an activation",
-            ));
+            return Err(invalid(&format!(
+                "transition observation precedes retained history: query={times:?}, edge={:?}",
+                self.edge.as_ref().map(|e| e.start_bounds)
+            )));
         }
-        // The controller rejects overlapping operator deadlines before this
-        // query; the complete window belongs to this retained ramp/plateau.
-        Ok(self.bounds_at(times))
+        let mut candidate = self.clone();
+        let mut value = candidate.bounds_at(times);
+        while let Some((deadline, target, bounds)) = candidate
+            .pending
+            .front()
+            .cloned()
+            .filter(|(d, _, _)| d.bounds.lo <= times.hi)
+        {
+            candidate.pending.pop_front();
+            candidate.target(deadline, target, bounds)?;
+            value = value.hull(candidate.bounds_at(times));
+        }
+        Ok(value)
+    }
+
+    pub(crate) fn continuous_range(&self, times: I) -> Result<(I, I), Error> {
+        let value = self.observation_range(times)?;
+        let slope = |history: &Self| {
+            if let Some(edge) = &history.edge {
+                let mut slope = edge.slope_bounds;
+                if times.lo < edge.start_bounds.hi {
+                    slope = slope.hull(edge.prior_slope);
+                }
+                if times.hi >= edge.end.bounds.lo {
+                    slope = slope.hull(I::ZERO);
+                }
+                slope
+            } else {
+                I::ZERO
+            }
+        };
+        let mut candidate = self.clone();
+        let mut derivative = slope(&candidate);
+        while let Some((deadline, target, bounds)) = candidate
+            .pending
+            .front()
+            .cloned()
+            .filter(|(d, _, _)| d.bounds.lo <= times.hi)
+        {
+            candidate.pending.pop_front();
+            candidate.target(deadline, target, bounds)?;
+            derivative = derivative.hull(slope(&candidate));
+        }
+        Ok((value, derivative))
     }
 
     fn bounds_at(&self, time: I) -> I {
         match &self.edge {
             Some(edge) if time.lo < edge.end.bounds.hi => {
+                if let Some(duration) = edge.symmetric_blend {
+                    let elapsed = (time - edge.start_bounds) / I::point(duration);
+                    let fraction = I {
+                        lo: elapsed.lo.clamp(0., 1.),
+                        hi: elapsed.hi.clamp(0., 1.),
+                    };
+                    let blend =
+                        edge.value_bounds + (edge.target_bounds - edge.value_bounds) * fraction;
+                    let levels = edge.value_bounds.hull(edge.target_bounds);
+                    return I {
+                        lo: blend.lo.max(levels.lo),
+                        hi: blend.hi.min(levels.hi),
+                    };
+                }
                 let bounds = edge.value_bounds + edge.slope_bounds * (time - edge.start_bounds);
                 // Interval extension of the exact monotone clipped ramp. The
                 // uncertain delayed start and uncertain target remain in it.
@@ -334,14 +519,26 @@ impl Transition {
     }
 
     fn target(&mut self, moment: Deadline, target: f64, target_bounds: I) -> Result<(), Error> {
+        let exact_start = moment.exact_time();
+        let exact_value = exact_start.as_ref().and_then(|t| self.exact_at(t));
+        let prior_slope = self.edge.as_ref().map_or(I::ZERO, |e| e.slope_bounds);
         let time = moment.bounds.hi;
         let value = self.value(time)?;
         let value_bounds = self.bounds_at(moment.bounds);
         let difference = target_bounds - value_bounds;
-        let direction = difference.sign().ok_or_else(|| {
-            invalid("cannot certify transition target relative to current output")
-        })?;
-        if direction == 0 {
+        let symmetric_blend = difference.sign().is_none()
+            && self.rise == self.fall
+            && self
+                .edge
+                .as_ref()
+                .is_none_or(|edge| edge.end.bounds.hi <= moment.bounds.lo);
+        let direction = difference
+            .sign()
+            .or(symmetric_blend.then_some(0))
+            .ok_or_else(|| {
+                invalid("cannot certify transition target relative to current output")
+            })?;
+        if direction == 0 && !symmetric_blend {
             self.settled = target;
             self.settled_bounds = target_bounds;
             self.edge = None;
@@ -365,11 +562,12 @@ impl Transition {
         let duration = if direction > 0 { self.rise } else { self.fall };
         let slope = (target - origin) / duration;
         let slope_bounds = (target_bounds - origin_bounds) / I::point(duration);
-        if slope_bounds.sign() != Some(direction)
+        if (!symmetric_blend
+            && (slope_bounds.sign() != Some(direction)
+                || slope == 0.0
+                || (slope > 0.0) != (direction > 0)))
             || !slope_bounds.finite()
             || !slope.is_finite()
-            || slope == 0.0
-            || (slope > 0.0) != (direction > 0)
         {
             return Err(invalid("cannot certify transition slope"));
         }
@@ -389,6 +587,7 @@ impl Transition {
             (moment.bounds + remaining, None)
         };
         let mut end = deadline(end_bounds, duration, sum)?;
+        end.continuous_end = true;
         if active.is_none() {
             end.exact = moment
                 .exact
@@ -398,7 +597,39 @@ impl Transition {
         if end.bounds.lo <= time {
             return Err(invalid("transition edge cannot advance representable time"));
         }
+        let exact_line = (|| {
+            use crate::exact_source::{binary, Budget};
+            if target_bounds.lo != target_bounds.hi || origin_bounds.lo != origin_bounds.hi {
+                return None;
+            }
+            let mut budget = Budget(0);
+            let delta = budget.check(binary(target_bounds.lo)? - binary(origin_bounds.lo)?)?;
+            let slope = budget.check(delta / binary(duration)?)?;
+            let product = budget.check(&slope * exact_start.as_ref()?.rational())?;
+            Some((budget.check(exact_value? - product)?, slope))
+        })();
+        if let Some((a, b)) = &exact_line {
+            let proof = (|| {
+                let value = crate::exact_source::Budget(0)
+                    .check(a - crate::exact_source::binary(target_bounds.lo)?)?;
+                crate::exact_source::RootTime::affine(value, b.clone(), end.bounds)
+            })();
+            if end
+                .exact
+                .as_ref()
+                .zip(proof.as_ref())
+                .is_some_and(|(a, b)| a.order(b) != std::cmp::Ordering::Equal)
+            {
+                return Err(invalid(
+                    "exact transition end contradicts timing certificate",
+                ));
+            }
+            end.exact = end.exact.or(proof);
+        }
         self.edge = Some(Edge {
+            exact_line,
+            exact_start,
+            prior_slope,
             start: time,
             start_bounds: moment.bounds,
             value,
@@ -410,6 +641,7 @@ impl Transition {
             slope,
             slope_bounds,
             end,
+            symmetric_blend: symmetric_blend.then_some(duration),
         });
         Ok(())
     }
@@ -479,17 +711,21 @@ impl Transition {
         if !input.is_finite() || !bounds.finite() {
             return Err(invalid("nonfinite transition target"));
         }
-        if input == self.input
-            && (bounds != self.input_bounds || (may_change && bounds.lo != bounds.hi))
-        {
+        if input == self.input && bounds != self.input_bounds && !may_change {
             return Err(invalid("cannot certify unchanged transition input history"));
         }
-        if input != self.input {
+        let uncertain_write = may_change && (bounds.lo != bounds.hi || bounds != self.input_bounds);
+        if input != self.input || uncertain_write {
+            self.input_revision = self
+                .input_revision
+                .checked_add(1)
+                .ok_or_else(|| invalid("transition input revision budget exceeded"))?;
             self.input = input;
             self.input_bounds = bounds;
             if self.delay == 0.0 {
                 self.target(
                     Deadline {
+                        continuous_end: false,
                         bounds: time_bounds,
                         exact: exact_root.cloned(),
                         sum: (time_bounds.lo == time_bounds.hi).then_some([
@@ -537,13 +773,42 @@ mod tests {
     #[test]
     fn equal_enclosures_do_not_prove_a_rewritten_target_unchanged() {
         let bounds = I { lo: 0.99, hi: 1.01 };
-        let accepted = Transition::enclosed(1.0, bounds, 0.0, 1.0, 1.0).unwrap();
+        let accepted = Transition::enclosed(1.0, bounds, 0.0, 1.0, 2.0).unwrap();
         let mut held = accepted.clone();
         held.advance_enclosed(0.5, 1.0, bounds, false).unwrap();
         let mut written = accepted.clone();
         assert!(written.advance_enclosed(0.5, 1.0, bounds, true).is_err());
         assert_eq!(accepted.value_bounds(0.5).unwrap(), bounds);
     }
+    #[test]
+    fn settled_symmetric_rewrite_encloses_independent_targets_in_both_directions() {
+        let bounds = I { lo: 0.99, hi: 1.01 };
+        let accepted = Transition::enclosed(1., bounds, 0., 0.25, 0.25).unwrap();
+        let mut next = accepted.clone();
+        next.advance_enclosed(0.5, 1., bounds, true).unwrap();
+        assert!(next.input_changed_from(&accepted));
+        for t in [0.5, 0.5625, 0.625, 0.75, 1.] {
+            let got = next.value_bounds(t).unwrap();
+            let fraction = ((t - 0.5) / 0.25_f64).clamp(0., 1.);
+            for old in [0.99, 1., 1.01] {
+                for target in [0.99, 1., 1.01] {
+                    let expected = old + (target - old) * fraction;
+                    assert!(
+                        got.lo <= expected && expected <= got.hi,
+                        "{t}: {got:?} excludes {expected}"
+                    );
+                }
+            }
+            assert_eq!(next.value(t).unwrap(), 1.);
+        }
+        // A new uncertain write during an active edge still lacks a proof.
+        let mut interrupted = next.clone();
+        assert!(interrupted
+            .advance_enclosed(0.625, 1., bounds, true)
+            .is_err());
+        assert_eq!(accepted.value_bounds(0.625).unwrap(), bounds);
+    }
+
     fn near(a: f64, b: f64) {
         assert!((a - b).abs() < 1e-12, "{a} != {b}");
     }
@@ -588,6 +853,97 @@ mod tests {
         exact.advance(2.0, 1.0).unwrap();
         exact.advance(6.0, 0.5).unwrap();
         near(exact.value(100.0).unwrap(), 0.5);
+    }
+}
+
+#[cfg(test)]
+mod exact_transition_line_tests {
+    use super::*;
+    use crate::exact_source::{binary, RootTime};
+    use num_rational::BigRational as R;
+
+    #[test]
+    fn nonbinary_start_proves_the_physical_line_only_on_one_retained_piece() {
+        let root = RootTime::affine(
+            R::from_integer((-1).into()),
+            R::from_integer(3.into()),
+            I { lo: 0.3, hi: 0.4 },
+        )
+        .unwrap();
+        let window = root.bounds().unwrap();
+        let mut history = Transition::new(0., 0., 0.5, 0.5).unwrap();
+        history
+            .advance_at_with_exact(window.hi, window, 1., I::ONE, true, Some(&root))
+            .unwrap();
+        let (a, b) = history.exact_affine_on(I { lo: 0.5, hi: 0.75 }).unwrap();
+        assert_eq!(a, R::new((-2).into(), 3.into()));
+        assert_eq!(b, binary(2.).unwrap());
+        assert!(history.exact_affine_on(I { lo: 0.25, hi: 0.5 }).is_none());
+        assert!(history.exact_affine_on(I { lo: 0.75, hi: 1. }).is_none());
+        let mut unknown = Transition::enclosed(
+            0.,
+            I {
+                lo: -1e-6,
+                hi: 1e-6,
+            },
+            0.,
+            0.5,
+            0.5,
+        )
+        .unwrap();
+        unknown
+            .advance_at_with_exact(window.hi, window, 1., I::ONE, true, Some(&root))
+            .unwrap();
+        assert!(unknown.exact_affine_on(I { lo: 0.5, hi: 0.75 }).is_none());
+    }
+
+    #[test]
+    fn exact_deadline_orders_closed_boxes_without_ordering_unknown_real_times() {
+        let root = RootTime::affine(
+            R::from_integer((-1).into()),
+            R::from_integer(3.into()),
+            I { lo: 0.3, hi: 0.4 },
+        )
+        .unwrap();
+        let bounds = root.bounds().unwrap();
+        let mut d = deadline(bounds, 1., None).unwrap();
+        d.exact = Some(root);
+        assert!(d.strictly_ordered_with(I {
+            lo: bounds.hi,
+            hi: 0.5
+        }));
+        assert!(d.strictly_ordered_with(I {
+            lo: 0.1,
+            hi: bounds.lo
+        }));
+        assert!(!d.strictly_ordered_with(bounds));
+        d.exact = None;
+        assert!(!d.strictly_ordered_with(I {
+            lo: bounds.hi,
+            hi: 0.5
+        }));
+        d.exact = RootTime::point(0.75);
+        assert!(!d.strictly_ordered_with(I {
+            lo: bounds.hi,
+            hi: 0.5
+        }));
+    }
+
+    #[test]
+    fn ordered_real_deadlines_do_not_authorize_a_representative_that_skips_the_next_one() {
+        let mut a = deadline(I { lo: 0.3, hi: 0.4 }, 100., None).unwrap();
+        a.exact = RootTime::point(0.35);
+        let mut b = deadline(I { lo: 0.35, hi: 0.5 }, 100., None).unwrap();
+        b.exact = RootTime::point(0.45);
+        assert!(a.serial_representatives(&b));
+        assert!(b.serial_representatives(&a));
+        b.exact = RootTime::point(0.39);
+        assert!(!a.serial_representatives(&b));
+        b.exact = None;
+        assert!(!a.serial_representatives(&b));
+        b.exact = RootTime::point(0.45);
+        b.bounds.hi = 0.4;
+        assert!(!a.serial_representatives(&b));
     }
 }
 
@@ -638,7 +994,7 @@ mod exact_deadline_tests {
     }
 
     #[test]
-    fn fresh_shared_anchor_coincides_but_interrupted_endpoint_does_not_invent_key() {
+    fn shared_anchor_and_interrupted_line_need_distinct_end_certificates() {
         let root = root();
         let window = root.bounds().unwrap();
         let mut a = Transition::new(0., 0., 0.75, 0.75).unwrap();
@@ -664,8 +1020,24 @@ mod exact_deadline_tests {
         .unwrap();
         a.advance_at_with_exact(0.5, I::point(0.5), 2., I::point(2.), true, Some(&next))
             .unwrap();
-        assert!(a.edge.as_ref().unwrap().end.exact.is_none());
+        let end = &a.edge.as_ref().unwrap().end;
+        let expected = RootTime::affine(
+            -R::from_integer(7.into()),
+            R::from_integer(6.into()),
+            end.bounds,
+        )
+        .unwrap();
+        assert!(end.coincides_root(&expected));
         assert!(a.edge.as_ref().unwrap().end.sum.is_none());
+        let mut unknown = Transition::new(0., 0., 0.75, 0.75).unwrap();
+        unknown
+            .advance_at(window.hi, window, 1., I::ONE, true)
+            .unwrap();
+        unknown
+            .advance_at_with_exact(0.5, I::point(0.5), 2., I::point(2.), true, Some(&next))
+            .unwrap();
+        assert!(unknown.edge.as_ref().unwrap().end.exact.is_none());
+        assert!(unknown.edge.as_ref().unwrap().end.sum.is_none());
     }
 
     #[test]

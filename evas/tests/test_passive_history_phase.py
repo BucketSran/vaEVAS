@@ -119,16 +119,21 @@ class PassiveHistoryPhase(unittest.TestCase):
         self.assertIn("transition deadline ordering relative to user event",
                       caught.exception.detail["message"])
 
-    def test_physical_and_mixed_callbacks_keep_anchor_requirement(self):
+    def test_exact_callback_time_preserves_physical_flow_and_mixed_refusal(self):
         for name, options in [("physical", {"observer": "V(dummy)<+seen;"}),
                               ("hidden-zero", {"observer": "V(dummy)<+0*seen;"}),
-                              ("mixed", {"mixed": True}),
                               ("stepbound", {"observer": "$bound_step(0.05);"})]:
             with self.subTest(name=name):
-                with self.assertRaises(KernelError) as caught:
-                    execute(name, **options)
-                self.assertEqual(caught.exception.detail["kind"], "event_resolution")
-                self.assertIn("exact fixed-clock physical anchor", caught.exception.detail["message"])
+                # The exact source root anchors due=1/3+Fraction(.1).
+                # check_flow independently checks atan(3*t)/3, seen at due,
+                # neighbouring query phases and the single display record.
+                result,times=execute(name, **options)
+                self.check_flow(result,times)
+                self.assertEqual(len(result['transient']['events']),2)
+        with self.assertRaises(KernelError) as caught:
+            execute('mixed',mixed=True)
+        self.assertEqual(caught.exception.detail["kind"], "event_resolution")
+        self.assertIn("exact fixed-clock physical anchor", caught.exception.detail["message"])
 
     def test_zero_foreign_physical_state_reference_stays_invalid(self):
         with self.assertRaises(KernelError) as caught:

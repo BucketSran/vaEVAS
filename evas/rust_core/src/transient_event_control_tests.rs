@@ -151,6 +151,7 @@ fn later_array_failure_rolls_back_prefix_displays_and_old_history_then_retries()
     let solution = circuit.solve(&good.values(0.)).unwrap();
     let mut controller = Controller {
         accepted: Frame {
+            value_proofs: Default::default(),
             time_proofs: Default::default(),
             time: 0.,
             states,

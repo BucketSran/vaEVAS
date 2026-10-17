@@ -1,0 +1,429 @@
+{
+  "phase": "candidate-final3",
+  "base": "49f24f0b552c0ef83f73716068f06e7a266a4a11",
+  "kernel_sha256": "006b04de47dd9de9b0278ba0481b64a3597655e7bb68d7e616f2eb68c97cd193",
+  "source_files": {
+    "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+    "evas/src/evas/__main__.py": "03467610db7d5563c99f2ffcf65c8f258175575fff18a38ca89dc5854439d651",
+    "evas/src/evas/array_elaboration.py": "922fd600f57b039b4f2e2b2242af03dd7830a464e0b31272260c82d11217d278",
+    "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+    "evas/src/evas/display.py": "c53802f643b2405e1f3da36596a8d4674aebf409635232ded3dc52f852f38b5c",
+    "evas/src/evas/elaboration.py": "a7a435e8d2361e7abf2b047b68210b1b25f656e24b40155fe969e9b4c593bc4a",
+    "evas/src/evas/errors.py": "4716787d137c2232e13d9b9b7231b407d5c87a38c755345c63bc9df91a45a158",
+    "evas/src/evas/event_index_domains.py": "c5558bdff652f64b5ddfdc72e32230f8a8330f9fa4798e1c09b7e95344bcaa39",
+    "evas/src/evas/event_specialization.py": "b33b4cb4f9f2997a6c25db6d15d918bb8ca9b362ec4cc9dd4e643c9c3b60b4d6",
+    "evas/src/evas/frontend.py": "310159f89cea075ff3f35a7d46e7177dfd8888eb8841528ddb924be45768854a",
+    "evas/src/evas/hierarchy.py": "ec8cd24105bfb646f28874dd40fe0923ae51ca5d22b45b1be0e6153347a7a10b",
+    "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+    "evas/src/evas/instance_compiler.py": "b7a8a38eeceb70e929848654e85d5a48dc6fef12fdc6bef17c8fc798f7154a12",
+    "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+    "evas/src/evas/ir.py": "b55291f1ae7cf3725f5480739cf7f8830513a1ef00fba0de9b588a2bfcc45b45",
+    "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+    "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+    "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+    "evas/src/evas/lowering.py": "ed41ea48b5175d5e39c702a51cd4a5f296de5c425f9fa708846c7864b19059b1",
+    "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+    "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+    "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+    "evas/src/evas/node_elaboration.py": "eaa06faf21bea22a2ef477605c2d4c2c167b5f99a2083f356733e08eae1a5cf5",
+    "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+    "evas/src/evas/predicate_structure.py": "0f145fafcf1a926877f555207da48d54e6334e8ffbde1d9b385499ea74d11543",
+    "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+    "evas/src/evas/protocol.py": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+    "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+    "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+    "evas/src/evas/runtime.py": "f7fb4d7d4b46facce3422e646a53845e782338e7ae1494cf7f957d9e6e722d10",
+    "evas/src/evas/scs.py": "647b3b4e34fe130860fce20634fbb30a01e4c0110bc5fa9e20f092fb12356283",
+    "evas/src/evas/scs_sources.py": "1fab2c390f33c4c6221969bbbb192265636caf5063d20fd735e5e247b22cfb8d",
+    "evas/src/evas/standard_headers.py": "efe0b2421d400ac723cfdf71c5d406cdef510dc89d3556ad999e2253600ec88e",
+    "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+    "evas/src/evas/syntax.py": "766c424ec8b6c1f8a9e6fa9416aebe91e274d52ffd9ba486fa75291e5efcd38f"
+  },
+  "denominator": 23,
+  "executed": 23,
+  "passed": 22,
+  "results": [
+    {
+      "family": "270",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "samples; P_RESET_CLEARS_STATE_AND_OBSERVABLES mismatch_count=0; P_CORRECTED_OUTPUT_USES_SAMPLE_TARGET_AND_COEF mismatch_count=0; P_ERROR_METRIC_REPORTS_ABSOLUTE_ERROR mismatch_count=0; P_PROGRESS_COUNTS_CONSECUTIVE_IN_WINDOW_SAMPLES mismatch_count=0; checked_property_ids=P_RESET_CLEARS_STATE_AND_OBSERVABLES,P_CORRECTED_OUTPUT_USES_SAMPLE_TARGET_AND_COEF,P_ERROR_METRIC_REPORTS_ABSOLUTE_ERROR,P_PROGRESS_COUNTS_CONSECUTIVE_IN_WINDOW_SAMPLES",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 18.741617166029755,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/sampled_error_update_monitor.va": "531698531c09535ad3bb15b26e6029a3fa6482c8e3a0b93b57c9e81db1687f13",
+        "testbench/trusted_replay_test.scs": "a7669ac9fd5713fa6633f07fb7b7bee969068450f3fda803170006ca964bb488"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "272",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "samples; P_INITIALIZE_THE_INTERNAL_STAGE_COUNT_AND mismatch_count=0; P_AFTER_UPDATING_THE_STAGE_COUNT_DRIVE mismatch_count=0; checked_property_ids=P_INITIALIZE_THE_INTERNAL_STAGE_COUNT_AND,P_AFTER_UPDATING_THE_STAGE_COUNT_DRIVE",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 7.499418541963678,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/reset_release_sequencer.va": "06fde0f44a8c4f485467ce359e76116db7d214e1c64f1d3589bbda6e940c15ad",
+        "testbench/trusted_replay_test.scs": "c9a236bbfdd577a553d59d39ff5a728452c29e70b0c605c6713057b155e02470"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "273",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "samples; P_INITIALIZE_THE_STORED_THRESHOLD_TO_THRESHOLD mismatch_count=0; P_WHEN_ADAPT_VTH_UPDATE_THE_STORED mismatch_count=0; checked_property_ids=P_INITIALIZE_THE_STORED_THRESHOLD_TO_THRESHOLD,P_WHEN_ADAPT_VTH_UPDATE_THE_STORED",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 12.059441375022288,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/adaptive_threshold_tracker.va": "1ee62ca3008c9434855faaeaacb071997bd4ab04dee67745850a670b3a7be978",
+        "testbench/trusted_replay_test.scs": "01c4c217c3ce0f31a2d1da16f6721109b7f685c2af61df35235988cebd3454bb"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "347",
+      "status": "execution_completed",
+      "checker": {
+        "passed": false,
+        "note": "v4_347 checked=20 mismatch_count=2 startup_seen=True brownout_seen=True async_clear=True async_checks=394 mismatch_detail=P_PWR_SEQUENCE_ORDER mismatch_count=1 sample_time=1.351e-07 expected=rst_n_core=0 observed=rst_n_core=1 metric_gap=1; P_PWR_SEQUENCE_ORDER mismatch_count=1 sample_time=1.451e-07 expected=en_ana=0 observed=en_ana=1 metric_gap=1",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 37.69828329200391,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/enable_sequencer.va": "1955ff0a7575a610cfc69ca27a5ac851c34213cc44df033b4be2322d693d9764",
+        "submission/por_detector.va": "f4284e7a329d48f893dda36842b43370a078c7a09be59f89d13d872822a0a4ce",
+        "submission/power_reset_seq_top.va": "bf3796b5dadee6be331cad8f2f87142fe3f72ec8aed7c013a65b21b098d346c1",
+        "submission/ready_flag.va": "2e89160c8a0f291e245508b9bed60f1473564a3f63012d8ea5cd0c5919108894",
+        "submission/reset_synchronizer.va": "c387d13f69fcb5abc7b517a668b6ea2406b10a93691b8fb2b0a67397ad1e597d",
+        "testbench/trusted_replay_test.scs": "a780e9d0ee709e992a2b4962b5a079c8bdacfac300f8eb690aa664772dfe63cc"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "354",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "P_RESET_CLEAR checked=9 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_TWO_TAP_FEEDBACK checked=8 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_CORRECTED_INPUT checked=8 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_CLOCKED_DECISION checked=8 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_HISTORY_ORDER checked=8 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 43.221138624998275,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/decision_latch.va": "aaa44b9bfa1cbc3232284be806c0b17a0739d242897b62f767c72ff27c3e569f",
+        "submission/dfe_rx_top.va": "fab5139b97c8ef472eacd7c9ae922354403582c7e33c6389eb0acd04d4063052",
+        "submission/feedback_filter.va": "45773bddcc56898b68c781c0111438926eba1671c93b6dd4a3f96495034140b0",
+        "submission/slicer.va": "1a828ec5b573acd713d01081a2c7c6fbcf242694f51e4d7e34024880748d579b",
+        "testbench/trusted_replay_test.scs": "ae15459e12c62045e9ba386e1b9eb5591f59c5ff74f65b061de97e27aedb8ab0"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "020",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "checked=48 reset=2 brownout=9 startup=7 valid=30 samples=0.000/0.000:0.00/0.0,0.000/0.000:0.00/0.0,0.000/0.000:0.00/0.0,0.000/0.000:0.00/0.0,0.000/0.000:0.00/0.0,0.000/0.000:0.00/0.0,0.000/0.000:0.00/0.0,0.192/0.192:0.20/0.2; P_RESET_AND_BROWNOUT mismatch_count=0; P_CLOCKED_FIRST_ORDER_SETTLING mismatch_count=0; P_TARGET_AND_OUTPUT_CLAMPS mismatch_count=0; P_VALIDITY_ENCODING mismatch_count=0; P_CLOCKED_HOLD mismatch_count=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 4.946131166012492,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/bandgap_reference_macro_model.va": "2680f7db93ac15103fcc5e337201d6bd65591a709ff5c610f23a42412d25a8cd",
+        "testbench/trusted_replay_test.scs": "44fbe4f6047fe075f92a26f593e0d45aa2b75a9240c93c60eeba5ba9aed01afb"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "021",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "v4_021_calibration_deadband_controller checked=179 mismatch_count=0 coverage=rising_edges=45 settle_s=1.92e-10; P_INITIAL_AND_RESET_TARGET checked=6 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_POSITIVE_ERROR_STEP checked=28 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_NEGATIVE_ERROR_STEP checked=16 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_DEADBAND_HOLD checked=40 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_OUTPUT_CLAMP checked=45 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_BETWEEN_EDGE_HOLD checked=44 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 3.0643956669955514,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/calibration_deadband_controller.va": "86f3bf1f50880197a3fbc55181836c51d631122469761c79cdf55379ad2e1020",
+        "testbench/trusted_replay_test.scs": "bf259989776410d90a6f005e8fcc9b4a5c60386587821c46316fcf1f0689aa7a"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "022",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "v4_022_charge_pump_abstraction checked=175 mismatch_count=0 coverage=rising_edges=44 settle_s=1.92e-10; P_RESET_MIDSCALE checked=8 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_UP_ONLY_STEP checked=16 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_DN_ONLY_STEP checked=18 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_HOLD_CASES checked=46 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_CONTROL_CLAMP checked=44 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_SAMPLED_HOLD checked=43 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 2.8403808339498937,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/charge_pump_abstraction.va": "eabf4fe3aac4fe59046c6940e9fe894c938ed0b655ac1feb794daa0b0f87fb7a",
+        "testbench/trusted_replay_test.scs": "5b01a6bd62ab5fc48641c3c700a63a3842df17e6591f5531fe1fedeef5ca2b6d"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "028",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "v4_028_higher_order_filter checked=162 mismatch_count=0 coverage=rising_edges=40 reset_edges=2 high_targets=13 low_targets=12 settle_s=2.16e-10; P_COMMON_MODE_INITIAL_RESET checked=3 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_GAINED_BOUNDED_TARGET checked=39 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_TWO_POLE_SAMPLED_SETTLING checked=40 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_LAG_METRIC checked=40 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_SIGNAL_RANGE checked=40 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 6.772311625012662,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/higher_order_filter.va": "d0ffbf066e28c51c10e01244dc1cde9620ea240802c34e516aa837002e83f085",
+        "testbench/trusted_replay_test.scs": "b583ccbd61f065044ed38ffff0506dd0727655c3352838214c64462ad052b844"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "030",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "v4_030_ldo_regulator_macro_model checked=259 mismatch_count=0 coverage=rising_edges=43 reset_edges=2 loads=5 rising_updates=23 falling_updates=18 settle_s=2.04e-10; P_INITIAL_AND_RESET_STATE checked=3 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_LOAD_TARGET checked=42 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_FIRST_ORDER_REGULATION checked=44 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_REGULATED_OUTPUT_CLAMP checked=43 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_ERROR_METRIC checked=43 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_CLOCKED_HOLD checked=84 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 8.596442041976843,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/ldo_regulator_macro_model.va": "1114ad55792c5292a9a63babb1b5766845d2b03137afedf3da3498c6ec4cc92a",
+        "testbench/trusted_replay_test.scs": "caeac09c6f7e26adf26b8925b36909e07c8d031eb82b52b235f46c387d22033f"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "031",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "limiter edge_checks=40 hold_checks=39; P_INITIAL_AND_RESET_COMMON_MODE mismatch_count=0; P_LINEAR_REGION mismatch_count=0; P_POSITIVE_LIMITING mismatch_count=0; P_NEGATIVE_LIMITING mismatch_count=0; P_OUTPUT_CLAMP mismatch_count=0; P_CLOCKED_HOLD mismatch_count=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 2.7551364580285735,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/limiting_amplifier_frontend.va": "a2f1abd849c3f148c1c15951f205b7d3aa9daef72c22e885402b2730c71e4f1a",
+        "testbench/trusted_replay_test.scs": "d35ecbb260320e052f858412e8f37b3d390f74d1c5d9d6e9874101065ce09491"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "032",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "lna edge_checks=40 hold_checks=39; P_INITIAL_AND_RESET_COMMON_MODE mismatch_count=0; P_SMALL_SIGNAL_GAIN mismatch_count=0; P_POSITIVE_COMPRESSION mismatch_count=0; P_NEGATIVE_COMPRESSION mismatch_count=0; P_FINAL_OUTPUT_CLAMP mismatch_count=0; P_CLOCKED_HOLD mismatch_count=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 3.8232313329936005,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/lna_gain_compression_macro.va": "625392c8e7328ca4fd4a1f29e6307bc17ad0c536bc333de4bf48149849d05a92",
+        "testbench/trusted_replay_test.scs": "ca69cd746c16223372dfefeadcb010818cba4d6cb902424001964b138a350248"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "033",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "rssi edge_checks=40 bins=[0, 1, 2, 3]; P_RESET_BASELINE mismatch_count=0; P_CLOCKED_MAGNITUDE_SAMPLE mismatch_count=0; P_RSSI_BINS mismatch_count=0; P_OUTPUT_BOUNDS mismatch_count=0; P_AMPLITUDE_METRIC mismatch_count=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 2.7251240420155227,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/log_rssi_power_detector.va": "d9a414c8c18d1b38c138cb1668ff460f0b6d0a86937d54a3034ac0d2e1ebd8ba",
+        "testbench/trusted_replay_test.scs": "3dd21f3f945dba500cc2054e0239a1ab0b1fccf5bc534078a05a839fd1763fbc"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "034",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "loop_filter edge_checks=40 max_accepted=15; P_RESET_STATE mismatch_count=0; P_SIGNED_UPDATE mismatch_count=0; P_STEP_HALVING mismatch_count=0; P_DEADBAND_HOLD mismatch_count=0; P_PROPORTIONAL_CLAMP mismatch_count=0; P_LOCK_COUNT_METRIC mismatch_count=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 3.745981000014581,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/loop_filter_abstraction.va": "cc323e4273bdfaab6683d78d05b9a3d76db38684ae296007578fb2db83777ddd",
+        "testbench/trusted_replay_test.scs": "f9e03e5f478e222fff1dd67d430d616dd0ab784dd4bb69c140db82950dfaceef"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "035",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "pa edge_checks=42 hold_checks=41; P_RESET_COMMON_MODE mismatch_count=0; P_CLOCKED_UPDATE mismatch_count=0; P_LINEAR_REGION mismatch_count=0; P_SYMMETRIC_COMPRESSION mismatch_count=0; P_OUTPUT_CLAMP mismatch_count=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 3.087217666034121,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/pa_compression_macro.va": "386d42d9d77bb2594cca35e9530bf03a33e1af14327ccfa12a2f1544e6c34e98",
+        "testbench/trusted_replay_test.scs": "5b0674d2f4b9427147e657dcc0de54f667fafa7f755571a27d8566b683ba3faf"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "046",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "uvlo_brownout_detector pgood=0.875 hold=0.900/0.000 recover=0.790; P_RESET_FAULT mismatch_count=0; P_UPPER_TRIP_ASSERT mismatch_count=0; P_HYSTERESIS_HOLD mismatch_count=0; P_BROWNOUT_CLEAR mismatch_count=0; P_STATUS_DISTINCTION mismatch_count=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 2.134114624990616,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/uvlo_brownout_detector.va": "60fa91ebfedf02dc4f98eeb393c6cfce1b22db121159cedae22e3d300ef5d55e",
+        "testbench/trusted_replay_test.scs": "10c360a9478268184f8e8104702ca7f7d0592d1fd5449ef46e7f117b760d8e1e"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "073",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "bias_voltage_generator_with_enable_trim enabled_updates=28 disabled_updates=12 settling_updates=28; P_CLOCKED_UPDATE mismatch_count=0; P_DISABLE_RESET mismatch_count=0; P_TRIM_TARGET mismatch_count=0; P_SETTLING mismatch_count=0; P_MONOTONIC_TRIM mismatch_count=0; P_ENABLE_METRIC mismatch_count=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 3.4226302090100944,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/bias_voltage_generator_with_enable_trim.va": "ee31fa1900d11bcf2761152a9edcac86ce0d54a32a6b2fe32ff93fcd33d2209e",
+        "testbench/trusted_replay_test.scs": "32da791be08c7cb531a7ac04cb3932696578ea9febf504643bca6a622cb10de2"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "082",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "agc_receiver_leveling_loop amp_low/overload/settled=0.204/0.429/0.135 gain=0.688->0.396 rssi=0.427/0.898/0.282; P_RESET_STATE mismatch_count=0; P_CLOCKED_GAIN_LOOP mismatch_count=0; P_OUTPUT_ENVELOPE mismatch_count=0; P_GAIN_DIRECTION_AND_BOUNDS mismatch_count=0; P_DEADBAND_HOLD mismatch_count=0; P_SETTLING_METRIC mismatch_count=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 4.1744934580056,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/agc_receiver_leveling_loop.va": "6496caf8b8feb4c6cd6872fb115db2cf20b856c603328ccc824f3ee90d401391",
+        "testbench/trusted_replay_test.scs": "5eb5cbf8311e1a4c75ab7a0e6d3bed0daa6dfadc6aa28681d1ad0a143dd906f0"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "083",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "release_amplifier_filter_chain metric_high_low=0.893/0.000 high_window=1.100e-08..2.900e-08 out_lag=0.556->0.813 settle=0.100->0.900; P_RESET_COMMON_MODE mismatch_count=0; P_BOUNDED_PREAMP mismatch_count=0; P_FIRST_FILTER_STAGE mismatch_count=0; P_SECOND_FILTER_STAGE mismatch_count=0; P_CASCADE_LAG mismatch_count=0; P_SETTLE_STATUS mismatch_count=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 5.625421667005867,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/amplifier_filter_chain.va": "a223c277a14fb21d3b6207aad9a4b603e2ffd0143b38ef96bd779cd5a105df4b",
+        "testbench/trusted_replay_test.scs": "ff60439578ac1ea3c8b7f13c91df29aa965feb46563ab848118991459d86aea8"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "086",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "complete_cal_loop reset=0.461 vin_span=0.600 out_span=0.155 correction=22/22 trim=21/22 residual=21/22 metric=0.839 reset_recovery=2/2",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 11.571181749983225,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/complete_calibration_loop.va": "98ddf6d8214ab2cfd0ccea018383998065ff0632ccd9ff667a966f1f5cff9021",
+        "testbench/trusted_replay_test.scs": "94f55054305902ee1bbd56744937dbeb7cbe307245e95f066b43cde337a33983"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "094",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "v4_094 checked=258 mismatch_count=0 coverage=clock_rises=33 reset_edges=1 phases=[0, 1, 2, 3] vin_regions=['high', 'mid']; P_RESET_COMMON_MODE checked=8 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_QUADRATURE_SEQUENCE checked=32 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_LO_MONITORS checked=62 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_MIXER_MONITORS checked=62 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_BASEBAND_UPDATES checked=63 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_PHASE_MONITOR checked=31 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 5.444670041964855,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/iq_downconversion_chain.va": "f66b798bcfabb432e3f3d6e1c14440d650587d2160e042b5a4ac15030cb7bd15",
+        "testbench/trusted_replay_test.scs": "762f6c934bb056870a12ac6a5885cb59c91028a2f668e6dd452f9da17414bd0b"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "095",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "ldo_load_step_recovery_flow pre/early/late/light/second=0.606/0.543/0.586/0.608/0.540 load=0.100/0.850/0.200/0.750 ctrl=0.491/0.823/0.528/0.780; P_RESET_REGULATION_STATE mismatch_count=0; P_BOUNDED_LOAD_AND_TARGET mismatch_count=0; P_CONTROL_MONITOR mismatch_count=0; P_HEAVY_LOAD_DROOP mismatch_count=0; P_LIGHT_LOAD_KICK mismatch_count=0; P_RECOVERY_AND_SETTLING mismatch_count=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 7.761144541960675,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/ldo_load_step_recovery_flow.va": "c2d509378d4dad0d2c237c64b7f90221c35cfaea765b772b83d738954904483e",
+        "testbench/trusted_replay_test.scs": "322d6e5b3812389898db66002fe0176e4781bd1c679275f875699f1824a7852a"
+      },
+      "cleanup_confirmed": true
+    },
+    {
+      "family": "099",
+      "status": "execution_completed",
+      "checker": {
+        "passed": true,
+        "note": "reference_startup_enable_flow pre_enable=0.050 startup=0.541 metric=0.900->0.724 dip=0.000; P_SUPPLY_AND_ENABLE_MONITORS mismatch_count=0; P_RESET_OR_BROWNOUT mismatch_count=0; P_DISABLED_REFERENCE mismatch_count=0; P_ENABLED_SETTLING mismatch_count=0; P_STARTUP_VALIDITY mismatch_count=0; P_BROWNOUT_RECOVERY mismatch_count=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "seconds": 3.759119084046688,
+      "cli_returncode": 0,
+      "source_files": {
+        "submission/reference_startup_enable_flow.va": "9d45fc7aec2aaabba5f1cbf4566c75bdf8996de37dd02ee0421d7b2c9dc8d3d4",
+        "testbench/trusted_replay_test.scs": "2371a608c46b50b1cd623e70ca672823dc8505c53060d21c0576e11a7741a424"
+      },
+      "cleanup_confirmed": true
+    }
+  ],
+  "formal_benchmark": false,
+  "availability": "Compact receipt repository-contained; all original raw outputs local-only; frozen historical checkers unchanged.",
+  "limits": {
+    "kernel_seconds": 120,
+    "worker_seconds": 150
+  },
+  "qualification": "Original23 unchanged input/tolerances/budgets/checker/normalization. 347 explained compatibility difference retained; this is an unmerged candidate, not23/23 or formalQ."
+}

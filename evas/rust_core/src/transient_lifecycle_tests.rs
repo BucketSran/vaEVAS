@@ -51,6 +51,7 @@ fn relocalization_fixture() -> (EventModel, Trajectory, Controller, Vec<Schedule
     let operators = Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
     let circuit = model.circuit(&states).unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
@@ -121,6 +122,7 @@ fn timer_history_fixture() -> (EventModel, Trajectory, Controller, Vec<Scheduled
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
@@ -186,6 +188,7 @@ fn failed_new_timer_flow_horizon_rolls_back_then_corrected_retry_matches_clean()
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
@@ -426,6 +429,7 @@ pub(super) fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEve
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         state_bounds: states.iter().copied().map(I::point).collect(),
@@ -648,6 +652,7 @@ pub(super) fn nonlinear_horizon_fixture(
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[]).unwrap(),
@@ -769,6 +774,7 @@ pub(super) fn history_guard_fixture() -> (EventModel, Trajectory, Controller, Ve
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
@@ -906,6 +912,7 @@ fn two_delays_accuracy_failure_discard_and_earlier_retry_preserve_frame() {
         .circuit_with(&[], &operators.values(0.0).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.0,
         solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
@@ -982,6 +989,7 @@ fn delayed_timer_root_fixture(
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
@@ -1118,6 +1126,7 @@ fn later_microevent_failure_rolls_back_entire_sequence_and_same_controller_retry
             .unwrap();
         let controller = Controller {
             accepted: Frame {
+                value_proofs: Default::default(),
                 time_proofs: Default::default(),
                 time: 0.,
                 solution: circuit.solve(&[0.]).unwrap(),
@@ -1318,6 +1327,7 @@ fn later_same_time_writer_conflict_rolls_back_whole_sequence_and_same_controller
             .unwrap();
         let controller = Controller {
             accepted: Frame {
+                value_proofs: Default::default(),
                 time_proofs: Default::default(),
                 time: 0.,
                 solution: circuit.solve(&[0.]).unwrap(),
@@ -1440,6 +1450,7 @@ fn shared_self_counter_conflict_preserves_frame_then_retries_in_same_controller(
     let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
     let mut controller = Controller {
         accepted: Frame {
+            value_proofs: Default::default(),
             time_proofs: Default::default(),
             time: 0.,
             states,
@@ -1546,6 +1557,7 @@ fn raw_source_held_epoch_fixture_at(
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&trajectory.values(0.)).unwrap(),
@@ -1735,12 +1747,12 @@ fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_r
     let original_outputs = controller.outputs.clone();
     let mut bad_program = model.program.clone();
     // Fail during the second source root, after the first root and intervening
-    // timer have succeeded inside the candidate transaction. The uncertain
-    // held start touches the accepted boundary and cannot choose a priority.
+    // timer have succeeded inside the candidate transaction. z=idt(1,0)
+    // is the physical time, but its sampled history enclosure touches the
+    // accepted boundary. A driven-input rational proof cannot erase that width.
     bad_program.events[2].body.push(
         serde_json::from_value(json!({"kind":"assign","state":0,
-            "rhs":{"op":"affine","constant":-1.,
-                "terms":[{"node":1,"coefficient":3.}]}}))
+            "rhs":{"op":"affine","constant":0.,"terms":[{"node":3,"coefficient":1.}]}}))
         .unwrap(),
     );
     let bad = EventModel::new(bad_program, model.driven.clone(), model.tolerances.clone()).unwrap();

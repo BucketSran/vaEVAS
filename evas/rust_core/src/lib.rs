@@ -4,6 +4,8 @@ mod affine_bounds;
 mod analog;
 mod assembly;
 mod batch;
+mod causal_event;
+mod causal_voltage;
 mod continuous;
 pub mod diagnostics;
 mod display;
@@ -12,6 +14,7 @@ mod event_accuracy;
 mod event_conditions;
 mod event_control;
 mod event_numeric;
+mod event_value_proof;
 mod events;
 mod exact_source;
 mod exact_time;
@@ -68,11 +71,13 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
         if let Some(errors) = &config.pwl_errors_v {
             if errors.len() != request.driven.len()
                 || errors.len() != config.pwl.len()
-                || errors.iter().any(|e| !e.is_finite() || *e < 0.)
+                || errors
+                    .iter()
+                    .any(|e| !e.bound().is_finite() || e.bound() < 0.)
             {
                 return Err(Error::new("invalid_inputs", "pwl_errors_V must match driven PWL sources and contain nonnegative finite voltage bounds"));
             }
-            if errors.iter().any(|e| *e > 0.) {
+            if errors.iter().any(|e| e.bound() > 0.) {
                 let derivative_event =
                     request
                         .program
@@ -90,7 +95,17 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
                                     }),
                             )
                         })?;
-                if !request.program.operators.is_empty() || derivative_event {
+                let shaped = errors
+                    .iter()
+                    .all(|e| e.bound() == 0. || e.shape().is_some());
+                let transition_only = request
+                    .program
+                    .operators
+                    .iter()
+                    .all(|op| matches!(op, ir::OperatorSpec::Transition { .. }));
+                if (!request.program.operators.is_empty() || derivative_event)
+                    && !(shaped && transition_only)
+                {
                     return Err(Error::new("unsupported_source_uncertainty", "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"));
                 }
             }
@@ -108,7 +123,7 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
         request.driven.push("$abstime".into());
         if let Some(transient) = &mut request.transient {
             if let Some(errors) = &mut transient.pwl_errors_v {
-                errors.push(0.);
+                errors.push(ir::SourceError::Voltage(0.));
             }
             transient
                 .pwl

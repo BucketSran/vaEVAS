@@ -154,6 +154,8 @@ pub(crate) struct Conditions {
     action_identity: Vec<Vec<ActionIdentity>>,
     stateful_events: Vec<bool>,
     state_count: usize,
+    node_count: usize,
+    driven_nodes: Vec<usize>,
     active_events: Vec<bool>,
 }
 
@@ -452,6 +454,8 @@ impl Conditions {
             action_identity,
             stateful_events,
             state_count: program.states.len(),
+            node_count: program.nodes.len(),
+            driven_nodes: Vec::new(),
             active_events: vec![true; program.events.len()],
         })
     }
@@ -546,6 +550,16 @@ impl Conditions {
 
     pub(crate) fn prepare(&mut self, program: &Program, driven: &[String]) -> Result<(), Error> {
         self.root_predicates.clear();
+        self.driven_nodes = driven
+            .iter()
+            .map(|name| {
+                program
+                    .nodes
+                    .iter()
+                    .position(|n| n == name)
+                    .ok_or_else(|| Error::new("invalid_inputs", "unknown event input"))
+            })
+            .collect::<Result<_, _>>()?;
         if self.enabled() {
             let mut expressions: Vec<_> = self
                 .predicates
@@ -562,7 +576,7 @@ impl Conditions {
                 expressions.push((!assignment.numeric).then_some(&assignment.expression));
             }
             self.bounds = Some(
-                GuardBounds::stateful_expressions(program, driven, &expressions)
+                GuardBounds::stateful_parameters(program, driven, &expressions)
                     .map_err(|e| Error::new("event_condition", e.message))?,
             );
             // A root enclosure contains times other than the actual root.
@@ -604,6 +618,16 @@ impl Conditions {
         fired_leaves: &[usize],
         before_bounds: &[I],
     ) -> Result<Selection, Error> {
+        self.select_with_proofs(events, inputs, fired_leaves, before_bounds, None)
+    }
+    pub(crate) fn select_with_proofs(
+        &self,
+        events: &[usize],
+        inputs: &[I],
+        fired_leaves: &[usize],
+        before_bounds: &[I],
+        proofs: Option<&crate::event_value_proof::Context<'_>>,
+    ) -> Result<Selection, Error> {
         if events
             .iter()
             .any(|&event| event >= self.active_events.len())
@@ -616,10 +640,11 @@ impl Conditions {
         if !events.iter().any(|&event| self.active_events[event]) {
             return Ok(Selection::default());
         }
+        let operators = proofs.map(|p| p.operators()).unwrap_or(&[]);
         let mut values = self
             .bounds
             .as_ref()
-            .map(|b| b.values(inputs))
+            .map(|b| b.values_with_operators(inputs, operators))
             .unwrap_or_default();
         let mut at_root = vec![false; self.predicates.len()];
         for &leaf in fired_leaves {
@@ -642,16 +667,25 @@ impl Conditions {
             identity: &[ActionIdentity],
             context: &Conditions,
             inputs: &[I],
-            states: &mut [I],
+            operators: &[I],
+            states: &mut crate::event_value_proof::LocalState,
             written: &mut [bool],
             at_root: &[bool],
             proof_attempts: &mut usize,
             loop_iterations: &mut usize,
         ) -> Result<(), Error> {
             let bounds = context.bounds.as_ref();
-            let numeric_nodes: Vec<I> = std::iter::once(I::ZERO)
-                .chain(inputs.iter().copied())
-                .collect();
+            let mut numeric_nodes = vec![
+                I {
+                    lo: f64::NEG_INFINITY,
+                    hi: f64::INFINITY
+                };
+                context.node_count
+            ];
+            numeric_nodes[0] = I::ZERO;
+            for (&node, &value) in context.driven_nodes.iter().zip(inputs) {
+                numeric_nodes[node] = value;
+            }
             for step in body {
                 match step {
                     Step::ArrayWrite {
@@ -681,6 +715,7 @@ impl Conditions {
                             identity,
                             context,
                             inputs,
+                            operators,
                             states,
                             written,
                             at_root,
@@ -706,6 +741,7 @@ impl Conditions {
                             identity,
                             context,
                             inputs,
+                            operators,
                             states,
                             written,
                             at_root,
@@ -719,7 +755,7 @@ impl Conditions {
                             } else {
                                 bounds
                                     .unwrap()
-                                    .value_with_states(*predicate, inputs, states)
+                                    .checked_value(*predicate, inputs, states, operators)?
                             };
                             let (yes, no) = crate::event_numeric::sign(p.relation, value);
                             if !value.finite() || !(yes || no) {
@@ -756,6 +792,7 @@ impl Conditions {
                                 identity,
                                 context,
                                 inputs,
+                                operators,
                                 states,
                                 written,
                                 at_root,
@@ -773,6 +810,7 @@ impl Conditions {
                                 identity,
                                 context,
                                 inputs,
+                                operators,
                                 states,
                                 written,
                                 at_root,
@@ -788,7 +826,9 @@ impl Conditions {
                             let value = if a.numeric {
                                 crate::event_numeric::bounds(&a.expression, &numeric_nodes, states)?
                             } else {
-                                bounds.unwrap().value_with_states(a.row, inputs, states)
+                                bounds
+                                    .unwrap()
+                                    .checked_value(a.row, inputs, states, operators)?
                             };
                             if !value.finite() {
                                 return Err(Error::new(
@@ -796,7 +836,7 @@ impl Conditions {
                                     "nonfinite prior-assignment bounds",
                                 ));
                             }
-                            states[a.state] = value;
+                            states.assign(a.state, &a.expression, &numeric_nodes, value);
                             written[a.state] = true;
                         }
                     }
@@ -805,7 +845,9 @@ impl Conditions {
                         let p = &predicates[*predicate];
                         let value = if p.numeric {
                             crate::event_numeric::bounds(&p.expression, &numeric_nodes, states)?
-                        } else if p.dependencies.state_dependencies.is_empty() {
+                        } else if p.dependencies.state_dependencies.is_empty()
+                            && !bounds.unwrap().symbolic(*predicate)
+                        {
                             values[*predicate]
                         } else if at_root[*predicate]
                             && p.dependencies
@@ -817,7 +859,16 @@ impl Conditions {
                         } else {
                             bounds
                                 .unwrap()
-                                .value_with_states(*predicate, inputs, states)
+                                .checked_value(*predicate, inputs, states, operators)?
+                        };
+                        let value = if value.sign().is_none() {
+                            states
+                                .value(&p.expression, &numeric_nodes)
+                                .and_then(|v| crate::exact_source::enclosure(&v))
+                                .filter(|v| value.lo <= v.lo && v.hi <= value.hi)
+                                .unwrap_or(value)
+                        } else {
+                            value
                         };
                         let (yes_proved, no_proved) = match p.relation {
                             Relation::Lt => (value.hi < 0.0, value.lo >= 0.0),
@@ -840,8 +891,8 @@ impl Conditions {
                             let mut nd = Vec::new();
                             let mut yo = Vec::new();
                             let mut no_ordered = Vec::new();
-                            let mut ys = states.to_vec();
-                            let mut ns = states.to_vec();
+                            let mut ys = states.clone();
+                            let mut ns = states.clone();
                             let mut yw = written.to_vec();
                             let mut nw = written.to_vec();
                             let yr = walk(
@@ -855,6 +906,7 @@ impl Conditions {
                                 identity,
                                 context,
                                 inputs,
+                                operators,
                                 &mut ys,
                                 &mut yw,
                                 at_root,
@@ -872,6 +924,7 @@ impl Conditions {
                                 identity,
                                 context,
                                 inputs,
+                                operators,
                                 &mut ns,
                                 &mut nw,
                                 at_root,
@@ -903,7 +956,7 @@ impl Conditions {
                                 .chain(&no_ordered)
                                 .all(|step| matches!(step, SelectedStep::Assign(_)));
                             let same_bounds = ys.len() == ns.len()
-                                && ys.iter().zip(&ns).all(|(a, b)| {
+                                && ys.iter().zip(ns.iter()).all(|(a, b)| {
                                     a.lo.to_bits() == b.lo.to_bits()
                                         && a.hi.to_bits() == b.hi.to_bits()
                                 });
@@ -916,7 +969,7 @@ impl Conditions {
                             {
                                 return Err(original);
                             }
-                            states.copy_from_slice(&ys);
+                            states.merge(ys, &ns);
                             written.copy_from_slice(&yw);
                             actions.extend(ya);
                             ordered.extend(yo);
@@ -940,6 +993,7 @@ impl Conditions {
                             identity,
                             context,
                             inputs,
+                            operators,
                             states,
                             written,
                             at_root,
@@ -966,7 +1020,8 @@ impl Conditions {
             let mut loop_iterations = 0;
             let mut actions = Vec::new();
             let mut ordered = Vec::new();
-            let mut states = before_bounds.to_vec();
+            let mut states =
+                crate::event_value_proof::LocalState::with_context(before_bounds, proofs);
             let mut written = vec![false; self.state_count];
             walk(
                 &self.bodies[event],
@@ -979,6 +1034,7 @@ impl Conditions {
                 &self.action_identity[event],
                 self,
                 inputs,
+                operators,
                 &mut states,
                 &mut written,
                 &at_root,

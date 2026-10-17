@@ -1,0 +1,106 @@
+[
+  {
+    "case": "cross-transition",
+    "source": "`include \"disciplines.vams\"\nmodule dut(u,y,count); input u; output y,count; electrical u,y,count; real q,next; integer n; analog begin @(initial_step) begin q=0; next=0.5; n=0; end\n @(cross(V(u)-0.4,1,1e-12,1e-12)) begin q=1-q; n=n+1; end\n V(y)<+0.5*V(y)+transition(q,0,0.08,0.12); V(count)<+n; end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (u 0) vsource type=pulse val0=0 val1=1 delay=.1 rise=.03 fall=.04 width=.3 period=1\nDUT (u y count) dut\nopts options precision=\"%24.17g\" reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=2.4 maxstep=.015625 errpreset=conservative method=traponly strobetimes=[0 0.11199000000000001 0.11201 0.14999999999999999 0.20000000000000001 0.25 0.40000000000000002 0.5 0.625 0.75 1 1.11199 1.1120099999999999 1.1499999999999999 1.2 1.25 1.5 1.625 1.75 2 2.1499999999999999 2.25 2.3999999999999999] strobeoutput=all compression=no skipcount=1\nsave u y count\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (u 0) vsource type=pulse val0=0 val1=1 delay=.1 rise=.03 fall=.04 width=.3 period=1\nDUT (u y count) dut\nopts options reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=2.4 maxstep=.015625 errpreset=conservative strobetimes=[0 0.11199000000000001 0.11201 0.14999999999999999 0.20000000000000001 0.25 0.40000000000000002 0.5 0.625 0.75 1 1.11199 1.1120099999999999 1.1499999999999999 1.2 1.25 1.5 1.625 1.75 2 2.1499999999999999 2.25 2.3999999999999999] strobeoutput=all\nsave u y count\n",
+    "contract": {
+      "voltage_budget_V": 1e-08,
+      "event_time_budget_s": 1e-12,
+      "expected_cross_count": 3,
+      "held_reset": false,
+      "pairing": "exact binary64 native time, no interpolation",
+      "independent": "Fraction pulse corner arithmetic; transition slope and held resets",
+      "source": "same physical VA/SCS model for both backends"
+    },
+    "source_sha256": "22830054f0b19e8b6759f96df88f6f68cf68894d8c50b811c93cd39058dfa109"
+  },
+  {
+    "case": "reverse-held-reset",
+    "source": "`include \"disciplines.vams\"\nmodule dut(u,y,count); input u; output y,count; electrical u,y,count; real q,next; integer n; analog begin @(initial_step) begin q=0; next=0.5; n=0; end\n @(cross(-V(u)-0.5,1,1e-12,1e-12)) begin q=1; n=n+1; end\n @(timer(next,0,1e-12)) begin q=0; next=next+1; end\n V(y)<+0.5*V(y)+transition(q,0,0.125,0.125); V(count)<+n; end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (0 u) vsource type=pulse val0=0 val1=1 delay=.1 rise=.1 fall=.2 width=0 period=1\nDUT (u y count) dut\nopts options precision=\"%24.17g\" reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=2.4 maxstep=.015625 errpreset=conservative method=traponly strobetimes=[0 0.11199000000000001 0.11201 0.14999999999999999 0.20000000000000001 0.25 0.40000000000000002 0.5 0.625 0.75 1 1.11199 1.1120099999999999 1.1499999999999999 1.2 1.25 1.5 1.625 1.75 2 2.1499999999999999 2.25 2.3999999999999999] strobeoutput=all compression=no skipcount=1\nsave u y count\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (0 u) vsource type=pulse val0=0 val1=1 delay=.1 rise=.1 fall=.2 width=0 period=1\nDUT (u y count) dut\nopts options reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=2.4 maxstep=.015625 errpreset=conservative strobetimes=[0 0.11199000000000001 0.11201 0.14999999999999999 0.20000000000000001 0.25 0.40000000000000002 0.5 0.625 0.75 1 1.11199 1.1120099999999999 1.1499999999999999 1.2 1.25 1.5 1.625 1.75 2 2.1499999999999999 2.25 2.3999999999999999] strobeoutput=all\nsave u y count\n",
+    "contract": {
+      "voltage_budget_V": 1e-08,
+      "event_time_budget_s": 1e-12,
+      "expected_cross_count": 3,
+      "held_reset": true,
+      "pairing": "exact binary64 native time, no interpolation",
+      "independent": "Fraction pulse corner arithmetic; transition slope and held resets",
+      "source": "same physical VA/SCS model for both backends"
+    },
+    "source_sha256": "c9ee130ca18c084c8b3c99049fa3f3b0a61f7b16029fc54a460cb18c7faf383f"
+  },
+  {
+    "case": "causal-retarget-correlation",
+    "source": "`include \"disciplines.vams\"\nmodule dut(u,e,y,mark,count); input u; output e,y,mark,count; electrical u,e,y,mark,count; real a,b,q,m; integer n;\n analog begin @(initial_step) begin a=0; b=0; q=0.1; m=0; n=0; end\n @(timer(0.125,0.125,1e-12)) begin a=0.3*V(u)*V(u); b=a;\n   if(b-a<0) q=2; else q=a; n=n+1; end\n @(timer(0.1875,0.125,1e-12)) begin if(b-a<0) m=2; else m=1; end\n V(e)<+transition(q,0,0.03125,0.03125); V(y)<+0.5*V(y)+V(e);\n V(mark)<+m; V(count)<+n; end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (u 0) vsource dc=0.7\nDUT (u e y mark count) dut\nopts options precision=\"%24.17g\" reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=.95 maxstep=.0078125 errpreset=conservative method=traponly strobetimes=[0 0.10000000000000001 0.12499 0.12501000000000001 0.14000000000000001 0.15625 0.18748999999999999 0.18751000000000001 0.29999999999999999 0.40000000000000002 0.5 0.59999999999999998 0.69999999999999996 0.80000000000000004 0.90000000000000002 0.94999999999999996] strobeoutput=all compression=no skipcount=1\nsave u e y mark count\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (u 0) vsource dc=0.7\nDUT (u e y mark count) dut\nopts options reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=.95 maxstep=.0078125 errpreset=conservative strobetimes=[0 0.10000000000000001 0.12499 0.12501000000000001 0.14000000000000001 0.15625 0.18748999999999999 0.18751000000000001 0.29999999999999999 0.40000000000000002 0.5 0.59999999999999998 0.69999999999999996 0.80000000000000004 0.90000000000000002 0.94999999999999996] strobeoutput=all\nsave u e y mark count\n",
+    "contract": {
+      "voltage_budget_V": 1e-08,
+      "event_time_budget_s": 1e-12,
+      "expected_timers": 14,
+      "pairing": "exact shared native binary64 time, no interpolation",
+      "oracle": "Fraction source coefficients, old/local assignment order, linear symmetric transition, causal affine feedback",
+      "scope": "new scalar causal event arithmetic, retained correlation, settled symmetric retarget and frozen transition network condition"
+    },
+    "source_sha256": "9b6cbc127ddc1c6588f008fe603e3d1231808f8891aa3278e20d7ed938454c4a"
+  },
+  {
+    "case": "transition-network-condition",
+    "source": "`include \"disciplines.vams\"\nmodule dut(u,e,y,mark,count); input u; output e,y,mark,count; electrical u,e,y,mark,count; real s,q; analog begin\n @(initial_step) begin s=0; q=0; end\n @(timer(0.25,0,1e-12)) s=1;\n @(timer(0.375,0,1e-12)) begin if(V(e)>1.4) q=0.75; else q=0; end\n V(e)<+1+transition(s,0,0.25,0.25); V(y)<+transition(q,0,0.125,0.125);\n V(mark)<+q; V(count)<+s; end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (u 0) vsource dc=0.7\nDUT (u e y mark count) dut\nopts options precision=\"%24.17g\" reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=.95 maxstep=.0078125 errpreset=conservative method=traponly strobetimes=[0 0.10000000000000001 0.24998999999999999 0.25001000000000001 0.29999999999999999 0.37498999999999999 0.37501000000000001 0.40000000000000002 0.45000000000000001 0.5 0.59999999999999998 0.75 0.90000000000000002 0.94999999999999996] strobeoutput=all compression=no skipcount=1\nsave u e y mark count\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (u 0) vsource dc=0.7\nDUT (u e y mark count) dut\nopts options reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=.95 maxstep=.0078125 errpreset=conservative strobetimes=[0 0.10000000000000001 0.24998999999999999 0.25001000000000001 0.29999999999999999 0.37498999999999999 0.37501000000000001 0.40000000000000002 0.45000000000000001 0.5 0.59999999999999998 0.75 0.90000000000000002 0.94999999999999996] strobeoutput=all\nsave u e y mark count\n",
+    "contract": {
+      "voltage_budget_V": 1e-08,
+      "event_time_budget_s": 1e-12,
+      "expected_timers": 2,
+      "pairing": "exact shared native binary64 time, no interpolation",
+      "oracle": "Fraction source coefficients, old/local assignment order, linear symmetric transition, causal affine feedback",
+      "scope": "new scalar causal event arithmetic, retained correlation, settled symmetric retarget and frozen transition network condition"
+    },
+    "source_sha256": "7df1fb1c5730802407d18da32ce8c6a295a0d15a8529246c3017e630dd616a5e"
+  },
+  {
+    "case": "transition-cascade-shared-root",
+    "source": "`include \"disciplines.vams\"\nmodule dut(u,e,y,mark,count); input u; inout e; output y,mark,count; electrical u,e,y,mark,count;\nreal s; integer q; analog begin\n @(initial_step) begin s=0; q=0; end\n @(timer(0.25,0,1e-12)) s=1;\n @(cross(V(e)-0.3,+1,1e-12,1e-12)) q=q+1;\n V(e)<+transition(s,0,0.25,0.25);\n V(y)<+q+transition((V(e)>0.3)?2:0,0,0.125,0.125);\n V(mark)<+q; V(count)<+s;\nend endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (u 0) vsource dc=0.7\nDUT (u e y mark count) dut\nopts options precision=\"%24.17g\" reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=.95 maxstep=.0078125 errpreset=conservative method=traponly strobetimes=[0 0.10000000000000001 0.24998999999999999 0.25001000000000001 0.29999999999999999 0.32499 0.32501000000000002 0.34999999999999998 0.40000000000000002 0.44999 0.45001000000000002 0.5 0.59999999999999998 0.75 0.90000000000000002 0.94999999999999996] strobeoutput=all compression=no skipcount=1\nsave u e y mark count\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (u 0) vsource dc=0.7\nDUT (u e y mark count) dut\nopts options reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=.95 maxstep=.0078125 errpreset=conservative strobetimes=[0 0.10000000000000001 0.24998999999999999 0.25001000000000001 0.29999999999999999 0.32499 0.32501000000000002 0.34999999999999998 0.40000000000000002 0.44999 0.45001000000000002 0.5 0.59999999999999998 0.75 0.90000000000000002 0.94999999999999996] strobeoutput=all\nsave u e y mark count\n",
+    "contract": {
+      "voltage_budget_V": 1e-08,
+      "event_time_budget_s": 1e-12,
+      "expected_timers": 1,
+      "expected_crosses": 1,
+      "pairing": "exact shared native binary64 time, no interpolation",
+      "oracle": "Fraction binary coefficients: root=1/4+Fraction(0.3)/4; q increments once there; y=q+2*clip((t-root)/(1/8)); e=clip((t-1/4)/(1/4))",
+      "scope": "acyclic internal transition target predicate, same physical root as event, no read-order ambiguity"
+    },
+    "source_sha256": "6bac4f7b472d7129b0338a97abe584fae6f45b347de3a2f7869d5530dfa72bb2"
+  },
+  {
+    "case": "adjacent-internal-transition-roots",
+    "source": "`include \"disciplines.vams\"\nmodule dut(u,e,y,mark,count); input u; inout e,mark; output y,count; electrical u,e,y,mark,count; real s,t; integer a,b; analog begin\n @(initial_step) begin s=0; t=0; a=0; b=0; end\n @(timer(1,0,1e-12)) s=1;\n @(timer(1.0000000000000002,0,1e-12)) t=1;\n @(cross(V(e)-0.3,+1,1e-12,1e-12)) a=1;\n @(cross(V(mark)-0.3,+1,1e-12,1e-12)) b=1;\n V(e)<+transition(s,0,0.25,0.25); V(mark)<+transition(t,0,0.25,0.25);\n V(y)<+a+2*b; V(count)<+b; end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (u 0) vsource dc=0\nDUT (u e y mark count) dut\nopts options precision=\"%24.17g\" reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=2 maxstep=.015625 errpreset=conservative method=traponly strobetimes=[0 0.5 1 1.05 1.0740000000000001 1.0760000000000001 1.125 1.25 1.5 2] strobeoutput=all compression=no skipcount=1\nsave u e y mark count\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (u 0) vsource dc=0\nDUT (u e y mark count) dut\nopts options reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=2 maxstep=.015625 errpreset=conservative strobetimes=[0 0.5 1 1.05 1.0740000000000001 1.0760000000000001 1.125 1.25 1.5 2] strobeoutput=all\nsave u e y mark count\n",
+    "contract": {
+      "voltage_budget_V": 1e-08,
+      "event_time_budget_s": 1e-12,
+      "oracle": "Fraction independent linear transitions after root1/3 and retarget1/2; or separate exact timer/transition roots at1+.3/4 and nexttimer+.3/4",
+      "pairing": "native shared time only; discrete alternatives allowed only within1ps of independent root"
+    },
+    "source_sha256": "e34f5a6ac1a8b6d664a70269d06fd27009a9725e063accc97035041610310755"
+  },
+  {
+    "case": "independent-interrupted-continuous-ends",
+    "source": "`include \"disciplines.vams\"\nmodule dut(u,e,y,mark,count); input u; inout e,mark; output y,count; electrical u,e,y,mark,count; real a,b; analog begin\n @(initial_step) begin a=0; b=0; end\n @(cross(V(u)-1,+1,1e-9,1e-9)) begin a=1; b=1; end\n @(timer(0.5,0,1e-9)) begin a=2; b=2.0000000000000004; end\n V(e)<+transition(a,0,0.75,0.75); V(mark)<+transition(b,0,0.75,0.75);\n V(y)<+V(e)+V(mark); V(count)<+a; end endmodule\n",
+    "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (u 0) vsource type=pwl wave=[0 0 1.5 4.5]\nDUT (u e y mark count) dut\nopts options precision=\"%24.17g\" reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=1.5 maxstep=.015625 errpreset=conservative method=traponly strobetimes=[0 0.40000000000000002 0.5 0.75 1 1.1499999999999999 1.2 1.5] strobeoutput=all compression=no skipcount=1\nsave u e y mark count\n",
+    "evas_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVin (u 0) vsource type=pwl wave=[0 0 1.5 4.5]\nDUT (u e y mark count) dut\nopts options reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=1.5 maxstep=.015625 errpreset=conservative strobetimes=[0 0.40000000000000002 0.5 0.75 1 1.1499999999999999 1.2 1.5] strobeoutput=all\nsave u e y mark count\n",
+    "contract": {
+      "voltage_budget_V": 1e-08,
+      "event_time_budget_s": 1e-12,
+      "oracle": "Fraction independent linear transitions after root1/3 and retarget1/2; or separate exact timer/transition roots at1+.3/4 and nexttimer+.3/4",
+      "pairing": "native shared time only; discrete alternatives allowed only within1ps of independent root"
+    },
+    "source_sha256": "3c15e545f067f6a3633f3f5f9d3a3ff340df707212e45ed735e8963d6110dce5"
+  }
+]

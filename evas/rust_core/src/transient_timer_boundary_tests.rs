@@ -98,6 +98,7 @@ fn fixture(
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&good.values(0.)).unwrap(),
@@ -319,6 +320,7 @@ fn live_filter_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEv
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&trajectory.values(0.)).unwrap(),

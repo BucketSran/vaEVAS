@@ -1,0 +1,1904 @@
+{
+  "scope": "P0原反例逐项核销；同源码独立debug/release构建；原checker、normalization、模型、精度及120/150秒预算保持；未合并，不新增Q成绩",
+  "source_commit": "82284d9736906f6f83421408ec580d41d6bdbf55",
+  "documentation_parent": "c2e45d8f83157c81a05f1adb09dcd5ae7a603b79",
+  "production_source_files": 142,
+  "production_sources_unchanged": true,
+  "build_receipt_sha256": "22b4f26b35b372ecefd1d94392fcb11879cd6c830a775326a7bf5f5f9a04267e",
+  "debug_kernel_sha256": "006b04de47dd9de9b0278ba0481b64a3597655e7bb68d7e616f2eb68c97cd193",
+  "release_kernel_sha256": "37ecd43d88f86233112ff8ee9580197ff08b81a77e74a80da029e1769026e1c6",
+  "release_build_command": [
+    "cargo",
+    "build",
+    "--release",
+    "--locked",
+    "--manifest-path",
+    "evas/rust_core/Cargo.toml"
+  ],
+  "five_originals": [
+    {
+      "family": "107",
+      "original_identity": {
+        "family_id": "107",
+        "task_name": "107-bipolar-dac-4b-continuous",
+        "checker_id": "v4_107_bipolar_dac_4b_continuous",
+        "original_task": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/107-bipolar-dac-4b-continuous",
+        "deck": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/107/testbench/trusted_replay_test.scs",
+        "gold_dir": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/107/submission",
+        "deck_sha256": "d7d6f1c1e9f6a91bf01806856796e2b6b1a4d2cf143e94ef89c41d7e2f45775e",
+        "gold_tree_sha256": "858dcc017cc1db23fdd962b07114f61a1663aacec90bc062511ea9a2bd9d3d09",
+        "source_files": {
+          "submission/bipolar_dac_4b_continuous.va": "6c7b4ab73b6be387d1b06d2f4958feb2a33fe5b8e47ea83c899863077913ab66",
+          "testbench/trusted_replay_test.scs": "d7d6f1c1e9f6a91bf01806856796e2b6b1a4d2cf143e94ef89c41d7e2f45775e"
+        }
+      },
+      "original_checker": {
+        "passed": false,
+        "note": "property_id=P_UNSIGNED_BIT_DECODE category=observable_mismatch expected=satisfy_observable_contract observed=bipolar_dac_max_err event=stimulus_relative_trace",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "mathematical_classification": {
+        "family": "107",
+        "classification": "semantic_difference",
+        "scope": "All executed original event assignments agree with exact PWL roots under te=tau; original checker FAIL retained; no new Spectre inference",
+        "events_checked": 3,
+        "state_names": [
+          "XDUT:code",
+          "XDUT:vout_level"
+        ],
+        "records": [
+          {
+            "root_fraction_s": "3022314549036573/604462909807314587353088",
+            "root_float_s": 5e-09,
+            "causes": [
+              {
+                "node": "vd2",
+                "direction": 1
+              },
+              {
+                "node": "vd0",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "vd3": "below",
+              "vd2": "equal",
+              "vd1": "below",
+              "vd0": "equal"
+            },
+            "independent_expected_state": [
+              0.0,
+              -0.9
+            ],
+            "observed_state": [
+              0.0,
+              -0.9
+            ],
+            "max_state_difference": 0.0
+          },
+          {
+            "root_fraction_s": "18254779876180901/1208925819614629174706176",
+            "root_float_s": 1.51e-08,
+            "causes": [
+              {
+                "node": "vd3",
+                "direction": 1
+              },
+              {
+                "node": "vd2",
+                "direction": -1
+              },
+              {
+                "node": "vd1",
+                "direction": 1
+              },
+              {
+                "node": "vd0",
+                "direction": -1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "vd3": "equal",
+              "vd2": "equal",
+              "vd1": "equal",
+              "vd0": "equal"
+            },
+            "independent_expected_state": [
+              0.0,
+              -0.9
+            ],
+            "observed_state": [
+              0.0,
+              -0.9
+            ],
+            "max_state_difference": 0.0
+          },
+          {
+            "root_fraction_s": "15172019036163597/604462909807314587353088",
+            "root_float_s": 2.51e-08,
+            "causes": [
+              {
+                "node": "vd2",
+                "direction": 1
+              },
+              {
+                "node": "vd0",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "vd3": "above",
+              "vd2": "equal",
+              "vd1": "above",
+              "vd0": "equal"
+            },
+            "independent_expected_state": [
+              10.0,
+              0.3
+            ],
+            "observed_state": [
+              10.0,
+              0.29999999999999993
+            ],
+            "max_state_difference": 7.401486830834377e-17
+          }
+        ],
+        "response_sha256": "d93fa8fc781d910d25c302e75582d8d7f27f68c069971a928e2200c03c1c196a"
+      },
+      "release_same_complete_response": true,
+      "cleanup_debug": true,
+      "cleanup_release": true
+    },
+    {
+      "family": "157",
+      "original_identity": {
+        "family_id": "157",
+        "task_name": "157-folded-flash-dac-4b",
+        "checker_id": "v4_157_folded_flash_dac_4b",
+        "original_task": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/157-folded-flash-dac-4b",
+        "deck": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/157/testbench/trusted_replay_test.scs",
+        "gold_dir": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/157/submission",
+        "deck_sha256": "9791b4ad7da4263e5a6d94c9822b0b762e59044044babfca5b029616158fc69a",
+        "gold_tree_sha256": "1ae9ffacb8c56f77711f1836c6d524ee59ee24f0deabc2ca36ba886f6a38de96",
+        "source_files": {
+          "submission/folded_flash_dac_4b.va": "3f24b5c7d72438afef43bd286a956e5320f8c51d30d13663750367b936760c7d",
+          "testbench/trusted_replay_test.scs": "9791b4ad7da4263e5a6d94c9822b0b762e59044044babfca5b029616158fc69a"
+        }
+      },
+      "original_checker": {
+        "passed": false,
+        "note": "checked=4 max_error=0.43750",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "mathematical_classification": {
+        "family": "157",
+        "classification": "semantic_difference",
+        "scope": "All executed original event assignments agree with exact PWL roots under te=tau; original checker FAIL retained; no new Spectre inference",
+        "events_checked": 3,
+        "state_names": [
+          "XDUT:out_scaled",
+          "XDUT:out_value"
+        ],
+        "records": [
+          {
+            "root_fraction_s": "2410295852856667/302231454903657293676544",
+            "root_float_s": 7.975e-09,
+            "causes": [
+              {
+                "node": "vd3",
+                "direction": 1
+              },
+              {
+                "node": "vd2",
+                "direction": 1
+              },
+              {
+                "node": "vd1",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "vd4": "below",
+              "vd3": "equal",
+              "vd2": "equal",
+              "vd1": "equal"
+            },
+            "independent_expected_state": [
+              8.0,
+              0.5
+            ],
+            "observed_state": [
+              8.0,
+              0.5
+            ],
+            "max_state_difference": 0.0
+          },
+          {
+            "root_fraction_s": "10865220803786481/604462909807314587353088",
+            "root_float_s": 1.7975e-08,
+            "causes": [
+              {
+                "node": "vd4",
+                "direction": 1
+              },
+              {
+                "node": "vd3",
+                "direction": -1
+              },
+              {
+                "node": "vd2",
+                "direction": -1
+              },
+              {
+                "node": "vd1",
+                "direction": -1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "vd4": "equal",
+              "vd3": "equal",
+              "vd2": "equal",
+              "vd1": "equal"
+            },
+            "independent_expected_state": [
+              8.0,
+              0.5
+            ],
+            "observed_state": [
+              8.0,
+              0.5
+            ],
+            "max_state_difference": 0.0
+          },
+          {
+            "root_fraction_s": "16909849901859627/604462909807314587353088",
+            "root_float_s": 2.7975000000000004e-08,
+            "causes": [
+              {
+                "node": "vd3",
+                "direction": 1
+              },
+              {
+                "node": "vd2",
+                "direction": 1
+              },
+              {
+                "node": "vd1",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "vd4": "above",
+              "vd3": "equal",
+              "vd2": "equal",
+              "vd1": "equal"
+            },
+            "independent_expected_state": [
+              8.0,
+              0.5
+            ],
+            "observed_state": [
+              8.0,
+              0.5
+            ],
+            "max_state_difference": 0.0
+          }
+        ],
+        "response_sha256": "f3bd904428eb4fa5ecbd2e6ff481bdf962aa23c1410d8bc633104d7d2b0d86b3"
+      },
+      "release_same_complete_response": true,
+      "cleanup_debug": true,
+      "cleanup_release": true
+    },
+    {
+      "family": "164",
+      "original_identity": {
+        "family_id": "164",
+        "task_name": "164-ideal-adc-out-7bits",
+        "checker_id": "v4_164_ideal_adc_out_7bits",
+        "original_task": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/164-ideal-adc-out-7bits",
+        "deck": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/164/testbench/trusted_replay_test.scs",
+        "gold_dir": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/164/submission",
+        "deck_sha256": "4a9e440e74a4ac322cb219e14c7bd78dcfd88cd07d1bf43ac44e7e9a698ad299",
+        "gold_tree_sha256": "6f252c99f6a1cbf412b53016439c7b55403fa1632dfbbea4cb9de1d20a9520fe",
+        "source_files": {
+          "submission/ideal_adc_out_7bits_scalar.va": "969938ee3d67a8a7cdc411aca748a11fa7b8329381dc0cd21a81aab20f79cf40",
+          "testbench/trusted_replay_test.scs": "4a9e440e74a4ac322cb219e14c7bd78dcfd88cd07d1bf43ac44e7e9a698ad299"
+        }
+      },
+      "original_checker": {
+        "passed": false,
+        "note": "property_id=P_SCALED_SCALAR_OUTPUT category=value_mismatch expected=dout=0.66406 observed=dout=0.00000 event=stable_window[1]@1.297500e-08s; checked_property_ids=P_THRESHOLD_CODE_DETECTION,P_WEIGHTED_GROUP_SUM,P_SCALED_SCALAR_OUTPUT",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "mathematical_classification": {
+        "family": "164",
+        "classification": "semantic_difference",
+        "scope": "All executed original event assignments agree with exact PWL roots under te=tau; original checker FAIL retained; no new Spectre inference",
+        "events_checked": 2,
+        "state_names": [
+          "XDUT:out_value"
+        ],
+        "records": [
+          {
+            "root_fraction_s": "2410295852856667/302231454903657293676544",
+            "root_float_s": 7.975e-09,
+            "causes": [
+              {
+                "node": "din0",
+                "direction": 1
+              },
+              {
+                "node": "din2",
+                "direction": 1
+              },
+              {
+                "node": "din4",
+                "direction": 1
+              },
+              {
+                "node": "din6",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "din0": "equal",
+              "din1": "below",
+              "din2": "equal",
+              "din3": "below",
+              "din4": "equal",
+              "din5": "below",
+              "din6": "equal"
+            },
+            "independent_expected_state": [
+              0.0
+            ],
+            "observed_state": [
+              0.0
+            ],
+            "max_state_difference": 0.0
+          },
+          {
+            "root_fraction_s": "10865220803786481/604462909807314587353088",
+            "root_float_s": 1.7975e-08,
+            "causes": [
+              {
+                "node": "din0",
+                "direction": -1
+              },
+              {
+                "node": "din1",
+                "direction": 1
+              },
+              {
+                "node": "din2",
+                "direction": -1
+              },
+              {
+                "node": "din3",
+                "direction": 1
+              },
+              {
+                "node": "din4",
+                "direction": -1
+              },
+              {
+                "node": "din5",
+                "direction": 1
+              },
+              {
+                "node": "din6",
+                "direction": -1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "din0": "equal",
+              "din1": "equal",
+              "din2": "equal",
+              "din3": "equal",
+              "din4": "equal",
+              "din5": "equal",
+              "din6": "equal"
+            },
+            "independent_expected_state": [
+              0.0
+            ],
+            "observed_state": [
+              0.0
+            ],
+            "max_state_difference": 0.0
+          }
+        ],
+        "response_sha256": "d850b51b7681e2fa0f58b2b6926c838a0b18b89a7b188014f576448d4d53cb18"
+      },
+      "release_same_complete_response": true,
+      "cleanup_debug": true,
+      "cleanup_release": true
+    },
+    {
+      "family": "168",
+      "original_identity": {
+        "family_id": "168",
+        "task_name": "168-dac-ideal-4b-offset",
+        "checker_id": "v4_168_dac_ideal_4b_offset",
+        "original_task": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/168-dac-ideal-4b-offset",
+        "deck": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/168/testbench/trusted_replay_test.scs",
+        "gold_dir": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/168/submission",
+        "deck_sha256": "c1b1af7f99a3758adddb06f18cf99b5886137bfddd68dabe6e4fcb373c73c1c9",
+        "gold_tree_sha256": "0abb24361bc3c8e7ccb82582512960308d6d726cfbceb26f66433ab6b0207a2f",
+        "source_files": {
+          "submission/dac_ideal_4b_offset.va": "25bda9909118dca943917a30202ef6edb568c86f288b6091486e3de3a9794884",
+          "testbench/trusted_replay_test.scs": "c1b1af7f99a3758adddb06f18cf99b5886137bfddd68dabe6e4fcb373c73c1c9"
+        }
+      },
+      "original_checker": {
+        "passed": false,
+        "note": "property_id=P_OFFSET_PLUS_SCALED_TRIM category=value_mismatch expected=dout=0.26713 observed=dout=0.23900 event=stable_window[1]@1.297500e-08s; checked_property_ids=P_THRESHOLDED_4BIT_CODE,P_OFFSET_PLUS_SCALED_TRIM,P_EVENT_UPDATED_OUTPUT",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "mathematical_classification": {
+        "family": "168",
+        "classification": "semantic_difference",
+        "scope": "All executed original event assignments agree with exact PWL roots under te=tau; original checker FAIL retained; no new Spectre inference",
+        "events_checked": 8,
+        "state_names": [
+          "XDUT:out_level"
+        ],
+        "records": [
+          {
+            "root_fraction_s": "43406418724434911774454577272211/5444517870735015415413993718908291383296",
+            "root_float_s": 7.9725e-09,
+            "causes": [
+              {
+                "node": "din0",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "din0": "equal",
+              "din1": "below",
+              "din2": "below",
+              "din3": "below"
+            },
+            "independent_expected_state": [
+              0.239
+            ],
+            "observed_state": [
+              0.239
+            ],
+            "max_state_difference": 0.0
+          },
+          {
+            "root_fraction_s": "97851597431785076074926332614035/5444517870735015415413993718908291383296",
+            "root_float_s": 1.79725e-08,
+            "causes": [
+              {
+                "node": "din1",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "din0": "above",
+              "din1": "equal",
+              "din2": "below",
+              "din3": "below"
+            },
+            "independent_expected_state": [
+              0.267125
+            ],
+            "observed_state": [
+              0.267125
+            ],
+            "max_state_difference": 1.2351231148954867e-17
+          },
+          {
+            "root_fraction_s": "97878820021138751389722719644269/5444517870735015415413993718908291383296",
+            "root_float_s": 1.7977500000000003e-08,
+            "causes": [
+              {
+                "node": "din0",
+                "direction": -1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "din0": "equal",
+              "din1": "above",
+              "din2": "below",
+              "din3": "below"
+            },
+            "independent_expected_state": [
+              0.29525
+            ],
+            "observed_state": [
+              0.29525
+            ],
+            "max_state_difference": 2.4702462297909733e-17
+          },
+          {
+            "root_fraction_s": "152296776139135231368198833214867/5444517870735015415413993718908291383296",
+            "root_float_s": 2.79725e-08,
+            "causes": [
+              {
+                "node": "din2",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "din0": "below",
+              "din1": "above",
+              "din2": "equal",
+              "din3": "below"
+            },
+            "independent_expected_state": [
+              0.29525
+            ],
+            "observed_state": [
+              0.29525
+            ],
+            "max_state_difference": 2.4702462297909733e-17
+          },
+          {
+            "root_fraction_s": "152323998728488906682995220245101/5444517870735015415413993718908291383296",
+            "root_float_s": 2.7977500000000004e-08,
+            "causes": [
+              {
+                "node": "din1",
+                "direction": -1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "din0": "below",
+              "din1": "equal",
+              "din2": "above",
+              "din3": "below"
+            },
+            "independent_expected_state": [
+              0.3515
+            ],
+            "observed_state": [
+              0.3515
+            ],
+            "max_state_difference": 6.106226635438361e-18
+          },
+          {
+            "root_fraction_s": "103370977423242698284695257015395/2722258935367507707706996859454145691648",
+            "root_float_s": 3.7972500000000005e-08,
+            "causes": [
+              {
+                "node": "din3",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "din0": "below",
+              "din1": "below",
+              "din2": "above",
+              "din3": "equal"
+            },
+            "independent_expected_state": [
+              0.3515
+            ],
+            "observed_state": [
+              0.3515
+            ],
+            "max_state_difference": 6.106226635438361e-18
+          },
+          {
+            "root_fraction_s": "103384588717919535041373525056413/2722258935367507707706996859454145691648",
+            "root_float_s": 3.7977500000000004e-08,
+            "causes": [
+              {
+                "node": "din2",
+                "direction": -1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "din0": "below",
+              "din1": "below",
+              "din2": "equal",
+              "din3": "above"
+            },
+            "independent_expected_state": [
+              0.46399999999999997
+            ],
+            "observed_state": [
+              0.46399999999999997
+            ],
+            "max_state_difference": 1.2212453270876722e-17
+          },
+          {
+            "root_fraction_s": "8162097923557360939413223865107/170141183460469231731687303715884105728",
+            "root_float_s": 4.79725e-08,
+            "causes": [
+              {
+                "node": "din0",
+                "direction": 1
+              },
+              {
+                "node": "din1",
+                "direction": 1
+              },
+              {
+                "node": "din2",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "din0": "equal",
+              "din1": "equal",
+              "din2": "equal",
+              "din3": "above"
+            },
+            "independent_expected_state": [
+              0.46399999999999997
+            ],
+            "observed_state": [
+              0.46399999999999997
+            ],
+            "max_state_difference": 1.2212453270876722e-17
+          }
+        ],
+        "response_sha256": "cba234e83adf903ce91b9a9649ea64d60ffa04823a86d77637e3816d60d6d74e"
+      },
+      "release_same_complete_response": true,
+      "cleanup_debug": true,
+      "cleanup_release": true
+    },
+    {
+      "family": "185",
+      "original_identity": {
+        "family_id": "185",
+        "task_name": "185-spi-shift-mux",
+        "checker_id": "v4_185_spi_shift_mux",
+        "original_task": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/185-spi-shift-mux",
+        "deck": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/185/testbench/trusted_replay_test.scs",
+        "gold_dir": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/185/submission",
+        "deck_sha256": "8c4ec88e4b4a63752269585681dc0672a99faf74cd417b275ca7ad3304afb714",
+        "gold_tree_sha256": "b2f69fe4f3799ed1594d5abbff4c46d4af703b1e140212fac6a19e3a67f72ccf",
+        "source_files": {
+          "submission/spi_shift_mux.va": "f77761d69f057dcaa0570ef73a39a02295d26d327949e034786d6ae09eb7ebdc",
+          "testbench/trusted_replay_test.scs": "8c4ec88e4b4a63752269585681dc0672a99faf74cd417b275ca7ad3304afb714"
+        }
+      },
+      "original_checker": {
+        "passed": false,
+        "note": "v4_185 checked=193 mismatch_count=3 coverage=rises=3 falls=3 shifts=4 reset_checks=4 reset_clock_checks=2 sdi=[0, 1]; P_RESET_LOADS_DEFAULT_WORD checked=34 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_SHIFT_ON_SCKI_TRANSITIONS checked=39 mismatch_count=3 expected=scko=0.9+/-0.08 observed=scko=-0 sample_time=1.175e-09 metric_gap=0.9; P_SHIFT_DIRECTION_AND_SDI_INSERTION checked=57 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_SDO_EXPOSES_SHIFTED_OUT_BIT checked=7 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_OUTPUT_RAIL_LEVELS checked=56 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0",
+        "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+      },
+      "mathematical_classification": {
+        "family": "185",
+        "classification": "semantic_difference",
+        "scope": "All executed original event assignments agree with exact PWL roots under te=tau; original checker FAIL retained; no new Spectre inference",
+        "events_checked": 7,
+        "state_names": [
+          "XDUT:b[0]",
+          "XDUT:b[1]",
+          "XDUT:b[2]",
+          "XDUT:b[3]",
+          "XDUT:b[4]",
+          "XDUT:b[5]",
+          "XDUT:b[6]",
+          "XDUT:b[7]",
+          "XDUT:i",
+          "XDUT:sck_level"
+        ],
+        "records": [
+          {
+            "root_fraction_s": "1239148965104995/1208925819614629174706176",
+            "root_float_s": 1.025e-09,
+            "causes": [
+              {
+                "node": "scki",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "scki": "equal",
+              "sdi": "above",
+              "rst": "below"
+            },
+            "independent_expected_state": [
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "observed_state": [
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "max_state_difference": 0.0
+          },
+          {
+            "root_fraction_s": "14265324671452625/9671406556917033397649408",
+            "root_float_s": 1.475e-09,
+            "causes": [
+              {
+                "node": "scki",
+                "direction": -1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "scki": "equal",
+              "sdi": "above",
+              "rst": "below"
+            },
+            "independent_expected_state": [
+              1.0,
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "observed_state": [
+              1.0,
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "max_state_difference": 0.0
+          },
+          {
+            "root_fraction_s": "7314001208668507/2417851639229258349412352",
+            "root_float_s": 3.025e-09,
+            "causes": [
+              {
+                "node": "scki",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "scki": "equal",
+              "sdi": "below",
+              "rst": "below"
+            },
+            "independent_expected_state": [
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "observed_state": [
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "max_state_difference": 0.0
+          },
+          {
+            "root_fraction_s": "16804068892643347/4835703278458516698824704",
+            "root_float_s": 3.4750000000000005e-09,
+            "causes": [
+              {
+                "node": "scki",
+                "direction": -1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "scki": "equal",
+              "sdi": "below",
+              "rst": "below"
+            },
+            "independent_expected_state": [
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "observed_state": [
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "max_state_difference": 0.0
+          },
+          {
+            "root_fraction_s": "10698993503589469/2417851639229258349412352",
+            "root_float_s": 4.425e-09,
+            "causes": [
+              {
+                "node": "rst",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "scki": "below",
+              "sdi": "above",
+              "rst": "equal"
+            },
+            "independent_expected_state": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "observed_state": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "max_state_difference": 0.0
+          },
+          {
+            "root_fraction_s": "12149704487127023/2417851639229258349412352",
+            "root_float_s": 5.025e-09,
+            "causes": [
+              {
+                "node": "scki",
+                "direction": 1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "scki": "equal",
+              "sdi": "above",
+              "rst": "above"
+            },
+            "independent_expected_state": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "observed_state": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "max_state_difference": 0.0
+          },
+          {
+            "root_fraction_s": "13237737724780191/2417851639229258349412352",
+            "root_float_s": 5.475000000000001e-09,
+            "causes": [
+              {
+                "node": "scki",
+                "direction": -1
+              }
+            ],
+            "input_comparison_to_threshold": {
+              "scki": "equal",
+              "sdi": "above",
+              "rst": "above"
+            },
+            "independent_expected_state": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "observed_state": [
+              0.0,
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            "max_state_difference": 0.0
+          }
+        ],
+        "response_sha256": "8a4309f4e70a905b3365acb0033ee7152e7c15d34b42ea1b686dae829f2f886b"
+      },
+      "release_same_complete_response": true,
+      "cleanup_debug": true,
+      "cleanup_release": true
+    }
+  ],
+  "sync_originals": {
+    "results": [
+      {
+        "condition": "c0",
+        "execution": "completed",
+        "seconds": 53.15004737500567,
+        "kernel_sha256": "37ecd43d88f86233112ff8ee9580197ff08b81a77e74a80da029e1769026e1c6",
+        "classification": "semantic_difference",
+        "rows": 9031,
+        "checker": {
+          "passed": false,
+          "checks": 1776,
+          "max_abs_error": {
+            "held0": 6.411138842032926e-10,
+            "held1": 6.117344408806957e-10,
+            "held2": 6.140308261848304e-10,
+            "held3": 6.636702298834507e-10,
+            "valid": 1.8,
+            "dout": 1.0355578207829703
+          },
+          "failures": [
+            {
+              "time": 8.640000000000002e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 8.640000000000002e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.2674439970067503,
+              "error": 0.2674439970067503
+            },
+            {
+              "time": 8.71e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 8.71e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.26738540186259613,
+              "error": 0.26738540186259613
+            },
+            {
+              "time": 8.820000000000001e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 8.820000000000001e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.2672933652040502,
+              "error": 0.2672933652040502
+            },
+            {
+              "time": 9.000000000000001e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 9.000000000000001e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.2671428689089818,
+              "error": 0.2671428689089818
+            },
+            {
+              "time": 9.180000000000001e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 9.180000000000001e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.2669925079996432,
+              "error": 0.2669925079996432
+            },
+            {
+              "time": 9.360000000000002e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 9.360000000000002e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.2668422823542422,
+              "error": 0.2668422823542422
+            }
+          ]
+        },
+        "events_checked": 10,
+        "records": [
+          {
+            "root_fraction_s": "2274291698150021/75557863725914323419136",
+            "node": "track",
+            "direction": 1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "12104369768891475/151115727451828646838272",
+            "node": "track",
+            "direction": -1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "4724255429462793/18889465931478580854784",
+            "node": "track",
+            "direction": 1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "2437685578457311/9444732965739290427392",
+            "node": "track",
+            "direction": -1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "6424307363295865/18889465931478580854784",
+            "node": "track",
+            "direction": 1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "6613202022610651/18889465931478580854784",
+            "node": "rst",
+            "direction": 1,
+            "track_minus_vth_exact": "8106479329266893/9007199254740992",
+            "rst_minus_vth_exact": "0",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "6877654545651351/18889465931478580854784",
+            "node": "rst",
+            "direction": -1,
+            "track_minus_vth_exact": "8106479329266893/9007199254740992",
+            "rst_minus_vth_exact": "0",
+            "independent_state": [
+              0,
+              1
+            ],
+            "observed_state": [
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "root_fraction_s": "442839916931101/1180591620717411303424",
+            "node": "track",
+            "direction": -1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              1,
+              0
+            ],
+            "observed_state": [
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "2739444796712681/4722366482869645213696",
+            "node": "track",
+            "direction": 1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "5998349906541023/9444732965739290427392",
+            "node": "track",
+            "direction": -1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "actual_spectre_reused": {
+          "analysis": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/original-callback-spectre-v1/ANALYSIS.json",
+          "sha256": "8a1cad793364191c1b36b448b91316c208a8e73e8374e79e060f42471aa67a56",
+          "original_source_hashes_match": true,
+          "callback_open_example": [
+            {
+              "tag": "SYNC_OPEN_BEFORE",
+              "time_token": "3.0100000050055556e-08",
+              "track_guard_token": "4.5050001840074572e-07",
+              "rst_guard_token": "-0.90000000000000002",
+              "acquired": 0,
+              "frame_valid": 0
+            },
+            {
+              "tag": "SYNC_OPEN_AFTER",
+              "time_token": "3.0100000050055556e-08",
+              "track_guard_token": "4.5050001840074572e-07",
+              "rst_guard_token": "-0.90000000000000002",
+              "acquired": 1,
+              "frame_valid": 0
+            }
+          ],
+          "source_rule": "All original assignment/guard/stimulus/settings bytes retained after removal of display-only lines",
+          "instrumented_original_native_trace_identical": true
+        },
+        "response_sha256": "6ce05635d29b4152a2a0c921bc4cc29deae3f3b5baa4fb53a9c007e3d52af832"
+      },
+      {
+        "condition": "core-boundary",
+        "execution": "completed",
+        "seconds": 7.911360166966915,
+        "kernel_sha256": "37ecd43d88f86233112ff8ee9580197ff08b81a77e74a80da029e1769026e1c6",
+        "classification": "semantic_difference",
+        "rows": 9031,
+        "checker": {
+          "passed": false,
+          "checks": 1776,
+          "max_abs_error": {
+            "held0": 1.1102230246251565e-16,
+            "held1": 1.1102230246251565e-16,
+            "held2": 5.551115123125783e-17,
+            "held3": 1.1102230246251565e-16,
+            "valid": 1.8,
+            "dout": 0.515
+          },
+          "failures": [
+            {
+              "time": 8.640000000000002e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 8.640000000000002e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.275,
+              "error": 0.275
+            },
+            {
+              "time": 8.71e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 8.71e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.275,
+              "error": 0.275
+            },
+            {
+              "time": 8.820000000000001e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 8.820000000000001e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.275,
+              "error": 0.275
+            },
+            {
+              "time": 9.000000000000001e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 9.000000000000001e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.275,
+              "error": 0.275
+            },
+            {
+              "time": 9.180000000000001e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 9.180000000000001e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.275,
+              "error": 0.275
+            },
+            {
+              "time": 9.360000000000002e-08,
+              "signal": "valid",
+              "actual": 0.0,
+              "expected": 1.8,
+              "error": 1.8
+            },
+            {
+              "time": 9.360000000000002e-08,
+              "signal": "dout",
+              "actual": 0.0,
+              "expected": 0.275,
+              "error": 0.275
+            }
+          ]
+        },
+        "events_checked": 10,
+        "records": [
+          {
+            "root_fraction_s": "2274291698150021/75557863725914323419136",
+            "node": "track",
+            "direction": 1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "12104369768891475/151115727451828646838272",
+            "node": "track",
+            "direction": -1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "4724255429462793/18889465931478580854784",
+            "node": "track",
+            "direction": 1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "2437685578457311/9444732965739290427392",
+            "node": "track",
+            "direction": -1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "6424307363295865/18889465931478580854784",
+            "node": "track",
+            "direction": 1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "6613202022610651/18889465931478580854784",
+            "node": "rst",
+            "direction": 1,
+            "track_minus_vth_exact": "8106479329266893/9007199254740992",
+            "rst_minus_vth_exact": "0",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "6877654545651351/18889465931478580854784",
+            "node": "rst",
+            "direction": -1,
+            "track_minus_vth_exact": "8106479329266893/9007199254740992",
+            "rst_minus_vth_exact": "0",
+            "independent_state": [
+              0,
+              1
+            ],
+            "observed_state": [
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "root_fraction_s": "442839916931101/1180591620717411303424",
+            "node": "track",
+            "direction": -1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              1,
+              0
+            ],
+            "observed_state": [
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "2739444796712681/4722366482869645213696",
+            "node": "track",
+            "direction": 1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "root_fraction_s": "5998349906541023/9444732965739290427392",
+            "node": "track",
+            "direction": -1,
+            "track_minus_vth_exact": "0",
+            "rst_minus_vth_exact": "-8106479329266893/9007199254740992",
+            "independent_state": [
+              0,
+              0
+            ],
+            "observed_state": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "actual_spectre_reused": {
+          "analysis": "runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/original-callback-spectre-v1/ANALYSIS.json",
+          "sha256": "8a1cad793364191c1b36b448b91316c208a8e73e8374e79e060f42471aa67a56",
+          "original_source_hashes_match": true,
+          "callback_open_example": [
+            {
+              "tag": "SYNC_OPEN_BEFORE",
+              "time_token": "3.0100000050055556e-08",
+              "track_guard_token": "4.5050001840074572e-07",
+              "rst_guard_token": "-0.90000000000000002",
+              "acquired": 0,
+              "frame_valid": 0
+            },
+            {
+              "tag": "SYNC_OPEN_AFTER",
+              "time_token": "3.0100000050055556e-08",
+              "track_guard_token": "4.5050001840074572e-07",
+              "rst_guard_token": "-0.90000000000000002",
+              "acquired": 1,
+              "frame_valid": 0
+            }
+          ],
+          "source_rule": "All original assignment/guard/stimulus/settings bytes retained after removal of display-only lines",
+          "instrumented_original_native_trace_identical": true
+        },
+        "response_sha256": "45e7d5841052a4b49284495698f6ae3f82e2c002a32f81764e73ce3205d966b4"
+      }
+    ],
+    "scope": "Each original request retains its checker verdict; te=tau expected states independently calculated from original PWL; actual Spectre observation-only callbacks reused by verified original source identity; no new remote/Q claim"
+  },
+  "query_pair": {
+    "original_schema": 22,
+    "current_schema": 24,
+    "recompiled_program_diff_only_schema_and_source_locations": true,
+    "correction": "replay-other RESULT recompile_structure_equal=false is a tuple/list comparison artifact before canonical JSON normalization; JSON-to-JSON proof below supersedes it",
+    "tau": "0.3535533905932737622004221810524245196424179688442370182941699344976831196155267597125968835819103932",
+    "threshold_q": "0.353553390593273786368655464684707112610340118408203125",
+    "q_minus_tau_s": "2.41682332836322825929679221495639661067058300655023168803844732402874031164180896068E-17",
+    "q_above_tau": true,
+    "new_guard_at_tau": "-2.41682332836322825929679221495639661067058300655023168803844732402874031164180896068E-17",
+    "first_root_nearest_float": 0.3535533905932738,
+    "second_root_float": 0.3535533905932738,
+    "same_nearest_binary64": true,
+    "current_rejection": {
+      "kind": "unsupported_cross",
+      "message": "event-dependent guard jump or uncertain same-time crossing requires an event closure contract"
+    },
+    "dense_current_rejection": {
+      "kind": "event_resolution",
+      "message": "output query cannot certify its physical event phase"
+    },
+    "classification": "unsupported; original accepted query-shift failure is not reproduced as successful execution; both complete same-VA IR24 requests reject, so no successful-query invariance claim",
+    "remaining_acceptance": "Prove two distinct root identities and causal update, execute both requests with same physical history and full original budgets, or retain this unsupported boundary; no347 exemption."
+  },
+  "precision_cases": [
+    {
+      "case": "high-gain-original",
+      "returncode": 0,
+      "seconds": 0.0333981669973582,
+      "tolerances": {
+        "absolute": 20000000.0,
+        "relative": 1e-10
+      },
+      "checks": [
+        {
+          "time_s": 0.0,
+          "actual_V": -0.0,
+          "independent_V": "0",
+          "error_V": "0",
+          "budget_V": "20000000.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "reported_bounds_enclose": null
+        },
+        {
+          "time_s": 10.0,
+          "actual_V": 17171572875253.81,
+          "independent_V": "17171572875253.80990239662255158060384286065624924610385364664052401853504307578592229922493134471685",
+          "error_V": "0.00064447837744841939615713934375075389614635335947598146495692421407770077506865528315",
+          "budget_V": "20001717.15728752538111724731312086957123490631618292220507263935724839853946832590736448764801025391",
+          "reported_bounds_enclose": null
+        }
+      ],
+      "events": [
+        {
+          "time": 1.4142135623730954,
+          "observation_time_bounds": [
+            1.4142135623730947,
+            1.4142135623730954
+          ],
+          "event": 0,
+          "origin": "continuous.va:2:106 (dut)",
+          "kind": "cross",
+          "guard_value": 8.881784197001252e-16,
+          "before": [
+            0.0
+          ],
+          "after": [
+            1414213.5623730954
+          ]
+        }
+      ],
+      "extra_query_events_identical": true
+    },
+    {
+      "case": "high-gain-tight",
+      "returncode": 2,
+      "seconds": 0.034188584017101675,
+      "tolerances": {
+        "absolute": 1e-06,
+        "relative": 0
+      },
+      "error": {
+        "kind": "waveform_accuracy",
+        "message": "cannot certify same-time forward error at y: bound 1.3322676295501898e-3, budget 1e-6"
+      }
+    },
+    {
+      "case": "high-gain-query-control",
+      "returncode": 0,
+      "seconds": 0.0443391670123674,
+      "tolerances": {
+        "absolute": 20000000.0,
+        "relative": 1e-10
+      },
+      "checks": [
+        {
+          "time_s": 0.0,
+          "actual_V": -0.0,
+          "independent_V": "0",
+          "error_V": "0",
+          "budget_V": "20000000.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "reported_bounds_enclose": null
+        },
+        {
+          "time_s": 1.0,
+          "actual_V": -0.0,
+          "independent_V": "0",
+          "error_V": "0",
+          "budget_V": "20000000.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "reported_bounds_enclose": null
+        },
+        {
+          "time_s": 2.0,
+          "actual_V": 1171572875253.81,
+          "independent_V": "1171572875253.809902396622551580603842860656249246103853646640524018535043075785922299224931344716854",
+          "error_V": "0.000156197127448419396157139343750753896146353359475981464956924214077700775068655283146",
+          "budget_V": "20000117.15728752538101012767241607318292932555633217461865306198778857726949809148209169507026672363",
+          "reported_bounds_enclose": null
+        },
+        {
+          "time_s": 5.0,
+          "actual_V": 7171572875253.811,
+          "independent_V": "7171572875253.809902396622551580603842860656249246103853646640524018535043075785922299224931344716854",
+          "error_V": "0.000644478377448419396157139343750753896146353359475981464956924214077700775068655283146",
+          "budget_V": "20000717.15728752538108081511580537182965574076911732256546364895621881174747613840736448764801025391",
+          "reported_bounds_enclose": null
+        },
+        {
+          "time_s": 10.0,
+          "actual_V": 17171572875253.81,
+          "independent_V": "17171572875253.80990239662255158060384286065624924610385364664052401853504307578592229922493134471685",
+          "error_V": "0.00064447837744841939615713934375075389614635335947598146495692421407770077506865528315",
+          "budget_V": "20001717.15728752538111724731312086957123490631618292220507263935724839853946832590736448764801025391",
+          "reported_bounds_enclose": null
+        }
+      ],
+      "events": [
+        {
+          "time": 1.4142135623730954,
+          "observation_time_bounds": [
+            1.4142135623730947,
+            1.4142135623730954
+          ],
+          "event": 0,
+          "origin": "continuous.va:2:106 (dut)",
+          "kind": "cross",
+          "guard_value": 8.881784197001252e-16,
+          "before": [
+            0.0
+          ],
+          "after": [
+            1414213.5623730954
+          ]
+        }
+      ]
+    },
+    {
+      "case": "linear-switch",
+      "returncode": 2,
+      "seconds": 0.008362249995116144,
+      "tolerances": {
+        "absolute": 0.0001,
+        "relative": 0
+      },
+      "error": {
+        "kind": "event_condition",
+        "message": "cannot certify Gt condition at continuous.va:2:147 (dut): difference in [-6.5415039063321245e-6, 1.0878906249178755e-6]"
+      }
+    },
+    {
+      "case": "nonlinear-switch",
+      "returncode": 2,
+      "seconds": 0.011669166968204081,
+      "tolerances": {
+        "absolute": 0.0001,
+        "relative": 0
+      },
+      "error": {
+        "kind": "event_condition",
+        "message": "cannot certify Gt condition at continuous.va:2:147 (dut): difference in [-6.5415039063321245e-6, 1.0878906249178755e-6]"
+      }
+    },
+    {
+      "case": "adjacent-linear-0",
+      "returncode": 2,
+      "seconds": 0.007202084001619369,
+      "tolerances": {
+        "absolute": 1e-12,
+        "relative": 1e-10
+      },
+      "error": {
+        "kind": "condition_precision",
+        "message": "no representable interior of selected mode"
+      }
+    },
+    {
+      "case": "adjacent-nonlinear-0",
+      "returncode": 2,
+      "seconds": 0.010471125016920269,
+      "tolerances": {
+        "absolute": 1e-12,
+        "relative": 1e-10
+      },
+      "error": {
+        "kind": "condition_precision",
+        "message": "no representable interior of physical mode"
+      }
+    },
+    {
+      "case": "adjacent-linear-1",
+      "returncode": 2,
+      "seconds": 0.011838334030471742,
+      "tolerances": {
+        "absolute": 1e-12,
+        "relative": 1e-10
+      },
+      "error": {
+        "kind": "condition_precision",
+        "message": "no representable interior of selected mode"
+      }
+    },
+    {
+      "case": "adjacent-nonlinear-1",
+      "returncode": 2,
+      "seconds": 0.007339750009123236,
+      "tolerances": {
+        "absolute": 1e-12,
+        "relative": 1e-10
+      },
+      "error": {
+        "kind": "condition_precision",
+        "message": "no representable interior of physical mode"
+      }
+    }
+  ],
+  "regressions": {
+    "kernel_sha256": "37ecd43d88f86233112ff8ee9580197ff08b81a77e74a80da029e1769026e1c6",
+    "tests_run": 69,
+    "failures": 0,
+    "errors": 0,
+    "successful": true
+  },
+  "reference_revalidation": {
+    "kernel_sha256": "37ecd43d88f86233112ff8ee9580197ff08b81a77e74a80da029e1769026e1c6",
+    "rows": [
+      {
+        "case": "cross-transition",
+        "previous_response": "runs/evas-source-shape-20261017/reference-pairs-final3/cross-transition/response.json",
+        "previous_sha256": "cde343e6ca07a79478c78fcc7bdd8b3a2fe326655ab88346e9c48a6e3f1c5c6e",
+        "new_response_sha256": "cde343e6ca07a79478c78fcc7bdd8b3a2fe326655ab88346e9c48a6e3f1c5c6e",
+        "entire_response_equal": true
+      },
+      {
+        "case": "reverse-held-reset",
+        "previous_response": "runs/evas-source-shape-20261017/reference-pairs-final3/reverse-held-reset/response.json",
+        "previous_sha256": "a4c1eb17146ed0d546255d448066834e5c2a6272725e862581c9a08014784e96",
+        "new_response_sha256": "a4c1eb17146ed0d546255d448066834e5c2a6272725e862581c9a08014784e96",
+        "entire_response_equal": true
+      },
+      {
+        "case": "causal-retarget-correlation",
+        "previous_response": "runs/evas-source-shape-20261017/mechanism-pairs-final3/causal-retarget-correlation/response.json",
+        "previous_sha256": "f9b83c37220ef458c9cfbbd1efaa852caeeb3970241f3ad1977ca34f957f747e",
+        "new_response_sha256": "f9b83c37220ef458c9cfbbd1efaa852caeeb3970241f3ad1977ca34f957f747e",
+        "entire_response_equal": true
+      },
+      {
+        "case": "transition-network-condition",
+        "previous_response": "runs/evas-source-shape-20261017/mechanism-pairs-final3/transition-network-condition/response.json",
+        "previous_sha256": "139eb518e08872f00c9ea5023028cb5f019ccb750207280f3bce860277bb85f4",
+        "new_response_sha256": "139eb518e08872f00c9ea5023028cb5f019ccb750207280f3bce860277bb85f4",
+        "entire_response_equal": true
+      },
+      {
+        "case": "adjacent-internal-transition-roots",
+        "previous_response": "runs/evas-source-shape-20261017/diagnosis-pairs-final3/adjacent-internal-transition-roots/response.json",
+        "previous_sha256": "acdd39b5bc8ef5fadaa02fd134282297bc5d0274ae75e4f5167a834d319ed97a",
+        "new_response_sha256": "acdd39b5bc8ef5fadaa02fd134282297bc5d0274ae75e4f5167a834d319ed97a",
+        "entire_response_equal": true
+      },
+      {
+        "case": "independent-interrupted-continuous-ends",
+        "previous_response": "runs/evas-source-shape-20261017/diagnosis-pairs-final3/independent-interrupted-continuous-ends/response.json",
+        "previous_sha256": "a05ad9508e48044ec61f20050e0a810eddebeaaf7dfa309f40ad30b6c38e9e17",
+        "new_response_sha256": "a05ad9508e48044ec61f20050e0a810eddebeaaf7dfa309f40ad30b6c38e9e17",
+        "entire_response_equal": true
+      },
+      {
+        "case": "internal-conditioned-cascade",
+        "previous_response": "runs/evas-source-shape-20261017/cascade-pilot-final3/response.json",
+        "previous_sha256": "e5dad534ccff34e3d8dc79c87487b9691fbb512aee9780dc87ebf3ab915a53da",
+        "new_response_sha256": "e5dad534ccff34e3d8dc79c87487b9691fbb512aee9780dc87ebf3ab915a53da",
+        "entire_response_equal": true
+      }
+    ],
+    "scope": "same source/VA/stimulus/tolerances, exact complete EVAS response equality permits reuse of previous actual Spectre native comparison and independent oracle; no new remote execution"
+  },
+  "debug_timeout_history": [
+    {
+      "status": "failed",
+      "returncode": 2,
+      "seconds": 120.09142629202688,
+      "inputs": {
+        "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c0/tb.scs": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1"
+      },
+      "kernel_sha256": "006b04de47dd9de9b0278ba0481b64a3597655e7bb68d7e616f2eb68c97cd193"
+    },
+    {
+      "status": "failed",
+      "returncode": 2,
+      "seconds": 120.0951140000252,
+      "inputs": {
+        "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c0/tb.scs": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1"
+      },
+      "kernel_sha256": "006b04de47dd9de9b0278ba0481b64a3597655e7bb68d7e616f2eb68c97cd193"
+    }
+  ],
+  "remaining": "原查询对近邻因果根闭包与相位、两个宽窗条件分支的恢复、四个相邻浮点mode请求仍未支持；原checker失败保留；本次未发现新的错误接受，非一般支持结案",
+  "retention": "紧凑数学及判定公开；原VA/request/response、冻结核、构建/guardian收据及原实际Spectre raw为local-only，位于runs/evas-source-shape-20261017/p0及checked/p0-*；历史原件路径保留；hash不是公开下载",
+  "release_original23": {
+    "count": 23,
+    "completed": 23,
+    "checker_passed": 22,
+    "cleanup_confirmed": 23,
+    "response_matches_original_debug": {
+      "270": true,
+      "272": true,
+      "273": true,
+      "347": true,
+      "354": true,
+      "020": true,
+      "021": true,
+      "022": true,
+      "028": true,
+      "030": true,
+      "031": true,
+      "032": true,
+      "033": true,
+      "034": true,
+      "035": true,
+      "046": true,
+      "073": true,
+      "082": true,
+      "083": true,
+      "086": true,
+      "094": true,
+      "095": true,
+      "099": true
+    }
+  }
+}

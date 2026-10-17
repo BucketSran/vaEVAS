@@ -306,22 +306,23 @@ mod sharing_tests {
         assert_eq!(later.time_bounds, I::point(time.next_up()));
         assert!(later.exact_root.is_none());
 
-        // Explicit inconsistent evidence reaches the unchanged transition
-        // guard; a retained window must not repair a newly supplied root.
-        let bad = retained
+        // A retained window cannot repair newly supplied inconsistent evidence.
+        let error = retained
             .prepare(time, I::point(time), &[I::ONE], Some(&root))
+            .err()
             .unwrap();
-        assert_eq!(bad.time_bounds, I::point(time));
+        assert_eq!(error.kind, "condition_precision");
+        assert!(retained.same_epoch(&before));
         let mut history = crate::transition::Transition::new(0., 0., 0.125, 0.125).unwrap();
         let old_history = history.clone();
         let error = history
             .advance_at_with_exact(
                 time,
-                bad.time_bounds,
-                bad.target.value,
-                bad.target.bounds,
-                bad.changed,
-                bad.exact_root.as_ref(),
+                I::point(time),
+                retained.target.value,
+                retained.target.bounds,
+                true,
+                Some(&root),
             )
             .unwrap_err();
         assert_eq!(error.kind, "event_resolution");

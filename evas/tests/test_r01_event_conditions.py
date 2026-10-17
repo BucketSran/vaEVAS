@@ -2,6 +2,7 @@
 GUARDS = ["EVENT-ORDER", "EVENT-CONDITIONS"]
 
 import unittest
+from fractions import Fraction as F
 
 from evas import KernelError
 from test_event_conditions import execute, source, states
@@ -26,12 +27,15 @@ class OrderedStateConditions(unittest.TestCase):
         result = execute(text, times=[0, .125, .5, .75, 1], step=.0625)
         self.assertEqual(states(result), [0, 0, 1, 1, 0])
 
-    def test_uncertain_prior_sample_cannot_choose_branch_from_rounded_zero(self):
-        # The exact midpoint of the submitted binary64 endpoints differs from
-        # 0.5; floating evaluation rounds to zero. Its enclosure straddles zero.
+    def test_exact_prior_sample_decides_sign_but_true_band_stays_unknown(self):
+        # The original midpoint difference is exactly1/2^56, even though
+        # floating subtraction rounds to zero. A source proof decides its sign.
         text = source('q=V(u,r)-0.5; if(q>0) q=1; else q=-1;')
+        self.assertGreater((F(.1)+F(.9))/2-F(.5),0)
+        self.assertEqual(states(execute(text,points=[[0,.1],[1,.9]])),[0,1,1])
+        # Preserve a truly unknown sign, rather than only arithmetic width.
         with self.assertRaisesRegex(KernelError, 'event_condition'):
-            execute(text, points=[[0, .1], [1, .9]])
+            execute(text,points=[[0,.1],[1,.9]],source_errors={'u':1e-12})
 
     def test_joint_voltage_feedback_is_rejected_when_used_by_later_state_predicate(self):
         text = source('q=0.5*V(y,r)+1; if(q>1) q=2; else q=3;')

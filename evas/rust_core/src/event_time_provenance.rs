@@ -695,6 +695,7 @@ mod tests {
             solution: circuit.solve(&trajectory.values(0.)).unwrap(),
             circuit,
             operators,
+            value_proofs: Default::default(),
             time_proofs: TimeProofs::from([(0, root(R::new(1.into(), 4.into())))]),
         };
         let calendar = crate::schedule::schedule_held(&model, &trajectory, &bounds).unwrap();

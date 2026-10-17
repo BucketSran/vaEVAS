@@ -32,7 +32,7 @@ impl Default for Work {
     }
 }
 impl Work {
-    fn limited(limits: [u64; 3]) -> Self {
+    pub(crate) fn limited(limits: [u64; 3]) -> Self {
         Self(Arc::new(Counters {
             plans: AtomicU64::new(0),
             cuts: AtomicU64::new(0),
@@ -40,7 +40,7 @@ impl Work {
             limits,
         }))
     }
-    fn debit(&self, slot: usize, amount: u64) -> Result<(), Error> {
+    pub(crate) fn debit(&self, slot: usize, amount: u64) -> Result<(), Error> {
         let counter = [&self.0.plans, &self.0.cuts, &self.0.work][slot];
         // Failed reservations remain exhausted; a candidate clone cannot refund
         // proof work already attempted in this request.
@@ -67,7 +67,7 @@ impl Work {
         }
         Ok(())
     }
-    fn step(&self) -> Result<(), Error> {
+    pub(crate) fn step(&self) -> Result<(), Error> {
         self.debit(2, 1)
     }
     fn exact(&self) -> Result<(), Error> {
@@ -713,11 +713,24 @@ impl Plan {
         if !time_bounds.finite() || time_bounds.lo > time_bounds.hi {
             return Err(invalid("invalid source-target event time"));
         }
+        if root.is_some_and(|r| r.refine(time_bounds).is_none()) {
+            return Err(invalid(
+                "source-target incoming root is outside its event window",
+            ));
+        }
         if time_bounds.lo < 0. || time_bounds.hi > self.spec.trajectory.config.stop {
             return Err(invalid("source-target time outside proven domain"));
         }
         for cut in self.cuts.iter() {
             if cut.bounds.lo <= time_bounds.hi && time_bounds.lo <= cut.bounds.hi {
+                // The source boundary is already at/before the lower endpoint,
+                // while the proved physical event is strictly later. Closed
+                // enclosure contact cannot reverse this exact ordering.
+                if cut.bounds.hi <= time_bounds.lo
+                    && root.is_some_and(|r| r.order(&cut.exact) == std::cmp::Ordering::Greater)
+                {
+                    continue;
+                }
                 // A requested binary64 point at the lower endpoint is still
                 // strictly before a nonpoint real cut. Enclosure contact is
                 // not an event coincidence or a target change.

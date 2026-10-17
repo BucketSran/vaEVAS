@@ -10,8 +10,8 @@ match a separately derived rational answer, the committed state values and the
 observed event multiplicity. Event-body statements execute in program order and
 are never permuted here. Voltage comparisons use the shared development
 tolerance; no exact cross-backend floating equality is required. Negative
-controls exercise a genuinely uncertain branch condition and a simultaneous
-state-writer conflict. These are development regressions, not new conditions in
+controls exercise a simultaneous state-writer conflict; genuinely unknown input
+bands remain covered by test_event_value_precision. These are development regressions, not new conditions in
 the fixed DVS set.
 """
 # Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
@@ -248,11 +248,22 @@ class NightSemanticVariants(unittest.TestCase):
         return transient(program, {"u": points}, [0, .5, 1], stop=1, max_step=1,
                          kernel=KERNEL, vabstol=1e-12, reltol=1e-10)
 
-    def test_uncertain_branch_condition_is_refused_and_decidable_input_passes(self):
-        # The exact midpoint of the submitted binary64 endpoints differs from
-        # 0.5 and its enclosure straddles 0.5, so no branch may be selected.
-        with self.assertRaisesRegex(KernelError, "event_condition"):
-            self.uncertain_run([[0, .1], [1, .9]])
+    def test_exact_midpoint_condition_preserves_sample_and_operator_history(self):
+        # The old interval-only refusal is now resolved by an exact source
+        # certificate. The original binary64 midpoint is strictly above .5.
+        # Truly unknown input-band selection remains a rejection in
+        # EventValuePrecision.test_uncertain_input_cannot_seed_an_exact_value.
+        midpoint=(F(.1)+F(.9))/2
+        self.assertGreater(midpoint,F(.5))
+        result=self.uncertain_run([[0, .1], [1, .9]])
+        held=F(1,4)+midpoint/2
+        for t,row,state in zip([F(0),F(1,2),F(1)],result['solutions'],result['transient']['states']):
+            self.assertEqual(state[0],int(t>=F(1,2)))
+            sampled=F(1,4) if t<F(1,2) else held
+            edge=max(F(0),min(F(1),2*(t-F(1,2))))
+            integral=F(.1)*t+(F(.9)-F(.1))*t*t/2
+            self.assertLessEqual(abs(F(state[1])-sampled),ERROR)
+            self.assertLessEqual(abs(F(row['voltages'][result['nodes'].index('y')])-(edge+sampled+2*integral)),ERROR)
         # Same model with a provably sub-threshold sample takes the else branch.
         result = self.uncertain_run([[0, .1], [1, .7]])
         self.assertEqual(result["transient"]["states"], [[0, .25], [1, 0], [1, 0]])
