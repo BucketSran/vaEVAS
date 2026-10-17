@@ -47,6 +47,15 @@
 python3 -B -m unittest discover -s experiments/performance -p 'test_*.py' -v
 ```
 
+## #138 恢复轮分析（2026-10-17）
+
+issue #138 恢复探索的首轮只读分析：[热点重测与切片排序](analysis-20261017/2026-10-17-evas-acceleration-analysis.md)
+（main `e2c7aac7`：nonlinear_idt ≈ 220 ms 主导；trial 全量 clone、事件全量重建、非线性区间
+Jacobian 每步重算三处代码证据）、[外部加速调研](analysis-20261017/2026-10-17-external-acceleration-survey.md)
+（Spectre-X/PrimeSim/Xyce/KLU/batched BLAS 做法与仿射算术等数学方向）与
+[候选扩展提案](analysis-20261017/2026-10-17-issue138-extension-proposal-draft.md)（E1–E5）。
+实施切片以 PR 为准（P03 → #205、P05 → #207），报告只保留分析与依据。
+
 ## 固定矩阵复用与稀疏消元实测
 
 [紧凑收据](results.json)保存配对结果、阶段、次数、内存和执行身份。相同请求与容差在基线/候选 release 内核上各运行五次独立进程，交替顺序。诊断开关及两个内核的输出逐字节相同，并通过基准内的独立答案。
