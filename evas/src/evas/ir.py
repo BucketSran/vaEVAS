@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 23
+SCHEMA_VERSION = 24
 
 
 @dataclass(frozen=True)

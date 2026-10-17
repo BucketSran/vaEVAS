@@ -313,7 +313,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
     times=[t for i in range(count+1) if (t:=float(i*Q(step)))<stop]+[stop]
     if any(a>=b for a,b in zip(times,times[1:])):
         fail('output times collapse at binary64 resolution')
-    waveforms,rounding,source_errors,pulse_proofs={},{},{},{}
+    waveforms,rounding,source_errors,pulse_proofs,source_shapes={},{},{},{},{}
     for nodes,settings,token in source_specs:
         def source_fail(message,*,unsupported=False):
             _fail(message,token,unsupported=unsupported)
@@ -324,9 +324,13 @@ def load_scs(path: str | Path) -> ScsTestbench:
         waveforms[net]=[[t,v if nodes[1]=='0' else -v] for t,v in points]
         rounding[token.text]=error
         if proof is not None:
+            shape = proof.pop('source_shape',None)
             pulse_proofs[token.text]=proof
             if proof['voltage_error_bound_V']>0:
                 source_errors[net]=proof['voltage_error_bound_V']
+                if shape is not None:
+                    sign = 1 if nodes[1]=='0' else -1
+                    source_shapes[net]=[dict(knot,value_V=sign*knot['value_V']) for knot in shape]
     # Keep the physical PWL definition intact. Saving every source corner
     # prevents a later linear interpolation of the saved drive from skipping
     # a pulse or replacing a piecewise-linear segment by a different line.
@@ -402,6 +406,8 @@ def load_scs(path: str | Path) -> ScsTestbench:
                   transient=dict(sources=waveforms,output_times=times,stop=stop,max_step=step,**strobe))
     if source_errors:
         manifest['transient']['source_errors']=source_errors
+    if source_shapes:
+        manifest['transient']['source_shapes']=source_shapes
     metadata=dict(input_format='spectre-voltage-subset',path=str(path),sha256=hashlib.sha256(text.encode()).hexdigest(),
                   model_sha256=model_sha256,
                   effective_tolerances=effective,output_grid='union of 0, k*maxstep below stop, stop, source corners within stop',

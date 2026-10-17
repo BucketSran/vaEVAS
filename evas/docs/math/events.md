@@ -1,6 +1,6 @@
 # 事件、时间推进与历史
 
-适用范围：IR22 的 `cross`、固定/保持状态 `timer`、受限事件体条件、事件 OR、多事件写者及模型步长请求。
+适用范围：IR24 的 `cross`、固定/保持状态 `timer`、受限事件体条件、事件 OR、多事件写者及模型步长请求。
 能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE；支持与缺口见[四后端支持范围](../COMPARISON.md)。
 
 本页维护定位、顺序赋值和同刻关系。历史的复位、观察及未来传播见
@@ -546,11 +546,10 @@ Spectre 的闭源实现不能由波形反推出完整算法；固定 V3 实验�
 
 外部源可另给逐源的绝对电压误差上界。Python `transient` 的 `source_errors`
 按驱动节点命名；原生请求 `transient.pwl_errors_V` 按 `pwl/driven` 顺序排列，长度必须一致，
-每项为有限非负电压值。省略表示全零，显式 null 或错误长度拒绝。这不改变 Program IR。
+每项为有限非负电压值，或下述 IR24 的物理曲线描述。省略表示全零，显式 null 或错误长度拒绝。
 对于非零误差 `E`，`Trajectory.value_bounds` 在名义 PWL 插值的区间上加 `[-E,E]`，
 并清除该源的精确曲线证明。固定 timer 的 real 采样使用此区间；后续状态电压放大继续检查原误差预算。
-该请求目前拒绝所有算子、cross 和保持状态 timer，避免用单一幅度界冒充导数或根时刻证明。
-零误差源保留原路径。这是有限源误差支持，尚不涵盖动态消费者。
+仅有幅度界的请求拒绝所有算子、cross 和保持状态 timer，避免把单一幅度界当作导数或根时刻证明。零误差源保留原路径。
 
 SCS pulse 的原时间参数是已解析 binary64 的精确有理数。设精确拐点为 `t_k`，保存拐点为 `s_k`，
 `D=max(abs(s_k-t_k))`，最大原坡度 `L=abs(val1-val0)/min(rise,fall)`。
@@ -561,6 +560,76 @@ SCS pulse 的原时间参数是已解析 binary64 的精确有理数。设精确
 [scs_sources.py](../../src/evas/scs_sources.py)、[pwl.rs](../../rust_core/src/pwl.rs) 和
 [test_source_uncertainty.py](../../tests/test_source_uncertainty.py)。原曲线的有理数角点和舍入差保留在运行元数据，
 不把保存 PWL 当作原 pulse 的精确定义。
+
+<a id="physical-source-shape"></a>
+
+### 已知物理源曲线
+
+IR24 的 `pwl_errors_V` 还接受 `{voltage_error_bound_V, exact_knots}`。每个角点含
+十进制整数字符串 `time_numerator`、正的 `time_denominator` 和有限 binary64 `value_V`。
+Python 保留 `source_errors` 的数值接口，另以 `source_shapes={节点名: 角点列表}` 提交曲线。
+这份描述声明唯一的连续物理 PWL，不表示幅度带内任意扰动。内核仍验证声明的非零投影误差。
+
+令名义曲线为 `n(t)`，物理曲线为 `f(t)`，声明幅度界为 `E`。
+两者角点的并集划分时间轴；每段上的 `f-n` 都是仿射函数。
+内核用精确有理数验证并集的每个端点满足 `|f-n|<=E`，从而证明整个 `[0,stop]` 的包含关系。
+实际电压取 `f(t)`，每次转 binary64 的向外舍入区间继续进入方程、状态与下游电压验收。
+已识别物理曲线后，投影带用于验证名义表示与物理输入的关系，不再作为任意噪声重复叠加。
+无法给出物理求值时仍保留名义插值和原幅度带的保守路径，不能无界接受。
+
+cross 在物理角点分区上完整枚举根，保留原有到零触发、方向、精确根排序和事件窗验收。
+不能在发生位移的名义角点之间直接插值来代替物理分区。已认证根通过现有 `RootTime`、日历与
+接受/候选 transition 历史传递；误差仍由各消费阶段检查。查询不改变历史，失败候选不提交状态或队列。
+
+曲线限 2 至 512 点、严格递增、始于零并覆盖 stop；整数解析长度不超过 1250 字符，
+有理运算分子/分母不超过 4096 位，复用现有运算与表达式预算。格式、顺序、覆盖或投影带不足时拒绝。
+SCS pulse 仅在该预算内附带原始角点，较大 pulse 保留幅度界和原消费者边界。
+本轮允许已支持的 cross、保持状态 timer 与 transition 组合；不开放非零源误差的
+idt、ddt、laplace、slew、absdelay。普通幅度带的拒绝边界保持，#131 同刻规则不变。
+
+代码入口为 `scs_sources.voltage_points`、`runtime.transient`、`Curve.shaped/range/crossings`、
+`Trajectory` 与 `schedule_with_history`。独立 Fraction 回归见
+[test_source_shape.py](../../tests/test_source_shape.py)，涵盖位移角点、舍入放大拒绝、反向接地、
+零宽脉冲、实例隔离、反馈、timer 复位及查询网格；内核测试检查全分区范围、到零与资源边界。
+实际参考及原请求结果见[物理源曲线证据](../../../experiments/backends/support/source-shape/README.md)。
+
+<a id="causal-transition-composition"></a>
+
+### 物理采样算术与 transition 组合
+
+IR24 候选允许事件赋值由本实例的保持状态和实际 driven 电压组成有限非线性标量算术。
+例如 `a=0.3*u*u; b=a; if(b-a<0)...` 按语句顺序求值，后续语句读此前赋值。
+每次赋值保留原表达式的区间包围；可用的有理数证明只能在原包围内收紧结果，未知证明立即清除。
+真实输入幅度不确定性不会变成精确值；下游放大仍须满足电压预算。
+电气未知量参与的非线性同刻反馈不在此范围，观察实例专用的数学函数、数组和循环也不能借此准入。
+结构扫描覆盖完整原事件体，包括条件和未走分支。
+
+事件条件可读取无环电压网络中的已认证 transition 样本。网络先展开到实际输入、保持状态和
+冻结的算子样本，再检查依赖；同刻写入经电压网络返回条件的环仍拒绝。冻结样本不改变历史。
+连续 transition 也可作为另一 transition 目标谓词的输入，但叶子仍为保持值。
+`transition_history_target.rs` 对全部源角点、父历史边界和谓词根分区，按无环依赖顺序建立候选计划；
+源或保持状态修改后重建。缓存绑定原程序、轨迹、父历史修订和状态包围，查询不能移动目标切换时刻。
+候选共享请求级工作预算，失败不退还已消费的预算；积分或滤波器直接消费这类选择目标仍不支持。
+
+中断边沿只有在原物理分区内证明为同一直线 `v(t)=A+B*t` 时，才保留精确起点和直线证明。
+`Curve.affine_on` 检查区间内的全部角点，不能用端点连线替代折线。由直线与目标交点得到的
+精确结束时间仅补充原期限包围，不移动名义波形或重置误差。无法证明的中断结束次序仍拒绝。
+两个独立的连续边沿结束点可在同一代表步消费，因为它们不产生目标或状态的离散修改；
+待激活目标和零延迟开始不使用这条规则。每个原物理波形及查询误差检查仍分别保留。
+
+日历中相连的重叠根簇若至少含一个 transition guard，只有每个根都有独立精确证书、
+且每组的共同 binary64 代表时刻严格早于下一真实根时才可排序执行。
+真实根之间没有可用代表时刻时仍拒绝；同根分组、原容差与固定前驱保护保持。
+这不开放一个浮点时间间隔内的一般微事件执行，也不改变 #131 的同刻读取规则。
+
+实现由 `causal_event.rs`、`causal_voltage.rs`、`event_value_proof.rs`、
+`transition_history_target.rs`、`transition.rs` 与 `schedule.rs` 共同承担。
+独立回归见 [采样算术](../../tests/test_causal_event_math.py)、
+[数值关联](../../tests/test_event_value_precision.py)、
+[连续条件与排序](../../tests/test_transition_event_conditions.py)和
+[精确期限](../../tests/test_exact_transition_deadlines.py)。真实控制器的晚期失败、回滚和同实例重试
+由 `transient_lifecycle_tests.rs` 与 history-target 工作预算测试覆盖。
+实际参考与未通过原 checker 的兼容差异保留在[源曲线证据](../../../experiments/backends/support/source-shape/README.md)。
 
 对于没有外部源误差的请求，通过上述限制，固定状态下的方程系数不变，输入每个分段内的节点电压和 guard 都是时间的仿射函数。
 guard 的状态独立性允许提前生成事件日程。内核同时进行普通求解和保守误差界计算：
@@ -820,7 +889,8 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 读取 rst 并选择复位或采样。所有分支都做静态合法性检查，执行时只判断沿路径实际到达的条件。
 `initial_step` 的电压初始化只读实际 driven 输入。事件谓词按源码顺序读取同块先前写入，
 同时传播完整误差包围。例如 `q=q+1; if(q>=2) q=0;` 使用递增后的 q。
-物理事件的谓词不能依赖待联立求解的电压赋值状态、历史算子或经电压网络返回的状态；
+物理事件的谓词不能依赖待联立求解的电压赋值状态或经电压网络返回的状态；
+有限 transition 样本与无环网络的候选扩展见[组合边界](#causal-transition-composition)；
 独立测量实例的例外见下节。无法证明分支时拒绝。
 结构依赖先检查，再作区间消元；`0*q`、`q-q`、下溢系数均不能作为独立性证明。
 内部无状态网络如 `z=2*rst-1/4` 可以作为谓词来源。
@@ -896,7 +966,7 @@ initial_step 与固定 start=0 的 timer 保留原执行顺序，后者后续周
 独立初始测量不会要求旧方程越过已知物理事件预测到 stop。例如 `z′=q z²`、z(0)=1、q 初值 1，在 timer(.5) 将 q 改为 −1；真实曲线在 .5 前为 1/(1−t)，之后为 1/t。初始 Display 不能迫使 q=1 的旧流算到 t=2，因为旧流在 t=1 发散，而真实请求仍有限。
 仅在原 IR 证明初始实例完全隔离、且没有动态或历史 guard 时，初始化先预测到当前日历首个期限。再用候选初态重建 held timer 日历，预测到新的首个期限，完成未来历史与输出认证后一起提交。`due=0` 改为未来值或禁用会改变第二个期限；仍为零的 timer 保留给主循环执行，不把 initial 当成已消费 timer。初始测量体和 Display 只执行一次。其他初始化路径保留原策略。
 独立曲线、改期、零 timer 与查询网格检查见 [test_initial_observer_horizon.py](../../tests/test_initial_observer_horizon.py)。
-一般电路反馈谓词与非隔离非线性事件赋值仍未支持；隔离统计数学的有限扩展见[事件数学](#event-math)。
+一般电路反馈谓词与非线性电气联立赋值仍未支持；隔离统计数学的有限扩展见[事件数学](#event-math)。
 
 实现见[实例隔离与投影](../../rust_core/src/passive_events.rs)、
 [物理事件提交](../../rust_core/src/transient.rs)与[物理采样区间](../../rust_core/src/settlement_bounds.rs)。

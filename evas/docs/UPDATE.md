@@ -4,6 +4,18 @@
 逐项证据见[证据索引](development/capability-evidence.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
 
+## 开发候选 IR24：有限物理源曲线
+
+IR24 扩展请求中的源误差项，可携带不超过 512 点的精确有理角点。
+内核验证原非零投影带，按物理曲线求值及完整分区定位 cross，并继续传播数值舍入误差。
+它复用现有 transition 历史与保持状态 timer，不开放一般幅度不确定性或其他连续算子。
+[数学契约](math/events.md#physical-source-shape)与[实际参考](../../experiments/backends/support/source-shape/README.md)限定其范围。
+最终冻结内核完整执行23条原请求，原checker通过22/23；347有两处失败，
+已用独立有理数与实际 Spectre 诊断解释为精确根采样与晚回调的兼容差异。用户选择保留既有语义并交付未合并候选。
+采样算术保留原包围，有限无环 transition 目标与精确期限按[组合合同](math/events.md#causal-transition-composition)验证；
+观察实例专用数学函数及一般电气非线性反馈仍拒绝。
+此候选尚未合并；包版本沿用 0.19.0，前端与内核须配套使用 IR24，旧 IR1–23 从原 VA 重编译。
+
 ## EVAS 0.19.0 / IR23：有界事件循环与数组
 
 独立测量实例可在普通事件和 final_step 中使用运行期 integer 循环、带检查的数组读写。

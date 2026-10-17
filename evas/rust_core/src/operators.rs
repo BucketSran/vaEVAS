@@ -979,6 +979,7 @@ fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
 
 #[derive(Clone, Default)]
 pub(crate) struct Operators {
+    history_targets: std::collections::BTreeMap<usize, history_target::TargetPlan>,
     entries: Vec<Runtime>,
     changes_on_advance: Vec<bool>,
     direct: Vec<Option<DirectInput>>,
@@ -986,6 +987,9 @@ pub(crate) struct Operators {
     horizon: f64,
     isolated_parameters: Vec<(usize, f64)>,
 }
+
+#[path = "transition_history_target.rs"]
+mod history_target;
 
 // Only structurally isolated instance slots are normalized here. The
 // Controller retains actual measurement states; physical history never uses
@@ -1266,11 +1270,112 @@ impl Evaluation<'_> {
 }
 
 impl Operators {
+    #[allow(clippy::too_many_arguments)]
+    fn refresh_history_targets(
+        &mut self,
+        time: f64,
+        window: I,
+        states: &[f64],
+        bounds: &[I],
+        changed: &[usize],
+        initial: bool,
+        exact_root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<(), Error> {
+        let mut pending: BTreeSet<_> = self.history_targets.keys().copied().collect();
+        let mut ordered = Vec::new();
+        while !pending.is_empty() {
+            let next = pending
+                .iter()
+                .copied()
+                .find(|i| {
+                    self.history_targets[i]
+                        .dependencies
+                        .iter()
+                        .all(|d| !pending.contains(d))
+                })
+                .ok_or_else(|| {
+                    Error::new(
+                        "unsupported_operator",
+                        "transition target history dependency cycle is unsupported",
+                    )
+                })?;
+            pending.remove(&next);
+            ordered.push(next);
+        }
+        for index in ordered {
+            if self.entries.iter().any(|e|matches!(e,Runtime::TransitionFilter{parent,..}|Runtime::TransitionIntegral{parent,..} if *parent==index)) {
+                return Err(Error::new("unsupported_operator","integral/filter consumers of history-selected transition targets are unsupported"));
+            }
+            let old = &self.history_targets[&index];
+            if self.horizon <= time {
+                if let Runtime::Transition { history, .. } = &mut self.entries[index] {
+                    history.advance_time(time)?;
+                }
+                continue;
+            }
+            let event_window = old.window_at(time).map_or(window, |cut| cut.hull(window));
+            let until = old
+                .dependencies
+                .iter()
+                .filter_map(|d| self.history_targets.get(d)?.next_after(time))
+                .fold(self.horizon, f64::min);
+            let plan = old.prepared(time, event_window, bounds, &self.entries, until)?;
+            let Runtime::Transition {
+                input,
+                input_bounds,
+                history,
+                program,
+                owner,
+                ..
+            } = &mut self.entries[index]
+            else {
+                unreachable!()
+            };
+            let (next, row) = transition_input(&plan.selected, program, bounds, owner)?;
+            let level = row
+                .iter()
+                .zip(bounds.iter().copied().chain([I::ONE]))
+                .fold(I::ZERO, |a, (&b, c)| a + b * c);
+            let value = next.value(&[], states)?;
+            if initial {
+                let OperatorSpec::Transition {
+                    delay, rise, fall, ..
+                } = &program.operators[index]
+                else {
+                    unreachable!()
+                };
+                **history = Transition::enclosed(value, level, *delay, *rise, *fall)?;
+            } else {
+                let may_change = plan.selected != old.selected
+                    || changed.iter().any(|s| next.state_dependencies.contains(s));
+                history.advance_at_with_exact(
+                    time,
+                    event_window,
+                    value,
+                    level,
+                    may_change,
+                    exact_root.or_else(|| old.root_at(time)),
+                )?;
+            }
+            *input = next;
+            *input_bounds = row;
+            self.history_targets.insert(index, plan);
+        }
+        Ok(())
+    }
     pub(crate) fn exact_affine_value(
         &self,
         op: usize,
         local: bool,
+        bounds: I,
     ) -> Option<(num_rational::BigRational, num_rational::BigRational)> {
+        if !local {
+            if let Runtime::Transition { history, .. } = self.entries.get(op)? {
+                let mut history = (**history).clone();
+                history.advance_time(bounds.lo).ok()?;
+                return history.exact_affine_on(bounds);
+            }
+        }
         self.continuous.as_ref()?.exact_affine_value(op, local)
     }
 
@@ -1378,7 +1483,7 @@ impl Operators {
                         ..
                     },
                 ) => function.bounds(*constant_bounds + *coefficient_bounds * bounds[*operator])?,
-                Runtime::Transition { history, .. } => history.value_range(window)?,
+                Runtime::Transition { history, .. } => history.observation_range(window)?,
                 _ => {
                     return Err(Error::new(
                         "event_resolution",
@@ -1489,8 +1594,11 @@ impl Operators {
             Continuous::new_until(program, trajectory, driven, states, horizon, tolerances)?
                 .map(Arc::new);
         let source_work = crate::transition_source_plan::Work::default();
+        let history_work =
+            crate::transition_source_plan::Work::limited([8192, 8192, 1_000_000_000]);
         let mut entries = Vec::new();
         let mut direct = Vec::new();
+        let mut history_targets = std::collections::BTreeMap::new();
         for (index, spec) in program.operators.iter().enumerate() {
             let direct_input = match spec {
                 OperatorSpec::Idt { input, origin, .. }
@@ -1709,6 +1817,41 @@ impl Operators {
                     fall,
                     origin,
                 } => {
+                    if let Some(plan) = history_target::TargetPlan::specification(
+                        input,
+                        program,
+                        trajectory,
+                        driven,
+                        &origin.instance,
+                        history_work.clone(),
+                    )? {
+                        let (affine, row) = transition_input(
+                            &Expression::Affine {
+                                constant: 0.,
+                                terms: vec![],
+                            },
+                            program,
+                            &states.iter().copied().map(I::point).collect::<Vec<_>>(),
+                            &origin.instance,
+                        )?;
+                        entries.push(Runtime::Transition {
+                            input: affine,
+                            input_bounds: row,
+                            history: Box::new(Transition::enclosed(
+                                0.,
+                                I::ZERO,
+                                *delay,
+                                *rise,
+                                *fall,
+                            )?),
+                            expression: input.clone(),
+                            program: Arc::new(program.clone()),
+                            owner: origin.instance.clone(),
+                            source: None,
+                        });
+                        history_targets.insert(index, plan);
+                        continue;
+                    }
                     let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
                     let source = crate::transition_source_plan::Spec::new(
                         input,
@@ -1840,14 +1983,25 @@ impl Operators {
             };
             changes_on_advance.push(changes);
         }
-        Ok(Self {
+        let mut result = Self {
+            history_targets,
             entries,
             changes_on_advance,
             direct,
             continuous,
             horizon,
             isolated_parameters,
-        })
+        };
+        result.refresh_history_targets(
+            0.,
+            I::ZERO,
+            states,
+            &states.iter().copied().map(I::point).collect::<Vec<_>>(),
+            &[],
+            true,
+            None,
+        )?;
+        Ok(result)
     }
 
     pub(crate) fn check_guard(&self, index: usize) -> Result<(), Error> {
@@ -1855,7 +2009,9 @@ impl Operators {
             .entries
             .get(index)
             .ok_or_else(|| Error::new("invalid_ir", "guard operator index out of range"))?;
-        if self.changes_on_advance[index] && !matches!(entry, Runtime::Continuous(_)) {
+        if self.changes_on_advance[index]
+            && !matches!(entry, Runtime::Continuous(_) | Runtime::Transition { .. })
+        {
             return Err(Error::new("unsupported_cross",
                 "cross requires a continuous epoch history; reset/transition history is unsupported"));
         }
@@ -1869,6 +2025,7 @@ impl Operators {
             Runtime::Continuous(_)
             | Runtime::Idt { .. }
             | Runtime::LaplaceNd(_)
+            | Runtime::Transition { .. }
             | Runtime::Math(_, SinInput::Direct(_)) => {}
             Runtime::Math(_, SinInput::Operator { operator, .. }) => self.check_guard(*operator)?,
             _ => {
@@ -1884,6 +2041,7 @@ impl Operators {
     pub(crate) fn keeps_guard_value(&self, index: usize) -> Result<bool, Error> {
         self.check_guard(index)?;
         match &self.entries[index] {
+            Runtime::Transition { .. } => Ok(true),
             Runtime::Continuous(slot) => self
                 .continuous
                 .as_ref()
@@ -1897,6 +2055,11 @@ impl Operators {
         self.check_guard(index)?;
         let entry = &self.entries[index];
         let result = match entry {
+            Runtime::Transition { history, .. } => {
+                let mut history = (**history).clone();
+                history.advance_time(time.lo)?;
+                history.continuous_range(time)?
+            }
             Runtime::Continuous(slot) => {
                 let c = self.continuous.as_ref().unwrap();
                 if !c.is_continuous(*slot) {
@@ -2053,6 +2216,17 @@ impl Operators {
         time: f64,
     ) -> Result<Option<crate::exact_source::RootTime>, Error> {
         let mut root: Option<crate::exact_source::RootTime> = None;
+        for plan in self.history_targets.values() {
+            if let Some(r) = plan.root_at(time) {
+                if root
+                    .as_ref()
+                    .is_some_and(|old| old.order(r) != std::cmp::Ordering::Equal)
+                {
+                    return Err(Error::new("event_resolution",format!("distinct history target roots share representative {time:e}: {:?} and {:?}",root,r)));
+                }
+                root = Some(r.clone());
+            }
+        }
         for entry in &self.entries {
             if let Runtime::Transition {
                 source: Some(source),
@@ -2076,7 +2250,7 @@ impl Operators {
         Ok(root)
     }
 
-    pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
+    fn physical_breakpoint(&self, after: f64) -> Option<f64> {
         self.entries
             .iter()
             .filter_map(|entry| match entry {
@@ -2100,6 +2274,74 @@ impl Operators {
                 Runtime::SlewCascade(history) => history.next_breakpoint(after),
             })
             .min_by(f64::total_cmp)
+    }
+
+    pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
+        self.physical_breakpoint(after)
+            .into_iter()
+            .chain(
+                self.history_targets
+                    .values()
+                    .filter_map(|p| p.next_after(after)),
+            )
+            .min_by(f64::total_cmp)
+    }
+
+    pub(crate) fn next_breakpoint_for_event(
+        &self,
+        after: f64,
+        event: Option<&crate::schedule::ScheduledEvent>,
+        model: &crate::events::EventModel,
+    ) -> Result<Option<f64>, Error> {
+        let Some(event) = event else {
+            return Ok(self.next_breakpoint(after));
+        };
+        let target = self
+            .history_targets
+            .values()
+            .filter_map(|p| p.next_after(after))
+            .min_by(f64::total_cmp);
+        let Some(target) = target else {
+            return Ok(self.physical_breakpoint(after));
+        };
+        let mut aligned = target;
+        for plan in self.history_targets.values() {
+            if let Some(window) = plan.window_at(target) {
+                if window.lo <= event.bounds().hi && event.bounds().lo <= window.hi {
+                    let crate::ir::EventTrigger::Cross { guard, .. } =
+                        &model.triggers[event.event].trigger
+                    else {
+                        return Err(Error::new(
+                            "event_resolution",
+                            "history target cut overlaps an unrelated timer",
+                        ));
+                    };
+                    let same_root = plan
+                        .root_at(target)
+                        .zip(crate::schedule::common_root(std::slice::from_ref(event)))
+                        .is_some_and(|(a, b)| a.order(&b) == std::cmp::Ordering::Equal);
+                    if !same_root && !plan.coincides(target, guard, &model.driven)? {
+                        return Err(Error::new(
+                            "event_resolution",
+                            "history target cut overlaps an unproved user root",
+                        ));
+                    }
+                    aligned = event.time;
+                }
+            }
+        }
+        Ok(self
+            .physical_breakpoint(after)
+            .into_iter()
+            .chain([aligned])
+            .min_by(f64::total_cmp))
+    }
+
+    pub(crate) fn source_window_at(&self, time: f64) -> Option<I> {
+        self.history_targets
+            .values()
+            .filter_map(|p| p.window_at(time))
+            .reduce(I::hull)
     }
 
     pub(crate) fn bounds(&self, time: f64) -> Result<Vec<I>, Error> {
@@ -2233,18 +2475,27 @@ impl Operators {
         }
         for (index, deadline) in deadlines.iter().enumerate() {
             if next_event.is_some_and(|event| {
-                deadline.overlaps(event) && !(event.lo == event.hi && event == deadline.bounds)
+                let accounted = (event.lo == event.hi && event == deadline.bounds)
+                    || deadline.strictly_ordered_with(event)
+                    || next_root
+                        .as_ref()
+                        .is_some_and(|root| deadline.coincides_root(root));
+                deadline.overlaps(event) && !accounted
             }) {
                 return Err(Error::new(
                     "event_resolution",
-                    "cannot certify transition deadline ordering relative to user event",
+                    format!("cannot certify transition deadline ordering relative to user event: after={after:e}, deadline={deadline:?}, event={next_event:?}, exact={next_root:?}"),
                 ));
             }
             for other in &deadlines[index + 1..] {
-                if deadline.overlaps(other.bounds) && !deadline.coincides(other) {
+                if deadline.overlaps(other.bounds)
+                    && !deadline.coincides(other)
+                    && !deadline.serial_representatives(other)
+                    && !deadline.independent_end_checkpoints(other)
+                {
                     return Err(Error::new(
                         "event_resolution",
-                        "cannot certify ordering of operator deadlines",
+                        format!("cannot certify ordering of operator deadlines: {deadline:?} and {other:?}"),
                     ));
                 }
             }
@@ -2418,7 +2669,13 @@ impl Operators {
                 )?));
             }
         }
-        for entry in &mut self.entries {
+        for (index, entry) in self.entries.iter_mut().enumerate() {
+            if self.history_targets.contains_key(&index) {
+                if let Runtime::Transition { history, .. } = entry {
+                    history.advance_time(time)?;
+                }
+                continue;
+            }
             match entry {
                 Runtime::DirectDerivative(_) => {}
                 Runtime::Continuous(_) => {}
@@ -2494,10 +2751,31 @@ impl Operators {
                 Runtime::Slew(_) | Runtime::SlewCascade(_) => {}
             }
         }
+        if install_source {
+            self.refresh_history_targets(
+                time,
+                time_bounds,
+                states,
+                bounds,
+                changed,
+                false,
+                exact_root,
+            )?;
+        }
         Ok(())
     }
 
     pub(crate) fn same_reset_history(&self, other: &Self) -> bool {
+        if self.history_targets.len() != other.history_targets.len()
+            || self.history_targets.iter().any(|(i, p)| {
+                !other
+                    .history_targets
+                    .get(i)
+                    .is_some_and(|q| p.same_epoch(q))
+            })
+        {
+            return false;
+        }
         if self.horizon != other.horizon {
             return false;
         }
@@ -2581,6 +2859,18 @@ fn reset_active(value: I) -> Result<bool, Error> {
 mod phase_operator_tests {
     use super::*;
 
+    fn uncertain_asymmetric_activation(frozen: &Evaluation<'_>) -> Result<Operators, Error> {
+        // Queue insertion is valid. Direction becomes undecidable when this
+        // asymmetric target activates; reject that private trial before commit.
+        let candidate = frozen.advanced(I::point(1.), &[0.25], &[I { lo: 0.2, hi: 0.3 }], &[0])?;
+        candidate.evaluation(1.125)?.advanced(
+            I::point(1.125),
+            &[0.25],
+            &[I { lo: 0.2, hi: 0.3 }],
+            &[],
+        )
+    }
+
     #[test]
     fn transition_filter_candidates_consume_old_edge_and_rollback_failed_targets() {
         use serde_json::json;
@@ -2590,7 +2880,7 @@ mod phase_operator_tests {
             "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","edge","filtered"],
             "states":[{"instance":"dut","name":"q","kind":"real","initial":0.25}],
             "operators":[
-                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.5,"origin":origin(1)},
+                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.75,"origin":origin(1)},
                 {"kind":"laplace_nd","input":{"op":"affine","constant":0,"terms":[{"node":2,"coefficient":1}]},"numerator":[1],"denominator":[1,0.25],"origin":origin(2)}],
             "contributions":[
                 {"branch":{"instance":"dut","local_positive":"edge","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin(3)},
@@ -2612,7 +2902,7 @@ mod phase_operator_tests {
         assert!(base.single_filter_budget(3.).is_some());
         let original = base.bounds(3.).unwrap();
         let frozen = base.evaluation(1.).unwrap();
-        let failed = frozen.advanced(I::point(1.), &[0.25], &[I { lo: 0.2, hi: 0.3 }], &[0]);
+        let failed = uncertain_asymmetric_activation(&frozen);
         assert!(failed.is_err());
         assert_eq!(base.bounds(3.).unwrap(), original);
         let candidate = frozen
@@ -2641,7 +2931,7 @@ mod phase_operator_tests {
             "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","edge","filtered"],
             "states":[{"instance":"dut","name":"q","kind":"real","initial":0.25}],
             "operators":[
-                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.5,"origin":origin(1)},
+                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.75,"origin":origin(1)},
                 {"kind":"laplace_nd","input":{"op":"affine","constant":0,"terms":[{"node":2,"coefficient":1}]},"numerator":[1],"denominator":[1,0.25],"origin":origin(2)}],
             "contributions":[
                 {"branch":{"instance":"dut","local_positive":"edge","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"multiply","left":{"op":"affine","constant":2,"terms":[{"node":1,"coefficient":1}]},"right":{"op":"operator","operator":0}},"origin":origin(3)},
@@ -2673,7 +2963,7 @@ mod phase_operator_tests {
         assert!(zero_base.bounds(1.).unwrap()[1].hi > 0.);
         let original = base.bounds(3.).unwrap();
         let frozen = base.evaluation(1.).unwrap();
-        let failed = frozen.advanced(I::point(1.), &[0.25], &[I { lo: 0.2, hi: 0.3 }], &[0]);
+        let failed = uncertain_asymmetric_activation(&frozen);
         assert!(failed.is_err());
         assert_eq!(base.bounds(3.).unwrap(), original);
         let candidate = frozen
@@ -2705,9 +2995,17 @@ mod phase_operator_tests {
         let accepted = candidate;
         let accepted_before = accepted.bounds(2.5).unwrap();
         let retry_base = accepted.evaluation(1.5).unwrap();
-        assert!(retry_base
+        let failed = retry_base
             .advanced(I::point(1.5), &[1.25], &[I { lo: 1.2, hi: 1.3 }], &[0])
-            .is_err());
+            .and_then(|candidate| {
+                candidate.evaluation(1.625)?.advanced(
+                    I::point(1.625),
+                    &[1.25],
+                    &[I { lo: 1.2, hi: 1.3 }],
+                    &[],
+                )
+            });
+        assert!(failed.is_err());
         assert_eq!(accepted.bounds(2.5).unwrap(), accepted_before);
         let retry = retry_base
             .advanced(I::point(1.5), &[-0.25], &[I::point(-0.25)], &[0])
@@ -2732,7 +3030,7 @@ mod phase_operator_tests {
             "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","edge","filtered"],
             "states":[{"instance":"dut","name":"q","kind":"real","initial":0.25}],
             "operators":[
-                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.5,"origin":origin(1)},
+                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.75,"origin":origin(1)},
                 {"kind":"idt","input":{"op":"affine","constant":0,"terms":[{"node":2,"coefficient":1}]},"ic":0.1,"origin":origin(2)}],
             "contributions":[
                 {"branch":{"instance":"dut","local_positive":"edge","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin(3)},
@@ -2753,7 +3051,7 @@ mod phase_operator_tests {
         let base = Operators::new(&program, &trajectory, &["u".into()], &[0.25]).unwrap();
         let original = base.bounds(3.).unwrap();
         let frozen = base.evaluation(1.).unwrap();
-        let failed = frozen.advanced(I::point(1.), &[0.25], &[I { lo: 0.2, hi: 0.3 }], &[0]);
+        let failed = uncertain_asymmetric_activation(&frozen);
         assert!(failed.is_err());
         assert_eq!(base.bounds(3.).unwrap(), original);
         let candidate = frozen

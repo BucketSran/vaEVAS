@@ -1,0 +1,121 @@
+{
+  "case": "347-power-reset-sequencer-system",
+  "contract": "EVAS nonpoint cross reads at exact mathematical root tau. Spectre21.1 callback is later; preserve both original verdicts. User requested an unmerged candidate retaining this semantic difference.",
+  "diagnosis": {
+    "root_fraction": "20897975288186326203/154742504910672534362390528",
+    "root_seconds": 1.3505e-07,
+    "enable_root_fraction": "5102044748092365/37778931862957161709568",
+    "enable_root_delta_s": 5.4089857242725325e-24,
+    "enable_at_root_fraction": "62720845870878876405741389765185/139379657490826866078039431708672",
+    "enable_at_root_V": 0.4500000000000487,
+    "excess_over_threshold_V": 4.868087151844914e-14,
+    "contract_sample_q": 1,
+    "minimal_q": 1.0,
+    "original_checker": {
+      "passed": false,
+      "note": "v4_347 checked=20 mismatch_count=2 startup_seen=True brownout_seen=True async_clear=True async_checks=394 mismatch_detail=P_PWR_SEQUENCE_ORDER mismatch_count=1 sample_time=1.351e-07 expected=rst_n_core=0 observed=rst_n_core=1 metric_gap=1; P_PWR_SEQUENCE_ORDER mismatch_count=1 sample_time=1.451e-07 expected=en_ana=0 observed=en_ana=1 metric_gap=1"
+    },
+    "kernel_sha256": "4e1c37322eb2a2b43c3f6314415a3435fd86917e28b107e2a78e0d420c0c1dca",
+    "interpretation": "EVAS documented te=tau; checker uses first saved high-clock row135.1ns instead of trigger root135.05ns; semantic inconsistency hypothesis retained"
+  },
+  "spectre_checker": {
+    "passed": true,
+    "note": "v4_347 checked=20 mismatch_count=0 startup_seen=True brownout_seen=True async_clear=True async_checks=506"
+  },
+  "spectre_native_edges": [
+    {
+      "time": 1.3505000000005806e-07,
+      "vdd_sense": 0.9,
+      "clk": 0.45000000052246786,
+      "rst_n_ext": 0.9,
+      "enable_req": 0.44999999947756597,
+      "por_n": 0.9,
+      "rst_n_core": 0.0,
+      "en_ana": 0.0,
+      "en_dig": 0.0,
+      "ready": 0.0
+    },
+    {
+      "time": 1.4505000000005807e-07,
+      "vdd_sense": 0.9,
+      "clk": 0.45000000052246786,
+      "rst_n_ext": 0.9,
+      "enable_req": 0.9,
+      "por_n": 0.9,
+      "rst_n_core": 0.0,
+      "en_ana": 0.0,
+      "en_dig": 0.0,
+      "ready": 0.0
+    }
+  ],
+  "spectre_native_rows": 2298,
+  "effective_settings": {
+    "requested": {
+      "reltol": 1e-10,
+      "vabstol": 1e-12,
+      "iabstol": 1e-15,
+      "stop": 2e-07,
+      "maxstep": 1e-10
+    },
+    "actual": {
+      "reltol": 1e-11,
+      "vabstol": 1e-12,
+      "iabstol": 1e-15,
+      "stop": 2.0000000000000002e-07,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "mismatches": [
+      "reltol"
+    ],
+    "status": "I"
+  },
+  "spectre": {
+    "version": "sub-version  21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f"
+  },
+  "spectre_raw_sha256": "0c4e9562c606b2ef4ae7329d4a35c67f3dcf276126d62caaa19391fa5bcd6ddf",
+  "source_files": {
+    "dut.va": {
+      "content": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule power_reset_seq_top (\n    input  electrical vdd_sense,\n    input  electrical clk,\n    input  electrical rst_n_ext,\n    input  electrical enable_req,\n    output electrical por_n,\n    output electrical rst_n_core,\n    output electrical en_ana,\n    output electrical en_dig,\n    output electrical ready\n);\n    parameter real vhi = 0.9;\n    parameter real vlo = 0.0;\n    parameter real vpor = 0.72;\n    parameter real vth = 0.45;\n    parameter real tr = 200e-12;\n\n    por_detector #(\n        .vhi(vhi),\n        .vlo(vlo),\n        .vpor(vpor),\n        .vth(vth),\n        .tr(tr)\n    ) u_por (\n        vdd_sense,\n        clk,\n        rst_n_ext,\n        por_n\n    );\n\n    reset_synchronizer #(\n        .vhi(vhi),\n        .vlo(vlo),\n        .vth(vth),\n        .tr(tr)\n    ) u_reset_sync (\n        clk,\n        por_n,\n        enable_req,\n        rst_n_core\n    );\n\n    enable_sequencer #(\n        .vhi(vhi),\n        .vlo(vlo),\n        .vth(vth),\n        .tr(tr)\n    ) u_enable_seq (\n        clk,\n        rst_n_core,\n        en_ana,\n        en_dig\n    );\n\n    ready_flag #(\n        .vhi(vhi),\n        .vlo(vlo),\n        .vth(vth),\n        .tr(tr)\n    ) u_ready (\n        clk,\n        en_ana,\n        en_dig,\n        ready\n    );\nendmodule\n",
+      "sha256": "bf3796b5dadee6be331cad8f2f87142fe3f72ec8aed7c013a65b21b098d346c1"
+    },
+    "enable_sequencer.va": {
+      "content": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule enable_sequencer (\n    input  electrical clk,\n    input  electrical rst_n_core,\n    output electrical en_ana,\n    output electrical en_dig\n);\n    parameter real vhi = 0.9;\n    parameter real vlo = 0.0;\n    parameter real vth = 0.45;\n    parameter real tr = 200e-12;\n\n    integer stage;\n    real en_ana_target;\n    real en_dig_target;\n\n    analog begin\n        @(initial_step) begin\n            stage = 0;\n        end\n\n        @(cross(V(clk) - vth, +1)) begin\n            if (V(rst_n_core) <= vth) begin\n                stage = 0;\n            end else if (stage < 2) begin\n                stage = stage + 1;\n            end\n        end\n\n        @(cross(V(rst_n_core) - vth, -1)) begin\n            stage = 0;\n        end\n\n        en_ana_target = (V(rst_n_core) > vth && stage >= 1) ? vhi : vlo;\n        en_dig_target = (V(rst_n_core) > vth && stage >= 2) ? vhi : vlo;\n        V(en_ana) <+ transition(en_ana_target, 0, tr);\n        V(en_dig) <+ transition(en_dig_target, 0, tr);\n    end\nendmodule\n",
+      "sha256": "1955ff0a7575a610cfc69ca27a5ac851c34213cc44df033b4be2322d693d9764"
+    },
+    "por_detector.va": {
+      "content": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule por_detector (\n    input  electrical vdd_sense,\n    input  electrical clk,\n    input  electrical rst_n_ext,\n    output electrical por_n\n);\n    parameter real vhi = 0.9;\n    parameter real vlo = 0.0;\n    parameter real vpor = 0.72;\n    parameter real vth = 0.45;\n    parameter real tr = 200e-12;\n\n    integer good_count;\n    integer por_state;\n    real por_target;\n\n    analog begin\n        @(initial_step) begin\n            good_count = 0;\n            por_state = 0;\n        end\n\n        @(cross(V(clk) - vth, +1)) begin\n            if ((V(vdd_sense) >= vpor) && (V(rst_n_ext) > vth)) begin\n                if (good_count < 2) begin\n                    good_count = good_count + 1;\n                end\n                if (good_count >= 2) begin\n                    por_state = 1;\n                end\n            end else begin\n                good_count = 0;\n                por_state = 0;\n            end\n        end\n\n        @(cross(V(vdd_sense) - vpor, -1) or cross(V(rst_n_ext) - vth, -1)) begin\n            good_count = 0;\n            por_state = 0;\n        end\n\n        por_target = ((V(vdd_sense) >= vpor) && (V(rst_n_ext) > vth) && (por_state != 0)) ? vhi : vlo;\n        V(por_n) <+ transition(por_target, 0, tr);\n    end\nendmodule\n",
+      "sha256": "f4284e7a329d48f893dda36842b43370a078c7a09be59f89d13d872822a0a4ce"
+    },
+    "ready_flag.va": {
+      "content": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule ready_flag (\n    input  electrical clk,\n    input  electrical en_ana,\n    input  electrical en_dig,\n    output electrical ready\n);\n    parameter real vhi = 0.9;\n    parameter real vlo = 0.0;\n    parameter real vth = 0.45;\n    parameter real tr = 200e-12;\n\n    integer ready_state;\n    real ready_target;\n\n    analog begin\n        @(initial_step) begin\n            ready_state = 0;\n        end\n\n        @(cross(V(clk) - vth, +1)) begin\n            if ((V(en_ana) > vth) && (V(en_dig) > vth)) begin\n                ready_state = 1;\n            end else begin\n                ready_state = 0;\n            end\n        end\n\n        @(cross(V(en_ana) - vth, -1) or cross(V(en_dig) - vth, -1)) begin\n            ready_state = 0;\n        end\n\n        ready_target = ((V(en_ana) > vth) && (V(en_dig) > vth) && (ready_state != 0)) ? vhi : vlo;\n        V(ready) <+ transition(ready_target, 0, tr);\n    end\nendmodule\n",
+      "sha256": "2e89160c8a0f291e245508b9bed60f1473564a3f63012d8ea5cd0c5919108894"
+    },
+    "reset_synchronizer.va": {
+      "content": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule reset_synchronizer (\n    input  electrical clk,\n    input  electrical por_n,\n    input  electrical enable_req,\n    output electrical rst_n_core\n);\n    parameter real vhi = 0.9;\n    parameter real vlo = 0.0;\n    parameter real vth = 0.45;\n    parameter real tr = 200e-12;\n\n    integer rst_state;\n    real rst_target;\n\n    analog begin\n        @(initial_step) begin\n            rst_state = 0;\n        end\n\n        @(cross(V(clk) - vth, +1)) begin\n            if (V(por_n) <= vth) begin\n                rst_state = 0;\n            end else if (V(enable_req) > vth) begin\n                rst_state = 1;\n            end\n        end\n\n        @(cross(V(por_n) - vth, -1)) begin\n            rst_state = 0;\n        end\n\n        rst_target = (V(por_n) > vth && (rst_state != 0)) ? vhi : vlo;\n        V(rst_n_core) <+ transition(rst_target, 0, tr);\n    end\nendmodule\n",
+      "sha256": "c387d13f69fcb5abc7b517a668b6ea2406b10a93691b8fb2b0a67397ad1e597d"
+    }
+  },
+  "spectre_deck": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\nahdl_include \"por_detector.va\"\nahdl_include \"reset_synchronizer.va\"\nahdl_include \"enable_sequencer.va\"\nahdl_include \"ready_flag.va\"\n\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=10n width=4n delay=5n rise=100p fall=100p\nVvdd_sense (vdd_sense 0) vsource type=pwl wave=[0 0 12n 0 12.1n 0.9 92n 0.9 92.1n 0.3 108n 0.3 108.1n 0.9 200n 0.9]\nVrst_n_ext (rst_n_ext 0) vsource type=pwl wave=[0 0 3n 0 3.1n 0.9 155n 0.9 155.1n 0 166n 0 166.1n 0.9 200n 0.9]\nVenable_req (enable_req 0) vsource type=pwl wave=[0 0 20n 0 20.1n 0.9 135n 0.9 135.1n 0 142n 0 142.1n 0.9 200n 0.9]\nXDUT (vdd_sense clk rst_n_ext enable_req por_n rst_n_core en_ana en_dig ready) power_reset_seq_top\n\nopts options precision=\"%24.17g\" reltol=1e-10 vabstol=1e-12 iabstol=1e-15\ntran tran stop=200n maxstep=100p errpreset=conservative method=traponly compression=no skipcount=1\nsave vdd_sense clk rst_n_ext enable_req por_n rst_n_core en_ana en_dig ready\n",
+  "original_deck": "simulator lang=spectre\nglobal 0\n\nahdl_include \"../submission/power_reset_seq_top.va\"\nahdl_include \"../submission/por_detector.va\"\nahdl_include \"../submission/reset_synchronizer.va\"\nahdl_include \"../submission/enable_sequencer.va\"\nahdl_include \"../submission/ready_flag.va\"\n\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=10n width=4n delay=5n rise=100p fall=100p\nVvdd_sense (vdd_sense 0) vsource type=pwl wave=[0 0 12n 0 12.1n 0.9 92n 0.9 92.1n 0.3 108n 0.3 108.1n 0.9 200n 0.9]\nVrst_n_ext (rst_n_ext 0) vsource type=pwl wave=[0 0 3n 0 3.1n 0.9 155n 0.9 155.1n 0 166n 0 166.1n 0.9 200n 0.9]\nVenable_req (enable_req 0) vsource type=pwl wave=[0 0 20n 0 20.1n 0.9 135n 0.9 135.1n 0 142n 0 142.1n 0.9 200n 0.9]\nXDUT (vdd_sense clk rst_n_ext enable_req por_n rst_n_core en_ana en_dig ready) power_reset_seq_top\n\ntran tran stop=200n maxstep=100p\nsave vdd_sense clk rst_n_ext enable_req por_n rst_n_core en_ana en_dig ready\n",
+  "checker_sha256": "9bfd84e430c84c08594937c5dee93e04318f78e25bf31b0669e0d40de34ccfd6",
+  "normalization_sha256": "492bab585735c4480581d8f18f54bfc7bdd58a1cb02cde49ed30808049bea541",
+  "independent_minimal_va": "`include \"disciplines.vams\"\nmodule m(u,en,y,r); input u,en; output y; inout r; electrical u,en,y,r; integer q; analog begin @(initial_step) q=0; @(cross(V(u,r)-0.45,+1,1e-12,1e-9)) begin if(V(en,r)>0.45) q=1; else q=0; end V(y,r)<+q; end endmodule",
+  "independent_answer": "Use exact Fraction clock tau=F(5e-9)+13F(10e-9)+F(100e-12)/2 and originalenablePWL. Threshold time-tau=5.4089857242725325e-24s; enable(tau)-F(.45)=4.868087151844914e-14V>0, so originalEVASmodel releasesreset. Checker uses first saved highclock135.1ns, whereenable=0, and wrongly predictsold_coreFalse atnextcycle.",
+  "availability": "Compact sources, configurations, selected native rows and analytic proof are repository-contained; complete PSF, response and logs local-only.",
+  "final_evas": {
+    "kernel_sha256": "af9cda53a81cbf40fb231ea6b54464fbe0d21d987cfb3c6ac9332faa74f2b147",
+    "checker": {
+      "passed": false,
+      "note": "v4_347 checked=20 mismatch_count=2 startup_seen=True brownout_seen=True async_clear=True async_checks=394 mismatch_detail=P_PWR_SEQUENCE_ORDER mismatch_count=1 sample_time=1.351e-07 expected=rst_n_core=0 observed=rst_n_core=1 metric_gap=1; P_PWR_SEQUENCE_ORDER mismatch_count=1 sample_time=1.451e-07 expected=en_ana=0 observed=en_ana=1 metric_gap=1",
+      "qualification": "unchanged frozen historical checker/normalization;not newQ score"
+    },
+    "status": "execution_completed",
+    "seconds": 43.26165837497683,
+    "csv_sha256": "c7ba0f15be43c08e86162dbadc256e6a2f6f815add61f2e3b881538b7f0a814e",
+    "response_sha256": "986851df65b16fbf3d87964d954938bb0ef46b0be05278f581c658d6b67be2ef"
+  },
+  "diagnosis_reuse": "Earlier analytic/minimal diagnosis retained with its original kernel identity. Exact physical inputs and te=tau unchanged. Final347 execution receipt and current public cross-condition regression revalidate the same difference on final-candidate2."
+}

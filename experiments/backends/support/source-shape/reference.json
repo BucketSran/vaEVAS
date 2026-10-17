@@ -1,0 +1,7015 @@
+{
+  "cases": [
+    {
+      "case": "cross-transition",
+      "contract": {
+        "voltage_budget_V": 1e-08,
+        "event_time_budget_s": 1e-12,
+        "expected_cross_count": 3,
+        "held_reset": false,
+        "pairing": "exact binary64 native time, no interpolation",
+        "independent": "Fraction pulse corner arithmetic; transition slope and held resets",
+        "source": "same physical VA/SCS model for both backends"
+      },
+      "native_rows": 234,
+      "maxima": {
+        "spectre_analytic_V": 3.8164024891707005e-13,
+        "evas_analytic_V": 2.3332030751888055e-15,
+        "paired_V": 3.7925218521195347e-13
+      },
+      "event_window_count_rows": [
+        {
+          "time_s": 0.112000000000015,
+          "reference_count": 1.0,
+          "ideal_count": 1.0,
+          "distance_s": 1.499844692887109e-14
+        },
+        {
+          "time_s": 1.1120000000000152,
+          "reference_count": 2.0,
+          "ideal_count": 2.0,
+          "distance_s": 1.519273595818049e-14
+        },
+        {
+          "time_s": 2.112000000000015,
+          "reference_count": 3.0,
+          "ideal_count": 3.0,
+          "distance_s": 1.519273595818049e-14
+        }
+      ],
+      "source_sha256": "22830054f0b19e8b6759f96df88f6f68cf68894d8c50b811c93cd39058dfa109",
+      "spectre_deck_sha256": "8324aa4e646b9980379357be12a98402ec846b309f2c5e7f5be2a93bda8ce60d",
+      "evas_deck_sha256": "14f4906937eb5907e1df73cc355c6869946972864b52ed9bbaae2009ced6333a",
+      "raw_psf_sha256": "8fd4e41abd5a9f0963ca35ce7b5328b38cab3e087bb3928d8fe443a363fb7f6b",
+      "evas_response_sha256": "99137a6b6adae069a8561314e0236e76ae7ed2b2cef647054e8c9c21332a1b47",
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.1,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.11199,
+          "spectre": {
+            "u": 0.3996666666666667,
+            "y": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.3996666666666667,
+            "y": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.11201,
+          "spectre": {
+            "u": 0.4003333333333331,
+            "y": 0.00024999999962505015,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.4003333333333331,
+            "y": 0.00024999999999955613,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.13,
+          "spectre": {
+            "u": 1.0,
+            "y": 0.44999999999962537,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 0.44999999999999973,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.15,
+          "spectre": {
+            "u": 1.0,
+            "y": 0.9499999999996251,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 0.9499999999999995,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.2,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.25,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0000000000000004,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.265625,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.28125,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.296875,
+          "spectre": {
+            "u": 1.0,
+            "y": 1.9999999999999996,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.3125,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.328125,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.34375,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.359375,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.375,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.4,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.43,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.47,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 5.204170427930421e-16,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.5,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.625,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.640625,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.65625,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.671875,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.6875,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.703125,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.71875,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.734375,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.75,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.765625,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.78125,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.796875,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8125,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.828125,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.84375,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.859375,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.875,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.890625,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.90625,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.921875,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.9375,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.953125,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.96875,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.984375,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.0,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.015625,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.03125,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.046875,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.0625,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.078125,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.1,
+          "spectre": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 2.7755575615628914e-15,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.11199,
+          "spectre": {
+            "u": 0.39966666666666484,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.3996666666666676,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.11201,
+          "spectre": {
+            "u": 0.4003333333333285,
+            "y": 1.9998333333335898,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.40033333333333126,
+            "y": 1.999833333333336,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.15,
+          "spectre": {
+            "u": 1.0,
+            "y": 1.3666666666669234,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 1.3666666666666698,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.2,
+          "spectre": {
+            "u": 1.0,
+            "y": 0.5333333333335892,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 0.5333333333333357,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.25,
+          "spectre": {
+            "u": 1.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.5,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.625,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.640625,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.65625,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.671875,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.6875,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.703125,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.71875,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.734375,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.75,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.765625,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.78125,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.796875,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.8125,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.828125,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.84375,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.859375,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.875,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.890625,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.90625,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.921875,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.9375,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.953125,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.96875,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.984375,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.0,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.015625,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.03125,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.046875,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.0625,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.078125,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.1,
+          "spectre": {
+            "u": 0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.7755575615628914e-15,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.13,
+          "spectre": {
+            "u": 0.9999999999999936,
+            "y": 0.4499999999996156,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 0.9999999999999963,
+            "y": 0.44999999999999485,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 2.15,
+          "spectre": {
+            "u": 1.0,
+            "y": 0.949999999999616,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 0.9499999999999953,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 2.25,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 2.265625,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 2.28125,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 2.296875,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 2.3125,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 2.328125,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 2.34375,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 2.359375,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 2.375,
+          "spectre": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 2.4,
+          "spectre": {
+            "u": 1.0,
+            "y": 1.9999999999999996,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 1.0,
+            "y": 2.0,
+            "count": 3.0
+          }
+        }
+      ],
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 2.4,
+          "maxstep": 0.015625
+        },
+        "actual": {
+          "reltol": 1e-11,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 2.4,
+          "maxstep": 0.015625,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "status": "I"
+      },
+      "execution": {
+        "returncode": 0,
+        "status": "completed",
+        "timeout": false,
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 8.243789857253432,
+        "completed_utc": "2026-10-17T06:34:49Z",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      }
+    },
+    {
+      "case": "reverse-held-reset",
+      "contract": {
+        "voltage_budget_V": 1e-08,
+        "event_time_budget_s": 1e-12,
+        "expected_cross_count": 3,
+        "held_reset": true,
+        "pairing": "exact binary64 native time, no interpolation",
+        "independent": "Fraction pulse corner arithmetic; transition slope and held resets",
+        "source": "same physical VA/SCS model for both backends"
+      },
+      "native_rows": 249,
+      "maxima": {
+        "spectre_analytic_V": 8.01581023779363e-13,
+        "evas_analytic_V": 5.551115123125783e-15,
+        "paired_V": 7.993605777301127e-13
+      },
+      "event_window_count_rows": [
+        {
+          "time_s": 0.15000000000004998,
+          "reference_count": 1.0,
+          "ideal_count": 1.0,
+          "distance_s": 4.997391389593986e-14
+        },
+        {
+          "time_s": 1.15000000000005,
+          "reference_count": 2.0,
+          "ideal_count": 2.0,
+          "distance_s": 5.0084936198402374e-14
+        },
+        {
+          "time_s": 2.15000000000005,
+          "reference_count": 3.0,
+          "ideal_count": 3.0,
+          "distance_s": 5.0084936198402374e-14
+        }
+      ],
+      "source_sha256": "c9ee130ca18c084c8b3c99049fa3f3b0a61f7b16029fc54a460cb18c7faf383f",
+      "spectre_deck_sha256": "449bce014b5e8d2b785c0580f0d10bec564de7ab6ab73e0195b536ac2f62c5da",
+      "evas_deck_sha256": "e0307011206be43947a8775a594b6037ae047f0401ecc1a4e6cfd8fd45b99d80",
+      "raw_psf_sha256": "6eb9a281b78bd720ff1fbec05477ffaddca1478b26af905a68977cf9d1a0bccb",
+      "evas_response_sha256": "ce680c934680c5a15ec2352f188d6d5ff0f2bb9dab1e4840413f7b3bfe2f8ec6",
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.1,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.11199,
+          "spectre": {
+            "u": -0.1199,
+            "y": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": -0.1199,
+            "y": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.11201,
+          "spectre": {
+            "u": -0.12009999999999993,
+            "y": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": -0.12009999999999993,
+            "y": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.2,
+          "spectre": {
+            "u": -1.0,
+            "y": 0.7999999999992005,
+            "count": 1.0
+          },
+          "evas": {
+            "u": -1.0,
+            "y": 0.7999999999999998,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.25,
+          "spectre": {
+            "u": -0.75,
+            "y": 1.5999999999992003,
+            "count": 1.0
+          },
+          "evas": {
+            "u": -0.7500000000000001,
+            "y": 1.5999999999999996,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.4,
+          "spectre": {
+            "u": -0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.5,
+          "spectre": {
+            "u": -0.0,
+            "y": 2.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.640625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.75,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.765625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.78125,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.796875,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8125,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.828125,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.84375,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.859375,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.875,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.890625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.90625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.921875,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.9375,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.953125,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.96875,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.984375,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.0,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.015625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.03125,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.046875,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.0625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.078125,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.1,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": -8.326672684688674e-16,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.11199,
+          "spectre": {
+            "u": -0.11989999999999945,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": -0.11990000000000028,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.11201,
+          "spectre": {
+            "u": -0.12009999999999854,
+            "y": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": -0.12009999999999937,
+            "y": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.2,
+          "spectre": {
+            "u": -0.9999999999999987,
+            "y": 0.7999999999991979,
+            "count": 2.0
+          },
+          "evas": {
+            "u": -0.9999999999999994,
+            "y": 0.7999999999999972,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.25,
+          "spectre": {
+            "u": -0.7500000000000004,
+            "y": 1.5999999999991985,
+            "count": 2.0
+          },
+          "evas": {
+            "u": -0.7500000000000001,
+            "y": 1.5999999999999979,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.5,
+          "spectre": {
+            "u": -0.0,
+            "y": 2.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": 2.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.640625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.75,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.765625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.78125,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.796875,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.8125,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.828125,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.84375,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.859375,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.875,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.890625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.90625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.921875,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.9375,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.953125,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.96875,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.984375,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.0,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.015625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.03125,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.046875,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.0625,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.078125,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.0,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.1,
+          "spectre": {
+            "u": -0.0,
+            "y": 0.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": -8.326672684688674e-16,
+            "y": -0.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 2.2,
+          "spectre": {
+            "u": -1.0,
+            "y": 0.7999999999992012,
+            "count": 3.0
+          },
+          "evas": {
+            "u": -0.9999999999999992,
+            "y": 0.7999999999999972,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 2.25,
+          "spectre": {
+            "u": -0.7500000000000004,
+            "y": 1.5999999999991985,
+            "count": 3.0
+          },
+          "evas": {
+            "u": -0.7500000000000001,
+            "y": 1.5999999999999943,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 2.4,
+          "spectre": {
+            "u": -9.992007221626409e-16,
+            "y": 2.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": -5.551115123125783e-16,
+            "y": 2.0,
+            "count": 3.0
+          }
+        }
+      ],
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 2.4,
+          "maxstep": 0.015625
+        },
+        "actual": {
+          "reltol": 1e-11,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 2.4,
+          "maxstep": 0.015625,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "status": "I"
+      },
+      "execution": {
+        "returncode": 0,
+        "status": "completed",
+        "timeout": false,
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 7.989067832008004,
+        "completed_utc": "2026-10-17T06:34:57Z",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      }
+    },
+    {
+      "case": "causal-retarget-correlation",
+      "contract": {
+        "voltage_budget_V": 1e-08,
+        "event_time_budget_s": 1e-12,
+        "expected_timers": 14,
+        "pairing": "exact shared native binary64 time, no interpolation",
+        "oracle": "Fraction source coefficients, old/local assignment order, linear symmetric transition, causal affine feedback",
+        "scope": "new scalar causal event arithmetic, retained correlation, settled symmetric retarget and frozen transition network condition"
+      },
+      "native_rows": 223,
+      "maxima": {
+        "spectre_analytic_V": 3.1752378504279474e-17,
+        "evas_analytic_V": 3.1752378504279474e-17,
+        "paired_V": 0.0
+      },
+      "event_window_rows": [
+        {
+          "time_s": 0.125,
+          "node": "count",
+          "reference_value": 1.0,
+          "ideal_value": 1.0
+        },
+        {
+          "time_s": 0.1875,
+          "node": "mark",
+          "reference_value": 1.0,
+          "ideal_value": 1.0
+        },
+        {
+          "time_s": 0.25,
+          "node": "count",
+          "reference_value": 2.0,
+          "ideal_value": 2.0
+        },
+        {
+          "time_s": 0.3125,
+          "node": "mark",
+          "reference_value": 1.0,
+          "ideal_value": 1.0
+        },
+        {
+          "time_s": 0.375,
+          "node": "count",
+          "reference_value": 3.0,
+          "ideal_value": 3.0
+        },
+        {
+          "time_s": 0.4375,
+          "node": "mark",
+          "reference_value": 1.0,
+          "ideal_value": 1.0
+        },
+        {
+          "time_s": 0.5,
+          "node": "count",
+          "reference_value": 4.0,
+          "ideal_value": 4.0
+        },
+        {
+          "time_s": 0.5625,
+          "node": "mark",
+          "reference_value": 1.0,
+          "ideal_value": 1.0
+        },
+        {
+          "time_s": 0.625,
+          "node": "count",
+          "reference_value": 5.0,
+          "ideal_value": 5.0
+        },
+        {
+          "time_s": 0.6875,
+          "node": "mark",
+          "reference_value": 1.0,
+          "ideal_value": 1.0
+        },
+        {
+          "time_s": 0.75,
+          "node": "count",
+          "reference_value": 6.0,
+          "ideal_value": 6.0
+        },
+        {
+          "time_s": 0.8125,
+          "node": "mark",
+          "reference_value": 1.0,
+          "ideal_value": 1.0
+        },
+        {
+          "time_s": 0.875,
+          "node": "count",
+          "reference_value": 7.0,
+          "ideal_value": 7.0
+        },
+        {
+          "time_s": 0.9375,
+          "node": "mark",
+          "reference_value": 1.0,
+          "ideal_value": 1.0
+        }
+      ],
+      "source_sha256": "9b6cbc127ddc1c6588f008fe603e3d1231808f8891aa3278e20d7ed938454c4a",
+      "spectre_deck_sha256": "fee4ec5811a47e394dda142ccb6a3071d10eecfdff0555ac11ed6735938b502f",
+      "evas_deck_sha256": "0819bc7df58b1293ac1c9d7f6b6984b4d259e8333314d013e1cafb1107d07600",
+      "raw_psf_sha256": "5e62bd5856458405c6444e553a4f98c096d52470bb819e2a2e3dcfc04cfb63ef",
+      "evas_response_sha256": "b0395fc5e57998a74fcfabddaa020dd30690ab1e3cab9fa3930f1788e5669552",
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.1,
+            "y": 0.2,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.1,
+            "y": 0.2,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.1,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.1,
+            "y": 0.2,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.1,
+            "y": 0.2,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.12499,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.1,
+            "y": 0.2,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.1,
+            "y": 0.2,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.125,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.1,
+            "y": 0.2,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.1,
+            "y": 0.2,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.12501,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.10001504000000003,
+            "y": 0.20003008000000005,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.10001504000000003,
+            "y": 0.20003008000000005,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.14,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.12256000000000002,
+            "y": 0.24512000000000003,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.12256000000000002,
+            "y": 0.24512000000000003,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.15625,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.1640625,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.18749,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.1875,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.18751,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.25,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.3,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.3125,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.3203125,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.328125,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.3359375,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.34375,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.3515625,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.359375,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.3671875,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.375,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 0.4,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 0.4375,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 0.4453125,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 0.453125,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 0.4609375,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 0.46875,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 0.4765625,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 0.484375,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 0.4921875,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 3.0
+          }
+        },
+        {
+          "time_s": 0.5,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          }
+        },
+        {
+          "time_s": 0.5625,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          }
+        },
+        {
+          "time_s": 0.5703125,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          }
+        },
+        {
+          "time_s": 0.578125,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          }
+        },
+        {
+          "time_s": 0.5859375,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          }
+        },
+        {
+          "time_s": 0.59375,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          }
+        },
+        {
+          "time_s": 0.6,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 4.0
+          }
+        },
+        {
+          "time_s": 0.625,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 5.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 5.0
+          }
+        },
+        {
+          "time_s": 0.6875,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 5.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 5.0
+          }
+        },
+        {
+          "time_s": 0.7,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 5.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 5.0
+          }
+        },
+        {
+          "time_s": 0.75,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          }
+        },
+        {
+          "time_s": 0.8,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          }
+        },
+        {
+          "time_s": 0.8125,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          }
+        },
+        {
+          "time_s": 0.8203125,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          }
+        },
+        {
+          "time_s": 0.828125,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          }
+        },
+        {
+          "time_s": 0.8359375,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          }
+        },
+        {
+          "time_s": 0.84375,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          }
+        },
+        {
+          "time_s": 0.8515625,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          }
+        },
+        {
+          "time_s": 0.859375,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          }
+        },
+        {
+          "time_s": 0.8671875,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 6.0
+          }
+        },
+        {
+          "time_s": 0.875,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 7.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 7.0
+          }
+        },
+        {
+          "time_s": 0.9,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 7.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 7.0
+          }
+        },
+        {
+          "time_s": 0.9375,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 7.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 7.0
+          }
+        },
+        {
+          "time_s": 0.95,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 7.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.147,
+            "y": 0.294,
+            "mark": 1.0,
+            "count": 7.0
+          }
+        }
+      ],
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 0.95,
+          "maxstep": 0.0078125
+        },
+        "actual": {
+          "reltol": 1e-11,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 0.9500000000000001,
+          "maxstep": 0.0078125,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "status": "I"
+      },
+      "execution": {
+        "returncode": 0,
+        "status": "completed",
+        "timeout": false,
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 14.631974782794714,
+        "completed_utc": "2026-10-17T07:00:28Z",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      }
+    },
+    {
+      "case": "transition-network-condition",
+      "contract": {
+        "voltage_budget_V": 1e-08,
+        "event_time_budget_s": 1e-12,
+        "expected_timers": 2,
+        "pairing": "exact shared native binary64 time, no interpolation",
+        "oracle": "Fraction source coefficients, old/local assignment order, linear symmetric transition, causal affine feedback",
+        "scope": "new scalar causal event arithmetic, retained correlation, settled symmetric retarget and frozen transition network condition"
+      },
+      "native_rows": 152,
+      "maxima": {
+        "spectre_analytic_V": 0.0,
+        "evas_analytic_V": 0.0,
+        "paired_V": 0.0
+      },
+      "event_window_rows": [
+        {
+          "time_s": 0.25,
+          "node": "count",
+          "reference_value": 1.0,
+          "ideal_value": 1.0
+        },
+        {
+          "time_s": 0.375,
+          "node": "mark",
+          "reference_value": 0.75,
+          "ideal_value": 0.75
+        }
+      ],
+      "source_sha256": "7df1fb1c5730802407d18da32ce8c6a295a0d15a8529246c3017e630dd616a5e",
+      "spectre_deck_sha256": "babc0601097178048b002bddcdc400d5f50c9b58bd2fecf1ef20e6392886ffa6",
+      "evas_deck_sha256": "21d68ed4df2e8dccbcc39e5dd41d0cee7fb4e24a8da351ba3ffebf54e1e82626",
+      "raw_psf_sha256": "cbd7b84b7b28effb3e868589ea6810aa8a9b84a97b7eb38d808325e1f7910e2e",
+      "evas_response_sha256": "9a745b27a2b7ace2da78f84f1817439b77b4e52ae17e67fc88ee84d4e75f862f",
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.1,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.24999,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.25,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.25001,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.00004,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.00004,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.3,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.2,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.2,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.37499,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.49996,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.49996,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.375,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.5,
+            "y": 0.0,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.5,
+            "y": -0.0,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.37501,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.50004,
+            "y": 6.0000000000060005e-05,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.50004,
+            "y": 6.0000000000060005e-05,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.4,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.6,
+            "y": 0.15000000000000013,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.6,
+            "y": 0.15000000000000013,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.45,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.8,
+            "y": 0.45000000000000007,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.8,
+            "y": 0.45000000000000007,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.5,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.5078125,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.6,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.75,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.7578125,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.765625,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.7734375,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.78125,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.7890625,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.796875,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8046875,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8125,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8203125,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.828125,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8359375,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.84375,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8515625,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.859375,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8671875,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.875,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8828125,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.890625,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.9,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.95,
+          "spectre": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 2.0,
+            "y": 0.75,
+            "mark": 0.75,
+            "count": 1.0
+          }
+        }
+      ],
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 0.95,
+          "maxstep": 0.0078125
+        },
+        "actual": {
+          "reltol": 1e-11,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 0.9500000000000001,
+          "maxstep": 0.0078125,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "status": "I"
+      },
+      "execution": {
+        "returncode": 0,
+        "status": "completed",
+        "timeout": false,
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.011090595275164,
+        "completed_utc": "2026-10-17T07:00:37Z",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      }
+    },
+    {
+      "case": "transition-cascade-shared-root",
+      "contract": {
+        "voltage_budget_V": 1e-08,
+        "event_time_budget_s": 1e-12,
+        "expected_timers": 1,
+        "expected_crosses": 1,
+        "pairing": "exact shared native binary64 time, no interpolation",
+        "oracle": "Fraction binary coefficients: root=1/4+Fraction(0.3)/4; q increments once there; y=q+2*clip((t-root)/(1/8)); e=clip((t-1/4)/(1/4))",
+        "scope": "acyclic internal transition target predicate, same physical root as event, no read-order ambiguity"
+      },
+      "maxima": {
+        "spectre_analytic_V": 2.000399845769607e-12,
+        "evas_analytic_V": 2.220446049250313e-16,
+        "paired_V": 2.000177801164682e-12
+      },
+      "event_window_rows": [
+        {
+          "time_s": 0.25,
+          "nodes": [
+            "count"
+          ],
+          "reference": {
+            "u": 0.7,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.325000000000125,
+          "nodes": [
+            "mark",
+            "y"
+          ],
+          "reference": {
+            "u": 0.7,
+            "e": 0.3000000000005001,
+            "y": 1.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        }
+      ],
+      "source_sha256": "6bac4f7b472d7129b0338a97abe584fae6f45b347de3a2f7869d5530dfa72bb2",
+      "raw_psf_sha256": "5cb3dbc5d4e0125d58582ec7a746bc1a24f5b990b42d99e172deec84ecf70711",
+      "evas_response_sha256": "238f4c5f24ef4dcd239908eadf69d2a924d45ff67b729db29ee9b28a62997f53",
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.1,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.24999,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.25,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.25001,
+          "spectre": {
+            "u": 0.7,
+            "e": 4.0000000000040004e-05,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 4.0000000000040004e-05,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.3,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.19999999999999996,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.19999999999999996,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.32499,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.29996,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.29996,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.32501,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.3000400000000001,
+            "y": 1.000159999998,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.3000400000000001,
+            "y": 1.0001600000000002,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.35,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.3999999999999999,
+            "y": 1.3999999999979993,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.3999999999999999,
+            "y": 1.3999999999999995,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.4,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.6000000000000001,
+            "y": 2.199999999998,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.6000000000000001,
+            "y": 2.2,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.44999,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.79996,
+            "y": 2.9998399999979997,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.79996,
+            "y": 2.99984,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.45001,
+          "spectre": {
+            "u": 0.7,
+            "e": 0.8000400000000001,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 0.8000400000000001,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.5,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.5078125,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.6,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.75,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.7578125,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.765625,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.7734375,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.78125,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.7890625,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.796875,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8046875,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8125,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8203125,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.828125,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8359375,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.84375,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8515625,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.859375,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8671875,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.875,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.8828125,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.890625,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.9,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.95,
+          "spectre": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.7,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        }
+      ],
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 0.95,
+          "maxstep": 0.0078125
+        },
+        "actual": {
+          "reltol": 1e-11,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 0.9500000000000001,
+          "maxstep": 0.0078125,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "status": "I"
+      },
+      "execution": {
+        "returncode": 0,
+        "status": "completed",
+        "timeout": false,
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 8.173447279259562,
+        "completed_utc": "2026-10-17T07:25:56Z",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      },
+      "spectre_deck_sha256": "3bb35563dc7a0432c58a38a8e63afb86f16e4d1a288b57ad43eba0733f2abf98",
+      "evas_deck_sha256": "25e34c2085d16fef16d56afb0419754ac7619fc1f06a4ccbf4d2c8274f403e59"
+    },
+    {
+      "case": "adjacent-internal-transition-roots",
+      "contract": {
+        "voltage_budget_V": 1e-08,
+        "event_time_budget_s": 1e-12,
+        "oracle": "Fraction independent linear transitions after root1/3 and retarget1/2; or separate exact timer/transition roots at1+.3/4 and nexttimer+.3/4",
+        "pairing": "native shared time only; discrete alternatives allowed only within1ps of independent root"
+      },
+      "native_rows": 143,
+      "maxima": {
+        "spectre_analytic_V": 8.881784197001252e-16,
+        "evas_analytic_V": 0.0,
+        "paired_V": 8.881784197001252e-16
+      },
+      "event_window_rows": [
+        {
+          "time_s": 1.075000000000125,
+          "nodes": [
+            "count",
+            "y"
+          ],
+          "spectre": {
+            "u": 0.0,
+            "e": 0.30000000000049987,
+            "y": 3.0,
+            "mark": 0.30000000000049987,
+            "count": 1.0
+          },
+          "ideal": {
+            "u": 0.0,
+            "e": 0.30000000000049987,
+            "mark": 0.300000000000499,
+            "y": 3.0,
+            "count": 1.0
+          }
+        }
+      ],
+      "source_sha256": "e34f5a6ac1a8b6d664a70269d06fd27009a9725e063accc97035041610310755",
+      "raw_psf_sha256": "c19bac99aee51e2b11b5b148e42171eb3afe5da906741607130b206571d80804",
+      "evas_response_sha256": "cc9cdb70352a41a5bfd713eb09b6e3a592b6402e75697a4861959cca542f6af6",
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.5,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.515625,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.53125,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.546875,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.5625,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.578125,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.59375,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.609375,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.625,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.640625,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.65625,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.671875,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.6875,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.703125,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.71875,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.734375,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.75,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.765625,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.78125,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.796875,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.8125,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.828125,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.84375,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.859375,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.875,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.890625,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.90625,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.921875,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.9375,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.953125,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.96875,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.984375,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 1.0,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": -0.0,
+            "y": -0.0,
+            "mark": -0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 1.05,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.20000000000000018,
+            "y": 0.0,
+            "mark": 0.20000000000000018,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 0.20000000000000018,
+            "y": -0.0,
+            "mark": 0.1999999999999993,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 1.074,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.29600000000000026,
+            "y": 0.0,
+            "mark": 0.29600000000000026,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 0.29600000000000026,
+            "y": -0.0,
+            "mark": 0.2959999999999994,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 1.076,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.30400000000000027,
+            "y": 3.0,
+            "mark": 0.30400000000000027,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 0.30400000000000027,
+            "y": 3.0,
+            "mark": 0.3039999999999994,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.125,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.5,
+            "y": 3.0,
+            "mark": 0.5,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 0.5,
+            "y": 3.0,
+            "mark": 0.4999999999999991,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.140625,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.5625,
+            "y": 3.0,
+            "mark": 0.5625,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 0.5625,
+            "y": 3.0,
+            "mark": 0.5624999999999991,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.15625,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.625,
+            "y": 3.0,
+            "mark": 0.625,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 0.625,
+            "y": 3.0,
+            "mark": 0.6249999999999991,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.171875,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.6875,
+            "y": 3.0,
+            "mark": 0.6875,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 0.6875,
+            "y": 3.0,
+            "mark": 0.6874999999999991,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.1875,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.75,
+            "y": 3.0,
+            "mark": 0.75,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 0.75,
+            "y": 3.0,
+            "mark": 0.7499999999999991,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.203125,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.8125,
+            "y": 3.0,
+            "mark": 0.8125,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 0.8125,
+            "y": 3.0,
+            "mark": 0.8124999999999991,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.21875,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.875,
+            "y": 3.0,
+            "mark": 0.875,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 0.875,
+            "y": 3.0,
+            "mark": 0.8749999999999991,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.234375,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.9375,
+            "y": 3.0,
+            "mark": 0.9375,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 0.9375,
+            "y": 3.0,
+            "mark": 0.9374999999999991,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.25,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 0.9999999999999991,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.265625,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.5,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.515625,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.53125,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.546875,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.5625,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.578125,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.59375,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.609375,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.625,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.640625,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.65625,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.671875,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.6875,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.703125,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.71875,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.734375,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.75,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.765625,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.78125,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.796875,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.8125,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.828125,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.84375,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.859375,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.875,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.890625,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.90625,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.921875,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.9375,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.953125,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.96875,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 1.984375,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 2.0,
+          "spectre": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 1.0,
+            "y": 3.0,
+            "mark": 1.0,
+            "count": 1.0
+          }
+        }
+      ],
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 2,
+          "maxstep": 0.015625
+        },
+        "actual": {
+          "reltol": 1e-11,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 2.0,
+          "maxstep": 0.015625,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "status": "I"
+      },
+      "execution": {
+        "returncode": 0,
+        "status": "completed",
+        "timeout": false,
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 13.87082963436842,
+        "completed_utc": "2026-10-17T08:08:46Z",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      },
+      "spectre_deck_sha256": "66690b0f1024f58854b6ee954e87b8f61f665c0a5456824c23e95bb796ef38f4",
+      "evas_deck_sha256": "7b17f279db8047e3f6f5a0729c1cf18fb04ec9dec091bfc931ffa6d462aa55bb"
+    },
+    {
+      "case": "independent-interrupted-continuous-ends",
+      "contract": {
+        "voltage_budget_V": 1e-08,
+        "event_time_budget_s": 1e-12,
+        "oracle": "Fraction independent linear transitions after root1/3 and retarget1/2; or separate exact timer/transition roots at1+.3/4 and nexttimer+.3/4",
+        "pairing": "native shared time only; discrete alternatives allowed only within1ps of independent root"
+      },
+      "native_rows": 150,
+      "maxima": {
+        "spectre_analytic_V": 4.444444318746971e-10,
+        "evas_analytic_V": 4.835638062811793e-16,
+        "paired_V": 4.444441759066109e-10
+      },
+      "event_window_rows": [
+        {
+          "time_s": 0.5,
+          "nodes": [
+            "count"
+          ],
+          "spectre": {
+            "u": 1.5,
+            "e": 0.22222222200000008,
+            "y": 0.44444444400000016,
+            "mark": 0.22222222200000008,
+            "count": 2.0
+          },
+          "ideal": {
+            "u": 1.5,
+            "e": 0.2222222222222222,
+            "mark": 0.2222222222222222,
+            "y": 0.4444444444444444,
+            "count": 2.0
+          }
+        }
+      ],
+      "source_sha256": "3c15e545f067f6a3633f3f5f9d3a3ff340df707212e45ed735e8963d6110dce5",
+      "raw_psf_sha256": "469fe0ac6bb569277413b2e5a5739aa1c6a5450ee9391adb793994457d70755e",
+      "evas_response_sha256": "b6300b35d9277756ef0b4b9603c56fb0c57ee5e6522aeb301bd52960d1354a01",
+      "pairs": [
+        {
+          "time_s": 0.0,
+          "spectre": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": 0.0,
+            "mark": 0.0,
+            "count": 0.0
+          },
+          "evas": {
+            "u": 0.0,
+            "e": 0.0,
+            "y": -0.0,
+            "mark": 0.0,
+            "count": -0.0
+          }
+        },
+        {
+          "time_s": 0.4,
+          "spectre": {
+            "u": 1.2,
+            "e": 0.08888888866666678,
+            "y": 0.17777777733333355,
+            "mark": 0.08888888866666678,
+            "count": 1.0
+          },
+          "evas": {
+            "u": 1.2,
+            "e": 0.08888888888888886,
+            "y": 0.17777777777777773,
+            "mark": 0.08888888888888886,
+            "count": 1.0
+          }
+        },
+        {
+          "time_s": 0.5,
+          "spectre": {
+            "u": 1.5,
+            "e": 0.22222222200000008,
+            "y": 0.44444444400000016,
+            "mark": 0.22222222200000008,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 1.5,
+            "e": 0.22222222222222215,
+            "y": 0.4444444444444443,
+            "mark": 0.22222222222222215,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.75,
+          "spectre": {
+            "u": 2.25,
+            "e": 0.888888888666667,
+            "y": 1.777777777333334,
+            "mark": 0.888888888666667,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.25,
+            "e": 0.8888888888888888,
+            "y": 1.777777777777778,
+            "mark": 0.8888888888888891,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.765625,
+          "spectre": {
+            "u": 2.296875,
+            "e": 0.9305555553333338,
+            "y": 1.8611111106666676,
+            "mark": 0.9305555553333338,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.296875,
+            "e": 0.9305555555555554,
+            "y": 1.861111111111111,
+            "mark": 0.9305555555555556,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.78125,
+          "spectre": {
+            "u": 2.34375,
+            "e": 0.9722222220000005,
+            "y": 1.944444444000001,
+            "mark": 0.9722222220000005,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.34375,
+            "e": 0.9722222222222221,
+            "y": 1.9444444444444444,
+            "mark": 0.9722222222222223,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.796875,
+          "spectre": {
+            "u": 2.390625,
+            "e": 1.013888888666667,
+            "y": 2.027777777333334,
+            "mark": 1.013888888666667,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.390625,
+            "e": 1.0138888888888888,
+            "y": 2.0277777777777777,
+            "mark": 1.0138888888888888,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.8125,
+          "spectre": {
+            "u": 2.4375,
+            "e": 1.0555555553333338,
+            "y": 2.1111111106666676,
+            "mark": 1.0555555553333338,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.4375,
+            "e": 1.0555555555555554,
+            "y": 2.111111111111111,
+            "mark": 1.0555555555555558,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.828125,
+          "spectre": {
+            "u": 2.484375,
+            "e": 1.0972222220000005,
+            "y": 2.194444444000001,
+            "mark": 1.0972222220000005,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.484375,
+            "e": 1.097222222222222,
+            "y": 2.1944444444444446,
+            "mark": 1.0972222222222225,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.84375,
+          "spectre": {
+            "u": 2.53125,
+            "e": 1.138888888666667,
+            "y": 2.277777777333334,
+            "mark": 1.138888888666667,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.53125,
+            "e": 1.1388888888888888,
+            "y": 2.2777777777777777,
+            "mark": 1.1388888888888888,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.859375,
+          "spectre": {
+            "u": 2.578125,
+            "e": 1.1805555553333338,
+            "y": 2.3611111106666676,
+            "mark": 1.1805555553333338,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.578125,
+            "e": 1.1805555555555554,
+            "y": 2.361111111111111,
+            "mark": 1.1805555555555558,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.875,
+          "spectre": {
+            "u": 2.625,
+            "e": 1.2222222220000005,
+            "y": 2.444444444000001,
+            "mark": 1.2222222220000005,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.625,
+            "e": 1.222222222222222,
+            "y": 2.4444444444444446,
+            "mark": 1.2222222222222225,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.890625,
+          "spectre": {
+            "u": 2.671875,
+            "e": 1.263888888666667,
+            "y": 2.527777777333334,
+            "mark": 1.263888888666667,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.671875,
+            "e": 1.2638888888888886,
+            "y": 2.5277777777777777,
+            "mark": 1.263888888888889,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.90625,
+          "spectre": {
+            "u": 2.71875,
+            "e": 1.3055555553333338,
+            "y": 2.6111111106666676,
+            "mark": 1.3055555553333338,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.71875,
+            "e": 1.3055555555555554,
+            "y": 2.611111111111111,
+            "mark": 1.3055555555555558,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.921875,
+          "spectre": {
+            "u": 2.765625,
+            "e": 1.3472222220000005,
+            "y": 2.694444444000001,
+            "mark": 1.3472222220000005,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.765625,
+            "e": 1.347222222222222,
+            "y": 2.6944444444444446,
+            "mark": 1.3472222222222225,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.9375,
+          "spectre": {
+            "u": 2.8125,
+            "e": 1.388888888666667,
+            "y": 2.777777777333334,
+            "mark": 1.388888888666667,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.8125,
+            "e": 1.3888888888888886,
+            "y": 2.7777777777777777,
+            "mark": 1.388888888888889,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.953125,
+          "spectre": {
+            "u": 2.859375,
+            "e": 1.4305555553333338,
+            "y": 2.8611111106666676,
+            "mark": 1.4305555553333338,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.859375,
+            "e": 1.4305555555555554,
+            "y": 2.861111111111111,
+            "mark": 1.4305555555555558,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.96875,
+          "spectre": {
+            "u": 2.90625,
+            "e": 1.4722222220000005,
+            "y": 2.944444444000001,
+            "mark": 1.4722222220000005,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.90625,
+            "e": 1.472222222222222,
+            "y": 2.9444444444444446,
+            "mark": 1.4722222222222225,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 0.984375,
+          "spectre": {
+            "u": 2.953125,
+            "e": 1.513888888666667,
+            "y": 3.027777777333334,
+            "mark": 1.513888888666667,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 2.953125,
+            "e": 1.5138888888888886,
+            "y": 3.0277777777777777,
+            "mark": 1.513888888888889,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.0,
+          "spectre": {
+            "u": 3.0,
+            "e": 1.5555555553333338,
+            "y": 3.1111111106666676,
+            "mark": 1.5555555553333338,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 3.0,
+            "e": 1.5555555555555554,
+            "y": 3.111111111111111,
+            "mark": 1.5555555555555558,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.015625,
+          "spectre": {
+            "u": 3.046875,
+            "e": 1.5972222220000005,
+            "y": 3.194444444000001,
+            "mark": 1.5972222220000005,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 3.046875,
+            "e": 1.597222222222222,
+            "y": 3.1944444444444446,
+            "mark": 1.5972222222222225,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.03125,
+          "spectre": {
+            "u": 3.09375,
+            "e": 1.638888888666667,
+            "y": 3.277777777333334,
+            "mark": 1.638888888666667,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 3.09375,
+            "e": 1.6388888888888886,
+            "y": 3.2777777777777777,
+            "mark": 1.638888888888889,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.046875,
+          "spectre": {
+            "u": 3.140625,
+            "e": 1.6805555553333338,
+            "y": 3.3611111106666676,
+            "mark": 1.6805555553333338,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 3.140625,
+            "e": 1.6805555555555554,
+            "y": 3.361111111111111,
+            "mark": 1.6805555555555558,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.0625,
+          "spectre": {
+            "u": 3.1875,
+            "e": 1.7222222220000005,
+            "y": 3.444444444000001,
+            "mark": 1.7222222220000005,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 3.1875,
+            "e": 1.722222222222222,
+            "y": 3.4444444444444446,
+            "mark": 1.7222222222222225,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.078125,
+          "spectre": {
+            "u": 3.234375,
+            "e": 1.763888888666667,
+            "y": 3.527777777333334,
+            "mark": 1.763888888666667,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 3.234375,
+            "e": 1.7638888888888886,
+            "y": 3.5277777777777777,
+            "mark": 1.763888888888889,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.09375,
+          "spectre": {
+            "u": 3.28125,
+            "e": 1.8055555553333338,
+            "y": 3.6111111106666676,
+            "mark": 1.8055555553333338,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 3.28125,
+            "e": 1.8055555555555554,
+            "y": 3.611111111111111,
+            "mark": 1.8055555555555558,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.109375,
+          "spectre": {
+            "u": 3.328125,
+            "e": 1.8472222220000003,
+            "y": 3.6944444440000006,
+            "mark": 1.8472222220000003,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 3.328125,
+            "e": 1.847222222222222,
+            "y": 3.6944444444444446,
+            "mark": 1.8472222222222225,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.125,
+          "spectre": {
+            "u": 3.375,
+            "e": 1.888888888666667,
+            "y": 3.777777777333334,
+            "mark": 1.888888888666667,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 3.375,
+            "e": 1.8888888888888886,
+            "y": 3.7777777777777777,
+            "mark": 1.888888888888889,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.15,
+          "spectre": {
+            "u": 3.4499999999999997,
+            "e": 1.9555555553333335,
+            "y": 3.911111110666667,
+            "mark": 1.9555555553333335,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 3.4499999999999997,
+            "e": 1.955555555555555,
+            "y": 3.9111111111111105,
+            "mark": 1.9555555555555555,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.2,
+          "spectre": {
+            "u": 3.5999999999999996,
+            "e": 2.0,
+            "y": 4.0,
+            "mark": 2.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 3.5999999999999996,
+            "e": 2.0,
+            "y": 4.0,
+            "mark": 2.0,
+            "count": 2.0
+          }
+        },
+        {
+          "time_s": 1.5,
+          "spectre": {
+            "u": 4.5,
+            "e": 2.0,
+            "y": 4.0,
+            "mark": 2.0,
+            "count": 2.0
+          },
+          "evas": {
+            "u": 4.5,
+            "e": 2.0,
+            "y": 4.0,
+            "mark": 2.0,
+            "count": 2.0
+          }
+        }
+      ],
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.5,
+          "maxstep": 0.015625
+        },
+        "actual": {
+          "reltol": 1e-11,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.5,
+          "maxstep": 0.015625,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "status": "I"
+      },
+      "execution": {
+        "returncode": 0,
+        "status": "completed",
+        "timeout": false,
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 13.858634699136019,
+        "completed_utc": "2026-10-17T08:09:00Z",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      },
+      "spectre_deck_sha256": "f30de785db01b929bc8fc43b20abcec1941db97390cc5464943e0126a8adfdef",
+      "evas_deck_sha256": "c5d0ca03c57a76e1f075fd6f31615c0adb9e3b0f176ad5d3373da9db95d336b7"
+    }
+  ],
+  "spectre": {
+    "version": "sub-version  21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f"
+  },
+  "kernel_sha256": "af9cda53a81cbf40fb231ea6b54464fbe0d21d987cfb3c6ac9332faa74f2b147",
+  "source_identity": {
+    "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+    "evas/src/evas/__main__.py": "03467610db7d5563c99f2ffcf65c8f258175575fff18a38ca89dc5854439d651",
+    "evas/src/evas/array_elaboration.py": "922fd600f57b039b4f2e2b2242af03dd7830a464e0b31272260c82d11217d278",
+    "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+    "evas/src/evas/display.py": "c53802f643b2405e1f3da36596a8d4674aebf409635232ded3dc52f852f38b5c",
+    "evas/src/evas/elaboration.py": "a7a435e8d2361e7abf2b047b68210b1b25f656e24b40155fe969e9b4c593bc4a",
+    "evas/src/evas/errors.py": "4716787d137c2232e13d9b9b7231b407d5c87a38c755345c63bc9df91a45a158",
+    "evas/src/evas/event_index_domains.py": "c5558bdff652f64b5ddfdc72e32230f8a8330f9fa4798e1c09b7e95344bcaa39",
+    "evas/src/evas/event_specialization.py": "b33b4cb4f9f2997a6c25db6d15d918bb8ca9b362ec4cc9dd4e643c9c3b60b4d6",
+    "evas/src/evas/frontend.py": "310159f89cea075ff3f35a7d46e7177dfd8888eb8841528ddb924be45768854a",
+    "evas/src/evas/hierarchy.py": "ec8cd24105bfb646f28874dd40fe0923ae51ca5d22b45b1be0e6153347a7a10b",
+    "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+    "evas/src/evas/instance_compiler.py": "b7a8a38eeceb70e929848654e85d5a48dc6fef12fdc6bef17c8fc798f7154a12",
+    "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+    "evas/src/evas/ir.py": "b55291f1ae7cf3725f5480739cf7f8830513a1ef00fba0de9b588a2bfcc45b45",
+    "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+    "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+    "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+    "evas/src/evas/lowering.py": "ed41ea48b5175d5e39c702a51cd4a5f296de5c425f9fa708846c7864b19059b1",
+    "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+    "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+    "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+    "evas/src/evas/node_elaboration.py": "eaa06faf21bea22a2ef477605c2d4c2c167b5f99a2083f356733e08eae1a5cf5",
+    "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+    "evas/src/evas/predicate_structure.py": "0f145fafcf1a926877f555207da48d54e6334e8ffbde1d9b385499ea74d11543",
+    "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+    "evas/src/evas/protocol.py": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+    "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+    "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+    "evas/src/evas/runtime.py": "f7fb4d7d4b46facce3422e646a53845e782338e7ae1494cf7f957d9e6e722d10",
+    "evas/src/evas/scs.py": "647b3b4e34fe130860fce20634fbb30a01e4c0110bc5fa9e20f092fb12356283",
+    "evas/src/evas/scs_sources.py": "1fab2c390f33c4c6221969bbbb192265636caf5063d20fd735e5e247b22cfb8d",
+    "evas/src/evas/standard_headers.py": "efe0b2421d400ac723cfdf71c5d406cdef510dc89d3556ad999e2253600ec88e",
+    "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+    "evas/src/evas/syntax.py": "766c424ec8b6c1f8a9e6fa9416aebe91e274d52ffd9ba486fa75291e5efcd38f",
+    "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+    "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+    "evas/rust_core/src/affine_bounds.rs": "074445000a0dc47246b9f7bcd4d299062668fc5d7772e958e95587f2e7b6edee",
+    "evas/rust_core/src/analog.rs": "1505d79dc24df924c7544da0a0fdfa9a6280bffb67f5ee191dad0ff2f13ad484",
+    "evas/rust_core/src/assembly.rs": "beab047ea57b6510e00e897b1caf02e437f3a30bd1567f92bc39c0a7e40b62f9",
+    "evas/rust_core/src/batch.rs": "ba227471ba388b4efd361e9a523352b7626bb80cd51141a00ca2b1c97eed2888",
+    "evas/rust_core/src/causal_event.rs": "907e6c283a281e9f07d022a44e6ad53ba91484f938e4a0d9e5d1b23ab032ef79",
+    "evas/rust_core/src/causal_voltage.rs": "8eab2a5a636f43999f51f015b2fd3bb82cc1e73b50ac389c0e0412de65d75da6",
+    "evas/rust_core/src/continuous.rs": "517d6574c6594857f8bc77bf829c714afe9a6f2bb5bc693dabf997ec432112fe",
+    "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+    "evas/rust_core/src/continuous_history.rs": "90d3fd2b904f5aece03b56fae587776d281cfc0e24348272e15597fc145bc46f",
+    "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+    "evas/rust_core/src/continuous_readout.rs": "637028c3dd24d06665ea5849d3e90666a3e41585b96cffb692910b041e135e84",
+    "evas/rust_core/src/continuous_runtime.rs": "6df2d30f8f67cf9039425b820abc614232e2a7ed02c973b99f18d6899f570403",
+    "evas/rust_core/src/continuous_select.rs": "8d6ac91199f325c78382da900debdf12504db7dd488869104b1a246a16cac111",
+    "evas/rust_core/src/continuous_select_cache_tests.rs": "2e9fe77ecd33b3d1ddcf5c1ab6834e5d9ea8abff9900db9f41bc1e5f2a2f0423",
+    "evas/rust_core/src/continuous_select_candidates.rs": "88017ad10779a666d82873230413ffbebaf95d13610c7c7795f100f2e1f1635b",
+    "evas/rust_core/src/continuous_step_simplify.rs": "70094c4ce51e296a92523cbe7bc7f83318f10798fd8aa81b105ce83bd413e0de",
+    "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+    "evas/rust_core/src/direct_derivative.rs": "606fa88155ae14278fef573f9c9c9615206ec58bd150ffaf12fb9577f0f56940",
+    "evas/rust_core/src/display.rs": "041ff1a89745233cd060578c91f34eb5c9979223f42535af1dca401180b94075",
+    "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+    "evas/rust_core/src/event_accuracy.rs": "f7ffbfc82cbfde3d9f89d3ba5af4a511664d46d6c14d34294492ae16bf22b4bb",
+    "evas/rust_core/src/event_conditions.rs": "ce7c29bd2d38c7faeb67efcbdc471d9c6c9ac476e277312965b9668b542f73d4",
+    "evas/rust_core/src/event_control.rs": "37e728c2ab5493f378ae6653744605c44d78a7ce806df3fd6b21497d4274b098",
+    "evas/rust_core/src/event_numeric.rs": "7c48b8670ce0c205a92c04e54be845ba26e59ae8424e9e75638a5be4a0ba2da9",
+    "evas/rust_core/src/event_time_provenance.rs": "15833c15b5f8cc2481988887c7976120c85848aa2042e8746603d60a5647c2d3",
+    "evas/rust_core/src/event_value_proof.rs": "db427243c8bb11f14c9743f10eb2290cfd4150d1a5f273dbc8ee1580fa069f96",
+    "evas/rust_core/src/events.rs": "500431a4b310086761d2a2cef9cd68187ff08f242dd9fb5f7ef0c070ece59622",
+    "evas/rust_core/src/events_certificate_cache_tests.rs": "6f0900e6e8149c49a230a527719e34ae2d95f28eaac09b9d423961bf222c7938",
+    "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+    "evas/rust_core/src/exact_source.rs": "519313bd72079207bbe847b262f6be4efa2f272e5b3bb0798766815706ee9f10",
+    "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+    "evas/rust_core/src/expression.rs": "81c1eb4bd3fc122006d7feb9841f1ad19f2e71a296ddad1fef45dfa8c5d41f4a",
+    "evas/rust_core/src/filter_budget.rs": "94807ee47a346648b5eb4d7d4af03366c0f1f1b79a0e67f636fc279c90b67656",
+    "evas/rust_core/src/guard_trajectory.rs": "e9db1cd8db29d735f5ba84cb9b0432711f7db3ba312b9932a63a84cba41b4147",
+    "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+    "evas/rust_core/src/idtmod.rs": "acdbdc83beef8cae53188c6335d7b99f9fe56ebb75d5318bbbd7a1f8e92fd2a1",
+    "evas/rust_core/src/implicit_dynamics.rs": "b30206f4dde77fc2220a942c896e8a5d5673a6f8efdd7f49f45db717597469a8",
+    "evas/rust_core/src/implicit_event_restart.rs": "d8b45dc327f0675ee2463c5047364716a4b692812e21ca44afca4b6d2bad5bd0",
+    "evas/rust_core/src/initial_state_invariance.rs": "74f5c1c625dbf19e4d653e85c649a668f590421018549c29a9cca83e62463438",
+    "evas/rust_core/src/initialization.rs": "209ad8ccdda14057fa2aa7b4d744c27ebb9d9df14d95141025c34dcfe23d2fc9",
+    "evas/rust_core/src/initialization_nodes.rs": "61aee737fbcf29bd236649d4532b7364503cf59bb1a56ed8ea1614a8de25d6e4",
+    "evas/rust_core/src/input_clamp.rs": "5c3010afc080801aabd1bbe6b839dac21c714d8f49eaf0ad4aee6fa413f1ac59",
+    "evas/rust_core/src/interval.rs": "75b04de91716ce2bbb523dc3c703036081bec4909f154a277b973bbccf9ef785",
+    "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+    "evas/rust_core/src/interval_zero_product_tests.rs": "882420755b22f048f6cc88b643ce2a07eb2ec44fa4510193c731b793b9c77afd",
+    "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+    "evas/rust_core/src/laplace.rs": "8f211b465b19d062033392ef6defbc1bdc66b34c7be9172ab3c41e32a9e7b3d1",
+    "evas/rust_core/src/lib.rs": "2e7a3e61bde0c2aae696eff4aa588e02d0663926cc7e101b2f38abfa1fcb2b07",
+    "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+    "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+    "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+    "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+    "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+    "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+    "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+    "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+    "evas/rust_core/src/math_functions.rs": "a57b876344f203b03d3dc0a2bb8f49bce673abd35619f55552c0a0d29b7f13a0",
+    "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+    "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+    "evas/rust_core/src/nonlinear_dynamics.rs": "b9c44deb78ec185e6209754736454a761cdd69f92114c67a04bed3b4e4796647",
+    "evas/rust_core/src/nonlinear_root_window.rs": "7341efc680fc3f1a247803651875bdc115791426f587acdcb8b10d9386e302dd",
+    "evas/rust_core/src/nonlinear_value_memo_tests.rs": "0b065a2b0bc8694ac0de2aa232b6dfc261ffaa68c3fcf29a2c7b0fe255d57679",
+    "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+    "evas/rust_core/src/operators.rs": "cc5b1a60ac75b8b272ab339ffc40a812a7b33c5c97d4e10ada3966bf4d63ccb8",
+    "evas/rust_core/src/passive_events.rs": "1843badd4a4f4c6ef63e79df58d2d6fa72634b116d56d1d25f7147f819574339",
+    "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+    "evas/rust_core/src/portability.rs": "c101c1075de370d3622ad270bb0ca7bdf73c6ba2b3ed6ddd940a45a3c8134cb4",
+    "evas/rust_core/src/pwl.rs": "003331df4a4da50d1c845fa10106d5bb36745ef65510208fbdc8868414917046",
+    "evas/rust_core/src/reset_dependencies.rs": "3f894fe282b3e22b7d07e7022a9e9aa9e6e06dc641591bdae25c0a7acf26f51f",
+    "evas/rust_core/src/schedule.rs": "178c6dde03dcae0ca51779e4a543ea5a92515ede57d2276586a322a5f1e82c24",
+    "evas/rust_core/src/schedule_timer_boundary_tests.rs": "99b19e3b98cb05226b8548de2b621172fe069b7a1fbf36f7451c1ec493fb0c32",
+    "evas/rust_core/src/settlement.rs": "728648c56188978b144d94bb4005857cd805d7b1f14b9c7cb611443fb1fc2f59",
+    "evas/rust_core/src/settlement_bounds.rs": "b597865d41187a586bda5c7b47297749c87e8e51c5867f250e29d972d3eb4686",
+    "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+    "evas/rust_core/src/slew_cascade.rs": "26b9cedd714dd24893d2076818d84c8905525da29c900c4df97bf9a7c40cc7b8",
+    "evas/rust_core/src/solver.rs": "71a06b3980a0dfdd5d0112edfa47de5113a68d16b5331ffc903bfbe3e7dbaa82",
+    "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+    "evas/rust_core/src/state_space.rs": "bc791c33b49c78259c0efa4b89203758830b6f90b461058d6a526ada5e1b2a94",
+    "evas/rust_core/src/step_bounds.rs": "7b34202c102b72aef2e19f2af1c28236cd6b3d4ba739cdbdf79e09b526331731",
+    "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+    "evas/rust_core/src/transient.rs": "7f0c81e508cf48e14f184748b42464800c3277210af387e03cce226ee20caff0",
+    "evas/rust_core/src/transient_condition_tests.rs": "0a8dfc626381785993cdf3476e808a12ee6688cbeae81495451f312f0266d10c",
+    "evas/rust_core/src/transient_event_acceptance.rs": "5fe6629c9ba8b7e322763297f0915843bf73cee93873f3853e94c874a1e5ae59",
+    "evas/rust_core/src/transient_event_control_tests.rs": "49f5f3c4c829bbd1a063446921898b7ad936f88ab20ef3e0b023613d6590e47a",
+    "evas/rust_core/src/transient_history_calendar.rs": "a444c9555a0b63ea72d2ae82b5a309494825e90a321b29c44fc5a9bd649676cf",
+    "evas/rust_core/src/transient_idt_tests.rs": "caaf846459e576549a5cf53e6b8f715c0d32b33496b241f419d5a2f3e2771530",
+    "evas/rust_core/src/transient_initialization.rs": "57f21b3df0fa1b4f5a5c6f9e2a517c8f4b57f9a632e6d4f1c2235dac91449728",
+    "evas/rust_core/src/transient_lifecycle_tests.rs": "584b2c1bb2043265b8708bbde1b34a8a8251e00dad45d41859f068e16616f698",
+    "evas/rust_core/src/transient_passive_tests.rs": "85eb5d501a7a06eae676ebcfb0ec426e5de0b89eff9dd43de449835f0d5bdd9b",
+    "evas/rust_core/src/transient_root_refinement.rs": "6bbb6b7df5676fe65038b227284d811666f105c01a7848480f81c95962fe466c",
+    "evas/rust_core/src/transient_time_proof_tests.rs": "70ef120b678cb4cb05908c4b5c9bde2db87a0eafb78507b09239d2b681c9e95f",
+    "evas/rust_core/src/transient_timer_boundary_tests.rs": "f5ea68af5178dc6c22ce112df1ae9e9523d1d3e12c8658de4b5d8ce1f601be28",
+    "evas/rust_core/src/transient_window_tests.rs": "b56afa40d9683445c745455dd19a9d35a4ab9247e5a184a3dfb6246c2ca628ad",
+    "evas/rust_core/src/transition.rs": "4d880dee369ea2ca900b89ec193949b94b221e1989d8adfcb489d915bf0890cd",
+    "evas/rust_core/src/transition_filter.rs": "94b63ec1985c3eeb376216cd7501e1caef177411260d61519849b53035e982b4",
+    "evas/rust_core/src/transition_filter_input.rs": "845679115ff39c13cfb951ea93786070a4a142b57af2aa28480efcf5d46b5e42",
+    "evas/rust_core/src/transition_history_target.rs": "f8f8fc9194975a3b2d5e7cf3243479741abf9db5024ef1a228283d7bbc555081",
+    "evas/rust_core/src/transition_integral.rs": "e5e32e03013915527e80c646ceecfba86d65161dbfa4c6df6c1ad0f8282447ed",
+    "evas/rust_core/src/transition_source_plan.rs": "6a1cfa5e320cc4850b26cf8c5b5a71b6fa60364c902e307744f2be7d60c9e14e",
+    "evas/rust_core/src/transition_source_state.rs": "d754cf5ae6891e1e934a6d17dab41e6548cfb4238d8a171ac1984ffdd15fd0c0",
+    "evas/rust_core/ir/src/lib.rs": "79137934a1fe7dcc35c95e317961902218a7e6ef7248a9cdb51be8fc5d61e55c",
+    "evas/pyproject.toml": "31f84287c6257f2f424e850df9451aac643aea94636eb4de4829785ea9b1de9e",
+    "evas/rust_core/Cargo.toml": "750f906a7ae10f2c6e0ae9cbee5787c1c286d66e1aad88a285bd9684c7ba1ad5",
+    "evas/rust_core/Cargo.lock": "a60ef97b215300e2665d2e9864d6bbbdb7b2bce468873f8c3cdba0fec858f5c5",
+    "evas/rust_core/ir/Cargo.toml": "ee626ead9fe9620b9b48c956bef41d283578683d25bc879b20f25730adf325f0"
+  },
+  "native_shared_pairs": 403,
+  "voltage_budget_V": 1e-08,
+  "event_time_budget_s": 1e-12,
+  "pairing": "exact shared native binary64 time, no interpolation or shifted times; discrete alternatives only inside declared event windows, continuous voltages keep10nV",
+  "retention": "Compact complete inputs, shared numerical pairs, settings and hashes are repository-contained. Raw PSF and complete execution receipts are local-only runs/evas-source-shape-20261017; remote originals retained; no public raw download claimed.",
+  "reference_reuse": "Five fixed actualSpectre controls reused and two newly executed; all seven EVAS cases replayed on final-candidate2 frozen binary. Original347 diagnostic is a separate compatibility difference, not one of these seven passes.",
+  "reader_sha256": "3936f1db5726127178d43e075cae67a006a2e0c37e01338a935e435573640251"
+}

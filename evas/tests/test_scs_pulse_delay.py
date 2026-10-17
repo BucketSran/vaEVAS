@@ -1,11 +1,12 @@
 """Omitted pulse delay follows the installed source contract through Rust."""
 GUARDS = ["DEV:scs-input"]
 
+from fractions import Fraction as Q
 from pathlib import Path
 import tempfile
 import unittest
 
-from evas import CompileError, KernelError
+from evas import CompileError, Instance, KernelError, compile_sources, transient
 from evas.scs import load_scs, simulate_scs
 from test_affine import KERNEL, model
 
@@ -76,17 +77,28 @@ class PulseDelayDefault(unittest.TestCase):
                 load_scs(self.deck(values,stop=stop,step=stop))
 
     def test_default_preserves_rounding_proof_and_downstream_voltage_rejection(self):
-        # A second pulse at 1e9 s has inexact .2 s corners. The 3x output
-        # must reject their propagated source error under a tight voltage budget.
+        # A second pulse at 1e9 s has inexact .2 s corners. An amplitude
+        # band alone must still reject; a physical shape gets a rational oracle.
         values=dict(val0='0',val1='1',rise='.2',fall='.2',width='.2',period='1e9')
         self.deck(values,stop='1000000001',step='1000000001')
         omitted=load_scs(self.path)
         self.assertGreater(omitted.manifest['transient']['source_errors']['u'],2e-7)
+        program=compile_sources(omitted.sources,[Instance(**i) for i in omitted.manifest['instances']])
+        generic={k:v for k,v in omitted.manifest['transient'].items() if k!='source_shapes'}
         with self.assertRaises(KernelError):
-            simulate_scs(self.path,kernel=KERNEL)
+            transient(program,kernel=KERNEL,**generic)
+        shaped=simulate_scs(self.path,kernel=KERNEL)
+        for t,row in zip(shaped['saved']['times'],shaped['saved']['values']):
+            elapsed=Q(t)%Q(1e9);edge=Q(.2)
+            expected=(elapsed/edge if elapsed<edge else Q(1) if elapsed<2*edge
+                      else 3-elapsed/edge if elapsed<3*edge else Q(0))
+            actual=dict(zip(shaped['saved']['nodes'],row))
+            for name,gain in [('u',1),('y',3)]:
+                self.assertLessEqual(abs(Q(actual[name])-gain*expected),Q(1e-9))
         self.deck(dict(values,delay='0'),stop='1000000001',step='1000000001')
         explicit=load_scs(self.path)
         self.assertEqual(omitted.manifest,explicit.manifest)
+        self.assertEqual(shaped['saved'],simulate_scs(self.path,kernel=KERNEL)['saved'])
         self.assertEqual(omitted.metadata['pulse_corner_proofs'],explicit.metadata['pulse_corner_proofs'])
         self.deck(values,stop='1000000001',step='1000000001',options='reltol=0 vabstol=1e-5')
         result=simulate_scs(self.path,kernel=KERNEL)

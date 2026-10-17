@@ -507,6 +507,7 @@ mod tests {
                 .unwrap();
             let controller = Controller {
                 accepted: Frame {
+                    value_proofs: Default::default(),
                     time_proofs: Default::default(),
                     time: 0.,
                     solution: circuit.solve(&[0.]).unwrap(),
@@ -641,6 +642,7 @@ mod tests {
             .unwrap();
         let mut controller = Controller {
             accepted: Frame {
+                value_proofs: Default::default(),
                 time_proofs: Default::default(),
                 time: 0.,
                 solution: circuit.solve(&[0.]).unwrap(),
@@ -766,6 +768,7 @@ mod tests {
             (
                 Controller {
                     accepted: Frame {
+                        value_proofs: Default::default(),
                         time_proofs: Default::default(),
                         time: 0.,
                         solution: circuit.solve(&[0.3]).unwrap(),
@@ -1263,6 +1266,7 @@ mod passive_seed_review {
                 operators,
                 state_bounds: states.iter().copied().map(I::point).collect(),
                 states,
+                value_proofs: Default::default(),
                 time_proofs: Default::default(),
             }
         };

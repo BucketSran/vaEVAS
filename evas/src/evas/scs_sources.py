@@ -59,9 +59,14 @@ def voltage_points(settings, stop, fail):
         fail('pulse point budget (100000) exceeded')
     low,high = settings['val0'],settings['val1']
     points, rounding, corners = [[0.,low]], Q(0), []
+    # Match the existing bounded original-curve proof capacity. Longer pulse
+    # requests retain their voltage band and conservative consumer boundary.
+    shape = [(Q(0), low)] if 4*count+2 <= 512 else None
     for index in range(count):
         start = delay + index*period
         for exact,value in ((start,low),(start+rise,high),(start+rise+width,high),(start+rise+width+fall,low)):
+            if shape is not None and exact != shape[-1][0]:
+                shape.append((exact, value))
             try:
                 time = float(exact)
             except OverflowError:
@@ -88,6 +93,13 @@ def voltage_points(settings, stop, fail):
     # Endpoint voltages are original binary64 inputs, with no value rounding.
     slope=abs(Q(high)-Q(low))/min(rise,fall)
     error=_upper_float(slope*rounding,fail)
-    return points, _upper_float(rounding,fail), dict(corners=corners,
+    proof = dict(corners=corners,
                 voltage_error_bound_V=error,value_rounding_error_V=0.,
                 maximum_slope_numerator=str(slope.numerator),maximum_slope_denominator=str(slope.denominator))
+    if shape is not None:
+        if shape[-1][0] < Q(stop):
+            shape.append((Q(stop),shape[-1][1]))
+        proof['source_shape'] = [dict(time_numerator=str(t.numerator),
+                                      time_denominator=str(t.denominator),value_V=v)
+                                  for t,v in shape]
+    return points, _upper_float(rounding,fail), proof

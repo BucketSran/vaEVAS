@@ -44,6 +44,7 @@ fn fixture(due: f64) -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>
     let calendar = schedule_held(&model, &trajectory, &state_bounds).unwrap();
     let controller = Controller {
         accepted: Frame {
+            value_proofs: Default::default(),
             time_proofs: Default::default(),
             time: 0.,
             solution: circuit.solve(&trajectory.values(0.)).unwrap(),
@@ -129,6 +130,7 @@ fn observer_samples_event_operator_tube_not_the_b_point_bound() {
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let before = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&trajectory.values(0.)).unwrap(),
@@ -179,6 +181,7 @@ fn observer_only_event_does_not_restart_or_change_physical_history() {
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let before = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&trajectory.values(0.)).unwrap(),
@@ -260,6 +263,7 @@ fn branch_review_same_controller_failure_keeps_history_proof_records_then_retrie
         (
             Controller {
                 accepted: Frame {
+                    value_proofs: Default::default(),
                     time_proofs: std::collections::BTreeMap::from([(2, proof)]),
                     time: 0.,
                     solution: circuit.solve(&[0.]).unwrap(),
@@ -525,6 +529,7 @@ fn source_fixture(due: f64) -> (EventModel, Trajectory, Controller, Vec<Schedule
     let mut controller = Controller {
         accepted: Frame {
             time: 0.,
+            value_proofs: Default::default(),
             time_proofs: Default::default(),
             solution: circuit.solve(&trajectory.values(0.)).unwrap(),
             circuit,

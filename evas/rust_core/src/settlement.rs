@@ -34,6 +34,34 @@ pub(crate) fn prepare(
         operator_bounds,
         previous,
         true,
+        None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn prepare_with_proofs(
+    model: &EventModel,
+    events: &[usize],
+    inputs: (&[f64], &[I]),
+    before: &[f64],
+    operators: &[f64],
+    before_bounds: &[I],
+    operator_bounds: &[I],
+    previous: Option<&Circuit>,
+    proofs: &crate::event_value_proof::Context<'_>,
+) -> Result<Prepared, Error> {
+    prepare_impl(
+        model,
+        (events, &[]),
+        inputs,
+        inputs.1,
+        before,
+        operators,
+        before_bounds,
+        operator_bounds,
+        previous,
+        true,
+        Some(proofs),
     )
 }
 
@@ -60,6 +88,35 @@ pub(crate) fn prepare_window(
         operator_bounds,
         previous,
         false,
+        None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn prepare_window_with_proofs(
+    model: &EventModel,
+    events_and_roots: (&[usize], &[usize]),
+    inputs: (&[f64], &[I]),
+    observation_inputs: &[I],
+    before: &[f64],
+    operators: &[f64],
+    before_bounds: &[I],
+    operator_bounds: &[I],
+    previous: Option<&Circuit>,
+    proofs: &crate::event_value_proof::Context<'_>,
+) -> Result<Prepared, Error> {
+    prepare_impl(
+        model,
+        events_and_roots,
+        inputs,
+        observation_inputs,
+        before,
+        operators,
+        before_bounds,
+        operator_bounds,
+        previous,
+        false,
+        Some(proofs),
     )
 }
 
@@ -76,13 +133,15 @@ fn prepare_impl(
     operator_bounds: &[I],
     previous: Option<&Circuit>,
     check_voltages: bool,
+    proofs: Option<&crate::event_value_proof::Context<'_>>,
 ) -> Result<Prepared, Error> {
     let (inputs, input_bounds) = inputs;
-    let selection = model.conditions.select_at_roots(
+    let selection = model.conditions.select_with_proofs(
         events_and_roots.0,
         input_bounds,
         events_and_roots.1,
         before_bounds,
+        proofs,
     )?;
     model.check_selection_writers(&selection)?;
     model.check_contribution_predicate_updates(&selection)?;
@@ -94,18 +153,24 @@ fn prepare_impl(
     let predicate_states =
         model.apply(&selection, &vec![0.0; model.program.nodes.len()], before)?;
     let predicate_bounds: Vec<_> = predicate_states.iter().copied().map(I::point).collect();
-    let selected =
-        model.selected_program_at_roots(&predicate_bounds, input_bounds, events_and_roots.1)?;
-    let mut joint = model.event_circuit_program(&selected, &selection, before, operators)?;
+    let selected = model.selected_program_with_parameters(
+        &predicate_bounds,
+        input_bounds,
+        events_and_roots.1,
+        operator_bounds,
+    )?;
+    let mut joint = model
+        .event_circuit_program_with_inputs(&selected, &selection, before, operators, inputs)?;
     if let Some(previous) = previous {
         joint.reuse_affine_factor_from(previous);
     }
     let candidate = joint.solve(inputs)?;
     let states = model.apply(&selection, &candidate.voltages, before)?;
-    let replayed = model.selected_program_at_roots(
+    let replayed = model.selected_program_with_parameters(
         &states.iter().copied().map(I::point).collect::<Vec<_>>(),
         input_bounds,
         events_and_roots.1,
+        operator_bounds,
     )?;
     if replayed
         .contributions
@@ -127,11 +192,12 @@ fn prepare_impl(
     let mut solution = circuit.solve(inputs)?;
     // Replay the same input/root certificate. A small equation residual
     // cannot certify a branch chosen from rounded representative inputs.
-    if model.conditions.select_at_roots(
+    if model.conditions.select_with_proofs(
         events_and_roots.0,
         input_bounds,
         events_and_roots.1,
         before_bounds,
+        proofs,
     )? != selection
     {
         return Err(Error::new(

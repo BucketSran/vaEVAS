@@ -20,6 +20,13 @@ pub(crate) struct Budget(pub(crate) usize);
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(crate) struct RootTime(R);
 
+pub(crate) struct Crossing {
+    pub time: RootTime,
+    pub segment: [I; 2],
+    pub ends: [I; 2],
+    pub slope: I,
+}
+
 pub(crate) fn enclosure(value: &R) -> Option<I> {
     let nearest = value.to_f64()?;
     if !nearest.is_finite() {
@@ -42,6 +49,16 @@ pub(crate) fn enclosure(value: &R) -> Option<I> {
         .then_some(bounds)
 }
 
+pub(crate) fn affine_range(line: (R, R), time: I) -> Option<I> {
+    let (a, b) = line;
+    let mut budget = Budget(0);
+    let lo = budget.check(&b * binary(time.lo)?)?;
+    let hi = budget.check(&b * binary(time.hi)?)?;
+    let lo = enclosure(&budget.check(&a + lo)?)?;
+    let hi = enclosure(&budget.check(a + hi)?)?;
+    Some(lo.hull(hi))
+}
+
 fn contains(bounds: I, value: &R) -> bool {
     bounds.finite()
         && binary(bounds.lo).is_some_and(|lo| lo <= *value)
@@ -51,6 +68,9 @@ fn contains(bounds: I, value: &R) -> bool {
 pub(crate) type TimeProofs = std::collections::BTreeMap<usize, RootTime>;
 
 impl RootTime {
+    pub(crate) fn rational(&self) -> &R {
+        &self.0
+    }
     pub(crate) fn point(time: f64) -> Option<Self> {
         Some(Self(binary(time)?))
     }
@@ -289,6 +309,189 @@ pub(crate) fn predicate_sign(
 }
 
 impl Curve {
+    /// A line is exact only when every original corner in this interval lies
+    /// on it. Endpoint secants alone do not establish that fact.
+    pub(crate) fn affine_on(&self, time: I) -> Option<(R, R)> {
+        let lo = binary(time.lo)?;
+        let hi = binary(time.hi)?;
+        if lo == hi {
+            return Some((self.value(&lo, &mut Budget(0))?, binary(0.)?));
+        }
+        if lo > hi {
+            return None;
+        }
+        let mut budget = Budget(0);
+        let a = self.value(&lo, &mut budget)?;
+        let b = self.value(&hi, &mut budget)?;
+        let duration = budget.check(&hi - &lo)?;
+        let delta = budget.check(b - &a)?;
+        let slope = budget.check(delta / duration)?;
+        let shift = budget.check(&slope * &lo)?;
+        let intercept = budget.check(a - shift)?;
+        for (t, v) in self.0.iter().filter(|(t, _)| lo < *t && *t < hi) {
+            let product = budget.check(&slope * t)?;
+            if budget.check(&intercept + product)? != *v {
+                return None;
+            }
+        }
+        Some((intercept, slope))
+    }
+    /// The supplied physical curve must be covered by the unchanged nominal
+    /// voltage band everywhere. On the union of both knot sets their difference
+    /// is affine, so checking its endpoints proves the complete time domain.
+    pub(crate) fn shaped(
+        shape: &crate::ir::ShapedSourceError,
+        nominal: &[[f64; 2]],
+        stop: f64,
+    ) -> Option<Self> {
+        if !(2..=MAX_POINTS).contains(&shape.exact_knots.len()) {
+            return None;
+        }
+        let mut budget = Budget(0);
+        let mut points: Vec<(R, R)> = Vec::new();
+        for knot in &shape.exact_knots {
+            // Bound parsing before allocating arbitrary-precision integers.
+            if knot.time_numerator.is_empty()
+                || knot.time_denominator.is_empty()
+                || knot.time_numerator.len() > 1250
+                || knot.time_denominator.len() > 1250
+                || !knot.time_numerator.bytes().all(|c| c.is_ascii_digit())
+                || !knot.time_denominator.bytes().all(|c| c.is_ascii_digit())
+            {
+                return None;
+            }
+            let time = budget.check(
+                format!("{}/{}", knot.time_numerator, knot.time_denominator)
+                    .parse::<R>()
+                    .ok()?,
+            )?;
+            let value = binary(knot.value_v)?;
+            if time.is_negative() || points.last().is_some_and(|(last, _)| last >= &time) {
+                return None;
+            }
+            points.push((time, value));
+        }
+        let stop = binary(stop)?;
+        if !points.first()?.0.is_zero() || points.last()?.0 < stop {
+            return None;
+        }
+        let physical = Self(points);
+        let nominal = Self::source(nominal)?;
+        let error = binary(shape.voltage_error_bound_v)?;
+        if error.is_negative() {
+            return None;
+        }
+        let mut knots = vec![R::zero(), stop.clone()];
+        for curve in [&physical, &nominal] {
+            knots.extend(curve.0.iter().map(|p| p.0.clone()).filter(|t| *t < stop));
+        }
+        knots.sort();
+        knots.dedup();
+        for time in knots {
+            let difference = budget.check(
+                physical.value(&time, &mut Budget(0))? - nominal.value(&time, &mut Budget(0))?,
+            )?;
+            if difference.abs() > error {
+                return None;
+            }
+        }
+        Some(physical)
+    }
+
+    /// Values and derivatives of the physical source, including every true
+    /// rational corner intersecting the query, rather than rounded knot slopes.
+    pub(crate) fn range(&self, time: I) -> Option<(I, I)> {
+        let lo = binary(time.lo)?;
+        let hi = binary(time.hi)?;
+        if lo > hi {
+            return None;
+        }
+        let mut budget = Budget(0);
+        let mut values = enclosure(&self.value(&lo, &mut budget)?)?
+            .hull(enclosure(&self.value(&hi, &mut budget)?)?);
+        let mut slope: Option<I> = None;
+        for pair in self.0.windows(2) {
+            let (a, x) = &pair[0];
+            let (b, y) = &pair[1];
+            if *a < hi && *b > lo || lo == hi && *a <= lo && lo <= *b {
+                let duration = budget.check(b - a)?;
+                let change = budget.check(y - x)?;
+                let derivative = enclosure(&budget.check(change / duration)?)?;
+                slope = Some(slope.map_or(derivative, |old| old.hull(derivative)));
+            }
+            if lo < *b && *b < hi {
+                values = values.hull(enclosure(y)?);
+            }
+        }
+        Some((values, slope.unwrap_or(I::ZERO)))
+    }
+
+    pub(crate) fn at_root(&self, root: &RootTime) -> Option<R> {
+        self.value(&root.0, &mut Budget(0))
+    }
+
+    pub(crate) fn at(&self, time: f64) -> Option<(f64, I)> {
+        let value = self.value(&binary(time)?, &mut Budget(0))?;
+        let bounds = enclosure(&value)?;
+        Some((value.to_f64()?, bounds))
+    }
+
+    /// Complete zero arrivals on the physical PWL partition. Rounded surrogate
+    /// knots cannot safely define this partition when corners have moved.
+    pub(crate) fn crossings(&self, direction: i8, stop: f64) -> Option<Vec<Crossing>> {
+        let stop = binary(stop)?;
+        let mut budget = Budget(0);
+        let mut out = Vec::new();
+        for pair in self.0.windows(2) {
+            let (a, x) = &pair[0];
+            let (b, y) = &pair[1];
+            if x.is_zero() {
+                continue;
+            }
+            let sign = if y.is_zero() {
+                if x.is_positive() {
+                    -1
+                } else {
+                    1
+                }
+            } else if x.is_positive() != y.is_positive() {
+                if y.is_positive() {
+                    1
+                } else {
+                    -1
+                }
+            } else {
+                continue;
+            };
+            if direction != 0 && direction != sign {
+                continue;
+            }
+            let duration = budget.check(b - a)?;
+            let change = budget.check(y - x)?;
+            let numerator = budget.check(x * &duration)?;
+            let shift = budget.check(numerator / &change)?;
+            let time = budget.check(a - shift)?;
+            if time <= R::zero() || time > stop {
+                continue;
+            }
+            out.push(Crossing {
+                time: RootTime(time.clone()),
+                segment: [enclosure(a)?, enclosure(b)?],
+                ends: [enclosure(x)?, enclosure(y)?],
+                // An upper representative at a nonbinary corner can lie in
+                // the outgoing segment. Bound every slope up to the latest
+                // representative accepted by Root, including that segment.
+                slope: self
+                    .range(I {
+                        lo: enclosure(&time)?.lo,
+                        hi: enclosure(b)?.hi.min(stop.to_f64()?),
+                    })?
+                    .1,
+            });
+        }
+        Some(out)
+    }
+
     /// Match an already discovered root without bridging an interior source kink.
     /// A redundant interior knot also takes the conservative fallback path.
     pub(crate) fn root_in(&self, segment: [f64; 2], ends: [I; 2], bounds: I) -> Option<RootTime> {
@@ -583,6 +786,90 @@ impl Curve {
 
 #[cfg(test)]
 mod tests {
+    fn descriptor(points: &[(&str, &str, f64)], error: f64) -> crate::ir::ShapedSourceError {
+        crate::ir::ShapedSourceError {
+            voltage_error_bound_v: error,
+            exact_knots: points
+                .iter()
+                .map(|(n, d, v)| crate::ir::ExactSourceKnot {
+                    time_numerator: (*n).into(),
+                    time_denominator: (*d).into(),
+                    value_v: *v,
+                })
+                .collect(),
+        }
+    }
+
+    #[test]
+    fn physical_partition_encloses_displaced_corner_and_derivative() {
+        let shape = descriptor(&[("0", "1", 0.), ("1", "3", 1.), ("1", "1", 1.)], 0.125);
+        let curve = Curve::shaped(&shape, &[[0., 0.], [0.3, 1.], [1., 1.]], 1.).unwrap();
+        let (value, slope) = curve.range(I { lo: 0.3, hi: 0.4 }).unwrap();
+        assert!(contains(
+            value,
+            &(binary(0.3).unwrap() * R::from_integer(3.into()))
+        ));
+        assert_eq!(value.hi, 1.);
+        assert_eq!(slope, I { lo: 0., hi: 3. });
+        let (_, rounded) = curve.at(0.1).unwrap();
+        assert!(rounded.lo < rounded.hi);
+        assert!(contains(
+            rounded,
+            &(binary(0.1).unwrap() * R::from_integer(3.into()))
+        ));
+        // The maximum discrepancy is at the nominal corner, absent from shape.
+        assert!(Curve::shaped(
+            &descriptor(&[("0", "1", 0.), ("1", "3", 1.), ("1", "1", 1.)], 0.0625),
+            &[[0., 0.], [0.3, 1.], [1., 1.]],
+            1.
+        )
+        .is_none());
+    }
+
+    #[test]
+    fn physical_crossings_own_zero_arrival_and_include_stop_without_departure() {
+        let curve = Curve(vec![
+            (R::from_integer(0.into()), R::from_integer((-1).into())),
+            (R::new(1.into(), 3.into()), R::zero()),
+            (R::new(1.into(), 2.into()), R::zero()),
+            (R::new(2.into(), 3.into()), R::from_integer(1.into())),
+            (R::from_integer(1.into()), R::zero()),
+        ]);
+        let all = curve.crossings(0, 1.).unwrap();
+        assert_eq!(all.len(), 2);
+        assert_eq!(all[0].time.0, R::new(1.into(), 3.into()));
+        assert_eq!(all[1].time.0, R::from_integer(1.into()));
+        assert_eq!(curve.crossings(1, 1.).unwrap().len(), 1);
+        assert_eq!(curve.crossings(-1, 1.).unwrap().len(), 1);
+    }
+
+    #[test]
+    fn shape_limits_and_coverage_refuse_before_using_unbounded_geometry() {
+        let nominal = [[0., 0.], [1., 1.]];
+        for points in [
+            vec![("0", "1", 0.)],
+            vec![("0", "1", 0.), ("1", "2", 1.)],
+            vec![("1", "4", 0.), ("1", "1", 1.)],
+            vec![("0", "1", 0.), ("1", "0", 1.)],
+            vec![("0", "1", 0.), ("1", "1", f64::INFINITY)],
+        ] {
+            assert!(Curve::shaped(&descriptor(&points, 1.), &nominal, 1.).is_none());
+        }
+        let mut shape = descriptor(&[("0", "1", 0.), ("1", "1", 1.)], 1.);
+        shape.exact_knots[1].time_numerator = "9".repeat(1250);
+        assert!(Curve::shaped(&shape, &nominal, 1.).is_none());
+        shape.exact_knots = (0..MAX_POINTS)
+            .map(|k| crate::ir::ExactSourceKnot {
+                time_numerator: k.to_string(),
+                time_denominator: (MAX_POINTS - 1).to_string(),
+                value_v: 0.,
+            })
+            .collect();
+        assert!(Curve::shaped(&shape, &[[0., 0.], [1., 0.]], 1.).is_some());
+        shape.exact_knots = vec![shape.exact_knots[0].clone(); MAX_POINTS + 1];
+        assert!(Curve::shaped(&shape, &nominal, 1.).is_none());
+    }
+
     #[test]
     fn source_cut_keeps_nonbinary_root_and_exact_boundary_sign() {
         let curve = super::Curve::source(&[[0., -0.5], [1., 2.5]]).unwrap();
