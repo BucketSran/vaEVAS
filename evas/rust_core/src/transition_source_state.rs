@@ -76,6 +76,38 @@ impl Source {
     ) -> Result<(), Error> {
         self.plan.check_incoming(after, bounds, root)
     }
+    /// Rebase only a cloned observation cursor inside an already certified
+    /// post-event phase. No source cut may have been consumed after the query.
+    pub(crate) fn rebase_observation(&mut self, time: f64) -> Result<(), Error> {
+        if time >= self.time {
+            return Ok(());
+        }
+        let query = RootTime::point(time);
+        if !self
+            .last_root
+            .as_ref()
+            .zip(query.as_ref())
+            .is_some_and(|(root, query)| {
+                root.refine(self.last_window).is_some()
+                    && root.order(query) != std::cmp::Ordering::Greater
+            })
+            || self
+                .plan
+                .next_after(time)
+                .is_some_and(|cut| cut <= self.time)
+        {
+            return Err(Error::new(
+                "event_resolution",
+                "output query cannot rebase its certified source phase",
+            ));
+        }
+        self.time = time;
+        // This is an ordinary observation. The event's original root/window
+        // still belongs to the immutable accepted frame, not this point query.
+        self.last_root = None;
+        self.last_window = I::point(time);
+        Ok(())
+    }
     pub(crate) fn prepare(
         &self,
         time: f64,
@@ -270,6 +302,37 @@ mod sharing_tests {
         assert!(root.refine(window).is_some());
         assert!(root.refine(I::point(window.hi)).is_none());
         (window.hi, window, root)
+    }
+
+    #[test]
+    fn observation_cursor_requires_post_root_proof_and_preserves_accepted_epoch() {
+        let (query, mut window, root) = nonpoint_moment();
+        window.hi = query.next_up();
+        let accepted = source()
+            .prepare(window.hi, window, &[I::ONE], Some(&root))
+            .unwrap()
+            .source;
+        let before = accepted.clone();
+        let mut observed = accepted.clone();
+        observed.rebase_observation(query).unwrap();
+        let prepared = observed
+            .prepare(query, I::point(query), &[I::ONE], None)
+            .unwrap();
+        assert!(!prepared.changed);
+        assert_eq!(prepared.time_bounds, I::point(query));
+        assert!(prepared.exact_root.is_none());
+        assert!(accepted.same_epoch(&before));
+
+        let mut rejected = accepted.clone();
+        assert!(rejected.rebase_observation(window.lo).is_err());
+        assert!(rejected.same_epoch(&before));
+        let mut unproved = source()
+            .prepare(0.25, I::point(0.25), &[I::ONE], None)
+            .unwrap()
+            .source;
+        let original = unproved.clone();
+        assert!(unproved.rebase_observation(0.2).is_err());
+        assert!(unproved.same_epoch(&original));
     }
 
     #[test]

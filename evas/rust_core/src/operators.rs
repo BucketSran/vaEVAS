@@ -2211,6 +2211,21 @@ impl Operators {
         )
     }
 
+    /// Called only on a disposable phase-observation seed. Physical histories,
+    /// targets and immutable proofs remain those of the selected event phase.
+    pub(crate) fn rebase_source_observation(&mut self, time: f64) -> Result<(), Error> {
+        for entry in &mut self.entries {
+            if let Runtime::Transition {
+                source: Some(source),
+                ..
+            } = entry
+            {
+                source.rebase_observation(time)?;
+            }
+        }
+        Ok(())
+    }
+
     pub(crate) fn source_root_at(
         &self,
         time: f64,

@@ -13,6 +13,43 @@ from test_affine import KERNEL, instance, model
 
 
 class SourceShapeContracts(unittest.TestCase):
+    def test_output_after_timer_root_before_representative_keeps_source_history(self):
+        # 3*binary64(1ns) < 6*binary64(500ps) < the timer's upper
+        # representative. This is a post-callback observation, not a new event.
+        period=Q(1e-9); query=6*500e-12; stop=4e-9; rise=Q(300e-12)
+        self.assertLess(3*period,Q(query))
+        for target in ['($abstime>120n)?q:0','(V(u,r)>0.5)?q:0']:
+            with self.subTest(target=target):
+                program=compile_sources({'observation.va':model(f'''@(initial_step) q=0;
+                    @(timer(1n,1n)) q=q+1;
+                    V(y,r)<+transition({target},0,300p,300p);
+                    V(z,r)<+q;''','integer q; electrical z;')},[instance()])
+                common=[0,3e-9,query,3.15e-9,stop]
+                def run(times,forced=False):
+                    return transient(program,{'u':[[0,1],[stop,1]]},times,
+                                     stop=stop,max_step=500e-12,kernel=KERNEL,
+                                     strobetimes=times if forced else [])
+                sparse=run([0,stop]); result=run(common)
+                self.assertEqual(sparse['transient']['events'],result['transient']['events'])
+                self.assertEqual(sparse['solutions'][-1],result['solutions'][-1])
+                forced=run(common,True)
+                # Forced points may refine the representative/window. The
+                # physical clock, callback state and voltage oracle stay fixed.
+                for response in [result,forced]:
+                    events=response['transient']['events']
+                    self.assertEqual([e['after'] for e in events],[[1],[2],[3],[4]])
+                    for k,event in enumerate(events,1):
+                        lo,hi=event.get('observation_time_bounds',[event['time']]*2)
+                        self.assertLessEqual(Q(lo),k*period)
+                        self.assertLessEqual(k*period,Q(hi))
+                yi=program.nodes.index('y'); zi=program.nodes.index('dut:z')
+                for response in [result,forced]:
+                    for t,row in zip(common,response['solutions']):
+                        count=min(4,int(Q(t)//period))
+                        expected=Q(0) if '$abstime' in target or count==0 else Q(count-1)+min(Q(1),(Q(t)-count*period)/rise)
+                        self.assertEqual(row['voltages'][zi],count)
+                        self.assertLessEqual(abs(Q(row['voltages'][yi])-expected),Q(1e-12)+Q(1e-10)*abs(expected))
+
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)

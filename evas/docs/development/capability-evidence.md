@@ -29,6 +29,8 @@
 
 [固定候选400与213位置收据](../../../experiments/backends/support/source-shape/evaluation-400-71.json)补充LANG、EVENT-CONDITIONS、EVENT-ORDER、COMPOSE与QUALIFICATION的同源开发证据。两套平台内核、原判据和独立判据分别记录；完整分类、未支持与缺证只在[统一清单](../COMPARISON.md#evaluation-400-71)维护，不改变既有共同Q或合并状态。
 
+[101/314源游标诊断](../../../experiments/backends/support/source-shape/history-101-314.json)补充EVENT-ORDER、TIMED-OPERATOR与COMPOSE的相邻输出阶段修复。独立公开回归和候选隔离检查覆盖真实根之后、执行代表时刻之前的普通及强制观察；两份原件仍拒绝，后续限制见[统一清单](../COMPARISON.md#history-101-314)。没有新增实际参考或合并支持声明。
+
 [Pulse delay 缺省值](../../../experiments/backends/support/pulse-delay/README.md)补充 DEV:scs-input 的有限开发证据；仅省略 delay 取 0，其他源参数与误差约束保持，原 22 请求仍有后续拒绝。
 
 [隐式 DAE 的动态模型步长](../../../experiments/backends/implicit-step-bounds/README.md)补充 DYNAMICS 的有限开发证据；两条实际参考各33点通过原100nV门槛，不宣称原R01请求新增恢复。
