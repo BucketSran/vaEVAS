@@ -62,13 +62,24 @@ python3 -B scripts/ci_selection.py select --event-name push --event-path runs/<t
 ```
 
 后续状态读取优先报告变化、失败和原证据路径，完整结果按具体问题展开。
-JSON 协议消费者使用 `--json`；CI 的 `GITHUB_OUTPUT` 布尔值不变。
+JSON 协议消费者使用 `--json`；CI 保留原布尔字段编码，并增加阶段、相关模块及计划版本输出。
 这只缩减显示内容，不减少工作区检查范围、检查项目或错误记录。
 
 ## CI 按改动选择检查
 
-CI 按改动涉及的内容选择检查。普通说明文档只检查改动行的空白并运行 CI 路由自检，
-不启动静态校准、编译或仿真。能力表、数学说明和评测标准保留对应的检查。
+CI 先选择最终验收义务，再按阶段决定本次执行范围。草稿 PR 的日常更新使用迭代阶段；
+已映射的修改只执行相关回归，保留完整交付义务。草稿推送在 `before` 是当前 head 的祖先时，
+按本次推送差异选择迭代模块；最终义务仍按完整 PR 差异记录。非草稿 PR、`ready_for_review`、main 推送
+和每周完整检查使用交付阶段。手动 `workflow_dispatch` 默认完整交付；显式选择 `iteration` 并提供
+有效的前序提交 `base` 可运行快速检查，缺失或无效身份回退完整交付。草稿可手动完成完整验收，
+无需改变 PR 状态。CI 配置、选择器、未知路径和缺少映射的共享修改保守回退到完整检查。
+
+快速任务先对改动的 EVAS Python 源码、直接开发测试和 scripts 文件检查 Ruff 基本错误规则 `E9,F63,F7,F82`，再检查 Rust 格式、
+Clippy 与生成清单；该任务通过后才启动昂贵任务。冻结题包、参考模型和故意失败的夹具不自动加入源码 lint。Python 风格格式化和 mypy 尚未启用。
+本地可执行 `python3 -B scripts/ci_lint.py --paths <改动路径...>`，先安装固定的 `ruff==0.14.1`。
+本地迭代／交付模块由 [evas_check_policy.py](evas_check_policy.py) 及其生成表维护。
+
+下表描述完整交付的检查义务。草稿阶段未执行的项目保持待验收，不报告为通过。
 
 | 改动内容 | 执行的检查 |
 | --- | --- |
@@ -107,13 +118,13 @@ Benchmark 下的来源说明、规范、模板和题面均触发 Benchmark 检�
 
 混合修改取检查的并集，删除和重命名也参与选择。PR 使用分叉点至最新提交的完整 Git 差异，
 main 推送使用推送前后的提交差异，不使用有文件数量上限的路径过滤。
-差异身份缺失、首次推送或手动 `workflow_dispatch` 时全跑。
+差异身份缺失、首次推送或默认手动 `workflow_dispatch` 时全跑。每周一北京时间02:23的完整检查重新执行回归，fuzz每个目标由普通检查的45秒延长到300秒；400模型和外部参考矩阵仍只按专项授权运行。
 
 [numerical-assurance.yml](../.github/workflows/numerical-assurance.yml) 是唯一调度入口，
-每次只判断一次改动。安装和 Benchmark 工作流保留各自文件，由入口按需调用。
+选择任务记录完整差异；快速任务在自己的 checkout 重建同一计划。安装和 Benchmark 工作流保留各自文件，由入口按需调用。
 统一的 `ci-result` 检查每个被选中的任务和子工作流完成记录；失败、取消、缺失或意外跳过
 都不能通过。需要设置分支必需检查时使用 `ci-result`，它替代原来的三个 `*-result` 检查。
-本次没有修改 GitHub 分支保护配置。
+草稿迭代只产生 `iteration-result`，不产生可供合并门禁使用的 `ci-result`；转为非草稿会触发完整验收。完整阶段的 `ci-result` 额外要求 `regression-coverage` 通过。本次没有修改 GitHub 分支保护配置。
 
 同一 PR 的新推送会取消该 PR 的过期 CI。main 推送和手动运行互相独立，不自动取消，
 避免后来的文档推送取消前一版代码尚未完成的回归。
@@ -179,6 +190,25 @@ Decimal80 参考包络。各档的输入预算、回调检查、离散相位选�
 
 这条路径的中位耗时下降约 51%，代价是保存观察点包络的内存。它不是仿真器加速，
 也不是完整测试模块或整体 CI 的加速比例；本次还新增了两项跨档等价与错误输入检查。
+
+### 将完整回归分组并复用相同输入的成功结果
+
+`run_regression.py` 按模块分组，保留同一模块的 fixture 与测试顺序。四个 CI worker 使用独立
+checkout 和构建目录。`regression-weights.json` 中的历史模块耗时只影响分配，不改变测试或阈值；
+新模块按测试数量分配默认权重。汇总任务验证四份完整清单一致、实际执行与显式的夹具级跳过逐项对应计划，集合不重叠且没有遗漏；跳过不计为执行。
+Rust 全工作区测试由第0组执行；其他组只执行各自 Python 集合。新版本工具或输入自动使
+[成功证据缓存](../docs/contributing/evidence.md#reuse-ci-regression-evidence)失效。
+
+```sh
+PYTHONPATH=evas/src python3 -B scripts/run_regression.py --shard-count 4 --shard-index 0 --weights scripts/regression-weights.json --report runs/<task>/shard0.json
+PYTHONPATH=evas/src python3 -B scripts/run_regression.py --modules test_transition test_timer --report runs/<task>/focused.json
+python3 -B scripts/run_regression.py --merge runs/<task>/shard0.json runs/<task>/shard1.json runs/<task>/shard2.json runs/<task>/shard3.json --report runs/<task>/complete.json
+```
+
+单组成功不是完整回归通过。开发迭代只跑相关模块；稳定候选再执行四组及覆盖核对。
+计时报告的各组耗时之和不是并行墙钟耗时，不从一次运行推断提速比例。参考
+[分阶段持续集成](https://martinfowler.com/articles/continuousIntegration.html#KeepTheBuildFast)与
+[测试范围和隔离](https://testing.googleblog.com/2010/12/test-sizes.html)。
 
 ### 找出回归慢在哪里
 

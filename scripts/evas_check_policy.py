@@ -19,6 +19,21 @@ _DOC_SUFFIXES = (".md", ".rst")
 # full Python coverage until their owning tests and consumers have been checked.
 _RULES = (
     (
+        tuple("evas/rust_core/src/" + name for name in (
+            "operators.rs", "transition.rs", "transition_source_plan.rs",
+            "transition_source_state.rs", "transition_filter.rs", "transition_integral.rs",
+            "transition_filter_input.rs", "transient.rs", "transient_event_acceptance.rs",
+            "transient_history_calendar.rs", "transient_root_refinement.rs",
+            "transient_initialization.rs", "event_conditions.rs", "event_control.rs",
+            "event_accuracy.rs", "event_numeric.rs", "event_time_provenance.rs")),
+        ("affine", "timer", "transition", "transition_accuracy", "timed_composition",
+         "event_window_sampling", "lifecycle_closure", "semantic_invariants",
+         "timer_history_order", "continuous_dynamics", "event_accuracy",
+         "event_history_continuation", "passive_events", "passive_history_phase", "display"),
+        ("*",),
+        "shared event/history iteration; complete Python coverage remains a delivery obligation",
+    ),
+    (
         ("evas/rust_core/src/linear.rs", "evas/rust_core/src/linear/"),
         ("affine", "sparse"),
         ("affine", "reuse", "accuracy", "sparse", "sparse_transient"),
@@ -130,7 +145,7 @@ def select_checks(
                         for module in modules:
                             add(
                                 which,
-                                f"python:test_{module}.py",
+                                "python-regression" if module == "*" else f"python:test_{module}.py",
                                 {**reason, "why": area},
                             )
                     break
@@ -384,7 +399,7 @@ def document_text(text: str) -> str:
         cells = (
             ", ".join(f"`{p}`" for p in prefixes),
             " ".join(f"`test_{m}`" for m in iteration),
-            " ".join(f"`test_{m}`" for m in delivery),
+            " ".join("Full Python regression" if m == "*" else f"`test_{m}`" for m in delivery),
         )
         rows.append("| " + " | ".join(cells) + " |")
     start, finish = text.index(begin) + len(begin), text.index(end)
