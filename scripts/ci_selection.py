@@ -222,7 +222,26 @@ def commit(repo, sha):
 def select(repo, event_name, event):
     plan = {**flags(*CHECKS), 'base': '', 'head': '', 'paths': []}
     if event_name == 'workflow_dispatch':
-        return {**plan, 'reason': 'manual full check'}
+        if event.get('inputs', {}).get('stage') == 'iteration':
+            try:
+                base = commit(repo, event['inputs']['base'])
+                head = commit(repo, git(repo, 'rev-parse', 'HEAD').decode().strip())
+                git(repo, 'merge-base', '--is-ancestor', base, head)
+                raw = git(repo, 'diff', '--name-only', '--no-renames', '-z', base, head, '--')
+                paths = [os.fsdecode(p) for p in raw.split(b'\0') if p]
+                selected = execution_plan(repo, paths, flags(*CHECKS), 'iteration',
+                                          iteration_paths=paths)
+                return dict(**selected, base=base, head=head, paths=paths,
+                            iteration_paths=paths, reason='explicit iteration baseline; all delivery obligations retained')
+            except (KeyError, ValueError, OSError, subprocess.CalledProcessError):
+                pass
+        return {**plan, 'mode': 'delivery', 'modules': [],
+                'delivery_required': flags(*CHECKS), 'delivery_complete': False,
+                'reason': 'manual full check'}
+    if event_name == 'schedule':
+        return {**plan, 'mode': 'delivery', 'modules': [],
+                'delivery_required': flags(*CHECKS), 'delivery_complete': False,
+                'reason': 'scheduled full check'}
     try:
         if event_name == 'pull_request':
             base = commit(repo, event['pull_request']['base']['sha'])
@@ -237,10 +256,56 @@ def select(repo, event_name, event):
         raw = git(repo, 'diff', '--name-only', '--no-renames', '-z', base, head, '--')
         paths = [os.fsdecode(path) for path in raw.split(b'\0') if path]
         checks, reasons = classify_changes(repo, base, head, paths)
-        return {**checks, 'base': base, 'head': head, 'paths': paths, 'reasons': reasons,
+        stage = ('iteration' if event_name == 'pull_request'
+                 and event.get('pull_request', {}).get('draft') is True else 'delivery')
+        iteration_paths = None
+        if stage == 'iteration' and event.get('before'):
+            try:
+                before = commit(repo, event['before'])
+                git(repo, 'merge-base', '--is-ancestor', before, head)
+                delta = git(repo, 'diff', '--name-only', '--no-renames', '-z', before, head, '--')
+                iteration_paths = [os.fsdecode(p) for p in delta.split(b'\0') if p]
+            except (ValueError, subprocess.CalledProcessError):
+                pass
+        execution = execution_plan(repo, paths, checks, stage, iteration_paths=iteration_paths)
+        return {**execution, 'base': base, 'head': head, 'paths': paths, 'reasons': reasons,
+                'iteration_paths': iteration_paths,
                 'reason': 'classified complete Git diff'}
-    except (KeyError, TypeError, ValueError, subprocess.CalledProcessError) as error:
-        return {**plan, 'reason': f'full check: change identity unavailable ({error})'}
+    except (KeyError, TypeError, ValueError, OSError, subprocess.CalledProcessError) as error:
+        return {**plan, 'mode': 'delivery', 'modules': [],
+                'delivery_required': flags(*CHECKS), 'delivery_complete': False,
+                'reason': f'full check: change identity unavailable ({error})'}
+
+
+def execution_plan(repo, paths, required, stage, *, iteration_paths=None):
+    """A fast draft run never discharges the full candidate's obligations."""
+    import runpy
+    if stage not in ('iteration', 'delivery'):
+        raise ValueError('invalid verification stage')
+    modules = []
+    mode = stage
+    full_required = dict(required)
+    if stage == 'iteration' and iteration_paths is not None:
+        paths = iteration_paths
+        required = classify(paths)
+    if stage == 'iteration' and required['regression']:
+        policy = runpy.run_path(str(Path(repo) / 'scripts/evas_check_policy.py'))
+        selected = policy['select_checks'](paths, Path(repo), required, 'iteration',
+            per_path={p: classify([p]) for p in paths})
+        checks = selected['checks']
+        if selected['blocked_checks'] or any(not c.startswith('python:') for c in checks):
+            mode = 'delivery'
+        else:
+            modules = sorted({Path(c.removeprefix('python:')).stem for c in checks})
+    if any(p.startswith('.github/') or p in CI_FILES or required == flags(*CHECKS) for p in paths):
+        mode = 'delivery'
+    enabled = dict(full_required if mode == 'delivery' else required)
+    if mode == 'iteration':
+        for flag in ('calibration', 'provenance', 'differential', 'fuzz', 'package', 'regression'):
+            enabled[flag] = False
+    return dict(**enabled, mode=mode, modules=modules if mode == 'iteration' else [],
+                focused=mode == 'iteration' and required['regression'],
+                delivery_required=full_required, delivery_complete=False)
 
 
 def gate_errors(needs):
@@ -249,6 +314,18 @@ def gate_errors(needs):
     if selection.get('result') != 'success':
         errors.append('selection did not succeed')
     outputs = selection.get('outputs', {})
+    if outputs.get('plan_version') != '2':
+        errors.append('missing or invalid CI plan version')
+    else:
+        if outputs.get('mode') not in ('iteration', 'delivery'):
+            errors.append('missing or invalid verification mode')
+        if needs.get('fast-checks', {}).get('result') != 'success':
+            errors.append('fast-checks did not succeed')
+        coverage = needs.get('regression-coverage', {}).get('result')
+        if outputs.get('regression') == 'true' and coverage != 'success':
+            errors.append('complete regression coverage was not verified')
+        elif coverage not in ('success', 'skipped'):
+            errors.append('regression coverage failed or is missing')
     for flag in CHECKS:
         if outputs.get(flag) not in ('true', 'false'):
             errors.append(f'invalid selection output: {flag}={outputs.get(flag)!r}')
@@ -297,6 +374,9 @@ def main():
             for key in (*flags(), 'base', 'head'):
                 value = str(plan[key]).lower() if key in flags() else plan[key]
                 output.write(f'{key}={value}\n')
+            output.write('plan_version=2\nmode=' + plan['mode'] + '\n')
+            output.write('focused=' + str(plan.get('focused', False)).lower() + '\n')
+            output.write('modules=' + json.dumps(plan['modules'], separators=(',', ':')) + '\n')
     if args.report:
         args.report.parent.mkdir(parents=True, exist_ok=True)
         args.report.write_text(json.dumps(plan, indent=2) + '\n')

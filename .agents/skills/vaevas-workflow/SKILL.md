@@ -109,8 +109,11 @@ Keep one human review summary under [the delivery limits](../../../CONTRIBUTING.
 Record phase time with [the existing evidence policy](../../../docs/contributing/evidence.md#development-time),
 including rework and CI waiting; reuse tool timings rather than reconstructing estimates later.
 
-Apply the [conversation handoff triggers](../../../docs/contributing/workspaces.md#conversation-handoff-triggers)
-when a task ends, after repeated compaction or when context is lost. A fresh review agent does not reset the main conversation.
+Keep the same main conversation and fixed progress entry for an ongoing task. Compaction
+alone never requires a transfer; recover settled decisions from the task record first.
+Apply the [conversation handoff rules](../../../docs/contributing/workspaces.md#conversation-handoff-triggers)
+when a transfer is necessary, keeping links in both conversations and the fixed progress entry.
+A fresh review agent does not replace the main conversation.
 
 ## Complete the requested stage
 

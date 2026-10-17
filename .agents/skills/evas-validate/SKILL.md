@@ -60,6 +60,14 @@ When executing, run commands from the repository root. Before simulator tests,
 rebuild the debug kernel using the [build command](../../../evas/README.md#构建与运行);
 those tests use that binary. Checks that do not invoke the kernel need no build.
 
+During iteration, start with the observed failure and the policy's `iteration` modules.
+Shared event/history mappings keep complete Python coverage as a `delivery` obligation.
+Run format, lint and generated metadata checks before freezing a candidate. Execute full
+acceptance for a stable candidate, then reuse matching evidence across review/publication;
+a changed implementation or consumer still invalidates the affected checks. Draft CI success
+is iteration evidence, not completed delivery. The executable stages, sharding and reuse limits
+are in [CI stages](../../../scripts/README.md#ci-按改动选择检查).
+
 The checkout-owned [check policy](../../../scripts/evas_check_policy.py) selects
 local iteration and delivery checks. Its executable mappings are generated below;
 run `python3 -B scripts/evas_check_policy.py --write-docs` after changing them.
@@ -72,6 +80,7 @@ use that revision's original validation entry and retain its historical evidence
 
 | Source paths | Iteration modules | Delivery modules |
 | --- | --- | --- |
+| `evas/rust_core/src/operators.rs`, `evas/rust_core/src/transition.rs`, `evas/rust_core/src/transition_source_plan.rs`, `evas/rust_core/src/transition_source_state.rs`, `evas/rust_core/src/transition_filter.rs`, `evas/rust_core/src/transition_integral.rs`, `evas/rust_core/src/transition_filter_input.rs`, `evas/rust_core/src/transient.rs`, `evas/rust_core/src/transient_event_acceptance.rs`, `evas/rust_core/src/transient_history_calendar.rs`, `evas/rust_core/src/transient_root_refinement.rs`, `evas/rust_core/src/transient_initialization.rs`, `evas/rust_core/src/event_conditions.rs`, `evas/rust_core/src/event_control.rs`, `evas/rust_core/src/event_accuracy.rs`, `evas/rust_core/src/event_numeric.rs`, `evas/rust_core/src/event_time_provenance.rs` | `test_affine` `test_timer` `test_transition` `test_transition_accuracy` `test_timed_composition` `test_event_window_sampling` `test_lifecycle_closure` `test_semantic_invariants` `test_timer_history_order` `test_continuous_dynamics` `test_event_accuracy` `test_event_history_continuation` `test_passive_events` `test_passive_history_phase` `test_display` | Full Python regression |
 | `evas/rust_core/src/linear.rs`, `evas/rust_core/src/linear/` | `test_affine` `test_sparse` | `test_affine` `test_reuse` `test_accuracy` `test_sparse` `test_sparse_transient` |
 | `evas/rust_core/src/nonlinear.rs`, `evas/rust_core/src/nonlinear/` | `test_affine` `test_nonlinear` | `test_affine` `test_nonlinear` `test_accuracy` `test_precision_chain` |
 | `evas/src/evas/syntax.py`, `evas/src/evas/parameters.py` | `test_affine` `test_contracts` | `test_affine` `test_contracts` `test_parameter_constraints` |

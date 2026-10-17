@@ -97,6 +97,27 @@ structured record. No-finding reviews need only their fixed scope, evidence and 
 Independent review does not recursively require another reviewer. Routine document and lint
 corrections use focused checks; new semantic questions retain independent review.
 
+### Keep iteration feedback short
+
+Keep one main conversation and update the fixed progress entry throughout an ongoing task.
+After compaction, recover decisions from that entry and continue. Necessary transfers follow
+the [handoff rules](docs/contributing/workspaces.md#conversation-handoff-triggers), including
+links in both conversations and the same progress entry.
+
+During implementation, run the current failing case and the affected module checks selected by
+[the local policy](scripts/evas_check_policy.py). Add a focused regression for a later-stage
+failure whenever it can detect the same fault. Run formatting, lint and generated-file checks
+before expensive acceptance. A draft CI success records iteration evidence; full delivery
+obligations remain open. Unknown/shared paths without an audited iteration mapping retain
+complete coverage.
+
+Freeze a stable candidate before full acceptance. Reuse matching evidence rather than rerunning
+all checks at review, commit and PR boundaries. Review source, tests, fixtures, dependencies,
+toolchain, commands and effective settings when deciding whether evidence still applies. Let
+CI verify reusable evidence identities; an earlier green commit alone is insufficient. Run
+changed consumers after a meaningful delta. See [CI stages](scripts/README.md#ci-按改动选择检查)
+and [evidence reuse](docs/contributing/evidence.md#reuse-ci-regression-evidence).
+
 ### Prepare one delivery candidate
 
 Run formatting, lint and changed-link checks before freezing behavioral acceptance. Keep one
