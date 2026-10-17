@@ -1,6 +1,6 @@
 # 有限整数位运算与点值证明
 
-[紧凑收据](evidence.json)记录有限整数位运算、transition点值证明和后续算子默认参数的分支验收。
+[紧凑收据](evidence.json)记录有限整数位运算、transition点值证明、算子默认参数和有限声明初值的分支验收。
 当前通过数与剩余缺口在[统一进度表](../../../../evas/docs/COMPARISON.md#progress-board)维护，
 排期与逐项推进见[Issue214](https://github.com/BucketSran/vaEVAS/issues/214)。PR208保持草稿，未合并。
 
@@ -14,8 +14,9 @@ transition复用已有有理起点、折线与终点证明，同时计算名义�
 舍入与下游放大仍按原预算验收。范围见[算子合同](../../../../evas/docs/math/operators.md)。
 公开PWL反例在原1e-12预算下先拒绝，再与独立Fraction答案一致；过严的1/3预算仍拒绝。
 
-收据分别绑定核心400原件和后续053/299/300三原件的源码、内核、原checker与normalization。
-同一Rust核不表示Python绑定相同，后续两例通过没有改写成新的统一400成绩。
+最终收据绑定同一144文件源码、release核、原checker和normalization，完整执行400原件：
+198通过、18失败、184拒绝，清理400/400。此前核心400与后续三件的独立身份保留在1de6896b历史收据。
+[有限声明初值](../declaration-initializers/README.md)随最终候选复验；当前成绩来自完整重跑，未从局部结果相加。
 012保留原checker覆盖不足，023/027、048/049、097/349保留各自后续阻塞。
 初始化仅交付[设计与正反例](../initial-voltage-sampling/proposal.md)，没有实现采样扩展。
 

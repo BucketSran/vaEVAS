@@ -227,6 +227,28 @@ cross 叶子保留 `guard_value`；timer 叶子不伪造 guard 值，只保留�
 动态 guard 的范围见下节，多块写同一状态的规则见
 [写者检查](#multiple-event-writers)。全部故障点的系统性注入和完整连续时间误差资格仍是验证缺口。
 
+<a id="declaration-initializers"></a>
+
+## 事件状态的声明初值
+
+本分支接受原本已有 cross/timer 写者的标量 `integer`、`real` 声明初值。
+例如 `integer n=2;` 给已有事件状态设置初值；声明赋值本身不能创建持久状态角色。
+只读时间参数、普通 analog 局部量、数组初值、其他变量依赖、电压采样、时间和算子调用仍拒绝。
+参数在每个实例绑定后，初值必须经既有类型降低证明为有限标量常量；这不开放全部合法常量表达式。
+
+所有显式声明初值先在实例私有临时表验证，再覆盖默认零环境，随后按原源码顺序执行 `initial_step`。
+因此声明 `n=2` 后的 `@(initial_step) n=7` 得到7；非法声明初值不能因稍后被覆盖而忽略。
+失败不返回部分 Program，下一次编译与其他实例不共享种子；声明赋值不在每次模拟求值时重做。
+
+源类型沿用原初始化合同：`real x=7/2` 的整数除法结果为3，显式 `7/2.0` 为3.5。
+整数中间溢出、非整型写入与非有限值仍拒绝，real 目标不删除整数检查。
+当前常量降低不能化成单个仿射常量的余数表达式，以及已有审计拒绝的整数参数除法仍拒绝。
+元数据只在前端保留，经函数、数组及层次展开传递，最终复用 IR24 的 `State.initial`。
+
+独立初值、后续事件和拒绝控制见[声明初值回归](../../tests/test_declaration_initializers.py)；
+完整原件及候选身份见[验收收据](../../../experiments/backends/support/declaration-initializers/evidence.json)。
+一般输入电压采样仍只有[设计与正反例](../../../experiments/backends/support/initial-voltage-sampling/proposal.md)，未实现。
+
 <a id="input-initialization"></a>
 
 ## 实际驱动输入的比较初值

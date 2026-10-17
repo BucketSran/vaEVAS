@@ -126,6 +126,10 @@ IR22 的隔离观察事件另支持执行时的 `sqrt`、`abs`、`min`、`max`�
   `{"u[0]":"a", "u[1]":"b"}` 的显式位连接；模块内部的整向量连接按各自声明顺序配对。
   `V(bus[index])` 接受实例常量或展开后的 genvar 下标。每个节点与贡献保留独立身份；
   electrical 与方向声明必须有相同范围。含向量模块展开后的节点上限为 4096，动态位选、切片、拼接仍拒绝。
+- 已有 cross/timer 写者的标量 `integer`、`real` 可在声明中给有限实例常量初值。
+  先完整验证声明种子，再执行原 `initial_step` 覆盖；声明本身不能制造事件状态角色。
+  只读设置、ordinary 局部量、数组和输入采样不纳入，类型及常量降低限制见
+  [声明初值合同](../math/events.md#declaration-initializers)。
 - `initial_step or initial_step("dc")` 等只含初始化叶、且至少含一个无分析限定叶的 OR，
   归并为一次初始化体。重复叶不重复执行，也不生成零时刻 timer。
   纯初始化中的 real/integer 还接受[实际 driven 输入比较](../math/events.md#input-initialization)，

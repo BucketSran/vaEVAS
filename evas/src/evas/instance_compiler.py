@@ -124,8 +124,11 @@ class InstanceCompiler:
                     yield from writes(statement.body)
 
         persistent = set(writes(self.model.initial))
+        event_writers = set()
         for event in self.model.events:
             persistent.update(writes(event.body))
+            if any(trigger.kind in ("cross", "timer") for trigger in event.triggers):
+                event_writers.update(writes(event.body))
         self.local_variables = set(writes(self.model.analog)) - persistent
         self.preserve_analog_structure = self.compilation.preserve_structure or bool(self.local_variables)
         def expression_reads(expr):
@@ -163,6 +166,7 @@ class InstanceCompiler:
         self.state_names = tuple(name for name in self.model.variables
                                  if name not in self.local_variables and (name in persistent or name in referenced))
         self.state_ids = {name: len(self.compilation.states) + index for index, name in enumerate(self.state_names)}
+        self.declaration_initials = self.bind_declaration_initializers(event_writers)
         self.initialize_states()
         self.infer_integer_state_ranges()
         self.analyze_event_index_domains()
@@ -210,10 +214,43 @@ class InstanceCompiler:
         if possible != definite:
             raise CompileError(f'{self.model.source}: conditional voltage branch may be inactive; switching to a zero-flow branch is unsupported')
 
+    def bind_declaration_initializers(self, event_writers):
+        # Declarations seed existing event state; they never manufacture a
+        # persistent role or read another variable's default/initial value.
+        seeds = {}
+        for name, expr in self.model.variable_initializers.items():
+            try:
+                if name not in event_writers or name in self.model.arrays:
+                    raise CompileError("declaration initialization requires a scalar cross/timer event target")
+                pending = [expr]
+                while pending:
+                    item = pending.pop()
+                    if (item.op in ("voltage", "time", "array", "index")
+                            or item.op == "parameter" and item.value not in self.model.parameters
+                            or item.op in OPERATOR_NAMES or item.op in DECISION_NAMES):
+                        raise CompileError("declaration initializers require instance-constant parameter expressions")
+                    pending.extend(item.args)
+                value = lower(expr, self.typed_resolve(self.parameter), {}, self.model.source)
+                if not isinstance(value, Affine) or value.terms or not math.isfinite(value.constant):
+                    raise CompileError("declaration initialization requires a finite scalar constant")
+                if self.model.variables[name] == "integer":
+                    self.validate_integer_value(value, expr.token, initial=True)
+                seeds[name] = value
+            except CompileError as exc:
+                if exc.diagnostic['code'] == 'resource_budget':
+                    raise
+                raise CompileError(f'unsupported declaration initializer: {exc}',
+                                   code='unsupported_initial_event', token=expr.token,
+                                   instance=self.instance.name) from exc
+        return seeds
+
     def initialize_states(self):
         # Initial procedural execution uses a symbolic environment. Each write
         # replaces the previous value, and branch merges preserve source order.
         env = {name: Affine(0., ()) for name in self.state_names}
+        # All explicit seeds have been validated before initial_step can
+        # overwrite them. This environment belongs to only this instance.
+        env.update(self.declaration_initials)
         def resolve(values):
             return self.typed_resolve(lambda name: values[name] if name in values else self.parameter(name))
         def execute(statements, values):

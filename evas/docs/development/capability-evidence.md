@@ -49,7 +49,14 @@ IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和�
 同一[分支收据](../../../experiments/backends/support/integer-bitops/evidence.json)补充TRANSITION、CROSS、SLEW和DYNAMICS：
 有理点值证明保留真实误差验收，标准算子缺省参数复用原IR；公开正反例分别见
 [点值回归](../../tests/test_transition_point_proof.py)和[默认参数回归](../../tests/test_operator_defaults.py)。
-核心400与后续三原件分开绑定源码，初始化采样仅有[设计](../../../experiments/backends/support/initial-voltage-sampling/proposal.md)。
+最终统一400绑定同一源码；早期核心400与后续三件身份保留在`1de6896b`历史收据。
+初始化采样仅有[设计](../../../experiments/backends/support/initial-voltage-sampling/proposal.md)。
+
+[有限声明初值](../../../experiments/backends/support/declaration-initializers/evidence.json)补充LANG的分支证据，
+并检查既有cross/timer写者上的初始化组合。
+初值只为原有事件写者绑定有限实例常量，复用原类型检查、顺序初始化和IR24，
+范围见[合同](../math/events.md#declaration-initializers)与[公开正反例](../../tests/test_declaration_initializers.py)。
+声明常量不授予一般输入采样、只读设置或ordinary局部量支持。
 
 IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) 合入 main，补充 LANG、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE 和 DEV:scs-input。
 契约见[局部变量与条件支路](../../validation/ANALOG_CONDITIONS_CONTRACT.md)、

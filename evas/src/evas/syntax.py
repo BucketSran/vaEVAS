@@ -219,6 +219,7 @@ class Model:
     node_ranges: dict[str, tuple[Expr, Expr] | None] = field(default_factory=dict)
     port_ranges: dict[str, tuple[Expr, Expr] | None] = field(default_factory=dict)
     declaration_token: Token | None = None
+    variable_initializers: dict[str, Expr] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -934,6 +935,7 @@ class Parser:
         self.take(")")
         self.take(";")
         parameters, variables, functions, genvars, arrays = {}, {}, {}, set(), {}
+        variable_initializers = {}
         parameter_types, parameter_ranges = {}, {}
         while (self.token.text in ("input", "output", "inout", "electrical", "parameter", "integer", "real", "genvar")
                or self.token.text == "analog" and self.tokens[self.index+1].text == "function"):
@@ -980,6 +982,12 @@ class Parser:
                             if self.token.text == "[":
                                 self.fail("multidimensional variable arrays are not yet supported")
                             arrays[variable] = (left, right)
+                        if self.token.text == "=":
+                            token = self.take("=")
+                            if variable in arrays:
+                                self.fail("declaration initialization requires a scalar variable", token,
+                                          code='unsupported_initial_event')
+                            variable_initializers[variable] = self.expression()
                         if self.token.text != ",":
                             break
                         self.take(",")
@@ -1037,4 +1045,4 @@ class Parser:
             self.fail('initial $display in a hierarchical model is not supported', module_token)
         if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys() | genvars):
             self.fail("function name conflicts with a module declaration")
-        return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children), parameter_types, parameter_ranges, node_ranges, port_ranges, module_token)
+        return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children), parameter_types, parameter_ranges, node_ranges, port_ranges, module_token, variable_initializers)
