@@ -1278,6 +1278,25 @@ impl EventModel {
         )
     }
 
+    /// `circuit_at` for same-window settlement trials: the scratch plan holds
+    /// only structure (nodes, branch grouping, labels) that this model fixes,
+    /// never candidate state, operator or input values, so reuse cannot leak a
+    /// previous trial's numbers into a later one.
+    pub(crate) fn circuit_at_with_scratch(
+        &self,
+        states: &[f64],
+        operators: &[f64],
+        inputs: &[I],
+        scratch: &mut Option<crate::assembly::AssemblyPlan>,
+    ) -> Result<Circuit, Error> {
+        Circuit::new_with_scratch(
+            self.bound_circuit_program_at(states, operators, inputs)?,
+            &self.driven,
+            self.tolerances.clone(),
+            scratch,
+        )
+    }
+
     fn bound_circuit_program_at(
         &self,
         states: &[f64],
@@ -1323,16 +1342,17 @@ impl EventModel {
         before: &[f64],
         operators: &[f64],
     ) -> Result<Circuit, Error> {
-        self.event_circuit_program(&self.program, selection, before, operators)
+        self.event_trial_program(&self.program, selection, before, operators)
+            .and_then(|program| Circuit::new(program, &self.driven, self.tolerances.clone()))
     }
 
-    pub(crate) fn event_circuit_program(
+    fn event_trial_program(
         &self,
         selected: &Program,
         selection: &Selection,
         before: &[f64],
         operators: &[f64],
-    ) -> Result<Circuit, Error> {
+    ) -> Result<Program, Error> {
         let initial: Vec<_> = before
             .iter()
             .map(|&value| AffineState {
@@ -1385,7 +1405,22 @@ impl EventModel {
         for (contribution, rhs) in program.contributions.iter_mut().zip(&rhs) {
             contribution.rhs = rhs.substitute(&updates)?.bind(&[], operators)?;
         }
-        Circuit::new(program, &self.driven, self.tolerances.clone())
+        Ok(program)
+    }
+
+    /// `event_circuit_program` for same-window settlement trials; see
+    /// [`EventModel::circuit_at_with_scratch`]. The affine state updates are
+    /// rebuilt from `before` and this trial's operator values on every call.
+    pub(crate) fn event_circuit_program_with_scratch(
+        &self,
+        selected: &Program,
+        selection: &Selection,
+        before: &[f64],
+        operators: &[f64],
+        scratch: &mut Option<crate::assembly::AssemblyPlan>,
+    ) -> Result<Circuit, Error> {
+        let program = self.event_trial_program(selected, selection, before, operators)?;
+        Circuit::new_with_scratch(program, &self.driven, self.tolerances.clone(), scratch)
     }
 
     fn bind(&self, states: &[f64], operators: &[f64]) -> Result<Program, Error> {
