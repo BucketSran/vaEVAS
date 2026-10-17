@@ -14,7 +14,7 @@
 `M_PI_2`、`M_PI_4`、`M_1_PI`、`M_2_PI`、`M_2_SQRTPI`、`M_SQRT2`、`M_SQRT1_2`。
 例如，显式包含后 ``V(y) <+ `M_TWO_PI;`` 使用标准小数舍入为 binary64 的值。
 `M_PI` 保留原 literal 及 binary64 值；数学常量依据标准定义，不读取商业仿真器头文件。
-没有该 include 或用户 define 时，数学宏仍未定义。`default_transition` 是独立编译指令，仍未支持。
+没有该 include 或用户 define 时，数学宏仍未定义。
 调用者提供的同路径文件总是优先，空头文件不等价于标准定义。
 不搜索机器文件系统，不隐式为没有 include 的模型添加 discipline。
 
@@ -42,6 +42,23 @@ nature 的 abstol 也不改变 manifest 的求解容差。
 实现入口是 `frontend.py`、`preprocessor.py`、`syntax.py` 与
 `standard_headers.py`；独立公开编译回归在 `tests/test_compile_admission.py`。
 该有限准入修复不等价于完整 Spectre/VAMS 语法兼容性认证。
+
+## transition 默认边沿
+
+PR208候选按VAMS 2.4 §10.3接受模块外的 `` `default_transition constant_expression``。
+它按活跃源码顺序作用于后续调用，include共享当前值，独立源码根各自初始化，后续指令不追改已解析模块。
+时间表达式须为有限正编译常量，可用宏，不能引用模块参数；整数除法与溢出沿用原常量检查。
+模块内指令和未知宏仍拒绝。零值指令需要实现定义的非零默认策略，本候选尚未提供，明确拒绝。
+
+依据§4.5.8，缺省或绑定后为零的rise/fall取当前默认。`transition(q)`的delay取0，
+`transition(q,td)`保留td，显式非零rise/fall优先；仅给rise时fall沿用rise，包括实例参数覆盖后的值。
+例如默认2、`transition(q,0,t,4)`在t=0时使用2和4，t=3时使用3和4。
+没有该指令时，原三／四参数调用与rise到fall的缺省规则保持；缺省或零rise仍明确拒绝。
+
+`preprocessor.py`把默认值附于活跃Token，`syntax.py`补缺少的参数，
+`instance_compiler.py`在实例常量绑定后替换零边沿，继续使用原IR与内核。
+[独立回归](../../tests/test_default_transition_directive.py)核对默认斜坡、include顺序、源码根和实例隔离及拒绝边界。
+这是未合并候选，尚无本切片实际Spectre对齐证据；原件结果另在[统一进度表](../COMPARISON.md#progress-board)维护。
 
 ## ANSI 端口声明
 

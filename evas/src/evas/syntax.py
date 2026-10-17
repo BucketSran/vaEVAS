@@ -22,6 +22,7 @@ class Token:
     column: int
     source: str = ''
     expansion: tuple[tuple[str, int], ...] = ()
+    default_transition: float | None = None
 
 
 _TOKEN = re.compile(
@@ -371,6 +372,13 @@ class Parser:
                 self.take(",")
                 arguments.append(self.expression())
             self.take(")")
+            if token.text == 'transition' and token.default_transition is not None and 1 <= len(arguments) <= 4:
+                default = Expr('number', token.default_transition, (), token)
+                zero = Expr('number', 0., (), token)
+                if len(arguments) == 1:
+                    arguments.append(zero)
+                if len(arguments) == 2:
+                    arguments.append(default)
             allowed = OPERATOR_ARITIES[token.text]
             if len(arguments) not in allowed:
                 label = " or ".join(str(count) for count in allowed)

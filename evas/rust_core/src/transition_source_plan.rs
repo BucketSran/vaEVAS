@@ -383,6 +383,56 @@ impl Spec {
             "cannot prove source-target predicate at original real root",
         )
     }
+    /// A held-only guard is constant throughout this epoch. Certify the
+    /// relation over its whole enclosure, never a representative state value.
+    /// Source-dependent guards retain the original exact-root/cut proof path.
+    fn held_decision(
+        &self,
+        left: &Expression,
+        right: &Expression,
+        relation: &Relation,
+        states: &[I],
+    ) -> Result<Option<bool>, Error> {
+        self.work.step()?;
+        let (mut nodes, mut dependencies, mut operators) =
+            crate::continuous::integral_dependency_edges(left, &self.program, &self.owner)?;
+        let (rn, rs, ro) =
+            crate::continuous::integral_dependency_edges(right, &self.program, &self.owner)?;
+        nodes.extend(rn);
+        dependencies.extend(rs);
+        operators.extend(ro);
+        if !dependencies.iter().any(|&k| states[k].lo != states[k].hi)
+            || nodes.iter().any(|&k| k != 0)
+            || !operators.is_empty()
+        {
+            return Ok(None);
+        }
+        let a = crate::affine_bounds::affine(left, &self.program)?;
+        let b = crate::affine_bounds::affine(right, &self.program)?;
+        let start = self.program.nodes.len();
+        let mut enclosure = *a.last().unwrap() - *b.last().unwrap();
+        for (k, state) in states.iter().enumerate() {
+            self.work.step()?;
+            enclosure = enclosure + (a[start + k] - b[start + k]) * *state;
+        }
+        if !enclosure.finite() {
+            return Err(invalid("nonfinite held source-target predicate enclosure"));
+        }
+        let decision = match relation {
+            Relation::Lt if enclosure.hi < 0. => Some(true),
+            Relation::Lt if enclosure.lo >= 0. => Some(false),
+            Relation::Le if enclosure.hi <= 0. => Some(true),
+            Relation::Le if enclosure.lo > 0. => Some(false),
+            Relation::Gt if enclosure.lo > 0. => Some(true),
+            Relation::Gt if enclosure.hi <= 0. => Some(false),
+            Relation::Ge if enclosure.lo >= 0. => Some(true),
+            Relation::Ge if enclosure.hi < 0. => Some(false),
+            _ => None,
+        };
+        decision.map(Some).ok_or_else(|| {
+            invalid("held source-target predicate is indeterminate over its enclosure")
+        })
+    }
     fn resolve(&self, e: &Expression, states: &[I], time: &Cut) -> Result<Expression, Error> {
         self.work.step()?;
         Ok(match e {
@@ -396,12 +446,17 @@ impl Spec {
             } => {
                 let left = self.resolve(left, states, time)?;
                 let right = self.resolve(right, states, time)?;
-                let sign = self.sign(&left, &right, states, time)?;
-                let yes = match relation {
-                    Relation::Lt => sign < 0,
-                    Relation::Le => sign <= 0,
-                    Relation::Gt => sign > 0,
-                    Relation::Ge => sign >= 0,
+                let yes = match self.held_decision(&left, &right, relation, states)? {
+                    Some(yes) => yes,
+                    None => {
+                        let sign = self.sign(&left, &right, states, time)?;
+                        match relation {
+                            Relation::Lt => sign < 0,
+                            Relation::Le => sign <= 0,
+                            Relation::Gt => sign > 0,
+                            Relation::Ge => sign >= 0,
+                        }
+                    }
                 };
                 return self.resolve(if yes { then_value } else { else_value }, states, time);
             }
@@ -587,15 +642,6 @@ impl Plan {
             return Err(Error::new(
                 "invalid_ir",
                 "source-target state dimensions or enclosures are invalid",
-            ));
-        }
-        if spec
-            .predicate_dependencies
-            .iter()
-            .any(|&k| states[k].lo != states[k].hi)
-        {
-            return Err(invalid(
-                "all source-target predicate state must be point-valued",
             ));
         }
         Ok(())
@@ -908,6 +954,87 @@ mod proof_cache_tests {
                 "condition_precision"
             );
         }
+    }
+
+    fn held_selected(relation: &str, threshold: f64) -> Expression {
+        serde_json::from_value(json!({
+            "op":"select", "relation":relation,
+            "left":Expression::State { state: 0 }, "right":constant(threshold),
+            "then_value":constant(1.), "else_value":constant(0.),
+            "origin":{"source":"held.va","line":1,"column":1,"instance":"M"}
+        }))
+        .unwrap()
+    }
+
+    #[test]
+    fn held_interval_relations_certify_endpoints_and_refuse_straddles() {
+        let spec = spec(
+            selected(constant(1.), constant(0.)),
+            [0., 1.],
+            Work::default(),
+        );
+        let state = Expression::State { state: 0 };
+        for (relation, bounds, expected) in [
+            (Relation::Gt, I { lo: 1., hi: 2. }, true),
+            (Relation::Gt, I { lo: -1., hi: 0. }, false),
+            (Relation::Ge, I { lo: 0., hi: 1. }, true),
+            (Relation::Ge, I { lo: -2., hi: -1. }, false),
+            (Relation::Lt, I { lo: -2., hi: -1. }, true),
+            (Relation::Lt, I { lo: 0., hi: 1. }, false),
+            (Relation::Le, I { lo: -1., hi: 0. }, true),
+            (Relation::Le, I { lo: 1., hi: 2. }, false),
+        ] {
+            assert_eq!(
+                spec.held_decision(&state, &constant(0.), &relation, &[bounds])
+                    .unwrap(),
+                Some(expected)
+            );
+            assert_eq!(
+                spec.held_decision(&state, &constant(0.), &relation, &[I { lo: -1., hi: 1. }])
+                    .unwrap_err()
+                    .kind,
+                "condition_precision"
+            );
+        }
+        // Contact with zero is ambiguous only for the relation whose truth
+        // changes between that endpoint and the interval's interior.
+        for (relation, bounds) in [
+            (Relation::Gt, I { lo: 0., hi: 1. }),
+            (Relation::Ge, I { lo: -1., hi: 0. }),
+            (Relation::Lt, I { lo: -1., hi: 0. }),
+            (Relation::Le, I { lo: 0., hi: 1. }),
+        ] {
+            assert_eq!(
+                spec.held_decision(&state, &constant(0.), &relation, &[bounds])
+                    .unwrap_err()
+                    .kind,
+                "condition_precision"
+            );
+        }
+    }
+
+    #[test]
+    fn held_interval_rebind_changes_decision_and_failed_rebind_preserves_plan() {
+        let spec = spec(
+            selected(held_selected("gt", 0.5), constant(0.)),
+            [1., 1.],
+            Work::default(),
+        );
+        let old = Plan::build(spec, &[I { lo: 0.1, hi: 0.2 }]).unwrap();
+        let before = old.clone();
+        assert_eq!(old.seed().value, 0.);
+        let changed = old.rebind(&[I { lo: 0.8, hi: 0.9 }]).unwrap();
+        assert_eq!(changed.seed().value, 1.);
+        assert!(!old.same_context(&[I { lo: 0.8, hi: 0.9 }]).unwrap());
+        assert_eq!(
+            old.rebind(&[I { lo: 0.4, hi: 0.6 }]).err().unwrap().kind,
+            "condition_precision"
+        );
+        assert!(old.same_proof(&before));
+        assert!(old
+            .rebind(&[I { lo: 0.1, hi: 0.2 }])
+            .unwrap()
+            .same_proof(&before));
     }
 
     #[test]

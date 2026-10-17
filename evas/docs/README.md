@@ -11,7 +11,7 @@
 | 表中“通过”依据什么，精度怎样判定？ | [四后端评测标准](COMPARISON-METHODOLOGY.md) |
 | 新测试是否覆盖旧测试，还缺什么？ | [累计测试清单](../validation/paper/COVERAGE.md) |
 | 当前版本包含哪些改动？ | [版本记录](UPDATE.md) |
-| R01、400家族和issue还缺什么，接下来做什么？ | [统一功能缺口与推进路线](COMPARISON.md#engineering-status) |
+| 现在完成了什么，还缺什么，下一步做什么？ | [功能进度总览](COMPARISON.md#progress-board)，原GAP依赖和验收见下方详细条目 |
 | 如何安装、设置观测或读取结果？ | 下方[接口参考](#接口参考) |
 | 电压、积分和事件怎样计算？ | [数学原理](math/README.md) |
 | 某项结论依据哪次实际实验？ | [证据索引](development/capability-evidence.md) |

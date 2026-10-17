@@ -1,0 +1,2365 @@
+{
+  "status": "unmerged draft; scoped development evidence; no benchmark or alignment qualification",
+  "base_head": "808dadc4823e55378a3aed2868cecb990bfaea38",
+  "source_files": {
+    "evas/pyproject.toml": "31f84287c6257f2f424e850df9451aac643aea94636eb4de4829785ea9b1de9e",
+    "evas/rust_core/Cargo.lock": "a60ef97b215300e2665d2e9864d6bbbdb7b2bce468873f8c3cdba0fec858f5c5",
+    "evas/rust_core/Cargo.toml": "750f906a7ae10f2c6e0ae9cbee5787c1c286d66e1aad88a285bd9684c7ba1ad5",
+    "evas/rust_core/ir/Cargo.toml": "ee626ead9fe9620b9b48c956bef41d283578683d25bc879b20f25730adf325f0",
+    "evas/rust_core/ir/src/lib.rs": "79137934a1fe7dcc35c95e317961902218a7e6ef7248a9cdb51be8fc5d61e55c",
+    "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+    "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+    "evas/rust_core/src/affine_bounds.rs": "074445000a0dc47246b9f7bcd4d299062668fc5d7772e958e95587f2e7b6edee",
+    "evas/rust_core/src/analog.rs": "1505d79dc24df924c7544da0a0fdfa9a6280bffb67f5ee191dad0ff2f13ad484",
+    "evas/rust_core/src/assembly.rs": "beab047ea57b6510e00e897b1caf02e437f3a30bd1567f92bc39c0a7e40b62f9",
+    "evas/rust_core/src/batch.rs": "ba227471ba388b4efd361e9a523352b7626bb80cd51141a00ca2b1c97eed2888",
+    "evas/rust_core/src/causal_event.rs": "907e6c283a281e9f07d022a44e6ad53ba91484f938e4a0d9e5d1b23ab032ef79",
+    "evas/rust_core/src/causal_voltage.rs": "8eab2a5a636f43999f51f015b2fd3bb82cc1e73b50ac389c0e0412de65d75da6",
+    "evas/rust_core/src/continuous.rs": "517d6574c6594857f8bc77bf829c714afe9a6f2bb5bc693dabf997ec432112fe",
+    "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+    "evas/rust_core/src/continuous_history.rs": "90d3fd2b904f5aece03b56fae587776d281cfc0e24348272e15597fc145bc46f",
+    "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+    "evas/rust_core/src/continuous_readout.rs": "637028c3dd24d06665ea5849d3e90666a3e41585b96cffb692910b041e135e84",
+    "evas/rust_core/src/continuous_runtime.rs": "6df2d30f8f67cf9039425b820abc614232e2a7ed02c973b99f18d6899f570403",
+    "evas/rust_core/src/continuous_select.rs": "8d6ac91199f325c78382da900debdf12504db7dd488869104b1a246a16cac111",
+    "evas/rust_core/src/continuous_select_cache_tests.rs": "2e9fe77ecd33b3d1ddcf5c1ab6834e5d9ea8abff9900db9f41bc1e5f2a2f0423",
+    "evas/rust_core/src/continuous_select_candidates.rs": "88017ad10779a666d82873230413ffbebaf95d13610c7c7795f100f2e1f1635b",
+    "evas/rust_core/src/continuous_step_simplify.rs": "70094c4ce51e296a92523cbe7bc7f83318f10798fd8aa81b105ce83bd413e0de",
+    "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+    "evas/rust_core/src/direct_derivative.rs": "606fa88155ae14278fef573f9c9c9615206ec58bd150ffaf12fb9577f0f56940",
+    "evas/rust_core/src/display.rs": "041ff1a89745233cd060578c91f34eb5c9979223f42535af1dca401180b94075",
+    "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+    "evas/rust_core/src/event_accuracy.rs": "e82c0b5ef998211b01af0ec3fab69ac833432b4a26dd908af392b514b170d43e",
+    "evas/rust_core/src/event_conditions.rs": "ce7c29bd2d38c7faeb67efcbdc471d9c6c9ac476e277312965b9668b542f73d4",
+    "evas/rust_core/src/event_control.rs": "37e728c2ab5493f378ae6653744605c44d78a7ce806df3fd6b21497d4274b098",
+    "evas/rust_core/src/event_numeric.rs": "7c48b8670ce0c205a92c04e54be845ba26e59ae8424e9e75638a5be4a0ba2da9",
+    "evas/rust_core/src/event_time_provenance.rs": "15833c15b5f8cc2481988887c7976120c85848aa2042e8746603d60a5647c2d3",
+    "evas/rust_core/src/event_value_proof.rs": "db427243c8bb11f14c9743f10eb2290cfd4150d1a5f273dbc8ee1580fa069f96",
+    "evas/rust_core/src/events.rs": "500431a4b310086761d2a2cef9cd68187ff08f242dd9fb5f7ef0c070ece59622",
+    "evas/rust_core/src/events_certificate_cache_tests.rs": "6f0900e6e8149c49a230a527719e34ae2d95f28eaac09b9d423961bf222c7938",
+    "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+    "evas/rust_core/src/exact_source.rs": "519313bd72079207bbe847b262f6be4efa2f272e5b3bb0798766815706ee9f10",
+    "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+    "evas/rust_core/src/expression.rs": "81c1eb4bd3fc122006d7feb9841f1ad19f2e71a296ddad1fef45dfa8c5d41f4a",
+    "evas/rust_core/src/filter_budget.rs": "94807ee47a346648b5eb4d7d4af03366c0f1f1b79a0e67f636fc279c90b67656",
+    "evas/rust_core/src/guard_trajectory.rs": "e9db1cd8db29d735f5ba84cb9b0432711f7db3ba312b9932a63a84cba41b4147",
+    "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+    "evas/rust_core/src/idtmod.rs": "acdbdc83beef8cae53188c6335d7b99f9fe56ebb75d5318bbbd7a1f8e92fd2a1",
+    "evas/rust_core/src/implicit_dynamics.rs": "b30206f4dde77fc2220a942c896e8a5d5673a6f8efdd7f49f45db717597469a8",
+    "evas/rust_core/src/implicit_event_restart.rs": "d8b45dc327f0675ee2463c5047364716a4b692812e21ca44afca4b6d2bad5bd0",
+    "evas/rust_core/src/initial_state_invariance.rs": "74f5c1c625dbf19e4d653e85c649a668f590421018549c29a9cca83e62463438",
+    "evas/rust_core/src/initialization.rs": "209ad8ccdda14057fa2aa7b4d744c27ebb9d9df14d95141025c34dcfe23d2fc9",
+    "evas/rust_core/src/initialization_nodes.rs": "61aee737fbcf29bd236649d4532b7364503cf59bb1a56ed8ea1614a8de25d6e4",
+    "evas/rust_core/src/input_clamp.rs": "5c3010afc080801aabd1bbe6b839dac21c714d8f49eaf0ad4aee6fa413f1ac59",
+    "evas/rust_core/src/interval.rs": "75b04de91716ce2bbb523dc3c703036081bec4909f154a277b973bbccf9ef785",
+    "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+    "evas/rust_core/src/interval_zero_product_tests.rs": "882420755b22f048f6cc88b643ce2a07eb2ec44fa4510193c731b793b9c77afd",
+    "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+    "evas/rust_core/src/laplace.rs": "8f211b465b19d062033392ef6defbc1bdc66b34c7be9172ab3c41e32a9e7b3d1",
+    "evas/rust_core/src/lib.rs": "2e7a3e61bde0c2aae696eff4aa588e02d0663926cc7e101b2f38abfa1fcb2b07",
+    "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+    "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+    "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+    "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+    "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+    "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+    "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+    "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+    "evas/rust_core/src/math_functions.rs": "a57b876344f203b03d3dc0a2bb8f49bce673abd35619f55552c0a0d29b7f13a0",
+    "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+    "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+    "evas/rust_core/src/nonlinear_dynamics.rs": "b9c44deb78ec185e6209754736454a761cdd69f92114c67a04bed3b4e4796647",
+    "evas/rust_core/src/nonlinear_root_window.rs": "7341efc680fc3f1a247803651875bdc115791426f587acdcb8b10d9386e302dd",
+    "evas/rust_core/src/nonlinear_value_memo_tests.rs": "0b065a2b0bc8694ac0de2aa232b6dfc261ffaa68c3fcf29a2c7b0fe255d57679",
+    "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+    "evas/rust_core/src/operators.rs": "f42e06f32af664271c675bb6714e77b8e912ce78da98cb73c7d1a947744f5724",
+    "evas/rust_core/src/passive_events.rs": "1843badd4a4f4c6ef63e79df58d2d6fa72634b116d56d1d25f7147f819574339",
+    "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+    "evas/rust_core/src/portability.rs": "c101c1075de370d3622ad270bb0ca7bdf73c6ba2b3ed6ddd940a45a3c8134cb4",
+    "evas/rust_core/src/pwl.rs": "8c17bd4cf3121989b9591c1a17390c3a18451b96fafca754368973df498d4ff5",
+    "evas/rust_core/src/reset_dependencies.rs": "3f894fe282b3e22b7d07e7022a9e9aa9e6e06dc641591bdae25c0a7acf26f51f",
+    "evas/rust_core/src/schedule.rs": "d18c68fb5efcd068bb0b4cb6946dfb246ea9184cd0297f91551fddf1588847ef",
+    "evas/rust_core/src/schedule_timer_boundary_tests.rs": "99b19e3b98cb05226b8548de2b621172fe069b7a1fbf36f7451c1ec493fb0c32",
+    "evas/rust_core/src/settlement.rs": "5cf1fa2ede0cc0805f6418d76706adabae35b98eb25f4a264838d7add893a289",
+    "evas/rust_core/src/settlement_bounds.rs": "b597865d41187a586bda5c7b47297749c87e8e51c5867f250e29d972d3eb4686",
+    "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+    "evas/rust_core/src/slew_cascade.rs": "26b9cedd714dd24893d2076818d84c8905525da29c900c4df97bf9a7c40cc7b8",
+    "evas/rust_core/src/solver.rs": "71a06b3980a0dfdd5d0112edfa47de5113a68d16b5331ffc903bfbe3e7dbaa82",
+    "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+    "evas/rust_core/src/state_space.rs": "bc791c33b49c78259c0efa4b89203758830b6f90b461058d6a526ada5e1b2a94",
+    "evas/rust_core/src/step_bounds.rs": "7b34202c102b72aef2e19f2af1c28236cd6b3d4ba739cdbdf79e09b526331731",
+    "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+    "evas/rust_core/src/transient.rs": "7f0c81e508cf48e14f184748b42464800c3277210af387e03cce226ee20caff0",
+    "evas/rust_core/src/transient_condition_tests.rs": "0a8dfc626381785993cdf3476e808a12ee6688cbeae81495451f312f0266d10c",
+    "evas/rust_core/src/transient_event_acceptance.rs": "1857edfebd39d1e6ccab9619220535398fc687b79c19985e399820d45020f33a",
+    "evas/rust_core/src/transient_event_control_tests.rs": "49f5f3c4c829bbd1a063446921898b7ad936f88ab20ef3e0b023613d6590e47a",
+    "evas/rust_core/src/transient_history_calendar.rs": "a444c9555a0b63ea72d2ae82b5a309494825e90a321b29c44fc5a9bd649676cf",
+    "evas/rust_core/src/transient_idt_tests.rs": "caaf846459e576549a5cf53e6b8f715c0d32b33496b241f419d5a2f3e2771530",
+    "evas/rust_core/src/transient_initialization.rs": "57f21b3df0fa1b4f5a5c6f9e2a517c8f4b57f9a632e6d4f1c2235dac91449728",
+    "evas/rust_core/src/transient_lifecycle_tests.rs": "584b2c1bb2043265b8708bbde1b34a8a8251e00dad45d41859f068e16616f698",
+    "evas/rust_core/src/transient_passive_tests.rs": "85eb5d501a7a06eae676ebcfb0ec426e5de0b89eff9dd43de449835f0d5bdd9b",
+    "evas/rust_core/src/transient_root_refinement.rs": "6bbb6b7df5676fe65038b227284d811666f105c01a7848480f81c95962fe466c",
+    "evas/rust_core/src/transient_time_proof_tests.rs": "70ef120b678cb4cb05908c4b5c9bde2db87a0eafb78507b09239d2b681c9e95f",
+    "evas/rust_core/src/transient_timer_boundary_tests.rs": "f5ea68af5178dc6c22ce112df1ae9e9523d1d3e12c8658de4b5d8ce1f601be28",
+    "evas/rust_core/src/transient_window_tests.rs": "b56afa40d9683445c745455dd19a9d35a4ab9247e5a184a3dfb6246c2ca628ad",
+    "evas/rust_core/src/transition.rs": "4d880dee369ea2ca900b89ec193949b94b221e1989d8adfcb489d915bf0890cd",
+    "evas/rust_core/src/transition_filter.rs": "94b63ec1985c3eeb376216cd7501e1caef177411260d61519849b53035e982b4",
+    "evas/rust_core/src/transition_filter_input.rs": "845679115ff39c13cfb951ea93786070a4a142b57af2aa28480efcf5d46b5e42",
+    "evas/rust_core/src/transition_history_target.rs": "6ea098b83c6e72ee2454919934d2b1bf53ffb477a1dec5368acb534bd0c7ad38",
+    "evas/rust_core/src/transition_integral.rs": "e5e32e03013915527e80c646ceecfba86d65161dbfa4c6df6c1ad0f8282447ed",
+    "evas/rust_core/src/transition_source_plan.rs": "006f34be7b498926389dbf0d4c5ac9c64e0fbdc46ca9f2d89455bf9d0225f078",
+    "evas/rust_core/src/transition_source_state.rs": "ffbd84e811b1abcaf41f0daad196023fefa1bc1e523279830ba05392338354d8",
+    "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+    "evas/src/evas/__main__.py": "03467610db7d5563c99f2ffcf65c8f258175575fff18a38ca89dc5854439d651",
+    "evas/src/evas/array_elaboration.py": "922fd600f57b039b4f2e2b2242af03dd7830a464e0b31272260c82d11217d278",
+    "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+    "evas/src/evas/display.py": "c53802f643b2405e1f3da36596a8d4674aebf409635232ded3dc52f852f38b5c",
+    "evas/src/evas/elaboration.py": "a7a435e8d2361e7abf2b047b68210b1b25f656e24b40155fe969e9b4c593bc4a",
+    "evas/src/evas/errors.py": "4716787d137c2232e13d9b9b7231b407d5c87a38c755345c63bc9df91a45a158",
+    "evas/src/evas/event_index_domains.py": "c5558bdff652f64b5ddfdc72e32230f8a8330f9fa4798e1c09b7e95344bcaa39",
+    "evas/src/evas/event_specialization.py": "e62efc8b23dc8a3d0b28adad005c3ce31b057fa77fe0171df9e5d7c65ada7b3b",
+    "evas/src/evas/frontend.py": "310159f89cea075ff3f35a7d46e7177dfd8888eb8841528ddb924be45768854a",
+    "evas/src/evas/hierarchy.py": "ec8cd24105bfb646f28874dd40fe0923ae51ca5d22b45b1be0e6153347a7a10b",
+    "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+    "evas/src/evas/instance_compiler.py": "c5c6d74aa0933926f6a69e02dd82de9454d9171b815a3417013d597bfe777642",
+    "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+    "evas/src/evas/ir.py": "b55291f1ae7cf3725f5480739cf7f8830513a1ef00fba0de9b588a2bfcc45b45",
+    "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+    "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+    "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+    "evas/src/evas/lowering.py": "8b95c03b9d4b3bd86fb3cf853bc45a878f7a15a8e04a5798102487defc26ed03",
+    "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+    "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+    "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+    "evas/src/evas/node_elaboration.py": "eaa06faf21bea22a2ef477605c2d4c2c167b5f99a2083f356733e08eae1a5cf5",
+    "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+    "evas/src/evas/predicate_structure.py": "0f145fafcf1a926877f555207da48d54e6334e8ffbde1d9b385499ea74d11543",
+    "evas/src/evas/preprocessor.py": "96d6525154bdc0f83d80cc177faa49e1a836497afb3bb82a9ec1a5a321695a08",
+    "evas/src/evas/protocol.py": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+    "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+    "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+    "evas/src/evas/runtime.py": "f7fb4d7d4b46facce3422e646a53845e782338e7ae1494cf7f957d9e6e722d10",
+    "evas/src/evas/scs.py": "647b3b4e34fe130860fce20634fbb30a01e4c0110bc5fa9e20f092fb12356283",
+    "evas/src/evas/scs_sources.py": "1fab2c390f33c4c6221969bbbb192265636caf5063d20fd735e5e247b22cfb8d",
+    "evas/src/evas/standard_headers.py": "efe0b2421d400ac723cfdf71c5d406cdef510dc89d3556ad999e2253600ec88e",
+    "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+    "evas/src/evas/syntax.py": "4047cd499814946e1ff07e77e00d37bb18cb3ed479905cd55d72d70102c324bb"
+  },
+  "kernel_sha256": "5baf1ff5734424f568bb7ed14b5c08140b077403c6be8e3fb41150cfd42a9114",
+  "source_diff_sha256": "eae30366f911954ddbbd8a53f0db06d7c5d0e6caa1649876e97ac40340584f6a",
+  "source_archive_sha256": "9530c9b879d2524f40c130990751298e890fddb9456f2c7e87b871c0aedce8ab",
+  "build": {
+    "command": "cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml",
+    "compiler": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2\n",
+    "availability": "local-only"
+  },
+  "capability_ids": [
+    "LANG",
+    "TRANSITION",
+    "EVENT-CONDITIONS",
+    "EVENT-ORDER",
+    "TIMED-OPERATOR",
+    "COMPOSE"
+  ],
+  "invariants": {
+    "checker": "427 original captured checker files and normalization verified unchanged",
+    "kernel_timeout_s": 120,
+    "guardian_timeout_s": 150,
+    "precision": "unchanged original requests",
+    "source_plan_limits": [
+      128,
+      8192,
+      1000000000
+    ],
+    "exact_operation_debit": 200000,
+    "original400_and213": "historical553eb83b identity preserved; not rerun or relabelled"
+  },
+  "scoped_originals": {
+    "selection": "115 previously affected families union 11 GAP20 families;076 overlap",
+    "summary": {
+      "fixed_count": 125,
+      "executed": 125,
+      "completed": 68,
+      "checker_passed": 60,
+      "checker_failed": 8,
+      "rejected": 57,
+      "cleanup_confirmed": 125,
+      "newly_completed": [
+        "090",
+        "092"
+      ],
+      "changed_completed_responses": []
+    },
+    "affected_cases": [
+      {
+        "family": "001",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "002",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "003",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "004",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "006",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "008",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "010",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "011",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "012",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "017",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "023",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "026",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "027",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "036",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "039",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "040",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "043",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "044",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "045",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "047",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "048",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "049",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "051",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "055",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "056",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "057",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "058",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "065",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "071",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "072",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "076",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "077",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "078",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "079",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "081",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "084",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "088",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "089",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "090",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "091",
+        "status": "completed",
+        "checker": "failed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "092",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "096",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "097",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "098",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "100",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "101",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "102",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "103",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "104",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "106",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "109",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "117",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "178",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "184",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "191",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "198",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "199",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "200",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "204",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "205",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "206",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "207",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "208",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "209",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "210",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "213",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "214",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "261",
+        "status": "completed",
+        "checker": "failed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "262",
+        "status": "completed",
+        "checker": "failed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "263",
+        "status": "completed",
+        "checker": "failed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "264",
+        "status": "completed",
+        "checker": "failed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "265",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "266",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "267",
+        "status": "completed",
+        "checker": "failed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "268",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "269",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "271",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "274",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "275",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "276",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "277",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "278",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "279",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "280",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "284",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "293",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "294",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "299",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "300",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "301",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "302",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "306",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "308",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "309",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "310",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "311",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "312",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "314",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "320",
+        "status": "completed",
+        "checker": "failed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "321",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "322",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "327",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "331",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "341",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "342",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "345",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "347",
+        "status": "completed",
+        "checker": "failed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "348",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "349",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "352",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "353",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "355",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "356",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "357",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "361",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "363",
+        "status": "rejected",
+        "checker": "not_run",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "367",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "375",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "376",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "379",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "382",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "394",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "395",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "397",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "399",
+        "status": "completed",
+        "checker": "passed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true
+      }
+    ],
+    "selected_cases": [
+      {
+        "family": "003",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "unsupported_initial_event",
+          "category": "unsupported",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates",
+          "hint": "Use an unqualified initialization leaf and constant values or a real driven-input comparison.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/003/submission/pipeline_stage.va",
+            "line": 42,
+            "column": 9
+          },
+          "instance": "XDUT"
+        },
+        "source_files": {
+          "submission/pipeline_stage.va": "fbcff7fa8b608c1b4de07f24af90187f5213c4b24e1f01d335046254b6ffea01",
+          "testbench/trusted_replay_test.scs": "d76dab8133aa950f0516337b3e5bb51d2cd621d3a465403380933bbb099e6b21"
+        },
+        "original_identity_sha256": "b9e532bd38a935e77018fc64618e87e55c024d33e6c0f6b250f212c94b0384cf",
+        "baseline_status": "rejected",
+        "baseline_checker": {
+          "status": "not_run"
+        },
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "011",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "unsupported_initial_event",
+          "category": "unsupported",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates",
+          "hint": "Use an unqualified initialization leaf and constant values or a real driven-input comparison.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/011/submission/pfd_updn.va",
+            "line": 30,
+            "column": 9
+          },
+          "instance": "XDUT"
+        },
+        "source_files": {
+          "submission/pfd_updn.va": "b3adc22c9fbb898026306c1b285b89074cc96c2701df3be9b9e68c63fb910e78",
+          "testbench/trusted_replay_test.scs": "ba578ef239bfc4331d695abf283d33d1be2fb475eaf3e679717864f6da2db2b7"
+        },
+        "original_identity_sha256": "5c4b8f585b1d65e57fcb724f2e02f54a1019f6ddf70900e7212ed34b6a09f969",
+        "baseline_status": "rejected",
+        "baseline_checker": {
+          "status": "not_run"
+        },
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "023",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/023/submission/flash_adc_3b.va:44:22: unsupported expression '>'",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/023/submission/flash_adc_3b.va",
+            "line": 44,
+            "column": 22
+          }
+        },
+        "source_files": {
+          "submission/flash_adc_3b.va": "c080e4926506d401ad7f5742b2b17ebe2d5858814609cf910ffb41f40b4b0af3",
+          "testbench/trusted_replay_test.scs": "7a38e7aee22c6b843180eac66caa0e288f15c5a31c2b5f782e01f7aa4d1a10de"
+        },
+        "original_identity_sha256": "f6abe133a9ded09745c7734656527f989db136d0aa988422f09d5c9ab84c8acd",
+        "baseline_status": "rejected",
+        "baseline_checker": {
+          "status": "not_run"
+        },
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "027",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/027/submission/v2b_4b.va:36:46: unsupported expression '>'",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/027/submission/v2b_4b.va",
+            "line": 36,
+            "column": 46
+          }
+        },
+        "source_files": {
+          "submission/dwa_ptr_gen.va": "03bf1fb4aa78bbbcef2d26d3d08c02cbc4a6be6ca977f96cfa6030577ff13d6f",
+          "submission/v2b_4b.va": "37dab6cd434bd76cecaea53cce86a15fb91b7af57ef2984b100cc527d11859c4",
+          "testbench/trusted_replay_test.scs": "63f4ec528de342c31a335ee3f835db745a753a01918d26fe5402a9c942d86c41"
+        },
+        "original_identity_sha256": "ebcc74b974aee969537a3b10d9d3e945e0784f45259df0f63b5d1b709e15f1a6",
+        "baseline_status": "rejected",
+        "baseline_checker": {
+          "status": "not_run"
+        },
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "039",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/039/submission/cmp_delay.va:28:12: expected ';', got '='; outside affine-voltage syntax",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/039/submission/cmp_delay.va",
+            "line": 28,
+            "column": 12
+          }
+        },
+        "source_files": {
+          "submission/cmp_delay.va": "32180511853b553a300eaa3aab702dd3dee520848d2a03de1a2f892f01378c92",
+          "submission/edge_interval_timer.va": "ea42065af34088fa083b7be795c98364770c6bc08aaa1929542198a2d0ab7fc9",
+          "testbench/trusted_replay_test.scs": "ab2e753a0a53236996589686b1fc5ab358d253a0f6d568c254dd95cd0b1681a6"
+        },
+        "original_identity_sha256": "6a62f67eea75bd665ba9b14d1b363dcc052019ca7298eb7f925a7780ae445d33",
+        "baseline_status": "rejected",
+        "baseline_checker": {
+          "status": "not_run"
+        },
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "045",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "unsupported_initial_event",
+          "category": "unsupported",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates",
+          "hint": "Use an unqualified initialization leaf and constant values or a real driven-input comparison.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/045/submission/comparator.va",
+            "line": 23,
+            "column": 9
+          },
+          "instance": "XDUT"
+        },
+        "source_files": {
+          "submission/comparator.va": "689e4870c9fa9a9790b9400e5314034fe0cd2834319c63bd94e5eb1adabfbcf8",
+          "testbench/trusted_replay_test.scs": "29d6fcd25d6d689e1b5f294dd8f5977f3406d4edd313bb088736a447076d2cef"
+        },
+        "original_identity_sha256": "045b426a637f92ea5a1d847e9c127e0fd4b989fed52bc1bd3302ed7511123540",
+        "baseline_status": "rejected",
+        "baseline_checker": {
+          "status": "not_run"
+        },
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "076",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/076/submission/clk_burst_gen.va:29:9: expected a non-reserved identifier",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/076/submission/clk_burst_gen.va",
+            "line": 29,
+            "column": 9
+          }
+        },
+        "source_files": {
+          "submission/clk_burst_gen.va": "bbd6ece2d9db07e93f472c279d023776d367e47742231d148437937eaaa1a181",
+          "testbench/trusted_replay_test.scs": "48e0cf3d1827da8473bf3484829fd4abe7311a69413561ccb906ff15d25c6bea"
+        },
+        "original_identity_sha256": "ef500c3c409debd6fd9500c0526821cf961f65de2a9b326095b7fcfcfa37b1b4",
+        "baseline_status": "rejected",
+        "baseline_checker": {
+          "status": "not_run"
+        },
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "090",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "dither_high=0.0240 dither_low=-0.0240 symmetry_err=0.0000 high_err=0.0000 low_err=0.0000 cm_max=0.0000; P_POSITIVE_DITHER mismatch_count=0; P_NEGATIVE_DITHER mismatch_count=0; P_SYMMETRIC_SPLIT mismatch_count=0; P_COMMON_MODE_PRESERVATION mismatch_count=0; P_PARAMETER_OVERRIDE mismatch_count=0"
+        },
+        "diagnostic": null,
+        "source_files": {
+          "submission/dither_adder.va": "562116f10da461fc5601b1d254338c857e0b0f2f33d0fa09bce9cdd8e3d596b9",
+          "testbench/trusted_replay_test.scs": "b55018ae4be869a4a1cf312e5666b15d9fde41c335d9e6ea704a7e521bee8bdf"
+        },
+        "original_identity_sha256": "7319c7accff3913b98ce6abd6d5a1828c7fed45528358a172240ace569de7084",
+        "baseline_status": "rejected",
+        "baseline_checker": {
+          "status": "not_run"
+        },
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "092",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "gain=4.750 gain_err=0.0000 cm_max=0.0000"
+        },
+        "diagnostic": null,
+        "source_files": {
+          "submission/gain_amp_fixed.va": "5fd409922703921018ea02faa81bbc2f6c30dde229b00f5c6ac128d74886c096",
+          "testbench/trusted_replay_test.scs": "4388587865e343d688371f41ea08e32518fad80e32fb0fd0f14ff3b02159b966"
+        },
+        "original_identity_sha256": "5c39525a4868c7787ef37876338deb72f5209274054527b9573ae16d0cb849e9",
+        "baseline_status": "rejected",
+        "baseline_checker": {
+          "status": "not_run"
+        },
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "096",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "unsupported_initial_event",
+          "category": "unsupported",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates",
+          "hint": "Use an unqualified initialization leaf and constant values or a real driven-input comparison.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/096/submission/pipeline_adc_chain_4b.va",
+            "line": 48,
+            "column": 9
+          },
+          "instance": "IDUT"
+        },
+        "source_files": {
+          "submission/pipeline_adc_chain_4b.va": "fbedf50f332853084b9ed49c5270d29d8ee5d1b6a0146dfe15c65f1f48c94490",
+          "testbench/trusted_replay_test.scs": "d28e0530ac9d8bf4c802c62a97b7b2af523c7a8c367c306712a394e8f3fcba27"
+        },
+        "original_identity_sha256": "cc2c2dda1969e6bf65685df0ebaffc56b0d6e1bdd98ae01743f5dddc515191ca",
+        "baseline_status": "rejected",
+        "baseline_checker": {
+          "status": "not_run"
+        },
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "101",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "event_resolution",
+          "message": "user event overlaps an unproved source-target boundary: incoming [1.19999999999999989e-7,1.20000000000000042e-7], cut [1.20000000000000016e-7,1.20000000000000016e-7], root order Some(Less)",
+          "diagnostic_version": 1,
+          "code": "kernel.event_resolution",
+          "stage": "kernel",
+          "category": "numerical",
+          "capability": null
+        },
+        "source_files": {
+          "submission/settling_time_measurement_tb.va": "4a49bef6f64d4da2d4c5f510aa3fa414dda0fd9c5d8939e111ad8a9b2a7bd42c",
+          "testbench/trusted_replay_test.scs": "f217ecf38e20b6af3bc3c34f2a8a7b2473d6720bee6c02b7a89180ba5c1c5b58"
+        },
+        "original_identity_sha256": "04b9081f94c853901d733e927b9530fb5298ae92206ec9ee3360931c7d362ca3",
+        "baseline_status": "rejected",
+        "baseline_checker": {
+          "status": "not_run"
+        },
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "102",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/102/submission/vin_src.va:40:36: unsupported expression '$'",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/102/submission/vin_src.va",
+            "line": 40,
+            "column": 36
+          }
+        },
+        "source_files": {
+          "submission/support/dither_adder.va": "c37a73ae0c82d5312d3baf7415bce5e160f307ae4f0a232586d2a152343b6744",
+          "submission/support/gain_amp_fixed.va": "c69f0dbf46d0d4a7f7f4f06168b8cde05bb864fceaf21adabe1440334f57c8e9",
+          "submission/support/lfsr.va": "36c973266e9acf0473a836ff51f0c350c990f0f85787ac5b83a1d51687d418b5",
+          "submission/vin_src.va": "faeeeee03c15ceb622cd2585d1fac2b991acede738480ba8e23ecbc0f407feda",
+          "testbench/public_support/dither_adder.va": "c37a73ae0c82d5312d3baf7415bce5e160f307ae4f0a232586d2a152343b6744",
+          "testbench/public_support/gain_amp_fixed.va": "c69f0dbf46d0d4a7f7f4f06168b8cde05bb864fceaf21adabe1440334f57c8e9",
+          "testbench/public_support/lfsr.va": "36c973266e9acf0473a836ff51f0c350c990f0f85787ac5b83a1d51687d418b5",
+          "testbench/trusted_replay_test.scs": "963435d8049bc97659aeeb2eed6e9b80f00decdcb4341afadd871d78aa086da9"
+        },
+        "original_identity_sha256": "7c5be0e801309a48c6d3cadab58ff940c8757efce08d3f46ead9c48144eb9614",
+        "baseline_status": "rejected",
+        "baseline_checker": {
+          "status": "not_run"
+        },
+        "cleanup_confirmed": true
+      },
+      {
+        "family": "314",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "event_resolution",
+          "message": "user event overlaps an unproved source-target boundary: incoming [5.19999999999999958e-8,5.20000000000000090e-8], cut [5.20000000000000024e-8,5.20000000000000024e-8], root order Some(Greater)",
+          "diagnostic_version": 1,
+          "code": "kernel.event_resolution",
+          "stage": "kernel",
+          "category": "numerical",
+          "capability": null
+        },
+        "source_files": {
+          "submission/hysteretic_window_comparator.va": "0c4eb5bd49730e92095128cf4255fe6f3f7bca0e5bd99296d0f88a7367c91cb6",
+          "testbench/trusted_replay_test.scs": "fc4c7fa63506e314fe7f04e3f6d6707b83590b6a680cf306ed3fc7fb73a4f561"
+        },
+        "original_identity_sha256": "7496c2542ce0aef2858fb0b80cf88c289a9e4b48aa53ed8d40eb67b28fc0ad0f",
+        "baseline_status": "rejected",
+        "baseline_checker": {
+          "status": "not_run"
+        },
+        "cleanup_confirmed": true
+      }
+    ],
+    "gap20_count": 11,
+    "gap20_completed": 2,
+    "gap20_checker_passed": 2,
+    "unchanged_preexisting_complete_responses": 66
+  },
+  "focused_checks": {
+    "python": "155 tests passed; integration/python-tests.log",
+    "rust": "404 kernel and2 IR passed;1 prior ignore retained;integration/rust-tests.log",
+    "worker_checks": {
+      "gap20": {
+        "initial_shared_kernel": "39/39; regressions.log",
+        "fresh_private_kernel": "81/81 PASS in 21.792s",
+        "command": "python3 runs/evas-source-shape-20261017/parallel-gap20-101-314/gap20/run_private_tests.py",
+        "log": "private-regressions-final.log",
+        "modules": [
+          "test_preprocessor",
+          "test_transition",
+          "test_default_transition_directive",
+          "test_affine",
+          "test_contracts",
+          "test_parameter_constraints"
+        ]
+      },
+      "101": {
+        "fixed808_public_red": "baseline-red.log: 2 subcases rejected condition_precision(point predicate)",
+        "candidate_public": "public-green.log: 3 tests PASS, includes true/false and sparse/dense/forced query consistency",
+        "rust_unit": "unit.log: transition_source_plan 10 passed, 395 filtered out",
+        "diff_check": "git diff --check owning Rust file passed",
+        "public_guardian": "Final public-green.log run uses subprocess timeout=150 and each runtime call timeout=120."
+      }
+    },
+    "final_test_sha256": {
+      "evas/tests/test_default_transition_directive.py": "40f89059ac4cc3aa88e9b4b7aaceca541cede723d5339684b01c740426e31476",
+      "evas/tests/test_source_state_predicates.py": "f194f98335bc9d957afda5e93ab9be2e0ca8255cf8056015181ed0cb2c187eda"
+    }
+  },
+  "certificate314": {
+    "status": "design only; no runtime acceptance change",
+    "design": {
+      "status": "design_only_not_implemented",
+      "scope": {
+        "family": "original314 and separately identified reduced variants",
+        "base": "808dadc4823e55378a3aed2868cecb990bfaea38",
+        "production_edits": false,
+        "remote_spectre": false,
+        "frozen_kernel_timeout_s": 120,
+        "guardian_timeout_s": 150,
+        "checker_or_tolerance_changes": false
+      },
+      "problem": {
+        "fact": "104*binary64(500ps) > binary64(52ns), while discovery windows overlap. Current conservative event_resolution is correct without a phase/history certificate.",
+        "not_sufficient": [
+          "exact root order",
+          "disjoint representatives",
+          "same rounded time",
+          "nonempty real interval alone",
+          "equation residual alone"
+        ],
+        "independent_math": "certificate314.mathematical_fixtures"
+      },
+      "sources": [
+        {
+          "id": "LRM2.4",
+          "url": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf",
+          "sections": [
+            "4.5.8",
+            "5.10.3.3"
+          ],
+          "finding": "Transition handles discrete targets, corner scheduling and interrupted ramps. Timer localization permits a nearby point. Neither section supplies an overlapping-window phase/history proof.",
+          "choice": "Retain existing EVAS physical-root contract and precision obligations; do not claim LRM mandates the proposed exact arithmetic representation."
+        },
+        {
+          "id": "legacy",
+          "commit": "6cb6fa7a7dac70fc0d4120126d8cf74258e6637b",
+          "files": [
+            "evas/rust_core/src/transition.rs",
+            "evas/simulator/event_transition_plan.py"
+          ],
+          "access": "git show only",
+          "finding": "Array transition kernel evaluates old output before assigning new target; diagnostic planner is not production semantics.",
+          "choice": "Reuse ownership/order lesson only; no source copied."
+        },
+        {
+          "id": "Gnucap",
+          "commit": "100e7469fa2f758b4de0492ec1374266820cbfcd",
+          "url": "https://raw.githubusercontent.com/gnucap/gnucap-modelgen-verilog/100e7469fa2f758b4de0492ec1374266820cbfcd/mgsim/d_va_absdelay.cc",
+          "sections": [
+            "COMMON_TRANSITION::tr_accept 750-795",
+            "COMMON_TRANSITION::tr_advance 797-807",
+            "COMMON_ABSDELAY::tr_accept/tr_advance 694-725"
+          ],
+          "finding": "Accepted target changes build waveform history; advance evaluates the stored waveform. Point-time implementation has no interval order certificate.",
+          "choice": "Adapt commit/advance separation; no dependency, license integration or foreign code import."
+        },
+        {
+          "id": "Goldstein et al.",
+          "url": "https://www.research.autodesk.com/publications/multiscale-representation-of-simulated-time/",
+          "publication": "2017 online, 2018 issue/editor choice",
+          "finding": "Floating-point event representations can lose distinctions across time scales.",
+          "choice": "Use exact root identity for internal ordering; do not infer mode, sampling or voltage correctness from a time representation paper."
+        }
+      ],
+      "certificate_inputs": {
+        "identity": [
+          "program/expression identity",
+          "physical source shape identity, exact knots and values",
+          "held epoch and all structural dependency enclosures",
+          "accepted history generation and transition call-site IDs",
+          "original incoming event root and discovery window",
+          "complete source cuts in the local window, exact root identity and source segment IDs",
+          "accepted exact cursor plus cut-consumption set",
+          "existing tolerances and unchanged Work handle"
+        ],
+        "forbidden_substitutes": [
+          "nominal/clipped PWL in place of original physical source",
+          "floating representative in place of event root",
+          "cut enclosure equality in place of physical equality",
+          "only selected-branch dependencies",
+          "after:f64 as sole accepted causal cursor"
+        ],
+        "proposal_type": "OverlapCertificate { context, ordered_root_groups, cell_modes, root_reads, old_history_projection, event_delta, new_target, cut_delta, error_bounds, work_receipt }"
+      },
+      "proof_obligations": [
+        {
+          "id": "O1-domain",
+          "required": "Every finite exact root lies inside original discovery and [0,stop]. All relevant source knots/predicate roots are enumerated. Reject missing provenance or partial coverage."
+        },
+        {
+          "id": "O2-order",
+          "required": "Compare exact roots using bounded rational arithmetic. Form one group only for exact equality. Preserve strictly ordered unequal roots even when they share a binary64 enclosure/representative. Verify accepted cursor order."
+        },
+        {
+          "id": "O3-cells",
+          "required": "For every real open cell between ordered roots, prove source segment, source predicate signs and selected target under the correct held epoch. A binary64 interior sample suffices only with complete affine cut coverage. Without one, use a bounded rational witness plus exact sign/cut-completeness proof, or reject; never use an endpoint as interior."
+        },
+        {
+          "id": "O4-point",
+          "required": "At every exact root evaluate strict/nonstrict predicates and selected target separately from left/right limits. Reject a point target different from both permitted adjacent targets. After settlement compare against OLD accepted target as well, not only a frozen pre-event plan."
+        },
+        {
+          "id": "O5-reads",
+          "required": "Event statements read original physical input at incoming exact root, respecting program assignment order and existing same-time writer rules. Source phase is determined by exact root order. Enclose arithmetic and propagate uncertainty; a representative sample is never a replacement."
+        },
+        {
+          "id": "O6-once",
+          "required": "Consume each source cut exactly once by (source identity, exact root/group, epoch). A no-op target corner advances source phase/cursor without restarting a transition. Equal source/user roots have one settlement group and one commit, not two sequential events chosen by insertion order."
+        },
+        {
+          "id": "O7-history",
+          "required": "Project old accepted transition/history through the ordered roots before constructing changed target history. Preserve ongoing ramps, delayed queues, uncertainty, unrelated histories and call-site ownership. If an existing timed consumer cannot retain exact root/window semantics, reject. Do not force event root to source cut or mutate accepted start times."
+        },
+        {
+          "id": "O8-errors",
+          "required": "Evaluate original residual, event root-time error, physical sample error and propagated output/history voltage error at existing acceptance gates. Success in root ordering cannot bypass downstream rejection."
+        },
+        {
+          "id": "O9-transaction",
+          "required": "Prepare entirely on candidate snapshot. Commit held states, all histories, calendar, source cut consumption and exact cursor atomically after all checks. On failure restore all accepted physical state; proof work stays charged and rejected reservations are not refunded."
+        },
+        {
+          "id": "O10-query",
+          "required": "Output queries are pure observations of accepted history. Additional coarse/dense boundary queries cannot consume a source cut, change roots or rebuild a different physical schedule."
+        }
+      ],
+      "state_machine": [
+        {
+          "state": "accepted",
+          "transition": "capture immutable context and exact accepted cursor",
+          "writes": "none"
+        },
+        {
+          "state": "ordered",
+          "transition": "O1/O2 complete; collect all overlapping cuts with existing finite work budget",
+          "writes": "candidate only"
+        },
+        {
+          "state": "phase_certified",
+          "transition": "O3/O4 for each strict open cell and root group",
+          "writes": "candidate certificate only"
+        },
+        {
+          "state": "old_history_projected",
+          "transition": "advance accepted histories on candidate through each required cut, O6/O7",
+          "writes": "candidate histories/cut delta"
+        },
+        {
+          "state": "event_settled",
+          "transition": "O5 and existing joint event settlement using exact physical root reads",
+          "writes": "candidate held states/equations"
+        },
+        {
+          "state": "new_history_prepared",
+          "transition": "rebind source plan to candidate states; prove point/old/right target handoff and O8",
+          "writes": "candidate histories only"
+        },
+        {
+          "state": "committed",
+          "transition": "O9 atomically publishes once",
+          "writes": "accepted physical state and cursor"
+        },
+        {
+          "state": "rejected",
+          "transition": "any proof failure aborts candidate; accepted snapshot unchanged; proof debit persists",
+          "writes": "diagnostic/resource accounting only"
+        }
+      ],
+      "failure_classes": {
+        "invalid_inputs": [
+          "nonfinite or inverted window",
+          "root outside discovery/domain",
+          "invalid source identity"
+        ],
+        "event_resolution": [
+          "unproved/misordered roots",
+          "missing cut coverage",
+          "stale exact cursor",
+          "equal-root grouping unresolved"
+        ],
+        "condition_precision": [
+          "unproved open-cell mode",
+          "third boundary target",
+          "indeterminate held predicate or unsupported mixed-source nonpoint predicate",
+          "physical sample enclosure insufficient"
+        ],
+        "unsupported_operator": [
+          "consumer lacks root-window handoff",
+          "feedback beyond existing source-target contract"
+        ],
+        "step_budget": [
+          "existing plan/cut/expression/rational limits exhausted"
+        ],
+        "existing_downstream_error": [
+          "equation residual",
+          "sample/output/history precision",
+          "existing same-time ambiguity"
+        ],
+        "internal_contract_rejection": [
+          "duplicate cut consume",
+          "stale context",
+          "accepted mutation before commit"
+        ]
+      },
+      "bounded_work": {
+        "unchanged_source_plan_limits": [
+          128,
+          8192,
+          1000000000
+        ],
+        "unchanged_exact_source_limits": {
+          "points": 512,
+          "bits": 4096,
+          "operations": 200000,
+          "depth": 64,
+          "expression_nodes": 512
+        },
+        "algorithm": "Scan only overlapping immutable cuts; charge each visited cut, rational comparison/witness and mode proof to existing request Work/Budget. Sort within existing cut count. Build each phase proof once per source/program/held/history epoch. Reject when existing budgets exhaust; do not increase limits or introduce unbounded ULP refinement.",
+        "cache": "Only successful pure facts keyed by full original source/expression/held/root context. Rejected physical candidates cannot publish history/cursor. Cache/resource counters are not physical state; work debits remain shared."
+      },
+      "interface_questions": [
+        {
+          "owner": "101",
+          "need": "Idempotent accepted-history preflight plus exact epoch identity; 314 should consume its pure result without advancing accepted history again.",
+          "status": "conceptual dependency; no requested source edits; existing check_incoming rejection must remain"
+        },
+        {
+          "owner": "future314 implementation",
+          "need": "ExactRootCursor/group ordering survives same binary64 representatives; no after:f64-only consumed test.",
+          "status": "requires explicit implementation authorization"
+        },
+        {
+          "owner": "future314 implementation",
+          "need": "Spec target evaluation at bounded rational interior witnesses, or explicit one-sided mode proof; current Cut::point(f64) alone is insufficient.",
+          "status": "reject absent support"
+        },
+        {
+          "owner": "future314 implementation",
+          "need": "Transition/history receives physical root identity and complete uncertainty; final prepare uses old accepted target and new held epoch.",
+          "status": "must prove public behavior and internal transaction tests"
+        }
+      ],
+      "fixture_interpretation": {
+        "positive": "Eligible mathematical inputs, not implemented acceptance. near-distinct remains expected event_resolution on frozen808. exact-same is a limited accepted compatibility control.",
+        "negative": "Three public negative probes exercise current refusal: isolated point, no representable interior, uncertainty without source shape. Additional mathematical fixtures specify future certificate rejection obligations; they are not current DUT executions.",
+        "query_grid": "Near-distinct coarse and dense reproduce identical current refusal. Exact-same accepted control has identical events and common samples on coarse/dense grids and matches independent rational interrupted-ramp answers. Near-distinct accepted query-history invariance remains unverified.",
+        "rollback": "Public process restart cannot verify rollback. Future same-engine injected-failure/retry test must snapshot accepted states/histories/calendar/cursor/cut set and compare retry with clean candidate; work counters must remain charged."
+      },
+      "implementation_acceptance": [
+        "First preserve frozen baseline failures and original314 identity/checker/precision; reduced variants retain separate identities.",
+        "Near-distinct positive accepts only with O1-O10; independently check root physical sample and output enclosures. Exact same root remains one group.",
+        "Mutate each certificate component independently: reverse exact order, omit root proof, omit cut, use representative read, duplicate consume, stale epoch, third point, missing mode, missing history handoff; each rejects explicitly.",
+        "No binary64 interior fixture either gains bounded rational mode proof and correct acceptance or retains documented rejection. Rational witness alone without full mode proof is insufficient.",
+        "Accepted coarse/dense and extra boundary samples yield same physical events/history/common samples and unchanged error enclosures.",
+        "Same-engine fault injection after each candidate stage leaves accepted physical state identical, then retry matches clean execution while resource debit remains charged.",
+        "Run affected lifecycle, semantic invariant, event-window, timed-composition, source-shape, source-target and Rust private rollback tests; rebuild new kernel before new runtime claims.",
+        "Original314 full public run plus untouched checker is a separate gate. No new Spectre run without authorization; old Spectre results remain historical identities."
+      ],
+      "observed_research": {
+        "start_utc": null,
+        "completion_reported_to_parent": true,
+        "elapsed_report": "about 4 minutes source inspection/search; no extension",
+        "scope": "mechanism design; not implementation timing"
+      },
+      "limitations": [
+        "No production implementation",
+        "No original314 new run or scored checker run",
+        "No current-kernel revalidation after 101/GAP20 edits",
+        "No same-engine rollback execution",
+        "No mathematical fixture marked as runtime acceptance merely because its oracle is consistent"
+      ]
+    },
+    "mathematical_fixtures": {
+      "base": "808dadc4823e55378a3aed2868cecb990bfaea38",
+      "derivation": "Fraction(binary64 literal), never DUT output; exact fixed-clock start+n*period; original PWL affine interpolation",
+      "fixture_count": 12,
+      "fixtures": [
+        {
+          "cut": {
+            "denominator": "75557863725914323419136",
+            "numerator": "3929008913747545"
+          },
+          "event": {
+            "denominator": "1208925819614629174706176",
+            "numerator": "62864142619960721"
+          },
+          "exact_order": "Greater",
+          "expected_certificate": "eligible_only_after_all_obligations",
+          "id": "P-near-distinct",
+          "open_binary64_point": false,
+          "physical_sample": {
+            "denominator": "1088903574147012833640645132288",
+            "numerator": "8106479329266893"
+          },
+          "representative_sample": {
+            "denominator": "136112946768376604205080641536",
+            "numerator": "8106479329266893"
+          }
+        },
+        {
+          "cut": {
+            "denominator": "75557863725914323419136",
+            "numerator": "3929008913747545"
+          },
+          "event": {
+            "denominator": "75557863725914323419136",
+            "numerator": "3929008913747545"
+          },
+          "exact_order": "Equal",
+          "expected_certificate": "eligible_joint_settlement",
+          "id": "P-exact-same",
+          "physical_sample": {
+            "denominator": "1",
+            "numerator": "0"
+          }
+        },
+        {
+          "cut": {
+            "denominator": "1208925819614629174706176",
+            "numerator": "62864142619960721"
+          },
+          "event": {
+            "denominator": "75557863725914323419136",
+            "numerator": "3929008913747545"
+          },
+          "exact_order": "Less",
+          "expected_certificate": "eligible_only_after_all_obligations",
+          "id": "P-event-before-cut",
+          "open_binary64_point": false
+        },
+        {
+          "claimed_order": "Less",
+          "cut": {
+            "denominator": "75557863725914323419136",
+            "numerator": "3929008913747545"
+          },
+          "event": {
+            "denominator": "1208925819614629174706176",
+            "numerator": "62864142619960721"
+          },
+          "exact_order": "Greater",
+          "expected_certificate": "reject",
+          "failure": "root_order_mismatch",
+          "id": "N-wrong-order-claim"
+        },
+        {
+          "cut_window": [
+            5.2e-08,
+            5.2e-08
+          ],
+          "event_window": [
+            5.2e-08,
+            5.200000000000001e-08
+          ],
+          "expected_certificate": "reject",
+          "failure": "root_order_unproved",
+          "id": "N-unproved-order",
+          "root": null
+        },
+        {
+          "cut": {
+            "denominator": "75557863725914323419136",
+            "numerator": "3929008913747545"
+          },
+          "event": {
+            "denominator": "1208925819614629174706176",
+            "numerator": "62864142619960721"
+          },
+          "event_window": [
+            5.1999999999999996e-08,
+            5.2e-08
+          ],
+          "exact_order": "Greater",
+          "expected_certificate": "reject",
+          "failure": "root_not_enclosed",
+          "id": "N-root-outside-discovery"
+        },
+        {
+          "cut": {
+            "denominator": "75557863725914323419136",
+            "numerator": "3929008913747545"
+          },
+          "event": {
+            "denominator": "75557863725914323419136",
+            "numerator": "3929008913747545"
+          },
+          "exact_order": "Equal",
+          "expected_certificate": "reject",
+          "failure": "third_boundary_target",
+          "id": "N-third-point-value",
+          "target_at": 1,
+          "target_left": 0,
+          "target_right": 0
+        },
+        {
+          "cut": {
+            "denominator": "75557863725914323419136",
+            "numerator": "3929008913747545"
+          },
+          "event": {
+            "denominator": "1208925819614629174706176",
+            "numerator": "62864142619960721"
+          },
+          "exact_order": "Greater",
+          "expected_certificate": "reject",
+          "failure": "open_cell_mode_unproved",
+          "id": "N-no-open-mode-proof",
+          "open_binary64_point": false,
+          "rational_mode_proof": null
+        },
+        {
+          "candidate_cut_id": "source0:52ns",
+          "consumed_cut_ids": [
+            "source0:52ns"
+          ],
+          "cut": {
+            "denominator": "75557863725914323419136",
+            "numerator": "3929008913747545"
+          },
+          "event": {
+            "denominator": "1208925819614629174706176",
+            "numerator": "62864142619960721"
+          },
+          "exact_order": "Greater",
+          "expected_certificate": "reject",
+          "failure": "duplicate_cut_consumption",
+          "id": "N-duplicate-consume"
+        },
+        {
+          "accepted_epoch": 4,
+          "certificate_epoch": 3,
+          "cut": {
+            "denominator": "75557863725914323419136",
+            "numerator": "3929008913747545"
+          },
+          "event": {
+            "denominator": "1208925819614629174706176",
+            "numerator": "62864142619960721"
+          },
+          "exact_order": "Greater",
+          "expected_certificate": "reject",
+          "failure": "stale_context",
+          "id": "N-stale-epoch"
+        },
+        {
+          "claimed_sample": {
+            "denominator": "136112946768376604205080641536",
+            "numerator": "8106479329266893"
+          },
+          "cut": {
+            "denominator": "75557863725914323419136",
+            "numerator": "3929008913747545"
+          },
+          "event": {
+            "denominator": "1208925819614629174706176",
+            "numerator": "62864142619960721"
+          },
+          "exact_order": "Greater",
+          "expected_certificate": "reject",
+          "failure": "physical_sample_mismatch",
+          "id": "N-representative-sample",
+          "physical_sample": {
+            "denominator": "1088903574147012833640645132288",
+            "numerator": "8106479329266893"
+          }
+        },
+        {
+          "advance_old_history": false,
+          "cut": {
+            "denominator": "75557863725914323419136",
+            "numerator": "3929008913747545"
+          },
+          "event": {
+            "denominator": "1208925819614629174706176",
+            "numerator": "62864142619960721"
+          },
+          "exact_order": "Greater",
+          "expected_certificate": "reject",
+          "failure": "history_handoff_unproved",
+          "id": "N-history-not-transferred",
+          "pending_old_ramp": true
+        }
+      ],
+      "root_delta": {
+        "denominator": "1208925819614629174706176",
+        "numerator": "1"
+      },
+      "source_corner": {
+        "denominator": "75557863725914323419136",
+        "numerator": "3929008913747545"
+      },
+      "tight_event_enclosure": [
+        5.2e-08,
+        5.200000000000001e-08
+      ],
+      "timer_root": {
+        "denominator": "1208925819614629174706176",
+        "numerator": "62864142619960721"
+      }
+    },
+    "reduced_public_fixtures": {
+      "exact-same": {
+        "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; analog begin @(initial_step) q=0; @(timer(52n)) q=1; V(y,r)<+transition((V(u,r)>0.45)?0:q,0,200p,200p); end endmodule\n",
+        "request": {
+          "max_step": 8e-11,
+          "output_times": [
+            0,
+            5.15e-08,
+            5.2e-08,
+            5.205e-08,
+            5.22e-08,
+            5.25e-08,
+            5.3e-08
+          ],
+          "sources": {
+            "u": [
+              [
+                0,
+                0
+              ],
+              [
+                5.2e-08,
+                0
+              ],
+              [
+                5.21e-08,
+                0.9
+              ],
+              [
+                5.3e-08,
+                0.9
+              ]
+            ]
+          },
+          "stop": 5.3e-08,
+          "timeout": 120
+        },
+        "source_sha256": "a9c9dd274dfefb480584907419fc46711d11dd29fb7ac7d12b99c8dbbaecc20d",
+        "request_sha256": "ef23146411dcda8a2c2a0e07ae04e30401d9491e07073eddb71bcac190eea906"
+      },
+      "near-distinct": {
+        "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; analog begin @(initial_step) q=0; @(timer(0,500p)) q=1-q; V(y,r)<+transition((V(u,r)>0.45)?0:q,0,200p,200p); end endmodule\n",
+        "request": {
+          "max_step": 8e-11,
+          "output_times": [
+            0,
+            5.15e-08,
+            5.2e-08,
+            5.205e-08,
+            5.22e-08,
+            5.25e-08,
+            5.3e-08
+          ],
+          "sources": {
+            "u": [
+              [
+                0,
+                0
+              ],
+              [
+                5.2e-08,
+                0
+              ],
+              [
+                5.21e-08,
+                0.9
+              ],
+              [
+                5.3e-08,
+                0.9
+              ]
+            ]
+          },
+          "stop": 5.3e-08,
+          "timeout": 120
+        },
+        "source_sha256": "51b8880da8cc37286a4964f88188668e655f645cca12a7d9c6acda9e0aab1ac5",
+        "request_sha256": "ef23146411dcda8a2c2a0e07ae04e30401d9491e07073eddb71bcac190eea906"
+      },
+      "no-interior-mode": {
+        "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; analog begin @(initial_step) q=0; @(timer(60n)) q=1; V(y,r)<+transition(($abstime>52n && $abstime<5.200000000000001e-08)?1:0,0,200p,200p); end endmodule\n",
+        "request": {
+          "max_step": 8e-11,
+          "output_times": [
+            0,
+            5.15e-08,
+            5.2e-08,
+            5.205e-08,
+            5.22e-08,
+            5.25e-08,
+            5.3e-08
+          ],
+          "sources": {
+            "u": [
+              [
+                0,
+                0
+              ],
+              [
+                5.2e-08,
+                0
+              ],
+              [
+                5.21e-08,
+                0.9
+              ],
+              [
+                5.3e-08,
+                0.9
+              ]
+            ]
+          },
+          "stop": 5.3e-08,
+          "timeout": 120
+        },
+        "source_sha256": "332b361eafecf58d33a25771635ef486e187f83da131921239c2d0c6b574b17f",
+        "request_sha256": "ef23146411dcda8a2c2a0e07ae04e30401d9491e07073eddb71bcac190eea906"
+      },
+      "physical-root-read": {
+        "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; analog begin @(initial_step) q=0; @(timer(0,500p)) q=V(u,r); V(y,r)<+transition((V(u,r)>0.45)?0:q,0,200p,200p); end endmodule\n",
+        "request": {
+          "max_step": 8e-11,
+          "output_times": [
+            0,
+            5.15e-08,
+            5.2e-08,
+            5.205e-08,
+            5.22e-08,
+            5.25e-08,
+            5.3e-08
+          ],
+          "sources": {
+            "u": [
+              [
+                0,
+                0
+              ],
+              [
+                5.2e-08,
+                0
+              ],
+              [
+                5.21e-08,
+                0.9
+              ],
+              [
+                5.3e-08,
+                0.9
+              ]
+            ]
+          },
+          "stop": 5.3e-08,
+          "timeout": 120
+        },
+        "source_sha256": "d27ace60891b2cc25dceb443f034f979e476da07dda58ab31b7325d18e604743",
+        "request_sha256": "ef23146411dcda8a2c2a0e07ae04e30401d9491e07073eddb71bcac190eea906"
+      },
+      "third-point": {
+        "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; analog begin @(initial_step) q=0; @(timer(60n)) q=1; V(y,r)<+transition(($abstime==52n)?1:0,0,200p,200p); end endmodule\n",
+        "request": {
+          "max_step": 8e-11,
+          "output_times": [
+            0,
+            5.15e-08,
+            5.2e-08,
+            5.205e-08,
+            5.22e-08,
+            5.25e-08,
+            5.3e-08
+          ],
+          "sources": {
+            "u": [
+              [
+                0,
+                0
+              ],
+              [
+                5.2e-08,
+                0
+              ],
+              [
+                5.21e-08,
+                0.9
+              ],
+              [
+                5.3e-08,
+                0.9
+              ]
+            ]
+          },
+          "stop": 5.3e-08,
+          "timeout": 120
+        },
+        "source_sha256": "01b3f77f7bfe44d4218c8dc6a6549ea7fe3b45d1326b4115497420a40b071396",
+        "request_sha256": "ef23146411dcda8a2c2a0e07ae04e30401d9491e07073eddb71bcac190eea906"
+      },
+      "uncertain-source": {
+        "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; analog begin @(initial_step) q=0; @(timer(0,500p)) q=1-q; V(y,r)<+transition((V(u,r)>0.45)?0:q,0,200p,200p); end endmodule\n",
+        "request": {
+          "max_step": 8e-11,
+          "output_times": [
+            0,
+            5.15e-08,
+            5.2e-08,
+            5.205e-08,
+            5.22e-08,
+            5.25e-08,
+            5.3e-08
+          ],
+          "source_errors": {
+            "u": 1e-06
+          },
+          "sources": {
+            "u": [
+              [
+                0,
+                0
+              ],
+              [
+                5.2e-08,
+                0
+              ],
+              [
+                5.21e-08,
+                0.9
+              ],
+              [
+                5.3e-08,
+                0.9
+              ]
+            ]
+          },
+          "stop": 5.3e-08,
+          "timeout": 120
+        },
+        "source_sha256": "51b8880da8cc37286a4964f88188668e655f645cca12a7d9c6acda9e0aab1ac5",
+        "request_sha256": "438b4fa1ca82bd41f356aefe9c6ea1d863151a2163293701c27dc1dd660ea896"
+      }
+    },
+    "frozen808_verification": {
+      "status": "pass",
+      "math_fixture_count": 12,
+      "public_runs": [
+        {
+          "case": "exact-same",
+          "grid": "coarse",
+          "status": "accepted",
+          "diagnostic": null
+        },
+        {
+          "case": "exact-same",
+          "grid": "dense",
+          "status": "accepted",
+          "diagnostic": null
+        },
+        {
+          "case": "near-distinct",
+          "grid": "coarse",
+          "status": "rejected",
+          "diagnostic": "event_resolution: user event overlaps an unproved source-target boundary: incoming [5.19999999999999958e-8,5.20000000000000090e-8], cut [5.20000000000000024e-8,5.20000000000000024e-8], root order Some(Greater)"
+        },
+        {
+          "case": "near-distinct",
+          "grid": "dense",
+          "status": "rejected",
+          "diagnostic": "event_resolution: user event overlaps an unproved source-target boundary: incoming [5.19999999999999958e-8,5.20000000000000090e-8], cut [5.20000000000000024e-8,5.20000000000000024e-8], root order Some(Greater)"
+        },
+        {
+          "case": "no-interior-mode",
+          "grid": "coarse",
+          "status": "rejected",
+          "diagnostic": "condition_precision: source cuts have no representable interior"
+        },
+        {
+          "case": "physical-root-read",
+          "grid": "coarse",
+          "status": "rejected",
+          "diagnostic": "event_resolution: user event overlaps an unproved source-target boundary: incoming [5.19999999999999958e-8,5.20000000000000090e-8], cut [5.20000000000000024e-8,5.20000000000000024e-8], root order Some(Greater)"
+        },
+        {
+          "case": "third-point",
+          "grid": "coarse",
+          "status": "rejected",
+          "diagnostic": "condition_precision: isolated source-target point or third boundary value"
+        },
+        {
+          "case": "uncertain-source",
+          "grid": "coarse",
+          "status": "rejected",
+          "diagnostic": "unsupported_source_uncertainty: source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+        }
+      ],
+      "exact_same_independent_answers": [
+        {
+          "time": 0.0,
+          "answer_numerator": "0",
+          "answer_denominator": "1"
+        },
+        {
+          "time": 5.15e-08,
+          "answer_numerator": "0",
+          "answer_denominator": "1"
+        },
+        {
+          "time": 5.2e-08,
+          "answer_numerator": "0",
+          "answer_denominator": "1"
+        },
+        {
+          "time": 5.205e-08,
+          "answer_numerator": "1934281311383296",
+          "answer_denominator": "7737125245533627"
+        },
+        {
+          "time": 5.22e-08,
+          "answer_numerator": "0",
+          "answer_denominator": "1"
+        },
+        {
+          "time": 5.25e-08,
+          "answer_numerator": "0",
+          "answer_denominator": "1"
+        },
+        {
+          "time": 5.3e-08,
+          "answer_numerator": "0",
+          "answer_denominator": "1"
+        }
+      ],
+      "exact_same_query_invariance": {
+        "events_equal": true,
+        "common_samples_equal": [
+          0,
+          5.15e-08,
+          5.2e-08,
+          5.205e-08,
+          5.22e-08,
+          5.25e-08,
+          5.3e-08
+        ]
+      },
+      "near_distinct_reject_query_invariance": true,
+      "not_verified": [
+        "proposed certificate implementation",
+        "original314 checker",
+        "same-engine rollback",
+        "post101 kernel"
+      ],
+      "original314_source_hashes_unchanged": true,
+      "kernel_sha256": "25347806e27569fa5540b68c8283c17b7ac54ff1e6c4078b42b67cba92e99721",
+      "frontend_archive_sha256": "8665ef8f7f05a84f4dcb5f10f745dcc6bdf283b0a1dd416fa2d65b69bacd6ad6"
+    }
+  },
+  "limitations": [
+    "101 original rejected at120ns root-window overlap;checker not run",
+    "314 original remains rejected;certificate proposal and mathematical controls are not implemented runtime checks",
+    "No new actual Spectre execution; prior references do not establish alignment for these new paths",
+    "Original raw runs, source archives and process receipts local-only; curated source and design included here",
+    "Draft PR208 remains unmerged and conflicting with current main; no main synchronization"
+  ],
+  "local_evidence": "runs/evas-source-shape-20261017/parallel-gap20-101-314",
+  "runners": {
+    "originals_sha256": "0a9d1e6581452c8d550751142ff77002ce4711a635c673a99c2d4dd3c55b7c45",
+    "frozen_worker_sha256": "f158c308dd1c6f78c869f7abc6ca87ae6d0a3e002f6ae893ea684994f6c65db9"
+  }
+}

@@ -31,6 +31,8 @@
 
 [101/314源游标诊断](../../../experiments/backends/support/source-shape/history-101-314.json)补充EVENT-ORDER、TIMED-OPERATOR与COMPOSE的相邻输出阶段修复。独立公开回归和候选隔离检查覆盖真实根之后、执行代表时刻之前的普通及强制观察；两份原件仍拒绝，后续限制见[统一清单](../COMPARISON.md#history-101-314)。没有新增实际参考或合并支持声明。
 
+[GAP20与保持谓词后续](../../../experiments/backends/support/source-shape/gap20-state-predicates.json)补充LANG、TRANSITION、EVENT-CONDITIONS、EVENT-ORDER与COMPOSE的有限开发证据。前端按源码顺序保留默认边沿；保持谓词仅以完整区间证明确定真／假，未认证根窗继续拒绝。314仅设计和正反例准备，未授予生产支持；原件状态及进度见[统一进度表](../COMPARISON.md#progress-board)，没有新增实际Spectre对齐或共同Q。
+
 [Pulse delay 缺省值](../../../experiments/backends/support/pulse-delay/README.md)补充 DEV:scs-input 的有限开发证据；仅省略 delay 取 0，其他源参数与误差约束保持，原 22 请求仍有后续拒绝。
 
 [隐式 DAE 的动态模型步长](../../../experiments/backends/implicit-step-bounds/README.md)补充 DYNAMICS 的有限开发证据；两条实际参考各33点通过原100nV门槛，不宣称原R01请求新增恢复。
