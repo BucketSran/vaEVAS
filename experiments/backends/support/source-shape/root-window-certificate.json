@@ -1,6 +1,6 @@
 {
   "status": "unmerged draftPR208; scoped development evidence, no benchmark/alignment/Q qualification",
-  "base_head": "51824db335792b4bfac090d3a50d1a3863fa685e",
+  "base_head": "468afd318f80adbadc4dcad61a08577312561d5c",
   "source_files": {
     "evas/pyproject.toml": "31f84287c6257f2f424e850df9451aac643aea94636eb4de4829785ea9b1de9e",
     "evas/rust_core/Cargo.lock": "a60ef97b215300e2665d2e9864d6bbbdb7b2bce468873f8c3cdba0fec858f5c5",
@@ -33,7 +33,7 @@
     "evas/rust_core/src/event_conditions.rs": "ce7c29bd2d38c7faeb67efcbdc471d9c6c9ac476e277312965b9668b542f73d4",
     "evas/rust_core/src/event_control.rs": "37e728c2ab5493f378ae6653744605c44d78a7ce806df3fd6b21497d4274b098",
     "evas/rust_core/src/event_numeric.rs": "7c48b8670ce0c205a92c04e54be845ba26e59ae8424e9e75638a5be4a0ba2da9",
-    "evas/rust_core/src/event_time_provenance.rs": "15833c15b5f8cc2481988887c7976120c85848aa2042e8746603d60a5647c2d3",
+    "evas/rust_core/src/event_time_provenance.rs": "381225c9637daa11719d399c3e7b10c8d140198e65d2c833922df6d3ec098ca7",
     "evas/rust_core/src/event_value_proof.rs": "db427243c8bb11f14c9743f10eb2290cfd4150d1a5f273dbc8ee1580fa069f96",
     "evas/rust_core/src/events.rs": "500431a4b310086761d2a2cef9cd68187ff08f242dd9fb5f7ef0c070ece59622",
     "evas/rust_core/src/events_certificate_cache_tests.rs": "6f0900e6e8149c49a230a527719e34ae2d95f28eaac09b9d423961bf222c7938",
@@ -89,7 +89,7 @@
     "evas/rust_core/src/state_space.rs": "bc791c33b49c78259c0efa4b89203758830b6f90b461058d6a526ada5e1b2a94",
     "evas/rust_core/src/step_bounds.rs": "7b34202c102b72aef2e19f2af1c28236cd6b3d4ba739cdbdf79e09b526331731",
     "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
-    "evas/rust_core/src/transient.rs": "11ad74ec047fc90b8d8c9f32aab9a61515c05819c40b1c33ef90f6e0af772e50",
+    "evas/rust_core/src/transient.rs": "21080c007144c4e609cb23b0d5bf5b72166bad98d937270a96f5d516629a4d39",
     "evas/rust_core/src/transient_condition_tests.rs": "0a8dfc626381785993cdf3476e808a12ee6688cbeae81495451f312f0266d10c",
     "evas/rust_core/src/transient_event_acceptance.rs": "1857edfebd39d1e6ccab9619220535398fc687b79c19985e399820d45020f33a",
     "evas/rust_core/src/transient_event_control_tests.rs": "49f5f3c4c829bbd1a063446921898b7ad936f88ab20ef3e0b023613d6590e47a",
@@ -146,14 +146,14 @@
     "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
     "evas/src/evas/syntax.py": "4047cd499814946e1ff07e77e00d37bb18cb3ed479905cd55d72d70102c324bb"
   },
-  "kernel_sha256": "a1bf051f2b288300e4a3c674935d4e2ce8eef8c29c2ee4a3abb201fa912bd753",
-  "source_archive_sha256": "d28a4a43d4762c4ca329e5f4d6fe9469343f26b73dd91289408cbb4f636d55da",
-  "source_diff_sha256": "593c43e3129a6c56062a7a05e46f3be2472d00cf31f30c813657bc144c7cc111",
+  "kernel_sha256": "4e7927e14e7ce22789b0563d67a847ec8215c88e41c24115313e88f9cca656d8",
+  "source_archive_sha256": "32022de6cca85be6d8bc5e6f6b00cdfaed7cde33d4b90e2301f192c6dcaa1a29",
+  "source_diff_sha256": "336b7077fcda91770de2e5958f958018d47e502e45c9372ade4376b6f3c5e4c5",
   "build": {
     "command": "cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml",
     "compiler": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2\n",
     "availability": "local-only",
-    "debug_compatibility_kernel_sha256": "5527e7447e64963e57aae587a1a8ee5492b40922a31ce442e054b79a287d6941"
+    "debug_compatibility_kernel_sha256": "b1168efdbc9a724b025b7f600dec9c07371adcec2e4e6417c1a518c45f167030"
   },
   "capability_ids": [
     "EVENT-ORDER",
@@ -1712,12 +1712,88 @@
         ]
       }
     ],
-    "all_changed_responses_guard_value_only": false
+    "all_changed_responses_guard_value_only": false,
+    "compared_second_candidate": {
+      "complete_responses_byte_identical": 70,
+      "families": [
+        "001",
+        "002",
+        "004",
+        "006",
+        "008",
+        "010",
+        "040",
+        "043",
+        "044",
+        "047",
+        "051",
+        "055",
+        "071",
+        "084",
+        "089",
+        "090",
+        "091",
+        "092",
+        "101",
+        "104",
+        "106",
+        "178",
+        "184",
+        "191",
+        "198",
+        "199",
+        "200",
+        "204",
+        "205",
+        "206",
+        "207",
+        "208",
+        "209",
+        "210",
+        "213",
+        "214",
+        "261",
+        "262",
+        "263",
+        "264",
+        "267",
+        "269",
+        "271",
+        "275",
+        "276",
+        "284",
+        "293",
+        "294",
+        "306",
+        "309",
+        "314",
+        "320",
+        "321",
+        "322",
+        "327",
+        "341",
+        "342",
+        "345",
+        "347",
+        "352",
+        "353",
+        "367",
+        "375",
+        "376",
+        "379",
+        "382",
+        "394",
+        "395",
+        "397",
+        "399"
+      ],
+      "note": "All70 completedresponses match final2;display snapshot does not alter these original outputs"
+    }
   },
   "independent_tests": {
     "source": "evas/tests/test_source_root_windows.py",
     "source_sha256": "27f016410e01069b8a58b2db5cb0331d96e9baad1059d0d90ea1f70ba5029005",
-    "public_kernel_sha256": "a1bf051f2b288300e4a3c674935d4e2ce8eef8c29c2ee4a3abb201fa912bd753",
+    "public_kernel_sha256": "4e7927e14e7ce22789b0563d67a847ec8215c88e41c24115313e88f9cca656d8",
     "public_methods": [
       {
         "method": "test_101_timer_before_time_cut_preserves_both_transition_histories",
@@ -1770,7 +1846,7 @@
         "cleanup_confirmed": true
       }
     ],
-    "ci_rework": "51824db3 full1890 CI exposed4 output-frame compatibility failures; fix14 retains physical-root settlement/passive reads, rebuilds representative output solution/circuit and certifies separately; original4 tests unchanged",
+    "ci_rework": "51824db3 full1890 CI exposed4 outputframe failures, corrected byfix14;468afd31 full1890 completedwith1passivedisplay error, corrected byfix15 carryingphysicalroot voltage snapshot fordisplay replay whileFramekeepsquerysolution;alloriginaltests/thresholds unchanged",
     "oracles": [
       "Fraction of actual binary64 inputs; complete independent linear transition/ramp and held recurrence answers",
       "q=2 prefix a=(104*Fraction(500ps)-Fraction(52ns))/Fraction(200ps), output1e6*a*clip((t-r)/d)",
@@ -1788,12 +1864,13 @@
     "rollback": "evas/rust_core/src/transient_root_window_tests.rs; original frame/history/calendar/records/output unchanged after two failures; corrected retry equals clean control"
   },
   "checks": {
-    "python": "37 focused default-debug regressions passed, including4CI failures and10newpublicmethods;10publicmethods also passed frozen release2 under120/150s guardian; Full1890 acceptance is not asserted by this execution receipt;see exacthead PR CI for separate result;localpartial not counted;local fullpartial cancelled withoutpassclaim",
+    "python": "70 focused default-debug regressions:47 event/rootwindow plus23 display consumers passed, includingall5CI failures and10newpublicmethods;10publicmethods also passed frozen release3 under120/150s guardian; Full1890 acceptance is not asserted by this execution receipt;see exacthead PR CI for separate result;localpartial not counted;local fullpartial cancelled withoutpassclaim",
     "build_label_correction": "First candidate called106focused tests release, but test_affine.KERNEL is hardcoded debug;that label was inaccurate;final source/debug identity and explicit release public/original results now separated",
-    "rust": "408 kernel +2 IR passed,1 prior ignored; rust-rework14.log/rust-ir.log",
+    "rust": "408 kernel +2 IR passed,1 prior ignored; rust15.log/rust-ir.log",
     "fmt": "pass",
     "clippy": "all targets -Dwarnings pass",
-    "diagnostics_traceability": "regenerated and checked; frozen validation identity checked"
+    "diagnostics_traceability": "regenerated and checked; frozen validation identity checked",
+    "additional_display_python": "23 defaultdebug passed;integration/display15-additional.log"
   },
   "limitations": [
     "Different nonpoint exact roots with identical minimal float enclosure still conservatively rejected",

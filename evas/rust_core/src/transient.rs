@@ -317,7 +317,7 @@ fn prepare_root_window(
     events: &[usize],
 ) -> Result<Frame, Error> {
     prepare_root_window_selected(model, trajectory, accepted, moment, events)
-        .map(|(frame, _)| frame)
+        .map(|(frame, _, _)| frame)
 }
 
 fn prepare_root_window_selected(
@@ -326,7 +326,7 @@ fn prepare_root_window_selected(
     accepted: &Frame,
     moment: EventMoment<'_>,
     events: &[usize],
-) -> Result<(Frame, crate::event_conditions::Selection), Error> {
+) -> Result<(Frame, crate::event_conditions::Selection, Vec<f64>), Error> {
     let ordinary =
         prepare_root_window_selected_impl(model, trajectory, accepted, moment, events, false);
     match ordinary {
@@ -365,7 +365,7 @@ fn prepare_root_window_impl(
         events,
         refine_ordinary_phase,
     )
-    .map(|(frame, _)| frame)
+    .map(|(frame, _, _)| frame)
 }
 
 fn prepare_root_window_selected_impl(
@@ -375,7 +375,7 @@ fn prepare_root_window_selected_impl(
     moment: EventMoment<'_>,
     events: &[usize],
     refine_ordinary_phase: bool,
-) -> Result<(Frame, crate::event_conditions::Selection), Error> {
+) -> Result<(Frame, crate::event_conditions::Selection, Vec<f64>), Error> {
     let _timing = crate::diagnostics::span("controller.prepare_candidate");
     if !crate::event_value_proof::valid(&accepted.value_proofs, &accepted.state_bounds) {
         return Err(Error::new(
@@ -685,6 +685,9 @@ fn prepare_root_window_selected_impl(
         selection.ordered_steps.sort_by_key(|(event, _)| *event);
         model.check_selection_writers(&selection)?;
     }
+    // Display replay must observe the identical root solution, even after
+    // the published frame is rebuilt for its execution/query representative.
+    let physical_voltages = prepared.solution.voltages.clone();
     if time_bounds.lo != time_bounds.hi {
         // The physical event read is complete, including passive observers.
         // A committed/query frame observes b with its own driven inputs and
@@ -737,6 +740,7 @@ fn prepare_root_window_selected_impl(
             operators,
         },
         selection,
+        physical_voltages,
     ))
 }
 
@@ -809,16 +813,12 @@ fn prepare_batch_until(
         .collect::<std::collections::BTreeSet<_>>()
         .into_iter()
         .collect();
-    let (next, selection) =
+    let (next, selection, physical_voltages) =
         prepare_root_window_selected(model, trajectory, accepted, moment, &blocks)?;
     next.operators
         .check_deadline_order(event_time, None, None)?;
-    let (display_states, candidate_displays) = model.apply_with_displays(
-        &selection,
-        &next.solution.voltages,
-        &accepted.states,
-        event_time,
-    )?;
+    let (display_states, candidate_displays) =
+        model.apply_with_displays(&selection, &physical_voltages, &accepted.states, event_time)?;
     // Displays replay the identical certified path. An observer cannot
     // publish text from a state different from the prepared event candidate.
     for (event, indices) in &selection.actions {

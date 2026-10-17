@@ -707,7 +707,7 @@ mod tests {
         };
         let before = controller.accepted.time_proofs.clone();
         let callback = root(R::new(1.into(), 2.into()));
-        let (candidate, _) = crate::transient::prepare_root_window_selected_impl(
+        let (candidate, _, _) = crate::transient::prepare_root_window_selected_impl(
             &model,
             &trajectory,
             &controller.accepted,
