@@ -110,15 +110,15 @@ class CompactPhysicalSelect(unittest.TestCase):
             transient(p,{},[0,1],stop=1,max_step=1,kernel=KERNEL)
 
     def test_legacy_expansion_boundary_counts_each_wire_use_and_guard_choice(self):
-        from types import SimpleNamespace
         from evas.compact_source_select import _exceeds_legacy_expansion
-        from evas.instance_compiler import InstanceCompiler
+        from evas.instance_compiler import Compilation,InstanceCompiler
         from evas.ir import Affine,Binary,Origin,Select,Term
         origin=Origin('expansion.va',1,1,'D')
         zero,one=Affine(0.,()),Affine(1.,())
         choice=Select('gt',Affine(0.,(Term(1,1.),)),zero,one,zero,origin)
-        legacy=SimpleNamespace(compact_event_candidate=lambda:False,
-                               split_selection=InstanceCompiler.split_selection)
+        legacy=InstanceCompiler.__new__(InstanceCompiler)
+        legacy.compilation=Compilation(('0','u'),False)
+        legacy.compact_event_candidate=lambda:False
         def expression(first,count):
             for _ in range(count):first=Binary('add',first,choice)
             return first

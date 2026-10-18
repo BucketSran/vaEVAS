@@ -51,15 +51,31 @@ class IntegerInvariants(unittest.TestCase):
             self.assertEqual((row['a'],row['b']),(6,126))
 
     def test_false_cutpoint_and_unbounded_lower_endpoint_do_not_gain_small_domain(self):
-        for update in ['n=n+1;if(n>200)flag=1;code=n;',
-                       'n=n+1;code=n&1;',
-                       'n=n-1;code=(n>15)?15:n;',
-                       'n=n+1;code=(n>256)?256:n;']:
-            with self.subTest(update=update),self.assertRaises(CompileError):
-                program('@(initial_step)begin n=0;flag=0;code=0;end '
-                        '@(timer(0.1,0.1))begin '+update+'end '
-                        'V(y,r)<+transition((code&1)?0.9:0,0,0.01,0.01);',
-                        'integer n,flag,code;')
+        with self.assertRaises(CompileError):
+            program('@(initial_step)begin n=0;flag=0;code=0;end '
+                    '@(timer(0.1,0.1))begin n=n+1;if(n>200)flag=1;code=n;end '
+                    'V(y,r)<+transition((code&1)?0.9:0,0,0.01,0.01);',
+                    'integer n,flag,code;')
+
+        # The native held-target route can read a wide signed32 value without
+        # an invented finite domain. Its mask/clamp must not bound n itself or
+        # hide the next overflow, even when the visible code stays small.
+        for update,seed,want in [
+                ('n=n+1;code=n&1;',2147483646,.9),
+                ('n=n-1;code=(n>15)?15:n;',-2147483647,0.),
+                ('n=n+1;code=(n>256)?256:n;',2147483646,0.)]:
+            with self.subTest(update=update):
+                p = program('@(initial_step)begin n='+str(seed)+';flag=0;code=0;end '
+                            '@(timer(0.1,0.1))begin '+update+'end '
+                            'V(y,r)<+transition((code&1)?0.9:0,0,0.01,0.01);',
+                            'integer n,flag,code;')
+                legal = transient(p,{'u':[[0,0],[1,0]]},[0,.15],
+                                  stop=.15,max_step=.025,kernel=KERNEL)
+                self.assertEqual(legal['solutions'][-1]['voltages'][legal['nodes'].index('y')],want)
+                with self.assertRaises(KernelError) as overflow:
+                    transient(p,{'u':[[0,0],[1,0]]},[0,.15,.25],
+                              stop=.25,max_step=.025,kernel=KERNEL)
+                self.assertIn(overflow.exception.detail['kind'],('state_range','integer_range'))
 
         # Native remainder bounds code without bounding the original counter.
         # At ticks 1..9 the parity is 1,0,...,0,1; n must still overflow at MAX+1.
