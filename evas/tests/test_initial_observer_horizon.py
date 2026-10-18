@@ -131,9 +131,12 @@ class InitialObserverHorizon(unittest.TestCase):
 
     def test_physical_initial_display_keeps_existing_rejection(self):
         with self.assertRaises(CompileError) as caught:
-            execute(program(initial=0.25, physical_display=True))
-        self.assertIn("initial $display", str(caught.exception))
-        self.assertIn("passive measurement", str(caught.exception))
+            program(initial=0.25, physical_display=True)
+        error = caught.exception
+        self.assertEqual(error.diagnostic['code'], 'unsupported_initial_event')
+        self.assertEqual(error.diagnostic['instance'], 'physical')
+        self.assertEqual(error.diagnostic['location']['source'], 'initial_observer_horizon.va')
+        self.assertIn("constant initialization snapshots", str(error))
 
     def test_observer_step_bound_keeps_its_invalid_request_guard(self):
         with self.assertRaises(KernelError) as caught:

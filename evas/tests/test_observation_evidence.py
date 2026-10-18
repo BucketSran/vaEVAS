@@ -2,6 +2,7 @@
 GUARDS = ["QUALIFICATION", "DEV:observation-evidence"]
 
 import copy
+from fractions import Fraction as F
 import math
 import unittest
 from evas import KernelError, transient
@@ -121,19 +122,29 @@ class ObservationEvidence(unittest.TestCase):
         lo,hi=evidence['voltage_bounds_V'][1][column]
         # Exact binary64 endpoint PWL at 0.5 is not exactly 0.5. Compute its
         # mathematical midpoint independently as a rational, including gain.
-        from fractions import Fraction as F
         exact=10**6*((F(0.2)+F(0.8))/2-F(0.5))
         self.assertLessEqual(F(lo),exact);self.assertGreaterEqual(F(hi),exact)
         self.assertLess(hi-lo,1e-7)
 
-    def test_unexported_nonlinear_certificate_stays_missing(self):
+    def test_nonlinear_certificate_encloses_exact_pwl_square(self):
         program=compile_sources({'test.va':model('V(y,r)<+pow(V(u,r),2);')},[instance()])
-        result=transient(program,{'u':[[0,0],[1,1]]},[0,0.5,1],stop=1,max_step=0.25,kernel=KERNEL)
+        inputs={'u':[[0,0.2],[1,0.8]]}
+        result=transient(program,inputs,[0,0.5,1],stop=1,max_step=0.25,
+                         vabstol=1e-9,reltol=0,kernel=KERNEL)
         evidence=result['observation_evidence']
-        self.assertEqual(evidence['voltage_bounds_V'],[None,None,None])
         self.assertEqual(evidence['sample_origins'],['stateless_working_point']*3)
-        self.assertEqual(result['solutions'][1]['voltages'][result['nodes'].index('y')],0.25)
-        without_zero=transient(program,{'u':[[0,0],[1,1]]},[0.5,1],stop=1,max_step=0.25,kernel=KERNEL)
+        # The PWL endpoints are binary64 values. Square their exact rational
+        # interpolation, independently of the solver and its returned voltage.
+        for time,row in zip([0,0.5,1],evidence['voltage_bounds_V']):
+            u=F(0.2)+(F(0.8)-F(0.2))*F(time)
+            expected={'0':F(0),'u':u,'y':u*u}
+            for node,(lo,hi) in zip(result['nodes'],row):
+                self.assertLessEqual(F(lo),expected[node])
+                self.assertGreaterEqual(F(hi),expected[node])
+                self.assertLessEqual(hi-lo,2e-9)
+            lo,hi=row[result['nodes'].index('y')]
+            self.assertGreater(hi,lo)
+        without_zero=transient(program,inputs,[0.5,1],stop=1,max_step=0.25,kernel=KERNEL)
         self.assertNotIn('initial_settled',without_zero['observation_evidence'])
 
     def test_phase_and_sine_bounds_remain_aligned_after_internal_node_lowering(self):
