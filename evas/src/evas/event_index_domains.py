@@ -88,6 +88,18 @@ def _literal(expr):
     return None
 
 
+def _charge(parameters, count=1):
+    charge = getattr(parameters, 'integer_proof_work', None)
+    if charge is not None:
+        for _ in range(count):
+            charge()
+
+
+def _copy_env(env, parameters):
+    _charge(parameters, len(env))
+    return dict(env)
+
+
 def evaluate(expr, env, parameters, arrays, on_read=None):
     """Interval of a typed-integer expression, or None when unknown.
 
@@ -95,17 +107,21 @@ def evaluate(expr, env, parameters, arrays, on_read=None):
     caller reports as TOP. Residual array reads overapproximate to the hull of
     every declared element; the index itself is irrelevant for soundness.
     """
+    _charge(parameters)
     if expr is None:
         return None
     if expr.op == 'index':
         if on_read is not None:
             on_read(expr)
         elements = arrays.get(str(expr.value), ())
-        values = [env.get(f'{expr.value}[{k}]') for k in elements]
-        if any(value is None for value in values) or not values:
-            return None
         result = BOTTOM
-        for value in values:
+        if not elements:
+            return None
+        for k in elements:
+            _charge(parameters)
+            value = env.get(f'{expr.value}[{k}]')
+            if value is None:
+                return None
             result = hull(result, value)
         return result
     if expr.op == 'number':
@@ -126,12 +142,37 @@ def evaluate(expr, env, parameters, arrays, on_read=None):
     if expr.op == 'checked':
         return evaluate(expr.args[0], env, parameters, arrays, on_read)
     args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]
+    if expr.op == 'floor':
+        transfer = getattr(parameters, 'real_floor_bounds', None)
+        return transfer(expr) if transfer is not None else None
     if expr.op in integer_bits.OPS:
         return integer_bits.bounds(expr.op, args)
     if expr.op in ('<', '<=', '>', '>=', '==', '!=', '&&', '||', 'unary!'):
         return (0, 1)
     if expr.op == 'ternary':
-        return None if args[1] is None or args[2] is None else hull(args[1], args[2])
+        if args[1] is None or args[2] is None:
+            return None
+        condition = expr.args[0]
+        # Only simple operands get this optional precision improvement. Replaying
+        # a nested condition here would duplicate its already evaluated tree.
+        if (condition.op in ('<', '<=', '>', '>=') and
+                all(arg.op in ('number', 'parameter') for arg in condition.args)):
+            local = {}
+            for arg in condition.args:
+                _charge(parameters)
+                if arg.op == 'parameter' and str(arg.value) in env:
+                    local[str(arg.value)] = env[str(arg.value)]
+            yes, no = refine(condition.op, *condition.args, local, parameters, arrays)
+            def arm_bounds(arm, value, narrowed):
+                _charge(parameters, len(narrowed))
+                if any(low > high for low, high in narrowed.values()):
+                    return BOTTOM
+                if arm.op == 'parameter' and str(arm.value) in narrowed:
+                    return narrowed[str(arm.value)]
+                return value
+            return hull(arm_bounds(expr.args[1], args[1], yes),
+                        arm_bounds(expr.args[2], args[2], no))
+        return hull(args[1], args[2])
     if expr.op == 'unary+':
         return args[0]
     if expr.op == 'unary-':
@@ -158,7 +199,7 @@ def refine(relation, left, right, env, parameters, arrays):
     conditions keep their entry domains; both branches and strict boundaries
     are covered, and an impossible branch becomes BOTTOM.
     """
-    yes, no = dict(env), dict(env)
+    yes, no = _copy_env(env, parameters), _copy_env(env, parameters)
 
     def interval_of(expr):
         value = evaluate(expr, env, parameters, arrays)
@@ -193,7 +234,7 @@ def refine(relation, left, right, env, parameters, arrays):
     return yes, no
 
 
-def flow(statements, env, *, arrays, parameters, on_use=None, on_state=None):
+def flow(statements, env, *, arrays, parameters, on_use=None, on_state=None, invariant_only=False):
     """Abstract one event body from `env`; returns the exit environment.
 
     Scalar assignments strong-update their target; dynamic array writes
@@ -202,10 +243,21 @@ def flow(statements, env, *, arrays, parameters, on_use=None, on_state=None):
     every dynamic index use with the statement-local environment, which is how
     admission (and later N03 loop proofs) consume per-site facts.
     """
-    env = dict(env)
+    env = _copy_env(env, parameters)
 
     def execute(statements, current):
+        _charge(parameters)
+        # This numerical reachability rule is restricted to invariant proof.
+        # Source/read/index audits still walk original bodies without pruning.
+        if invariant_only:
+            _charge(parameters, len(current))
+            if any(low > high for low, high in current.values()):
+                _charge(parameters, len(current))
+                return {name: BOTTOM for name in current}
         for statement in statements:
+            charge = getattr(parameters, 'integer_proof_work', None)
+            if charge is not None:
+                charge()
             if on_state is not None:
                 on_state(current)
             if isinstance(statement, Loop):
@@ -214,11 +266,15 @@ def flow(statements, env, *, arrays, parameters, on_use=None, on_state=None):
                 # owns actual indices and the event-wide iteration budget.
                 def writers(items):
                     for item in items:
+                        if charge is not None:
+                            charge()
                         if isinstance(item, Assignment):
                             if item.index is None:
                                 yield item.name
                             else:
-                                yield from (f'{item.name}[{k}]' for k in arrays.get(item.name, ()))
+                                for k in arrays.get(item.name, ()):
+                                    _charge(parameters)
+                                    yield f'{item.name}[{k}]'
                         elif isinstance(item, Conditional):
                             yield from writers(item.then_body)
                             yield from writers(item.else_body)
@@ -226,9 +282,10 @@ def flow(statements, env, *, arrays, parameters, on_use=None, on_state=None):
                             yield item.name
                             yield from writers(item.body)
                 for name in (statement.name, *writers(statement.body)):
+                    _charge(parameters)
                     if name in current:
                         current[name] = TOP
-                execute(statement.body, dict(current))
+                execute(statement.body, _copy_env(current, parameters))
             elif isinstance(statement, Conditional):
                 def branch_reads(expr, env=current):
                     if on_use is not None:
@@ -239,8 +296,9 @@ def flow(statements, env, *, arrays, parameters, on_use=None, on_state=None):
                                  current, parameters, arrays)
                 then_exit = execute(statement.then_body, yes)
                 else_exit = execute(statement.else_body, no)
-                joined = dict(current)
+                joined = _copy_env(current, parameters)
                 for name in joined:
+                    _charge(parameters)
                     joined[name] = hull(then_exit.get(name, BOTTOM), else_exit.get(name, BOTTOM))
                 current = joined
             elif isinstance(statement, Display):
@@ -263,6 +321,7 @@ def flow(statements, env, *, arrays, parameters, on_use=None, on_state=None):
                     value = TOP if value is None else clamp(value)
                     singleton = index is not None and index != BOTTOM and index[0] == index[1]
                     for element in elements:
+                        _charge(parameters)
                         name = f'{statement.name}[{element}]'
                         if name not in current:
                             continue
@@ -288,27 +347,32 @@ def entry_domains(event_bodies, initial_bounds, *, arrays, parameters,
     post-fixpoint verification `T_e(R) ⊆ R` for every event body. A model that
     still fails verification is rejected rather than reported as proven.
     """
+    from .integer_invariants import ProofWork, proof_parameters, widening_candidate
+    work = getattr(parameters, 'integer_proof_counter', None) or ProofWork()
+    parameters = proof_parameters(parameters, work)
+    _charge(parameters)
+    _charge(parameters, len(states))
     domains = {name: initial_bounds.get(name, TOP) for name in states}
 
     def step(current):
-        joined = dict(current)
+        joined = _copy_env(current, parameters)
         for body in event_bodies:
-            exit_domains = flow(body, current, arrays=arrays, parameters=parameters)
+            _charge(parameters)
+            exit_domains = flow(body, current, arrays=arrays, parameters=parameters, invariant_only=True)
             for name in joined:
+                _charge(parameters)
                 joined[name] = hull(joined[name], exit_domains.get(name, BOTTOM))
         return joined
 
-    def verify(current):
-        for body in event_bodies:
-            exit_domains = flow(body, current, arrays=arrays, parameters=parameters)
-            for name, value in exit_domains.items():
-                if name in current and hull(current[name], value) != current[name]:
-                    return False
-        return True
+    def verify(current, lookup=parameters):
+        from .integer_invariants import verify_candidate
+        return verify_candidate(event_bodies, initial_bounds, current,
+                                arrays=arrays, parameters=lookup)
 
     widened = False
     for _ in range(passes):
         nxt = step(domains)
+        _charge(parameters, len(domains))
         if nxt == domains:
             break
         domains = nxt
@@ -316,10 +380,24 @@ def entry_domains(event_bodies, initial_bounds, *, arrays, parameters,
         # Preserve stable endpoints, e.g. a nonnegative counter stays nonnegative.
         # Only an endpoint still moving outwards is widened to its signed32 limit.
         probe = step(domains)
-        domains = {name: (SIGNED32_MIN if probe[name][0] < domains[name][0] else domains[name][0],
-                          SIGNED32_MAX if probe[name][1] > domains[name][1] else domains[name][1])
-                   for name in domains}
+        _charge(parameters, len(domains))
+        standard = {name: (SIGNED32_MIN if probe[name][0] < domains[name][0] else domains[name][0],
+                           SIGNED32_MAX if probe[name][1] > domains[name][1] else domains[name][1])
+                    for name in domains}
+        candidate = widening_candidate(event_bodies, initial_bounds, domains, standard,
+                                       states=states, arrays=arrays, parameters=parameters, work=work)
+        lookup = parameters
+        # One checked candidate replaces endpoint widening, never another
+        # fixed-point iteration. A failed guess retains the original fallback;
+        # all iterations and both checks share one bounded proof work counter.
+        if candidate is not None and verify(candidate, lookup):
+            return candidate, True
+        domains = standard
         widened = True
+        if candidate is not None:
+            if not verify(domains, lookup):
+                raise ValueError('event integer domains failed the post-fixpoint verification')
+            return domains, widened
     if not verify(domains):
         raise ValueError('event integer domains failed the post-fixpoint verification')
     return domains, widened

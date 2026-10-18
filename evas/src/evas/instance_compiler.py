@@ -13,6 +13,8 @@ from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contri
 from .lowering import lower, scale
 from .limits import check_ir
 from .input_rational_scope import input_rational_tree
+from .compact_source_select import compact_source_assignment
+from .integer_prefix import factor_integer_prefix
 from .parameters import bind_parameters
 from .elaboration import unroll_loops
 from .array_elaboration import scalarize_arrays, ARRAY_BUDGET
@@ -39,6 +41,7 @@ class Compilation:
     indices: dict[str, int] = field(init=False)
     source_rational_origins: list[Origin] = field(default_factory=list)
     source_rational_nodes: set[int] = field(default_factory=lambda: {0})
+    settled_integer_reads: bool = False
 
     def __post_init__(self):
         self.indices = {name: i for i, name in enumerate(self.nodes)}
@@ -111,6 +114,17 @@ class InstanceCompiler:
 
     def compile(self):
         self.cache = bind_parameters(self.model, self.instance.parameters, self.instance.name)
+        # Inspect source writers before scalarization unrolls even zero-trip
+        # loops. A future/dead write must not create an immutable binding.
+        declaration_writers, pending = set(), list(self.model.initial) + list(self.model.analog)
+        for event in self.model.events:
+            pending.extend(event.body)
+        while pending:
+            item = pending.pop()
+            if isinstance(item, (SyntaxAssignment, Loop)):
+                declaration_writers.add(item.name)
+            for branch in ("then_body", "else_body", "body"):
+                pending.extend(getattr(item, branch, ()))
         self.model = scalarize_arrays(self.model, self.parameter)
         self.array_elements = self._declared_elements()
         self.array_dispatch_leaves = 0
@@ -141,6 +155,8 @@ class InstanceCompiler:
             persistent.update(writes(event.body))
             if any(trigger.kind in ("cross", "timer") for trigger in event.triggers):
                 event_writers.update(writes(event.body))
+        all_writers = persistent | set(writes(self.model.analog))
+        immutable_names = set(self.model.variable_initializers) - all_writers - declaration_writers - set(self.model.arrays)
         self.local_variables = set(writes(self.model.analog)) - persistent
         self.preserve_analog_structure = self.compilation.preserve_structure or bool(self.local_variables)
         def expression_reads(expr):
@@ -176,14 +192,24 @@ class InstanceCompiler:
         # Read-only declarations retain VA's default zero, but an unused
         # declaration must not turn a stateless solve into a state program.
         self.state_names = tuple(name for name in self.model.variables
-                                 if name not in self.local_variables and (name in persistent or name in referenced))
+                                 if name not in self.local_variables and name not in immutable_names
+                                 and (name in persistent or name in referenced))
         self.state_ids = {name: len(self.compilation.states) + index for index, name in enumerate(self.state_names)}
         self.constant_local_aliases = self.bind_constant_local_aliases(writes)
         self.initial_voltage_aliases = bind_initial_voltage_aliases(self, writes)
         self.runtime_voltage_aliases = bind_runtime_voltage_aliases(self, writes)
         self.active_event_aliases = {}
-        self.declaration_initials = self.bind_declaration_initializers(event_writers)
+        seeds = self.bind_declaration_initializers(event_writers, immutable_names)
+        # No-writer declaration values belong to the variable namespace. They
+        # never enter model.parameters/cache or manufacture held event state.
+        self.immutable_declarations = {name: value for name, value in seeds.items() if name in immutable_names}
+        self.declaration_initials = {name: value for name, value in seeds.items() if name not in immutable_names}
         self.initialize_states()
+        from .event_real_ranges import floor_use_sites
+        self.event_floor_range_facts = floor_use_sites(
+            [event.body for event in self.model.events],
+            [name for name in self.state_names if self.model.variables[name] == 'real'],
+            self.parameter, integer_type=self.integer_type)
         self.infer_integer_state_ranges()
         self.analyze_event_index_domains()
         from .event_specialization import audit_event_body, specialize_event_body
@@ -209,7 +235,22 @@ class InstanceCompiler:
         self.active_event_aliases = {}
         statements = unroll_loops(self.model, self.parameter)
         self.validate_branch_presence(statements)
-        _, contributions = self.execute_analog(statements, {})
+        # Only a whole-program no-feedback certificate permits these bounds.
+        # Initialization and all event/final-step lowering above retain the
+        # lifetime domains and every original checked integer intermediate.
+        self.ordinary_integer_bounds = None
+        if self.compilation.settled_integer_reads:
+            self.ordinary_integer_bounds = dict(self.integer_state_ranges)
+            for name, (low, high) in self.event_entry_domains.items():
+                state = self.state_ids[name]
+                old_low, old_high = self.integer_state_ranges.get(state, (-2147483648, 2147483647))
+                # Both facts are sound; a coarser entry transfer must not
+                # replace a stronger existing state-independent writer proof.
+                self.ordinary_integer_bounds[state] = (max(low, old_low), min(high, old_high))
+        try:
+            _, contributions = self.execute_analog(statements, {})
+        finally:
+            self.ordinary_integer_bounds = None
         self.emit_contributions(contributions)
 
     def validate_branch_presence(self, statements):
@@ -280,14 +321,14 @@ class InstanceCompiler:
                 (self.constant_local_aliases | self.runtime_voltage_aliases).items()
                 if name in self.model.local_alias_scopes.get(token, ())}
 
-    def bind_declaration_initializers(self, event_writers):
-        # Declarations seed existing event state; they never manufacture a
-        # persistent role or read another variable's default/initial value.
+    def bind_declaration_initializers(self, event_writers, immutable_names):
+        # Declarations either seed existing event state or bind a no-writer
+        # scalar. Neither reads another variable's default/initial value.
         seeds = {}
         for name, expr in self.model.variable_initializers.items():
             try:
-                if name not in event_writers or name in self.model.arrays:
-                    raise CompileError("declaration initialization requires a scalar cross/timer event target")
+                if name not in event_writers | immutable_names or name in self.model.arrays:
+                    raise CompileError("declaration initialization requires a scalar event target or a variable without procedural writers")
                 pending = [expr]
                 while pending:
                     item = pending.pop()
@@ -396,6 +437,10 @@ class InstanceCompiler:
         return result
 
     def parameter(self, name):
+        # Internal constant lookup does not grant parameter override authority:
+        # bind_parameters validated external keys before these bindings exist.
+        if name in getattr(self, "immutable_declarations", {}):
+            return self.immutable_declarations[name]
         if name not in self.model.parameters:
             raise CompileError(f"{self.model.source}: unknown parameter {name!r}")
         return self.cache[name]
@@ -491,7 +536,10 @@ class InstanceCompiler:
         if isinstance(expression, Affine) and not expression.terms:
             return expression.constant, expression.constant
         if isinstance(expression, StateRef):
-            return getattr(self, "integer_state_ranges", {}).get(expression.state, (-2147483648, 2147483647))
+            bounds = getattr(self, "ordinary_integer_bounds", None)
+            if bounds is None:
+                bounds = getattr(self, "integer_state_ranges", {})
+            return bounds.get(expression.state, (-2147483648, 2147483647))
         if isinstance(expression, Select):
             a, b = self.integral_bounds(expression.then_value), self.integral_bounds(expression.else_value)
             return min(a[0], b[0]), max(a[1], b[1])
@@ -548,6 +596,15 @@ class InstanceCompiler:
         lookup.finite_floor = self.finite_floor
         lookup.validate_integer_operation = self.validate_integer_operation
         lookup.allow_integer_assignment_root = allow_integer_assignment_root
+        if getattr(self, "ordinary_integer_bounds", None) is not None:
+            def finite_integer(expr, nodes, args, options):
+                # The existing complete table audits each original arithmetic
+                # node before folding a row. Per-bit nested tables would copy
+                # a shift tree again for every possible AND operand value.
+                if expr.op not in integer_bits.OPS | {"+", "-", "*", "/", "%", "unary+", "unary-"}:
+                    return None
+                return self.integer_expression_table(expr, lookup, nodes, args, options)
+            lookup.finite_integer_expression = finite_integer
         return lookup
 
     def finite_power(self, expr, base, exponent):
@@ -573,7 +630,10 @@ class InstanceCompiler:
                                code='unsupported_floor', token=expr.token, instance=self.instance.name)
         origin = Origin(expr.token.source or self.model.source, expr.token.line,
                         expr.token.column, self.instance.name, expr.expansion)
-        result = floor_table(argument, origin)
+        fact = getattr(self, 'event_floor_range_facts', {}).get(id(expr))
+        state_bounds = ({self.state_ids[name]: bounds for name, bounds in fact[1].items()}
+                        if fact is not None and fact[0] is expr else None)
+        result = floor_table(argument, origin, state_bounds=state_bounds)
         if isinstance(result, Select):
             self.expression_decision_origins.add(origin)
         return result
@@ -907,15 +967,26 @@ class InstanceCompiler:
         bodies = [event.body for event in self.model.events]
         def parameters(name):
             return self.parameter(name)
+        from .event_real_ranges import integer_floor_bounds
+        parameters.real_floor_bounds = lambda expr: integer_floor_bounds(self.event_floor_range_facts, expr)
         def location_of(token):
             return f"{token.source or self.model.source}:{token.line}:{token.column}"
+        from .integer_invariants import ProofBudgetExceeded
         try:
-            domains, _widened = event_index_domains.entry_domains(
-                bodies, initial, arrays=self.array_elements,
-                parameters=parameters, states=states)
-            partitions = event_index_domains.boolean_partitions(
-                bodies, initial, arrays=self.array_elements,
-                parameters=parameters, states=states)
+            try:
+                domains, _widened = event_index_domains.entry_domains(
+                    bodies, initial, arrays=self.array_elements,
+                    parameters=parameters, states=states)
+            except ProofBudgetExceeded:
+                # Range inference is optional. Exhaustion proves no finite
+                # invariant and must not reject an otherwise valid old model
+                # or restart the candidate search with a fresh allowance.
+                domains = {name: event_index_domains.TOP for name in states}
+                partitions = None
+            else:
+                partitions = event_index_domains.boolean_partitions(
+                    bodies, initial, arrays=self.array_elements,
+                    parameters=parameters, states=states)
             reachable = set() if partitions is not None else None
             facts, holder = event_index_domains.use_site_facts(
                 bodies, domains, arrays=self.array_elements,
@@ -1059,7 +1130,7 @@ class InstanceCompiler:
                 raise CompileError(f"{expr.op} nesting is limited to fixed {expr.op} stages")
             return self.waveform(nested, resolve)
         value = lower(expr.args[0], resolve, input_nodes, self.model.source,
-                  (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "cos", "exp", "ln", "sqrt", "idt", "laplace_nd", "laplace_np", "ddt") else nested_fixed if expr.op in ("absdelay", "slew") else None,
+                  (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "cos", "exp", "ln", "sqrt", "tanh", "idt", "laplace_nd", "laplace_np", "ddt") else nested_fixed if expr.op in ("absdelay", "slew") else None,
                       preserve_structure=True, decisions=self.expression_select,
                       validate_decision=self.validate_decision_expression, node_declarations=True)
         if expr.op in ("laplace_nd", "laplace_np"):
@@ -1123,7 +1194,7 @@ class InstanceCompiler:
             self.compilation.operators.append(IdtMod(value, ic, modulus, offset, origin))
         elif expr.op == "sin":
             self.compilation.operators.append(Sin(value, origin))
-        elif expr.op in ("cos", "exp", "ln", "sqrt"):
+        elif expr.op in ("cos", "exp", "ln", "sqrt", "tanh"):
             self.compilation.operators.append(MathFunction(expr.op, value, origin))
         elif expr.op == "absdelay":
             delay = settings[0].constant
@@ -1338,7 +1409,8 @@ class InstanceCompiler:
                                          integer_assignment_root=self.model.variables[statement.name] == "integer")
                 if self.model.variables[statement.name] == "integer" and not self.integral(value):
                     raise CompileError("integer assignment requires integral state arithmetic")
-                result.extend(self.event_assignment(self.state_ids[statement.name], value, origin))
+                result.extend(self.event_assignment(self.state_ids[statement.name], value, origin,
+                    compact_source=compact_source_assignment(self, statement, value, origin)))
         return tuple(result)
 
     @staticmethod
@@ -1383,8 +1455,8 @@ class InstanceCompiler:
                     continuation(a), continuation(b), decision.origin),)
         return (Conditional(relation, left, right, yes, no, origin),)
 
-    def event_assignment(self, state, value, origin):
-        if self.compact_event_candidate():
+    def event_assignment(self, state, value, origin, *, compact_source=False):
+        if self.compact_event_candidate() or compact_source:
             return (Assignment(state, value),)
         # Select RHS decisions before installing the assignment. Distribute
         # enclosing arithmetic so the ordered event solver keeps affine leaves.
@@ -1518,7 +1590,7 @@ class InstanceCompiler:
 
     @staticmethod
     def contains_history_call(expr):
-        pure_math = {"sin", "cos", "exp", "ln", "sqrt"}
+        pure_math = {"sin", "cos", "exp", "ln", "sqrt", "tanh"}
         return (expr.op in OPERATOR_NAMES-pure_math or
                 any(InstanceCompiler.contains_history_call(arg) for arg in expr.args))
 
@@ -1664,7 +1736,10 @@ class InstanceCompiler:
                     if then_env[name] is else_env[name]:
                         result[name] = then_env[name]
                         continue
-                    result[name] = Select({"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation], left, right, then_env[name], else_env[name], origin)
+                    result[name] = factor_integer_prefix(
+                        relation, left, right, then_env[name], else_env[name], origin,
+                        integer_target=self.model.variables.get(name) == "integer",
+                        validate_integer=self.validate_integer_value)
                     check_ir(result[name], origin)
             else:
                 if statement.name not in self.local_variables:

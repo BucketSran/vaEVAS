@@ -95,16 +95,84 @@ class StatelessExpressionContracts(unittest.TestCase):
 
     def test_hidden_operators_and_unsupported_arms_reject_before_execution(self):
         hidden=['idt(V(u),0)','ddt(V(u))',"laplace_nd(V(u),'{1},'{1,1})",'transition(1,0,1,1)','sin(V(u))']
-        invalid=['V(u)*V(u)','pow(V(u),2)','(V(y)>0?1:0)','(0*V(y)>0?1:0)',
-                 '(V(u)*V(u)-V(u)*V(u)>0?1:0)','((V(u)>0?V(u):0)*V(b))']
+        invalid=['pow(V(u),2)','(V(y)>0?1:0)','(0*V(y)>0?1:0)']
         for bad in hidden+invalid:
             for expr in (f'1?{bad}:0',f'0?{bad}:0',f'1?0:{bad}',f'0&&({bad})',f'1||({bad})'):
                 with self.subTest(expr=expr),self.assertRaises(CompileError):compile_expr(expr)
-        for expr in ('V(u)*V(u)>0','pow(V(u),2)>0','V(y)>0','0*V(y)>0'):
+        for expr in ('pow(V(u),2)>0','V(y)>0','0*V(y)>0'):
             with self.subTest(expr=expr),self.assertRaises(CompileError):compile_expr(expr)
         for expr in ('0?(alias>0?1:0):0','1||(alias>0)'):
             with self.subTest(expr=expr),self.assertRaises(CompileError):
                 compile_expr(expr,'alias=V(y);','real alias;')
+
+    def test_pure_input_products_in_selected_and_short_circuit_arms(self):
+        samples = [[-2, -3, 0, -1], [0, 2, 0, 0], [2, -3, 0, 0.5], [1, 2, 0, 2]]
+        for expression, oracle in (
+            ('V(u)*V(u)', lambda a,b,c,u: u*u),
+            ('(V(u)*V(u)-V(u)*V(u)>0?1:0)', lambda a,b,c,u: 0),
+            ('((V(u)>0?V(u):0)*V(b))', lambda a,b,c,u: max(u, F(0))*b),
+        ):
+            expected = [oracle(*map(F, row)) for row in samples]
+            for wrapped, answers in ((f'1?{expression}:0', expected),
+                                     (f'0?{expression}:0', [0]*4),
+                                     (f'1?0:{expression}', [0]*4),
+                                     (f'0&&({expression})', [0]*4),
+                                     (f'1||({expression})', [1]*4)):
+                with self.subTest(expression=wrapped):
+                    self.assertEqual(list(map(F, values(solve(compile_expr(wrapped),
+                        list(INPUTS), samples, kernel=KERNEL)))), answers)
+        self.assertEqual(values(solve(compile_expr('V(u)*V(u)>0'), list(INPUTS),
+                                      samples, kernel=KERNEL)), [1, 0, 1, 1])
+
+    def test_input_product_function_obligations_keep_constant_results(self):
+        # Source validation still audits discarded arguments; pure input Add /
+        # Multiply no longer fail the old affine-only guard scope. As with the
+        # affine controls below, a validation obligation adds no runtime choice.
+        functions=('analog function real discard; input x; real x; begin discard=1; end endfunction '
+                   'analog function real nested_discard; input x; real x,tmp; begin tmp=x+x; nested_discard=1; end endfunction '
+                   'analog function real overwrite_guard; input x; real x,tmp; begin tmp=x>0; tmp=1; overwrite_guard=1; end endfunction '
+                   'analog function real overwrite; input x; real x,tmp; begin tmp=x*x; tmp=1; overwrite=1; end endfunction '
+                   'analog function real pair; input x,z; real x,z; begin pair=1; end endfunction ')
+        fixtures = [
+            ('discard(V(u)*V(u)>0)', '', '', 1),
+            ('discard((V(a)>0?V(a):0)*V(b))', '', '', 1),
+            ('0?discard(V(u)*V(u)):2', '', '', 2),
+            ('overwrite_guard(V(u)*V(u))', '', '', 1),
+            ('discard(alias*V(b))','alias=V(a)>0?V(a):0;','real alias;',1),
+            ('discard(other*V(b))','alias=V(a)>0?V(a):0; other=alias;','real alias,other;',1),
+            ('overwrite(alias)','alias=V(a)>0?V(a):0;','real alias;',1),
+            ('discard(z[0]*V(b))','z[0]=V(a)>0?V(a):0;','real z[0:0];',1),
+            ('pair(alias,discard(V(b)*V(b)))','alias=V(a)>0;','real alias;',1),
+            ('nested_discard('*7+'alias*V(b)'+')'*7,'alias=V(a)>0?V(a):0;','real alias;',1),
+        ]
+        for expression, prefix, declaration, answer in fixtures:
+            with self.subTest(expression=expression):
+                program = compile_expr(expression, prefix, functions+declaration)
+                result = solve(program, list(INPUTS), [[-2,-3,0,-1],[0,2,0,0],[2,-3,0,2]], kernel=KERNEL)
+                self.assertEqual(values(result), [answer]*3)
+
+    def test_input_product_guards_keep_selected_overflow_and_program_scope(self):
+        for expression in ('V(u)*V(u)>0',
+                           '(V(u)*V(u)-V(u)*V(u)>0?1:0)',
+                           '(1e308+1e308*V(u)>0?1:0)'):
+            with self.subTest(expression=expression), self.assertRaisesRegex(KernelError, 'nonfinite_arithmetic'):
+                solve(compile_expr(expression), list(INPUTS), [[1,0,0,1e308]], kernel=KERNEL)
+        # The inactive branch keeps its original product in the IR, but the
+        # runtime must not evaluate a source expression in that branch.
+        self.assertEqual(values(solve(compile_expr('0?(V(u)*V(u)>0):2'),
+                                     list(INPUTS), [[1,0,0,1e308]], kernel=KERNEL)), [2])
+        for expression, prefix, declaration in (
+            ('(V(u)*V(u)>0)?q:0', '@(initial_step) q=1;', 'real q;'),
+            ('(V(u)*V(u)>0)?idt(V(a),0):0', '', ''),
+            ('(V(u)*V(u)>0)?pow(V(a),2):0', '', ''),
+            ('0?(V(u)*V(u)>0?unknown:1):2', '', ''),
+            ('0?(V(u)*V(u)>0?V(y):1):2', '', ''),
+        ):
+            with self.subTest(expression=expression), self.assertRaises(CompileError):
+                compile_expr(expression, prefix, declaration)
+        program = compile_expr('V(u)*V(u)>0')
+        with self.assertRaisesRegex(KernelError, 'unsupported_condition'):
+            solve(program, ['a', 'b', 'c'], [[0,0,0]], kernel=KERNEL)
 
     def test_event_and_waveform_decisions_keep_parameter_rejection(self):
         for prefix in ('@(initial_step) q=0;', '@(initial_step) q=0; @(timer(1,0,1e-12)) q=1;'):
@@ -152,9 +220,7 @@ class StatelessExpressionContracts(unittest.TestCase):
         discard='analog function real discard; input x; real x; begin discard=1; end endfunction '
         overwritten='analog function real overwrite; input x; real x,tmp; begin tmp=x>0; tmp=1; overwrite=1; end endfunction '
         for expression in ('discard(V(y)>0)', '0?discard(V(y)>0):2',
-                           'discard(V(u)*V(u)>0)', 'discard(0*V(y)>0)',
-                           'discard((V(a)>0?V(a):0)*V(b))', '0?discard(V(u)*V(u)):2',
-                           'overwrite(V(y))', 'overwrite(V(u)*V(u))'):
+                           'discard(0*V(y)>0)', 'overwrite(V(y))'):
             with self.subTest(expression=expression), self.assertRaises(CompileError):
                 compile_expr(expression,declarations=discard+overwritten)
         for declaration,prefix,expression in ((discard+' real alias;', 'alias=V(y);', 'discard(alias>0)'),
@@ -277,7 +343,6 @@ class StatelessExpressionContracts(unittest.TestCase):
         function='analog function real discard; input x; real x,tmp; begin tmp=x+x; discard=1; end endfunction '
         for expression,prefix,declaration in (
             ('V(y)>0','',''),
-            ('alias*V(b)','alias=V(a)>0?V(a):0;','real alias;'),
             ('pow(alias,2)','alias=V(a)>0;','real alias;'),
             ('1>0','','parameter real k=VALUE;'),
         ):
@@ -300,13 +365,8 @@ class StatelessExpressionContracts(unittest.TestCase):
                    'analog function real overwrite; input x; real x,tmp; begin tmp=x*x; tmp=1; overwrite=1; end endfunction '
                    'analog function real pair; input x,z; real x,z; begin pair=1; end endfunction ')
         for expression,prefix,declaration in (
-            ('discard(alias*V(b))','alias=V(a)>0?V(a):0;','real alias;'),
             ('discard(pow(alias,2))','alias=V(a)>0;','real alias;'),
-            ('discard(other*V(b))','alias=V(a)>0?V(a):0; other=alias;','real alias,other;'),
-            ('overwrite(alias)','alias=V(a)>0?V(a):0;','real alias;'),
-            ('discard(z[0]*V(b))','z[0]=V(a)>0?V(a):0;','real z[0:0];'),
             ('0','for(i=0;i<1;i=i+1) begin z[i]=V(a)>0; V(y,r)<+discard(pow(z[i],2)); end','real z[0:0]; genvar i;'),
-            ('pair(alias,discard(V(b)*V(b)))','alias=V(a)>0;','real alias;'),
             ('transition(discard(alias),0,1,1)','alias=V(y)>0;','real alias;'),
         ):
             with self.subTest(expression=expression,prefix=prefix),self.assertRaises(CompileError):

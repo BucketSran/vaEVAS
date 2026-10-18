@@ -141,6 +141,13 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
 
     event_math = getattr(parameters, "event_math", None)
     sampled_values = getattr(parameters, "sampled_values", False)
+    finite_integer = getattr(parameters, "finite_integer_expression", None)
+    if finite_integer is not None:
+        result = finite_integer(expr, nodes,
+            (operators, preserve_structure, decisions, validate_decision, decision_scope, indices),
+            {"node_declarations": node_declarations})
+        if result is not None:
+            return result
     if expr.op == 'floor':
         if len(expr.args) != 1:
             fail('floor requires one real argument', code='unsupported_floor')
@@ -207,7 +214,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
                          parameters, nodes, source, operators, preserve_structure,
                          decisions, validate_decision, decision_scope, indices,
                          memo=memo, node_declarations=node_declarations)
-    if expr.op in ("cos", "exp", "ln", "sqrt") and operators is None:
+    if expr.op in ("cos", "exp", "ln", "sqrt", "tanh") and operators is None:
         argument = lower(expr.args[0], parameters, nodes, source,
                          preserve_structure=preserve_structure, memo=memo,
                          node_declarations=node_declarations)
@@ -215,7 +222,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
             fail("nonconstant mathematical functions require a waveform contribution")
         try:
             value = {"cos": math.cos, "exp": math.exp, "ln": math.log,
-                     "sqrt": math.sqrt}[expr.op](argument.constant)
+                     "sqrt": math.sqrt, "tanh": math.tanh}[expr.op](argument.constant)
         except (ValueError, OverflowError):
             fail("mathematical constant is outside the finite function domain")
         if not math.isfinite(value):

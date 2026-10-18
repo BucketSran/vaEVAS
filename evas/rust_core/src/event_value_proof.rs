@@ -106,7 +106,21 @@ impl LocalState {
         }
     }
     pub(crate) fn value(&self, expr: &E, nodes: &[I]) -> Option<R> {
-        evaluate(
+        self.value_with_work(expr, nodes, &mut || Some(()))
+            .ok()
+            .flatten()
+    }
+    /// Charge a caller's aggregate allowance before each visited node and
+    /// exact arithmetic operation, retaining the evaluator's per-expression
+    /// limits. Unknown provenance is distinct from an exhausted allowance.
+    pub(crate) fn value_with_work<W: FnMut() -> Option<()>>(
+        &self,
+        expr: &E,
+        nodes: &[I],
+        work: &mut W,
+    ) -> Result<Option<R>, ()> {
+        let mut exhausted = false;
+        let result = evaluate(
             expr,
             nodes,
             &self.exact,
@@ -114,13 +128,40 @@ impl LocalState {
             &mut Budget(0),
             0,
             &mut 0,
-        )
+            &mut || {
+                let result = work();
+                exhausted |= result.is_none();
+                result
+            },
+        );
+        if exhausted {
+            Err(())
+        } else {
+            Ok(result)
+        }
+    }
+    /// Ordinary event/time proof retains its existing per-expression allowance.
+    pub(crate) fn assign_proof(&mut self, state: usize, expr: &E, nodes: &[I]) {
+        self.exact[state] = self.value(expr, nodes);
+    }
+    /// Replay optional scalar provenance in a private proof frame. Aggregate
+    /// exhaustion must stop replay, rather than merely clearing one value.
+    pub(crate) fn assign_proof_with_work<W: FnMut() -> Option<()>>(
+        &mut self,
+        state: usize,
+        expr: &E,
+        nodes: &[I],
+        work: &mut W,
+    ) -> Result<(), ()> {
+        self.exact[state] = self.value_with_work(expr, nodes, work)?;
+        Ok(())
     }
 }
 fn point(v: I) -> Option<R> {
     (v.lo == v.hi).then(|| binary(v.lo)).flatten()
 }
-fn evaluate(
+#[allow(clippy::too_many_arguments)]
+fn evaluate<W: FnMut() -> Option<()>>(
     e: &E,
     nodes: &[I],
     states: &[Option<R>],
@@ -128,7 +169,9 @@ fn evaluate(
     budget: &mut Budget,
     depth: usize,
     count: &mut usize,
+    work: &mut W,
 ) -> Option<R> {
+    work()?;
     *count += 1;
     if depth > 64 || *count > 512 {
         return None;
@@ -140,6 +183,7 @@ fn evaluate(
             }
             let mut value = binary(*constant)?;
             for term in terms {
+                work()?;
                 if term.node == 0 {
                     continue;
                 }
@@ -147,15 +191,36 @@ fn evaluate(
                     .and_then(|p| p.get(term.node))
                     .and_then(|v| v.clone())
                     .or_else(|| point(*nodes.get(term.node)?))?;
+                work()?;
                 let product = budget.check(binary(term.coefficient)? * v)?;
+                work()?;
                 value = budget.check(value + product)?;
             }
             Some(value)
         }
         E::State { state } => budget.check(states.get(*state)?.as_ref()?.clone()),
         E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
-            let a = evaluate(left, nodes, states, node_proofs, budget, depth + 1, count)?;
-            let b = evaluate(right, nodes, states, node_proofs, budget, depth + 1, count)?;
+            let a = evaluate(
+                left,
+                nodes,
+                states,
+                node_proofs,
+                budget,
+                depth + 1,
+                count,
+                work,
+            )?;
+            let b = evaluate(
+                right,
+                nodes,
+                states,
+                node_proofs,
+                budget,
+                depth + 1,
+                count,
+                work,
+            )?;
+            work()?;
             if matches!(e, E::Add { .. }) {
                 budget.check(a + b)
             } else if matches!(e, E::Multiply { .. }) {
@@ -167,9 +232,19 @@ fn evaluate(
             }
         }
         E::Power { base, exponent } if *exponent <= 32 => {
-            let a = evaluate(base, nodes, states, node_proofs, budget, depth + 1, count)?;
+            let a = evaluate(
+                base,
+                nodes,
+                states,
+                node_proofs,
+                budget,
+                depth + 1,
+                count,
+                work,
+            )?;
             let mut result = binary(1.)?;
             for _ in 0..*exponent {
+                work()?;
                 result = budget.check(result * &a)?;
             }
             Some(result)
@@ -183,9 +258,13 @@ fn evaluate(
                 budget,
                 depth + 1,
                 count,
+                work,
             )?;
             match function {
-                F::Abs if args.len() == 1 => budget.check(a.abs()),
+                F::Abs if args.len() == 1 => {
+                    work()?;
+                    budget.check(a.abs())
+                }
                 F::Min | F::Max if args.len() == 2 => {
                     let b = evaluate(
                         &args[1],
@@ -195,7 +274,9 @@ fn evaluate(
                         budget,
                         depth + 1,
                         count,
+                        work,
                     )?;
+                    work()?;
                     budget.check(if matches!(function, F::Min) {
                         a.min(b)
                     } else {

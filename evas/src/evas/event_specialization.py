@@ -15,10 +15,11 @@ from .lowering import lower, lower_decision
 from .syntax import Loop, Assignment, Conditional, Display, OPERATOR_NAMES, DECISION_NAMES
 from .display import validate_format
 from .integer_bits import OPS as BIT_OPS
+from .compact_source_select import compact_source_assignment
 
 PURE_MATH = frozenset(("sin", "cos", "exp", "ln", "sqrt"))
 VALUE_OPS = frozenset(("number", "parameter", "voltage", "time", "index", "checked",
-                       "+", "-", "*", "/", "%", "power", "unary+", "unary-")) | DECISION_NAMES | PURE_MATH | BIT_OPS
+                       "+", "-", "*", "/", "%", "power", "floor", "unary+", "unary-")) | DECISION_NAMES | PURE_MATH | BIT_OPS
 UNKNOWN = object()
 
 
@@ -122,7 +123,7 @@ def audit_event_body(compiler, statements):
             if id(item) in visited:
                 continue
             visited.add(id(item))
-            if (item.op in DECISION_NAMES or item.op in BIT_OPS or item.op == "index" or
+            if (item.op in DECISION_NAMES or item.op in BIT_OPS or item.op in ("index", "floor") or
                     item.op in ("/", "%") and compiler.integer_type(item) or
                     item.op == "power" and finite_power_tree(item) is not None):
                 return True
@@ -158,7 +159,7 @@ def audit_event_body(compiler, statements):
             value = resource_tree(root.args[0], memo)
         elif root.op == "index":
             value = index_read(root)
-        elif root.op in BIT_OPS or root.op in ("/", "%") and compiler.integer_type(root):
+        elif root.op in BIT_OPS or root.op == "floor" or root.op in ("/", "%") and compiler.integer_type(root):
             # The typed lowerer introduces quotient-bin decisions even when
             # there is no explicit source decision. Retain their real shape.
             value = audit_lower(root)
@@ -324,7 +325,8 @@ def audit_event_body(compiler, statements):
                     # Reuse the actual bounded assignment expander. A separate
                     # source profiler can miss comparison operand choices.
                     compiler.event_assignment(compiler.state_ids.get(statement.name, 0),
-                                              budget_value, origin)
+                                              budget_value, origin,
+                                              compact_source=compact_source_assignment(compiler, statement, budget_value, origin))
                 if kind == "integer":
                     value = audit_lower(statement.rhs, integer_assignment_root=True,
                                         static_integer_audit=parameter_dead)

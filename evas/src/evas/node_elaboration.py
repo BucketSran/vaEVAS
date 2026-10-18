@@ -24,9 +24,34 @@ def scalarize_nodes(model, parameters):
         return parameters[name]
 
     attach_constant_integer_arithmetic(parameter, model)
+    # Loop expansion may erase a zero-trip writer. Preserve the new immutable
+    # declaration admission boundary without changing existing event seeds.
+    loop_writers = set()
+    pending = [(s, False) for s in (*model.initial, *model.analog)]
+    pending.extend((s, False) for event in model.events for s in event.body)
+    while pending:
+        item, in_loop = pending.pop()
+        nested = in_loop or isinstance(item, Loop)
+        if nested and isinstance(item, (Assignment, Loop)):
+            loop_writers.add(item.name)
+        for branch in ("then_body", "else_body", "body"):
+            pending.extend((s, nested) for s in getattr(item, branch, ()))
     model = elaborate_loops(model, parameter)
     model = replace(model, analog=[s for s in model.analog if not isinstance(s,Event)],
                     events=[*model.events, *(s for s in model.analog if isinstance(s,Event))])
+    event_writers = set()
+    pending = [s for event in model.events
+               if any(t.kind in ("cross", "timer") for t in event.triggers)
+               for s in event.body]
+    while pending:
+        item = pending.pop()
+        if isinstance(item, (Assignment, Loop)):
+            event_writers.add(item.name)
+        for branch in ("then_body", "else_body", "body"):
+            pending.extend(getattr(item, branch, ()))
+    for name in loop_writers & model.variable_initializers.keys() - event_writers:
+        fail('declaration initializer with a source loop writer cannot bind an immutable value',
+             model.variable_initializers[name].token, code='unsupported_initial_event')
     # Genvar substitution can expose integer-only arithmetic in both values and
     # node/array indices. Recheck the complete expanded tree before real lowering.
     check_integer_model(model, parameters)

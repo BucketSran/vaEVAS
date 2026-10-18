@@ -403,6 +403,7 @@ enum Function {
     Exp,
     Ln,
     Sqrt,
+    Tanh,
 }
 impl From<crate::ir::MathFunction> for Function {
     fn from(value: crate::ir::MathFunction) -> Self {
@@ -411,6 +412,7 @@ impl From<crate::ir::MathFunction> for Function {
             crate::ir::MathFunction::Exp => Self::Exp,
             crate::ir::MathFunction::Ln => Self::Ln,
             crate::ir::MathFunction::Sqrt => Self::Sqrt,
+            crate::ir::MathFunction::Tanh => Self::Tanh,
         }
     }
 }
@@ -422,6 +424,7 @@ impl Function {
             Self::Exp => x.exp(),
             Self::Ln => x.ln(),
             Self::Sqrt => x.sqrt(),
+            Self::Tanh => x.tanh(),
         }
     }
     fn bounds(self, x: I) -> Result<I, Error> {
@@ -431,6 +434,7 @@ impl Function {
             Self::Exp => crate::math_functions::exp(x),
             Self::Ln => crate::math_functions::ln(x),
             Self::Sqrt => crate::math_functions::sqrt(x),
+            Self::Tanh => crate::math_functions::tanh(x),
         }
     }
     fn derivative(self, x: I) -> Result<I, Error> {
@@ -438,6 +442,7 @@ impl Function {
             Self::Sin => sin_bounds(x + constant_interval(FRAC_PI_2_BITS)),
             Self::Cos => Ok(-sin_bounds(x)?),
             Self::Exp => self.bounds(x),
+            Self::Tanh => crate::math_functions::tanh_derivative(x),
             Self::Ln => {
                 self.bounds(x)?;
                 Ok(I::ONE / x)
@@ -486,6 +491,7 @@ enum Runtime {
         history: Box<Transition>,
     },
     Slew(Slew),
+    SourceSlew(crate::source_slew::SourceSlew),
     SlewCascade(crate::slew_cascade::Cascade),
 }
 
@@ -528,6 +534,19 @@ fn transition_input(
         .chain([*row.last().unwrap()])
         .collect();
     Ok((input, coefficients))
+}
+
+// Evaluate the selected original held expression, never its rounded affine row.
+// Admission still belongs to transition_input and its all-arm dependency audit.
+fn transition_value_proof(
+    expression: &Expression,
+    program: &Program,
+    bounds: &[I],
+    proofs: Option<&crate::event_value_proof::Proofs>,
+) -> Result<Option<num_rational::BigRational>, Error> {
+    let nodes = vec![I::ZERO; program.nodes.len()];
+    let selected = crate::continuous::resolve_selection(expression, program, &[], &nodes, bounds)?;
+    Ok(crate::event_value_proof::LocalState::with_proofs(bounds, proofs).value(&selected, &nodes))
 }
 
 const SIN_MAX_MAGNITUDE: f64 = 128.0;
@@ -1200,6 +1219,30 @@ impl Evaluation<'_> {
         proven: Option<&Operators>,
         proofs: Option<&crate::exact_source::TimeProofs>,
     ) -> Result<Operators, Error> {
+        self.advanced_until_with_value_proofs(
+            time_bounds,
+            states,
+            bounds,
+            changed,
+            horizon,
+            proven,
+            proofs,
+            None,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn advanced_until_with_value_proofs(
+        &self,
+        time_bounds: I,
+        states: &[f64],
+        bounds: &[I],
+        changed: &[usize],
+        horizon: f64,
+        proven: Option<&Operators>,
+        proofs: Option<&crate::exact_source::TimeProofs>,
+        value_proofs: Option<&crate::event_value_proof::Proofs>,
+    ) -> Result<Operators, Error> {
         let _timing = crate::diagnostics::span("history.advance_candidate");
         let physical_proofs = proofs
             .map(|proofs| {
@@ -1219,6 +1262,22 @@ impl Evaluation<'_> {
             })
             .transpose()?;
         let proofs = physical_proofs.as_ref();
+        let physical_value_proofs = value_proofs
+            .map(|values| {
+                if !crate::event_value_proof::valid(values, bounds) {
+                    return Err(Error::new(
+                        "event_resolution",
+                        "history value proof outside matching candidate state enclosure",
+                    ));
+                }
+                let mut physical = values.clone();
+                for &(state, _) in &self.base.isolated_parameters {
+                    physical.remove(&state);
+                }
+                Ok(physical)
+            })
+            .transpose()?;
+        let value_proofs = physical_value_proofs.as_ref();
         let states = physical_parameters(states, &self.base.isolated_parameters, |value| value);
         let bounds = physical_parameters(bounds, &self.base.isolated_parameters, I::point);
         let states = states.as_ref();
@@ -1275,6 +1334,7 @@ impl Evaluation<'_> {
             changed,
             self.exact_root.as_ref(),
             true,
+            value_proofs,
         )?;
         Ok(candidate)
     }
@@ -1482,6 +1542,7 @@ impl Operators {
                 Runtime::Transition { history, .. } => {
                     history.observation_range(transition_window)?
                 }
+                Runtime::SourceSlew(history) => history.range(transition_window)?,
                 _ if point.is_some() => point.as_ref().unwrap()[index],
                 Runtime::DirectDerivative(history) => history.range(window)?,
                 Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
@@ -1612,6 +1673,7 @@ impl Operators {
                     | OperatorSpec::Ddt { .. }
                     | OperatorSpec::Math { .. }
                     | OperatorSpec::Transition { .. }
+                    | OperatorSpec::Slew { .. }
             ) {
                 crate::continuous::validate_integral_input(input, program, &origin.instance)?;
             } else {
@@ -1622,9 +1684,25 @@ impl Operators {
             Continuous::new_until(program, trajectory, driven, states, horizon, tolerances)?
                 .map(Arc::new);
         let source_work = crate::transition_source_plan::Work::default();
+        let needs_source_plan = program.operators.iter().any(|spec| match spec {
+            OperatorSpec::Transition { .. } => true,
+            OperatorSpec::Slew { input, .. } => crate::source_slew::selected(input),
+            _ => false,
+        });
+        let source_context = needs_source_plan
+            .then(|| {
+                crate::transition_source_plan::ProofContext::new(
+                    program,
+                    trajectory,
+                    driven,
+                    source_work.clone(),
+                )
+            })
+            .transpose()?;
         let history_work =
             crate::transition_source_plan::Work::limited([8192, 8192, 1_000_000_000]);
         let mut entries = Vec::new();
+        let mut selected_slew_count = 0usize;
         let mut direct = Vec::new();
         let mut history_targets = std::collections::BTreeMap::new();
         for (index, spec) in program.operators.iter().enumerate() {
@@ -1881,13 +1959,10 @@ impl Operators {
                         continue;
                     }
                     let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
-                    let source = crate::transition_source_plan::Spec::new(
+                    let source = crate::transition_source_plan::Spec::new_with_context(
                         input,
-                        program,
-                        trajectory,
-                        driven,
+                        source_context.as_ref().unwrap().clone(),
                         &origin.instance,
-                        source_work.clone(),
                     )?
                     .map(|spec| {
                         crate::transition_source_state::Source::initialized(spec, &state_bounds)
@@ -1954,6 +2029,24 @@ impl Operators {
                     fall,
                     origin,
                 } => {
+                    if crate::source_slew::selected(input) {
+                        selected_slew_count += 1;
+                        if selected_slew_count > 32 {
+                            return Err(Error::new(
+                                "unsupported_operator",
+                                "selected slew is limited to 32 independent call sites",
+                            ));
+                        }
+                        entries.push(Runtime::SourceSlew(crate::source_slew::SourceSlew::new(
+                            input,
+                            source_context.as_ref().unwrap().clone(),
+                            &origin.instance,
+                            states,
+                            *rise,
+                            *fall,
+                        )?));
+                        continue;
+                    }
                     if let Some(parent) =
                         history_parent(input, program, driven, origin, FeedforwardKind::Slew)?
                     {
@@ -2007,6 +2100,7 @@ impl Operators {
                 | Runtime::AbsDelay(_)
                 | Runtime::LaplaceNd(_)
                 | Runtime::Slew(_)
+                | Runtime::SourceSlew(_)
                 | Runtime::SlewCascade(_) => false,
             };
             changes_on_advance.push(changes);
@@ -2330,6 +2424,7 @@ impl Operators {
                     Runtime::AbsDelay(history) => history.value(time)?,
                     Runtime::Transition { history, .. } => history.value(time)?,
                     Runtime::Slew(history) => history.value(time)?,
+                    Runtime::SourceSlew(history) => history.value(time)?,
                     Runtime::SlewCascade(history) => history.value(time)?,
                 };
                 if !value.is_finite() {
@@ -2356,6 +2451,17 @@ impl Operators {
         Ok(())
     }
 
+    fn source_cuts(entry: &Runtime) -> &[crate::transition_source_plan::Cut] {
+        match entry {
+            Runtime::Transition {
+                source: Some(source),
+                ..
+            } => source.cuts(),
+            Runtime::SourceSlew(source) => source.cuts(),
+            _ => &[],
+        }
+    }
+
     pub(crate) fn source_root_at(
         &self,
         time: f64,
@@ -2373,12 +2479,16 @@ impl Operators {
             }
         }
         for entry in &self.entries {
-            if let Runtime::Transition {
-                source: Some(source),
-                ..
-            } = entry
             {
-                if let Some(cut) = source.cut_at(time) {
+                let cut = match entry {
+                    Runtime::Transition {
+                        source: Some(source),
+                        ..
+                    } => source.cut_at(time),
+                    Runtime::SourceSlew(source) => source.cut_at(time),
+                    _ => None,
+                };
+                if let Some(cut) = cut {
                     if root
                         .as_ref()
                         .is_some_and(|root| root.order(&cut.exact) != std::cmp::Ordering::Equal)
@@ -2416,6 +2526,7 @@ impl Operators {
                     .chain(source.as_ref().and_then(|s| s.next_after(after)))
                     .min_by(f64::total_cmp),
                 Runtime::Slew(history) => history.next_breakpoint(after),
+                Runtime::SourceSlew(history) => history.next_breakpoint(after),
                 Runtime::SlewCascade(history) => history.next_breakpoint(after),
             })
             .min_by(f64::total_cmp)
@@ -2486,6 +2597,10 @@ impl Operators {
         self.history_targets
             .values()
             .filter_map(|p| p.window_at(time))
+            .chain(self.entries.iter().filter_map(|entry| match entry {
+                Runtime::SourceSlew(source) => source.cut_at(time).map(|cut| cut.bounds),
+                _ => None,
+            }))
             .reduce(I::hull)
     }
 
@@ -2556,6 +2671,7 @@ impl Operators {
                         }
                     },
                     Runtime::Slew(history) => history.value_bounds(time),
+                    Runtime::SourceSlew(history) => history.bounds(time)?,
                     Runtime::SlewCascade(history) => history.value_bounds(time)?,
                     Runtime::AbsDelay(history) => history.value_bounds(time),
                     Runtime::Transition { history, .. } => history.value_bounds(time)?,
@@ -2580,6 +2696,8 @@ impl Operators {
                 } = entry
                 {
                     source.check_incoming(after, event, next_root.as_ref())?;
+                } else if let Runtime::SourceSlew(source) = entry {
+                    source.check_incoming(after, event, next_root.as_ref())?;
                 }
             }
         }
@@ -2596,16 +2714,15 @@ impl Operators {
                 Runtime::LaplaceNd(_) => Vec::new(),
                 Runtime::TransitionFilter { .. } | Runtime::TransitionIntegral { .. } => Vec::new(),
                 Runtime::Transition { history, .. } => history.deadlines(after),
-                Runtime::Slew(_) | Runtime::SlewCascade(_) => Vec::new(),
+                Runtime::Slew(_) | Runtime::SourceSlew(_) | Runtime::SlewCascade(_) => Vec::new(),
             })
             .collect();
         for entry in &self.entries {
-            if let Runtime::Transition {
-                source: Some(source),
-                ..
-            } = entry
             {
-                for cut in source.cuts().iter().filter(|cut| cut.time >= after) {
+                for cut in Self::source_cuts(entry)
+                    .iter()
+                    .filter(|cut| cut.time >= after)
+                {
                     let point = cut.bounds;
                     for deadline in &deadlines {
                         if deadline.overlaps(point)
@@ -2658,7 +2775,7 @@ impl Operators {
         bounds: &[I],
         changed: &[usize],
     ) -> Result<(), Error> {
-        self.advance_with_exact(time, time_bounds, states, bounds, changed, None, true)
+        self.advance_with_exact(time, time_bounds, states, bounds, changed, None, true, None)
     }
 
     /// Consume accepted histories to the settlement boundary without installing
@@ -2670,8 +2787,18 @@ impl Operators {
         states: &[f64],
         bounds: &[I],
         exact_root: Option<&crate::exact_source::RootTime>,
+        value_proofs: Option<&crate::event_value_proof::Proofs>,
     ) -> Result<(), Error> {
-        self.advance_with_exact(time, time_bounds, states, bounds, &[], exact_root, false)
+        self.advance_with_exact(
+            time,
+            time_bounds,
+            states,
+            bounds,
+            &[],
+            exact_root,
+            false,
+            value_proofs,
+        )
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -2684,8 +2811,23 @@ impl Operators {
         changed: &[usize],
         exact_root: Option<&crate::exact_source::RootTime>,
         install_source: bool,
+        value_proofs: Option<&crate::event_value_proof::Proofs>,
     ) -> Result<(), Error> {
         let _timing = crate::diagnostics::span("history.advance");
+        if value_proofs.is_some_and(|proofs| !crate::event_value_proof::valid(proofs, bounds)) {
+            return Err(Error::new(
+                "event_resolution",
+                "history value proof outside matching state enclosure",
+            ));
+        }
+        let physical_value_proofs = value_proofs.map(|proofs| {
+            let mut physical = proofs.clone();
+            for &(state, _) in &self.isolated_parameters {
+                physical.remove(&state);
+            }
+            physical
+        });
+        let value_proofs = physical_value_proofs.as_ref();
         let physical_states = physical_parameters(states, &self.isolated_parameters, |value| value);
         let physical_bounds = physical_parameters(bounds, &self.isolated_parameters, I::point);
         let states = physical_states.as_ref();
@@ -2783,14 +2925,20 @@ impl Operators {
             if !may_change && !reaches_deadline {
                 continue;
             }
+            let target_proof = if source.is_none() {
+                transition_value_proof(expression, program, bounds, value_proofs)?
+            } else {
+                None
+            };
             let mut preview = old.clone();
-            preview.advance_at_with_exact(
+            preview.advance_at_with_proofs(
                 time,
                 preview_bounds,
                 value,
                 target_bounds,
                 may_change,
                 preview_root.as_ref(),
+                target_proof.as_ref(),
             )?;
             let prediction = match entry {
                 Runtime::TransitionFilter { history, .. } => Runtime::TransitionFilter {
@@ -2924,17 +3072,20 @@ impl Operators {
                             .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
                         let may_change =
                             changed.iter().any(|s| input.state_dependencies.contains(s));
-                        history.advance_at_with_exact(
+                        let target_proof =
+                            transition_value_proof(expression, program, bounds, value_proofs)?;
+                        history.advance_at_with_proofs(
                             time,
                             time_bounds,
                             input.value(&[], states)?,
                             enclosure,
                             may_change,
                             exact_root,
+                            target_proof.as_ref(),
                         )?;
                     }
                 }
-                Runtime::Slew(_) | Runtime::SlewCascade(_) => {}
+                Runtime::Slew(_) | Runtime::SourceSlew(_) | Runtime::SlewCascade(_) => {}
             }
         }
         if install_source {
@@ -2975,6 +3126,8 @@ impl Operators {
                 .iter()
                 .zip(&other.entries)
                 .all(|(a, b)| match (a, b) {
+                    (Runtime::SourceSlew(a), Runtime::SourceSlew(b)) => a.same_history(b),
+                    (Runtime::SourceSlew(_), _) | (_, Runtime::SourceSlew(_)) => false,
                     (Runtime::Idt { history: a, .. }, Runtime::Idt { history: b, .. }) => {
                         a.same_reset_history(b)
                     }

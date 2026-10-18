@@ -28,7 +28,7 @@ class Token:
 _TOKEN = re.compile(
     r"(?P<space>\s+)|(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)"
     r'|(?P<include>`include[ \t]+"[^"\n]+")'
-    r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)|(?P<math>\$floor\b)|(?P<task>\$(?:bound_step|display)\b)"
+    r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)|(?P<math>\$(?:floor|tanh)\b)|(?P<task>\$(?:bound_step|display)\b)"
     r'|(?P<directive>`[A-Za-z_][A-Za-z_0-9]*)|(?P<string>"[^"\n]*")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
     r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<<<|>>>|<<|>>|<=|>=|==|!=|&&|\|\||'\{|[\[\]:<>(){}+*/%;,=@#.?!&|^~\-])"
@@ -37,14 +37,14 @@ _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 OPERATOR_ARITIES = {"transition": (3, 4), "absdelay": (2,), "slew": (2, 3),
                     "idt": (2, 3), "laplace_nd": (3,), "laplace_np": (3, 4), "idtmod": (3, 4), "ddt": (1,)}
-OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin", "cos", "exp", "ln", "sqrt"}
+OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin", "cos", "exp", "ln", "sqrt", "tanh"}
 DECISION_NAMES = frozenset(("<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!", "ternary", "abs", "min", "max"))
 _KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
              "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or",
              "function", "endfunction", "for", "genvar", "from", "exclude", "inf",
              "case", "endcase", "default", "casex", "casez"}
 _BUILTINS = OPERATOR_NAMES | {"V", "pow", "timer", "cross"}
-_RESERVED = _KEYWORDS | _BUILTINS
+_RESERVED = _KEYWORDS | (_BUILTINS - {"tanh"})
 
 
 def _tokens(source: str, name: str, *, tolerant=False) -> list[Token]:
@@ -83,7 +83,7 @@ class Expr:
     op: Literal["number", "parameter", "node", "voltage", "array", "unary+", "unary-",
                 "+", "-", "*", "/", "%", "&", "|", "^", "unary~", "<<", ">>", "power", "sin", "cos", "exp", "ln", "sqrt", "transition", "absdelay", "slew",
                 "idt", "laplace_nd", "laplace_np", "idtmod", "ddt", "call", "index",
-                "<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!", "ternary", "abs", "min", "max", "floor", "checked"]
+                "<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!", "ternary", "abs", "min", "max", "floor", "tanh", "checked"]
     value: str | float | None
     args: tuple["Expr", ...]
     token: Token
@@ -405,6 +405,11 @@ class Parser:
                 arguments += (self.expression(),)
             self.take(")")
             left = Expr(token.text, None, arguments, token, result_type="real")
+        elif token.text == "$tanh" or (token.text == "tanh" and token.text not in self.function_names and self.token.text == "("):
+            self.take("(")
+            argument = self.expression()
+            self.take(")")
+            left = Expr("tanh", None, (argument,), token, result_type="real")
         elif token.text == "$floor" or (token.text == "floor" and token.text not in self.function_names and self.token.text == "("):
             self.take("(")
             argument = self.expression()

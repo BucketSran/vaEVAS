@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 24
+SCHEMA_VERSION = 25
 
 
 @dataclass(frozen=True)
@@ -181,7 +181,7 @@ class Sin:
 
 @dataclass(frozen=True)
 class MathFunction:
-    function: Literal["cos", "exp", "ln", "sqrt"]
+    function: Literal["cos", "exp", "ln", "sqrt", "tanh"]
     input: Expression
     origin: Origin
     kind: str = field(default="math", init=False)

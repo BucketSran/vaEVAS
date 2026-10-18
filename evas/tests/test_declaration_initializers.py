@@ -66,11 +66,17 @@ class DeclarationInitializers(unittest.TestCase):
                 compile_one(source(declaration, event='x=1; a=3;'))
 
     def test_initializer_cannot_create_a_persistent_role(self):
-        cases = [source('integer x=3;', event=''),
-                 source('integer x=3;', '@(initial_step) x=7;', event=''),
-                 source('real x=3;', 'x=V(i);', event=''),
-                 source('real x=3;', event='y=1;', output='x')
-                    .replace('real x=3;', 'real x=3; integer y;')]
+        # Read-only declarations are immutable values, with no held x state.
+        for text in [source('integer x=3;', event=''),
+                     source('real x=3;', event='y=1;', output='x')
+                        .replace('real x=3;', 'real x=3; integer y;')]:
+            p = compile_one(text)
+            self.assertNotIn(('dut', 'x'), self.initials(p))
+            contribution = p.contributions[0]
+            self.assertEqual(contribution.rhs.constant,
+                             3 if p.nodes[contribution.positive] == 'o' else -3)
+        cases = [source('integer x=3;', '@(initial_step) x=7;', event=''),
+                 source('real x=3;', 'x=V(i);', event='')]
         for text in cases:
             with self.subTest(text=text), self.assertRaises(CompileError):
                 compile_one(text)

@@ -10,8 +10,16 @@ type Row = Option<Vec<I>>;
 struct Budget(usize);
 impl Budget {
     fn take(&mut self, n: usize) -> Option<()> {
-        self.0 = self.0.checked_sub(n)?;
-        Some(())
+        match self.0.checked_sub(n) {
+            Some(left) => {
+                self.0 = left;
+                Some(())
+            }
+            None => {
+                self.0 = 0;
+                None
+            }
+        }
     }
 }
 
@@ -113,9 +121,10 @@ fn batch(p: &Program, blocks: &[usize], before: &[Row], budget: &mut Budget) -> 
     Some(after)
 }
 
-pub(crate) fn unchanged(p: &Program, stages: &[Vec<usize>], required: &BTreeSet<usize>) -> bool {
-    prove(p, stages, required, false).unwrap_or(false)
-        || prove(p, stages, required, true).unwrap_or(false)
+#[cfg(test)]
+fn unchanged(p: &Program, stages: &[Vec<usize>], required: &BTreeSet<usize>) -> bool {
+    prove(p, stages, required, false, &mut Budget(2_000_000)).unwrap_or(false)
+        || prove(p, stages, required, true, &mut Budget(2_000_000)).unwrap_or(false)
 }
 
 fn prove(
@@ -123,6 +132,7 @@ fn prove(
     stages: &[Vec<usize>],
     required: &BTreeSet<usize>,
     concrete: bool,
+    budget: &mut Budget,
 ) -> Option<bool> {
     let width = p
         .nodes
@@ -130,7 +140,6 @@ fn prove(
         .checked_add(p.states.len())?
         .checked_add(p.operators.len())?
         .checked_add(1)?;
-    let mut budget = Budget(2_000_000);
     budget.take(width.checked_mul(p.states.len())?)?;
     let initial_values = p
         .states
@@ -151,13 +160,348 @@ fn prove(
         .collect();
     let mut after = initial.clone();
     for stage in stages {
-        after = batch(p, stage, &after, &mut budget)?;
+        after = batch(p, stage, &after, budget)?;
     }
     Some(
         required
             .iter()
             .all(|&s| after[s].as_ref() == initial[s].as_ref()),
     )
+}
+
+/// Preserve both legacy attempts and their individual caps. Input-aware replay
+/// may spend only the unused balance of the second attempt, never a third cap.
+pub(crate) fn unchanged_with_inputs(
+    model: &crate::events::EventModel,
+    stages: &[Vec<usize>],
+    required: &BTreeSet<usize>,
+    trajectory: &crate::pwl::Trajectory,
+) -> bool {
+    let p = &model.program;
+    let Some(mut budget) = legacy_remaining(p, stages, required, 2_000_000) else {
+        return true;
+    };
+    let mut prove = || -> Option<bool> {
+        // The preparer supplies initial blocks followed by zero-timer blocks.
+        // Shared OR bodies cannot be replayed as two independently executed stages.
+        let [initial, zero] = stages else {
+            return None;
+        };
+        budget.take(initial.len().checked_mul(zero.len())?)?;
+        if initial.iter().any(|block| zero.contains(block)) {
+            return None;
+        }
+        // Precharge all newly introduced input/state allocation and lookup work.
+        // Old successful attempts return above before any of this work occurs.
+        let width = p
+            .nodes
+            .len()
+            .checked_add(p.states.len())?
+            .checked_add(p.operators.len())?
+            .checked_add(1)?;
+        budget.take(
+            width.checked_mul(p.states.len())?.checked_add(
+                p.nodes
+                    .len()
+                    .checked_mul(model.driven.len().checked_add(1)?)?,
+            )?,
+        )?;
+        // value_bounds(0) visits every supplied source, including generated
+        // ones. Validated nominal/shaped curves start at zero, so each lookup
+        // needs at most two word-bounded binary searches plus a bounded knot
+        // copy/enclosure, with no interpolation. Reserve that work before the
+        // query instead of treating its internal searches as free.
+        budget.take(
+            trajectory
+                .config
+                .pwl
+                .len()
+                .checked_mul(2 * usize::BITS as usize + 16)?,
+        )?;
+        let before: Vec<_> = model.initial().into_iter().map(I::point).collect();
+        let mut nodes = vec![
+            I {
+                lo: f64::NEG_INFINITY,
+                hi: f64::INFINITY
+            };
+            p.nodes.len()
+        ];
+        nodes[0] = I::ZERO;
+        for (name, bounds) in model.driven.iter().zip(trajectory.value_bounds(0.)) {
+            nodes[p.nodes.iter().position(|node| node == name)?] = bounds;
+        }
+        Some(prove_at_inputs(
+            p,
+            stages,
+            required,
+            &nodes,
+            &before,
+            &mut budget,
+        ))
+    };
+    prove().unwrap_or(false)
+}
+
+fn legacy_remaining(
+    p: &Program,
+    stages: &[Vec<usize>],
+    required: &BTreeSet<usize>,
+    limit: usize,
+) -> Option<Budget> {
+    if prove(p, stages, required, false, &mut Budget(limit)).unwrap_or(false) {
+        return None;
+    }
+    let mut concrete = Budget(limit);
+    if prove(p, stages, required, true, &mut concrete).unwrap_or(false) {
+        return None;
+    }
+    Some(concrete)
+}
+
+#[cfg(test)]
+fn unchanged_with_limit(
+    p: &Program,
+    stages: &[Vec<usize>],
+    required: &BTreeSet<usize>,
+    inputs: Option<(&[I], &[I])>,
+    limit: usize,
+) -> bool {
+    let Some(mut concrete) = legacy_remaining(p, stages, required, limit) else {
+        return true;
+    };
+    inputs.is_some_and(|(nodes, before)| {
+        prove_at_inputs(p, stages, required, nodes, before, &mut concrete)
+    })
+}
+
+/// A sufficient t=0 proof using the supplied input/state boxes. This only
+/// chooses ordinary event execution; it does not execute, consume or publish a
+/// callback. Unknown internal/history values remain unknown, including zero
+/// coefficients. Unknown predicates join both original arms.
+fn prove_at_inputs(
+    p: &Program,
+    stages: &[Vec<usize>],
+    required: &BTreeSet<usize>,
+    nodes: &[I],
+    before: &[I],
+    budget: &mut Budget,
+) -> bool {
+    fn reads(
+        e: &Expression,
+        budget: &mut Budget,
+        width: usize,
+        out: &mut BTreeSet<usize>,
+    ) -> Option<()> {
+        // Charge before visiting or allocating for each original node/term.
+        budget.take(width)?;
+        match e {
+            Expression::State { state } => {
+                out.insert(*state);
+            }
+            Expression::Affine { terms, .. } => {
+                budget.take(terms.len())?;
+            }
+            Expression::Operator { .. } => {}
+            Expression::Add { left, right }
+            | Expression::Multiply { left, right }
+            | Expression::Divide { left, right } => {
+                reads(left, budget, width, out)?;
+                reads(right, budget, width, out)?;
+            }
+            Expression::Power { base, .. } => reads(base, budget, width, out)?,
+            Expression::Select {
+                left,
+                right,
+                then_value,
+                else_value,
+                ..
+            } => {
+                for child in [left, right, then_value, else_value] {
+                    reads(child, budget, width, out)?;
+                }
+            }
+            // Unsupported exact forms never obtain a bootstrap certificate.
+            _ => return None,
+        }
+        Some(())
+    }
+    fn body_reads(
+        body: &[Statement],
+        budget: &mut Budget,
+        width: usize,
+        out: &mut BTreeSet<usize>,
+        writes: &mut BTreeSet<usize>,
+    ) -> Option<()> {
+        for statement in body {
+            budget.take(1)?;
+            match statement {
+                Statement::Assign(a) => {
+                    budget.take(width)?;
+                    writes.insert(a.state);
+                    reads(&a.rhs, budget, width, out)?;
+                }
+                Statement::Display { args, .. } => {
+                    for e in args {
+                        reads(e, budget, width, out)?;
+                    }
+                }
+                Statement::If {
+                    left,
+                    right,
+                    then_body,
+                    else_body,
+                    ..
+                } => {
+                    reads(left, budget, width, out)?;
+                    reads(right, budget, width, out)?;
+                    body_reads(then_body, budget, width, out, writes)?;
+                    body_reads(else_body, budget, width, out, writes)?;
+                }
+                Statement::ArrayWrite { .. } | Statement::Loop { .. } => return None,
+            }
+        }
+        Some(())
+    }
+    fn replay(
+        body: &[Statement],
+        local: &mut crate::event_value_proof::LocalState,
+        nodes: &[I],
+        budget: &mut Budget,
+        width: usize,
+    ) -> Option<()> {
+        for statement in body {
+            budget.take(1)?;
+            match statement {
+                Statement::Assign(a) => {
+                    reads(&a.rhs, budget, width, &mut BTreeSet::new())?;
+                    local
+                        .assign_proof_with_work(a.state, &a.rhs, nodes, &mut || budget.take(1))
+                        .ok()?;
+                }
+                // Ordinary execution still checks/captures the complete display.
+                Statement::Display { .. } => {}
+                Statement::If {
+                    relation,
+                    left,
+                    right,
+                    then_body,
+                    else_body,
+                    ..
+                } => {
+                    reads(left, budget, width, &mut BTreeSet::new())?;
+                    reads(right, budget, width, &mut BTreeSet::new())?;
+                    let known = local
+                        .value_with_work(left, nodes, &mut || budget.take(1))
+                        .ok()?
+                        .zip(
+                            local
+                                .value_with_work(right, nodes, &mut || budget.take(1))
+                                .ok()?,
+                        )
+                        .map(|(a, b)| {
+                            use crate::ir::Relation;
+                            match relation {
+                                Relation::Lt => a < b,
+                                Relation::Le => a <= b,
+                                Relation::Gt => a > b,
+                                Relation::Ge => a >= b,
+                            }
+                        });
+                    if let Some(yes) = known {
+                        replay(
+                            if yes { then_body } else { else_body },
+                            local,
+                            nodes,
+                            budget,
+                            width,
+                        )?;
+                    } else {
+                        budget.take(3usize.checked_mul(width)?.checked_mul(local.len())?)?;
+                        let mut yes = local.clone();
+                        let mut no = local.clone();
+                        replay(then_body, &mut yes, nodes, budget, width)?;
+                        replay(else_body, &mut no, nodes, budget, width)?;
+                        local.merge(yes, &no);
+                    }
+                }
+                Statement::ArrayWrite { .. } | Statement::Loop { .. } => return None,
+            }
+        }
+        Some(())
+    }
+    let mut prove = || -> Option<bool> {
+        if nodes.len() != p.nodes.len() || before.len() != p.states.len() {
+            return None;
+        }
+        let width = p
+            .nodes
+            .len()
+            .checked_add(p.states.len())?
+            .checked_add(p.operators.len())?
+            .checked_add(1)?;
+        budget.take(2usize.checked_mul(width)?.checked_mul(before.len())?)?;
+        let initial = crate::event_value_proof::LocalState::new(before);
+        let mut local = initial.clone();
+        for stage in stages {
+            budget.take(1)?;
+            let mut blocks = BTreeSet::new();
+            for &block in stage {
+                budget.take(width.checked_add(usize::BITS as usize)?)?;
+                blocks.insert(block);
+            }
+            let mut writes = Vec::new();
+            let mut references = Vec::new();
+            for &block in &blocks {
+                let event = p.events.get(block)?;
+                budget.take(width)?;
+                let mut state_reads = BTreeSet::new();
+                let mut state_writes = BTreeSet::new();
+                body_reads(
+                    &event.body,
+                    budget,
+                    width,
+                    &mut state_reads,
+                    &mut state_writes,
+                )?;
+                writes.push(state_writes);
+                references.push(state_reads);
+            }
+            // Independent blocks may be replayed serially only when every
+            // explicit state read still sees the shared old frame. Otherwise
+            // decline this optional proof and retain the prior diagnostic.
+            for i in 0..writes.len() {
+                for j in 0..i {
+                    budget.take(3usize.checked_mul(width)?)?;
+                    if !writes[i].is_disjoint(&writes[j])
+                        || !writes[i].is_disjoint(&references[j])
+                        || !writes[j].is_disjoint(&references[i])
+                    {
+                        return None;
+                    }
+                }
+            }
+            for block in blocks {
+                replay(&p.events[block].body, &mut local, nodes, budget, width)?;
+            }
+        }
+        for &state in required {
+            budget.take(width)?;
+            let e = Expression::State { state };
+            let old = initial
+                .value_with_work(&e, nodes, &mut || budget.take(1))
+                .ok()??;
+            if local
+                .value_with_work(&e, nodes, &mut || budget.take(1))
+                .ok()?
+                .as_ref()
+                != Some(&old)
+            {
+                return Some(false);
+            }
+        }
+        Some(true)
+    };
+    prove().unwrap_or(false)
 }
 
 #[cfg(test)]
@@ -279,5 +623,225 @@ mod tests {
         assert!(unchanged(&p, &[vec![0]], &required()));
         let changed = program(vec![vec![assign(0, c(2.)), assign(1, v)]]);
         assert!(!unchanged(&changed, &[vec![0]], &required()));
+    }
+    fn at_input(
+        p: &Program,
+        stages: &[Vec<usize>],
+        required: &BTreeSet<usize>,
+        input: I,
+        states: &[I],
+    ) -> bool {
+        prove_at_inputs(
+            p,
+            stages,
+            required,
+            &[I::ZERO, input],
+            states,
+            &mut Budget(2_000_000),
+        )
+    }
+    #[test]
+    fn input_aware_proof_uses_the_whole_source_box_and_unknown_state_box() {
+        let origin = json!({"source":"proof.va","line":1,"column":1,"instance":"dut"});
+        let v = json!({"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]});
+        let branch = json!({"kind":"if","relation":"gt","left":v,"right":c(0.),
+            "then_body":[assign(0,c(1.))],"else_body":[assign(0,c(2.))],"origin":origin});
+        let p = program(vec![vec![branch]]);
+        let states = [I::ONE, I::ZERO];
+        assert!(at_input(&p, &[vec![0]], &required(), I::ONE, &states));
+        assert!(!at_input(
+            &p,
+            &[vec![0]],
+            &required(),
+            I { lo: -1., hi: 1. },
+            &states
+        ));
+        assert!(!at_input(
+            &p,
+            &[vec![0]],
+            &required(),
+            I {
+                lo: f64::NEG_INFINITY,
+                hi: f64::INFINITY
+            },
+            &states
+        ));
+        let mut uncertain = states;
+        uncertain[0] = I { lo: 0.9, hi: 1.1 };
+        assert!(!at_input(&p, &[vec![0]], &required(), I::ONE, &uncertain));
+    }
+    #[test]
+    fn unknown_nonseed_predicates_join_and_cannot_flow_back_into_a_seed() {
+        let origin = json!({"source":"proof.va","line":1,"column":1,"instance":"dut"});
+        let v = json!({"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]});
+        let branch = json!({"kind":"if","relation":"gt","left":v,"right":c(0.),
+            "then_body":[assign(1,c(1.))],"else_body":[assign(1,c(2.))],"origin":origin});
+        let unknown = I {
+            lo: f64::NEG_INFINITY,
+            hi: f64::INFINITY,
+        };
+        let states = [I::ONE, I::ZERO];
+        let p = program(vec![vec![branch.clone(), assign(0, c(1.))]]);
+        assert!(at_input(&p, &[vec![0]], &required(), unknown, &states));
+        let p = program(vec![vec![branch, assign(0, state(1))]]);
+        assert!(!at_input(&p, &[vec![0]], &required(), unknown, &states));
+        let p = program(vec![vec![assign(1, v), assign(0, c(1.))]]);
+        assert!(at_input(&p, &[vec![0]], &required(), unknown, &states));
+        assert!(!at_input(
+            &p,
+            &[vec![0]],
+            &BTreeSet::from([0, 1]),
+            unknown,
+            &states
+        ));
+    }
+    #[test]
+    fn input_aware_proof_does_not_turn_unknown_zero_coefficients_into_a_value() {
+        let v = json!({"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]});
+        let zero = json!({"op":"multiply","left":c(0.),"right":v});
+        let p = program(vec![vec![assign(0, add(c(1.), zero))]]);
+        assert!(!at_input(
+            &p,
+            &[vec![0]],
+            &required(),
+            I {
+                lo: f64::NEG_INFINITY,
+                hi: f64::INFINITY
+            },
+            &[I::ONE, I::ZERO]
+        ));
+    }
+    #[test]
+    fn input_aware_blocks_keep_shared_old_state_and_existing_resource_limit() {
+        let p = program(vec![vec![assign(1, state(0))], vec![assign(0, state(1))]]);
+        let states = [I::ONE, I::ZERO];
+        assert!(!at_input(&p, &[vec![0, 1]], &required(), I::ZERO, &states));
+        assert!(at_input(
+            &p,
+            &[vec![0], vec![1]],
+            &required(),
+            I::ZERO,
+            &states
+        ));
+        let p = program(vec![vec![assign(0, state(0))], vec![assign(0, state(0))]]);
+        assert!(!at_input(&p, &[vec![0, 1]], &required(), I::ZERO, &states));
+        let p = program(vec![vec![assign(0, state(0))]]);
+        assert!(!at_input(
+            &p,
+            &vec![vec![0]; 200_000],
+            &required(),
+            I::ZERO,
+            &states
+        ));
+    }
+    #[test]
+    fn budget_exhaustion_is_sticky_and_cannot_fund_input_replay() {
+        let mut b = Budget(3);
+        assert!(b.take(4).is_none());
+        assert_eq!(b.0, 0);
+        assert!(b.take(1).is_none());
+        let p = program(vec![vec![assign(0, c(1.))]]);
+        let nodes = [I::ZERO, I::ONE];
+        let states = [I::ONE, I::ZERO];
+        // Input replay is valid with its full cap, but cannot create a fresh
+        // cap after the concrete attempt exhausted its inherited balance.
+        assert!(prove_at_inputs(
+            &p,
+            &[vec![0]],
+            &required(),
+            &nodes,
+            &states,
+            &mut Budget(200)
+        ));
+        assert!(!prove_at_inputs(
+            &p,
+            &[vec![0]],
+            &required(),
+            &nodes,
+            &states,
+            &mut b
+        ));
+        assert!(!unchanged_with_limit(
+            &p,
+            &[vec![0]],
+            &required(),
+            Some((&nodes, &states)),
+            9
+        ));
+    }
+    #[test]
+    fn exact_power_work_consumes_the_inherited_initialization_allowance() {
+        // Three exponent-32 nodes perform at least 96 exact multiplications
+        // per assignment. 300 assignments need 28_800 operations, exceeding
+        // this scaled 20_000 allowance even before scans and legacy attempts.
+        // The small accepted case distinguishes accounting from disabling proof.
+        let mut rhs = state(1);
+        for _ in 0..3 {
+            rhs = json!({"op":"power","base":rhs,"exponent":32});
+        }
+        for (copies, accepted) in [(1, true), (300, false)] {
+            let mut body = vec![assign(1, rhs.clone()); copies];
+            body.push(assign(
+                0,
+                json!({"op":"affine","constant":0.,
+                "terms":[{"node":1,"coefficient":1.}]}),
+            ));
+            let p = program(vec![body]);
+            assert_eq!(
+                unchanged_with_limit(
+                    &p,
+                    &[vec![0]],
+                    &required(),
+                    Some((&[I::ZERO, I::ONE], &[I::ONE, I::ZERO])),
+                    20_000
+                ),
+                accepted
+            );
+        }
+    }
+
+    #[test]
+    fn both_legacy_successes_keep_their_original_per_attempt_cap() {
+        for rhs in [state(0), c(1.)] {
+            let p = program(vec![vec![assign(0, rhs)]]);
+            for limit in 0..150 {
+                let old = prove(&p, &[vec![0]], &required(), false, &mut Budget(limit))
+                    .unwrap_or(false)
+                    || prove(&p, &[vec![0]], &required(), true, &mut Budget(limit))
+                        .unwrap_or(false);
+                // No input fallback: exact compatibility over every boundary.
+                assert_eq!(
+                    unchanged_with_limit(&p, &[vec![0]], &required(), None, limit),
+                    old
+                );
+            }
+        }
+    }
+    #[test]
+    fn input_scan_and_stage_dedup_charge_before_work() {
+        let p = program(vec![vec![assign(0, c(1.))]]);
+        let nodes = [I::ZERO, I::ONE];
+        let states = [I::ONE, I::ZERO];
+        let mut budget = Budget(21); // 20 frame units, then stage; no block insertion.
+        assert!(!prove_at_inputs(
+            &p,
+            &[vec![0; 10000]],
+            &required(),
+            &nodes,
+            &states,
+            &mut budget
+        ));
+        assert_eq!(budget.0, 0);
+        let mut budget = Budget(100);
+        let many = program(vec![vec![assign(1, state(0)); 10000]]);
+        assert!(!prove_at_inputs(
+            &many,
+            &[vec![0]],
+            &required(),
+            &nodes,
+            &states,
+            &mut budget
+        ));
+        assert_eq!(budget.0, 0);
     }
 }

@@ -26,6 +26,9 @@ mod root_refinement;
 #[path = "transient_root_window_tests.rs"]
 mod root_window_tests;
 
+#[cfg(test)]
+#[path = "source_selected_slew_tests.rs"]
+mod source_selected_slew_tests;
 #[path = "event_time_provenance.rs"]
 pub(crate) mod time_provenance;
 
@@ -416,7 +419,14 @@ fn prepare_root_window_selected_impl(
     // Every trial starts from accepted uncertainty, regardless of whether the
     // program has conditional statements or history operators.
     let old_bounds = accepted.state_bounds.as_slice();
-    operators.advance_old(time, time_bounds, &accepted.states, old_bounds, exact_root)?;
+    operators.advance_old(
+        time,
+        time_bounds,
+        &accepted.states,
+        old_bounds,
+        exact_root,
+        Some(&accepted.value_proofs),
+    )?;
     // Positive edge durations make transition continuous at a target change.
     // Freeze its current value for the same-time state/voltage solve, then
     // install the new target only in this disposable candidate history.
@@ -578,7 +588,7 @@ fn prepare_root_window_selected_impl(
         old_bounds,
         &prepared.bounds,
     );
-    let mut operators = frozen.advanced_until_with_time_proofs(
+    let mut operators = frozen.advanced_until_with_value_proofs(
         time_bounds,
         &prepared.states,
         &prepared.bounds,
@@ -586,6 +596,7 @@ fn prepare_root_window_selected_impl(
         prediction_end,
         None,
         Some(&physical_time_proofs),
+        Some(&physical_value_proofs),
     )?;
     let mut replay = settle(&observation.0, &observation.1)?;
     let replay_values = crate::event_value_proof::apply(
@@ -616,7 +627,7 @@ fn prepare_root_window_selected_impl(
         old_bounds,
         &replay.bounds,
     );
-    let history_replay = frozen.advanced_until_with_time_proofs(
+    let history_replay = frozen.advanced_until_with_value_proofs(
         time_bounds,
         &replay.states,
         &replay.bounds,
@@ -624,6 +635,7 @@ fn prepare_root_window_selected_impl(
         prediction_end,
         Some(&operators),
         Some(&replay_time_proofs),
+        Some(&replay_values),
     )?;
     if prepared.states != replay.states
         || physical_time_proofs != replay_time_proofs
@@ -2896,3 +2908,7 @@ mod time_proof_tests;
 #[cfg(test)]
 #[path = "transient_event_control_tests.rs"]
 mod event_control_tests;
+
+#[cfg(test)]
+#[path = "transient_rational_transition_tests.rs"]
+mod rational_transition_tests;

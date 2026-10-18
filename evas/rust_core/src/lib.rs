@@ -42,6 +42,7 @@ mod settlement_bounds;
 mod slew;
 mod slew_cascade;
 pub mod solver;
+mod source_slew;
 mod state_space;
 mod step_bounds;
 mod strobe;

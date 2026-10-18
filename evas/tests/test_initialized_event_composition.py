@@ -84,22 +84,87 @@ class InitializedEventComposition(unittest.TestCase):
                 self.assertEqual(values(result), [0,0,1,1])
                 self.assertEqual(len(result['transient']['events']), 1)
 
-    def test_cluster_extension_does_not_invent_an_internal_root_certificate(self):
-        for threshold, reason in [
-                (.5000000000000001, 'cannot certify ordering of distinct events with overlapping time bounds'),
-                (.5000000000000003, 'cannot certify exact ordering of the next event while extending the connected cluster')]:
-            program = compile_model(
+    def test_point_input_projection_certifies_internal_root_without_merging_events(self):
+        low, high = Fraction(.1), Fraction(.9)
+        source_root = (Fraction(.5)-low)/(high-low)
+        neighbors = [.5]
+        for _ in range(6):
+            neighbors.append(math.nextafter(neighbors[-1], math.inf))
+        for threshold in [.5000000000000001, .5000000000000003]:
+            body = (
                 '@(initial_step) begin n=0; m=0; k=0; end '
                 '@(cross(V(u,r)-0.5,1,1e-12,1e-9)) n=n+1; '
                 '@(timer(0.5,0,1e-12)) k=k+1; '
                 'V(z,r)<+V(u,r); '
                 f'@(cross(V(z,r)-{threshold!r},1,1e-12,1e-9)) m=m+1; '
-                'V(y,r)<+1.0*n+1.0*m+1.0*k;', 'integer n,m,k; electrical z;')
-            for times in [[0, 1], [0, .5, math.nextafter(.5, math.inf), 1]]:
+                'V(y,r)<+1.0*n+1.0*m+1.0*k;')
+            program = compile_model(body, 'integer n,m,k; electrical z;')
+            # z=u is an exact point-coefficient projection onto the original
+            # source. Its root has a certificate, not just a rounded enclosure.
+            internal_root = (Fraction(threshold)-low)/(high-low)
+            previous = None
+            for times in [[0, 1], [0, *neighbors, 1]]:
+                result = run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
+                expected = [int(Fraction(t) >= source_root) + int(t >= .5)
+                            + int(Fraction(t) >= internal_root) for t in times]
+                self.assertEqual(values(result), expected)
+                events = result['transient']['events']
+                self.assertEqual([event['event'] for event in events], [0, 1, 2])
+                self.assertTrue(all(a['time'] < b['time'] for a,b in zip(events,events[1:])))
+                for event, physical in zip(events, [source_root,Fraction(.5),internal_root]):
+                    self.assertGreaterEqual(Fraction(event['time']), physical)
+                    self.assertLessEqual(Fraction(event['time'])-physical, Fraction(1e-12))
+                if previous is not None:
+                    self.assertEqual(events, previous)
+                previous = events
+            # The projection does not relax either source-event precision gate.
+            for tolerances in ['1e-24,1e-9', '1e-12,1e-24']:
+                tight = compile_model(body.replace('1e-12,1e-9',tolerances),
+                                      'integer n,m,k; electrical z;')
                 with self.assertRaises(KernelError) as caught:
-                    run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
+                    run(tight, {'u': [[0,.1],[1,.9]]}, [0,1], stop=1)
                 self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
-                self.assertEqual(caught.exception.detail['message'], reason)
+
+    def test_nonpoint_internal_projection_cannot_invent_a_root_certificate(self):
+        # The coupled equations give z=u/3, but their interval elimination has
+        # a nonpoint 1/3 coefficient. The point-projection contract cannot turn
+        # that coefficient's nominal value into an exact original source root.
+        program = compile_model(
+            '@(initial_step) begin n=0; m=0; k=0; end '
+            '@(cross(V(u,r)-0.5,1,1e-12,1e-9)) n=n+1; '
+            '@(timer(0.5,0,1e-12)) k=k+1; '
+            'V(z,r)<+V(u,r)-2*V(w,r); V(w,r)<+V(z,r); '
+            '@(cross(V(z,r)-0.16666666666666669,1,1e-12,1e-9)) m=m+1; '
+            'V(y,r)<+1.0*n+1.0*m+1.0*k;', 'integer n,m,k; electrical z,w;')
+        for times in [[0,1], [0,.5,math.nextafter(.5,math.inf),1]]:
+            with self.assertRaises(KernelError) as caught:
+                run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
+            self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
+            self.assertIn('overlapping time bounds', caught.exception.detail['message'])
+
+    def test_projected_root_sample_retains_error_after_later_gain(self):
+        threshold = .5000000000000001
+        nominal = .45*threshold
+        gain = 2**40
+        exact = gain*(Fraction(.45)*Fraction(threshold)-Fraction(nominal))
+        self.assertGreater(abs(exact), Fraction(1e-12))
+        program = compile_model(
+            '@(initial_step) begin n=0; m=0; k=0; q=0; h=0; end '
+            '@(cross(V(u,r)-0.5,1,1e-12,1e-9)) n=n+1; '
+            '@(timer(0.5,0,1e-12)) k=k+1; V(z,r)<+V(u,r); '
+            f'@(cross(V(z,r)-{threshold!r},1,1e-12,1e-9)) begin '
+            'm=m+1; q=0.45*V(z,r); end '
+            f'@(timer(0.75)) h={gain}*(q-{nominal!r}); V(y,r)<+h;',
+            'integer n,m,k; real q,h; electrical z;')
+        with self.assertRaises(KernelError) as caught:
+            run(program, {'u': [[0,.1],[1,.9]]}, [0,.5,.75,1], stop=1,
+                vabstol=1e-12, reltol=0)
+        self.assertIn('same-time forward error', caught.exception.detail['message'])
+        result = run(program, {'u': [[0,.1],[1,.9]]}, [0,.5,.75,1], stop=1,
+                     vabstol=1e-4, reltol=0)
+        for time, value in zip([0,.5,.75,1],values(result)):
+            expected = exact if time >= .75 else Fraction(0)
+            self.assertLessEqual(abs(Fraction(value)-expected), Fraction(1e-4))
 
     def test_cluster_construction_respects_existing_transaction_microevent_budget(self):
         # A source root represented at .5 pushes each subsequent exact clock

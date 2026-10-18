@@ -7,7 +7,7 @@ import math
 from fractions import Fraction as F
 
 from .errors import CompileError
-from .ir import Affine, Binary, Power, Select
+from .ir import Affine, Binary, Power, Select, StateRef
 from .integer_bits import DOMAIN_BUDGET, MINIMUM, MAXIMUM, evaluate
 from .limits import check_ir
 
@@ -22,7 +22,7 @@ def _binary_scale(value):
     return value == 0 or math.isfinite(value) and math.frexp(abs(value))[0] == .5
 
 
-def real_bounds(expression):
+def real_bounds(expression, state_bounds=None):
     """Return exact rational endpoints, with None for an unbounded endpoint.
 
     Clamp recognition uses the same bound operand in the predicate and value
@@ -42,6 +42,8 @@ def real_bounds(expression):
             return constant, constant
         if isinstance(value, Affine):
             return None, None
+        if isinstance(value, StateRef):
+            return (state_bounds or {}).get(value.state, (None, None))
         if isinstance(value, Select):
             limit = _constant(value.right)
             if (limit is not None and _constant(value.then_value) == limit
@@ -72,7 +74,7 @@ def real_bounds(expression):
     return visit(expression)
 
 
-def floor_table(argument, origin):
+def floor_table(argument, origin, *, state_bounds=None):
     """Build a real-valued Select table without changing source integer typing."""
     def fail(message, code='unsupported_floor'):
         raise CompileError(message, code=code, token=origin, instance=origin.instance)
@@ -105,10 +107,14 @@ def floor_table(argument, origin):
             pending.append(value.base)
         elif isinstance(value, Select):
             pending.extend((value.left, value.right, value.then_value, value.else_value))
+        elif isinstance(value, StateRef):
+            bound = (state_bounds or {}).get(value.state)
+            if bound is None or any(x is None for x in bound) or bound[0] > bound[1]:
+                fail('event floor state needs a finite range proved before this source use')
         else:
             fail('bounded floor requires source-clamped piecewise-affine input expressions')
 
-    low, high = real_bounds(argument)
+    low, high = real_bounds(argument, state_bounds)
     if low is None or high is None:
         fail('floor requires a finite range proved before the call; later clamps and deck ranges are not proofs')
     first, last = math.floor(low), math.floor(high)

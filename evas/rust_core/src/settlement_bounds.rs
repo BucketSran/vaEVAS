@@ -70,7 +70,7 @@ fn affine_with_operators(
 
 #[path = "initial_state_invariance.rs"]
 mod initial_state_invariance;
-pub(crate) use initial_state_invariance::unchanged as unchanged_initial_states;
+pub(crate) use initial_state_invariance::unchanged_with_inputs as unchanged_initial_states;
 
 fn dot(row: &[I], values: &[I]) -> I {
     let dense = || {

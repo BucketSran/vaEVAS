@@ -68,6 +68,23 @@ fn expression_value(
     root: Option<&RootTime>,
     identity: &BTreeSet<usize>,
 ) -> Option<RootTime> {
+    expression_with_points(expr, states, root, identity, None)
+}
+
+fn expression_with_points(
+    expr: &Expression,
+    states: &TimeProofs,
+    root: Option<&RootTime>,
+    identity: &BTreeSet<usize>,
+    points: Option<&crate::event_value_proof::LocalState>,
+) -> Option<RootTime> {
+    let point_offset = |expr| {
+        literal(expr).or_else(|| {
+            let exact = points?.value(expr, &[])?;
+            let bounds = crate::exact_source::enclosure(&exact)?;
+            (bounds.lo == bounds.hi).then_some(bounds.lo)
+        })
+    };
     match expr {
         Expression::State { state } => states.get(state).cloned(),
         Expression::Affine { constant, terms }
@@ -82,20 +99,20 @@ fn expression_value(
             shifted(root?.clone(), *constant)
         }
         Expression::Add { left, right } => {
-            if let Some(offset) = literal(right) {
-                shifted(expression_value(left, states, root, identity)?, offset)
-            } else if let Some(offset) = literal(left) {
-                shifted(expression_value(right, states, root, identity)?, offset)
-            } else {
-                None
-            }
+            let add = |time, offset| {
+                shifted(
+                    expression_with_points(time, states, root, identity, points)?,
+                    point_offset(offset)?,
+                )
+            };
+            add(left, right).or_else(|| add(right, left))
         }
         Expression::EventMath { function, args, .. }
             if matches!(function, EventMathFunction::Min | EventMathFunction::Max)
                 && args.len() == 2 =>
         {
             let exact = |arg| {
-                expression_value(arg, states, root, identity)
+                expression_with_points(arg, states, root, identity, points)
                     .or_else(|| RootTime::point(literal(arg)?))
             };
             let a = exact(&args[0])?;
@@ -122,7 +139,7 @@ pub(crate) fn apply(
     before_bounds: &[I],
     after_bounds: &[I],
 ) -> TimeProofs {
-    let before: TimeProofs = before
+    let mut before: TimeProofs = before
         .iter()
         .filter(|(s, r)| {
             before_bounds
@@ -131,6 +148,24 @@ pub(crate) fn apply(
         })
         .map(|(&s, r)| (s, r.clone()))
         .collect();
+    // A simple held start with a genuinely point accepted value is an exact
+    // absolute time. Seed only real timer starts, never arbitrary observer
+    // constants or a nominal endpoint of an uncertain time interval.
+    for leaf in &model.triggers {
+        if let crate::ir::EventTrigger::HeldTimer { start, .. } = &leaf.trigger {
+            if let Expression::State { state } = start.as_ref() {
+                if matches!(model.program.states[*state].kind, StateKind::Real) {
+                    if let Some(bounds) = before_bounds.get(*state) {
+                        if bounds.finite() && bounds.lo == bounds.hi {
+                            if let Some(point) = RootTime::point(bounds.lo) {
+                                before.entry(*state).or_insert(point);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     crate::diagnostics::counter("time_proof_root_calls", usize::from(root.is_some()));
     let mut result = before.clone();
     let identity = if root.is_some() && !selection.actions.is_empty() {
@@ -140,18 +175,24 @@ pub(crate) fn apply(
     };
     for (event, indices) in &selection.actions {
         let mut local = before.clone();
+        let mut points = crate::event_value_proof::LocalState::new(before_bounds);
         let assignments = model.program.events[*event].assignments();
         for &index in indices {
             let assignment = &assignments[index];
-            let proof = expression_value(&assignment.rhs, &local, root, &identity).or_else(|| {
-                // A literal reset of an already tracked time is still exact.
-                // Never seed all observer constants, or restore a proof cleared
-                // by an earlier unsupported write in this same callback.
-                local
-                    .contains_key(&assignment.state)
-                    .then(|| RootTime::point(literal(&assignment.rhs)?))
-                    .flatten()
-            });
+            let proof =
+                expression_with_points(&assignment.rhs, &local, root, &identity, Some(&points))
+                    .or_else(|| {
+                        // A literal reset of an already tracked time is still exact.
+                        // Never seed all observer constants, or restore a proof cleared
+                        // by an earlier unsupported write in this same callback.
+                        local
+                            .contains_key(&assignment.state)
+                            .then(|| RootTime::point(literal(&assignment.rhs)?))
+                            .flatten()
+                    });
+            // Empty nodes keep voltage, time and history reads unknown. Only
+            // exact arithmetic over the original point held inputs qualifies.
+            points.assign_proof(assignment.state, &assignment.rhs, &[]);
             local.remove(&assignment.state);
             result.remove(&assignment.state);
             if let Some(proof) = proof
@@ -1023,5 +1064,338 @@ mod held_review_tests {
         let mut unchanged = vec![false; 3];
         invalidate_timers(&leaves, &before, &before.clone(), &mut unchanged);
         assert_eq!(unchanged, vec![false; 3]);
+    }
+}
+
+#[cfg(test)]
+mod held_point_tests {
+    use super::*;
+    use crate::ir::{Program, Tolerances, TransientInputs, SCHEMA_VERSION};
+    use serde_json::{json, Value};
+
+    fn c(x: f64) -> Value {
+        json!({"op":"affine","constant":x,"terms":[]})
+    }
+    fn s(i: usize) -> Value {
+        json!({"op":"state","state":i})
+    }
+    fn add(a: Value, b: Value) -> Value {
+        json!({"op":"add","left":a,"right":b})
+    }
+    fn assign(i: usize, rhs: Value) -> Value {
+        json!({"kind":"assign","state":i,"rhs":rhs})
+    }
+    fn origin() -> Value {
+        json!({"source":"held-point.va","line":1,"column":1,"instance":"dut"})
+    }
+    fn trajectory(good: bool) -> Trajectory {
+        Trajectory::new(
+            TransientInputs {
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![vec![
+                    [0., 0.16],
+                    [0.25, 0.16],
+                    [0.5, if good { -0.16 } else { 0.16 }],
+                    [1., if good { -0.16 } else { 0.16 }],
+                ]],
+                output_times: vec![0., 0.25, 0.5, 1.],
+                stop: 1.,
+                max_step: 1.,
+            },
+            1,
+        )
+        .unwrap()
+    }
+    fn model(body: Value, with_history: bool) -> EventModel {
+        let mut p: Program = serde_json::from_value(json!({
+            "schema_version":SCHEMA_VERSION,"nodes":["0","u","y"],
+            "states":[{"instance":"dut","name":"due","kind":"real","initial":0.5},
+                {"instance":"dut","name":"half","kind":"real","initial":0.1},
+                {"instance":"dut","name":"x","kind":"real","initial":0},
+                {"instance":"dut","name":"p","kind":"real","initial":0},
+                {"instance":"dut","name":"span","kind":"real","initial":1}],
+            "events":[{"origin":origin(),"trigger":{"kind":"held_timer","start":s(0),
+                "period":c(0.),"enabled":c(1.),"time_tolerance":1e-9},"body":body}],
+            "contributions":[{"origin":origin(),"branch":{"instance":"dut",
+                "local_positive":"p","local_negative":"r","kind":"voltage"},
+                "positive":2,"negative":0,"rhs":c(0.)}],"operators":[]
+        }))
+        .unwrap();
+        if with_history {
+            p.operators = serde_json::from_value(json!([{"kind":"transition","input":s(4),
+                "delay":0,"rise":0.125,"fall":0.5,"origin":origin()}]))
+            .unwrap();
+            p.contributions[0].rhs = serde_json::from_value(add(
+                json!({"op":"operator","operator":0}),
+                json!({"op":"multiply","left":c(1e12),"right":s(3)}),
+            ))
+            .unwrap();
+        }
+        EventModel::new(
+            p,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-8,
+                relative: 0.,
+            },
+        )
+        .unwrap()
+    }
+    #[test]
+    fn held_point_seed_offsets_follow_source_order_and_after_bounds() {
+        for before_write in [true, false] {
+            let change = assign(1, c(0.125));
+            let due = assign(0, add(s(0), s(1)));
+            let body = if before_write {
+                json!([change, due])
+            } else {
+                json!([due, change])
+            };
+            let model = model(body, false);
+            let trajectory = trajectory(true);
+            let before = [I::point(0.1), I::point(0.1), I::ZERO, I::ZERO, I::ONE];
+            let offset = if before_write { 0.125 } else { 0.1 };
+            let exact = crate::exact_source::binary(0.1).unwrap()
+                + crate::exact_source::binary(offset).unwrap();
+            let mut after = before;
+            after[0] = crate::exact_source::enclosure(&exact).unwrap();
+            after[1] = I::point(0.125);
+            let selection = Selection {
+                actions: vec![(0, vec![0, 1])],
+                ..Default::default()
+            };
+            let proof = apply(
+                &model,
+                &trajectory,
+                &selection,
+                &TimeProofs::new(),
+                None,
+                &before,
+                &after,
+            );
+            assert_eq!(proof[&0].rational(), &exact);
+            assert!(
+                !proof.contains_key(&1),
+                "ordinary offset constants are not time seeds"
+            );
+            after[0] = I::point(0.9);
+            assert!(!apply(
+                &model,
+                &trajectory,
+                &selection,
+                &TimeProofs::new(),
+                None,
+                &before,
+                &after
+            )
+            .contains_key(&0));
+        }
+    }
+    #[test]
+    fn nonpoint_and_hidden_unknown_offsets_never_become_time_certificates() {
+        let selection = Selection {
+            actions: vec![(0, vec![0])],
+            ..Default::default()
+        };
+        let trajectory = trajectory(true);
+        for offset in [
+            s(1),
+            json!({"op":"multiply","left":c(0.),"right":s(2)}),
+            json!({"op":"divide","left":c(0.5),"right":s(1)}),
+        ] {
+            let division = offset["op"] == "divide";
+            let model = model(json!([assign(0, add(s(0), offset))]), false);
+            let mut before = [
+                I::point(0.1),
+                I { lo: 0.1, hi: 0.2 },
+                I { lo: -1., hi: 1. },
+                I::ZERO,
+                I::ONE,
+            ];
+            if division {
+                before[1] = I::point(3.);
+            }
+            let after = [I { lo: 0., hi: 1. }; 5];
+            assert!(!apply(
+                &model,
+                &trajectory,
+                &selection,
+                &TimeProofs::new(),
+                None,
+                &before,
+                &after
+            )
+            .contains_key(&0));
+        }
+        let mut before = [I::point(0.1); 5];
+        before[0] = I { lo: 0.1, hi: 0.2 };
+        let uncertain_start = model(json!([assign(0, add(s(0), c(0.1)))]), false);
+        let after = [I { lo: 0., hi: 1. }; 5];
+        assert!(!apply(
+            &uncertain_start,
+            &trajectory,
+            &selection,
+            &TimeProofs::new(),
+            None,
+            &before,
+            &after
+        )
+        .contains_key(&0));
+
+        before[0] = I::point(0.1);
+        let overwritten = model(
+            json!([
+                assign(
+                    1,
+                    json!({"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]})
+                ),
+                assign(0, add(s(0), s(1)))
+            ]),
+            false,
+        );
+        let both = Selection {
+            actions: vec![(0, vec![0, 1])],
+            ..Default::default()
+        };
+        assert!(!apply(
+            &overwritten,
+            &trajectory,
+            &both,
+            &TimeProofs::new(),
+            None,
+            &before,
+            &after
+        )
+        .contains_key(&0));
+    }
+    #[test]
+    fn failed_held_point_candidate_retries_same_controller_with_future_history_and_error() {
+        use crate::transient::{event_acceptance, Controller, Frame};
+        let body = json!([assign(0,add(s(0),s(1))),{"kind":"if","relation":"gt",
+            "left":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},
+            "right":c(0.),"then_body":[assign(3,s(2))],"else_body":[assign(3,c(0.))],"origin":origin()}]);
+        let model = model(body, true);
+        let good = trajectory(true);
+        let bad = trajectory(false);
+        let mut states = vec![0.5, 0.1, 0.45 * 0.16, 0., 1.];
+        let mut bounds = states.iter().copied().map(I::point).collect::<Vec<_>>();
+        bounds[2] = I::point(0.45) * I::point(0.16);
+        assert!(bounds[2].lo < bounds[2].hi);
+        let mut operators =
+            crate::operators::Operators::new(&model.program, &good, &model.driven, &states)
+                .unwrap();
+        states[4] = 0.;
+        bounds[4] = I::ZERO;
+        operators
+            .advance(0.25, I::point(0.25), &states, &bounds, &[4])
+            .unwrap();
+        assert_eq!(operators.values(0.5).unwrap(), vec![0.5]);
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.25).unwrap())
+            .unwrap();
+        let solution = circuit.solve(&good.values(0.25)).unwrap();
+        let frame = Frame {
+            time: 0.25,
+            states,
+            state_bounds: bounds,
+            operators,
+            circuit,
+            solution,
+            time_proofs: Default::default(),
+            value_proofs: Default::default(),
+        };
+        let mut calendar =
+            crate::schedule::schedule_held(&model, &good, &frame.state_bounds).unwrap();
+        let mut controller = Controller {
+            accepted: frame.clone(),
+            event: 0,
+            records: vec![],
+            outputs: vec![],
+        };
+        let saved_calendar = calendar.clone();
+        let signatures = |events: &[crate::schedule::ScheduledEvent]| {
+            events
+                .iter()
+                .map(|e| {
+                    (
+                        e.event,
+                        e.time.to_bits(),
+                        e.bounds().lo.to_bits(),
+                        e.bounds().hi.to_bits(),
+                    )
+                })
+                .collect::<Vec<_>>()
+        };
+        let same = |a: &Frame, b: &Frame| {
+            assert_eq!(a.time, b.time);
+            assert_eq!(a.states, b.states);
+            assert_eq!(a.state_bounds, b.state_bounds);
+            assert_eq!(a.time_proofs, b.time_proofs);
+            assert_eq!(a.value_proofs, b.value_proofs);
+            assert_eq!(a.solution.voltages, b.solution.voltages);
+            assert!(a.operators.same_reset_history(&b.operators));
+            assert_eq!(
+                a.operators.values(0.5).unwrap(),
+                b.operators.values(0.5).unwrap()
+            );
+            assert_eq!(
+                a.operators.values(1.).unwrap(),
+                b.operators.values(1.).unwrap()
+            );
+        };
+        for _ in 0..2 {
+            let error = controller
+                .accept_changed_events(
+                    &model,
+                    &bad,
+                    &mut calendar,
+                    event_acceptance::Strategy::Static,
+                )
+                .unwrap_err();
+            assert_eq!(error.kind, "waveform_accuracy");
+            assert!(error.message.contains("forward error"));
+            same(&controller.accepted, &frame);
+            assert_eq!(controller.event, 0);
+            assert!(controller.records.is_empty());
+            assert!(controller.outputs.is_empty());
+            assert_eq!(signatures(&calendar), signatures(&saved_calendar));
+        }
+        controller
+            .accept_changed_events(
+                &model,
+                &good,
+                &mut calendar,
+                event_acceptance::Strategy::Static,
+            )
+            .unwrap();
+        let mut clean = Controller {
+            accepted: frame,
+            event: 0,
+            records: vec![],
+            outputs: vec![],
+        };
+        let mut clean_calendar = saved_calendar;
+        clean
+            .accept_changed_events(
+                &model,
+                &good,
+                &mut clean_calendar,
+                event_acceptance::Strategy::Static,
+            )
+            .unwrap();
+        same(&controller.accepted, &clean.accepted);
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            serde_json::to_value(&clean.records).unwrap()
+        );
+        assert_eq!(signatures(&calendar), signatures(&clean_calendar));
+        assert_eq!(
+            controller.accepted.operators.values(0.5).unwrap(),
+            vec![0.5]
+        );
+        assert_eq!(controller.accepted.operators.values(1.).unwrap(), vec![0.]);
+        assert!(controller.accepted.state_bounds[2].lo < controller.accepted.state_bounds[2].hi);
+        assert!(controller.accepted.time_proofs.contains_key(&0));
     }
 }

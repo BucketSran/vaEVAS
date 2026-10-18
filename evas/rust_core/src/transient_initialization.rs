@@ -180,13 +180,16 @@ pub(super) fn prepare(
     }
     if seeds.is_disjoint(&assigned)
         || crate::settlement_bounds::unchanged_initial_states(
-            &model.program,
+            model,
             &[initial_blocks.clone(), blocks.clone()],
             &seeds,
+            trajectory,
         )
     {
         return Ok(None);
     }
+    let before = model.initial();
+    let before_bounds: Vec<_> = before.iter().copied().map(I::point).collect();
     if model.guard_operators.iter().flatten().any(|&index| {
         matches!(
             model.program.operators[index],
@@ -237,8 +240,7 @@ pub(super) fn prepare(
     // Build candidates in language order; neither stage commits any history,
     // calendar consumption or record. Histories are constructed once from the
     // final seed only after both stages pass their certificates.
-    let before = model.initial();
-    let before_bounds: Vec<_> = before.iter().copied().map(I::point).collect();
+
     // Transition constructors read only their complete structural seed set.
     // Other held values may retain arithmetic uncertainty in Prepared/Frame;
     // they are not exact inputs to any cold history in this restricted graph.
@@ -742,5 +744,169 @@ mod tests {
                 .kind,
             "unsupported_initial_history"
         );
+    }
+    fn invariant_calendar_model() -> EventModel {
+        let mut p = nonseed_model().program;
+        let c = |value| json!({"op":"affine","constant":value,"terms":[]});
+        let u = json!({"op":"affine","constant":0.,"terms":[{"node":1,"coefficient":1.}]});
+        let origin = p.events[0].origin.clone();
+        p.events[0].body = serde_json::from_value(json!([
+            {"kind":"if","relation":"gt","left":u,"right":c(0.),
+             "then_body":[{"kind":"assign","state":2,"rhs":c(0.)}],
+             "else_body":[{"kind":"assign","state":2,"rhs":c(1.)}],"origin":origin},
+            {"kind":"assign","state":0,"rhs":{"op":"multiply","left":c(0.45),"right":u}}
+        ]))
+        .unwrap();
+        p.events[1].body = serde_json::from_value(json!([
+            {"kind":"assign","state":3,"rhs":c(1.)},
+            {"kind":"assign","state":2,"rhs":c(1.)}
+        ]))
+        .unwrap();
+        p.states.push(
+            serde_json::from_value(
+                json!({"instance":"dut","name":"due","kind":"real","initial":2}),
+            )
+            .unwrap(),
+        );
+        p.events.push(
+            serde_json::from_value(json!({"origin":origin,
+            "trigger":{"kind":"held_timer","start":{"op":"state","state":4},
+                "period":c(0.),"enabled":c(1.),"time_tolerance":1e-12},
+            "body":[{"kind":"assign","state":1,"rhs":c(0.)}]}))
+            .unwrap(),
+        );
+        let OperatorSpec::Transition { rise, fall, .. } = &mut p.operators[0] else {
+            unreachable!()
+        };
+        *rise = 0.5;
+        *fall = 0.125;
+        EventModel::new(
+            p,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-8,
+                relative: 0.,
+            },
+        )
+        .unwrap()
+    }
+    fn invariant_controller(
+        model: &EventModel,
+        t: &Trajectory,
+    ) -> (Controller, Vec<ScheduledEvent>) {
+        assert!(prepare(model, t).unwrap().is_none());
+        let states = model.initial();
+        let state_bounds = states.iter().copied().map(I::point).collect::<Vec<_>>();
+        let operators = Operators::new(&model.program, t, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_at(&states, &operators.values(0.).unwrap(), &t.value_bounds(0.))
+            .unwrap();
+        let solution = circuit.solve(&t.values(0.)).unwrap();
+        let calendar = schedule_held(model, t, &state_bounds).unwrap();
+        (
+            Controller {
+                accepted: Frame {
+                    states,
+                    state_bounds,
+                    operators,
+                    circuit,
+                    solution,
+                    time: 0.,
+                    value_proofs: Default::default(),
+                    time_proofs: Default::default(),
+                },
+                event: 0,
+                records: vec![],
+                outputs: vec![],
+            },
+            calendar,
+        )
+    }
+    #[test]
+    fn input_aware_seed_proof_keeps_ordinary_zero_execution_and_same_controller_late_retry() {
+        let model = invariant_calendar_model();
+        let good = nonseed_trajectory(true);
+        let bad = nonseed_trajectory(false);
+        let (mut controller, mut calendar) = invariant_controller(&model, &good);
+        let accept = |c: &mut Controller, t: &Trajectory, q: &mut Vec<ScheduledEvent>| {
+            c.accept_changed_events(&model, t, q, event_acceptance::Strategy::Held)
+        };
+        accept(&mut controller, &good, &mut calendar).unwrap();
+        assert_eq!(controller.accepted.time, 0.);
+        assert_eq!(controller.records.len(), 1);
+        assert!(controller.accepted.state_bounds[0].lo < controller.accepted.state_bounds[0].hi);
+        assert!(controller.accepted.value_proofs.contains_key(&0));
+        accept(&mut controller, &good, &mut calendar).unwrap();
+        assert_eq!(controller.accepted.time, 0.25);
+        let before = controller.accepted.clone();
+        let records = serde_json::to_value(&controller.records).unwrap();
+        let signature = |q: &[ScheduledEvent]| {
+            q.iter()
+                .map(|e| {
+                    (
+                        e.event,
+                        e.time.to_bits(),
+                        e.bounds().lo.to_bits(),
+                        e.bounds().hi.to_bits(),
+                    )
+                })
+                .collect::<Vec<_>>()
+        };
+        let queue = signature(&calendar);
+        let cursor = controller.event;
+        let same = |a: &Frame, b: &Frame| {
+            assert_eq!(a.time, b.time);
+            assert_eq!(a.states, b.states);
+            assert_eq!(a.state_bounds, b.state_bounds);
+            assert_eq!(a.value_proofs, b.value_proofs);
+            assert_eq!(a.time_proofs, b.time_proofs);
+            assert_eq!(a.solution.voltages, b.solution.voltages);
+            assert!(a.operators.same_reset_history(&b.operators));
+            for t in [0.375, 0.5, 0.75, 1.] {
+                assert_eq!(
+                    a.operators.values(t).unwrap(),
+                    b.operators.values(t).unwrap()
+                );
+                assert_eq!(
+                    a.operators.bounds(t).unwrap(),
+                    b.operators.bounds(t).unwrap()
+                );
+            }
+        };
+        let outputs = controller.outputs.clone();
+        for _ in 0..2 {
+            let error = accept(&mut controller, &bad, &mut calendar).unwrap_err();
+            assert_eq!(error.kind, "waveform_accuracy");
+            assert!(error.message.contains("forward error"));
+            same(&controller.accepted, &before);
+            assert_eq!(controller.event, cursor);
+            assert_eq!(signature(&calendar), queue);
+            assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
+            assert_eq!(controller.outputs.len(), outputs.len());
+            for (a, b) in controller.outputs.iter().zip(&outputs) {
+                same(a, b);
+            }
+        }
+        accept(&mut controller, &good, &mut calendar).unwrap();
+        let (mut clean, mut clean_calendar) = invariant_controller(&model, &good);
+        for _ in 0..3 {
+            accept(&mut clean, &good, &mut clean_calendar).unwrap();
+        }
+        same(&controller.accepted, &clean.accepted);
+        assert_eq!(signature(&calendar), signature(&clean_calendar));
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            serde_json::to_value(&clean.records).unwrap()
+        );
+        assert_eq!(
+            controller.records.iter().filter(|r| r.time == 0.).count(),
+            1
+        );
+        assert_eq!(
+            controller.accepted.operators.values(0.5).unwrap(),
+            vec![0.5]
+        );
+        assert_eq!(controller.accepted.operators.values(1.).unwrap(), vec![1.]);
+        assert!(controller.accepted.state_bounds[0].lo < controller.accepted.state_bounds[0].hi);
     }
 }
