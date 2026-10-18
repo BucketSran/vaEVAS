@@ -76,7 +76,7 @@ class EventFloorRanges(unittest.TestCase):
         for body in [CLAMP+'q=floor(8*c)&1;',
                      CLAMP+'if(0>1)q=floor(8*c)+(2147483647+1);',
                      CLAMP+'if(0>1)q=floor(1/0);',
-                     'if(0>1)q=floor(V(u,r));']:
+                     'if(0>1)q=floor(q+V(u,r));']:
             with self.subTest(body=body), self.assertRaises(CompileError):
                 program(body)
 

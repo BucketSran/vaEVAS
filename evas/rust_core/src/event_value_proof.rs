@@ -261,6 +261,10 @@ fn evaluate<W: FnMut() -> Option<()>>(
                 work,
             )?;
             match function {
+                F::Floor if args.len() == 1 => {
+                    work()?;
+                    budget.check(a.floor())
+                }
                 F::Abs if args.len() == 1 => {
                     work()?;
                     budget.check(a.abs())
@@ -335,4 +339,44 @@ pub(crate) fn valid(proofs: &Proofs, bounds: &[I]) -> bool {
             .get(*state)
             .is_some_and(|b| enclosure(value).is_some_and(|v| b.lo <= v.lo && v.hi <= b.hi))
     })
+}
+
+#[cfg(test)]
+mod native_floor_tests {
+    use super::*;
+    #[test]
+    fn negative_rational_floor_charges_existing_work_and_exhaustion_returns_unknown() {
+        let local = LocalState {
+            bounds: vec![],
+            exact: vec![],
+            nodes: Some(vec![binary(0.), Some(R::new((-1).into(), 3.into()))]),
+        };
+        let node = E::Affine {
+            constant: 0.,
+            terms: vec![crate::ir::Term {
+                node: 1,
+                coefficient: 1.,
+            }],
+        };
+        let expr = E::EventMath {
+            function: F::Floor,
+            args: vec![node],
+            origin: crate::ir::Origin {
+                source: "floor.va".into(),
+                line: 1,
+                column: 1,
+                instance: "dut".into(),
+                expansion: vec![],
+            },
+        };
+        let nodes = [
+            I::ZERO,
+            I {
+                lo: -0.34,
+                hi: -0.33,
+            },
+        ];
+        assert_eq!(local.value(&expr, &nodes), binary(-1.));
+        assert!(local.value_with_work(&expr, &nodes, &mut || None).is_err());
+    }
 }

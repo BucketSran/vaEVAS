@@ -697,3 +697,61 @@ fn failed_source_target_epoch_and_memo_roll_back_then_same_controller_retries() 
     // positive edge here. The newly certified target must have reversed it.
     assert_eq!(controller.accepted.operators.values(0.9).unwrap()[0], 0.);
 }
+
+#[test]
+fn native_floor_crossbin_failure_preserves_controller_then_retries_exact_source() {
+    let (base, trajectory, mut controller, mut calendar) = fixture(0.75);
+    let mut payload = serde_json::to_value(&base.program).unwrap();
+    let origin = payload["events"][1]["origin"].clone();
+    payload["events"][1]["body"][0]["then_body"].as_array_mut().unwrap().push(json!({
+        "kind":"assign","state":1,"rhs":{"op":"event_math","function":"floor",
+        "args":[{"op":"affine","constant":0.,"terms":[{"node":1,"coefficient":2.}]}],"origin":origin}}));
+    let model = EventModel::new(
+        serde_json::from_value(payload).unwrap(),
+        base.driven,
+        base.tolerances,
+    )
+    .unwrap();
+    let mut config = trajectory.config.clone();
+    config.pwl_errors_v = Some(serde_json::from_value(json!([1e-12])).unwrap());
+    let uncertain = Trajectory::new(config, 1).unwrap();
+    let snapshot = |c: &Controller, cal: &Vec<ScheduledEvent>| {
+        (
+            c.accepted.time,
+            c.accepted.states.clone(),
+            c.accepted.state_bounds.clone(),
+            c.accepted.value_proofs.clone(),
+            c.accepted.time_proofs.clone(),
+            c.event,
+            serde_json::to_string(&c.records).unwrap(),
+            c.outputs
+                .iter()
+                .map(|f| (f.time, f.states.clone(), f.state_bounds.clone()))
+                .collect::<Vec<_>>(),
+            cal.iter()
+                .map(|e| (e.event, e.time, e.bounds()))
+                .collect::<Vec<_>>(),
+        )
+    };
+    let old = snapshot(&controller, &calendar);
+    for _ in 0..2 {
+        let error = controller
+            .accept_relocalized(&model, &uncertain, &mut calendar)
+            .unwrap_err();
+        assert_eq!(error.kind, "event_condition");
+        assert!(error.message.contains("floor bin"));
+        assert_eq!(snapshot(&controller, &calendar), old);
+    }
+    let (_, _, mut clean, mut clean_calendar) = fixture(0.75);
+    controller
+        .accept_relocalized(&model, &trajectory, &mut calendar)
+        .unwrap();
+    clean
+        .accept_relocalized(&model, &trajectory, &mut clean_calendar)
+        .unwrap();
+    assert_eq!(
+        snapshot(&controller, &calendar),
+        snapshot(&clean, &clean_calendar)
+    );
+    assert_eq!(controller.accepted.states, [1., 1., 0.75]);
+}

@@ -4,6 +4,19 @@ use super::*;
 use crate::ir::{Expression, OperatorSpec, Statement};
 use std::collections::BTreeSet;
 
+/// Closed display-only records cannot change cold histories or observe a
+/// pre-initialization physical solution. Raw IR must satisfy this independently.
+pub(super) fn constant_outputs(body: &[Statement]) -> bool {
+    !body.is_empty()
+        && body.iter().all(|statement| match statement {
+            Statement::Display { args, .. } => args.iter().all(|arg| {
+                matches!(arg,
+            Expression::Affine { constant, terms } if constant.is_finite() && terms.is_empty())
+            }),
+            _ => false,
+        })
+}
+
 fn unsupported(message: &str) -> Error {
     Error::new("unsupported_initial_history", message)
 }
@@ -218,6 +231,7 @@ pub(super) fn prepare(
             .contributions
             .iter()
             .any(|c| &c.origin.instance == owner)
+            && !constant_outputs(&model.program.events[block].body)
     }) {
         return Err(Error::new(
             "unsupported_initial_event",

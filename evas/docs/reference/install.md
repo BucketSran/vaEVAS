@@ -17,14 +17,14 @@ python3 -m venv .venv
 `solve`、`transient`、`simulate` 及 results 的 `run` 默认使用当前安装包内核。
 Python API 的 `solve(..., kernel=None)`、`transient(..., kernel=None)`、
 `simulate_scs(..., kernel=None)` 与 `results.run(..., kernel=None, out=...)` 同样使用它。
-默认选择检查构建记录、文件 SHA256、内核实际报告、IR25、包版本和 OS/架构。
+默认选择检查构建记录、文件 SHA256、内核实际报告、IR26、包版本和 OS/架构。
 macOS 的 arm64 映射到 Rust 的 aarch64，darwin 映射到 macos。
 
 显式 `--kernel PATH` 始终选择该路径；API 的显式参数原样传给子进程，
 裸命令名保留已有 PATH 查找语义。CLI、身份查询和 results 的显式参数继续按文件路径解析。缺失、不可执行或运行失败
 不会切换至包内核。显式路径保留已有请求/响应协议验证，不要求旧内核新增身份元数据；
 results 仍需已有身份查询合同。请求协议没有独立版本，字段继续为 null，不能解释为已确认
-全部协议兼容。IR 不匹配需用配套前端与内核重新编译原模型。IR25增加原生tanh，保留IR24物理源曲线、事件循环及紧凑数组；旧 IR1–24
+全部协议兼容。IR 不匹配需用配套前端与内核重新编译原模型。IR26增加受限的原生事件floor，保留IR25原生tanh及既有源曲线/事件结构；旧 IR1–25
 不能仅改版本号；保留原产物与收据，按[迁移规则](../../README.md#ir-v8-migration)生成新 IR。
 
 只查询包可继续使用 `evas-rebuild version --json`，不查找内核。

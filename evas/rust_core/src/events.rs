@@ -802,7 +802,7 @@ impl EventModel {
         voltages: &[f64],
         states: &[f64],
     ) -> Result<(Vec<I>, Vec<I>), Error> {
-        self.certify_observation_at_roots(
+        self.certify_observation_at_roots_with_proofs(
             selection,
             &[],
             inputs,
@@ -810,10 +810,12 @@ impl EventModel {
             operators,
             voltages,
             states,
+            None,
         )
     }
 
     #[allow(clippy::too_many_arguments)] // Root, state and voltage certificates are distinct inputs.
+    #[cfg(test)]
     pub(crate) fn certify_observation_at_roots(
         &self,
         selection: &Selection,
@@ -824,6 +826,22 @@ impl EventModel {
         voltages: &[f64],
         states: &[f64],
     ) -> Result<(Vec<I>, Vec<I>), Error> {
+        self.certify_observation_at_roots_with_proofs(
+            selection, fired, inputs, before, operators, voltages, states, None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn certify_observation_at_roots_with_proofs(
+        &self,
+        selection: &Selection,
+        fired: &[usize],
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+        voltages: &[f64],
+        states: &[f64],
+        proofs: Option<&crate::event_value_proof::Context<'_>>,
+    ) -> Result<(Vec<I>, Vec<I>), Error> {
         let _timing = crate::diagnostics::span("event.certificate");
         let selected = self.selected_program_with_parameters(
             &states.iter().copied().map(I::point).collect::<Vec<_>>(),
@@ -833,6 +851,7 @@ impl EventModel {
         )?;
         if let Some(result) = crate::causal_event::certificate(
             self, selection, &selected, fired, inputs, before, operators, voltages, states, true,
+            proofs,
         )? {
             return Ok(result);
         }
@@ -905,6 +924,7 @@ impl EventModel {
     }
 
     #[allow(clippy::too_many_arguments)] // Root, state and voltage certificates are distinct inputs.
+    #[cfg(test)]
     pub(crate) fn certify_event_states(
         &self,
         selection: &Selection,
@@ -914,6 +934,22 @@ impl EventModel {
         operators: &[I],
         voltages: &[f64],
         states: &[f64],
+    ) -> Result<Vec<I>, Error> {
+        self.certify_event_states_with_proofs(
+            selection, fired, inputs, before, operators, voltages, states, None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn certify_event_states_with_proofs(
+        &self,
+        selection: &Selection,
+        fired: &[usize],
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+        voltages: &[f64],
+        states: &[f64],
+        proofs: Option<&crate::event_value_proof::Context<'_>>,
     ) -> Result<Vec<I>, Error> {
         let _timing = crate::diagnostics::span("event.state_certificate");
 
@@ -925,6 +961,7 @@ impl EventModel {
         )?;
         if let Some(result) = crate::causal_event::certificate(
             self, selection, &selected, fired, inputs, before, operators, voltages, states, false,
+            proofs,
         )? {
             return Ok(result.0);
         }
@@ -1172,6 +1209,12 @@ impl EventModel {
             predicates(&c.rhs, &self.program, &self.driven, &mut tested)?;
         }
         for (event, indices) in &selection.actions {
+            // Causal numeric actions are evaluated from actual driven inputs,
+            // not unknown same-time voltage nodes. Classification audited every
+            // original action and the existing writer checks retain isolation.
+            if self.causal_numeric[*event] {
+                continue;
+            }
             let mut voltage_dependent = vec![false; self.program.states.len()];
             for &index in indices {
                 let (state, rhs) = &self.actions[*event][index];

@@ -1,4 +1,4 @@
-"""Version 23: voltage/event IR with pure arithmetic for isolated observers.
+"""Version 26: voltage/event IR with finite sampled floor for driven inputs.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 25
+SCHEMA_VERSION = 26
 
 
 @dataclass(frozen=True)
@@ -75,7 +75,7 @@ class OperatorRef:
 
 @dataclass(frozen=True)
 class EventMath:
-    function: Literal["sqrt", "abs", "min", "max"]
+    function: Literal["sqrt", "abs", "min", "max", "floor"]
     args: tuple["Expression", ...]
     origin: Origin
     op: str = field(default="event_math", init=False)

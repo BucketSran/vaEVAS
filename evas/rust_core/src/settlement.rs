@@ -230,7 +230,7 @@ fn prepare_impl(
         }
     }
     let bounds = if check_voltages {
-        let (states, nodes) = model.certify_observation_at_roots(
+        let (states, nodes) = model.certify_observation_at_roots_with_proofs(
             &selection,
             events_and_roots.1,
             input_bounds,
@@ -238,11 +238,12 @@ fn prepare_impl(
             operator_bounds,
             &solution.voltages,
             &states,
+            proofs,
         )?;
         crate::observation::retain_bounds(&mut solution, nodes);
         states
     } else {
-        model.certify_event_states(
+        model.certify_event_states_with_proofs(
             &selection,
             events_and_roots.1,
             input_bounds,
@@ -250,6 +251,7 @@ fn prepare_impl(
             operator_bounds,
             &solution.voltages,
             &states,
+            proofs,
         )?
     };
     Ok(Prepared {

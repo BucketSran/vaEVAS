@@ -134,15 +134,32 @@ end
 
 ## 事件输出记录与时间
 
-受支持事件体中的 `$display` 按语句顺序求值，只输出实际选中分支。格式限 `%d`、`%g`、
-`%.Ng`（N 为 1–32）及 `%%`，格式转换数须与数值参数数目相同。结果保存在
+受支持事件体中的 `$display` 与 `$strobe` 共用输出记录，按语句顺序求值，只输出实际选中分支。
+格式限 `%d`、`%g`、`%.Ng`（N 为 1–32）、`%f`、`%.Nf`（N 为 0–32）及 `%%`。
+`%f` 默认保留六位小数，指定精度时保留相应小数位；格式转换数须与数值参数数目相同。结果保存在
 `transient.display_records`，每条包含 `time`、`event`、`origin`、`text`。
 记录与候选事件共同验收后提交；失败试算、丢弃与重试不重复输出。
 Python 响应检查要求 `event` 与 `time` 对应已提交事件，`origin` 属于该请求事件内的 `$display`。
 `origin` 是源码位置及实例的标签，用于定位语句；它本身不证明输出数值或事件精度。
 
 无电压贡献的被动模型可在 `initial_step` 中穿插常量初始化与输出；记录先于 `timer(0)`。
-带电压贡献模型的初始化输出仍拒绝。被动模型仍须有足够驱动约束，浮动节点不因只输出而合法。
+带电压贡献的模型可在初始化赋值之间输出常量快照。编译器在每条输出语句的位置读取参数和当时的
+初始化环境，捕获有限常量参数；后续赋值不会改写此前快照，物理状态与冷启动历史仍使用最后的初始化值。
+例如先输出默认 q=0、赋 q=3 再输出，记录为0和3，而初始transition种子为3。
+生成的初始事件只含已有IR的Display，不重新执行初始化赋值。Rust在普通初始化与零timer引导两条路径
+独立确认主动模型初始事件只含常量输出，不允许原始IR夹带状态写入或电压读取。
+
+本地候选仅允许常量输出参数及常量分支条件。主动初始化输出读取电压、历史算子、输入选择的状态值，
+在初始化循环内输出，或由含子实例的模型输出，均明确拒绝；不扩展一般初始化采样。
+被动模型仍须有足够驱动约束，浮动节点不因只输出而合法。
+独立回归见[主动初始化输出](../../tests/test_active_initial_output.py)，覆盖赋值前后快照、实例隔离、
+零timer的种子更新、拒绝重试、固定小数格式和原始IR拒绝边界。该本地候选尚待独立审查及原件checker验收。
+
+此处任务别名、接受后输出与实数格式依据
+[VAMS-2023 LRM §9.4.1、§9.4.3、§9.4.6](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf)。
+常量初始化快照及主动模型的有限准入是EVAS实现边界。Python的syntax.py保留初始化源序，
+instance_compiler.py::initialize_states捕获快照，display.py与Rust display.rs约束格式；
+transient.rs与transient_initialization.rs沿用现有候选记录提交。
 
 与零时刻 transition 种子更新组合时，本地集成候选先执行被动 `initial_step`，再执行固定零 timer，
 最后用最终状态构造历史。例如 initial 输出旧 n=0 后赋 n=3，timer 的输出应读到3。
@@ -714,6 +731,33 @@ integer赋值只在独立证明整数值及signed32范围后消费该结果；�
 整个实际输入区间跨bin时拒绝，不能用名义值代替；原256分区、4096决策及100000 IR预算不变。
 公开顺序、跨回调和typed控制见
 [test_event_floor_ranges.py](../../tests/test_event_floor_ranges.py)。
+
+<a id="native-event-floor"></a>
+
+### 原生事件floor：实际驱动仿射输入的本地候选
+
+有限范围选择树仍是第一入口，原来成功的IR除schema外保持一致；256分区或其他资源拒绝不转入新路径。
+事件中的 `floor(8*V(vin))` 若缺少源码前置范围，可用IR26的单参数 `event_math/function=floor` 表示。
+新入口只接受参数及原始输入电压构成的仿射表达式，缩放系数限精确二进幂；非二进缩放/除法不以已舍入系数重建floor切点。
+producer审计原操作数，保留零系数、未选臂和原算术检查；
+内核按实际driven/ground节点再次审计。State、内部反馈、电压未知量、时间、一般事件数学均未因此开放。
+
+设原参数认证盒为 `[a,b]`，floor盒为 `[floor(a),floor(b)]`。两端不同时在该操作处拒绝，
+不能因后续饱和到同一值便抹去原中间不确定性。只有既有精确物理根/输入来源链在原盒内证明唯一值时，
+才可收紧floor盒；非零源误差没有这张来源证书，代表时刻与中点不能代替它。负数按向负无穷取整。
+例如 `floor(-0.5)=-1`；跨越-1的输入盒包含两个floor值，即使二者后来都夹成0也拒绝。
+
+floor在源码中返回real，`floor(3.0)/2`为1.5，不能直接作integer位运算操作数。
+每条原integer赋值仍检查精确整数值与signed32范围，后面的 `if(code>7)code=7` 不补救此前溢出。
+点求值、区间、精确有理值证明与状态写入分别保留原表达式顺序；失败候选不提交状态、记录、日历或proof。
+所有已有分区、IR、路径证明、精度与执行预算不变。
+
+前端由instance_compiler.py::finite_floor保留旧入口并审计新操作数；Rust event_numeric.rs执行点/盒求值，
+event_value_proof.rs复用LocalState、RootTime及有理数预算。settlement.rs把现有证明上下文送给causal_event.rs，
+后者只允许已证明实际驱动依赖的floor。该因果证书也用于贡献Select的预览、联立解和重放，未知反馈的原拒绝保留。
+同控制器跨bin失败与精确源重试由transient_passive_tests.rs检查，公共合同见
+[test_native_event_floor.py](../../tests/test_native_event_floor.py)。这仍是未合并候选，原checker与安装验收归主集成，
+不以原件能完成执行宣称通过或提高Q资格。023的同回调局部量除法和027的modulo不在此次范围。
 
 <a id="integer-prefix"></a>
 

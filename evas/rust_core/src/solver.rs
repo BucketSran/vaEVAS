@@ -372,6 +372,16 @@ impl Circuit {
         solution: &Solution,
         input_bounds: &[I],
     ) -> Result<(), Error> {
+        self.waveform_bounds(solution, input_bounds).map(|_| ())
+    }
+
+    /// Return the enclosure already established by the original-relation proof.
+    /// This exposes its certificate without a second solve or weaker acceptance.
+    pub(crate) fn waveform_bounds(
+        &self,
+        solution: &Solution,
+        input_bounds: &[I],
+    ) -> Result<Vec<I>, Error> {
         let _timing = crate::diagnostics::span("voltage.waveform_certificate");
 
         if input_bounds.len() != self.driven.len() {
@@ -429,7 +439,7 @@ impl Circuit {
             }
         }
         if self.unknown.is_empty() {
-            return Ok(());
+            return Ok(point_values);
         }
         let n = self.unknown.len();
         if self.equations.len() != n {
@@ -474,7 +484,11 @@ impl Circuit {
                 solution.voltages[node],
                 box_values[node],
             ) {
-                return Ok(());
+                // Mean value theorem: each true root differs from the center
+                // by -F(center,U)/F'(X,U). Preserve that image, not only success.
+                point_values[node] =
+                    I::point(solution.voltages[node]) - residuals[0] / jacobian[0][0];
+                return Ok(point_values);
             }
             Some(jacobian)
         } else {
@@ -577,7 +591,10 @@ impl Circuit {
                 ));
             }
         }
-        Ok(())
+        for (j, &node) in self.unknown.iter().enumerate() {
+            point_values[node] = krawczyk[j];
+        }
+        Ok(point_values)
     }
 
     /// A stateless operating point. No previous solution or physical history is

@@ -150,6 +150,6 @@ class DisplayMeasurements(unittest.TestCase):
     def test_invalid_format_and_initial_side_effect_are_explicit(self):
         for body in ['@(timer(0.5)) $display("bad=%s",n);',
                      '@(timer(0.5)) $display("bad=%d");',
-                     '@(initial_step) $display("bad=%d",n);']:
+                     '@(initial_step) $display("bad=%g",V(y,r));']:
             with self.subTest(body=body), self.assertRaises(CompileError):
                 compile_sources({'display.va':model(body+' V(y,r)<+n;','integer n;')},[instance()])

@@ -4,6 +4,14 @@
 逐项证据见[证据索引](development/capability-evidence.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
 
+## 本地候选 IR26：受限原生事件floor
+
+新增 `event_math/function=floor`，仅准入原始实际驱动仿射输入的事件采样。旧有限floor选择树优先，
+每次原始integer写入、单bin、源误差与精确根证明继续检查；不扩展一般事件数学。
+前端、内核、当前fixtures和身份测试同步使用IR26；旧IR1–25从原VA重编译，历史收据不改写。
+[数学与生命周期合同](math/events.md#native-event-floor)及独立回归限定范围。原244已在wave14统一400通过，该候选295通过、18失败、87拒绝；安装与完整CI待验，
+不新增已合并支持或共同资格。
+
 ## 开发候选 IR24：有限物理源曲线
 
 IR24 扩展请求中的源误差项，可携带不超过 512 点的精确有理角点。

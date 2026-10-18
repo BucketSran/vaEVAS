@@ -1037,6 +1037,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
     }
     let mut transient = request.transient.unwrap();
     transient.max_step = crate::step_bounds::history_cap(&request.program, transient.max_step)?;
+    let mut trajectory = Trajectory::new(transient.clone(), request.driven.len())?;
     if request.program.states.is_empty()
         && request.program.events.is_empty()
         && request.program.operators.is_empty()
@@ -1044,11 +1045,11 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         return run_stateless_transient(
             request.program,
             request.driven,
-            transient,
+            trajectory,
             request.tolerances,
+            None,
         );
     }
-    let mut trajectory = Trajectory::new(transient.clone(), request.driven.len())?;
     let program = crate::initialization::resolve(
         request.program,
         &request.driven,
@@ -1071,12 +1072,63 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                     .is_err_and(|error| error.kind == "unsupported_transient")
             }))
     {
+        // Reuse this existing non-affine/implicit dispatch decision. Already
+        // supported direct-affine math never enters the optional new audit or
+        // constructs an additional Operators proof owner.
+        if crate::source_math::candidate(&request.program) {
+            match crate::source_math::Prepared::new(
+                &request.program,
+                &trajectory,
+                &request.driven,
+                &request.tolerances,
+            ) {
+                Ok(prepared) => {
+                    return run_stateless_transient(
+                        request.program,
+                        request.driven,
+                        trajectory,
+                        request.tolerances,
+                        Some(prepared),
+                    )
+                }
+                Err(error) if error.kind == "unsupported_source_math_scope" => {
+                    // Scope misses precede Operators construction. Retain the
+                    // old implicit route, including its uncertainty restriction.
+                    if trajectory
+                        .config
+                        .pwl_errors_v
+                        .as_ref()
+                        .is_some_and(|errors| errors.iter().any(|e| e.bound() > 0.))
+                    {
+                        return Err(Error::new("unsupported_source_uncertainty",
+                            "source math uncertainty requires the complete stateless driven-input scope"));
+                    }
+                }
+                // Never retry numerical/proof/resource failures with a new owner.
+                Err(error) => return Err(error),
+            }
+        }
         return crate::continuous::run_implicit(
             request.program,
             request.driven,
             transient,
             request.tolerances,
         );
+    }
+    // lib's cheap candidate permits deferring this metadata gate for the new
+    // stateless consumer. This branch retained the legacy affine/history path,
+    // so keep its original positive-source-error refusal before any Operators.
+    if crate::source_math::candidate(&request.program)
+        && trajectory
+            .config
+            .pwl_errors_v
+            .as_ref()
+            .is_some_and(|errors| errors.iter().any(|e| e.bound() > 0.))
+    {
+        return Err(Error::new(
+            "unsupported_source_uncertainty",
+            "legacy native math requires zero source voltage uncertainty",
+        ));
     }
     let output_count =
         crate::input_clamp::lower(&mut request.program, &mut request.driven, &mut trajectory)?;
@@ -1204,6 +1256,9 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 .contributions
                 .iter()
                 .any(|c| &c.origin.instance == owner)
+                && !initialization::constant_outputs(
+                    &model.program.events[model.triggers[id].event].body,
+                )
         }) {
             return Err(Error::new(
                 "unsupported_initial_event",
@@ -1591,35 +1646,51 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
 fn run_stateless_transient(
     program: crate::ir::Program,
     driven: Vec<String>,
-    transient: crate::ir::TransientInputs,
+    trajectory: Trajectory,
     tolerances: crate::ir::Tolerances,
+    mut math: Option<crate::source_math::Prepared>,
 ) -> Result<Response, Error> {
     let _timing = crate::diagnostics::span("controller.stateless");
 
-    let trajectory = Trajectory::new(transient, driven.len())?;
     let times = trajectory.config.output_times.clone();
     let nodes = program.nodes.clone();
     let bounded = !program.step_bounds.is_empty();
     let step_bounds = crate::step_bounds::Bounds::new(&program)?;
-    let mut circuit = crate::analog::Analog::new(program, driven, tolerances.clone())?;
+    let mut circuit = if math.is_none() {
+        Some(crate::analog::Analog::new(
+            program,
+            driven,
+            tolerances.clone(),
+        )?)
+    } else {
+        None
+    };
     let mut solutions = Vec::new();
     let mut previous: Option<Solution> = None;
     let mut time = if bounded { 0. } else { times[0] };
     let mut sample = 0;
     let mut accepted_steps = 0;
     loop {
-        let solution = circuit
-            .solve(
+        let solved = if let Some(math) = &mut math {
+            math.solve(
+                &trajectory.values(time),
+                &trajectory.value_bounds(time),
+                time,
+                &trajectory.exact_sources,
+            )
+        } else {
+            circuit.as_mut().unwrap().solve(
                 &trajectory.values(time),
                 &trajectory.value_bounds(time),
                 previous.as_ref().map(|s| s.voltages.as_slice()),
                 time,
                 &trajectory.exact_sources,
             )
-            .map_err(|mut error| {
-                error.sample = Some(sample);
-                error
-            })?;
+        };
+        let solution = solved.map_err(|mut error| {
+            error.sample = Some(sample);
+            error
+        })?;
         if sample < times.len() && time == times[sample] {
             solutions.push(solution.clone());
             sample += 1;

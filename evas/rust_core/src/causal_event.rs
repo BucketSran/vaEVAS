@@ -4,7 +4,7 @@
 use crate::event_conditions::Selection;
 use crate::events::EventModel;
 use crate::interval::Interval as I;
-use crate::ir::{Error, Program};
+use crate::ir::{Error, EventMathFunction as F, Expression as E, Program};
 use std::collections::BTreeSet;
 
 pub(crate) fn classify(
@@ -18,7 +18,76 @@ pub(crate) fn classify(
         .enumerate()
         .filter_map(|(n, name)| (n == 0 || driven.contains(name)).then_some(n))
         .collect();
+    fn binary_scale(v: f64) -> bool {
+        let bits = v.abs().to_bits();
+        let exponent = bits >> 52;
+        let fraction = bits & ((1u64 << 52) - 1);
+        v == 0.
+            || v.is_finite()
+                && (if exponent == 0 {
+                    fraction.count_ones() == 1
+                } else {
+                    fraction == 0
+                })
+    }
+    fn input_operand(e: &E, driven: &BTreeSet<usize>) -> Option<usize> {
+        match e {
+            E::Affine { terms, .. }
+                if terms
+                    .iter()
+                    .all(|t| driven.contains(&t.node) && binary_scale(t.coefficient)) =>
+            {
+                Some(usize::from(!terms.is_empty()))
+            }
+            E::Add { left, right } => {
+                Some(input_operand(left, driven)?.max(input_operand(right, driven)?))
+            }
+            E::Multiply { left, right } => {
+                if [left.as_ref(),right.as_ref()].iter().any(|e| matches!(e,E::Affine {constant,terms} if terms.is_empty() && !binary_scale(*constant))) { return None; }
+                let degree = input_operand(left, driven)? + input_operand(right, driven)?;
+                (degree <= 1).then_some(degree)
+            }
+            E::Power { base, exponent: 1 } => input_operand(base, driven),
+            _ => None,
+        }
+    }
+    fn audit(v: &serde_json::Value, driven: &BTreeSet<usize>) -> Result<(), Error> {
+        match v {
+            serde_json::Value::Object(m) => {
+                if m.get("op").and_then(|v| v.as_str()) == Some("event_math")
+                    && m.get("function").and_then(|v| v.as_str()) == Some("floor")
+                {
+                    let expr: E = serde_json::from_value(v.clone())
+                        .map_err(|e| Error::new("invalid_ir", e.to_string()))?;
+                    if let E::EventMath {
+                        function: F::Floor,
+                        args,
+                        ..
+                    } = expr
+                    {
+                        if args.len() != 1 || input_operand(&args[0], driven).is_none() {
+                            return Err(Error::new(
+                                "unsupported_floor",
+                                "native event floor requires actual driven affine inputs",
+                            ));
+                        }
+                    }
+                }
+                for child in m.values() {
+                    audit(child, driven)?;
+                }
+            }
+            serde_json::Value::Array(a) => {
+                for child in a {
+                    audit(child, driven)?;
+                }
+            }
+            _ => (),
+        }
+        Ok(())
+    }
     p.events.iter().enumerate().map(|(index,e)| {
+        audit(&serde_json::to_value(&e.body).map_err(|e|Error::new("invalid_ir",e.to_string()))?, &driven)?;
         if passive[index] || e.assignments().iter().all(|a| crate::events::affine(&a.rhs,p,&e.origin.instance).is_ok()) {
             return Ok(false);
         }
@@ -29,7 +98,7 @@ pub(crate) fn classify(
         fn control(v: &serde_json::Value) -> bool {
             match v {
                 serde_json::Value::Object(m) => m.get("kind").and_then(|v|v.as_str()).is_some_and(|s|matches!(s,"loop"|"array_write"))
-                    || m.get("op").and_then(|v|v.as_str()).is_some_and(|s|matches!(s,"event_math"|"array_read"|"checked_integer"|"checked_index"))
+                    || m.get("op").and_then(|v|v.as_str()).is_some_and(|s|matches!(s,"array_read"|"checked_integer"|"checked_index") || s=="event_math" && m.get("function").and_then(|v|v.as_str())!=Some("floor"))
                     || m.values().any(control),
                 serde_json::Value::Array(a) => a.iter().any(control), _=>false,
             }
@@ -76,6 +145,7 @@ pub(crate) fn certificate(
     voltages: &[f64],
     states: &[f64],
     check_voltages: bool,
+    proofs: Option<&crate::event_value_proof::Context<'_>>,
 ) -> Result<Option<StateVoltageBounds>, Error> {
     if !selection
         .actions
@@ -90,7 +160,7 @@ pub(crate) fn certificate(
         if model.passive_events[*event] {
             continue;
         }
-        let mut local = crate::event_value_proof::LocalState::new(before);
+        let mut local = crate::event_value_proof::LocalState::with_context(before, proofs);
         for &index in indices {
             let expression = &model.action_expressions[*event][index];
             let dependencies = crate::event_numeric::dependencies(
@@ -109,7 +179,7 @@ pub(crate) fn certificate(
                     "nonlinear sampled batch cannot include a joint voltage assignment",
                 ));
             }
-            let value = crate::event_numeric::bounds(expression, &nodes, &local)?;
+            let value = crate::event_numeric::bounds_with_proofs(expression, &nodes, &local)?;
             let state = model.program.events[*event].assignments()[index].state;
             local.assign(state, expression, &nodes, value);
             after[state] = local[state];

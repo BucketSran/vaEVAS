@@ -361,7 +361,36 @@ class InstanceCompiler:
         def resolve(values, aliases):
             return self.typed_resolve(lambda name: values[name] if name in values else
                                       aliases[name] if name in aliases else self.parameter(name))
-        def execute(statements, values, aliases=None):
+        snapshots = []
+        def constant_snapshot(value):
+            try:
+                return constant_snapshot_value(value)
+            except ArithmeticError as error:
+                raise CompileError('active initial output requires finite snapshots') from error
+        def constant_snapshot_value(value):
+            # Resolve only closed initializer values. Even a dead arm must not
+            # smuggle voltage/history observation into the new output contract.
+            if isinstance(value, Affine) and not value.terms:
+                number = value.constant
+            elif isinstance(value, Binary):
+                a, b = constant_snapshot(value.left), constant_snapshot(value.right)
+                number = {'add': lambda: a+b, 'multiply': lambda: a*b,
+                          'divide': lambda: a/b}[value.op]()
+            elif isinstance(value, Power):
+                number = constant_snapshot(value.base) ** value.exponent
+            elif isinstance(value, Select):
+                a, b = constant_snapshot(value.left), constant_snapshot(value.right)
+                yes, no = constant_snapshot(value.then_value), constant_snapshot(value.else_value)
+                number = yes if {'lt': a<b, 'le': a<=b, 'gt': a>b, 'ge': a>=b}[value.relation] else no
+            else:
+                raise CompileError('active initial output requires constant initialization snapshots')
+            if not math.isfinite(number):
+                raise CompileError('active initial output requires finite snapshots')
+            return number
+        def has_output(statements):
+            return any(isinstance(item, SyntaxDisplay) or isinstance(item, SyntaxConditional)
+                       and (has_output(item.then_body) or has_output(item.else_body)) for item in statements)
+        def execute(statements, values, aliases=None, active=True):
             values = dict(values)
             for statement in statements:
                 if statement.token in self.model.local_alias_scopes:
@@ -376,12 +405,29 @@ class InstanceCompiler:
                                   preserve_structure=True, decisions=self.initial_select, node_declarations=True)
                     self.validate_initial_operand(statement.left, left)
                     self.validate_initial_operand(statement.right, right)
-                    yes, no = execute(statement.then_body, values, aliases), execute(statement.else_body, values, aliases)
+                    if has_output(statement.then_body) or has_output(statement.else_body):
+                        a, b = constant_snapshot(left), constant_snapshot(right)
+                        selected = {'<': a<b, '<=': a<=b, '>': a>b, '>=': a>=b}[statement.relation]
+                    else:
+                        selected = True
+                    yes = execute(statement.then_body, values, aliases, active and selected)
+                    no = execute(statement.else_body, values, aliases, active and not selected)
                     for name in values:
                         if yes[name] is not no[name]:
                             values[name] = self.initial_select(statement.left,
                                 {"<":"lt", "<=":"le", ">":"gt", ">=":"ge"}[statement.relation],
                                 left, right, yes[name], no[name])
+                elif isinstance(statement, SyntaxDisplay):
+                    arguments = []
+                    for argument in statement.args:
+                        value = lower(argument, resolve(values, aliases), self.node_ids, self.model.source,
+                                      preserve_structure=True, decisions=self.initial_select,
+                                      validate_decision=self.validate_initial_operand, node_declarations=True)
+                        arguments.append(Affine(constant_snapshot(value), ()))
+                    origin = Origin(statement.token.source or self.model.source, statement.token.line,
+                                    statement.token.column, self.instance.name, statement.token.expansion)
+                    if active:
+                        snapshots.append(Display(statement.format, tuple(arguments), origin))
                 else:
                     if not isinstance(statement, SyntaxAssignment) or statement.name not in self.state_ids:
                         raise CompileError("initial_step requires declared state assignments")
@@ -412,6 +458,8 @@ class InstanceCompiler:
             raise CompileError(f'unsupported initial_step value: {exc}',
                                code='unsupported_initial_event', token=token,
                                instance=self.instance.name) from exc
+        if snapshots:
+            self.compilation.events.append(Event(InitialStepTrigger(), tuple(snapshots), snapshots[0].origin))
         for name, value in env.items():
             if isinstance(value, Affine) and not value.terms:
                 value = value.constant
@@ -470,6 +518,8 @@ class InstanceCompiler:
         static_integer_audit = kwargs.pop("static_integer_audit", False)
         typed = self.typed_resolve(resolve, allow_integer_assignment_root=assignment_root)
         typed.sampled_values = sampled_values
+        if event_values or sampled_values:
+            typed.finite_floor = lambda item, argument: self.finite_floor(item, argument, native=True)
         if event_values:
             if getattr(self, "runtime_event_checks", False) and not static_integer_audit:
                 typed.validate_integer_operation = self.checked_event_integer
@@ -510,7 +560,7 @@ class InstanceCompiler:
         if isinstance(expression, StateRef):
             return self.compilation.states[expression.state].kind == "integer"
         if isinstance(expression, EventMath):
-            return expression.function != "sqrt" and all(self.integral(arg) for arg in expression.args)
+            return expression.function == "floor" or expression.function != "sqrt" and all(self.integral(arg) for arg in expression.args)
         if isinstance(expression, Select):
             return self.integral(expression.then_value) and self.integral(expression.else_value)
         if isinstance(expression, Power):
@@ -622,7 +672,7 @@ class InstanceCompiler:
             self.expression_decision_origins.add(origin)
         return result
 
-    def finite_floor(self, expr, argument):
+    def finite_floor(self, expr, argument, *, native=False):
         from .finite_floor import floor_table
         if (_predicate_degree(argument) is None
                 or not self.expression_nodes(argument).issubset(self.allowed_condition_nodes)):
@@ -633,7 +683,38 @@ class InstanceCompiler:
         fact = getattr(self, 'event_floor_range_facts', {}).get(id(expr))
         state_bounds = ({self.state_ids[name]: bounds for name, bounds in fact[1].items()}
                         if fact is not None and fact[0] is expr else None)
-        result = floor_table(argument, origin, state_bounds=state_bounds)
+        try:
+            result = floor_table(argument, origin, state_bounds=state_bounds)
+        except CompileError as error:
+            if not native or error.diagnostic['code'] != 'unsupported_floor':
+                raise
+            # Audit the original operand before cancelled voltage/state reads
+            # can disappear from a folded affine. This gate does not grant a
+            # lifetime range or turn floor's real source type into integer.
+            def source_input(item):
+                if item.op == 'voltage':
+                    return all(self.node_ids.get(str(node.value)) in self.allowed_condition_nodes
+                               and str(node.value) != '$abstime' for node in item.args)
+                if item.op == 'parameter':
+                    return item.value in self.model.parameters
+                return item.op in ('number', '+', '-', '*', '/', 'unary+', 'unary-') and all(
+                    source_input(child) for child in item.args)
+            def binary_scale(number):
+                return number == 0 or math.isfinite(number) and math.frexp(abs(number))[0] == 0.5
+            def affine_input(value):
+                if isinstance(value, Affine):
+                    return all(t.node in self.allowed_condition_nodes and
+                               t.node != self.node_ids.get('$abstime') and binary_scale(t.coefficient)
+                               for t in value.terms)
+                if isinstance(value, Binary) and value.op in ('add', 'multiply'):
+                    if value.op == 'multiply' and any(isinstance(part, Affine) and not part.terms
+                            and not binary_scale(part.constant) for part in (value.left,value.right)):
+                        return False
+                    return affine_input(value.left) and affine_input(value.right)
+                return isinstance(value, Power) and value.exponent == 1 and affine_input(value.base)
+            if not source_input(expr.args[0]) or not affine_input(argument):
+                raise error
+            result = EventMath('floor', (argument,), origin)
         if isinstance(result, Select):
             self.expression_decision_origins.add(origin)
         return result

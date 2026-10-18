@@ -19,14 +19,16 @@ fn conversions(format: &str) -> Result<Vec<(usize, usize, char, usize)>, Error> 
             while b.get(i).is_some_and(u8::is_ascii_digit) {
                 i += 1;
             }
-            precision = format[first..i].parse::<usize>().unwrap_or(0);
-            if b.get(first) == Some(&b'0')
-                || !(1..=32).contains(&precision)
-                || b.get(i) != Some(&b'g')
-            {
+            precision = format[first..i].parse::<usize>().unwrap_or(usize::MAX);
+            let valid = match b.get(i) {
+                Some(b'g') => (1..=32).contains(&precision),
+                Some(b'f') => precision <= 32,
+                _ => false,
+            };
+            if !valid || (i - first > 1 && b.get(first) == Some(&b'0')) {
                 return Err(Error::new(
                     "invalid_ir",
-                    "display precision requires %.Ng with N in 1..32",
+                    "display precision requires %.Ng (1..32) or %.Nf (0..32)",
                 ));
             }
         }
@@ -34,10 +36,10 @@ fn conversions(format: &str) -> Result<Vec<(usize, usize, char, usize)>, Error> 
             .get(i)
             .ok_or_else(|| Error::new("invalid_ir", "incomplete display conversion"))?
             as char;
-        if !matches!(kind, '%' | 'd' | 'g') {
+        if !matches!(kind, '%' | 'd' | 'g' | 'f') {
             return Err(Error::new(
                 "invalid_ir",
-                "display supports only %d, %g, %.Ng and %%",
+                "display supports %d, %g, %.Ng, %f, %.Nf and %%",
             ));
         }
         i += 1;
@@ -110,6 +112,8 @@ pub(crate) fn render(format: &str, args: &[f64]) -> Result<String, Error> {
                     ));
                 }
                 output.push_str(&(value.trunc() as i64).to_string());
+            } else if kind == 'f' {
+                output.push_str(&format!("{:.*}", precision, value));
             } else {
                 output.push_str(&general(value, precision));
             }
@@ -229,6 +233,23 @@ pub(crate) fn evaluate(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn fixed_decimal_precision_and_signed_zero() {
+        assert_eq!(
+            render("%.0f %.1f %.3f %f", &[2.5, -1.25, 0.5, 1.5]).unwrap(),
+            "2 -1.2 0.500 1.500000"
+        );
+        assert_eq!(render("%.0f %.3f", &[-0., -0.]).unwrap(), "-0 -0.000");
+        assert_eq!(
+            render("%.32f", &[0.5]).unwrap(),
+            "0.50000000000000000000000000000000"
+        );
+        for format in ["%.33f", "%.03f", "%.f", "%.0g", "%.2d"] {
+            assert!(render(format, &[1.]).is_err(), "{format}");
+        }
+        assert!(render("%f", &[f64::INFINITY]).is_err());
+    }
+
     #[test]
     fn significant_digits_and_integer_measurements() {
         assert_eq!(

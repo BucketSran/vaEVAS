@@ -824,7 +824,11 @@ impl Conditions {
                         ordered.push(SelectedStep::Assign(*index));
                         if let Some(a) = assignments.get(*index).filter(|a| a.row != usize::MAX) {
                             let value = if a.numeric {
-                                crate::event_numeric::bounds(&a.expression, &numeric_nodes, states)?
+                                crate::event_numeric::bounds_with_proofs(
+                                    &a.expression,
+                                    &numeric_nodes,
+                                    states,
+                                )?
                             } else {
                                 bounds
                                     .unwrap()

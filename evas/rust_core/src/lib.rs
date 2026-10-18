@@ -42,6 +42,7 @@ mod settlement_bounds;
 mod slew;
 mod slew_cascade;
 pub mod solver;
+mod source_math;
 mod source_slew;
 mod state_space;
 mod step_bounds;
@@ -104,9 +105,10 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
                     .operators
                     .iter()
                     .all(|op| matches!(op, ir::OperatorSpec::Transition { .. }));
-                if (!request.program.operators.is_empty() || derivative_event)
-                    && !(shaped && transition_only)
-                {
+                let source_uncertainty_supported = source_math::candidate(&request.program)
+                    || (request.program.operators.is_empty() && !derivative_event)
+                    || (shaped && transition_only);
+                if !source_uncertainty_supported {
                     return Err(Error::new("unsupported_source_uncertainty", "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"));
                 }
             }

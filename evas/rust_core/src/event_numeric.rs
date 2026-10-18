@@ -22,7 +22,8 @@ pub(crate) fn integral(e: &E, p: &Program) -> bool {
             ..
         } => integral(then_value, p) && integral(else_value, p),
         E::EventMath { function, args, .. } => {
-            !matches!(function, F::Sqrt) && args.iter().all(|e| integral(e, p))
+            matches!(function, F::Floor)
+                || !matches!(function, F::Sqrt) && args.iter().all(|e| integral(e, p))
         }
         _ => false,
     }
@@ -193,6 +194,7 @@ pub(crate) fn validate(e: &E, p: &Program, owner: &str) -> Result<(), Error> {
                 || origin.source.is_empty()
                 || origin.line == 0
                 || origin.column == 0
+                || !origin.valid_expansion()
             {
                 return Err(Error::new("invalid_ir", "invalid pure event mathematics"));
             }
@@ -351,6 +353,7 @@ fn bind_math(e: &E, p: &Program, owner: &str, nodes: &[f64], states: &[f64]) -> 
                     }
                     a.sqrt()
                 }
+                F::Floor => a.floor(),
                 F::Abs => a.abs(),
                 F::Min => a.min(value(&args[1], p, owner, nodes, states)?),
                 F::Max => a.max(value(&args[1], p, owner, nodes, states)?),
@@ -376,6 +379,21 @@ fn bind_math(e: &E, p: &Program, owner: &str, nodes: &[f64], states: &[f64]) -> 
 }
 
 pub(crate) fn bounds(e: &E, nodes: &[I], states: &[I]) -> Result<I, Error> {
+    bounds_in(e, nodes, states, None)
+}
+pub(crate) fn bounds_with_proofs(
+    e: &E,
+    nodes: &[I],
+    states: &crate::event_value_proof::LocalState,
+) -> Result<I, Error> {
+    bounds_in(e, nodes, states, Some(states))
+}
+fn bounds_in(
+    e: &E,
+    nodes: &[I],
+    states: &[I],
+    proofs: Option<&crate::event_value_proof::LocalState>,
+) -> Result<I, Error> {
     let v = match e {
         E::ArrayRead {
             states: slots,
@@ -385,7 +403,7 @@ pub(crate) fn bounds(e: &E, nodes: &[I], states: &[I]) -> Result<I, Error> {
             origin,
         } => {
             let v = checked_index(
-                bounds(index, nodes, states)
+                bounds_in(index, nodes, states, proofs)
                     .map_err(|e| checked_error(e, "array_index_range", origin))?,
                 *first,
                 *last,
@@ -394,7 +412,8 @@ pub(crate) fn bounds(e: &E, nodes: &[I], states: &[I]) -> Result<I, Error> {
             states[slots[(v.lo - f64::from(*first)) as usize]]
         }
         E::CheckedInteger { value, origin } => checked_integer(
-            bounds(value, nodes, states).map_err(|e| checked_error(e, "integer_range", origin))?,
+            bounds_in(value, nodes, states, proofs)
+                .map_err(|e| checked_error(e, "integer_range", origin))?,
             origin,
         )?,
         E::CheckedIndex {
@@ -403,7 +422,7 @@ pub(crate) fn bounds(e: &E, nodes: &[I], states: &[I]) -> Result<I, Error> {
             last,
             origin,
         } => checked_index(
-            bounds(index, nodes, states)
+            bounds_in(index, nodes, states, proofs)
                 .map_err(|e| checked_error(e, "array_index_range", origin))?,
             *first,
             *last,
@@ -413,11 +432,15 @@ pub(crate) fn bounds(e: &E, nodes: &[I], states: &[I]) -> Result<I, Error> {
             sum + I::point(t.coefficient) * nodes[t.node]
         }),
         E::State { state } => states[*state],
-        E::Add { left, right } => bounds(left, nodes, states)? + bounds(right, nodes, states)?,
-        E::Multiply { left, right } => bounds(left, nodes, states)? * bounds(right, nodes, states)?,
+        E::Add { left, right } => {
+            bounds_in(left, nodes, states, proofs)? + bounds_in(right, nodes, states, proofs)?
+        }
+        E::Multiply { left, right } => {
+            bounds_in(left, nodes, states, proofs)? * bounds_in(right, nodes, states, proofs)?
+        }
         E::Divide { left, right } => {
-            let a = bounds(left, nodes, states)?;
-            let b = bounds(right, nodes, states)?;
+            let a = bounds_in(left, nodes, states, proofs)?;
+            let b = bounds_in(right, nodes, states, proofs)?;
             if b.lo <= 0. && b.hi >= 0. {
                 return Err(Error::new(
                     "event_domain",
@@ -427,7 +450,7 @@ pub(crate) fn bounds(e: &E, nodes: &[I], states: &[I]) -> Result<I, Error> {
             a / b
         }
         E::Power { base, exponent } => {
-            let a = bounds(base, nodes, states)?;
+            let a = bounds_in(base, nodes, states, proofs)?;
             let mut v = I::ONE;
             for _ in 0..*exponent {
                 v = v * a;
@@ -442,12 +465,13 @@ pub(crate) fn bounds(e: &E, nodes: &[I], states: &[I]) -> Result<I, Error> {
             else_value,
             ..
         } => {
-            let d = bounds(left, nodes, states)? - bounds(right, nodes, states)?;
+            let d =
+                bounds_in(left, nodes, states, proofs)? - bounds_in(right, nodes, states, proofs)?;
             let (yes, no) = sign(*relation, d);
             if yes {
-                bounds(then_value, nodes, states)?
+                bounds_in(then_value, nodes, states, proofs)?
             } else if no {
-                bounds(else_value, nodes, states)?
+                bounds_in(else_value, nodes, states, proofs)?
             } else {
                 return Err(Error::new(
                     "event_condition",
@@ -456,8 +480,29 @@ pub(crate) fn bounds(e: &E, nodes: &[I], states: &[I]) -> Result<I, Error> {
             }
         }
         E::EventMath { function, args, .. } => {
-            let a = bounds(&args[0], nodes, states)?;
+            let a = bounds_in(&args[0], nodes, states, proofs)?;
             match function {
+                F::Floor => {
+                    let floored = I {
+                        lo: a.lo.floor(),
+                        hi: a.hi.floor(),
+                    };
+                    if floored.lo == floored.hi {
+                        floored
+                    } else {
+                        proofs
+                            .and_then(|s| s.value(e, nodes))
+                            .as_ref()
+                            .and_then(crate::exact_source::enclosure)
+                            .filter(|v| v.lo == v.hi && floored.lo <= v.lo && v.hi <= floored.hi)
+                            .ok_or_else(|| {
+                                Error::new(
+                                    "event_condition",
+                                    "cannot certify a single native floor bin",
+                                )
+                            })?
+                    }
+                }
                 F::Sqrt => crate::math_functions::sqrt(a)
                     .map_err(|e| Error::new("event_domain", e.message))?,
                 F::Abs => I {
@@ -469,7 +514,7 @@ pub(crate) fn bounds(e: &E, nodes: &[I], states: &[I]) -> Result<I, Error> {
                     hi: a.magnitude(),
                 },
                 F::Min | F::Max => {
-                    let b = bounds(&args[1], nodes, states)?;
+                    let b = bounds_in(&args[1], nodes, states, proofs)?;
                     if matches!(function, F::Min) {
                         I {
                             lo: a.lo.min(b.lo),

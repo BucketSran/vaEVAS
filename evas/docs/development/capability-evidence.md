@@ -66,7 +66,7 @@ IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和�
 历史波7逐例比较波6b新增129、137、138、224、233、295、296、380共8份、无回退；相对波5新增35份、无回退。296恢复。
 本分支IR25增加native tanh；原checker、精度、证明预算保持。real初态只接有限点包围，integer电压采样仍拒绝。
 多项式guard与有限floor已纳入波7，guard乘加中间值溢出在同一冻结release核明确拒绝；历史反例和修复收据均保留。
-111的事件认证限制保留；波8纳入[隔离整数输出读取](../math/events.md#settled-integer-reads)及[点held时间证明](../math/events.md#held-time-point-proof)，更广组合仍回退或拒绝。后续Slew、证明缓存和tanh已进入wave12的292。初始化幂乘共享计费与整数证明耗尽退回TOP已独审；Rust457项与2项IR通过，原1项忽略。3项IR身份旧断言已同步为IR25，所属8项重验通过。本地Python2210项收齐，保留旧断言及未优化debug90秒超时原记录；CO-SH-01按既有CI opt1构建和原90秒请求重验通过，8111d3dc的CI完整Python2210项全通过；源码包漏夹具已定位并补清单，安装复验中。原始材料local-only，无新增实际Spectre、正式r53或Q。
+111的事件认证限制保留；波8纳入[隔离整数输出读取](../math/events.md#settled-integer-reads)及[点held时间证明](../math/events.md#held-time-point-proof)，更广组合仍回退或拒绝。后续Slew、证明缓存和tanh已进入wave12的292。初始化幂乘共享计费与整数证明耗尽退回TOP已独审；Rust457项与2项IR通过，原1项忽略。3项IR身份旧断言已同步为IR25，所属8项重验通过。本地Python2210项收齐，保留旧断言及未优化debug90秒超时原记录；CO-SH-01按既有CI opt1构建和原90秒请求重验通过，1af9772c的完整交付15项CI全部通过，含Python2210项和两平台安装；原漏夹具失败记录保留。原始材料local-only，无新增实际Spectre、正式r53或Q。
 四个过时passive夹具已改成真正负start加正period，7/7 private负控通过；合法过去单次timer仍按非正period合同处理。
 波5全Python执行2024项、2022通过，一项旧P/2拒绝期待已迁移并复验13方法，CO-SH-01在90秒超时且旧核对照待完成；不报告全绿。
 
@@ -138,6 +138,7 @@ L1–L5 是表格导航 ID，不替换下表开发 ID；旧版本、原预算和
 IR19 增加纯数学函数，恒定 PWL 保留原输入位；契约见[纯数学函数](../math/operators.md#elementary-functions)，
 回归见[函数测试](../../tests/test_unary_functions.py)、[恒定输入测试](../../tests/test_constant_input_identity.py)，
 独立校准见[校准工具](../../validation/calibrate_elementary.py)。
+PR208下一候选补充[纯输入数学组合的观察点根盒](../math/solving.md#纯输入数学组合的观察点认证)及[公开正反例](../../tests/test_source_math.py)。原237已在wave14完整400通过；该候选295通过，安装与完整CI待验。
 静态输入与回调证书只解除已证明的义务；新旧成绩、具体工具版本和未完组合均在收据中分开记录。
 函数修复属于本轮源码交付；#162 的旧运行不计作当前 main 能力，#131 不动。
 
@@ -258,3 +259,12 @@ EVAS 的全部 6,366 行计数符合名义时钟，四行严格差异仍保留�
 [有界运行期事件控制](../../../experiments/backends/support/event-runtime-control/README.md)补充 LANG、EVENT-CONDITIONS 和 EVENT-ORDER：三个实际 Spectre 控制按原 100 nV 门槛及精确整数答案验收；4096 迭代、signed32 中间检查、数组边界及晚失败回退见 test_event_runtime_loops.py。原 CDS 整题尚未完成，不新增 Q 成绩。
 
 保持目标中的嵌套 held `Select` 补充 TRANSITION 与 EVENT-CONDITIONS，见[原算式、结构负控与有限参考](../../../experiments/backends/support/held-transition-targets/README.md)。这里只验证保持量目标的分支展开，不表示完整 MUX 模型或历史谓词已经支持。
+
+[主动初始化输出的本地回归](../../tests/test_active_initial_output.py)补充 LANG、EVENT-ORDER、
+TRANSITION、COMPOSE 的开发证据，覆盖常量初始化快照、analog strobe别名与固定小数格式。
+主动模型仍拒绝初始电压/历史观察和状态写入型原始IR；独立审查已闭合，原076已在wave14完整400通过，交付CI待验。
+
+[受限原生事件floor](../../tests/test_native_event_floor.py)补充 LANG、EVENT-ORDER、CROSS、
+EVENT-CONDITIONS、COMPOSE 的本地开发证据，契约见[原生事件floor](../math/events.md#native-event-floor)。
+旧有限表IR逐字对照仅排除schema版本差异；同控制器跨bin失败/重试与精确有理取整预算分别由
+transient_passive_tests.rs、event_value_proof.rs覆盖。原244已在wave14统一400通过，安装与完整CI仍待验。

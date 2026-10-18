@@ -28,7 +28,7 @@ class Token:
 _TOKEN = re.compile(
     r"(?P<space>\s+)|(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)"
     r'|(?P<include>`include[ \t]+"[^"\n]+")'
-    r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)|(?P<math>\$(?:floor|tanh)\b)|(?P<task>\$(?:bound_step|display)\b)"
+    r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)|(?P<math>\$(?:floor|tanh)\b)|(?P<task>\$(?:bound_step|display|strobe)\b)"
     r'|(?P<directive>`[A-Za-z_][A-Za-z_0-9]*)|(?P<string>"[^"\n]*")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
     r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<<<|>>>|<<|>>|<=|>=|==|!=|&&|\|\||'\{|[\[\]:<>(){}+*/%;,=@#.?!&|^~\-])"
@@ -625,7 +625,7 @@ class Parser:
             rhs = self.expression()
             self.take(";")
             return (ContributionStatement(branch, rhs, token),)
-        if token.text == '$display':
+        if token.text in ('$display', '$strobe'):
             from .display import validate_format
             self.take()
             self.take('(')
@@ -776,6 +776,7 @@ class Parser:
         self.take("analog")
         self.take("begin")
         analog, initial, events = [], [], []
+        initial_segments = []
         self.local_alias_scopes = {}
         self.local_array_alias_scopes = {}
         available = set()
@@ -793,6 +794,12 @@ class Parser:
                 array_scope = tuple(available_array)
                 first_initial = len(initial)
                 event = self.monitored_event(token, initial)
+                initial_segments.append(tuple(initial[first_initial:]))
+                if event is not None and any(t.kind == 'initial_step' for t in event.triggers):
+                    initial_segments.append(event.body)
+                    for statement in event.body:
+                        self.local_alias_scopes[statement.token] = scope
+                        self.local_array_alias_scopes[statement.token] = array_scope
                 self.local_alias_scopes[token] = scope
                 self.local_array_alias_scopes[token] = array_scope
                 for statement in initial[first_initial:]:
@@ -813,7 +820,11 @@ class Parser:
                        and (contributes(s.then_body) or contributes(s.else_body))
                        or isinstance(s, Loop) and contributes(s.body) for s in statements)
         if contributes(analog) and any(isinstance(s, Event) and any(t.kind == 'initial_step' for t in s.triggers) for s in analog):
-            self.fail('initial $display is currently supported only in passive measurement models')
+            # Keep physical initialization in the existing seed compiler. It
+            # captures constant output arguments at their source positions.
+            initial = [statement for segment in initial_segments for statement in segment]
+            analog = [s for s in analog if not (isinstance(s, Event) and
+                      any(t.kind == 'initial_step' for t in s.triggers))]
         analog.sort(key=lambda s: 0 if isinstance(s, Event) and any(t.kind == 'initial_step' for t in s.triggers) else 1)
         return analog, initial, events
 
@@ -1089,8 +1100,14 @@ class Parser:
                 pending.extend((*statement.then_body, *statement.else_body))
         if not contributed and not monitored and (not children or initial or events):
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
-        if children and any(isinstance(statement, Event) and any(t.kind == 'initial_step' for t in statement.triggers)
-                            for statement in analog):
+        def initial_outputs(statements):
+            return any(isinstance(statement, Display) or isinstance(statement, Conditional)
+                       and (initial_outputs(statement.then_body) or initial_outputs(statement.else_body))
+                       or isinstance(statement, Loop) and initial_outputs(statement.body)
+                       for statement in statements)
+        if children and (initial_outputs(initial) or any(
+                isinstance(statement, Event) and any(t.kind == 'initial_step' for t in statement.triggers)
+                for statement in analog)):
             self.fail('initial $display in a hierarchical model is not supported', module_token)
         if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys() | genvars):
             self.fail("function name conflicts with a module declaration")

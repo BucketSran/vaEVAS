@@ -147,9 +147,8 @@ impl Analog {
                 })?;
             crate::observation::retain_bounds(&mut solution, bounds);
         } else {
-            prepared
-                .circuit
-                .check_waveform_accuracy(&solution, input_bounds)?;
+            let bounds = prepared.circuit.waveform_bounds(&solution, input_bounds)?;
+            crate::observation::retain_bounds(&mut solution, bounds);
         }
         Ok(solution)
     }
