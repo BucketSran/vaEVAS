@@ -84,8 +84,10 @@ use that revision's original validation entry and retain its historical evidence
 
 | Source paths | Iteration modules | Delivery modules |
 | --- | --- | --- |
+| `evas/src/evas/instance_compiler.py`, `evas/src/evas/lowering.py`, `evas/src/evas/compact_source_select.py`, `evas/src/evas/integer_prefix.py`, `evas/src/evas/input_rational_scope.py` | `test_affine` `test_analog_conditions` `test_stateless_expressions` `test_event_conditions` | Full Python regression |
+| `evas/src/evas/event_index_domains.py`, `evas/src/evas/integer_invariants.py` | `test_affine` `test_integer_loops` `test_event_body_loops` `test_event_runtime_loops` | Full Python regression |
 | `evas/src/evas/scs.py`, `evas/src/evas/scs_sources.py` | `test_scs` `test_scs_pulse_delay` `test_scs_save` `test_scs_bsource` `test_scs_driven_nodes` `test_scs_vectors` `test_source_uncertainty` `test_ansi_ports` `test_case_statements` `test_held_transition_targets` `test_r01_language` `test_strobe` | Full Python regression |
-| `evas/rust_core/src/operators.rs`, `evas/rust_core/src/transition.rs`, `evas/rust_core/src/transition_source_plan.rs`, `evas/rust_core/src/transition_source_state.rs`, `evas/rust_core/src/transition_filter.rs`, `evas/rust_core/src/transition_integral.rs`, `evas/rust_core/src/transition_filter_input.rs`, `evas/rust_core/src/transient.rs`, `evas/rust_core/src/transient_event_acceptance.rs`, `evas/rust_core/src/transient_history_calendar.rs`, `evas/rust_core/src/transient_root_refinement.rs`, `evas/rust_core/src/transient_initialization.rs`, `evas/rust_core/src/event_conditions.rs`, `evas/rust_core/src/event_control.rs`, `evas/rust_core/src/event_accuracy.rs`, `evas/rust_core/src/event_numeric.rs`, `evas/rust_core/src/event_time_provenance.rs` | `test_affine` `test_timer` `test_transition` `test_transition_accuracy` `test_timed_composition` `test_event_window_sampling` `test_lifecycle_closure` `test_semantic_invariants` `test_timer_history_order` `test_continuous_dynamics` `test_event_accuracy` `test_event_history_continuation` `test_passive_events` `test_passive_history_phase` `test_display` | Full Python regression |
+| `evas/rust_core/src/operators.rs`, `evas/rust_core/src/transition.rs`, `evas/rust_core/src/transition_source_plan.rs`, `evas/rust_core/src/transition_source_state.rs`, `evas/rust_core/src/transition_filter.rs`, `evas/rust_core/src/transition_integral.rs`, `evas/rust_core/src/transition_filter_input.rs`, `evas/rust_core/src/transient.rs`, `evas/rust_core/src/transient_event_acceptance.rs`, `evas/rust_core/src/transient_history_calendar.rs`, `evas/rust_core/src/transient_root_refinement.rs`, `evas/rust_core/src/transient_initialization.rs`, `evas/rust_core/src/event_conditions.rs`, `evas/rust_core/src/event_control.rs`, `evas/rust_core/src/initial_state_invariance.rs`, `evas/rust_core/src/event_accuracy.rs`, `evas/rust_core/src/event_numeric.rs`, `evas/rust_core/src/event_time_provenance.rs` | `test_affine` `test_timer` `test_transition` `test_transition_accuracy` `test_timed_composition` `test_event_window_sampling` `test_lifecycle_closure` `test_semantic_invariants` `test_timer_history_order` `test_continuous_dynamics` `test_event_accuracy` `test_event_history_continuation` `test_passive_events` `test_passive_history_phase` `test_display` | Full Python regression |
 | `evas/rust_core/src/linear.rs`, `evas/rust_core/src/linear/` | `test_affine` `test_sparse` | `test_affine` `test_reuse` `test_accuracy` `test_sparse` `test_sparse_transient` |
 | `evas/rust_core/src/nonlinear.rs`, `evas/rust_core/src/nonlinear/` | `test_affine` `test_nonlinear` | `test_affine` `test_nonlinear` `test_accuracy` `test_precision_chain` |
 | `evas/src/evas/syntax.py`, `evas/src/evas/parameters.py` | `test_affine` `test_contracts` | `test_affine` `test_contracts` `test_parameter_constraints` |
@@ -158,6 +160,11 @@ this table does not require a new remote matrix for every edit.
 ## Composition triggers
 
 Trace changed data through its consumers. Select only applicable obligations:
+
+Use [early integration checks](../../../docs/contributing/validation.md#early-integration-checks)
+for representation/dispatch changes and new proof work. Run the policy's
+`--early-checks` command before dependent integration; inspect each check's scope
+and not-applicable/blocked results. Its pass does not close full-delivery obligations.
 
 - State construction or initialization: check call-site/instance isolation,
   nonzero initial values and preservation of unrelated dynamic states.

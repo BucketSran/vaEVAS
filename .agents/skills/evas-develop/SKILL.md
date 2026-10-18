@@ -69,6 +69,11 @@ a Python helper result alone does not establish the default Rust path's behavior
 Distinguish inspected code from an observed run and keep an unexecuted baseline
 unconfirmed. Preserve focused lifecycle/numerical tests with distinct obligations.
 
+Before dependent integration, apply the triggered
+[early integration checks](../../../docs/contributing/validation.md#early-integration-checks).
+Representation changes need old-consumer coverage; new proof work needs accounting
+and exhaustion evidence. Reuse the same scoped evidence for review and publication.
+
 ## Change the owning layer
 
 Use the current [module/interface map](../../../evas/README.md#模块与接口), then the

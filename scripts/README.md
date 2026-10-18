@@ -22,6 +22,21 @@
 
 <a id="development-records"></a>
 
+### 子任务进入共享基线前的快检
+
+`python3 -B scripts/evas_check_policy.py --early-checks --report runs/early-integration.json`
+检查当前源码的两个小Select兼容案例，以及实际存在的整数计费、初始化证明预算机制。
+同一命令在现有CI fast-checks阶段执行。新增机制尚不存在会明确记为不适用，不会算作已验证；
+显式选择缺失的检查会阻断。需要实际数值消费者时加`--kernel`指定匹配内核。
+小表达式执行路径变化时先返回2，表示需要消费者验证；CI仅在此时先构建内核，
+运行小消费者再决定是否继续宽回归。合法的新表示可以通过实际消费者验收，不强求IR相同。
+
+`--plan runs/ci-plan.json` 按已确认的改动范围选择快检；纯文档或工作流改动跳过仿真，未知源码保守保留快检。
+复核历史冻结副本可使用`--source-root`和`--python-root`，每次使用独立Python进程。
+收据区分编译结构检查、实际内核执行和未覆盖范围。初始化检查只拦独立额度分配者增加及耗尽后恢复，
+累计调用和所有循环的收费仍须相应测试与审查。完整等待、后台和复用边界统一见
+[early integration checks](../docs/contributing/validation.md#early-integration-checks)，不再另开一套验收流程。
+
 ## 精简审查与阶段计时
 
 [development_records.py](development_records.py) 检查本轮唯一的人读摘要。无问题上限 300 字，

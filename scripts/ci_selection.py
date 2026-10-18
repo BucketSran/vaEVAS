@@ -33,6 +33,8 @@ JOB_FLAGS = {
 CHILD_RESULTS = {'package': ('install_result',),
                  'benchmark': ('identity_result', 'first_batch_result')}
 MAINTENANCE_FILES = {
+    'scripts/evas_check_policy.py', 'scripts/tests/test_evas_check_policy.py',
+    'scripts/evas_integration_checks.py', 'scripts/tests/test_evas_integration_checks.py',
     'scripts/traceability.py', 'scripts/diagnostic_inventory.py',
     'scripts/verify_validation_version.py', 'scripts/check_workspaces.py',
     'scripts/development_records.py', 'scripts/tests/test_development_records.py',
