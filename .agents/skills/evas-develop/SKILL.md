@@ -117,6 +117,9 @@ or event correctness. Preserve the original validation cases and thresholds.
 Use the [waiting boundaries](../../../CONTRIBUTING.md#keep-iteration-feedback-short):
 obtain the local failure/consumer feedback needed for the next edit, then run stable-candidate
 acceptance in the background while independent authorized work continues.
+For parallel repairs, use the [candidate batching rules](../../../CONTRIBUTING.md#prepare-one-delivery-candidate)
+and keep unready lanes outside the frozen batch. Do not run an original400 merely
+to finish each subtask.
 When a shared mechanism changes, use the [composition triggers](../evas-validate/SKILL.md#composition-triggers)
 to select affected feedback, event/reset, sampling and retry regressions. An
 operator-only pass cannot establish those combinations.

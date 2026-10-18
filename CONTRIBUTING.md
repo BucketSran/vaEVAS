@@ -122,6 +122,12 @@ CI verify reusable evidence identities; an earlier green commit alone is insuffi
 changed consumers after a meaningful delta. See [CI stages](scripts/README.md#ci-按改动选择检查)
 and [evidence reuse](docs/contributing/evidence.md#reuse-ci-regression-evidence).
 
+Name one executor for complete Python coverage on that candidate, normally remote CI.
+Local development runs the distinguishing case and direct consumers. Run a local full suite
+when it owns that obligation or is needed to diagnose a failure; do not repeat it merely
+because CI, review or publication is another stage. An unmapped shared change still needs
+complete coverage. Record its executor and pending result before dependent integration.
+
 Use the [early integration boundary](docs/contributing/validation.md#early-integration-checks)
 for representation/dispatch changes and new proof work. Reuse that scoped feedback
 and review at later stages; only changed assumptions or unresolved findings add work.
@@ -146,6 +152,13 @@ changed sections. Independent reviewers receive their own necessary context. Ent
 commit, PR or merge stages does not restart research, review or numerical acceptance.
 
 ### Prepare one delivery candidate
+
+Integrate independently ready repairs in a batch after their scoped acceptance and review.
+Keep a blocked repair isolated; other ready repairs can reach a delivery checkpoint. Freeze
+the selected integrated tree once, then run its complete Python coverage and original-request
+campaign. Finishing a subtask alone does not require another original400. Preserve the running
+candidate while later work continues separately; a later source change needs its own affected
+acceptance rather than overwriting or relabelling the earlier execution.
 
 Run formatting, lint and changed-link checks before freezing behavioral acceptance. Keep one
 source/build identity for the original request and required reference comparisons. At delivery,
