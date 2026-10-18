@@ -61,7 +61,8 @@ IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和�
 [低成本闭包](../../../experiments/backends/support/low-cost-closure/README.md)补充 LANG、LIN、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS 和 COMPOSE 的分支证据。
 合同分别见[有限点初值与别名](../math/events.md#input-initialization)、[typed整数与有限幂](../math/events.md#typed-integer-closure)及[普通条件与有理输出](../math/solving.md#普通-analog-条件)。
 公开控制覆盖源码顺序、精确数组槽、真实根处读取、signed余数、有限pow类型与资源、分支临时量和正分母事实。
-[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)固定最新已验收wave17提交 `3c870f31` 的162份生产输入、IR28、0.21.0与release核 `721190664d05`。完整400为302通过、19失败、79拒绝，321完成，10+390件身份一致，清理400/400。新增069、335，原300及198通过保留，19项旧失败字典相同；固定125仍93/10/22，距350差48份。077原checker FAIL及诊断保持。单次完整CI39146347930的2314项全通过、0方法及setup跳过，两平台0.21/IR28安装、重装和负控通过。
+[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)固定最新已验收wave18提交 `c8dc2a7b` 的163份生产输入、IR28、0.21.0与release核 `406d7b27da50`，303通过、19失败、78拒绝，322完成，清理400/400。12件与其余388件经collector核验为同一执行身份；相对wave17新增135，原302及198通过全部保留，19份旧失败checker字典相同。原固定125成员从同次结果抽取仍为93通过、10失败、22拒绝，距350还差47份。单次完整delivery CI `39149288332` 在同一提交实跑2320项，四分片为611、574、545、590项，全部通过，无遗漏、重复或方法及setup跳过。Ubuntu Python3.10与macOS arm64 Python3.12的0.21/IR28安装、重装和负控通过；远端回归与wheel核各保留实际SHA，不声称与本地内核字节相同。
+[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)保留历史wave17提交 `3c870f31` 的162份生产输入、IR28、0.21.0与release核 `721190664d05`。完整400为302通过、19失败、79拒绝，321完成，10+390件身份一致，清理400/400。新增069、335，原300及198通过保留，19项旧失败字典相同；固定125仍93/10/22，距350差48份。077原checker FAIL及诊断保持。单次完整CI39146347930的2314项全通过、0方法及setup跳过，两平台0.21/IR28安装、重装和负控通过。
 [收据](../../../experiments/backends/support/low-cost-closure/evidence.json)保留历史wave16的162份生产源、IR27与release核 `e66a84673d59`，完整400为300通过、19失败、81拒绝，7+393件身份一致，清理400/400。新增324、377，原wave15的298及基线198通过保留，18项旧失败字典不变，077完整运行后仍为原checker失败。两平台IR27安装通过；完整CI2307方法中的1项旧拒绝断言已迁移，30项窄CI加2277项未变旧通过覆盖全部2307项，0方法跳过，原完整CI失败保留。
 历史wave12为292通过、18失败、90拒绝，158文件源码、IR25与release核 `83da6b2b521c` 的42+358件身份一致。
 原198及有效波10全部278通过保留，新增14份，无回退；18项旧checker失败字典保持。原固定125成员重算为92通过、9失败、24拒绝；历史波11失败候选及波8等旧收据保持原身份。
@@ -143,7 +144,7 @@ IR19 增加纯数学函数，恒定 PWL 保留原输入位；契约见[纯数学
 PR208补充[纯输入数学组合的观察点根盒](../math/solving.md#纯输入数学组合的观察点认证)及[公开正反例](../../tests/test_source_math.py)。原237已在wave14完整400通过；该轮295通过；两平台安装通过，完整2245项覆盖经b71317e0窄CI的33项与2212项未变通过复用闭合，原全量CI的两项失败保留。
 [无状态 selected-Ln 开发回归](../../tests/test_selected_ln.py)补充 ANALOG、DYNAMICS、COMPOSE 的有限证据：
 原源查询、内部 abs/clamp、定义域、隐藏依赖、真实同 owner 预算耗尽与拒绝不提交。
-范围见[数学函数](../math/operators.md#elementary-functions)；原135/checker未验收，不新增原件或 Q 计数。
+范围见[数学函数](../math/operators.md#elementary-functions)。原135已在提交 `c8dc2a7b` 的163输入、IR28与406d统一400通过原checker；数学与预算、兼容及集成审查和实际root124/11/3检查单列于低成本闭包收据，不据此新增Q计数。
 静态输入与回调证书只解除已证明的义务；新旧成绩、具体工具版本和未完组合均在收据中分开记录。
 函数修复属于本轮源码交付；#162 的旧运行不计作当前 main 能力，#131 不动。
 
@@ -293,4 +294,5 @@ transient_passive_tests.rs、event_value_proof.rs覆盖。原244已在wave14统�
 wave17已验收IR28候选的[事件typed余数与减法合同](../math/events.md#事件体运行期余数与二元减法ir28-本地候选)
 及[公共正反控](../../tests/test_native_integer28.py)补充LANG、EVENT-ORDER、EVENT-CONDITIONS与COMPOSE。
 同源统一候选的原069、335已通过原checker，完整400为302/19/79；单次完整Python2314项及两平台0.21/IR28安装通过，范围仍限上述合同。
-后续Ln135是163输入、IR27、release核 `f1fe352c6c61` 的独立冻结候选，原135 pilot通过不加到本轮302。IR29位运算也在独立ignored快照开发，尚无新增原件PASS。
+历史独立Ln135 pilot固定163输入、IR27与release核 `f1fe352c6c61`；该pilot保留原身份，不参与wave18计分，135只按本轮IR28统一400结果计入。
+IR29位运算、selected-Floor、factor018及history-forcing分别在独立ignored快照开发，均为0新增原件PASS，不计入本轮303。
