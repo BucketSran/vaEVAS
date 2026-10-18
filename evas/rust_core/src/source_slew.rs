@@ -35,19 +35,21 @@ impl SourceSlew {
         // The shared context binds the original program/source mapping and
         // quota. DC normalization audits the original tree before substituting
         // target leaves; predicates and their physical root identities survive.
-        let expression = context.slew_dc_leaves(expression, owner)?;
-        let spec = Spec::new_with_context(&expression, context, owner)?.ok_or_else(|| {
-            Error::new(
-                "unsupported_operator",
-                "selected slew needs original-source predicates",
-            )
-        })?;
+        let (expression, factor) = context.slew_admission(expression, owner)?;
+        let spec = Spec::source_slew_with_context(&expression, context, owner, factor)?
+            .ok_or_else(|| {
+                Error::new(
+                    "unsupported_operator",
+                    "selected slew needs original-source predicates",
+                )
+            })?;
         let bounds: Vec<_> = state_values.iter().copied().map(I::point).collect();
         let plan = Arc::new(Plan::build_for_slew(spec, &bounds)?);
-        let seed = plan.seed();
+        let seed = plan.slew_seed()?;
         // The terminal cut is the original context's finite stop, not an
         // independently supplied horizon that could mismatch this proof.
         let stop = plan.cuts().last().unwrap().time;
+        plan.charge_slew_build()?;
         let mut targets = Vec::with_capacity(plan.cuts().len());
         for cut in plan.cuts() {
             plan.debit_boundary()?;

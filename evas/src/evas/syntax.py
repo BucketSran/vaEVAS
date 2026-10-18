@@ -91,10 +91,11 @@ class Expr:
     result_type: str | None = None
 
 
-def contains_operator(expr: Expr) -> bool:
+def contains_operator(expr: Expr, *, visit=None) -> bool:
     pending, seen = [expr], set()
     while pending:
         current = pending.pop()
+        if visit is not None: visit(current)
         if id(current) in seen:
             continue
         seen.add(id(current))
@@ -104,10 +105,11 @@ def contains_operator(expr: Expr) -> bool:
     return False
 
 
-def contains_decision(expr: Expr) -> bool:
+def contains_decision(expr: Expr, *, visit=None) -> bool:
     pending, seen = [expr], set()
     while pending:
         current = pending.pop()
+        if visit is not None: visit(current)
         if id(current) in seen:
             continue
         seen.add(id(current))

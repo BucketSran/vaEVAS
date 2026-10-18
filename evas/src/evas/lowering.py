@@ -1,5 +1,6 @@
 """Bind arithmetic to polynomial IR, preserving the affine constant-folding path."""
 import math
+from dataclasses import fields
 from typing import Callable, Mapping
 
 from .ir import EventMath, Origin, Affine, Binary, Expression, OperatorRef, Power, Select, StateRef, Term
@@ -10,24 +11,34 @@ class UnsupportedConstantPower(CompileError):
     """Private classification from the original pow rejection traversal."""
 
 
-def affine(constant, terms):
-    return Affine(constant, tuple(Term(n, c) for n, c in sorted(terms.items()) if c != 0.0))
+def _make(work, cls, *args):
+    if work is not None:
+        work('lower_emit_object',1)
+        work('lower_emit_field',len(fields(cls)))
+    return cls(*args)
 
 
-def scale(expression: Expression, factor: float) -> Expression:
+def affine(constant, terms, *, work=None):
+    if work is not None: work('lower_affine_scan',len(terms))
+    return _make(work, Affine, constant, tuple(_make(work,Term,n,c) for n,c in sorted(terms.items()) if c!=0.0))
+
+
+def scale(expression: Expression, factor: float, *, work=None) -> Expression:
     if factor == 1.0:
         return expression
     if isinstance(expression, Affine):
-        return affine(expression.constant * factor, {t.node: t.coefficient * factor for t in expression.terms})
-    return Binary("multiply", Affine(factor, ()), expression)
+        return affine(expression.constant * factor, {t.node: t.coefficient * factor for t in expression.terms}, work=work)
+    return _make(work,Binary,"multiply",_make(work,Affine,factor,()),expression)
 
 
 def _has_bound_decision(expr: Expr, parameters) -> bool:
     """Inspect current bindings before a constant function result drops them."""
+    work = getattr(parameters,"native_work",None)
     def has_select(value):
         pending, seen = [value], set()
         while pending:
             item = pending.pop()
+            if work is not None: work("bound_decision_visit",1)
             if id(item) in seen:
                 continue
             seen.add(id(item))
@@ -42,6 +53,7 @@ def _has_bound_decision(expr: Expr, parameters) -> bool:
     pending, seen = [expr], set()
     while pending:
         item = pending.pop()
+        if work is not None: work("bound_decision_source",1)
         if id(item) in seen:
             continue
         seen.add(id(item))
@@ -51,11 +63,12 @@ def _has_bound_decision(expr: Expr, parameters) -> bool:
     return False
 
 
-def lower_decision(op, values, select):
+def lower_decision(op, values, select, *, work=None):
     """Build the common decision tree after callers validate source operands."""
-    zero, one = Affine(0.0, ()), Affine(1.0, ())
+    zero, one = _make(work,Affine,0.0,()), _make(work,Affine,1.0,())
     def choose(value, then_value, else_value):
         def boolean_tree(item):
+            if work is not None: work("boolean_visit",1)
             if isinstance(item, Affine):
                 return not item.terms and item.constant in (0., 1.)
             return isinstance(item, Select) and boolean_tree(item.then_value) and boolean_tree(item.else_value)
@@ -65,6 +78,7 @@ def lower_decision(op, values, select):
             # every predicate and produces exponential wire expansion.
             select("gt", value, zero, then_value, else_value)
             def substitute(item):
+                if work is not None: work("boolean_substitute",1)
                 if isinstance(item, Affine):
                     return then_value if item.constant else else_value
                 return select(item.relation, item.left, item.right,
@@ -73,7 +87,7 @@ def lower_decision(op, values, select):
         return select("gt", value, zero, then_value,
                       select("lt", value, zero, then_value, else_value))
     if op == "abs":
-        return select("ge", values[0], zero, values[0], scale(values[0], -1.))
+        return select("ge", values[0], zero, values[0], scale(values[0], -1., work=work))
     if op in ("min", "max"):
         return select("le" if op == "min" else "ge", values[0], values[1], values[0], values[1])
     if op in ("<", "<=", ">", ">="):
@@ -101,6 +115,8 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
           decision_scope: bool = False, indices: Callable[[Expr], Expression] | None = None, *,
           memo: dict | None = None,
           node_declarations: bool = False) -> Expression:
+    work = getattr(parameters,"native_work",None)
+    if work is not None: work("lower_source_visit",1)
     validator = getattr(parameters, "validate_integer_operation", None)
     depth = getattr(parameters, "integer_operation_depth", 0)
     if validator is not None:
@@ -141,7 +157,7 @@ def _lower_checked(expr, parameters, nodes, source, operators, preserve_structur
     if memo is not None:
         if operators is not None or decisions is not None or validate_decision is not None or indices is not None:
             raise ValueError("lower memo cannot be used with semantic callbacks")
-        key = (id(expr), preserve_structure, decision_scope)
+        key = (id(expr), preserve_structure, decision_scope, getattr(parameters, "source_floor_operand", False))
         if key not in memo:
             value = _lower(expr, parameters, nodes, source, operators, preserve_structure,
                            decisions, validate_decision, decision_scope, indices, memo, node_declarations)
@@ -155,6 +171,8 @@ def _lower_checked(expr, parameters, nodes, source, operators, preserve_structur
 
 def _lower(expr, parameters, nodes, source, operators, preserve_structure,
            decisions, validate_decision, decision_scope, indices, memo, node_declarations):
+    work = getattr(parameters,"native_work",None)
+    if work is not None: work("lower_child_attachment",len(expr.args))
     def fail(message, *, code="compile_error", error=CompileError):
         raise error(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}",
                            code=code, token=expr.token)
@@ -177,7 +195,21 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
         finite_floor = getattr(parameters, 'finite_floor', None)
         if finite_floor is None:
             fail('floor requires a source-proven finite range', code='unsupported_floor')
-        return finite_floor(expr, argument)
+        try:
+            return finite_floor(expr, argument)
+        except CompileError as error:
+            source_floor = getattr(parameters, 'source_floor', None)
+            if source_floor is None or error.diagnostic['code'] != 'unsupported_floor':
+                raise
+            def lower_operand(bindings):
+                def retained(name):
+                    return bindings[name] if name in bindings else parameters(name)
+                retained.__dict__.update(getattr(parameters, '__dict__', {}))
+                retained.source_floor_operand = True
+                return lower(expr.args[0], retained, nodes, source, operators, True,
+                             decisions, validate_decision, decision_scope, indices,
+                             node_declarations=node_declarations)
+            return source_floor(expr, lower_operand)
     if event_math is not None and expr.op in ("sqrt", "abs", "min", "max"):
         args = tuple(lower(arg, parameters, nodes, source, None, True,
                            decisions, validate_decision, False, indices,
@@ -194,11 +226,11 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
                 pass
             else:
                 if math.isfinite(value):
-                    return Affine(value, ())
+                    return _make(work,Affine,value, ())
         return event_math(expr, args)
 
     if expr.op == "checked":
-        scope = decision_scope or contains_decision(expr) or _has_bound_decision(expr, parameters)
+        scope = decision_scope or contains_decision(expr,visit=(lambda item:work("decision_scan",1)) if work is not None else None) or _has_bound_decision(expr, parameters)
         if scope and decisions is None:
             fail("decision expressions are only supported in stateless ordinary analog expressions")
         values = [lower(arg, parameters, nodes, source, operators,
@@ -213,13 +245,13 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
     if expr.op in DECISION_NAMES:
         if decisions is None:
             fail("decision expressions are only supported in stateless ordinary analog expressions")
-        if contains_operator(expr) and event_math is None:
+        if contains_operator(expr,visit=(lambda item:work("operator_scan",1)) if work is not None else None) and event_math is None:
             fail("decision expressions do not support waveform operators in any operand or arm")
         values = [lower(arg, parameters, nodes, source, operators, True, decisions, validate_decision, True, indices, memo=memo, node_declarations=node_declarations) for arg in expr.args]
-        zero, one = Affine(0.0, ()), Affine(1.0, ())
+        zero, one = _make(work,Affine,0.0,()), _make(work,Affine,1.0,())
         def select(relation, left, right, then_value, else_value):
             return decisions(expr, relation, left, right, then_value, else_value)
-        return lower_decision(expr.op, values, select)
+        return lower_decision(expr.op, values, select, work=work)
 
     bound_exponent = None
     if expr.op == "power":
@@ -247,7 +279,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
             fail("mathematical constant is outside the finite function domain")
         if not math.isfinite(value):
             fail("nonfinite mathematical constant")
-        return Affine(value, ())
+        return _make(work,Affine,value, ())
     if expr.op in OPERATOR_NAMES:
         if operators is None:
             fail("waveform operators are only allowed in contributions; nesting is unsupported")
@@ -263,21 +295,21 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
     if expr.op == "time":
         if "$abstime" not in nodes:
             fail("absolute time is unavailable in a constant expression")
-        return Affine(0., (Term(nodes["$abstime"], 1.),))
+        return _make(work,Affine,0., (_make(work,Term,nodes["$abstime"], 1.),))
     if expr.op == "number":
-        return Affine(float(expr.value), ())
+        return _make(work,Affine,float(expr.value), ())
     if expr.op == "parameter":
         value = parameters(str(expr.value))
-        return value if isinstance(value, (Affine, Binary, Power, Select, StateRef, OperatorRef, EventMath)) else Affine(value, ())
+        return value if isinstance(value, (Affine, Binary, Power, Select, StateRef, OperatorRef, EventMath)) else _make(work,Affine,value, ())
     if expr.op == "voltage":
         p, n = (str(arg.value) for arg in expr.args)
         if p not in nodes or n not in nodes:
             fail(f"undeclared electrical node in V({p},{n})",
                  code="undeclared_node" if node_declarations else "compile_error")
         if preserve_structure and nodes[p] == nodes[n]:
-            return Binary("add", Affine(0.0, (Term(nodes[p], 1.0),)),
-                          Affine(0.0, (Term(nodes[n], -1.0),)))
-        return affine(0.0, {} if nodes[p] == nodes[n] else {nodes[p]: 1.0, nodes[n]: -1.0})
+            return _make(work,Binary,"add", _make(work,Affine,0.0, (_make(work,Term,nodes[p], 1.0),)),
+                          _make(work,Affine,0.0, (_make(work,Term,nodes[n], -1.0),)))
+        return affine(0.0, {} if nodes[p] == nodes[n] else {nodes[p]: 1.0, nodes[n]: -1.0}, work=work)
     values = [bound_exponent if expr.op == "power" and i == 1 else
               lower(arg, parameters, nodes, source, operators, preserve_structure,
                     decisions, validate_decision, decision_scope, indices, memo=memo,
@@ -291,10 +323,11 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
             fail("bitwise expression requires typed integer binding", code="unsupported_integer_bitwise")
         return bitwise(expr, values)
     if expr.op.startswith("unary"):
-        result = scale(a, -1.0 if expr.op == "unary-" else 1.0)
+        result = scale(a, -1.0 if expr.op == "unary-" else 1.0, work=work)
     else:
         b = values[1]
-        both_affine = isinstance(a, Affine) and isinstance(b, Affine)
+        both_affine = (isinstance(a, Affine) and isinstance(b, Affine)
+                       and not getattr(parameters, "source_floor_operand", False))
         if both_affine and preserve_structure and (a.terms or b.terms):
             both_affine = False
         if expr.op in ("+", "-"):
@@ -303,16 +336,16 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
                 terms = {t.node: t.coefficient for t in a.terms}
                 for t in b.terms:
                     terms[t.node] = terms.get(t.node, 0.0) + sign * t.coefficient
-                result = affine(a.constant + sign * b.constant, terms)
+                result = affine(a.constant + sign * b.constant, terms, work=work)
             else:
-                result = Binary("add", a, scale(b, sign))
+                result = _make(work,Binary,"add", a, scale(b, sign, work=work))
         elif expr.op == "*":
             if both_affine and not (a.terms and b.terms):
                 factor = b.constant if a.terms else a.constant
                 result = affine(a.constant * b.constant,
                                 {t.node: t.coefficient * factor for t in (a.terms or b.terms)})
             else:
-                result = Binary("multiply", a, b)
+                result = _make(work,Binary,"multiply", a, b)
         elif expr.op in ("/", "%"):
             integer_arithmetic = getattr(parameters, "integer_arithmetic", None)
             integer_result = integer_arithmetic(expr, a, b) if integer_arithmetic is not None else None
@@ -323,11 +356,13 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
             if not isinstance(b, Affine) or b.terms:
                 if operators is None and event_math is None and not sampled_values:
                     fail("variable division requires an ordinary analog expression")
-                return Binary("divide", a, b)
+                return _make(work,Binary,"divide", a, b)
             if b.constant == 0 and (event_math is not None or sampled_values):
-                return Binary("divide", a, b)
+                return _make(work,Binary,"divide", a, b)
             if b.constant == 0:
                 fail("division requires a nonzero constant denominator")
+            if getattr(parameters, "source_floor_operand", False):
+                return Binary("divide", a, b)
             # Keep division, rather than multiplication by a reciprocal, on
             # the affine path so its existing rounding behavior is preserved.
             if isinstance(a, Affine) and not (preserve_structure and a.terms):
@@ -336,7 +371,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
                 reciprocal = 1.0 / b.constant
                 if not math.isfinite(reciprocal):
                     fail("nonfinite coefficient during constant folding")
-                result = Binary("multiply", Affine(reciprocal, ()), a) if preserve_structure else scale(a, reciprocal)
+                result = _make(work,Binary,"multiply", _make(work,Affine,reciprocal, ()), a) if preserve_structure else scale(a, reciprocal, work=work)
         elif expr.op == "power":
             finite_power = getattr(parameters, "finite_power", None)
             if finite_power is not None:
@@ -350,13 +385,13 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
             exponent = int(b.constant)
             if isinstance(a, Affine) and not a.terms:
                 try:
-                    result = Affine(a.constant ** exponent, ())
+                    result = _make(work,Affine,a.constant ** exponent, ())
                 except OverflowError:
                     fail("nonfinite coefficient during constant folding")
             elif exponent == 1:
                 result = a
             else:
-                result = Power(a, exponent)
+                result = _make(work,Power,a, exponent)
         else:
             fail(f"unsupported arithmetic {expr.op!r}")
     if isinstance(result, Affine) and not all(math.isfinite(x) for x in

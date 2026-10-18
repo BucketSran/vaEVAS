@@ -65,8 +65,10 @@ def bounds(op, operands):
     return None
 
 
-def integer_type(expr, variables, parameters, genvars=(), *, child_types=None):
+def integer_type(expr, variables, parameters, genvars=(), *, child_types=None, visit=None):
     """Source integer typing shared by instance and parameter bit lowering."""
+    if visit is not None:
+        visit(expr)
     if expr.result_type == 'real':
         return False
     if expr.result_type == 'integer':
@@ -76,11 +78,11 @@ def integer_type(expr, variables, parameters, genvars=(), *, child_types=None):
     if expr.op == 'parameter':
         return variables.get(expr.value) == 'integer' or parameters.get(expr.value) == 'integer'
     if expr.op == 'checked':
-        return child_types[0] if child_types is not None else integer_type(expr.args[0], variables, parameters, genvars)
+        return child_types[0] if child_types is not None else integer_type(expr.args[0], variables, parameters, genvars, visit=visit)
     if expr.op in ('<', '<=', '>', '>=', '==', '!=', '&&', '||', 'unary!'):
         return True
     args = expr.args[1:] if expr.op == 'ternary' else expr.args
     if expr.op == 'ternary' or expr.op in OPS or expr.op in ('+', '-', '*', '/', '%', 'unary+', 'unary-'):
         return all(child_types[1:] if expr.op == 'ternary' else child_types) if child_types is not None else all(
-            integer_type(arg, variables, parameters, genvars) for arg in args)
+            integer_type(arg, variables, parameters, genvars, visit=visit) for arg in args)
     return False

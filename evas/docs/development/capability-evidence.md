@@ -295,4 +295,4 @@ wave17已验收IR28候选的[事件typed余数与减法合同](../math/events.md
 及[公共正反控](../../tests/test_native_integer28.py)补充LANG、EVENT-ORDER、EVENT-CONDITIONS与COMPOSE。
 同源统一候选的原069、335已通过原checker，完整400为302/19/79；单次完整Python2314项及两平台0.21/IR28安装通过，范围仍限上述合同。
 历史独立Ln135 pilot固定163输入、IR27与release核 `f1fe352c6c61`；该pilot保留原身份，不参与wave18计分，135只按本轮IR28统一400结果计入。
-IR29位运算、selected-Floor、factor018及history-forcing分别在独立ignored快照开发，均为0新增原件PASS，不计入本轮303。
+IR29位运算与纯保持目标、原树事件Floor、无状态源因子和字面零电流支路已合入本地候选，合同见[算子手册](../math/operators.md#native-held-bits29)。新增公开正反控见[整数保持目标](../../tests/test_native_held_bits29.py)、[原树Floor](../../tests/test_source_floor_event.py)、[源因子](../../tests/test_source_factor.py)与[零电流](../../tests/test_scs_zero_current.py)。定向测试和各lane审查不替代同源统一400、完整Python与安装验收，本候选尚不改写历史303。history-forcing仍在隔离快照，0统一原件信用。

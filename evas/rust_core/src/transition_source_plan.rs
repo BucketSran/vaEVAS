@@ -1,15 +1,19 @@
 //! Immutable proofs for piecewise-held targets selected by original PWL inputs.
 //! This module never advances or publishes accepted transition history.
+mod source_factor;
 use crate::events::AffineState;
 use crate::exact_source::RootTime;
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, Program, Relation};
 use crate::pwl::Trajectory;
 use num_traits::Zero;
+#[cfg(test)]
+pub(crate) use source_factor::tests::fixture as factor_fixture;
+use source_factor::{Factor, Shape};
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::{
     atomic::{AtomicU64, Ordering},
-    Arc, Mutex,
+    Arc, Mutex, OnceLock,
 };
 
 fn invalid(message: &str) -> Error {
@@ -33,6 +37,10 @@ impl Default for Work {
     }
 }
 impl Work {
+    pub(crate) fn spent(&self) -> u64 {
+        self.0.work.load(Ordering::Relaxed)
+    }
+
     pub(crate) fn limited(limits: [u64; 3]) -> Self {
         Self(Arc::new(Counters {
             plans: AtomicU64::new(0),
@@ -225,8 +233,59 @@ pub(crate) struct ProofContext {
     work: Work,
     proofs: Mutex<Vec<ProvenSign>>,
     cuts: Mutex<Vec<ProvenCuts>>,
+    factor_structural: OnceLock<Arc<Mutex<Option<usize>>>>,
 }
 impl ProofContext {
+    pub(crate) fn new_held(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        copy_items: usize,
+    ) -> Result<Arc<Self>, Error> {
+        Self::event_request_with_work(program, trajectory, driven, copy_items, Work::default())
+    }
+    /// One prepaid event-source owner. All new event consumers borrow this
+    /// same ledger; the actual lookup/copy helper cannot run before reservation.
+    pub(crate) fn event_request_with_work(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        copy_items: usize,
+        work: Work,
+    ) -> Result<Arc<Self>, Error> {
+        work.debit(2, program.nodes.len().saturating_add(driven.len()) as u64)?;
+        let names = program
+            .nodes
+            .iter()
+            .fold(0usize, |n, s| n.saturating_add(s.len().saturating_add(1)));
+        let driven_names = driven
+            .iter()
+            .fold(0usize, |n, s| n.saturating_add(s.len().saturating_add(1)));
+        let copied = copy_items
+            .saturating_add(names)
+            .saturating_add(driven_names);
+        let lookup = program
+            .nodes
+            .len()
+            .saturating_mul(driven.len())
+            .saturating_mul(names.saturating_add(1));
+        work.debit(2, copied.saturating_add(lookup) as u64)?;
+        trajectory.charge_source_copy(&work)?;
+        Self::new(program, trajectory, driven, work)
+    }
+    pub(crate) fn program_arc(&self) -> Arc<Program> {
+        self.program.clone()
+    }
+    pub(crate) fn borrow_work(&self) -> &Work {
+        &self.work
+    }
+    pub(crate) fn original_binding(&self) -> (&Program, &Trajectory, &[String]) {
+        (&self.program, &self.trajectory, &self.driven)
+    }
+    pub(crate) fn event_input_nodes(&self) -> &[usize] {
+        &self.input_nodes
+    }
+
     /// A new selected-math consumer uses the existing source ledger once.
     /// program_items is counted by its complete structural admission before copying.
     pub(crate) fn new_source_math(
@@ -355,7 +414,43 @@ impl ProofContext {
         owner: &str,
         held: bool,
     ) -> Result<Expression, Error> {
-        fn audit(e: &Expression, context: &ProofContext, held: bool) -> Result<(), Error> {
+        self.dc_admission(expression, owner, held, false)
+            .map(|x| x.0)
+    }
+    pub(crate) fn slew_admission(
+        &self,
+        expression: &Expression,
+        owner: &str,
+    ) -> Result<(Expression, Option<Arc<Factor>>), Error> {
+        let candidate = matches!(
+            expression,
+            Expression::Add { .. } | Expression::Multiply { .. }
+        ) && self.program.states.is_empty()
+            && self.program.events.is_empty()
+            && self.program.step_bounds.is_empty()
+            && self.program.operators.len() == 1
+            && self.program.contributions.len() == 1;
+        if candidate
+            && self
+                .factor_structural
+                .get()
+                .is_some_and(|a| a.lock().unwrap().is_none())
+        {
+            return Err(Error::new(
+                "resource_budget",
+                "source factor structural audit remains exhausted",
+            ));
+        }
+        self.dc_admission(expression, owner, false, candidate)
+    }
+    fn dc_admission(
+        &self,
+        expression: &Expression,
+        owner: &str,
+        held: bool,
+        factor_gate: bool,
+    ) -> Result<(Expression, Option<Arc<Factor>>), Error> {
+        fn audit(e: &Expression, context: &ProofContext, held: bool) -> Result<Shape, Error> {
             context.work.step()?;
             match e {
                 Expression::Affine { constant, terms } => {
@@ -403,6 +498,7 @@ impl ProofContext {
                             }
                         }
                     }
+                    Ok(Shape::leaf(1 + terms.len()))
                 }
                 Expression::Select {
                     left,
@@ -410,29 +506,27 @@ impl ProofContext {
                     then_value,
                     else_value,
                     ..
-                } => {
-                    for child in [left, right, then_value, else_value] {
-                        audit(child, context, held)?;
-                    }
-                }
-                Expression::Add { left, right } | Expression::Multiply { left, right } => {
-                    audit(left, context, held)?;
-                    audit(right, context, held)?;
-                }
-                Expression::State { .. } if held => {}
-                _ => {
-                    return Err(unsupported(
-                        "source slew DC targets require source-only sums and constant products",
-                    ))
-                }
+                } => Ok(Shape::select(
+                    audit(left, context, held)?,
+                    audit(right, context, held)?,
+                    audit(then_value, context, held)?,
+                    audit(else_value, context, held)?,
+                )),
+                Expression::Add { left, right } | Expression::Multiply { left, right } => Ok(
+                    Shape::binary(audit(left, context, held)?, audit(right, context, held)?),
+                ),
+                Expression::State { .. } if held => Ok(Shape::leaf(1)),
+                _ => Err(unsupported(
+                    "source slew DC targets require source-only sums and constant products",
+                )),
             }
-            Ok(())
         }
         fn normalize(
             e: &Expression,
             context: &ProofContext,
             constants: &mut BTreeMap<usize, f64>,
             held: bool,
+            factor: Option<&Factor>,
         ) -> Result<Expression, Error> {
             context.work.step()?;
             Ok(match e {
@@ -447,17 +541,17 @@ impl ProofContext {
                     relation: *relation,
                     left: left.clone(),
                     right: right.clone(),
-                    then_value: Box::new(normalize(then_value, context, constants, held)?),
-                    else_value: Box::new(normalize(else_value, context, constants, held)?),
+                    then_value: Box::new(normalize(then_value, context, constants, held, factor)?),
+                    else_value: Box::new(normalize(else_value, context, constants, held, factor)?),
                     origin: origin.clone(),
                 },
                 Expression::Add { left, right } => Expression::Add {
-                    left: Box::new(normalize(left, context, constants, held)?),
-                    right: Box::new(normalize(right, context, constants, held)?),
+                    left: Box::new(normalize(left, context, constants, held, factor)?),
+                    right: Box::new(normalize(right, context, constants, held, factor)?),
                 },
                 Expression::Multiply { left, right } => Expression::Multiply {
-                    left: Box::new(normalize(left, context, constants, held)?),
-                    right: Box::new(normalize(right, context, constants, held)?),
+                    left: Box::new(normalize(left, context, constants, held, factor)?),
+                    right: Box::new(normalize(right, context, constants, held, factor)?),
                 },
                 Expression::Affine {
                     constant: value,
@@ -471,6 +565,9 @@ impl ProofContext {
                         } else if let Some(value) = constants.get(&term.node) {
                             *value
                         } else {
+                            if factor.is_some() {
+                                context.trajectory.charge_source_copy(&context.work)?;
+                            }
                             context.work.exact()?;
                             let node = Expression::Affine {
                                 constant: 0.,
@@ -513,9 +610,30 @@ impl ProofContext {
                 _ => return Err(unsupported("invalid source DC target")),
             })
         }
-        audit(expression, self, held)?;
-        crate::continuous::validate_selection(expression, &self.program, &self.driven, owner)?;
-        normalize(expression, self, &mut BTreeMap::new(), held)
+        let shape = audit(expression, self, held)?;
+        let factor = if factor_gate && shape.forms > 8192 {
+            let factor = Arc::new(Factor::new(self, expression, owner, shape)?);
+            factor.validate_selection(expression, &self.driven)?;
+            Some(factor)
+        } else {
+            crate::continuous::validate_selection(expression, &self.program, &self.driven, owner)?;
+            None
+        };
+        if let Some(f) = &factor {
+            f.normalization_copy()?;
+        }
+        let normalized = normalize(
+            expression,
+            self,
+            &mut BTreeMap::new(),
+            held,
+            factor.as_deref(),
+        )?;
+        if let Some(f) = &factor {
+            f.qualify(&normalized)?;
+            crate::diagnostics::counter("source_factor_factory_calls", 1);
+        }
+        Ok((normalized, factor))
     }
 
     /// Whole-domain scalar fact, with original references checked before algebra.
@@ -600,6 +718,7 @@ impl ProofContext {
             work,
             proofs: Mutex::new(Vec::new()),
             cuts: Mutex::new(Vec::new()),
+            factor_structural: OnceLock::new(),
         }))
     }
 }
@@ -616,6 +735,17 @@ pub(crate) struct Spec {
     // Pure results are scoped to the complete immutable source identity. Each
     // insertion has paid the original exact reservation and cut quota.
     context: Arc<ProofContext>,
+    factor: Option<Arc<Factor>>,
+}
+impl Drop for Spec {
+    fn drop(&mut self) {
+        if self.factor.is_some() {
+            crate::diagnostics::counter(
+                "source_factor_work_end",
+                self.work.0.work.load(Ordering::Relaxed) as usize,
+            );
+        }
+    }
 }
 impl Spec {
     /// Independent source contexts remain available to direct proof tests.
@@ -639,31 +769,48 @@ impl Spec {
         context: Arc<ProofContext>,
         owner: &str,
     ) -> Result<Option<Arc<Self>>, Error> {
-        Self::prepare_with_context(expression, context, owner, false).map(|(_, spec)| spec)
+        Self::prepare_with_context(expression, context, owner, false, None).map(|(_, spec)| spec)
     }
     pub(crate) fn transition_with_context(
         expression: &Expression,
         context: Arc<ProofContext>,
         owner: &str,
     ) -> Result<(Option<Expression>, Option<Arc<Self>>), Error> {
-        Self::prepare_with_context(expression, context, owner, true)
+        Self::prepare_with_context(expression, context, owner, true, None)
+    }
+    pub(crate) fn source_slew_with_context(
+        expression: &Expression,
+        context: Arc<ProofContext>,
+        owner: &str,
+        factor: Option<Arc<Factor>>,
+    ) -> Result<Option<Arc<Self>>, Error> {
+        if let Some(f) = &factor {
+            f.check_binding(&context, expression, owner)?;
+        }
+        Self::prepare_with_context(expression, context, owner, false, factor).map(|x| x.1)
     }
     fn prepare_with_context(
         expression: &Expression,
         context: Arc<ProofContext>,
         owner: &str,
         dc_target: bool,
+        factor: Option<Arc<Factor>>,
     ) -> Result<(Option<Expression>, Option<Arc<Self>>), Error> {
         let program = context.program.as_ref();
         let driven = context.driven.as_slice();
         let work = context.work.clone();
         work.step()?;
-        let (nodes, dependencies, operators) =
-            crate::continuous::integral_dependency_edges(expression, program, owner)?;
+        let (nodes, dependencies, operators) = match &factor {
+            Some(f) => f.dependency_edges(expression)?,
+            None => crate::continuous::integral_dependency_edges(expression, program, owner)?,
+        };
         if nodes.iter().all(|n| *n == 0) {
             return Ok((None, None));
         }
-        crate::continuous::validate_selection(expression, program, driven, owner)?;
+        match &factor {
+            Some(f) => f.validate_selection(expression, driven)?,
+            None => crate::continuous::validate_selection(expression, program, driven, owner)?,
+        }
         fn exact_domain(e: &Expression, w: &Work) -> Result<(), Error> {
             w.step()?;
             match e {
@@ -686,17 +833,21 @@ impl Spec {
                 "source-target predicates cannot read histories",
             ));
         }
-        for leaf in forms(expression, &work)? {
-            let a = crate::events::affine(&leaf, program, owner)?;
-            if a.node_dependencies.iter().any(|n| *n != 0) || !a.operator_dependencies.is_empty() {
-                if dc_target {
-                    let normalized = context.transition_dc_leaves(expression, owner)?;
-                    let source = Self::new_with_context(&normalized, context, owner)?;
-                    return Ok((Some(normalized), source));
+        if factor.is_none() {
+            for leaf in forms(expression, &work)? {
+                let a = crate::events::affine(&leaf, program, owner)?;
+                if a.node_dependencies.iter().any(|n| *n != 0)
+                    || !a.operator_dependencies.is_empty()
+                {
+                    if dc_target {
+                        let normalized = context.transition_dc_leaves(expression, owner)?;
+                        let source = Self::new_with_context(&normalized, context, owner)?;
+                        return Ok((Some(normalized), source));
+                    }
+                    return Err(unsupported(
+                        "transition value leaves must use held state and constants only",
+                    ));
                 }
-                return Err(unsupported(
-                    "transition value leaves must use held state and constants only",
-                ));
             }
         }
         fn predicate_deps(
@@ -705,6 +856,7 @@ impl Spec {
             o: &str,
             out: &mut BTreeSet<usize>,
             w: &Work,
+            factor: Option<&Factor>,
         ) -> Result<(), Error> {
             w.step()?;
             match e {
@@ -716,19 +868,22 @@ impl Spec {
                     ..
                 } => {
                     for x in [left, right] {
-                        out.extend(crate::continuous::integral_dependency_edges(x, p, o)?.1);
+                        out.extend(match factor {
+                            Some(f) => f.dependency_edges(x)?.1,
+                            None => crate::continuous::integral_dependency_edges(x, p, o)?.1,
+                        });
                     }
                     for x in [left, right, then_value, else_value] {
-                        predicate_deps(x, p, o, out, w)?;
+                        predicate_deps(x, p, o, out, w, factor)?;
                     }
                 }
                 Expression::Add { left, right }
                 | Expression::Multiply { left, right }
                 | Expression::Divide { left, right } => {
-                    predicate_deps(left, p, o, out, w)?;
-                    predicate_deps(right, p, o, out, w)?;
+                    predicate_deps(left, p, o, out, w, factor)?;
+                    predicate_deps(right, p, o, out, w, factor)?;
                 }
-                Expression::Power { base, .. } => predicate_deps(base, p, o, out, w)?,
+                Expression::Power { base, .. } => predicate_deps(base, p, o, out, w, factor)?,
                 _ => {}
             }
             Ok(())
@@ -740,7 +895,15 @@ impl Spec {
             owner,
             &mut predicate_dependencies,
             &work,
+            factor.as_deref(),
         )?;
+        if let Some(f) = &factor {
+            f.copy_tree(expression)?;
+            f.charge(
+                "source_factor_copy_debit",
+                context.input_nodes.len() + owner.len() + 8,
+            )?;
+        }
         Ok((
             None,
             Some(Arc::new(Self {
@@ -753,6 +916,7 @@ impl Spec {
                 predicate_dependencies,
                 work,
                 context,
+                factor,
             })),
         ))
     }
@@ -767,14 +931,25 @@ impl Spec {
         failure: &str,
     ) -> Result<i8, Error> {
         let mut proofs = self.context.proofs.lock().unwrap();
-        if let Some(proof) = proofs.iter().find(|p| {
-            p.owner == self.owner && p.left == *left && p.right == *right && p.root.as_ref() == root
-        }) {
+        let found = if let Some(f) = &self.factor {
+            f.find_proof(&proofs, &self.owner, left, right, root)?
+        } else {
+            proofs.iter().find(|p| {
+                p.owner == self.owner
+                    && p.left == *left
+                    && p.right == *right
+                    && p.root.as_ref() == root
+            })
+        };
+        if let Some(proof) = found {
             // Equality has no bind/step of its own. Even a pure proof hit must
             // refuse once another shared reservation exhausted this request.
             self.work.debit(2, 0)?;
             crate::diagnostics::counter("source_exact_proof_hits", 1);
             return Ok(proof.sign);
+        }
+        if self.factor.is_some() && root.is_some() {
+            self.trajectory.charge_source_copy(&self.work)?;
         }
         self.work.exact()?;
         crate::diagnostics::counter("source_exact_proof_builds", 1);
@@ -812,6 +987,10 @@ impl Spec {
         states: &[I],
         time: &Cut,
     ) -> Result<i8, Error> {
+        if let Some(f) = &self.factor {
+            f.copy_tree(left)?;
+            f.copy_tree(right)?;
+        }
         let left = bind(left, states, &self.work)?;
         let right = bind(right, states, &self.work)?;
         crate::diagnostics::counter("source_predicate_sign_calls", 1);
@@ -833,6 +1012,11 @@ impl Spec {
         states: &[I],
     ) -> Result<Option<bool>, Error> {
         self.work.step()?;
+        // Factorized SourceSlew qualification proves zero held dependencies.
+        // Do not run the held-state dense dependency helper on that path.
+        if self.factor.is_some() {
+            return Ok(None);
+        }
         let (mut nodes, mut dependencies, mut operators) =
             crate::continuous::integral_dependency_edges(left, &self.program, &self.owner)?;
         let (rn, rs, ro) =
@@ -874,6 +1058,9 @@ impl Spec {
     }
     fn resolve(&self, e: &Expression, states: &[I], time: &Cut) -> Result<Expression, Error> {
         self.work.step()?;
+        if let Some(f) = &self.factor {
+            f.resolve_node(e)?;
+        }
         Ok(match e {
             Expression::Select {
                 relation,
@@ -916,6 +1103,9 @@ impl Spec {
     }
     fn proven_cuts(&self, guard: &Expression) -> Result<Vec<RootTime>, Error> {
         let mut cache = self.context.cuts.lock().unwrap();
+        if let Some(f) = &self.factor {
+            f.cut_lookup(guard, cache.len(), &self.trajectory)?;
+        }
         if let Some(proof) = cache
             .iter()
             .find(|p| p.owner == self.owner && p.guard == *guard)
@@ -927,7 +1117,13 @@ impl Spec {
             self.work.debit(1, proof.cuts.len() as u64)?;
             crate::diagnostics::counter("source_cut_proof_hits", 1);
             crate::diagnostics::counter("source_cut_materialized_roots", proof.cuts.len());
+            if let Some(f) = &self.factor {
+                f.roots(&proof.cuts)?;
+            }
             return Ok(proof.cuts.clone());
+        }
+        if self.factor.is_some() {
+            self.trajectory.charge_source_copy(&self.work)?;
         }
         self.work.exact()?;
         let curve = self
@@ -946,6 +1142,9 @@ impl Spec {
             // The immutable certificate owns an additional root vector, too.
             // Charge its actual storage separately before making that copy.
             self.work.debit(1, cuts.len() as u64)?;
+            if let Some(f) = &self.factor {
+                f.roots(&cuts)?;
+            }
             cache.push(ProvenCuts {
                 owner: self.owner.clone(),
                 guard: guard.clone(),
@@ -978,22 +1177,35 @@ impl Spec {
                 for x in [left, right, then_value, else_value] {
                     self.collect_once(x, states, cuts, seen)?;
                 }
+                if let Some(f) = &self.factor {
+                    f.copy_tree(left)?;
+                    f.copy_tree(right)?;
+                }
                 for left in forms(left, &self.work)? {
                     for right in forms(right, &self.work)? {
                         self.work.step()?;
-                        let (mut nodes, _, _) = crate::continuous::integral_dependency_edges(
-                            &left,
-                            &self.program,
-                            &self.owner,
-                        )?;
-                        nodes.extend(
-                            crate::continuous::integral_dependency_edges(
-                                &right,
+                        let (mut nodes, _, _) = match &self.factor {
+                            Some(f) => {
+                                f.guard_material(&left, &right, seen.len())?;
+                                f.dependency_edges(&left)?
+                            }
+                            None => crate::continuous::integral_dependency_edges(
+                                &left,
                                 &self.program,
                                 &self.owner,
-                            )?
-                            .0,
-                        );
+                            )?,
+                        };
+                        nodes.extend(match &self.factor {
+                            Some(f) => f.dependency_edges(&right)?.0,
+                            None => {
+                                crate::continuous::integral_dependency_edges(
+                                    &right,
+                                    &self.program,
+                                    &self.owner,
+                                )?
+                                .0
+                            }
+                        });
                         if nodes.iter().all(|n| *n == 0) {
                             continue;
                         }
@@ -1026,7 +1238,19 @@ impl Spec {
     }
     fn target(&self, states: &[I], time: &Cut) -> Result<Target, Error> {
         let selected = self.resolve(&self.expression, states, time)?;
+        if let Some(f) = &self.factor {
+            f.dense(
+                &selected,
+                self.program.nodes.len()
+                    + self.program.states.len()
+                    + self.program.operators.len()
+                    + 1,
+            )?;
+        }
         let affine = crate::events::affine(&selected, &self.program, &self.owner)?;
+        if let Some(f) = &self.factor {
+            f.copy_tree(&selected)?;
+        }
         let proof = bind(&selected, states, &self.work)?;
         crate::diagnostics::counter("source_leaf_proof_calls", 1);
         self.proof_sign(
@@ -1170,7 +1394,9 @@ impl Plan {
                 _ => false,
             }
         }
-        if !spec.dependencies.is_empty() || held_or_history(&spec.expression) {
+        if !spec.dependencies.is_empty()
+            || (spec.factor.is_none() && held_or_history(&spec.expression))
+        {
             return Err(unsupported(
                 "source slew plans cannot depend on held state or history",
             ));
@@ -1185,14 +1411,21 @@ impl Plan {
         crate::diagnostics::counter("source_plan_build_calls", 1);
         Self::check_states(&spec, states)?;
         spec.work.debit(0, 1)?;
+        if let Some(f) = &spec.factor {
+            f.charge("source_factor_root_debit", 8192)?;
+        }
         let mut cuts = vec![
             RootTime::point(0.).unwrap(),
             RootTime::point(spec.trajectory.config.stop).unwrap(),
         ];
         spec.work.debit(1, 2)?;
         spec.collect(&spec.expression, states, &mut cuts)?;
-        cuts.sort_by(RootTime::order);
-        cuts.dedup_by(|a, b| a.order(b) == std::cmp::Ordering::Equal);
+        if let Some(f) = &spec.factor {
+            f.sort_dedup_roots(&mut cuts)?;
+        } else {
+            cuts.sort_by(RootTime::order);
+            cuts.dedup_by(|a, b| a.order(b) == std::cmp::Ordering::Equal);
+        }
         let cuts = cuts
             .into_iter()
             .map(Cut::new)
@@ -1209,6 +1442,12 @@ impl Plan {
         strict_points: bool,
     ) -> Result<Self, Error> {
         crate::diagnostics::counter("source_plan_context_calls", 1);
+        if let Some(f) = &spec.factor {
+            f.charge(
+                "source_factor_copy_debit",
+                cuts.len().saturating_mul(32) + states.len(),
+            )?;
+        }
         let mut points = Vec::new();
         let mut modes = Vec::new();
         for t in cuts.iter() {
@@ -1367,15 +1606,27 @@ impl Plan {
     /// no right interval exists, so retain the certified incoming mode.
     pub(crate) fn slew_target_after(&self, root: &RootTime) -> Result<Target, Error> {
         self.spec.work.debit(2, 0)?;
+        if let Some(f) = &self.spec.factor {
+            f.search_roots(root, self.cuts.iter().map(|c| &c.exact))?;
+        }
         let index = self
             .cuts
             .binary_search_by(|cut| cut.exact.order(root))
             .map_err(|_| invalid("source slew target requires an original cut identity"))?;
-        self.modes
+        let target = self
+            .modes
             .get(index)
             .or_else(|| self.modes.last())
-            .cloned()
-            .ok_or_else(|| invalid("source slew has no proven open-cell target"))
+            .ok_or_else(|| invalid("source slew has no proven open-cell target"))?;
+        if let Some(f) = &self.spec.factor {
+            f.copy_tree(&target.proof)?;
+            let d = self.spec.program.nodes.len() + 2;
+            f.charge(
+                "source_factor_copy_debit",
+                target.coefficients.len() + d.saturating_mul(d).saturating_mul(16),
+            )?;
+        }
+        Ok(target.clone())
     }
     pub(crate) fn next_after(&self, time: f64) -> Option<f64> {
         self.cuts.iter().find(|t| t.time > time).map(|cut| cut.time)
@@ -1494,6 +1745,31 @@ impl Plan {
             return Err(invalid("unproved terminal source-target change"));
         }
         Ok(right.clone())
+    }
+    pub(crate) fn slew_seed(&self) -> Result<Target, Error> {
+        if let Some(f) = &self.spec.factor {
+            f.copy_tree(&self.points[0].proof)?;
+            f.charge(
+                "source_factor_copy_debit",
+                self.points[0].coefficients.len()
+                    + (self.spec.program.nodes.len() + 2)
+                        .saturating_pow(2)
+                        .saturating_mul(16),
+            )?;
+        }
+        Ok(self.seed())
+    }
+    pub(crate) fn charge_slew_build(&self) -> Result<(), Error> {
+        if let Some(f) = &self.spec.factor {
+            f.charge(
+                "source_factor_history_debit",
+                self.cuts.len().saturating_mul(1024),
+            )?;
+            for cut in self.cuts.iter() {
+                f.roots(std::slice::from_ref(&cut.exact))?;
+            }
+        }
+        Ok(())
     }
     pub(crate) fn debit_boundary(&self) -> Result<(), Error> {
         self.spec.work.step()

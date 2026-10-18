@@ -158,7 +158,7 @@ fn prepare_impl(
         let node = model.program.nodes.iter().position(|n| n == name).unwrap();
         predicate_nodes[node] = value;
     }
-    let predicate_states = model.apply(&selection, &predicate_nodes, before)?;
+    let predicate_states = model.apply_with_proofs(&selection, &predicate_nodes, before, proofs)?;
     let predicate_bounds: Vec<_> = predicate_states.iter().copied().map(I::point).collect();
     let selected = model.selected_program_with_parameters(
         &predicate_bounds,
@@ -166,13 +166,14 @@ fn prepare_impl(
         events_and_roots.1,
         operator_bounds,
     )?;
-    let mut joint = model
-        .event_circuit_program_with_inputs(&selected, &selection, before, operators, inputs)?;
+    let mut joint = model.event_circuit_program_with_inputs_and_proofs(
+        &selected, &selection, before, operators, inputs, proofs,
+    )?;
     if let Some(previous) = previous {
         joint.reuse_affine_factor_from(previous);
     }
     let candidate = joint.solve(inputs)?;
-    let states = model.apply(&selection, &candidate.voltages, before)?;
+    let states = model.apply_with_proofs(&selection, &candidate.voltages, before, proofs)?;
     let replayed = model.selected_program_with_parameters(
         &states.iter().copied().map(I::point).collect::<Vec<_>>(),
         input_bounds,
@@ -212,7 +213,7 @@ fn prepare_impl(
             "condition replay changed the selected path",
         ));
     }
-    let replay = model.apply(&selection, &solution.voltages, before)?;
+    let replay = model.apply_with_proofs(&selection, &solution.voltages, before, proofs)?;
     for ((&state, &checked), spec) in states.iter().zip(&replay).zip(&model.program.states) {
         let bound = if spec.kind == StateKind::Integer {
             0.0

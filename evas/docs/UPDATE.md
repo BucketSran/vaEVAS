@@ -4,6 +4,12 @@
 逐项证据见[证据索引](development/capability-evidence.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
 
+## 本地候选 0.22.0 / IR29：保持位目标与原树源证明
+
+新增受限signed32右移、按位与及纯保持Transition目标。移位数须是实例常量，实际状态盒须为同实例整数单点，完整原树依赖和逐节点溢出检查保留。事件原树Floor、无状态源因子和已证明字面零电流支路同时进入本地候选，范围见[算子合同](math/operators.md#native-held-bits29)。
+
+Native与Floor复用一个原Program、物理输入和请求预算。失败准备不发布状态、历史、日程或输出；耗尽后先拒绝重试。协议、包和当前开发夹具迁到29/0.22.0，历史材料与执行身份不改。本候选的统一400、完整Python及安装仍待验收，原303继续绑定IR28的wave18；Forcing保持隔离。
+
 ## 本地候选 0.21.0 / IR28：事件 typed 余数除数与减法
 
 事件体的typed树新增二元Subtract并接受运行期typed余数除数，每个原节点保留signed32

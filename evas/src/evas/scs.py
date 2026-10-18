@@ -153,6 +153,45 @@ class _Statement:
         return node,offset
 
 
+def _zero_current_source(token, nodes, settings, statement):
+    """Prove only a literal zero, preserving every consumed field's source."""
+    if len(nodes)!=2 or nodes[0]==nodes[1]:
+        _fail('isource requires two distinct scalar terminals',token,unsupported=True)
+    if set(settings)-{'type','dc'} or 'dc' not in settings or settings.get('type','dc')!='dc':
+        _fail('isource accepts only explicit exact-zero dc and optional type=dc',token,unsupported=True)
+    if not isinstance(settings['dc'],float):
+        _fail('isource dc requires a scalar exact-zero numeric literal',token,unsupported=True)
+    # General settings parsing above already consumed/rejected all syntax and
+    # numeric legality. Only accepted <=2 fields are inspected again here.
+    positions={id(value):i for i,value in enumerate(statement.tokens)}
+    starts=sorted((positions[id(value)],key) for key,value in statement.setting_tokens.items())
+    fields=[]
+    for k,(start,key) in enumerate(starts):
+        end=starts[k+1][0] if k+1<len(starts) else len(statement.tokens)
+        values=statement.tokens[start+2:end]
+        fields.append(dict(name=key,value=settings[key],
+            location=dict(source=statement.tokens[start].source,line=statement.tokens[start].line,
+                          column=statement.tokens[start].column),
+            tokens=[dict(text=x.text,kind=x.kind,source=x.source,line=x.line,column=x.column) for x in values]))
+        if key=='dc':
+            dc_tokens=values
+    original=''.join(value.text for value in dc_tokens)
+    number=dc_tokens[1:] if dc_tokens and dc_tokens[0].text in ('+','-') else dc_tokens
+    if len(number)!=1 or number[0].kind!='number':
+        _fail('isource zero proof requires an original numeric literal, not a parameter',token,unsupported=True)
+    spelling=number[0].text
+    if spelling[-1] in _SUFFIX:
+        spelling=spelling[:-1]
+    mantissa=re.split('[eE]',spelling,maxsplit=1)[0]
+    # A decimal/SI literal is zero iff every mantissa digit is zero. The
+    # exponent/suffix cannot turn nonzero into exact zero, even if float underflows.
+    if any(digit in '123456789' for digit in mantissa):
+        _fail('nonzero isource requires electrical network support (#68)',token,unsupported=True)
+    return dict(name=token.text,device='isource',terminals=list(nodes),settings=dict(settings),fields=fields,
+                origin=dict(source=token.source,line=token.line,column=token.column),
+                proof=dict(kind='exact_zero_dc_literal',dc_literal=original,current_A='0'))
+
+
 @dataclass
 class ScsTestbench:
     sources: dict[str,str]
@@ -186,6 +225,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
     saved,tolerances,source_specs = [],{},[]
     seen_options,warning_reports=set(),[]
     behavioral_sources=[]
+    zero_current_sources=[]
     preset=None
     save_policy=None
     transient_spec=None
@@ -243,7 +283,9 @@ def load_scs(path: str | Path) -> ScsTestbench:
                 if len(nodes)!=2 or nodes[0]==nodes[1]:
                     s.fail('vsource requires two distinct scalar terminals',unsupported=True)
                 source_specs.append((nodes,settings,first))
-            elif module in ('resistor','capacitor','inductor','isource','r','c','l'):
+            elif module=='isource':
+                zero_current_sources.append(_zero_current_source(first,nodes,settings,s))
+            elif module in ('resistor','capacitor','inductor','r','c','l'):
                 s.fail(f'{module} requires electrical network support (#68)',unsupported=True)
             else:
                 if any(not isinstance(v,float) for v in settings.values()):
@@ -317,7 +359,8 @@ def load_scs(path: str | Path) -> ScsTestbench:
     occupied={'0',*saved,*[n for nodes,_,_ in source_specs for n in nodes],
               *[n for _,nodes,_,_ in devices for n in nodes],
               *[n for _,nodes,_,_ in behavioral_sources for n in nodes],
-              *[reference.text for _,_,reference,_ in behavioral_sources]}
+              *[reference.text for _,_,reference,_ in behavioral_sources],
+              *[node for entry in zero_current_sources for node in entry['terminals']]}
     internal_source_nodes=[]
     for nodes,settings,token in source_specs:
         def source_fail(message,*,unsupported=False):
@@ -388,9 +431,11 @@ def load_scs(path: str | Path) -> ScsTestbench:
         instances.append(dict(name=token.text,module=name,connections=dict(zip(expanded.ports,nodes)),parameters=settings))
     model_sha256={p:hashlib.sha256(t.encode()).hexdigest() for p,t in sources.items()}
     generated_sha256={}
+    # Build original VA/source topology once. Zero-current branches never add
+    # nodes, voltage constraints, inputs or generated instances to this set.
+    available={'0',*waveforms,*[net for i in instances for net in i['connections'].values()],
+               *[net for _,nodes,_,_ in behavioral_sources for net in nodes]}
     if behavioral_sources:
-        available={'0',*waveforms,*[net for i in instances for net in i['connections'].values()],
-                   *[net for _,nodes,_,_ in behavioral_sources for net in nodes]}
         driven=set(waveforms)
         module_name='__evas_scs_bsource'
         while module_name in models:
@@ -413,7 +458,15 @@ def load_scs(path: str | Path) -> ScsTestbench:
                                   connections=dict(p=nodes[0],n=nodes[1],u=reference.text,g='0'),parameters=dict(offset=offset)))
         sources[generated_path]=generated
         generated_sha256[generated_path]=hashlib.sha256(generated.encode()).hexdigest()
-    available={'0',*waveforms,*[net for i in instances for net in i['connections'].values()]}
+    if zero_current_sources:
+        private_inputs=set(internal_source_nodes)
+        for entry in zero_current_sources:
+            if any(node not in available or node in private_inputs for node in entry['terminals']):
+                location=entry['origin']
+                _fail('zero isource terminals require independently existing VA/source topology; '
+                      'a zero current cannot anchor or create a node',
+                      Token(entry['name'],'name',location['line'],location['column'],location['source']),
+                      unsupported=True)
     # A non-node time selector needs no voltage column: the transient axis is
     # already exported as saved.times. A real electrical node named time still
     # belongs to available and retains its voltage through the normal path.
@@ -430,6 +483,8 @@ def load_scs(path: str | Path) -> ScsTestbench:
                   model_sha256=model_sha256,
                   effective_tolerances=effective,output_grid='union of 0, k*maxstep below stop, stop, source corners within stop',
                   pulse_corner_rounding_seconds=rounding)
+    if zero_current_sources:
+        metadata['zero_current_sources']=zero_current_sources
     if internal_source_nodes:
         metadata['internal_source_nodes']=internal_source_nodes
     if pulse_proofs:

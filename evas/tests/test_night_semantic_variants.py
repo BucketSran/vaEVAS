@@ -216,7 +216,7 @@ class NightSemanticVariants(unittest.TestCase):
                 self.assertEqual(events, renamed_events)
 
     def test_independent_instances_own_inputs_and_order(self):
-        baseline = None
+        baseline, baseline_events = None, None
         for order in (("a", "b"), ("b", "a")):
             with self.subTest(order=order):
                 samples, events = run_probe(separate=True, order=order)

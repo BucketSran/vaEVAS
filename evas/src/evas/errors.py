@@ -17,6 +17,7 @@ RULES = {
     'source_input': ('invalid_input', 'input', 'LANG', 'Use UTF-8 source text.'),
     'parameter_dependency': ('invalid_input', 'binding', 'LANG', 'Use declared, acyclic constant parameter defaults.'),
     'parameter_override': ('invalid_input', 'binding', 'LANG', 'Override declared parameters with finite numeric values.'),
+    'unsupported_held_integer_target': ('unsupported', 'lowering', 'TRANSITION', 'Use only same-owner point integer-state projections or Select in this typed Transition target.'),
     'resource_budget': ('resource', 'compile', 'LANG', 'Reduce compiler expansion or depth; this is an implementation budget.'),
     'compile_error': ('unknown', 'compile', None, None),
     'syntax_error': ('unknown', 'parse', 'LANG', 'Check the supported syntax and the source location.'),

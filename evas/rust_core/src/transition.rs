@@ -235,6 +235,36 @@ fn exact_level(
 }
 
 impl Transition {
+    // Copy accounting only; the existing history/transition algorithm is unchanged.
+    pub(crate) fn charge_held_copy(
+        &self,
+        charge: &impl Fn(usize) -> Result<(), Error>,
+    ) -> Result<(), Error> {
+        fn rational(r: &num_rational::BigRational) -> usize {
+            4 + ((r.numer().bits() + r.denom().bits()) as usize).div_ceil(8)
+        }
+        fn deadline(d: &Deadline) -> usize {
+            12 + d.exact.as_ref().map_or(0, |r| r.copy_items())
+        }
+        charge(16 + self.exact_settled.as_ref().map_or(0, rational))?;
+        if let Some(e) = &self.edge {
+            charge(
+                40 + e
+                    .exact_line
+                    .as_ref()
+                    .map_or(0, |(a, b)| rational(a) + rational(b))
+                    + e.exact_start.as_ref().map_or(0, |r| r.copy_items())
+                    + e.exact_origin.as_ref().map_or(0, rational)
+                    + e.exact_target.as_ref().map_or(0, rational)
+                    + deadline(&e.end),
+            )?;
+        }
+        for (d, _, _, r) in &self.pending {
+            charge(4 + deadline(d) + r.as_ref().map_or(0, rational))?;
+        }
+        Ok(())
+    }
+
     fn exact_at(&self, time: &crate::exact_source::RootTime) -> Option<num_rational::BigRational> {
         use crate::exact_source::Budget;
         if self.pending.front().is_some_and(|(d, _, _, _)| {

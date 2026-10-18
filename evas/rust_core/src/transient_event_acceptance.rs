@@ -2,6 +2,30 @@
 use super::*;
 use crate::schedule::HistoryEpoch;
 
+#[cfg(test)]
+type FinalCandidateHook = Box<dyn FnMut(&mut Frame)>;
+
+#[cfg(test)]
+thread_local! {
+    static FINAL_CANDIDATE_HOOK: std::cell::RefCell<Option<FinalCandidateHook>> =
+        std::cell::RefCell::new(None);
+}
+
+#[cfg(test)]
+pub(super) fn test_with_final_candidate<R>(
+    hook: impl FnMut(&mut Frame) + 'static,
+    body: impl FnOnce() -> R,
+) -> R {
+    struct Restore(Option<FinalCandidateHook>);
+    impl Drop for Restore {
+        fn drop(&mut self) {
+            FINAL_CANDIDATE_HOOK.with(|slot| *slot.borrow_mut() = self.0.take());
+        }
+    }
+    let _restore = Restore(FINAL_CANDIDATE_HOOK.with(|slot| slot.replace(Some(Box::new(hook)))));
+    body()
+}
+
 #[derive(Clone, Copy)]
 pub(super) enum Strategy {
     Static,
@@ -42,13 +66,13 @@ fn observation_seed(
     phase: usize,
     time: f64,
 ) -> Result<Frame, Error> {
-    let mut seed = phases[phase].0.clone();
+    let mut seed = phases[phase].0.candidate_clone()?;
     let mut physical = phase;
     while physical > 0 && passive_batch(model, &phases[physical].1) {
         physical -= 1;
     }
     if physical != phase {
-        seed.operators = phases[physical].0.operators.clone();
+        seed.operators = phases[physical].0.operators.candidate_clone()?;
     }
     seed.operators.rebase_source_observation(time)?;
     Ok(seed)
@@ -141,8 +165,11 @@ impl PreparedEvents {
             CalendarScope::Complete,
         )?;
         let mut phases = vec![
-            (controller.accepted.clone(), Vec::new()),
-            (next.clone(), calendar[controller.event..end].to_vec()),
+            (controller.accepted.candidate_clone()?, Vec::new()),
+            (
+                next.candidate_clone()?,
+                calendar[controller.event..end].to_vec(),
+            ),
         ];
         let mut microevents = 0;
         let mut static_cursor = end;
@@ -215,7 +242,7 @@ impl PreparedEvents {
             next = batch.frame;
             future = batch.future;
             records.extend(batch.records);
-            phases.push((next.clone(), physical_batch));
+            phases.push((next.candidate_clone()?, physical_batch));
             microevents += 1;
         }
         // Prepare every requested phase observation before publication.
@@ -296,6 +323,11 @@ impl Controller {
         calendar: &mut Vec<ScheduledEvent>,
         strategy: Strategy,
     ) -> Result<(), Error> {
+        if let Some(source) = &model.source_context {
+            // A shared event-source quota stays exhausted before a retry can
+            // copy histories or start any other candidate preparation.
+            source.charge(0)?;
+        }
         let prepared = PreparedEvents::prepare(self, model, trajectory, calendar, strategy)?;
         prepared.publish(self, calendar);
         Ok(())
@@ -431,6 +463,12 @@ impl Controller {
         )?;
         // Nonlinear extension can widen the endpoint enclosure. Certify the
         // stored observation against the final history, not just reset closure.
+        #[cfg(test)]
+        FINAL_CANDIDATE_HOOK.with(|slot| {
+            if let Some(hook) = slot.borrow_mut().as_mut() {
+                hook(&mut next);
+            }
+        });
         let inputs = trajectory.value_bounds(next.time);
         let (_, nodes) = model.certify_observation(
             &model.conditions.select(&[], &inputs)?,

@@ -706,6 +706,9 @@ impl Conditions {
             proof_attempts: &mut usize,
             loop_iterations: &mut usize,
         ) -> Result<(), Error> {
+            if let Some(w) = states.floor_work() {
+                crate::event_floor::charge(w, context.node_count + 1, "floor_source_copy")?;
+            }
             let bounds = context.bounds.as_ref();
             let mut numeric_nodes = vec![
                 I {
@@ -719,6 +722,9 @@ impl Conditions {
                 numeric_nodes[node] = value;
             }
             for step in body {
+                if let Some(w) = states.floor_work() {
+                    crate::event_floor::charge(w, 1, "floor_source_ast")?;
+                }
                 match step {
                     Step::ArrayWrite {
                         index,
@@ -783,7 +789,11 @@ impl Conditions {
                         loop {
                             let p = &predicates[*predicate];
                             let value = if p.numeric {
-                                crate::event_numeric::bounds(&p.expression, &numeric_nodes, states)?
+                                crate::event_numeric::bounds_with_proofs(
+                                    &p.expression,
+                                    &numeric_nodes,
+                                    states,
+                                )?
                             } else {
                                 bounds
                                     .unwrap()
@@ -872,7 +882,7 @@ impl Conditions {
                                     "nonfinite prior-assignment bounds",
                                 ));
                             }
-                            states.assign(a.state, &a.expression, &numeric_nodes, value);
+                            states.try_assign(a.state, &a.expression, &numeric_nodes, value)?;
                             written[a.state] = true;
                         }
                     }
@@ -880,7 +890,11 @@ impl Conditions {
                     Step::If { predicate, yes, no } => {
                         let p = &predicates[*predicate];
                         let value = if p.numeric {
-                            crate::event_numeric::bounds(&p.expression, &numeric_nodes, states)?
+                            crate::event_numeric::bounds_with_proofs(
+                                &p.expression,
+                                &numeric_nodes,
+                                states,
+                            )?
                         } else if p.dependencies.state_dependencies.is_empty()
                             && !bounds.unwrap().symbolic(*predicate)
                         {
@@ -898,8 +912,17 @@ impl Conditions {
                                 .checked_value(*predicate, inputs, states, operators)?
                         };
                         let value = if value.sign().is_none() {
-                            states
-                                .value(&p.expression, &numeric_nodes)
+                            let exact = states.try_value(&p.expression, &numeric_nodes)?;
+                            if exact.is_some() {
+                                if let Some(w) = states.floor_work() {
+                                    crate::event_floor::charge(
+                                        w,
+                                        1024,
+                                        "floor_source_exact_enclosure",
+                                    )?;
+                                }
+                            }
+                            exact
                                 .and_then(|v| crate::exact_source::enclosure(&v))
                                 .filter(|v| value.lo <= v.lo && v.hi <= value.hi)
                                 .unwrap_or(value)
@@ -927,8 +950,8 @@ impl Conditions {
                             let mut nd = Vec::new();
                             let mut yo = Vec::new();
                             let mut no_ordered = Vec::new();
-                            let mut ys = states.clone();
-                            let mut ns = states.clone();
+                            let mut ys = states.try_clone()?;
+                            let mut ns = states.try_clone()?;
                             let mut yw = written.to_vec();
                             let mut nw = written.to_vec();
                             let yr = walk(
@@ -1005,6 +1028,7 @@ impl Conditions {
                             {
                                 return Err(original);
                             }
+                            states.prepay_comparison(&ns)?;
                             states.merge(ys, &ns);
                             written.copy_from_slice(&yw);
                             actions.extend(ya);
@@ -1057,7 +1081,7 @@ impl Conditions {
             let mut actions = Vec::new();
             let mut ordered = Vec::new();
             let mut states =
-                crate::event_value_proof::LocalState::with_context(before_bounds, proofs);
+                crate::event_value_proof::LocalState::try_with_context(before_bounds, proofs)?;
             let mut written = vec![false; self.state_count];
             walk(
                 &self.bodies[event],

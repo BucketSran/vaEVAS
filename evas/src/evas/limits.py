@@ -39,7 +39,7 @@ def _children(value):
     return None
 
 
-def check_ir(value, origin=None):
+def check_ir(value, origin=None, *, work=None):
     """Count expanded values/containers without expanding shared objects.
 
     Depth is JSON container depth, counting dataclasses as objects. A cached
@@ -57,11 +57,15 @@ def check_ir(value, origin=None):
     memo, active = {}, set()
     pending = [(value, False)]
     while pending:
+        if work is not None:
+            work("ir_walk", 1)
         item, exiting = pending.pop()
         identity = id(item)
         if identity in memo:
             continue
         children = _children(item)
+        if work is not None and children is not None:
+            work("ir_fields", len(children))
         if children is None:
             memo[identity] = (0, 1)
             continue
@@ -80,3 +84,5 @@ def check_ir(value, origin=None):
             fail(f'expanded IR size limit ({MAX_IR_ITEMS} values/containers) exceeded', code='resource_budget')
         memo[identity] = (depth, size)
         active.remove(identity)
+
+    return memo[id(value)]

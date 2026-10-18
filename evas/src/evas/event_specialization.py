@@ -65,16 +65,9 @@ def parameter_value(expr, parameters, memo):
     return result
 
 
-def audit_event_body(compiler, statements):
+def audit_event_body(compiler, statements, charge_native):
     """Read-only original-tree admission using this instance's bindings/facts."""
     seen = {}
-    work = 0
-
-    def charge_native(item):
-        nonlocal work
-        work += 1
-        if work > MAX_IR_ITEMS:
-            fail("original event audit exceeds expression budget", item, "resource_budget")
     compiler.native_integer_charge = charge_native
 
     def fail(message, item, code="compile_error"):
@@ -228,16 +221,14 @@ def audit_event_body(compiler, statements):
         return value
 
     def shape(root, *, integer_assignment=False, parameter_dead=False):
-        nonlocal work
         pending = [root]
         while pending:
             item = pending.pop()
+            charge_native.extra(item, "source_pop")
             if id(item) in seen:
                 continue
             seen[id(item)] = item
-            work += 1
-            if work > MAX_IR_ITEMS:
-                fail("original event audit exceeds expression budget", item, "resource_budget")
+            charge_native(item, "event_audit")
             if item.op not in VALUE_OPS:
                 message = "event bodies do not support history/operator calls" if item.op in OPERATOR_NAMES else "unsupported event value structure"
                 fail(message, item)
@@ -288,11 +279,8 @@ def audit_event_body(compiler, statements):
         return {"<":a<b, "<=":a<=b, ">":a>b, ">=":a>=b}[statement.relation]
 
     def body(items, parameter_dead=False):
-        nonlocal work
         for statement in items:
-            work += 1
-            if work > MAX_IR_ITEMS:
-                fail("original event audit exceeds statement budget", statement, "resource_budget")
+            charge_native(statement, "event_statement")
             if isinstance(statement, Loop):
                 compiler.validate_runtime_loop(statement)
                 for expr in (statement.start, statement.limit, statement.update):

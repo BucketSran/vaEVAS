@@ -47,7 +47,7 @@ class NativeEventFloor(unittest.TestCase):
         with self.assertRaises(CompileError):program('q=floor(8*V(u,r))&1;')
 
     def test_hidden_state_internal_feedback_and_time_are_not_native_inputs(self):
-        for body in ['q=floor(q+V(u,r));','q=floor(V(y,r));','q=floor(0*V(y,r)+V(u,r));','q=floor($abstime+V(u,r));','q=floor(V(u,r)/3);','q=floor(0.1*V(u,r));']:
+        for body in ['q=floor(q+V(u,r));','q=floor(V(y,r));','q=floor(0*V(y,r)+V(u,r));','q=floor($abstime+V(u,r));']:
             with self.subTest(body=body),self.assertRaises(CompileError):program(body)
 
     def test_floor_keeps_real_division_and_exact_physical_root(self):

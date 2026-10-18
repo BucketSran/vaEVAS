@@ -3,7 +3,7 @@
 Parameter/local/state environments belong to this instance. Global node indices,
 operator/state IDs and output order belong to Compilation; no loop-captured state.
 """
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, field, fields, replace
 import math
 from fractions import Fraction
 from typing import TYPE_CHECKING
@@ -12,6 +12,7 @@ from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contri
                  IntegerPrimitive, IntegerLiteral, IntegerState, ArrayRead, ArrayWrite, CheckedInteger, CheckedIndex, Loop as RuntimeLoop, EventMath, Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
 from .lowering import lower, scale, UnsupportedConstantPower, FiniteIntegerUnavailable
 from .limits import check_ir
+from .integer_invariants import SourceProofRequest
 from .input_rational_scope import input_rational_tree
 from .compact_source_select import compact_source_assignment
 from .integer_prefix import factor_integer_prefix
@@ -19,6 +20,7 @@ from .parameters import bind_parameters
 from .elaboration import unroll_loops
 from .array_elaboration import scalarize_arrays, ARRAY_BUDGET
 from . import event_index_domains, integer_bits, finite_math
+from .native_audit import NativeAudit
 from .rational_predicates import condition_positive_facts, normalize_positive_quotient_comparison
 from .initialization_aliases import bind_initial_voltage_aliases, bind_runtime_voltage_aliases, bind_event_body_aliases
 from .syntax import (CompileError, Model, contains_operator, contains_decision,
@@ -39,6 +41,8 @@ class Compilation:
     operators: list[Transition | AbsDelay | Slew | Idt | LaplaceNd | IdtMod | Sin | MathFunction | Ddt] = field(default_factory=list)
     step_bounds: list[StepBound] = field(default_factory=list)
     initial_math_work: int = 100_000
+    native_audit: NativeAudit = field(default_factory=NativeAudit)
+    integer_proof_owner: object = field(default_factory=SourceProofRequest)
     indices: dict[str, int] = field(init=False)
     source_rational_origins: list[Origin] = field(default_factory=list)
     source_rational_nodes: set[int] = field(default_factory=lambda: {0})
@@ -48,9 +52,12 @@ class Compilation:
         self.indices = {name: i for i, name in enumerate(self.nodes)}
 
     def program(self) -> Program:
+        self.native_audit.debit("program_copy",5+len(self.contributions)+len(self.states)+len(self.events)+len(self.operators)+len(self.step_bounds))
+        self.native_audit.debit("emit_field",len(fields(Program)))
         result = Program(self.nodes, tuple(self.contributions), tuple(self.states), tuple(self.events), tuple(self.operators),
                          step_bounds=tuple(self.step_bounds))
-        check_ir(result)
+        check_ir(result, work=self.native_audit.ir_work)
+        object.__setattr__(result, "_native_audit", self.native_audit)
         if self.source_rational_origins:
             trees = [input_rational_tree(c.rhs, self.source_rational_nodes) for c in result.contributions]
             if (result.states or result.events or result.operators or result.step_bounds
@@ -99,6 +106,17 @@ def _predicate_degree(expression, memo=None):
 
 
 class InstanceCompiler:
+    def scale_ir(self, expression, factor):
+        return scale(expression, factor, work=self.compilation.native_audit.ir_work)
+
+    def make_ir(self, cls, *args, **kwargs):
+        # Debit before constructing the dataclass; native/event/target emission
+        # all use the same explicit Compilation owner, including failed tries.
+        owner = self.compilation.native_audit
+        owner.debit("emit_object")
+        owner.debit("emit_field",len(fields(cls)))
+        return cls(*args, **kwargs)
+
     def __init__(self, instance: "Instance", model: Model, nets: dict[str, str], compilation: Compilation, *,
                  source_model: Model | None = None):
         self.instance = instance
@@ -221,17 +239,18 @@ class InstanceCompiler:
         from .event_specialization import audit_event_body, specialize_event_body
         self.array_audit_dispatch_leaves = 0
         native_allowances = {}
-        for event in self.model.events:
+        for event_index, event in enumerate(self.model.events):
             self.active_event_aliases = self.aliases_at(event.token, body=True)
             self.runtime_event_checks = self.checked_event_context(event)
-            native_allowances[id(event)] = audit_event_body(self, event.body)
+            view = self.compilation.native_audit.event_view((self.instance.name, event_index))
+            native_allowances[id(event)] = audit_event_body(self, event.body, view)
         for event in self.model.events:
             self.active_event_aliases = self.aliases_at(event.token)
             self.runtime_event_checks = self.checked_event_context(event)
             self.native_integer_charge = native_allowances[id(event)]
             triggers = tuple(self.trigger(leaf) for leaf in event.triggers)
-            event_trigger = triggers[0] if len(triggers) == 1 else OrTrigger(triggers)
-            origin = Origin(event.token.source or self.model.source, event.token.line, event.token.column, self.instance.name, event.token.expansion)
+            event_trigger = triggers[0] if len(triggers) == 1 else self.make_ir(OrTrigger, triggers)
+            origin = self.make_ir(Origin, event.token.source or self.model.source, event.token.line, event.token.column, self.instance.name, event.token.expansion)
             def retained(body):
                 if self.event_reachable_statements is None:
                     return body
@@ -240,7 +259,7 @@ class InstanceCompiler:
                              for item in body if id(item) in self.event_reachable_statements)
             execution = specialize_event_body(retained(event.body), self.cache)
             self.active_event_aliases = self.aliases_at(event.token, body=True)
-            self.compilation.events.append(Event(event_trigger, self.body(execution), origin))
+            self.compilation.events.append(self.make_ir(Event, event_trigger, self.body(execution), origin))
         self.active_event_aliases = {}
         statements = unroll_loops(self.model, self.parameter)
         self.validate_branch_presence(statements)
@@ -365,7 +384,7 @@ class InstanceCompiler:
     def initialize_states(self):
         # Initial procedural execution uses a symbolic environment. Each write
         # replaces the previous value, and branch merges preserve source order.
-        env = {name: Affine(0., ()) for name in self.state_names}
+        env = {name: self.make_ir(Affine, 0., ()) for name in self.state_names}
         # All explicit seeds have been validated before initial_step can
         # overwrite them. This environment belongs to only this instance.
         env.update(self.declaration_initials)
@@ -437,11 +456,11 @@ class InstanceCompiler:
                         value = lower(argument, resolve(values, aliases), self.node_ids, self.model.source,
                                       preserve_structure=True, decisions=self.initial_select,
                                       validate_decision=self.validate_initial_operand, node_declarations=True)
-                        arguments.append(Affine(constant_snapshot(value), ()))
-                    origin = Origin(statement.token.source or self.model.source, statement.token.line,
+                        arguments.append(self.make_ir(Affine, constant_snapshot(value), ()))
+                    origin = self.make_ir(Origin, statement.token.source or self.model.source, statement.token.line,
                                     statement.token.column, self.instance.name, statement.token.expansion)
                     if active:
-                        snapshots.append(Display(statement.format, tuple(arguments), origin))
+                        snapshots.append(self.make_ir(Display, statement.format, tuple(arguments), origin))
                 else:
                     if not isinstance(statement, SyntaxAssignment) or statement.name not in self.state_ids:
                         raise CompileError("initial_step requires declared state assignments")
@@ -487,14 +506,14 @@ class InstanceCompiler:
                                code='unsupported_initial_event', token=token,
                                instance=self.instance.name) from exc
         if snapshots:
-            self.compilation.events.append(Event(InitialStepTrigger(), tuple(snapshots), snapshots[0].origin))
+            self.compilation.events.append(self.make_ir(Event, self.make_ir(InitialStepTrigger, ), tuple(snapshots), snapshots[0].origin))
         for name, value in env.items():
             if isinstance(value, Affine) and not value.terms:
                 value = value.constant
                 if self.model.variables[name] == "integer" and not -2147483648 <= value <= 2147483647:
                     raise CompileError("integer initialization must be an exact signed 32-bit integer")
             self.initials[name] = value
-        self.compilation.states.extend(State(self.instance.name, name, self.model.variables[name], self.initials[name]) for name in self.state_names)
+        self.compilation.states.extend(self.make_ir(State, self.instance.name, name, self.model.variables[name], self.initials[name]) for name in self.state_names)
 
     def validate_initial_operand(self, expr, value):
         # Check all lowered function obligations, including dead branches.
@@ -506,10 +525,10 @@ class InstanceCompiler:
     def initial_select(self, expr, relation, left, right, then_value, else_value):
         self.validate_initial_operand(expr, left)
         self.validate_initial_operand(expr, right)
-        origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column,
+        origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line, expr.token.column,
                         self.instance.name, expr.expansion)
-        result = Select(relation, left, right, then_value, else_value, origin)
-        check_ir(result, origin)
+        result = self.make_ir(Select, relation, left, right, then_value, else_value, origin)
+        self.checked_ir(result, origin)
         return result
 
     def parameter(self, name):
@@ -529,7 +548,7 @@ class InstanceCompiler:
         if name in self.local_variables:
             raise CompileError(f"{self.model.source}: event expressions cannot read ordinary analog local variable {name!r}; use direct input or persistent state expressions",
                                code='unsupported_local_event', instance=self.instance.name)
-        return StateRef(self.state_ids[name]) if name in self.state_ids else self.parameter(name)
+        return self.make_ir(StateRef, self.state_ids[name]) if name in self.state_ids else self.parameter(name)
 
     def event_parameter(self, name):
         # Conditions and settings keep their constant-only/state-independent
@@ -549,16 +568,18 @@ class InstanceCompiler:
         typed = self.typed_resolve(resolve, allow_integer_assignment_root=assignment_root)
         typed.sampled_values = sampled_values
         if (event_values or sampled_values) and hasattr(self, 'native_integer_charge'):
-            typed.native_integer = lambda item: self.native_event_integer(item, resolve)
+            native_charge = self.native_integer_charge
+            typed.native_integer = lambda item: self.native_event_integer(item, resolve, native_charge)
         if event_values or sampled_values:
             typed.finite_floor = lambda item, argument: self.finite_floor(item, argument, native=True)
+            typed.source_floor = lambda item, lower_operand: self.source_floor(item, lower_operand, resolve)
         if event_values:
             if getattr(self, "runtime_event_checks", False) and not static_integer_audit:
                 typed.validate_integer_operation = self.checked_event_integer
             def math_value(item, args):
-                origin = Origin(item.token.source or self.model.source, item.token.line,
+                origin = self.make_ir(Origin, item.token.source or self.model.source, item.token.line,
                     item.token.column, self.instance.name, item.expansion)
-                return EventMath(item.op, args, origin)
+                return self.make_ir(EventMath, item.op, args, origin)
             typed.event_math = math_value
             kwargs["decisions"] = self.event_select
             kwargs.pop("validate_decision", None)
@@ -575,13 +596,14 @@ class InstanceCompiler:
             raise
 
     def event_select(self, expr, relation, left, right, yes, no):
-        origin = Origin(expr.token.source or self.model.source, expr.token.line,
+        origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line,
                         expr.token.column, self.instance.name, expr.expansion)
-        result = Select(relation, left, right, yes, no, origin)
-        check_ir(result, origin)
+        result = self.make_ir(Select, relation, left, right, yes, no, origin)
+        self.checked_ir(result, origin)
         return result
 
     def integral(self, expression):
+        self.compilation.native_audit.extra(expression, "integral_visit")
         # Do not introduce an implicit real-to-integer rounding rule.
         if isinstance(expression, Affine):
             return not expression.terms and expression.constant.is_integer()
@@ -600,6 +622,7 @@ class InstanceCompiler:
         return isinstance(expression, Binary) and expression.op in ("add", "multiply") and self.integral(expression.left) and self.integral(expression.right)
 
     def integral_bounds(self, expression):
+        self.compilation.native_audit.extra(expression, "bound_visit")
         if isinstance(expression, IntegerPrimitive):
             if expression.function == 'remainder':
                 divisor = expression.args[1]
@@ -609,7 +632,7 @@ class InstanceCompiler:
                 return -width + 1, width - 1
             return -2147483648, 2147483647
         if isinstance(expression, ArrayRead):
-            bounds = [self.integral_bounds(StateRef(state)) for state in expression.states]
+            bounds = [self.integral_bounds(self.make_ir(StateRef, state)) for state in expression.states]
             return min(a for a,b in bounds), max(b for a,b in bounds)
         if isinstance(expression, CheckedInteger):
             low, high = self.integral_bounds(expression.value)
@@ -673,13 +696,14 @@ class InstanceCompiler:
         if not state_dependent:
             self.validate_integer_operation(expr, value, root=root)
             return None
-        origin = Origin(expr.token.source or self.model.source, expr.token.line,
+        origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line,
                         expr.token.column, self.instance.name, expr.expansion)
-        return CheckedInteger(value, origin)
+        return self.make_ir(CheckedInteger, value, origin)
 
     def typed_resolve(self, resolve, *, allow_integer_assignment_root=False):
         def lookup(name):
             return resolve(name)
+        lookup.native_work = lambda kind, amount: self.compilation.native_audit.debit(kind,amount)
         lookup.integer_arithmetic = self.integer_arithmetic
         lookup.integer_bitwise = self.integer_bitwise
         lookup.finite_power = self.finite_power
@@ -701,7 +725,7 @@ class InstanceCompiler:
         if not self.integer_type(expr.args[1]) or not self.integral(exponent):
             return None
         bounds = self.integral_bounds(exponent)
-        origin = Origin(expr.token.source or self.model.source, expr.token.line,
+        origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line,
                         expr.token.column, self.instance.name, expr.expansion)
         try:
             result = finite_math.power(base, exponent, bounds, origin)
@@ -712,13 +736,17 @@ class InstanceCompiler:
             self.expression_decision_origins.add(origin)
         return result
 
+    def source_floor(self, expr, lower_operand, resolve):
+        from .source_floor_event import source_floor
+        return source_floor(self, expr, lower_operand, resolve)
+
     def finite_floor(self, expr, argument, *, native=False):
         from .finite_floor import floor_table
         if (_predicate_degree(argument) is None
                 or not self.expression_nodes(argument).issubset(self.allowed_condition_nodes)):
             raise CompileError('floor requires a source-clamped piecewise-affine input expression',
                                code='unsupported_floor', token=expr.token, instance=self.instance.name)
-        origin = Origin(expr.token.source or self.model.source, expr.token.line,
+        origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line,
                         expr.token.column, self.instance.name, expr.expansion)
         fact = getattr(self, 'event_floor_range_facts', {}).get(id(expr))
         state_bounds = ({self.state_ids[name]: bounds for name, bounds in fact[1].items()}
@@ -754,7 +782,7 @@ class InstanceCompiler:
                 return isinstance(value, Power) and value.exponent == 1 and affine_input(value.base)
             if not source_input(expr.args[0]) or not affine_input(argument):
                 raise error
-            result = EventMath('floor', (argument,), origin)
+            result = self.make_ir(EventMath, 'floor', (argument,), origin)
         if isinstance(result, Select):
             self.expression_decision_origins.add(origin)
         return result
@@ -792,7 +820,8 @@ class InstanceCompiler:
 
     def integer_type(self, expr):
         return integer_bits.integer_type(expr, self.model.variables,
-                                         self.model.parameter_types, self.model.genvars)
+                                         self.model.parameter_types, self.model.genvars,
+                                         visit=lambda item: self.compilation.native_audit.extra(item, "typing_visit"))
 
     def infer_integer_state_ranges(self):
         # Only state-independent writers tighten a declaration's full domain.
@@ -830,7 +859,7 @@ class InstanceCompiler:
                 continue
             state = self.state_ids[name]
             initial = self.initials[name]
-            initial = Affine(initial, ()) if isinstance(initial, (int, float)) else initial
+            initial = self.make_ir(Affine, initial, ()) if isinstance(initial, (int, float)) else initial
             bounds = [self.integral_bounds(initial)]
             for targets, rhs in writers:
                 if name not in targets:
@@ -886,7 +915,7 @@ class InstanceCompiler:
             return None
         code = "unsupported_integer_bitwise" if has_bits else "unsupported_integer_arithmetic"
         context = "bitwise" if has_bits else "integer arithmetic"
-        origin = Origin(expr.token.source or self.model.source, expr.token.line,
+        origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line,
                         expr.token.column, self.instance.name, expr.expansion)
         options = dict(options)
         options.pop("memo", None)  # A binding owns its memo; never reuse across rows.
@@ -922,7 +951,7 @@ class InstanceCompiler:
                 if constant and self.integral(value):
                     low, high = self.integral_bounds(value)
                     if low == high and -2147483648 <= low <= 2147483647:
-                        return Affine(float(low), ())
+                        return self.make_ir(Affine, float(low), ())
                 raise CompileError("finite integer binding did not produce proven constant integer IR",
                     code=code, token=expr.token,
                     instance=self.instance.name)
@@ -934,14 +963,14 @@ class InstanceCompiler:
                 if first == last:
                     return leaf(first)
                 middle = (first + last + 1) // 2
-                return Select("lt", state, Affine(float(middle), ()),
+                return self.make_ir(Select, "lt", state, self.make_ir(Affine, float(middle), ()),
                               split(first, middle - 1), split(middle, last), origin)
             if low == high:
                 value = leaf(low)
-                return Select("lt", state, Affine(low + 0.5, ()), value, value, origin)
+                return self.make_ir(Select, "lt", state, self.make_ir(Affine, low + 0.5, ()), value, value, origin)
             return split(low, high)
         value = table(0, {})
-        check_ir(value, origin)
+        self.checked_ir(value, origin)
         self.expression_decision_origins.add(origin)
         return value
 
@@ -984,19 +1013,22 @@ class InstanceCompiler:
         if expr.op in ("<<", ">>") and not isinstance(values[1], Affine):
             fail("bitwise shift count requires an instance-constant integer")
         if not integer_bits.small_domain(bounds):
+            if expr.op in (">>", "&"):
+                raise FiniteIntegerUnavailable("bounded integer bitwise operation exceeds finite-domain budget (256)",
+                    code="unsupported_integer_bitwise", token=expr.token, instance=self.instance.name)
             fail("bounded integer bitwise operation exceeds finite-domain budget (256)")
-        origin = Origin(expr.token.source or self.model.source, expr.token.line,
+        origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line,
                         expr.token.column, self.instance.name, expr.expansion)
         if len(values) == 2:
             from .finite_floor import map_integer_leaves
             mapped = map_integer_leaves(values[0], expr.op, values[1])
             if mapped is not None:
-                check_ir(mapped, origin)
+                self.checked_ir(mapped, origin)
                 self.expression_decision_origins.add(origin)
                 return mapped
         def tree(operand, args):
             if operand == len(values):
-                return Affine(float(integer_bits.evaluate(expr.op, *args)), ())
+                return self.make_ir(Affine, float(integer_bits.evaluate(expr.op, *args)), ())
             low, high = bounds[operand]
             if low == high:
                 value = tree(operand + 1, args + [low])
@@ -1005,36 +1037,39 @@ class InstanceCompiler:
                 # Range proof does not erase an original source read, even
                 # when every successful value is the same integer. The kernel
                 # retains predicate reads for equivalent Select arms.
-                return Select("lt", values[operand], Affine(low + 0.5, ()), value, value, origin)
+                return self.make_ir(Select, "lt", values[operand], self.make_ir(Affine, low + 0.5, ()), value, value, origin)
             def split(first, last):
                 if first == last:
                     return tree(operand + 1, args + [first])
                 middle = (first + last + 1) // 2
-                return Select("lt", values[operand], Affine(float(middle), ()),
+                return self.make_ir(Select, "lt", values[operand], self.make_ir(Affine, float(middle), ()),
                               split(first, middle - 1), split(middle, last), origin)
             return split(low, high)
         value = tree(0, [])
-        check_ir(value, origin)
+        self.checked_ir(value, origin)
         if any(low != high for low, high in bounds):
             self.expression_decision_origins.add(origin)
         return value
 
-    def native_event_integer(self, expr, resolve):
+    def checked_ir(self, value, origin=None):
+        return check_ir(value, origin, work=self.compilation.native_audit.ir_work)
+
+    def native_event_integer(self, expr, resolve, charge):
         # This is called only after the original route classified a finite
         # representation failure. One bottom-up visit types each source node;
         # no domain enumeration, child retyping, or folded arithmetic inputs.
         def build(item):
-            self.native_integer_charge(item)
+            charge(item)
             if item.op == 'number':
-                if not integer_bits.integer_type(item, self.model.variables, self.model.parameter_types, self.model.genvars):
+                if not integer_bits.integer_type(item, self.model.variables, self.model.parameter_types, self.model.genvars, visit=lambda leaf: charge.extra(leaf, "typing_visit")):
                     return None
                 number = item.value
             elif item.op == 'parameter':
-                if not integer_bits.integer_type(item, self.model.variables, self.model.parameter_types, self.model.genvars):
+                if not integer_bits.integer_type(item, self.model.variables, self.model.parameter_types, self.model.genvars, visit=lambda leaf: charge.extra(leaf, "typing_visit")):
                     return None
                 value = resolve(item.value)
                 if isinstance(value, StateRef):
-                    return IntegerState(value.state)
+                    return self.make_ir(IntegerState, value.state)
                 if isinstance(value, Affine) and not value.terms:
                     number = value.constant
                 elif isinstance(value, (int, float)):
@@ -1046,36 +1081,41 @@ class InstanceCompiler:
                 if not isinstance(value, IntegerLiteral):
                     return None
                 number = value.value if item.op == 'unary+' else -value.value
-            elif item.op in ('+', '-', '%'):
+            elif item.op in ('+', '-', '%', '>>', '&'):
+                charge.extra(item, "emit_tuple", 1 + len(item.args))
                 values = tuple(build(arg) for arg in item.args)
                 if any(value is None for value in values):
                     return None
                 if item.op == '%' and isinstance(values[1], IntegerLiteral) and values[1].value == 0:
                     raise CompileError('integer division/modulo requires a nonzero divisor', token=item.token)
-                origin = Origin(item.token.source or self.model.source, item.token.line,
+                if item.op == '>>' and not isinstance(values[1], IntegerLiteral):
+                    return None
+                origin = self.make_ir(Origin, item.token.source or self.model.source, item.token.line,
                                 item.token.column, self.instance.name, item.expansion)
                 if all(isinstance(value, IntegerLiteral) for value in values):
                     a, b = (value.value for value in values)
-                    self.native_integer_charge(item)
+                    charge(item)
                     if item.op == '+':
                         number = a+b
                     elif item.op == '-':
                         number = a-b
+                    elif item.op in ('>>', '&'):
+                        number = integer_bits.evaluate(item.op, a, b)
                     else:
                         if a == -2147483648 and b == -1:
                             raise CompileError('integer quotient may exceed signed 32-bit range', token=item.token)
                         magnitude = abs(a)//abs(b)
                         number = a - (-magnitude if (a<0)!=(b<0) else magnitude)*b
                 else:
-                    return IntegerPrimitive({'+': 'add', '-': 'subtract', '%': 'remainder'}[item.op], values, origin)
+                    return self.make_ir(IntegerPrimitive, {'+': 'add', '-': 'subtract', '%': 'remainder', '>>': 'shift_right', '&': 'bit_and'}[item.op], values, origin)
             else:
                 return None
             if not math.isfinite(number) or int(number) != number or not -2147483648 <= number <= 2147483647:
                 raise CompileError('integer intermediate may exceed signed 32-bit range', token=item.token)
-            return IntegerLiteral(int(number))
+            return self.make_ir(IntegerLiteral, int(number))
         value = build(expr)
         if isinstance(value, IntegerPrimitive):
-            check_ir(value, value.origin)
+            self.checked_ir(value, getattr(value, "origin", None))
             return value
         return None
 
@@ -1113,22 +1153,22 @@ class InstanceCompiler:
         if last-first+1 > 256:
             raise FiniteIntegerUnavailable("bounded integer division/modulo exceeds quotient-bin budget (256)",
                 code="unsupported_integer_arithmetic", token=expr.token, instance=self.instance.name)
-        origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column,
+        origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line, expr.token.column,
                         self.instance.name, expr.expansion)
         def tree(start, end):
             if start == end:
-                return Affine(float(start), ())
+                return self.make_ir(Affine, float(start), ())
             middle = (start+end+1)//2
             boundary = middle*width if middle > 0 else (middle-1)*width+1
-            return Select("lt", numerator, Affine(float(boundary), ()),
+            return self.make_ir(Select, "lt", numerator, self.make_ir(Affine, float(boundary), ()),
                           tree(start, middle-1), tree(middle, end), origin)
         self.expression_decision_origins.add(origin)
         value = tree(first, last)
         if divisor < 0:
-            value = scale(value, -1.)
+            value = self.scale_ir(value, -1.)
         if expr.op == "%":
-            value = Binary("add", numerator, scale(value, -float(divisor)))
-        check_ir(value, origin)
+            value = self.make_ir(Binary, "add", numerator, self.scale_ir(value, -float(divisor)))
+        self.checked_ir(value, origin)
         return value
 
     def _declared_elements(self):
@@ -1159,8 +1199,10 @@ class InstanceCompiler:
         bodies = [event.body for event in self.model.events]
         def parameters(name):
             return self.parameter(name)
+        from .integer_invariants import proof_parameters
         from .event_real_ranges import integer_floor_bounds
         parameters.real_floor_bounds = lambda expr: integer_floor_bounds(self.event_floor_range_facts, expr)
+        inference_parameters = proof_parameters(parameters, self.compilation.integer_proof_owner.instance())
         def location_of(token):
             return f"{token.source or self.model.source}:{token.line}:{token.column}"
         from .integer_invariants import ProofBudgetExceeded
@@ -1168,8 +1210,10 @@ class InstanceCompiler:
             try:
                 domains, _widened = event_index_domains.entry_domains(
                     bodies, initial, arrays=self.array_elements,
-                    parameters=parameters, states=states)
+                    parameters=inference_parameters, states=states)
             except ProofBudgetExceeded:
+                if self.compilation.integer_proof_owner.active:
+                    self.compilation.integer_proof_owner._check()
                 # Range inference is optional. Exhaustion proves no finite
                 # invariant and must not reject an otherwise valid old model
                 # or restart the candidate search with a fresh allowance.
@@ -1229,29 +1273,29 @@ class InstanceCompiler:
                 raise CompileError(f'{location}: dynamic {access} index of {array!r} is not provably within '
                                    f'[{low}:{high}]; interval [{facts.index[0]},{facts.index[1]}]',
                                    code='array_index_range', token=token, instance=self.instance.name)
-            origin = Origin(token.source or self.model.source, token.line, token.column,
+            origin = self.make_ir(Origin, token.source or self.model.source, token.line, token.column,
                             self.instance.name, token.expansion)
-            return CheckedIndex(value, low, high, origin)
+            return self.make_ir(CheckedIndex, value, low, high, origin)
         return value
 
     def _array_read_tree(self, array, elements, index_value, token, *, register=True):
         """Complete balanced Select over every declared slot (no fallback arm)."""
-        origin = Origin(token.source or self.model.source, token.line, token.column,
+        origin = self.make_ir(Origin, token.source or self.model.source, token.line, token.column,
                         self.instance.name, token.expansion)
         if self.compact_event_candidate():
-            return ArrayRead(tuple(self.state_ids[f'{array}[{k}]'] for k in elements),
+            return self.make_ir(ArrayRead, tuple(self.state_ids[f'{array}[{k}]'] for k in elements),
                              index_value, elements[0], elements[-1], origin)
         def tree(items):
             if len(items) == 1:
-                return StateRef(self.state_ids[f'{array}[{items[0]}]'])
+                return self.make_ir(StateRef, self.state_ids[f'{array}[{items[0]}]'])
             middle = len(items) // 2
             boundary = items[middle - 1] + 0.5
-            return Select("lt", index_value, Affine(boundary, ()),
+            return self.make_ir(Select, "lt", index_value, self.make_ir(Affine, boundary, ()),
                           tree(items[:middle]), tree(items[middle:]), origin)
         result = tree(elements)
         if len(elements) == 1 and isinstance(index_value, CheckedIndex):
-            result = Select("lt", index_value, Affine(elements[0]+0.5, ()), result, result, origin)
-        check_ir(result, origin)
+            result = self.make_ir(Select, "lt", index_value, self.make_ir(Affine, elements[0]+0.5, ()), result, result, origin)
+        self.checked_ir(result, origin)
         if register:
             self.expression_decision_origins.add(origin)
         return result
@@ -1293,7 +1337,7 @@ class InstanceCompiler:
                 raise CompileError('dynamic array dispatch budget (4096 leaves) exceeded',
                                    code='resource_budget', token=statement.token,
                                    instance=self.instance.name)
-            return (ArrayWrite(tuple(self.state_ids[f'{array}[{k}]'] for k in elements),
+            return (self.make_ir(ArrayWrite, tuple(self.state_ids[f'{array}[{k}]'] for k in elements),
                                index_value, value, elements[0], elements[-1], origin),)
         def dispatch(items):
             if len(items) == 1:
@@ -1305,15 +1349,64 @@ class InstanceCompiler:
                 return self.event_assignment(self.state_ids[f'{array}[{items[0]}]'], value, origin)
             middle = len(items) // 2
             boundary = items[middle - 1] + 0.5
-            return (Conditional("lt", index_value, Affine(boundary, ()),
+            return (self.make_ir(Conditional, "lt", index_value, self.make_ir(Affine, boundary, ()),
                                 tuple(dispatch(items[:middle])), tuple(dispatch(items[middle:])), origin),)
         result = dispatch(elements)
         if len(elements) == 1 and isinstance(index_value, CheckedIndex):
-            result = (Conditional("lt", index_value, Affine(elements[0]+0.5, ()), result, result, origin),)
+            result = (self.make_ir(Conditional, "lt", index_value, self.make_ir(Affine, elements[0]+0.5, ()), result, result, origin),)
         return result
+
+    def held_integer_source_charge(self, root, resolve):
+        # This is entered only from a known finite-representation failure in
+        # a Transition input. One real aggregate owner covers source audit,
+        # delegated typing, emission, fallback and subsequent wire copies.
+        from .native_audit import Charge
+        charge = Charge(self.compilation.native_audit, None)
+        pending, found = [root], False
+        allowed = {"number", "parameter", "+", "-", "*", ">>", "&", "unary+", "unary-",
+                   "<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!", "ternary"}
+        while pending:
+            item = pending.pop()
+            charge.extra(item, "target_ast")
+            if item.op in (">>", "&") and not found:
+                self.compilation.native_audit.activate(item)
+                found = True
+            if item.op not in allowed:
+                raise CompileError("typed held Transition target must be a pure integer-state projection/Select",
+                                   code="unsupported_held_integer_target", token=item.token)
+            if item.op == "parameter":
+                name = str(item.value)
+                value = resolve(name)
+                # Parameter binding already checked the original dependency tree,
+                # overrides and finiteness. Match lower()'s numeric-constant IR
+                # representation without admitting numeric state/local aliases.
+                if (name in self.model.parameters and type(value) in (int, float)
+                        and math.isfinite(value)):
+                    value = self.make_ir(Affine, float(value), ())
+                if isinstance(value, StateRef):
+                    state = self.compilation.states[value.state]
+                    if state.kind != "integer" or state.instance != self.instance.name:
+                        raise CompileError("typed held Transition target requires same-owner integer state",
+                                           code="unsupported_held_integer_target", token=item.token)
+                elif not isinstance(value, Affine) or value.terms or not math.isfinite(value.constant):
+                    raise CompileError("typed held Transition target aliases must be finite constants",
+                                       code="unsupported_held_integer_target", token=item.token)
+            pending.extend(item.args)
+        return charge if found else None
 
     def waveform(self, expr, resolve):
         resolve = self.typed_resolve(resolve)
+        target_charge = None
+        target_checked = False
+        if expr.op == "transition":
+            def native_target(item):
+                nonlocal target_charge, target_checked
+                if not target_checked:
+                    target_charge = self.held_integer_source_charge(expr.args[0], resolve)
+                    target_checked = True
+                return (self.native_event_integer(item, resolve, target_charge)
+                        if target_charge is not None else None)
+            resolve.native_integer = native_target
         if expr.op == "laplace_np" and len(expr.args) != 3:
             raise CompileError(f"{self.model.source}:{expr.token.line}:{expr.token.column}: laplace_np epsilon is unsupported; omit the tolerance argument")
         input_nodes = self.node_ids
@@ -1321,10 +1414,23 @@ class InstanceCompiler:
             if nested.op != expr.op:
                 raise CompileError(f"{expr.op} nesting is limited to fixed {expr.op} stages")
             return self.waveform(nested, resolve)
+        def target_select(item, relation, left, right, yes, no):
+            if target_charge is None:
+                return self.expression_select(item, relation, left, right, yes, no)
+            origin = self.make_ir(Origin, item.token.source or self.model.source,
+                item.token.line, item.token.column, self.instance.name, item.expansion)
+            value = self.make_ir(Select, relation, left, right, yes, no, origin)
+            self.checked_ir(value, origin)
+            return value
+        def target_decision(item, value):
+            if target_charge is None:
+                self.validate_decision_expression(item, value)
+            else:
+                self.checked_ir(value, getattr(value, "origin", None))
         value = lower(expr.args[0], resolve, input_nodes, self.model.source,
                   (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "cos", "exp", "ln", "sqrt", "tanh", "idt", "laplace_nd", "laplace_np", "ddt") else nested_fixed if expr.op in ("absdelay", "slew") else None,
-                      preserve_structure=True, decisions=self.expression_select,
-                      validate_decision=self.validate_decision_expression, node_declarations=True)
+                      preserve_structure=True, decisions=target_select,
+                      validate_decision=target_decision, node_declarations=True)
         if expr.op in ("laplace_nd", "laplace_np"):
             def coefficients(array):
                 if array.op != "array":
@@ -1369,30 +1475,30 @@ class InstanceCompiler:
             settings = [setting(arg) for arg in setting_args]
             if any(not isinstance(v, Affine) or v.terms for v in settings):
                 raise CompileError(f"{expr.op} settings must be instance constants")
-        origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
+        origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
         index = len(self.compilation.operators)
         if expr.op == "idt":
             reset = lower(expr.args[2], resolve, {}, self.model.source, preserve_structure=True) if len(expr.args) == 3 else None
-            self.compilation.operators.append(Idt(value, settings[0].constant, origin, reset))
+            self.compilation.operators.append(self.make_ir(Idt, value, settings[0].constant, origin, reset))
         elif expr.op == "ddt":
-            self.compilation.operators.append(Ddt(value, origin))
+            self.compilation.operators.append(self.make_ir(Ddt, value, origin))
         elif expr.op in ("laplace_nd", "laplace_np"):
-            self.compilation.operators.append(LaplaceNd(value, numerator, denominator, origin))
+            self.compilation.operators.append(self.make_ir(LaplaceNd, value, numerator, denominator, origin))
         elif expr.op == "idtmod":
             ic, modulus = (v.constant for v in settings[:2])
             offset = settings[2].constant if len(settings) == 3 else 0.0
             if modulus <= 0:
                 raise CompileError("idtmod requires positive explicit modulus")
-            self.compilation.operators.append(IdtMod(value, ic, modulus, offset, origin))
+            self.compilation.operators.append(self.make_ir(IdtMod, value, ic, modulus, offset, origin))
         elif expr.op == "sin":
-            self.compilation.operators.append(Sin(value, origin))
+            self.compilation.operators.append(self.make_ir(Sin, value, origin))
         elif expr.op in ("cos", "exp", "ln", "sqrt", "tanh"):
-            self.compilation.operators.append(MathFunction(expr.op, value, origin))
+            self.compilation.operators.append(self.make_ir(MathFunction, expr.op, value, origin))
         elif expr.op == "absdelay":
             delay = settings[0].constant
             if delay < 0:
                 raise CompileError("absdelay requires nonnegative delay; zero is an EVAS extension")
-            self.compilation.operators.append(AbsDelay(value, delay, origin))
+            self.compilation.operators.append(self.make_ir(AbsDelay, value, delay, origin))
         elif expr.op == "transition":
             def continuous_value(item):
                 if isinstance(item, Affine):
@@ -1433,24 +1539,24 @@ class InstanceCompiler:
                 raise CompileError("transition requires nonnegative delay and positive explicit edge times",
                                    code='unsupported_transition_zero_edges', token=expr.token,
                                    instance=self.instance.name)
-            self.compilation.operators.append(Transition(value, delay, rise, fall, origin))
+            self.compilation.operators.append(self.make_ir(Transition, value, delay, rise, fall, origin))
         elif expr.op == "slew":
             rise = settings[0].constant
             fall = settings[1].constant if len(settings) == 2 else -rise
             if rise <= 0 or fall >= 0:
                 raise CompileError("slew requires explicit rise > 0 and fall < 0")
-            self.compilation.operators.append(Slew(value, rise, fall, origin))
+            self.compilation.operators.append(self.make_ir(Slew, value, rise, fall, origin))
         else:
             raise CompileError(f"unsupported waveform operator {expr.op!r}")
-        return OperatorRef(index)
+        return self.make_ir(OperatorRef, index)
 
     def trigger(self, leaf):
         if leaf.kind == "initial_step":
             if self.model.children:
                 raise CompileError("initial display events require a passive monitor without child instances", token=leaf.token)
-            return InitialStepTrigger()
+            return self.make_ir(InitialStepTrigger, )
         if leaf.kind == "final_step":
-            return FinalStepTrigger()
+            return self.make_ir(FinalStepTrigger, )
         if leaf.kind == 'timer':
             pending = [arg for arg in leaf.arguments if arg is not None]
             while pending:
@@ -1475,7 +1581,7 @@ class InstanceCompiler:
             direction, time_tol, expr_tol = settings
             if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
                 raise CompileError("cross requires direction -1/0/1 and positive tolerances")
-            result = CrossTrigger(self.lower_event(leaf.arguments[0], self.symbol, self.node_ids, lambda expr: self.waveform(expr, self.symbol), preserve_structure=True, node_declarations=True),
+            result = self.make_ir(CrossTrigger, self.lower_event(leaf.arguments[0], self.symbol, self.node_ids, lambda expr: self.waveform(expr, self.symbol), preserve_structure=True, node_declarations=True),
                                    int(direction), time_tol, expr_tol)
         else:
             # Lower optional source arguments into the existing explicit IR.
@@ -1485,19 +1591,19 @@ class InstanceCompiler:
             time_tol = 1e-12 if tolerance_arg is None else setting(tolerance_arg)
             if time_tol < 0:
                 raise CompileError("timer requires nonnegative start and time_tol")
-            values = [self.lower_event(arg, self.symbol, {}, preserve_structure=True) if arg is not None else Affine(0., ())
+            values = [self.lower_event(arg, self.symbol, {}, preserve_structure=True) if arg is not None else self.make_ir(Affine, 0., ())
                       for arg in (start_arg, period_arg, enable_arg)]
             if enable_arg is None:
-                values[2] = Affine(1., ())
+                values[2] = self.make_ir(Affine, 1., ())
             if all(isinstance(value, Affine) and not value.terms for value in values):
                 start, period, enabled = (value.constant for value in values)
                 if start < 0:
                     raise CompileError("timer requires nonnegative start and time_tol")
-                result = TimerTrigger(start, period, time_tol, enabled != 0)
+                result = self.make_ir(TimerTrigger, start, period, time_tol, enabled != 0)
             else:
                 if time_tol == 0:
                     raise CompileError("zero time_tol requires fixed timer parameters")
-                result = HeldTimerTrigger(values[0], values[1], time_tol, values[2])
+                result = self.make_ir(HeldTimerTrigger, values[0], values[1], time_tol, values[2])
         return result
 
     def numeric_observer_candidate(self):
@@ -1576,14 +1682,14 @@ class InstanceCompiler:
     def body(self, statements):
         result = []
         for statement in statements:
-            origin = Origin(statement.token.source or self.model.source, statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
+            origin = self.make_ir(Origin, statement.token.source or self.model.source, statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
             if isinstance(statement, Loop):
                 self.validate_runtime_loop(statement)
                 initialize = SyntaxAssignment(statement.name, statement.start, statement.token)
                 update = SyntaxAssignment(statement.name, statement.update, statement.token)
-                result.append(RuntimeLoop(self.body((initialize,)),
+                result.append(self.make_ir(RuntimeLoop, self.body((initialize,)),
                     {"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation],
-                    StateRef(self.state_ids[statement.name]),
+                    self.make_ir(StateRef, self.state_ids[statement.name]),
                     self.lower_event_value(statement.limit, self.symbol, self.node_ids, preserve_structure=True),
                     self.body(statement.body), self.body((update,)), origin))
             elif isinstance(statement, SyntaxDisplay):
@@ -1592,7 +1698,7 @@ class InstanceCompiler:
                     validate_decision=self.validate_decision_expression, node_declarations=True,
                     indices=self.event_index_read)
                     for arg in statement.args)
-                result.append(Display(statement.format, arguments, origin))
+                result.append(self.make_ir(Display, statement.format, arguments, origin))
             elif isinstance(statement, SyntaxConditional):
                 # The kernel evaluates predicates against the preceding
                 # assignments, preserving procedural statement order.
@@ -1649,7 +1755,7 @@ class InstanceCompiler:
 
     def event_conditional(self, relation, left, right, yes, no, origin):
         if self.compact_event_candidate():
-            return (Conditional(relation, left, right, yes, no, origin),)
+            return (self.make_ir(Conditional, relation, left, right, yes, no, origin),)
         for field, expression in (("left", left), ("right", right)):
             choice = self.split_selection(expression)
             if choice is not None:
@@ -1657,13 +1763,13 @@ class InstanceCompiler:
                 def continuation(value):
                     return self.event_conditional(relation, value if field == "left" else left,
                         value if field == "right" else right, yes, no, origin)
-                return (Conditional(decision.relation, decision.left, decision.right,
+                return (self.make_ir(Conditional, decision.relation, decision.left, decision.right,
                     continuation(a), continuation(b), decision.origin),)
-        return (Conditional(relation, left, right, yes, no, origin),)
+        return (self.make_ir(Conditional, relation, left, right, yes, no, origin),)
 
     def event_assignment(self, state, value, origin, *, compact_source=False):
         if self.compact_event_candidate() or compact_source:
-            return (Assignment(state, value),)
+            return (self.make_ir(Assignment, state, value),)
         # Select RHS decisions before installing the assignment. Distribute
         # enclosing arithmetic so the ordered event solver keeps affine leaves.
         count = 0
@@ -1674,9 +1780,9 @@ class InstanceCompiler:
                 raise CompileError("expanded event decision budget (4096) exceeded", code="resource_budget")
             choice = self.split_selection(expression)
             if choice is None:
-                return (Assignment(state, expression),)
+                return (self.make_ir(Assignment, state, expression),)
             decision, yes, no = choice
-            return (Conditional(decision.relation, decision.left, decision.right,
+            return (self.make_ir(Conditional, decision.relation, decision.left, decision.right,
                                 expand(yes), expand(no), decision.origin),)
         return expand(value)
 
@@ -1768,9 +1874,9 @@ class InstanceCompiler:
         return value_degree(value) is not None or has_divide(value) and rational_tree(value)
 
     def validate_decision_expression(self, expr, value):
-        origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column,
+        origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line, expr.token.column,
                         self.instance.name, expr.expansion)
-        check_ir(value, origin)
+        self.checked_ir(value, origin)
         if not self.selected_value_supported(value):
             if self.input_rational_candidate(value):
                 self.request_input_rational(origin)
@@ -1778,10 +1884,10 @@ class InstanceCompiler:
                 raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected value must remain piecewise-affine or a supported rational expression")
 
     def expression_select(self, expr, relation, left, right, then_value, else_value, *, register=True):
-        origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column,
+        origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line, expr.token.column,
                         self.instance.name, expr.expansion)
-        result = Select(relation, left, right, then_value, else_value, origin)
-        check_ir(result, origin)
+        result = self.make_ir(Select, relation, left, right, then_value, else_value, origin)
+        self.checked_ir(result, origin)
         if (_predicate_degree(left) is None or _predicate_degree(right) is None or
                 not self.selected_value_supported(result)):
             if self.input_rational_candidate(result):
@@ -1810,10 +1916,10 @@ class InstanceCompiler:
         if decision and contains_operator(expr):
             raise CompileError(f"{self.model.source}:{expr.token.line}: decision expressions do not support waveform operators in any operand or arm")
         def factory(item, relation, left, right, then_value, else_value):
-            raw = Select(relation, left, right, then_value, else_value,
-                         Origin(item.token.source or self.model.source, item.token.line, item.token.column,
+            raw = self.make_ir(Select, relation, left, right, then_value, else_value,
+                         self.make_ir(Origin, item.token.source or self.model.source, item.token.line, item.token.column,
                                 self.instance.name, item.expansion))
-            check_ir(raw, raw.origin)
+            self.checked_ir(raw, raw.origin)
             # Keep the existing denominator proof before the stateless input
             # fallback: another instance may add a waveform operator later.
             normalized = normalize_positive_quotient_comparison(relation, left, right, positive_facts)
@@ -1848,8 +1954,8 @@ class InstanceCompiler:
         # Apply the new source-arm check only to new expression decisions,
         # including ones read back through local aliases.
         if has_expression_decision(value):
-            origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
-            check_ir(value, origin)
+            origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
+            self.checked_ir(value, origin)
             if not self.selected_value_supported(value):
                 if self.input_rational_candidate(value):
                     self.request_input_rational(origin)
@@ -1887,19 +1993,19 @@ class InstanceCompiler:
                 value = self.lower_local(statement.rhs, result, preserve_structure=True, positive_facts=positive_facts)
                 if isinstance(value, Affine) and not value.terms and value.constant < 0:
                     raise CompileError('$bound_step requires a nonnegative value')
-                origin = Origin(statement.token.source or self.model.source, statement.token.line, statement.token.column,
+                origin = self.make_ir(Origin, statement.token.source or self.model.source, statement.token.line, statement.token.column,
                                 self.instance.name, statement.token.expansion)
-                self.compilation.step_bounds.append(StepBound(value, active, origin))
+                self.compilation.step_bounds.append(self.make_ir(StepBound, value, active, origin))
             elif isinstance(statement, ContributionStatement):
                 emitted.append((statement, self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure, conditional=conditional, positive_facts=positive_facts)))
             elif isinstance(statement, SyntaxConditional):
                 if contains_operator(statement.left) or contains_operator(statement.right):
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates do not support waveform operators")
-                origin = Origin(statement.token.source or self.model.source, statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
+                origin = self.make_ir(Origin, statement.token.source or self.model.source, statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
                 left = self.lower_local(statement.left, result, preserve_structure=True, positive_facts=positive_facts)
                 right = self.lower_local(statement.right, result, preserve_structure=True, positive_facts=positive_facts)
-                check_ir(left, origin)
-                check_ir(right, origin)
+                self.checked_ir(left, origin)
+                self.checked_ir(right, origin)
                 if not self.expression_nodes(left).issubset(self.allowed_condition_nodes) or not self.expression_nodes(right).issubset(self.allowed_condition_nodes):
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates must depend only on input/inout ports")
                 if _predicate_degree(left) is None or _predicate_degree(right) is None:
@@ -1908,19 +2014,19 @@ class InstanceCompiler:
                     else:
                         raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates must be affine or input-selected piecewise-affine; nonlinear products and powers are unsupported")
                 relation = {"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation]
-                zero, one = Affine(0., ()), Affine(1., ())
-                yes = Select('gt', active, zero, Select(relation, left, right, one, zero, origin), zero, origin)
-                no = Select('gt', active, zero, Select(relation, left, right, zero, one, origin), zero, origin)
+                zero, one = self.make_ir(Affine, 0., ()), self.make_ir(Affine, 1., ())
+                yes = self.make_ir(Select, 'gt', active, zero, self.make_ir(Select, relation, left, right, one, zero, origin), zero, origin)
+                no = self.make_ir(Select, 'gt', active, zero, self.make_ir(Select, relation, left, right, zero, one, origin), zero, origin)
                 yes_domains, no_domains = self.condition_domains(relation, left, right, domains)
                 yes_facts, no_facts = condition_positive_facts(relation, left, right, positive_facts)
                 then_env, then_emitted = self.execute_analog(statement.then_body, result, conditional=True, active=yes, domains=yes_domains, positive_facts=yes_facts)
                 else_env, else_emitted = self.execute_analog(statement.else_body, result, conditional=True, active=no, domains=no_domains, positive_facts=no_facts)
                 for selected, other, contributions in ((True, False, then_emitted), (False, True, else_emitted)):
                     for branch, value in contributions:
-                        value = Select(relation, left, right,
-                                       value if selected else Affine(0., ()),
-                                       value if other else Affine(0., ()), origin)
-                        check_ir(value, origin)
+                        value = self.make_ir(Select, relation, left, right,
+                                       value if selected else self.make_ir(Affine, 0., ()),
+                                       value if other else self.make_ir(Affine, 0., ()), origin)
+                        self.checked_ir(value, origin)
                         emitted.append((branch, value))
                 for name in sorted(set(then_env) | set(else_env) | set(result)):
                     if name not in self.local_variables:
@@ -1946,14 +2052,14 @@ class InstanceCompiler:
                         relation, left, right, then_env[name], else_env[name], origin,
                         integer_target=self.model.variables.get(name) == "integer",
                         validate_integer=self.validate_integer_value)
-                    check_ir(result[name], origin)
+                    self.checked_ir(result[name], origin)
             else:
                 if statement.name not in self.local_variables:
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog assignment target must be a local variable")
                 if conditional and self.contains_history_call(statement.rhs):
                     raise CompileError(f"{self.model.source}:{statement.token.line}: history waveform call sites must be unconditional")
                 value = self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure, conditional=conditional, positive_facts=positive_facts)
-                check_ir(value, Origin(self.model.source, statement.token.line, statement.token.column, self.instance.name))
+                self.checked_ir(value, self.make_ir(Origin, self.model.source, statement.token.line, statement.token.column, self.instance.name))
                 if self.model.variables[statement.name] == "integer":
                     self.validate_integer_value(value, statement.token)
                 result[statement.name] = value
@@ -1972,6 +2078,6 @@ class InstanceCompiler:
                 raise CompileError(f"{self.model.source}:{branch.token.line}: distinct local contribution branches alias after connection; not supported in this slice")
             bound_branches[bound_pair] = pair
             sign = 1.0 if (local_p, local_n) == pair else -1.0
-            origin = Origin(branch.token.source or self.model.source, branch.token.line, branch.token.column, self.instance.name, branch.expansion)
-            identity = BranchIdentity(self.instance.name, *pair)
-            self.compilation.contributions.append(Contribution(identity, p, n, scale(expression, sign), origin))
+            origin = self.make_ir(Origin, branch.token.source or self.model.source, branch.token.line, branch.token.column, self.instance.name, branch.expansion)
+            identity = self.make_ir(BranchIdentity, self.instance.name, *pair)
+            self.compilation.contributions.append(self.make_ir(Contribution, identity, p, n, self.scale_ir(expression, sign), origin))

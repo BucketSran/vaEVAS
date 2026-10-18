@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 28
+SCHEMA_VERSION = 29
 
 
 @dataclass(frozen=True)
@@ -121,7 +121,7 @@ class IntegerState:
 
 @dataclass(frozen=True)
 class IntegerPrimitive:
-    function: Literal["add", "subtract", "remainder"]
+    function: Literal["add", "subtract", "remainder", "shift_right", "bit_and"]
     args: tuple["IntegerLiteral | IntegerState | IntegerPrimitive", ...]
     origin: Origin
     op: str = field(default="integer_primitive", init=False)
@@ -350,5 +350,6 @@ class Program:
     step_bounds: tuple[StepBound, ...] = ()
 
     def to_dict(self) -> dict:
-        check_ir(self)
-        return asdict(self)
+        audit = getattr(self, "_native_audit", None)
+        check_ir(self, work=audit.ir_work if audit is not None else None)
+        return audit.materialize(self) if audit is not None and audit.active else asdict(self)

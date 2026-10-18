@@ -27,6 +27,17 @@ mod root_refinement;
 mod root_window_tests;
 
 #[cfg(test)]
+#[path = "transient_source_factor_tests.rs"]
+mod source_factor_lifecycle_tests;
+#[cfg(test)]
+#[path = "transient_source_floor_tests.rs"]
+mod source_floor_tests;
+
+#[cfg(test)]
+#[path = "transient_native_floor_tests.rs"]
+mod native_floor_combination_tests;
+
+#[cfg(test)]
 #[path = "source_selected_slew_tests.rs"]
 mod source_selected_slew_tests;
 #[path = "event_time_provenance.rs"]
@@ -42,6 +53,23 @@ struct Frame {
     solution: Solution,
     circuit: Circuit,
     operators: Operators,
+}
+
+impl Frame {
+    fn candidate_clone(&self) -> Result<Self, Error> {
+        // Charge before copying the target runtime, including observation phases.
+        let operators = self.operators.candidate_clone()?;
+        Ok(Self {
+            value_proofs: self.value_proofs.clone(),
+            time_proofs: self.time_proofs.clone(),
+            time: self.time,
+            states: self.states.clone(),
+            state_bounds: self.state_bounds.clone(),
+            solution: self.solution.clone(),
+            circuit: self.circuit.clone(),
+            operators,
+        })
+    }
 }
 
 // Own every event-commit mutation in the production controller. Preparing a
@@ -380,6 +408,13 @@ fn prepare_root_window_selected_impl(
     refine_ordinary_phase: bool,
 ) -> Result<(Frame, crate::event_conditions::Selection, Vec<f64>), Error> {
     let _timing = crate::diagnostics::span("controller.prepare_candidate");
+    if let Some(r) = &model.floor_source {
+        crate::event_floor::charge(
+            r.work(),
+            1024 * (accepted.value_proofs.len() + accepted.time_proofs.len()),
+            "floor_source_exact_enclosure",
+        )?;
+    }
     if !crate::event_value_proof::valid(&accepted.value_proofs, &accepted.state_bounds) {
         return Err(Error::new(
             "event_resolution",
@@ -407,8 +442,20 @@ fn prepare_root_window_selected_impl(
         fired_roots: fired_leaves,
         prediction_end,
     } = moment;
+    if let Some(request) = &model.floor_source {
+        let supplied = accepted.operators.source_context.as_ref().ok_or_else(|| {
+            Error::new("event_condition", "source floor trial lost request owner")
+        })?;
+        if !std::sync::Arc::ptr_eq(supplied, &request.source) {
+            return Err(Error::new(
+                "event_condition",
+                "source floor trial changed request owner",
+            ));
+        }
+        crate::event_floor::charge(request.work(), 1, "floor_source_copy")?;
+    }
     let copying = crate::diagnostics::span("history.clone");
-    let mut operators = accepted.operators.clone();
+    let mut operators = accepted.operators.candidate_clone()?;
     operators.refine_ordinary_phase(refine_ordinary_phase);
     drop(copying);
     crate::diagnostics::counter("history_clone_calls", 1);
@@ -471,16 +518,16 @@ fn prepare_root_window_selected_impl(
     let proof_root = exact_root
         .filter(|r| r.refine(time_bounds).is_some())
         .or(point_root.as_ref());
-    let value_context = crate::event_value_proof::Context::new(
+    let value_context = crate::event_value_proof::Context::try_new(
         model,
         trajectory,
         &input_bounds,
         &accepted.value_proofs,
         proof_root,
-    )
-    .with_operators(&frozen.bounds);
+    )?
+    .try_with_operators(&frozen.bounds)?;
     let settle = |values: &[f64], bounds: &[I]| {
-        let evaluation_context = value_context.with_operators(bounds);
+        let evaluation_context = value_context.try_with_operators(bounds)?;
         if time_bounds.lo == time_bounds.hi {
             crate::settlement::prepare_with_proofs(
                 model,
@@ -559,15 +606,18 @@ fn prepare_root_window_selected_impl(
         ));
     }
     // Only the final closed state may define the future flow and targets.
-    let physical_value_proofs = crate::event_value_proof::apply(
+    let physical_value_proofs = crate::event_value_proof::apply_charged(
         model,
         &physical_selection,
         &input_bounds,
         old_bounds,
         &prepared.bounds,
         &value_context,
-    );
+    )?;
     for (&state, value) in &physical_value_proofs {
+        if let Some(r) = &model.floor_source {
+            crate::event_floor::charge(r.work(), 1024, "floor_source_exact_enclosure")?;
+        }
         if let Some(bounds) = crate::exact_source::enclosure(value) {
             prepared.bounds[state] = bounds;
         }
@@ -599,14 +649,14 @@ fn prepare_root_window_selected_impl(
         Some(&physical_value_proofs),
     )?;
     let mut replay = settle(&observation.0, &observation.1)?;
-    let replay_values = crate::event_value_proof::apply(
+    let replay_values = crate::event_value_proof::apply_charged(
         model,
         &physical_selection,
         &input_bounds,
         old_bounds,
         &replay.bounds,
         &value_context,
-    );
+    )?;
     for (&state, value) in &replay_values {
         if let Some(bounds) = crate::exact_source::enclosure(value) {
             replay.bounds[state] = bounds;
@@ -730,14 +780,14 @@ fn prepare_root_window_selected_impl(
         old_bounds,
         &prepared.bounds,
     );
-    let value_proofs = crate::event_value_proof::apply(
+    let value_proofs = crate::event_value_proof::apply_charged(
         model,
         &selection,
         &input_bounds,
         old_bounds,
         &prepared.bounds,
         &value_context,
-    );
+    )?;
     // Refinement belongs to this observation, never future root predictions.
     operators.refine_ordinary_phase(false);
     Ok((
@@ -825,12 +875,41 @@ fn prepare_batch_until(
         .collect::<std::collections::BTreeSet<_>>()
         .into_iter()
         .collect();
+    // The display consumer reuses the same immutable physical root/binding.
+    // No representative-time Floor evaluation is allowed to choose a new bin.
+    let display_root = moment.exact_root.cloned().or_else(|| {
+        (event_bounds.lo == event_bounds.hi)
+            .then(|| crate::exact_source::RootTime::point(event_time))
+            .flatten()
+    });
+    let display_inputs = if model.floor_source.is_some() {
+        Some(trajectory.range(event_bounds)?.0)
+    } else {
+        None
+    };
+    let display_context = display_inputs
+        .as_ref()
+        .map(|inputs| {
+            crate::event_value_proof::Context::try_new(
+                model,
+                trajectory,
+                inputs,
+                &accepted.value_proofs,
+                display_root.as_ref(),
+            )
+        })
+        .transpose()?;
     let (next, selection, physical_voltages) =
         prepare_root_window_selected(model, trajectory, accepted, moment, &blocks)?;
     next.operators
         .check_deadline_order(event_time, None, None)?;
-    let (display_states, candidate_displays) =
-        model.apply_with_displays(&selection, &physical_voltages, &accepted.states, event_time)?;
+    let (display_states, candidate_displays) = model.apply_with_displays_with_proofs(
+        &selection,
+        &physical_voltages,
+        &accepted.states,
+        event_time,
+        display_context.as_ref(),
+    )?;
     // Displays replay the identical certified path. An observer cannot
     // publish text from a state different from the prepared event candidate.
     for (event, indices) in &selection.actions {
@@ -967,7 +1046,7 @@ fn prepare_calendar_batch(
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
     let local_accepted;
     let accepted = if let Some((clock, _)) = accepted.operators.local_epoch() {
-        let mut operators = accepted.operators.clone();
+        let mut operators = accepted.operators.candidate_clone()?;
         operators.observe_local(crate::schedule::ordered_observation(
             scheduled, clock, model,
         )?)?;
@@ -1155,6 +1234,9 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         Some(&trajectory),
     )?;
     let step_bounds = crate::step_bounds::Bounds::new(&model.program)?;
+    if model.floor_source.is_some() {
+        crate::diagnostics::counter("floor_source_before_initialization", 1);
+    }
     let prepared = initialization::prepare(&model, &trajectory)?;
     let initial = prepared
         .as_ref()
@@ -1166,35 +1248,65 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         .is_some_and(|p| p.bounded_held_transition_seeds);
     let relocalize = model.relocalized_guards.iter().any(|&held| held);
     let history_calendar = model.guard_operators.iter().any(|ops| !ops.is_empty());
+    if !model.typed_transition_targets.is_empty()
+        && (history_calendar || relocalize || model.dynamic_guards.iter().any(|&v| v))
+    {
+        return Err(Error::new(
+            "unsupported_held_integer_target",
+            "typed held targets require the ordinary independent calendar",
+        ));
+    }
+    // For no-bootstrap declarations these are the actual cold Frame bounds.
+    // If prepare returned a certified box, borrow it without normalization.
+    let declaration_bounds: Vec<_> =
+        if !model.typed_transition_targets.is_empty() && initial_bounds.is_none() {
+            initial.iter().copied().map(I::point).collect()
+        } else {
+            Vec::new()
+        };
     let (operators, mut crossings) = if history_calendar {
         history_calendar::initialize(&model, &trajectory, &initial)?
     } else if relocalize {
         let bounds: Vec<_> = initial.iter().copied().map(I::point).collect();
         let crossings = schedule_held(&model, &trajectory, &bounds)?;
-        let operators = Operators::new_until(
+        let operators = Operators::new_until_with_source_context(
             &model.program,
             &trajectory,
             &model.driven,
             &initial,
             prediction_end(&model, &trajectory, crossings.first()),
             &model.tolerances,
+            model.floor_source.as_ref().map(|r| r.source.clone()),
         )?;
         (operators, crossings)
     } else if model.dynamic_guards.iter().any(|&dynamic| dynamic) {
-        let operators = Operators::new_until(
+        let operators = Operators::new_until_with_source_context(
             &model.program,
             &trajectory,
             &model.driven,
             &initial,
             trajectory.config.stop,
             &model.tolerances,
+            model.floor_source.as_ref().map(|r| r.source.clone()),
         )?;
         let crossings = schedule(&model, &trajectory, &operators)?;
         (operators, crossings)
     } else {
         let crossings = independent_schedule(&model, &trajectory)?;
-        let operators = if bounded_held_transition_seeds {
-            Operators::new_until_with_bootstrap_bounds(
+        let operators = if !model.typed_transition_targets.is_empty() {
+            Operators::new_until_with_held_points(
+                &model.program,
+                &trajectory,
+                &model.driven,
+                &initial,
+                initial_bounds.unwrap_or(&declaration_bounds),
+                &model.typed_transition_targets,
+                model.source_context.as_ref().expect("typed owner").clone(),
+                prediction_end(&model, &trajectory, crossings.first()),
+                &model.tolerances,
+            )?
+        } else if bounded_held_transition_seeds {
+            Operators::new_until_with_bootstrap_bounds_and_source(
                 &model.program,
                 &trajectory,
                 &model.driven,
@@ -1202,15 +1314,17 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 initial_bounds.expect("bounded bootstrap has a prepared enclosure"),
                 prediction_end(&model, &trajectory, crossings.first()),
                 &model.tolerances,
+                model.floor_source.as_ref().map(|r| r.source.clone()),
             )?
         } else {
-            Operators::new_until(
+            Operators::new_until_with_source_context(
                 &model.program,
                 &trajectory,
                 &model.driven,
                 &initial,
                 prediction_end(&model, &trajectory, crossings.first()),
                 &model.tolerances,
+                model.floor_source.as_ref().map(|r| r.source.clone()),
             )?
         };
         (operators, crossings)

@@ -21,11 +21,38 @@ fn unsupported(message: &str) -> Error {
     Error::new("unsupported_initial_history", message)
 }
 fn check_expression(e: &Expression, model: &EventModel, owner: &str) -> Result<(), Error> {
+    if let Some(r) = &model.floor_source {
+        crate::event_floor::charge(r.work(), 1, "floor_source_initial_scan")?;
+    }
     // Dependency audit only. Typed nodes remain event-body values; bootstrap
     // execution and cold-history construction retain their existing owners.
     match e {
+        Expression::EventMath {
+            function: crate::ir::EventMathFunction::Floor,
+            args,
+            ..
+        } if model
+            .floor_source
+            .as_ref()
+            .map(|r| crate::event_floor::contains_charged(e, r.work()))
+            .transpose()?
+            .unwrap_or(false) =>
+        {
+            model
+                .floor_source
+                .as_ref()
+                .unwrap()
+                .bootstrap_numeric(e, owner)?;
+            for child in args {
+                check_expression(child, model, owner)?;
+            }
+            return Ok(());
+        }
         Expression::IntegerPrimitive { .. } => {
-            return crate::event_numeric::validate(e, &model.program, owner)
+            if let Some(request) = &model.floor_source {
+                return request.bootstrap_numeric(e, owner);
+            }
+            return crate::event_numeric::validate(e, &model.program, owner);
         }
         Expression::Add { left, right }
         | Expression::Multiply { left, right }
@@ -47,6 +74,14 @@ fn check_expression(e: &Expression, model: &EventModel, owner: &str) -> Result<(
             return Ok(());
         }
         _ => (),
+    }
+    if let Some(request) = &model.floor_source {
+        if !request.bootstrap_dependencies(e, owner)?.1 {
+            return Err(unsupported(
+                "transition bootstrap events must read only held state and directly driven inputs",
+            ));
+        }
+        return Ok(());
     }
     let (nodes, _, operators) =
         crate::continuous::integral_dependency_edges(e, &model.program, owner)?;
@@ -195,7 +230,7 @@ pub(super) fn prepare(
                 EventTrigger::Timer { .. } | EventTrigger::InitialStep { .. }
             )
         });
-    for spec in &model.program.operators {
+    for (spec_index, spec) in model.program.operators.iter().enumerate() {
         bounded_held_transition_seeds &= match spec {
             OperatorSpec::Transition {
                 input: Expression::State { state },
@@ -207,6 +242,38 @@ pub(super) fn prepare(
             _ => false,
         };
         if let OperatorSpec::Transition { input, origin, .. } = spec {
+            if model.typed_transition_targets.contains(&spec_index) {
+                let context = model.source_context.as_ref().expect("typed owner");
+                let required = crate::held_integer_target::dependencies(
+                    input,
+                    &model.program,
+                    &origin.instance,
+                    context,
+                )?;
+                crate::held_integer_target::merge_dependencies(
+                    &mut seeds,
+                    &required,
+                    &mut |amount| context.charge(amount),
+                )?;
+                continue;
+            }
+            if let Some(request) = &model.floor_source {
+                let (dependencies, allowed) =
+                    request.bootstrap_dependencies(input, &origin.instance)?;
+                if !allowed {
+                    return Ok(None);
+                }
+                request.source.charge(
+                    dependencies
+                        .len()
+                        .saturating_add(seeds.len())
+                        .saturating_add(1)
+                        .saturating_pow(2)
+                        .saturating_mul(8),
+                )?;
+                seeds.extend(dependencies);
+                continue;
+            }
             match crate::events::affine(input, &model.program, &origin.instance) {
                 Ok(row)
                     if row.node_dependencies.is_empty() && row.operator_dependencies.is_empty() =>
@@ -365,23 +432,67 @@ fn prepare_stage(
         return Ok((before.to_vec(), before_bounds.to_vec(), Vec::new()));
     }
     let inputs = trajectory.value_bounds(0.);
-    let selection = model
-        .conditions
-        .select_at_roots(blocks, &inputs, ids, before_bounds)?;
-    model.check_selection_writers(&selection)?;
-    let mut direct = vec![0.; model.program.nodes.len()];
-    for (name, value) in model.driven.iter().zip(trajectory.values(0.)) {
-        direct[model.program.nodes.iter().position(|n| n == name).unwrap()] = value;
-    }
-    let (states, display_records) = model.apply_with_displays(&selection, &direct, before, 0.)?;
-    let bounds = crate::settlement_bounds::Bounds::held_inputs(model, &selection)?.check_states(
-        model,
+    let empty_proofs = crate::event_value_proof::Proofs::new();
+    let root = crate::exact_source::RootTime::point(0.);
+    let context = model
+        .floor_source
+        .as_ref()
+        .map(|_| {
+            crate::event_value_proof::Context::try_new(
+                model,
+                trajectory,
+                &inputs,
+                &empty_proofs,
+                root.as_ref(),
+            )
+        })
+        .transpose()?;
+    let selection = model.conditions.select_with_proofs(
+        blocks,
         &inputs,
+        ids,
         before_bounds,
-        &[],
-        &[],
-        &states,
+        context.as_ref(),
     )?;
+    model.check_selection_writers(&selection)?;
+    if let Some(request) = &model.floor_source {
+        request
+            .source
+            .charge(model.program.nodes.len().saturating_add(1))?;
+    }
+    let mut direct = vec![0.; model.program.nodes.len()];
+    if let Some(request) = &model.floor_source {
+        for (&node, value) in request.input_nodes()?.iter().zip(trajectory.values(0.)) {
+            direct[node] = value;
+        }
+    } else {
+        for (name, value) in model.driven.iter().zip(trajectory.values(0.)) {
+            direct[model.program.nodes.iter().position(|n| n == name).unwrap()] = value;
+        }
+    }
+    let (states, display_records) =
+        model.apply_with_displays_with_proofs(&selection, &direct, before, 0., context.as_ref())?;
+    let bounds = if context.is_some() {
+        model.certify_event_states_with_proofs(
+            &selection,
+            ids,
+            &inputs,
+            before_bounds,
+            &[],
+            &direct,
+            &states,
+            context.as_ref(),
+        )?
+    } else {
+        crate::settlement_bounds::Bounds::held_inputs(model, &selection)?.check_states(
+            model,
+            &inputs,
+            before_bounds,
+            &[],
+            &[],
+            &states,
+        )?
+    };
     if states.len() != model.program.states.len()
         || bounds.len() != states.len()
         || bounds
@@ -401,17 +512,20 @@ fn prepare_stage(
         ));
     }
     let (replay_states, replay_displays) =
-        model.apply_with_displays(&selection, &direct, before, 0.)?;
+        model.apply_with_displays_with_proofs(&selection, &direct, before, 0., context.as_ref())?;
     let same_displays = replay_displays.len() == display_records.len()
         && replay_displays.iter().zip(&display_records).all(|(a, b)| {
             a.time == b.time && a.event == b.event && a.origin == b.origin && a.text == b.text
         });
     if replay_states != states
         || !same_displays
-        || model
-            .conditions
-            .select_at_roots(blocks, &inputs, ids, before_bounds)?
-            != selection
+        || model.conditions.select_with_proofs(
+            blocks,
+            &inputs,
+            ids,
+            before_bounds,
+            context.as_ref(),
+        )? != selection
     {
         return Err(Error::new(
             "event_consistency",

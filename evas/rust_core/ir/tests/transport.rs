@@ -64,3 +64,26 @@ fn integer28_dynamic_rhs_and_subtract_round_trip_while_ir27_is_rejected() {
         "unsupported_ir_version"
     );
 }
+
+#[test]
+fn bits29_nested_wire_keeps_source_children_and_rejects_ir28() {
+    let origin = json!({"source":"wire29.va","line":1,"column":1,"instance":"dut"});
+    let input = json!({"op":"integer_primitive","function":"bit_and","origin":origin,
+        "args":[{"op":"integer_primitive","function":"shift_right","origin":origin,
+            "args":[{"op":"integer_primitive","function":"add","origin":origin,
+                "args":[{"op":"integer_state","state":0},{"op":"integer_literal","value":1}]},
+                {"op":"integer_literal","value":-1}]},{"op":"integer_literal","value":0}]});
+    let mut v = json!({"program":{"schema_version":SCHEMA_VERSION,"nodes":["0"],"contributions":[],
+        "events":[{"origin":origin,"trigger":{"kind":"initial_step"},
+            "body":[{"kind":"assign","state":0,"rhs":input}]}]},"driven":[],"samples":[]});
+    let parsed = parse_request(&v.to_string()).unwrap();
+    assert_eq!(
+        serde_json::to_value(parsed).unwrap()["program"]["events"][0]["body"][0]["rhs"],
+        input
+    );
+    v["program"]["schema_version"] = json!(28);
+    assert_eq!(
+        parse_request(&v.to_string()).unwrap_err().kind,
+        "unsupported_ir_version"
+    );
+}

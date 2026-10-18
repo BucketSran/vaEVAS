@@ -27,6 +27,12 @@ pub(crate) fn validate(
             "typed remainder literal divisor must be nonzero",
         ));
     }
+    if matches!(f, F::ShiftRight) && !matches!(args.get(1), Some(O::IntegerLiteral { .. })) {
+        return Err(Error::new(
+            "invalid_ir",
+            "typed logical shift requires an integer literal count",
+        ));
+    }
     for arg in args {
         match arg {
             O::IntegerLiteral { .. } => (),
@@ -110,6 +116,15 @@ pub(crate) fn evaluate<S: FnMut(usize) -> Result<i32, Error>, W: FnMut() -> Resu
         F::Add => a.checked_add(b),
         F::Subtract => a.checked_sub(b),
         F::Remainder => a.checked_rem(b),
+        F::BitAnd => Some(a & b),
+        F::ShiftRight => {
+            let count = b as u32;
+            Some(if count >= 32 {
+                0
+            } else {
+                ((a as u32) >> count) as i32
+            })
+        }
     };
     value.ok_or_else(|| {
         Error::new(
@@ -261,6 +276,110 @@ mod tests {
                 .kind,
                 "integer_range"
             );
+        }
+    }
+    #[test]
+    fn bits29_word_counts_boxes_and_shared_work_are_checked() {
+        let origin = origin();
+        for (a, count, want) in [
+            (-1, 0, -1),
+            (-1, 1, 2147483647),
+            (-1, 31, 1),
+            (-1, 32, 0),
+            (-1, 33, 0),
+            (-1, -1, 0),
+            (i32::MIN, 1, 1073741824),
+            (i32::MIN, 31, 1),
+        ] {
+            let args = [
+                O::IntegerState { state: 0 },
+                O::IntegerLiteral { value: count },
+            ];
+            assert_eq!(
+                evaluate(
+                    F::ShiftRight,
+                    &args,
+                    &origin,
+                    &mut |_| Ok(a),
+                    &mut || Ok(())
+                )
+                .unwrap(),
+                want
+            );
+            assert!(evaluate(
+                F::ShiftRight,
+                &args,
+                &origin,
+                &mut |_| point(
+                    I {
+                        lo: f64::from(a),
+                        hi: f64::from(a) + 1.
+                    },
+                    &origin
+                ),
+                &mut || Ok(())
+            )
+            .is_err());
+        }
+        let args = [
+            O::IntegerPrimitive {
+                function: F::ShiftRight,
+                args: vec![O::IntegerState { state: 0 }, O::IntegerLiteral { value: 1 }],
+                origin: origin.clone(),
+            },
+            O::IntegerState { state: 1 },
+        ];
+        let mut spent = 0;
+        assert_eq!(
+            evaluate(
+                F::BitAnd,
+                &args,
+                &origin,
+                &mut |s| Ok([-1, 1][s]),
+                &mut || {
+                    spent += 1;
+                    Ok(())
+                }
+            )
+            .unwrap(),
+            1
+        );
+        assert_eq!(spent, 8);
+        for uncertain in 0..2 {
+            assert!(evaluate(
+                F::BitAnd,
+                &args,
+                &origin,
+                &mut |s| {
+                    point(
+                        if s == uncertain {
+                            I { lo: 1., hi: 2. }
+                        } else {
+                            I::ONE
+                        },
+                        &origin,
+                    )
+                },
+                &mut || Ok(())
+            )
+            .is_err());
+        }
+        let mut remaining = spent - 1;
+        for _ in 0..2 {
+            assert_eq!(
+                evaluate(F::BitAnd, &args, &origin, &mut |_| Ok(1), &mut || {
+                    if remaining == 0 {
+                        Err(Error::new("resource_budget", "same owner exhausted"))
+                    } else {
+                        remaining -= 1;
+                        Ok(())
+                    }
+                })
+                .unwrap_err()
+                .kind,
+                "resource_budget"
+            );
+            assert_eq!(remaining, 0);
         }
     }
 }

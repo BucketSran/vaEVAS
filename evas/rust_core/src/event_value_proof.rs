@@ -12,13 +12,111 @@ pub(crate) struct Context<'a> {
     states: &'a Proofs,
     nodes: Vec<Option<R>>,
     operators: Vec<I>,
+    floor_work: Option<crate::transition_source_plan::Work>,
+    floor_bounds: Option<Vec<I>>,
 }
 impl<'a> Context<'a> {
+    pub(crate) fn floor_work(&self) -> Option<&crate::transition_source_plan::Work> {
+        self.floor_work.as_ref()
+    }
+
+    pub(crate) fn try_new(
+        model: &crate::events::EventModel,
+        trajectory: &crate::pwl::Trajectory,
+        inputs: &[I],
+        states: &'a Proofs,
+        root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<Self, crate::ir::Error> {
+        if let Some(request) = &model.floor_source {
+            request.check_source(trajectory)?;
+            // Context::new invokes at_root at most once per actual driven input.
+            // The helper keeps its local200000 cap, reserved before invocation.
+            if root.is_some() {
+                crate::event_floor::charge(
+                    request.work(),
+                    model.driven.len().saturating_add(1),
+                    "floor_source_binding_scan",
+                )?;
+                let calls = trajectory
+                    .exact_sources
+                    .iter()
+                    .take(model.driven.len())
+                    .filter(|c| c.is_some())
+                    .count();
+                crate::event_floor::charge(
+                    request.work(),
+                    200000 * calls,
+                    "floor_source_helper_reservations",
+                )?;
+                crate::diagnostics::counter("floor_source_helper_calls", calls);
+            }
+            crate::event_floor::charge(
+                request.work(),
+                144 * (model.program.nodes.len() + states.len() + inputs.len() + 1),
+                "floor_source_copy",
+            )?;
+            crate::event_floor::charge(
+                request.work(),
+                1024 * (states.len() + inputs.len()),
+                "floor_source_exact_enclosure",
+            )?;
+        }
+        let indices = model
+            .floor_source
+            .as_ref()
+            .map(|r| r.input_nodes())
+            .transpose()?;
+        let mut result = if indices.is_some() {
+            Self::build(model, trajectory, inputs, states, root, indices)
+        } else {
+            Self::new(model, trajectory, inputs, states, root)
+        };
+        result.floor_work = model.floor_source.as_ref().map(|r| r.work().clone());
+        if result.floor_work.is_some() {
+            let mut b = vec![
+                I {
+                    lo: f64::NEG_INFINITY,
+                    hi: f64::INFINITY
+                };
+                model.program.nodes.len()
+            ];
+            b[0] = I::ZERO;
+            for (&node, &v) in indices.unwrap().iter().zip(inputs) {
+                b[node] = v;
+            }
+            result.floor_bounds = Some(b);
+        }
+        Ok(result)
+    }
+    pub(crate) fn try_with_operators(&self, operators: &[I]) -> Result<Self, crate::ir::Error> {
+        if let Some(w) = &self.floor_work {
+            crate::event_floor::charge(
+                w,
+                self.nodes.len().saturating_add(1),
+                "floor_source_binding_scan",
+            )?;
+            let limbs = self
+                .nodes
+                .iter()
+                .flatten()
+                .map(|r| 1 + (r.numer().bits() + r.denom().bits()).div_ceil(64) as usize)
+                .sum::<usize>();
+            crate::event_floor::charge(
+                w,
+                limbs + operators.len() + self.nodes.len() * 2 + 1,
+                "floor_source_copy",
+            )?;
+        }
+        Ok(self.with_operators(operators))
+    }
+
     pub(crate) fn with_operators(&self, operators: &[I]) -> Self {
         Self {
             states: self.states,
             nodes: self.nodes.clone(),
             operators: operators.to_vec(),
+            floor_work: self.floor_work.clone(),
+            floor_bounds: self.floor_bounds.clone(),
         }
     }
     pub(crate) fn operators(&self) -> &[I] {
@@ -31,19 +129,34 @@ impl<'a> Context<'a> {
         states: &'a Proofs,
         root: Option<&crate::exact_source::RootTime>,
     ) -> Self {
+        Self::build(model, trajectory, inputs, states, root, None)
+    }
+    fn build(
+        model: &crate::events::EventModel,
+        trajectory: &crate::pwl::Trajectory,
+        inputs: &[I],
+        states: &'a Proofs,
+        root: Option<&crate::exact_source::RootTime>,
+        indices: Option<&[usize]>,
+    ) -> Self {
         let mut nodes = vec![None; model.program.nodes.len()];
         nodes[0] = binary(0.);
         for (k, (name, &bounds)) in model.driven.iter().zip(inputs).enumerate() {
             let original = root
                 .and_then(|r| trajectory.exact_sources.get(k)?.as_ref()?.at_root(r))
                 .filter(|v| enclosure(v).is_some_and(|i| bounds.lo <= i.lo && i.hi <= bounds.hi));
-            nodes[model.program.nodes.iter().position(|n| n == name).unwrap()] =
-                original.or_else(|| point(bounds));
+            let node = indices.map_or_else(
+                || model.program.nodes.iter().position(|n| n == name).unwrap(),
+                |indices| indices[k],
+            );
+            nodes[node] = original.or_else(|| point(bounds));
         }
         Self {
             states,
             nodes,
             operators: Vec::new(),
+            floor_work: None,
+            floor_bounds: None,
         }
     }
 }
@@ -53,6 +166,8 @@ pub(crate) struct LocalState {
     bounds: Vec<I>,
     exact: Vec<Option<R>>,
     nodes: Option<Vec<Option<R>>>,
+    floor_work: Option<crate::transition_source_plan::Work>,
+    floor_bounds: Option<Vec<I>>,
 }
 impl std::ops::Deref for LocalState {
     type Target = [I];
@@ -61,16 +176,107 @@ impl std::ops::Deref for LocalState {
     }
 }
 impl LocalState {
+    fn prepay_copy(&self) -> Result<(), crate::ir::Error> {
+        if let Some(w) = &self.floor_work {
+            let mut items = 16
+                + self.bounds.len() * 4
+                + self.exact.len()
+                + self.nodes.as_ref().map_or(0, Vec::len)
+                + self.floor_bounds.as_ref().map_or(0, Vec::len);
+            for r in self
+                .exact
+                .iter()
+                .flatten()
+                .chain(self.nodes.iter().flatten().flatten())
+            {
+                crate::event_floor::charge(w, 1, "floor_source_ast")?;
+                items += 8 + (r.numer().bits() + r.denom().bits()).div_ceil(64) as usize;
+            }
+            crate::event_floor::charge(w, items, "floor_source_copy")?;
+        }
+        Ok(())
+    }
+    pub(crate) fn try_clone(&self) -> Result<Self, crate::ir::Error> {
+        self.prepay_copy()?;
+        Ok(self.clone())
+    }
+    pub(crate) fn try_value(&self, e: &E, nodes: &[I]) -> Result<Option<R>, crate::ir::Error> {
+        let Some(w) = &self.floor_work else {
+            return Ok(self.value(e, nodes));
+        };
+        // Retain the old exact evaluator's local cap. Prepay every rational
+        // clone it can perform before invoking it, including state/source limbs.
+        let size = crate::event_floor::encoded_size(e, w)?;
+        crate::event_floor::charge(w, size * 144, "floor_source_copy")?;
+        self.value_with_work(e, nodes, &mut || {
+            crate::event_floor::charge(w, 1, "floor_source_exact_ops").ok()
+        })
+        .map_err(|_| crate::ir::Error::new("step_budget", "source floor provenance work exhausted"))
+    }
+    pub(crate) fn prepay_comparison(&self, other: &Self) -> Result<(), crate::ir::Error> {
+        if let Some(w) = &self.floor_work {
+            crate::event_floor::charge(
+                w,
+                144 * (self.len() + other.len() + 1),
+                "floor_source_identity_debit",
+            )?;
+        }
+        Ok(())
+    }
+    pub(crate) fn floor_bound(&self, n: usize) -> Option<I> {
+        self.floor_bounds.as_ref()?.get(n).copied()
+    }
+    pub(crate) fn floor_work(&self) -> Option<&crate::transition_source_plan::Work> {
+        self.floor_work.as_ref()
+    }
+    pub(crate) fn floor_node(&self, n: usize) -> Option<&R> {
+        self.nodes.as_ref()?.get(n)?.as_ref()
+    }
+    pub(crate) fn try_with_context(
+        bounds: &[I],
+        context: Option<&Context<'_>>,
+    ) -> Result<Self, crate::ir::Error> {
+        if let Some(w) = context.and_then(|c| c.floor_work.as_ref()) {
+            let c = context.unwrap();
+            crate::event_floor::charge(
+                w,
+                c.nodes
+                    .len()
+                    .saturating_add(c.states.len())
+                    .saturating_add(1),
+                "floor_source_binding_scan",
+            )?;
+            let limbs = c
+                .nodes
+                .iter()
+                .flatten()
+                .chain(c.states.values())
+                .map(|r| 1 + (r.numer().bits() + r.denom().bits()).div_ceil(64) as usize)
+                .sum::<usize>();
+            crate::event_floor::charge(
+                w,
+                limbs + c.nodes.len() * 2 + bounds.len() * 4 + 1,
+                "floor_source_copy",
+            )?;
+            crate::event_floor::charge(w, 1024 * c.states.len(), "floor_source_exact_enclosure")?;
+        }
+        Ok(Self::with_context(bounds, context))
+    }
+
     pub(crate) fn new(bounds: &[I]) -> Self {
         Self {
             bounds: bounds.to_vec(),
             exact: bounds.iter().map(|v| point(*v)).collect(),
             nodes: None,
+            floor_work: None,
+            floor_bounds: None,
         }
     }
     pub(crate) fn with_context(bounds: &[I], context: Option<&Context<'_>>) -> Self {
         let mut local = Self::with_proofs(bounds, context.map(|c| c.states));
         local.nodes = context.map(|c| c.nodes.clone());
+        local.floor_work = context.and_then(|c| c.floor_work.clone());
+        local.floor_bounds = context.and_then(|c| c.floor_bounds.clone());
         local
     }
     pub(crate) fn with_proofs(bounds: &[I], proofs: Option<&Proofs>) -> Self {
@@ -85,6 +291,51 @@ impl LocalState {
             }
         }
         local
+    }
+    pub(crate) fn try_assign(
+        &mut self,
+        state: usize,
+        expr: &E,
+        nodes: &[I],
+        bounds: I,
+    ) -> Result<(), crate::ir::Error> {
+        let has_floor = if let Some(w) = self.floor_work() {
+            crate::event_floor::contains_charged(expr, w)?
+        } else {
+            false
+        };
+        if has_floor {
+            let e = crate::event_floor::resolve(expr, nodes, self)?;
+            let w = self
+                .floor_work
+                .as_ref()
+                .ok_or_else(|| {
+                    crate::ir::Error::new("event_condition", "source floor assignment lacks owner")
+                })?
+                .clone();
+            let exact = self.try_value(&e, nodes)?;
+            crate::event_floor::charge(&w, 1024, "floor_source_exact_enclosure")?;
+            let tighter = exact
+                .as_ref()
+                .and_then(enclosure)
+                .filter(|v| bounds.lo <= v.lo && v.hi <= bounds.hi);
+            self.bounds[state] = tighter.unwrap_or(bounds);
+            self.exact[state] = exact.filter(|_| tighter.is_some());
+        } else if self.floor_work.is_some() {
+            let exact = self.try_value(expr, nodes)?;
+            if let Some(w) = &self.floor_work {
+                crate::event_floor::charge(w, 1024, "floor_source_exact_enclosure")?;
+            }
+            let tighter = exact
+                .as_ref()
+                .and_then(enclosure)
+                .filter(|v| bounds.lo <= v.lo && v.hi <= bounds.hi);
+            self.bounds[state] = tighter.unwrap_or(bounds);
+            self.exact[state] = exact.filter(|_| tighter.is_some());
+        } else {
+            self.assign(state, expr, nodes, bounds);
+        }
+        Ok(())
     }
     pub(crate) fn assign(&mut self, state: usize, expr: &E, nodes: &[I], bounds: I) {
         let exact = self.value(expr, nodes);
@@ -333,6 +584,64 @@ fn evaluate<W: FnMut() -> Option<()>>(
     }
 }
 
+/// Meter the source-request variant without changing old optional provenance.
+pub(crate) fn apply_charged(
+    model: &crate::events::EventModel,
+    selection: &crate::event_conditions::Selection,
+    inputs: &[I],
+    before: &[I],
+    after: &[I],
+    context: &Context<'_>,
+) -> Result<Proofs, crate::ir::Error> {
+    let Some(w) = context.floor_work.as_ref() else {
+        return Ok(apply(model, selection, inputs, before, after, context));
+    };
+    crate::event_floor::charge(w, model.program.nodes.len() + 1, "floor_source_copy")?;
+    let nodes = crate::causal_event::input_nodes(model, inputs);
+    let initial = LocalState::try_with_context(before, Some(context))?;
+    initial.prepay_copy()?;
+    let mut result = initial
+        .exact
+        .iter()
+        .enumerate()
+        .filter_map(|(s, v)| Some((s, v.clone()?)))
+        .collect::<Proofs>();
+    for (event, indices) in &selection.actions {
+        let mut local = initial.try_clone()?;
+        let body = &model.program.events[*event].body;
+        let size = crate::event_floor::encoded_size(body, w)?;
+        crate::event_floor::charge(w, size, "floor_source_copy")?;
+        let assignments = model.program.events[*event].assignments();
+        for &index in indices {
+            let a = &assignments[index];
+            let exact = if crate::event_floor::contains_charged(&a.rhs, w)? {
+                let resolved = crate::event_floor::resolve(&a.rhs, &nodes, &local)?;
+                local.try_value(&resolved, &nodes)?
+            } else {
+                local.try_value(&a.rhs, &nodes)?
+            };
+            crate::event_floor::charge(w, 144, "floor_source_copy")?;
+            local.exact[a.state] = exact.clone();
+            result.remove(&a.state);
+            if let Some(value) = exact {
+                result.insert(a.state, value);
+            }
+        }
+    }
+    crate::event_floor::charge(w, result.len() * 8, "floor_source_copy")?;
+    let mut checked = Proofs::new();
+    for (state, value) in result {
+        crate::event_floor::charge(w, 1024, "floor_source_exact_enclosure")?;
+        if after
+            .get(state)
+            .is_some_and(|b| enclosure(&value).is_some_and(|v| b.lo <= v.lo && v.hi <= b.hi))
+        {
+            checked.insert(state, value);
+        }
+    }
+    Ok(checked)
+}
+
 /// Replay the selected original assignments in a private proof frame. Every
 /// block starts from the same old state; unsupported writes clear provenance.
 pub(crate) fn apply(
@@ -389,6 +698,8 @@ mod native_floor_tests {
             bounds: vec![],
             exact: vec![],
             nodes: Some(vec![binary(0.), Some(R::new((-1).into(), 3.into()))]),
+            floor_work: None,
+            floor_bounds: None,
         };
         let node = E::Affine {
             constant: 0.,

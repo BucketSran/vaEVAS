@@ -1000,6 +1000,8 @@ fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
 
 #[derive(Clone, Default)]
 pub(crate) struct Operators {
+    held_targets: std::collections::BTreeMap<usize, Arc<crate::held_integer_target::Spec>>,
+    pub(crate) source_context: Option<Arc<crate::transition_source_plan::ProofContext>>,
     history_targets: std::collections::BTreeMap<usize, history_target::TargetPlan>,
     entries: Vec<Runtime>,
     changes_on_advance: Vec<bool>,
@@ -1082,7 +1084,7 @@ impl Evaluation<'_> {
             .transpose()?;
         let parameters = physical_parameters(parameters, &self.base.isolated_parameters, I::point);
         let parameters = parameters.as_ref();
-        let mut observed = self.base.clone();
+        let mut observed = self.base.candidate_clone()?;
         if let Some(continuous) = &self.base.continuous {
             observed.continuous = Some(Arc::new(match &physical_proofs {
                 Some(proofs) => continuous.mapped_event_with_time_proofs(
@@ -1286,7 +1288,7 @@ impl Evaluation<'_> {
         let bounds = bounds.as_ref();
 
         let copying = crate::diagnostics::span("history.clone");
-        let mut candidate = self.base.clone();
+        let mut candidate = self.base.candidate_clone()?;
         drop(copying);
         if let Some(proven) = proven {
             if candidate.entries.len() != proven.entries.len() {
@@ -1343,6 +1345,27 @@ impl Evaluation<'_> {
 }
 
 impl Operators {
+    pub(crate) fn candidate_clone(&self) -> Result<Self, Error> {
+        for (&index, spec) in &self.held_targets {
+            if let Runtime::Transition {
+                expression,
+                input,
+                input_bounds,
+                owner,
+                history,
+                ..
+            } = &self.entries[index]
+            {
+                spec.charge_runtime_copy(
+                    expression,
+                    input.states.len() + input.nodes.len() + input_bounds.len() + owner.len(),
+                )?;
+                history.charge_held_copy(&|amount| spec.charge(amount))?;
+            }
+        }
+        Ok(self.clone())
+    }
+
     #[allow(clippy::too_many_arguments)]
     fn refresh_history_targets(
         &mut self,
@@ -1641,9 +1664,38 @@ impl Operators {
             tolerances,
             None,
             Some(bounds),
+            None,
         )
     }
 
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_until_with_bootstrap_bounds_and_source(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        bounds: &[I],
+        horizon: f64,
+        tolerances: &Tolerances,
+        shared: Option<Arc<crate::transition_source_plan::ProofContext>>,
+    ) -> Result<Self, Error> {
+        if shared.is_none() {
+            return Self::new_until_with_bootstrap_bounds(
+                program, trajectory, driven, states, bounds, horizon, tolerances,
+            );
+        }
+        Self::new_until_with_seed_bounds(
+            program,
+            trajectory,
+            driven,
+            states,
+            horizon,
+            tolerances,
+            shared,
+            Some(bounds),
+            None,
+        )
+    }
     #[allow(clippy::too_many_arguments)]
     pub(crate) fn new_until_with_source_context(
         program: &Program,
@@ -1655,7 +1707,43 @@ impl Operators {
         shared: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
     ) -> Result<Self, Error> {
         Self::new_until_with_seed_bounds(
-            program, trajectory, driven, states, horizon, tolerances, shared, None,
+            program, trajectory, driven, states, horizon, tolerances, shared, None, None,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_until_with_held_points(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        bounds: &[I],
+        typed_targets: &BTreeSet<usize>,
+        context: Arc<crate::transition_source_plan::ProofContext>,
+        horizon: f64,
+        tolerances: &Tolerances,
+    ) -> Result<Self, Error> {
+        if typed_targets.is_empty()
+            || program
+                .operators
+                .iter()
+                .any(|s| !matches!(s, OperatorSpec::Transition { .. }))
+        {
+            return Err(Error::new(
+                "unsupported_held_integer_target",
+                "held integer targets require an all-Transition independent calendar",
+            ));
+        }
+        Self::new_until_with_seed_bounds(
+            program,
+            trajectory,
+            driven,
+            states,
+            horizon,
+            tolerances,
+            Some(context),
+            Some(bounds),
+            Some(typed_targets),
         )
     }
 
@@ -1669,6 +1757,7 @@ impl Operators {
         tolerances: &Tolerances,
         shared: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
         initial_bounds: Option<&[I]>,
+        typed_targets: Option<&BTreeSet<usize>>,
     ) -> Result<Self, Error> {
         let _timing = crate::diagnostics::span("history.prepare");
         if let Some(bounds) = initial_bounds {
@@ -1700,7 +1789,7 @@ impl Operators {
         let initial_bounds = physical_bounds.as_deref();
 
         let mut identities = BTreeSet::new();
-        for spec in &program.operators {
+        for (spec_index, spec) in program.operators.iter().enumerate() {
             let origin = spec.origin();
             if origin.instance.is_empty()
                 || origin.source.is_empty()
@@ -1725,6 +1814,7 @@ impl Operators {
                 ));
             }
             if initial_bounds.is_some()
+                && typed_targets.is_none()
                 && !matches!(spec,
                 OperatorSpec::Transition {input: Expression::State {state}, origin, ..}
                     if program.states.get(*state).is_some_and(|s|
@@ -1746,6 +1836,31 @@ impl Operators {
                 | OperatorSpec::Slew { input, .. }
                 | OperatorSpec::IdtMod { input, .. } => input,
             };
+            if typed_targets.is_some_and(|ids| ids.contains(&spec_index)) {
+                crate::held_integer_target::dependencies(
+                    input,
+                    program,
+                    &origin.instance,
+                    shared.as_ref().expect("typed owner"),
+                )?;
+                continue;
+            }
+            if typed_targets.is_some() {
+                // Opt-in typed targets do not inherit the separate077 bare-real
+                // nonpoint exception, including old targets in the same graph.
+                let (_, deps, _) =
+                    crate::continuous::integral_dependency_edges(input, program, &origin.instance)?;
+                let actual = initial_bounds.expect("held cold frame");
+                if deps
+                    .iter()
+                    .any(|&s| actual.get(s).is_none_or(|b| b.lo != b.hi))
+                {
+                    return Err(Error::new(
+                        "unsupported_initial_history",
+                        "typed target composition retains the original cold point-seed gate",
+                    ));
+                }
+            }
             // Validate raw indices and ownership before any interval indexing.
             // The kernel must not assume a trusted Python producer.
             if matches!(
@@ -1790,6 +1905,7 @@ impl Operators {
         let mut selected_slew_count = 0usize;
         let mut direct = Vec::new();
         let mut history_targets = std::collections::BTreeMap::new();
+        let mut held_targets = std::collections::BTreeMap::new();
         for (index, spec) in program.operators.iter().enumerate() {
             let direct_input = match spec {
                 OperatorSpec::Idt { input, origin, .. }
@@ -2008,6 +2124,45 @@ impl Operators {
                     fall,
                     origin,
                 } => {
+                    if typed_targets.is_some_and(|ids| ids.contains(&index)) {
+                        let spec = crate::held_integer_target::Spec::new(
+                            input,
+                            program,
+                            &origin.instance,
+                            source_context.as_ref().unwrap().clone(),
+                        )?;
+                        let (value, bound) = spec.evaluate(
+                            input,
+                            states,
+                            initial_bounds.expect("held target borrows actual cold box"),
+                        )?;
+                        spec.charge(
+                            4 + program.nodes.len()
+                                + 2 * program.states.len()
+                                + program.operators.len(),
+                        )?;
+                        let constant = Expression::Affine {
+                            constant: value,
+                            terms: vec![],
+                        };
+                        let affine = affine(&constant, program, &origin.instance)?;
+                        // Charge the original target copy and stored dependency row
+                        // before allocation; Arc Spec itself never copies a tree.
+                        spec.charge_runtime_copy(input, program.states.len())?;
+                        entries.push(Runtime::Transition {
+                            expression: input.clone(),
+                            program: source_context.as_ref().unwrap().program_arc(),
+                            owner: origin.instance.clone(),
+                            source: None,
+                            input: affine,
+                            input_bounds: initial_bounds.expect("actual cold target box").to_vec(),
+                            history: Box::new(Transition::enclosed(
+                                value, bound, *delay, *rise, *fall,
+                            )?),
+                        });
+                        held_targets.insert(index, spec);
+                        continue;
+                    }
                     if let Some(plan) = history_target::TargetPlan::specification(
                         input,
                         program,
@@ -2199,6 +2354,8 @@ impl Operators {
             changes_on_advance.push(changes);
         }
         let mut result = Self {
+            held_targets,
+            source_context,
             history_targets,
             entries,
             changes_on_advance,
@@ -2271,6 +2428,9 @@ impl Operators {
         let entry = &self.entries[index];
         let result = match entry {
             Runtime::Transition { history, .. } => {
+                if let Some(spec) = self.held_targets.get(&index) {
+                    history.charge_held_copy(&|amount| spec.charge(amount))?;
+                }
                 let mut history = (**history).clone();
                 history.advance_time(time.lo)?;
                 history.continuous_range(time)?
@@ -3150,6 +3310,28 @@ impl Operators {
                         *input = next.target.affine;
                         *input_bounds = next.target.coefficients;
                         **current = next.source;
+                    } else if let Some(spec) = self.held_targets.get(&index) {
+                        // Recheck the actual epoch even if a caller reports no
+                        // nominal writes. A certificate/box change is relevant.
+                        let (value, enclosure) = spec.evaluate(expression, states, bounds)?;
+                        let may_change = changed.iter().any(|s| spec.dependencies.contains(s))
+                            || spec
+                                .dependencies
+                                .iter()
+                                .any(|&s| input_bounds.get(s) != bounds.get(s));
+                        if may_change {
+                            spec.charge(1 + bounds.len())?;
+                            *input_bounds = bounds.to_vec();
+                        }
+                        history.advance_at_with_proofs(
+                            time,
+                            time_bounds,
+                            value,
+                            enclosure,
+                            may_change,
+                            exact_root,
+                            None,
+                        )?;
                     } else {
                         let may_change =
                             changed.iter().any(|s| input.state_dependencies.contains(s));
@@ -3195,6 +3377,26 @@ impl Operators {
         Ok(())
     }
 
+    #[cfg(test)]
+    pub(crate) fn test_held_contexts(
+        &self,
+    ) -> Vec<Arc<crate::transition_source_plan::ProofContext>> {
+        self.held_targets
+            .values()
+            .map(|spec| spec.test_context())
+            .collect()
+    }
+
+    #[cfg(test)]
+    pub(crate) fn test_transition_histories(&self) -> Vec<Transition> {
+        self.entries
+            .iter()
+            .filter_map(|e| match e {
+                Runtime::Transition { history, .. } => Some(history.as_ref().clone()),
+                _ => None,
+            })
+            .collect()
+    }
     pub(crate) fn same_reset_history(&self, other: &Self) -> bool {
         if self.history_targets.len() != other.history_targets.len()
             || self.history_targets.iter().any(|(i, p)| {

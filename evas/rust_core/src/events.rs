@@ -473,7 +473,10 @@ pub(crate) struct TriggerLeaf {
 }
 
 pub(crate) struct EventModel {
+    pub(crate) typed_transition_targets: BTreeSet<usize>,
+    pub(crate) source_context: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
     pub(crate) program: Program,
+    pub(crate) floor_source: Option<std::sync::Arc<crate::event_floor::Request>>,
     pub(crate) dc_projection: Option<std::sync::Arc<crate::dc_projection::DcProjection>>,
     rhs: Vec<AffineState>,
     pub(crate) guards: Vec<Option<AffineState>>,
@@ -509,7 +512,83 @@ impl EventModel {
         tolerances: Tolerances,
         trajectory: Option<&crate::pwl::Trajectory>,
     ) -> Result<Self, Error> {
-        crate::event_control::validate(&program)?;
+        Self::build_with_context(program, driven, tolerances, trajectory, None, true)
+    }
+    /// A composed caller constructs one original-request owner before Stage0.
+    /// Held target admission borrows it; retries and Operators clones keep it.
+    #[allow(dead_code)] // Composed Stage0 request entry; independently tested below.
+    pub(crate) fn new_with_context(
+        program: Program,
+        driven: Vec<String>,
+        tolerances: Tolerances,
+        trajectory: Option<&crate::pwl::Trajectory>,
+        provided: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
+    ) -> Result<Self, Error> {
+        Self::build_with_context(program, driven, tolerances, trajectory, provided, false)
+    }
+    fn build_with_context(
+        program: Program,
+        driven: Vec<String>,
+        tolerances: Tolerances,
+        trajectory: Option<&crate::pwl::Trajectory>,
+        provided: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
+        request_entry: bool,
+    ) -> Result<Self, Error> {
+        let admission =
+            crate::event_control::admit(&program, provided.as_ref().map(|s| s.borrow_work()))?;
+        if trajectory.is_none() && admission.source_floor() {
+            return Err(Error::new(
+                "unsupported_floor",
+                "source floor requires the original physical trajectory",
+            ));
+        }
+        if !request_entry
+            && provided.is_none()
+            && (!admission.targets.is_empty() || admission.source_floor())
+        {
+            return Err(Error::new(
+                "invalid_ir",
+                "event source helper requires the original provided source context",
+            ));
+        }
+        let floor_source = if let Some(t) = trajectory {
+            crate::event_floor::Request::new(&admission, t, &driven, provided.clone())?
+        } else {
+            None
+        };
+        if floor_source.is_none() {
+            if let Some(source) = &provided {
+                crate::event_floor::check_provided_binding(
+                    source,
+                    &program,
+                    trajectory.ok_or_else(|| {
+                        Error::new(
+                            "unsupported_held_integer_target",
+                            "typed target requires its original trajectory",
+                        )
+                    })?,
+                    &driven,
+                )?;
+            }
+        }
+        let shared = provided.or_else(|| floor_source.as_ref().map(|r| r.source.clone()));
+        let source_context = if let Some(context) = shared {
+            Some(context)
+        } else if admission.targets.is_empty() {
+            None
+        } else {
+            Some(crate::transition_source_plan::ProofContext::new_held(
+                &program,
+                trajectory.ok_or_else(|| {
+                    Error::new(
+                        "unsupported_held_integer_target",
+                        "typed target requires a transient point frame",
+                    )
+                })?,
+                &driven,
+                admission.copy_items,
+            )?)
+        };
         let initial_values = program
             .states
             .iter()
@@ -569,6 +648,7 @@ impl EventModel {
             program: &Program,
             owner: &str,
             numeric: bool,
+            work: Option<&crate::transition_source_plan::Work>,
         ) -> Result<(), Error> {
             for statement in body {
                 match statement {
@@ -587,7 +667,10 @@ impl EventModel {
                         crate::display::validate(format, args.len())?;
                         for argument in args {
                             crate::display::validate_expression(argument, program, owner)?;
-                            if !numeric && crate::event_numeric::contains_math(argument) {
+                            if !numeric
+                                && crate::event_numeric::contains_math(argument)
+                                && !crate::event_floor::display_operand(argument, work)?
+                            {
                                 return Err(Error::new(
                                     "unsupported_transient",
                                     "pure event mathematics requires an isolated observer",
@@ -601,17 +684,17 @@ impl EventModel {
                         update,
                         ..
                     } => {
-                        validate_displays(initialize, program, owner, numeric)?;
-                        validate_displays(body, program, owner, numeric)?;
-                        validate_displays(update, program, owner, numeric)?;
+                        validate_displays(initialize, program, owner, numeric, work)?;
+                        validate_displays(body, program, owner, numeric, work)?;
+                        validate_displays(update, program, owner, numeric, work)?;
                     }
                     crate::ir::Statement::If {
                         then_body,
                         else_body,
                         ..
                     } => {
-                        validate_displays(then_body, program, owner, numeric)?;
-                        validate_displays(else_body, program, owner, numeric)?;
+                        validate_displays(then_body, program, owner, numeric, work)?;
+                        validate_displays(else_body, program, owner, numeric, work)?;
                     }
                     crate::ir::Statement::ArrayWrite {
                         states,
@@ -643,12 +726,19 @@ impl EventModel {
                 &program,
                 &event.origin.instance,
                 passive_events[index],
+                floor_source.as_ref().map(|r| r.work()),
             )?;
         }
         let mut actions = Vec::new();
         let mut action_expressions = Vec::new();
         let mut numeric_actions = Vec::new();
-        let causal_numeric = crate::causal_event::classify(&program, &passive_events, &driven)?;
+        let causal_numeric = crate::causal_event::classify(
+            &program,
+            &passive_events,
+            &driven,
+            &admission,
+            floor_source.as_ref().map(|r| r.work()),
+        )?;
         let general_events: Vec<_> = passive_events
             .iter()
             .zip(&causal_numeric)
@@ -804,12 +894,16 @@ impl EventModel {
         let (projected, node_inputs) =
             crate::event_accuracy::GuardBounds::passive_program(&program);
         passive_conditions.prepare(&projected, &node_inputs)?;
+        let typed_transition_targets = admission.targets;
         let mut model = Self {
+            typed_transition_targets,
+            source_context,
             conditions,
             passive_conditions,
             passive_events,
             program,
             dc_projection: None,
+            floor_source,
             rhs,
             guards,
             dynamic_guards,
@@ -1523,17 +1617,25 @@ impl EventModel {
         before: &[f64],
         operators: &[f64],
     ) -> Result<Circuit, Error> {
-        self.event_circuit_program_impl(selected, selection, before, operators, None)
+        self.event_circuit_program_impl(selected, selection, before, operators, None, None)
     }
-    pub(crate) fn event_circuit_program_with_inputs(
+    pub(crate) fn event_circuit_program_with_inputs_and_proofs(
         &self,
         selected: &Program,
         selection: &Selection,
         before: &[f64],
         operators: &[f64],
         inputs: &[f64],
+        proofs: Option<&crate::event_value_proof::Context<'_>>,
     ) -> Result<Circuit, Error> {
-        self.event_circuit_program_impl(selected, selection, before, operators, Some(inputs))
+        self.event_circuit_program_impl(
+            selected,
+            selection,
+            before,
+            operators,
+            Some(inputs),
+            proofs,
+        )
     }
     fn event_circuit_program_impl(
         &self,
@@ -1542,7 +1644,27 @@ impl EventModel {
         before: &[f64],
         operators: &[f64],
         inputs: Option<&[f64]>,
+        proofs: Option<&crate::event_value_proof::Context<'_>>,
     ) -> Result<Circuit, Error> {
+        if let Some(w) = proofs.and_then(|c| c.floor_work()) {
+            let n = self.program.nodes.len()
+                + self.program.states.len()
+                + self.program.operators.len()
+                + 1;
+            let mut actions = selection.actions.len() + 1;
+            for (_, indices) in &selection.actions {
+                crate::event_floor::charge(w, 1, "floor_source_joint_scan")?;
+                actions = actions.saturating_add(indices.len());
+            }
+            crate::event_floor::charge(
+                w,
+                8usize
+                    .saturating_mul(n)
+                    .saturating_mul(n)
+                    .saturating_mul(actions),
+                "floor_source_joint_dense",
+            )?;
+        }
         let initial: Vec<_> = before
             .iter()
             .map(|&value| AffineState {
@@ -1573,12 +1695,13 @@ impl EventModel {
                         .iter()
                         .map(|v| v.value(&nodes, &[]))
                         .collect::<Result<Vec<_>, _>>()?;
-                    let value = crate::event_numeric::value(
+                    let value = crate::event_numeric::value_with_proofs(
                         &self.action_expressions[*event][index],
                         &self.program,
                         &self.program.events[*event].origin.instance,
                         &nodes,
                         &values,
+                        proofs,
                     )?;
                     let mut fixed = initial[*state].clone();
                     fixed.constant = value;
@@ -1826,6 +1949,16 @@ impl EventModel {
         before: &[f64],
         time: f64,
     ) -> Result<(Vec<f64>, Vec<crate::ir::DisplayRecord>), Error> {
+        self.apply_with_displays_with_proofs(selection, voltages, before, time, None)
+    }
+    pub(crate) fn apply_with_displays_with_proofs(
+        &self,
+        selection: &Selection,
+        voltages: &[f64],
+        before: &[f64],
+        time: f64,
+        proofs: Option<&crate::event_value_proof::Context<'_>>,
+    ) -> Result<(Vec<f64>, Vec<crate::ir::DisplayRecord>), Error> {
         fn collect<'a>(body: &'a [crate::ir::Statement], out: &mut Vec<&'a crate::ir::Statement>) {
             for statement in body {
                 match statement {
@@ -1864,12 +1997,13 @@ impl EventModel {
                     crate::event_conditions::SelectedStep::Assign(index) => {
                         let (state, expression) = &self.actions[*event][*index];
                         local[*state] = if self.numeric_actions[*event][*index] {
-                            crate::event_numeric::value(
+                            crate::event_numeric::value_with_proofs(
                                 &self.action_expressions[*event][*index],
                                 &self.program,
                                 &self.program.events[*event].origin.instance,
                                 voltages,
                                 &local,
+                                proofs,
                             )?
                         } else {
                             expression.value(voltages, &local)?
@@ -1887,12 +2021,13 @@ impl EventModel {
                             let values = args
                                 .iter()
                                 .map(|expr| {
-                                    crate::display::evaluate(
+                                    crate::event_numeric::value_with_proofs(
                                         expr,
                                         &self.program,
                                         &body.origin.instance,
                                         voltages,
                                         &local,
+                                        proofs,
                                     )
                                 })
                                 .collect::<Result<Vec<_>, _>>()?;
@@ -1918,18 +2053,28 @@ impl EventModel {
         voltages: &[f64],
         before: &[f64],
     ) -> Result<Vec<f64>, Error> {
+        self.apply_with_proofs(selection, voltages, before, None)
+    }
+    pub(crate) fn apply_with_proofs(
+        &self,
+        selection: &Selection,
+        voltages: &[f64],
+        before: &[f64],
+        proofs: Option<&crate::event_value_proof::Context<'_>>,
+    ) -> Result<Vec<f64>, Error> {
         let mut after = before.to_vec();
         for (event, indices) in &selection.actions {
             let mut local = before.to_vec();
             for &index in indices {
                 let (state, expression) = &self.actions[*event][index];
                 local[*state] = if self.numeric_actions[*event][index] {
-                    crate::event_numeric::value(
+                    crate::event_numeric::value_with_proofs(
                         &self.action_expressions[*event][index],
                         &self.program,
                         &self.program.events[*event].origin.instance,
                         voltages,
                         &local,
+                        proofs,
                     )?
                 } else {
                     expression.value(voltages, &local)?

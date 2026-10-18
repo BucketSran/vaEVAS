@@ -1834,3 +1834,39 @@ Transition输出乘原始输入供电差、再由内部节点cross采样时，�
 独立合同见`test_dc_factor.py`：正负供电、非零参考、跨实例与近邻不同history根、全域变化与误差拒绝，
 以及原根误差在后续电压放大后紧预算拒绝、宽预算返回区间包围独立有理真值。
 同engine失败重试与共享额度耗尽由`dc_projection`私有测试覆盖。原111已随wave15统一候选通过完整请求与原checker；身份与资源边界见[低成本闭包收据](../../../experiments/backends/support/low-cost-closure/evidence.json)，不据此开放一般联合仿射历史组合。
+
+### IR29 本地候选：typed 逻辑右移、按位与及严格保持目标
+
+IR29 / 0.22.0 在既有 typed 事件树中新增 `ShiftRight` 和 `BitAnd`。`>>` 的计数必须来自
+integer 常量，先解释为32位无符号数，计数大于等于32时结果为零，包括源 `-1`。
+例如 `-1>>1=2147483647`、`-1>>31=1`、`-1>>32=0`。`&` 对32位补码逐位求与。
+每个原 Add/Subtract/Rem 子节点仍先检查 signed32，父 `&0` 或 `>>32` 不抹掉子节点溢出。
+旧256有限域及4096决策表示成功时保持旧IR；不新增左移、Or/Xor、单目负号、Divide、
+普通连续integer贡献、trigger或一般CheckedInteger/Floor准入。
+
+新增 target 是独立 opt-in 消费者，限普通独立日历、全Transition图中的同owner integer
+保持状态纯函数。只接受严格projection/Select，原实数常量系数可用于投影；每个原依赖，
+包括未选分支和乘零后的依赖，都须经过结构/owner审计。实际Prepared/Frame盒须为与
+名义值一致的有限signed32整数点，real state即使当前为整数点也不满足typed叶要求。
+冷启动保留原point gate，不借用077裸real非点seed豁免。详细历史/误差合同见
+[严格保持整数目标](operators.md#native-held-bits29)。
+
+编译期 `Compilation.native_audit` 保存同一个累计账本。旧无新typed target的程序继续使用
+原每事件100000审计限制。首次新target启用aggregate100000限制时，已经发生的全部计费
+也计入，因此这是新组合入口更严格的工程准入。其后每个事件和target、失败fallback、
+重试、实际Source AST/typing/IR emission/metadata遍历以及展开wire/copy均沿同owner扣费，
+不为每target或重试重开额度。IR100000/depth96及其他原cap仍独立成立。
+`Program.to_dict` 对opt-in程序逐个展开引用并计费；同一Program重复调用不会退款。
+运行期沿原 `ProofContext` 的同一Work，旧无新target程序不创建新target proof。
+跨feature入口可通过 `EventModel::new_with_context` 借用调用方在Stage0前创建的原请求Arc；
+组合调用方不得为Floor、typed target或其他新消费者各建一个默认额度。
+
+公共回归在 `test_native_held_bits29.py`、`test_held_integer_targets.py`、
+`test_native_audit.py`。同Controller目标失败、实际Prepared/Frame非点拒绝和两事件两目标
+自然耗尽后两次重试见 `transient_lifecycle_tests.rs::held29_*`。它们是开发证据，
+不代表原061/062/027通过、完整Python/400、安装或发布验收。
+
+保持target的长owner及依赖集合辅助按[amount审计费用](operators.md#native-held-bits29)
+在实际操作前预付同一Work。运行期Work100000耗尽回归是缩限单元控制，不代表生产1e9额度自然耗尽；
+编译aggregate100000的原额度耗尽证据与此分开。原Frame字段复制和首轮serde转换保持旧边界，
+不计作新增target reservation已覆盖的工作。

@@ -22,6 +22,46 @@ class ProofWork:
             raise ProofBudgetExceeded('integer invariant exceeds source proof budget (100000)')
 
 
+class SourceProofRequest:
+    """Record existing local proof costs; only new Floor activates aggregation.
+
+    Old callers retain their original per-instance ProofWork enforcement. New
+    admission never creates credit after the already-recorded request prefix.
+    This is the same proof stage, separate from native typed-audit allowances.
+    """
+    def __init__(self):
+        self.used = 0
+        self.active = False
+
+    def _check(self):
+        if self.used > MAX_IR_ITEMS:
+            raise ProofBudgetExceeded('source floor request exceeds existing source proof budget (100000)')
+
+    def activate(self):
+        self.active = True
+        self._check()
+
+    def charge(self):
+        self.used += 1
+        if self.active:
+            self._check()
+
+    def instance(self):
+        request = self
+        class LocalProofWork:
+            def __init__(self):
+                self.local = ProofWork()
+
+            @property
+            def used(self):
+                return self.local.used
+
+            def charge(self):
+                request.charge()
+                self.local.charge()
+        return LocalProofWork()
+
+
 def proof_parameters(parameters, work):
     if getattr(parameters, 'integer_proof_counter', None) is work:
         return parameters

@@ -68,6 +68,10 @@ fn contains(bounds: I, value: &R) -> bool {
 pub(crate) type TimeProofs = std::collections::BTreeMap<usize, RootTime>;
 
 impl RootTime {
+    pub(crate) fn copy_items(&self) -> usize {
+        4 + ((self.0.numer().bits() + self.0.denom().bits()) as usize).div_ceil(8)
+    }
+
     pub(crate) fn rational(&self) -> &R {
         &self.0
     }
@@ -332,11 +336,12 @@ impl Curve {
     pub(crate) fn charge_source_copy(
         &self,
         work: &crate::transition_source_plan::Work,
+        names: [&'static str; 3],
     ) -> Result<(), crate::ir::Error> {
         for (t, v) in &self.0 {
             work.debit(2, 1)?;
-            crate::diagnostics::counter("selected_ln_ast_visits", 1);
-            crate::diagnostics::counter("selected_ln_work_debit", 1);
+            crate::diagnostics::counter(names[0], 1);
+            crate::diagnostics::counter(names[2], 1);
             let items = 2 + [
                 t.numer().bits(),
                 t.denom().bits(),
@@ -347,8 +352,8 @@ impl Curve {
             .map(|bits| bits.div_ceil(64) as usize)
             .sum::<usize>();
             work.debit(2, items as u64)?;
-            crate::diagnostics::counter("selected_ln_copy_items", items);
-            crate::diagnostics::counter("selected_ln_work_debit", items);
+            crate::diagnostics::counter(names[1], items);
+            crate::diagnostics::counter(names[2], items);
         }
         Ok(())
     }

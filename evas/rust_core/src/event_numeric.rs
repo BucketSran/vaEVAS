@@ -403,6 +403,40 @@ fn bind_math(e: &E, p: &Program, owner: &str, nodes: &[f64], states: &[f64]) -> 
     })
 }
 
+pub(crate) fn value_with_proofs(
+    e: &E,
+    p: &Program,
+    owner: &str,
+    nodes: &[f64],
+    states: &[f64],
+    context: Option<&crate::event_value_proof::Context<'_>>,
+) -> Result<f64, Error> {
+    let Some(w) = context.and_then(|c| c.floor_work()) else {
+        return value(e, p, owner, nodes, states);
+    };
+    if !crate::event_floor::contains_charged(e, w)? {
+        return value(e, p, owner, nodes, states);
+    }
+    if let Some(w) = context.and_then(|c| c.floor_work()) {
+        crate::event_floor::charge(w, states.len() + nodes.len() + 2, "floor_source_copy")?;
+    }
+    let state_bounds = states.iter().copied().map(I::point).collect::<Vec<_>>();
+    let local = crate::event_value_proof::LocalState::try_with_context(&state_bounds, context)?;
+    let node_bounds = nodes.iter().copied().map(I::point).collect::<Vec<_>>();
+    let resolved = crate::event_floor::resolve(e, &node_bounds, &local)?;
+    if let Some(w) = local.floor_work() {
+        // Existing affine replay builds dense node/state rows. Serialized tree
+        // length bounds node count; reserve before its traversal/allocations.
+        let size = crate::event_floor::encoded_size(&resolved, w)?;
+        crate::event_floor::charge(
+            w,
+            8 * size * (nodes.len() + states.len() + 1).saturating_pow(2),
+            "floor_source_dense",
+        )?;
+    }
+    value(&resolved, p, owner, nodes, states)
+}
+
 pub(crate) fn bounds(e: &E, nodes: &[I], states: &[I]) -> Result<I, Error> {
     bounds_in(e, nodes, states, None)
 }
@@ -411,7 +445,17 @@ pub(crate) fn bounds_with_proofs(
     nodes: &[I],
     states: &crate::event_value_proof::LocalState,
 ) -> Result<I, Error> {
-    bounds_in(e, nodes, states, Some(states))
+    let has_floor = if let Some(w) = states.floor_work() {
+        crate::event_floor::contains_charged(e, w)?
+    } else {
+        false
+    };
+    if has_floor {
+        let resolved = crate::event_floor::resolve(e, nodes, states)?;
+        bounds_in(&resolved, nodes, states, Some(states))
+    } else {
+        bounds_in(e, nodes, states, Some(states))
+    }
 }
 fn bounds_in(
     e: &E,

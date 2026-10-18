@@ -215,10 +215,24 @@ impl Trajectory {
         &self,
         work: &crate::transition_source_plan::Work,
     ) -> Result<(), Error> {
+        self.charge_source_copy_named(
+            work,
+            [
+                "selected_ln_ast_visits",
+                "selected_ln_copy_items",
+                "selected_ln_work_debit",
+            ],
+        )
+    }
+    pub(crate) fn charge_source_copy_named(
+        &self,
+        work: &crate::transition_source_plan::Work,
+        names: [&'static str; 3],
+    ) -> Result<(), Error> {
         let debit = |items: usize| -> Result<(), Error> {
             work.debit(2, items as u64)?;
-            crate::diagnostics::counter("selected_ln_copy_items", items);
-            crate::diagnostics::counter("selected_ln_work_debit", items);
+            crate::diagnostics::counter(names[1], items);
+            crate::diagnostics::counter(names[2], items);
             Ok(())
         };
         debit(
@@ -244,7 +258,7 @@ impl Trajectory {
         for curve in &self.exact_sources {
             debit(1)?;
             if let Some(curve) = curve {
-                curve.charge_source_copy(work)?;
+                curve.charge_source_copy(work, names)?;
             }
         }
         Ok(())
