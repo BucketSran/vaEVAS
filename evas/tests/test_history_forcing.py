@@ -12,7 +12,8 @@ import unittest
 from evas import Instance, compile_sources, transient
 
 
-KERNEL = Path(os.environ['EVAS_TEST_KERNEL'])
+KERNEL = Path(os.environ.get(
+    'EVAS_TEST_KERNEL', Path(__file__).resolve().parents[1] / 'rust_core/target/debug/evas-kernel'))
 SOURCE = '''`include "disciplines.vams"
 module mixer(u,lo,rst,y,metric);
 input u,lo,rst; output y,metric; electrical u,lo,rst,y,metric;

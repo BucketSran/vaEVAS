@@ -5,8 +5,8 @@ from fractions import Fraction as Q
 import bisect,json,os,tempfile,unittest
 from unittest.mock import patch
 from evas import Instance,compile_sources,transient
-from test_history_forcing import SOURCE
-KERNEL=Path(os.environ.get('FORCING_POINT_KERNEL',os.environ['EVAS_TEST_KERNEL']))
+from test_history_forcing import KERNEL as DEFAULT_KERNEL, SOURCE
+KERNEL=Path(os.environ.get('FORCING_POINT_KERNEL',DEFAULT_KERNEL))
 class OwnedPhysicalPoint(unittest.TestCase):
  def test_complete_clock_grid_preserves_physical_fraction_oracle(self):
   f=json.loads((Path(__file__).parent/'fixtures/forcing-owned-clock.json').read_text());stop=f['stop']

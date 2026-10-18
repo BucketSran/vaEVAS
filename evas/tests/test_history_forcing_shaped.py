@@ -9,9 +9,9 @@ from unittest.mock import patch
 import unittest
 from evas import Instance,compile_sources,transient
 from evas.scs_sources import voltage_points
-from test_history_forcing import SOURCE
+from test_history_forcing import KERNEL as DEFAULT_KERNEL, SOURCE
 
-KERNEL=Path(os.environ.get('FORCING_SHAPE_KERNEL',os.environ['EVAS_TEST_KERNEL']))
+KERNEL=Path(os.environ.get('FORCING_SHAPE_KERNEL',DEFAULT_KERNEL))
 
 class PhysicalForcing(unittest.TestCase):
     def run_shape(self,source=SOURCE,shaped=True,foreign=False,pulse=None):
