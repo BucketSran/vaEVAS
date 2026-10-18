@@ -176,6 +176,9 @@ pub(super) fn prepare(
     model: &EventModel,
     trajectory: &Trajectory,
 ) -> Result<Option<Prepared>, Error> {
+    if let Some(request) = &model.floor_source {
+        request.source.charge(0)?;
+    }
     let zero: BTreeSet<_> = model
         .triggers
         .iter()
@@ -217,6 +220,12 @@ pub(super) fn prepare(
         .flat_map(|&i| model.program.events[i].assignments())
         .map(|a| a.state)
         .collect();
+    // With no zero-timer writes the original disjoint-seed test is true for
+    // every seed set. A source Floor request needs no bootstrap proof here;
+    // its ordinary target construction and event validation still follow.
+    if model.floor_source.is_some() && assigned.is_empty() {
+        return Ok(None);
+    }
     let mut seeds = BTreeSet::new();
     // Only the ordinary fixed-timer schedule has a bounded cold constructor.
     // All other compositions retain the original point-seed certificate.

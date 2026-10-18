@@ -152,6 +152,13 @@ fn source_floor_natural_original_owner_exhaustion_and_twice_retry_no_clone_or_he
                     c.prepare_events(&m, &t, &calendar).err().unwrap().kind,
                     "step_budget"
                 );
+                let work = m.floor_source.as_ref().unwrap().work();
+                let spent = work.spent();
+                assert_eq!(
+                    initialization::prepare(&m, &t).err().unwrap().kind,
+                    "step_budget"
+                );
+                assert_eq!(work.spent(), spent);
             }
             Ok(())
         });
@@ -335,6 +342,118 @@ fn source_floor_joint_preview_uses_the_same_certified_bin_as_final_apply() {
         m.apply_with_proofs(&selection, &solved.voltages, &before, Some(&context))
             .unwrap(),
         [0.]
+    );
+}
+
+#[test]
+fn source_floor_without_zero_writes_does_not_prepare_bootstrap_proofs() {
+    let (model, trajectory, _, _) = fixture();
+    let work = model.floor_source.as_ref().unwrap().work();
+    let before = work.spent();
+    let (answer, report) = capture(Options::default(), || {
+        initialization::prepare(&model, &trajectory)
+    });
+    assert!(answer.unwrap().is_none());
+    assert_eq!(work.spent(), before);
+    assert_eq!(
+        report
+            .counters
+            .get("floor_source_bootstrap_dependency_calls")
+            .copied()
+            .unwrap_or(0),
+        0
+    );
+}
+
+#[test]
+fn source_floor_context_reuses_actual_point_certificate_but_preserves_nonpoint_inputs() {
+    let (model, trajectory, _, _) = fixture();
+    let proofs = crate::event_value_proof::Proofs::new();
+    let root = crate::exact_source::RootTime::point(0.5).unwrap();
+    for bounds in [I::point(0.03), I { lo: 0.02, hi: 0.04 }] {
+        let (answer, report) = capture(Options::default(), || {
+            crate::event_value_proof::Context::try_new(
+                &model,
+                &trajectory,
+                &[bounds],
+                &proofs,
+                Some(&root),
+            )
+        });
+        let context = answer.unwrap();
+        let local =
+            crate::event_value_proof::LocalState::try_with_context(&[I::point(2.)], Some(&context))
+                .unwrap();
+        assert_eq!(local.floor_bound(1), Some(bounds));
+        assert_eq!(
+            local.floor_node(1),
+            crate::exact_source::binary(0.03).as_ref()
+        );
+        let expected = u64::from(bounds.lo != bounds.hi);
+        assert_eq!(
+            report
+                .counters
+                .get("floor_source_helper_calls")
+                .copied()
+                .unwrap_or(0),
+            expected
+        );
+        assert_eq!(
+            report
+                .counters
+                .get("floor_source_helper_reservations")
+                .copied()
+                .unwrap_or(0),
+            expected * 200000
+        );
+    }
+}
+
+#[test]
+fn source_floor_context_reserves_only_actual_nonpoint_physical_reads() {
+    let (old, old_trajectory, _, _) = fixture();
+    let mut program = old.program.clone();
+    program.nodes.push("supply".into());
+    let mut config = old_trajectory.config.clone();
+    config.pwl.push(vec![[0., 0.9], [1., 0.9]]);
+    let trajectory = Trajectory::new(config, 2).unwrap();
+    let model = EventModel::new_with_trajectory(
+        program,
+        vec!["u".into(), "supply".into()],
+        old.tolerances,
+        Some(&trajectory),
+    )
+    .unwrap();
+    let inputs = [I { lo: 0.02, hi: 0.04 }, I::point(0.9)];
+    let proofs = crate::event_value_proof::Proofs::new();
+    let root = crate::exact_source::RootTime::point(0.5).unwrap();
+    let (answer, report) = capture(Options::default(), || {
+        crate::event_value_proof::Context::try_new(
+            &model,
+            &trajectory,
+            &inputs,
+            &proofs,
+            Some(&root),
+        )
+    });
+    let context = answer.unwrap();
+    assert_eq!(report.counters.get("floor_source_helper_calls"), Some(&1));
+    assert_eq!(
+        report.counters.get("floor_source_helper_reservations"),
+        Some(&200000)
+    );
+    let local =
+        crate::event_value_proof::LocalState::try_with_context(&[I::point(2.)], Some(&context))
+            .unwrap();
+    assert_eq!(local.floor_bound(1), Some(inputs[0]));
+    assert_eq!(local.floor_bound(3), Some(inputs[1]));
+    assert_eq!(
+        local.floor_node(1),
+        crate::exact_source::binary(0.03).as_ref()
+    );
+    assert_eq!(
+        local.floor_node(3),
+        crate::exact_source::binary(0.9).as_ref()
     );
 }
 

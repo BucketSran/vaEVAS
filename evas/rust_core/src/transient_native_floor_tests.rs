@@ -154,11 +154,11 @@ fn nf_copy_record(r: &EventRecord) -> EventRecord {
 fn nf_both_consumers(r: &Report) {
     assert!(
         r.counters
-            .get("floor_source_helper_calls")
+            .get("floor_source_exact_decisions")
             .copied()
             .unwrap_or(0)
             > 0,
-        "the actual Floor paired helper did not run"
+        "the actual original-tree Floor decision did not run"
     );
     assert!(
         r.counters

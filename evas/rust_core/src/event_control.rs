@@ -183,7 +183,7 @@ pub(crate) fn admit<'a>(
                     summary.floor |= c.floor;
                     summary.event_only |= c.event_only;
                 }
-                let child = |name: &str| m.get(name).map(&get).unwrap_or_default();
+                let child = |name: &str| m.get(name).map(get).unwrap_or_default();
                 summary.event_only |= m.get("op").and_then(Value::as_str).is_some_and(|op| {
                     matches!(
                         op,
@@ -262,7 +262,7 @@ pub(crate) fn admit<'a>(
                 )?;
             }
             let typed = spec.get("kind").and_then(Value::as_str) == Some("transition")
-                && spec.get("input").is_some_and(&event_only);
+                && spec.get("input").is_some_and(event_only);
             if typed {
                 if let Some(w) = work {
                     crate::event_floor::charge(
@@ -302,7 +302,7 @@ pub(crate) fn admit<'a>(
         .is_some_and(|events| {
             events
                 .iter()
-                .any(|e| e.get("trigger").is_some_and(&event_only))
+                .any(|e| e.get("trigger").is_some_and(event_only))
         })
     {
         return Err(Error::new(

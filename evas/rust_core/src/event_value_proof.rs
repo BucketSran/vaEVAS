@@ -34,14 +34,17 @@ impl<'a> Context<'a> {
             if root.is_some() {
                 crate::event_floor::charge(
                     request.work(),
-                    model.driven.len().saturating_add(1),
+                    model.driven.len().saturating_add(1).saturating_mul(8),
                     "floor_source_binding_scan",
                 )?;
                 let calls = trajectory
                     .exact_sources
                     .iter()
+                    .zip(inputs)
                     .take(model.driven.len())
-                    .filter(|c| c.is_some())
+                    .filter(|(source, bounds)| {
+                        source.is_some() && !(bounds.finite() && bounds.lo == bounds.hi)
+                    })
                     .count();
                 crate::event_floor::charge(
                     request.work(),
@@ -142,14 +145,25 @@ impl<'a> Context<'a> {
         let mut nodes = vec![None; model.program.nodes.len()];
         nodes[0] = binary(0.);
         for (k, (name, &bounds)) in model.driven.iter().zip(inputs).enumerate() {
-            let original = root
-                .and_then(|r| trajectory.exact_sources.get(k)?.as_ref()?.at_root(r))
-                .filter(|v| enclosure(v).is_some_and(|i| bounds.lo <= i.lo && i.hi <= bounds.hi));
+            // A finite inherited singleton already certifies this exact binary
+            // value. The old root result could only be used if enclosed by
+            // that same singleton, so both rational values would be equal.
+            // Restrict this order to the source Floor consumer. Nonpoint boxes
+            // and every legacy caller retain their original root proof.
+            let value = if indices.is_some() && bounds.finite() && bounds.lo == bounds.hi {
+                point(bounds)
+            } else {
+                root.and_then(|r| trajectory.exact_sources.get(k)?.as_ref()?.at_root(r))
+                    .filter(|v| {
+                        enclosure(v).is_some_and(|i| bounds.lo <= i.lo && i.hi <= bounds.hi)
+                    })
+                    .or_else(|| point(bounds))
+            };
             let node = indices.map_or_else(
                 || model.program.nodes.iter().position(|n| n == name).unwrap(),
                 |indices| indices[k],
             );
-            nodes[node] = original.or_else(|| point(bounds));
+            nodes[node] = value;
         }
         Self {
             states,
