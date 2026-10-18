@@ -70,9 +70,10 @@ IR 保存 operators 与调用点引用。结构依赖在数值绑定前检查，
 
 ## IR29 本地候选的证明边界
 
-本批 IR29、包版本 0.22.0 是本地候选，包含下述严格保持整数目标、源 Select 分解和
-事件 Floor 证书消费者。49 项定向公开回归已通过。root 的组合 Controller 控制仍在迭代，
-统一 400 与 CI 尚未运行；独立 lane 通过不能当作组合通过。Forcing 降阶执行不在本批，
+本批 IR29、包版本 0.22.0 的171份生产输入已在wave20原件统一400和完整delivery CI验收，
+原件312通过、19失败、69拒绝。严格保持整数目标、源 Select 分解和事件 Floor证书消费者
+的数学边界保持。验收与两轨计数见[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)。
+Forcing 降阶执行不在本批，
 这里不授予它与这些消费者组合的支持，也没有新增 Spectre 对齐资格。
 
 三条路线保留原表达式及结构依赖，旧准入成功时保持原 dispatch 和费用。
