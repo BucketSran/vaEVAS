@@ -188,7 +188,7 @@ class TransitionRejections(unittest.TestCase):
             self.assertAlmostEqual(row['voltages'][index], expected, delta=2e-12)
 
     def test_unsupported_inputs_settings_and_contexts(self):
-        for expression in ['transition(V(u,r),0,1n,1n)', 'transition(a,0,0,1n)',
+        for expression in ['transition(a,0,0,1n)',
                            'transition(a,-1n,1n,1n)', 'transition(a,0)',
                            'transition(transition(a,0,1n,1n),0,1n,1n)',
                            'transition(a,a,1n,1n)']:
@@ -197,6 +197,17 @@ class TransitionRejections(unittest.TestCase):
         for expression in ['transition(a*a,0,1n,1n)']:
             with self.subTest(expression=expression), self.assertRaises(KernelError):
                 run_transition(f'@(initial_step) a=0; V(y,r)<+{expression};',[0,1e-9],1e-9,declarations='real a;')
+        # The original voltage target is a DC candidate. Compilation alone
+        # cannot establish its physical source over the complete run.
+        program = compile_transition('V(y,r)<+transition(V(u,r),0,1n,1n);')
+        result = transient(program, {'u':[[0,1.25],[2e-9,1.25]]},
+                           [0,1e-9,2e-9], stop=2e-9, max_step=2e-9, kernel=KERNEL)
+        y = result['nodes'].index('y')
+        self.assertEqual([s['voltages'][y] for s in result['solutions']], [1.25]*3)
+        with self.assertRaises(KernelError) as caught:
+            transient(program, {'u':[[0,0],[2e-9,1.25]]}, [0,1e-9,2e-9],
+                      stop=2e-9, max_step=2e-9, kernel=KERNEL)
+        self.assertEqual(caught.exception.diagnostic['code'], 'kernel.unsupported_operator')
 
     def test_live_affine_products_preserve_old_inputs_and_use_current_voltage(self):
         # These exact expressions used to be structurally rejected. Keep the

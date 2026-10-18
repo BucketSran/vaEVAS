@@ -291,7 +291,8 @@ class DiagnosticSources(unittest.TestCase):
         import tempfile
         from pathlib import Path
         bodies = [
-            'V(y,r)<+transition(V(u,r),0,1,1);',
+            # Voltage targets defer DC proof; voltage-dependent delay remains unsupported.
+            'V(y,r)<+transition(0,V(u,r),1,1);',
             'V(y,r)<+absdelay(V(u,r),V(u,r));',
             'V(y,r)<+idt(V(u,r),0,V(u,r));',
         ]
