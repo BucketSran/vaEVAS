@@ -56,12 +56,18 @@ For accuracy-recovery or performance claims, apply the
 in addition to the affected rows. A narrower root or faster local solve alone does not
 establish the downstream result or complete-request improvement.
 
-When executing, run commands from the repository root. Before simulator tests,
-rebuild the debug kernel using the [build command](../../../evas/README.md#构建与运行);
-those tests use that binary. Checks that do not invoke the kernel need no build.
+When executing, run commands from the repository root. Simulator tests need a debug
+kernel matching their production source and build identity. Rebuild changed Rust
+inputs using the [build command](../../../evas/README.md#构建与运行); reuse a verified
+matching binary for test-only or prose-only edits. Checks that do not invoke the
+kernel need no build.
 
 During iteration, start with the observed failure and the policy's `iteration` modules.
 Shared event/history mappings keep complete Python coverage as a `delivery` obligation.
+Name its [single executor](../../../CONTRIBUTING.md#keep-iteration-feedback-short),
+normally CI, and reuse matching completed coverage instead of also running the
+full local command by default. Changed consumers still require scoped execution;
+test-only corrections follow [scoped revalidation](../../../docs/contributing/evidence.md#reuse-ci-regression-evidence).
 Run format, lint and generated metadata checks before freezing a candidate. Execute full
 acceptance for a stable candidate, then reuse matching evidence across review/publication;
 a changed implementation or consumer still invalidates the affected checks. Draft CI success
@@ -84,10 +90,12 @@ use that revision's original validation entry and retain its historical evidence
 
 | Source paths | Iteration modules | Delivery modules |
 | --- | --- | --- |
-| `evas/src/evas/instance_compiler.py`, `evas/src/evas/lowering.py`, `evas/src/evas/compact_source_select.py`, `evas/src/evas/integer_prefix.py`, `evas/src/evas/input_rational_scope.py` | `test_affine` `test_analog_conditions` `test_stateless_expressions` `test_event_conditions` | Full Python regression |
+| `evas/src/evas/instance_compiler.py`, `evas/src/evas/lowering.py`, `evas/src/evas/compact_source_select.py`, `evas/src/evas/integer_prefix.py`, `evas/src/evas/input_rational_scope.py` | `test_affine` `test_analog_conditions` `test_stateless_expressions` `test_event_conditions` `test_display` `test_initial_display_transition` `test_initial_observer_horizon` | Full Python regression |
+| `evas/src/evas/display.py`, `evas/rust_core/src/display.rs` | `test_affine` `test_display` `test_display_node_declarations` `test_strobe` `test_initial_display_transition` `test_initial_observer_horizon` | Full Python regression |
+| `evas/rust_core/src/analog.rs`, `evas/rust_core/src/solver.rs`, `evas/rust_core/src/source_math.rs`, `evas/rust_core/src/observation.rs` | `test_affine` `test_reuse` `test_accuracy` `test_nonlinear` `test_events` `test_precision_chain` `test_observation_evidence` `test_observation_evidence_helper` | Full Python regression |
 | `evas/src/evas/event_index_domains.py`, `evas/src/evas/integer_invariants.py` | `test_affine` `test_integer_loops` `test_event_body_loops` `test_event_runtime_loops` | Full Python regression |
 | `evas/src/evas/scs.py`, `evas/src/evas/scs_sources.py` | `test_scs` `test_scs_pulse_delay` `test_scs_save` `test_scs_bsource` `test_scs_driven_nodes` `test_scs_vectors` `test_source_uncertainty` `test_ansi_ports` `test_case_statements` `test_held_transition_targets` `test_r01_language` `test_strobe` | Full Python regression |
-| `evas/rust_core/src/operators.rs`, `evas/rust_core/src/transition.rs`, `evas/rust_core/src/transition_source_plan.rs`, `evas/rust_core/src/transition_source_state.rs`, `evas/rust_core/src/transition_filter.rs`, `evas/rust_core/src/transition_integral.rs`, `evas/rust_core/src/transition_filter_input.rs`, `evas/rust_core/src/transient.rs`, `evas/rust_core/src/transient_event_acceptance.rs`, `evas/rust_core/src/transient_history_calendar.rs`, `evas/rust_core/src/transient_root_refinement.rs`, `evas/rust_core/src/transient_initialization.rs`, `evas/rust_core/src/event_conditions.rs`, `evas/rust_core/src/event_control.rs`, `evas/rust_core/src/initial_state_invariance.rs`, `evas/rust_core/src/event_accuracy.rs`, `evas/rust_core/src/event_numeric.rs`, `evas/rust_core/src/event_time_provenance.rs` | `test_affine` `test_timer` `test_transition` `test_transition_accuracy` `test_timed_composition` `test_event_window_sampling` `test_lifecycle_closure` `test_semantic_invariants` `test_timer_history_order` `test_continuous_dynamics` `test_event_accuracy` `test_event_history_continuation` `test_passive_events` `test_passive_history_phase` `test_display` | Full Python regression |
+| `evas/rust_core/src/operators.rs`, `evas/rust_core/src/transition.rs`, `evas/rust_core/src/transition_source_plan.rs`, `evas/rust_core/src/transition_source_state.rs`, `evas/rust_core/src/transition_filter.rs`, `evas/rust_core/src/transition_integral.rs`, `evas/rust_core/src/transition_filter_input.rs`, `evas/rust_core/src/transient.rs`, `evas/rust_core/src/transient_event_acceptance.rs`, `evas/rust_core/src/transient_history_calendar.rs`, `evas/rust_core/src/transient_root_refinement.rs`, `evas/rust_core/src/transient_initialization.rs`, `evas/rust_core/src/event_conditions.rs`, `evas/rust_core/src/event_control.rs`, `evas/rust_core/src/initial_state_invariance.rs`, `evas/rust_core/src/event_accuracy.rs`, `evas/rust_core/src/event_numeric.rs`, `evas/rust_core/src/event_time_provenance.rs` | `test_affine` `test_timer` `test_transition` `test_transition_accuracy` `test_timed_composition` `test_event_window_sampling` `test_lifecycle_closure` `test_semantic_invariants` `test_timer_history_order` `test_continuous_dynamics` `test_event_accuracy` `test_event_history_continuation` `test_passive_events` `test_passive_history_phase` `test_display` `test_initial_display_transition` `test_initial_observer_horizon` | Full Python regression |
 | `evas/rust_core/src/linear.rs`, `evas/rust_core/src/linear/` | `test_affine` `test_sparse` | `test_affine` `test_reuse` `test_accuracy` `test_sparse` `test_sparse_transient` |
 | `evas/rust_core/src/nonlinear.rs`, `evas/rust_core/src/nonlinear/` | `test_affine` `test_nonlinear` | `test_affine` `test_nonlinear` `test_accuracy` `test_precision_chain` |
 | `evas/src/evas/syntax.py`, `evas/src/evas/parameters.py` | `test_affine` `test_contracts` | `test_affine` `test_contracts` `test_parameter_constraints` |
@@ -132,7 +140,8 @@ For a Python module set from the table:
 PYTHONPATH=evas/src:evas/tests python3 -m unittest -v test_affine test_contracts
 ```
 
-All-Python command for shared IR/transport changes:
+Shared IR/transport changes require complete Python coverage. When the recorded
+executor is local, use:
 
 ```sh
 PYTHONPATH=evas/src python3 -m unittest discover -s evas/tests -v

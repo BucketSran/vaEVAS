@@ -19,14 +19,37 @@ _REPRESENTATION_PATHS = tuple('evas/src/evas/'+name for name in (
     'instance_compiler.py', 'lowering.py', 'compact_source_select.py',
     'integer_prefix.py', 'input_rational_scope.py'))
 _BUDGET_PATHS = ('evas/src/evas/event_index_domains.py', 'evas/src/evas/integer_invariants.py')
+_PROOF_PATHS = _BUDGET_PATHS + (
+    'evas/src/evas/initial_constant_math.py', 'evas/src/evas/integer_bits.py',
+    'evas/rust_core/src/source_math.rs', 'evas/rust_core/src/dc_projection.rs',
+    'evas/rust_core/src/transition_source_plan.rs',
+    'evas/rust_core/src/initial_state_invariance.rs',
+    'evas/rust_core/src/transient_initialization.rs',
+)
 # Deliberately limited to inspected source boundaries. Unknown/shared changes use
 # full Python coverage until their owning tests and consumers have been checked.
 _RULES = (
     (
         _REPRESENTATION_PATHS,
-        ('affine', 'analog_conditions', 'stateless_expressions', 'event_conditions'),
+        ('affine', 'analog_conditions', 'stateless_expressions', 'event_conditions',
+         'display', 'initial_display_transition', 'initial_observer_horizon'),
         ('*',),
         'representation/admission consumers; early representation contract also required',
+    ),
+    (
+        ('evas/src/evas/display.py', 'evas/rust_core/src/display.rs'),
+        ('affine', 'display', 'display_node_declarations', 'strobe',
+         'initial_display_transition', 'initial_observer_horizon'),
+        ('*',),
+        'output formatting and initial observation consumers',
+    ),
+    (
+        tuple('evas/rust_core/src/'+name for name in (
+            'analog.rs', 'solver.rs', 'source_math.rs', 'observation.rs')),
+        ('affine', 'reuse', 'accuracy', 'nonlinear', 'events', 'precision_chain',
+         'observation_evidence', 'observation_evidence_helper'),
+        ('*',),
+        'voltage relation and exported enclosure consumers; affected histories still need review',
     ),
     (
         _BUDGET_PATHS,
@@ -54,7 +77,8 @@ _RULES = (
         ("affine", "timer", "transition", "transition_accuracy", "timed_composition",
          "event_window_sampling", "lifecycle_closure", "semantic_invariants",
          "timer_history_order", "continuous_dynamics", "event_accuracy",
-         "event_history_continuation", "passive_events", "passive_history_phase", "display"),
+         "event_history_continuation", "passive_events", "passive_history_phase", "display",
+         "initial_display_transition", "initial_observer_horizon"),
         ("*",),
         "shared event/history iteration; complete Python coverage remains a delivery obligation",
     ),
@@ -159,13 +183,12 @@ def select_checks(
                            _ACCEPTANCE+'#early-integration-checks',
                            before='dependent-integration',
                            command='python3 -B scripts/evas_check_policy.py --early-checks --checks representation')
-            if path in _BUDGET_PATHS or path in (
-                    'evas/rust_core/src/initial_state_invariance.rs',
-                    'evas/rust_core/src/transient_initialization.rs'):
+            if path in _PROOF_PATHS:
                 obligation('proof-budget',
                            'Before dependent integration, account for new work, inherited '
-                           'allowances, exhaustion and same-request retry. Missing mechanisms '
-                           'and untested callers remain pending, not verified.',
+                           'allowances, delegated traversals, old successful routes, exhaustion '
+                           'and same-request retry. Generic early checks do not qualify a new '
+                           'proof helper; its case-specific evidence remains pending.',
                            _ACCEPTANCE+'#early-integration-checks',
                            before='dependent-integration',
                            command='python3 -B scripts/evas_check_policy.py --early-checks')
