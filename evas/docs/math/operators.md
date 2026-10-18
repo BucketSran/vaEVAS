@@ -69,7 +69,7 @@ idt 复位可能改变当刻输出，须按[积分生命周期](#生命周期组
 IR 保存 operators 与调用点引用。结构依赖在数值绑定前检查，零乘数、相消、下溢和跨实例连接
 不能隐藏不支持的反馈/guard。当前重绑算子值的路径没有新的矩阵分解复用性能结论。
 
-## IR29 本地候选的证明边界
+## IR29 检查点的证明边界
 
 本批 IR29、包版本 0.22.0 的171份生产输入已在wave20原件统一400和完整delivery CI验收，
 原件312通过、19失败、69拒绝。严格保持整数目标、源 Select 分解和事件 Floor证书消费者
@@ -106,11 +106,35 @@ Floor 的输入证明可复用实际传入的有限单点盒 `[p,p]`。原根处
 
 ## Independent source forcing beside held histories
 
-This IR30, package 0.23.0 integration is a draft. The common source is not frozen
-or scored. Published wave20 results remain 312 PASS, 19 FAIL, and 69 REJECTED on
-the original 400, and 313 PASS, 17 FAIL, and 70 REJECTED on the separately versioned
-revised 400. The isolated R6 run of original 041 passed its checker. That run uses
-a different frozen candidate and contributes no additional unified PASS.
+This IR30, package 0.23.0 development checkpoint uses production commit `a201378e`,
+176 source/build inputs, and release kernel `7e7ae92ae2de`. It is not a public release or
+tag; PR208 remains a draft. All 400 original requests executed: 312 PASS, 19 FAIL,
+and 69 REJECTED, with cleanup 400/400. The previous 312, 303, and baseline 198
+passes remain, and all 19 old failed-checker dictionaries are unchanged. Wave21
+adds zero original PASS over wave20. Unified original 041 is `step_budget`
+REJECTED at the unchanged default 1e9 budget; its checker did not run. The isolated
+R6 author PASS is separate evidence and gives no unified PASS credit.
+
+The separately versioned revised 400 is 313 PASS, 17 FAIL, and 70 REJECTED.
+It reuses 398 identical-material results from this original run and the actual
+revised 012 PASS and 107 `condition_precision` REJECTED runs. Executing all 400
+requests is distinct from passing all 400: 88 originals and 87 revised requests
+remain without PASS. No new Spectre qualification is claimed.
+
+Single CI run `39169679908` at auxiliary head `8e507c51` completed all 15 jobs
+successfully. All 2390 unique Python methods passed in shards 621/605/638/526,
+with no missing, duplicate, method-skipped, or setup-skipped entries. Linux
+x86_64/Python3.10 and macOS arm64/Python3.12 installation and negative controls
+passed. All 176 production inputs match; remote and wheel kernels retain their
+own hashes. The independent CI review binds the actual source, package, and method
+identities. The separate publication receipt records the document review.
+
+The original/revised execution reviews and CI collector receipts are identified
+in the curated low-cost-closure evidence. Failed CI `39168731444` stopped before
+full Python or installs. Failed CI `39169086325` reported 2372 PASS and three
+loader ERROR entries, omitted 18 real methods, and ended with 10 successful,
+four failed, and one upstream-dependent skipped job. Those records remain;
+no green result is composed across runs.
 
 ### Continuous source intent and held target intent
 
@@ -216,8 +240,9 @@ preparations and 2693 certified physical reads on that same original limit. Its
 next reservation failed at 1000014079 work units. Two production Static retries
 performed no further prefix or physical helpers and preserved the full accepted
 Frame, histories, calendar, cursor, records, and outputs. This is focused local
-evidence; final frozen-source, public, original/revised400, and CI gates remain
-pending.
+evidence. Final production, original/revised400, and single-run CI receipts are
+identified in the delivery status above and the curated evidence index; independent
+The independent CI review confirms the final run and its source/package bindings.
 
 Prefix accessors reserve original exact-root, enclosure, clock and phase work
 before invocation. The actual private dense operator coefficients are included

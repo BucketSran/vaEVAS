@@ -4,6 +4,17 @@
 逐项证据见[证据索引](development/capability-evidence.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
 
+## 开发检查点 0.23.0 / IR30：source Forcing与独立保持历史
+
+受限source Forcing按实际物理源选择值，独立Transition继续消费已提交的held state；完整原树角色、原Program／Trajectory身份、private Reduction及同请求Work在初始化、准备和失败重试中保留。旧source-rational路线优先，Forcing与新Floor、typed Native及Slew混合明确拒绝，完整合同见[算子说明](math/operators.md#independent-source-forcing-beside-held-histories)。
+
+当前wave21生产提交 `a201378e` 绑定176份源码／构建输入、IR30、0.23.0和release核 `7e7ae92ae2de`。原件400份已完整执行：312通过、19失败、69拒绝，331完成，清理400/400；这不表示400份全部PASS。13+387件同源，旧312、303和基线198通过保留，旧19份失败checker字典相同，相对wave20新增PASS为0。原041在默认1e9证明预算下 `step_budget` 拒绝，checker未运行；R6作者独立PASS不替代统一结果。
+修订材料另轨400为313通过、17失败、70拒绝，清理400/400；398份同材料复用本轮原件结果，另两份为修订012通过、107因 `condition_precision` 拒绝。它不替换原件计数。距离全部PASS，原件还差88份，修订轨还差87份；350只是进展节点。
+单次完整delivery CI `39169679908` 在辅助修复提交 `8e507c51` 实际15 jobs全部成功，2390个唯一方法通过，四分片621/605/638/526，无遗漏、重复、方法或setup跳过。Ubuntu x86_64/Python3.10与macOS arm64/Python3.12的0.23/IR30安装、重装及负控通过；176份源码／构建输入不变，远端回归和wheel核各保留实际SHA，不声称与本地release字节相同。CI执行身份、完整方法覆盖和两平台安装证据已独立复核。
+本轮先前CI `39168731444` 因inventory stale在完整Python前失败（0完整Python、0安装）；`39169086325` 完整失败，2375条为2372PASS及main/point/shaped三个loader ERROR，18个真实方法遗漏，15 jobs为10成功、4失败、1个上游失败导致coverage skip。两份原红记录保留，不跨run拼接全绿。PR208仍为草稿未合并，0.23是开发版本，未发布公共索引或tag；未新增Spectre共同资格，完整EVAS与400全部PASS目标未完成。
+
+下列旧版本“本地候选／待验收”描述保留其当时的候选快照；后续wave20／wave21验收不倒改旧记录。
+
 ## 本地候选 0.22.0 / IR29：保持位目标与原树源证明
 
 新增受限signed32右移、按位与及纯保持Transition目标。移位数须是实例常量，实际状态盒须为同实例整数单点，完整原树依赖和逐节点溢出检查保留。事件原树Floor、无状态源因子和已证明字面零电流支路同时进入本地候选，范围见[算子合同](math/operators.md#native-held-bits29)。

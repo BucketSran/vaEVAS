@@ -32,8 +32,13 @@ EVAS 的价值需要由电压域工程行为证明：在正确时刻采样，保
 每类都检查初始化、事件前后读值、历史延续、多个实例和误差控制，再扩展反馈及更复杂组合。
 支持结论仍只维护在总表中。晶体管、电流与电荷方程不属于当前范围；性能优化排在行为与精度之后。
 
-当前开发版本为 **EVAS 0.22.0 / IR29**，尚未发布到公共索引或打 tag。变化、验收范围和历史执行身份见[版本记录](docs/UPDATE.md)。
-IR29新增受限 signed32 右移与按位与及纯保持目标，并合入原树事件 Floor、无状态源因子和字面零电流支路的本地候选。组合边界见[算子合同](docs/math/operators.md#native-held-bits29)。统一原件与修订材料、完整回归和安装尚待本候选验收，已验收的303仍绑定历史IR28候选。
+当前开发版本为 **EVAS 0.23.0 / IR30**，尚未发布到公共索引或打tag，PR208草稿未合并。IR30新增受限source Forcing与独立held Transition；原有IR29右移／按位与、保持目标、原树事件Floor、源因子及字面零支路保留。Forcing与这些新Floor／typed Native／Slew的混合仍拒绝，旧route优先。数学合同见[算子说明](docs/math/operators.md#independent-source-forcing-beside-held-histories)，历史版本见[更新记录](docs/UPDATE.md)。
+
+当前wave21生产提交 `a201378e` 绑定176份源码／构建输入、IR30、0.23.0和release核 `7e7ae92ae2de`。原件400份已完整执行：312通过、19失败、69拒绝，331完成，清理400/400；这不表示400份全部PASS。13+387件同源，旧312、303和基线198通过保留，旧19份失败checker字典相同，相对wave20新增PASS为0。原041在默认1e9证明预算下 `step_budget` 拒绝，checker未运行；R6作者独立PASS不替代统一结果。
+修订材料另轨400为313通过、17失败、70拒绝，清理400/400；398份同材料复用本轮原件结果，另两份为修订012通过、107因 `condition_precision` 拒绝。它不替换原件计数。距离全部PASS，原件还差88份，修订轨还差87份；350只是进展节点。
+单次完整delivery CI `39169679908` 在辅助修复提交 `8e507c51` 实际15 jobs全部成功，2390个唯一方法通过，四分片621/605/638/526，无遗漏、重复、方法或setup跳过。Ubuntu x86_64/Python3.10与macOS arm64/Python3.12的0.23/IR30安装、重装及负控通过；176份源码／构建输入不变，远端回归和wheel核各保留实际SHA，不声称与本地release字节相同。CI执行身份、完整方法覆盖和两平台安装证据已独立复核。
+本轮先前CI `39168731444` 因inventory stale在完整Python前失败（0完整Python、0安装）；`39169086325` 完整失败，2375条为2372PASS及main/point/shaped三个loader ERROR，18个真实方法遗漏，15 jobs为10成功、4失败、1个上游失败导致coverage skip。两份原红记录保留，不跨run拼接全绿。PR208仍为草稿未合并，0.23是开发版本，未发布公共索引或tag；未新增Spectre共同资格，完整EVAS与400全部PASS目标未完成。
+
 IR28新增事件体 typed 二元Subtract与运行期Remainder除数；IR27的Add与常量Remainder继续保留；IR26的受限原生事件`floor`和IR25的原生`tanh`继续保留；IR24的物理PWL、有限采样算术与transition组合继续保留。
 范围与失败规则见[事件循环](docs/reference/frontend-admission.md#runtime-event-loops)和[事件数学](docs/math/events.md#event-math)；版本升级不代表支持表新增通过。
 
