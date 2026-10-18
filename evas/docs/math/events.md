@@ -1740,4 +1740,4 @@ Transition输出乘原始输入供电差、再由内部节点cross采样时，�
 
 独立合同见`test_dc_factor.py`：正负供电、非零参考、跨实例与近邻不同history根、全域变化与误差拒绝，
 以及原根误差在后续电压放大后紧预算拒绝、宽预算返回区间包围独立有理真值。
-同engine失败重试与共享额度耗尽由`dc_projection`私有测试覆盖。原benchmark的验收归冻结候选原checker。
+同engine失败重试与共享额度耗尽由`dc_projection`私有测试覆盖。原111已随wave15统一候选通过完整请求与原checker；身份与资源边界见[低成本闭包收据](../../../experiments/backends/support/low-cost-closure/evidence.json)，不据此开放一般联合仿射历史组合。

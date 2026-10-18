@@ -148,7 +148,7 @@ binary64 常量。端点相等不足以证明 DC，未来脉冲和非零输入�
 旧 held-only 和源选择常量的路径保持；内部节点、历史值和实际变化的连续目标仍拒绝。
 [独立合同](../../tests/test_transition_dc_target.py)覆盖 held 翻转、实例／调用点、复位、
 未来脉冲、误差管、零权依赖及乘法误差放大；Rust 回归检查共享预算耗尽、失败候选及同对象重试。
-此隔离候选只建立本地证据，未新增实际 Spectre 对齐资格或原 checker 结论。
+该切片已随wave15统一候选通过原193的完整请求与原checker；证据见[低成本闭包收据](../../../experiments/backends/support/low-cost-closure/evidence.json)。没有新增实际Spectre对齐或共同资格。
 
 普通输出或强制观察点可能满足 `tau <= tq < b`：真实 timer 已发生，执行代表时刻却略晚于观察点。
 例如 binary64 的 `3*1ns < 6*500ps < b`。该点应读取回调后的状态，不能再次推进已位于 b 的源游标。
@@ -999,10 +999,10 @@ EVAS的有限包围是额外的工程合同，不保证平台数学库逐位一�
 
 ### 初始化后的闭合实数幂常量
 
-本地候选支持一个无观察者的初始化只读标量：模型只有一条real初始化赋值、没有声明初值或运行期事件，普通analog只含电压贡献。编译器先审计完整源码依赖及writer，确认初始表达式仅由实例参数和闭合有理算术构成，才允许普通贡献读取其保留的AST。其他初始读取、未来writer、ordinary alias、数组和初始输出不进入新路径；既有声明常量、整数有限pow和half-power路径保持；旧lowering接受时不启动新证明；只有原pow指数拒绝分类才启动闭合证明。新证明的有理后序遍历复用已收费的子项类型事实，不重新解释source integer除法，逐项检查signed32中间范围。
+有限实现支持一个无观察者的初始化只读标量：模型只有一条real初始化赋值、没有声明初值或运行期事件，普通analog只含电压贡献。剔除未使用声明后，该目标必须是唯一存活状态。编译器先审计完整源码依赖及writer，确认初始表达式仅由实例参数和闭合有理算术构成，才允许普通贡献读取其保留的AST。其他初始读取、未来writer、ordinary alias、数组和初始输出不进入新路径；既有声明常量、整数有限pow和half-power路径保持；旧lowering接受时不启动新证明；只有原pow指数拒绝分类才启动闭合证明。新证明的有理后序遍历复用已收费的子项类型事实，不重新解释source integer除法，逐项检查signed32中间范围。
 
 新实指数路径仅接受正底、闭合非整数指数，另包含完整原参数审计后的零指数恒等式。它不支持运行期pow。底数、指数及其原除法保留为IR算术；`pow(x,y)`使用现有`ln(x)`和`exp(y*ln(x))`两级native Math，倒数也保留原Divide。Python不计算pow代表点，不从证明区间取中点作为精确初始化State。
 
 `initial_constant_math.py`拥有源码资格、变量namespace及每请求共享100000项证明账本；`instance_compiler.py`只在该证明成立时省去相应运行期State。`source_math.rs`只允许同实例、更早且已证明闭合的Ln/Exp依赖链，保留统一Audit和Operators拥有者，不开放一般嵌套源数学。`operators.rs`与`math_functions.rs`重新包围原系数、ln/exp和舍入，最终`gain*V(input)`仍经过原关系root boxes与原电压精度验收。
 
-独立答案、原算式算术误差、源顺序/隐藏依赖拒绝、实例隔离、raw IR所有权/前向引用、共享证明预算及强放大拒绝见`test_constant_initial_power.py`。这只是未合并的有限能力证据，不代表动态实指数或状态依赖transition timing已支持，也不新增原件checker成绩。
+独立答案、原算式算术误差、源顺序/隐藏依赖拒绝、实例隔离、raw IR所有权/前向引用、共享证明预算及强放大拒绝见`test_constant_initial_power.py`。该切片已随wave15统一候选通过原120的完整请求与原checker，仍未合并；它不授予动态实指数或状态依赖transition timing支持，也不增加共同资格。

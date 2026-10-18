@@ -61,12 +61,13 @@ IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和�
 [低成本闭包](../../../experiments/backends/support/low-cost-closure/README.md)补充 LANG、LIN、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS 和 COMPOSE 的分支证据。
 合同分别见[有限点初值与别名](../math/events.md#input-initialization)、[typed整数与有限幂](../math/events.md#typed-integer-closure)及[普通条件与有理输出](../math/solving.md#普通-analog-条件)。
 公开控制覆盖源码顺序、精确数组槽、真实根处读取、signed余数、有限pow类型与资源、分支临时量和正分母事实。
-[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)固定wave12完整400的292通过、18失败、90拒绝，158文件源码、IR25与release核 `83da6b2b521c` 的42+358件身份一致，清理400/400。
+[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)固定最新已验收wave15的161份生产源、IR26与release核 `d4163bfebc37`，完整400为298通过、18失败、84拒绝，3+397件身份一致，清理400/400。新增111、120、193，原wave14的295及基线198通过保留。两平台安装与四模块窄CI通过；完整CI2281方法中的四个旧拒绝方法已迁移，77项窄CI通过加2204项未变通过覆盖全部2281项，原失败保留。
+历史wave12为292通过、18失败、90拒绝，158文件源码、IR25与release核 `83da6b2b521c` 的42+358件身份一致。
 原198及有效波10全部278通过保留，新增14份，无回退；18项旧checker失败字典保持。原固定125成员重算为92通过、9失败、24拒绝；历史波11失败候选及波8等旧收据保持原身份。
 历史波7逐例比较波6b新增129、137、138、224、233、295、296、380共8份、无回退；相对波5新增35份、无回退。296恢复。
-本分支IR25增加native tanh；原checker、精度、证明预算保持。real初态只接有限点包围，integer电压采样仍拒绝。
+历史wave12的IR25增加native tanh；原checker、精度、证明预算保持。real初态只接有限点包围，integer电压采样仍拒绝。
 多项式guard与有限floor已纳入波7，guard乘加中间值溢出在同一冻结release核明确拒绝；历史反例和修复收据均保留。
-111的事件认证限制保留；波8纳入[隔离整数输出读取](../math/events.md#settled-integer-reads)及[点held时间证明](../math/events.md#held-time-point-proof)，更广组合仍回退或拒绝。后续Slew、证明缓存和tanh已进入wave12的292。初始化幂乘共享计费与整数证明耗尽退回TOP已独审；Rust457项与2项IR通过，原1项忽略。3项IR身份旧断言已同步为IR25，所属8项重验通过。本地Python2210项收齐，保留旧断言及未优化debug90秒超时原记录；CO-SH-01按既有CI opt1构建和原90秒请求重验通过，1af9772c的完整交付15项CI全部通过，含Python2210项和两平台安装；原漏夹具失败记录保留。原始材料local-only，无新增实际Spectre、正式r53或Q。
+wave12时111的事件认证仍拒绝；波8纳入[隔离整数输出读取](../math/events.md#settled-integer-reads)及[点held时间证明](../math/events.md#held-time-point-proof)，更广组合仍回退或拒绝。后续Slew、证明缓存和tanh已进入wave12的292。初始化幂乘共享计费与整数证明耗尽退回TOP已独审；Rust457项与2项IR通过，原1项忽略。3项IR身份旧断言已同步为IR25，所属8项重验通过。本地Python2210项收齐，保留旧断言及未优化debug90秒超时原记录；CO-SH-01按既有CI opt1构建和原90秒请求重验通过，1af9772c的完整交付15项CI全部通过，含Python2210项和两平台安装；原漏夹具失败记录保留。原始材料local-only，无新增实际Spectre、正式r53或Q。
 四个过时passive夹具已改成真正负start加正period，7/7 private负控通过；合法过去单次timer仍按非正period合同处理。
 波5全Python执行2024项、2022通过，一项旧P/2拒绝期待已迁移并复验13方法，CO-SH-01在90秒超时且旧核对照待完成；不报告全绿。
 
@@ -138,7 +139,7 @@ L1–L5 是表格导航 ID，不替换下表开发 ID；旧版本、原预算和
 IR19 增加纯数学函数，恒定 PWL 保留原输入位；契约见[纯数学函数](../math/operators.md#elementary-functions)，
 回归见[函数测试](../../tests/test_unary_functions.py)、[恒定输入测试](../../tests/test_constant_input_identity.py)，
 独立校准见[校准工具](../../validation/calibrate_elementary.py)。
-PR208下一候选补充[纯输入数学组合的观察点根盒](../math/solving.md#纯输入数学组合的观察点认证)及[公开正反例](../../tests/test_source_math.py)。原237已在wave14完整400通过；该候选295通过，安装与完整CI待验。
+PR208补充[纯输入数学组合的观察点根盒](../math/solving.md#纯输入数学组合的观察点认证)及[公开正反例](../../tests/test_source_math.py)。原237已在wave14完整400通过；该轮295通过；两平台安装通过，完整2245项覆盖经b71317e0窄CI的33项与2212项未变通过复用闭合，原全量CI的两项失败保留。
 静态输入与回调证书只解除已证明的义务；新旧成绩、具体工具版本和未完组合均在收据中分开记录。
 函数修复属于本轮源码交付；#162 的旧运行不计作当前 main 能力，#131 不动。
 
@@ -262,11 +263,15 @@ EVAS 的全部 6,366 行计数符合名义时钟，四行严格差异仍保留�
 
 [主动初始化输出的本地回归](../../tests/test_active_initial_output.py)补充 LANG、EVENT-ORDER、
 TRANSITION、COMPOSE 的开发证据，覆盖常量初始化快照、analog strobe别名与固定小数格式。
-主动模型仍拒绝初始电压/历史观察和状态写入型原始IR；独立审查已闭合，原076已在wave14完整400通过，交付CI待验。
+主动模型仍拒绝初始电压/历史观察和状态写入型原始IR；独立审查已闭合，原076已在wave14完整400通过，且在wave15保留；交付覆盖与历史失败见低成本闭包收据。
 
 [受限原生事件floor](../../tests/test_native_event_floor.py)补充 LANG、EVENT-ORDER、CROSS、
 EVENT-CONDITIONS、COMPOSE 的本地开发证据，契约见[原生事件floor](../math/events.md#native-event-floor)。
 旧有限表IR逐字对照仅排除schema版本差异；同控制器跨bin失败/重试与精确有理取整预算分别由
-transient_passive_tests.rs、event_value_proof.rs覆盖。原244已在wave14统一400通过，安装与完整CI仍待验。
+transient_passive_tests.rs、event_value_proof.rs覆盖。原244已在wave14统一400通过，且在wave15保留；两平台安装与逐ID复用覆盖见低成本闭包收据。
 
-[闭合初始化实数幂开发回归](../../tests/test_constant_initial_power.py)补充LANG、COMPOSE和NONLINEAR-TRANSIENT：初始只读AST经既有Ln/Exp与原关系root boxes消费，保留原除法、所有权及数值误差。只有单条闭合real初始赋值、无其他观察者/writer的有限结构进入新路径；运行期实指数不在此范围。原完整SCS响应是作者诊断，独立审查与原checker成绩由主集成验收，不据此提升Q计数。
+[闭合初始化实数幂开发回归](../../tests/test_constant_initial_power.py)补充LANG、COMPOSE和NONLINEAR-TRANSIENT：初始只读AST经既有Ln/Exp与原关系root boxes消费，保留原除法、所有权及数值误差。只有单条闭合real初始赋值、无其他观察者/writer的有限结构进入新路径；运行期实指数不在此范围。独立审查已闭合，原120在wave15同源完整400通过原checker；实际原请求沿用120秒内核、150秒guardian及原精度，不据此提升Q计数。
+
+[精确DC供电系数与history guard投影](../math/events.md#精确dc供电系数与history-guard投影)补充CROSS、EVENT-CONDITIONS、TRANSITION和COMPOSE。
+[test_dc_factor.py](../../tests/test_dc_factor.py)覆盖幅值、符号、非零参考、跨实例所有权与放大后的原误差预算；同owner耗尽与失败重试有私有控制。
+原111在wave15同源完整400通过原checker；一般变化供电、非零误差和更广联合仿射历史仍拒绝。

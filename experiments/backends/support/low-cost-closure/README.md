@@ -1,15 +1,17 @@
 # 有限低成本闭包证据
 
-本目录固定wave14开发候选的合同与收据。159份生产源、IR26与release核 `a31927cdf694` 已冻结；198通过的比较基线仍为 `f6465c42`。PR208草稿未合并，当前安装与完整交付CI待验。
+本目录固定最新已验收wave15候选的合同与收据。提交 `bbd8d6d0` 的161份生产源、IR26与release核 `d4163bfebc37` 已冻结；198通过的比较基线仍为 `f6465c42`。PR208草稿未合并。
 源码、runner、worker、原checker、normalization、输入和预算见[evidence.json](evidence.json)。该JSON为仓库内紧凑证据；原件、波形、源码归档和完整运行收据均为local-only，哈希不代表公开可复现。
 
-最新完整400为295通过、18失败、87拒绝，313完成，清理400/400。collector核验11件与其余389件具有相同执行身份，不能跨候选相加。
-相对wave12新增076、237、244；原292及198通过全部保留，18份失败的checker字典相同。原固定125成员从本次400抽取为93通过、9失败、23拒绝，清理125/125。距350还差55份。
-076常量初始化快照、237数学组合根盒和244原生floor均已独审。主集成171消费者、463项内核与2项IR、3组快检及lint通过，原1项忽略保留。IR26安装与完整Python/精确提交CI待验，不以旧CI替代。
+最新完整400为298通过、18失败、84拒绝，316完成，清理400/400。collector核验3件与其余397件具有相同执行身份。
+相对wave14新增111、120、193，原295及198通过全部保留，18份失败的checker字典相同。原固定125成员从本次400抽取为93通过、9失败、23拒绝，清理125/125。距350还差52份。
+整段DC目标、精确DC供电投影和闭合初始化实数幂均已独审。主集成183消费者、469项Rust、3组快检、fmt、lint及Clippy通过，原1项忽略保留。
+两平台IR26安装通过。完整CI实际执行2281方法，四个旧DC目标拒绝方法产生7项失败断言。仅改四个测试模块后，两轮窄CI通过；逐ID核对为77项窄CI通过加2204项未变通过复用，共2281项覆盖，无遗漏或跳过，收据见JSON。原完整CI失败记录保留，不称第二次全量CI通过。
+
+历史wave14固定159份生产源、IR26与release核 `a31927cdf694`，295通过、18失败、87拒绝；相对wave12新增076、237、244。该轮两平台安装通过，原完整Python2245项中2项失败；b71317e0窄CI的33项通过与2212项未变通过复用，覆盖2245项。
 
 历史wave13使用159份源码、IR25与核 `89fbfa279e5a`，294通过、18失败、88拒绝，新增076/237。
 暂停前修复wave12的158份源码、IR25与核 `83da6b2b521c` 为292通过、18失败、90拒绝；较波10新增14、无回退。初始化聚合计费与整数耗尽兼容已独审，1af9772c的15项交付CI含2210Python与两平台安装全通过，仅对应wave12。旧断言、未优化debug90秒超时及sdist漏夹具记录保留，不倒改历史。
-193的整段DC叶Transition目标在隔离修补新增计费问题，未计入295。
 历史波10为278通过、18失败、104拒绝。波11的274通过、12失败、114拒绝保留为失败候选；十份Select旧通过回退已由wave12完整400验证恢复。
 历史波8为272通过、18失败、110拒绝，新增026、098、194，原收据保持。
 历史波7的150文件源码与 `1d0845b6` 的269通过、18失败、113拒绝保留原身份。
@@ -24,7 +26,7 @@
 - [有限点初始化与别名](../../../../evas/docs/math/events.md#input-initialization)。real仿射初值只接受有限单点包围，integer电压采样仍拒绝。唯一前序输入别名和准确数组槽保留源码顺序；运行事件读取当前物理根输入。
 - [typed整数与有限幂](../../../../evas/docs/math/events.md#typed-integer-closure)。整数除法向零截断，余数保留被除数符号；有限real幂保留类型、读取和原预算。160有限运行除数已在波6b验收并由波7保留。
 - [普通条件与有理输出](../../../../evas/docs/math/solving.md#普通-analog-条件)。分支临时量在实际读取时检查，正分母比较事实不外泄。纯输入有理guard和输出必须通过完整程序的实际源依赖、符号与电压认证。
-- [timer、根身份与bootstrap](../../../../evas/docs/math/events.md#wave6-local-closure)。过去单次held timer、已证明的输入投影根、236非种子包围传播分别有正反例；029、160、236在波6b通过原checker。111的事件认证限制保留。
+- [timer、根身份与bootstrap](../../../../evas/docs/math/events.md#wave6-local-closure)。过去单次held timer、已证明的输入投影根、236非种子包围传播分别有正反例；029、160、236在波6b通过原checker。111的精确DC供电投影已在wave15通过原checker，一般联合仿射事件组合仍受限。
 
 公开控制包括 `test_frontend_closure.py`、`test_branch_local_closure.py`、`test_initial_sampling_closure.py`、`test_integer_math_closure.py`、
 `test_rational_predicate_closure.py`、`test_positive_clamped_divisor.py`、`test_selected_quotient_comparison.py`、`test_input_rational_closure.py` 和 `test_source_rational_guards.py`。
