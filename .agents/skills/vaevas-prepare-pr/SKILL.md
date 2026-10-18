@@ -39,6 +39,10 @@ identify remaining criteria without presenting a partial implementation as compl
 
 ## Make the evidence reviewable
 
+Verify that required [early integration evidence](../../../docs/contributing/validation.md#early-integration-checks)
+still matches the included delta and consumers. Carry matching execution and review
+forward; publication is not a new review round or a reason to rerun the full suite.
+
 - Confirm that changed behavior and compatibility limits agree with the owning
   component documentation and PR checkpoint. Keep unsupported behavior explicit.
 - Use observed checks for the owning component: the [EVAS check mapping](../evas-validate/SKILL.md#select-the-necessary-checks),

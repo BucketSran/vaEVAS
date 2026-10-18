@@ -104,6 +104,10 @@ After compaction, recover decisions from that entry and continue. Necessary tran
 the [handoff rules](docs/contributing/workspaces.md#conversation-handoff-triggers), including
 links in both conversations and the same progress entry.
 
+Record the workflow revision used by a long-lived task. Reconcile changed workflow
+files when main and the task branch differ, preserving unrelated source and staged
+work. A workflow merged into main is not automatically present in an older checkout.
+
 During implementation, run the current failing case and the affected module checks selected by
 [the local policy](scripts/evas_check_policy.py). Add a focused regression for a later-stage
 failure whenever it can detect the same fault. Run formatting, lint and generated-file checks
@@ -117,6 +121,10 @@ toolchain, commands and effective settings when deciding whether evidence still 
 CI verify reusable evidence identities; an earlier green commit alone is insufficient. Run
 changed consumers after a meaningful delta. See [CI stages](scripts/README.md#ci-按改动选择检查)
 and [evidence reuse](docs/contributing/evidence.md#reuse-ci-regression-evidence).
+
+Use the [early integration boundary](docs/contributing/validation.md#early-integration-checks)
+for representation/dispatch changes and new proof work. Reuse that scoped feedback
+and review at later stages; only changed assumptions or unresolved findings add work.
 
 Wait during development for feedback that determines the next implementation step:
 the distinguishing failure, the changed path and its direct consumers. Full CI,

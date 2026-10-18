@@ -14,6 +14,21 @@ POLICY = ROOT / "scripts/evas_check_policy.py"
 
 
 class PolicyCommands(unittest.TestCase):
+    def test_representation_and_budget_require_early_evidence_without_new_protocol(self):
+        for path, obligation in (
+                ('evas/src/evas/compact_source_select.py', 'representation-compatibility'),
+                ('evas/src/evas/event_index_domains.py', 'proof-budget'),
+                ('evas/rust_core/src/initial_state_invariance.rs', 'proof-budget')):
+            with self.subTest(path=path):
+                plan = self.request(operation='plan', paths=[path], stage='iteration')
+                self.assertNotIn('python-regression', plan['checks'])
+                item = next(p for p in plan['pending_acceptance'] if p['id'] == obligation)
+                self.assertEqual(item['before'], 'dependent-integration')
+                self.assertIn('--early-checks', item['command'])
+                self.assertFalse(plan['acceptance_complete'])
+                self.assertEqual([x['check'] for x in plan['check_selection']['delivery']],
+                                 ['python-regression'])
+
     def request(self, **request):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "request.json"

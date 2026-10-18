@@ -93,6 +93,16 @@ jobs:
         run: |
           python3 -B scripts/ci_selection.py select --report runs/ci-plan.json
           python3 -B scripts/ci_lint.py --plan runs/ci-plan.json
+      - name: Early integration counterexamples
+        run: |
+          status=0
+          python3 -B scripts/evas_check_policy.py --early-checks --plan runs/ci-plan.json --report runs/early-integration.json || status=$?
+          if [ "$status" = 2 ]; then
+            cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
+            python3 -B scripts/evas_check_policy.py --early-checks --plan runs/ci-plan.json --kernel evas/rust_core/target/debug/evas-kernel --report runs/early-integration.json
+          elif [ "$status" != 0 ]; then
+            exit "$status"
+          fi
       - name: Focused draft regression
         if: needs.selection.outputs.focused == 'true'
         env:
@@ -114,6 +124,7 @@ jobs:
           name: fast-feedback
           path: |
             runs/ci-plan.json
+            runs/early-integration.json
             runs/draft-regression.json*
           if-no-files-found: warn
           retention-days: 14
