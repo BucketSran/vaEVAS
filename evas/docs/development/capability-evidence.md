@@ -141,6 +141,9 @@ IR19 增加纯数学函数，恒定 PWL 保留原输入位；契约见[纯数学
 回归见[函数测试](../../tests/test_unary_functions.py)、[恒定输入测试](../../tests/test_constant_input_identity.py)，
 独立校准见[校准工具](../../validation/calibrate_elementary.py)。
 PR208补充[纯输入数学组合的观察点根盒](../math/solving.md#纯输入数学组合的观察点认证)及[公开正反例](../../tests/test_source_math.py)。原237已在wave14完整400通过；该轮295通过；两平台安装通过，完整2245项覆盖经b71317e0窄CI的33项与2212项未变通过复用闭合，原全量CI的两项失败保留。
+[无状态 selected-Ln 开发回归](../../tests/test_selected_ln.py)补充 ANALOG、DYNAMICS、COMPOSE 的有限证据：
+原源查询、内部 abs/clamp、定义域、隐藏依赖、真实同 owner 预算耗尽与拒绝不提交。
+范围见[数学函数](../math/operators.md#elementary-functions)；原135/checker未验收，不新增原件或 Q 计数。
 静态输入与回调证书只解除已证明的义务；新旧成绩、具体工具版本和未完组合均在收据中分开记录。
 函数修复属于本轮源码交付；#162 的旧运行不计作当前 main 能力，#131 不动。
 

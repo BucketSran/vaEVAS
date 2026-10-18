@@ -329,6 +329,30 @@ pub(crate) fn predicate_sign(
 }
 
 impl Curve {
+    pub(crate) fn charge_source_copy(
+        &self,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<(), crate::ir::Error> {
+        for (t, v) in &self.0 {
+            work.debit(2, 1)?;
+            crate::diagnostics::counter("selected_ln_ast_visits", 1);
+            crate::diagnostics::counter("selected_ln_work_debit", 1);
+            let items = 2 + [
+                t.numer().bits(),
+                t.denom().bits(),
+                v.numer().bits(),
+                v.denom().bits(),
+            ]
+            .into_iter()
+            .map(|bits| bits.div_ceil(64) as usize)
+            .sum::<usize>();
+            work.debit(2, items as u64)?;
+            crate::diagnostics::counter("selected_ln_copy_items", items);
+            crate::diagnostics::counter("selected_ln_work_debit", items);
+        }
+        Ok(())
+    }
+
     /// A line is exact only when every original corner in this interval lies
     /// on it. Endpoint secants alone do not establish that fact.
     pub(crate) fn affine_on(&self, time: I) -> Option<(R, R)> {

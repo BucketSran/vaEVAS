@@ -210,6 +210,46 @@ pub(crate) struct Trajectory {
 }
 
 impl Trajectory {
+    /// Prepay all storage copied by Clone, including original rational limbs.
+    pub(crate) fn charge_source_copy(
+        &self,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<(), Error> {
+        let debit = |items: usize| -> Result<(), Error> {
+            work.debit(2, items as u64)?;
+            crate::diagnostics::counter("selected_ln_copy_items", items);
+            crate::diagnostics::counter("selected_ln_work_debit", items);
+            Ok(())
+        };
+        debit(
+            16 + self.knots.len()
+                + self.solver_points.len()
+                + self.source_errors.len()
+                + self.config.strobetimes.len()
+                + self.config.output_times.len(),
+        )?;
+        for points in &self.config.pwl {
+            debit(1 + 2 * points.len())?;
+        }
+        if let Some(errors) = &self.config.pwl_errors_v {
+            for error in errors {
+                debit(2)?;
+                if let Some(shape) = error.shape() {
+                    for knot in &shape.exact_knots {
+                        debit(3 + knot.time_numerator.len() + knot.time_denominator.len())?;
+                    }
+                }
+            }
+        }
+        for curve in &self.exact_sources {
+            debit(1)?;
+            if let Some(curve) = curve {
+                curve.charge_source_copy(work)?;
+            }
+        }
+        Ok(())
+    }
+
     // Root-demand slopes apply only to physical PWL inputs, not generated
     // sources whose enclosures may include an independent time-varying error.
     pub(crate) fn has_only_physical_inputs(&self) -> bool {

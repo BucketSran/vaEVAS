@@ -227,6 +227,107 @@ pub(crate) struct ProofContext {
     cuts: Mutex<Vec<ProvenCuts>>,
 }
 impl ProofContext {
+    /// A new selected-math consumer uses the existing source ledger once.
+    /// program_items is counted by its complete structural admission before copying.
+    pub(crate) fn new_source_math(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        program_items: usize,
+    ) -> Result<Arc<Self>, Error> {
+        let work = Work::default();
+        Self::source_math_with_work(program, trajectory, driven, program_items, work)
+    }
+
+    pub(crate) fn source_math_with_work(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        program_items: usize,
+        work: Work,
+    ) -> Result<Arc<Self>, Error> {
+        // Count the name-size scan itself before inspecting/copying storage.
+        work.debit(2, program.nodes.len() as u64)?;
+        crate::diagnostics::counter("selected_ln_ast_visits", program.nodes.len());
+        crate::diagnostics::counter("selected_ln_work_debit", program.nodes.len());
+        let names: usize = program.nodes.iter().map(|s| s.len() + 1).sum();
+        let lookup = program
+            .nodes
+            .len()
+            .saturating_mul(driven.len())
+            .saturating_mul(names.saturating_add(1));
+        let copy = program_items
+            .saturating_add(names)
+            .saturating_add(driven.iter().map(|s| s.len() + 1).sum::<usize>());
+        work.debit(2, copy.saturating_add(lookup) as u64)?;
+        crate::diagnostics::counter("selected_ln_copy_items", copy);
+        crate::diagnostics::counter("selected_ln_lookup_debit", lookup);
+        crate::diagnostics::counter("selected_ln_work_debit", copy.saturating_add(lookup));
+        trajectory.charge_source_copy(&work)?;
+        crate::diagnostics::counter("selected_ln_factory_calls", 1);
+        Self::new(program, trajectory, driven, work)
+    }
+
+    /// Counted source-only tree. The square coordinate bound also covers
+    /// dependency-set merging/insertion, without growing gradient searches.
+    pub(crate) fn source_affine_value(
+        &self,
+        expression: &Expression,
+        nodes: &[f64],
+        counted_items: usize,
+    ) -> Result<f64, Error> {
+        let dimensions =
+            self.program.nodes.len() + self.program.states.len() + self.program.operators.len() + 1;
+        self.source_charge(
+            "selected_ln_dense_debit",
+            counted_items
+                .saturating_mul(dimensions)
+                .saturating_mul(dimensions)
+                .saturating_mul(6),
+        )?;
+        crate::events::affine(
+            expression,
+            &self.program,
+            &self.program.operators[0].origin().instance,
+        )?
+        .value(nodes, &[])
+    }
+
+    pub(crate) fn source_work_used(&self) -> u64 {
+        self.work.0.work.load(Ordering::Relaxed)
+    }
+
+    pub(crate) fn source_charge(&self, category: &'static str, amount: usize) -> Result<(), Error> {
+        if let Err(error) = self.work.debit(2, amount as u64) {
+            crate::diagnostics::counter("selected_ln_work_exhausted", 1);
+            return Err(error);
+        }
+        crate::diagnostics::counter(category, amount);
+        crate::diagnostics::counter("selected_ln_work_debit", amount);
+        Ok(())
+    }
+
+    /// Exactly one local exact helper follows each aggregate reservation.
+    /// Called only after interval arithmetic cannot decide the original predicate.
+    pub(crate) fn source_point_sign(
+        &self,
+        left: &Expression,
+        right: &Expression,
+        time: f64,
+    ) -> Result<i8, Error> {
+        self.source_charge("selected_ln_exact_debit", 200_000)?;
+        crate::diagnostics::counter("selected_ln_exact_reservations", 1);
+        crate::diagnostics::counter("selected_ln_exact_calls", 1);
+        crate::exact_source::predicate_sign(
+            left,
+            right,
+            &self.input_nodes,
+            &self.trajectory.exact_sources,
+            time,
+        )
+        .ok_or_else(|| invalid("selected Ln source predicate has no exact certificate"))
+    }
+
     /// Rate-limited targets may replace whole-domain physical DC leaves.
     /// Predicates keep their original curves and real-root partition. Audit the
     /// original tree first, including masked operands and zero-weight sources.

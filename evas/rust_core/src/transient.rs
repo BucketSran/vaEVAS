@@ -1060,6 +1060,21 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         transient: Some(transient.clone()),
         ..request
     };
+    if crate::source_math::selected_ln_candidate(&request.program) {
+        let prepared = crate::source_math::Prepared::new_selected_ln(
+            &request.program,
+            &trajectory,
+            &request.driven,
+            &request.tolerances,
+        )?;
+        return run_stateless_transient(
+            request.program,
+            request.driven,
+            trajectory,
+            request.tolerances,
+            Some(prepared),
+        );
+    }
     if !request.program.operators.is_empty()
         && request
             .program

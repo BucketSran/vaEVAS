@@ -1,10 +1,12 @@
 //! Stateless native math stages are certified algebraic forcing, never history.
 //! Audit original source dependencies before replacing operator references.
+mod selected_ln;
 use crate::analog::Analog;
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, OperatorSpec, Program, Solution, Term, Tolerances};
 use crate::operators::Operators;
 use crate::pwl::Trajectory;
+pub(crate) use selected_ln::candidate as selected_ln_candidate;
 use std::collections::{HashMap, HashSet};
 
 /// A cheap dispatch candidate, not an admission or source-uncertainty proof.
@@ -107,7 +109,8 @@ fn unsupported() -> Error {
 }
 
 pub(crate) struct Prepared {
-    operators: Operators,
+    operators: Option<Operators>,
+    selected: Option<selected_ln::SelectedLn>,
     analog: Analog,
     original_nodes: usize,
 }
@@ -274,7 +277,8 @@ impl Prepared {
         reduced.operators.clear();
         let analog = Analog::new(reduced, extended, tolerances.clone())?;
         Ok(Self {
-            operators,
+            operators: Some(operators),
+            selected: None,
             analog,
             original_nodes,
         })
@@ -287,14 +291,28 @@ impl Prepared {
         time: f64,
         _exact: &[Option<crate::exact_source::Curve>],
     ) -> Result<Solution, Error> {
+        let extra = if let Some(selected) = &self.selected {
+            selected.charge_extension_copies(values.len())?;
+            let (value, bound) = selected.value(values, bounds, time)?;
+            (vec![value], vec![bound])
+        } else {
+            let operators = self.operators.as_ref().unwrap();
+            (operators.values(time)?, operators.bounds(time)?)
+        };
         let mut values = values.to_vec();
-        values.extend(self.operators.values(time)?);
+        values.extend(extra.0);
         let mut bounds = bounds.to_vec();
-        bounds.extend(self.operators.bounds(time)?);
+        bounds.extend(extra.1);
         // Admission excludes every Select. Analog only consults exact curves
         // for Select predicates; true source uncertainty remains in bounds.
         // Avoid copying the original rational knots at every output query.
-        let mut solution = self.analog.solve(&values, &bounds, None, time, &[])?;
+        let mut solution = if let Some(selected) = &self.selected {
+            selected.charge_trial_copy()?;
+            let mut trial = self.analog.fresh_source_trial()?;
+            trial.solve(&values, &bounds, None, time, &[])?
+        } else {
+            self.analog.solve(&values, &bounds, None, time, &[])?
+        };
         solution.voltages.truncate(self.original_nodes);
         if let Some(bounds) = &mut solution.certified_voltage_bounds {
             bounds.truncate(self.original_nodes);

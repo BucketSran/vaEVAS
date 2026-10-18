@@ -38,6 +38,20 @@ pub(crate) fn has_select(expr: &Expression) -> bool {
 }
 
 impl Analog {
+    #[cfg(test)]
+    pub(crate) fn source_trial_has_cache(&self) -> bool {
+        self.prepared.is_some()
+    }
+
+    /// A selected stateless math query never commits a failed solver cache.
+    pub(crate) fn fresh_source_trial(&self) -> Result<Self, Error> {
+        Self::new(
+            self.program.clone(),
+            self.driven.clone(),
+            self.tolerances.clone(),
+        )
+    }
+
     pub(crate) fn new(
         program: Program,
         driven: Vec<String>,

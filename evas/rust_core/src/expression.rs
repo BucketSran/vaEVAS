@@ -546,7 +546,7 @@ fn finite_predicate_interval(value: I) -> Result<I, Error> {
     }
 }
 
-fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
+pub(crate) fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
     match expr {
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
