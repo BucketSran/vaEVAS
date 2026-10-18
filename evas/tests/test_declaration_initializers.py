@@ -105,9 +105,15 @@ class DeclarationInitializers(unittest.TestCase):
         for expression in ('2147483647+1-1', '1.0&1', '(-2147483648)/(-1)', '7%2'):
             with self.subTest(expression=expression), self.assertRaises(CompileError):
                 compile_one(source(f'real x={expression};', '@(initial_step) x=0;'))
-        # Existing parameter-expression auditing conservatively rejects P/2.
-        with self.assertRaises(CompileError):
-            compile_one(source('parameter integer P=7; real x=P/2;'))
+        # Parameter operand types still determine division before a real seed.
+        for declaration, expected in (
+            ('parameter integer P=7; real x=P/2;', 3),
+            ('parameter integer P=-7; real x=P/2;', -3),
+            ('parameter real P=7; real x=P/2;', 3.5),
+        ):
+            with self.subTest(declaration=declaration):
+                self.assertEqual(self.initials(compile_one(source(declaration))),
+                                 {('dut', 'x'): expected})
 
     def test_bad_seed_diagnostic_keeps_its_declaration_location(self):
         with self.assertRaises(CompileError) as caught:

@@ -252,7 +252,9 @@ fn evaluate_states(
             }
             Some(value)
         }
-        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
             let a = evaluate_states(left, nodes, sources, time, budget, depth + 1, count, states)?;
             let b = evaluate_states(
                 right,
@@ -264,11 +266,18 @@ fn evaluate_states(
                 count,
                 states,
             )?;
-            budget.check(if matches!(e, Expression::Add { .. }) {
-                a + b
-            } else {
-                a * b
-            })
+            let result = budget.check(match e {
+                Expression::Add { .. } => a + b,
+                Expression::Multiply { .. } => a * b,
+                Expression::Divide { .. } if !b.is_zero() => a / b,
+                _ => return None,
+            })?;
+            if matches!(e, Expression::Divide { .. }) {
+                // A sign certificate must not turn a non-finite selected
+                // division into a successful source condition.
+                enclosure(&result)?;
+            }
+            Some(result)
         }
         _ => None,
     }

@@ -68,12 +68,37 @@ pub(crate) fn expand(e: &E, p: &Program, driven: &[String]) -> Result<E, Error> 
                         let Some(first) = contributions.first() else {
                             return Err(unsupported());
                         };
-                        if contributions.iter().any(|c| {
-                            c.branch != first.branch || (c.positive != 0 && c.negative != 0)
-                        }) {
+                        if contributions.iter().any(|c| c.branch != first.branch) {
                             return Err(unsupported());
                         }
-                        let mut value = constant(0.);
+                        // V(p,n)=rhs determines either endpoint only after the
+                        // other endpoint has independently been determined.
+                        // Keep that reference live, including a nonzero rail.
+                        // The active set rejects loops; all incident branches
+                        // above must still belong to this single constraint.
+                        let reference = if first.positive == n {
+                            first.negative
+                        } else {
+                            first.positive
+                        };
+                        let mut value = if reference == 0 {
+                            constant(0.)
+                        } else {
+                            walk(
+                                &E::Affine {
+                                    constant: 0.,
+                                    terms: vec![crate::ir::Term {
+                                        node: reference,
+                                        coefficient: 1.,
+                                    }],
+                                },
+                                p,
+                                driven,
+                                active,
+                                work,
+                                depth + 1,
+                            )?
+                        };
                         for c in contributions {
                             let sign = if c.positive == n { 1. } else { -1. };
                             let rhs = walk(&c.rhs, p, driven, active, work, depth + 1)?;

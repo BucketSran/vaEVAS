@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from typing import Callable, Mapping
 
 from .syntax import Assignment, Conditional, Display, Loop
-from . import integer_bits
+from . import integer_bits, integer_arithmetic
 
 SIGNED32_MIN, SIGNED32_MAX = -2147483648, 2147483647
 #: Conservative domain of a successfully stored integer state.
@@ -146,24 +146,7 @@ def evaluate(expr, env, parameters, arrays, on_read=None):
         products = [x * y for x in args[0] for y in args[1]]
         return (min(products), max(products))
     if expr.op in ('/', '%'):
-        if None in args:
-            return None
-        (dlow, dhigh) = args[1]
-        if dlow != dhigh or dlow == 0:
-            return None
-        divisor = dlow
-        low, high = args[0]
-        # Truncation toward zero, matching the existing quotient lowering.
-        def quotient(value):
-            magnitude = abs(value) // abs(divisor)
-            return -magnitude if (value < 0) != (divisor < 0) else magnitude
-        first, last = quotient(low), quotient(high)
-        quotient_domain = (min(first, last), max(first, last))
-        if expr.op == '/':
-            return quotient_domain
-        # remainder = numerator - divisor * quotient, as an interval product.
-        products = [divisor * y for y in quotient_domain]
-        return (low - max(products), high - min(products))
+        return integer_arithmetic.bounds(expr.op, args)
     return None
 
 

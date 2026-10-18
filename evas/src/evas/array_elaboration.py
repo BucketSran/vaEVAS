@@ -171,12 +171,25 @@ def scalarize_arrays(model, parameter):
         dynamic = all(leaf.kind in DYNAMIC_EVENT_KINDS for leaf in event.triggers)
         return body(event.body, dynamic)
 
+    analog = list(body(unroll_loops(model, parameter)))
+    initial = list(body(model.initial))
+    events = [replace(event, body=event_body(event), triggers=tuple(
+        replace(leaf, arguments=tuple(expression(a, False) if a is not None else None
+                                     for a in leaf.arguments)) for leaf in event.triggers))
+        for event in model.events]
+    scopes = dict(model.local_alias_scopes)
+    # Syntax retains the exact preceding unconditional indexed assignments.
+    # Bind each index in this instance, using the same type/bounds gate as the
+    # assignment itself. An array name never makes unwritten slots available.
+    for token, assignments in getattr(model, 'local_array_alias_scopes', {}).items():
+        names = set(scopes.get(token, ()))
+        for assignment in assignments:
+            if assignment.index is not None:
+                names.add(element(assignment.name, assignment.index, assignment.token, False))
+        scopes[token] = frozenset(names)
+
     # Element bounds stay on the model so the instance compiler can rebuild the
     # slot list for residual dynamic indices.
     return replace(model, variables=variables,
-                   analog=list(body(unroll_loops(model, parameter))),
-                   initial=list(body(model.initial)),
-                   events=[replace(event, body=event_body(event), triggers=tuple(
-                       replace(leaf, arguments=tuple(expression(a, False) if a is not None else None
-                                                   for a in leaf.arguments)) for leaf in event.triggers))
-                       for event in model.events])
+                   analog=analog, initial=initial, events=events,
+                   local_alias_scopes=scopes)

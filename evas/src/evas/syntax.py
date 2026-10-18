@@ -28,7 +28,7 @@ class Token:
 _TOKEN = re.compile(
     r"(?P<space>\s+)|(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)"
     r'|(?P<include>`include[ \t]+"[^"\n]+")'
-    r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)|(?P<task>\$(?:bound_step|display)\b)"
+    r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)|(?P<math>\$floor\b)|(?P<task>\$(?:bound_step|display)\b)"
     r'|(?P<directive>`[A-Za-z_][A-Za-z_0-9]*)|(?P<string>"[^"\n]*")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
     r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<<<|>>>|<<|>>|<=|>=|==|!=|&&|\|\||'\{|[\[\]:<>(){}+*/%;,=@#.?!&|^~\-])"
@@ -83,7 +83,7 @@ class Expr:
     op: Literal["number", "parameter", "node", "voltage", "array", "unary+", "unary-",
                 "+", "-", "*", "/", "%", "&", "|", "^", "unary~", "<<", ">>", "power", "sin", "cos", "exp", "ln", "sqrt", "transition", "absdelay", "slew",
                 "idt", "laplace_nd", "laplace_np", "idtmod", "ddt", "call", "index",
-                "<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!", "ternary", "abs", "min", "max", "checked"]
+                "<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!", "ternary", "abs", "min", "max", "floor", "checked"]
     value: str | float | None
     args: tuple["Expr", ...]
     token: Token
@@ -220,6 +220,8 @@ class Model:
     port_ranges: dict[str, tuple[Expr, Expr] | None] = field(default_factory=dict)
     declaration_token: Token | None = None
     variable_initializers: dict[str, Expr] = field(default_factory=dict)
+    local_alias_scopes: dict[Token, frozenset[str]] = field(default_factory=dict)
+    local_array_alias_scopes: dict[Token, tuple[Assignment, ...]] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -239,6 +241,7 @@ class Parser:
         self.index = 0
         self.nesting = 0
         self.mixed_initial_body = False
+        self.function_names = set()
         self.declarations = declarations if declarations is not None else {}
 
     @property
@@ -402,6 +405,11 @@ class Parser:
                 arguments += (self.expression(),)
             self.take(")")
             left = Expr(token.text, None, arguments, token, result_type="real")
+        elif token.text == "$floor" or (token.text == "floor" and token.text not in self.function_names and self.token.text == "("):
+            self.take("(")
+            argument = self.expression()
+            self.take(")")
+            left = Expr("floor", None, (argument,), token, result_type="real")
         elif token.text == "pow":
             self.take("(")
             base = self.expression()
@@ -763,17 +771,37 @@ class Parser:
         self.take("analog")
         self.take("begin")
         analog, initial, events = [], [], []
+        self.local_alias_scopes = {}
+        self.local_array_alias_scopes = {}
+        available = set()
+        available_array = []
         while self.token.text != "end":
             if self.token.text == "@":
                 token = self.take("@")
                 self.take("(")
                 # Initialization is installed once by the existing state path;
                 # only monitored leaves become runtime events.
+                # Retain lexical availability before initial_step is split
+                # from ordinary execution. Instance binding separately proves
+                # that an available alias has one pure constant writer.
+                scope = frozenset(available)
+                array_scope = tuple(available_array)
+                first_initial = len(initial)
                 event = self.monitored_event(token, initial)
+                self.local_alias_scopes[token] = scope
+                self.local_array_alias_scopes[token] = array_scope
+                for statement in initial[first_initial:]:
+                    self.local_alias_scopes[statement.token] = scope
+                    self.local_array_alias_scopes[statement.token] = array_scope
                 if event is not None:
                     analog.append(event)
                 continue
-            analog.extend(self.statements(True, True))
+            statements = self.statements(True, True)
+            analog.extend(statements)
+            available.update(s.name for s in statements
+                             if isinstance(s, Assignment) and s.index is None)
+            available_array.extend(s for s in statements
+                                   if isinstance(s, Assignment) and s.index is not None)
         self.take("end")
         def contributes(statements):
             return any(isinstance(s, ContributionStatement) or isinstance(s, Conditional)
@@ -929,11 +957,25 @@ class Parser:
         while self.token.kind == "include":
             self.take()
         module_token = self.take("module")
+        self.function_names = set()
         name = self.name()
         self.take("(")
         ports, directions, nodes, node_ranges, port_ranges = self.module_ports()
         self.take(")")
         self.take(";")
+        # Resolve call spelling against this module's function declarations,
+        # including forward calls in other function bodies. This is only a
+        # declaration lookup; normal parsing still validates every header/body.
+        self.function_names = set()
+        for position in range(self.index, len(self.tokens)-2):
+            if self.tokens[position].text == "endmodule":
+                break
+            if (self.tokens[position].text == "analog"
+                    and self.tokens[position+1].text == "function"):
+                name_position = position+2
+                if self.tokens[name_position].text in ("real", "integer"):
+                    name_position += 1
+                self.function_names.add(self.tokens[name_position].text)
         parameters, variables, functions, genvars, arrays = {}, {}, {}, set(), {}
         variable_initializers = {}
         parameter_types, parameter_ranges = {}, {}
@@ -1024,6 +1066,8 @@ class Parser:
                 children.append(child)
         if self.token.text != 'analog' and not children:
             self.fail('module requires an analog block or child instances')
+        self.local_alias_scopes = {}
+        self.local_array_alias_scopes = {}
         analog, initial, events = self.analog_block() if self.token.text == 'analog' else ([], [], [])
         self.take("endmodule")
         if eof:
@@ -1045,4 +1089,4 @@ class Parser:
             self.fail('initial $display in a hierarchical model is not supported', module_token)
         if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys() | genvars):
             self.fail("function name conflicts with a module declaration")
-        return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children), parameter_types, parameter_ranges, node_ranges, port_ranges, module_token, variable_initializers)
+        return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children), parameter_types, parameter_ranges, node_ranges, port_ranges, module_token, variable_initializers, getattr(self, "local_alias_scopes", {}), getattr(self, "local_array_alias_scopes", {}))

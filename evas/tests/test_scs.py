@@ -271,7 +271,7 @@ class ScsContracts(unittest.TestCase):
     def test_unknown_options_devices_discontinuities_and_sources_reject(self):
         cases=[('Vin (u 0) vsource type=sine ampl=1 freq=1',''),
                ('Vin (u 0) vsource type=dc dc=[0 1]',''),
-               ('Vin (u y) vsource dc=1',''),
+               ('Vin (u u) vsource dc=1',''),
                ('Vin (u 0) vsource dc=1','R1 (y 0) resistor r=1k'),
                ('Vin (u 0) vsource dc=1','opts options mystery=1p'),
                ('Vin (u 0) vsource dc=1','bad tran stop=1 maxstep=.1 errpreset=unknown'),

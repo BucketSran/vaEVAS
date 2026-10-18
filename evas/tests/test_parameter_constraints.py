@@ -2,22 +2,22 @@
 GUARDS = ["LANG"]
 
 import unittest
-from evas import CompileError, Instance, compile_sources
-from test_affine import execute, instance, model
+from evas import CompileError, Instance, compile_sources, solve
+from test_affine import KERNEL, execute, instance, model
 
 
 class ParameterConstraints(unittest.TestCase):
     def test_literal_integer_defaults_ranges_and_child_overrides_are_checked(self):
-        # 3/2*2 is 2 with integer division, 3 after real lowering. The bounded
-        # frontend must reject it, even when no integer parameter is referenced.
-        for declaration in ('parameter integer n=3/2*2;',
-                            'parameter integer n=2147483647*2/2;',
-                            'parameter integer n=3 from [0:3/2*2];',
-                            'parameter real n=3 from [0:3/2*2];'):
-            with self.subTest(declaration=declaration):
-                with self.assertRaises(CompileError) as caught:
-                    compile_sources({'p.va':model('V(y)<+n;',declaration)},[instance()])
-                self.assertEqual(caught.exception.diagnostic['code'],'unsupported_integer_arithmetic')
+        # Typed division truncates before multiplication; the range endpoint
+        # is therefore 2 rather than the real arithmetic result 3.
+        self.assertEqual(execute(model('V(y)<+n;', 'parameter integer n=3/2*2;'))[0]['y'],2)
+        for declaration, code in (
+                ('parameter integer n=2147483647*2/2;', 'unsupported_integer_arithmetic'),
+                ('parameter integer n=3 from [0:3/2*2];', 'parameter_range'),
+                ('parameter real n=3 from [0:3/2*2];', 'parameter_range')):
+            with self.subTest(declaration=declaration), self.assertRaises(CompileError) as caught:
+                compile_sources({'p.va':model('V(y)<+n;',declaration)},[instance()])
+            self.assertEqual(caught.exception.diagnostic['code'],code)
         source=model('V(y)<+n;', 'parameter integer n=3/2*2;')
         self.assertEqual(execute(source,[instance(parameters={'n':4})])[0]['y'],4)
         self.assertEqual(execute(model('V(y)<+n;','parameter integer n=3/2.0*2;'))[0]['y'],3)
@@ -28,9 +28,9 @@ module child(y); output y; electrical y;
             parameter integer n=1; analog begin V(y)<+n; end endmodule
             module parent(y); output y; electrical y;
             child #(.n(3/2*2)) c(y); endmodule'''
-        with self.assertRaises(CompileError) as caught:
-            compile_sources({'p.va':source},[Instance('p','parent',{'y':'y'})])
-        self.assertEqual(caught.exception.diagnostic['code'],'unsupported_integer_arithmetic')
+        program=compile_sources({'p.va':source},[Instance('p','parent',{'y':'y'})])
+        result=solve(program,[],[[]],kernel=KERNEL)
+        self.assertEqual(result['solutions'][0]['voltages'][result['nodes'].index('y')],2)
 
     def test_integer_semantics_survive_genvar_substitution_in_node_indices(self):
         source = '''`include "disciplines.vams"
@@ -47,15 +47,15 @@ module m(y); output y; electrical y; electrical [3:0] x;
         self.assertEqual(caught.exception.diagnostic['code'],'unsupported_integer_arithmetic')
 
     def test_integer_division_and_overflow_are_not_silently_real_arithmetic(self):
-        for rhs in ('n/2','n+1/2','n*2147483647'):
-            with self.subTest(rhs=rhs), self.assertRaises(CompileError) as caught:
-                compile_sources({'p.va':model('V(y)<+'+rhs+';', 'parameter integer n=3;')},[instance()])
-            self.assertEqual(caught.exception.diagnostic['code'],'unsupported_integer_arithmetic')
+        for rhs, expected in (('n/2',1), ('n+1/2',3)):
+            with self.subTest(rhs=rhs):
+                self.assertEqual(execute(model('V(y)<+'+rhs+';', 'parameter integer n=3;'))[0]['y'],expected)
+        with self.assertRaises(CompileError) as caught:
+            compile_sources({'p.va':model('V(y)<+n*2147483647;', 'parameter integer n=3;')},[instance()])
+        self.assertEqual(caught.exception.diagnostic['code'],'unsupported_integer_arithmetic')
         self.assertEqual(execute(model('V(y)<+n/2.0;', 'parameter integer n=3;'))[0]['y'],1.5)
-        with self.assertRaises(CompileError):
-            compile_sources({'p.va':model('V(y)<+gain;', 'parameter integer n=3; parameter real gain=n/2;')},[instance()])
-        with self.assertRaises(CompileError):
-            compile_sources({'p.va':model('for(i=1;i<3;i=i+1) V(y)<+n/i;', 'parameter integer n=3; genvar i;')},[instance()])
+        self.assertEqual(execute(model('V(y)<+gain;', 'parameter integer n=3; parameter real gain=n/2;'))[0]['y'],1)
+        self.assertEqual(execute(model('for(i=1;i<3;i=i+1) V(y)<+n/i;', 'parameter integer n=3; genvar i;'))[0]['y'],4)
 
     def test_comma_declarations_bind_each_value_and_range(self):
         source = model('V(y,r)<+a+b;', 'parameter integer a=2 from [1:3], b=a+1 from (a:5);')

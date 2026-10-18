@@ -95,6 +95,26 @@ def audit_event_body(compiler, statements):
                         compiler.instance.name, item.expansion)
         return Select(relation, left, right, yes, no, origin)
 
+    implicit_powers = {}
+
+    def finite_power_tree(root):
+        # Only an actual finite lowering contributes implicit Select choices.
+        # Unsupported unused pure mathematics keeps its existing opaque shape;
+        # probing must not turn resource accounting into a domain admission.
+        if root.op != "power" or not compiler.integer_type(root.args[1]):
+            return None
+        if id(root) not in implicit_powers:
+            try:
+                value = compiler.lower_event(root, compiler.symbol, compiler.node_ids,
+                    preserve_structure=True, node_declarations=True,
+                    sampled_values=True, decisions=selection, indices=index_read)
+            except CompileError as error:
+                if error.diagnostic['code'] == 'resource_budget':
+                    raise
+                value = None
+            implicit_powers[id(root)] = (root, value if isinstance(value, Select) else None)
+        return implicit_powers[id(root)][1]
+
     def needs_choices(root):
         pending, visited = [root], set()
         while pending:
@@ -103,7 +123,8 @@ def audit_event_body(compiler, statements):
                 continue
             visited.add(id(item))
             if (item.op in DECISION_NAMES or item.op in BIT_OPS or item.op == "index" or
-                    item.op in ("/", "%") and compiler.integer_type(item)):
+                    item.op in ("/", "%") and compiler.integer_type(item) or
+                    item.op == "power" and finite_power_tree(item) is not None):
                 return True
             pending.extend(item.args)
         return False
@@ -141,6 +162,8 @@ def audit_event_body(compiler, statements):
             # The typed lowerer introduces quotient-bin decisions even when
             # there is no explicit source decision. Retain their real shape.
             value = audit_lower(root)
+        elif root.op == "power" and finite_power_tree(root) is not None:
+            value = finite_power_tree(root)
         elif root.op in ("number", "parameter", "voltage", "time"):
             value = audit_lower(root)
         else:

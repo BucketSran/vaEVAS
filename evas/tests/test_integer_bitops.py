@@ -129,14 +129,17 @@ class IntegerBitops(unittest.TestCase):
                 with self.assertRaisesRegex(CompileError, 'input/inout'):
                     compile_sources({'ordinary-bit-wrapper.va': source}, [instance()])
 
-    def test_bitwise_table_does_not_turn_runtime_divisor_into_instance_constant(self):
-        for operator in ('/', '%'):
+    def test_bitwise_table_preserves_bounded_runtime_divisor_semantics(self):
+        for operator, expected in (('/',[3,1,1]), ('%',[3,0,0])):
             for divisor in ('d', '(d&3)'):
                 source = model('@(initial_step) begin n=3; d=1; end '
                     '@(timer(0.25)) n=(n'+operator+divisor+')&1; V(y,r)<+n;', 'integer n,d;')
-                with self.subTest(operator=operator, divisor=divisor), self.assertRaises(CompileError) as caught:
-                    compile_sources({'runtime-divisor-bits.va': source}, [instance()])
-                self.assertEqual(caught.exception.diagnostic['code'], 'unsupported_integer_arithmetic')
+                with self.subTest(operator=operator, divisor=divisor):
+                    program = compile_sources({'runtime-divisor-bits.va': source},[instance()])
+                    result = transient(program, {'u': [[0,0],[.5,0]]}, [0,.25,.5],
+                                       stop=.5, max_step=.25, kernel=KERNEL)
+                    y = result['nodes'].index('y')
+                    self.assertEqual([row['voltages'][y] for row in result['solutions']], expected)
         # An instance-constant divisor retains finite integer truncation.
         source = model('@(initial_step) n=3; @(timer(0.25,0.25,1e-12)) n=(n/2)&1; V(y,r)<+n;', 'integer n;')
         program = compile_sources({'constant-divisor-bits.va': source}, [instance()])

@@ -119,6 +119,33 @@ impl GuardBounds {
             .collect::<Result<Vec<_>, _>>()?
             .iter()
             .all(|row| (1..count).all(|node| row[node].zero() || driven_nodes.contains(&node)));
+        // A forced voltage alias can have a nonzero reference. Substitute only
+        // a proven acyclic, single-branch relation and then recheck affinity.
+        // Unrelated nonlinear outputs need not enter this guard projection.
+        let expanded = (!direct)
+            .then(|| {
+                expressions
+                    .iter()
+                    .map(|expression| {
+                        expression
+                            .map(|expression| {
+                                let expanded =
+                                    crate::causal_voltage::expand(expression, program, driven)?;
+                                let row = affine(&expanded, program)?;
+                                if (1..count)
+                                    .any(|node| !row[node].zero() && !driven_nodes.contains(&node))
+                                {
+                                    return Err(unresolved("unresolved forced guard voltage"));
+                                }
+                                Ok(expanded)
+                            })
+                            .transpose()
+                    })
+                    .collect::<Result<Vec<_>, Error>>()
+                    .ok()
+            })
+            .flatten();
+        let direct = direct || expanded.is_some();
         let symbolic = if !direct
             && keep_states
             && keep_operators
@@ -153,11 +180,16 @@ impl GuardBounds {
         validate_projection(&nodes, variables, width)?;
         let mut coefficients = expressions
             .iter()
-            .map(|expression| {
+            .enumerate()
+            .map(|(index, expression)| {
                 // Keep rows aligned with event indices; timer has no guard.
                 let Some(guard) = expression.filter(|_| !symbolic_mode) else {
                     return Ok(vec![I::ZERO; width]);
                 };
+                let guard = expanded
+                    .as_ref()
+                    .and_then(|expressions| expressions[index].as_ref())
+                    .unwrap_or(guard);
                 let guard = affine(guard, program)?;
                 project_row(&guard, &nodes, width)
             })

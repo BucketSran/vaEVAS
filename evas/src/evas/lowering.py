@@ -141,6 +141,16 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
 
     event_math = getattr(parameters, "event_math", None)
     sampled_values = getattr(parameters, "sampled_values", False)
+    if expr.op == 'floor':
+        if len(expr.args) != 1:
+            fail('floor requires one real argument', code='unsupported_floor')
+        argument = lower(expr.args[0], parameters, nodes, source, operators, True,
+                         decisions, validate_decision, decision_scope, indices,
+                         node_declarations=node_declarations)
+        finite_floor = getattr(parameters, 'finite_floor', None)
+        if finite_floor is None:
+            fail('floor requires a source-proven finite range', code='unsupported_floor')
+        return finite_floor(expr, argument)
     if event_math is not None and expr.op in ("sqrt", "abs", "min", "max"):
         args = tuple(lower(arg, parameters, nodes, source, None, True,
                            decisions, validate_decision, False, indices,
@@ -301,6 +311,11 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
                     fail("nonfinite coefficient during constant folding")
                 result = Binary("multiply", Affine(reciprocal, ()), a) if preserve_structure else scale(a, reciprocal)
         elif expr.op == "power":
+            finite_power = getattr(parameters, "finite_power", None)
+            if finite_power is not None:
+                finite_result = finite_power(expr, a, b)
+                if finite_result is not None:
+                    return finite_result
             if (not isinstance(b, Affine) or b.terms or not b.constant.is_integer()
                     or not 1 <= b.constant <= 32):
                 fail("pow exponent must be an instance-constant integer in [1,32]")

@@ -239,6 +239,20 @@ pub(super) fn prepare(
     // final seed only after both stages pass their certificates.
     let before = model.initial();
     let before_bounds: Vec<_> = before.iter().copied().map(I::point).collect();
+    // Transition constructors read only their complete structural seed set.
+    // Other held values may retain arithmetic uncertainty in Prepared/Frame;
+    // they are not exact inputs to any cold history in this restricted graph.
+    // Keep the existing all-point rule for every other operator composition.
+    let point_states = if model
+        .program
+        .operators
+        .iter()
+        .all(|spec| matches!(spec, OperatorSpec::Transition { .. }))
+    {
+        seeds
+    } else {
+        (0..model.program.states.len()).collect()
+    };
     let (initial_states, initial_bounds, mut records) = prepare_stage(
         model,
         trajectory,
@@ -246,6 +260,7 @@ pub(super) fn prepare(
         &initial_ids,
         &before,
         &before_bounds,
+        &point_states,
     )?;
     let ids: Vec<_> = zero.iter().copied().collect();
     let (states, bounds, timer_records) = prepare_stage(
@@ -255,6 +270,7 @@ pub(super) fn prepare(
         &ids,
         &initial_states,
         &initial_bounds,
+        &point_states,
     )?;
     records.extend(timer_records);
     Ok(Some(Prepared {
@@ -274,6 +290,7 @@ fn prepare_stage(
     ids: &[usize],
     before: &[f64],
     before_bounds: &[I],
+    point_states: &BTreeSet<usize>,
 ) -> Result<PreparedStage, Error> {
     if blocks.is_empty() {
         return Ok((before.to_vec(), before_bounds.to_vec(), Vec::new()));
@@ -301,7 +318,14 @@ fn prepare_stage(
         || bounds
             .iter()
             .zip(&states)
-            .any(|(&b, &s)| !s.is_finite() || b != I::point(s))
+            .enumerate()
+            .any(|(index, (&b, &s))| {
+                !s.is_finite()
+                    || !b.finite()
+                    || s < b.lo
+                    || s > b.hi
+                    || point_states.contains(&index) && b != I::point(s)
+            })
     {
         return Err(unsupported(
             "transition bootstrap requires finite final point state certificates",
@@ -486,5 +510,237 @@ mod tests {
         assert!(ready.cursor(&extra).is_err());
         assert_eq!(ready.cursor(&calendar).unwrap(), 1);
         assert_eq!(ready.records.len(), 1);
+    }
+
+    fn nonseed_model() -> EventModel {
+        let origin = json!({"source":"nonseed.va","line":1,"column":1,"instance":"dut"});
+        let c = |value| json!({"op":"affine","constant":value,"terms":[]});
+        let s = |state| json!({"op":"state","state":state});
+        let a = |state, rhs| json!({"kind":"assign","state":state,"rhs":rhs});
+        let u = json!({"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]});
+        let timer = |start| {
+            json!({"kind":"timer","start":start,"period":0,
+                                  "time_tolerance":1e-12,"enabled":true})
+        };
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":SCHEMA_VERSION,"nodes":["0","u","y"],
+            "states":[{"instance":"dut","name":"x","kind":"real","initial":0},
+                {"instance":"dut","name":"p","kind":"real","initial":0},
+                {"instance":"dut","name":"span","kind":"real","initial":0},
+                {"instance":"dut","name":"warm","kind":"real","initial":0}],
+            "events":[{"origin":origin,"trigger":timer(0.),"body":[a(2,c(1.)),
+                a(0,json!({"op":"multiply","left":c(0.45),"right":u}))]},
+                {"origin":origin,"trigger":timer(0.25),"body":[a(3,c(1.)),a(2,c(0.))]},
+                {"origin":origin,"trigger":timer(0.5),"body":[{"kind":"if",
+                    "relation":"gt","left":u,"right":c(0.),"then_body":[a(1,s(0))],
+                    "else_body":[a(1,c(0.))],"origin":origin}]}],
+            "operators":[{"kind":"transition","input":s(2),"delay":0,
+                "rise":0.125,"fall":0.5,"origin":origin}],
+            "contributions":[{"origin":origin,"branch":{"instance":"dut",
+                "local_positive":"p","local_negative":"r","kind":"voltage"},
+                "positive":2,"negative":0,"rhs":{"op":"add",
+                    "left":{"op":"multiply","left":c(1e12),"right":s(1)},
+                    "right":{"op":"operator","operator":0}}}]
+        }))
+        .unwrap();
+        EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-8,
+                relative: 0.,
+            },
+        )
+        .unwrap()
+    }
+
+    fn nonseed_trajectory(good: bool) -> Trajectory {
+        Trajectory::new(
+            TransientInputs {
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![vec![
+                    [0., 0.16],
+                    [0.25, 0.16],
+                    [0.5, if good { -0.16 } else { 0.16 }],
+                    [1., if good { -0.16 } else { 0.16 }],
+                ]],
+                output_times: vec![0., 0.125, 0.375, 0.75, 1.],
+                stop: 1.,
+                max_step: 1.,
+            },
+            1,
+        )
+        .unwrap()
+    }
+
+    fn nonseed_controller(
+        model: &EventModel,
+        trajectory: &Trajectory,
+    ) -> (Controller, Vec<ScheduledEvent>) {
+        let prepared = prepare(model, trajectory).unwrap().unwrap();
+        // .45*.16 is an independently nonrepresentable binary64 product.
+        assert!(prepared.bounds[0].lo < prepared.bounds[0].hi);
+        assert_eq!(prepared.bounds[2], I::ONE);
+        let operators =
+            Operators::new(&model.program, trajectory, &model.driven, &prepared.states).unwrap();
+        let circuit = model
+            .circuit_at(
+                &prepared.states,
+                &operators.values(0.).unwrap(),
+                &trajectory.value_bounds(0.),
+            )
+            .unwrap();
+        let solution = circuit.solve(&trajectory.values(0.)).unwrap();
+        let calendar = independent_schedule(model, trajectory).unwrap();
+        let event = prepared.cursor(&calendar).unwrap();
+        (
+            Controller {
+                accepted: Frame {
+                    value_proofs: Default::default(),
+                    time_proofs: Default::default(),
+                    time: 0.,
+                    states: prepared.states,
+                    state_bounds: prepared.bounds,
+                    operators,
+                    circuit,
+                    solution,
+                },
+                event,
+                records: prepared.records,
+                outputs: vec![],
+            },
+            calendar,
+        )
+    }
+
+    #[test]
+    fn bootstrap_nonseed_bounds_survive_same_controller_late_failure_and_retry() {
+        let model = nonseed_model();
+        let good = nonseed_trajectory(true);
+        let bad = nonseed_trajectory(false);
+        let (mut controller, mut calendar) = nonseed_controller(&model, &good);
+        let accept = |controller: &mut Controller,
+                      trajectory: &Trajectory,
+                      calendar: &mut Vec<ScheduledEvent>| {
+            controller.accept_changed_events(
+                &model,
+                trajectory,
+                calendar,
+                event_acceptance::Strategy::Static,
+            )
+        };
+        accept(&mut controller, &good, &mut calendar).unwrap();
+        assert_eq!(controller.accepted.time, 0.25);
+        assert!(controller.accepted.state_bounds[0].lo < controller.accepted.state_bounds[0].hi);
+        let before = controller.accepted.clone();
+        let records = serde_json::to_value(&controller.records).unwrap();
+        let cursor = controller.event;
+        let signature = |events: &[ScheduledEvent]| {
+            events
+                .iter()
+                .map(|event| {
+                    (
+                        event.event,
+                        event.time.to_bits(),
+                        event.bounds().lo.to_bits(),
+                        event.bounds().hi.to_bits(),
+                    )
+                })
+                .collect::<Vec<_>>()
+        };
+        let calendar_before = signature(&calendar);
+        let same_frame = |actual: &Frame, expected: &Frame| {
+            assert_eq!(actual.time, expected.time);
+            assert_eq!(actual.states, expected.states);
+            assert_eq!(actual.state_bounds, expected.state_bounds);
+            assert_eq!(actual.solution.voltages, expected.solution.voltages);
+            assert!(actual.operators.same_reset_history(&expected.operators));
+            assert_eq!(
+                actual.operators.bounds(actual.time).unwrap(),
+                expected.operators.bounds(expected.time).unwrap()
+            );
+            assert_eq!(
+                actual.operators.values(actual.time).unwrap(),
+                expected.operators.values(expected.time).unwrap()
+            );
+        };
+        let outputs = controller.outputs.clone();
+        for _ in 0..2 {
+            // Bad/good agree throughout the accepted prefix. Only the future
+            // .5 condition changes; bad forwards x's inherited uncertainty.
+            let error = accept(&mut controller, &bad, &mut calendar).unwrap_err();
+            assert!(
+                error.message.contains("forward error"),
+                "{} {}",
+                error.kind,
+                error.message
+            );
+            same_frame(&controller.accepted, &before);
+            assert_eq!(controller.event, cursor);
+            assert_eq!(signature(&calendar), calendar_before);
+            assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
+            assert_eq!(controller.outputs.len(), outputs.len());
+            for (actual, expected) in controller.outputs.iter().zip(&outputs) {
+                same_frame(actual, expected);
+            }
+        }
+        accept(&mut controller, &good, &mut calendar).unwrap();
+        let (mut clean, mut clean_calendar) = nonseed_controller(&model, &good);
+        accept(&mut clean, &good, &mut clean_calendar).unwrap();
+        accept(&mut clean, &good, &mut clean_calendar).unwrap();
+        same_frame(&controller.accepted, &clean.accepted);
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            serde_json::to_value(&clean.records).unwrap()
+        );
+        assert_eq!(signature(&calendar), signature(&clean_calendar));
+        // The unrelated span history falls from 1 to 0 over [.25,.75].
+        // A rejected p update cannot advance or replace its accepted edge.
+        assert_eq!(
+            controller.accepted.operators.values(0.5).unwrap(),
+            vec![0.5]
+        );
+        assert_eq!(controller.accepted.operators.values(1.).unwrap(), vec![0.]);
+        assert_eq!(controller.accepted.solution.voltages[2], 0.5);
+        assert!(controller.accepted.state_bounds[0].lo < controller.accepted.state_bounds[0].hi);
+    }
+
+    #[test]
+    fn bootstrap_nontransition_compositions_keep_the_existing_all_point_rule() {
+        let mut model = nonseed_model();
+        model.program.operators.push(
+            serde_json::from_value(json!({
+                "kind":"idt","input":{"op":"operator","operator":0},"ic":0,
+                "origin":{"source":"nonseed.va","line":1,"column":1,"instance":"dut"}
+            }))
+            .unwrap(),
+        );
+        let error = prepare(&model, &nonseed_trajectory(true)).err().unwrap();
+        assert_eq!(error.kind, "unsupported_initial_history");
+        assert!(
+            error.message.contains("finite final point"),
+            "{}",
+            error.message
+        );
+    }
+
+    #[test]
+    fn bootstrap_point_rule_still_covers_all_structural_transition_dependencies() {
+        let mut model = nonseed_model();
+        let OperatorSpec::Transition { input, .. } = &mut model.program.operators[0] else {
+            unreachable!()
+        };
+        *input = serde_json::from_value(json!({"op":"add","left":{"op":"state","state":2},
+            "right":{"op":"multiply","left":{"op":"affine","constant":0,"terms":[]},
+                     "right":{"op":"state","state":0}}}))
+        .unwrap();
+        assert_eq!(
+            prepare(&model, &nonseed_trajectory(true))
+                .err()
+                .unwrap()
+                .kind,
+            "unsupported_initial_history"
+        );
     }
 }

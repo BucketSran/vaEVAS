@@ -3,7 +3,7 @@ from dataclasses import fields, is_dataclass
 from .errors import CompileError
 from .ir import Affine
 from .lowering import lower
-from .parameters import bind_parameters
+from .parameters import bind_parameters, attach_constant_integer_arithmetic
 from .node_elaboration import scalarize_nodes
 from .integer_constants import check_integer_expression
 from .syntax import Expr
@@ -79,6 +79,7 @@ def bind_hierarchy(models, instances, instance_type):
                 raise CompileError(f'{model.source}: unknown parent parameter {name!r}')
             return parameters[name]
 
+        attach_constant_integer_arithmetic(parameter, model, instance.name)
         for child in model.children:
             if child.module not in models:
                 raise CompileError(f'{model.source}:{child.token.line}: unknown child module {child.module!r}')
@@ -91,7 +92,7 @@ def bind_hierarchy(models, instances, instance_type):
             overrides = {}
             for name, expr in requested.items():
                 check_integer_expression(expr, model, parameters,
-                                         check_literals=target.parameter_types.get(name) == 'integer')
+                                         check_literals=target.parameter_types.get(name) == 'integer', allow_division=True)
                 value = lower(expr, parameter, {}, model.source)
                 if not isinstance(value,Affine) or value.terms:
                     raise CompileError(f'{model.source}:{expr.token.line}: child parameter override must be an instance constant')

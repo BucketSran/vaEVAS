@@ -50,13 +50,25 @@ IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和�
 有理点值证明保留真实误差验收，标准算子缺省参数复用原IR；公开正反例分别见
 [点值回归](../../tests/test_transition_point_proof.py)和[默认参数回归](../../tests/test_operator_defaults.py)。
 最终统一400绑定同一源码；早期核心400与后续三件身份保留在`1de6896b`历史收据。
-初始化采样仅有[设计](../../../experiments/backends/support/initial-voltage-sampling/proposal.md)。
+后续有限点采样的实现与新候选身份见下述低成本闭包证据；原设计保留历史身份。
 
 [有限声明初值](../../../experiments/backends/support/declaration-initializers/evidence.json)补充LANG的分支证据，
 并检查既有cross/timer写者上的初始化组合。
 初值只为原有事件写者绑定有限实例常量，复用原类型检查、顺序初始化和IR24，
 范围见[合同](../math/events.md#declaration-initializers)与[公开正反例](../../tests/test_declaration_initializers.py)。
 声明常量不授予一般输入采样、只读设置或ordinary局部量支持。
+
+[低成本闭包](../../../experiments/backends/support/low-cost-closure/README.md)补充 LANG、LIN、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS 和 COMPOSE 的分支证据。
+合同分别见[有限点初值与别名](../math/events.md#input-initialization)、[typed整数与有限幂](../math/events.md#typed-integer-closure)及[普通条件与有理输出](../math/solving.md#普通-analog-条件)。
+公开控制覆盖源码顺序、精确数组槽、真实根处读取、signed余数、有限pow类型与资源、分支临时量和正分母事实。
+[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)固定波7完整400的269通过、18失败、113拒绝，150文件源码与release核 `1d0845b6` 的102+298件身份一致，清理400/400。
+原198份、波5的234份和波6b的261份通过全部保留；波1的221及前轮181保留历史身份。
+逐例比较波6b新增129、137、138、224、233、295、296、380共8份、无回退；相对波5新增35份、无回退。296恢复。
+IR24与原checker、精度、证明预算保持，real初态只接有限点包围，integer电压采样仍拒绝。
+多项式guard与有限floor已纳入波7，guard乘加中间值溢出在同一冻结release核明确拒绝；历史反例和修复收据均保留。
+111的事件认证限制保留；194、时间证明和Slew后续工作未正式验收，不计入269。原始材料local-only，无新增实际Spectre、正式r53或Q。
+四个过时passive夹具已改成真正负start加正period，7/7 private负控通过；合法过去单次timer仍按非正period合同处理。
+波5全Python执行2024项、2022通过，一项旧P/2拒绝期待已迁移并复验13方法，CO-SH-01在90秒超时且旧核对照待完成；不报告全绿。
 
 IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) 合入 main，补充 LANG、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE 和 DEV:scs-input。
 契约见[局部变量与条件支路](../../validation/ANALOG_CONDITIONS_CONTRACT.md)、

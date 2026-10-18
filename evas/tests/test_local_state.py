@@ -58,12 +58,13 @@ class LocalStateContracts(unittest.TestCase):
         self.assertEqual(values(run(program)), [1, 1.25, 2, 2.25, 2.5])
 
     def test_event_cannot_capture_an_analog_local_at_an_ambiguous_sequence(self):
-        for body in ("a=V(u,r); @(timer(0.5)) q=a;",
+        # Unique input-affine aliases have public positive coverage in
+        # test_initial_sampling_closure; nonlinear and future aliases stay rejected.
+        for body in ("a=V(u,r)*V(u,r); @(timer(0.5)) q=a;",
                      "@(timer(0.5)) q=a; a=V(u,r);",
-                     "a=V(u,r); @(cross(a-0.5,1)) q=2;",
-                     "a=0.5; @(timer(a)) q=2;",
-                     "a=V(u,r); @(timer(0.5)) if(a>0) q=2;",
-                     "a=0.125; @(timer(0.5,0,a)) q=2;"):
+                     "a=V(u,r)*V(u,r); @(cross(a-0.5,1)) q=2;",
+                     "a=V(u,r)*V(u,r); @(timer(0.5)) if(a>0) q=2;",
+                     ):
             with self.subTest(body=body), self.assertRaisesRegex(CompileError, "event expressions cannot read ordinary analog local") as failure:
                 compile_local("@(initial_step) q=1; " + body + " V(y,r)<+q;")
             self.assertEqual(failure.exception.diagnostic["code"], "unsupported_local_event")
@@ -86,7 +87,7 @@ class LocalStateContracts(unittest.TestCase):
         for event in ("@(timer(0.5)) q=a;", "@(cross(a-0.5,1)) q=2;",
                       "@(timer(0.5)) if(a>0) q=2;", "@(timer(0.5,0,a)) q=2;"):
             with self.subTest(event=event), self.assertRaises(CompileError) as failure:
-                compile_local("@(initial_step) q=1;\na=V(u,r);\n" + event + "\nV(y,r)<+q;")
+                compile_local("@(initial_step) q=1;\na=V(u,r)*V(u,r);\n" + event + "\nV(y,r)<+q;")
             diagnostic=failure.exception.diagnostic
             self.assertEqual(diagnostic['code'],'unsupported_local_event')
             self.assertEqual(diagnostic['location']['source'],'local-state.va')

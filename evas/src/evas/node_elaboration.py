@@ -10,6 +10,7 @@ from .lowering import lower
 from .elaboration import elaborate_loops
 from .syntax import Loop, Assignment, Conditional, ContributionStatement, Event, Display
 from .integer_constants import check_integer_model, check_integer_expression
+from .parameters import attach_constant_integer_arithmetic
 
 
 def scalarize_nodes(model, parameters):
@@ -22,6 +23,7 @@ def scalarize_nodes(model, parameters):
             fail(f'unknown parameter {name!r} in electrical bound/index')
         return parameters[name]
 
+    attach_constant_integer_arithmetic(parameter, model)
     model = elaborate_loops(model, parameter)
     model = replace(model, analog=[s for s in model.analog if not isinstance(s,Event)],
                     events=[*model.events, *(s for s in model.analog if isinstance(s,Event))])

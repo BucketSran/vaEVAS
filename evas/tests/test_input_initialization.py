@@ -134,7 +134,7 @@ module pair(a,b,oa,ob,na,nb); inout a,b,oa,ob,na,nb;
                 self.assertIn(json.loads(proc.stderr)['kind'],['invalid_request','invalid_ir','unsupported_initialization'])
 
     def test_frontend_rejects_broader_initialization_structurally(self):
-        for rhs in ['V(u,r)', '(V(y,r)>0.65)', '(0*V(y,r)>0.65)',
+        for rhs in ['(V(y,r)>0.65)', '(0*V(y,r)>0.65)',
                     '(V(y,y)>0.65)', '(idt(V(u,r),0)>0.65)',
                     '(V(u,r)>0.65)?1:(V(y,r)>0.65)', '(V(u,r)*V(u,r)>0.65)']:
             with self.subTest(rhs=rhs), self.assertRaises(CompileError):

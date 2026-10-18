@@ -192,7 +192,7 @@ class State:
     instance: str
     name: str
     kind: Literal["real", "integer"]
-    initial: float | Select
+    initial: float | Expression
 
 
 @dataclass(frozen=True)

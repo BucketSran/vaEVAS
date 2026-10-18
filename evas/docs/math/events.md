@@ -242,16 +242,16 @@ cross 叶子保留 `guard_value`；timer 叶子不伪造 guard 值，只保留�
 
 源类型沿用原初始化合同：`real x=7/2` 的整数除法结果为3，显式 `7/2.0` 为3.5。
 整数中间溢出、非整型写入与非有限值仍拒绝，real 目标不删除整数检查。
-当前常量降低不能化成单个仿射常量的余数表达式，以及已有审计拒绝的整数参数除法仍拒绝。
+整数参数除法与有限余数范围现在按[typed 整数算术](#typed-integer-closure)绑定；声明初值仍须满足本节的有限标量常量条件。
 元数据只在前端保留，经函数、数组及层次展开传递，最终复用 IR24 的 `State.initial`。
 
 独立初值、后续事件和拒绝控制见[声明初值回归](../../tests/test_declaration_initializers.py)；
 完整原件及候选身份见[验收收据](../../../experiments/backends/support/declaration-initializers/evidence.json)。
-一般输入电压采样仍只有[设计与正反例](../../../experiments/backends/support/initial-voltage-sampling/proposal.md)，未实现。
+独立的 `initial_step` 已有[有限点电压采样](#input-initialization)；声明初值语法本身仍不接受电压表达式。
 
 <a id="input-initialization"></a>
 
-## 实际驱动输入的比较初值
+## 实际驱动输入的比较与有限点初值
 
 EVAS 接受 `@(initial_step) q=(V(in)>H);`，`q` 可为 real 或 integer。
 初始化按源码顺序执行，后续语句读取先前赋值；未显式初始化的持久状态默认零。Verilog-A 比较结果为 0/1。
@@ -274,7 +274,9 @@ EVAS 接受 `@(initial_step) q=(V(in)>H);`，`q` 可为 real 或 integer。
 没有定义的端口、奇异或冲突电压关系，以及未认证的历史依赖仍拒绝；
 零系数、代数抵消和未走分支不能隐藏依赖。受限条件、逻辑与三元初值可组合实例常数、
 先前初始化值及直接驱动输入；integer 每次写入都须证明整型和范围。
-初值仍须为由输入谓词选择的常量臂，不接受一般 real 电压采样。
+real 状态还接受结构仿射的输入电压值，以及由输入谓词选择的仿射值臂。
+例如 `@(initial_step) q=0.5*V(in)+0.125;` 只采样零时刻，之后 q 保持该值。
+每个候选仍检查所有谓词、值臂和结构依赖。integer 值臂保持常量限制，不隐含采样或取整 real 电压。
 初态与电压互相选择的固定点、不能独立认证条件的贡献分支、比较式中的历史调用及分析专属生命周期仍不支持。
 状态依赖按需要解析，实例枚举顺序不决定结果；依赖环未证唯一时明确拒绝。
 单个联合电压闭包限256个未知量，状态依赖深度限128，总依赖工作限100000步。
@@ -283,15 +285,40 @@ EVAS 接受 `@(initial_step) q=(V(in)>H);`，`q` 可为 real 或 integer。
 不设置 epsilon。单点输入复用 binary64 乘积和的精确符号证明；
 非点输入复用向外舍入区间证明。区间横跨分支边界且无法证明时返回
 `initialization_precision`，附源码及状态身份，不猜测初值。
-选择后的初值是精确 0/1 单点，不引入一般初值算术的误差传播。
+比较表达式仍返回精确 0/1。real 采样值从原输入包围向外计算，
+只有结果有限且 `lo==hi` 才安装到 `State.initial`。源误差或算术舍入产生非点包围时，
+即使名义值可计算也返回 `initialization_precision`；当前没有一般初值区间状态传播。
 
-Python `instance_compiler.py` 独立 lowering 初值并保留结构/来源，IR18 的
-`State.initial` 为 number 或 `op=select` 对象。Rust `initialization.rs::resolve`
+Python `instance_compiler.py` 独立降低初值并保留结构与来源。IR24 的
+`State.initial` 复用 number 或既有表达式对象，包括 `affine`、加法、乘法、幂和 `select`；
+Python 类型注解由 `float | Select` 扩为 `float | Expression`，schema 未改变。Rust `initialization.rs::resolve`
 从 `Trajectory.value_bounds(0)` 及 `initialization_nodes.rs` 的局部电压证书解析整个候选集，成功后才安装常数。
 `EventModel.initial()`、算子构造和守卫调度使用同一组结果；
 之后才建立完整接受帧，执行合法 timer(0) 并输出首行。
 失败路径没有模型、日程、历史、接受帧或 trace 可提交。
 旧 schema 和畸形字段分别由版本/请求校验拒绝。
+
+### 前序局部别名与固定数组槽
+
+普通 analog 赋值可给初值或事件表达式提供别名。编译器只接全段唯一、无条件且在该事件前已执行的写者，
+按实例绑定参数并按源码顺序代入。纯实例常量别名可用于原有常量设置；
+real 输入仿射别名可用于初值，以及 cross guard 和事件体的当前电压读取。
+`a=V(in); @(cross(a-0.5,1)) q=a;` 在物理根处重新读取输入，不能把 a 的初始采样当作运行期常量。
+这不开放电压驱动的 timer 设置或 cross 方向、容差。
+
+固定数组下标逐槽处理。`a[0]=V(in); a[1]=2*a[0];` 仅为源码中已经写过的准确槽建立作用域，
+不因 a[0] 已写就允许提前读 a[1]。实例参数和既有下标检查负责确定槽，未证明的动态下标不获得此扩展。
+分支写者、多次写者、未来写者、状态反馈、输出依赖、时间及历史别名仍拒绝。
+运行事件的电压别名还排除选择表达式和非线性乘积。既有事件数组能力按自身合同保持。
+
+`syntax.py::analog_block` 保留事件前的标量名字和 indexed Assignment 前缀，
+`array_elaboration.py::scalarize_arrays` 用既有元素绑定转换为精确槽。
+`initialization_aliases.py` 证明初始与运行别名，`instance_compiler.py` 在各自词法作用域使用它们。
+独立公开证据见 [test_frontend_closure.py](../../tests/test_frontend_closure.py) 与
+[test_initial_sampling_closure.py](../../tests/test_initial_sampling_closure.py)，
+覆盖根处采样、实例隔离、顺序、未来与重复写拒绝，以及源误差放大。
+[固定候选收据](../../../experiments/backends/support/low-cost-closure/evidence.json)区分局部原件验收与全量身份。
+这项表达式替换不改变事件排序、历史归属、接受与回退；历史波5的029、111仍有各自的内核事件定位阻塞，后续波6b的029已通过原checker，111限制保留。
 
 [三个节点依赖实际对照](../../../experiments/backends/support/initial-node-dependencies/README.md)
 覆盖跨实例 transition 种子、耦合电压和非接地支路，有限原生观察均满足原 1e-9 V 门槛。
@@ -549,6 +576,80 @@ IR24、Rust整数写入检查、事件求解、误差预算和候选提交与回
 独立公共回归见[test_integer_bitops.py](../../tests/test_integer_bitops.py)，包括定宽负数边界、
 小型移位寄存器的顺序事件、普通analog掩码、参数默认值及拒绝控制。
 [证据说明](../../../experiments/backends/support/integer-bitops/README.md)区分本地验证和实际Spectre对照。
+
+<a id="typed-integer-closure"></a>
+
+## typed 整数除法、余数与有限 real 幂
+
+两个源 integer 操作数的 `/` 向零截断，`%` 满足 `n=d*q+r`，非零余数与被除数同号。
+例如 `-9/2=-4`、`-9%2=-1`。任一操作数为 real 时除法保留 real 语义；
+`real q=9/2` 得到4，`9.0/2` 得到4.5。参数默认值、范围端点和父实例覆盖均沿用源类型，
+覆盖参数仍使用原来的依赖替换规则。零除、signed32 中间溢出和 `INT_MIN/-1` 不因最终余数为零而合法。
+未知除数域继续拒绝，不能把 real 值恰好为整数当作源 integer。
+
+`integer_arithmetic.py` 对固定非零除数计算商与余数的有符号范围，
+`event_index_domains.py` 沿事件回边和顺序写入联合证明整个生命周期的范围。
+模计数器 `n=(n+1)%8` 可由此证明有限域；先检查 n+1，不能让 `%8` 掩盖中间溢出。
+`integer_constants.py`、`parameters.py`、`hierarchy.py` 与 `node_elaboration.py` 共享常量类型语义，
+实例编译复用既有整数检查。独立正反例见 [test_integer_math_closure.py](../../tests/test_integer_math_closure.py)。
+
+运行期整数指数的有限 `pow` 扩展要求底数为正的常量二进制幂，指数源类型为 integer，
+且已证明的整个指数域在 [-32,32] 内。`finite_math.py` 只生成有限且可精确表示的 binary64 常量叶，
+例如 `pow(2.0,n)` 和 `1.0/pow(2.0,n)`，结果保持 real 类型。
+它复用既有 `Select`，单值域也保留原指数读取，不能掩盖同刻读写冲突。
+非整数指数、未知或过大域、非二进制幂底数及不能精确有限表示的原值不获得此扩展。
+原有常量幂路径按自身合同保留。
+
+有限域仍受256组合与4096实际展开决策预算、原源码和IR限制约束。
+资源审计包含参数死臂中实际生成的选择树，所有原操作数和整数中间检查保留。
+这不是一般 real `pow` 近似器，也没有新增opcode、时间证明或接受与回退策略。
+实现与原件状态见[紧凑证据](../../../experiments/backends/support/low-cost-closure/README.md)。
+
+<a id="wave6-local-closure"></a>
+
+## 波6b起有限闭包与波7验收身份
+
+以下机制已纳入历史波6b的149文件源码与release核 `5935fd87` 全量：261通过、18失败、121拒绝，296相对波5回退。
+最新波7固定150文件源码与release核 `1d0845b6` 的完整400为269通过、18失败、113拒绝，原198份及波6b的261份通过全部保留，296恢复。
+相对波6b新增8份、无回退，机制合同不等于所有相关模型通过。固定身份、历史回退及后续开发边界见[紧凑收据](../../../experiments/backends/support/low-cost-closure/evidence.json)。
+
+held timer 仅在整个period包围非正且整个start包围严格为负时，认定过去单次事件的当前日程为空。
+后续状态更新仍会重建该timer日历，可将它改期到未来。负start配正period、跨零start或跨正周期制度的区间保持拒绝。
+`add_timer` 不修改trigger或接受状态。公开过去单次、重启及正period拒绝见
+[test_timer_closure.py](../../tests/test_timer_closure.py)；该文件的源误差负控止于前置准入，不证明内部跨零区间分支。
+
+已认证输入投影可为普通PWL alias根恢复原source `RootTime`。
+`GuardBounds::exact_input_expression` 只返回全部系数为点、无残留状态或算子列的原输入表达式。
+`schedule_with_history` 优先使用原guard曲线，投影回退仍须通过 `Curve::root_in` 的分段、端点与已发现根匹配。
+相同浮点包围不能代替同根证明；相邻不同有理根仍分开回调。
+别名两个transition期限与近根控制见 [test_scs_closure.py](../../tests/test_scs_closure.py)。
+
+零时transition bootstrap候选只要求种子依赖状态为点包围。
+无关real状态可以保留有限且包含名义值的非点包围，随后事件采样、历史和电压验收必须继续携带它。
+`transient_initialization.rs::prepare_stage` 不把非种子值压成点；非transition算子组合仍保留原全点限制。
+公开 `BootstrapNonseedBounds` 和Rust同控制器失败重试分别检查236形状的启动、后续放大拒绝及回退，
+不开放非点 `State.initial` 或一般bootstrap历史。该候选局部证据见
+[test_initial_sampling_closure.py](../../tests/test_initial_sampling_closure.py)。
+
+160形状的运行期整数除数候选将纯integer根表达式所读的联合StateRef域枚举为既有Select树。
+联合域须不超过256，每行复用原strict lower，保留signed32中间检查、真实除法与余数语义和全部状态读取。
+单值域也保留同刻读取依赖；零除域、未知或过大域继续拒绝，运行移位量未扩展。
+该入口由 `integer_expression_table` 触发，`integer_arithmetic.py` 提供有符号范围；4096决策和原IR预算保持。
+[test_integer_math_closure.py](../../tests/test_integer_math_closure.py)覆盖正负除数、除数改变、预算和隐蔽中间错误。
+160原件在波6b完整验收通过；069等未闭合的嵌套组合仍保留拒绝。
+
+### 波7有限 floor 合同
+
+`floor(x)` 与 `$floor(x)` 的内建结果保留real类型；结果碰巧为整数不赋予integer位运算身份。
+裸调用优先绑定同模块已声明的用户函数，包括其他函数体中的前向引用；`$floor` 始终显式调用内建函数。
+合法参数或局部名 `floor` 继续按变量读取。独立兼容控制见 [test_floor_syntax.py](../../tests/test_floor_syntax.py)。
+
+内建仅接受有限常量或在调用之前由原始源码证明的有限裁剪范围，再分解为既有选择树。
+联合区间划分不超过256，实际展开仍计4096决策和原IR预算；后置裁剪、testbench输入范围和观察到的数值不能充当前置证明。
+每个所选输入误差盒必须落在同一整数bin；跨边界或所选原算术中间值非有限时拒绝。
+保留原参数求值、signed32赋值检查、未选臂结构与源依赖检查，不用整数转换隐藏原除法或溢出。
+合同正反例见 [test_finite_floor.py](../../tests/test_finite_floor.py)。该机制已纳入波7固定150文件源码与release核 `1d0845b6` 的完整400验收，224通过原checker；050、052仍因source transition证明预算拒绝，预算未放宽。
+波7共269通过、18失败、113拒绝，不把floor入口可编译视为原件通过；后续194、时间证明和Slew不属于这份冻结身份。
 
 ## PWL 与事件的执行契约
 

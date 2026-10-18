@@ -12,10 +12,13 @@ from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contri
                  ArrayRead, ArrayWrite, CheckedInteger, CheckedIndex, Loop as RuntimeLoop, EventMath, Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
 from .lowering import lower, scale
 from .limits import check_ir
+from .input_rational_scope import input_rational_tree
 from .parameters import bind_parameters
 from .elaboration import unroll_loops
 from .array_elaboration import scalarize_arrays, ARRAY_BUDGET
-from . import event_index_domains, integer_bits
+from . import event_index_domains, integer_bits, finite_math
+from .rational_predicates import condition_positive_facts, normalize_positive_quotient_comparison
+from .initialization_aliases import bind_initial_voltage_aliases, bind_runtime_voltage_aliases
 from .syntax import (CompileError, Model, contains_operator, contains_decision,
                      Assignment as SyntaxAssignment, Conditional as SyntaxConditional, Display as SyntaxDisplay,
                      Loop, ContributionStatement, BoundStep, OPERATOR_NAMES, DECISION_NAMES)
@@ -34,6 +37,8 @@ class Compilation:
     operators: list[Transition | AbsDelay | Slew | Idt | LaplaceNd | IdtMod | Sin | MathFunction | Ddt] = field(default_factory=list)
     step_bounds: list[StepBound] = field(default_factory=list)
     indices: dict[str, int] = field(init=False)
+    source_rational_origins: list[Origin] = field(default_factory=list)
+    source_rational_nodes: set[int] = field(default_factory=lambda: {0})
 
     def __post_init__(self):
         self.indices = {name: i for i, name in enumerate(self.nodes)}
@@ -42,6 +47,12 @@ class Compilation:
         result = Program(self.nodes, tuple(self.contributions), tuple(self.states), tuple(self.events), tuple(self.operators),
                          step_bounds=tuple(self.step_bounds))
         check_ir(result)
+        if self.source_rational_origins:
+            trees = [input_rational_tree(c.rhs, self.source_rational_nodes) for c in result.contributions]
+            if (result.states or result.events or result.operators or result.step_bounds
+                    or any(tree is None for tree in trees)):
+                origin = self.source_rational_origins[0]
+                raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: non-affine guards require a complete stateless input-only algebraic program")
         return result
 
 
@@ -96,6 +107,7 @@ class InstanceCompiler:
         self.expression_decision_origins = set()
         self.allowed_condition_nodes = {0} | ({self.node_ids["$abstime"]} if "$abstime" in self.node_ids else set()) | {self.node_ids[port] for port, direction in model.directions.items()
                                              if direction in ("input", "inout")}
+        self.compilation.source_rational_nodes.update(self.allowed_condition_nodes)
 
     def compile(self):
         self.cache = bind_parameters(self.model, self.instance.parameters, self.instance.name)
@@ -166,6 +178,10 @@ class InstanceCompiler:
         self.state_names = tuple(name for name in self.model.variables
                                  if name not in self.local_variables and (name in persistent or name in referenced))
         self.state_ids = {name: len(self.compilation.states) + index for index, name in enumerate(self.state_names)}
+        self.constant_local_aliases = self.bind_constant_local_aliases(writes)
+        self.initial_voltage_aliases = bind_initial_voltage_aliases(self, writes)
+        self.runtime_voltage_aliases = bind_runtime_voltage_aliases(self, writes)
+        self.active_event_aliases = {}
         self.declaration_initials = self.bind_declaration_initializers(event_writers)
         self.initialize_states()
         self.infer_integer_state_ranges()
@@ -173,9 +189,11 @@ class InstanceCompiler:
         from .event_specialization import audit_event_body, specialize_event_body
         self.array_audit_dispatch_leaves = 0
         for event in self.model.events:
+            self.active_event_aliases = self.aliases_at(event.token)
             self.runtime_event_checks = self.checked_event_context(event)
             audit_event_body(self, event.body)
         for event in self.model.events:
+            self.active_event_aliases = self.aliases_at(event.token)
             self.runtime_event_checks = self.checked_event_context(event)
             triggers = tuple(self.trigger(leaf) for leaf in event.triggers)
             event_trigger = triggers[0] if len(triggers) == 1 else OrTrigger(triggers)
@@ -188,6 +206,7 @@ class InstanceCompiler:
                              for item in body if id(item) in self.event_reachable_statements)
             execution = specialize_event_body(retained(event.body), self.cache)
             self.compilation.events.append(Event(event_trigger, self.body(execution), origin))
+        self.active_event_aliases = {}
         statements = unroll_loops(self.model, self.parameter)
         self.validate_branch_presence(statements)
         _, contributions = self.execute_analog(statements, {})
@@ -213,6 +232,53 @@ class InstanceCompiler:
         possible, definite = branches(statements)
         if possible != definite:
             raise CompileError(f'{self.model.source}: conditional voltage branch may be inactive; switching to a zero-flow branch is unsupported')
+
+    def bind_constant_local_aliases(self, writes):
+        # Only a unique unconditional writer can denote the same instance
+        # constant throughout an analysis. Evaluate candidates in source order,
+        # never from a dependency graph that could move a future write earlier.
+        counts = {}
+        for name in writes(self.model.analog):
+            counts[name] = counts.get(name, 0) + 1
+        aliases = {}
+        for statement in self.model.analog:
+            if (not isinstance(statement, SyntaxAssignment) or statement.index is not None
+                    or statement.name not in self.local_variables or counts[statement.name] != 1):
+                continue
+            pending = [statement.rhs]
+            pure = True
+            while pending:
+                expr = pending.pop()
+                if (expr.op in ("voltage", "time", "array", "index", "call")
+                        or expr.op in OPERATOR_NAMES
+                        or expr.op == "parameter" and expr.value not in self.model.parameters
+                        and expr.value not in aliases):
+                    pure = False
+                    break
+                pending.extend(expr.args)
+            if not pure:
+                continue
+            try:
+                def resolve(name):
+                    return aliases[name] if name in aliases else self.parameter(name)
+                value = lower(statement.rhs, self.typed_resolve(resolve), {}, self.model.source)
+                if not isinstance(value, Affine) or value.terms or not math.isfinite(value.constant):
+                    continue
+                if self.model.variables[statement.name] == "integer":
+                    self.validate_integer_value(value, statement.token, initial=True)
+                aliases[statement.name] = value
+            except CompileError as error:
+                if error.diagnostic['code'] == 'resource_budget':
+                    raise
+                # Ordinary execution still diagnoses an invalid assignment.
+        return aliases
+
+    def aliases_at(self, token):
+        # Retain expressions here. Event lowering evaluates their input nodes
+        # at the current physical root, independently of initial sampling.
+        return {name: value for name, value in
+                (self.constant_local_aliases | self.runtime_voltage_aliases).items()
+                if name in self.model.local_alias_scopes.get(token, ())}
 
     def bind_declaration_initializers(self, event_writers):
         # Declarations seed existing event state; they never manufacture a
@@ -251,19 +317,25 @@ class InstanceCompiler:
         # All explicit seeds have been validated before initial_step can
         # overwrite them. This environment belongs to only this instance.
         env.update(self.declaration_initials)
-        def resolve(values):
-            return self.typed_resolve(lambda name: values[name] if name in values else self.parameter(name))
-        def execute(statements, values):
+        def resolve(values, aliases):
+            return self.typed_resolve(lambda name: values[name] if name in values else
+                                      aliases[name] if name in aliases else self.parameter(name))
+        def execute(statements, values, aliases=None):
             values = dict(values)
             for statement in statements:
+                if statement.token in self.model.local_alias_scopes:
+                    aliases = {name: value for name, value in
+                               (self.constant_local_aliases | self.initial_voltage_aliases).items()
+                               if name in self.model.local_alias_scopes[statement.token]}
+                aliases = aliases or {}
                 if isinstance(statement, SyntaxConditional):
-                    left = lower(statement.left, resolve(values), self.node_ids, self.model.source,
+                    left = lower(statement.left, resolve(values, aliases), self.node_ids, self.model.source,
                                  preserve_structure=True, decisions=self.initial_select, node_declarations=True)
-                    right = lower(statement.right, resolve(values), self.node_ids, self.model.source,
+                    right = lower(statement.right, resolve(values, aliases), self.node_ids, self.model.source,
                                   preserve_structure=True, decisions=self.initial_select, node_declarations=True)
                     self.validate_initial_operand(statement.left, left)
                     self.validate_initial_operand(statement.right, right)
-                    yes, no = execute(statement.then_body, values), execute(statement.else_body, values)
+                    yes, no = execute(statement.then_body, values, aliases), execute(statement.else_body, values, aliases)
                     for name in values:
                         if yes[name] is not no[name]:
                             values[name] = self.initial_select(statement.left,
@@ -272,7 +344,7 @@ class InstanceCompiler:
                 else:
                     if not isinstance(statement, SyntaxAssignment) or statement.name not in self.state_ids:
                         raise CompileError("initial_step requires declared state assignments")
-                    value = lower(statement.rhs, resolve(values), self.node_ids, self.model.source,
+                    value = lower(statement.rhs, resolve(values, aliases), self.node_ids, self.model.source,
                                   preserve_structure=True, decisions=self.initial_select,
                                   validate_decision=self.validate_initial_operand, node_declarations=True)
                     self.validate_initial_operand(statement.rhs, value)
@@ -284,9 +356,9 @@ class InstanceCompiler:
                         if isinstance(item, Binary):
                             return item.op in ("add", "multiply") and constant_arms(item.left) and constant_arms(item.right)
                         return isinstance(item, Power) and constant_arms(item.base)
-                    if not constant_arms(value):
-                        raise CompileError("initial_step values require constant-valued arms selected by input predicates")
                     if self.model.variables[statement.name] == "integer":
+                        if not constant_arms(value):
+                            raise CompileError("integer initial_step values require constant-valued arms selected by input predicates")
                         self.validate_integer_value(value, statement.token, initial=True)
                     values[statement.name] = value
             return values
@@ -329,6 +401,8 @@ class InstanceCompiler:
         return self.cache[name]
 
     def symbol(self, name):
+        if name in self.active_event_aliases:
+            return self.active_event_aliases[name]
         if name in self.local_variables:
             raise CompileError(f"{self.model.source}: event expressions cannot read ordinary analog local variable {name!r}; use direct input or persistent state expressions",
                                code='unsupported_local_event', instance=self.instance.name)
@@ -470,9 +544,39 @@ class InstanceCompiler:
             return resolve(name)
         lookup.integer_arithmetic = self.integer_arithmetic
         lookup.integer_bitwise = self.integer_bitwise
+        lookup.finite_power = self.finite_power
+        lookup.finite_floor = self.finite_floor
         lookup.validate_integer_operation = self.validate_integer_operation
         lookup.allow_integer_assignment_root = allow_integer_assignment_root
         return lookup
+
+    def finite_power(self, expr, base, exponent):
+        if not self.integer_type(expr.args[1]) or not self.integral(exponent):
+            return None
+        bounds = self.integral_bounds(exponent)
+        origin = Origin(expr.token.source or self.model.source, expr.token.line,
+                        expr.token.column, self.instance.name, expr.expansion)
+        try:
+            result = finite_math.power(base, exponent, bounds, origin)
+        except ValueError as error:
+            raise CompileError(str(error), token=expr.token,
+                               instance=self.instance.name) from error
+        if result is not None:
+            self.expression_decision_origins.add(origin)
+        return result
+
+    def finite_floor(self, expr, argument):
+        from .finite_floor import floor_table
+        if (_predicate_degree(argument) is None
+                or not self.expression_nodes(argument).issubset(self.allowed_condition_nodes)):
+            raise CompileError('floor requires a source-clamped piecewise-affine input expression',
+                               code='unsupported_floor', token=expr.token, instance=self.instance.name)
+        origin = Origin(expr.token.source or self.model.source, expr.token.line,
+                        expr.token.column, self.instance.name, expr.expansion)
+        result = floor_table(argument, origin)
+        if isinstance(result, Select):
+            self.expression_decision_origins.add(origin)
+        return result
 
     def validate_integer_operation(self, expr, value, *, root):
         # The recursive lowerer invokes this before a parent can fold away the
@@ -562,24 +666,27 @@ class InstanceCompiler:
         self.integer_state_ranges = ranges
 
     def integer_expression_table(self, expr, resolve, nodes, args, options):
-        """One bounded table for a pure bitwise RHS, preserving state reads."""
+        """One bounded pure-integer table, preserving all original state reads."""
         if not self.integer_type(expr):
             return None
         allowed = integer_bits.OPS | {"number", "parameter", "+", "-", "*", "/", "%", "unary+", "unary-"}
-        pending, references, has_bits = [expr], {}, False
+        pending, references, has_bits, runtime_divisor = [expr], {}, False, False
         while pending:
             item = pending.pop()
             if item.op not in allowed:
                 return None
             has_bits |= item.op in integer_bits.OPS
             if item.op in ("<<", ">>", "/", "%"):
-                # Binding a state to a table row must not turn a runtime
-                # divisor or shift count into an instance constant.
+                # Runtime shifts retain their instance-constant contract.
+                # Division/modulo instead retain every divisor read in this
+                # complete bounded table and audit every original grid row.
                 count = [item.args[1]]
                 while count:
                     part = count.pop()
                     if part.op == "parameter" and part.value in self.model.variables:
-                        return None
+                        if item.op in ("<<", ">>"):
+                            return None
+                        runtime_divisor = True
                     count.extend(part.args)
             if item.op == "parameter" and item.value in self.model.variables:
                 value = resolve(item.value)
@@ -588,12 +695,14 @@ class InstanceCompiler:
                 elif not isinstance(value, Affine) or value.terms:
                     return None
             pending.extend(item.args)
-        if not has_bits or not references:
+        if not (has_bits or runtime_divisor) or not references:
             return None
         states = tuple(dict.fromkeys(references.values()))
         bounds = [tuple(map(int, self.integral_bounds(state))) for state in states]
         if not integer_bits.small_domain(bounds):
             return None
+        code = "unsupported_integer_bitwise" if has_bits else "unsupported_integer_arithmetic"
+        context = "bitwise" if has_bits else "integer arithmetic"
         origin = Origin(expr.token.source or self.model.source, expr.token.line,
                         expr.token.column, self.instance.name, expr.expansion)
         options = dict(options)
@@ -608,8 +717,8 @@ class InstanceCompiler:
                 try:
                     value = lower(expr, typed, nodes, self.model.source, *args, **options)
                 except CompileError as error:
-                    raise CompileError("bitwise expression cannot prove every integer intermediate: " + str(error),
-                        code="unsupported_integer_bitwise", token=expr.token,
+                    raise CompileError(context + " expression cannot prove every integer intermediate: " + str(error),
+                        code=code, token=expr.token,
                         instance=self.instance.name) from error
                 # Modulo deliberately retains arithmetic IR even for constant
                 # arguments. Prove that the strict lowering left only constant
@@ -632,7 +741,7 @@ class InstanceCompiler:
                     if low == high and -2147483648 <= low <= 2147483647:
                         return Affine(float(low), ())
                 raise CompileError("finite integer binding did not produce proven constant integer IR",
-                    code="unsupported_integer_bitwise", token=expr.token,
+                    code=code, token=expr.token,
                     instance=self.instance.name)
             state = states[operand]
             low, high = bounds[operand]
@@ -695,6 +804,13 @@ class InstanceCompiler:
             fail("bounded integer bitwise operation exceeds finite-domain budget (256)")
         origin = Origin(expr.token.source or self.model.source, expr.token.line,
                         expr.token.column, self.instance.name, expr.expansion)
+        if len(values) == 2:
+            from .finite_floor import map_integer_leaves
+            mapped = map_integer_leaves(values[0], expr.op, values[1])
+            if mapped is not None:
+                check_ir(mapped, origin)
+                self.expression_decision_origins.add(origin)
+                return mapped
         def tree(operand, args):
             if operand == len(values):
                 return Affine(float(integer_bits.evaluate(expr.op, *args)), ())
@@ -1062,7 +1178,9 @@ class InstanceCompiler:
             pending = [arg for arg in leaf.arguments if arg is not None]
             while pending:
                 expr = pending.pop()
-                if expr.op == 'voltage' or contains_operator(expr):
+                if (expr.op == 'voltage' or contains_operator(expr)
+                        or expr.op == 'parameter' and expr.value in self.active_event_aliases
+                        and self.expression_nodes(self.active_event_aliases[expr.value])):
                     raise CompileError(
                         f'{self.model.source}:{expr.token.line}:{expr.token.column}: timer parameters cannot depend on continuous voltage or operator history',
                         code='unsupported_timer_dependency', token=expr.token, instance=self.instance.name)
@@ -1307,6 +1425,27 @@ class InstanceCompiler:
             return self.symbol(name)
         return self.typed_resolve(resolve)
 
+    def input_rational_candidate(self, value):
+        # Binding declarations identify only a frontend candidate. The kernel
+        # must still audit the whole original Program against actual driven nodes.
+        if self.state_names or self.model.initial or self.model.events:
+            return False
+        pending = list(self.model.analog)
+        while pending:
+            statement = pending.pop()
+            if isinstance(statement, BoundStep):
+                return False
+            for field in ('rhs', 'left', 'right', 'start', 'limit', 'update'):
+                expression = getattr(statement, field, None)
+                if expression is not None and contains_operator(expression):
+                    return False
+            for field in ('body', 'then_body', 'else_body'):
+                pending.extend(getattr(statement, field, ()))
+        return input_rational_tree(value, self.allowed_condition_nodes) is not None
+
+    def request_input_rational(self, origin):
+        self.compilation.source_rational_origins.append(origin)
+
     def selected_value_supported(self, value):
         # Rational value arms use the kernel's certified polynomial/rational
         # evaluation. Their guards retain the narrower affine predicate scope.
@@ -1355,7 +1494,10 @@ class InstanceCompiler:
                         self.instance.name, expr.expansion)
         check_ir(value, origin)
         if not self.selected_value_supported(value):
-            raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected value must remain piecewise-affine or a supported rational expression")
+            if self.input_rational_candidate(value):
+                self.request_input_rational(origin)
+            else:
+                raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected value must remain piecewise-affine or a supported rational expression")
 
     def expression_select(self, expr, relation, left, right, then_value, else_value, *, register=True):
         origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column,
@@ -1364,7 +1506,10 @@ class InstanceCompiler:
         check_ir(result, origin)
         if (_predicate_degree(left) is None or _predicate_degree(right) is None or
                 not self.selected_value_supported(result)):
-            raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: decision predicates and every arm must be affine or input-selected piecewise-affine")
+            if self.input_rational_candidate(result):
+                self.request_input_rational(origin)
+            else:
+                raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: decision predicates and every arm must be affine or input-selected piecewise-affine")
         if not (self.expression_nodes(left) | self.expression_nodes(right)).issubset(self.allowed_condition_nodes):
             raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: decision predicates must depend only on input/inout ports")
         if register:
@@ -1377,7 +1522,7 @@ class InstanceCompiler:
         return (expr.op in OPERATOR_NAMES-pure_math or
                 any(InstanceCompiler.contains_history_call(arg) for arg in expr.args))
 
-    def lower_local(self, expr, env, *, preserve_structure=False, conditional=False):
+    def lower_local(self, expr, env, *, preserve_structure=False, conditional=False, positive_facts=()):
         resolve = self.local_symbol(env)
         def outer_decision(item):
             if item.op in OPERATOR_NAMES:
@@ -1386,7 +1531,17 @@ class InstanceCompiler:
         decision = outer_decision(expr)
         if decision and contains_operator(expr):
             raise CompileError(f"{self.model.source}:{expr.token.line}: decision expressions do not support waveform operators in any operand or arm")
-        factory = self.expression_select
+        def factory(item, relation, left, right, then_value, else_value):
+            raw = Select(relation, left, right, then_value, else_value,
+                         Origin(item.token.source or self.model.source, item.token.line, item.token.column,
+                                self.instance.name, item.expansion))
+            check_ir(raw, raw.origin)
+            # Keep the existing denominator proof before the stateless input
+            # fallback: another instance may add a waveform operator later.
+            normalized = normalize_positive_quotient_comparison(relation, left, right, positive_facts)
+            if normalized is not None:
+                relation, left, right = normalized
+            return self.expression_select(item, relation, left, right, then_value, else_value)
         def waveform(op):
             if conditional and self.contains_history_call(op):
                 raise CompileError(f"{self.model.source}:{op.token.line}: history waveform call sites must be unconditional")
@@ -1418,7 +1573,10 @@ class InstanceCompiler:
             origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
             check_ir(value, origin)
             if not self.selected_value_supported(value):
-                raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected value must remain piecewise-affine or a supported rational expression")
+                if self.input_rational_candidate(value):
+                    self.request_input_rational(origin)
+                else:
+                    raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected value must remain piecewise-affine or a supported rational expression")
         return value
 
     def condition_domains(self, relation, left, right, domains):
@@ -1440,7 +1598,7 @@ class InstanceCompiler:
         yes[key], no[key] = (below, above) if relation in ("lt", "le") else (above, below)
         return yes, no
 
-    def execute_analog(self, statements, env, conditional=False, active=Affine(1., ()), domains=None):
+    def execute_analog(self, statements, env, conditional=False, active=Affine(1., ()), domains=None, positive_facts=()):
         result = dict(env)
         domains = dict(self.integer_state_ranges if domains is None else domains)
         emitted = []
@@ -1448,33 +1606,37 @@ class InstanceCompiler:
             if isinstance(statement, BoundStep):
                 if contains_operator(statement.rhs):
                     raise CompileError(f'{self.model.source}:{statement.token.line}: $bound_step requires an expression without new waveform call sites')
-                value = self.lower_local(statement.rhs, result, preserve_structure=True)
+                value = self.lower_local(statement.rhs, result, preserve_structure=True, positive_facts=positive_facts)
                 if isinstance(value, Affine) and not value.terms and value.constant < 0:
                     raise CompileError('$bound_step requires a nonnegative value')
                 origin = Origin(statement.token.source or self.model.source, statement.token.line, statement.token.column,
                                 self.instance.name, statement.token.expansion)
                 self.compilation.step_bounds.append(StepBound(value, active, origin))
             elif isinstance(statement, ContributionStatement):
-                emitted.append((statement, self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure, conditional=conditional)))
+                emitted.append((statement, self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure, conditional=conditional, positive_facts=positive_facts)))
             elif isinstance(statement, SyntaxConditional):
                 if contains_operator(statement.left) or contains_operator(statement.right):
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates do not support waveform operators")
                 origin = Origin(statement.token.source or self.model.source, statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
-                left = self.lower_local(statement.left, result, preserve_structure=True)
-                right = self.lower_local(statement.right, result, preserve_structure=True)
+                left = self.lower_local(statement.left, result, preserve_structure=True, positive_facts=positive_facts)
+                right = self.lower_local(statement.right, result, preserve_structure=True, positive_facts=positive_facts)
                 check_ir(left, origin)
                 check_ir(right, origin)
                 if not self.expression_nodes(left).issubset(self.allowed_condition_nodes) or not self.expression_nodes(right).issubset(self.allowed_condition_nodes):
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates must depend only on input/inout ports")
                 if _predicate_degree(left) is None or _predicate_degree(right) is None:
-                    raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates must be affine or input-selected piecewise-affine; nonlinear products and powers are unsupported")
+                    if self.input_rational_candidate(left) and self.input_rational_candidate(right):
+                        self.request_input_rational(origin)
+                    else:
+                        raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates must be affine or input-selected piecewise-affine; nonlinear products and powers are unsupported")
                 relation = {"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation]
                 zero, one = Affine(0., ()), Affine(1., ())
                 yes = Select('gt', active, zero, Select(relation, left, right, one, zero, origin), zero, origin)
                 no = Select('gt', active, zero, Select(relation, left, right, zero, one, origin), zero, origin)
                 yes_domains, no_domains = self.condition_domains(relation, left, right, domains)
-                then_env, then_emitted = self.execute_analog(statement.then_body, result, conditional=True, active=yes, domains=yes_domains)
-                else_env, else_emitted = self.execute_analog(statement.else_body, result, conditional=True, active=no, domains=no_domains)
+                yes_facts, no_facts = condition_positive_facts(relation, left, right, positive_facts)
+                then_env, then_emitted = self.execute_analog(statement.then_body, result, conditional=True, active=yes, domains=yes_domains, positive_facts=yes_facts)
+                else_env, else_emitted = self.execute_analog(statement.else_body, result, conditional=True, active=no, domains=no_domains, positive_facts=no_facts)
                 for selected, other, contributions in ((True, False, then_emitted), (False, True, else_emitted)):
                     for branch, value in contributions:
                         value = Select(relation, left, right,
@@ -1494,7 +1656,11 @@ class InstanceCompiler:
                             result[name] = else_env[name]
                         continue
                     if name not in then_env or name not in else_env:
-                        raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if leaves local variable {name!r} unassigned")
+                        # A branch-only temporary need not escape the merge.
+                        # Any later read still fails in local_symbol unless a
+                        # following assignment defines a value on every path.
+                        result.pop(name, None)
+                        continue
                     if then_env[name] is else_env[name]:
                         result[name] = then_env[name]
                         continue
@@ -1505,7 +1671,7 @@ class InstanceCompiler:
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog assignment target must be a local variable")
                 if conditional and self.contains_history_call(statement.rhs):
                     raise CompileError(f"{self.model.source}:{statement.token.line}: history waveform call sites must be unconditional")
-                value = self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure, conditional=conditional)
+                value = self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure, conditional=conditional, positive_facts=positive_facts)
                 check_ir(value, Origin(self.model.source, statement.token.line, statement.token.column, self.instance.name))
                 if self.model.variables[statement.name] == "integer":
                     self.validate_integer_value(value, statement.token)

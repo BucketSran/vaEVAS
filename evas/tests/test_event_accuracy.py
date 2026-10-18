@@ -198,12 +198,13 @@ class EventAccuracy(unittest.TestCase):
             self.assertLessEqual(abs(Q(.1)+(Q(.9)-Q(.1))*Q(event['time'])-Q(threshold)), Q(1e-9))
 
     def test_unproved_internal_neighbouring_roots_still_reject(self):
-        # Structural internal-node provenance is not an original input proof,
-        # even if this particular relay has a simple mathematical answer.
+        # The feedback equation 3z=u needs a non-point 1/3 projection.
+        # Neither an acyclic alias proof nor rounded coefficients establish
+        # original root identity for these neighbouring internal thresholds.
         source=model('''@(initial_step) begin n=0; m=0; end
-          V(z,r)<+V(u,r);
-          @(cross(V(z,r)-0.5,1)) n=n+1;
-          @(cross(V(z,r)-0.5000000000000001,1)) m=m+1;
+          V(z,r)<+V(u,r)-2.0*V(z,r);
+          @(cross(V(z,r)-0.16666666666666666,1)) n=n+1;
+          @(cross(V(z,r)-0.16666666666666669,1)) m=m+1;
           V(y,r)<+1.0*n+m;''','integer n,m; electrical z;')
         with self.assertRaises(KernelError) as caught:
             execute_event(source,sources={'u':[[0,.1],[1,.9]]},

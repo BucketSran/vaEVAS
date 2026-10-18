@@ -909,6 +909,12 @@ fn add_timer(
                 .sign()
                 .ok_or_else(|| unresolved("cannot certify dynamic timer enable"))?
                 != 0;
+            // A nonpositive period has only its single start occurrence.
+            // A certified negative start is already past at every t >= 0;
+            // later state writes still rebuild this held timer's calendar.
+            if period.hi <= 0. && start.hi < 0. {
+                return Ok(());
+            }
             if start.lo < 0. || period.lo <= 0. && period.hi > 0. {
                 return Err(unresolved(
                     "cannot certify dynamic timer start or period regime",
@@ -1610,7 +1616,6 @@ fn schedule_with_history(
                 .iter()
                 .map(|&time| bounds.values(&trajectory.value_bounds(time))[index])
                 .collect();
-            let shaped = physical.is_some();
             let roots = physical
                 .map_or_else(|| trajectory.roots(&knots, &values, *direction), Ok)
                 .map_err(|mut error| {
@@ -1637,11 +1642,12 @@ fn schedule_with_history(
                 trajectory
                     .original_guard_curve(guard, &input_nodes)
                     .or_else(|| {
-                        if shaped {
-                            trajectory.original_guard_curve(projected_guard.as_ref()?, &input_nodes)
-                        } else {
-                            None
-                        }
+                        // GuardBounds supplies this projection only for exact
+                        // point coefficients over original input nodes. Keep
+                        // the same source-time certificate for ordinary PWL
+                        // roots as for shaped roots; root_in still checks that
+                        // it identifies the discovered physical root.
+                        trajectory.original_guard_curve(projected_guard.as_ref()?, &input_nodes)
                     })
             };
             for root in roots {
