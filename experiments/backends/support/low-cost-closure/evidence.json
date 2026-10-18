@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "Frozen wave12 unified candidate; fixed400 original requests, checkers, precision and budgets unchanged",
-  "publication_status": "wave12 full400 complete; full Python and exact-head delivery CI pending; PR208 remains draft and unmerged",
+  "publication_status": "wave12 committed/pushed8111d3dc;all2210 CI Python tests passed;install CI found missing sdist test fixtures,manifest followup in progress;PR208 draft/unmerged",
   "availability": "Curated receipt repository-contained; source archives, original inputs, waveforms and worker logs local-only",
   "candidate": {
     "label": "toward350-wave12",
@@ -2352,11 +2352,53 @@
       "result": "457 kernel tests and2 IR tests passed;1 existing ignored"
     },
     "python": {
-      "status": "running;CO-SH-01 ERROR;3 stale IR24 assertion failures separately fixed and full8-method identity module passed;not all green",
-      "progress_journal": {
-        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/full-python.jsonl",
+      "status": "Complete original unoptimized-debug2210 report retained, not all green;3stale IR24 assertions fixed and8-method identity module passed;CO-SH-01 original90s timeout also historical, passes original request under existing CI opt1 profile",
+      "complete": true,
+      "tests_run": 2210,
+      "passed": 2206,
+      "failures": 3,
+      "errors": 1,
+      "skipped": 0,
+      "original_report": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/full-python.json",
+        "sha256": "1ca408277259e20ff9248bd2c71c78c6d38f51eb26ade39df2209ee98e8df959",
         "availability": "local-only"
-      }
+      },
+      "original_log": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/full-python.log",
+        "sha256": "2ccd8b78ddbfd1210e9489c0996c85b9aa7a8f7e4a37fb5e3e0e730312a2f66d",
+        "availability": "local-only"
+      },
+      "final_identity": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/local-regression-final-identity.json",
+        "sha256": "0279e4c5a261d80a7be2a633ebfd20e6fb374804351393f3fa0e5cae3364b939",
+        "availability": "local-only"
+      },
+      "identity_module_rerun": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/identity-green.log",
+        "sha256": "7c9d3062fa0add8cb3e415f980fb0d3e491b6db95aba525e6d74b185e62abdaa",
+        "availability": "local-only",
+        "passed": 8
+      },
+      "ci_profile_co_sh": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/paper-ci-profile.log",
+        "sha256": "84da76b99bf0b298a7291449fc0947efa023e1e4c12544e34e8dd4abed510aa4",
+        "availability": "local-only",
+        "passed": 1,
+        "full_requests": 2,
+        "timeout_seconds_each": 90,
+        "kernel_identity": {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/ci-profile-kernel.json",
+          "sha256": "62ea0311387fa095f13d369afcb36f79490446c3bbf69d2deec1424dafa0423d",
+          "availability": "local-only"
+        }
+      },
+      "release_diagnosis": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/paper-acceptance-diagnosis/report.json",
+        "sha256": "443b850728ab1ef646119595d9fc8aa0ad9d4bdd78f96d40719a5bf108187996",
+        "availability": "local-only"
+      },
+      "full_ci": "pending;local mixed-profile checks are not a fresh full optimized run"
     },
     "format": {
       "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/fmt.log",
@@ -2377,13 +2419,49 @@
       "result": "passed"
     },
     "exact_head_ci": {
-      "status": "pending;no merge authorized"
+      "status": "completed failure: numerical checks passed,2package install jobs failed",
+      "head": "8111d3dc30855736550f5fc226706f5300e2b21a",
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/39124363474",
+      "result": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/ci-8111-final.json",
+        "sha256": "3d581573f0a35873cc4ae9792c97857e9a49ed220ac6b1fe31eb721ff8a717c0",
+        "availability": "local-only"
+      },
+      "full_python": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/ci-python-8111/python-regression.json",
+        "sha256": "290414529803ab8a8619a988af0949c2423a58d3cb4ec5c373638bbdaed9fccd",
+        "availability": "local-only",
+        "successful": true,
+        "tests_run": 2210,
+        "passed": 2210,
+        "skipped": 0,
+        "shards": 4
+      },
+      "package_failure": "New Rust rollback include_str fixtures absent from sdist;MANIFEST.in followup only.Production158 closure and full400 unchanged.",
+      "failed_log": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/ci-install-linux/package-install/commands.log",
+        "sha256": "6e6296a08c689a805a39a46d9a8091c116b61006822bafc413c5bee7d0b4353d",
+        "availability": "local-only"
+      }
     },
     "identity_test_alignment": {
       "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/identity-test-delta.json",
       "sha256": "3187651fcac68770183bdf69d61eaa0b0546f325fa559f5dbba560218bd90e4d",
       "availability": "local-only",
       "result": "Only3 current-schema assertions24->25; all8 identity tests passed; mismatch refusal and independent integral answers retained"
+    },
+    "package_manifest_followup": {
+      "status": "Fresh sdist includes3matching rollback fixtures;extracted sdist cargo test --locked --no-run passed;new exact-head installed checks pending",
+      "members": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/package-fixed-members.json",
+        "sha256": "fe824f760c3f7fbf2d9a195c15475e0acb63e7b68a39488020ed3a35aa67739f",
+        "availability": "local-only"
+      },
+      "compile_log": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/package-fixed-cargo.log",
+        "sha256": "219aa2d3bd49e8de15636823198ceb8a38abe21af43a7d5ebd6f9de5d7963672",
+        "availability": "local-only"
+      }
     }
   },
   "historical_wave7_candidate": {
@@ -4159,5 +4237,10 @@
       "availability": "local-only"
     },
     "limits": "Scaled valid-IR power counterexample proves aggregate accounting defect; no original2m public overrun established. Optional integer proof exhaustion gives TOP, never a finite certificate or a new allowance."
+  },
+  "published_candidate_binding": {
+    "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/resume-unified-20261018/published-candidate-binding.json",
+    "sha256": "7a6234103477fc6f188a56c3f8c8af46bb5cd936385b669f48e3133dd1c42ed5",
+    "availability": "local-only"
   }
 }

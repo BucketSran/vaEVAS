@@ -66,7 +66,7 @@ IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和�
 历史波7逐例比较波6b新增129、137、138、224、233、295、296、380共8份、无回退；相对波5新增35份、无回退。296恢复。
 本分支IR25增加native tanh；原checker、精度、证明预算保持。real初态只接有限点包围，integer电压采样仍拒绝。
 多项式guard与有限floor已纳入波7，guard乘加中间值溢出在同一冻结release核明确拒绝；历史反例和修复收据均保留。
-111的事件认证限制保留；波8纳入[隔离整数输出读取](../math/events.md#settled-integer-reads)及[点held时间证明](../math/events.md#held-time-point-proof)，更广组合仍回退或拒绝。后续Slew、证明缓存和tanh已进入wave12的292。初始化幂乘共享计费与整数证明耗尽退回TOP已独审；Rust457项与2项IR通过，原1项忽略。3项IR身份旧断言已同步为IR25，所属8项重验通过。完整Python仍运行且CO-SH-01报错待查，精确提交CI待执行。原始材料local-only，无新增实际Spectre、正式r53或Q。
+111的事件认证限制保留；波8纳入[隔离整数输出读取](../math/events.md#settled-integer-reads)及[点held时间证明](../math/events.md#held-time-point-proof)，更广组合仍回退或拒绝。后续Slew、证明缓存和tanh已进入wave12的292。初始化幂乘共享计费与整数证明耗尽退回TOP已独审；Rust457项与2项IR通过，原1项忽略。3项IR身份旧断言已同步为IR25，所属8项重验通过。本地Python2210项收齐，保留旧断言及未优化debug90秒超时原记录；CO-SH-01按既有CI opt1构建和原90秒请求重验通过，8111d3dc的CI完整Python2210项全通过；源码包漏夹具已定位并补清单，安装复验中。原始材料local-only，无新增实际Spectre、正式r53或Q。
 四个过时passive夹具已改成真正负start加正period，7/7 private负控通过；合法过去单次timer仍按非正period合同处理。
 波5全Python执行2024项、2022通过，一项旧P/2拒绝期待已迁移并复验13方法，CO-SH-01在90秒超时且旧核对照待完成；不报告全绿。
 
