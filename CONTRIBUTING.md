@@ -97,6 +97,54 @@ structured record. No-finding reviews need only their fixed scope, evidence and 
 Independent review does not recursively require another reviewer. Routine document and lint
 corrections use focused checks; new semantic questions retain independent review.
 
+### Keep iteration feedback short
+
+Keep one main conversation and update the fixed progress entry throughout an ongoing task.
+After compaction, recover decisions from that entry and continue. Necessary transfers follow
+the [handoff rules](docs/contributing/workspaces.md#conversation-handoff-triggers), including
+links in both conversations and the same progress entry.
+
+Record the workflow revision used by a long-lived task. Reconcile changed workflow
+files when main and the task branch differ, preserving unrelated source and staged
+work. A workflow merged into main is not automatically present in an older checkout.
+
+During implementation, run the current failing case and the affected module checks selected by
+[the local policy](scripts/evas_check_policy.py). Add a focused regression for a later-stage
+failure whenever it can detect the same fault. Run formatting, lint and generated-file checks
+before expensive acceptance. A draft CI success records iteration evidence; full delivery
+obligations remain open. Unknown/shared paths without an audited iteration mapping retain
+complete coverage.
+
+Freeze a stable candidate before full acceptance. Reuse matching evidence rather than rerunning
+all checks at review, commit and PR boundaries. Review source, tests, fixtures, dependencies,
+toolchain, commands and effective settings when deciding whether evidence still applies. Let
+CI verify reusable evidence identities; an earlier green commit alone is insufficient. Run
+changed consumers after a meaningful delta. See [CI stages](scripts/README.md#ci-按改动选择检查)
+and [evidence reuse](docs/contributing/evidence.md#reuse-ci-regression-evidence).
+
+Use the [early integration boundary](docs/contributing/validation.md#early-integration-checks)
+for representation/dispatch changes and new proof work. Reuse that scoped feedback
+and review at later stages; only changed assumptions or unresolved findings add work.
+
+Wait during development for feedback that determines the next implementation step:
+the distinguishing failure, the changed path and its direct consumers. Full CI,
+broader regressions and independent review can run against a fixed candidate while
+the coordinator continues independent authorized work. Identify each job's commit,
+owner and pending result in the existing task entry. A shared correctness finding
+blocks work that depends on it; unrelated work can continue. Preserve the source and
+binary used by running local checks instead of overwriting their inputs.
+
+Collect results at task checkpoints or on completion/failure events. Avoid repeated
+status polling when independent work is available. Required checks and review must
+finish before claiming acceptance or merging. After a merge whose tree matches the
+accepted candidate, automatic main CI does not by itself block the next independent
+development step. Reconcile a changed merge tree before reusing affected evidence.
+
+Reuse already-read skill text and settled decisions when their versions and context
+remain applicable. Reassess each new delta's scope and risks; load only missing or
+changed sections. Independent reviewers receive their own necessary context. Entering
+commit, PR or merge stages does not restart research, review or numerical acceptance.
+
 ### Prepare one delivery candidate
 
 Run formatting, lint and changed-link checks before freezing behavioral acceptance. Keep one

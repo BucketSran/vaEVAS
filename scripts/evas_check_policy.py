@@ -15,9 +15,49 @@ _VALIDATION = ".agents/skills/evas-validate/SKILL.md#select-the-necessary-checks
 _ACCEPTANCE = "docs/contributing/validation.md"
 _TEST = re.compile(r"evas/tests/(test_[A-Za-z0-9_]+\.py)\Z")
 _DOC_SUFFIXES = (".md", ".rst")
+_REPRESENTATION_PATHS = tuple('evas/src/evas/'+name for name in (
+    'instance_compiler.py', 'lowering.py', 'compact_source_select.py',
+    'integer_prefix.py', 'input_rational_scope.py'))
+_BUDGET_PATHS = ('evas/src/evas/event_index_domains.py', 'evas/src/evas/integer_invariants.py')
 # Deliberately limited to inspected source boundaries. Unknown/shared changes use
 # full Python coverage until their owning tests and consumers have been checked.
 _RULES = (
+    (
+        _REPRESENTATION_PATHS,
+        ('affine', 'analog_conditions', 'stateless_expressions', 'event_conditions'),
+        ('*',),
+        'representation/admission consumers; early representation contract also required',
+    ),
+    (
+        _BUDGET_PATHS,
+        ('affine', 'integer_loops', 'event_body_loops', 'event_runtime_loops'),
+        ('*',),
+        'integer analysis consumers; early shared-work budget contract also required',
+    ),
+    (
+        ("evas/src/evas/scs.py", "evas/src/evas/scs_sources.py"),
+        ("scs", "scs_pulse_delay", "scs_save", "scs_bsource", "scs_driven_nodes",
+         "scs_vectors", "source_uncertainty", "ansi_ports", "case_statements",
+         "held_transition_targets", "r01_language", "strobe"),
+        ("*",),
+        "SCS loading/source generation and all direct public consumers; full delivery retained",
+    ),
+    (
+        tuple("evas/rust_core/src/" + name for name in (
+            "operators.rs", "transition.rs", "transition_source_plan.rs",
+            "transition_source_state.rs", "transition_filter.rs", "transition_integral.rs",
+            "transition_filter_input.rs", "transient.rs", "transient_event_acceptance.rs",
+            "transient_history_calendar.rs", "transient_root_refinement.rs",
+            "transient_initialization.rs", "event_conditions.rs", "event_control.rs",
+            "initial_state_invariance.rs",
+            "event_accuracy.rs", "event_numeric.rs", "event_time_provenance.rs")),
+        ("affine", "timer", "transition", "transition_accuracy", "timed_composition",
+         "event_window_sampling", "lifecycle_closure", "semantic_invariants",
+         "timer_history_order", "continuous_dynamics", "event_accuracy",
+         "event_history_continuation", "passive_events", "passive_history_phase", "display"),
+        ("*",),
+        "shared event/history iteration; complete Python coverage remains a delivery obligation",
+    ),
     (
         ("evas/rust_core/src/linear.rs", "evas/rust_core/src/linear/"),
         ("affine", "sparse"),
@@ -112,6 +152,23 @@ def select_checks(
             continue
         if path.startswith(("evas/src/", "evas/rust_core/")):
             behavior = True
+            if path in _REPRESENTATION_PATHS:
+                obligation('representation-compatibility',
+                           'Before dependent integration, inspect changed old IR/routes and '
+                           'run affected complete consumers; the small Select contract is a starting set.',
+                           _ACCEPTANCE+'#early-integration-checks',
+                           before='dependent-integration',
+                           command='python3 -B scripts/evas_check_policy.py --early-checks --checks representation')
+            if path in _BUDGET_PATHS or path in (
+                    'evas/rust_core/src/initial_state_invariance.rs',
+                    'evas/rust_core/src/transient_initialization.rs'):
+                obligation('proof-budget',
+                           'Before dependent integration, account for new work, inherited '
+                           'allowances, exhaustion and same-request retry. Missing mechanisms '
+                           'and untested callers remain pending, not verified.',
+                           _ACCEPTANCE+'#early-integration-checks',
+                           before='dependent-integration',
+                           command='python3 -B scripts/evas_check_policy.py --early-checks')
             if path.startswith("evas/rust_core/"):
                 obligation(
                     "rust-tests",
@@ -130,7 +187,7 @@ def select_checks(
                         for module in modules:
                             add(
                                 which,
-                                f"python:test_{module}.py",
+                                "python-regression" if module == "*" else f"python:test_{module}.py",
                                 {**reason, "why": area},
                             )
                     break
@@ -384,11 +441,43 @@ def document_text(text: str) -> str:
         cells = (
             ", ".join(f"`{p}`" for p in prefixes),
             " ".join(f"`test_{m}`" for m in iteration),
-            " ".join(f"`test_{m}`" for m in delivery),
+            " ".join("Full Python regression" if m == "*" else f"`test_{m}`" for m in delivery),
         )
         rows.append("| " + " | ".join(cells) + " |")
     start, finish = text.index(begin) + len(begin), text.index(end)
     return text[:start] + "\n\n" + "\n".join(rows) + "\n\n" + text[finish:]
+
+
+def early_checks_for_plan(plan):
+    """Use the actual delta, without treating a focused result as acceptance."""
+    from evas_integration_checks import CHECKS
+    paths = plan.get('iteration_paths') if plan.get('mode') == 'iteration' else None
+    if paths is None:
+        paths = plan.get('paths')
+    # Missing/manual identities retain all contracts. An identified empty diff
+    # can skip them; unknown EVAS sources/build inputs conservatively select all.
+    if (not isinstance(paths, list) or any(not isinstance(p, str) or not p for p in paths)
+            or not plan.get('base') or not plan.get('head')):
+        return list(CHECKS)
+    selected = set()
+    for path in paths:
+        if path.endswith(_DOC_SUFFIXES):
+            continue
+        if path in _REPRESENTATION_PATHS:
+            selected.add('representation')
+        elif path in _BUDGET_PATHS:
+            selected.add('integer-budget')
+        elif path.startswith('evas/') or path in ('rust-toolchain.toml', 'rust-toolchain'):
+            selected.update(CHECKS)
+    return [check for check in CHECKS if check in selected]
+
+
+def early_runtime_for_plan(plan):
+    paths = plan.get('iteration_paths') if plan.get('mode') == 'iteration' else None
+    paths = plan.get('paths') if paths is None else paths
+    return (not plan.get('base') or not plan.get('head') or not isinstance(paths, list)
+            or any(p.startswith('evas/rust_core/')
+                   or p in ('rust-toolchain.toml', 'rust-toolchain') for p in paths))
 
 
 def main():
@@ -397,12 +486,44 @@ def main():
     mode.add_argument("--request", type=Path)
     mode.add_argument("--check-docs", action="store_true")
     mode.add_argument("--write-docs", action="store_true")
+    mode.add_argument('--early-checks', action='store_true')
+    parser.add_argument('--source-root', type=Path, default=ROOT)
+    parser.add_argument('--python-root', type=Path)
+    parser.add_argument('--kernel', type=Path)
+    parser.add_argument('--checks', nargs='+', choices=('representation', 'integer-budget', 'initial-budget'))
+    parser.add_argument('--report', type=Path)
+    parser.add_argument('--plan', type=Path, help='CI delta plan; skip unaffected early contracts')
     parser.add_argument(
         "--document", type=Path, default=ROOT / ".agents/skills/evas-validate/SKILL.md"
     )
     args = parser.parse_args()
     try:
-        if args.request:
+        if args.early_checks:
+            sys.path.insert(0, str(ROOT/'scripts'))
+            from evas_integration_checks import run
+            if args.plan and args.checks:
+                raise ValueError('--plan and --checks are mutually exclusive')
+            plan = json.loads(args.plan.read_text()) if args.plan else None
+            selected = early_checks_for_plan(plan) if plan is not None else args.checks
+            if selected == []:
+                result = dict(source_root=str(args.source_root.resolve()), checks=[], passed=True,
+                              needs_runtime=False, selection='no affected early contracts in identified delta',
+                              acceptance_complete=False, full400=False)
+            else:
+                result = run(args.source_root, python_root=args.python_root,
+                             kernel=args.kernel, checks=selected, absent_is_inapplicable=bool(args.plan),
+                             require_runtime=early_runtime_for_plan(plan) if plan is not None else False)
+            if args.plan:
+                result['selection_plan'] = plan
+            if args.report:
+                args.report.parent.mkdir(parents=True, exist_ok=True)
+                args.report.write_text(json.dumps(result, indent=2)+'\n')
+            print(json.dumps(result))
+            if result['passed']:
+                return 0
+            return 2 if all(r['status'] in ('passed', 'not-applicable', 'needs-runtime')
+                            for r in result['checks']) and result['needs_runtime'] else 1
+        elif args.request:
             request = json.loads(args.request.read_text())
             if not isinstance(request, dict):
                 raise ValueError("policy request must be an object")

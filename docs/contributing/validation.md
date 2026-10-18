@@ -40,6 +40,57 @@ Its mandatory interface confirmations, blanket ban on internal tests and review-
 refactoring are not repository rules. Existing authorization, numerical evidence and
 independent validation contracts govern those choices here.
 
+## Early integration checks
+
+Before another task depends on a subtask's behavior, obtain the distinguishing
+failure, relevant rejection and direct-consumer feedback on its fixed candidate.
+Apply these additional triggers only when the change touches them:
+
+- Representation, admission or dispatch changes: compare affected previously
+  passing programs' IR or execution routes. Exercise changed routes in complete
+  consumers, including surrounding state and internal drivers. An intentional
+  representation change needs consumer evidence; identical IR is not a universal
+  requirement and cannot validate a changed Rust consumer.
+- New scans, searches, proof fallbacks or cache copies: preserve the existing
+  budget owner and sublimits. Charge actual inner work and pass the authorized
+  remainder to fallback attempts. Test exhaustion and same-request retry. A
+  repeated cap constant does not establish an unchanged aggregate allowance.
+
+CI passes its identified change plan with `--plan runs/ci-plan.json`: documentation
+and workflow-only deltas skip simulator contracts; affected sources select their
+contracts, and unknown EVAS source/build changes retain all available contracts.
+A missing change identity retains all contracts. Draft incremental evidence covers
+only that delta and does not close the full candidate's delivery obligations.
+
+Use the local policy's `--early-checks` command for the recorded small-Select,
+array-slot accounting and optional-initial-proof counterexamples. The same command
+runs in the existing CI fast-checks job. Add `--kernel PATH` to check the two Select
+consumers through the actual matching kernel; compilation-only evidence is labelled.
+A changed small-Select route without a kernel returns exit2 and remains pending;
+CI then builds the matching kernel and checks its consumers before wider regression.
+Changes to the Rust consumer or build require this runtime check even when IR stays
+the same.
+An intentional representation change may pass those consumers without identical IR.
+The initial-proof check enforces one production allocation owner, at most the
+existing two allocation sites, and a sticky production Budget primitive. It does
+not prove aggregate caller accounting or every loop's cost; review and relevant
+private tests still establish those obligations. New or renamed mechanisms need
+their own affected check instead of inheriting a pass from this starting set.
+
+Automatic checks report absent mechanisms as not applicable; an explicitly
+requested absent check is blocked. Neither outcome verifies that mechanism.
+Keep untested assumptions pending in the existing task entry.
+
+| Feedback | Waiting boundary |
+| --- | --- |
+| Distinguishing failure, changed path, direct consumers, applicable representation/budget checks and review of their unresolved assumptions | Before dependent integration; other independent tasks may continue. |
+| Full Python/Rust regression, stable-candidate original400, required CI and installation checks | Run against a fixed candidate in the background; finish before their delivery claims or merge. |
+| Already matching execution, independent reference or review | Reuse by the affected claim and dependency identities; a new commit or PR stage alone does not invalidate it. |
+
+Run changed-file formatting and metadata checks before expensive acceptance. Reuse
+the same scoped checks and review through integration and publication. A focused
+pass is not a new full400 score. Unknown/shared coverage remains conservative.
+
 ## Original request acceptance
 
 For a behavioral repair, link the original failing request and its observed failure in the

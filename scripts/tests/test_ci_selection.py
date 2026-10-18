@@ -363,7 +363,10 @@ class GitChangeTests(unittest.TestCase):
 class GateTests(unittest.TestCase):
     def results(self, *selected):
         output = {key: str(value).lower() for key, value in ci.flags(*selected).items()}
+        output.update(plan_version='2', mode='delivery')
         needs = {'selection': {'result': 'success', 'outputs': output}}
+        needs['fast-checks'] = {'result': 'success'}
+        needs['regression-coverage'] = {'result': 'success' if 'regression' in selected else 'skipped'}
         for job, flags in ci.JOB_FLAGS.items():
             result = 'success' if any(flag in selected for flag in flags) else 'skipped'
             needs[job] = {'result': result, 'outputs': {

@@ -71,6 +71,10 @@ to identify evidence invalidated by changed code, inputs, checkers or measuremen
   parameter dependency and override rules, finite values, and instance isolation.
 - For IR changes, trace Python/Rust serialization, version rejection, structured
   branch identity, endpoint orientation, and validation at both entry points.
+- For representation/dispatch or proof-budget changes, check the applicable
+  [early integration evidence](../../../docs/contributing/validation.md#early-integration-checks).
+  Review uncovered consumer and cumulative-accounting assumptions, rather than
+  repeating an already matching author run. Additional coverage is scoped to the gap.
 - For assembly and solving, check contribution accumulation, independent instance
   constraints, ground/driven-node handling, singular systems, non-finite results,
   and residual acceptance. A small residual alone is not a forward-error bound.

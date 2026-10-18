@@ -69,6 +69,11 @@ a Python helper result alone does not establish the default Rust path's behavior
 Distinguish inspected code from an observed run and keep an unexecuted baseline
 unconfirmed. Preserve focused lifecycle/numerical tests with distinct obligations.
 
+Before dependent integration, apply the triggered
+[early integration checks](../../../docs/contributing/validation.md#early-integration-checks).
+Representation changes need old-consumer coverage; new proof work needs accounting
+and exhaustion evidence. Reuse the same scoped evidence for review and publication.
+
 ## Change the owning layer
 
 Use the current [module/interface map](../../../evas/README.md#模块与接口), then the
@@ -109,6 +114,9 @@ the distinct fault each added regression detects. Include a relevant rejection o
 compatibility case. Select
 checks from [the validation mapping](../evas-validate/SKILL.md#select-the-necessary-checks); static replay cannot establish transient
 or event correctness. Preserve the original validation cases and thresholds.
+Use the [waiting boundaries](../../../CONTRIBUTING.md#keep-iteration-feedback-short):
+obtain the local failure/consumer feedback needed for the next edit, then run stable-candidate
+acceptance in the background while independent authorized work continues.
 When a shared mechanism changes, use the [composition triggers](../evas-validate/SKILL.md#composition-triggers)
 to select affected feedback, event/reset, sampling and retry regressions. An
 operator-only pass cannot establish those combinations.

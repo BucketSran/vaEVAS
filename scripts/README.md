@@ -22,6 +22,21 @@
 
 <a id="development-records"></a>
 
+### 子任务进入共享基线前的快检
+
+`python3 -B scripts/evas_check_policy.py --early-checks --report runs/early-integration.json`
+检查当前源码的两个小Select兼容案例，以及实际存在的整数计费、初始化证明预算机制。
+同一命令在现有CI fast-checks阶段执行。新增机制尚不存在会明确记为不适用，不会算作已验证；
+显式选择缺失的检查会阻断。需要实际数值消费者时加`--kernel`指定匹配内核。
+小表达式执行路径变化时先返回2，表示需要消费者验证；CI仅在此时先构建内核，
+运行小消费者再决定是否继续宽回归。合法的新表示可以通过实际消费者验收，不强求IR相同。
+
+`--plan runs/ci-plan.json` 按已确认的改动范围选择快检；纯文档或工作流改动跳过仿真，未知源码保守保留快检。
+复核历史冻结副本可使用`--source-root`和`--python-root`，每次使用独立Python进程。
+收据区分编译结构检查、实际内核执行和未覆盖范围。初始化检查只拦独立额度分配者增加及耗尽后恢复，
+累计调用和所有循环的收费仍须相应测试与审查。完整等待、后台和复用边界统一见
+[early integration checks](../docs/contributing/validation.md#early-integration-checks)，不再另开一套验收流程。
+
 ## 精简审查与阶段计时
 
 [development_records.py](development_records.py) 检查本轮唯一的人读摘要。无问题上限 300 字，
@@ -62,13 +77,24 @@ python3 -B scripts/ci_selection.py select --event-name push --event-path runs/<t
 ```
 
 后续状态读取优先报告变化、失败和原证据路径，完整结果按具体问题展开。
-JSON 协议消费者使用 `--json`；CI 的 `GITHUB_OUTPUT` 布尔值不变。
+JSON 协议消费者使用 `--json`；CI 保留原布尔字段编码，并增加阶段、相关模块及计划版本输出。
 这只缩减显示内容，不减少工作区检查范围、检查项目或错误记录。
 
 ## CI 按改动选择检查
 
-CI 按改动涉及的内容选择检查。普通说明文档只检查改动行的空白并运行 CI 路由自检，
-不启动静态校准、编译或仿真。能力表、数学说明和评测标准保留对应的检查。
+CI 先选择最终验收义务，再按阶段决定本次执行范围。草稿 PR 的日常更新使用迭代阶段；
+已映射的修改只执行相关回归，保留完整交付义务。草稿推送在 `before` 是当前 head 的祖先时，
+按本次推送差异选择迭代模块；最终义务仍按完整 PR 差异记录。非草稿 PR、`ready_for_review`、main 推送
+和每周完整检查使用交付阶段。手动 `workflow_dispatch` 默认完整交付；显式选择 `iteration` 并提供
+有效的前序提交 `base` 可运行快速检查，缺失或无效身份回退完整交付。草稿可手动完成完整验收，
+无需改变 PR 状态。CI 配置、选择器、未知路径和缺少映射的共享修改保守回退到完整检查。
+
+快速任务先对改动的 EVAS Python 源码、直接开发测试和 scripts 文件检查 Ruff 基本错误规则 `E9,F63,F7,F82`，再检查 Rust 格式、
+Clippy 与生成清单；该任务通过后才启动昂贵任务。冻结题包、参考模型和故意失败的夹具不自动加入源码 lint。Python 风格格式化和 mypy 尚未启用。
+本地可执行 `python3 -B scripts/ci_lint.py --paths <改动路径...>`，先安装固定的 `ruff==0.14.1`。
+本地迭代／交付模块由 [evas_check_policy.py](evas_check_policy.py) 及其生成表维护。
+
+下表描述完整交付的检查义务。草稿阶段未执行的项目保持待验收，不报告为通过。
 
 | 改动内容 | 执行的检查 |
 | --- | --- |
@@ -80,17 +106,18 @@ CI 按改动涉及的内容选择检查。普通说明文档只检查改动行�
 | 已逐项核对的历史结果收据 | 数学、checker 与表格来源校准，不运行仿真回归 |
 | `evas/tests/` 的 Python 开发测试、Rust `tests/` 下的 `.rs` 测试 | 维护检查、来源校准、完整 Rust 与 Python 回归 |
 | 验证模型、参数等共享输入 | 完整 Rust 与 Python 回归、相关静态检查 |
-| Rust `src/`、`ir/src/` 下的 `.rs` 实现 | 完整回归、维护与来源校准、ngspice 对照、fuzz、两平台安装测试 |
+| Rust `src/`、`ir/src/` 下的 `.rs` 实现 | 完整回归、维护与来源校准、ngspice 对照、fuzz；仅已核对且内容身份完整的数值修改可免安装，并检查新 release 核 |
 | Python 前端、依赖、构建文件及其他未细分 EVAS 输入 | 完整回归、静态检查、ngspice 对照、fuzz、两平台安装测试 |
 | ngspice 对照工具 | 对照测试、相关静态检查 |
 | 安装验收脚本 | 维护工具测试、两平台安装测试 |
 | Benchmark 材料与规范文档、题目、checker、登记工具 | Benchmark 登记与索引、阶段静态检查、身份与独立判据回归 |
 | CI 配置、检查选择器或未登记的非文档路径 | 全部检查 |
 
-有完整 base/head 文件内容时，选择器额外识别两种已核对的边界：
+有完整 base/head 文件内容时，选择器额外识别以下已核对的边界：
 
 - `scripts/ci_selection.py` 只有 `MAINTENANCE_FILES` 字面集合变化，且变化项已在当前选择器核对为独立维护路径时，只选维护检查。其余 Python 语法树必须相同。新路径、调度语义变化和 CI 配置仍全选；选择器回归自身选维护检查。
 - `evas/docs/COMPARISON.md` 只有唯一 `ci:progress:start` / `ci:progress:end` 注释块内的进度文字变化，块外文本完全一致时，只做快速检查。该块只记录推进进度，不放能力、成绩或验收规则；表格、标题、代码块和嵌套注释不适用。新增、删除标记或文件仍选来源校准。
+- `ci_selection.py` 的 `ALGORITHM_PATHS` 中现有数值模块，前后原件均为普通文件，且无安装相关内容或未知宏时，保留行为回归但免完整安装。入口、IR、依赖、构建、资源、平台、未核对路径、文件新增／删除和身份缺失仍保守安装。该判定不能替代消费者与风险审查，见[安装边界](../evas/docs/reference/install.md#源码交付与安装检查边界)。
 
 仅有路径的本地政策请求不能证明这些边界，继续保守选取。逐路径理由保存在完整选取结果中。
 登记独立维护路径前仍须核对消费者；共享依赖不能登记成独立维护来绕开验收。
@@ -107,16 +134,22 @@ Benchmark 下的来源说明、规范、模板和题面均触发 Benchmark 检�
 
 混合修改取检查的并集，删除和重命名也参与选择。PR 使用分叉点至最新提交的完整 Git 差异，
 main 推送使用推送前后的提交差异，不使用有文件数量上限的路径过滤。
-差异身份缺失、首次推送或手动 `workflow_dispatch` 时全跑。
+差异身份缺失、首次推送或默认手动 `workflow_dispatch` 时全跑。每周一北京时间02:23的完整检查重新执行回归，fuzz每个目标由普通检查的45秒延长到300秒；400模型和外部参考矩阵仍只按专项授权运行。
 
 [numerical-assurance.yml](../.github/workflows/numerical-assurance.yml) 是唯一调度入口，
-每次只判断一次改动。安装和 Benchmark 工作流保留各自文件，由入口按需调用。
+选择任务记录完整差异；快速任务在自己的 checkout 重建同一计划。安装和 Benchmark 工作流保留各自文件，由入口按需调用。
 统一的 `ci-result` 检查每个被选中的任务和子工作流完成记录；失败、取消、缺失或意外跳过
 都不能通过。需要设置分支必需检查时使用 `ci-result`，它替代原来的三个 `*-result` 检查。
-本次没有修改 GitHub 分支保护配置。
+草稿迭代只产生 `iteration-result`，不产生可供合并门禁使用的 `ci-result`；转为非草稿会触发完整验收。完整阶段的 `ci-result` 额外要求 `regression-coverage` 通过。本次没有修改 GitHub 分支保护配置。
 
 同一 PR 的新推送会取消该 PR 的过期 CI。main 推送和手动运行互相独立，不自动取消，
 避免后来的文档推送取消前一版代码尚未完成的回归。
+CI 针对固定提交后台执行。主对话按[等待边界](../CONTRIBUTING.md#keep-iteration-feedback-short)
+继续独立授权工作，在检查点收取结果；选中的最终任务未完成时保持待验收，合并前收齐。
+
+未选择安装的完整回归，在第 0 组先构建新 release 核，并用
+`scripts/check_source_kernel.py` 经公开 API 检查独立仿射与积分答案，记录实际路径与 SHA256。
+这一步检查源码核，不声明新 wheel 或另一平台已安装通过。完整安装已选择时沿用其 release 构建与运行检查。
 
 Rust 缓存按操作系统、架构、实际编译器、依赖清单和任务区分，保存 Cargo 下载与开发构建结果。
 缓存命中后仍执行 Cargo 构建和全部选中的测试，不缓存“通过”结论。
@@ -179,6 +212,25 @@ Decimal80 参考包络。各档的输入预算、回调检查、离散相位选�
 
 这条路径的中位耗时下降约 51%，代价是保存观察点包络的内存。它不是仿真器加速，
 也不是完整测试模块或整体 CI 的加速比例；本次还新增了两项跨档等价与错误输入检查。
+
+### 将完整回归分组并复用相同输入的成功结果
+
+`run_regression.py` 按模块分组，保留同一模块的 fixture 与测试顺序。四个 CI worker 使用独立
+checkout 和构建目录。`regression-weights.json` 中的历史模块耗时只影响分配，不改变测试或阈值；
+新模块按测试数量分配默认权重。汇总任务验证四份完整清单一致、实际执行与显式的夹具级跳过逐项对应计划，集合不重叠且没有遗漏；跳过不计为执行。
+Rust 全工作区测试由第0组执行；其他组只执行各自 Python 集合。新版本工具或输入自动使
+[成功证据缓存](../docs/contributing/evidence.md#reuse-ci-regression-evidence)失效。
+
+```sh
+PYTHONPATH=evas/src python3 -B scripts/run_regression.py --shard-count 4 --shard-index 0 --weights scripts/regression-weights.json --report runs/<task>/shard0.json
+PYTHONPATH=evas/src python3 -B scripts/run_regression.py --modules test_transition test_timer --report runs/<task>/focused.json
+python3 -B scripts/run_regression.py --merge runs/<task>/shard0.json runs/<task>/shard1.json runs/<task>/shard2.json runs/<task>/shard3.json --report runs/<task>/complete.json
+```
+
+单组成功不是完整回归通过。开发迭代只跑相关模块；稳定候选再执行四组及覆盖核对。
+计时报告的各组耗时之和不是并行墙钟耗时，不从一次运行推断提速比例。参考
+[分阶段持续集成](https://martinfowler.com/articles/continuousIntegration.html#KeepTheBuildFast)与
+[测试范围和隔离](https://testing.googleblog.com/2010/12/test-sizes.html)。
 
 ### 找出回归慢在哪里
 
