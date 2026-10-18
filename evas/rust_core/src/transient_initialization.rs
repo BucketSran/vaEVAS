@@ -21,6 +21,33 @@ fn unsupported(message: &str) -> Error {
     Error::new("unsupported_initial_history", message)
 }
 fn check_expression(e: &Expression, model: &EventModel, owner: &str) -> Result<(), Error> {
+    // Dependency audit only. Typed nodes remain event-body values; bootstrap
+    // execution and cold-history construction retain their existing owners.
+    match e {
+        Expression::IntegerPrimitive { .. } => {
+            return crate::event_numeric::validate(e, &model.program, owner)
+        }
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
+            check_expression(left, model, owner)?;
+            return check_expression(right, model, owner);
+        }
+        Expression::Power { base, .. } => return check_expression(base, model, owner),
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => {
+            for child in [left, right, then_value, else_value] {
+                check_expression(child, model, owner)?;
+            }
+            return Ok(());
+        }
+        _ => (),
+    }
     let (nodes, _, operators) =
         crate::continuous::integral_dependency_edges(e, &model.program, owner)?;
     let driven: BTreeSet<_> = model
@@ -72,6 +99,7 @@ pub(super) struct Prepared {
     pub(super) states: Vec<f64>,
     pub(super) bounds: Vec<I>,
     pub(super) records: Vec<EventRecord>,
+    pub(super) bounded_held_transition_seeds: bool,
     zero: BTreeSet<usize>,
 }
 impl Prepared {
@@ -155,7 +183,29 @@ pub(super) fn prepare(
         .map(|a| a.state)
         .collect();
     let mut seeds = BTreeSet::new();
+    // Only the ordinary fixed-timer schedule has a bounded cold constructor.
+    // All other compositions retain the original point-seed certificate.
+    let mut bounded_held_transition_seeds = !model.program.operators.is_empty()
+        && !model.relocalized_guards.iter().any(|&v| v)
+        && !model.dynamic_guards.iter().any(|&v| v)
+        && model.guard_operators.iter().all(|ops| ops.is_empty())
+        && model.triggers.iter().all(|t| {
+            matches!(
+                t.trigger,
+                EventTrigger::Timer { .. } | EventTrigger::InitialStep { .. }
+            )
+        });
     for spec in &model.program.operators {
+        bounded_held_transition_seeds &= match spec {
+            OperatorSpec::Transition {
+                input: Expression::State { state },
+                origin,
+                ..
+            } => model.program.states.get(*state).is_some_and(|s| {
+                s.kind == crate::ir::StateKind::Real && s.instance == origin.instance
+            }),
+            _ => false,
+        };
         if let OperatorSpec::Transition { input, origin, .. } = spec {
             match crate::events::affine(input, &model.program, &origin.instance) {
                 Ok(row)
@@ -259,7 +309,9 @@ pub(super) fn prepare(
     // Other held values may retain arithmetic uncertainty in Prepared/Frame;
     // they are not exact inputs to any cold history in this restricted graph.
     // Keep the existing all-point rule for every other operator composition.
-    let point_states = if model
+    let point_states = if bounded_held_transition_seeds {
+        BTreeSet::new()
+    } else if model
         .program
         .operators
         .iter()
@@ -293,6 +345,7 @@ pub(super) fn prepare(
         states,
         bounds,
         records,
+        bounded_held_transition_seeds,
         zero,
     }))
 }
@@ -464,8 +517,15 @@ mod tests {
         .unwrap()
     }
     #[test]
-    fn rejected_initial_certificate_retries_on_the_same_model_without_seed_or_record_mutation() {
-        let model = model();
+    fn rejected_nonbare_initial_certificate_retries_without_seed_or_record_mutation() {
+        let mut model = model();
+        // The new bounded route deliberately excludes even an affine wrapper.
+        // Keep the former point-certificate refusal as a scope detector.
+        if let OperatorSpec::Transition { input, .. } = &mut model.program.operators[0] {
+            *input = serde_json::from_value(json!({"op":"add","left":{"op":"state","state":0},
+                "right":{"op":"affine","constant":0,"terms":[]}}))
+            .unwrap();
+        }
         let identity = serde_json::to_value(&model.program).unwrap();
         for _ in 0..2 {
             let error = prepare(&model, &trajectory(0.2)).err().unwrap();
@@ -922,5 +982,124 @@ mod tests {
         );
         assert_eq!(controller.accepted.operators.values(1.).unwrap(), vec![1.]);
         assert!(controller.accepted.state_bounds[0].lo < controller.accepted.state_bounds[0].hi);
+    }
+
+    #[test]
+    fn bounded_cold_seed_passes_actual_state_box_to_existing_transition_constructor() {
+        use num_rational::BigRational as R;
+        let model = model();
+        let trajectory = trajectory(0.2);
+        let prepared = prepare(&model, &trajectory).unwrap().unwrap();
+        assert!(prepared.bounded_held_transition_seeds);
+        let exact = R::from_float(0.2).unwrap() + R::from_float(0.1).unwrap();
+        let b = prepared.bounds[0];
+        assert!(b.lo < b.hi);
+        assert!(R::from_float(b.lo).unwrap() <= exact && exact <= R::from_float(b.hi).unwrap());
+        let histories = Operators::new_until_with_bootstrap_bounds(
+            &model.program,
+            &trajectory,
+            &model.driven,
+            &prepared.states,
+            &prepared.bounds,
+            1.,
+            &model.tolerances,
+        )
+        .unwrap();
+        let initial = histories.bounds(0.).unwrap()[0];
+        for time in [0., 0.05, 0.5, 1.] {
+            let bounds = histories.bounds(time).unwrap()[0];
+            assert!(bounds.lo <= b.lo && bounds.hi >= b.hi);
+            assert_eq!(histories.values(time).unwrap()[0], prepared.states[0]);
+            assert_eq!(bounds, initial); // delay/rise must not invent a cold edge.
+        }
+        println!(
+            "ACTUAL_COLD_SEED_BOX {}",
+            json!({"states":prepared.states,
+            "state_bounds":prepared.bounds.iter().map(|b|[b.lo,b.hi]).collect::<Vec<_>>(),
+            "transition_bounds_at_zero":[initial.lo,initial.hi]})
+        );
+    }
+
+    #[test]
+    fn bounded_constructor_rejects_bad_boxes_and_every_nonbare_target_shape() {
+        let model = model();
+        let trajectory = trajectory(0.2);
+        let prepared = prepare(&model, &trajectory).unwrap().unwrap();
+        for bounds in [
+            vec![],
+            vec![I {
+                lo: f64::NAN,
+                hi: 1.,
+            }],
+            vec![I {
+                lo: f64::NEG_INFINITY,
+                hi: f64::INFINITY,
+            }],
+            vec![I::point(-1.)],
+        ] {
+            assert!(Operators::new_until_with_bootstrap_bounds(
+                &model.program,
+                &trajectory,
+                &model.driven,
+                &prepared.states,
+                &bounds,
+                1.,
+                &model.tolerances
+            )
+            .is_err());
+        }
+        let origin = json!({"source":"init.va","line":1,"column":1,"instance":"dut"});
+        let inputs = [
+            json!({"op":"add","left":{"op":"state","state":0},"right":{"op":"affine","constant":0,"terms":[]}}),
+            json!({"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]}),
+            json!({"op":"select","relation":"lt","left":{"op":"affine","constant":0,"terms":[]},"right":{"op":"affine","constant":1,"terms":[]},"then_value":{"op":"state","state":0},"else_value":{"op":"state","state":999},"origin":origin}),
+        ];
+        for input in inputs {
+            let mut p = model.program.clone();
+            if let OperatorSpec::Transition { input: target, .. } = &mut p.operators[0] {
+                *target = serde_json::from_value(input).unwrap();
+            }
+            assert!(Operators::new_until_with_bootstrap_bounds(
+                &p,
+                &trajectory,
+                &model.driven,
+                &prepared.states,
+                &prepared.bounds,
+                1.,
+                &model.tolerances
+            )
+            .is_err());
+        }
+        for (kind, owner) in [
+            (crate::ir::StateKind::Integer, "dut"),
+            (crate::ir::StateKind::Real, "foreign"),
+        ] {
+            let mut p = model.program.clone();
+            p.states[0].kind = kind;
+            p.states[0].instance = owner.into();
+            assert!(Operators::new_until_with_bootstrap_bounds(
+                &p,
+                &trajectory,
+                &model.driven,
+                &prepared.states,
+                &prepared.bounds,
+                1.,
+                &model.tolerances
+            )
+            .is_err());
+        }
+        // Low-level pure Transition support does not grant another operator a bounded seed.
+        let mut p = model.program.clone();
+        p.operators.push(serde_json::from_value(json!({"kind":"idt","input":{"op":"state","state":0},"ic":0,"origin":{"source":"init.va","line":2,"column":1,"instance":"dut"}})).unwrap());
+        assert!(Operators::new_until_with_bootstrap_bounds(
+            &p,
+            &trajectory,
+            &model.driven,
+            &prepared.states,
+            &prepared.bounds,
+            1.,
+            &model.tolerances
+        )
+        .is_err());
     }
 }

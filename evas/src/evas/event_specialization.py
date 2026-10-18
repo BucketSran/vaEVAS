@@ -70,6 +70,13 @@ def audit_event_body(compiler, statements):
     seen = {}
     work = 0
 
+    def charge_native(item):
+        nonlocal work
+        work += 1
+        if work > MAX_IR_ITEMS:
+            fail("original event audit exceeds expression budget", item, "resource_budget")
+    compiler.native_integer_charge = charge_native
+
     def fail(message, item, code="compile_error"):
         raise CompileError(message, code=code, token=item.token,
                            instance=compiler.instance.name)
@@ -335,6 +342,7 @@ def audit_event_body(compiler, statements):
             else:
                 fail("unsupported statement in original event audit", statement)
     body(statements)
+    return charge_native
 
 
 def specialize_event_body(statements, parameters):

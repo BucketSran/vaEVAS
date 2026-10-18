@@ -1144,6 +1144,11 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
     let initial = prepared
         .as_ref()
         .map_or_else(|| model.initial(), |p| p.states.clone());
+    // Borrow the certified cold frame before constructing its histories.
+    let initial_bounds = prepared.as_ref().map(|p| p.bounds.as_slice());
+    let bounded_held_transition_seeds = prepared
+        .as_ref()
+        .is_some_and(|p| p.bounded_held_transition_seeds);
     let relocalize = model.relocalized_guards.iter().any(|&held| held);
     let history_calendar = model.guard_operators.iter().any(|ops| !ops.is_empty());
     let (operators, mut crossings) = if history_calendar {
@@ -1173,14 +1178,26 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         (operators, crossings)
     } else {
         let crossings = independent_schedule(&model, &trajectory)?;
-        let operators = Operators::new_until(
-            &model.program,
-            &trajectory,
-            &model.driven,
-            &initial,
-            prediction_end(&model, &trajectory, crossings.first()),
-            &model.tolerances,
-        )?;
+        let operators = if bounded_held_transition_seeds {
+            Operators::new_until_with_bootstrap_bounds(
+                &model.program,
+                &trajectory,
+                &model.driven,
+                &initial,
+                initial_bounds.expect("bounded bootstrap has a prepared enclosure"),
+                prediction_end(&model, &trajectory, crossings.first()),
+                &model.tolerances,
+            )?
+        } else {
+            Operators::new_until(
+                &model.program,
+                &trajectory,
+                &model.driven,
+                &initial,
+                prediction_end(&model, &trajectory, crossings.first()),
+                &model.tolerances,
+            )?
+        };
         (operators, crossings)
     };
     let initial_cursor = prepared
@@ -1188,9 +1205,9 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         .map(|p| p.cursor(&crossings))
         .transpose()?
         .unwrap_or(0);
-    let initial_bounds = prepared.as_ref().map_or_else(
+    let initial_bounds = initial_bounds.map_or_else(
         || initial.iter().copied().map(I::point).collect(),
-        |p| p.bounds.clone(),
+        |bounds| bounds.to_vec(),
     );
     let circuit = model.circuit_at(
         &initial,

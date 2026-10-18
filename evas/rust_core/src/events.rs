@@ -140,7 +140,8 @@ pub(crate) fn affine(
         has_variables: false,
     };
     match expr {
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {
@@ -1111,6 +1112,12 @@ impl EventModel {
                         .iter()
                         .any(|&state| writers[state].is_some_and(|w| w != event))
                         || reads_other_writer(index, event, writers)
+                }
+                Expression::IntegerPrimitive { args, .. } => {
+                    let mut refs = Vec::new();
+                    crate::integer_primitive::states(args, &mut refs);
+                    refs.iter()
+                        .any(|&state| writers[state].is_some_and(|w| w != event))
                 }
                 Expression::EventMath { args, .. } => {
                     args.iter().any(|e| reads_other_writer(e, event, writers))

@@ -9,7 +9,7 @@ pub(crate) fn integral(e: &E, p: &Program) -> bool {
             .first()
             .and_then(|i| p.states.get(*i))
             .is_some_and(|s| s.kind == crate::ir::StateKind::Integer),
-        E::CheckedInteger { .. } | E::CheckedIndex { .. } => true,
+        E::IntegerPrimitive { .. } | E::CheckedInteger { .. } | E::CheckedIndex { .. } => true,
         E::Affine { constant, terms } => terms.is_empty() && constant.fract() == 0.,
         E::State { state } => p.states[*state].kind == crate::ir::StateKind::Integer,
         E::Add { left, right } | E::Multiply { left, right } => {
@@ -55,7 +55,8 @@ pub(crate) fn contains_operator(e: &E) -> bool {
 
 pub(crate) fn contains_math(e: &E) -> bool {
     match e {
-        E::ArrayRead { .. }
+        E::IntegerPrimitive { .. }
+        | E::ArrayRead { .. }
         | E::CheckedInteger { .. }
         | E::CheckedIndex { .. }
         | E::EventMath { .. } => true,
@@ -102,6 +103,11 @@ pub(crate) fn dependencies(e: &E, p: &Program, owner: &str) -> Result<AffineStat
                     leaves(e, out);
                 }
             }
+            E::IntegerPrimitive { args, .. } => {
+                let mut states = Vec::new();
+                crate::integer_primitive::states(args, &mut states);
+                out.extend(states.into_iter().map(|state| E::State { state }));
+            }
             E::EventMath { args, .. } => {
                 for e in args {
                     leaves(e, out);
@@ -136,6 +142,11 @@ pub(crate) fn validate(e: &E, p: &Program, owner: &str) -> Result<(), Error> {
             last,
             origin,
         } => validate_array(states, index, *first, *last, origin, p, owner)?,
+        E::IntegerPrimitive {
+            function,
+            args,
+            origin,
+        } => crate::integer_primitive::validate(*function, args, origin, p, owner)?,
         E::CheckedInteger { value, origin } => {
             if origin.instance != owner
                 || origin.source.is_empty()
@@ -278,6 +289,20 @@ fn bind_math(e: &E, p: &Program, owner: &str, nodes: &[f64], states: &[f64]) -> 
                 terms: vec![],
             }
         }
+        E::IntegerPrimitive {
+            function,
+            args,
+            origin,
+        } => E::Affine {
+            constant: f64::from(crate::integer_primitive::evaluate(
+                *function,
+                args,
+                origin,
+                &mut |state| crate::integer_primitive::point(I::point(states[state]), origin),
+                &mut || Ok(()),
+            )?),
+            terms: vec![],
+        },
         E::CheckedInteger { value, origin } => {
             let v = self::value(value, p, owner, nodes, states)
                 .map_err(|e| checked_error(e, "integer_range", origin))?;
@@ -411,6 +436,17 @@ fn bounds_in(
             )?;
             states[slots[(v.lo - f64::from(*first)) as usize]]
         }
+        E::IntegerPrimitive {
+            function,
+            args,
+            origin,
+        } => I::point(f64::from(crate::integer_primitive::evaluate(
+            *function,
+            args,
+            origin,
+            &mut |state| crate::integer_primitive::point(states[state], origin),
+            &mut || Ok(()),
+        )?)),
         E::CheckedInteger { value, origin } => checked_integer(
             bounds_in(value, nodes, states, proofs)
                 .map_err(|e| checked_error(e, "integer_range", origin))?,

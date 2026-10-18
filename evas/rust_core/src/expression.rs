@@ -5,7 +5,8 @@ use std::collections::{BTreeSet, HashSet};
 
 pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
     match expr {
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. }
@@ -97,7 +98,9 @@ fn predicate_nodes(expr: &Expression, nodes: &mut BTreeSet<usize>) {
         Expression::CheckedIndex { index, .. }
         | Expression::CheckedInteger { value: index, .. } => predicate_nodes(index, nodes),
         Expression::ArrayRead { index, .. } => predicate_nodes(index, nodes),
-        Expression::State { .. } | Expression::Operator { .. } => {}
+        Expression::IntegerPrimitive { .. }
+        | Expression::State { .. }
+        | Expression::Operator { .. } => {}
     }
 }
 
@@ -130,7 +133,8 @@ fn predicate_degree(expr: &Expression) -> Option<u8> {
                 .max(predicate_degree(then_value)?)
                 .max(predicate_degree(else_value)?),
         ),
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. }
@@ -204,7 +208,8 @@ pub(crate) fn validate_source_select_predicates(
     source_program: bool,
 ) -> Result<(), Error> {
     match expr {
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {
@@ -336,7 +341,8 @@ impl Accumulator {
         nodes: &[f64],
     ) -> Result<(), Error> {
         match expr {
-            Expression::ArrayRead { .. }
+            Expression::IntegerPrimitive { .. }
+            | Expression::ArrayRead { .. }
             | Expression::CheckedInteger { .. }
             | Expression::CheckedIndex { .. }
             | Expression::EventMath { .. }
@@ -542,7 +548,8 @@ fn finite_predicate_interval(value: I) -> Result<I, Error> {
 
 fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
     match expr {
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. }

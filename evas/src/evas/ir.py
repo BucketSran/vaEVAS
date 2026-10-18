@@ -1,4 +1,4 @@
-"""Version 26: voltage/event IR with finite sampled floor for driven inputs.
+"""Version 27: voltage/event IR with typed event integer primitives.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 26
+SCHEMA_VERSION = 27
 
 
 @dataclass(frozen=True)
@@ -107,7 +107,27 @@ class ArrayRead:
     op: str = field(default="array_read", init=False)
 
 
-Expression = ArrayRead | CheckedInteger | CheckedIndex | Affine | Binary | Power | Select | StateRef | OperatorRef | EventMath
+@dataclass(frozen=True)
+class IntegerLiteral:
+    value: int
+    op: str = field(default="integer_literal", init=False)
+
+
+@dataclass(frozen=True)
+class IntegerState:
+    state: int
+    op: str = field(default="integer_state", init=False)
+
+
+@dataclass(frozen=True)
+class IntegerPrimitive:
+    function: Literal["add", "remainder"]
+    args: tuple["IntegerLiteral | IntegerState | IntegerPrimitive", ...]
+    origin: Origin
+    op: str = field(default="integer_primitive", init=False)
+
+
+Expression = IntegerPrimitive | ArrayRead | CheckedInteger | CheckedIndex | Affine | Binary | Power | Select | StateRef | OperatorRef | EventMath
 
 
 @dataclass(frozen=True)

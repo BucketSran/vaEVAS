@@ -854,7 +854,8 @@ impl ResetExpression {
 fn reset_terms(expr: &Expression) -> Result<ResetTerms, Error> {
     let mut result = ResetTerms::default();
     match expr {
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {
@@ -944,7 +945,8 @@ fn reset_exact_sign(terms: &ResetTerms, states: &[I]) -> Result<Option<I>, Error
 
 fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
     let value = match expr {
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {
@@ -1621,6 +1623,28 @@ impl Operators {
         )
     }
     #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_until_with_bootstrap_bounds(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        bounds: &[I],
+        horizon: f64,
+        tolerances: &Tolerances,
+    ) -> Result<Self, Error> {
+        Self::new_until_with_seed_bounds(
+            program,
+            trajectory,
+            driven,
+            states,
+            horizon,
+            tolerances,
+            None,
+            Some(bounds),
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
     pub(crate) fn new_until_with_source_context(
         program: &Program,
         trajectory: &Trajectory,
@@ -1630,7 +1654,37 @@ impl Operators {
         tolerances: &Tolerances,
         shared: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
     ) -> Result<Self, Error> {
+        Self::new_until_with_seed_bounds(
+            program, trajectory, driven, states, horizon, tolerances, shared, None,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn new_until_with_seed_bounds(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        horizon: f64,
+        tolerances: &Tolerances,
+        shared: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
+        initial_bounds: Option<&[I]>,
+    ) -> Result<Self, Error> {
         let _timing = crate::diagnostics::span("history.prepare");
+        if let Some(bounds) = initial_bounds {
+            if states.len() != program.states.len()
+                || bounds.len() != states.len()
+                || states
+                    .iter()
+                    .zip(bounds)
+                    .any(|(&v, &b)| !v.is_finite() || !b.finite() || v < b.lo || v > b.hi)
+            {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "invalid bounded bootstrap state enclosure",
+                ));
+            }
+        }
         let owners = crate::passive_events::isolated_instances(program);
         let isolated_parameters = program
             .states
@@ -1641,6 +1695,9 @@ impl Operators {
             .collect::<Result<Vec<_>, Error>>()?;
         let physical_states = physical_parameters(states, &isolated_parameters, |value| value);
         let states = physical_states.as_ref();
+        let physical_bounds = initial_bounds
+            .map(|bounds| physical_parameters(bounds, &isolated_parameters, I::point));
+        let initial_bounds = physical_bounds.as_deref();
 
         let mut identities = BTreeSet::new();
         for spec in &program.operators {
@@ -1665,6 +1722,17 @@ impl Operators {
                 return Err(Error::new(
                     "invalid_ir",
                     "invalid or duplicate operator call-site identity",
+                ));
+            }
+            if initial_bounds.is_some()
+                && !matches!(spec,
+                OperatorSpec::Transition {input: Expression::State {state}, origin, ..}
+                    if program.states.get(*state).is_some_and(|s|
+                        s.kind == crate::ir::StateKind::Real && s.instance == origin.instance))
+            {
+                return Err(Error::new(
+                    "unsupported_initial_history",
+                    "bounded bootstrap requires only bare same-owner real-state Transition targets",
                 ));
             }
             let input = match spec {
@@ -1986,10 +2054,17 @@ impl Operators {
                         )?;
                     let input = dc_input.as_ref().unwrap_or(input);
                     let expression = input.clone();
-                    let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
+                    let point_bounds;
+                    let state_bounds = match initial_bounds {
+                        Some(bounds) => bounds,
+                        None => {
+                            point_bounds = states.iter().copied().map(I::point).collect::<Vec<_>>();
+                            &point_bounds
+                        }
+                    };
                     let source = source_spec
                         .map(|spec| {
-                            crate::transition_source_state::Source::initialized(spec, &state_bounds)
+                            crate::transition_source_state::Source::initialized(spec, state_bounds)
                         })
                         .transpose()?;
                     let (input, input_bounds, history, source) =
@@ -2017,7 +2092,7 @@ impl Operators {
                             )
                         } else {
                             let (affine, row) =
-                                transition_input(input, program, &state_bounds, &origin.instance)?;
+                                transition_input(input, program, state_bounds, &origin.instance)?;
                             let bound = row
                                 .iter()
                                 .zip(state_bounds.iter().copied().chain([I::ONE]))

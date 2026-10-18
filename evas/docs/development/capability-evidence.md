@@ -275,3 +275,13 @@ transient_passive_tests.rs、event_value_proof.rs覆盖。原244已在wave14统�
 [精确DC供电系数与history guard投影](../math/events.md#精确dc供电系数与history-guard投影)补充CROSS、EVENT-CONDITIONS、TRANSITION和COMPOSE。
 [test_dc_factor.py](../../tests/test_dc_factor.py)覆盖幅值、符号、非零参考、跨实例所有权与放大后的原误差预算；同owner耗尽与失败重试有私有控制。
 原111在wave15同源完整400通过原checker；一般变化供电、非零误差和更广联合仿射历史仍拒绝。
+
+[事件体纯输入别名](../../tests/test_event_body_input_aliases.py)补充LANG、EVENT-ORDER和COMPOSE。
+只有原始标量唯一前序写者可进入新body映射，trigger和setting保持原映射；
+数组与零次循环原写者不得在展开后绕过资格，旧仿射数组及loop响应有独立字节对照。
+原377已在独立冻结的IR26前端候选通过完整原checker；该局部结果不与wave15的298相加，统一IR27候选验收另记。
+
+[原生事件整数](../../tests/test_native_integer_events.py)与[有界冷Transition种子](../../tests/test_transition_bootstrap_bounds.py)
+补充LANG、EVENT-ORDER、TRANSITION和COMPOSE。IR27只扩展事件体typed Add及常量非零Remainder，
+每节点signed32检查及预算耗尽沿原owner保持。冷种子桥只借用真实Prepared.bounds初始化全Transition图中的裸同实例real状态目标，
+并保留固定timer0调度门、初始电压认证及同Controller失败重试；更广初态和历史组合仍拒绝。完整原077及统一候选验收仍待主集成，未计新增PASS。

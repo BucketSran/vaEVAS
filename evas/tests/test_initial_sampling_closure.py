@@ -48,10 +48,15 @@ class InitialVoltageAliases(unittest.TestCase):
             with self.subTest(body=body), self.assertRaises(CompileError):
                 self.compile(body+' V(y,r)<+q;')
 
-    def test_dynamic_aliases_remain_unsupported_in_runtime_events(self):
-        with self.assertRaises(CompileError):
-            self.compile('a=(V(u,r)>0.25)?V(u,r):0; @(initial_step) q=a; '
-                         '@(timer(0.5)) q=a; V(y,r)<+q;')
+    def test_initial_and_runtime_selected_alias_samples_are_distinct(self):
+        # u(0)=0 selects0 at startup; u(1/2)=1/2 selects the live
+        # voltage at the timer. Later observations retain that sample.
+        program = self.compile('a=(V(u,r)>0.25)?V(u,r):0; @(initial_step) q=a; '
+                               '@(timer(0.5)) q=a; V(y,r)<+q;')
+        result = transient(program, {'u': [[0,0],[1,1]]}, [0,.25,.75,1],
+                           stop=1, max_step=1, kernel=KERNEL)
+        self.assertEqual([row['voltages'][result['nodes'].index('y')]
+                          for row in result['solutions']], [0,0,.5,.5])
 
     def test_alias_cannot_hide_integer_real_conversion(self):
         with self.assertRaises(CompileError):
@@ -205,12 +210,16 @@ class RuntimeVoltageAliases(unittest.TestCase):
                    ('', 'a=V(u,r);'), ('a=q;', ''),
                    ('a=V(y,r);', ''), ('a=0*V(y,r);', ''),
                    ('a=$abstime;', ''), ('a=idt(V(u,r),0);', ''),
-                   ('if(V(u,r)>0) a=V(u,r);', ''),
-                   ('a=(V(u,r)>0)?1:0;', '')]
+                   ('if(V(u,r)>0) a=V(u,r);', '')]
         for before, after in aliases:
             with self.subTest(before=before,after=after), self.assertRaises(CompileError):
                 self.compile('@(initial_step) q=0; '+before+
                              '@(timer(0.5)) q=a; '+after+' V(y,r)<+q;')
+
+    def test_selected_body_alias_does_not_expand_cross_guard_admission(self):
+        with self.assertRaises(CompileError):
+            self.compile('a=(V(u,r)>0)?1:0; @(initial_step)q=0; '
+                         '@(cross(a-0.5,+1))q=1; V(y,r)<+q;')
 
     def test_voltage_alias_cannot_be_a_dynamic_timer_or_cross_setting(self):
         for event in ['@(timer(a)) q=1;', '@(timer(0.5,0,a)) q=1;',

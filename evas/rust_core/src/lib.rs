@@ -25,6 +25,7 @@ mod idt;
 mod idtmod;
 mod initialization;
 mod input_clamp;
+mod integer_primitive;
 
 mod interval;
 pub mod ir;

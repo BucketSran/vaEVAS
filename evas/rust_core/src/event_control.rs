@@ -25,7 +25,10 @@ pub(crate) fn validate(program: &Program) -> Result<(), Error> {
         match v {
             Value::Object(m) => {
                 m.get("op").and_then(Value::as_str).is_some_and(|op| {
-                    matches!(op, "checked_index" | "checked_integer" | "array_read")
+                    matches!(
+                        op,
+                        "integer_primitive" | "checked_index" | "checked_integer" | "array_read"
+                    )
                 }) || m.values().any(event_only)
             }
             Value::Array(a) => a.iter().any(event_only),

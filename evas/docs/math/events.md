@@ -373,16 +373,26 @@ real 输入仿射别名可用于初值，以及 cross guard 和事件体的当�
 固定数组下标逐槽处理。`a[0]=V(in); a[1]=2*a[0];` 仅为源码中已经写过的准确槽建立作用域，
 不因 a[0] 已写就允许提前读 a[1]。实例参数和既有下标检查负责确定槽，未证明的动态下标不获得此扩展。
 分支写者、多次写者、未来写者、状态反馈、输出依赖、时间及历史别名仍拒绝。
-运行事件的电压别名还排除选择表达式和非线性乘积。既有事件数组能力按自身合同保持。
+cross guard继续只接原有连续仿射别名。事件体另接受纯输入的有限选择表达式，例如先定义
+`a=(V(in)>0.25)?V(in):0`，再在timer或cross回调中读取a。每次回调读取当前物理根输入，
+初始采样和后续保持值相互独立。受限的源integer选择量可作为依赖，但每个原中间值仍受signed32类型检查。
+非线性乘积、状态、时间、历史、内部或输出依赖仍拒绝，零系数及未选臂也须完成原审计。
+
+新事件体别名只接原源码中唯一、无条件、前序的普通标量写者。`frontend.py`保留层次绑定与循环展开前的
+原模型引用；`initialization_aliases.py`据此检查全部initial、ordinary及event写者，包括零次循环中的写者。
+新路径排除数组槽和循环产生的定义，传递依赖也逐项检查。既有仿射数组与循环能力按原合同保持。
+按事件体实际需求绑定的表达式保留原树；累计绑定按wire引用重复计数，仍受原100000项IR和深度上限约束，
+有限域256与决策展开4096上限不变。guard、方向、容差及timer设置使用原别名映射，不能借事件体映射扩大准入。
 
 `syntax.py::analog_block` 保留事件前的标量名字和 indexed Assignment 前缀，
 `array_elaboration.py::scalarize_arrays` 用既有元素绑定转换为精确槽。
 `initialization_aliases.py` 证明初始与运行别名，`instance_compiler.py` 在各自词法作用域使用它们。
 独立公开证据见 [test_frontend_closure.py](../../tests/test_frontend_closure.py) 与
-[test_initial_sampling_closure.py](../../tests/test_initial_sampling_closure.py)，
-覆盖根处采样、实例隔离、顺序、未来与重复写拒绝，以及源误差放大。
+[test_initial_sampling_closure.py](../../tests/test_initial_sampling_closure.py)和
+[test_event_body_input_aliases.py](../../tests/test_event_body_input_aliases.py)，
+覆盖根处采样、实例隔离、源码顺序、原写者资格、旧数组及空循环兼容，以及源误差放大。
 [固定候选收据](../../../experiments/backends/support/low-cost-closure/evidence.json)区分局部原件验收与全量身份。
-这项表达式替换不改变事件排序、历史归属、接受与回退；历史波5的029、111仍有各自的内核事件定位阻塞，后续波6b的029已通过原checker，111限制保留。
+这项表达式替换不改变事件排序、历史归属、接受与回退；历史波5的029、111仍有各自的内核事件定位阻塞，后续波6b的029及wave15精确DC投影下的111已通过原checker，一般联合仿射事件组合仍受限。
 
 [三个节点依赖实际对照](../../../experiments/backends/support/initial-node-dependencies/README.md)
 覆盖跨实例 transition 种子、耦合电压和非接地支路，有限原生观察均满足原 1e-9 V 门槛。
@@ -668,6 +678,62 @@ IR24、Rust整数写入检查、事件求解、误差预算和候选提交与回
 资源审计包含参数死臂中实际生成的选择树，所有原操作数和整数中间检查保留。
 这不是一般 real `pow` 近似器，也没有新增opcode、时间证明或接受与回退策略。
 实现与原件状态见[紧凑证据](../../../experiments/backends/support/low-cost-closure/README.md)。
+
+### 事件体的原生 typed 加法与常量余数（IR27 本地候选）
+
+旧有限域表示优先。仅当其商分段或整数中间范围表示不足时，事件体可生成独立
+`integer_primitive`。第一版只包括源 integer 的 Add 和常量非零 signed32 除数的
+Remainder；叶只能是 `integer_literal`、同实例 integer `integer_state` 或同类子树。
+real 的整数点值、电压、时间、算子和实时 Floor 结果不能直接成为 typed 叶。
+源 Floor 仍须先通过原有输入/单 bin 证书并写入合法 integer 状态。
+
+`integer_primitive.rs` 对每个原节点执行 `i32::checked_add` 或 `checked_rem`。
+余数向零截断并与被除数同号，`INT_MIN % -1` 拒绝。点路径与盒路径共享这些操作，
+盒路径仅接受单点 signed32 state；不从非点盒选择代表值。原 counter 保留真实递增，
+后续取余、clamp 或写回不能挽救前一个节点的溢出。同回调每句读取前序局部写入，
+不同回调仍保留原同批次冲突规则。失败退出候选帧，不提交状态、历史、日历或输出。
+零时刻 timer 的冷启动依赖审计也识别新节点，但原冷历史 seed 的单点证书保持。
+输入点值与原 real 算术形成非点 `vout` 盒时，只有下述裸保持状态 Transition 门可保留该盒构造冷历史；其余组成保留原point要求。
+
+前端的新增 typed 构建逐节点扣原事件审计的100000额度，审计与最终构建复用同一 owner，
+不因重试恢复额度。原256域、4096决策、IR100000/depth96与精确证明512/depth64上限保留。
+可选有理来源解释继续扣原 `value_with_work` 调用方及 `Budget`，缺证或耗尽返回 unknown。
+`event_control.rs` 拒绝贡献、算子目标和事件 trigger 中的新节点；`causal_event.rs` 只为新节点
+开放实际驱动输入与保持 state 的路径，原 CheckedInteger/Floor/loop 门不变。
+
+独立公共例见 [test_native_integer_events.py](../../tests/test_native_integer_events.py)，
+同引擎失败后两次重试见 `transient_lifecycle_tests.rs` 的
+`native_integer_failed_prefix_rolls_back_and_retries_same_controller`。
+这份本地候选不表示一般 runtime 除数、位运算、连续 integer 输出、内部反馈或原件 checker 通过。
+
+### 裸保持状态 Transition 的有界冷初态（本地候选）
+
+固定精确timer0执行之后，原点执行值与 `Prepared.bounds` 是两套证据。
+例如binary64字面量的`.2+.1`名义值为`.30000000000000004`，实际原盒可为
+`[.3,.3000000000000001]`。它是有限有界初态，不能改成名义值的单点。
+
+本门仅接受整program的历史算子全部为Transition，每个原IR input都是裸、同owner、
+kind=real的StateRef，并走普通固定timer的 `independent_schedule` 分支。
+一般Select/仿射目标、DC voltage alias、其他算子、history-calendar以及dynamic/relocalized guard
+保留原point门。初始化语句、未选臂依赖、writer/整数检查和精确零时刻cursor不变。
+
+若名义状态为\(\hat x\)，原证书为\(X\)，冷历史直接由既有
+`Transition::enclosed(\hat x,X,delay,rise,fall)`构造settled初态。
+初始level在首个实际更新前始终包于\(X\)，delay/rise不产生伪t0边沿；
+不调用`advance_at(0)`伪造初始化转移。有限性、向量长度和名义值落在原盒内均先检查。
+`transient.rs`在历史构造前借用Prepared.bounds，`operators.rs`的专用私有入口沿原constructor
+与source_context/history_work创建一次历史，旧入口默认point行为不变。
+
+Frame.state_bounds和Operators的初始盒仍一起通过原 `model.certify_observation`。
+初始输出的误差放大超过原电压预算必须拒绝，有限初态不是单独的接受条件。
+失败前不发布frame、日历消费或输出。后续事件沿原Controller候选事务，失败后重试不能改变
+种子盒、历史、proof、records或outputs。观察网格不改变物理初态。
+
+独立公共合同见 [test_transition_bootstrap_bounds.py](../../tests/test_transition_bootstrap_bounds.py)。
+其Fraction答案取原binary64字面量，不来自EVAS输出；另有严格高增益拒绝、passive初始display
+保留和原nonbare目标拒绝。私有bootstrap测试记录实际state/history盒，同Controller回归在
+`transient_lifecycle_tests.rs::bounded_cold_transition_seed_survives_two_failed_same_controller_callbacks`。
+这些开发证据不替代原件checker、完整候选CI或安装验收。
 
 <a id="wave6-local-closure"></a>
 

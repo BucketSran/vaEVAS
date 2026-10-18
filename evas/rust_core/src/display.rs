@@ -131,7 +131,8 @@ pub(crate) fn bind(
     states: &[f64],
 ) -> Result<Expression, Error> {
     Ok(match expr {
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {

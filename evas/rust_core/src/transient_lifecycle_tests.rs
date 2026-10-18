@@ -1804,3 +1804,234 @@ fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_r
         [0, 1, 2, 3]
     );
 }
+
+#[test]
+fn native_integer_failed_prefix_rolls_back_and_retries_same_controller() {
+    let origin = json!({"source":"integer-retry.va","line":1,"column":1,"instance":"dut"});
+    let program:Program=serde_json::from_value(json!({
+        "schema_version":SCHEMA_VERSION,"nodes":["0","y"],
+        "states":[{"instance":"dut","name":"n","kind":"integer","initial":2147483647.0},
+                  {"instance":"dut","name":"out","kind":"real","initial":0.0}],
+        "operators":[{"kind":"transition","input":{"op":"state","state":1},"delay":0,"rise":0.1,"fall":0.1,"origin":origin}],
+        "contributions":[{"branch":{"instance":"dut","local_positive":"p","local_negative":"r","kind":"voltage"},"positive":1,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}],
+        "events":[{"origin":origin,"trigger":{"kind":"timer","start":1,"period":1,"time_tolerance":1e-12,"enabled":true},"body":[
+            {"kind":"assign","state":1,"rhs":{"op":"affine","constant":4,"terms":[]}},
+            {"kind":"display","format":"prefix=%g","args":[{"op":"state","state":1}],"origin":origin},
+            {"kind":"assign","state":0,"rhs":{"op":"integer_primitive","function":"add","args":[{"op":"integer_state","state":0},{"op":"integer_literal","value":1}],"origin":origin}},
+            {"kind":"assign","state":1,"rhs":{"op":"affine","constant":0,"terms":[]}}
+        ]}]
+    })).unwrap();
+    let model = EventModel::new(
+        program,
+        vec![],
+        Tolerances {
+            absolute: 1e-10,
+            relative: 1e-10,
+        },
+    )
+    .unwrap();
+    let trajectory = Trajectory::new(
+        TransientInputs {
+            pwl_errors_v: None,
+            strobetimes: vec![],
+            pwl: vec![],
+            output_times: vec![0., 2.],
+            stop: 2.,
+            max_step: 1.,
+        },
+        0,
+    )
+    .unwrap();
+    let states = model.initial();
+    let (operators, mut calendar) =
+        history_calendar::initialize(&model, &trajectory, &states).unwrap();
+    let circuit = model
+        .circuit_with(&states, &operators.values(0.).unwrap())
+        .unwrap();
+    let mut controller = Controller {
+        accepted: Frame {
+            value_proofs: Default::default(),
+            time_proofs: Default::default(),
+            time: 0.,
+            solution: circuit.solve(&[]).unwrap(),
+            circuit,
+            operators,
+            state_bounds: states.iter().copied().map(I::point).collect(),
+            states,
+        },
+        event: 0,
+        records: vec![],
+        outputs: vec![],
+    };
+    let before = controller.accepted.clone();
+    let calendar_before: Vec<_> = calendar
+        .iter()
+        .map(|e| (e.event, e.time, e.bounds()))
+        .collect();
+    for _ in 0..2 {
+        let error = controller
+            .accept_history_events(&model, &trajectory, &mut calendar)
+            .unwrap_err();
+        assert_eq!(error.kind, "integer_range");
+        assert_eq!(controller.accepted.time, before.time);
+        assert_eq!(controller.accepted.states, before.states);
+        assert_eq!(controller.accepted.state_bounds, before.state_bounds);
+        assert_eq!(
+            controller.accepted.solution.voltages,
+            before.solution.voltages
+        );
+        assert_eq!(controller.accepted.value_proofs, before.value_proofs);
+        assert!(controller
+            .accepted
+            .operators
+            .same_reset_history(&before.operators));
+        assert_eq!(controller.event, 0);
+        assert!(controller.records.is_empty());
+        assert!(controller.outputs.is_empty());
+        assert_eq!(
+            calendar
+                .iter()
+                .map(|e| (e.event, e.time, e.bounds()))
+                .collect::<Vec<_>>(),
+            calendar_before
+        );
+    }
+}
+
+#[test]
+fn bounded_cold_transition_seed_survives_two_failed_same_controller_callbacks() {
+    let origin = json!({"source":"cold-retry.va","line":1,"column":1,"instance":"dut"});
+    let p:Program=serde_json::from_value(json!({"schema_version":SCHEMA_VERSION,"nodes":["0","u","y"],
+        "states":[{"instance":"dut","name":"out","kind":"real","initial":0},
+                  {"instance":"dut","name":"n","kind":"integer","initial":2147483647}],
+        "operators":[{"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.5,"origin":origin}],
+        "contributions":[{"branch":{"instance":"dut","local_positive":"p","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}],
+        "events":[
+            {"origin":origin,"trigger":{"kind":"timer","start":0,"period":0,"time_tolerance":1e-12,"enabled":true},"body":[{"kind":"assign","state":0,"rhs":{"op":"add","left":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},"right":{"op":"affine","constant":0.1,"terms":[]}}}]},
+            {"origin":origin,"trigger":{"kind":"timer","start":1,"period":1,"time_tolerance":1e-12,"enabled":true},"body":[
+                {"kind":"assign","state":0,"rhs":{"op":"affine","constant":4,"terms":[]}},
+                {"kind":"display","format":"candidate=%g","args":[{"op":"state","state":0}],"origin":origin},
+                {"kind":"assign","state":1,"rhs":{"op":"integer_primitive","function":"add","args":[{"op":"integer_state","state":1},{"op":"integer_literal","value":1}],"origin":origin}}
+            ]}
+        ]})).unwrap();
+    let model = EventModel::new(
+        p,
+        vec!["u".into()],
+        Tolerances {
+            absolute: 1e-10,
+            relative: 0.,
+        },
+    )
+    .unwrap();
+    let trajectory = Trajectory::new(
+        TransientInputs {
+            pwl_errors_v: None,
+            strobetimes: vec![],
+            pwl: vec![vec![[0., 0.2], [2., 0.2]]],
+            output_times: vec![0., 2.],
+            stop: 2.,
+            max_step: 1.,
+        },
+        1,
+    )
+    .unwrap();
+    let prepared = initialization::prepare(&model, &trajectory)
+        .unwrap()
+        .unwrap();
+    assert!(prepared.bounded_held_transition_seeds);
+    assert!(prepared.bounds[0].lo < prepared.bounds[0].hi);
+    let mut calendar = independent_schedule(&model, &trajectory).unwrap();
+    let cursor = prepared.cursor(&calendar).unwrap();
+    assert_eq!(cursor, 1);
+    let operators = Operators::new_until_with_bootstrap_bounds(
+        &model.program,
+        &trajectory,
+        &model.driven,
+        &prepared.states,
+        &prepared.bounds,
+        prediction_end(&model, &trajectory, calendar.get(cursor)),
+        &model.tolerances,
+    )
+    .unwrap();
+    let circuit = model
+        .circuit_at(
+            &prepared.states,
+            &operators.values(0.).unwrap(),
+            &trajectory.value_bounds(0.),
+        )
+        .unwrap();
+    let solution = circuit.solve(&trajectory.values(0.)).unwrap();
+    let inputs = trajectory.value_bounds(0.);
+    let (state_bounds, _) = model
+        .certify_observation(
+            &model.conditions.select(&[], &inputs).unwrap(),
+            &inputs,
+            &prepared.bounds,
+            &operators.bounds(0.).unwrap(),
+            &solution.voltages,
+            &prepared.states,
+        )
+        .unwrap();
+    let mut controller = Controller {
+        accepted: Frame {
+            value_proofs: Default::default(),
+            time_proofs: Default::default(),
+            time: 0.,
+            states: prepared.states,
+            state_bounds,
+            solution,
+            circuit,
+            operators,
+        },
+        event: cursor,
+        records: prepared.records,
+        outputs: vec![],
+    };
+    let before = controller.accepted.clone();
+    let original_records = serde_json::to_value(&controller.records).unwrap();
+    let original_calendar: Vec<_> = calendar
+        .iter()
+        .map(|e| (e.event, e.time, e.bounds()))
+        .collect();
+    let original_history_boxes = before.operators.bounds(0.).unwrap();
+    for _ in 0..2 {
+        let error = controller
+            .accept_changed_events(
+                &model,
+                &trajectory,
+                &mut calendar,
+                event_acceptance::Strategy::Static,
+            )
+            .unwrap_err();
+        assert_eq!(error.kind, "integer_range");
+        assert_eq!(controller.accepted.time, before.time);
+        assert_eq!(controller.accepted.states, before.states);
+        assert_eq!(controller.accepted.state_bounds, before.state_bounds);
+        assert_eq!(
+            controller.accepted.solution.voltages,
+            before.solution.voltages
+        );
+        assert_eq!(controller.accepted.value_proofs, before.value_proofs);
+        assert!(controller
+            .accepted
+            .operators
+            .same_reset_history(&before.operators));
+        assert_eq!(
+            controller.accepted.operators.bounds(0.).unwrap(),
+            original_history_boxes
+        );
+        assert_eq!(controller.event, cursor);
+        assert!(controller.outputs.is_empty());
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            original_records
+        );
+        assert_eq!(
+            calendar
+                .iter()
+                .map(|e| (e.event, e.time, e.bounds()))
+                .collect::<Vec<_>>(),
+            original_calendar
+        );
+    }
+}

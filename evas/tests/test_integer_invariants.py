@@ -2,7 +2,7 @@
 GUARDS = ['LANG', 'TIMER', 'EVENT-ORDER', 'COMPOSE']
 
 import unittest
-from evas import CompileError, compile_sources, transient
+from evas import CompileError, KernelError, compile_sources, transient
 from test_affine import KERNEL, model, instance
 
 
@@ -53,7 +53,6 @@ class IntegerInvariants(unittest.TestCase):
     def test_false_cutpoint_and_unbounded_lower_endpoint_do_not_gain_small_domain(self):
         for update in ['n=n+1;if(n>200)flag=1;code=n;',
                        'n=n+1;code=n&1;',
-                       'n=n+1;code=n%8;',
                        'n=n-1;code=(n>15)?15:n;',
                        'n=n+1;code=(n>256)?256:n;']:
             with self.subTest(update=update),self.assertRaises(CompileError):
@@ -61,6 +60,28 @@ class IntegerInvariants(unittest.TestCase):
                         '@(timer(0.1,0.1))begin '+update+'end '
                         'V(y,r)<+transition((code&1)?0.9:0,0,0.01,0.01);',
                         'integer n,flag,code;')
+
+        # Native remainder bounds code without bounding the original counter.
+        # At ticks 1..9 the parity is 1,0,...,0,1; n must still overflow at MAX+1.
+        body = ('@(initial_step)begin n=0;flag=0;code=0;end '
+                '@(timer(0.1,0.1))begin n=n+1;code=n%8;end '
+                'V(y,r)<+transition((code&1)?0.9:0,0,0.01,0.01);')
+        p = program(body, 'integer n,flag,code;')
+        result = transient(p, {'u':[[0,0],[1,0]]}, [0,.15,.25,.35,.85,.95],
+                           stop=1, max_step=.025, kernel=KERNEL)
+        self.assertEqual([row['voltages'][result['nodes'].index('y')]
+                          for row in result['solutions']], [0,.9,0,.9,0,.9])
+        near_limit = program(body.replace('n=0;', 'n=2147483646;', 1),
+                             'integer n,flag,code;')
+        legal = transient(near_limit, {'u':[[0,0],[1,0]]}, [0,.15],
+                          stop=.15, max_step=.025, kernel=KERNEL)
+        self.assertEqual(legal['solutions'][-1]['voltages'][legal['nodes'].index('y')], .9)
+        with self.assertRaises(KernelError) as overflow:
+            transient(near_limit, {'u':[[0,0],[1,0]]}, [0,.15,.25],
+                      stop=.25, max_step=.025, kernel=KERNEL)
+        # The preferred legacy assignment gate and a typed-node gate both
+        # enforce the same original signed32 boundary, at different stages.
+        self.assertIn(overflow.exception.detail['kind'], ('state_range', 'integer_range'))
 
     def test_dead_original_errors_and_overflow_before_clamp_still_reject(self):
         for suffix in ['if(n<0)tmp=1/0;',

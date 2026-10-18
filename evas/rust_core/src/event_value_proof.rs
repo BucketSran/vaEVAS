@@ -198,6 +198,45 @@ fn evaluate<W: FnMut() -> Option<()>>(
             }
             Some(value)
         }
+        E::IntegerPrimitive {
+            function,
+            args,
+            origin,
+        } => {
+            use num_traits::ToPrimitive;
+            let mut visited = 0usize;
+            let value = crate::integer_primitive::evaluate(
+                *function,
+                args,
+                origin,
+                &mut |state| {
+                    let r = states
+                        .get(state)
+                        .and_then(|v| v.as_ref())
+                        .filter(|r| r.is_integer())
+                        .and_then(|r| r.to_integer().to_i32());
+                    r.ok_or_else(|| {
+                        crate::ir::Error::new("unknown_proof", "integer state proof missing")
+                    })
+                },
+                &mut || {
+                    visited += 1;
+                    work().ok_or_else(|| {
+                        crate::ir::Error::new("resource_budget", "integer proof work exhausted")
+                    })?;
+                    if *count + visited > 512 || depth + visited > 64 {
+                        return Err(crate::ir::Error::new(
+                            "unknown_proof",
+                            "integer proof expression limit",
+                        ));
+                    }
+                    Ok(())
+                },
+            )
+            .ok()?;
+            *count += visited;
+            budget.check(binary(f64::from(value))?)
+        }
         E::State { state } => budget.check(states.get(*state)?.as_ref()?.clone()),
         E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
             let a = evaluate(

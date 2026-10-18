@@ -29,3 +29,19 @@ fn version_precedes_shape_and_duplicate_fields_still_fail() {
         "invalid_request"
     );
 }
+
+#[test]
+fn typed_integer_wire_roundtrip_and_distinct_operand_types() {
+    let mut value = serde_json::json!({"program":{"schema_version":SCHEMA_VERSION,"nodes":["0"],"contributions":[],
+        "states":[{"instance":"dut","name":"n","kind":"integer","initial":0}],
+        "events":[{"origin":{"source":"wire.va","line":1,"column":1,"instance":"dut"},"trigger":{"kind":"timer","start":1,"period":1,"time_tolerance":1e-12,"enabled":true},
+        "body":[{"kind":"assign","state":0,"rhs":{"op":"integer_primitive","function":"remainder",
+        "args":[{"op":"integer_state","state":0},{"op":"integer_literal","value":8}],"origin":{"source":"wire.va","line":1,"column":1,"instance":"dut"}}}]}]},"driven":[],"samples":[]});
+    let parsed = parse_request(&value.to_string()).unwrap();
+    let again = serde_json::to_value(parsed).unwrap();
+    let decoded = parse_request(&again.to_string()).unwrap();
+    assert_eq!(serde_json::to_value(decoded).unwrap(), again);
+    value["program"]["events"][0]["body"][0]["rhs"]["args"][0] =
+        serde_json::json!({"op":"affine","constant":1,"terms":[]});
+    assert!(parse_request(&value.to_string()).is_err());
+}

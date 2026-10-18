@@ -90,6 +90,10 @@ def lower_decision(op, values, select):
     return choose(values[0], truth, zero) if op == "&&" else choose(values[0], one, truth)
 
 
+class FiniteIntegerUnavailable(CompileError):
+    """The original route ran out of representation, not semantic validity."""
+
+
 def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Mapping[str, int],
           source: str, operators: Callable[[Expr], Expression] | None = None, preserve_structure: bool = False,
           decisions: Callable[..., Select] | None = None,
@@ -102,11 +106,23 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
     if validator is not None:
         parameters.integer_operation_depth = depth + 1
     try:
-        value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,
-                               decisions, validate_decision, decision_scope, indices,
-                               memo=memo, node_declarations=node_declarations)
+        try:
+            value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,
+                                   decisions, validate_decision, decision_scope, indices,
+                                   memo=memo, node_declarations=node_declarations)
+        except FiniteIntegerUnavailable:
+            native = getattr(parameters, "native_integer", None)
+            value = native(expr) if native is not None else None
+            if value is None:
+                raise
         if validator is not None:
-            checked = validator(expr, value, root=depth == 0 and getattr(parameters, "allow_integer_assignment_root", False))
+            try:
+                checked = validator(expr, value, root=depth == 0 and getattr(parameters, "allow_integer_assignment_root", False))
+            except FiniteIntegerUnavailable:
+                native = getattr(parameters, "native_integer", None)
+                checked = native(expr) if native is not None else None
+                if checked is None:
+                    raise
             if checked is not None:
                 value = checked
         return value

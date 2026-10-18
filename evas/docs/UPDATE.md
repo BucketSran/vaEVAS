@@ -4,6 +4,15 @@
 逐项证据见[证据索引](development/capability-evidence.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
 
+## 本地候选 0.20.0 / IR27：事件 typed 整数
+
+事件体新增源 typed Add 与常量非零 Remainder。旧有限表示优先；新节点在每个原算术位置
+检查 signed32，盒求值要求单点 integer state，同回调保持原句序。普通贡献、历史算子目标、
+trigger、一般运行期除数与位运算仍不获得新准入。Floor 与 CheckedInteger 的原门保留。
+前端、内核、当前开发 fixtures 与身份测试迁移到IR27；历史记录不改写。
+数学合同与限制见[事件手册](math/events.md#事件体的原生-typed-加法与常量余数ir27-本地候选)。
+当前仅是待独审本地实现；原件checker、完整Python与安装验收由统一候选安排，不新增正式成绩。
+
 ## 本地候选 IR26：受限原生事件floor
 
 新增 `event_math/function=floor`，仅准入原始实际驱动仿射输入的事件采样。旧有限floor选择树优先，

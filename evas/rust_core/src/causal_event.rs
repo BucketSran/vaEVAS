@@ -86,9 +86,19 @@ pub(crate) fn classify(
         }
         Ok(())
     }
+    fn has_integer(v: &serde_json::Value) -> bool {
+        match v {
+            serde_json::Value::Object(m) => {
+                m.get("op").and_then(|v| v.as_str()) == Some("integer_primitive")
+                    || m.values().any(has_integer)
+            }
+            serde_json::Value::Array(a) => a.iter().any(has_integer),
+            _ => false,
+        }
+    }
     p.events.iter().enumerate().map(|(index,e)| {
         audit(&serde_json::to_value(&e.body).map_err(|e|Error::new("invalid_ir",e.to_string()))?, &driven)?;
-        if passive[index] || e.assignments().iter().all(|a| crate::events::affine(&a.rhs,p,&e.origin.instance).is_ok()) {
+        if passive[index] || (!has_integer(&serde_json::to_value(&e.body).map_err(|e|Error::new("invalid_ir",e.to_string()))?) && e.assignments().iter().all(|a| crate::events::affine(&a.rhs,p,&e.origin.instance).is_ok())) {
             return Ok(false);
         }
         // Runtime control and checked integer/array nodes keep their isolated

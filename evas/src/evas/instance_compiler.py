@@ -9,8 +9,8 @@ from fractions import Fraction
 from typing import TYPE_CHECKING
 
 from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
-                 ArrayRead, ArrayWrite, CheckedInteger, CheckedIndex, Loop as RuntimeLoop, EventMath, Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
-from .lowering import lower, scale, UnsupportedConstantPower
+                 IntegerPrimitive, IntegerLiteral, IntegerState, ArrayRead, ArrayWrite, CheckedInteger, CheckedIndex, Loop as RuntimeLoop, EventMath, Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
+from .lowering import lower, scale, UnsupportedConstantPower, FiniteIntegerUnavailable
 from .limits import check_ir
 from .input_rational_scope import input_rational_tree
 from .compact_source_select import compact_source_assignment
@@ -20,7 +20,7 @@ from .elaboration import unroll_loops
 from .array_elaboration import scalarize_arrays, ARRAY_BUDGET
 from . import event_index_domains, integer_bits, finite_math
 from .rational_predicates import condition_positive_facts, normalize_positive_quotient_comparison
-from .initialization_aliases import bind_initial_voltage_aliases, bind_runtime_voltage_aliases
+from .initialization_aliases import bind_initial_voltage_aliases, bind_runtime_voltage_aliases, bind_event_body_aliases
 from .syntax import (CompileError, Model, contains_operator, contains_decision,
                      Assignment as SyntaxAssignment, Conditional as SyntaxConditional, Display as SyntaxDisplay,
                      Loop, ContributionStatement, BoundStep, OPERATOR_NAMES, DECISION_NAMES)
@@ -99,9 +99,11 @@ def _predicate_degree(expression, memo=None):
 
 
 class InstanceCompiler:
-    def __init__(self, instance: "Instance", model: Model, nets: dict[str, str], compilation: Compilation):
+    def __init__(self, instance: "Instance", model: Model, nets: dict[str, str], compilation: Compilation, *,
+                 source_model: Model | None = None):
         self.instance = instance
         self.model = model
+        self.event_body_source_model = source_model
         self.compilation = compilation
         self.cache: dict[str, float] = {}
         self.node_ids = {name: compilation.indices[net] for name, net in nets.items()}
@@ -201,6 +203,7 @@ class InstanceCompiler:
         self.constant_local_aliases = self.bind_constant_local_aliases(writes)
         self.initial_voltage_aliases = bind_initial_voltage_aliases(self, writes)
         self.runtime_voltage_aliases = bind_runtime_voltage_aliases(self, writes)
+        self.event_body_aliases = bind_event_body_aliases(self, writes)
         self.active_event_aliases = {}
         seeds = self.bind_declaration_initializers(event_writers, immutable_names)
         # No-writer declaration values belong to the variable namespace. They
@@ -217,13 +220,15 @@ class InstanceCompiler:
         self.analyze_event_index_domains()
         from .event_specialization import audit_event_body, specialize_event_body
         self.array_audit_dispatch_leaves = 0
+        native_allowances = {}
+        for event in self.model.events:
+            self.active_event_aliases = self.aliases_at(event.token, body=True)
+            self.runtime_event_checks = self.checked_event_context(event)
+            native_allowances[id(event)] = audit_event_body(self, event.body)
         for event in self.model.events:
             self.active_event_aliases = self.aliases_at(event.token)
             self.runtime_event_checks = self.checked_event_context(event)
-            audit_event_body(self, event.body)
-        for event in self.model.events:
-            self.active_event_aliases = self.aliases_at(event.token)
-            self.runtime_event_checks = self.checked_event_context(event)
+            self.native_integer_charge = native_allowances[id(event)]
             triggers = tuple(self.trigger(leaf) for leaf in event.triggers)
             event_trigger = triggers[0] if len(triggers) == 1 else OrTrigger(triggers)
             origin = Origin(event.token.source or self.model.source, event.token.line, event.token.column, self.instance.name, event.token.expansion)
@@ -234,6 +239,7 @@ class InstanceCompiler:
                              if isinstance(item, SyntaxConditional) else item
                              for item in body if id(item) in self.event_reachable_statements)
             execution = specialize_event_body(retained(event.body), self.cache)
+            self.active_event_aliases = self.aliases_at(event.token, body=True)
             self.compilation.events.append(Event(event_trigger, self.body(execution), origin))
         self.active_event_aliases = {}
         statements = unroll_loops(self.model, self.parameter)
@@ -317,11 +323,13 @@ class InstanceCompiler:
                 # Ordinary execution still diagnoses an invalid assignment.
         return aliases
 
-    def aliases_at(self, token):
+    def aliases_at(self, token, *, body=False):
         # Retain expressions here. Event lowering evaluates their input nodes
         # at the current physical root, independently of initial sampling.
-        return {name: value for name, value in
-                (self.constant_local_aliases | self.runtime_voltage_aliases).items()
+        aliases = self.constant_local_aliases | self.runtime_voltage_aliases
+        if body:
+            aliases |= self.event_body_aliases
+        return {name: value for name, value in aliases.items()
                 if name in self.model.local_alias_scopes.get(token, ())}
 
     def bind_declaration_initializers(self, event_writers, immutable_names):
@@ -540,6 +548,8 @@ class InstanceCompiler:
         static_integer_audit = kwargs.pop("static_integer_audit", False)
         typed = self.typed_resolve(resolve, allow_integer_assignment_root=assignment_root)
         typed.sampled_values = sampled_values
+        if (event_values or sampled_values) and hasattr(self, 'native_integer_charge'):
+            typed.native_integer = lambda item: self.native_event_integer(item, resolve)
         if event_values or sampled_values:
             typed.finite_floor = lambda item, argument: self.finite_floor(item, argument, native=True)
         if event_values:
@@ -575,7 +585,7 @@ class InstanceCompiler:
         # Do not introduce an implicit real-to-integer rounding rule.
         if isinstance(expression, Affine):
             return not expression.terms and expression.constant.is_integer()
-        if isinstance(expression, (CheckedIndex, CheckedInteger)):
+        if isinstance(expression, (CheckedIndex, CheckedInteger, IntegerPrimitive)):
             return True
         if isinstance(expression, ArrayRead):
             return all(self.compilation.states[state].kind == "integer" for state in expression.states)
@@ -590,6 +600,11 @@ class InstanceCompiler:
         return isinstance(expression, Binary) and expression.op in ("add", "multiply") and self.integral(expression.left) and self.integral(expression.right)
 
     def integral_bounds(self, expression):
+        if isinstance(expression, IntegerPrimitive):
+            if expression.function == 'remainder':
+                width = abs(expression.args[1].value)
+                return -width + 1, width - 1
+            return -2147483648, 2147483647
         if isinstance(expression, ArrayRead):
             bounds = [self.integral_bounds(StateRef(state)) for state in expression.states]
             return min(a for a,b in bounds), max(b for a,b in bounds)
@@ -752,6 +767,8 @@ class InstanceCompiler:
         if -2147483648 <= low <= high <= 2147483647:
             return
         def unknown_state(item):
+            if isinstance(item, IntegerPrimitive):
+                return True  # Each typed child retains its runtime signed32 check.
             if isinstance(item, StateRef):
                 return getattr(self, "integer_state_ranges", {}).get(item.state, (-2147483648, 2147483647)) == (-2147483648, 2147483647)
             if isinstance(item, Binary):
@@ -765,7 +782,7 @@ class InstanceCompiler:
         if unknown_state(value) and low <= 2147483647 and high >= -2147483648:
             if root:
                 return
-            raise CompileError("integer intermediate signed 32-bit range is unproven",
+            raise FiniteIntegerUnavailable("integer intermediate signed 32-bit range is unproven",
                                token=expr.token, instance=self.instance.name)
         raise CompileError("integer intermediate may exceed signed 32-bit range",
                            token=expr.token, instance=self.instance.name)
@@ -999,6 +1016,64 @@ class InstanceCompiler:
             self.expression_decision_origins.add(origin)
         return value
 
+    def native_event_integer(self, expr, resolve):
+        # This is called only after the original route classified a finite
+        # representation failure. One bottom-up visit types each source node;
+        # no domain enumeration, child retyping, or folded arithmetic inputs.
+        def build(item):
+            self.native_integer_charge(item)
+            if item.op == 'number':
+                if not integer_bits.integer_type(item, self.model.variables, self.model.parameter_types, self.model.genvars):
+                    return None
+                number = item.value
+            elif item.op == 'parameter':
+                if not integer_bits.integer_type(item, self.model.variables, self.model.parameter_types, self.model.genvars):
+                    return None
+                value = resolve(item.value)
+                if isinstance(value, StateRef):
+                    return IntegerState(value.state)
+                if isinstance(value, Affine) and not value.terms:
+                    number = value.constant
+                elif isinstance(value, (int, float)):
+                    number = value
+                else:
+                    return None
+            elif item.op in ('unary+', 'unary-'):
+                value = build(item.args[0])
+                if not isinstance(value, IntegerLiteral):
+                    return None
+                number = value.value if item.op == 'unary+' else -value.value
+            elif item.op in ('+', '%'):
+                values = tuple(build(arg) for arg in item.args)
+                if any(value is None for value in values):
+                    return None
+                if item.op == '%' and (not isinstance(values[1], IntegerLiteral) or values[1].value == 0):
+                    return None
+                origin = Origin(item.token.source or self.model.source, item.token.line,
+                                item.token.column, self.instance.name, item.expansion)
+                if all(isinstance(value, IntegerLiteral) for value in values):
+                    a, b = (value.value for value in values)
+                    self.native_integer_charge(item)
+                    if item.op == '+':
+                        number = a+b
+                    else:
+                        if a == -2147483648 and b == -1:
+                            raise CompileError('integer quotient may exceed signed 32-bit range', token=item.token)
+                        magnitude = abs(a)//abs(b)
+                        number = a - (-magnitude if (a<0)!=(b<0) else magnitude)*b
+                else:
+                    return IntegerPrimitive('add' if item.op == '+' else 'remainder', values, origin)
+            else:
+                return None
+            if not math.isfinite(number) or int(number) != number or not -2147483648 <= number <= 2147483647:
+                raise CompileError('integer intermediate may exceed signed 32-bit range', token=item.token)
+            return IntegerLiteral(int(number))
+        value = build(expr)
+        if isinstance(value, IntegerPrimitive):
+            check_ir(value, value.origin)
+            return value
+        return None
+
     def integer_arithmetic(self, expr, numerator, denominator):
         if not all(self.integer_type(arg) for arg in expr.args):
             return None
@@ -1021,9 +1096,13 @@ class InstanceCompiler:
             return int(value)//width if value >= 0 else -((-int(value))//width)
         first, last = quotient(low), quotient(high)
         if divisor < 0 and -first > 2147483647:
+            if not isinstance(numerator, Affine) or numerator.terms:
+                raise FiniteIntegerUnavailable("integer quotient requires runtime signed32 checking",
+                    code="unsupported_integer_arithmetic", token=expr.token, instance=self.instance.name)
             fail("integer quotient may exceed signed 32-bit range")
         if last-first+1 > 256:
-            fail("bounded integer division/modulo exceeds quotient-bin budget (256)")
+            raise FiniteIntegerUnavailable("bounded integer division/modulo exceeds quotient-bin budget (256)",
+                code="unsupported_integer_arithmetic", token=expr.token, instance=self.instance.name)
         origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column,
                         self.instance.name, expr.expansion)
         def tree(start, end):

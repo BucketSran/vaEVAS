@@ -95,7 +95,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance], *, ex
                               settled_integer_reads=isolated_output_encoder(bindings))
     for instance, model, nets in bindings:
         try:
-            InstanceCompiler(instance, model, nets, compilation).compile()
+            InstanceCompiler(instance, model, nets, compilation, source_model=models[model.name]).compile()
         except CompileError as error:
             error.diagnostic.setdefault("instance", instance.name)
             raise

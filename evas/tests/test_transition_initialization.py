@@ -107,10 +107,10 @@ class FinalInitialHistory(unittest.TestCase):
             self.assertEqual(caught.exception.diagnostic['category'], 'unsupported')
             self.assertEqual(caught.exception.diagnostic['capability'], 'COMPOSE')
 
-    def test_changed_seed_rejects_nonpoint_state_certificate(self):
+    def test_nonbare_changed_seed_keeps_point_state_certificate(self):
         with self.assertRaises(KernelError) as caught:
             run_transition('@(initial_step) a=0.1; @(timer(0,0,0.001)) a=a+0.2; '
-                           'V(y,r)<+transition(a,0,0.5,0.5);', [0, 1], 1)
+                           'V(y,r)<+transition(a+0.0,0,0.5,0.5);', [0, 1], 1)
         self.assertEqual(caught.exception.detail['kind'], 'unsupported_initial_history')
 
     def test_changed_seed_rejects_hidden_internal_read_in_unselected_arm(self):

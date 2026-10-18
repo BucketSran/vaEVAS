@@ -26,13 +26,21 @@ class R01RuntimeFrontend(unittest.TestCase):
             '@(initial_step) begin n=2147483647; flag=(n+1)>0; end V(y,r)<+flag;',
             '@(timer(0.5)) n=(2147483647+1)-1; V(y,r)<+n;',
             '@(timer(0.5)) flag=(2147483647+1)>0; V(y,r)<+flag;',
-            '@(initial_step) n=2147483647; @(timer(0.5)) n=(n+1)-1; V(y,r)<+n;',
-            '@(initial_step) n=0; @(timer(0.25)) n=2147483647; @(timer(0.5)) n=(n+1)-1; V(y,r)<+n;',
-            '@(initial_step) n=0; @(timer(0.5)) begin n=n+1; flag=(n+1)>0; end V(y,r)<+flag;',
         ]
         for body in bodies:
             with self.subTest(body=body), self.assertRaisesRegex(CompileError, 'integer intermediate.*signed 32-bit'):
                 compile_sources({'r01-runtime.va': model(body, 'integer n,flag;')}, [instance()])
+        # IR27 preserves source Add at runtime when the lifetime range is
+        # unknown. Original constant errors above remain compile failures.
+        for body in [
+            '@(initial_step) n=2147483647; @(timer(0.5)) n=(n+1)-1; V(y,r)<+n;',
+            '@(initial_step) n=0; @(timer(0.25)) n=2147483647; @(timer(0.5)) n=(n+1)-1; V(y,r)<+n;',
+        ]:
+            with self.subTest(body=body), self.assertRaises(KernelError) as caught:
+                run(body, 'integer n;')
+            self.assertEqual(caught.exception.detail['kind'], 'integer_range')
+        safe='@(initial_step) n=0; @(timer(0.5)) begin n=n+1; flag=(n+1)>0; end V(y,r)<+flag;'
+        self.assertEqual(output(run(safe, 'integer n,flag;')), [0,1,1])
         observer='@(timer(0.5)) begin n=n+1; m=m+1; k=k+1; end V(y,r)<+n+m+k;'
         with self.assertRaisesRegex(CompileError, 'integer intermediate signed 32-bit range is unproven'):
             compile_sources({'r01-runtime.va': model(observer, 'integer n,m,k;')}, [instance()])

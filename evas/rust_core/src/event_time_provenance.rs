@@ -86,6 +86,7 @@ fn expression_with_points(
         })
     };
     match expr {
+        Expression::IntegerPrimitive { .. } => None,
         Expression::State { state } => states.get(state).cloned(),
         Expression::Affine { constant, terms }
             if terms.iter().filter(|term| term.node != 0).count() == 1
