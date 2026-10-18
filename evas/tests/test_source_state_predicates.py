@@ -49,11 +49,21 @@ class SourceStatePredicates(unittest.TestCase):
         self.assertEqual(error.exception.detail['kind'], 'condition_precision')
 
     def test_unselected_nonheld_leaf_remains_structurally_rejected(self):
-        # A source-valued leaf is invalid even when the condition selects 0.9.
-        with self.assertRaises(CompileError):
-            compile_sources({'masked.va': model("""
-                V(y,r)<+transition(($abstime>1n)?0.9:V(u,r),0,300p,300p);
-            """)}, [instance()])
+        program = compile_sources({'masked.va': model("""
+            V(y,r)<+transition(($abstime>1n)?0.9:V(u,r),0,300p,300p);
+        """)}, [instance()])
+        times = [2e-9,3e-9]
+        result = transient(program, {'u':[[0,.5],[3e-9,.5]]}, times,
+                           stop=3e-9,max_step=3e-9,kernel=KERNEL)
+        for solution in result['solutions']:
+            self.assertAlmostEqual(solution['voltages'][program.nodes.index('y')], .9,
+                                   delta=2e-12)
+        # The source changes only after its arm is unselected. Whole-domain
+        # auditing must still reject it, even though all queries select 0.9.
+        with self.assertRaises(KernelError) as caught:
+            transient(program, {'u':[[0,.5],[1e-9,.5],[2e-9,.7],[3e-9,.7]]}, times,
+                      stop=3e-9,max_step=3e-9,kernel=KERNEL)
+        self.assertEqual(caught.exception.diagnostic['code'], 'kernel.unsupported_operator')
 
 if __name__ == '__main__':
     unittest.main()
