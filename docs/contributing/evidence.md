@@ -102,6 +102,20 @@ changes preserve numerical execution evidence while changed claims still require
 Background execution retains its fixed source/kernel; pending, cancelled or partial results
 remain incomplete under the [waiting boundaries](../../CONTRIBUTING.md#keep-iteration-feedback-short).
 
+For a test-only or prose-only correction, a task may retain unaffected successful
+executions and rerun the changed test modules and their consumers. Bind both
+revisions, compare production/build/fixture/settings identities, account for the
+complete final test manifest, and name every reused or rerun result. Check changed
+test helpers for imports or shared consumers before limiting the rerun. A changed
+expected answer needs independent justification; matching the current output is
+insufficient. Unknown dependencies retain full revalidation.
+
+Keep failed producer reports unchanged. A composed revalidation record is separate
+from a single successful full workflow, a cache receipt or the CI coverage job.
+That job still requires compatible successful shard reports; a task-level record
+does not waive an independently required CI job. Numerical or packaging changes
+invalidate their affected execution or installation evidence as usual.
+
 ### Complete local run bundles
 
 The [results command](../../evas/docs/reference/results.md) writes a local execution bundle.

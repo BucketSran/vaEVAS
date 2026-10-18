@@ -14,6 +14,53 @@ POLICY = ROOT / "scripts/evas_check_policy.py"
 
 
 class PolicyCommands(unittest.TestCase):
+    def test_initial_output_changes_select_legacy_observer_consumers(self):
+        for path in (
+                'evas/src/evas/instance_compiler.py',
+                'evas/src/evas/display.py',
+                'evas/rust_core/src/display.rs',
+                'evas/rust_core/src/transient_initialization.rs'):
+            with self.subTest(path=path):
+                plan = self.request(operation='plan', paths=[path], stage='iteration')
+                self.assertNotIn('python-regression', plan['checks'])
+                self.assertTrue({
+                    'python:test_display.py',
+                    'python:test_initial_display_transition.py',
+                    'python:test_initial_observer_horizon.py',
+                } <= set(plan['checks']))
+                self.assertEqual([x['check'] for x in plan['check_selection']['delivery']],
+                                 ['python-regression'])
+
+    def test_nonlinear_evidence_changes_select_public_observation_consumers(self):
+        for path in ('analog.rs', 'solver.rs', 'source_math.rs', 'observation.rs'):
+            with self.subTest(path=path):
+                plan = self.request(operation='plan',
+                    paths=['evas/rust_core/src/'+path], stage='iteration')
+                self.assertNotIn('python-regression', plan['checks'])
+                self.assertTrue({
+                    'python:test_observation_evidence.py',
+                    'python:test_observation_evidence_helper.py',
+                    'python:test_precision_chain.py',
+                } <= set(plan['checks']))
+                self.assertEqual([x['check'] for x in plan['check_selection']['delivery']],
+                                 ['python-regression'])
+
+    def test_new_proof_paths_keep_accounting_obligation_after_local_pass(self):
+        for path in ('evas/src/evas/initial_constant_math.py',
+                     'evas/src/evas/integer_bits.py',
+                     'evas/rust_core/src/source_math.rs',
+                     'evas/rust_core/src/transition_source_plan.rs',
+                     'evas/rust_core/src/dc_projection.rs'):
+            with self.subTest(path=path):
+                plan = self.request(operation='plan', paths=[path], stage='iteration')
+                item = next(p for p in plan['pending_acceptance']
+                            if p['id'] == 'proof-budget')
+                self.assertEqual(item['before'], 'dependent-integration')
+                state = self.request(operation='acceptance', plan=plan,
+                    results=[dict(check=c, passed=True) for c in plan['checks']])
+                self.assertIn('proof-budget',
+                              {p['id'] for p in state['pending_acceptance']})
+
     def test_representation_and_budget_require_early_evidence_without_new_protocol(self):
         for path, obligation in (
                 ('evas/src/evas/compact_source_select.py', 'representation-compatibility'),

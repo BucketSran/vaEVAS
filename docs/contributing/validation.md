@@ -53,8 +53,10 @@ Apply these additional triggers only when the change touches them:
   requirement and cannot validate a changed Rust consumer.
 - New scans, searches, proof fallbacks or cache copies: preserve the existing
   budget owner and sublimits. Charge actual inner work and pass the authorized
-  remainder to fallback attempts. Test exhaustion and same-request retry. A
-  repeated cap constant does not establish an unchanged aggregate allowance.
+  remainder to fallback attempts. Check an old successful route that does not need
+  the new proof, and measure delegated child traversals or copies against the same
+  ledger or a prepaid bound. Test exhaustion and same-request retry. A repeated
+  cap constant does not establish an unchanged aggregate allowance.
 
 CI passes its identified change plan with `--plan runs/ci-plan.json`: documentation
 and workflow-only deltas skip simulator contracts; affected sources select their
@@ -76,6 +78,11 @@ existing two allocation sites, and a sticky production Budget primitive. It does
 not prove aggregate caller accounting or every loop's cost; review and relevant
 private tests still establish those obligations. New or renamed mechanisms need
 their own affected check instead of inheriting a pass from this starting set.
+In particular, the generic initial-proof check does not cover a new Python
+constant-math helper or a new DC/source-math audit. Their old-route admission and
+inner-work counterexamples remain separate evidence under the same proof-budget
+obligation. Repeated omissions may require shared accounting code; adding a skill
+instruction does not fix that source defect or close its review finding.
 
 Automatic checks report absent mechanisms as not applicable; an explicitly
 requested absent check is blocked. Neither outcome verifies that mechanism.
@@ -86,6 +93,13 @@ Keep untested assumptions pending in the existing task entry.
 | Distinguishing failure, changed path, direct consumers, applicable representation/budget checks and review of their unresolved assumptions | Before dependent integration; other independent tasks may continue. |
 | Full Python/Rust regression, stable-candidate original400, required CI and installation checks | Run against a fixed candidate in the background; finish before their delivery claims or merge. |
 | Already matching execution, independent reference or review | Reuse by the affected claim and dependency identities; a new commit or PR stage alone does not invalidate it. |
+
+Use the [candidate executor and batching rules](../../CONTRIBUTING.md#prepare-one-delivery-candidate)
+to avoid running complete Python coverage both locally and remotely by default.
+The chosen full executor retains all planned tests and reports skips and failures.
+Pending remote coverage permits independent development, while the local direct
+consumer feedback still gates work that depends on it. An unknown/shared mapping
+keeps its full-coverage obligation and named executor.
 
 Run changed-file formatting and metadata checks before expensive acceptance. Reuse
 the same scoped checks and review through integration and publication. A focused
