@@ -21,12 +21,10 @@ pub(crate) fn validate(
             "invalid typed integer origin or arity",
         ));
     }
-    if matches!(f, F::Remainder)
-        && !matches!(args.get(1),Some(O::IntegerLiteral{value}) if *value != 0)
-    {
+    if matches!(f, F::Remainder) && matches!(args.get(1), Some(O::IntegerLiteral { value: 0 })) {
         return Err(Error::new(
             "invalid_ir",
-            "typed remainder requires a nonzero integer literal divisor",
+            "typed remainder literal divisor must be nonzero",
         ));
     }
     for arg in args {
@@ -110,6 +108,7 @@ pub(crate) fn evaluate<S: FnMut(usize) -> Result<i32, Error>, W: FnMut() -> Resu
     work()?;
     let value = match f {
         F::Add => a.checked_add(b),
+        F::Subtract => a.checked_sub(b),
         F::Remainder => a.checked_rem(b),
     };
     value.ok_or_else(|| {
@@ -196,6 +195,72 @@ mod tests {
                 .is_err()
             );
             assert_eq!(allowance, 0);
+        }
+    }
+    #[test]
+    fn runtime_remainder_subtraction_point_boxes_and_sticky_work_owner() {
+        let origin = origin();
+        let args = vec![
+            O::IntegerPrimitive {
+                function: F::Subtract,
+                args: vec![O::IntegerState { state: 0 }, O::IntegerState { state: 1 }],
+                origin: origin.clone(),
+            },
+            O::IntegerState { state: 2 },
+        ];
+        let accepted = [I::point(9.), I::point(2.), I::point(4.)];
+        let mut work = 0;
+        let got = evaluate(
+            F::Remainder,
+            &args,
+            &origin,
+            &mut |s| point(accepted[s], &origin),
+            &mut || {
+                work += 1;
+                Ok(())
+            },
+        )
+        .unwrap();
+        assert_eq!(got, 3);
+        assert_eq!(work, 8); // Every original node, operand visit and operation.
+        let mut remaining = work - 1;
+        for _ in 0..2 {
+            assert_eq!(
+                evaluate(
+                    F::Remainder,
+                    &args,
+                    &origin,
+                    &mut |s| point(accepted[s], &origin),
+                    &mut || {
+                        if remaining == 0 {
+                            Err(Error::new("resource_budget", "same owner exhausted"))
+                        } else {
+                            remaining -= 1;
+                            Ok(())
+                        }
+                    }
+                )
+                .unwrap_err()
+                .kind,
+                "resource_budget"
+            );
+            assert_eq!(remaining, 0);
+        }
+        for state in 0..3 {
+            let mut uncertain = accepted;
+            uncertain[state].hi += 1.;
+            assert_eq!(
+                evaluate(
+                    F::Remainder,
+                    &args,
+                    &origin,
+                    &mut |s| point(uncertain[s], &origin),
+                    &mut || Ok(())
+                )
+                .unwrap_err()
+                .kind,
+                "integer_range"
+            );
         }
     }
 }

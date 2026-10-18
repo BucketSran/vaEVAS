@@ -4,6 +4,15 @@
 逐项证据见[证据索引](development/capability-evidence.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
 
+## 本地候选 0.21.0 / IR28：事件 typed 余数除数与减法
+
+事件体的typed树新增二元Subtract并接受运行期typed余数除数，每个原节点保留signed32
+检查、当前局部state句序和点盒证书。旧有限表和预算、静态常量错误、同owner审计及事务
+回滚保留。普通贡献/历史目标、Divide、单目负号、Multiply、位运算、Floor和CheckedInteger
+未扩展。当前协议、包、开发fixtures/fuzz和身份测试迁到28/0.21.0，历史执行身份不改。
+公开正反例见[test_native_integer28.py](../tests/test_native_integer28.py)，合同见[事件手册](math/events.md#事件体运行期余数与二元减法ir28-本地候选)。
+原069/335、完整Python、安装和checker由主统一候选安排，本切片不报告新增原件PASS。
+
 ## 本地候选 0.20.0 / IR27：事件 typed 整数
 
 事件体新增源 typed Add 与常量非零 Remainder。旧有限表示优先；新节点在每个原算术位置

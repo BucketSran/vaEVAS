@@ -706,6 +706,33 @@ real 的整数点值、电压、时间、算子和实时 Floor 结果不能直�
 `native_integer_failed_prefix_rolls_back_and_retries_same_controller`。
 该切片已进入wave16统一候选，原324通过原checker；同候选的原377依赖事件体输入别名闭包。一般runtime除数、位运算、连续integer输出及内部反馈仍不在此范围。原077完整运行后仍为checker FAIL，首个4.896ns失败由原稀疏网格跨边沿插值造成，原FAIL保留，不由派生查询改判；身份和诊断边界见[低成本闭包收据](../../../experiments/backends/support/low-cost-closure/evidence.json)。
 
+### 事件体运行期余数与二元减法（IR28 本地候选）
+
+IR28 在上述源 typed 事件树中增加二元 `Subtract`，并接受 Remainder 的 typed
+运行期除数。叶类型、同 owner 审计、真实原节点 origin 和点 signed32 盒要求不变。
+前端仅在明确的 typed 余数表示不足处进入既有 native fallback，不捕获任意编译错误。
+旧有限域成功路径优先，旧表中确定的零除或越界行仍静态拒绝；字面量零除与常量中间溢出
+也不迁为运行期成功路径。宽域 state 的运行期零除在实际选中的原节点报错。
+
+对已接受的整数点，`a-b` 使用 `i32::checked_sub`，`a%d` 使用既有 `checked_rem`。
+减法先于父节点执行，即使父节点乘零、取余、clamp 或后续赋值也不能消除其溢出。
+余数满足 `a=d*trunc(a/d)+r`，非零余数与 a 同号，零除及 `INT_MIN%-1` 拒绝。
+例如 `-9%8=-1`，`(9-2+0.0)/2.0=3.5`；后者仍先检查源 integer 减法，
+再按原 real 规则传播数值误差。动态除数在每次使用处读当前局部 state，不能缓存写前值。
+成功余数的保守编译包围为 signed32 模数所允许的 `[-2147483647,2147483647]`，
+不据此替代执行时的零除、溢出和点盒检查。
+
+点与盒执行仍共用 `integer_primitive.rs::evaluate`，每个节点、操作数及操作扣同一 work
+回调；可选有理来源沿原调用者预算，耗尽保持 unknown 或原拒绝。Python 构建沿既有
+事件审计 owner 扣费，不新开 fallback 额度。普通贡献、trigger、算子目标、整数 Divide、
+单目负号、Multiply、位运算、Floor 和全局 CheckedInteger 准入均未扩展。
+零时刻依赖审计仅复用原 typed 节点验证，冷历史的裸 real StateRef 门不变。
+
+公共独立例见 [test_native_integer28.py](../../tests/test_native_integer28.py)。同一 Controller
+在真实除零或减法溢出后两次重试的回滚测试为
+`integer28_runtime_failures_roll_back_twice_in_same_controller`。这些开发例不代表
+原069/335通过、完整Python通过或安装验收；原件收益上界为两项，已验证新增PASS为零。
+
 ### 裸保持状态 Transition 的有界冷初态（本地候选）
 
 固定精确timer0执行之后，原点执行值与 `Prepared.bounds` 是两套证据。

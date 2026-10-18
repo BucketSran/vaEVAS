@@ -49,11 +49,10 @@ class NativeIntegerEvents(unittest.TestCase):
             with self.subTest(body=body),self.assertRaises(KernelError):
                 transient(program(body,initial='n=2147483647;out=0;'),{},[0,1],stop=1,max_step=1,kernel=KERNEL)
 
-    def test_original_division_overflow_and_zero_or_runtime_divisor_reject(self):
+    def test_original_division_overflow_and_zero_or_real_divisor_reject(self):
         with self.assertRaises(KernelError):
             transient(program('n=n+0;out=n%-1;',initial='n=-2147483648;out=0;'),{},[0,1],stop=1,max_step=1,kernel=KERNEL)
         for body,decl in [('n=n+0;out=n%0;','integer n;real out;'),
-                          ('n=n+0;d=d+0;out=n%d;','integer n,d;real out;'),
                           ('n=n+0;out=n%8.0;','integer n;real out;')]:
             with self.subTest(body=body),self.assertRaises(CompileError):
                 program(body,decl=decl)

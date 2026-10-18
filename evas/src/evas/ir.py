@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 27
+SCHEMA_VERSION = 28
 
 
 @dataclass(frozen=True)
@@ -121,7 +121,7 @@ class IntegerState:
 
 @dataclass(frozen=True)
 class IntegerPrimitive:
-    function: Literal["add", "remainder"]
+    function: Literal["add", "subtract", "remainder"]
     args: tuple["IntegerLiteral | IntegerState | IntegerPrimitive", ...]
     origin: Origin
     op: str = field(default="integer_primitive", init=False)

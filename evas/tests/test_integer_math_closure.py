@@ -28,17 +28,23 @@ class IntegerMathClosure(unittest.TestCase):
             y=result['nodes'].index('y')
             self.assertEqual([row['voltages'][y] for row in result['solutions']],expected)
 
-    def test_runtime_divisor_joint_budget_and_original_arithmetic_guards(self):
-        for last,accepted in ((16,True),(17,False)):
+    def test_runtime_remainder_fallback_keeps_division_joint_budget_and_original_guards(self):
+        for last,legacy_table in ((16,True),(17,False)):
             source=model('@(initial_step)begin n=0;d=1;end '
                 '@(timer(0.125))if(V(u,r)>0)n=15;else n=0; '
                 '@(timer(0.25))if(V(u,r)>0)d='+str(last)+';else d=1; '
                 '@(timer(0.375))q=n%d;V(y,r)<+q;','integer n,d;real q;')
-            if accepted:
-                compile_sources({'joint256.va':source},[instance()])
-            else:
+            program=compile_sources({'joint-rem.va':source},[instance()])
+            # The old256 table stays intact; only the formerly rejected272
+            # combination uses the new event-only runtime remainder route.
+            import json
+            encoded=json.dumps(program.to_dict())
+            self.assertEqual('integer_primitive' in encoded,not legacy_table)
+            result=transient(program,{'u':[[0,1],[.5,1]]},[0,.5],stop=.5,max_step=.125,kernel=KERNEL)
+            self.assertEqual(result['solutions'][-1]['voltages'][result['nodes'].index('y')],15)
+            if not legacy_table:
                 with self.assertRaises(CompileError):
-                    compile_sources({'joint272.va':source},[instance()])
+                    compile_sources({'joint-div272.va':source.replace('q=n%d','q=n/d')},[instance()])
         for declarations,body in [
                 ('integer n,d;real q;', '@(initial_step)begin n=3;d=1;end '
                  '@(timer(0.125))if(V(u,r)>0)d=0;@(timer(0.25))q=n/d;V(y,r)<+q;'),

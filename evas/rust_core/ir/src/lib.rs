@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 27;
+pub const SCHEMA_VERSION: u32 = 28;
 
 pub fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -160,6 +160,7 @@ pub enum EventMathFunction {
 #[serde(rename_all = "snake_case")]
 pub enum IntegerFunction {
     Add,
+    Subtract,
     Remainder,
 }
 

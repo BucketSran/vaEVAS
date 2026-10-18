@@ -602,7 +602,10 @@ class InstanceCompiler:
     def integral_bounds(self, expression):
         if isinstance(expression, IntegerPrimitive):
             if expression.function == 'remainder':
-                width = abs(expression.args[1].value)
+                divisor = expression.args[1]
+                # Only successful checked values participate in this enclosure.
+                # A dynamic signed32 divisor can have magnitude at most 2**31.
+                width = abs(divisor.value) if isinstance(divisor, IntegerLiteral) else 2147483648
                 return -width + 1, width - 1
             return -2147483648, 2147483647
         if isinstance(expression, ArrayRead):
@@ -1043,12 +1046,12 @@ class InstanceCompiler:
                 if not isinstance(value, IntegerLiteral):
                     return None
                 number = value.value if item.op == 'unary+' else -value.value
-            elif item.op in ('+', '%'):
+            elif item.op in ('+', '-', '%'):
                 values = tuple(build(arg) for arg in item.args)
                 if any(value is None for value in values):
                     return None
-                if item.op == '%' and (not isinstance(values[1], IntegerLiteral) or values[1].value == 0):
-                    return None
+                if item.op == '%' and isinstance(values[1], IntegerLiteral) and values[1].value == 0:
+                    raise CompileError('integer division/modulo requires a nonzero divisor', token=item.token)
                 origin = Origin(item.token.source or self.model.source, item.token.line,
                                 item.token.column, self.instance.name, item.expansion)
                 if all(isinstance(value, IntegerLiteral) for value in values):
@@ -1056,13 +1059,15 @@ class InstanceCompiler:
                     self.native_integer_charge(item)
                     if item.op == '+':
                         number = a+b
+                    elif item.op == '-':
+                        number = a-b
                     else:
                         if a == -2147483648 and b == -1:
                             raise CompileError('integer quotient may exceed signed 32-bit range', token=item.token)
                         magnitude = abs(a)//abs(b)
                         number = a - (-magnitude if (a<0)!=(b<0) else magnitude)*b
                 else:
-                    return IntegerPrimitive('add' if item.op == '+' else 'remainder', values, origin)
+                    return IntegerPrimitive({'+': 'add', '-': 'subtract', '%': 'remainder'}[item.op], values, origin)
             else:
                 return None
             if not math.isfinite(number) or int(number) != number or not -2147483648 <= number <= 2147483647:
@@ -1080,6 +1085,11 @@ class InstanceCompiler:
         def fail(message):
             raise CompileError(message, token=expr.token, instance=self.instance.name,
                                code="unsupported_integer_arithmetic")
+        if expr.op == '%' and (not isinstance(denominator, Affine) or denominator.terms):
+            # The operands are source-integer typed above. Only event callers
+            # have a native fallback; other consumers retain this rejection.
+            raise FiniteIntegerUnavailable('integer remainder requires runtime divisor checking',
+                code='unsupported_integer_arithmetic', token=expr.token, instance=self.instance.name)
         if (not isinstance(denominator, Affine) or denominator.terms or
                 not denominator.constant.is_integer() or denominator.constant == 0):
             fail("integer division/modulo requires a nonzero constant integer divisor")

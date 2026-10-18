@@ -45,3 +45,22 @@ fn typed_integer_wire_roundtrip_and_distinct_operand_types() {
         serde_json::json!({"op":"affine","constant":1,"terms":[]});
     assert!(parse_request(&value.to_string()).is_err());
 }
+
+#[test]
+fn integer28_dynamic_rhs_and_subtract_round_trip_while_ir27_is_rejected() {
+    let origin = json!({"source":"wire28.va","line":1,"column":1,"instance":"dut"});
+    let operation = json!({"op":"integer_primitive","function":"remainder","origin":origin,
+        "args":[{"op":"integer_primitive","function":"subtract","origin":origin,
+            "args":[{"op":"integer_state","state":0},{"op":"integer_literal","value":1}]},
+            {"op":"integer_state","state":1}]});
+    let mut value = json!({"program":{"schema_version":SCHEMA_VERSION,"nodes":["0"],"contributions":[],
+        "events":[{"origin":origin,"trigger":{"kind":"initial_step"},"body":[{"kind":"assign","state":0,"rhs":operation}]}]},"driven":[],"samples":[]});
+    let parsed = parse_request(&value.to_string()).unwrap();
+    let again = serde_json::to_value(parsed).unwrap();
+    assert_eq!(again["program"]["events"][0]["body"][0]["rhs"], operation);
+    value["program"]["schema_version"] = json!(27);
+    assert_eq!(
+        parse_request(&value.to_string()).unwrap_err().kind,
+        "unsupported_ir_version"
+    );
+}

@@ -285,3 +285,7 @@ transient_passive_tests.rs、event_value_proof.rs覆盖。原244已在wave14统�
 补充LANG、EVENT-ORDER、TRANSITION和COMPOSE。IR27只扩展事件体typed Add及常量非零Remainder，
 每节点signed32检查及预算耗尽沿原owner保持。冷种子桥只借用真实Prepared.bounds初始化全Transition图中的裸同实例real状态目标，
 并保留固定timer0调度门、初始电压认证及同Controller失败重试；更广初态和历史组合仍拒绝。原077已完整执行，但原checker仍为FAIL。首个失败是原网格跨边沿插值，实际查询保持值正确；诊断不改变原FAIL，后续性质未重评，未计077新增PASS。
+
+IR28本地开发候选的[事件typed余数与减法合同](../math/events.md#事件体运行期余数与二元减法ir28-本地候选)
+及[公共正反控](../../tests/test_native_integer28.py)补充LANG、EVENT-ORDER、EVENT-CONDITIONS与COMPOSE。
+原件、完整Python及安装结论仍由统一候选安排，不改变既有资格成绩。

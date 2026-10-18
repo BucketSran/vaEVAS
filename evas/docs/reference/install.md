@@ -2,12 +2,12 @@
 
 平台 wheel 包含 Python 前端和独立 `evas-kernel` 程序。安装 wheel 不需要 Rust。
 发行名称仍为 `evas-rebuild`，命令仍为 `evas-rebuild`；没有公共 PyPI 发布或版本 tag。
-0.20.0 是本地源码候选；下列 wheel 路径是安装命令示例，不表示该版本已有已验收的发布产物。
+0.21.0 是本地源码候选；下列 wheel 路径是安装命令示例，不表示该版本已有已验收的发布产物。
 从本地构建产物或具名 CI artifact 取得 wheel 后，在匹配平台安装：
 
 ```sh
 python3 -m venv .venv
-.venv/bin/python -m pip install /path/to/evas_rebuild-0.20.0-py3-none-PLATFORM.whl
+.venv/bin/python -m pip install /path/to/evas_rebuild-0.21.0-py3-none-PLATFORM.whl
 .venv/bin/evas-rebuild version --json --bundled-kernel
 .venv/bin/evas-rebuild solve /path/to/sim.json
 .venv/bin/evas-rebuild transient /path/to/transient.json
@@ -17,14 +17,14 @@ python3 -m venv .venv
 `solve`、`transient`、`simulate` 及 results 的 `run` 默认使用当前安装包内核。
 Python API 的 `solve(..., kernel=None)`、`transient(..., kernel=None)`、
 `simulate_scs(..., kernel=None)` 与 `results.run(..., kernel=None, out=...)` 同样使用它。
-默认选择检查构建记录、文件 SHA256、内核实际报告、IR27、包版本和 OS/架构。
+默认选择检查构建记录、文件 SHA256、内核实际报告、IR28、包版本和 OS/架构。
 macOS 的 arm64 映射到 Rust 的 aarch64，darwin 映射到 macos。
 
 显式 `--kernel PATH` 始终选择该路径；API 的显式参数原样传给子进程，
 裸命令名保留已有 PATH 查找语义。CLI、身份查询和 results 的显式参数继续按文件路径解析。缺失、不可执行或运行失败
 不会切换至包内核。显式路径保留已有请求/响应协议验证，不要求旧内核新增身份元数据；
 results 仍需已有身份查询合同。请求协议没有独立版本，字段继续为 null，不能解释为已确认
-全部协议兼容。IR 不匹配需用配套前端与内核重新编译原模型。IR27增加事件体 typed Add 与常量非零 Remainder，保留IR26原生事件floor及既有源曲线/事件结构；旧 IR1–26
+全部协议兼容。IR 不匹配需用配套前端与内核重新编译原模型。IR28增加事件体二元Subtract及运行期typed余数除数，沿用IR27的Add和常量Rem，保留IR26原生事件floor及既有源曲线/事件结构；旧 IR1–27
 不能仅改版本号；保留原产物与收据，按[迁移规则](../../README.md#ir-v8-migration)生成新 IR。
 
 只查询包可继续使用 `evas-rebuild version --json`，不查找内核。
@@ -39,7 +39,7 @@ results 仍需已有身份查询合同。请求协议没有独立版本，字段
 新增 [安装 CI](../../../.github/workflows/package-install.yml) 的目标是 Ubuntu 24.04 x86_64 / Python 3.10
 及 macOS 14 arm64 / Python 3.12。实际通过情况以对应工作流 revision、runner 和 artifact 为准；
 配置任务不等于已获得执行证据。本地首次安装验收在 macOS 26 arm64 / Python 3.14 执行。
-这条历史安装记录不证明本轮 0.20.0 wheel 已通过；本轮须另绑定实际构建和安装收据。
+这条历史安装记录不证明本轮 0.21.0 wheel 已通过；本轮须另绑定实际构建和安装收据。
 
 Linux 构建生成本机 `linux_x86_64` 标签，没有声明 manylinux、musllinux 或任意 Linux 发行版兼容。
 Ubuntu 24.04 的 glibc/链接环境是本批 CI 边界；在不同 libc 或旧系统上需独立构建和验收。
