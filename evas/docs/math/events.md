@@ -704,7 +704,7 @@ real 的整数点值、电压、时间、算子和实时 Floor 结果不能直�
 独立公共例见 [test_native_integer_events.py](../../tests/test_native_integer_events.py)，
 同引擎失败后两次重试见 `transient_lifecycle_tests.rs` 的
 `native_integer_failed_prefix_rolls_back_and_retries_same_controller`。
-这份本地候选不表示一般 runtime 除数、位运算、连续 integer 输出、内部反馈或原件 checker 通过。
+该切片已进入wave16统一候选，原324通过原checker；同候选的原377依赖事件体输入别名闭包。一般runtime除数、位运算、连续integer输出及内部反馈仍不在此范围。原077完整运行后仍为checker FAIL，首个4.896ns失败由原稀疏网格跨边沿插值造成，原FAIL保留，不由派生查询改判；身份和诊断边界见[低成本闭包收据](../../../experiments/backends/support/low-cost-closure/evidence.json)。
 
 ### 裸保持状态 Transition 的有界冷初态（本地候选）
 

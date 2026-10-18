@@ -61,7 +61,7 @@ IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和�
 [低成本闭包](../../../experiments/backends/support/low-cost-closure/README.md)补充 LANG、LIN、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS 和 COMPOSE 的分支证据。
 合同分别见[有限点初值与别名](../math/events.md#input-initialization)、[typed整数与有限幂](../math/events.md#typed-integer-closure)及[普通条件与有理输出](../math/solving.md#普通-analog-条件)。
 公开控制覆盖源码顺序、精确数组槽、真实根处读取、signed余数、有限pow类型与资源、分支临时量和正分母事实。
-[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)固定最新已验收wave15的161份生产源、IR26与release核 `d4163bfebc37`，完整400为298通过、18失败、84拒绝，3+397件身份一致，清理400/400。新增111、120、193，原wave14的295及基线198通过保留。两平台安装与四模块窄CI通过；完整CI2281方法中的四个旧拒绝方法已迁移，77项窄CI通过加2204项未变通过覆盖全部2281项，原失败保留。
+[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)固定最新已验收wave16的162份生产源、IR27与release核 `e66a84673d59`，完整400为300通过、19失败、81拒绝，7+393件身份一致，清理400/400。新增324、377，原wave15的298及基线198通过保留，18项旧失败字典不变，077完整运行后仍为原checker失败。两平台IR27安装通过；完整CI2307方法中的1项旧拒绝断言已迁移，30项窄CI加2277项未变旧通过覆盖全部2307项，0方法跳过，原完整CI失败保留。
 历史wave12为292通过、18失败、90拒绝，158文件源码、IR25与release核 `83da6b2b521c` 的42+358件身份一致。
 原198及有效波10全部278通过保留，新增14份，无回退；18项旧checker失败字典保持。原固定125成员重算为92通过、9失败、24拒绝；历史波11失败候选及波8等旧收据保持原身份。
 历史波7逐例比较波6b新增129、137、138、224、233、295、296、380共8份、无回退；相对波5新增35份、无回退。296恢复。
@@ -279,9 +279,9 @@ transient_passive_tests.rs、event_value_proof.rs覆盖。原244已在wave14统�
 [事件体纯输入别名](../../tests/test_event_body_input_aliases.py)补充LANG、EVENT-ORDER和COMPOSE。
 只有原始标量唯一前序写者可进入新body映射，trigger和setting保持原映射；
 数组与零次循环原写者不得在展开后绕过资格，旧仿射数组及loop响应有独立字节对照。
-原377已在独立冻结的IR26前端候选通过完整原checker；该局部结果不与wave15的298相加，统一IR27候选验收另记。
+原377已随wave16统一IR27候选通过完整原checker；同批324也通过，统一400为300/19/81，不以局部结果另行相加。
 
 [原生事件整数](../../tests/test_native_integer_events.py)与[有界冷Transition种子](../../tests/test_transition_bootstrap_bounds.py)
 补充LANG、EVENT-ORDER、TRANSITION和COMPOSE。IR27只扩展事件体typed Add及常量非零Remainder，
 每节点signed32检查及预算耗尽沿原owner保持。冷种子桥只借用真实Prepared.bounds初始化全Transition图中的裸同实例real状态目标，
-并保留固定timer0调度门、初始电压认证及同Controller失败重试；更广初态和历史组合仍拒绝。完整原077及统一候选验收仍待主集成，未计新增PASS。
+并保留固定timer0调度门、初始电压认证及同Controller失败重试；更广初态和历史组合仍拒绝。原077已完整执行，但原checker仍为FAIL。首个失败是原网格跨边沿插值，实际查询保持值正确；诊断不改变原FAIL，后续性质未重评，未计077新增PASS。
