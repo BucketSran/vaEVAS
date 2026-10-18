@@ -1,7 +1,8 @@
 # 有历史的波形算子
 
-适用范围：当前 IR19 的直接输入基础算子路径。能力 ID 为 TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE；
-支持与缺口见[四后端支持范围](../COMPARISON.md)。独立需求和手算答案由 validation 的专项契约维护。
+This chapter covers direct-input history operators and the explicitly bounded joint paths below.
+Capability IDs are TRANSITION, ABSDELAY, SLEW, DYNAMICS, and COMPOSE.
+See the [support matrix](../COMPARISON.md) for delivery status. Independent contracts and worked answers belong to validation.
 
 积分反馈、联合复位、高阶滤波及内部节点/算子输入的 `ddt` 由[连续动态章节](continuous.md)维护。
 本页的直接输入限制不自动推广到联合网络。需要历史的算子按实例与调用点保存历史；
@@ -102,6 +103,155 @@ Floor 的输入证明可复用实际传入的有限单点盒 `[p,p]`。原根处
 零时刻 timer 的全部原树赋值集合为空时，任何种子集合都与它不相交，因而无需构造 bootstrap
 依赖证明。只在 Floor 路线提前返回，先检查同一 Work 的耗尽状态；普通算子构造、事件及电压
 验证仍照常执行。这两项只省去不再执行的证明，不改变任何预算或仍执行助手的费率。
+
+## Independent source forcing beside held histories
+
+This IR30, package 0.23.0 integration is a draft. The common source is not frozen
+or scored. Published wave20 results remain 312 PASS, 19 FAIL, and 69 REJECTED on
+the original 400, and 313 PASS, 17 FAIL, and 70 REJECTED on the separately versioned
+revised 400. The isolated R6 run of original 041 passed its checker. That run uses
+a different frozen candidate and contributes no additional unified PASS.
+
+### Continuous source intent and held target intent
+
+An ordinary contribution can describe a voltage that changes whenever its physical
+source changes. For example, `V(out) <+ V(clk)>vth ? gain*V(in) : 0` chooses a
+source expression at the actual query time. It does not sample `V(in)` at a clock
+event or install the chosen value as a held Transition target. The existing
+`transition(q,td,tr,tf)` still consumes the committed state `q` and maintains its
+own instance and call-site history. The two components remain independent.
+
+Forcing admits grounded voltage outputs beside at least one `Transition` with a bare `State` input.
+Each forcing output has one contribution, one undriven output node, and ground as
+the other terminal. Other relations cannot share or read that output. The held
+component can use driven inputs and states, but it cannot depend on the forcing
+output. This boundary excludes feedback, coupled output equations, and a forcing
+expression used as a Transition target.
+
+The value tree contains source-affine leaves, addition, multiplication by a
+structurally source-independent value, and source `Select`. Both source-dependent
+factors in a product are rejected. Every Select retains its comparison, both
+value arms, and source ownership. The frontend tries the existing representation
+first. A Forcing marker records a candidate after that representation fails its
+own shape check. It is not a topology certificate or a catch-all recovery from
+numerical, domain, or resource errors.
+
+### Original dependencies and physical provider identity
+
+The frontend audits the complete original AST across the compilation's instances.
+Unused assignments, local aliases, zero coefficients, discarded intermediates,
+function arms, and unselected branches still carry dependencies. A voltage probe
+on a contribution target is a write. Other voltage probes are reads. A forcing
+output read anywhere in the original components rejects the candidate, even if
+scalarization would remove that read. The original per-compilation proof ledger
+pays this audit. Requests without a marker keep the old route without this scan.
+
+The kernel independently checks all transported expression trees and owners.
+Before selection, every arm in the forcing value and retained checked trees must
+have a finite domain over the actual request's physical source range. Zero multiplication or a
+later clamp cannot hide a nonfinite child. State, event, operator, and step-bound
+dependencies must also satisfy the component separation rules.
+
+The provider consists of the original physical PWL curves, stop time, and source
+error configuration. Appended or substituted sources do not qualify. A nonzero
+source band requires an already validated exact physical shape. That shape may
+serve a predicate, but it cannot enter a numerical value leaf, including an
+inactive or zero-coefficient numerical read. Unknown uncertainty remains a refusal.
+The predicate follows the certified physical curve, not a rounded nominal PWL or
+an endpoint-derived reconstruction. Exact shape identity does not make two
+otherwise different request configurations interchangeable.
+
+### Private reduction and projection into the original phase
+
+`forcing_graph::Graph::partition` retains the original Program and Trajectory
+binding in `ProofContext`. After the original audits, the graph replaces only
+independent forcing RHSs with zero in its private execution Program. A private
+`Reduction` token binds that exact execution wire and the driven mapping. The
+original binding and the execution projection have different roles.
+
+Initialization and input clamp still run through their common entries. The graph
+checks the resulting execution Program and actual provider against its token.
+An arbitrary reduced Program cannot claim equality with the original Program.
+In particular, the full prepared Program equality required by Floor remains
+strict. This Forcing slice rejects source Floor, typed integer targets, and raw
+ShiftRight/BitAnd event consumers, including inactive arms and zero-trip loops.
+It preserves the earlier Add/Subtract/Remainder controller scope. Continuous local
+observation providers, Slew, and other history operator bridges remain excluded.
+
+At each accepted or candidate phase, `Graph::project` reads physical values and
+outward boxes at the actual time. It resolves Select predicates from certified
+interval signs, or from the existing exact point-sign proof when needed. It then
+evaluates the selected original value tree and its interval. The value and box
+must satisfy the original absolute and relative voltage tolerances.
+
+`Circuit::install_forcing_phase` replaces each provisional zero row with the
+resolved original relation. It checks the original point residual, the interval
+residual, and the remaining affine relations before recording the phase identity
+and time. Initial, candidate, and observation paths must all pass this projection.
+A successful reduced solve alone is not an output certificate. No per-query
+recompilation or reconstruction of the complete original source context is allowed.
+
+### Exact physical reads and one request budget
+
+For shaped PWL reads, `Curve::try_forcing_point` uses the original rational knots.
+Exact signed cross products certify comparisons. A floating quotient is only a
+guess. Exact equality certifies a point, or explicit comparisons certify an
+outward two-neighbor enclosure. Knot and plateau shortcuts require exact binary
+representability. Interpolation retains the original rational arithmetic and its
+bit limits. An uncertified guess pays for the unchanged strict helper before
+fallback. A budget error propagates immediately and never enables fallback.
+
+The graph, physical provider helpers, and retained proof context use the same
+request Work. Traversals, name comparisons, serialization, clones, dense work,
+and exact arithmetic require payment before the work they own. Original limits
+remain 128 plans, 8192 root materials, and 1000000000 work units, with the existing
+local exact-helper limits. Failure gives no refund and retry creates no new owner.
+
+The isolated R6 natural-exhaustion control repeats actual physical reads under
+the default 1000000000 limit. Its later two Static retries use the same Controller
+and preserve accepted Frame, histories, calendar, cursor, and outputs. Those
+receipts do not establish the integrated candidate's prefix costs or rollback.
+The integrated control has additionally exercised 2693 actual calendar candidate
+preparations and 2693 certified physical reads on that same original limit. Its
+next reservation failed at 1000014079 work units. Two production Static retries
+performed no further prefix or physical helpers and preserved the full accepted
+Frame, histories, calendar, cursor, records, and outputs. This is focused local
+evidence; final frozen-source, public, original/revised400, and CI gates remain
+pending.
+
+Prefix accessors reserve original exact-root, enclosure, clock and phase work
+before invocation. The actual private dense operator coefficients are included
+in candidate-clone storage. Requests that require an unproved Dynamic guard to
+be re-evaluated during a Forcing phase query return `unsupported_forcing_scope`.
+They do not run the older predicate/GuardTrajectory recovery without a bound.
+Timer and exact-Cross phase proofs retain their original mathematical answers.
+Continuous local observations cannot enter this provider graph, and that bridge
+is explicitly refused before local proof construction or Frame copying.
+
+A failed candidate must discard state and interval changes, operator queues,
+proofs, phase data, calendar changes, display records, and outputs together.
+Consumed Work remains charged. Final shared-owner composition requires actual
+same-request default-budget exhaustion and two retries through the production
+Controller, together with successful-prefix cost checks. A reduced limit is only
+a charge-order locator and cannot replace that natural-exhaustion evidence.
+
+### Code and evidence map
+
+| Contract | Implementation | Focused evidence |
+| --- | --- | --- |
+| Candidate marker and original AST audit | [forcing_components.py](../../src/evas/forcing_components.py), `source_forcing_tree`, `audit_original_reads`, and `residual_checks`; [instance_compiler.py](../../src/evas/instance_compiler.py), `Compilation` and `source_forcing_candidate` | [original binding controls](../../tests/test_history_forcing_binding.py) |
+| Owner, domain, component separation, private reduction, and phase selection | [forcing_graph.rs](../../rust_core/src/forcing_graph.rs), `Graph::partition`, `source_context`, `resolve`, and `project` | [source forcing controls](../../tests/test_history_forcing.py) |
+| Physical shape and source uncertainty | [pwl.rs](../../rust_core/src/pwl.rs), `forcing_shaped_inputs`, `forcing_request_value_bounds`, and `forcing_predicate_reads` | [shaped provider controls](../../tests/test_history_forcing_shaped.py) |
+| Certified rational point reads and paid fallback | [forcing_point.rs](../../rust_core/src/exact_source/forcing_point.rs), `Curve::try_forcing_point`; `Trajectory::forcing_values_bounds` | [point controls](../../tests/test_history_forcing_point.py) |
+| Original row residuals and phase identity | [solver.rs](../../rust_core/src/solver.rs), `Circuit::install_forcing_phase` | [lifecycle controls](../../rust_core/src/transient_forcing_tests.rs) |
+| Controller entry, retained Work, candidate copies, and paid calendar/phase access | [transient.rs](../../rust_core/src/transient.rs), [operators.rs](../../rust_core/src/operators.rs), [exact source prefixes](../../rust_core/src/exact_source.rs), [clock prefixes](../../rust_core/src/exact_time.rs), [calendar prefixes](../../rust_core/src/schedule.rs), and [integration controls](../../rust_core/src/transient_forcing_integration_tests.rs) | Final integrated receipt pending |
+
+The local R6 contract and identity are retained in the
+[isolated handoff](../../../runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-lanes/history-forcing/r6/final-handoff.json).
+Those ignored receipts are local evidence, not a public reproducibility archive.
+There is no new Spectre alignment evidence. Slew, other history operators,
+general nonlinear value products, Forcing/history feedback, Forcing with Floor or native typed
+consumers, and uncertain numerical source leaves remain outside this slice.
 
 ## transition
 

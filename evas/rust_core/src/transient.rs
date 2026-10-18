@@ -56,6 +56,15 @@ struct Frame {
 }
 
 impl Frame {
+    fn charge_forcing_copy(&self, g: &crate::forcing_graph::Graph) -> Result<(), Error> {
+        g.charge_frame_storage(
+            self.states.len(),
+            self.solution.voltages.len(),
+            &self.value_proofs,
+            &self.time_proofs,
+        )?;
+        self.operators.charge_forcing_copy()
+    }
     fn candidate_clone(&self) -> Result<Self, Error> {
         // Charge before copying the target runtime, including observation phases.
         let operators = self.operators.candidate_clone()?;
@@ -104,10 +113,15 @@ impl Controller {
         let result = self.prepare_events_until(model, trajectory, crossings, None)?;
         result.0.operators.check_deadline_order(
             result.0.time,
-            crossings.get(result.2).map(|e| e.bounds()),
             crossings
                 .get(result.2)
-                .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
+                .map(|e| event_bounds(model, e))
+                .transpose()?,
+            crossings
+                .get(result.2)
+                .map(|e| event_root(model, std::slice::from_ref(e)))
+                .transpose()?
+                .flatten(),
         )?;
         Ok(result)
     }
@@ -313,6 +327,13 @@ mod condition_history_tests;
 mod window_history_tests;
 
 #[cfg(test)]
+#[path = "transient_forcing_integration_tests.rs"]
+mod forcing_integration_tests;
+#[cfg(test)]
+#[path = "transient_forcing_tests.rs"]
+mod forcing_lifecycle_tests;
+
+#[cfg(test)]
 #[path = "transient_lifecycle_tests.rs"]
 mod lifecycle_controller_tests;
 
@@ -407,6 +428,9 @@ fn prepare_root_window_selected_impl(
     events: &[usize],
     refine_ordinary_phase: bool,
 ) -> Result<(Frame, crate::event_conditions::Selection, Vec<f64>), Error> {
+    if let Some(graph) = &model.forcing {
+        graph.ensure_live()?;
+    }
     let _timing = crate::diagnostics::span("controller.prepare_candidate");
     if let Some(r) = &model.floor_source {
         crate::event_floor::charge(
@@ -415,19 +439,37 @@ fn prepare_root_window_selected_impl(
             "floor_source_exact_enclosure",
         )?;
     }
-    if !crate::event_value_proof::valid(&accepted.value_proofs, &accepted.state_bounds) {
+    let proofs_valid = match &model.forcing {
+        Some(graph) => crate::event_value_proof::valid_with_work(
+            &accepted.value_proofs,
+            &accepted.state_bounds,
+            graph.request_work(),
+        )?,
+        None => crate::event_value_proof::valid(&accepted.value_proofs, &accepted.state_bounds),
+    };
+    if !proofs_valid {
         return Err(Error::new(
             "event_resolution",
             "accepted exact value proof outside matching state enclosure",
         ));
     }
+    if let Some(graph) = &model.forcing {
+        graph.request_work().debit(
+            2,
+            (accepted.time_proofs.len() as u64)
+                .saturating_mul(16)
+                .saturating_add(16),
+        )?;
+    }
     for (&state, proof) in &accepted.time_proofs {
-        if accepted
-            .state_bounds
-            .get(state)
-            .and_then(|bounds| proof.refine(*bounds))
-            .is_none()
-        {
+        let refined = match accepted.state_bounds.get(state) {
+            Some(bounds) => match &model.forcing {
+                Some(graph) => proof.refine_with_work(*bounds, graph.request_work())?,
+                None => proof.refine(*bounds),
+            },
+            None => None,
+        };
+        if refined.is_none() {
             return Err(Error::new(
                 "event_resolution",
                 "accepted time proof outside matching state enclosure",
@@ -442,6 +484,9 @@ fn prepare_root_window_selected_impl(
         fired_roots: fired_leaves,
         prediction_end,
     } = moment;
+    if let Some(g) = &model.forcing {
+        accepted.charge_forcing_copy(g)?;
+    }
     if let Some(request) = &model.floor_source {
         let supplied = accepted.operators.source_context.as_ref().ok_or_else(|| {
             Error::new("event_condition", "source floor trial lost request owner")
@@ -788,6 +833,14 @@ fn prepare_root_window_selected_impl(
         &prepared.bounds,
         &value_context,
     )?;
+    if let Some(graph) = &model.forcing {
+        graph.project(
+            time,
+            trajectory,
+            &mut prepared.solution,
+            &mut prepared.circuit,
+        )?;
+    }
     // Refinement belongs to this observation, never future root predictions.
     operators.refine_ordinary_phase(false);
     Ok((
@@ -864,11 +917,17 @@ fn prepare_batch_until(
     accepted: &Frame,
     moment: EventMoment<'_>,
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
+    if let Some(graph) = &model.forcing {
+        graph.ensure_live()?;
+    }
     let event_time = moment.representative;
     let event_bounds = moment.observation;
     let ids = moment.fired_roots;
     // Calendar IDs identify leaves; settlement IDs identify event bodies.
     // Same-root certification occurred before this deduplication.
+    if let Some(graph) = &model.forcing {
+        graph.charge_event_prefix_storage(ids.len())?;
+    }
     let blocks: Vec<_> = ids
         .iter()
         .map(|&id| model.triggers[id].event)
@@ -877,11 +936,15 @@ fn prepare_batch_until(
         .collect();
     // The display consumer reuses the same immutable physical root/binding.
     // No representative-time Floor evaluation is allowed to choose a new bin.
-    let display_root = moment.exact_root.cloned().or_else(|| {
-        (event_bounds.lo == event_bounds.hi)
-            .then(|| crate::exact_source::RootTime::point(event_time))
-            .flatten()
-    });
+    let display_root = if model.forcing.is_some() {
+        None
+    } else {
+        moment.exact_root.cloned().or_else(|| {
+            (event_bounds.lo == event_bounds.hi)
+                .then(|| crate::exact_source::RootTime::point(event_time))
+                .flatten()
+        })
+    };
     let display_inputs = if model.floor_source.is_some() {
         Some(trajectory.range(event_bounds)?.0)
     } else {
@@ -1044,8 +1107,20 @@ fn prepare_calendar_batch(
     scheduled: &[ScheduledEvent],
     prediction_end: f64,
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
+    if let Some(graph) = &model.forcing {
+        graph.ensure_live()?;
+    }
     let local_accepted;
     let accepted = if let Some((clock, _)) = accepted.operators.local_epoch() {
+        // Continuous providers were refused when this Forcing runtime was
+        // bound. Keep the unsupported bridge explicit before any local proof
+        // helper or Frame copy, including malformed internal callers.
+        if model.forcing.is_some() {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing continuous local-observation provider bridge is not implemented",
+            ));
+        }
         let mut operators = accepted.operators.candidate_clone()?;
         operators.observe_local(crate::schedule::ordered_observation(
             scheduled, clock, model,
@@ -1064,16 +1139,30 @@ fn prepare_calendar_batch(
     } else {
         accepted
     };
-    let exact_root = crate::schedule::common_root(scheduled);
-    let ids: Vec<_> = scheduled.iter().map(|e| e.event).collect();
-    let bounds =
-        scheduled
-            .iter()
-            .map(|event| event.bounds())
-            .fold(I::point(time), |sum, bounds| I {
-                lo: sum.lo.min(bounds.lo),
-                hi: sum.hi.max(bounds.hi),
-            });
+    if model.forcing.is_some() {
+        crate::diagnostics::counter("forcing_prefix_calendar_root", 1);
+    }
+    let exact_root = event_root(model, scheduled)?;
+    let (ids, bounds) = match &model.forcing {
+        Some(graph) => (
+            crate::schedule::event_ids_with_work(scheduled, graph.request_work())?,
+            crate::schedule::event_bounds_hull_with_work(
+                scheduled,
+                I::point(time),
+                graph.request_work(),
+            )?,
+        ),
+        None => (
+            scheduled.iter().map(|e| e.event).collect::<Vec<_>>(),
+            scheduled
+                .iter()
+                .map(|event| event.bounds())
+                .fold(I::point(time), |sum, bounds| I {
+                    lo: sum.lo.min(bounds.lo),
+                    hi: sum.hi.max(bounds.hi),
+                }),
+        ),
+    };
     let (next, mut records) = prepare_batch_until(
         model,
         trajectory,
@@ -1095,7 +1184,7 @@ fn prepare_calendar_batch(
                     leaf.event == record.event && leaf.index == fired.trigger
                 })
                 .unwrap();
-            let bounds = event.bounds();
+            let bounds = event_bounds(model, event)?;
             fired.time_bounds = Some([bounds.lo, bounds.hi]);
         }
         record.fired_triggers.sort_by_key(|f| f.trigger);
@@ -1103,11 +1192,72 @@ fn prepare_calendar_batch(
     Ok((next, records))
 }
 
+// Opt-in accessors keep the original unmarked calendar consumers unchanged.
+fn event_bounds(model: &EventModel, event: &ScheduledEvent) -> Result<I, Error> {
+    match &model.forcing {
+        Some(graph) => event.bounds_with_work(graph.request_work()),
+        None => Ok(event.bounds()),
+    }
+}
+fn event_root(
+    model: &EventModel,
+    events: &[ScheduledEvent],
+) -> Result<Option<crate::exact_source::RootTime>, Error> {
+    match &model.forcing {
+        Some(graph) => crate::schedule::common_root_with_work(events, graph.request_work()),
+        None => Ok(crate::schedule::common_root(events)),
+    }
+}
+
+fn record_ambiguous_event(
+    model: &EventModel,
+    event: &ScheduledEvent,
+    site: &str,
+    time: f64,
+) -> Result<(), Error> {
+    if let Some(graph) = &model.forcing {
+        // Error diagnostics must not invoke the legacy exact-root/bounds
+        // helpers a second time outside the owned phase reservation.
+        graph.request_work().debit(2, 64)?;
+        crate::diagnostics::record(
+            "ambiguous_query",
+            "rejected",
+            Some(time),
+            None,
+            1,
+            Some(site),
+        );
+    } else {
+        event.record_ambiguous_query(site, time);
+    }
+    Ok(())
+}
+fn event_order(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    event: &ScheduledEvent,
+    time: f64,
+) -> Result<Option<std::cmp::Ordering>, Error> {
+    match &model.forcing {
+        Some(graph) => event.physical_order_for_query_with_work(time, model, graph.request_work()),
+        None => Ok(event.physical_order_for_query(time, model, trajectory)),
+    }
+}
+fn source_root_bounds(
+    model: &EventModel,
+    root: &crate::exact_source::RootTime,
+) -> Result<Option<I>, Error> {
+    match &model.forcing {
+        Some(graph) => root.bounds_with_work(graph.request_work()),
+        None => Ok(root.bounds()),
+    }
+}
+
 pub(crate) fn run(request: Request) -> Result<Response, Error> {
     crate::strobe::run(request)
 }
 
-pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
+pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
     if !request.samples.is_empty() {
         return Err(Error::new(
             "invalid_inputs",
@@ -1129,6 +1279,15 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             None,
         );
     }
+    // Bind the actual original program before initialization can rewrite any
+    // initial predicate or input clamp. The private reduction changes only
+    // audited independent forcing output rows, and is never the original IR.
+    let forcing = crate::forcing_graph::Graph::partition(
+        &mut request.program,
+        &trajectory,
+        &request.driven,
+        &request.tolerances,
+    )?;
     let program = crate::initialization::resolve(
         request.program,
         &request.driven,
@@ -1139,7 +1298,21 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         transient: Some(transient.clone()),
         ..request
     };
+    let forcing_output_count = if let Some(graph) = &forcing {
+        let count =
+            crate::input_clamp::lower(&mut request.program, &mut request.driven, &mut trajectory)?;
+        graph.source_context(&request.program, &trajectory, &request.driven)?;
+        Some(count)
+    } else {
+        None
+    };
     if crate::source_math::selected_ln_candidate(&request.program) {
+        if forcing.is_some() {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing source-math dispatch is not implemented",
+            ));
+        }
         let prepared = crate::source_math::Prepared::new_selected_ln(
             &request.program,
             &trajectory,
@@ -1166,6 +1339,12 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                     .is_err_and(|error| error.kind == "unsupported_transient")
             }))
     {
+        if forcing.is_some() {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing implicit dispatch is not implemented",
+            ));
+        }
         // Reuse this existing non-affine/implicit dispatch decision. Already
         // supported direct-affine math never enters the optional new audit or
         // constructs an additional Operators proof owner.
@@ -1224,15 +1403,20 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             "legacy native math requires zero source voltage uncertainty",
         ));
     }
-    let output_count =
-        crate::input_clamp::lower(&mut request.program, &mut request.driven, &mut trajectory)?;
+    let output_count = match forcing_output_count {
+        Some(count) => count,
+        None => {
+            crate::input_clamp::lower(&mut request.program, &mut request.driven, &mut trajectory)?
+        }
+    };
 
-    let model = EventModel::new_with_trajectory(
+    let mut model = EventModel::new_with_trajectory(
         request.program,
         request.driven,
         request.tolerances,
         Some(&trajectory),
     )?;
+    model.forcing = forcing;
     let step_bounds = crate::step_bounds::Bounds::new(&model.program)?;
     if model.floor_source.is_some() {
         crate::diagnostics::counter("floor_source_before_initialization", 1);
@@ -1264,7 +1448,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         } else {
             Vec::new()
         };
-    let (operators, mut crossings) = if history_calendar {
+    let (mut operators, mut crossings) = if history_calendar {
         history_calendar::initialize(&model, &trajectory, &initial)?
     } else if relocalize {
         let bounds: Vec<_> = initial.iter().copied().map(I::point).collect();
@@ -1276,7 +1460,10 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             &initial,
             prediction_end(&model, &trajectory, crossings.first()),
             &model.tolerances,
-            model.floor_source.as_ref().map(|r| r.source.clone()),
+            match &model.forcing {
+                Some(g) => Some(g.source_context(&model.program, &trajectory, &model.driven)?),
+                None => model.floor_source.as_ref().map(|r| r.source.clone()),
+            },
         )?;
         (operators, crossings)
     } else if model.dynamic_guards.iter().any(|&dynamic| dynamic) {
@@ -1287,12 +1474,21 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             &initial,
             trajectory.config.stop,
             &model.tolerances,
-            model.floor_source.as_ref().map(|r| r.source.clone()),
+            match &model.forcing {
+                Some(g) => Some(g.source_context(&model.program, &trajectory, &model.driven)?),
+                None => model.floor_source.as_ref().map(|r| r.source.clone()),
+            },
         )?;
         let crossings = schedule(&model, &trajectory, &operators)?;
         (operators, crossings)
     } else {
         let crossings = independent_schedule(&model, &trajectory)?;
+        if bounded_held_transition_seeds && model.forcing.is_some() {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing bootstrap provider bridge is not implemented",
+            ));
+        }
         let operators = if !model.typed_transition_targets.is_empty() {
             Operators::new_until_with_held_points(
                 &model.program,
@@ -1324,11 +1520,23 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 &initial,
                 prediction_end(&model, &trajectory, crossings.first()),
                 &model.tolerances,
-                model.floor_source.as_ref().map(|r| r.source.clone()),
+                match &model.forcing {
+                    Some(g) => {
+                        Some(g.source_context(&model.program, &trajectory, &model.driven)?)
+                    }
+                    None => model.floor_source.as_ref().map(|r| r.source.clone()),
+                },
             )?
         };
         (operators, crossings)
     };
+    if let Some(graph) = &model.forcing {
+        operators.bind_forcing_context(graph.source_context(
+            &model.program,
+            &trajectory,
+            &model.driven,
+        )?)?;
+    }
     let initial_cursor = prepared
         .as_ref()
         .map(|p| p.cursor(&crossings))
@@ -1364,6 +1572,14 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
     )?;
     accepted.state_bounds = state_bounds;
     crate::observation::retain_bounds(&mut accepted.solution, node_bounds);
+    if let Some(graph) = &model.forcing {
+        graph.project(
+            0.0,
+            &trajectory,
+            &mut accepted.solution,
+            &mut accepted.circuit,
+        )?;
+    }
     let mut trace = TransientTrace {
         display_records: Vec::new(),
         times: trajectory.config.output_times.clone(),
@@ -1490,10 +1706,15 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         }
         controller.accepted.operators.check_deadline_order(
             controller.accepted.time,
-            crossings.get(controller.event).map(|e| e.bounds()),
             crossings
                 .get(controller.event)
-                .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
+                .map(|e| event_bounds(&model, e))
+                .transpose()?,
+            crossings
+                .get(controller.event)
+                .map(|e| event_root(&model, std::slice::from_ref(e)))
+                .transpose()?
+                .flatten(),
         )?;
         // t=0 is processed after initial_step and before the initial observation.
         // Later events are reached by the same loop after advancing to their time.
@@ -1519,10 +1740,15 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         }
         controller.accepted.operators.check_deadline_order(
             controller.accepted.time,
-            crossings.get(controller.event).map(|e| e.bounds()),
             crossings
                 .get(controller.event)
-                .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
+                .map(|e| event_bounds(&model, e))
+                .transpose()?,
+            crossings
+                .get(controller.event)
+                .map(|e| event_root(&model, std::slice::from_ref(e)))
+                .transpose()?
+                .flatten(),
         )?;
         while output < trace.times.len() && trace.times[output] < controller.accepted.time {
             let index = controller
@@ -1591,30 +1817,32 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         }
         // Discard an overshooting time proposal before evaluating history:
         // the earlier event can change the future waveform and constraints.
-        if output < trace.times.len()
-            && time == trace.times[output]
-            && crossings.get(controller.event).is_some_and(|event| {
-                event.time > time
-                    && event.bounds().lo <= time
-                    && event
-                        .physical_order_for_query(time, &model, &trajectory)
-                        .is_none()
-            })
-        {
+        let pending_ambiguous = if output < trace.times.len() && time == trace.times[output] {
+            match crossings.get(controller.event) {
+                Some(event) if event.time > time && event_bounds(&model, event)?.lo <= time => {
+                    event_order(&model, &trajectory, event, time)?.is_none()
+                }
+                _ => false,
+            }
+        } else {
+            false
+        };
+        if pending_ambiguous {
             if let Some(event) = crossings.get(controller.event) {
-                event.record_ambiguous_query("transient.pending", time);
+                record_ambiguous_event(&model, event, "transient.pending", time)?;
             }
             return Err(Error::new(
                 "event_resolution",
                 "output query cannot certify its physical event phase",
             ));
         }
-        let physically_due = crossings.get(controller.event).is_some_and(|event| {
-            matches!(
-                event.physical_order_for_query(time, &model, &trajectory),
+        let physically_due = match crossings.get(controller.event) {
+            Some(event) => matches!(
+                event_order(&model, &trajectory, event, time)?,
                 Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
-            )
-        });
+            ),
+            None => false,
+        };
         if controller.event < crossings.len()
             && (crossings[controller.event].time <= time || physically_due)
         {
@@ -1646,7 +1874,9 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 let source_root = controller.accepted.operators.source_root_at(time)?;
                 let source_window = source_root
                     .as_ref()
-                    .and_then(|root| root.bounds())
+                    .map(|root| source_root_bounds(&model, root))
+                    .transpose()?
+                    .flatten()
                     .or_else(|| controller.accepted.operators.source_window_at(time))
                     .unwrap_or(I::point(time));
                 let next = crate::diagnostics::outcome(
@@ -1672,10 +1902,15 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 )?;
                 next.operators.check_deadline_order(
                     time,
-                    crossings.get(controller.event).map(|e| e.bounds()),
                     crossings
                         .get(controller.event)
-                        .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
+                        .map(|e| event_bounds(&model, e))
+                        .transpose()?,
+                    crossings
+                        .get(controller.event)
+                        .map(|e| event_root(&model, std::slice::from_ref(e)))
+                        .transpose()?
+                        .flatten(),
                 )?;
                 controller.accepted = next;
             } else {

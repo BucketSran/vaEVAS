@@ -1,5 +1,6 @@
 //! Bounded exact binary64 source arithmetic for phase and ordinary conditions.
 //! Curves retain original rational knots; rounded clamp knots are never inputs.
+mod forcing_point;
 use crate::interval::Interval as I;
 use crate::ir::Expression;
 use num_rational::BigRational as R;
@@ -333,6 +334,128 @@ pub(crate) fn predicate_sign(
 }
 
 impl Curve {
+    /// Forcing-only prepayment for the pinned num-rational 0.4.2 / num-bigint
+    /// 0.4.6 algorithms. All arithmetic below saturates before the one debit.
+    /// `b` bounds numerator/denominator bits including unreduced intermediates.
+    /// The named costs count limb scans/products, not elapsed CPU instructions.
+    pub(crate) fn charge_forcing_read(
+        &self,
+        work: &crate::transition_source_plan::Work,
+        time: f64,
+        range: bool,
+    ) -> Result<(), crate::ir::Error> {
+        fn linear(b: u64) -> u64 {
+            b.div_ceil(64).saturating_add(1)
+        }
+        fn mul(b: u64) -> u64 {
+            linear(b).saturating_pow(2).saturating_mul(16)
+        }
+        fn div(b: u64) -> u64 {
+            // Knuth: <=L quotient digits; each digit has <=2 estimate
+            // corrections, sub_mul and possible addback, plus normalization.
+            linear(b).saturating_pow(2).saturating_mul(16)
+        }
+        fn gcd(b: u64) -> u64 {
+            // Stein: positive operand product halves at least once per
+            // iteration, <=2b+2 iterations, <=8 complete limb scans each.
+            b.saturating_mul(2)
+                .saturating_add(2)
+                .saturating_mul(linear(b))
+                .saturating_mul(8)
+        }
+        fn compare(b: u64) -> u64 {
+            // Ratio::cmp uses two div_mod_floor calls per Euclidean round,
+            // <=2b+2 rounds, with comparisons/clones/sign correction scans.
+            b.saturating_mul(2).saturating_add(2).saturating_mul(
+                div(b)
+                    .saturating_mul(2)
+                    .saturating_add(linear(b).saturating_mul(16)),
+            )
+        }
+        fn operation(b: u64) -> u64 {
+            // Covers both lcm-based Add/Sub and cross-GCD Mul/Div, including
+            // Ratio::new -> reduce, signs, result clones and Budget bit tests.
+            gcd(b)
+                .saturating_mul(4)
+                .saturating_add(div(b).saturating_mul(8))
+                .saturating_add(mul(b).saturating_mul(4))
+                .saturating_add(linear(b).saturating_mul(16))
+        }
+        fn enclosure_cost(b: u64) -> u64 {
+            // Two to_f64 calls (including at's returned representative):
+            // ratio_to_f64 shifts to <=b+56 bits then one div_rem each.
+            // Three binary(f64) constructions, each normalize by one GCD and
+            // two divisions; four Ratio comparisons certify both endpoints.
+            // A nonzero finite b-bit ratio's rounded binary64 has at most
+            // b+56 bits (also covers a subnormal/next_{up,down} endpoint).
+            let wide = b.saturating_add(56);
+            div(wide)
+                .saturating_mul(2)
+                .saturating_add(linear(wide).saturating_mul(32))
+                .saturating_add(
+                    gcd(wide)
+                        .saturating_add(div(wide).saturating_mul(2))
+                        .saturating_mul(3),
+                )
+                .saturating_add(compare(wide).saturating_mul(4))
+        }
+        work.debit(2, self.0.len().saturating_add(4) as u64)?;
+        let (mut tbits, mut vbits) = (1u64, 1u64);
+        for (t, v) in &self.0 {
+            tbits = tbits.max(t.numer().bits()).max(t.denom().bits());
+            vbits = vbits.max(v.numer().bits()).max(v.denom().bits());
+        }
+        // Includes smallest subnormal denominator 2^1074 (1075 bits), without
+        // allocating a BigRational while deciding whether its work is funded.
+        let exponent = ((time.to_bits() >> 52) & 0x7ff) as i64;
+        let power = if exponent == 0 {
+            -1074
+        } else {
+            exponent - 1023 - 52
+        };
+        let q = if time == 0. {
+            1
+        } else {
+            (53 + power.max(0)).max(1 + (-power).max(0)) as u64
+        };
+        let delta = vbits.saturating_mul(2).saturating_add(1);
+        let elapsed = tbits.saturating_add(q).saturating_add(1);
+        let duration = tbits.saturating_mul(2).saturating_add(1);
+        let fraction = elapsed.saturating_add(duration).saturating_add(1);
+        let change = delta.saturating_add(fraction).saturating_add(1);
+        let result = vbits.saturating_add(change).saturating_add(1);
+        let six = [delta, elapsed, duration, fraction, change, result]
+            .into_iter()
+            .fold(0u64, |sum, b| sum.saturating_add(operation(b)));
+        let n = self.0.len() as u64;
+        let searches = (u64::BITS - n.max(1).leading_zeros()) as u64 + 2;
+        let point = six
+            .saturating_add(enclosure_cost(result))
+            .saturating_add(compare(tbits.max(q)).saturating_mul(searches))
+            .saturating_add(operation(q)); // binary(time), with spare operations
+        let cost = if range {
+            // range: two endpoint values and every original pair (all arms),
+            // six time comparisons, three derivative operations, derivative
+            // enclosure and an optional interior voltage enclosure per pair.
+            let derivative = delta.saturating_add(duration).saturating_add(1);
+            let pair = compare(tbits.max(q))
+                .saturating_mul(6)
+                .saturating_add(operation(duration))
+                .saturating_add(operation(delta))
+                .saturating_add(operation(derivative))
+                .saturating_add(enclosure_cost(derivative))
+                .saturating_add(enclosure_cost(vbits));
+            point
+                .saturating_mul(2)
+                .saturating_add(pair.saturating_mul(n))
+        } else {
+            point
+        };
+        crate::diagnostics::counter("forcing_curve_requested_work", cost as usize);
+        work.debit(2, cost)?;
+        crate::diagnostics::counter("forcing_curve_reserved_work", cost as usize);
+        Ok(())
+    }
     pub(crate) fn charge_source_copy(
         &self,
         work: &crate::transition_source_plan::Work,
@@ -1220,5 +1343,349 @@ mod tests {
         assert_eq!(value, 1.0_f64.next_down());
         let exact = binary(1.0).unwrap() - binary(tiny).unwrap();
         assert!(binary(bounds.lo).unwrap() <= exact && exact <= binary(bounds.hi).unwrap());
+    }
+}
+
+// Same-request opt-in event-prefix accounting. Unmarked consumers keep the old APIs.
+mod event_prefix_fees {
+    use super::{I, R};
+    use crate::transition_source_plan::Work;
+    pub(super) fn live(w: &Work) -> Result<(), crate::ir::Error> {
+        w.debit(2, 0)
+    }
+    pub(super) fn metadata(w: &Work, n: u64) -> Result<(), crate::ir::Error> {
+        live(w)?;
+        w.debit(2, n)
+    }
+    pub(super) fn l(b: u64) -> u64 {
+        b.div_ceil(64).saturating_add(1)
+    }
+    fn mul(b: u64) -> u64 {
+        l(b).saturating_pow(2).saturating_mul(16)
+    }
+    fn div(b: u64) -> u64 {
+        mul(b)
+    }
+    fn gcd(b: u64) -> u64 {
+        b.saturating_mul(2)
+            .saturating_add(2)
+            .saturating_mul(l(b))
+            .saturating_mul(8)
+    }
+    pub(super) fn cmp(b: u64) -> u64 {
+        b.saturating_mul(2).saturating_add(2).saturating_mul(
+            div(b)
+                .saturating_mul(2)
+                .saturating_add(l(b).saturating_mul(16)),
+        )
+    }
+    pub(super) fn binary(b: u64) -> u64 {
+        gcd(b)
+            .saturating_add(div(b).saturating_mul(2))
+            .saturating_add(l(b).saturating_mul(32))
+            .saturating_add(64)
+    }
+    pub(super) fn op(b: u64) -> u64 {
+        gcd(b)
+            .saturating_mul(4)
+            .saturating_add(div(b).saturating_mul(8))
+            .saturating_add(mul(b).saturating_mul(4))
+            .saturating_add(l(b).saturating_mul(16))
+    }
+    pub(super) fn width(v: &R) -> u64 {
+        v.numer().bits().max(v.denom().bits()).max(1)
+    }
+    pub(super) fn float_width(x: f64) -> Option<u64> {
+        if !x.is_finite() {
+            return None;
+        }
+        if x == 0.0 {
+            return Some(1);
+        }
+        let e = ((x.to_bits() >> 52) & 2047) as i64;
+        let p = if e == 0 { -1074 } else { e - 1023 - 52 };
+        Some((53 + p.max(0)).max(1 + (-p).max(0)) as u64)
+    }
+    pub(super) fn endpoint_widths(v: I) -> Option<(u64, u64)> {
+        Some((float_width(v.lo)?, float_width(v.hi)?))
+    }
+    pub(super) fn copy(b: u64) -> u64 {
+        l(b).saturating_mul(4).saturating_add(32)
+    }
+    pub(super) fn enclosure(b: u64) -> u64 {
+        let q = b.saturating_add(56);
+        // One ratio_to_f64 (pinned shifted div/scan), three binary() and four Ratio comparisons.
+        div(q)
+            .saturating_add(l(q).saturating_mul(64))
+            .saturating_add(64)
+            .saturating_add(binary(q).saturating_mul(3))
+            .saturating_add(cmp(q).saturating_mul(4))
+            .saturating_add(64)
+    }
+    pub(super) fn contains(b: u64, lo: u64, hi: u64) -> u64 {
+        binary(lo)
+            .saturating_add(binary(hi))
+            .saturating_add(cmp(b.max(lo)))
+            .saturating_add(cmp(b.max(hi)))
+            .saturating_add(64)
+    }
+    pub(super) fn refine(b: u64, lo: u64, hi: u64) -> u64 {
+        contains(b, lo, hi)
+            .saturating_add(enclosure(b))
+            .saturating_add(64)
+    }
+}
+
+/// Reservation only, for callers retaining the old exact enclosure body.
+pub(crate) fn charge_enclosure_with_work(
+    value: &R,
+    w: &crate::transition_source_plan::Work,
+) -> Result<(), crate::ir::Error> {
+    event_prefix_fees::metadata(w, 32)?;
+    let bits = event_prefix_fees::width(value);
+    w.debit(2, event_prefix_fees::enclosure(bits))
+}
+/// Result preserves old optional mathematical failure; Work errors are never discarded.
+pub(crate) fn enclosure_with_work(
+    value: &R,
+    w: &crate::transition_source_plan::Work,
+) -> Result<Option<I>, crate::ir::Error> {
+    charge_enclosure_with_work(value, w)?;
+    crate::diagnostics::counter("forcing_prefix_enclosure_helpers", 1);
+    Ok(enclosure(value))
+}
+impl RootTime {
+    pub(crate) fn clone_with_work(
+        &self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Self, crate::ir::Error> {
+        event_prefix_fees::metadata(w, 32)?;
+        w.debit(
+            2,
+            event_prefix_fees::copy(event_prefix_fees::width(&self.0)),
+        )?;
+        crate::diagnostics::counter("forcing_prefix_exact_clones", 1);
+        Ok(self.clone())
+    }
+    pub(crate) fn order_with_work(
+        &self,
+        other: &Self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<std::cmp::Ordering, crate::ir::Error> {
+        event_prefix_fees::metadata(w, 64)?;
+        let b = event_prefix_fees::width(&self.0).max(event_prefix_fees::width(&other.0));
+        w.debit(2, event_prefix_fees::cmp(b))?;
+        crate::diagnostics::counter("forcing_prefix_exact_comparisons", 1);
+        Ok(self.order(other))
+    }
+    pub(crate) fn refine_with_work(
+        &self,
+        discovery: I,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<I>, crate::ir::Error> {
+        event_prefix_fees::metadata(w, 64)?;
+        let Some((lo, hi)) = event_prefix_fees::endpoint_widths(discovery) else {
+            return Ok(None);
+        };
+        let b = event_prefix_fees::width(&self.0);
+        w.debit(2, event_prefix_fees::refine(b, lo, hi))?;
+        crate::diagnostics::counter("forcing_prefix_exact_refinements", 1);
+        Ok(self.refine(discovery))
+    }
+    pub(crate) fn from_clock_with_work(
+        clock: crate::exact_time::Clock,
+        discovery: I,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<Self>, crate::ir::Error> {
+        event_prefix_fees::metadata(w, 96)?;
+        if clock.index > crate::schedule::EVENT_BUDGET {
+            return Ok(None);
+        }
+        let Some(s) = event_prefix_fees::float_width(clock.start) else {
+            return Ok(None);
+        };
+        let Some(p) = event_prefix_fees::float_width(clock.period) else {
+            return Ok(None);
+        };
+        let Some((lo, hi)) = event_prefix_fees::endpoint_widths(discovery) else {
+            return Ok(None);
+        };
+        let index_bits = (usize::BITS - clock.index.leading_zeros()).max(1) as u64;
+        let offset = p.saturating_add(index_bits).saturating_add(1);
+        let result = s.saturating_add(offset).saturating_add(1);
+        let fee = event_prefix_fees::binary(s)
+            .saturating_add(event_prefix_fees::binary(p))
+            .saturating_add(64)
+            .saturating_add(event_prefix_fees::l(index_bits).saturating_mul(32))
+            .saturating_add(event_prefix_fees::op(offset))
+            .saturating_add(event_prefix_fees::op(result))
+            .saturating_add(event_prefix_fees::contains(result, lo, hi));
+        w.debit(2, fee)?;
+        crate::diagnostics::counter("forcing_prefix_clock_helpers", 1);
+        Ok(Self::from_clock(clock, discovery))
+    }
+    pub(crate) fn point_ends_with_work(
+        segment: [f64; 2],
+        ends: [I; 2],
+        discovery: I,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<Self>, crate::ir::Error> {
+        event_prefix_fees::metadata(w, 128)?;
+        if ends.iter().any(|v| v.lo != v.hi) {
+            return Ok(None);
+        }
+        let Some(a) = event_prefix_fees::float_width(ends[0].lo) else {
+            return Ok(None);
+        };
+        let Some(b) = event_prefix_fees::float_width(ends[1].lo) else {
+            return Ok(None);
+        };
+        let Some(s) = event_prefix_fees::float_width(segment[0]) else {
+            return Ok(None);
+        };
+        let Some(e) = event_prefix_fees::float_width(segment[1]) else {
+            return Ok(None);
+        };
+        let Some((lo, hi)) = event_prefix_fees::endpoint_widths(discovery) else {
+            return Ok(None);
+        };
+        let duration = s.saturating_add(e).saturating_add(1);
+        let change = b.saturating_add(a).saturating_add(1);
+        let numerator = a.saturating_add(duration).saturating_add(1);
+        let shift = numerator.saturating_add(change).saturating_add(1);
+        let result = s.saturating_add(shift).saturating_add(1);
+        let fee = [a, b, s, e]
+            .into_iter()
+            .fold(0u64, |n, b| n.saturating_add(event_prefix_fees::binary(b)))
+            .saturating_add(event_prefix_fees::cmp(a.max(b))) // original generic a==b
+            .saturating_add(
+                [duration, change, numerator, shift, result]
+                    .into_iter()
+                    .fold(0u64, |n, b| n.saturating_add(event_prefix_fees::op(b))),
+            )
+            .saturating_add(event_prefix_fees::cmp(s.max(result)))
+            .saturating_add(event_prefix_fees::cmp(result.max(e)))
+            .saturating_add(event_prefix_fees::contains(result, lo, hi))
+            .saturating_add(128);
+        w.debit(2, fee)?;
+        crate::diagnostics::counter("forcing_prefix_cross_helpers", 1);
+        Ok(Self::point_ends(segment, ends, discovery))
+    }
+}
+
+#[cfg(test)]
+mod event_prefix_accounting_tests {
+    use super::*;
+    use crate::transition_source_plan::Work;
+    #[test]
+    fn paid_root_math_retains_independent_small_values_and_sticky_refusal() {
+        let work = Work::default();
+        for (n, d) in [(0, 1), (1, 3), (-2, 7), (3, 8)] {
+            let value = R::new(n.into(), d.into());
+            let bounds = enclosure_with_work(&value, &work).unwrap().unwrap();
+            assert!(binary(bounds.lo).unwrap() <= value && value <= binary(bounds.hi).unwrap());
+            assert_eq!(Some(bounds), enclosure(&value));
+        }
+        let clock = crate::exact_time::Clock {
+            start: 0.125,
+            period: 0.25,
+            index: 3,
+        };
+        let root = RootTime::from_clock_with_work(clock, I::point(0.875), &work)
+            .unwrap()
+            .unwrap();
+        assert_eq!(*root.rational(), R::new(7.into(), 8.into()));
+        assert_eq!(
+            root.refine_with_work(I { lo: 0.8, hi: 0.9 }, &work)
+                .unwrap(),
+            Some(I::point(0.875))
+        );
+        let empty = Work::limited([128, 8192, 0]);
+        let before = root.clone();
+        for _ in 0..2 {
+            let (result, report) = crate::diagnostics::capture(Default::default(), || {
+                root.refine_with_work(I::point(0.875), &empty)
+            });
+            assert_eq!(result.unwrap_err().kind, "step_budget");
+            assert!(!report
+                .counters
+                .keys()
+                .any(|k| k.starts_with("forcing_prefix_")));
+            assert_eq!(root, before);
+        }
+    }
+}
+
+// private field inspection is behind metadata prepayment.
+impl RootTime {
+    pub(crate) fn bounds_with_work(
+        &self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<I>, crate::ir::Error> {
+        enclosure_with_work(&self.0, w)
+    }
+    fn difference_clock_reservation(
+        &self,
+        clock: crate::exact_time::Clock,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<u64>, crate::ir::Error> {
+        event_prefix_fees::metadata(w, 128)?;
+        if clock.index > crate::schedule::EVENT_BUDGET {
+            return Ok(None);
+        }
+        let Some(s) = event_prefix_fees::float_width(clock.start) else {
+            return Ok(None);
+        };
+        let Some(p) = event_prefix_fees::float_width(clock.period) else {
+            return Ok(None);
+        };
+        let i = (usize::BITS - clock.index.leading_zeros()).max(1) as u64;
+        let offset = p.saturating_add(i).saturating_add(1);
+        let absolute = s.saturating_add(offset).saturating_add(1);
+        let difference = event_prefix_fees::width(&self.0)
+            .saturating_add(absolute)
+            .saturating_add(1);
+        let fee = event_prefix_fees::binary(s)
+            .saturating_add(event_prefix_fees::binary(p))
+            .saturating_add(event_prefix_fees::l(i).saturating_mul(32))
+            .saturating_add(64)
+            .saturating_add(event_prefix_fees::op(offset))
+            .saturating_add(event_prefix_fees::op(absolute))
+            .saturating_add(event_prefix_fees::op(difference));
+        w.debit(2, fee)?;
+        Ok(Some(difference))
+    }
+    pub(crate) fn clock_delta_order_with_work(
+        &self,
+        clock: crate::exact_time::Clock,
+        delta: f64,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<std::cmp::Ordering>, crate::ir::Error> {
+        let Some(difference) = self.difference_clock_reservation(clock, w)? else {
+            return Ok(None);
+        };
+        let Some(d) = event_prefix_fees::float_width(delta) else {
+            return Ok(None);
+        };
+        let result = difference.saturating_add(d).saturating_add(1);
+        w.debit(
+            2,
+            event_prefix_fees::binary(d)
+                .saturating_add(event_prefix_fees::op(result))
+                .saturating_add(event_prefix_fees::cmp(result))
+                .saturating_add(64),
+        )?;
+        Ok(self.clock_delta_order(clock, delta))
+    }
+    pub(crate) fn local_bounds_with_work(
+        &self,
+        clock: crate::exact_time::Clock,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<I>, crate::ir::Error> {
+        let Some(b) = self.difference_clock_reservation(clock, w)? else {
+            return Ok(None);
+        };
+        w.debit(2, event_prefix_fees::enclosure(b))?;
+        Ok(self.local_bounds(clock))
     }
 }

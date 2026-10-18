@@ -66,13 +66,22 @@ fn observation_seed(
     phase: usize,
     time: f64,
 ) -> Result<Frame, Error> {
-    let mut seed = phases[phase].0.candidate_clone()?;
+    let mut seed = if let Some(g) = &model.forcing {
+        phases[phase].0.charge_forcing_copy(g)?;
+        phases[phase].0.clone()
+    } else {
+        phases[phase].0.candidate_clone()?
+    };
     let mut physical = phase;
     while physical > 0 && passive_batch(model, &phases[physical].1) {
         physical -= 1;
     }
     if physical != phase {
-        seed.operators = phases[physical].0.operators.candidate_clone()?;
+        seed.operators = if model.forcing.is_some() {
+            phases[physical].0.operators.forcing_clone()?
+        } else {
+            phases[physical].0.operators.candidate_clone()?
+        };
     }
     seed.operators.rebase_source_observation(time)?;
     Ok(seed)
@@ -164,6 +173,10 @@ impl PreparedEvents {
             strategy,
             CalendarScope::Complete,
         )?;
+        if let Some(g) = &model.forcing {
+            controller.accepted.charge_forcing_copy(g)?;
+            next.charge_forcing_copy(g)?;
+        }
         let mut phases = vec![
             (controller.accepted.candidate_clone()?, Vec::new()),
             (
@@ -178,22 +191,38 @@ impl PreparedEvents {
             // follow every consumed batch and precede the retained successor.
             // This also covers a point below a rounded event representative:
             // local history preserves the exact clock and physical seed.
-            let forced = trajectory.config.strobetimes.iter().copied().find(|&time| {
-                time > controller.accepted.time
-                    && time <= next.time
-                    && phases[1..].iter().all(|(_, batch)| {
-                        batch.iter().all(|event| {
-                            matches!(
-                                event.physical_order_for_query(time, model, trajectory),
-                                Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
-                            )
-                        })
-                    })
-                    && future.first().is_none_or(|event| {
-                        event.physical_order_for_query(time, model, trajectory)
+            let mut forced = None;
+            for &time in &trajectory.config.strobetimes {
+                if time <= controller.accepted.time || time > next.time {
+                    continue;
+                }
+                let mut after_phases = true;
+                'phases: for (_, batch) in &phases[1..] {
+                    for event in batch {
+                        if !matches!(
+                            event_order(model, trajectory, event, time)?,
+                            Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
+                        ) {
+                            after_phases = false;
+                            break 'phases;
+                        }
+                    }
+                }
+                if !after_phases {
+                    continue;
+                }
+                let before_future = match future.first() {
+                    Some(event) => {
+                        event_order(model, trajectory, event, time)?
                             == Some(std::cmp::Ordering::Greater)
-                    })
-            });
+                    }
+                    None => true,
+                };
+                if before_future {
+                    forced = Some(time);
+                    break;
+                }
+            }
             if let Some(time) = forced {
                 if time != next.time {
                     let seed = observation_seed(model, &phases, phases.len() - 1, time)?;
@@ -213,10 +242,12 @@ impl PreparedEvents {
                 }
                 break;
             }
-            if !future
+            let future_due = future
                 .first()
-                .is_some_and(|event| event.bounds().lo <= next.time)
-            {
+                .map(|event| event_bounds(model, event))
+                .transpose()?
+                .is_some_and(|bounds| bounds.lo <= next.time);
+            if !future_due {
                 break;
             }
             if microevents >= crate::schedule::CAUSAL_MICROEVENT_BUDGET
@@ -242,7 +273,13 @@ impl PreparedEvents {
             next = batch.frame;
             future = batch.future;
             records.extend(batch.records);
-            phases.push((next.candidate_clone()?, physical_batch));
+            let phase = if let Some(g) = &model.forcing {
+                next.charge_forcing_copy(g)?;
+                next.clone()
+            } else {
+                next.candidate_clone()?
+            };
+            phases.push((phase, physical_batch));
             microevents += 1;
         }
         // Prepare every requested phase observation before publication.
@@ -256,11 +293,11 @@ impl PreparedEvents {
             for (index, (_, physical_batch)) in phases.iter().enumerate().skip(1) {
                 let mut occurred = true;
                 for event in physical_batch {
-                    occurred &= match event.physical_order_for_query(time, model, trajectory) {
+                    occurred &= match event_order(model, trajectory, event, time)? {
                         Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal) => true,
                         Some(std::cmp::Ordering::Greater) => false,
                         None => {
-                            event.record_ambiguous_query("event_acceptance.phase", time);
+                            record_ambiguous_event(model, event, "event_acceptance.phase", time)?;
                             return Err(Error::new(
                                 "event_resolution",
                                 "output query cannot certify its physical event phase",
@@ -323,6 +360,9 @@ impl Controller {
         calendar: &mut Vec<ScheduledEvent>,
         strategy: Strategy,
     ) -> Result<(), Error> {
+        if let Some(graph) = &model.forcing {
+            graph.ensure_live()?;
+        }
         if let Some(source) = &model.source_context {
             // A shared event-source quota stays exhausted before a retry can
             // copy histories or start any other candidate preparation.
@@ -357,7 +397,7 @@ impl Controller {
                         let mut boundary = next.time;
                         let mut steps = 0;
                         while cluster_end < calendar.len()
-                            && calendar[cluster_end].bounds().lo <= boundary
+                            && event_bounds(model, &calendar[cluster_end])?.lo <= boundary
                         {
                             if calendar[cluster_end].time > boundary {
                                 if steps >= crate::schedule::CAUSAL_MICROEVENT_BUDGET {
@@ -456,10 +496,15 @@ impl Controller {
         let future = plan.resolve(model, trajectory, &next, until)?;
         next.operators.check_deadline_order(
             next.time,
-            future.first().map(|event| event.bounds()),
             future
                 .first()
-                .and_then(|e| crate::schedule::common_root(std::slice::from_ref(e))),
+                .map(|event| event_bounds(model, event))
+                .transpose()?,
+            future
+                .first()
+                .map(|e| event_root(model, std::slice::from_ref(e)))
+                .transpose()?
+                .flatten(),
         )?;
         // Nonlinear extension can widen the endpoint enclosure. Certify the
         // stored observation against the final history, not just reset closure.
@@ -470,15 +515,27 @@ impl Controller {
             }
         });
         let inputs = trajectory.value_bounds(next.time);
+        // Legacy bounds certify only the independently reduced rows. Its zero
+        // coordinates are private and must be replaced by original forcing
+        // certificates below before the candidate leaves this transaction.
+        let projected = model
+            .forcing
+            .as_ref()
+            .map(|g| g.legacy_voltage_view(&next.solution.voltages))
+            .transpose()?;
+        let legacy_voltages = projected.as_deref().unwrap_or(&next.solution.voltages);
         let (_, nodes) = model.certify_observation(
             &model.conditions.select(&[], &inputs)?,
             &inputs,
             &next.state_bounds,
             &next.operators.bounds(next.time)?,
-            &next.solution.voltages,
+            legacy_voltages,
             &next.states,
         )?;
         crate::observation::retain_bounds(&mut next.solution, nodes);
+        if let Some(graph) = &model.forcing {
+            graph.project(next.time, trajectory, &mut next.solution, &mut next.circuit)?;
+        }
         // This certifies one batch; cluster closure and queries still precede publication.
         Ok((next, future))
     }

@@ -703,6 +703,30 @@ pub(crate) fn valid(proofs: &Proofs, bounds: &[I]) -> bool {
     })
 }
 
+/// exact old valid() semantics, only explicit original Work accounting added.
+pub(crate) fn valid_with_work(
+    proofs: &Proofs,
+    bounds: &[I],
+    w: &crate::transition_source_plan::Work,
+) -> Result<bool, crate::ir::Error> {
+    w.debit(2, 0)?;
+    w.debit(
+        2,
+        (proofs.len() as u64).saturating_mul(16).saturating_add(16),
+    )?;
+    for (&state, value) in proofs {
+        let Some(bound) = bounds.get(state) else {
+            return Ok(false);
+        };
+        if !crate::exact_source::enclosure_with_work(value, w)?
+            .is_some_and(|enclosure| bound.lo <= enclosure.lo && enclosure.hi <= bound.hi)
+        {
+            return Ok(false);
+        }
+    }
+    Ok(true)
+}
+
 #[cfg(test)]
 mod native_floor_tests {
     use super::*;

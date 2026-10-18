@@ -854,6 +854,12 @@ impl ResetExpression {
 fn reset_terms(expr: &Expression) -> Result<ResetTerms, Error> {
     let mut result = ResetTerms::default();
     match expr {
+        Expression::Forcing { .. } => {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing marker requires its owning independent component dispatcher",
+            ))
+        }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
@@ -945,6 +951,12 @@ fn reset_exact_sign(terms: &ResetTerms, states: &[I]) -> Result<Option<I>, Error
 
 fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
     let value = match expr {
+        Expression::Forcing { .. } => {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing marker requires its owning independent component dispatcher",
+            ))
+        }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
@@ -1002,6 +1014,7 @@ fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
 pub(crate) struct Operators {
     held_targets: std::collections::BTreeMap<usize, Arc<crate::held_integer_target::Spec>>,
     pub(crate) source_context: Option<Arc<crate::transition_source_plan::ProofContext>>,
+    forcing_context: Option<Arc<crate::transition_source_plan::ProofContext>>,
     history_targets: std::collections::BTreeMap<usize, history_target::TargetPlan>,
     entries: Vec<Runtime>,
     changes_on_advance: Vec<bool>,
@@ -1345,6 +1358,70 @@ impl Evaluation<'_> {
 }
 
 impl Operators {
+    pub(crate) fn bind_forcing_context(
+        &mut self,
+        c: Arc<crate::transition_source_plan::ProofContext>,
+    ) -> Result<(), Error> {
+        self.forcing_context = Some(c);
+        self.charge_forcing_copy()
+    }
+    pub(crate) fn charge_forcing_copy(&self) -> Result<(), Error> {
+        let Some(c) = &self.forcing_context else {
+            return Ok(());
+        };
+        c.source_charge(
+            "forcing_operator_copy",
+            32 + self.entries.len() * 64
+                + self.direct.len() * 16
+                + self.changes_on_advance.len()
+                + self.isolated_parameters.len() * 2,
+        )?;
+        if !self.history_targets.is_empty()
+            || self.continuous.is_some()
+            || self.direct.iter().any(Option::is_some)
+        {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing runtime provider differs from audited bare held graph",
+            ));
+        }
+        for e in &self.entries {
+            let Runtime::Transition {
+                expression,
+                owner,
+                input,
+                input_bounds,
+                history,
+                source: None,
+                ..
+            } = e
+            else {
+                return Err(Error::new(
+                    "unsupported_forcing_scope",
+                    "forcing runtime provider differs from audited bare held graph",
+                ));
+            };
+            if !matches!(expression, Expression::State { .. }) {
+                return Err(Error::new(
+                    "unsupported_forcing_scope",
+                    "forcing requires bare held provider",
+                ));
+            }
+            c.source_charge(
+                "forcing_operator_copy",
+                owner
+                    .len()
+                    .saturating_add(input.owned_copy_items())
+                    .saturating_add(input_bounds.len())
+                    .saturating_add(64),
+            )?;
+            history.charge_forcing_copy(c)?;
+        }
+        Ok(())
+    }
+    pub(crate) fn forcing_clone(&self) -> Result<Self, Error> {
+        self.candidate_clone()
+    }
     pub(crate) fn candidate_clone(&self) -> Result<Self, Error> {
         for (&index, spec) in &self.held_targets {
             if let Runtime::Transition {
@@ -1363,6 +1440,7 @@ impl Operators {
                 history.charge_held_copy(&|amount| spec.charge(amount))?;
             }
         }
+        self.charge_forcing_copy()?;
         Ok(self.clone())
     }
 
@@ -2356,6 +2434,7 @@ impl Operators {
         let mut result = Self {
             held_targets,
             source_context,
+            forcing_context: None,
             history_targets,
             entries,
             changes_on_advance,

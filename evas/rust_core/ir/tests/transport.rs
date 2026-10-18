@@ -87,3 +87,32 @@ fn bits29_nested_wire_keeps_source_children_and_rejects_ir28() {
         "unsupported_ir_version"
     );
 }
+
+#[test]
+fn forcing30_checked_roles_round_trip_and_old_ir29_is_rejected() {
+    // Transport only: this does not grant runtime composition/admission.
+    let origin = json!({"source":"wire30.va","line":1,"column":1,"instance":"dut"});
+    let forcing = json!({"op":"forcing","origin":origin,
+        "value":{"op":"affine","constant":0.,"terms":[{"node":1,"coefficient":1.}]},
+        "checked":[{"op":"affine","constant":0.,"terms":[{"node":1,"coefficient":0.}]}]});
+    let value = json!({"program":{"schema_version":SCHEMA_VERSION,"nodes":["0","u","y"],
+        "contributions":[{"branch":{"instance":"dut","local_positive":"out","local_negative":"ref","kind":"voltage"},
+            "positive":2,"negative":0,"rhs":forcing,"origin":origin}]},"driven":["u"],"samples":[[0.25]]});
+    let parsed = parse_request(&value.to_string()).unwrap();
+    let again = serde_json::to_value(parsed).unwrap();
+    assert_eq!(again["program"]["contributions"][0]["rhs"], forcing);
+    let decoded = parse_request(&again.to_string()).unwrap();
+    assert_eq!(serde_json::to_value(decoded).unwrap(), again);
+    let mut old = value.clone();
+    old["program"]["schema_version"] = json!(29);
+    assert_eq!(
+        parse_request(&old.to_string()).unwrap_err().kind,
+        "unsupported_ir_version"
+    );
+    let mut malformed = value;
+    malformed["program"]["contributions"][0]["rhs"]["unknown"] = json!(true);
+    assert_eq!(
+        parse_request(&malformed.to_string()).unwrap_err().kind,
+        "invalid_request"
+    );
+}

@@ -275,6 +275,12 @@ pub(crate) fn value(
 
 fn bind_math(e: &E, p: &Program, owner: &str, nodes: &[f64], states: &[f64]) -> Result<E, Error> {
     Ok(match e {
+        E::Forcing { .. } => {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing marker requires its owning independent component dispatcher",
+            ))
+        }
         E::ArrayRead {
             states: index_states,
             index,
@@ -464,6 +470,12 @@ fn bounds_in(
     proofs: Option<&crate::event_value_proof::LocalState>,
 ) -> Result<I, Error> {
     let v = match e {
+        E::Forcing { .. } => {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing marker requires its owning independent component dispatcher",
+            ))
+        }
         E::ArrayRead {
             states: slots,
             index,

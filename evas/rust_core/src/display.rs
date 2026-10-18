@@ -131,6 +131,12 @@ pub(crate) fn bind(
     states: &[f64],
 ) -> Result<Expression, Error> {
     Ok(match expr {
+        Expression::Forcing { .. } => {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing marker requires its owning independent component dispatcher",
+            ))
+        }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }

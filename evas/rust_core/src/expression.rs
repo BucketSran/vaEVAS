@@ -5,6 +5,12 @@ use std::collections::{BTreeSet, HashSet};
 
 pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
     match expr {
+        Expression::Forcing { .. } => {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing marker requires its owning independent component dispatcher",
+            ))
+        }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
@@ -68,6 +74,7 @@ pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
 
 fn predicate_nodes(expr: &Expression, nodes: &mut BTreeSet<usize>) {
     match expr {
+        Expression::Forcing { value, .. } => predicate_nodes(value, nodes),
         Expression::EventMath { args, .. } => {
             for arg in args {
                 predicate_nodes(arg, nodes);
@@ -109,6 +116,7 @@ fn predicate_nodes(expr: &Expression, nodes: &mut BTreeSet<usize>) {
 /// in cancelled terms and in all select arms; do not use a sample's value here.
 fn predicate_degree(expr: &Expression) -> Option<u8> {
     match expr {
+        Expression::Forcing { .. } => None,
         Expression::Affine { terms, .. } => Some(u8::from(!terms.is_empty())),
         Expression::Add { left, right } => {
             Some(predicate_degree(left)?.max(predicate_degree(right)?))
@@ -208,6 +216,12 @@ pub(crate) fn validate_source_select_predicates(
     source_program: bool,
 ) -> Result<(), Error> {
     match expr {
+        Expression::Forcing { .. } => {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing marker requires its owning independent component dispatcher",
+            ))
+        }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
@@ -341,6 +355,12 @@ impl Accumulator {
         nodes: &[f64],
     ) -> Result<(), Error> {
         match expr {
+            Expression::Forcing { .. } => {
+                return Err(Error::new(
+                    "unsupported_forcing_scope",
+                    "forcing marker requires its owning independent component dispatcher",
+                ))
+            }
             Expression::IntegerPrimitive { .. }
             | Expression::ArrayRead { .. }
             | Expression::CheckedInteger { .. }
@@ -548,6 +568,10 @@ fn finite_predicate_interval(value: I) -> Result<I, Error> {
 
 pub(crate) fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
     match expr {
+        Expression::Forcing { .. } => Err(Error::new(
+            "unsupported_forcing_scope",
+            "forcing marker requires its owning independent component dispatcher",
+        )),
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }

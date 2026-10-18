@@ -8,11 +8,12 @@ import math
 from fractions import Fraction
 from typing import TYPE_CHECKING
 
-from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
-                 IntegerPrimitive, IntegerLiteral, IntegerState, ArrayRead, ArrayWrite, CheckedInteger, CheckedIndex, Loop as RuntimeLoop, EventMath, Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
+from .ir import (Affine, Term, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
+                 IntegerPrimitive, IntegerLiteral, IntegerState, ArrayRead, ArrayWrite, CheckedInteger, CheckedIndex, Loop as RuntimeLoop, EventMath, Origin, Program, Power, Select, Forcing, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
 from .lowering import lower, scale, UnsupportedConstantPower, FiniteIntegerUnavailable
 from .limits import check_ir
 from .integer_invariants import SourceProofRequest
+from .forcing_components import source_forcing_tree, audit_original_reads, residual_checks
 from .input_rational_scope import input_rational_tree
 from .compact_source_select import compact_source_assignment
 from .integer_prefix import factor_integer_prefix
@@ -47,6 +48,9 @@ class Compilation:
     source_rational_origins: list[Origin] = field(default_factory=list)
     source_rational_nodes: set[int] = field(default_factory=lambda: {0})
     settled_integer_reads: bool = False
+    # References only: bind_hierarchy/parse_sources already own these objects.
+    # No original-tree proof is visited or charged without a forcing marker.
+    forcing_original_bindings: list[tuple[Model, dict[str, int], str]] = field(default_factory=list)
 
     def __post_init__(self):
         self.indices = {name: i for i, name in enumerate(self.nodes)}
@@ -57,6 +61,54 @@ class Compilation:
         result = Program(self.nodes, tuple(self.contributions), tuple(self.states), tuple(self.events), tuple(self.operators),
                          step_bounds=tuple(self.step_bounds))
         check_ir(result, work=self.native_audit.ir_work)
+        if any(isinstance(c.rhs, Forcing) for c in result.contributions):
+            # Preserve R6's original, pre-scalarization component role audit.
+            # It owns its existing source-proof phase; no reduced Program is
+            # substituted for the original bound instance/node references.
+            self.initial_math_work -= 3 * len(result.contributions)
+            if self.initial_math_work < 0:
+                raise CompileError('forcing output dependency budget exceeded', code='resource_budget')
+            outputs = {n for c in result.contributions if isinstance(c.rhs, Forcing)
+                       for n in (c.positive, c.negative)} - {0}
+            numeric_reads = set()
+            for model, node_ids, owner in self.forcing_original_bindings:
+                try:
+                    numeric_reads.update(audit_original_reads(self, model, node_ids, outputs))
+                except CompileError as error:
+                    error.diagnostic.setdefault('instance', owner)
+                    raise
+            self.initial_math_work -= len(numeric_reads)**2 + 8*len(numeric_reads)
+            if self.initial_math_work < 0:
+                raise CompileError('forcing numeric role budget exceeded', code='resource_budget')
+
+            def emit_forcing_ir(cls, *args, **kwargs):
+                # These added IR objects use the existing request audit too.
+                self.native_audit.debit("emit_object")
+                self.native_audit.debit("emit_field", len(fields(cls)))
+                return cls(*args, **kwargs)
+
+            footprint = emit_forcing_ir(Affine, 0., tuple(
+                emit_forcing_ir(Term, n, 0.) for n in sorted(numeric_reads)))
+            self.native_audit.debit("copy_container")
+            self.native_audit.debit("copy_element", len(result.contributions))
+            contributions = list(result.contributions)
+            for index, contribution in enumerate(contributions):
+                if isinstance(contribution.rhs, Forcing):
+                    original = contribution.rhs
+                    self.native_audit.debit("copy_container")
+                    self.native_audit.debit("copy_element", len(original.checked) + 1)
+                    checked = (*original.checked, footprint)
+                    value = emit_forcing_ir(Forcing, original.value, original.origin, checked)
+                    contributions[index] = emit_forcing_ir(
+                        Contribution, contribution.branch, contribution.positive,
+                        contribution.negative, value, contribution.origin)
+                    break
+            self.native_audit.debit("program_copy", 5 + len(contributions))
+            result = emit_forcing_ir(Program, result.nodes, tuple(contributions),
+                                    result.states, result.events, result.operators,
+                                    step_bounds=result.step_bounds)
+            check_ir(result, work=self.native_audit.ir_work)
+        # A replacement Program must keep the SAME owner for expanded transport.
         object.__setattr__(result, "_native_audit", self.native_audit)
         if self.source_rational_origins:
             trees = [input_rational_tree(c.rhs, self.source_rational_nodes) for c in result.contributions]
@@ -129,9 +181,14 @@ class InstanceCompiler:
             self.node_ids["$abstime"] = compilation.indices["$abstime"]
         self.initials = {}
         self.expression_decision_origins = set()
+        self.forcing_seen = False
+        self.forcing_checks = {}
+        self.forcing_ordinary_active = False
         self.allowed_condition_nodes = {0} | ({self.node_ids["$abstime"]} if "$abstime" in self.node_ids else set()) | {self.node_ids[port] for port, direction in model.directions.items()
                                              if direction in ("input", "inout")}
         self.compilation.source_rational_nodes.update(self.allowed_condition_nodes)
+        self.compilation.forcing_original_bindings.append(
+            (source_model or model, self.node_ids, instance.name))
 
     def compile(self):
         self.cache = bind_parameters(self.model, self.instance.parameters, self.instance.name)
@@ -276,8 +333,10 @@ class InstanceCompiler:
                 # replace a stronger existing state-independent writer proof.
                 self.ordinary_integer_bounds[state] = (max(low, old_low), min(high, old_high))
         try:
+            self.forcing_ordinary_active = True
             _, contributions = self.execute_analog(statements, {})
         finally:
+            self.forcing_ordinary_active = False
             self.ordinary_integer_bounds = None
         self.emit_contributions(contributions)
 
@@ -1873,6 +1932,16 @@ class InstanceCompiler:
             return _predicate_degree(item)
         return value_degree(value) is not None or has_divide(value) and rational_tree(value)
 
+    def source_forcing_candidate(self, value):
+        if self.forcing_ordinary_active and source_forcing_tree(value, self.allowed_condition_nodes, self):
+            self.compilation.initial_math_work -= 1
+            if self.compilation.initial_math_work < 0:
+                raise CompileError('forcing checked expression budget exceeded', code='resource_budget')
+            self.forcing_checks[id(value)] = value
+            self.forcing_seen = True
+            return True
+        return False
+
     def validate_decision_expression(self, expr, value):
         origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line, expr.token.column,
                         self.instance.name, expr.expansion)
@@ -1880,6 +1949,8 @@ class InstanceCompiler:
         if not self.selected_value_supported(value):
             if self.input_rational_candidate(value):
                 self.request_input_rational(origin)
+            elif self.source_forcing_candidate(value):
+                pass
             else:
                 raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected value must remain piecewise-affine or a supported rational expression")
 
@@ -1892,6 +1963,8 @@ class InstanceCompiler:
                 not self.selected_value_supported(result)):
             if self.input_rational_candidate(result):
                 self.request_input_rational(origin)
+            elif self.source_forcing_candidate(result):
+                pass
             else:
                 raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: decision predicates and every arm must be affine or input-selected piecewise-affine")
         if not (self.expression_nodes(left) | self.expression_nodes(right)).issubset(self.allowed_condition_nodes):
@@ -1959,6 +2032,8 @@ class InstanceCompiler:
             if not self.selected_value_supported(value):
                 if self.input_rational_candidate(value):
                     self.request_input_rational(origin)
+                elif self.source_forcing_candidate(value):
+                    pass
                 else:
                     raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected value must remain piecewise-affine or a supported rational expression")
         return value
@@ -2012,7 +2087,9 @@ class InstanceCompiler:
                     if self.input_rational_candidate(left) and self.input_rational_candidate(right):
                         self.request_input_rational(origin)
                     else:
-                        raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates must be affine or input-selected piecewise-affine; nonlinear products and powers are unsupported")
+                        candidate = self.make_ir(Binary, "add", left, self.scale_ir(right, -1.0))
+                        if not self.source_forcing_candidate(candidate):
+                            raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates must be affine or input-selected piecewise-affine; nonlinear products and powers are unsupported")
                 relation = {"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation]
                 zero, one = self.make_ir(Affine, 0., ()), self.make_ir(Affine, 1., ())
                 yes = self.make_ir(Select, 'gt', active, zero, self.make_ir(Select, relation, left, right, one, zero, origin), zero, origin)
@@ -2066,6 +2143,21 @@ class InstanceCompiler:
         return result, emitted
 
     def emit_contributions(self, analog_contributions):
+        checked = ()
+        if self.forcing_seen:
+            forbidden, roots = set(), []
+            for statement, expression in analog_contributions:
+                if source_forcing_tree(expression, self.allowed_condition_nodes, self):
+                    forbidden.update(self.node_ids[str(arg.value)] for arg in statement.branch.args)
+                    roots.append(expression)
+            forbidden.discard(0)
+            if not forbidden:
+                raise CompileError('new forcing expression requires an independent output consumer',
+                                   code='unsupported_forcing_scope')
+            self.compilation.initial_math_work -= len(self.forcing_checks)
+            if self.compilation.initial_math_work < 0:
+                raise CompileError('forcing checked expression copy budget exceeded', code='resource_budget')
+            checked = residual_checks(self, roots, self.forcing_checks)
         bound_branches = {}
         for branch_statement, expression in analog_contributions:
             branch = branch_statement.branch
@@ -2080,4 +2172,8 @@ class InstanceCompiler:
             sign = 1.0 if (local_p, local_n) == pair else -1.0
             origin = self.make_ir(Origin, branch.token.source or self.model.source, branch.token.line, branch.token.column, self.instance.name, branch.expansion)
             identity = self.make_ir(BranchIdentity, self.instance.name, *pair)
-            self.compilation.contributions.append(self.make_ir(Contribution, identity, p, n, self.scale_ir(expression, sign), origin))
+            value = self.scale_ir(expression, sign)
+            if self.forcing_seen and source_forcing_tree(value, self.allowed_condition_nodes, self):
+                value = self.make_ir(Forcing, value, origin, checked)
+                checked = ()
+            self.compilation.contributions.append(self.make_ir(Contribution, identity, p, n, value, origin))

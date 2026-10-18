@@ -271,6 +271,239 @@ impl Trajectory {
             && self.source_errors.iter().all(|e| *e == 0.)
     }
 
+    /// Separate from the slope-demand zero-band predicate. Only validated
+    /// original physical curves qualify; appended sources are never providers.
+    pub(crate) fn forcing_shaped_inputs(
+        &self,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Vec<usize>, Error> {
+        work.debit(
+            2,
+            (4 + self.config.pwl.len() + self.source_errors.len()) as u64,
+        )?;
+        if self.original_source_count != self.config.pwl.len() {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing provider is not original physical input",
+            ));
+        }
+        let mut shaped = Vec::new();
+        for (k, &error) in self.source_errors.iter().enumerate() {
+            if error != 0. {
+                if !self.is_shaped(k) || self.exact_sources[k].is_none() {
+                    return Err(Error::new(
+                        "unsupported_forcing_scope",
+                        "forcing nonzero band requires validated original exact shape",
+                    ));
+                }
+                shaped.push(k);
+            }
+        }
+        Ok(shaped)
+    }
+    /// An existing exact predicate helper evaluates every original affine term.
+    /// Prepay its shaped Curve::value reads as well as its separate 200k AST
+    /// reservation. This is an upper bound even if that helper later fails.
+    pub(crate) fn forcing_predicate_reads(
+        &self,
+        e: &crate::ir::Expression,
+        mapping: &[usize],
+        time: f64,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<(), Error> {
+        use crate::ir::Expression as E;
+        work.step()?;
+        match e {
+            E::Affine { terms, .. } => {
+                work.debit(
+                    2,
+                    terms.len().saturating_mul(mapping.len().saturating_add(1)) as u64,
+                )?;
+                for term in terms {
+                    if let Some(k) = mapping.iter().position(|n| *n == term.node) {
+                        if self.is_shaped(k) {
+                            self.exact_sources[k]
+                                .as_ref()
+                                .ok_or_else(|| {
+                                    unresolved("forcing predicate physical curve missing")
+                                })?
+                                .charge_forcing_read(work, time, false)?;
+                            crate::diagnostics::counter("forcing_predicate_curve_reads_prepaid", 1);
+                        }
+                    }
+                }
+            }
+            E::Add { left, right } | E::Multiply { left, right } => {
+                self.forcing_predicate_reads(left, mapping, time, work)?;
+                self.forcing_predicate_reads(right, mapping, time, work)?;
+            }
+            _ => {
+                return Err(unresolved(
+                    "forcing predicate not resolved before exact read prepayment",
+                ))
+            }
+        }
+        Ok(())
+    }
+    /// Prepay each actual arbitrary-precision physical-source read. There is
+    /// no nominal fallback when an admitted shaped provider lacks a certificate.
+    pub(crate) fn forcing_values_bounds(
+        &self,
+        time: f64,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<(Vec<f64>, Vec<I>), Error> {
+        work.debit(2, (8 + self.config.pwl.len() * 32) as u64)?;
+        let mut values = Vec::new();
+        let mut bounds = Vec::new();
+        for (k, source) in self.config.pwl.iter().enumerate() {
+            if self.is_shaped(k) {
+                let curve = self.exact_sources[k]
+                    .as_ref()
+                    .ok_or_else(|| unresolved("forcing physical curve missing"))?;
+                if let Some((v, b)) = curve.try_forcing_point(time, work)? {
+                    values.push(v);
+                    bounds.push(b);
+                    continue;
+                }
+                crate::diagnostics::counter("forcing_owned_strict_fallback", 1);
+                curve.charge_forcing_read(work, time, false)?;
+                crate::diagnostics::counter("forcing_curve_actual_point_calls", 1);
+                let (v, b) = curve
+                    .at(time)
+                    .ok_or_else(|| unresolved("forcing physical point has no certificate"))?;
+                values.push(v);
+                bounds.push(b);
+                continue;
+            }
+            work.debit(2, source.len() as u64)?;
+            let j = source.partition_point(|p| p[0] < time);
+            if source[j][0] == time {
+                values.push(source[j][1]);
+                bounds.push(I::point(source[j][1]));
+                continue;
+            }
+            let [start, a] = source[j - 1];
+            let [end, b] = source[j];
+            let f = (time - start) / (end - start);
+            values.push(if a == b { a } else { (1. - f) * a + f * b });
+            let fraction = (I::point(time) - I::point(start)) / (I::point(end) - I::point(start));
+            bounds.push(I::point(a) + (I::point(b) - I::point(a)) * fraction);
+        }
+        Ok((values, bounds))
+    }
+    /// A conservative full-request physical value box, with no slope demand.
+    /// Validated PWL segments are convex combinations of their original knot
+    /// ordinates. Include every knot, even after stop: this may widen the box
+    /// but cannot omit an extremum. This is not a local range certificate.
+    pub(crate) fn forcing_request_value_bounds(
+        &self,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Vec<I>, Error> {
+        self.forcing_shaped_inputs(work)?;
+        // Source lookup, Option access, Vec storage and each output copy.
+        work.debit(
+            2,
+            (self.config.pwl.len() as u64)
+                .saturating_mul(8)
+                .saturating_add(4),
+        )?;
+        let mut result = Vec::new();
+        for (k, source) in self.config.pwl.iter().enumerate() {
+            let shape = self
+                .config
+                .pwl_errors_v
+                .as_ref()
+                .and_then(|errors| errors[k].shape());
+            if shape.is_some() && self.exact_sources[k].is_none() {
+                return Err(unresolved(
+                    "forcing global box requires validated physical shape",
+                ));
+            }
+            let count = shape.map_or(source.len(), |s| s.exact_knots.len());
+            // All knot reads, point construction, min/max and counters are
+            // prepaid before reading the first ordinate, including on retry.
+            work.debit(2, (count as u64).saturating_mul(8).saturating_add(4))?;
+            let mut bounds: Option<I> = None;
+            let mut include = |v: f64| {
+                crate::diagnostics::counter("forcing_global_value_knots", 1);
+                let point = I::point(v);
+                bounds = Some(bounds.map_or(point, |old| old.hull(point)));
+            };
+            if let Some(shape) = shape {
+                for knot in &shape.exact_knots {
+                    include(knot.value_v);
+                }
+            } else {
+                for knot in source {
+                    include(knot[1]);
+                }
+            }
+            result.push(
+                bounds.ok_or_else(|| unresolved("forcing global box has no original knots"))?,
+            );
+        }
+        Ok(result)
+    }
+    // Retain the strict paid local value/slope certificate; the new global
+    // value-only consumer deliberately does not request this operation.
+    #[cfg_attr(not(test), allow(dead_code))]
+    pub(crate) fn forcing_range(
+        &self,
+        time: I,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<(Vec<I>, Vec<I>), Error> {
+        if !time.finite() || time.lo < 0.0 || time.hi > self.config.stop || time.lo > time.hi {
+            return Err(Error::new(
+                "event_resolution",
+                "invalid guard time interval",
+            ));
+        }
+        let left = self.forcing_values_bounds(time.lo, work)?.1;
+        let right = self.forcing_values_bounds(time.hi, work)?.1;
+        let mut values: Vec<_> = left.iter().zip(right).map(|(&a, b)| a.hull(b)).collect();
+        let mut derivatives = Vec::new();
+        for (k, source) in self.config.pwl.iter().enumerate() {
+            work.debit(2, source.len().saturating_add(4) as u64)?;
+            if self.is_shaped(k) {
+                let curve = self.exact_sources[k]
+                    .as_ref()
+                    .ok_or_else(|| unresolved("forcing physical curve missing"))?;
+                curve.charge_forcing_read(work, time.lo, true)?;
+                curve.charge_forcing_read(work, time.hi, true)?;
+                crate::diagnostics::counter("forcing_curve_actual_range_calls", 1);
+                let (physical_values, physical_slope) = self.exact_sources[k]
+                    .as_ref()
+                    .and_then(|curve| curve.range(time))
+                    .ok_or_else(|| unresolved("cannot bound original source shape"))?;
+                values[k] = physical_values;
+                derivatives.push(physical_slope);
+                continue;
+            }
+            let mut slope = None;
+            for pair in source.windows(2) {
+                if pair[0][0] < time.hi && pair[1][0] > time.lo
+                    || time.lo == time.hi && pair[0][0] <= time.lo && time.lo <= pair[1][0]
+                {
+                    let d = (I::point(pair[1][1]) - I::point(pair[0][1]))
+                        / (I::point(pair[1][0]) - I::point(pair[0][0]));
+                    slope = Some(slope.map_or(d, |previous: I| previous.hull(d)));
+                }
+            }
+            for &[t, v] in source {
+                if t > time.lo && t < time.hi {
+                    values[k] = values[k].hull(
+                        I::point(v)
+                            + I {
+                                lo: -self.source_errors[k],
+                                hi: self.source_errors[k],
+                            },
+                    );
+                }
+            }
+            derivatives.push(slope.unwrap_or(I::ZERO));
+        }
+        Ok((values, derivatives))
+    }
     pub(crate) fn range(&self, time: I) -> Result<(Vec<I>, Vec<I>), Error> {
         if !time.finite() || time.lo < 0.0 || time.hi > self.config.stop || time.lo > time.hi {
             return Err(Error::new(
@@ -709,6 +942,145 @@ impl Trajectory {
 mod tests {
     use super::*;
 
+    fn forcing_shape_test(value: f64) -> Trajectory {
+        let config = serde_json::from_value(serde_json::json!({"pwl":[[[0,0],[1,value]]],
+          "output_times":[0,1],"stop":1,"max_step":1,
+          "pwl_errors_V":[{"voltage_error_bound_V":0,"exact_knots":[
+            {"time_numerator":"0","time_denominator":"1","value_V":0},
+            {"time_numerator":"1","time_denominator":"1","value_V":value}]}]}))
+        .unwrap();
+        Trajectory::new(config, 1).unwrap()
+    }
+    #[test]
+    fn forcing_global_values_include_interior_and_beyond_stop_physical_extrema() {
+        let config = serde_json::from_value(serde_json::json!({"pwl":[[[0,0],[2,0]]],
+          "output_times":[0,1],"stop":1,"max_step":1,
+          "pwl_errors_V":[{"voltage_error_bound_V":2,"exact_knots":[
+            {"time_numerator":"0","time_denominator":"1","value_V":0},
+            {"time_numerator":"1","time_denominator":"2","value_V":2},
+            {"time_numerator":"2","time_denominator":"1","value_V":-2}]}]}))
+        .unwrap();
+        let t = Trajectory::new(config, 1).unwrap();
+        let work = crate::transition_source_plan::Work::default();
+        let (r, d) = crate::diagnostics::capture(Default::default(), || {
+            t.forcing_request_value_bounds(&work)
+        });
+        let b = r.unwrap()[0];
+        assert_eq!((b.lo, b.hi), (-2., 2.));
+        assert_eq!(d.counters["forcing_global_value_knots"], 3);
+        assert_eq!(d.counters.get("forcing_curve_actual_range_calls"), None);
+        assert_eq!(d.counters.get("forcing_curve_reserved_work"), None);
+        assert!(b.lo <= -2.); // Exterior final knot is retained, not clipped away.
+        let work = crate::transition_source_plan::Work::limited([128, 8192, 30]);
+        for _ in 0..3 {
+            let (r, d) = crate::diagnostics::capture(Default::default(), || {
+                t.forcing_request_value_bounds(&work)
+            });
+            assert_eq!(r.unwrap_err().kind, "step_budget");
+            assert_eq!(d.counters.get("forcing_global_value_knots"), None);
+        }
+    }
+    #[test]
+    fn forcing_global_values_keep_zero_band_physical_and_nominal_sources() {
+        let config = serde_json::from_value(serde_json::json!({"pwl":[[[0,0],[2,2]]],
+          "output_times":[0,1],"stop":1,"max_step":1,
+          "pwl_errors_V":[{"voltage_error_bound_V":0,"exact_knots":[
+            {"time_numerator":"0","time_denominator":"1","value_V":0},
+            {"time_numerator":"2","time_denominator":"1","value_V":2}]}]}))
+        .unwrap();
+        let t = Trajectory::new(config, 1).unwrap();
+        let work = crate::transition_source_plan::Work::default();
+        let b = t.forcing_request_value_bounds(&work).unwrap()[0];
+        assert_eq!((b.lo, b.hi), (0., 2.));
+        let (local, d) = crate::diagnostics::capture(Default::default(), || {
+            t.forcing_range(I { lo: 0., hi: 1. }, &work)
+        });
+        let local = local.unwrap().0[0];
+        assert!(local.hi < b.hi && local.lo >= b.lo);
+        assert_eq!(d.counters["forcing_curve_actual_range_calls"], 1);
+        assert!(d.counters["forcing_curve_reserved_work"] > 0);
+        let config = serde_json::from_value(serde_json::json!({"pwl":[[[0,0],[0.5,3],[2,-4]]],
+          "output_times":[0,1],"stop":1,"max_step":1}))
+        .unwrap();
+        let t = Trajectory::new(config, 1).unwrap();
+        let b = t.forcing_request_value_bounds(&work).unwrap()[0];
+        assert_eq!((b.lo, b.hi), (-4., 3.));
+    }
+    #[test]
+    fn forcing_global_values_reject_uncovered_unknown_and_generated_providers() {
+        for points in [
+            serde_json::json!([[0.1, 0], [1, 1]]),
+            serde_json::json!([[0, 0], [0.9, 1]]),
+        ] {
+            let config = serde_json::from_value(
+                serde_json::json!({"pwl":[points],"output_times":[0,1],"stop":1,"max_step":1}),
+            )
+            .unwrap();
+            assert!(Trajectory::new(config, 1).is_err());
+        }
+        let config=serde_json::from_value(serde_json::json!({"pwl":[[[0,0],[1,1]]],"output_times":[0,1],"stop":1,"max_step":1,"pwl_errors_V":[0.1]})).unwrap();
+        let t = Trajectory::new(config, 1).unwrap();
+        let work = crate::transition_source_plan::Work::default();
+        assert_eq!(
+            t.forcing_request_value_bounds(&work).unwrap_err().kind,
+            "unsupported_forcing_scope"
+        );
+        let mut t = forcing_shape_test(1.);
+        t.add_enclosed_source(vec![[0., 0.], [1., 1.]], 0.).unwrap();
+        assert_eq!(
+            t.forcing_request_value_bounds(&work).unwrap_err().kind,
+            "unsupported_forcing_scope"
+        );
+    }
+    #[test]
+    fn forcing_physical_point_prepays_limbs_subnormal_time_and_sticky_locator() {
+        use crate::transition_source_plan::Work;
+        let small = forcing_shape_test(1.);
+        let large = forcing_shape_test(1e300);
+        let measure = |t: &Trajectory| {
+            let work = Work::default();
+            let (r, d) = crate::diagnostics::capture(Default::default(), || {
+                t.forcing_values_bounds(f64::from_bits(1), &work)
+            });
+            let (_, boxes) = r.unwrap();
+            let exact = crate::exact_source::binary(t.config.pwl[0][1][1]).unwrap()
+                * crate::exact_source::binary(f64::from_bits(1)).unwrap();
+            assert!(
+                crate::exact_source::binary(boxes[0].lo).unwrap() <= exact
+                    && exact <= crate::exact_source::binary(boxes[0].hi).unwrap()
+            );
+            d
+        };
+        let a = measure(&small);
+        let b = measure(&large);
+        assert_eq!(a.counters["forcing_curve_actual_point_calls"], 1); // Strict conversion-overflow fallback.
+        assert_eq!(b.counters["forcing_owned_point_success"], 1);
+        assert_eq!(b.counters.get("forcing_curve_actual_point_calls"), None);
+        assert!(
+            b.counters["forcing_owned_reserved_work"] > a.counters["forcing_owned_reserved_work"]
+        );
+        println!("forcing_owned_subnormal_limb_cost small_owned={} small_legacy={} large_owned={} large_certified_without_legacy=true",a.counters["forcing_owned_reserved_work"],a.counters["forcing_curve_reserved_work"],b.counters["forcing_owned_reserved_work"]);
+        let work = Work::limited([128, 8192, 100]); // Locator only, original1e9 is unchanged.
+        for _ in 0..3 {
+            let (r, d) = crate::diagnostics::capture(Default::default(), || {
+                large.forcing_values_bounds(f64::from_bits(1), &work)
+            });
+            assert_eq!(r.unwrap_err().kind, "step_budget");
+            assert_eq!(d.counters.get("forcing_curve_actual_point_calls"), None);
+            assert_eq!(d.counters.get("forcing_owned_time_conversions"), None);
+            assert_eq!(d.counters.get("forcing_owned_cross_comparisons"), None);
+        }
+    }
+    #[test]
+    fn forcing_provider_refuses_generated_even_zero_error_history() {
+        use crate::transition_source_plan::Work;
+        let mut t = forcing_shape_test(1.);
+        t.add_enclosed_source(vec![[0., 0.], [1., 1.]], 0.).unwrap();
+        assert_eq!(
+            t.forcing_shaped_inputs(&Work::default()).unwrap_err().kind,
+            "unsupported_forcing_scope"
+        );
+    }
     #[test]
     fn flat_generated_source_keeps_its_enclosure_error() {
         let mut trajectory = Trajectory::new(
@@ -889,5 +1261,76 @@ mod exact_mixed_order_tests {
             prop_assert_eq!(left.exact_order(&right),Some(order(left_time.clone()-right_time)));
             prop_assert_eq!(left.clock_delta_order(clock,delta),Some(order(left_time-q(start)-q(period)*q(index as f64)-q(delta))));
         }
+    }
+}
+
+// borrow original Root metadata, never run rational_time to price it.
+impl Root {
+    pub(crate) fn rational_time_with_work(
+        &self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<crate::exact_source::RootTime>, crate::ir::Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 32)?;
+        if let Some(time) = &self.source_time {
+            return time.clone_with_work(w).map(Some);
+        }
+        crate::exact_source::RootTime::point_ends_with_work(self.segment, self.ends, self.bounds, w)
+    }
+}
+
+// original Root branches preserved, no projected root substituted.
+impl Root {
+    pub(crate) fn clock_delta_order_with_work(
+        &self,
+        clock: crate::exact_time::Clock,
+        delta: f64,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<std::cmp::Ordering>, Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 64)?;
+        if let Some(time) = &self.source_time {
+            return time.clock_delta_order_with_work(clock, delta, w);
+        }
+        w.debit(2, crate::exact_time::TRIPLE_SIGN_FEE)?;
+        Ok(self.clock_delta_order(clock, delta))
+    }
+    pub(crate) fn local_bounds_with_work(
+        &self,
+        clock: crate::exact_time::Clock,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<I>, Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 64)?;
+        if let Some(time) = &self.source_time {
+            return time.local_bounds_with_work(clock, w);
+        }
+        // The old closure performs only fixed-array clock_delta_order here.
+        w.debit(
+            2,
+            crate::exact_time::ENCLOSE_SIGN_CALLS
+                .saturating_mul(crate::exact_time::TRIPLE_SIGN_FEE.saturating_add(64))
+                .saturating_add(256),
+        )?;
+        Ok(self.local_bounds(clock))
+    }
+    pub(crate) fn exact_order_with_work(
+        &self,
+        other: &Self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<std::cmp::Ordering>, Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 96)?;
+        if self.source_time.is_some() || other.source_time.is_some() {
+            let Some(a) = self.rational_time_with_work(w)? else {
+                return Ok(None);
+            };
+            let Some(b) = other.rational_time_with_work(w)? else {
+                return Ok(None);
+            };
+            return Ok(Some(a.order_with_work(&b, w)?));
+        }
+        w.debit(2, crate::exact_time::TRIPLE_SIGN_FEE)?;
+        Ok(self.exact_order(other))
     }
 }

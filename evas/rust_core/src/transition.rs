@@ -235,6 +235,55 @@ fn exact_level(
 }
 
 impl Transition {
+    pub(crate) fn charge_forcing_copy(
+        &self,
+        c: &crate::transition_source_plan::ProofContext,
+    ) -> Result<(), Error> {
+        fn rational(
+            c: &crate::transition_source_plan::ProofContext,
+            r: &num_rational::BigRational,
+        ) -> Result<(), Error> {
+            c.source_charge(
+                "forcing_history_limbs",
+                4 + (r.numer().bits().div_ceil(64) + r.denom().bits().div_ceil(64)) as usize,
+            )
+        }
+        fn deadline(
+            c: &crate::transition_source_plan::ProofContext,
+            d: &Deadline,
+        ) -> Result<(), Error> {
+            c.source_charge("forcing_deadline_copy", 16)?;
+            if let Some(r) = &d.exact {
+                rational(c, r.rational())?;
+            }
+            Ok(())
+        }
+        c.source_charge("forcing_history_queue_copy", 64 + self.pending.len() * 32)?;
+        if let Some(r) = &self.exact_settled {
+            rational(c, r)?;
+        }
+        if let Some(e) = &self.edge {
+            c.source_charge("forcing_history_edge_copy", 64)?;
+            if let Some((a, b)) = &e.exact_line {
+                rational(c, a)?;
+                rational(c, b)?;
+            }
+            if let Some(r) = &e.exact_start {
+                rational(c, r.rational())?;
+            }
+            for r in [&e.exact_origin, &e.exact_target].into_iter().flatten() {
+                rational(c, r)?;
+            }
+            deadline(c, &e.end)?;
+        }
+        for (d, _, _, r) in &self.pending {
+            deadline(c, d)?;
+            if let Some(r) = r {
+                rational(c, r)?;
+            }
+        }
+        Ok(())
+    }
     // Copy accounting only; the existing history/transition algorithm is unchanged.
     pub(crate) fn charge_held_copy(
         &self,

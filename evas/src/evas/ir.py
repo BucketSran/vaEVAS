@@ -1,4 +1,4 @@
-"""Version 27: voltage/event IR with typed event integer primitives.
+"""Version 30: voltage/event IR with typed integers and forcing markers.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 29
+SCHEMA_VERSION = 30
 
 
 @dataclass(frozen=True)
@@ -59,6 +59,14 @@ class Select:
     else_value: "Expression"
     origin: Origin
     op: str = field(default="select", init=False)
+
+
+@dataclass(frozen=True)
+class Forcing:
+    value: "Expression"
+    origin: Origin
+    checked: tuple["Expression", ...] = ()
+    op: str = field(default="forcing", init=False)
 
 
 @dataclass(frozen=True)
@@ -127,7 +135,7 @@ class IntegerPrimitive:
     op: str = field(default="integer_primitive", init=False)
 
 
-Expression = IntegerPrimitive | ArrayRead | CheckedInteger | CheckedIndex | Affine | Binary | Power | Select | StateRef | OperatorRef | EventMath
+Expression = Forcing | IntegerPrimitive | ArrayRead | CheckedInteger | CheckedIndex | Affine | Binary | Power | Select | StateRef | OperatorRef | EventMath
 
 
 @dataclass(frozen=True)

@@ -5,11 +5,23 @@ use crate::ir::{Error, Expression, Program, Solution, Tolerances};
 use crate::{expression, linear, nonlinear};
 use std::sync::{Arc, OnceLock};
 
+pub(crate) type ForcingRow = (
+    usize,
+    usize,
+    usize,
+    f64,
+    f64,
+    I,
+    Expression,
+    crate::ir::Origin,
+);
+
 type AffineFactor = Arc<OnceLock<Result<linear::Factorization, Error>>>;
 
 #[derive(Clone)]
 pub struct Circuit {
     pub nodes: Vec<String>,
+    pub(crate) forcing_phase: Option<(usize, f64)>,
     equations: Vec<Equation>,
     driven: Vec<usize>,
     unknown: Vec<usize>,
@@ -118,6 +130,12 @@ fn interval_evaluate(expr: &Expression, values: &[I]) -> Result<IntervalValue, E
     let count = values.len();
     let mut gradient = vec![I::ZERO; count];
     let value = match expr {
+        Expression::Forcing { .. } => {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing marker requires its owning independent component dispatcher",
+            ))
+        }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
@@ -241,6 +259,7 @@ impl Circuit {
             Vec::new()
         };
         Ok(Self {
+            forcing_phase: None,
             nodes,
             equations,
             driven,
@@ -785,6 +804,67 @@ impl Circuit {
             self.affine_factor.clone_from(&previous.affine_factor);
             crate::diagnostics::counter("affine_cache_links", 1);
         }
+    }
+
+    pub(crate) fn install_forcing_phase(
+        &mut self,
+        identity: usize,
+        time: f64,
+        solution: &mut Solution,
+        rows: Vec<ForcingRow>,
+    ) -> Result<(), Error> {
+        let boxes = solution.certified_voltage_bounds.as_mut().ok_or_else(|| {
+            Error::new("invalid_ir", "forcing requires original observation boxes")
+        })?;
+        for (node, positive, negative, rhs, value, bound, original, origin) in rows {
+            let equation = self
+                .equations
+                .iter_mut()
+                .find(|e| {
+                    e.positive == positive
+                        && e.negative == negative
+                        && e.branch.instance == origin.instance
+                })
+                .ok_or_else(|| {
+                    Error::new("invalid_ir", "forcing relation lost from reduced circuit")
+                })?;
+            if !equation.rhs_terms.is_empty() || !equation.nonlinear.is_empty() {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "forcing provisional row was not independent",
+                ));
+            }
+            // The actual phase-bound RHS and original relation replace the
+            // provisional zero. Unknown coefficients/factor remain identical.
+            equation.rhs_constant = rhs;
+            solution.voltages[node] = value;
+            boxes[node] = [bound.lo.min(value), bound.hi.max(value)];
+            let point_rhs = expression::evaluate(&original, &solution.voltages)?.value;
+            let lhs = solution.voltages[positive] - solution.voltages[negative];
+            let limit = self.tolerances.absolute
+                + self.tolerances.relative * lhs.abs().max(point_rhs.abs());
+            let residual = (lhs - point_rhs).abs();
+            let physical: Vec<_> = boxes.iter().map(|b| I { lo: b[0], hi: b[1] }).collect();
+            let box_residual = (physical[positive] - physical[negative])
+                - interval_expression(&original, &physical)?;
+            if !residual.is_finite()
+                || residual > limit
+                || !box_residual.finite()
+                || box_residual.lo < -limit
+                || box_residual.hi > limit
+            {
+                return Err(Error::new(
+                    "residual_failure",
+                    "forcing original relation lacks point/box residual certificate",
+                ));
+            }
+            equation.original_rhs = vec![original];
+        }
+        let (residual, ratio) = self.check_affine_residuals(&solution.voltages)?;
+        solution.max_residual_v = residual;
+        solution.max_residual_ratio = ratio;
+        self.forcing_phase = Some((identity, time));
+        Ok(())
     }
 
     fn check_affine_residuals(&self, values: &[f64]) -> Result<(f64, f64), Error> {

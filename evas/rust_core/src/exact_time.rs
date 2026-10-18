@@ -181,6 +181,56 @@ pub(crate) fn enclose_zero(sign: impl Fn(f64) -> Option<i8>) -> Option<I> {
     })
 }
 
+// fixed-array exact predicates. Original APIs retain their fees.
+// A word primitive is one 64-bit load/store/add/mul/div/compare/branch.
+// pair: 2*68 zero slots, <=4 terms*2 words*2 carry halves*68
+// carry steps, final <=68 comparisons, plus <=16 scalar setup per term.
+// triple: 2*100 zero slots, <=8 terms*(3*3 product limbs+3*2*100
+// carry steps), final <=100 comparisons. 64 per step covers all named
+// reads/writes/shifts/carries/branches and array indexing, not an empty loop.
+pub(crate) const PAIR_SIGN_FEE: u64 = 64 * (136 + 4 * 2 * 2 * 68 + 68 + 4 * 16);
+pub(crate) const TRIPLE_SIGN_FEE: u64 = 64 * (200 + 8 * (3 * 3 + 3 * 2 * 100) + 100);
+pub(crate) const ENCLOSE_SIGN_CALLS: u64 = 66; // two endpoints + <=64 rank bisections
+impl Clock {
+    pub(crate) fn order_with_work(
+        self,
+        other: Self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<std::cmp::Ordering>, crate::ir::Error> {
+        w.debit(2, 0)?;
+        w.debit(2, PAIR_SIGN_FEE + 64)?;
+        Ok(self.order(other))
+    }
+    pub(crate) fn delta_with_work(
+        self,
+        time: f64,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<I>, crate::ir::Error> {
+        w.debit(2, 0)?;
+        w.debit(
+            2,
+            ENCLOSE_SIGN_CALLS
+                .saturating_mul(PAIR_SIGN_FEE + 64)
+                .saturating_add(256),
+        )?;
+        Ok(self.delta(time))
+    }
+    pub(crate) fn difference_with_work(
+        self,
+        other: Self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<I>, crate::ir::Error> {
+        w.debit(2, 0)?;
+        w.debit(
+            2,
+            ENCLOSE_SIGN_CALLS
+                .saturating_mul(TRIPLE_SIGN_FEE + 64)
+                .saturating_add(256),
+        )?;
+        Ok(self.difference(other))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -5,6 +5,7 @@ use super::*;
 
 fn enclose(e: &Expression, nodes: &[I], states: &[I]) -> Option<I> {
     let value = match e {
+        Expression::Forcing { .. } => return None,
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }

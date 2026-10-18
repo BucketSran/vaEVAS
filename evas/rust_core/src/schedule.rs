@@ -2583,3 +2583,343 @@ mod held_calendar_review_tests {
             .is_none());
     }
 }
+
+// old common_root and all old consumers remain unchanged.
+impl Moment {
+    /// Preserve old bounds mathematical fallback, but never discard Work errors.
+    fn bounds_with_work(&self, w: &crate::transition_source_plan::Work) -> Result<I, Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 32)?;
+        if let Self::HeldTimer { bounds, .. } = self {
+            return Ok(*bounds);
+        }
+        let discovery = match self {
+            Self::Cross(root) => root.bounds,
+            Self::Anchored { bounds, .. }
+            | Self::Dynamic { bounds, .. }
+            | Self::Timer { bounds, .. }
+            | Self::HeldTimer { bounds, .. } => *bounds,
+        };
+        if let Some(root) = self.exact_history_root() {
+            return Ok(root.refine_with_work(discovery, w)?.unwrap_or(discovery));
+        }
+        Ok(discovery)
+    }
+}
+impl ScheduledEvent {
+    fn exact_root_with_work(
+        &self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<crate::exact_source::RootTime>, Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 32)?;
+        let bounds = self.moment.bounds_with_work(w)?;
+        let root = if let Some(root) = self.moment.exact_history_root() {
+            root.clone_with_work(w)?
+        } else if let Moment::Cross(root) = &self.moment {
+            let Some(root) = root.rational_time_with_work(w)? else {
+                return Ok(None);
+            };
+            root
+        } else {
+            let Some(clock) = self.moment.clock() else {
+                return Ok(None);
+            };
+            let Some(root) = crate::exact_source::RootTime::from_clock_with_work(clock, bounds, w)?
+            else {
+                return Ok(None);
+            };
+            root
+        };
+        if root.refine_with_work(bounds, w)?.is_none() {
+            return Ok(None);
+        }
+        Ok(Some(root))
+    }
+}
+pub(crate) fn common_root_with_work(
+    events: &[ScheduledEvent],
+    w: &crate::transition_source_plan::Work,
+) -> Result<Option<crate::exact_source::RootTime>, Error> {
+    w.debit(2, 0)?;
+    w.debit(
+        2,
+        (events.len() as u64).saturating_mul(8).saturating_add(16),
+    )?;
+    let Some(event) = events.first() else {
+        return Ok(None);
+    };
+    let Some(first) = event.exact_root_with_work(w)? else {
+        return Ok(None);
+    };
+    for event in events.iter().skip(1) {
+        let Some(next) = event.exact_root_with_work(w)? else {
+            return Ok(None);
+        };
+        if first.order_with_work(&next, w)? != std::cmp::Ordering::Equal {
+            return Ok(None);
+        }
+    }
+    Ok(Some(first))
+}
+pub(crate) fn event_ids_with_work(
+    events: &[ScheduledEvent],
+    w: &crate::transition_source_plan::Work,
+) -> Result<Vec<usize>, Error> {
+    w.debit(2, 0)?;
+    w.debit(
+        2,
+        (events.len() as u64).saturating_mul(4).saturating_add(32),
+    )?;
+    Ok(events.iter().map(|event| event.event).collect())
+}
+
+/// Public-to-crate opt-in accessor: paid nested cached proof refinement.
+impl ScheduledEvent {
+    pub(crate) fn bounds_with_work(
+        &self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<I, Error> {
+        self.moment.bounds_with_work(w)
+    }
+}
+/// Every bounds read in the caller fold is separately paid; common_root's paid
+/// reads do not cover this independent traversal.
+pub(crate) fn event_bounds_hull_with_work(
+    events: &[ScheduledEvent],
+    initial: I,
+    w: &crate::transition_source_plan::Work,
+) -> Result<I, Error> {
+    w.debit(2, 0)?;
+    w.debit(
+        2,
+        (events.len() as u64).saturating_mul(8).saturating_add(32),
+    )?;
+    let mut result = initial;
+    for event in events {
+        let bounds = event.bounds_with_work(w)?;
+        result = I {
+            lo: result.lo.min(bounds.lo),
+            hi: result.hi.max(bounds.hi),
+        };
+    }
+    Ok(result)
+}
+
+// Same-request calendar and phase seams. Continuous local observation
+// remains outside the Forcing provider scope.
+// New Forcing scope rejects ambiguous Dynamic/noexact guard re-evaluation.
+// This is a deliberate new-route restriction, not an old mathematical None.
+
+impl Moment {
+    fn exact_order_with_work(
+        &self,
+        other: &Self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<std::cmp::Ordering>, Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 128)?;
+        if let Some(root) = self.exact_history_root() {
+            if let Some(next) = other.exact_history_root() {
+                return Ok(Some(root.order_with_work(next, w)?));
+            }
+            if let Some(clock) = other.clock() {
+                return root.clock_delta_order_with_work(clock, 0., w);
+            }
+            if let Self::Cross(next) = other {
+                let Some(next) = next.rational_time_with_work(w)? else {
+                    return Ok(None);
+                };
+                return Ok(Some(root.order_with_work(&next, w)?));
+            }
+        }
+        if other.exact_history_root().is_some() {
+            return Ok(other
+                .exact_order_with_work(self, w)?
+                .map(std::cmp::Ordering::reverse));
+        }
+        if std::ptr::eq(self, other) {
+            return Ok(Some(std::cmp::Ordering::Equal));
+        }
+        if let (Some(a), Some(b)) = (self.clock(), other.clock()) {
+            return a.order_with_work(b, w);
+        }
+        match (self, other) {
+            (Self::Anchored { anchor, delta, .. }, b) => {
+                let other = if let Some(clock) = b.clock() {
+                    clock.difference_with_work(*anchor, w)?
+                } else {
+                    match b {
+                        Self::Cross(root) => root.local_bounds_with_work(*anchor, w)?,
+                        Self::Anchored {
+                            anchor: b,
+                            delta: d,
+                            ..
+                        } if b == anchor => Some(*d),
+                        _ => None,
+                    }
+                };
+                let Some(other) = other else {
+                    return Ok(None);
+                };
+                Ok(if delta.hi < other.lo {
+                    Some(std::cmp::Ordering::Less)
+                } else if delta.lo > other.hi {
+                    Some(std::cmp::Ordering::Greater)
+                } else if delta.lo == delta.hi && *delta == other {
+                    Some(std::cmp::Ordering::Equal)
+                } else {
+                    None
+                })
+            }
+            (a, Self::Anchored { .. }) => Ok(other
+                .exact_order_with_work(a, w)?
+                .map(std::cmp::Ordering::reverse)),
+            (Self::Cross(a), Self::Cross(b)) => a.exact_order_with_work(b, w),
+            (Self::Cross(root), clock) => {
+                let Some(clock) = clock.clock() else {
+                    return Ok(None);
+                };
+                root.clock_delta_order_with_work(clock, 0., w)
+            }
+            (clock, Self::Cross(root)) => {
+                let Some(clock) = clock.clock() else {
+                    return Ok(None);
+                };
+                Ok(root
+                    .clock_delta_order_with_work(clock, 0., w)?
+                    .map(std::cmp::Ordering::reverse))
+            }
+            _ => Ok(None),
+        }
+    }
+}
+impl ScheduledEvent {
+    pub(crate) fn physical_order_at_with_work(
+        &self,
+        time: f64,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<std::cmp::Ordering>, Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 128)?;
+        let query = Moment::Timer {
+            bounds: I::point(time),
+            start: time,
+            period: 0.,
+            index: 0,
+        };
+        if let Some(root) = self.moment.exact_history_root() {
+            if let Some(order) = root.clock_delta_order_with_work(query.clock().unwrap(), 0., w)? {
+                return Ok(Some(order));
+            }
+        }
+        if let Some(order) = self.moment.exact_order_with_work(&query, w)? {
+            return Ok(Some(order));
+        }
+        if let Moment::Anchored { anchor, delta, .. } = &self.moment {
+            if let Some(query) = anchor.delta_with_work(time, w)? {
+                if delta.hi <= query.lo {
+                    return Ok(Some(std::cmp::Ordering::Less));
+                }
+                if delta.lo > query.hi {
+                    return Ok(Some(std::cmp::Ordering::Greater));
+                }
+            } else {
+                return Ok(None);
+            }
+        }
+        let bounds = self.bounds_with_work(w)?;
+        Ok(if bounds.lo == bounds.hi && bounds.lo == time {
+            Some(std::cmp::Ordering::Equal)
+        } else if bounds.hi <= time {
+            Some(std::cmp::Ordering::Less)
+        } else if bounds.lo > time {
+            Some(std::cmp::Ordering::Greater)
+        } else {
+            None
+        })
+    }
+    pub(crate) fn physical_order_for_query_with_work(
+        &self,
+        time: f64,
+        model: &EventModel,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<std::cmp::Ordering>, Error> {
+        w.debit(2, 0)?;
+        if let Some(order) = self.physical_order_at_with_work(time, w)? {
+            return Ok(Some(order));
+        }
+        w.debit(2, 64)?;
+        if !self.can_refine_input_root(model) {
+            return Ok(None);
+        }
+        // Root-approved new Forcing scope: original predicate_sign +
+        // GuardTrajectory::new/range are not admitted here. Never fall back
+        // after Work error, and never convert this refusal to mathematical None.
+        Err(Error::new("unsupported_forcing_scope","forcing phase query needs an original exact root or an already certified interval side; dynamic guard re-evaluation is outside the forcing scope"))
+    }
+}
+
+#[cfg(test)]
+mod forcing_phase_accounting_tests {
+    use super::*;
+    use crate::ir::{Program, Tolerances, SCHEMA_VERSION};
+    use crate::transition_source_plan::Work;
+    use serde_json::json;
+
+    #[test]
+    fn forcing_unproved_dynamic_phase_is_explicit_scope_error_without_guard_fallback() {
+        let o = json!({"source":"forcing-phase.va","line":1,"column":1,"instance":"D"});
+        let p:Program=serde_json::from_value(json!({"schema_version":SCHEMA_VERSION,"nodes":["0","u","y"],
+            "states":[{"name":"q","instance":"D","kind":"real","initial":0.}],
+            "events":[{"origin":o,"trigger":{"kind":"cross","guard":{"op":"affine","constant":-0.5,"terms":[{"node":1,"coefficient":1.}]},
+                "direction":1,"time_tolerance":0.2,"expression_tolerance":0.2},
+                "body":[{"kind":"assign","state":0,"rhs":{"op":"affine","constant":1.,"terms":[]}}]}],
+            "contributions":[{"origin":o,"branch":{"instance":"D","local_positive":"p","local_negative":"r","kind":"voltage"},
+                "positive":2,"negative":0,"rhs":{"op":"state","state":0}}]})).unwrap();
+        let model = EventModel::new(p, vec!["u".into()], Tolerances::default()).unwrap();
+        let event = ScheduledEvent {
+            time: 0.6,
+            event: 0,
+            fixed_predecessor: None,
+            moment: Moment::Dynamic {
+                history: None,
+                exact: None,
+                bounds: I { lo: 0.4, hi: 0.6 },
+                derivative: I::point(1.),
+                end: 1.,
+            },
+        };
+        assert!(event.can_refine_input_root(&model));
+        assert_eq!(event.physical_order_at(0.5), None);
+        let (result, report) = crate::diagnostics::capture(Default::default(), || {
+            event.physical_order_for_query_with_work(0.5, &model, &Work::default())
+        });
+        assert_eq!(result.unwrap_err().kind, "unsupported_forcing_scope");
+        assert_eq!(report.counters.get("root_query_phase_checks"), None);
+        let exact = ScheduledEvent {
+            moment: Moment::Dynamic {
+                history: None,
+                exact: Some(crate::exact_source::RootTime::point(0.5).unwrap()),
+                bounds: I { lo: 0.4, hi: 0.6 },
+                derivative: I::point(1.),
+                end: 1.,
+            },
+            ..event
+        };
+        let work = Work::default();
+        for (time, want) in [
+            (0.25, std::cmp::Ordering::Greater),
+            (0.5, std::cmp::Ordering::Equal),
+            (0.75, std::cmp::Ordering::Less),
+        ] {
+            assert_eq!(
+                exact
+                    .physical_order_for_query_with_work(time, &model, &work)
+                    .unwrap(),
+                Some(want)
+            );
+            assert_eq!(exact.physical_order_at(time), Some(want));
+        }
+    }
+}

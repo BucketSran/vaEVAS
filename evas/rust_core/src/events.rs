@@ -22,6 +22,17 @@ pub(crate) struct AffineState {
 }
 
 impl AffineState {
+    // Actual owned storage, including the private dense operator coefficients.
+    // This is used only by the opt-in forcing clone admission.
+    pub(crate) fn owned_copy_items(&self) -> usize {
+        self.nodes
+            .len()
+            .saturating_add(self.states.len())
+            .saturating_add(self.operators.len())
+            .saturating_add(self.node_dependencies.len().saturating_mul(4))
+            .saturating_add(self.state_dependencies.len().saturating_mul(4))
+            .saturating_add(self.operator_dependencies.len().saturating_mul(4))
+    }
     pub(crate) fn union_dependencies(&mut self, other: &Self) {
         self.node_dependencies.extend(&other.node_dependencies);
         self.state_dependencies.extend(&other.state_dependencies);
@@ -140,6 +151,12 @@ pub(crate) fn affine(
         has_variables: false,
     };
     match expr {
+        Expression::Forcing { .. } => {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing marker requires its owning independent component dispatcher",
+            ))
+        }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
@@ -477,6 +494,7 @@ pub(crate) struct EventModel {
     pub(crate) source_context: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
     pub(crate) program: Program,
     pub(crate) floor_source: Option<std::sync::Arc<crate::event_floor::Request>>,
+    pub(crate) forcing: Option<std::sync::Arc<crate::forcing_graph::Graph>>,
     pub(crate) dc_projection: Option<std::sync::Arc<crate::dc_projection::DcProjection>>,
     rhs: Vec<AffineState>,
     pub(crate) guards: Vec<Option<AffineState>>,
@@ -904,6 +922,7 @@ impl EventModel {
             program,
             dc_projection: None,
             floor_source,
+            forcing: None,
             rhs,
             guards,
             dynamic_guards,
@@ -1197,6 +1216,7 @@ impl EventModel {
     pub(crate) fn check_selection_writers(&self, selection: &Selection) -> Result<(), Error> {
         fn reads_other_writer(expr: &Expression, event: usize, writers: &[Option<usize>]) -> bool {
             match expr {
+                Expression::Forcing { value, .. } => reads_other_writer(value, event, writers),
                 Expression::CheckedIndex { index, .. }
                 | Expression::CheckedInteger { value: index, .. } => {
                     reads_other_writer(index, event, writers)
@@ -2090,3 +2110,37 @@ impl EventModel {
 #[cfg(test)]
 #[path = "events_certificate_cache_tests.rs"]
 mod certificate_cache_tests;
+
+#[cfg(test)]
+mod forcing_affine_storage_tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn affine_state_owned_copy_items_counts_private_dense_operator_dimension() {
+        let mut counts = Vec::new();
+        for k in [1usize, 1024usize] {
+            let o = json!({"source":"affine-storage.va","line":1,"column":1,"instance":"D"});
+            let transition = json!({"kind":"transition","input":{"op":"state","state":0},
+            "delay":0.,"rise":0.125,"fall":0.125,"origin":o});
+            let p: Program = serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u"],
+            "states":[{"instance":"D","name":"q","kind":"integer","initial":0.}],
+            "operators":vec![transition;k],"contributions":[],"events":[]}))
+            .unwrap();
+            let a = affine(&Expression::State { state: 0 }, &p, "D").unwrap();
+            // Independently from the constructor dimensions: 2 node slots, 1 state
+            // slot, K private operator slots, one dependency-set entry at 4 items.
+            // Even unused zero-valued operator coefficients occupy owned storage.
+            assert_eq!(a.nodes.len(), 2);
+            assert_eq!(a.states.len(), 1);
+            assert_eq!(a.operators.len(), k);
+            assert_eq!(a.state_dependencies.len(), 1);
+            assert!(a.node_dependencies.is_empty());
+            assert!(a.operator_dependencies.is_empty());
+            assert_eq!(a.owned_copy_items(), 2 + 1 + k + 4);
+            counts.push(a.owned_copy_items());
+        }
+        assert_eq!(counts[1] - counts[0], 1023);
+    }
+}
