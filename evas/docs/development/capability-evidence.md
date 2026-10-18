@@ -61,7 +61,8 @@ IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和�
 [低成本闭包](../../../experiments/backends/support/low-cost-closure/README.md)补充 LANG、LIN、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS 和 COMPOSE 的分支证据。
 合同分别见[有限点初值与别名](../math/events.md#input-initialization)、[typed整数与有限幂](../math/events.md#typed-integer-closure)及[普通条件与有理输出](../math/solving.md#普通-analog-条件)。
 公开控制覆盖源码顺序、精确数组槽、真实根处读取、signed余数、有限pow类型与资源、分支临时量和正分母事实。
-[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)固定最新已验收wave16的162份生产源、IR27与release核 `e66a84673d59`，完整400为300通过、19失败、81拒绝，7+393件身份一致，清理400/400。新增324、377，原wave15的298及基线198通过保留，18项旧失败字典不变，077完整运行后仍为原checker失败。两平台IR27安装通过；完整CI2307方法中的1项旧拒绝断言已迁移，30项窄CI加2277项未变旧通过覆盖全部2307项，0方法跳过，原完整CI失败保留。
+[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)固定最新已验收wave17提交 `3c870f31` 的162份生产输入、IR28、0.21.0与release核 `721190664d05`。完整400为302通过、19失败、79拒绝，321完成，10+390件身份一致，清理400/400。新增069、335，原300及198通过保留，19项旧失败字典相同；固定125仍93/10/22，距350差48份。077原checker FAIL及诊断保持。单次完整CI39146347930的2314项全通过、0方法及setup跳过，两平台0.21/IR28安装、重装和负控通过。
+[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)保留历史wave16的162份生产源、IR27与release核 `e66a84673d59`，完整400为300通过、19失败、81拒绝，7+393件身份一致，清理400/400。新增324、377，原wave15的298及基线198通过保留，18项旧失败字典不变，077完整运行后仍为原checker失败。两平台IR27安装通过；完整CI2307方法中的1项旧拒绝断言已迁移，30项窄CI加2277项未变旧通过覆盖全部2307项，0方法跳过，原完整CI失败保留。
 历史wave12为292通过、18失败、90拒绝，158文件源码、IR25与release核 `83da6b2b521c` 的42+358件身份一致。
 原198及有效波10全部278通过保留，新增14份，无回退；18项旧checker失败字典保持。原固定125成员重算为92通过、9失败、24拒绝；历史波11失败候选及波8等旧收据保持原身份。
 历史波7逐例比较波6b新增129、137、138、224、233、295、296、380共8份、无回退；相对波5新增35份、无回退。296恢复。
@@ -286,6 +287,7 @@ transient_passive_tests.rs、event_value_proof.rs覆盖。原244已在wave14统�
 每节点signed32检查及预算耗尽沿原owner保持。冷种子桥只借用真实Prepared.bounds初始化全Transition图中的裸同实例real状态目标，
 并保留固定timer0调度门、初始电压认证及同Controller失败重试；更广初态和历史组合仍拒绝。原077已完整执行，但原checker仍为FAIL。首个失败是原网格跨边沿插值，实际查询保持值正确；诊断不改变原FAIL，后续性质未重评，未计077新增PASS。
 
-IR28本地开发候选的[事件typed余数与减法合同](../math/events.md#事件体运行期余数与二元减法ir28-本地候选)
+wave17已验收IR28候选的[事件typed余数与减法合同](../math/events.md#事件体运行期余数与二元减法ir28-本地候选)
 及[公共正反控](../../tests/test_native_integer28.py)补充LANG、EVENT-ORDER、EVENT-CONDITIONS与COMPOSE。
-原件、完整Python及安装结论仍由统一候选安排，不改变既有资格成绩。
+同源统一候选的原069、335已通过原checker，完整400为302/19/79；单次完整Python2314项及两平台0.21/IR28安装通过，范围仍限上述合同。
+后续Ln135是163输入、IR27、release核 `f1fe352c6c61` 的独立冻结候选，原135 pilot通过不加到本轮302。IR29位运算也在独立ignored快照开发，尚无新增原件PASS。

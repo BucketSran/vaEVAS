@@ -1,17 +1,18 @@
 {
   "schema_version": 1,
   "scope": "Fixed original400 requests/checkers/settings; no precision, checker or budget changes",
-  "publication_status": "PR208 draft/unmerged;wave16 original400 retention accepted;CI per-ID scoped composition,original full CI failure retained",
+  "publication_status": "PR208 draft/unmerged;wave17 full400 and single full delivery CI accepted at3c870f31;no release tag/public PyPI publication",
   "availability": "Curated receipt repository-contained; source archives, original inputs, waveforms and worker logs local-only",
   "candidate": {
-    "label": "toward350-wave16-unified",
-    "base_head": "07582ae0f53c5d390ec99df9b7a735fdf87604d4",
+    "label": "toward350-wave17-unified",
+    "base_head": "b8793d90941af4d3868cbcd1f7417a5d897ebb59",
+    "production_revision": "3c870f31fb17db4d835e6f2247b3643b9d5d3207",
     "source_files": {
-      "evas/pyproject.toml": "ebd3099ccdfa5c2b3d6ab55af69f12a30174d38aec22cc239bdff1f6b27e2663",
-      "evas/rust_core/Cargo.lock": "d37c9968d50f3b5f76943684d43acc7920960b06607cc2f2b5e31104092edc0e",
-      "evas/rust_core/Cargo.toml": "61d6d804d0135e9a4eab38b626d348c03ce76c3d407a540a2eb52200ee94a0ae",
+      "evas/pyproject.toml": "1269e34b55540c9396fbc796780fe7a294b893a28b5769300589fbc6f15bb326",
+      "evas/rust_core/Cargo.lock": "bd1e73bd9a9ef37c7a1d9b174ab5c31de595c82359c3ab1e42becf44fe59a4a4",
+      "evas/rust_core/Cargo.toml": "8dd0eab5705c5aa4f1b65bf26216f5263ae179c5e76782ca6018e97c67b64288",
       "evas/rust_core/ir/Cargo.toml": "ee626ead9fe9620b9b48c956bef41d283578683d25bc879b20f25730adf325f0",
-      "evas/rust_core/ir/src/lib.rs": "c92e363d9a8c33ec40b1dc5c894425690573f7baaf180f05f3e9d12032897aa7",
+      "evas/rust_core/ir/src/lib.rs": "f2d25355531a71308d8f695025fa7892b4bf0f4d4a89da253959197d0206385d",
       "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
       "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
       "evas/rust_core/src/affine_bounds.rs": "0754e6accc90f1ccd4ee2d0177c2d0d5cf0eacbd6e5850ac79455ecd4adb68f6",
@@ -57,7 +58,7 @@
       "evas/rust_core/src/initialization.rs": "100d475239ec9a436a5fd0ce2ab6fedce73ecf3e516ccebeea452f601c186a8c",
       "evas/rust_core/src/initialization_nodes.rs": "61aee737fbcf29bd236649d4532b7364503cf59bb1a56ed8ea1614a8de25d6e4",
       "evas/rust_core/src/input_clamp.rs": "5c3010afc080801aabd1bbe6b839dac21c714d8f49eaf0ad4aee6fa413f1ac59",
-      "evas/rust_core/src/integer_primitive.rs": "488c94f1efd308a1b4208e074c2c0423dc7c0abe02fd1605bf91c7205b6a186f",
+      "evas/rust_core/src/integer_primitive.rs": "0cc4b5d0e550bf1490b2d6cc9a6d58ff116b9b019c967daaaff48f89d3984edf",
       "evas/rust_core/src/interval.rs": "75b04de91716ce2bbb523dc3c703036081bec4909f154a277b973bbccf9ef785",
       "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
       "evas/rust_core/src/interval_zero_product_tests.rs": "882420755b22f048f6cc88b643ce2a07eb2ec44fa4510193c731b793b9c77afd",
@@ -106,7 +107,7 @@
       "evas/rust_core/src/transient_history_calendar.rs": "d527dccd0b3c179486bdf335f7e3afac040b0a95cfde5877ff5af851ed70f00e",
       "evas/rust_core/src/transient_idt_tests.rs": "caaf846459e576549a5cf53e6b8f715c0d32b33496b241f419d5a2f3e2771530",
       "evas/rust_core/src/transient_initialization.rs": "0c3d8844a9a021cf941ba1a0671d014cdbe09c9f138bee4092e435ff7326b8f2",
-      "evas/rust_core/src/transient_lifecycle_tests.rs": "1135e3fa265e3dbb0d41f52c560797a7a5ccdcd11795083f6d515b1938e5632d",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "768cbfa3df1efd30ade4aec96d2e5f49760634a504a2c8d2b785bc8923db42ff",
       "evas/rust_core/src/transient_passive_tests.rs": "a8ae3a75b6f2f0f4c65f41da98e1f15bc01890eda8db5b2406cbeff65eeba516",
       "evas/rust_core/src/transient_rational_transition_tests.rs": "c8431d9e3f132d8af19d331f873234759ee7d98a64ecd7ef82e4112e01df8a7f",
       "evas/rust_core/src/transient_root_refinement.rs": "6bbb6b7df5676fe65038b227284d811666f105c01a7848480f81c95962fe466c",
@@ -140,13 +141,13 @@
       "evas/src/evas/initial_constant_math.py": "b27dbfd8418e60b126b0c739414f3acda340215feea02ecf8968436d29122b2f",
       "evas/src/evas/initialization_aliases.py": "2a0e5e78888316bb9e4338af465171d25abbefbff4700fe20196d465a2db3e26",
       "evas/src/evas/input_rational_scope.py": "31e7da4f1c43921d00e76851a1ab95e8b54f31e61722033136f0a03dafd6c8a1",
-      "evas/src/evas/instance_compiler.py": "a6d70c1cfc43b7b7b0addd11ffd8735ce3129407d90180dd83db28887d29713e",
+      "evas/src/evas/instance_compiler.py": "c42877c6128ca03e39dc81fe8f93df9bd04eed5f8e41356fe6738766a7617022",
       "evas/src/evas/integer_arithmetic.py": "c01899e27cd3f263043c09783c556e38b3a50ab5ded288d694ad7e1215df867c",
       "evas/src/evas/integer_bits.py": "afbc1d36caa572fcb1473266e91ccbcdfbc301f76a882d44c4a6cfd900f59257",
       "evas/src/evas/integer_constants.py": "901e90d2cd9573f8f2d4cb3aff21c5edcdd231f417f298d78e4279379c776168",
       "evas/src/evas/integer_invariants.py": "6399fb4c4643d6623102eeff9a4028cd819563b09ca03992662923ea9d02a38f",
       "evas/src/evas/integer_prefix.py": "0482dbde4698a8f97cdd63c152ee18f70787499303eed03bbc78297d2fd0089c",
-      "evas/src/evas/ir.py": "b2a5845476cd6753361f28acd578b6d453620baf88ed712c8b6051624758a60e",
+      "evas/src/evas/ir.py": "9dfc9c0bed9989cd027ca25711694d318748c333a7b9ae66f426b22357a937a9",
       "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
       "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
       "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
@@ -170,26 +171,51 @@
       "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
       "evas/src/evas/syntax.py": "738049034d8d0499292313a9062df64f44839cefc52f6f2d4ecf2c1e4dae4599"
     },
-    "source_archive_sha256": "08467501313cc9d6be8e50375cab1f9e5fe9f6bc6a7d71353cb72373acb27175",
-    "source_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "kernel_sha256": "e66a84673d593afe57314280bfb36a0294d7c1c52e14fa2e1846bc48cc04fef7",
-    "ir_schema_version": 27,
-    "frozen_at_utc": "2026-10-18T15:55:14.798299+00:00",
-    "build_command": "cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml",
-    "build_gate": "pass;fresh release observed;all162 production inputs match before/after and964file Git index export",
-    "compiler": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2\n",
     "source_count": 162,
-    "package_version": "0.20.0",
+    "source_archive_sha256": "6978bc31cabc90ca88fb9174b5949f2fdb228ac9e0ec9c0101d3cda6aaf3f327",
+    "source_diff_sha256": "c684498f08c6152b11421368dbd9c144c3108365c993d58673fe4ef9e6c2d1ee",
+    "kernel_sha256": "721190664d053c41b8c477849769c829678288ff4c6ab9c48c6882694a452a2e",
+    "ir_schema_version": 28,
+    "manifest_package_version": "0.21.0",
+    "frozen_at_utc": "2026-10-18T16:42:09.778653+00:00",
+    "build_command": [
+      "cargo",
+      "build",
+      "--release",
+      "--locked",
+      "--manifest-path",
+      "evas/rust_core/Cargo.toml"
+    ],
+    "build_gate": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/build-release/RESULT.json",
+      "sha256": "9b1c915b24e82630c18952255f176b8afaf24f40c36ce2c208977a79913b499d",
+      "status": "freshrootreleasebuildpass;genericwrapperkernel_fieldisdebug,actualreleasehashcomputedseparately",
+      "source_unchanged": true,
+      "elapsed_s": 19.409165207995102
+    },
+    "compiler": {
+      "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+      "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)"
+    },
+    "index_export": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/INDEX_EXPORT.json",
+      "sha256": "077bade91bdbdebf3c091a02891f3de0325979cb418d44ffc4ff25508515526e",
+      "exported_files": 966
+    },
+    "same_bytes_as_author_release": true,
+    "limits": "The referenced release receipt was frozen before the original400 run;current complete acceptance is wave17_full400 at302/19/79. Only these162 frozen production inputs belong to wave17;sourceLn135 and IR29 work remain separate candidates.",
+    "package_version": "0.21.0",
     "receipt": {
-      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/release/RECEIPT.json",
-      "sha256": "0c213c3cbf36e5107b297bf8259ec4a716ac200a83cb7ce1a6faf28a4784d2a5",
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/release/RECEIPT.json",
+      "sha256": "57ed63f8ba09848dad3a4ae921254f2da0e06370c93ca909db077f03c769e5ef",
       "availability": "local-only"
     },
     "snapshot": {
-      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/SNAPSHOT.json",
-      "sha256": "cc6ab16a7738feeb47fc06bd93b41dd4cf9384da6151d91b713658271c1db52f",
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/SNAPSHOT.json",
+      "sha256": "3bb6c8e63a32a1fc5b0df1393f1ab97ece32a48efec86ac37aeb360913bb8dc5",
       "availability": "local-only"
-    }
+    },
+    "build_receipt_limits_at_freeze": "sourceLn135notincluded;freshsnapshot includes acceptedwave16docs and seedfollowup;neworiginal400notcomplete"
   },
   "fixed_execution": {
     "runner_sha256": "6b0c07b1bca68f21f0fe0b17d7d2e07a5454cd5c91f50d61f65e675098337312",
@@ -212,26 +238,26 @@
       "other": "Original request and source/IR proof budgets retained; no budget increase"
     },
     "identity": {
-      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/full400/IDENTITY.json",
-      "sha256": "8b09b63b3d337c59f9a7a98018607c3eb7fd359133be5b1357b0243583ffe045",
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/full400/IDENTITY.json",
+      "sha256": "5c568052e333ce19197447f265920b48e7e18f942fc0a48c1fa5d26404e8eb41",
       "availability": "local-only"
     }
   },
   "latest_completed_full400": {
     "status": "complete",
-    "candidate": "wave16-unified,162source/IR27/e66a84673d59",
+    "candidate": "wave17-unified,162source/IR28/0.21.0/721190664d05",
     "source_receipt": {
-      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/release/RECEIPT.json",
-      "sha256": "0c213c3cbf36e5107b297bf8259ec4a716ac200a83cb7ce1a6faf28a4784d2a5",
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/release/RECEIPT.json",
+      "sha256": "57ed63f8ba09848dad3a4ae921254f2da0e06370c93ca909db077f03c769e5ef",
       "availability": "local-only"
     },
     "summary": {
       "fixed_count": 400,
       "executed": 400,
-      "completed": 319,
-      "checker_passed": 300,
+      "completed": 321,
+      "checker_passed": 302,
       "checker_failed": 19,
-      "rejected": 81,
+      "rejected": 79,
       "cleanup_confirmed": 400,
       "baseline_head": "f6465c42c1f8927944320a3f725f175534d7101e",
       "baseline_passed": 198,
@@ -253,6 +279,7 @@
         "057",
         "058",
         "067",
+        "069",
         "072",
         "076",
         "096",
@@ -325,6 +352,7 @@
         "311",
         "312",
         "324",
+        "335",
         "338",
         "350",
         "355",
@@ -340,22 +368,22 @@
         "396"
       ],
       "formerly_passed_now_other": [],
-      "net_pass_change": 102,
+      "net_pass_change": 104,
       "execution": "Disjoint matching candidate segments; original checker, settings and budgets unchanged"
     },
     "summary_receipt": {
-      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/full400/SUMMARY.json",
-      "sha256": "f47cad7986f31a3280905b1a6ac29fd6d051861ee5502ccbe94708cd44bbbd8f",
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/full400/SUMMARY.json",
+      "sha256": "f0edd2b316c3aaee88aa65a1b23d82481fb7f394b051371f771c1fd9018755b0",
       "availability": "local-only"
     },
     "identity": {
-      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/full400/IDENTITY.json",
-      "sha256": "8b09b63b3d337c59f9a7a98018607c3eb7fd359133be5b1357b0243583ffe045",
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/full400/IDENTITY.json",
+      "sha256": "5c568052e333ce19197447f265920b48e7e18f942fc0a48c1fa5d26404e8eb41",
       "availability": "local-only"
     },
     "results": {
-      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/full400/RESULTS.json",
-      "sha256": "2b7d126b729ef0afaf61b6295d5b556846d811889b560afb42278011abdc44cd",
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/full400/RESULTS.json",
+      "sha256": "7644ba60a9ce6703a9a1dd391d58eac5bf3caf6955b2d0eba5fccf445fba64d9",
       "availability": "local-only"
     },
     "collector_sha256": "52f118e972637b02e44cb65e97484783a5928b756bad135bac3c458c832b12b7",
@@ -381,41 +409,39 @@
     ],
     "segments": [
       {
-        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/focused",
-        "identity_sha256": "0ebca1f7f46c48c8d49de06c1691cac6b3d842b4aa444a40004098dba612d5b3",
-        "results_sha256": "e10d03062e8242b6a5210d17b8bc61a58730ff17a86ecdfb7cacafe6337c6d17"
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/focused",
+        "identity_sha256": "f1ae704e10dd42ad11809f17bc224ec14bee9f4d4716a21a2316890bbf0d5675",
+        "results_sha256": "0575192b4c8072624941d5ec68299537971706ff6e4612bfc8f75fac24f0215f"
       },
       {
-        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/remainder",
-        "identity_sha256": "df1e69da93d383b22ad30e5e01bd4f59622db7d9e62d4dc8a2ee8066ba4a69d4",
-        "results_sha256": "1c3c3493dfee31e27f04dfc7450a98b4d13f7aebd725eda94f0b2a0dec24dc3e"
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/remainder",
+        "identity_sha256": "426f796278c8cf2df90beb54244bf8709612ce8742c3ebadbffa5281751e5992",
+        "results_sha256": "3f3d16b073a065dc49ffa533a48127b4b457e358c4c48cab5b81ebf3424f30af"
       }
     ],
-    "same_identity_focused_count": 7,
-    "same_identity_remaining_count": 393,
-    "versus_wave15": {
-      "created_at_utc": "2026-10-18T16:22:04.239802+00:00",
-      "candidate": "wave16-unified",
+    "same_identity_focused_count": 10,
+    "same_identity_remaining_count": 390,
+    "versus_wave16": {
+      "created_at_utc": "2026-10-18T17:06:28.617755+00:00",
+      "candidate": "wave17-unified",
       "source_count": 162,
-      "ir_schema_version": 27,
-      "kernel_sha256": "e66a84673d593afe57314280bfb36a0294d7c1c52e14fa2e1846bc48cc04fef7",
+      "ir_schema_version": 28,
+      "kernel_sha256": "721190664d053c41b8c477849769c829678288ff4c6ab9c48c6882694a452a2e",
       "full400": [
-        300,
+        302,
         19,
-        81
+        79
       ],
       "cleanup": 400,
-      "new_vs_wave15": [
-        "324",
-        "377"
+      "new_vs_wave16": [
+        "069",
+        "335"
       ],
-      "lost_vs_wave15": [],
-      "old298_and198_retained": true,
-      "all18_old_failure_dictionaries_identical": true,
+      "lost_vs_wave16": [],
+      "old300_and198_retained": true,
+      "all19_old_failure_dictionaries_identical": true,
       "changed_old_failure_dictionaries": [],
-      "new_checker_failures": [
-        "077"
-      ],
+      "new_checker_failures": [],
       "fixed125": {
         "passed": 93,
         "failed": 10,
@@ -426,31 +452,31 @@
         "sha256": "0b567afad182939b0697558c1dc9a5416b1f08d9989c8c28ec143928710b1c5b",
         "availability": "local-only"
       },
-      "remaining_to350": 50,
+      "remaining_to350": 48,
       "original077_status": {
         "status": "failed",
         "note": "property_id=P_SAMPLE_HOLD category=override_level_or_hold_mismatch expected=public_level_throughout_stable_interval observed=interval=6,time=4.8960e-09 event=override"
       },
-      "original077_diagnosis": {
-        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/diagnose077/diagnosis-result.json",
-        "sha256": "4899760c010aa05b9675ba9cd5222e6d33a99e67e6dda9455e0252f20abaf4c1",
-        "availability": "local-only"
-      },
       "baseline": {
-        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave15-unified/full400/RESULTS.json",
-        "sha256": "bf8f1b6e5e9d59d157b123e65f45b43da3f3cf78b6312c3366ec2b6fc6f5e7f4",
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/full400/RESULTS.json",
+        "sha256": "2b7d126b729ef0afaf61b6295d5b556846d811889b560afb42278011abdc44cd",
         "availability": "local-only"
       },
       "current": {
-        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/full400/RESULTS.json",
-        "sha256": "2b7d126b729ef0afaf61b6295d5b556846d811889b560afb42278011abdc44cd",
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/full400/RESULTS.json",
+        "sha256": "7644ba60a9ce6703a9a1dd391d58eac5bf3caf6955b2d0eba5fccf445fba64d9",
         "availability": "local-only"
       },
       "acceptance": "retention gate passed"
     },
     "comparison_receipt": {
-      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/comparison-wave15.json",
-      "sha256": "be934b56590c19eeffd3542efcd421efed2ffb9b00f148920007699539fc5e94",
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/comparison-wave16.json",
+      "sha256": "c798889c9f6082d4ca47d592b95dcc632b52b3831c67f19e494c088ec6d7faf0",
+      "availability": "local-only"
+    },
+    "independent_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/full400-review.json",
+      "sha256": "75326afc6e1748b4b5f4d6cf3fcb73e228ee5f1242c5b065d6fc38c221b76eef",
       "availability": "local-only"
     }
   },
@@ -2393,66 +2419,103 @@
     "interpretation": "76 isolated polynomial tests,31 current tests,4 PWL probes and51 floor/function tests retain their recorded debug identities. Wave7 full400 is separately tied to150-source release1d0845b6."
   },
   "next_candidate": {
-    "label": "IR28/.21 typed runtime Remainder+binary Subtract;stateless selected-source Ln",
-    "status": "Separate ignored source snapshots under development/review,not part of acceptedwave16",
-    "interpretation": "Original069/335/135 not executed for these slices and0 newly verified passes;current complete score300"
+    "label": "selected-source Ln135 and native held bitsIR29, separate ignored snapshots",
+    "status": "Not part of acceptedwave17;complete score remains302",
+    "ln135": {
+      "source_count": 163,
+      "ir_schema": 27,
+      "package_version": "0.20.0",
+      "release_sha256": "f1fe352c6c61f4b7eeb51c3af2107ee4992c31d37f692413a5d14b53226fe742",
+      "fixed_source": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-lanes/source-ln135/freeze/fixed-source.json",
+        "sha256": "8ac30ea37f028cf5cb0a5b93a066a91fb1f12283b3a95b2dab9685da912b91f0",
+        "availability": "local-only"
+      },
+      "pilot_identity": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave18-preflight-ln135/focused/IDENTITY.json",
+        "sha256": "3cc3f4f489b3f82ae8a03f372dde1a050112833699a49d690dd0bd913bf02832",
+        "availability": "local-only"
+      },
+      "pilot_results": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave18-preflight-ln135/focused/RESULTS.json",
+        "sha256": "cd50a92ffb943d7e866e10a152764a78745338bb4cee6a169973403e58acc60d",
+        "availability": "local-only"
+      },
+      "original135_checker": "passed in this distinct pilot",
+      "add_to_wave17_total": false
+    },
+    "native_bits29": {
+      "status": "Separate ignored development snapshot;0 newly verified original PASS",
+      "add_to_wave17_total": false
+    },
+    "interpretation": "No cross-candidate local incremental pass summation;Ln135 pilot does not change302 or the48 gap"
   },
   "delivery_checks": {
-    "status": "Local scoped checks and two installs passed;full CI2307 executed with1 stale rejection failure;test-only scoped CI30 passed;per-ID composition independently verified",
-    "current_candidate": "wave16-unified",
-    "production_revision": "07582ae0f53c5d390ec99df9b7a735fdf87604d4",
-    "test_revision": "25be11524f4b0ef6bf4998deb4ef438cd3813b4f",
+    "status": "single complete full CI success;2314 unique passed,0 failure/error/method/setup skip;two .21/IR28 installs passed",
+    "current_candidate": "wave17-unified",
+    "production_revision": "3c870f31fb17db4d835e6f2247b3643b9d5d3207",
+    "test_revision": "3c870f31fb17db4d835e6f2247b3643b9d5d3207",
     "checks": {
-      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/local-checks.json",
-      "sha256": "ccc5fefff24c6a6d6be7fac159f9d2feb10f277c09a28fe397e6a23657b7e241",
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/review-closure.json",
+      "sha256": "774f51497adc4926f232cfa6b2e81471a86f7c2be9492dbc872ede05a344bf56",
       "availability": "local-only"
     },
-    "review_closure": {
-      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/review-closure.json",
-      "sha256": "49f1c4ad13c89636f3147a62538a9cca3ab092e9d69be2300a6709f24aac09a6",
+    "checks_scope": "Earlier source/integration and root82/3early/lintmetadata checks;its pending-fullCI/full400 text is historical and superseded by the following final receipts.",
+    "integration_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/integration-review.json",
+      "sha256": "d4d3298d245d0642adde5f1df60c8e8805bfcba27cbc5b73190243969b303309",
       "availability": "local-only"
     },
     "full_ci": {
-      "run": 39142676333,
-      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/39142676333",
-      "conclusion": "failure",
-      "executed": 2307,
-      "passed_methods": 2306,
-      "failed_methods": 1,
-      "failed_subassertions": 1,
+      "run": 39146347930,
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/39146347930",
+      "conclusion": "success",
+      "executed": 2314,
+      "passed_methods": 2314,
+      "failed_methods": 0,
       "skipped": 0,
+      "setup_skipped": 0,
+      "shard_counts": [
+        564,
+        629,
+        518,
+        603
+      ],
       "platform_install_passed": 2,
       "coverage": {
-        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/ci-wave16-baseline-coverage.json",
-        "sha256": "2b1be20836ad6a915c611aa44b450662be1e3389efd2b8b073af270f7f4df392",
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/ci-wave17-full-coverage.json",
+        "sha256": "49f752df93dca0d7a609b090e986bc8d5fdd6f78567ef90927786c4017ac8f9d",
+        "availability": "local-only"
+      },
+      "test_map": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/ci-wave17-test-map.json",
+        "sha256": "13c2135e1ae5978be8ef9de693dc651d60c70c4dc188e4904af563f8bf1403c9",
+        "availability": "local-only"
+      },
+      "discovery_manifest": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/ci-wave17-discovery-manifest.json",
+        "sha256": "70db0bd7684efbe5adf2a958b3f6b0197d487b3f1b01a2b705a035b04caa565c",
+        "availability": "local-only"
+      },
+      "environment": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/ci-wave17-environment.json",
+        "sha256": "18aaae17bf4a0e7b5cea8a76acf7d45b46c43a317512f8b5139cd6b76550d0fa",
         "availability": "local-only"
       }
     },
-    "scoped_ci": [
-      {
-        "run": 39143823716,
-        "revision": "25be11524f4b0ef6bf4998deb4ef438cd3813b4f",
-        "url": "https://github.com/BucketSran/vaEVAS/actions/runs/39143823716",
-        "conclusion": "success",
-        "passed_methods": 30
-      }
-    ],
-    "composition_status": "complete2307unique passed with0missing/duplicate/skip",
-    "single_full_ci_success": false,
-    "composition": {
-      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/ci-wave16-scoped-revalidation-composition.json",
-      "sha256": "7cc93294ed8d6c552e6d9da36d4d04d190afe9f4847f1bcdd7291c333ac21312",
+    "single_full_ci_success": true,
+    "complete_manifest": 2314,
+    "independent_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/ci-wave17-independent-review.json",
+      "sha256": "c5b569f614906f613015af09649ce8919f3b63083945482a330a4376ebd034aa",
       "availability": "local-only"
     },
-    "composition_review": {
-      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/ci-wave16-composition-review.json",
-      "sha256": "0613bc9f8d5ee57f5f45b5a410b3626a40271624bca249c64ba4c312b84ff51b",
+    "installation": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/ci-wave17-install-summary.json",
+      "sha256": "21ec6d27461566708e48404e12fe34851e498aa776ad280dbc101d05e6b6a176",
       "availability": "local-only"
     },
-    "complete_manifest": 2307,
-    "reused_passed_tests": 2277,
-    "rerun_passed_unique_tests": 30,
-    "remote_binary_limit": "Scoped CI publishes no kernelSHA;locked inputs/build recipe and observed environments match,not a remote byte equality claim"
+    "binary_identity_limit": "Remote regression039af886, Linux wheel4f8630c5 and mac wheel fafa94e5 have recorded independent hashes;not claimed equal to local root9cc,author01cda orrelease721190"
   },
   "historical_wave7_candidate": {
     "label": "toward350-wave7",
@@ -4229,10 +4292,10 @@
     "limits": "Scaled valid-IR power counterexample proves aggregate accounting defect; no original2m public overrun established. Optional integer proof exhaustion gives TOP, never a finite certificate or a new allowance."
   },
   "published_candidate_binding": {
-    "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/wave16-published-source-binding.json",
-    "sha256": "ef7a203584d0b90d1b14a4df181bfeb6319fa47d057420950a188a911ca889b5",
+    "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/wave17-published-source-binding.json",
+    "sha256": "60670a594fd88245171bbdb261e31896acfdcfbff9a6a714124b76d24de02a1c",
     "availability": "local-only",
-    "status": "All162 production Git blobs at07582ae0 and25be1152 match frozen source;only initial_seed_invariance test changes between them"
+    "status": "All162 production Git blobs at3c870f31 match wave17 release/runtime freeze;test revision matches,25be seed migration retained"
   },
   "historical_wave12_candidate": {
     "label": "toward350-wave12",
@@ -6316,5 +6379,947 @@
     },
     "observed": "Original50ps grid spans transition completion;checker chord0.804855,actual directquery0.81;all405 original common observations and65 eventrecords unchanged",
     "limits": "One separately labelled query-augmented diagnostic only;no originalgrid/checker/normalization/precision/budget change;later original checker properties not regraded"
+  },
+  "historical_wave16_candidate": {
+    "label": "toward350-wave16-unified",
+    "base_head": "07582ae0f53c5d390ec99df9b7a735fdf87604d4",
+    "source_files": {
+      "evas/pyproject.toml": "ebd3099ccdfa5c2b3d6ab55af69f12a30174d38aec22cc239bdff1f6b27e2663",
+      "evas/rust_core/Cargo.lock": "d37c9968d50f3b5f76943684d43acc7920960b06607cc2f2b5e31104092edc0e",
+      "evas/rust_core/Cargo.toml": "61d6d804d0135e9a4eab38b626d348c03ce76c3d407a540a2eb52200ee94a0ae",
+      "evas/rust_core/ir/Cargo.toml": "ee626ead9fe9620b9b48c956bef41d283578683d25bc879b20f25730adf325f0",
+      "evas/rust_core/ir/src/lib.rs": "c92e363d9a8c33ec40b1dc5c894425690573f7baaf180f05f3e9d12032897aa7",
+      "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+      "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+      "evas/rust_core/src/affine_bounds.rs": "0754e6accc90f1ccd4ee2d0177c2d0d5cf0eacbd6e5850ac79455ecd4adb68f6",
+      "evas/rust_core/src/analog.rs": "1bdecdf731229d779097c2fb50cdc5d4bfe693ec8e743c837b785ec0a75899ff",
+      "evas/rust_core/src/assembly.rs": "7a88907d87691cd997a82b639e7d8a441ccf8abe839b00831b99bfc80a52c615",
+      "evas/rust_core/src/batch.rs": "ba227471ba388b4efd361e9a523352b7626bb80cd51141a00ca2b1c97eed2888",
+      "evas/rust_core/src/causal_event.rs": "e7c0526389dd26c694c9879c9afb6dfc1458b8f31a34e474de40a99709242cab",
+      "evas/rust_core/src/causal_voltage.rs": "403bb4469241412f8e05cba0ae597416e0614108dad1569f75d4ab901f574bfa",
+      "evas/rust_core/src/continuous.rs": "517d6574c6594857f8bc77bf829c714afe9a6f2bb5bc693dabf997ec432112fe",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "90d3fd2b904f5aece03b56fae587776d281cfc0e24348272e15597fc145bc46f",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_readout.rs": "637028c3dd24d06665ea5849d3e90666a3e41585b96cffb692910b041e135e84",
+      "evas/rust_core/src/continuous_runtime.rs": "6df2d30f8f67cf9039425b820abc614232e2a7ed02c973b99f18d6899f570403",
+      "evas/rust_core/src/continuous_select.rs": "8d6ac91199f325c78382da900debdf12504db7dd488869104b1a246a16cac111",
+      "evas/rust_core/src/continuous_select_cache_tests.rs": "2e9fe77ecd33b3d1ddcf5c1ab6834e5d9ea8abff9900db9f41bc1e5f2a2f0423",
+      "evas/rust_core/src/continuous_select_candidates.rs": "88017ad10779a666d82873230413ffbebaf95d13610c7c7795f100f2e1f1635b",
+      "evas/rust_core/src/continuous_step_simplify.rs": "4f4bac6e3af3c7986a8e25dd335ec435d3a7b9bd55f212165e226e1957db6af7",
+      "evas/rust_core/src/dc_projection.rs": "bae0d5d34ace7e5a14c316cab8ac01985dd6d05881dd2700e27c514baa6d5b7e",
+      "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+      "evas/rust_core/src/direct_derivative.rs": "606fa88155ae14278fef573f9c9c9615206ec58bd150ffaf12fb9577f0f56940",
+      "evas/rust_core/src/display.rs": "f3cff72249935013153265bd2a67eb9840a8398d1e835bfa253e5bac8cc87058",
+      "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+      "evas/rust_core/src/event_accuracy.rs": "dc33a528ca290ec024f8b8d024c0b3a48b2234a2203578bb38933370b942688b",
+      "evas/rust_core/src/event_conditions.rs": "73a801296499026fd6bb2409bc1cb31fec01455e4229777d00323e3520f49643",
+      "evas/rust_core/src/event_control.rs": "652228ca53b7ee0a0242923a1306708b07d30fe954be6e3ef96d9be2ea3e66b1",
+      "evas/rust_core/src/event_numeric.rs": "09cb39fffb000b8123d11b385cb125937d4c01bd6029c665674d5173f584e942",
+      "evas/rust_core/src/event_time_provenance.rs": "ef41cf6b71d5f61d4723ebaebd9ab6f324f4c7c5b26cee74cb82e85c4f9c498c",
+      "evas/rust_core/src/event_value_proof.rs": "9e1942452ce2d067ac1b48df49f5ace42086ebec1b7e63a2f97f144b26524933",
+      "evas/rust_core/src/events.rs": "75ac604ab6ddf2cf463d5d364e355f3d4e4ec61cbeceec30a41ef52aa1307d48",
+      "evas/rust_core/src/events_certificate_cache_tests.rs": "6f0900e6e8149c49a230a527719e34ae2d95f28eaac09b9d423961bf222c7938",
+      "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+      "evas/rust_core/src/exact_source.rs": "2c261fa30297560a9d2f7109129877f01829ea81b2a33c7e56be475d3180d75c",
+      "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+      "evas/rust_core/src/expression.rs": "efea0fa9093e8df1d63c6f881a7b7e8372b0d40e81ec779bd5acc9d27f6d779f",
+      "evas/rust_core/src/filter_budget.rs": "94807ee47a346648b5eb4d7d4af03366c0f1f1b79a0e67f636fc279c90b67656",
+      "evas/rust_core/src/guard_trajectory.rs": "4a358e0969b826f41a98354b615a1da68502a9dd5c8f6e6bedaefbf8810f2602",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "acdbdc83beef8cae53188c6335d7b99f9fe56ebb75d5318bbbd7a1f8e92fd2a1",
+      "evas/rust_core/src/implicit_dynamics.rs": "b30206f4dde77fc2220a942c896e8a5d5673a6f8efdd7f49f45db717597469a8",
+      "evas/rust_core/src/implicit_event_restart.rs": "d8b45dc327f0675ee2463c5047364716a4b692812e21ca44afca4b6d2bad5bd0",
+      "evas/rust_core/src/initial_state_invariance.rs": "7dbb08ac3123c5ad731b43c5ba1732cea7f3f68a785525602c3e3ec4ddf394e5",
+      "evas/rust_core/src/initialization.rs": "100d475239ec9a436a5fd0ce2ab6fedce73ecf3e516ccebeea452f601c186a8c",
+      "evas/rust_core/src/initialization_nodes.rs": "61aee737fbcf29bd236649d4532b7364503cf59bb1a56ed8ea1614a8de25d6e4",
+      "evas/rust_core/src/input_clamp.rs": "5c3010afc080801aabd1bbe6b839dac21c714d8f49eaf0ad4aee6fa413f1ac59",
+      "evas/rust_core/src/integer_primitive.rs": "488c94f1efd308a1b4208e074c2c0423dc7c0abe02fd1605bf91c7205b6a186f",
+      "evas/rust_core/src/interval.rs": "75b04de91716ce2bbb523dc3c703036081bec4909f154a277b973bbccf9ef785",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/interval_zero_product_tests.rs": "882420755b22f048f6cc88b643ce2a07eb2ec44fa4510193c731b793b9c77afd",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "8f211b465b19d062033392ef6defbc1bdc66b34c7be9172ab3c41e32a9e7b3d1",
+      "evas/rust_core/src/lib.rs": "5ca0dfe67c6e11c6115da28c10167d0f60454c386e3196e61bcfeb15f72b7c08",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+      "evas/rust_core/src/math_functions.rs": "c8e036b0ef40897a3f9ad40b42eb3b223fa4aef199f7c5011f702823aab54358",
+      "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "b9c44deb78ec185e6209754736454a761cdd69f92114c67a04bed3b4e4796647",
+      "evas/rust_core/src/nonlinear_root_window.rs": "7341efc680fc3f1a247803651875bdc115791426f587acdcb8b10d9386e302dd",
+      "evas/rust_core/src/nonlinear_value_memo_tests.rs": "0b065a2b0bc8694ac0de2aa232b6dfc261ffaa68c3fcf29a2c7b0fe255d57679",
+      "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+      "evas/rust_core/src/operators.rs": "e129ecf71bc112e52d6480bf557c5aca7eaaf4bfeab6c8e1930c9423c606e700",
+      "evas/rust_core/src/passive_events.rs": "1843badd4a4f4c6ef63e79df58d2d6fa72634b116d56d1d25f7147f819574339",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/portability.rs": "c101c1075de370d3622ad270bb0ca7bdf73c6ba2b3ed6ddd940a45a3c8134cb4",
+      "evas/rust_core/src/pwl.rs": "8c17bd4cf3121989b9591c1a17390c3a18451b96fafca754368973df498d4ff5",
+      "evas/rust_core/src/reset_dependencies.rs": "3f894fe282b3e22b7d07e7022a9e9aa9e6e06dc641591bdae25c0a7acf26f51f",
+      "evas/rust_core/src/schedule.rs": "1c19b2e7891aa0b317b726fe7556dd3294850cb8590a392037b005308d6c7c98",
+      "evas/rust_core/src/schedule_timer_boundary_tests.rs": "99b19e3b98cb05226b8548de2b621172fe069b7a1fbf36f7451c1ec493fb0c32",
+      "evas/rust_core/src/settlement.rs": "59b838a540a0b0491e9b853349b59000f6d74818cf02de5677dc65d62c7f9852",
+      "evas/rust_core/src/settlement_bounds.rs": "c7a36c0aa41624a4910ec65bfcec29676bce033475bc6fb278ba2379b4256b5b",
+      "evas/rust_core/src/slew.rs": "a7ac6b492d0f1146acdd8c305096979e143182a7a3c224fa68fd15a9963ef37a",
+      "evas/rust_core/src/slew_cascade.rs": "26b9cedd714dd24893d2076818d84c8905525da29c900c4df97bf9a7c40cc7b8",
+      "evas/rust_core/src/solver.rs": "2f6bfa8a08ad031c6b362d66c4fca77b3d38a09e871fdbb8b27be4d4b0d4e5af",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/source_math.rs": "5d7eebf03e94dd0279093c1c57a68fd11f1229cf5b0125d3a8f7083dcb38def4",
+      "evas/rust_core/src/source_selected_slew_tests.rs": "35841fb0072763826ad115897e3dc5bcfcbe6ad139d031b60072b9978bdbe71c",
+      "evas/rust_core/src/source_slew.rs": "82a6912310eeb0d10ebd679071735c5aeec6057633d7e2e351e4f9947c6aedf9",
+      "evas/rust_core/src/state_space.rs": "bc791c33b49c78259c0efa4b89203758830b6f90b461058d6a526ada5e1b2a94",
+      "evas/rust_core/src/step_bounds.rs": "7b34202c102b72aef2e19f2af1c28236cd6b3d4ba739cdbdf79e09b526331731",
+      "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+      "evas/rust_core/src/transient.rs": "cbd904faa155897e7ec73ca33b64f4d53406eff2b6aaa12099e9e2fe13931b06",
+      "evas/rust_core/src/transient_condition_tests.rs": "0a8dfc626381785993cdf3476e808a12ee6688cbeae81495451f312f0266d10c",
+      "evas/rust_core/src/transient_event_acceptance.rs": "1857edfebd39d1e6ccab9619220535398fc687b79c19985e399820d45020f33a",
+      "evas/rust_core/src/transient_event_control_tests.rs": "49f5f3c4c829bbd1a063446921898b7ad936f88ab20ef3e0b023613d6590e47a",
+      "evas/rust_core/src/transient_history_calendar.rs": "d527dccd0b3c179486bdf335f7e3afac040b0a95cfde5877ff5af851ed70f00e",
+      "evas/rust_core/src/transient_idt_tests.rs": "caaf846459e576549a5cf53e6b8f715c0d32b33496b241f419d5a2f3e2771530",
+      "evas/rust_core/src/transient_initialization.rs": "0c3d8844a9a021cf941ba1a0671d014cdbe09c9f138bee4092e435ff7326b8f2",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "1135e3fa265e3dbb0d41f52c560797a7a5ccdcd11795083f6d515b1938e5632d",
+      "evas/rust_core/src/transient_passive_tests.rs": "a8ae3a75b6f2f0f4c65f41da98e1f15bc01890eda8db5b2406cbeff65eeba516",
+      "evas/rust_core/src/transient_rational_transition_tests.rs": "c8431d9e3f132d8af19d331f873234759ee7d98a64ecd7ef82e4112e01df8a7f",
+      "evas/rust_core/src/transient_root_refinement.rs": "6bbb6b7df5676fe65038b227284d811666f105c01a7848480f81c95962fe466c",
+      "evas/rust_core/src/transient_root_window_tests.rs": "ee5a255e6f92591846bfd1581e354afaba1ca738c5c49446ffd3c2d84abb2fb0",
+      "evas/rust_core/src/transient_time_proof_tests.rs": "70ef120b678cb4cb05908c4b5c9bde2db87a0eafb78507b09239d2b681c9e95f",
+      "evas/rust_core/src/transient_timer_boundary_tests.rs": "f5ea68af5178dc6c22ce112df1ae9e9523d1d3e12c8658de4b5d8ce1f601be28",
+      "evas/rust_core/src/transient_window_tests.rs": "b56afa40d9683445c745455dd19a9d35a4ab9247e5a184a3dfb6246c2ca628ad",
+      "evas/rust_core/src/transition.rs": "c64b7910a6000ba98b3af74b23e7ec0bd043a381ff50b34beb38b12eeee43b3b",
+      "evas/rust_core/src/transition_filter.rs": "94b63ec1985c3eeb376216cd7501e1caef177411260d61519849b53035e982b4",
+      "evas/rust_core/src/transition_filter_input.rs": "845679115ff39c13cfb951ea93786070a4a142b57af2aa28480efcf5d46b5e42",
+      "evas/rust_core/src/transition_history_target.rs": "6ea098b83c6e72ee2454919934d2b1bf53ffb477a1dec5368acb534bd0c7ad38",
+      "evas/rust_core/src/transition_integral.rs": "e5e32e03013915527e80c646ceecfba86d65161dbfa4c6df6c1ad0f8282447ed",
+      "evas/rust_core/src/transition_source_plan.rs": "165ee2d27a964073d673811c0da702d40d3f8e41e28b34816e92dab8bf06c66d",
+      "evas/rust_core/src/transition_source_state.rs": "51dd449ad2c4f22c2de9e2ac8b5afa0b98caf8ee018234f6e06716048f5a8577",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "03467610db7d5563c99f2ffcf65c8f258175575fff18a38ca89dc5854439d651",
+      "evas/src/evas/array_elaboration.py": "6d40fce3cb2ea428ac297ca4c862a017d66ef2a5601a6a41cd673e4bf80b8ea5",
+      "evas/src/evas/compact_source_select.py": "d6127bb9cf134bf8c08b5a000a61a6268b5a508b0fd8c99a63a8f30033d60468",
+      "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+      "evas/src/evas/display.py": "aebb6f4eae06b5e0cca24a634b56e68939c6fc0bbf6e053f1a71fcb97ca89c86",
+      "evas/src/evas/elaboration.py": "52120626f2ff8ba22f8fe9cf1d6310d36ac5c9011485ba78746c06447ec9d9e2",
+      "evas/src/evas/errors.py": "720b37bc53b03403faf08715c85639775301aa13c412b482bae2ebcf915cfb9e",
+      "evas/src/evas/event_index_domains.py": "f2dc00bae57ab3f66247507e96fc9ebf1d6e018aa2eb61dc5a8041f85e707e3b",
+      "evas/src/evas/event_real_ranges.py": "7bd44c8af00bde73a420165b8beb6ab968f9c783bd0feba41906930d505c75dd",
+      "evas/src/evas/event_specialization.py": "c59e9aa4cce3b113a3b81e884d3eed3abfa2a12fdbb20e06b9f42b2b74c3cea3",
+      "evas/src/evas/finite_floor.py": "362142fffa82e3a4d5c23849a5c5b71884804b93f479afbc4df12c509d2dba00",
+      "evas/src/evas/finite_math.py": "a6e69bd1b8b2dec42a94367b61f36289c7cf22cb28dc8d3c6009c9459014a767",
+      "evas/src/evas/frontend.py": "482d325cd27eb3bdc12b20d89501a78b1ce91a30ee30d6bfe30ec01bc18a88ed",
+      "evas/src/evas/hierarchy.py": "6f791464c16ea36c70bdd28f89b9cc2defe79208bf3ad8bea847e999ef05d9fb",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/initial_constant_math.py": "b27dbfd8418e60b126b0c739414f3acda340215feea02ecf8968436d29122b2f",
+      "evas/src/evas/initialization_aliases.py": "2a0e5e78888316bb9e4338af465171d25abbefbff4700fe20196d465a2db3e26",
+      "evas/src/evas/input_rational_scope.py": "31e7da4f1c43921d00e76851a1ab95e8b54f31e61722033136f0a03dafd6c8a1",
+      "evas/src/evas/instance_compiler.py": "a6d70c1cfc43b7b7b0addd11ffd8735ce3129407d90180dd83db28887d29713e",
+      "evas/src/evas/integer_arithmetic.py": "c01899e27cd3f263043c09783c556e38b3a50ab5ded288d694ad7e1215df867c",
+      "evas/src/evas/integer_bits.py": "afbc1d36caa572fcb1473266e91ccbcdfbc301f76a882d44c4a6cfd900f59257",
+      "evas/src/evas/integer_constants.py": "901e90d2cd9573f8f2d4cb3aff21c5edcdd231f417f298d78e4279379c776168",
+      "evas/src/evas/integer_invariants.py": "6399fb4c4643d6623102eeff9a4028cd819563b09ca03992662923ea9d02a38f",
+      "evas/src/evas/integer_prefix.py": "0482dbde4698a8f97cdd63c152ee18f70787499303eed03bbc78297d2fd0089c",
+      "evas/src/evas/ir.py": "b2a5845476cd6753361f28acd578b6d453620baf88ed712c8b6051624758a60e",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/src/evas/lowering.py": "ad52d9ed7eab6b9c4dd38c88dec6c77b0c68fb7c0650d98b3ef6f5c67f2ba4d2",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/node_elaboration.py": "625a5683f39e045dbbc7f635c13523287e6967ffbb23ef973442ab9858a9df11",
+      "evas/src/evas/parameters.py": "acefecf0f4e05e072d4a472d7298f994e2e404e79a88c4165ca50b4b6a6de5fc",
+      "evas/src/evas/predicate_structure.py": "0f145fafcf1a926877f555207da48d54e6334e8ffbde1d9b385499ea74d11543",
+      "evas/src/evas/preprocessor.py": "96d6525154bdc0f83d80cc177faa49e1a836497afb3bb82a9ec1a5a321695a08",
+      "evas/src/evas/protocol.py": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+      "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+      "evas/src/evas/rational_predicates.py": "b816cb46a9792cde73e935d92576dd4622e0d0ebb5acbc80bb1f917055be8803",
+      "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+      "evas/src/evas/runtime.py": "f7fb4d7d4b46facce3422e646a53845e782338e7ae1494cf7f957d9e6e722d10",
+      "evas/src/evas/scs.py": "7c28cbeecbfea82cb5b4aedd291d7f53d88bff4380813acf4493775df25e3827",
+      "evas/src/evas/scs_sources.py": "1fab2c390f33c4c6221969bbbb192265636caf5063d20fd735e5e247b22cfb8d",
+      "evas/src/evas/settled_integer_reads.py": "dfa4019608e1b026a7359f4ec3789bba8d64ab92453f9c0219425442300d7b70",
+      "evas/src/evas/standard_headers.py": "efe0b2421d400ac723cfdf71c5d406cdef510dc89d3556ad999e2253600ec88e",
+      "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+      "evas/src/evas/syntax.py": "738049034d8d0499292313a9062df64f44839cefc52f6f2d4ecf2c1e4dae4599"
+    },
+    "source_archive_sha256": "08467501313cc9d6be8e50375cab1f9e5fe9f6bc6a7d71353cb72373acb27175",
+    "source_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "kernel_sha256": "e66a84673d593afe57314280bfb36a0294d7c1c52e14fa2e1846bc48cc04fef7",
+    "ir_schema_version": 27,
+    "frozen_at_utc": "2026-10-18T15:55:14.798299+00:00",
+    "build_command": "cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml",
+    "build_gate": "pass;fresh release observed;all162 production inputs match before/after and964file Git index export",
+    "compiler": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2\n",
+    "source_count": 162,
+    "package_version": "0.20.0",
+    "receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/release/RECEIPT.json",
+      "sha256": "0c213c3cbf36e5107b297bf8259ec4a716ac200a83cb7ce1a6faf28a4784d2a5",
+      "availability": "local-only"
+    },
+    "snapshot": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/SNAPSHOT.json",
+      "sha256": "cc6ab16a7738feeb47fc06bd93b41dd4cf9384da6151d91b713658271c1db52f",
+      "availability": "local-only"
+    }
+  },
+  "historical_wave16_fixed_execution": {
+    "runner_sha256": "6b0c07b1bca68f21f0fe0b17d7d2e07a5454cd5c91f50d61f65e675098337312",
+    "worker_sha256": "f158c308dd1c6f78c869f7abc6ca87ae6d0a3e002f6ae893ea684994f6c65db9",
+    "adapter_sha256": "99bb64ce03332a40e8086ce9e19177213c134c807da4ea41ed0d8523516efd1d",
+    "checker_identity_sha256": "fad863fde1c4e4651480e0813fccb1fa43fd0dd023d79020f22737025c91567f",
+    "normalization_sha256": "492bab585735c4480581d8f18f54bfc7bdd58a1cb02cde49ed30808049bea541",
+    "original_index_sha256": "b0571d0a722a5e937835eb3e6816aede63d9b80b7b14429bcace62e780c236a9",
+    "harness_head": "f2cba93cec5e2412a9a7461a7248cc983e6218c8",
+    "harness_files_sha256": {
+      "circuit_harness/execution/runtime/process.py": "d0833e133f10d95e4433c993afa5580e2da194dd13514d2cff7997dfb43daf6b",
+      "circuit_harness/execution/runtime/journal.py": "31785f6e2cd4cef1c25e52ed55cac54c1484e6ee97d8f91a76a8946e3dafc66d"
+    },
+    "kernel_timeout_s": 120,
+    "guardian_timeout_s": 150,
+    "precision": "Per-case archived original tolerances and output grid retained without overrides; inputs and source/deck hashes are fixed in focused IDENTITY and original INPUT_IDENTITY receipts. No common tolerance is invented for different requests.",
+    "proof_budgets": {
+      "integer_domain_combinations": 256,
+      "expanded_decisions": 4096,
+      "other": "Original request and source/IR proof budgets retained; no budget increase"
+    },
+    "identity": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/full400/IDENTITY.json",
+      "sha256": "8b09b63b3d337c59f9a7a98018607c3eb7fd359133be5b1357b0243583ffe045",
+      "availability": "local-only"
+    }
+  },
+  "historical_wave16_latest_completed_full400": {
+    "status": "complete",
+    "candidate": "wave16-unified,162source/IR27/e66a84673d59",
+    "source_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/release/RECEIPT.json",
+      "sha256": "0c213c3cbf36e5107b297bf8259ec4a716ac200a83cb7ce1a6faf28a4784d2a5",
+      "availability": "local-only"
+    },
+    "summary": {
+      "fixed_count": 400,
+      "executed": 400,
+      "completed": 319,
+      "checker_passed": 300,
+      "checker_failed": 19,
+      "rejected": 81,
+      "cleanup_confirmed": 400,
+      "baseline_head": "f6465c42c1f8927944320a3f725f175534d7101e",
+      "baseline_passed": 198,
+      "newly_checker_passed": [
+        "003",
+        "005",
+        "011",
+        "014",
+        "015",
+        "017",
+        "024",
+        "026",
+        "029",
+        "045",
+        "050",
+        "052",
+        "053",
+        "056",
+        "057",
+        "058",
+        "067",
+        "072",
+        "076",
+        "096",
+        "098",
+        "100",
+        "105",
+        "108",
+        "111",
+        "119",
+        "120",
+        "124",
+        "128",
+        "129",
+        "137",
+        "138",
+        "145",
+        "150",
+        "160",
+        "166",
+        "167",
+        "172",
+        "173",
+        "181",
+        "182",
+        "188",
+        "190",
+        "192",
+        "193",
+        "194",
+        "201",
+        "203",
+        "216",
+        "217",
+        "223",
+        "224",
+        "229",
+        "232",
+        "233",
+        "235",
+        "236",
+        "237",
+        "240",
+        "241",
+        "244",
+        "250",
+        "251",
+        "252",
+        "253",
+        "254",
+        "255",
+        "256",
+        "257",
+        "258",
+        "259",
+        "265",
+        "266",
+        "268",
+        "274",
+        "277",
+        "278",
+        "279",
+        "280",
+        "285",
+        "286",
+        "288",
+        "295",
+        "296",
+        "297",
+        "310",
+        "311",
+        "312",
+        "324",
+        "338",
+        "350",
+        "355",
+        "372",
+        "377",
+        "380",
+        "385",
+        "386",
+        "387",
+        "388",
+        "392",
+        "393",
+        "396"
+      ],
+      "formerly_passed_now_other": [],
+      "net_pass_change": 102,
+      "execution": "Disjoint matching candidate segments; original checker, settings and budgets unchanged"
+    },
+    "summary_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/full400/SUMMARY.json",
+      "sha256": "f47cad7986f31a3280905b1a6ac29fd6d051861ee5502ccbe94708cd44bbbd8f",
+      "availability": "local-only"
+    },
+    "identity": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/full400/IDENTITY.json",
+      "sha256": "8b09b63b3d337c59f9a7a98018607c3eb7fd359133be5b1357b0243583ffe045",
+      "availability": "local-only"
+    },
+    "results": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/full400/RESULTS.json",
+      "sha256": "2b7d126b729ef0afaf61b6295d5b556846d811889b560afb42278011abdc44cd",
+      "availability": "local-only"
+    },
+    "collector_sha256": "52f118e972637b02e44cb65e97484783a5928b756bad135bac3c458c832b12b7",
+    "verified_shared_keys": [
+      "build",
+      "kernel_timeout_s",
+      "worker_timeout_s",
+      "runner_sha256",
+      "worker_sha256",
+      "checker_identity_sha256",
+      "normalization_sha256",
+      "adapter_sha256",
+      "baseline_identity_sha256",
+      "original_index_sha256",
+      "receipt_sha256",
+      "harness_head",
+      "harness_files_sha256",
+      "interpreter",
+      "kernel_timeout_s",
+      "worker_timeout_s",
+      "frozen_worker_sha256",
+      "archived_campaign_sha256"
+    ],
+    "segments": [
+      {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/focused",
+        "identity_sha256": "0ebca1f7f46c48c8d49de06c1691cac6b3d842b4aa444a40004098dba612d5b3",
+        "results_sha256": "e10d03062e8242b6a5210d17b8bc61a58730ff17a86ecdfb7cacafe6337c6d17"
+      },
+      {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/remainder",
+        "identity_sha256": "df1e69da93d383b22ad30e5e01bd4f59622db7d9e62d4dc8a2ee8066ba4a69d4",
+        "results_sha256": "1c3c3493dfee31e27f04dfc7450a98b4d13f7aebd725eda94f0b2a0dec24dc3e"
+      }
+    ],
+    "same_identity_focused_count": 7,
+    "same_identity_remaining_count": 393,
+    "versus_wave15": {
+      "created_at_utc": "2026-10-18T16:22:04.239802+00:00",
+      "candidate": "wave16-unified",
+      "source_count": 162,
+      "ir_schema_version": 27,
+      "kernel_sha256": "e66a84673d593afe57314280bfb36a0294d7c1c52e14fa2e1846bc48cc04fef7",
+      "full400": [
+        300,
+        19,
+        81
+      ],
+      "cleanup": 400,
+      "new_vs_wave15": [
+        "324",
+        "377"
+      ],
+      "lost_vs_wave15": [],
+      "old298_and198_retained": true,
+      "all18_old_failure_dictionaries_identical": true,
+      "changed_old_failure_dictionaries": [],
+      "new_checker_failures": [
+        "077"
+      ],
+      "fixed125": {
+        "passed": 93,
+        "failed": 10,
+        "rejected": 22
+      },
+      "fixed125_membership": {
+        "path": "runs/evas-source-shape-20261017/root-window-certificate/integration/affected-originals-final3/IDENTITY.json",
+        "sha256": "0b567afad182939b0697558c1dc9a5416b1f08d9989c8c28ec143928710b1c5b",
+        "availability": "local-only"
+      },
+      "remaining_to350": 50,
+      "original077_status": {
+        "status": "failed",
+        "note": "property_id=P_SAMPLE_HOLD category=override_level_or_hold_mismatch expected=public_level_throughout_stable_interval observed=interval=6,time=4.8960e-09 event=override"
+      },
+      "original077_diagnosis": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/diagnose077/diagnosis-result.json",
+        "sha256": "4899760c010aa05b9675ba9cd5222e6d33a99e67e6dda9455e0252f20abaf4c1",
+        "availability": "local-only"
+      },
+      "baseline": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave15-unified/full400/RESULTS.json",
+        "sha256": "bf8f1b6e5e9d59d157b123e65f45b43da3f3cf78b6312c3366ec2b6fc6f5e7f4",
+        "availability": "local-only"
+      },
+      "current": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/full400/RESULTS.json",
+        "sha256": "2b7d126b729ef0afaf61b6295d5b556846d811889b560afb42278011abdc44cd",
+        "availability": "local-only"
+      },
+      "acceptance": "retention gate passed"
+    },
+    "comparison_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/comparison-wave15.json",
+      "sha256": "be934b56590c19eeffd3542efcd421efed2ffb9b00f148920007699539fc5e94",
+      "availability": "local-only"
+    }
+  },
+  "historical_wave16_delivery_checks": {
+    "status": "Local scoped checks and two installs passed;full CI2307 executed with1 stale rejection failure;test-only scoped CI30 passed;per-ID composition independently verified",
+    "current_candidate": "wave16-unified",
+    "production_revision": "07582ae0f53c5d390ec99df9b7a735fdf87604d4",
+    "test_revision": "25be11524f4b0ef6bf4998deb4ef438cd3813b4f",
+    "checks": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/local-checks.json",
+      "sha256": "ccc5fefff24c6a6d6be7fac159f9d2feb10f277c09a28fe397e6a23657b7e241",
+      "availability": "local-only"
+    },
+    "review_closure": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/review-closure.json",
+      "sha256": "49f1c4ad13c89636f3147a62538a9cca3ab092e9d69be2300a6709f24aac09a6",
+      "availability": "local-only"
+    },
+    "full_ci": {
+      "run": 39142676333,
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/39142676333",
+      "conclusion": "failure",
+      "executed": 2307,
+      "passed_methods": 2306,
+      "failed_methods": 1,
+      "failed_subassertions": 1,
+      "skipped": 0,
+      "platform_install_passed": 2,
+      "coverage": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/ci-wave16-baseline-coverage.json",
+        "sha256": "2b1be20836ad6a915c611aa44b450662be1e3389efd2b8b073af270f7f4df392",
+        "availability": "local-only"
+      }
+    },
+    "scoped_ci": [
+      {
+        "run": 39143823716,
+        "revision": "25be11524f4b0ef6bf4998deb4ef438cd3813b4f",
+        "url": "https://github.com/BucketSran/vaEVAS/actions/runs/39143823716",
+        "conclusion": "success",
+        "passed_methods": 30
+      }
+    ],
+    "composition_status": "complete2307unique passed with0missing/duplicate/skip",
+    "single_full_ci_success": false,
+    "composition": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/ci-wave16-scoped-revalidation-composition.json",
+      "sha256": "7cc93294ed8d6c552e6d9da36d4d04d190afe9f4847f1bcdd7291c333ac21312",
+      "availability": "local-only"
+    },
+    "composition_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/ci-wave16-composition-review.json",
+      "sha256": "0613bc9f8d5ee57f5f45b5a410b3626a40271624bca249c64ba4c312b84ff51b",
+      "availability": "local-only"
+    },
+    "complete_manifest": 2307,
+    "reused_passed_tests": 2277,
+    "rerun_passed_unique_tests": 30,
+    "remote_binary_limit": "Scoped CI publishes no kernelSHA;locked inputs/build recipe and observed environments match,not a remote byte equality claim"
+  },
+  "historical_wave16_published_candidate_binding": {
+    "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-377077/wave16-published-source-binding.json",
+    "sha256": "ef7a203584d0b90d1b14a4df181bfeb6319fa47d057420950a188a911ca889b5",
+    "availability": "local-only",
+    "status": "All162 production Git blobs at07582ae0 and25be1152 match frozen source;only initial_seed_invariance test changes between them"
+  },
+  "historical_wave16_next_candidate": {
+    "label": "IR28/.21 typed runtime Remainder+binary Subtract;stateless selected-source Ln",
+    "status": "Separate ignored source snapshots under development/review,not part of acceptedwave16",
+    "interpretation": "Original069/335/135 not executed for these slices and0 newly verified passes;current complete score300"
+  },
+  "wave17_full400": {
+    "status": "complete",
+    "candidate": "wave17-unified,162source/IR28/0.21.0/721190664d05",
+    "source_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/release/RECEIPT.json",
+      "sha256": "57ed63f8ba09848dad3a4ae921254f2da0e06370c93ca909db077f03c769e5ef",
+      "availability": "local-only"
+    },
+    "summary": {
+      "fixed_count": 400,
+      "executed": 400,
+      "completed": 321,
+      "checker_passed": 302,
+      "checker_failed": 19,
+      "rejected": 79,
+      "cleanup_confirmed": 400,
+      "baseline_head": "f6465c42c1f8927944320a3f725f175534d7101e",
+      "baseline_passed": 198,
+      "newly_checker_passed": [
+        "003",
+        "005",
+        "011",
+        "014",
+        "015",
+        "017",
+        "024",
+        "026",
+        "029",
+        "045",
+        "050",
+        "052",
+        "053",
+        "056",
+        "057",
+        "058",
+        "067",
+        "069",
+        "072",
+        "076",
+        "096",
+        "098",
+        "100",
+        "105",
+        "108",
+        "111",
+        "119",
+        "120",
+        "124",
+        "128",
+        "129",
+        "137",
+        "138",
+        "145",
+        "150",
+        "160",
+        "166",
+        "167",
+        "172",
+        "173",
+        "181",
+        "182",
+        "188",
+        "190",
+        "192",
+        "193",
+        "194",
+        "201",
+        "203",
+        "216",
+        "217",
+        "223",
+        "224",
+        "229",
+        "232",
+        "233",
+        "235",
+        "236",
+        "237",
+        "240",
+        "241",
+        "244",
+        "250",
+        "251",
+        "252",
+        "253",
+        "254",
+        "255",
+        "256",
+        "257",
+        "258",
+        "259",
+        "265",
+        "266",
+        "268",
+        "274",
+        "277",
+        "278",
+        "279",
+        "280",
+        "285",
+        "286",
+        "288",
+        "295",
+        "296",
+        "297",
+        "310",
+        "311",
+        "312",
+        "324",
+        "335",
+        "338",
+        "350",
+        "355",
+        "372",
+        "377",
+        "380",
+        "385",
+        "386",
+        "387",
+        "388",
+        "392",
+        "393",
+        "396"
+      ],
+      "formerly_passed_now_other": [],
+      "net_pass_change": 104,
+      "execution": "Disjoint matching candidate segments; original checker, settings and budgets unchanged"
+    },
+    "summary_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/full400/SUMMARY.json",
+      "sha256": "f0edd2b316c3aaee88aa65a1b23d82481fb7f394b051371f771c1fd9018755b0",
+      "availability": "local-only"
+    },
+    "identity": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/full400/IDENTITY.json",
+      "sha256": "5c568052e333ce19197447f265920b48e7e18f942fc0a48c1fa5d26404e8eb41",
+      "availability": "local-only"
+    },
+    "results": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/full400/RESULTS.json",
+      "sha256": "7644ba60a9ce6703a9a1dd391d58eac5bf3caf6955b2d0eba5fccf445fba64d9",
+      "availability": "local-only"
+    },
+    "collector_sha256": "52f118e972637b02e44cb65e97484783a5928b756bad135bac3c458c832b12b7",
+    "verified_shared_keys": [
+      "build",
+      "kernel_timeout_s",
+      "worker_timeout_s",
+      "runner_sha256",
+      "worker_sha256",
+      "checker_identity_sha256",
+      "normalization_sha256",
+      "adapter_sha256",
+      "baseline_identity_sha256",
+      "original_index_sha256",
+      "receipt_sha256",
+      "harness_head",
+      "harness_files_sha256",
+      "interpreter",
+      "kernel_timeout_s",
+      "worker_timeout_s",
+      "frozen_worker_sha256",
+      "archived_campaign_sha256"
+    ],
+    "segments": [
+      {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/focused",
+        "identity_sha256": "f1ae704e10dd42ad11809f17bc224ec14bee9f4d4716a21a2316890bbf0d5675",
+        "results_sha256": "0575192b4c8072624941d5ec68299537971706ff6e4612bfc8f75fac24f0215f"
+      },
+      {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/remainder",
+        "identity_sha256": "426f796278c8cf2df90beb54244bf8709612ce8742c3ebadbffa5281751e5992",
+        "results_sha256": "3f3d16b073a065dc49ffa533a48127b4b457e358c4c48cab5b81ebf3424f30af"
+      }
+    ],
+    "same_identity_focused_count": 10,
+    "same_identity_remaining_count": 390,
+    "versus_wave16": {
+      "created_at_utc": "2026-10-18T17:06:28.617755+00:00",
+      "candidate": "wave17-unified",
+      "source_count": 162,
+      "ir_schema_version": 28,
+      "kernel_sha256": "721190664d053c41b8c477849769c829678288ff4c6ab9c48c6882694a452a2e",
+      "full400": [
+        302,
+        19,
+        79
+      ],
+      "cleanup": 400,
+      "new_vs_wave16": [
+        "069",
+        "335"
+      ],
+      "lost_vs_wave16": [],
+      "old300_and198_retained": true,
+      "all19_old_failure_dictionaries_identical": true,
+      "changed_old_failure_dictionaries": [],
+      "new_checker_failures": [],
+      "fixed125": {
+        "passed": 93,
+        "failed": 10,
+        "rejected": 22
+      },
+      "fixed125_membership": {
+        "path": "runs/evas-source-shape-20261017/root-window-certificate/integration/affected-originals-final3/IDENTITY.json",
+        "sha256": "0b567afad182939b0697558c1dc9a5416b1f08d9989c8c28ec143928710b1c5b",
+        "availability": "local-only"
+      },
+      "remaining_to350": 48,
+      "original077_status": {
+        "status": "failed",
+        "note": "property_id=P_SAMPLE_HOLD category=override_level_or_hold_mismatch expected=public_level_throughout_stable_interval observed=interval=6,time=4.8960e-09 event=override"
+      },
+      "baseline": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave16-unified/full400/RESULTS.json",
+        "sha256": "2b7d126b729ef0afaf61b6295d5b556846d811889b560afb42278011abdc44cd",
+        "availability": "local-only"
+      },
+      "current": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/full400/RESULTS.json",
+        "sha256": "7644ba60a9ce6703a9a1dd391d58eac5bf3caf6955b2d0eba5fccf445fba64d9",
+        "availability": "local-only"
+      },
+      "acceptance": "retention gate passed"
+    },
+    "comparison_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/comparison-wave16.json",
+      "sha256": "c798889c9f6082d4ca47d592b95dcc632b52b3831c67f19e494c088ec6d7faf0",
+      "availability": "local-only"
+    },
+    "independent_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/full400-review.json",
+      "sha256": "75326afc6e1748b4b5f4d6cf3fcb73e228ee5f1242c5b065d6fc38c221b76eef",
+      "availability": "local-only"
+    }
+  },
+  "wave17_fixed125": {
+    "membership_identity": {
+      "path": "runs/evas-source-shape-20261017/root-window-certificate/integration/affected-originals-final3/IDENTITY.json",
+      "sha256": "0b567afad182939b0697558c1dc9a5416b1f08d9989c8c28ec143928710b1c5b",
+      "availability": "local-only"
+    },
+    "families": [
+      "001",
+      "002",
+      "003",
+      "004",
+      "006",
+      "008",
+      "010",
+      "011",
+      "012",
+      "017",
+      "023",
+      "026",
+      "027",
+      "036",
+      "039",
+      "040",
+      "043",
+      "044",
+      "045",
+      "047",
+      "048",
+      "049",
+      "051",
+      "055",
+      "056",
+      "057",
+      "058",
+      "065",
+      "071",
+      "072",
+      "076",
+      "077",
+      "078",
+      "079",
+      "081",
+      "084",
+      "088",
+      "089",
+      "090",
+      "091",
+      "092",
+      "096",
+      "097",
+      "098",
+      "100",
+      "101",
+      "102",
+      "103",
+      "104",
+      "106",
+      "109",
+      "117",
+      "178",
+      "184",
+      "191",
+      "198",
+      "199",
+      "200",
+      "204",
+      "205",
+      "206",
+      "207",
+      "208",
+      "209",
+      "210",
+      "213",
+      "214",
+      "261",
+      "262",
+      "263",
+      "264",
+      "265",
+      "266",
+      "267",
+      "268",
+      "269",
+      "271",
+      "274",
+      "275",
+      "276",
+      "277",
+      "278",
+      "279",
+      "280",
+      "284",
+      "293",
+      "294",
+      "299",
+      "300",
+      "301",
+      "302",
+      "306",
+      "308",
+      "309",
+      "310",
+      "311",
+      "312",
+      "314",
+      "320",
+      "321",
+      "322",
+      "327",
+      "331",
+      "341",
+      "342",
+      "345",
+      "347",
+      "348",
+      "349",
+      "352",
+      "353",
+      "355",
+      "356",
+      "357",
+      "361",
+      "363",
+      "367",
+      "375",
+      "376",
+      "379",
+      "382",
+      "394",
+      "395",
+      "397",
+      "399"
+    ],
+    "method": "Unchanged125 members selected from this same original400 execution; no rerun or denominator change",
+    "summary": {
+      "fixed_count": 125,
+      "executed": 125,
+      "completed": 103,
+      "checker_passed": 93,
+      "checker_failed": 10,
+      "rejected": 22,
+      "cleanup_confirmed": 125
+    },
+    "comparison_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave17-unified/comparison-wave16.json",
+      "sha256": "c798889c9f6082d4ca47d592b95dcc632b52b3831c67f19e494c088ec6d7faf0",
+      "availability": "local-only"
+    }
+  },
+  "wave17_local_contract_evidence": {
+    "fixed_source": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-lanes/native-integer28/fixed-source.json",
+      "sha256": "3a159855d4c68f49c28d1deedba84b08513c70ba3d669ac22733db1db1e811ff",
+      "availability": "local-only"
+    },
+    "source_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-lanes/native-integer28/review/review-result.json",
+      "sha256": "215fa012f82781045811e3d874ca56264bcf2fc40fd22ce9bbe72042e4a1c798",
+      "availability": "local-only"
+    },
+    "integration_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/integration-review.json",
+      "sha256": "d4d3298d245d0642adde5f1df60c8e8805bfcba27cbc5b73190243969b303309",
+      "availability": "local-only"
+    },
+    "root_checks": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/review-closure.json",
+      "sha256": "774f51497adc4926f232cfa6b2e81471a86f7c2be9492dbc872ede05a344bf56",
+      "availability": "local-only"
+    },
+    "contracts": "Event-body source-typed binary Subtract and dynamic Remainder rhs only;old finite table/per-original-node signed32/current state order/same owner work and rollback retained. No Divide/unary/Multiply/bitwise/continuous target extension.",
+    "original_passes": [
+      "069",
+      "335"
+    ],
+    "full400_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/full400-review.json",
+      "sha256": "75326afc6e1748b4b5f4d6cf3fcb73e228ee5f1242c5b065d6fc38c221b76eef",
+      "availability": "local-only"
+    },
+    "ci_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-integer28/ci-wave17-independent-review.json",
+      "sha256": "c5b569f614906f613015af09649ce8919f3b63083945482a330a4376ebd034aa",
+      "availability": "local-only"
+    }
   }
 }
