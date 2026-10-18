@@ -1,5 +1,6 @@
 """A proved unchanged t=0 seed retains the full ordinary event transaction."""
 import os
+from fractions import Fraction as Q
 from pathlib import Path
 import unittest
 
@@ -39,10 +40,24 @@ class InitialSeedInvariance(unittest.TestCase):
         p=program('@(initial_step)begin q=0;a=0.5;end @(timer(0,1))begin if(V(u)>0)q=0;else q=V(x);end V(x)<+transition(a,0,0.1,0.1);V(y)<+transition(q,0,0.1,0.1);')
         with self.assertRaisesRegex(KernelError,'bootstrap events must read only held state'):
             run(p,u=-1.)
-    def test_rational_changed_seed_keeps_point_certificate_requirement(self):
-        p=program('@(initial_step)q=0;@(timer(0,1))q=q+0.03+0.09*V(u);V(y)<+transition(q,0,0.1,0.1);')
-        with self.assertRaisesRegex(KernelError,'finite final point state certificates'):
-            run(p,u=.2)
+    def test_rational_changed_seed_retains_bounded_history(self):
+        body='@(initial_step)q=0;@(timer(0,1))q=q+0.03+0.09*V(u);V(y)<+transition(q,0,0.1,0.1);'
+        delta=Q(.03)+Q(.09)*Q(.2)
+        self.assertNotEqual(delta,Q(float(delta)))
+        result,y=run(program(body),u=.2)
+        node=result['nodes'].index('y')
+        boxes=result['observation_evidence']['voltage_bounds_V']
+        for actual,box,want in zip(y,boxes,[delta,delta,2*delta],strict=True):
+            self.assertLessEqual(abs(Q(actual)-want),Q(1e-8))
+            lo,hi=map(Q,box[node])
+            self.assertLessEqual(lo,want)
+            self.assertGreaterEqual(hi,want)
+        self.assertLess(boxes[0][node][0],boxes[0][node][1])
+        amplified=body.replace('V(y)<+transition','V(y)<+1000000000000*transition')
+        with self.assertRaises(KernelError) as caught:
+            run(program(amplified),u=.2)
+        self.assertEqual(caught.exception.detail['kind'],'waveform_accuracy')
+        self.assertIn('forward error',caught.exception.detail['message'])
     def test_initial_timer_or_is_not_proved_by_replaying_one_body_twice(self):
         body='begin if(V(u)>0)q=1-q;else q=0;end V(y)<+transition(q,0,0.1,0.1);'
         with self.assertRaisesRegex(CompileError,'mixed initialization'):
