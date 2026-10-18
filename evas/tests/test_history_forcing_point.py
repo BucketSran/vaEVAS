@@ -1,4 +1,5 @@
 """Synthetic DUT public test with preserved physical clock/grid; no original DUT/checker."""
+GUARDS = ["LANG", "ANALOG", "EVENT-ORDER", "TIMED-OPERATOR", "COMPOSE"]
 from pathlib import Path
 from fractions import Fraction as Q
 import bisect,json,os,tempfile,unittest
