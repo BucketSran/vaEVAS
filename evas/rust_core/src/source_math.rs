@@ -45,12 +45,27 @@ impl Audit {
         owner: &str,
         operators: bool,
     ) -> Result<(), Error> {
+        self.tree_scope(expression, program, sources, owner, operators, None)
+            .map(|_| ())
+    }
+
+    fn tree_scope(
+        &mut self,
+        expression: &Expression,
+        program: &Program,
+        sources: &HashSet<usize>,
+        owner: &str,
+        operators: bool,
+        closed_operators: Option<&HashSet<usize>>,
+    ) -> Result<bool, Error> {
+        let mut closed = true;
         let mut pending = vec![expression];
         while let Some(expr) = pending.pop() {
             self.charge(1)?;
             match expr {
                 Expression::Affine { constant, terms } => {
                     self.charge(terms.len())?;
+                    closed &= terms.is_empty();
                     if !constant.is_finite()
                         || terms.iter().any(|term| {
                             !term.coefficient.is_finite() || !sources.contains(&term.node)
@@ -60,6 +75,9 @@ impl Audit {
                     }
                 }
                 Expression::Operator { operator } if operators => {
+                    if closed_operators.is_some_and(|allowed| !allowed.contains(operator)) {
+                        return Err(unsupported());
+                    }
                     if program
                         .operators
                         .get(*operator)
@@ -78,7 +96,7 @@ impl Audit {
                 _ => return Err(unsupported()),
             }
         }
-        Ok(())
+        Ok(closed)
     }
 }
 fn unsupported() -> Error {
@@ -137,7 +155,8 @@ impl Prepared {
                 return Err(unsupported());
             }
         }
-        for op in &program.operators {
+        let mut closed_operators = HashSet::new();
+        for (index, op) in program.operators.iter().enumerate() {
             audit.charge(1)?;
             let (OperatorSpec::Sin { input, origin } | OperatorSpec::Math { input, origin, .. }) =
                 op
@@ -145,7 +164,14 @@ impl Prepared {
                 return Err(unsupported());
             };
             let before = audit.remaining.unwrap();
-            audit.tree(input, program, &sources, &origin.instance, false)?;
+            let closed = audit.tree_scope(
+                input,
+                program,
+                &sources,
+                &origin.instance,
+                true,
+                Some(&closed_operators),
+            )?;
             let input_items = before - audit.remaining.unwrap();
             // affine allocates/traverses dense coordinate vectors per input
             // AST node. Reserve their conservative actual inner-work bound in
@@ -161,13 +187,26 @@ impl Prepared {
             let affine = crate::events::affine(input, program, &origin.instance)
                 .map_err(|_| unsupported())?;
             if !affine.state_dependencies.is_empty()
-                || !affine.operator_dependencies.is_empty()
+                || (!affine.operator_dependencies.is_empty()
+                    && (!closed || affine.operator_dependencies.len() != 1))
                 || affine
                     .node_dependencies
                     .iter()
                     .any(|n| !sources.contains(n))
             {
                 return Err(unsupported());
+            }
+            if closed
+                && matches!(
+                    op,
+                    OperatorSpec::Math {
+                        function: crate::ir::MathFunction::Ln | crate::ir::MathFunction::Exp,
+                        ..
+                    }
+                )
+            {
+                audit.charge(1)?;
+                closed_operators.insert(index);
             }
         }
         for contribution in &program.contributions {

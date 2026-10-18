@@ -1616,6 +1616,20 @@ impl Operators {
         horizon: f64,
         tolerances: &Tolerances,
     ) -> Result<Self, Error> {
+        Self::new_until_with_source_context(
+            program, trajectory, driven, states, horizon, tolerances, None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_until_with_source_context(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        horizon: f64,
+        tolerances: &Tolerances,
+        shared: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
+    ) -> Result<Self, Error> {
         let _timing = crate::diagnostics::span("history.prepare");
         let owners = crate::passive_events::isolated_instances(program);
         let isolated_parameters = program
@@ -1683,22 +1697,25 @@ impl Operators {
         let continuous =
             Continuous::new_until(program, trajectory, driven, states, horizon, tolerances)?
                 .map(Arc::new);
-        let source_work = crate::transition_source_plan::Work::default();
         let needs_source_plan = program.operators.iter().any(|spec| match spec {
             OperatorSpec::Transition { .. } => true,
             OperatorSpec::Slew { input, .. } => crate::source_slew::selected(input),
             _ => false,
         });
-        let source_context = needs_source_plan
-            .then(|| {
-                crate::transition_source_plan::ProofContext::new(
-                    program,
-                    trajectory,
-                    driven,
-                    source_work.clone(),
-                )
-            })
-            .transpose()?;
+        let source_context = if shared.is_some() {
+            shared
+        } else {
+            needs_source_plan
+                .then(|| {
+                    crate::transition_source_plan::ProofContext::new(
+                        program,
+                        trajectory,
+                        driven,
+                        crate::transition_source_plan::Work::default(),
+                    )
+                })
+                .transpose()?
+        };
         let history_work =
             crate::transition_source_plan::Work::limited([8192, 8192, 1_000_000_000]);
         let mut entries = Vec::new();
@@ -1958,16 +1975,23 @@ impl Operators {
                         history_targets.insert(index, plan);
                         continue;
                     }
+                    // Reuse the old Spec classification/leaf parsing. It only
+                    // requests DC proof when that existing parser finds a
+                    // voltage value leaf; old held dispatch spends no extra Work.
+                    let (dc_input, source_spec) =
+                        crate::transition_source_plan::Spec::transition_with_context(
+                            input,
+                            source_context.as_ref().unwrap().clone(),
+                            &origin.instance,
+                        )?;
+                    let input = dc_input.as_ref().unwrap_or(input);
+                    let expression = input.clone();
                     let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
-                    let source = crate::transition_source_plan::Spec::new_with_context(
-                        input,
-                        source_context.as_ref().unwrap().clone(),
-                        &origin.instance,
-                    )?
-                    .map(|spec| {
-                        crate::transition_source_state::Source::initialized(spec, &state_bounds)
-                    })
-                    .transpose()?;
+                    let source = source_spec
+                        .map(|spec| {
+                            crate::transition_source_state::Source::initialized(spec, &state_bounds)
+                        })
+                        .transpose()?;
                     let (input, input_bounds, history, source) =
                         if let Some((source, point, changed)) = source {
                             let target = source.target();
@@ -2007,14 +2031,8 @@ impl Operators {
                             )?;
                             (affine, row, history, None)
                         };
-                    let OperatorSpec::Transition {
-                        input: expression, ..
-                    } = spec
-                    else {
-                        unreachable!()
-                    };
                     entries.push(Runtime::Transition {
-                        expression: expression.clone(),
+                        expression,
                         program: Arc::new(program.clone()),
                         owner: origin.instance.clone(),
                         source,
@@ -3925,6 +3943,73 @@ mod held_nested_select_audit_tests {
             assert_eq!(retry.bounds(time).unwrap(), clean.bounds(time).unwrap());
             let clip = |t: f64| (4. * t).clamp(0., 1.);
             let exact = clip(time - 1.) - clip(time - 2.) + clip(time - 3.);
+            let bounds = retry.bounds(time).unwrap()[0];
+            assert!(bounds.lo <= exact && exact <= bounds.hi);
+        }
+    }
+    #[test]
+    fn dc_target_keeps_accepted_history_after_failed_trial_and_retry() {
+        let (mut p, mut input) = fixture();
+        p.nodes.push("u".into());
+        if let Expression::Select { then_value, .. } = &mut input {
+            **then_value = Expression::Affine {
+                constant: 0.,
+                terms: vec![crate::ir::Term {
+                    node: 2,
+                    coefficient: 1.,
+                }],
+            };
+        }
+        let mut value = serde_json::to_value(p).unwrap();
+        value["operators"] = serde_json::json!([{
+            "kind":"transition", "input":input, "delay":0., "rise":0.25, "fall":0.25,
+            "origin":{"source":"dc-retry.va","line":1,"column":1,"instance":"dut"}
+        }]);
+        value["contributions"] = serde_json::json!([{
+            "branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},
+            "positive":1,"negative":0,"rhs":{"op":"operator","operator":0},
+            "origin":{"source":"dc-retry.va","line":1,"column":2,"instance":"dut"}
+        }]);
+        let program: Program = serde_json::from_value(value).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![vec![[0., 1.], [4., 1.]]],
+                output_times: vec![0., 4.],
+                stop: 4.,
+                max_step: 4.,
+            },
+            1,
+        )
+        .unwrap();
+        let mut accepted = Operators::new(&program, &trajectory, &["u".into()], &[0.]).unwrap();
+        accepted
+            .advance(1., I::point(1.), &[1.], &[I::ONE], &[0])
+            .unwrap();
+        let clean = accepted.clone();
+        let prefix = accepted.bounds(2.25).unwrap();
+        for _ in 0..2 {
+            let failed = accepted.evaluation(2.).unwrap().advanced(
+                I::point(2.),
+                &[0.],
+                &[I { lo: -1., hi: 1. }],
+                &[0],
+            );
+            assert!(failed.is_err());
+            assert!(accepted.same_reset_history(&clean));
+            assert_eq!(accepted.bounds(2.25).unwrap(), prefix);
+        }
+        let mut retry = accepted;
+        let mut clean = clean;
+        for history in [&mut retry, &mut clean] {
+            history
+                .advance(2., I::point(2.), &[0.], &[I::ZERO], &[0])
+                .unwrap();
+        }
+        for time in [2., 2.125, 2.25] {
+            assert_eq!(retry.bounds(time).unwrap(), clean.bounds(time).unwrap());
+            let exact = 1. - (4. * (time - 2.)).clamp(0., 1.);
             let bounds = retry.bounds(time).unwrap()[0];
             assert!(bounds.lo <= exact && exact <= bounds.hi);
         }

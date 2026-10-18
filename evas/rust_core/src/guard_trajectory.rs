@@ -196,7 +196,14 @@ impl<'a> GuardTrajectory<'a> {
             }
             (nodes, Some(allowed))
         } else {
-            (crate::affine_bounds::node_map(p, &model.driven)?, None)
+            (
+                crate::affine_bounds::node_map_with_dc(
+                    p,
+                    &model.driven,
+                    model.dc_projection.as_deref(),
+                )?,
+                None,
+            )
         };
         Ok(Self {
             model,

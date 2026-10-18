@@ -1539,16 +1539,10 @@ fn schedule_with_history(
     });
     // A timer-only network needs no guard trajectory certification.
     let bounds = if model.guards.iter().any(Option::is_some) {
-        Some(if let Some(h) = &held {
-            GuardBounds::held(
-                &model.program,
-                &model.driven,
-                &model.dynamic_guards,
-                h.states,
-            )?
-        } else {
-            GuardBounds::new(&model.program, &model.driven, &model.dynamic_guards)?
-        })
+        Some(GuardBounds::for_model(
+            model,
+            held.as_ref().map(|h| h.states),
+        )?)
     } else {
         None
     };

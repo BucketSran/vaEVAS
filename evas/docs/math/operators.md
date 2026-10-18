@@ -133,7 +133,22 @@ Rust 另检查队列/边沿的候选回退；新增同刻电压目标与变化�
 分段保持目标可以由外部 PWL 源的可认证条件选择，例如
 `transition(V(ctrl)>0.5 ? q : 0,0,tr,tr)`。EVAS 按源的实际切点更新目标，
 保留切点区间和原实数根身份；不能因为两个根落入同一浮点区间就把它们合并。
-目标叶子仍须是保持量或常量，`transition(V(ctrl),...)` 这类连续目标仍拒绝。
+目标叶子须是保持量、常量，或运行时证明为整段 DC 的原始外部输入。
+前端只保留 DC 候选的原 AST，并不从初始读数生成常量。
+`transition_source_plan::ProofContext::transition_dc_leaves` 复用 slew 的原源审计、
+共享 Work 和逐节点缓存：每个原依赖（包括零系数和未选分支）都必须来自 ground 或
+本次 driven 输入；原物理 `Curve.affine_on([0,stop])` 必须返回零斜率及可精确表示的
+binary64 常量。端点相等不足以证明 DC，未来脉冲和非零输入误差管继续拒绝。
+有形状误差的输入仍须先通过原公共不确定性门，不能只取名义折线。
+
+证明只替换目标值叶子的输入项，保持 Select 判定、状态所有权、实例和调用点身份；
+原乘加仍按结构保留，避免先舍入完整目标而掩盖后续放大的误差。
+`operators::Operators::new_until` 在构造历史前保存已证树，后续 advance、复位和重试
+复用既有 held/rational transition 包围和事务路径，不重新采样输入。
+旧 held-only 和源选择常量的路径保持；内部节点、历史值和实际变化的连续目标仍拒绝。
+[独立合同](../../tests/test_transition_dc_target.py)覆盖 held 翻转、实例／调用点、复位、
+未来脉冲、误差管、零权依赖及乘法误差放大；Rust 回归检查共享预算耗尽、失败候选及同对象重试。
+此隔离候选只建立本地证据，未新增实际 Spectre 对齐资格或原 checker 结论。
 
 普通输出或强制观察点可能满足 `tau <= tq < b`：真实 timer 已发生，执行代表时刻却略晚于观察点。
 例如 binary64 的 `3*1ns < 6*500ps < b`。该点应读取回调后的状态，不能再次推进已位于 b 的源游标。
@@ -981,3 +996,13 @@ EVAS的有限包围是额外的工程合同，不保证平台数学库逐位一�
 [operators.rs](../../rust_core/src/operators.rs)。[公开回归](../../tests/test_unary_functions.py)
 检查函数、拒绝边界及嵌套调用；[独立有限校准](../../validation/calibrate_elementary.py)
 把实际 Rust 区间实现与高精度参考比较。有限点校准通过不能扩大上面的认证域。
+
+### 初始化后的闭合实数幂常量
+
+本地候选支持一个无观察者的初始化只读标量：模型只有一条real初始化赋值、没有声明初值或运行期事件，普通analog只含电压贡献。编译器先审计完整源码依赖及writer，确认初始表达式仅由实例参数和闭合有理算术构成，才允许普通贡献读取其保留的AST。其他初始读取、未来writer、ordinary alias、数组和初始输出不进入新路径；既有声明常量、整数有限pow和half-power路径保持；旧lowering接受时不启动新证明；只有原pow指数拒绝分类才启动闭合证明。新证明的有理后序遍历复用已收费的子项类型事实，不重新解释source integer除法，逐项检查signed32中间范围。
+
+新实指数路径仅接受正底、闭合非整数指数，另包含完整原参数审计后的零指数恒等式。它不支持运行期pow。底数、指数及其原除法保留为IR算术；`pow(x,y)`使用现有`ln(x)`和`exp(y*ln(x))`两级native Math，倒数也保留原Divide。Python不计算pow代表点，不从证明区间取中点作为精确初始化State。
+
+`initial_constant_math.py`拥有源码资格、变量namespace及每请求共享100000项证明账本；`instance_compiler.py`只在该证明成立时省去相应运行期State。`source_math.rs`只允许同实例、更早且已证明闭合的Ln/Exp依赖链，保留统一Audit和Operators拥有者，不开放一般嵌套源数学。`operators.rs`与`math_functions.rs`重新包围原系数、ln/exp和舍入，最终`gain*V(input)`仍经过原关系root boxes与原电压精度验收。
+
+独立答案、原算式算术误差、源顺序/隐藏依赖拒绝、实例隔离、raw IR所有权/前向引用、共享证明预算及强放大拒绝见`test_constant_initial_power.py`。这只是未合并的有限能力证据，不代表动态实指数或状态依赖transition timing已支持，也不新增原件checker成绩。

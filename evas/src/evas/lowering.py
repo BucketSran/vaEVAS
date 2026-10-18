@@ -6,6 +6,10 @@ from .ir import EventMath, Origin, Affine, Binary, Expression, OperatorRef, Powe
 from .syntax import CompileError, Expr, OPERATOR_NAMES, DECISION_NAMES, contains_operator, contains_decision
 
 
+class UnsupportedConstantPower(CompileError):
+    """Private classification from the original pow rejection traversal."""
+
+
 def affine(constant, terms):
     return Affine(constant, tuple(Term(n, c) for n, c in sorted(terms.items()) if c != 0.0))
 
@@ -135,8 +139,8 @@ def _lower_checked(expr, parameters, nodes, source, operators, preserve_structur
 
 def _lower(expr, parameters, nodes, source, operators, preserve_structure,
            decisions, validate_decision, decision_scope, indices, memo, node_declarations):
-    def fail(message, *, code="compile_error"):
-        raise CompileError(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}",
+    def fail(message, *, code="compile_error", error=CompileError):
+        raise error(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}",
                            code=code, token=expr.token)
 
     event_math = getattr(parameters, "event_math", None)
@@ -325,7 +329,8 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
                     return finite_result
             if (not isinstance(b, Affine) or b.terms or not b.constant.is_integer()
                     or not 1 <= b.constant <= 32):
-                fail("pow exponent must be an instance-constant integer in [1,32]")
+                fail("pow exponent must be an instance-constant integer in [1,32]",
+                     error=UnsupportedConstantPower)
             exponent = int(b.constant)
             if isinstance(a, Affine) and not a.terms:
                 try:

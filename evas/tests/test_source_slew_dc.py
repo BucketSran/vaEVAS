@@ -86,9 +86,10 @@ class SourceSlewDc(unittest.TestCase):
                    errors={'v':0},shapes={'v':shape})
         self.assertEqual(voltage(result),[0,0,.25,.5,.75,.75])
 
-    def test_old_transition_source_leaf_remains_rejected(self):
-        with self.assertRaisesRegex(CompileError,'transition target values must be held states or constants'):
-            run('V(y,r)<+transition(V(u,r)>0.5?V(v,r):0,0,1,1);')
+    def test_transition_source_leaf_uses_whole_domain_dc_certificate(self):
+        result = run('V(y,r)<+transition(V(u,r)>0.5?V(v,r):0,0,1,1);',
+                     sources={'r':[[0,0],[2,0]],'v':[[0,1],[2,1]]})
+        self.assertEqual(voltage(result),[0,0,0.25,0.5,1,1])
 
     def test_product_rounding_error_survives_future_gain(self):
         exact=F(.9)*F(.06666666666666667)

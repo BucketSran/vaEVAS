@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 
 from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
                  ArrayRead, ArrayWrite, CheckedInteger, CheckedIndex, Loop as RuntimeLoop, EventMath, Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
-from .lowering import lower, scale
+from .lowering import lower, scale, UnsupportedConstantPower
 from .limits import check_ir
 from .input_rational_scope import input_rational_tree
 from .compact_source_select import compact_source_assignment
@@ -38,6 +38,7 @@ class Compilation:
     events: list[Event] = field(default_factory=list)
     operators: list[Transition | AbsDelay | Slew | Idt | LaplaceNd | IdtMod | Sin | MathFunction | Ddt] = field(default_factory=list)
     step_bounds: list[StepBound] = field(default_factory=list)
+    initial_math_work: int = 100_000
     indices: dict[str, int] = field(init=False)
     source_rational_origins: list[Origin] = field(default_factory=list)
     source_rational_nodes: set[int] = field(default_factory=lambda: {0})
@@ -114,6 +115,8 @@ class InstanceCompiler:
 
     def compile(self):
         self.cache = bind_parameters(self.model, self.instance.parameters, self.instance.name)
+        self.closed_initial_math = {}
+        self.initial_math_source_model = self.model
         # Inspect source writers before scalarization unrolls even zero-trip
         # loops. A future/dead write must not create an immutable binding.
         declaration_writers, pending = set(), list(self.model.initial) + list(self.model.analog)
@@ -192,7 +195,7 @@ class InstanceCompiler:
         # Read-only declarations retain VA's default zero, but an unused
         # declaration must not turn a stateless solve into a state program.
         self.state_names = tuple(name for name in self.model.variables
-                                 if name not in self.local_variables and name not in immutable_names
+                                 if name not in self.local_variables and name not in immutable_names and name not in self.closed_initial_math
                                  and (name in persistent or name in referenced))
         self.state_ids = {name: len(self.compilation.states) + index for index, name in enumerate(self.state_names)}
         self.constant_local_aliases = self.bind_constant_local_aliases(writes)
@@ -393,6 +396,9 @@ class InstanceCompiler:
         def execute(statements, values, aliases=None, active=True):
             values = dict(values)
             for statement in statements:
+                if (isinstance(statement, SyntaxAssignment)
+                        and statement.name in self.closed_initial_math):
+                    continue  # Complete observer-free initial AST was audited by its owner.
                 if statement.token in self.model.local_alias_scopes:
                     aliases = {name: value for name, value in
                                (self.constant_local_aliases | self.initial_voltage_aliases).items()
@@ -431,9 +437,23 @@ class InstanceCompiler:
                 else:
                     if not isinstance(statement, SyntaxAssignment) or statement.name not in self.state_ids:
                         raise CompileError("initial_step requires declared state assignments")
-                    value = lower(statement.rhs, resolve(values, aliases), self.node_ids, self.model.source,
-                                  preserve_structure=True, decisions=self.initial_select,
-                                  validate_decision=self.validate_initial_operand, node_declarations=True)
+                    try:
+                        value = lower(statement.rhs, resolve(values, aliases), self.node_ids, self.model.source,
+                                      preserve_structure=True, decisions=self.initial_select,
+                                      validate_decision=self.validate_initial_operand, node_declarations=True)
+                    except UnsupportedConstantPower:
+                        # The original traversal owns classification. Old accepted
+                        # initializers never enter or pay for the optional proof.
+                        from .initial_constant_math import binding
+                        closed = binding(self, self.initial_math_source_model)
+                        if statement.name not in closed:
+                            raise
+                        self.closed_initial_math = closed
+                        self.state_names = ()
+                        self.state_ids = {}
+                        for name in closed:
+                            values.pop(name, None)
+                        continue
                     self.validate_initial_operand(statement.rhs, value)
                     def constant_arms(item):
                         if isinstance(item, Affine):
@@ -487,6 +507,8 @@ class InstanceCompiler:
     def parameter(self, name):
         # Internal constant lookup does not grant parameter override authority:
         # bind_parameters validated external keys before these bindings exist.
+        if name in getattr(self, "closed_initial_math", {}):
+            return self.closed_initial_math[name]
         if name in getattr(self, "immutable_declarations", {}):
             return self.immutable_declarations[name]
         if name not in self.model.parameters:
@@ -1293,8 +1315,22 @@ class InstanceCompiler:
                 if isinstance(item, Binary):
                     return continuous_value(item.left) or continuous_value(item.right)
                 return isinstance(item, Power) and continuous_value(item.base)
-            if continuous_value(value):
-                raise CompileError("transition target values must be held states or constants; continuous voltage targets are unsupported",
+            def dc_target_candidate(item):
+                # Admission only: the kernel must prove each original physical
+                # source constant on the entire run, including unselected arms.
+                if isinstance(item, Affine):
+                    nodes = {0} | {self.node_ids[port] for port, direction in self.model.directions.items()
+                                   if direction in ("input", "inout")}
+                    return all(term.node in nodes for term in item.terms)
+                if isinstance(item, StateRef):
+                    return True
+                if isinstance(item, Select):
+                    return dc_target_candidate(item.then_value) and dc_target_candidate(item.else_value)
+                if isinstance(item, Binary) and item.op in ("add", "multiply"):
+                    return dc_target_candidate(item.left) and dc_target_candidate(item.right)
+                return False
+            if continuous_value(value) and not dc_target_candidate(value):
+                raise CompileError("transition target values must be held states or constants; unsupported whole-domain DC candidate",
                                    token=expr.token, instance=self.instance.name)
             delay, rise = (v.constant for v in settings[:2])
             # LRM 2.4 §4.5.8: a positive explicit rise supplies omitted fall.

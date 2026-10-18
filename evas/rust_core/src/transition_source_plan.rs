@@ -227,7 +227,7 @@ pub(crate) struct ProofContext {
     cuts: Mutex<Vec<ProvenCuts>>,
 }
 impl ProofContext {
-    /// Only rate-limited targets may replace whole-domain physical DC leaves.
+    /// Rate-limited targets may replace whole-domain physical DC leaves.
     /// Predicates keep their original curves and real-root partition. Audit the
     /// original tree first, including masked operands and zero-weight sources.
     pub(crate) fn slew_dc_leaves(
@@ -235,7 +235,26 @@ impl ProofContext {
         expression: &Expression,
         owner: &str,
     ) -> Result<Expression, Error> {
-        fn audit(e: &Expression, context: &ProofContext) -> Result<(), Error> {
+        self.dc_leaves(expression, owner, false)
+    }
+
+    // The existing Spec leaf parser calls this only after finding a voltage
+    // value leaf; held-only and source-selected constants incur no new scan.
+    pub(crate) fn transition_dc_leaves(
+        &self,
+        expression: &Expression,
+        owner: &str,
+    ) -> Result<Expression, Error> {
+        self.dc_leaves(expression, owner, true)
+    }
+
+    fn dc_leaves(
+        &self,
+        expression: &Expression,
+        owner: &str,
+        held: bool,
+    ) -> Result<Expression, Error> {
+        fn audit(e: &Expression, context: &ProofContext, held: bool) -> Result<(), Error> {
             context.work.step()?;
             match e {
                 Expression::Affine { constant, terms } => {
@@ -249,12 +268,38 @@ impl ProofContext {
                     }
                     for term in terms {
                         context.work.step()?;
-                        if !term.coefficient.is_finite()
-                            || term.node != 0 && !context.input_nodes.contains(&term.node)
-                        {
+                        if !term.coefficient.is_finite() {
                             return Err(unsupported(
                                 "source slew targets require original driven nodes",
                             ));
+                        }
+                        if term.node != 0 {
+                            // One lookup replaces both contains and position.
+                            // Reserve its full linear upper bound before work,
+                            // even when the exact DC value is already cached.
+                            context.work.debit(2, context.input_nodes.len() as u64)?;
+                            let index = context
+                                .input_nodes
+                                .iter()
+                                .position(|&n| n == term.node)
+                                .ok_or_else(|| {
+                                    unsupported("source slew targets require original driven nodes")
+                                })?;
+                            // A shaped physical curve does not erase its tube.
+                            if held
+                                && context
+                                    .trajectory
+                                    .config
+                                    .pwl_errors_v
+                                    .as_ref()
+                                    .and_then(|errors| errors.get(index))
+                                    .is_some_and(|error| error.bound() > 0.)
+                            {
+                                return Err(Error::new(
+                                    "unsupported_source_uncertainty",
+                                    "transition DC candidates require zero source error bounds",
+                                ));
+                            }
                         }
                     }
                 }
@@ -266,13 +311,14 @@ impl ProofContext {
                     ..
                 } => {
                     for child in [left, right, then_value, else_value] {
-                        audit(child, context)?;
+                        audit(child, context, held)?;
                     }
                 }
                 Expression::Add { left, right } | Expression::Multiply { left, right } => {
-                    audit(left, context)?;
-                    audit(right, context)?;
+                    audit(left, context, held)?;
+                    audit(right, context, held)?;
                 }
+                Expression::State { .. } if held => {}
                 _ => {
                     return Err(unsupported(
                         "source slew DC targets require source-only sums and constant products",
@@ -285,6 +331,7 @@ impl ProofContext {
             e: &Expression,
             context: &ProofContext,
             constants: &mut BTreeMap<usize, f64>,
+            held: bool,
         ) -> Result<Expression, Error> {
             context.work.step()?;
             Ok(match e {
@@ -299,17 +346,17 @@ impl ProofContext {
                     relation: *relation,
                     left: left.clone(),
                     right: right.clone(),
-                    then_value: Box::new(normalize(then_value, context, constants)?),
-                    else_value: Box::new(normalize(else_value, context, constants)?),
+                    then_value: Box::new(normalize(then_value, context, constants, held)?),
+                    else_value: Box::new(normalize(else_value, context, constants, held)?),
                     origin: origin.clone(),
                 },
                 Expression::Add { left, right } => Expression::Add {
-                    left: Box::new(normalize(left, context, constants)?),
-                    right: Box::new(normalize(right, context, constants)?),
+                    left: Box::new(normalize(left, context, constants, held)?),
+                    right: Box::new(normalize(right, context, constants, held)?),
                 },
                 Expression::Multiply { left, right } => Expression::Multiply {
-                    left: Box::new(normalize(left, context, constants)?),
-                    right: Box::new(normalize(right, context, constants)?),
+                    left: Box::new(normalize(left, context, constants, held)?),
+                    right: Box::new(normalize(right, context, constants, held)?),
                 },
                 Expression::Affine {
                     constant: value,
@@ -361,12 +408,71 @@ impl ProofContext {
                     }
                     result
                 }
-                _ => return Err(unsupported("invalid source slew DC target")),
+                Expression::State { .. } if held => e.clone(),
+                _ => return Err(unsupported("invalid source DC target")),
             })
         }
-        audit(expression, self)?;
+        audit(expression, self, held)?;
         crate::continuous::validate_selection(expression, &self.program, &self.driven, owner)?;
-        normalize(expression, self, &mut BTreeMap::new())
+        normalize(expression, self, &mut BTreeMap::new(), held)
+    }
+
+    /// Whole-domain scalar fact, with original references checked before algebra.
+    /// Zero ground terms are legal; the complete factor must be nonzero.
+    pub(crate) fn exact_dc_affine(
+        &self,
+        expression: &Expression,
+        owner: &str,
+    ) -> Result<f64, Error> {
+        let Expression::Affine { terms, .. } = expression else {
+            return Err(unsupported("DC factor requires an original affine supply"));
+        };
+        for term in terms {
+            self.work.step()?;
+            if term.node != 0 {
+                self.work.debit(2, self.input_nodes.len() as u64)?;
+                let index = self
+                    .input_nodes
+                    .iter()
+                    .position(|&n| n == term.node)
+                    .ok_or_else(|| unsupported("DC factor requires original driven nodes"))?;
+                if self
+                    .trajectory
+                    .config
+                    .pwl_errors_v
+                    .as_ref()
+                    .and_then(|e| e.get(index))
+                    .is_some_and(|e| e.bound() > 0.)
+                {
+                    return Err(Error::new(
+                        "unsupported_source_uncertainty",
+                        "DC factor requires zero source error bounds",
+                    ));
+                }
+            }
+        }
+        // Reuse the audited physical-DC producer; retain its conservative exact
+        // reservation for every source, including zero-weight dependencies.
+        let _ = self.slew_dc_leaves(expression, owner)?;
+        self.work.exact()?;
+        let (value, slope) = self
+            .trajectory
+            .original_guard_curve(expression, &self.input_nodes)
+            .and_then(|c| {
+                c.affine_on(I {
+                    lo: 0.,
+                    hi: self.trajectory.config.stop,
+                })
+            })
+            .ok_or_else(|| unsupported("DC factor requires a whole-domain physical constant"))?;
+        let value = binary_dc_value(&value, &slope)?;
+        if value == 0. {
+            return Err(unsupported("DC supply factor must be nonzero"));
+        }
+        Ok(value)
+    }
+    pub(crate) fn charge(&self, amount: usize) -> Result<(), Error> {
+        self.work.debit(2, amount as u64)
     }
 
     pub(crate) fn new(
@@ -432,6 +538,21 @@ impl Spec {
         context: Arc<ProofContext>,
         owner: &str,
     ) -> Result<Option<Arc<Self>>, Error> {
+        Self::prepare_with_context(expression, context, owner, false).map(|(_, spec)| spec)
+    }
+    pub(crate) fn transition_with_context(
+        expression: &Expression,
+        context: Arc<ProofContext>,
+        owner: &str,
+    ) -> Result<(Option<Expression>, Option<Arc<Self>>), Error> {
+        Self::prepare_with_context(expression, context, owner, true)
+    }
+    fn prepare_with_context(
+        expression: &Expression,
+        context: Arc<ProofContext>,
+        owner: &str,
+        dc_target: bool,
+    ) -> Result<(Option<Expression>, Option<Arc<Self>>), Error> {
         let program = context.program.as_ref();
         let driven = context.driven.as_slice();
         let work = context.work.clone();
@@ -439,7 +560,7 @@ impl Spec {
         let (nodes, dependencies, operators) =
             crate::continuous::integral_dependency_edges(expression, program, owner)?;
         if nodes.iter().all(|n| *n == 0) {
-            return Ok(None);
+            return Ok((None, None));
         }
         crate::continuous::validate_selection(expression, program, driven, owner)?;
         fn exact_domain(e: &Expression, w: &Work) -> Result<(), Error> {
@@ -467,6 +588,11 @@ impl Spec {
         for leaf in forms(expression, &work)? {
             let a = crate::events::affine(&leaf, program, owner)?;
             if a.node_dependencies.iter().any(|n| *n != 0) || !a.operator_dependencies.is_empty() {
+                if dc_target {
+                    let normalized = context.transition_dc_leaves(expression, owner)?;
+                    let source = Self::new_with_context(&normalized, context, owner)?;
+                    return Ok((Some(normalized), source));
+                }
                 return Err(unsupported(
                     "transition value leaves must use held state and constants only",
                 ));
@@ -514,17 +640,20 @@ impl Spec {
             &mut predicate_dependencies,
             &work,
         )?;
-        Ok(Some(Arc::new(Self {
-            expression: expression.clone(),
-            program: context.program.clone(),
-            trajectory: context.trajectory.clone(),
-            input_nodes: context.input_nodes.clone(),
-            owner: owner.into(),
-            dependencies,
-            predicate_dependencies,
-            work,
-            context,
-        })))
+        Ok((
+            None,
+            Some(Arc::new(Self {
+                expression: expression.clone(),
+                program: context.program.clone(),
+                trajectory: context.trajectory.clone(),
+                input_nodes: context.input_nodes.clone(),
+                owner: owner.into(),
+                dependencies,
+                predicate_dependencies,
+                work,
+                context,
+            })),
+        ))
     }
     pub(crate) fn equal_targets(&self, a: &Target, b: &Target) -> Result<bool, Error> {
         a.proven_equal(b, self)
@@ -1411,20 +1540,23 @@ mod proof_cache_tests {
 
     #[test]
     fn dc_proof_reservations_share_sticky_request_exhaustion() {
-        let base = spec(
-            selected(constant(1.), constant(0.)),
-            [1., 1.],
-            Work::limited([128, 8192, 200_000]),
-        );
-        let expression = selected(source(), constant(0.));
-        for _ in 0..2 {
-            assert_eq!(
-                base.context
-                    .slew_dc_leaves(&expression, "M")
-                    .unwrap_err()
-                    .kind,
-                "step_budget"
+        for transition in [false, true] {
+            let base = spec(
+                selected(constant(1.), constant(0.)),
+                [1., 1.],
+                Work::limited([128, 8192, 200_000]),
             );
+            let expression = selected(source(), constant(0.));
+            for _ in 0..2 {
+                let error = if transition {
+                    base.context
+                        .transition_dc_leaves(&expression, "M")
+                        .unwrap_err()
+                } else {
+                    base.context.slew_dc_leaves(&expression, "M").unwrap_err()
+                };
+                assert_eq!(error.kind, "step_budget");
+            }
         }
     }
 
@@ -2202,5 +2334,78 @@ mod proof_cache_tests {
             1
         );
         assert_eq!(used(&work) - before, 2);
+    }
+}
+
+#[cfg(test)]
+mod dc_dispatch_budget_tests {
+    use super::*;
+    use serde_json::json;
+    fn context(work: Work, count: usize) -> Arc<ProofContext> {
+        let nodes: Vec<_> = std::iter::once("0".to_string())
+            .chain((1..=count).map(|i| format!("u{i}")))
+            .collect();
+        let p: Program = serde_json::from_value(json!({"schema_version":crate::ir::SCHEMA_VERSION,
+            "nodes":nodes,"states":[{"instance":"M","name":"q","kind":"real","initial":0}],
+            "contributions":[],"events":[],"operators":[]}))
+        .unwrap();
+        let config = serde_json::from_value(json!({"pwl":vec![vec![[0.,1.],[1.,1.]];count],
+            "output_times":[0.,1.],"stop":1.,"max_step":1.}))
+        .unwrap();
+        let t = Trajectory::new(config, count).unwrap();
+        ProofContext::new(&p, &t, &p.nodes[1..], work).unwrap()
+    }
+    #[test]
+    fn legacy_held_and_source_selected_constants_spend_only_original_work() {
+        let held = Expression::State { state: 0 };
+        let c = context(Work::limited([128, 8192, 1]), 0);
+        let (normalized, source) = Spec::transition_with_context(&held, c.clone(), "M").unwrap();
+        assert!(normalized.is_none() && source.is_none());
+        assert_eq!(c.work.0.work.load(Ordering::Relaxed), 1);
+        let selected: Expression = serde_json::from_value(json!({"op":"select","relation":"gt",
+            "left":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},
+            "right":constant(0.5),"then_value":constant(1.),"else_value":constant(0.),
+            "origin":{"source":"dc-budget.va","line":1,"column":1,"instance":"M"}}))
+        .unwrap();
+        let old = context(Work::default(), 1);
+        assert!(Spec::new_with_context(&selected, old.clone(), "M")
+            .unwrap()
+            .is_some());
+        let used = old.work.0.work.load(Ordering::Relaxed);
+        let new = context(Work::limited([128, 8192, used]), 1);
+        let (normalized, source) =
+            Spec::transition_with_context(&selected, new.clone(), "M").unwrap();
+        assert!(normalized.is_none() && source.is_some());
+        assert_eq!(new.work.0.work.load(Ordering::Relaxed), used);
+    }
+    #[test]
+    fn repeated_dc_input_lookup_reserves_search_upper_bound_and_stays_exhausted() {
+        let c = context(Work::limited([128, 8192, 300000]), 4000);
+        let mut leaves = vec![
+            Expression::Affine {
+                constant: 0.,
+                terms: vec![crate::ir::Term {
+                    node: 4000,
+                    coefficient: 1.
+                }]
+            };
+            1024
+        ];
+        while leaves.len() > 1 {
+            leaves = leaves
+                .chunks(2)
+                .map(|a| Expression::Add {
+                    left: Box::new(a[0].clone()),
+                    right: Box::new(a[1].clone()),
+                })
+                .collect();
+        }
+        let expression = leaves.pop().unwrap();
+        for _ in 0..2 {
+            assert_eq!(
+                c.transition_dc_leaves(&expression, "M").unwrap_err().kind,
+                "step_budget"
+            );
+        }
     }
 }

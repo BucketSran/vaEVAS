@@ -295,6 +295,13 @@ pub(crate) fn contribution_affine(
     program: &Program,
     owner: &str,
 ) -> Result<AffineState, Error> {
+    contribution_shape(expr, program, owner).map(|(row, _)| row)
+}
+fn contribution_shape(
+    expr: &Expression,
+    program: &Program,
+    owner: &str,
+) -> Result<(AffineState, bool), Error> {
     match expr {
         Expression::Select {
             left,
@@ -303,9 +310,10 @@ pub(crate) fn contribution_affine(
             else_value,
             ..
         } => {
-            let mut result = contribution_affine(then_value, program, owner)?;
+            let (mut result, mut dc) = contribution_shape(then_value, program, owner)?;
             for child in [left, right, else_value] {
-                let other = contribution_affine(child, program, owner)?;
+                let (other, child_dc) = contribution_shape(child, program, owner)?;
+                dc |= child_dc;
                 result.node_dependencies.extend(other.node_dependencies);
                 result.state_dependencies.extend(other.state_dependencies);
                 result
@@ -313,13 +321,13 @@ pub(crate) fn contribution_affine(
                     .extend(other.operator_dependencies);
                 result.has_variables |= other.has_variables;
             }
-            Ok(result)
+            Ok((result, dc))
         }
         Expression::Add { left, right }
         | Expression::Multiply { left, right }
         | Expression::Divide { left, right } => {
-            let a = contribution_affine(left, program, owner)?;
-            let b = contribution_affine(right, program, owner)?;
+            let (a, ad) = contribution_shape(left, program, owner)?;
+            let (b, bd) = contribution_shape(right, program, owner)?;
             // Reuse affine validation on a representative arm, retaining every
             // structural dependency separately for feedback checks.
             let representative = representative(expr);
@@ -369,6 +377,23 @@ pub(crate) fn contribution_affine(
             } else {
                 affine(&representative, program, owner)?
             };
+            // Reuse these existing parsed rows: an already-zero factor is
+            // affine on the legacy path and must not acquire a DC admission tax.
+            let live = |v: &AffineState| {
+                v.constant != 0.
+                    || v.nodes
+                        .iter()
+                        .chain(&v.states)
+                        .chain(&v.operators)
+                        .any(|&c| c != 0.)
+            };
+            let dc = ad
+                || bd
+                || sampled_coefficient
+                    && transition_coefficient
+                    && live(&a)
+                    && live(&b)
+                    && (!a.node_dependencies.is_empty() || !b.node_dependencies.is_empty());
             result.has_variables |= a.has_variables || b.has_variables;
             result.node_dependencies.extend(a.node_dependencies);
             result.node_dependencies.extend(b.node_dependencies);
@@ -376,9 +401,9 @@ pub(crate) fn contribution_affine(
             result.state_dependencies.extend(b.state_dependencies);
             result.operator_dependencies.extend(a.operator_dependencies);
             result.operator_dependencies.extend(b.operator_dependencies);
-            Ok(result)
+            Ok((result, dc))
         }
-        _ => affine(expr, program, owner),
+        _ => affine(expr, program, owner).map(|row| (row, false)),
     }
 }
 
@@ -448,6 +473,7 @@ pub(crate) struct TriggerLeaf {
 
 pub(crate) struct EventModel {
     pub(crate) program: Program,
+    pub(crate) dc_projection: Option<std::sync::Arc<crate::dc_projection::DcProjection>>,
     rhs: Vec<AffineState>,
     pub(crate) guards: Vec<Option<AffineState>>,
     pub(crate) dynamic_guards: Vec<bool>,
@@ -473,6 +499,14 @@ impl EventModel {
         program: Program,
         driven: Vec<String>,
         tolerances: Tolerances,
+    ) -> Result<Self, Error> {
+        Self::new_with_trajectory(program, driven, tolerances, None)
+    }
+    pub(crate) fn new_with_trajectory(
+        program: Program,
+        driven: Vec<String>,
+        tolerances: Tolerances,
+        trajectory: Option<&crate::pwl::Trajectory>,
     ) -> Result<Self, Error> {
         crate::event_control::validate(&program)?;
         let initial_values = program
@@ -518,11 +552,13 @@ impl EventModel {
                     }
                 })?;
         }
-        let rhs = program
+        let shaped = program
             .contributions
             .iter()
-            .map(|c| contribution_affine(&c.rhs, &program, &c.origin.instance))
+            .map(|c| contribution_shape(&c.rhs, &program, &c.origin.instance))
             .collect::<Result<Vec<_>, _>>()?;
+        let dc_supply = shaped.iter().any(|(_, dc)| *dc);
+        let rhs = shaped.into_iter().map(|(row, _)| row).collect::<Vec<_>>();
         let passive_events = crate::passive_events::classify(&program)?;
         let mut guards = Vec::new();
         let mut dynamic_guards = Vec::new();
@@ -772,6 +808,7 @@ impl EventModel {
             passive_conditions,
             passive_events,
             program,
+            dc_projection: None,
             rhs,
             guards,
             dynamic_guards,
@@ -788,7 +825,30 @@ impl EventModel {
             initial_values,
         };
         model.check_guard_dependencies()?;
-        model.conditions.prepare(&model.program, &model.driven)?;
+        // Reuse dependency metadata already audited above. Original Transition
+        // products plus an internal history cross cannot use the legacy affine
+        // network map; direct/implicit supported callers incur no DC proof.
+        if let Some(t) = trajectory {
+            if model.guard_operators.iter().any(|ops| !ops.is_empty())
+                && model
+                    .program
+                    .operators
+                    .iter()
+                    .all(|o| matches!(o, crate::ir::OperatorSpec::Transition { .. }))
+                && dc_supply
+            {
+                model.dc_projection = Some(crate::dc_projection::DcProjection::new(
+                    &model.program,
+                    t,
+                    &model.driven,
+                )?);
+            }
+        }
+        model.conditions.prepare_with_dc(
+            &model.program,
+            &model.driven,
+            model.dc_projection.as_deref(),
+        )?;
         Ok(model)
     }
 
@@ -1334,10 +1394,14 @@ impl EventModel {
                     else {
                         return false;
                     };
-                    crate::event_accuracy::GuardBounds::expressions(
+                    crate::event_accuracy::GuardBounds::project_with_dc(
                         &self.program,
                         &self.driven,
                         &[Some(guard), Some(&difference)],
+                        None,
+                        false,
+                        false,
+                        self.dc_projection.as_deref(),
                     )
                     .is_ok_and(|b| b.same_zero_set(0, 1))
                 });

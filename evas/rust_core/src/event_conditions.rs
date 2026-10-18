@@ -549,6 +549,14 @@ impl Conditions {
     }
 
     pub(crate) fn prepare(&mut self, program: &Program, driven: &[String]) -> Result<(), Error> {
+        self.prepare_with_dc(program, driven, None)
+    }
+    pub(crate) fn prepare_with_dc(
+        &mut self,
+        program: &Program,
+        driven: &[String],
+        dc: Option<&crate::dc_projection::DcProjection>,
+    ) -> Result<(), Error> {
         self.root_predicates.clear();
         self.driven_nodes = driven
             .iter()
@@ -576,8 +584,19 @@ impl Conditions {
                 expressions.push((!assignment.numeric).then_some(&assignment.expression));
             }
             self.bounds = Some(
-                GuardBounds::stateful_parameters(program, driven, &expressions)
-                    .map_err(|e| Error::new("event_condition", e.message))?,
+                match dc {
+                    Some(dc) => GuardBounds::project_with_dc(
+                        program,
+                        driven,
+                        &expressions,
+                        None,
+                        true,
+                        true,
+                        Some(dc),
+                    ),
+                    None => GuardBounds::stateful_parameters(program, driven, &expressions),
+                }
+                .map_err(|e| Error::new("event_condition", e.message))?,
             );
             // A root enclosure contains times other than the actual root.
             // Preserve g(tau)=0 when a predicate has the same proven zero set.
@@ -590,13 +609,26 @@ impl Conditions {
                                 (self.active_events[p.event] && !p.numeric).then_some(&p.expression)
                             }))
                             .collect();
-                        GuardBounds::stateful_expressions(program, driven, &expressions)
-                            .map(|bounds| {
-                                (0..self.predicates.len())
-                                    .filter(|&i| bounds.same_zero_set(0, i + 1))
-                                    .collect()
-                            })
-                            .unwrap_or_default()
+                        match dc {
+                            Some(dc) => GuardBounds::project_with_dc(
+                                program,
+                                driven,
+                                &expressions,
+                                None,
+                                true,
+                                false,
+                                Some(dc),
+                            ),
+                            None => {
+                                GuardBounds::stateful_expressions(program, driven, &expressions)
+                            }
+                        }
+                        .map(|bounds| {
+                            (0..self.predicates.len())
+                                .filter(|&i| bounds.same_zero_set(0, i + 1))
+                                .collect()
+                        })
+                        .unwrap_or_default()
                     } else {
                         vec![]
                     };

@@ -1718,3 +1718,26 @@ C5 的每个 timer 参数先分类为实例常量、分段保持状态或连续�
 guard 的精确仿射根必须落在原隔离盒中。日程保留原盒和根身份，仅把执行观察盒与该有理数根的严格外包络相交，再使用上端代表。原方向、时间/表达式容差、stop 与因果前驱检查继续生效；旧流采样、状态映射和新历史种子共享这一观察盒。根证书用于查询和事件排序，两个有理数根即使共享同一个 binary64 外包络也不能合并。此精化复用原始 PWL 根证书的原则，没有把最近浮点数定义为事件时刻。
 
 原 E3 中 `idt(slope)` 在 timer `.25` 后斜率为 2，根恰为 `.5`，该查询读事件后状态。原 E5 的根为有理数 `1/3`，binary64 查询 `float(1/3)` 严格在根前，下一浮点查询在根后。完整原查询列表、邻接查询和稀疏布局由 [历史相位回归](../../tests/test_exact_affine_history_phase.py) 覆盖；一般多项式历史根仍不能由这一仿射证明决定相位。
+
+
+### 精确DC供电系数与history guard投影
+
+Transition输出乘原始输入供电差、再由内部节点cross采样时，可在投影矩阵中使用整段物理DC系数。
+该切片只接收原始已驱动输入/ground的仿射供电叶子；必须在整个`[0,stop]`零斜率、零误差、有限，
+完整乘子的精确有理值可表示为非零binary64。正负值均保留，零ground项本身不非法；
+零供电、变化源、正误差（包括有physical shape）、隐藏内部依赖和不可精确表示的差值明确拒绝。
+例如binary64的`0.9-0`可用，但`0.9-0.1`的精确差不能先浮点舍入为`0.8`再充当证明。
+
+`dc_projection::DcProjection`仅持有原贡献的受证行视图。原Program、贡献、guard树、Origin、
+方向和误差门不变，原始电压关系仍用于数值求解与forward-error验收。投影保留供电幅值和符号，
+不把`A*(T-0.5)`约成`T-0.5`，也不在另一个实例guard中生成foreign OperatorRef。
+`GuardTrajectory`继续使用原Transition epoch、原搜索窗和`RootTime`；等值盒不是history身份。
+
+资格来自既有贡献依赖解析的乘子标记，旧direct-affine和合法implicit分流不承担新DC审计。
+`EventModel`、guard/condition/settlement行与实际Operators初始化共用同一个不可变`ProofContext`及
+粘性的`Work`。新增树复制、比较、全域精确请求和成员查找均归该owner；耗尽或证明失败不重建owner。
+原依赖和未选臂所有权先审计，不能先用零系数/常量化隐藏非法引用。
+
+独立合同见`test_dc_factor.py`：正负供电、非零参考、跨实例与近邻不同history根、全域变化与误差拒绝，
+以及原根误差在后续电压放大后紧预算拒绝、宽预算返回区间包围独立有理真值。
+同engine失败重试与共享额度耗尽由`dc_projection`私有测试覆盖。原benchmark的验收归冻结候选原checker。

@@ -20,6 +20,38 @@ pub(crate) struct GuardBounds {
 }
 
 impl GuardBounds {
+    pub(crate) fn for_model(
+        model: &crate::events::EventModel,
+        states: Option<&[I]>,
+    ) -> Result<Self, Error> {
+        if model.dc_projection.is_none() {
+            return match states {
+                Some(states) => {
+                    Self::held(&model.program, &model.driven, &model.dynamic_guards, states)
+                }
+                None => Self::new(&model.program, &model.driven, &model.dynamic_guards),
+            };
+        }
+        let expressions = model
+            .triggers
+            .iter()
+            .enumerate()
+            .map(|(i, leaf)| match &leaf.trigger {
+                EventTrigger::Cross { guard, .. } if !model.dynamic_guards[i] => Some(guard),
+                _ => None,
+            })
+            .collect::<Vec<_>>();
+        Self::project_with_dc(
+            &model.program,
+            &model.driven,
+            &expressions,
+            states,
+            false,
+            false,
+            model.dc_projection.as_deref(),
+        )
+    }
+
     pub(crate) fn new(
         program: &Program,
         driven: &[String],
@@ -96,6 +128,26 @@ impl GuardBounds {
         states: Option<&[I]>,
         keep_states: bool,
         keep_operators: bool,
+    ) -> Result<Self, Error> {
+        Self::project_with_dc(
+            program,
+            driven,
+            expressions,
+            states,
+            keep_states,
+            keep_operators,
+            None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn project_with_dc(
+        program: &Program,
+        driven: &[String],
+        expressions: &[Option<&Expression>],
+        states: Option<&[I]>,
+        keep_states: bool,
+        keep_operators: bool,
+        dc: Option<&crate::dc_projection::DcProjection>,
     ) -> Result<Self, Error> {
         let count = program.nodes.len();
         let variables = count + program.states.len() + program.operators.len();
@@ -175,7 +227,7 @@ impl GuardBounds {
             }
             nodes
         } else {
-            crate::affine_bounds::node_map(program, driven)?
+            crate::affine_bounds::node_map_with_dc(program, driven, dc)?
         };
         validate_projection(&nodes, variables, width)?;
         let mut coefficients = expressions

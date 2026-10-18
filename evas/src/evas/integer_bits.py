@@ -65,7 +65,7 @@ def bounds(op, operands):
     return None
 
 
-def integer_type(expr, variables, parameters, genvars=()):
+def integer_type(expr, variables, parameters, genvars=(), *, child_types=None):
     """Source integer typing shared by instance and parameter bit lowering."""
     if expr.result_type == 'real':
         return False
@@ -76,10 +76,11 @@ def integer_type(expr, variables, parameters, genvars=()):
     if expr.op == 'parameter':
         return variables.get(expr.value) == 'integer' or parameters.get(expr.value) == 'integer'
     if expr.op == 'checked':
-        return integer_type(expr.args[0], variables, parameters, genvars)
+        return child_types[0] if child_types is not None else integer_type(expr.args[0], variables, parameters, genvars)
     if expr.op in ('<', '<=', '>', '>=', '==', '!=', '&&', '||', 'unary!'):
         return True
     args = expr.args[1:] if expr.op == 'ternary' else expr.args
     if expr.op == 'ternary' or expr.op in OPS or expr.op in ('+', '-', '*', '/', '%', 'unary+', 'unary-'):
-        return all(integer_type(arg, variables, parameters, genvars) for arg in args)
+        return all(child_types[1:] if expr.op == 'ternary' else child_types) if child_types is not None else all(
+            integer_type(arg, variables, parameters, genvars) for arg in args)
     return False

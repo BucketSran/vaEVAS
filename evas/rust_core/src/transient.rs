@@ -1133,7 +1133,12 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
     let output_count =
         crate::input_clamp::lower(&mut request.program, &mut request.driven, &mut trajectory)?;
 
-    let model = EventModel::new(request.program, request.driven, request.tolerances)?;
+    let model = EventModel::new_with_trajectory(
+        request.program,
+        request.driven,
+        request.tolerances,
+        Some(&trajectory),
+    )?;
     let step_bounds = crate::step_bounds::Bounds::new(&model.program)?;
     let prepared = initialization::prepare(&model, &trajectory)?;
     let initial = prepared

@@ -13,13 +13,14 @@ pub(super) fn initialize(
     let until = pending
         .first()
         .map_or(trajectory.config.stop, |event| event.time);
-    let operators = Operators::new_until(
+    let operators = Operators::new_until_with_source_context(
         &model.program,
         trajectory,
         &model.driven,
         states,
         until,
         &model.tolerances,
+        model.dc_projection.as_ref().map(|dc| dc.source.clone()),
     )?;
     let calendar = history_epoch(
         model,

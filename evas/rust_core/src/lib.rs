@@ -7,6 +7,7 @@ mod batch;
 mod causal_event;
 mod causal_voltage;
 mod continuous;
+mod dc_projection;
 pub mod diagnostics;
 mod display;
 mod dynamic_roots;

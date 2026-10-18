@@ -268,3 +268,5 @@ TRANSITION、COMPOSE 的开发证据，覆盖常量初始化快照、analog stro
 EVENT-CONDITIONS、COMPOSE 的本地开发证据，契约见[原生事件floor](../math/events.md#native-event-floor)。
 旧有限表IR逐字对照仅排除schema版本差异；同控制器跨bin失败/重试与精确有理取整预算分别由
 transient_passive_tests.rs、event_value_proof.rs覆盖。原244已在wave14统一400通过，安装与完整CI仍待验。
+
+[闭合初始化实数幂开发回归](../../tests/test_constant_initial_power.py)补充LANG、COMPOSE和NONLINEAR-TRANSIENT：初始只读AST经既有Ln/Exp与原关系root boxes消费，保留原除法、所有权及数值误差。只有单条闭合real初始赋值、无其他观察者/writer的有限结构进入新路径；运行期实指数不在此范围。原完整SCS响应是作者诊断，独立审查与原checker成绩由主集成验收，不据此提升Q计数。

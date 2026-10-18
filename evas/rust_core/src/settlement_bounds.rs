@@ -414,6 +414,10 @@ impl Bounds {
         crate::diagnostics::counter("certificate_bounds_builds", 1);
         let bindings = RefCell::new(BTreeSet::new());
         let bind = |expr: &Expression| {
+            let expr = match &model.dc_projection {
+                Some(dc) => dc.view(expr)?,
+                None => expr,
+            };
             if operators.is_empty() {
                 affine(expr, p)
             } else {
