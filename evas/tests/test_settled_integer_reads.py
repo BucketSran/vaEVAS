@@ -108,7 +108,7 @@ class SettledIntegerReads(unittest.TestCase):
         with self.assertRaisesRegex(CompileError, '256'):
             compile_sources({"composition.va": source(body, 'integer q=10;real s;',
                 ("bit0", "y"))}, [inst(outputs=("bit0", "y"))])
-        with self.assertRaisesRegex(CompileError, 'integral state arithmetic'):
+        with self.assertRaisesRegex(CompileError, 'integer conversion requires a direct physical input probe'):
             compile_sources({"typed-voltage.va": source(body, 'integer q=10,s;',
                 ("bit0", "y"))}, [inst(outputs=("bit0", "y"))])
 
