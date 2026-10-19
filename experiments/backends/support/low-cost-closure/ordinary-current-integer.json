@@ -346,7 +346,7 @@
     "install_acceptance_for_114": "not claimed",
     "source_reuse": "58个Python runtime文件和已核kernel同字节；不外推到未来Rust/源码变化。"
   },
-  "receiving_status": "received in current common candidate;raw scoped evidence retains its original source/kernel identity;complete common CI and final400 pending",
+  "receiving_status": "received and final same-source wave27 dual400/CI/install independently accepted;see final_delivery",
   "received_common_original": {
     "result": {
       "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/three-original114-common-r2/RESULT.json",
@@ -360,5 +360,15 @@
     }
   },
   "received_common_kernel": "074f28fd901674ded933a092793144a292ee1d688e2793427ec52a6b83737bd3",
-  "received_common_evidence": "ordinary-prefix.json#common_three"
+  "received_common_evidence": "ordinary-prefix.json#common_three",
+  "historical_record_boundary": "既有源码、开发/私有内核、局部计数及失败均保留各自原身份；最终同源交付以final_delivery为准，局部计数不叠加。",
+  "final_delivery": {
+    "path": "experiments/backends/support/low-cost-closure/ordinary-common-three.json",
+    "sha256": "d123bd11014e5698905cda6bbcd9ba7cf0fbd705303fa56aef943be7b1b84500",
+    "production_revision": "5f0f13202e67e28f06bdf783208b402bba70e146",
+    "original_pass": 317,
+    "revised_pass": 320,
+    "remaining": 80,
+    "target400_complete": false
+  }
 }

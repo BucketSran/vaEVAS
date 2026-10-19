@@ -1,0 +1,371 @@
+{
+  "schema_version": 1,
+  "status": "independently_accepted_frozen_wave27_checkpoint;draft_PR208;not_merged",
+  "accepted_at_utc": "2026-10-19T21:19:13.101326+00:00",
+  "capabilities": [
+    "LANG",
+    "EVENT-ORDER",
+    "EVENT-CONDITIONS",
+    "TRANSITION",
+    "COMPOSE"
+  ],
+  "production_revision": "5f0f13202e67e28f06bdf783208b402bba70e146",
+  "package": "0.24.0",
+  "ir_schema": 32,
+  "release_kernel_sha256": "2676e7e640f18cecc93466d7fa23130447734781faee8a918ab7f639f23462d5",
+  "kernel_profile": "local release; opt-level3; debug-assertions=false; overflow-checks=false; lto=false; codegen-units16; debug0; incremental=false",
+  "runtime_build_input_count": 202,
+  "frozen_git_package_source_count": 481,
+  "source_count_boundary": "481为精确CI sdist内受Git跟踪源码，包含测试、bench和字面fixture；202为运行及构建输入。7份生成sdist元数据排除。",
+  "original400": {
+    "passed": 317,
+    "failed": 19,
+    "rejected": 64,
+    "completed": 336,
+    "cleanup": 400,
+    "timeout": 0,
+    "previous_passed": 314,
+    "new_pass_ids": [
+      "037",
+      "114",
+      "234"
+    ],
+    "lost_prior_pass_ids": [],
+    "old314_response_hashes_identical": true,
+    "old19_fail_checker_dictionaries_identical": true
+  },
+  "revised400": {
+    "passed": 320,
+    "failed": 15,
+    "rejected": 65,
+    "completed": 335,
+    "cleanup": 400,
+    "timeout": 0,
+    "previous_passed": 317,
+    "new_pass_ids": [
+      "037",
+      "114",
+      "234"
+    ],
+    "lost_prior_pass_ids": [],
+    "same_final_original_reuse": 396,
+    "same_final_revised_executions": 4,
+    "remaining_to400": 80,
+    "target400_complete": false
+  },
+  "execution": {
+    "full_original_campaigns": 1,
+    "revised_subset_campaigns": 1,
+    "new_case_executions": 404,
+    "kernel_timeout_s": 120,
+    "worker_timeout_s": 150,
+    "old_wave_results_used_as_current_rows": 0,
+    "cleanup_confirmed": 404
+  },
+  "material_track": {
+    "012": "PASS; passed_sample_gate",
+    "075": "PASS;725 direct samples;32 finite edges",
+    "077": "PASS;405 direct samples;additive Fraction oracle",
+    "107": "REJECTED;not_evaluable_no_saved_DUT_response;zero new credit",
+    "original012075077107": "all remain FAIL;original materials and checker unchanged",
+    "material_correction_pass_advantage": 3,
+    "material_correction_advantage_new_this_round": 0
+  },
+  "ci": {
+    "run": 39319056695,
+    "head": "5f0f13202e67e28f06bdf783208b402bba70e146",
+    "url": "https://github.com/BucketSran/vaEVAS/actions/runs/39319056695",
+    "jobs_success": 15,
+    "python_unique_executed_passed": 2641,
+    "python_modules": 255,
+    "python_shards": [
+      681,
+      633,
+      672,
+      655
+    ],
+    "python_method_or_setup_skip": 0,
+    "rust_passed": 653,
+    "rust_performance_ignored": 1,
+    "install_reinstall_negative_controls": [
+      "macOS arm64 Python3.12 PASS",
+      "Ubuntu x86_64 Python3.10 PASS"
+    ],
+    "platform_kernel_boundary": "CI regression、两平台wheel、开发核074f及本地release2676各保留实际二进制身份，不声称字节相同。"
+  },
+  "other_CI_denominators": {
+    "selection": {
+      "reported": 70,
+      "executed": 70
+    },
+    "maintenance": {
+      "reported": 271,
+      "executed": 237,
+      "external_harness_skips": 34
+    },
+    "math_calibration": {
+      "executed": 264
+    },
+    "paper_provenance": {
+      "reported": 412,
+      "executed": 411,
+      "missing_old_archive_skip": 1
+    },
+    "differential": {
+      "executed": 9
+    },
+    "benchmark_identity": {
+      "reported": 77,
+      "executed": 76,
+      "skips": 1
+    },
+    "benchmark_first_batch": {
+      "reported": 246,
+      "executed": 240,
+      "skips": 6
+    },
+    "ngspice": {
+      "records": 11,
+      "pass": 6,
+      "compile_refused": 3,
+      "unsupported": 2
+    }
+  },
+  "retained_failures": {
+    "old_CI": {
+      "run": 39312465964,
+      "actual_python_methods": 2628,
+      "passed": 2619,
+      "environment_errors": 8,
+      "obsolete_refusal_failure": 1,
+      "status": "retained unchanged;shared optional kernel default and same-body semantic controls fixed before final CI"
+    },
+    "rejected_diagnostic_changes": {
+      "same_lowering_stage": [
+        "036",
+        "063",
+        "249",
+        "349"
+      ],
+      "generic_compile_to_explicit_lowering": [
+        "140",
+        "373"
+      ],
+      "new_pass_credit": 0
+    },
+    "private390": {
+      "status": "deferred;not_integrated;zero_PASS_credit",
+      "observed_frontier": "state-owner value expansion fix reaches original1e9 Work limit",
+      "investigation_command_s": 560.35,
+      "cap_s": 600,
+      "new_controls_executed": false
+    },
+    "346_048_358_360": "existing refusal or incomplete capability retained;no new support claim"
+  },
+  "stage_result": {
+    "minimum_gain1_met": true,
+    "aspiration_gain3_and_revised320_met": true,
+    "ultimate400_met": false
+  },
+  "remaining_ids": [
+    "019",
+    "036",
+    "038",
+    "039",
+    "041",
+    "048",
+    "049",
+    "059",
+    "060",
+    "063",
+    "065",
+    "070",
+    "074",
+    "079",
+    "081",
+    "088",
+    "091",
+    "093",
+    "097",
+    "102",
+    "107",
+    "109",
+    "112",
+    "116",
+    "140",
+    "157",
+    "163",
+    "164",
+    "168",
+    "170",
+    "185",
+    "186",
+    "189",
+    "211",
+    "212",
+    "219",
+    "222",
+    "245",
+    "249",
+    "260",
+    "261",
+    "262",
+    "263",
+    "264",
+    "267",
+    "301",
+    "302",
+    "308",
+    "313",
+    "316",
+    "320",
+    "325",
+    "329",
+    "330",
+    "331",
+    "332",
+    "333",
+    "340",
+    "343",
+    "344",
+    "346",
+    "347",
+    "349",
+    "351",
+    "356",
+    "357",
+    "358",
+    "359",
+    "360",
+    "361",
+    "362",
+    "363",
+    "364",
+    "365",
+    "369",
+    "371",
+    "373",
+    "390",
+    "391",
+    "400"
+  ],
+  "local_only_evidence": {
+    "fixed_source": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/final-source/fixed-source.json",
+      "sha256": "52b31d02ffda6243a9e30992f1e10a6d89d2dc44b0c7de11b0d8d20183650e49"
+    },
+    "source_manifest": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/final-source/source-manifest.json",
+      "sha256": "ca57bad09756eecac2094089900bf217b62d814549f504b3d8ff0cd7ba632ca0"
+    },
+    "release_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave27-sixhour-ir32/release/RECEIPT.json",
+      "sha256": "28e695e6aedb84a4d5885f6214ab80c5731eea1f162a4084aedbe0e9004ccf49"
+    },
+    "original_identity": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave27-sixhour-ir32/execution/IDENTITY.json",
+      "sha256": "6caefd6e836254aa5ea2dc6489bc538fd77d42344d93a5d12e5ab7581539588f"
+    },
+    "original_results": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave27-sixhour-ir32/execution/RESULTS.json",
+      "sha256": "9896ce3722ac39f95c2cae5987299661685b268fab070aa98747c299dd7cf20e"
+    },
+    "original_summary": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave27-sixhour-ir32/execution/SUMMARY.json",
+      "sha256": "0a491d235204dd277ca93020fda434906104003ac2a6ff39a502c70084448732"
+    },
+    "original_comparison": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/final-original400-comparison.json",
+      "sha256": "640eb9d8b06e9d50c128f9389af9f9dcea7ca3f63f0f0bd093654914fd604c83"
+    },
+    "original_outer_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/sixhour-final-original400-20261020/execution.receipt.json",
+      "sha256": "7b4f86fb64c86108a4c66f14b74c2996e797abc4c4163779319cb79a6730808d"
+    },
+    "revised4_outer_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/sixhour-final-revised4-20261020/execution.receipt.json",
+      "sha256": "40681296966ddf6764e7e2fa7cb47f095fae4dceef493ab092809bf53a782c92"
+    },
+    "compose_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/final-compose-execution-r1/execution.receipt.json",
+      "sha256": "54fc72288cb8700b3d7e0b5187a480f7ea6f591761de88b8d8fe6883004609e2"
+    },
+    "revised_identity": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave27-materials-r3/revised-full400/IDENTITY.json",
+      "sha256": "b4d1b3d19b7b6e5a0afac05b1f82dcda24f051d1c4148045ec16e301c1d6f588"
+    },
+    "revised_results": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave27-materials-r3/revised-full400/RESULTS.json",
+      "sha256": "109287d72bbb90e70f63f9c822aad27df10680ecf6a9cf1ad9ccade087dbf516"
+    },
+    "revised_summary": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave27-materials-r3/revised-full400/SUMMARY.json",
+      "sha256": "75fe1ffd780272bab5cc15f1ad1b842aeb8c4c08428a824b11572afdfc5ab012"
+    },
+    "revised_retention": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave27-materials-r3/revised-full400/RETENTION.json",
+      "sha256": "89584d834f5ad637a3f6b6514c73ccf56ae59fcdfcac9ccfbc26904bdda83bc6"
+    },
+    "version_map": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave27-materials-r3/revised-full400/VERSIONS.json",
+      "sha256": "ec4f08a3d84feecf29bb9a783d2aea13a7c5955f6edfec89f5dc7c9db5eccbea"
+    },
+    "original_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/final-original400-independent-review.json",
+      "sha256": "3c8bfe6771ef0a8ef6600f52eb580ec904101a81b3202add4e20be878dd21734"
+    },
+    "revised_postcheck_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/final-revised4-postchecks-review.json",
+      "sha256": "50e53c54d1214f12200e6a77727947995504e4bf59ec048a7acfa2f624fd1ce4"
+    },
+    "composition_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/final-dual400-composition-review.json",
+      "sha256": "646a61692a32ca8b02a09c75b7d089e92fc11cb4dd9eab7863d79abc3d201a21"
+    },
+    "source_readiness_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/final-source-readiness-review-r2.json",
+      "sha256": "a0e11ec97db680cce4df4019a7c0b9061984986d8a6f6bd39bcfd8b7cec6d0dc"
+    },
+    "ci_audit": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/ci39319056695/AUDIT.json",
+      "sha256": "9baa91a9e97966245983935fb0f8b3bb1bed604dcecd3cc4c7d3cc008a50fdde"
+    },
+    "ci_delivery_review": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/three-common-CI-delivery-review.json",
+      "sha256": "337fb221aa35660e4f9755dcf22ce0f7f1efc48c3391587932f664bfdb4f8127"
+    },
+    "private390_deferred": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/390-deferred-receipt.json",
+      "sha256": "f2f50cecdb56ec8e76734aef332c599cdd38d0fdb304db507238dc5777f7af94"
+    },
+    "postcheck_012": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave27-materials-r3/012-actual-postcheck.json",
+      "sha256": "d139befbf4d5f15c6ed7451262d673e76d2482d4edfb14bc49b2a69311db4499"
+    },
+    "postcheck_075": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave27-materials-r3/075-actual-postcheck.json",
+      "sha256": "ad08d2b7acc6c1a625e97696ed3607160054933af94e9bc06bcd9e23c3dae304"
+    },
+    "postcheck_077": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave27-materials-r3/077-actual-postcheck.json",
+      "sha256": "02c73bc5786fc02f74414123f60436c75fae2a5e196c6b0084c48846711f7d0f"
+    },
+    "postcheck_107": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave27-materials-r3/107-actual-postcheck.json",
+      "sha256": "d2c7d79646a3b78c7f802dfe62dc174b4ebc992185f7a003b2f7e5c5c39a8736"
+    },
+    "main_acceptance": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/final400-acceptance.json",
+      "sha256": "1445b0736aff13d7ab05d7023d37f2085a10f9e4399b15317f7855c04958dfda"
+    }
+  },
+  "limits": [
+    "两轨400为兼容性检查点，不授予共同Q、通用Verilog-A支持或新Spectre资格。",
+    "没有新增实际Spectre、外部算力或正式资格检查。",
+    "原生agent active-time及Stop拦截未证实；实际控制为既有有界命令deadline、收费及cleanup。",
+    "原始collector accepted=false按生产者时点保留；本记录单独记录最终主线程接纳。",
+    "原始观察与完整审计为ignored local-only，公开摘要中的哈希不构成下载地址。",
+    "PR208保持草稿，不合并、不发布公共索引或tag。",
+    "冻结打包源码属于生产5f；后续辅助文档提交单独比较运行、测试与构建输入，不能称完整481份当前文件均不变或新head已执行旧CI。"
+  ]
+}

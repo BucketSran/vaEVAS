@@ -32,16 +32,18 @@ EVAS 的价值需要由电压域工程行为证明：在正确时刻采样，保
 每类都检查初始化、事件前后读值、历史延续、多个实例和误差控制，再扩展反馈及更复杂组合。
 支持结论仍只维护在总表中。晶体管、电流与电荷方程不属于当前范围；性能优化排在行为与精度之后。
 
-最近已验收检查点为 **EVAS 0.24.0 / IR31**，完整CI、安装与两轨400已按下述身份验收，尚未发布到公共索引或打tag，PR208草稿未合并。IR31增加事件体标量integer赋值根的直接物理输入电压转换，最近整数且半整数远离零，完整原值盒须证明同一signed32 bin；[合同及边界](docs/math/events.md#ir31-候选事件中的直接电压到-integer-转换)单独维护。IR30新增受限source Forcing与独立held Transition；原有IR29右移／按位与、保持目标、原树事件Floor、源因子及字面零支路保留。该检查点的Forcing与新Floor／typed Native／Slew混合仍拒绝，旧route优先。数学合同见[算子说明](docs/math/operators.md#independent-source-forcing-beside-held-histories)，历史版本见[更新记录](docs/UPDATE.md)。
+最近已验收检查点为 **EVAS 0.24.0 / IR32**，生产提交 `5f0f1320`、本地release核 `2676e7e640f1`。wave27原始400为317通过、19失败、64拒绝；材料r3修订轨为320通过、15失败、65拒绝，剩80项。两轨相对wave26均只新增037、114、234，旧通过零回退，旧314个原始响应哈希与19份失败checker字典不变。修订轨使用本次同源396份原执行和4份修订执行，未用旧批补行。完整CI的2641个不同Python方法及双平台安装、重装和负控通过，最终双轨和身份已独审。202份运行及构建输入与481份冻结打包源码分别计数，内核身份各自保留，见[最终共同收据](../experiments/backends/support/low-cost-closure/ordinary-common-three.json)。400全部PASS目标未完成，PR208保持草稿，尚未合并或发布公共索引/tag。
 
-当前源码另有 **0.24.0 / IR32 本地候选**：增加受限普通历史消费者、同支路二次源项与保持历史的组合、保持整数目标的紧凑表示，以及显式参数的解析正弦输入值。原请求Work、全部准入审计和精度预算保留；IR31保存请求须从原VA重编译。联合199个唯一Python方法、110个不同Rust单元测试及6个原生测试通过，两轴审查的问题已闭合。完整400、完整Python CI与安装仍待本候选验收，不能沿用下述IR31成绩。原369、371在新候选完整请求中仍被原1e9预算拒绝，原346仍有展开及derived clock组合缺口；三项均未新增PASS。数学合同见[算子手册](docs/math/operators.md#同支路二次源直接项的本地候选)与[解析源值合同](docs/math/events.md#ir32-private-candidate-explicit-analytic-source-values)。
-此前IR32迭代曾使旧PASS027触及原100000审计上限；wave26后续同源完整执行已恢复旧通过，原始314／修订317，旧身份与计数的独立交付复核已闭合；该历史证据不认证当前新候选。
+此前IR31检查点增加事件体标量integer赋值根的直接物理输入电压转换，最近整数且半整数远离零，完整原值盒须证明同一signed32 bin；[合同及边界](docs/math/events.md#ir31-候选事件中的直接电压到-integer-转换)单独维护。IR30受限source Forcing与独立held Transition、IR29右移与按位与等原有边界保留。IR31保存请求须从原VA重编译为IR32。数学合同见[算子说明](docs/math/operators.md#independent-source-forcing-beside-held-histories)，历史版本见[更新记录](docs/UPDATE.md)。
 
-当前共同候选的普通integer当前值与单点保持来源证明已接收，原037、114、234在同一开发核074f28fd下均完整通过原checker；最终同源双轨和完整CI尚待验收，统一314／317不改写。合同见[事件手册](docs/math/events.md#ordinary-current-integer-alias)，身份见[共同收据](../experiments/backends/support/low-cost-closure/ordinary-prefix.json)。
+IR32增加受限普通历史消费者、同支路二次源项与保持历史的组合、保持整数目标的紧凑表示，以及显式参数的解析正弦输入值。原请求Work、全部准入审计和精度预算保留。早期局部候选的199个唯一Python方法、110个不同Rust单元测试及6个原生测试保留其开发身份；最终验收使用上述wave27同源双轨和CI。原369、371仍被原1e9预算拒绝，原346仍有展开及derived clock组合缺口。数学合同见[算子手册](docs/math/operators.md#同支路二次源直接项的本地候选)与[解析源值合同](docs/math/events.md#ir32-private-candidate-explicit-analytic-source-values)。
+此前IR32迭代曾使旧PASS027触及原100000审计上限；wave26恢复旧通过，原始314、修订317。该历史失败及恢复身份保留；本次wave27再次完整验证旧通过不回退。
 
-2026-10-20另纳入[回调位置的普通纯输入前缀](docs/math/events.md#ordinary-event-prefix)与[事件读取的integer Floor前缀](docs/math/events.md#ordinary-integer-event-prefix)。共同源码的135个不同定向Python方法跨运行通过，公开编译IR上的2项Rust控制覆盖新ratio槽、同Controller完整Frame与共享Work；原234定向完整原checker7/7通过。无新需求的旧路径费用与基线一致，signed32、Floor bin和原预算不放宽。这些局部结果不更新统一314/317；完整CI、安装和最终同源双轨验收仍待执行，见[紧凑收据](../experiments/backends/support/low-cost-closure/ordinary-prefix.json)。
+本次接纳普通integer当前值与单点保持来源证明，原037、114、234在最终release核上完整通过原checker，响应与开发核074f28fd的对应结果逐字相同。完整误差盒、原Frame和共享Work保留。合同见[事件手册](docs/math/events.md#ordinary-current-integer-alias)，最终成绩与CI见[共同收据](../experiments/backends/support/low-cost-closure/ordinary-common-three.json)。
 
-当前wave22生产快照 `ab928317` 绑定177份源码／构建输入、IR31、0.24.0和release核 `69c46e155808`，测试辅助提交为 `6d3c8a93`。原始400保持314通过、19失败、67拒绝，333完成；材料r3修订另轨400为317通过、15失败、68拒绝，332完成，两轨均清理400/400、零超时。原件新增027、142；修订轨先由075、再由077新增通过，旧316通过零回退，旧19份原失败checker字典不变。修订轨由同wave22的396份原执行、既有修订012／107／075及新正式执行的077组成。全部PASS仍差83项，350只是节点。
+本次还接纳[回调位置的普通纯输入前缀](docs/math/events.md#ordinary-event-prefix)与[事件读取的integer Floor前缀](docs/math/events.md#ordinary-integer-event-prefix)。早期135个不同Python方法跨运行通过，公开编译IR上的2项Rust控制覆盖同Controller完整Frame与共享Work。k225旧费用保持、k226仍按原100000上限拒绝，signed32及Floor bin边界不放宽。局部身份见[前缀收据](../experiments/backends/support/low-cost-closure/ordinary-prefix.json)，不与最终全量方法数相加。
+
+历史wave22生产快照 `ab928317` 绑定177份源码／构建输入、IR31、0.24.0和release核 `69c46e155808`，测试辅助提交为 `6d3c8a93`。原始400保持314通过、19失败、67拒绝，333完成；材料r3修订另轨400为317通过、15失败、68拒绝，332完成，两轨均清理400/400、零超时。原件新增027、142；修订轨先由075、再由077新增通过，旧316通过零回退，旧19份原失败checker字典不变。修订轨由同wave22的396份原执行、既有修订012／107／075及新正式执行的077组成。全部PASS仍差83项，350只是节点。
 075原相邻样本平滑判据会误拒正确斜坡并放过瞬时跳变，独立Fraction参考与14项正负控制已证。修订仅增加250ps直接观察和必要的有限边沿检查，仍要求完整原checker及其0.40阈值；原VA、物理输入、时长、maxstep、精度和全部预算保持。正式725行保留原365点，32个直接边沿通过，两轴独审闭合；原075仍为FAIL。
 077的说明把整个输出保持与实时输入加保持扰动混写。用户审阅具体提案后明确选择后者；修订保留原deck、参数和全部预算，只保持扰动、实时相加输入，完整checker核五性质。正式405直接行、独立Fraction校核、真实registry42项校准及完整400两轴独审通过；原077仍FAIL，未据此推断唯一原意。
 [材料r3收据](../experiments/backends/support/low-cost-closure/continuation-wave22-materials-r3.json)绑定修订依据、正式执行与完整400映射。

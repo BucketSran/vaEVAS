@@ -1369,7 +1369,7 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 
 <a id="ordinary-event-prefix"></a>
 
-### 回调位置的普通纯输入前缀（本地候选）
+### 回调位置的普通纯输入前缀（分支已验收，未合并）
 
 没有初始化、事件或循环写者的标量 `real`，可以在回调体中读取其源码前缀。
 例如 `a=V(u); @(timer(0.25))q=a; a=2*V(u); V(y)<+a;`，
@@ -1433,7 +1433,7 @@ A 入口不改变该队列、单次发射、失败后禁止重放或原预算合
 
 <a id="ordinary-integer-event-prefix"></a>
 
-### 事件读取的普通 integer Floor 前缀（本地候选）
+### 事件读取的普通 integer Floor 前缀（分支已验收，未合并）
 
 单个普通标量 integer 可由物理输入的 `floor` 赋值及后续常量夹位组成前缀，
 并只在其后声明的运行回调体内被读取。编译器把完整原赋值和夹位放在每个读取回调之前，
@@ -1458,11 +1458,11 @@ A 入口不改变该队列、单次发射、失败后禁止重放或原预算合
 以及原共享 Work 自然耗尽后的两次粘性拒绝；完整 Frame 包含无关状态、历史、电路、队列和输出。
 该控制覆盖静态日历，不外推到 Held/History 日历。
 局部证据见[普通前缀收据](../../../experiments/backends/support/low-cost-closure/ordinary-prefix.json)，
-原件234定向通过不替代同源400、完整 CI 或安装验收，也没有新增 Spectre 或共同资格。
+局部身份不叠加计分；最终同源双轨、完整CI及安装见[共同收据](../../../experiments/backends/support/low-cost-closure/ordinary-common-three.json)。没有新增Spectre或共同资格。
 
 <a id="ordinary-current-integer-alias"></a>
 
-### 保留事件状态的普通 integer 当前值别名（本地候选）
+### 保留事件状态的普通 integer 当前值别名（分支已验收，未合并）
 
 同一标量 integer 可以保留原 State 和 cross 写者，同时在普通 analog 求值中使用独立的当前值别名。
 这条路径要求原源码恰有一个无条件顶层普通赋值，且每个普通读取都位于该赋值之后。
@@ -1483,11 +1483,11 @@ A 入口不改变该队列、单次发射、失败后禁止重放或原预算合
 核对原 cross 方向、`V(vsel)-V(0)-vth` guard、原赋值体，以及两次真实触发的 before/after 和 State 轨迹，
 并检查查询点不变性及原树负控。原114的258点 checker 定向通过；4个公开方法、11个既有 integer 前缀方法
 及旧 k225/k226 费用边界分别保留证据，不合并为新覆盖数。
-这些局部结果不替代同源400、共同 CI 或安装验收，没有新增 Spectre 配对或共同资格；统一314/317保持。
+最终release原114及同源双轨、完整CI与安装已独审，见[共同收据](../../../experiments/backends/support/low-cost-closure/ordinary-common-three.json)。没有新增Spectre配对或共同资格。
 
 <a id="ordinary-point-lineage"></a>
 
-### 采样输入谓词与普通单点的保持值来源证明（本地候选）
+### 采样输入谓词与普通单点的保持值来源证明（分支已验收，未合并）
 
 采样状态和当前输入共同决定贡献分支时，先从原表达式树审计实际 driven 输入及保持状态的来源。
 同 owner 的全部回调、numeric actions、未选分支和零项均参加审计；
@@ -1516,7 +1516,7 @@ A 入口不改变该队列、单次发射、失败后禁止重放或原预算合
 公开 Fraction 控制区分精确来源与代表点的相反符号，并核对加密查询不改物理历史。
 
 原037定向 checker 的45个边沿及5项属性通过；开发核、6项内部方法、独立公开控制及所有失败各保留身份。
-这不是最终同源400或新增 Spectre 资格。原始314／修订317仍是统一基线。
+最终release原037及同源双轨已独审，原始317、修订320、剩80，见[共同收据](../../../experiments/backends/support/low-cost-closure/ordinary-common-three.json)。没有新增Spectre资格。
 源码、配置和限制见[单点来源证据](../../../experiments/backends/support/low-cost-closure/ordinary-point-lineage.json)。
 
 <a id="multiple-event-writers"></a>

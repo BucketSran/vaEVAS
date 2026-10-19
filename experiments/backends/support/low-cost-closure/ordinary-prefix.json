@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "historical scoped frontend checkpoint;current common three-case delivery pending",
+  "status": "historical scoped frontend evidence;final common delivery independently accepted in linked wave27 receipt",
   "at_utc": "2026-10-19T19:15:05.350285+00:00",
   "capabilities": [
     "LANG",
@@ -273,5 +273,15 @@
     },
     "test_environment_invariant": "Optional EVAS_TEST_KERNEL/default has one shared owner in test_affine;existing standard fullCI runs absent-env path and detected old8 KeyErrors;no duplicate lint rule",
     "aggregate_credit": 0
+  },
+  "historical_record_boundary": "既有源码、开发/私有内核、局部计数及失败均保留各自原身份；最终同源交付以final_delivery为准，局部计数不叠加。",
+  "final_delivery": {
+    "path": "experiments/backends/support/low-cost-closure/ordinary-common-three.json",
+    "sha256": "d123bd11014e5698905cda6bbcd9ba7cf0fbd705303fa56aef943be7b1b84500",
+    "production_revision": "5f0f13202e67e28f06bdf783208b402bba70e146",
+    "original_pass": 317,
+    "revised_pass": 320,
+    "remaining": 80,
+    "target400_complete": false
   }
 }

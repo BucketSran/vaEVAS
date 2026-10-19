@@ -60,10 +60,10 @@ IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和�
 
 [回调位置的普通纯输入前缀](../math/events.md#ordinary-event-prefix)与
 [事件读取的 integer Floor 前缀](../math/events.md#ordinary-integer-event-prefix)
-补充 LANG、EVENT-ORDER、EVENT-CONDITIONS、TRANSITION 和 COMPOSE 的本地候选证据。
+补充 LANG、EVENT-ORDER、EVENT-CONDITIONS、TRANSITION 和 COMPOSE 的分支验收证据。
 [紧凑收据](../../../experiments/backends/support/low-cost-closure/ordinary-prefix.json)
 记录公开数值正反控、原预算边界、当前前端生成 IR 的一致性及同 Controller 完整 Frame 控制。
-原234定向完整通过与统一400分开；本候选尚待完整 CI、安装和最终同源双轨验收，没有新增 Spectre 或正式共同资格。
+原234局部身份保留；最终同源双轨、完整CI及安装已由[wave27共同收据](../../../experiments/backends/support/low-cost-closure/ordinary-common-three.json)闭合，原317、修订320、剩80。没有新增Spectre或正式共同资格。
 
 [仅初始化状态的普通别名合同](../math/events.md#initial-only-ordinary-alias)
 登记 LANG、EVENT-ORDER 和 COMPOSE 的分支开发入口。
@@ -72,12 +72,12 @@ IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和�
 [准入控制](../../tests/test_initial_ordinary_alias_admission.py)要求拒绝直接或传递设置依赖、
 依赖目标的 bound-step 激活条件及 indexed probe，并保留原非 A 入口。
 2026-10-19 主区联合检查159项通过，使用当前贡献队列和内核，覆盖上述准入、初始化、
-预算和两种实例排列。完整交付 CI 与原件400验收仍待执行，不增加 Spectre 配对或正式共同资格。
+预算和两种实例排列。该159项为历史局部运行；最终交付使用wave27同源400及2641方法CI，不增加Spectre配对或正式共同资格。
 
 [低成本闭包](../../../experiments/backends/support/low-cost-closure/README.md)补充 LANG、LIN、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS 和 COMPOSE 的分支证据。
 合同分别见[有限点初值与别名](../math/events.md#input-initialization)、[typed整数与有限幂](../math/events.md#typed-integer-closure)及[普通条件与有理输出](../math/solving.md#普通-analog-条件)。
 公开控制覆盖源码顺序、精确数组槽、真实根处读取、signed余数、有限pow类型与资源、分支临时量和正分母事实。
-当前wave22生产快照 `ab928317` 绑定177份源码／构建输入、IR31、0.24.0和release核 `69c46e155808`，测试辅助提交为 `6d3c8a93`。原始400保持314通过、19失败、67拒绝，333完成；材料r3修订另轨400为317通过、15失败、68拒绝，332完成，两轨均清理400/400、零超时。原件新增027、142；修订轨先由075、再由077新增通过，旧316通过零回退，旧19份原失败checker字典不变。修订轨由同wave22的396份原执行、既有修订012／107／075及新正式执行的077组成。全部PASS仍差83项，350只是节点。
+历史wave22生产快照 `ab928317` 绑定177份源码／构建输入、IR31、0.24.0和release核 `69c46e155808`，测试辅助提交为 `6d3c8a93`。原始400保持314通过、19失败、67拒绝，333完成；材料r3修订另轨400为317通过、15失败、68拒绝，332完成，两轨均清理400/400、零超时。原件新增027、142；修订轨先由075、再由077新增通过，旧316通过零回退，旧19份原失败checker字典不变。修订轨由同wave22的396份原执行、既有修订012／107／075及新正式执行的077组成。全部PASS仍差83项，350只是节点。
 075原相邻样本平滑判据会误拒正确斜坡并放过瞬时跳变，独立Fraction参考与14项正负控制已证。修订仅增加250ps直接观察和必要的有限边沿检查，仍要求完整原checker及其0.40阈值；原VA、物理输入、时长、maxstep、精度和全部预算保持。正式725行保留原365点，32个直接边沿通过，两轴独审闭合；原075仍为FAIL。
 077的说明把整个输出保持与实时输入加保持扰动混写。用户审阅具体提案后明确选择后者；修订保留原deck、参数和全部预算，只保持扰动、实时相加输入，完整checker核五性质。正式405直接行、独立Fraction校核、真实registry42项校准及完整400两轴独审通过；原077仍FAIL，未据此推断唯一原意。
 [材料r3收据](../../../experiments/backends/support/low-cost-closure/continuation-wave22-materials-r3.json)绑定修订依据、正式执行与完整400映射。
@@ -333,11 +333,11 @@ IR29位运算与纯保持目标、原树事件Floor、无状态源因子和字�
 [按需期限根与付费精确dyadic包围](../../../experiments/backends/support/low-cost-closure/source-budget-foundations.json)补充EVENT-ORDER、TRANSITION与COMPOSE的局部开发证据。IR31主候选联合控制69个去重Rust方法与25个Python方法通过，默认请求预算耗尽与完整Controller回滚保留；041仍在56.4/68ns处预算拒绝，未运行checker，不新增完整400成绩。独立5089例只验证数学函数，不替代真实owner计费控制。
 
 
-IR32本地共同候选涉及LANG、COMPOSE、TRANSITION、DEV:scs-input、CROSS、TIMER、EVENT-ORDER：
+以下IR32早期局部候选记录保留历史身份，最终交付已由上述wave27收据验收；涉及LANG、COMPOSE、TRANSITION、DEV:scs-input、CROSS、TIMER与EVENT-ORDER。
 普通保持历史消费者、受限共享Forcing和解析源值已合批，联合199个唯一Python方法、110个不同lib测试及6个native测试通过。
-原369、371完整请求仍在1e9预算拒绝，原346仍未闭合；完整400、完整Python CI及安装待验收，不增加既有317成绩。
-全量迭代已观察到旧PASS027因typed目标聚合审计超出原100000预算而回退；修复与重验未闭合，本候选不满足旧通过保留条件。
+原369、371完整请求仍在1e9预算拒绝，原346仍未闭合；早期完整400、CI及安装未验收的状态不代表当前wave27状态。
+早期全量迭代曾使旧PASS027因typed目标聚合审计超出原100000预算而回退；该失败保留。wave26及本次wave27完整结果已证明旧通过恢复，不能删掉早期失败身份。
 显式typed源值、PWL根窗采样和direct-held事件，合同见[事件手册](../math/events.md#ir32-private-candidate-explicit-analytic-source-values)。
 本条只导航候选合同，不增加成熟支持、共同Q或400通过数；Spectre默认和一般history组合仍未支持。
 
-[普通integer当前值](../../../experiments/backends/support/low-cost-closure/ordinary-current-integer.json)补充LANG、EVENT-ORDER与COMPOSE；[普通单点保持来源](../../../experiments/backends/support/low-cost-closure/ordinary-point-lineage.json)补充EVENT-CONDITIONS、TRANSITION与COMPOSE。037、114、234已在同一公共源码和074f开发核分别通过完整原checker，完整盒、来源角色、Frame与原共享预算控制各保留身份。跨运行方法覆盖与历史失败见[共同收据](../../../experiments/backends/support/low-cost-closure/ordinary-prefix.json)；最终release同源双轨、完整CI和安装待验收，不改变共同Q或新增Spectre资格。
+[普通integer当前值](../../../experiments/backends/support/low-cost-closure/ordinary-current-integer.json)补充LANG、EVENT-ORDER与COMPOSE；[普通单点保持来源](../../../experiments/backends/support/low-cost-closure/ordinary-point-lineage.json)补充EVENT-CONDITIONS、TRANSITION与COMPOSE。最终release核的037、114、234均完整通过原checker，完整盒、来源角色、Frame与共享预算控制保持。最终同源双轨原317、修订320及完整2641方法CI、双平台安装已独审，见[共同收据](../../../experiments/backends/support/low-cost-closure/ordinary-common-three.json)。这些结果不改变共同Q或新增Spectre资格。
