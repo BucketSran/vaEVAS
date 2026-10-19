@@ -1,11 +1,10 @@
 """Pure-input ordinary prefixes retain their value at each event source site."""
 GUARDS = ['LANG', 'EVENT-ORDER', 'COMPOSE']
 
-import os
-from pathlib import Path
 import unittest
 
 from evas import CompileError, Instance, KernelError, compile_sources, transient
+from test_affine import KERNEL
 
 
 def program(body, declarations='real a,q;'):
@@ -20,7 +19,7 @@ class OrdinaryEventPrefix(unittest.TestCase):
     def run_values(self, p, times=(0., 0.25, 0.5, 0.75, 1.), **kw):
         result = transient(p, {'u': [[0., 0.], [1., 1.]]}, list(times),
                            stop=1., max_step=0.25,
-                           kernel=Path(os.environ['EVAS_TEST_KERNEL']),
+                           kernel=KERNEL,
                            vabstol=1e-10, reltol=0., **kw)
         node = result['nodes'].index('y')
         return result, [row['voltages'][node] for row in result['solutions']]
@@ -66,7 +65,7 @@ class OrdinaryEventPrefix(unittest.TestCase):
                     '@(timer(0.5))q=a; V(y)<+q;')
         r = transient(p, {'u': [[0., 0.], [1., 1.]]},
                       [0., 0.25, 0.5, 0.75, 1.], stop=1., max_step=0.25,
-                      kernel=Path(os.environ['EVAS_TEST_KERNEL']),
+                      kernel=KERNEL,
                       vabstol=1e-10, reltol=0.)
         node = r['nodes'].index('y')
         self.assertEqual([row['voltages'][node] for row in r['solutions']],

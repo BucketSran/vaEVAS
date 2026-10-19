@@ -10,6 +10,7 @@ GUARDS = ["LANG", "LIN", "COMPOSE", "case:n_v1_02", "case:d2_v7_01"]
 import itertools
 import json
 import math
+import os
 from pathlib import Path
 import random
 import subprocess
@@ -18,7 +19,8 @@ import unittest
 from evas import CompileError, Instance, KernelError, compile_sources, solve, transient
 
 EVAS = Path(__file__).resolve().parents[1]
-KERNEL = EVAS / "rust_core/target/debug/evas-kernel"
+# Shared test kernel selection: the override is optional in normal CI.
+KERNEL = Path(os.environ.get("EVAS_TEST_KERNEL", EVAS / "rust_core/target/debug/evas-kernel"))
 SUM = (EVAS / "validation/cases/n_v1_02/dut.va").read_text()
 FEEDBACK = (EVAS / "validation/cases/d2_v7_01/dut.va").read_text()
 

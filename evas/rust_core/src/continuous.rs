@@ -118,7 +118,9 @@ mod runtime;
 #[path = "continuous_select.rs"]
 mod selection;
 pub(crate) use runtime::Continuous;
-pub(crate) use selection::{resolve_selection, validate as validate_selection};
+pub(crate) use selection::{
+    resolve_selection, resolve_selection_with_lineage, validate as validate_selection,
+};
 
 #[derive(Clone)]
 pub(crate) struct LinearContinuous {

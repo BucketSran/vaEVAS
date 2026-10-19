@@ -35,7 +35,9 @@ EVAS 的价值需要由电压域工程行为证明：在正确时刻采样，保
 最近已验收检查点为 **EVAS 0.24.0 / IR31**，完整CI、安装与两轨400已按下述身份验收，尚未发布到公共索引或打tag，PR208草稿未合并。IR31增加事件体标量integer赋值根的直接物理输入电压转换，最近整数且半整数远离零，完整原值盒须证明同一signed32 bin；[合同及边界](docs/math/events.md#ir31-候选事件中的直接电压到-integer-转换)单独维护。IR30新增受限source Forcing与独立held Transition；原有IR29右移／按位与、保持目标、原树事件Floor、源因子及字面零支路保留。该检查点的Forcing与新Floor／typed Native／Slew混合仍拒绝，旧route优先。数学合同见[算子说明](docs/math/operators.md#independent-source-forcing-beside-held-histories)，历史版本见[更新记录](docs/UPDATE.md)。
 
 当前源码另有 **0.24.0 / IR32 本地候选**：增加受限普通历史消费者、同支路二次源项与保持历史的组合、保持整数目标的紧凑表示，以及显式参数的解析正弦输入值。原请求Work、全部准入审计和精度预算保留；IR31保存请求须从原VA重编译。联合199个唯一Python方法、110个不同Rust单元测试及6个原生测试通过，两轴审查的问题已闭合。完整400、完整Python CI与安装仍待本候选验收，不能沿用下述IR31成绩。原369、371在新候选完整请求中仍被原1e9预算拒绝，原346仍有展开及derived clock组合缺口；三项均未新增PASS。数学合同见[算子手册](docs/math/operators.md#同支路二次源直接项的本地候选)与[解析源值合同](docs/math/events.md#ir32-private-candidate-explicit-analytic-source-values)。
-此前IR32迭代曾使旧PASS027触及原100000审计上限；wave26后续同源完整执行已恢复旧通过，原始314／修订317，独立交付复核仍待闭合。
+此前IR32迭代曾使旧PASS027触及原100000审计上限；wave26后续同源完整执行已恢复旧通过，原始314／修订317，旧身份与计数的独立交付复核已闭合；该历史证据不认证当前新候选。
+
+当前共同候选的普通integer当前值与单点保持来源证明已接收，原037、114、234在同一开发核074f28fd下均完整通过原checker；最终同源双轨和完整CI尚待验收，统一314／317不改写。合同见[事件手册](docs/math/events.md#ordinary-current-integer-alias)，身份见[共同收据](../experiments/backends/support/low-cost-closure/ordinary-prefix.json)。
 
 2026-10-20另纳入[回调位置的普通纯输入前缀](docs/math/events.md#ordinary-event-prefix)与[事件读取的integer Floor前缀](docs/math/events.md#ordinary-integer-event-prefix)。共同源码的135个不同定向Python方法跨运行通过，公开编译IR上的2项Rust控制覆盖新ratio槽、同Controller完整Frame与共享Work；原234定向完整原checker7/7通过。无新需求的旧路径费用与基线一致，signed32、Floor bin和原预算不放宽。这些局部结果不更新统一314/317；完整CI、安装和最终同源双轨验收仍待执行，见[紧凑收据](../experiments/backends/support/low-cost-closure/ordinary-prefix.json)。
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "local scoped integration verified;complete delivery pending",
+  "status": "historical scoped frontend checkpoint;current common three-case delivery pending",
   "at_utc": "2026-10-19T19:15:05.350285+00:00",
   "capabilities": [
     "LANG",
@@ -171,5 +171,107 @@
     "new_formal_qualification": false,
     "merged": false
   },
-  "decision_trail": "runs/evas-source-shape-20261017/overnight-integer-20261018/decisions.tsv (local-only canonical trail)"
+  "decision_trail": "runs/evas-source-shape-20261017/overnight-integer-20261018/decisions.tsv (local-only canonical trail)",
+  "verified_source_revision": "c8a39fea8f6c71125be4e62466f81ad3d056e915",
+  "related_received_scopes": [
+    "ordinary-current-integer.json",
+    "ordinary-point-lineage.json"
+  ],
+  "common_three": {
+    "status": "same current runtime and development kernel;targeted three complete originals passed;fullCI/release400 pending",
+    "kernel_sha256": "074f28fd901674ded933a092793144a292ee1d688e2793427ec52a6b83737bd3",
+    "profile": "dev opt0 debug_assertions and overflow_checks true",
+    "originals": {
+      "037": {
+        "result": {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/three-original037-common-r2/RESULT.json",
+          "sha256": "05e5c4299edbaf1c02c350f907a1a5bc0c619b14228638863799afea6a3c9df1",
+          "availability": "local-only in ignored task runs"
+        },
+        "response_sha256": "83527a2a35627616509ecf513b33b68f39a85c1593fb3944a48a793b87fc28d2",
+        "checker": {
+          "status": "passed",
+          "note": "rectifier edge_checks=45 attack=9 decay=33 rect_p90=0.0000; P_FULL_WAVE_RECTIFICATION mismatch_count=0; P_RESET_ENVELOPE mismatch_count=0; P_PEAK_ATTACK mismatch_count=0; P_BOUNDED_DECAY mismatch_count=0; P_ENVELOPE_LAG_METRIC mismatch_count=0"
+        }
+      },
+      "114": {
+        "result": {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/three-original114-common-r2/RESULT.json",
+          "sha256": "555e7a0a223285b49ad1c960ff0c95cd82b083c6b19282cfee627d140247dfec",
+          "availability": "local-only in ignored task runs"
+        },
+        "response_sha256": "2c1d4200e402b16da594818837f2053e41e91d70f3300d7291694a2c88eefb55",
+        "checker": {
+          "status": "passed",
+          "note": "checked=258 max_error=0.00000 modes=0,1; P_HIGH_SELECTS_VIN1 mismatch_count=0; P_LOW_SELECTS_VIN2 mismatch_count=0; P_BIDIRECTIONAL_SELECTION mismatch_count=0; P_NO_MIXING mismatch_count=0"
+        }
+      },
+      "234": {
+        "result": {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/three-original234-common-r2/RESULT.json",
+          "sha256": "bca91f298b117b5a0e34dfa1062b24f5b2487856560ab4ab7cf5b910e8c383ba",
+          "availability": "local-only in ignored task runs"
+        },
+        "response_sha256": "7ea1206fd21a873d97e003950009fb4e029e5d974f5b6ae1d070668d1f13839a",
+        "checker": {
+          "status": "passed",
+          "note": "edges=7 checks=7 highs=2 lows=5 max_err=0.0000"
+        }
+      }
+    },
+    "python": {
+      "first_run": {
+        "methods": 154,
+        "pass": 153,
+        "fail": 1,
+        "skip": 0,
+        "receipt": {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/three-common-python-r1/execution.receipt.json",
+          "sha256": "ec2d87877da3c67aa938bddedf1ce28f7d9c963b3dd191e51d9700a7022c4146",
+          "availability": "local-only in ignored task runs"
+        }
+      },
+      "affected_module_after_original_case_numeric_migration": {
+        "methods": 22,
+        "pass": 22,
+        "skip": 0,
+        "receipt": {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/three-common-initial-alias-green-r2/execution.receipt.json",
+          "sha256": "c0bc0ea382f08a0b8c0b3e276053cf394a3cacd6b5c30681511cb7a077eb7168",
+          "availability": "local-only in ignored task runs"
+        }
+      },
+      "reuse": "133 unchanged current methods plus22 affected methods =155 distinct current method IDs across runs;not one155 run",
+      "default_environment": "EVAS_TEST_KERNEL absent;all selected actual default paths were074f kernel;6 new modules now use shared test_affine.KERNEL"
+    },
+    "rust": {
+      "joint_methods": 10,
+      "pass": 10,
+      "receipt": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/three-common-rust-joint-r1/execution.receipt.json",
+        "sha256": "769caf4843663a2bc97f77a97ca483eb924ebfb195f4c4eac1df79a1c740d309",
+        "availability": "local-only in ignored task runs"
+      },
+      "post_lint_point_methods": 6,
+      "post_lint_pass": 6,
+      "post_lint_receipt": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/three-common-point-tests-r2/execution.receipt.json",
+        "sha256": "9afd8d176f74e2441b4e5b9405fca458a6788ab1933125f8c6595bb9a43ecb36",
+        "availability": "local-only in ignored task runs"
+      },
+      "reuse": "6 overlap prior10;no summed16 claim"
+    },
+    "clippy": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/three-common-clippy-r2/execution.receipt.json",
+      "sha256": "24b05c29bd25d1f04a933ac2b96b8d3227a1005fb06d09f33b07e11521c968a4",
+      "availability": "local-only in ignored task runs"
+    },
+    "receiving_map": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-037-integration-map.json",
+      "sha256": "12ea0dce8c66fa3f5ebc8026bbf6d9f6972e0120e4e7c7f5d60702f431167ee1",
+      "availability": "local-only in ignored task runs"
+    },
+    "test_environment_invariant": "Optional EVAS_TEST_KERNEL/default has one shared owner in test_affine;existing standard fullCI runs absent-env path and detected old8 KeyErrors;no duplicate lint rule",
+    "aggregate_credit": 0
+  }
 }

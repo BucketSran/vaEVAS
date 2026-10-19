@@ -12,9 +12,26 @@ pub(crate) fn resolve_selection(
     nodes: &[I],
     states: &[I],
 ) -> Result<Expression, Error> {
-    resolve_with_source(expr, program, driven, nodes, states, None)
+    resolve_with_source(expr, program, driven, nodes, states, None, None)
 }
-type SourceSign<'a> = dyn Fn(&Expression, &Expression) -> Option<i8> + 'a;
+pub(crate) fn resolve_selection_with_lineage(
+    expr: &Expression,
+    program: &Program,
+    driven: &[String],
+    nodes: &[I],
+    states: &[I],
+    lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
+) -> Result<Expression, Error> {
+    if let Some(lineage) = lineage {
+        let exact = |left: &Expression, right: &Expression, owner: &str| {
+            lineage.sign(left, right, owner, program, driven, nodes, states)
+        };
+        resolve_with_source(expr, program, driven, nodes, states, None, Some(&exact))
+    } else {
+        resolve_selection(expr, program, driven, nodes, states)
+    }
+}
+type SourceSign<'a> = dyn Fn(&Expression, &Expression, &str) -> Result<Option<i8>, Error> + 'a;
 
 fn resolve_with_source(
     expr: &Expression,
@@ -23,6 +40,7 @@ fn resolve_with_source(
     nodes: &[I],
     states: &[I],
     exact: Option<&SourceSign<'_>>,
+    refine: Option<&SourceSign<'_>>,
 ) -> Result<Expression, Error> {
     match expr {
         Expression::Select {
@@ -33,8 +51,8 @@ fn resolve_with_source(
             else_value,
             origin,
         } => {
-            let left = resolve_with_source(left, program, driven, nodes, states, exact)?;
-            let right = resolve_with_source(right, program, driven, nodes, states, exact)?;
+            let left = resolve_with_source(left, program, driven, nodes, states, exact, refine)?;
+            let right = resolve_with_source(right, program, driven, nodes, states, exact, refine)?;
             predicate(&left, program, driven, &origin.instance)?;
             predicate(&right, program, driven, &origin.instance)?;
             let a = affine_bounds::affine(&left, program)?;
@@ -55,7 +73,11 @@ fn resolve_with_source(
             // Point predicates retain the exact binary64 affine product-sum certificate.
             let selected = if decision.0 || decision.1 {
                 decision.0
-            } else if let Some(sign) = exact.and_then(|f| f(&left, &right)) {
+            } else if let Some(sign) = exact
+                .map(|f| f(&left, &right, &origin.instance))
+                .transpose()?
+                .flatten()
+            {
                 match relation {
                     crate::ir::Relation::Lt => sign < 0,
                     crate::ir::Relation::Le => sign <= 0,
@@ -63,25 +85,47 @@ fn resolve_with_source(
                     crate::ir::Relation::Ge => sign >= 0,
                 }
             } else {
-                let bind = |e: &Expression| bind_states(e, states);
-                let probe = Expression::Select {
-                    relation: *relation,
-                    left: Box::new(bind(&left)?),
-                    right: Box::new(bind(&right)?),
-                    then_value: Box::new(Expression::Affine {
-                        constant: 1.,
-                        terms: vec![],
-                    }),
-                    else_value: Box::new(Expression::Affine {
-                        constant: 0.,
-                        terms: vec![],
-                    }),
-                    origin: origin.clone(),
-                };
-                matches!(
-                    crate::expression::resolve_selects(&probe, nodes)?,
-                    Expression::Affine { constant: 1., .. }
-                )
+                let original: Result<bool, Error> = (|| {
+                    let bind = |e: &Expression| bind_states(e, states);
+                    let probe = Expression::Select {
+                        relation: *relation,
+                        left: Box::new(bind(&left)?),
+                        right: Box::new(bind(&right)?),
+                        then_value: Box::new(Expression::Affine {
+                            constant: 1.,
+                            terms: vec![],
+                        }),
+                        else_value: Box::new(Expression::Affine {
+                            constant: 0.,
+                            terms: vec![],
+                        }),
+                        origin: origin.clone(),
+                    };
+                    Ok(matches!(
+                        crate::expression::resolve_selects(&probe, nodes)?,
+                        Expression::Affine { constant: 1., .. }
+                    ))
+                })();
+                match original {
+                    Ok(selected) => selected,
+                    Err(error) if error.kind == "condition_precision" => {
+                        let sign = refine
+                            .map(|f| f(&left, &right, &origin.instance))
+                            .transpose()?
+                            .flatten();
+                        if let Some(sign) = sign {
+                            match relation {
+                                crate::ir::Relation::Lt => sign < 0,
+                                crate::ir::Relation::Le => sign <= 0,
+                                crate::ir::Relation::Gt => sign > 0,
+                                crate::ir::Relation::Ge => sign >= 0,
+                            }
+                        } else {
+                            return Err(error);
+                        }
+                    }
+                    Err(error) => return Err(error),
+                }
             };
             resolve_with_source(
                 if selected { then_value } else { else_value },
@@ -90,35 +134,36 @@ fn resolve_with_source(
                 nodes,
                 states,
                 exact,
+                refine,
             )
         }
         Expression::Add { left, right } => Ok(Expression::Add {
             left: Box::new(resolve_with_source(
-                left, program, driven, nodes, states, exact,
+                left, program, driven, nodes, states, exact, refine,
             )?),
             right: Box::new(resolve_with_source(
-                right, program, driven, nodes, states, exact,
+                right, program, driven, nodes, states, exact, refine,
             )?),
         }),
         Expression::Multiply { left, right } => Ok(Expression::Multiply {
             left: Box::new(resolve_with_source(
-                left, program, driven, nodes, states, exact,
+                left, program, driven, nodes, states, exact, refine,
             )?),
             right: Box::new(resolve_with_source(
-                right, program, driven, nodes, states, exact,
+                right, program, driven, nodes, states, exact, refine,
             )?),
         }),
         Expression::Divide { left, right } => Ok(Expression::Divide {
             left: Box::new(resolve_with_source(
-                left, program, driven, nodes, states, exact,
+                left, program, driven, nodes, states, exact, refine,
             )?),
             right: Box::new(resolve_with_source(
-                right, program, driven, nodes, states, exact,
+                right, program, driven, nodes, states, exact, refine,
             )?),
         }),
         Expression::Power { base, exponent } => Ok(Expression::Power {
             base: Box::new(resolve_with_source(
-                base, program, driven, nodes, states, exact,
+                base, program, driven, nodes, states, exact, refine,
             )?),
             exponent: *exponent,
         }),
@@ -580,13 +625,15 @@ pub(super) fn freeze_context(
                 .unwrap()
         })
         .collect();
-    let exact = |left: &Expression, right: &Expression| {
-        context.trajectory.original_predicate_sign(
-            &bind_states(left, parameters).ok()?,
-            &bind_states(right, parameters).ok()?,
-            &input_nodes,
-            time,
-        )
+    let exact = |left: &Expression, right: &Expression, _owner: &str| {
+        Ok(bind_states(left, parameters)
+            .ok()
+            .zip(bind_states(right, parameters).ok())
+            .and_then(|(left, right)| {
+                context
+                    .trajectory
+                    .original_predicate_sign(&left, &right, &input_nodes, time)
+            }))
     };
     let mut frozen = step_simplify::program(context, parameters)?;
     for c in &mut frozen.contributions {
@@ -597,6 +644,7 @@ pub(super) fn freeze_context(
             &nodes,
             parameters,
             Some(&exact),
+            None,
         )?;
     }
     for o in &mut frozen.operators {
@@ -612,6 +660,7 @@ pub(super) fn freeze_context(
                     &nodes,
                     parameters,
                     Some(&exact),
+                    None,
                 )?
             }
             _ => {}
@@ -626,6 +675,7 @@ pub(super) fn freeze_context(
                 &nodes,
                 parameters,
                 Some(&exact),
+                None,
             )
         })?;
         b.value = resolve_with_source(
@@ -635,6 +685,7 @@ pub(super) fn freeze_context(
             &nodes,
             parameters,
             Some(&exact),
+            None,
         )?;
     }
     Ok(Arc::new(Context {

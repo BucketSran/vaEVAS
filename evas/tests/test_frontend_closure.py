@@ -47,12 +47,27 @@ class ConstantEventAliases(unittest.TestCase):
             observed = [row['voltages'][result['nodes'].index(name)] for row in result['solutions']]
             self.assertEqual(observed, expected)
 
-    def test_future_reassigned_and_dynamic_aliases_still_reject(self):
+    def test_total_input_branch_prefix_samples_and_then_holds(self):
+        # Keep the formerly rejected original body. At the callback the total
+        # prefix selects2 for positive input and1 for zero/negative input.
+        # Later input changes must not replace the sampled q.
+        text = model('a=1; if(V(u,r)>0) a=2; @(timer(0.5)) q=a; '
+                     'V(y,r)<+q;', 'real a,b,q;')
+        program = compile_sources({'aliases.va':text}, [instance()])
+        for middle, final, expected in [(0.5,-1.,2.),(-0.5,1.,1.),(0.,1.,1.)]:
+            with self.subTest(sampled_input=middle):
+                result = transient(program, {'u':[[0.,0.],[0.5,middle],[1.,final]]},
+                                   [0.,0.25,0.75,1.], stop=1., max_step=0.125,
+                                   kernel=KERNEL)
+                self.assertEqual([row['voltages'][result['nodes'].index('y')]
+                                  for row in result['solutions']], [0.,0.,expected,expected])
+        self.assertEqual([state.name for state in program.states], ['q'])
+
+    def test_future_and_initial_reassigned_aliases_still_reject(self):
         bodies = [
             '@(initial_step) q=a; a=1;',
             '@(timer(0.5)) q=a; a=1;',
             'a=1; @(initial_step) q=a; a=2;',
-            'a=1; if(V(u,r)>0) a=2; @(timer(0.5)) q=a;',
             'a=b; b=2; @(initial_step) q=a;',
         ]
         for body in bodies:

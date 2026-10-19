@@ -378,6 +378,12 @@ class InstanceCompiler:
                     owner.debit("copy_element")
                     ordinary_scratch.add(name)
                 continue
+            if name in persistent and self.model.variables[name] == "integer":
+                from .ordinary_integer_current_alias import admit as admit_current_integer
+                if admit_current_integer(self, name, source_model):
+                    owner.debit("copy_element")
+                    ordinary_scratch.add(name)
+                continue
             if name not in persistent or self.model.variables[name] != "real" or name not in event_writers:
                 continue
             owner.activate(self.model.initial[0].token if self.model.initial else None)

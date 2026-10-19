@@ -1,0 +1,14 @@
+`include "disciplines.vams"
+module proven_lineage(u,y,z,h,w);
+input u; output y,z,h,w; electrical u,y,z,h,w;
+real q,s;
+analog begin
+ @(initial_step)begin q=0; s=0; end
+ @(timer(0.25))q=V(u)+0.25;
+ @(timer(0.5))s=1;
+ V(y)<+((q-V(u)>0.125)?1:0);
+ V(h)<+q;
+ V(z)<+transition(q,0,0.125,0.125);
+ V(w)<+transition(s,0,0.25,0.25);
+end
+endmodule

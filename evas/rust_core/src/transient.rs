@@ -33,12 +33,17 @@ mod root_window_tests;
 #[cfg(test)]
 #[path = "transient_integer_round_tests.rs"]
 mod integer_round_tests;
+#[path = "transient_point_lineage.rs"]
+pub(crate) mod point_lineage;
 #[cfg(test)]
 #[path = "transient_source_factor_tests.rs"]
 mod source_factor_lifecycle_tests;
 #[cfg(test)]
 #[path = "transient_source_floor_tests.rs"]
 mod source_floor_tests;
+#[cfg(test)]
+#[path = "transient_source_predicate_tests.rs"]
+mod source_predicate_tests;
 
 #[cfg(test)]
 #[path = "transient_native_floor_tests.rs"]
@@ -664,6 +669,15 @@ fn prepare_root_window_selected_impl(
     .try_with_operators(&frozen.bounds)?;
     let settle = |values: &[f64], bounds: &[I]| {
         let evaluation_context = value_context.try_with_operators(bounds)?;
+        let lineage = point_lineage::PointLineage::new(
+            accepted,
+            model,
+            trajectory,
+            &evaluation_context,
+            time,
+            time_bounds,
+            events.is_empty() && fired_leaves.is_empty() && exact_root.is_none(),
+        );
         if time_bounds.lo == time_bounds.hi {
             crate::settlement::prepare_with_proofs(
                 model,
@@ -675,6 +689,12 @@ fn prepare_root_window_selected_impl(
                 bounds,
                 Some(&accepted.circuit),
                 &evaluation_context,
+                accepted
+                    .operators
+                    .source_context
+                    .as_ref()
+                    .map(|context| (context.as_ref(), trajectory)),
+                Some(&lineage),
             )
         } else {
             crate::settlement::prepare_window_with_proofs(
@@ -688,6 +708,12 @@ fn prepare_root_window_selected_impl(
                 bounds,
                 Some(&accepted.circuit),
                 &evaluation_context,
+                accepted
+                    .operators
+                    .source_context
+                    .as_ref()
+                    .map(|context| (context.as_ref(), trajectory)),
+                Some(&lineage),
             )
         }
     };

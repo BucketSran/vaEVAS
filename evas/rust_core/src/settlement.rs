@@ -4,6 +4,14 @@ use crate::interval::Interval as I;
 use crate::ir::{Error, Solution, StateKind};
 use crate::solver::Circuit;
 
+#[cfg(test)]
+type PointCandidateHook = Box<dyn FnMut(&mut Solution)>;
+
+#[cfg(test)]
+thread_local! {
+    pub(crate) static POINT_CANDIDATE_HOOK: std::cell::RefCell<Option<PointCandidateHook>> = const { std::cell::RefCell::new(None) };
+}
+
 pub(crate) struct Prepared {
     pub(crate) states: Vec<f64>,
     pub(crate) bounds: Vec<I>,
@@ -35,6 +43,8 @@ pub(crate) fn prepare(
         previous,
         true,
         None,
+        None,
+        None,
     )
 }
 
@@ -49,6 +59,8 @@ pub(crate) fn prepare_with_proofs(
     operator_bounds: &[I],
     previous: Option<&Circuit>,
     proofs: &crate::event_value_proof::Context<'_>,
+    source: Option<crate::events::SourcePredicateBinding<'_>>,
+    lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
@@ -62,6 +74,8 @@ pub(crate) fn prepare_with_proofs(
         previous,
         true,
         Some(proofs),
+        source,
+        lineage,
     )
 }
 
@@ -89,6 +103,8 @@ pub(crate) fn prepare_window(
         previous,
         false,
         None,
+        None,
+        None,
     )
 }
 
@@ -104,6 +120,8 @@ pub(crate) fn prepare_window_with_proofs(
     operator_bounds: &[I],
     previous: Option<&Circuit>,
     proofs: &crate::event_value_proof::Context<'_>,
+    source: Option<crate::events::SourcePredicateBinding<'_>>,
+    lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
@@ -117,6 +135,8 @@ pub(crate) fn prepare_window_with_proofs(
         previous,
         false,
         Some(proofs),
+        source,
+        lineage,
     )
 }
 
@@ -134,6 +154,8 @@ fn prepare_impl(
     previous: Option<&Circuit>,
     check_voltages: bool,
     proofs: Option<&crate::event_value_proof::Context<'_>>,
+    source: Option<crate::events::SourcePredicateBinding<'_>>,
+    lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
 ) -> Result<Prepared, Error> {
     let (inputs, input_bounds) = inputs;
     let selection = model.conditions.select_with_proofs(
@@ -144,15 +166,16 @@ fn prepare_impl(
         proofs,
     )?;
     model.check_selection_writers(&selection)?;
-    model.check_contribution_predicate_updates(&selection)?;
+    model.check_contribution_predicate_updates(&selection, source)?;
     // A unique voltage solution is required. In particular, a zero-delay loop
     // with multiple fixed points is not accepted merely because iteration stalls.
     // Constant/integer event updates can change mode predicates in this same
     // batch. Evaluate those updates first, retaining voltage-dependent updates
     // as affine unknowns in the actual joint solve.
     // Causal sampled actions read actual driven values even in this preview.
-    // Unknown electrical nodes remain placeholders; predicates depending on
-    // voltage-assigned states were rejected above and the joint solve owns them.
+    // Unknown electrical nodes remain placeholders and retain the old refusal.
+    // The paid source-only exception reads actual driven values here; later
+    // state/source-box replay must still certify the selected contribution arm.
     let mut predicate_nodes = vec![0.0; model.program.nodes.len()];
     for (name, &value) in model.driven.iter().zip(inputs) {
         let node = model.program.nodes.iter().position(|n| n == name).unwrap();
@@ -160,11 +183,12 @@ fn prepare_impl(
     }
     let predicate_states = model.apply_with_proofs(&selection, &predicate_nodes, before, proofs)?;
     let predicate_bounds: Vec<_> = predicate_states.iter().copied().map(I::point).collect();
-    let selected = model.selected_program_with_parameters(
+    let selected = model.selected_program_with_lineage(
         &predicate_bounds,
         input_bounds,
         events_and_roots.1,
         operator_bounds,
+        lineage,
     )?;
     let mut joint = model.event_circuit_program_with_inputs_and_proofs(
         &selected, &selection, before, operators, inputs, proofs,
@@ -174,11 +198,12 @@ fn prepare_impl(
     }
     let candidate = joint.solve(inputs)?;
     let states = model.apply_with_proofs(&selection, &candidate.voltages, before, proofs)?;
-    let replayed = model.selected_program_with_parameters(
+    let replayed = model.selected_program_with_lineage(
         &states.iter().copied().map(I::point).collect::<Vec<_>>(),
         input_bounds,
         events_and_roots.1,
         operator_bounds,
+        lineage,
     )?;
     if replayed
         .contributions
@@ -193,11 +218,18 @@ fn prepare_impl(
     }
     // Validate the original, unsubstituted voltage constraints with the replayed
     // state. Substitution roundoff must not replace the physical residual check.
-    let mut circuit = model.circuit_at(&states, operators, observation_inputs)?;
+    let mut circuit =
+        model.circuit_at_with_lineage(&states, operators, observation_inputs, lineage)?;
     if let Some(previous) = previous {
         circuit.reuse_affine_factor_from(previous);
     }
     let mut solution = circuit.solve(inputs)?;
+    #[cfg(test)]
+    POINT_CANDIDATE_HOOK.with(|slot| {
+        if let Some(hook) = slot.borrow_mut().as_mut() {
+            hook(&mut solution);
+        }
+    });
     // Replay the same input/root certificate. A small equation residual
     // cannot certify a branch chosen from rounded representative inputs.
     if model.conditions.select_with_proofs(
@@ -231,7 +263,7 @@ fn prepare_impl(
         }
     }
     let bounds = if check_voltages {
-        let (states, nodes) = model.certify_observation_at_roots_with_proofs(
+        let (states, nodes) = model.certify_observation_at_roots_with_lineage(
             &selection,
             events_and_roots.1,
             input_bounds,
@@ -240,11 +272,12 @@ fn prepare_impl(
             &solution.voltages,
             &states,
             proofs,
+            lineage,
         )?;
         crate::observation::retain_bounds(&mut solution, nodes);
         states
     } else {
-        model.certify_event_states_with_proofs(
+        model.certify_event_states_with_lineage(
             &selection,
             events_and_roots.1,
             input_bounds,
@@ -253,6 +286,7 @@ fn prepare_impl(
             &solution.voltages,
             &states,
             proofs,
+            lineage,
         )?
     };
     Ok(Prepared {

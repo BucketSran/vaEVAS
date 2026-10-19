@@ -5,15 +5,14 @@ of EVAS lowering. The prefix assignment must reject signed32 overflow before
 its subsequent clamp can hide the value.
 """
 import math
-import os
 from fractions import Fraction
 from pathlib import Path
 import unittest
+from test_affine import KERNEL
 
 from evas import CompileError, Instance, KernelError, compile_sources, transient
 
 GUARDS = ['LANG', 'EVENT-ORDER', 'EVENT-CONDITIONS', 'COMPOSE']
-KERNEL = Path(os.environ.get('EVAS_TEST_KERNEL', str(Path(__file__).resolve().parents[1]/'rust_core/target/debug/evas-kernel')))
 
 
 def text(prefix='ratio=$floor(V(u)+0.5);if(ratio<1)ratio=1;', extra='', event='@(timer(0.25,1)) q=q+ratio;'):

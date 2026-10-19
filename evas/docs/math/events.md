@@ -1460,6 +1460,65 @@ A 入口不改变该队列、单次发射、失败后禁止重放或原预算合
 局部证据见[普通前缀收据](../../../experiments/backends/support/low-cost-closure/ordinary-prefix.json)，
 原件234定向通过不替代同源400、完整 CI 或安装验收，也没有新增 Spectre 或共同资格。
 
+<a id="ordinary-current-integer-alias"></a>
+
+### 保留事件状态的普通 integer 当前值别名（本地候选）
+
+同一标量 integer 可以保留原 State 和 cross 写者，同时在普通 analog 求值中使用独立的当前值别名。
+这条路径要求原源码恰有一个无条件顶层普通赋值，且每个普通读取都位于该赋值之后。
+例如 `selector=(V(vsel)>vth)?1:0;` 后声明上升和下降 cross 写入 `selector=1/0`，
+再由普通 `if(selector==1)` 选择两路输入时，连续输出读取本轮输入计算的 selector，
+原 cross 仍更新其原有 State；两种值的命名空间保持分离。
+
+普通赋值的右侧只接受参数及直接当前 input/inout 物理源，拒绝其他局部量、旧状态、time、history，
+以及由其他实例输出驱动的输入。原数组、循环、声明初始化、第二写者和条件写者不进入此切片。
+写前读，以及初始化体、事件体、触发器或设置中的同名读取仍拒绝，包含零系数或未选分支中的读取。
+
+原两臂和全部子表达式先接受完整结构审计，再由既有 lowerer、决策操作数检查、`checked_ir`
+及 signed32 检查确认整数赋值。普通执行保留原整数验证，不删除原树、移动原赋值或新增状态槽。
+`ordinary_integer_current_alias.py` 的新资格工作由原 NativeAudit 的100000累计预算支付；
+既有写者遍历没有发现候选时，不启动新扫描或计费。此 integer 切片没有新增 IR 或 Rust 消费者权限。
+
+公开控制见 [test_ordinary_integer_current_alias.py](../../tests/test_ordinary_integer_current_alias.py)：
+核对原 cross 方向、`V(vsel)-V(0)-vth` guard、原赋值体，以及两次真实触发的 before/after 和 State 轨迹，
+并检查查询点不变性及原树负控。原114的258点 checker 定向通过；4个公开方法、11个既有 integer 前缀方法
+及旧 k225/k226 费用边界分别保留证据，不合并为新覆盖数。
+这些局部结果不替代同源400、共同 CI 或安装验收，没有新增 Spectre 配对或共同资格；统一314/317保持。
+
+<a id="ordinary-point-lineage"></a>
+
+### 采样输入谓词与普通单点的保持值来源证明（本地候选）
+
+采样状态和当前输入共同决定贡献分支时，先从原表达式树审计实际 driven 输入及保持状态的来源。
+同 owner 的全部回调、numeric actions、未选分支和零项均参加审计；
+`$abstime`、内部电压、贡献目标及经另一回调采入的非法依赖仍拒绝。
+原完整区间能够决定分支时，继续使用原区间认证。
+
+只有完整旧回退实际返回 `condition_precision`，才尝试保持值的精确来源证明。
+它限于没有事件批次、已触发根或物理 exact_root 的普通单点观察，且时间位于已接受 Frame 与原 stop 之间。
+旧路径成功及其它错误原样返回，包括旧路径在共享预算已耗尽时仍能完成的情况。
+
+设保持状态的原完整盒为 \(B_i\)，有效有理来源为 \(p_i\in B_i\)。
+新证明在原 binary64 叶子上精确递推 \(L(p,u(t))-R(p,u(t))\) 的符号，
+同时绑定实际 accepted Frame 的 proof map、原 Program、driven 身份及已验证源配置。
+另一 Frame 即使拥有相同盒，也不能替代当前证明；缺失证明、单点盒或代表点不能制造精确值。
+非输入或未知节点采用未知 mask。原状态盒、源盒及后续历史传播保持完整，成功 query 后逐项核对未缩窄。
+
+已有 `exact_knots` 可以证明一条确定物理曲线，其 binary64 PWL 投影仍可带非零包围带。
+本路径复用付费的 `forcing_shaped_inputs(work)` 资格门及当前 source box 包含检查；
+真实未知 band、缺失精确曲线或新增生成源继续拒绝。
+只有 `unsupported_forcing_scope` 转为无新证明；`step_budget` 与其它错误传播。
+这项来源证明不扩大一般 source-uncertainty 或非点事件窗口的支持。
+
+所有新增扫描、比较、分配及有理数运算预付到原 request Work。
+真实控制覆盖非空 Frame、两次晚拒绝后的合法重试、完整电路／历史／队列／输出回退，
+原十亿预算自然耗尽98次 query 后的两次粘性拒绝，以及已耗尽预算上旧回退的零新增费用。
+公开 Fraction 控制区分精确来源与代表点的相反符号，并核对加密查询不改物理历史。
+
+原037定向 checker 的45个边沿及5项属性通过；开发核、6项内部方法、独立公开控制及所有失败各保留身份。
+这不是最终同源400或新增 Spectre 资格。原始314／修订317仍是统一基线。
+源码、配置和限制见[单点来源证据](../../../experiments/backends/support/low-cost-closure/ordinary-point-lineage.json)。
+
 <a id="multiple-event-writers"></a>
 
 <a id="多事件块写同一状态pr25-已交付"></a>

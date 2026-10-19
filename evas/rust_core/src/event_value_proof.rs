@@ -19,6 +19,12 @@ pub(crate) struct Context<'a> {
     floor_bounds: Option<Vec<I>>,
 }
 impl<'a> Context<'a> {
+    // Identity, not equality: two different accepted Frames can contain two
+    // distinct exact rationals inside the same outward-rounded interval.
+    pub(crate) fn proof_identity(&self) -> *const Proofs {
+        self.states as *const Proofs
+    }
+
     pub(crate) fn floor_work(&self) -> Option<&crate::transition_source_plan::Work> {
         self.floor_work.as_ref()
     }
@@ -202,6 +208,46 @@ impl std::ops::Deref for LocalState {
     }
 }
 impl LocalState {
+    /// Only the strict point-lineage consumer supplies these source proofs.
+    /// Unlike legacy constructors, singleton bounds do not manufacture proof.
+    pub(crate) fn strict_point_lineage(
+        bounds: &[I],
+        proofs: &Proofs,
+        nodes: Vec<Option<R>>,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Option<Self>, crate::ir::Error> {
+        work.debit(
+            2,
+            (16 + bounds.len() * 4 + nodes.len() * 2 + proofs.len() * 4) as u64,
+        )?;
+        for value in proofs.values() {
+            work.step()?;
+            let bits = value.numer().bits().saturating_add(value.denom().bits());
+            work.debit(2, 1 + bits.div_ceil(64))?;
+            if value.numer().bits() > crate::exact_source::MAX_BITS
+                || value.denom().bits() > crate::exact_source::MAX_BITS
+            {
+                return Ok(None);
+            }
+        }
+        if !valid_with_work(proofs, bounds, work)? {
+            return Ok(None);
+        }
+        let mut exact = vec![None; bounds.len()];
+        for (&state, value) in proofs {
+            // All limb copying was reserved before cloning or allocating.
+            exact[state] = Some(value.clone());
+        }
+        Ok(Some(Self {
+            bounds: bounds.to_vec(),
+            exact,
+            nodes: Some(nodes),
+            floor_work: None,
+            history_work: None,
+            floor_bounds: None,
+        }))
+    }
+
     fn prepay_copy(&self) -> Result<(), crate::ir::Error> {
         if self.history_work.is_some() {
             return history::charge_local_copy(self);

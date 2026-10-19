@@ -6,6 +6,10 @@ use crate::settlement_bounds::Bounds;
 use crate::solver::Circuit;
 use std::cell::RefCell;
 use std::collections::BTreeSet;
+#[path = "event_source_predicate.rs"]
+mod source_predicate;
+pub(crate) use source_predicate::qualify_point as qualify_point_predicate;
+pub(crate) use source_predicate::Binding as SourcePredicateBinding;
 
 #[derive(Clone, PartialEq)]
 pub(crate) struct AffineState {
@@ -1203,12 +1207,30 @@ impl EventModel {
         states: &[f64],
         proofs: Option<&crate::event_value_proof::Context<'_>>,
     ) -> Result<(Vec<I>, Vec<I>), Error> {
+        self.certify_observation_at_roots_with_lineage(
+            selection, fired, inputs, before, operators, voltages, states, proofs, None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)] // Preserve the independent root, state and voltage inputs.
+    pub(crate) fn certify_observation_at_roots_with_lineage(
+        &self,
+        selection: &Selection,
+        fired: &[usize],
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+        voltages: &[f64],
+        states: &[f64],
+        proofs: Option<&crate::event_value_proof::Context<'_>>,
+        lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
+    ) -> Result<(Vec<I>, Vec<I>), Error> {
         let _timing = crate::diagnostics::span("event.certificate");
-        let selected = self.selected_program_with_parameters(
+        let selected = self.selected_program_with_lineage(
             &states.iter().copied().map(I::point).collect::<Vec<_>>(),
             inputs,
             fired,
             operators,
+            lineage,
         )?;
         if let Some(result) = crate::causal_event::certificate(
             self, selection, &selected, fired, inputs, before, operators, voltages, states, true,
@@ -1235,7 +1257,7 @@ impl EventModel {
             let result =
                 bounds.check_observation(self, inputs, before, operators, voltages, states)?;
             let replay =
-                self.selected_program_with_parameters(&result.0, inputs, fired, operators)?;
+                self.selected_program_with_lineage(&result.0, inputs, fired, operators, lineage)?;
             if replay
                 .contributions
                 .iter()
@@ -1268,7 +1290,7 @@ impl EventModel {
         // Preserve the original operator-bearing path's enclosure replay.
         if !operators.is_empty() {
             let replay =
-                self.selected_program_with_parameters(&result.0, inputs, fired, operators)?;
+                self.selected_program_with_lineage(&result.0, inputs, fired, operators, lineage)?;
             if replay
                 .contributions
                 .iter()
@@ -1312,13 +1334,31 @@ impl EventModel {
         states: &[f64],
         proofs: Option<&crate::event_value_proof::Context<'_>>,
     ) -> Result<Vec<I>, Error> {
+        self.certify_event_states_with_lineage(
+            selection, fired, inputs, before, operators, voltages, states, proofs, None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)] // Preserve the independent root, state and voltage inputs.
+    pub(crate) fn certify_event_states_with_lineage(
+        &self,
+        selection: &Selection,
+        fired: &[usize],
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+        voltages: &[f64],
+        states: &[f64],
+        proofs: Option<&crate::event_value_proof::Context<'_>>,
+        lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
+    ) -> Result<Vec<I>, Error> {
         let _timing = crate::diagnostics::span("event.state_certificate");
 
-        let selected = self.selected_program_with_parameters(
+        let selected = self.selected_program_with_lineage(
             &states.iter().copied().map(I::point).collect::<Vec<_>>(),
             inputs,
             fired,
             operators,
+            lineage,
         )?;
         if let Some(result) = crate::causal_event::certificate(
             self, selection, &selected, fired, inputs, before, operators, voltages, states, false,
@@ -1344,7 +1384,7 @@ impl EventModel {
             let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
             let result = bounds.check_states(self, inputs, before, operators, voltages, states)?;
             let replay =
-                self.selected_program_with_parameters(&result, inputs, fired, operators)?;
+                self.selected_program_with_lineage(&result, inputs, fired, operators, lineage)?;
             if replay
                 .contributions
                 .iter()
@@ -1376,7 +1416,7 @@ impl EventModel {
             .check_states(self, inputs, before, operators, voltages, states)?;
         if !operators.is_empty() {
             let replay =
-                self.selected_program_with_parameters(&result, inputs, fired, operators)?;
+                self.selected_program_with_lineage(&result, inputs, fired, operators, lineage)?;
             if replay
                 .contributions
                 .iter()
@@ -1540,6 +1580,7 @@ impl EventModel {
     pub(crate) fn check_contribution_predicate_updates(
         &self,
         selection: &Selection,
+        source: Option<SourcePredicateBinding<'_>>,
     ) -> Result<(), Error> {
         fn predicates(
             e: &Expression,
@@ -1591,6 +1632,11 @@ impl EventModel {
                     || rhs.state_dependencies.iter().any(|&s| voltage_dependent[s]);
             }
             if tested.iter().any(|&s| voltage_dependent[s]) {
+                if let Some(binding) = source {
+                    if source_predicate::qualify(self, *event, binding)? {
+                        continue;
+                    }
+                }
                 return Err(Error::new(
                     "unsupported_condition",
                     "same-time contribution predicate depends on a voltage-assigned state",
@@ -1621,6 +1667,16 @@ impl EventModel {
         inputs: &[I],
         fired: &[usize],
         operators: &[I],
+    ) -> Result<std::borrow::Cow<'_, Program>, Error> {
+        self.selected_program_with_lineage(states, inputs, fired, operators, None)
+    }
+    pub(crate) fn selected_program_with_lineage(
+        &self,
+        states: &[I],
+        inputs: &[I],
+        fired: &[usize],
+        operators: &[I],
+        lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
     ) -> Result<std::borrow::Cow<'_, Program>, Error> {
         let history_work = self
             .history_admission
@@ -1674,12 +1730,13 @@ impl EventModel {
                 continue;
             }
             let expression = self.resolve_root_selects(&c.rhs, fired)?;
-            c.rhs = crate::continuous::resolve_selection(
+            c.rhs = crate::continuous::resolve_selection_with_lineage(
                 &expression,
                 &self.program,
                 &self.driven,
                 &nodes,
                 states,
+                lineage,
             )
             .or_else(|error| {
                 if error.kind == "unsupported_transient" && !operators.is_empty() {
@@ -1785,11 +1842,21 @@ impl EventModel {
         operators: &[f64],
         inputs: &[I],
     ) -> Result<Circuit, Error> {
-        Circuit::new(
-            self.bound_circuit_program_at(states, operators, inputs)?,
-            &self.driven,
-            self.tolerances.clone(),
-        )
+        self.circuit_at_with_lineage(states, operators, inputs, None)
+    }
+    pub(crate) fn circuit_at_with_lineage(
+        &self,
+        states: &[f64],
+        operators: &[f64],
+        inputs: &[I],
+        lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
+    ) -> Result<Circuit, Error> {
+        let program = if let Some(lineage) = lineage {
+            self.bound_circuit_program_at_with_lineage(states, operators, inputs, Some(lineage))?
+        } else {
+            self.bound_circuit_program_at(states, operators, inputs)?
+        };
+        Circuit::new(program, &self.driven, self.tolerances.clone())
     }
 
     fn bound_circuit_program_at(
@@ -1798,12 +1865,23 @@ impl EventModel {
         operators: &[f64],
         inputs: &[I],
     ) -> Result<Program, Error> {
+        self.bound_circuit_program_at_with_lineage(states, operators, inputs, None)
+    }
+
+    fn bound_circuit_program_at_with_lineage(
+        &self,
+        states: &[f64],
+        operators: &[f64],
+        inputs: &[I],
+        lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
+    ) -> Result<Program, Error> {
         let bounds: Vec<_> = states.iter().copied().map(I::point).collect();
-        let selected = self.selected_program_with_parameters(
+        let selected = self.selected_program_with_lineage(
             &bounds,
             inputs,
             &[],
             &operators.iter().copied().map(I::point).collect::<Vec<_>>(),
+            lineage,
         )?;
         let rhs = selected
             .contributions

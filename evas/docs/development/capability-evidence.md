@@ -339,3 +339,5 @@ IR32本地共同候选涉及LANG、COMPOSE、TRANSITION、DEV:scs-input、CROSS�
 全量迭代已观察到旧PASS027因typed目标聚合审计超出原100000预算而回退；修复与重验未闭合，本候选不满足旧通过保留条件。
 显式typed源值、PWL根窗采样和direct-held事件，合同见[事件手册](../math/events.md#ir32-private-candidate-explicit-analytic-source-values)。
 本条只导航候选合同，不增加成熟支持、共同Q或400通过数；Spectre默认和一般history组合仍未支持。
+
+[普通integer当前值](../../../experiments/backends/support/low-cost-closure/ordinary-current-integer.json)补充LANG、EVENT-ORDER与COMPOSE；[普通单点保持来源](../../../experiments/backends/support/low-cost-closure/ordinary-point-lineage.json)补充EVENT-CONDITIONS、TRANSITION与COMPOSE。037、114、234已在同一公共源码和074f开发核分别通过完整原checker，完整盒、来源角色、Frame与原共享预算控制各保留身份。跨运行方法覆盖与历史失败见[共同收据](../../../experiments/backends/support/low-cost-closure/ordinary-prefix.json)；最终release同源双轨、完整CI和安装待验收，不改变共同Q或新增Spectre资格。

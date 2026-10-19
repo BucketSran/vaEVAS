@@ -1,4 +1,4 @@
-"""Independent procedural/oracle controls for initial-only real total aliases."""
+"""Independent procedural/oracle controls for initial state and total aliases."""
 GUARDS=['LANG','EVENT-ORDER','COMPOSE']
 import os
 from pathlib import Path
@@ -170,9 +170,18 @@ end endmodule
             with self.subTest(body=body),self.assertRaises(CompileError):
                 program('@(initial_step)q=7;'+body+'V(z)<+1;')
 
-    def test_target_integer_arrays_loops_and_time_are_not_added(self):
-        cases=[('integer q;','q=1;'),
-               ('real q;integer i;','for(i=0;i<0;i=i+1)q=1;q=2;'),
+    def test_integer_ordinary_constant_keeps_the_original_initial_state(self):
+        # Keep the former integer rejection verbatim. Continuous evaluation
+        # reads1, while the original event State remains its initial value7.
+        p=program('@(initial_step)q=7;q=1;V(y)<+q;V(z)<+1;', 'integer q;')
+        self.assertEqual([(s.name,s.initial) for s in p.states],[('q',7.)])
+        r=sample(p)
+        self.assertEqual(values(r),[1.]*5)
+        self.assertEqual(values(r,'z'),[1.]*5)
+        self.assertEqual(r['transient']['states'],[[7.]]*5)
+
+    def test_target_arrays_loops_and_time_are_not_added(self):
+        cases=[('real q;integer i;','for(i=0;i<0;i=i+1)q=1;q=2;'),
                ('real q,a[0:1];','q=1;'),
                ('real q;','q=$abstime;')]
         for decl,body in cases:
