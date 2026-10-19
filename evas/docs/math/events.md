@@ -326,6 +326,12 @@ real 形参下的 `3/2` 为 `1.5`。未赋值的 integer 返回槽从零开始�
 
 内部展开节点 `function_assign` 保留各次赋值的类型义务与顺序，不是新的线协议节点。
 未使用的实参、局部赋值和未选中的分支仍保留检查义务；不能先消去它们再判断整数范围。
+事件正文的原树审查验证 `function_assign` 的单子节点、类型与每次整数转换，
+随后继续遍历完整子树。real wrapper 在参数常量条件和 source-only compact event assignment
+中保留旧资格。整数 wrapper 不借此取得 array、index 或 held target 等额外角色。
+新增 metadata 查询和复制仍计入原编译审查 owner；未选分支与隐藏操作不会被常量特化消除。
+公开兼容与拒绝控制见 [test_event_function_consumer.py](../../tests/test_event_function_consumer.py)。
+
 动态 real 值不能仅凭函数返回类型取得整数资格，必须通过现有完整输入域证明。
 后置 clamp 不替代原中间值检查，也不开放一般电压表达式到整数的转换。
 需要实例类型绑定的调用在尚无该绑定的参数默认值、数组维度等入口明确拒绝；
@@ -1060,6 +1066,36 @@ idt、ddt、laplace、slew、absdelay。普通幅度带的拒绝边界保持，#
 旧保持阶段前缀、新目标安装和未来边沿须一起认证；有理内部见证、根处采样、
 查询／回滚与残余拒绝边界见[源目标历史合同](operators.md#外部源选择目标与实时电压读出)。
 这不是仅凭根序对一般近根组合的准入，也没有更改既有Spectre兼容差异。
+
+<a id="paid-shaped-range"></a>
+
+### 同一请求中的物理曲线区间读取
+
+`Trajectory::history_range([a,b], work)` 对已认证的物理 PWL 保留完整曲线，
+按原输入顺序先读取所有左端点，再读取所有右端点，最后组合区间与导数。
+值域是两个端点和所有严格内部角点值的 hull。导数包围所有与窗口相交的线段斜率；
+窗口为精确角点单点时，保留左右两段，不能只取执行代表时刻的一侧。
+有理角点与 binary64 窗口边界通过付费的精确比较确定次序。
+
+词法局部 `StagedRange` 借用 immutable `Curve` 和原请求 `Work`，
+三个阶段共用原 `Paid.local` 运算计数。左、右端点各求值一次；付费二分定位可能相交的
+线段后，仍按原升序逐一检查相交条件、内部角点和斜率。
+原六步插值、向外包围和 hull 顺序保持。该读取不裁剪输入，也不修改完整源、AST、隐藏臂、
+角色及父表达式资格审查。其他 `forcing_range` 消费者继续使用其原算法与费用。
+
+reader 仅在原左端点循环实际遇到 shaped 输入时建立。构造、slot、容量增长、结构移动、
+搜索和有理运算在执行前向同一 owner 付费。只有 None 或普通 Voltage 误差的旧路线不建 reader，
+保持原费用。reader 不进入 Frame 或跨请求缓存；失败不提交候选状态、日历、记录或输出，
+已花预算不返还。Work 错误直接传播，不退回名义值。原 128 个 plan、8192 个 cut、
+10⁹ 总 Work 和局部有理数限制不变。
+
+实现位于 `pwl.rs` 与 `exact_source/history_paid.rs`。
+[有理数生成器](../../tests/helpers/generate_shaped_range_oracle.py)独立生成多角点、
+非 binary 时间、精确角点、邻 ULP、subnormal 及斜率溢出控制；
+`shaped_range_tests.rs` 另比较旧完整区间的结果位并检验自然预算耗尽。
+`transient_history_consumer_tests.rs` 验证实际根窗、非点采样、完整 Frame 两次拒绝重试，
+原生 `history_consumer` 与公开 [物理点读取控制](../../tests/test_physical_point_bundle.py)
+检查生产消费者。减少重复工作不保证任意原件在固定总预算内完成。
 
 <a id="causal-transition-composition"></a>
 

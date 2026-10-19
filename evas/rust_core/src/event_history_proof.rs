@@ -324,6 +324,8 @@ pub(crate) fn charge_local_comparison(a: &LocalState, b: &LocalState) -> Result<
     }
     Ok(())
 }
+// Keep the explicit proof inputs and their original accounting owner together.
+#[allow(clippy::too_many_arguments)]
 fn eval(
     e: &E,
     nodes: &[I],

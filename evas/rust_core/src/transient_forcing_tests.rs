@@ -1301,7 +1301,7 @@ fn forcing_point_bundle_executes_one_actual_strict_body_and_preserves_bits() {
 }
 
 #[test]
-fn forcing_point_bundle_rebuilds_foreign_and_repeated_requests_but_never_range() {
+fn forcing_point_bundle_rebuilds_requests_and_stages_range_independently() {
     let (model, t, _, _) = fixture_mode(true);
     let w = model.forcing.as_ref().unwrap().request_work();
     let mut config = t.config.clone();
@@ -1330,9 +1330,13 @@ fn forcing_point_bundle_rebuilds_foreign_and_repeated_requests_but_never_range()
     let (result, report) = crate::diagnostics::capture(Default::default(), || {
         t.history_range(I { lo: 0.25, hi: 0.5 }, w)
     });
-    let (range, _) = result.unwrap();
+    let (range, slopes) = result.unwrap();
     assert!(range[0].lo <= 0.24609375 && range[0].hi >= 0.4921875);
-    assert_eq!(report.counters.get("strict_curve_at_body"), Some(&2));
+    // The physical segment is (63/64)*t. The independent staged range
+    // evaluates its two endpoints without a point-bundle cache entry.
+    assert!(slopes[0].lo <= 0.984375 && slopes[0].hi >= 0.984375);
+    assert_eq!(report.counters.get("strict_range_value_body"), Some(&2));
+    assert!(!report.counters.contains_key("strict_curve_at_body"));
     assert!(!report
         .counters
         .contains_key("history_point_bundle_strict_reuse"));

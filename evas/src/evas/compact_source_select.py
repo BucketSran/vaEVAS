@@ -65,7 +65,11 @@ def compact_source_assignment(compiler, statement, value, origin):
         if id(item) in seen:
             continue
         seen.add(id(item))
-        if item.op not in SOURCE_OPS:
+        if item.op == "function_assign":
+            compiler.compilation.native_audit.extra(item, "function_assignment_compact_metadata", 4)
+            if (item.value != "real" or item.result_type != "real" or len(item.args) != 1):
+                return False
+        elif item.op not in SOURCE_OPS:
             return False
         if item.op == 'voltage':
             # Include ground and same-node reads: cancellation must not turn an

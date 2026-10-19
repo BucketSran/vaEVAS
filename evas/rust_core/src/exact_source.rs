@@ -584,6 +584,8 @@ impl Curve {
             .hull(enclosure(&self.value(&hi, &mut budget)?)?);
         let mut slope: Option<I> = None;
         for pair in self.0.windows(2) {
+            #[cfg(test)]
+            crate::diagnostics::counter("strict_range_pair_body", 1);
             let (a, x) = &pair[0];
             let (b, y) = &pair[1];
             if *a < hi && *b > lo || lo == hi && *a <= lo && lo <= *b {
@@ -739,6 +741,8 @@ impl Curve {
         ))
     }
     fn value(&self, time: &R, budget: &mut Budget) -> Option<R> {
+        #[cfg(test)]
+        crate::diagnostics::counter("strict_range_value_body", 1);
         let index = self.0.partition_point(|p| p.0 < *time);
         let (end, b) = self.0.get(index)?;
         if end == time {

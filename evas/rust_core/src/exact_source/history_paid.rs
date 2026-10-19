@@ -167,6 +167,7 @@ impl<'a> Paid<'a> {
         let change = self.op(&delta, &fraction, '*')?;
         self.op(a, &change, '+')
     }
+    #[allow(clippy::too_many_arguments)]
     fn eval(
         &mut self,
         e: &Expression,
@@ -633,6 +634,129 @@ pub(crate) fn affine_root(a: R, b: R, bounds: I, w: &Work) -> Result<Option<Root
 
 pub(crate) fn root(value: R) -> RootTime {
     RootTime(value)
+}
+
+// A lexical range read borrows an already validated physical shaped curve and
+// its request ledger. Left, right and pair phases share the original local cap.
+pub(crate) struct StagedRange<'a> {
+    curve: &'a Curve,
+    paid: Paid<'a>,
+    time: I,
+    ends: Option<(R, R)>,
+    left: Option<I>,
+    right: Option<I>,
+    phase: u8,
+}
+impl<'a> StagedRange<'a> {
+    pub(crate) fn new(curve: &'a Curve, time: I, work: &'a Work) -> Result<Self, Error> {
+        work.debit(2, 0)?;
+        work.debit(
+            2,
+            (std::mem::size_of::<Self>().div_ceil(std::mem::size_of::<usize>()) + 8) as u64,
+        )?;
+        Ok(Self {
+            curve,
+            paid: Paid::new(work),
+            time,
+            ends: None,
+            left: None,
+            right: None,
+            phase: 0,
+        })
+    }
+    pub(crate) fn endpoint(mut self, right: bool) -> Result<Option<(Self, I)>, Error> {
+        let result = (|| {
+            self.paid.pay(8)?;
+            if self.phase != u8::from(right) {
+                return None;
+            }
+            if !right {
+                let lo = self.paid.binary(self.time.lo)?;
+                let hi = self.paid.binary(self.time.hi)?;
+                if self.paid.cmp(&lo, &hi)?.is_gt() {
+                    return None;
+                }
+                self.ends = Some((lo, hi));
+            }
+            let ends = self.ends.as_ref()?;
+            self.paid.pay(1)?;
+            #[cfg(test)]
+            crate::diagnostics::counter("strict_range_value_body", 1);
+            let v = self
+                .paid
+                .value(self.curve, if right { &ends.1 } else { &ends.0 })?;
+            let bounds = self.paid.enclose(&v)?;
+            self.paid.pay(4)?;
+            if right {
+                self.right = Some(bounds);
+            } else {
+                self.left = Some(bounds);
+            }
+            self.phase += 1;
+            Some(bounds)
+        })();
+        match result {
+            Some(bounds) => Ok(Some((self, bounds))),
+            None => self.paid.finish(None),
+        }
+    }
+    pub(crate) fn finish(mut self) -> Result<Option<(I, I)>, Error> {
+        let result = (|| {
+            self.paid.pay(8)?;
+            if self.phase != 2 {
+                return None;
+            }
+            let (lo, hi) = self.ends.as_ref()?;
+            let point = self.paid.cmp(lo, hi)?.is_eq();
+            let start = bound(&mut self.paid, self.curve, lo, !point)?
+                .checked_sub(1)
+                .or_else(|| point.then_some(0))?;
+            let end = bound(&mut self.paid, self.curve, hi, point)?
+                .min(self.curve.0.len().checked_sub(1)?);
+            self.paid.pay(4)?;
+            let mut values = self.left?.hull(self.right?);
+            let mut slope: Option<I> = None;
+            for index in start..end {
+                self.paid.pay(8)?;
+                #[cfg(test)]
+                crate::diagnostics::counter("strict_range_pair_body", 1);
+                let (a, x) = &self.curve.0[index];
+                let (b, y) = &self.curve.0[index + 1];
+                let overlaps = (self.paid.cmp(a, hi)?.is_lt() && self.paid.cmp(b, lo)?.is_gt())
+                    || (point && !self.paid.cmp(a, lo)?.is_gt() && !self.paid.cmp(lo, b)?.is_gt());
+                if overlaps {
+                    let duration = self.paid.op(b, a, '-')?;
+                    let change = self.paid.op(y, x, '-')?;
+                    let d = self.paid.op(&change, &duration, '/')?;
+                    let derivative = self.paid.enclose(&d)?;
+                    self.paid.pay(4)?;
+                    slope = Some(slope.map_or(derivative, |old| old.hull(derivative)));
+                }
+                if self.paid.cmp(lo, b)?.is_lt() && self.paid.cmp(b, hi)?.is_lt() {
+                    let corner = self.paid.enclose(y)?;
+                    self.paid.pay(2)?;
+                    values = values.hull(corner);
+                }
+            }
+            Some((values, slope.unwrap_or(I::ZERO)))
+        })();
+        self.paid.finish(result)
+    }
+}
+fn bound(paid: &mut Paid<'_>, curve: &Curve, time: &R, upper: bool) -> Option<usize> {
+    let (mut lo, mut hi) = (0, curve.0.len());
+    while lo < hi {
+        paid.pay(4)?;
+        let mid = lo + (hi - lo) / 2;
+        let order = paid.cmp(&curve.0[mid].0, time)?;
+        crate::diagnostics::counter("shaped_range_search_compare", 1);
+        if order.is_lt() || upper && order.is_eq() {
+            lo = mid + 1;
+        } else {
+            hi = mid;
+        }
+    }
+    Some(lo)
 }
 
 #[cfg(test)]

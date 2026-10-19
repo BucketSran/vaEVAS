@@ -961,11 +961,8 @@ pub(crate) fn held_input(
 #[cfg(test)]
 mod shape_admission_tests {
     use super::*;
-    use crate::ir::SCHEMA_VERSION;
+    use crate::history_consumer_fixture as fixture;
     use serde_json::json;
-    mod fixture {
-        include!("history_consumer_fixture.rs");
-    }
 
     #[test]
     fn shape_admission_many_affine_choices_need_no_cartesian_rows() {

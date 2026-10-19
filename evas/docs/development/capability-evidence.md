@@ -69,6 +69,8 @@ IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和�
 此前CI `39192407319` 的2423PASS及1个旧错误文案断言FAIL保留，coverage因失败分片跳过；同一非法内部电压仍拒绝，一行测试预期修正后18项相关方法通过并双轴复核，再用上述单次完整CI重验，未跨run拼绿。原041仍默认1e9预算拒绝，048仍8192根材料预算拒绝；371、346及369未验收改动不混入本轮。400全部PASS目标未完成，原生Goal已由用户恢复并核实active；既有原生Stop检查在317/400且83项有事可做时的精确命令重放仍阻止结束；用户已信任本地定义，真实原生Stop触发仍未观察到。PR208保持草稿，未合并、未发布公共索引/tag，未新增Spectre或正式共同资格。
 [wave22紧凑收据](../../../experiments/backends/support/low-cost-closure/continuation-wave22.json)保留完整执行和独审身份；后续实现继续使用既有scope与400队列。
 
+[IR32恢复证据](../../../experiments/backends/support/low-cost-closure/continuation-ir32-recovery.json)补充LANG、CROSS、EVENT-ORDER与COMPOSE的分支增量。旧函数wrapper的事件、参数和compact消费者保留完整类型义务；[物理区间读取](../math/events.md#paid-shaped-range)减少实际重复工作并沿用原Work。214项Python、188项Rust及8项原生窄检查和两轴集成审查通过；同193输入/release `d4eaadba91fc` 的40原件诊断恢复38项旧通过，369/371仍同预算拒绝。完整400、交付CI及安装待验收，旧317仍只属于上述177份wave22源核。
+
 历史wave21生产提交 `a201378e` 绑定176份源码／构建输入、IR30、0.23.0和release核 `7e7ae92ae2de`。原件400份已完整执行：312通过、19失败、69拒绝，331完成，清理400/400；这不表示400份全部PASS。13+387件同源，旧312、303和基线198通过保留，旧19份失败checker字典相同，相对wave20新增PASS为0。原041在默认1e9证明预算下 `step_budget` 拒绝，checker未运行；R6作者独立PASS不替代统一结果。
 修订材料另轨400为313通过、17失败、70拒绝，清理400/400；398份同材料复用本轮原件结果，另两份为修订012通过、107因 `condition_precision` 拒绝。它不替换原件计数。距离全部PASS，原件还差88份，修订轨还差87份；350只是进展节点。
 单次完整delivery CI `39169679908` 在辅助修复提交 `8e507c51` 实际15 jobs全部成功，2390个唯一方法通过，四分片621/605/638/526，无遗漏、重复、方法或setup跳过。Ubuntu x86_64/Python3.10与macOS arm64/Python3.12的0.23/IR30安装、重装及负控通过；176份源码／构建输入不变，远端回归和wheel核各保留实际SHA，不声称与本地release字节相同。CI执行身份、完整方法覆盖和两平台安装证据已独立复核。

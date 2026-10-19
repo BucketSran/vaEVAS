@@ -468,7 +468,8 @@ class InstanceCompiler:
                 return tuple(replace(item, then_body=retained(item.then_body), else_body=retained(item.else_body))
                              if isinstance(item, SyntaxConditional) else item
                              for item in body if id(item) in self.event_reachable_statements)
-            execution = specialize_event_body(retained(event.body), self.cache)
+            execution = specialize_event_body(retained(event.body), self.cache,
+                                              work=native_allowances[id(event)])
             self.active_event_aliases = self.aliases_at(event.token, body=True)
             self.compilation.events.append(self.make_ir(Event, event_trigger, self.body(execution), origin))
         self.active_event_aliases = {}

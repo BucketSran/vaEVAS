@@ -1,7 +1,6 @@
 //! Ordinary history predicate deadlines use actual production Controller frames.
 use super::*;
-#[path = "history_consumer_fixture.rs"]
-mod source_fixture;
+use crate::history_consumer_fixture as source_fixture;
 fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
     fixture_mode(false)
 }
@@ -33,6 +32,11 @@ fn fixture_mode(late_failure: bool) -> (EventModel, Trajectory, Controller, Vec<
 fn fixture_value(
     value: serde_json::Value,
 ) -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+    let value = if STAGED_SHAPED_FIXTURE.with(|f| f.get()) {
+        staged_shaped_value(value)
+    } else {
+        value
+    };
     let request: Request = serde_json::from_value(value).unwrap();
     let t = Trajectory::new(request.transient.unwrap(), request.driven.len()).unwrap();
     let m = EventModel::new_with_trajectory(
@@ -989,4 +993,285 @@ fn shape_admission_129_distinct_predicates_preserve_original_refusal() {
         .expect("129 distinct guards must retain the 128 limit");
     assert_eq!(error.kind, "condition_precision");
     assert_eq!(error.message, "history target predicate budget exhausted");
+}
+
+// GUARDS: LANG, EVENT-ORDER, TIMED-OPERATOR, COMPOSE.
+thread_local! { static STAGED_SHAPED_FIXTURE: std::cell::Cell<bool> = const { std::cell::Cell::new(false) }; }
+fn staged_shaped_value(mut value: serde_json::Value) -> serde_json::Value {
+    let stop = value["transient"]["stop"].as_f64().unwrap();
+    assert!(stop == 1. || stop == 2.);
+    let knots:Vec<_>=(0..85).map(|i|serde_json::json!({
+        "time_numerator":(i * stop as usize).to_string(),"time_denominator":"84","value_V":0.5
+    })).collect();
+    value["transient"]["pwl_errors_V"] =
+        serde_json::json!([{"voltage_error_bound_V":1e-12,"exact_knots":knots}]);
+    value
+}
+fn with_staged_shape(f: impl FnOnce()) {
+    struct Reset;
+    impl Drop for Reset {
+        fn drop(&mut self) {
+            STAGED_SHAPED_FIXTURE.with(|x| x.set(false));
+        }
+    }
+    STAGED_SHAPED_FIXTURE.with(|x| x.set(true));
+    let _reset = Reset;
+    let (r, d) = crate::diagnostics::capture(Default::default(), || {
+        f();
+        Ok(())
+    });
+    r.unwrap();
+    assert!(
+        d.counters
+            .get("shaped_range_search_compare")
+            .copied()
+            .unwrap_or(0)
+            > 0
+    );
+    println!("Controller shaped actual range counters={:?}", d.counters);
+}
+#[test]
+fn staged_shaped_controller_p5_nonpoint_and_overlap_refusal() {
+    with_staged_shape(nonpoint_exact_history_root_window_does_not_silently_merge_a_timer);
+}
+#[test]
+fn staged_shaped_controller_p6_two_late_failures_legal_retry_clean_full_frame() {
+    with_staged_shape(two_final_candidate_failures_then_legal_retry_match_clean_controller);
+}
+#[test]
+fn staged_shaped_controller_actual_history_root_and_sample() {
+    with_staged_shape(warm_static_controller_schedules_actual_ordinary_history_midpoint);
+}
+
+#[test]
+fn staged_shaped_controller_default_range_exhaustion_and_full_frame_sticky_retries() {
+    let (m, t, mut c, mut q) = fixture_value(staged_shaped_value(source_fixture::fixture()));
+    for _ in 0..2 {
+        c.accept_changed_events(&m, &t, &mut q, event_acceptance::Strategy::Static)
+            .unwrap();
+    }
+    let before = c.accepted.clone();
+    let records = serde_json::to_value(&c.records).unwrap();
+    let calendar = q
+        .iter()
+        .map(|e| (e.event, e.time, e.bounds()))
+        .collect::<Vec<_>>();
+    let cursor = c.event;
+    let work = m.source_context.as_ref().unwrap().borrow_work();
+    assert!(std::sync::Arc::ptr_eq(
+        m.source_context.as_ref().unwrap(),
+        c.accepted.operators.source_context.as_ref().unwrap()
+    ));
+    let proof_inputs = t.value_bounds(0.5);
+    let proof_root = crate::exact_source::RootTime::point(0.5).unwrap();
+    let context = crate::event_value_proof::Context::try_new(
+        &m,
+        &t,
+        &proof_inputs,
+        &before.value_proofs,
+        Some(&proof_root),
+    )
+    .unwrap();
+    assert!(
+        context.floor_work().is_none(),
+        "history accounting must not grant Floor role"
+    );
+    let local = crate::event_value_proof::LocalState::try_with_context(
+        &before.state_bounds,
+        Some(&context),
+    )
+    .unwrap();
+    assert!(local.floor_work().is_none());
+    let selection = m.conditions.select(&[1], &proof_inputs).unwrap();
+    let guard_projection = crate::event_accuracy::GuardBounds::for_model(&m, None).unwrap();
+    let mut actual = 0;
+    loop {
+        // Rebuild and solve a real ordinary consumer using this prepared request.
+        // No debit, quota override, helper-only owner, or candidate refund occurs here.
+        match crate::event_value_proof::history::input_range(&m, &t, I { lo: 0.5, hi: 0.625 }) {
+            Ok((values, slopes)) => {
+                assert_eq!(values, [I::point(0.5)]);
+                assert_eq!(slopes, [I::ZERO]);
+                actual += 1;
+            }
+            Err(error) => {
+                assert_eq!(error.kind, "step_budget");
+                break;
+            }
+        }
+        assert!(
+            actual < 100_000,
+            "default quota did not constrain real consumer work"
+        );
+    }
+    println!(
+        "actual shaped range reads before default exhaustion={actual}; used={}",
+        work.spent()
+    );
+    assert!(actual > 1);
+    assert!(work.spent() > 1_000_000_000);
+    let used = work.spent();
+    let next_event = q.get(cursor).unwrap().clone();
+    let independent_root = crate::exact_source::RootTime::point(0.625).unwrap();
+    for _ in 0..2 {
+        // Actual history-owner exhaustion must reach all calendar proof accessors.
+        // No helper may reconstruct a clock root after the shared request has failed.
+        let (result, report) = crate::diagnostics::capture(Default::default(), || {
+            event_root(&m, std::slice::from_ref(&next_event))
+        });
+        assert_eq!(result.unwrap_err().kind, "step_budget");
+        assert!(report.counters.is_empty() && report.stages.is_empty());
+        assert_eq!(
+            event_bounds(&m, &next_event).unwrap_err().kind,
+            "step_budget"
+        );
+        assert_eq!(
+            event_order(&m, &t, &next_event, 0.625).unwrap_err().kind,
+            "step_budget"
+        );
+        assert_eq!(
+            source_root_bounds(&m, &independent_root).unwrap_err().kind,
+            "step_budget"
+        );
+        assert_eq!(work.spent(), used);
+        let (result, report) = crate::diagnostics::capture(Default::default(), || {
+            assert_eq!(
+                crate::event_accuracy::GuardBounds::for_model(&m, None)
+                    .err()
+                    .unwrap()
+                    .kind,
+                "step_budget"
+            );
+            assert_eq!(
+                guard_projection
+                    .active_inputs_history(0, work)
+                    .unwrap_err()
+                    .kind,
+                "step_budget"
+            );
+            assert_eq!(
+                independent_schedule(&m, &t).err().unwrap().kind,
+                "step_budget"
+            );
+            assert_eq!(
+                crate::schedule::copy_calendar(&q, &m).err().unwrap().kind,
+                "step_budget"
+            );
+            assert_eq!(before.candidate_clone().err().unwrap().kind, "step_budget");
+            assert_eq!(
+                crate::event_value_proof::apply_charged(
+                    &m,
+                    &selection,
+                    &proof_inputs,
+                    &before.state_bounds,
+                    &before.state_bounds,
+                    &context
+                )
+                .unwrap_err()
+                .kind,
+                "step_budget"
+            );
+            assert_eq!(
+                time_provenance::apply_charged(
+                    &m,
+                    &t,
+                    &selection,
+                    &before.time_proofs,
+                    Some(&proof_root),
+                    &before.state_bounds,
+                    &before.state_bounds
+                )
+                .unwrap_err()
+                .kind,
+                "step_budget"
+            );
+            assert_eq!(local.try_clone().err().unwrap().kind, "step_budget");
+            assert_eq!(
+                local
+                    .try_value(&crate::ir::Expression::State { state: 0 }, &[])
+                    .unwrap_err()
+                    .kind,
+                "step_budget"
+            );
+            assert_eq!(
+                crate::event_value_proof::history::inputs(&m, &t, 0.5)
+                    .unwrap_err()
+                    .kind,
+                "step_budget"
+            );
+            assert_eq!(
+                crate::event_value_proof::history::input_bounds(&m, &t, 0.5)
+                    .unwrap_err()
+                    .kind,
+                "step_budget"
+            );
+            assert_eq!(
+                crate::event_value_proof::history::input_range(&m, &t, I::point(0.5))
+                    .unwrap_err()
+                    .kind,
+                "step_budget"
+            );
+            assert_eq!(
+                crate::event_value_proof::Context::try_new(
+                    &m,
+                    &t,
+                    &[I::point(0.5)],
+                    &before.value_proofs,
+                    Some(&independent_root)
+                )
+                .err()
+                .unwrap()
+                .kind,
+                "step_budget"
+            );
+            assert_eq!(
+                crate::event_value_proof::history::equal(
+                    &before.value_proofs,
+                    &before.value_proofs,
+                    work
+                )
+                .unwrap_err()
+                .kind,
+                "step_budget"
+            );
+            assert_eq!(
+                time_provenance::equal_history(&before.time_proofs, &before.time_proofs, work)
+                    .unwrap_err()
+                    .kind,
+                "step_budget"
+            );
+            assert_eq!(
+                before
+                    .operators
+                    .same_reset_history_paid(&before.operators, work)
+                    .unwrap_err()
+                    .kind,
+                "step_budget"
+            );
+            Ok(())
+        });
+        result.unwrap();
+        assert!(report.counters.is_empty() && report.stages.is_empty());
+        assert_eq!(work.spent(), used);
+        let (result, report) = crate::diagnostics::capture(Default::default(), || {
+            c.accept_changed_events(&m, &t, &mut q, event_acceptance::Strategy::Static)
+        });
+        assert_eq!(result.unwrap_err().kind, "step_budget");
+        assert!(
+            report.counters.is_empty(),
+            "retry entered helpers: {:?}",
+            report.counters
+        );
+        assert!(report.stages.is_empty(), "retry prepared a candidate");
+        assert_eq!(work.spent(), used);
+        assert_frame_unchanged(&c.accepted, &before);
+        assert_eq!(c.event, cursor);
+        assert_eq!(
+            q.iter()
+                .map(|e| (e.event, e.time, e.bounds()))
+                .collect::<Vec<_>>(),
+            calendar
+        );
+        assert_eq!(serde_json::to_value(&c.records).unwrap(), records);
+    }
 }

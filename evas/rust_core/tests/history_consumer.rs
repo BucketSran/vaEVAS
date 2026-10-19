@@ -159,3 +159,39 @@ fn paid_delayed_transition_queue_reaches_the_ordinary_consumer() {
             > 0
     );
 }
+
+// GUARDS: LANG, EVENT-ORDER, TIMED-OPERATOR, COMPOSE.
+fn shaped_request() -> serde_json::Value {
+    let mut v = fixture();
+    let knots: Vec<_> = (0..85)
+        .map(|i| json!({"time_numerator":i.to_string(),"time_denominator":"84","value_V":0.5}))
+        .collect();
+    v["transient"]["pwl_errors_V"] = json!([{"voltage_error_bound_V":1e-12,"exact_knots":knots}]);
+    v
+}
+#[test]
+fn public_shaped_range_keeps_actual_history_and_same_clock_sample() {
+    let (r, d) = evas_kernel::diagnostics::capture(Default::default(), || {
+        run(serde_json::from_value(shaped_request()).unwrap())
+    });
+    let r = r.unwrap();
+    for (i, row) in r.solutions.iter().enumerate() {
+        let core = if i >= 5 { 0.625 } else { 0. };
+        let sampled = if i >= 6 { 0.625 } else { 0. };
+        assert!((row.voltages[3] - core).abs() < 1e-9);
+        assert!((row.voltages[4] - sampled).abs() < 1e-9);
+        assert!((row.voltages[5] - core).abs() < 1e-9);
+        assert!(row.max_residual_ratio <= 1.);
+    }
+    assert!(d.counters["shaped_range_search_compare"] > 0);
+}
+#[test]
+fn public_shaped_range_preserves_strict_midpoint_adjacent_queries() {
+    let mut v = shaped_request();
+    let mid = 0.625f64;
+    v["transient"]["output_times"] = json!([0., mid.next_down(), mid, mid.next_up(), 1.]);
+    let r = run(serde_json::from_value(v).unwrap()).unwrap();
+    assert_eq!(r.solutions[1].voltages[3], 0.);
+    assert_eq!(r.solutions[2].voltages[3], 0.);
+    assert!((r.solutions[3].voltages[3] - 0.625).abs() < 1e-10);
+}

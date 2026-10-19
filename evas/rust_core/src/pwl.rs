@@ -1,7 +1,10 @@
 //! Continuous PWL inputs and zero arrivals, independent of event state mutation.
 use crate::event_accuracy::unresolved;
+use crate::exact_source::history_paid::StagedRange;
 use crate::interval::{equal_products, sum_products_sign, Interval as I};
 use crate::ir::{Error, TransientInputs};
+
+type PhysicalPointBuffer = Option<Vec<Option<(f64, I)>>>;
 
 #[derive(Clone)]
 pub(crate) struct Root {
@@ -684,7 +687,7 @@ impl Trajectory {
         // first actual strict shaped result allocates this local paid buffer.
         let mut points = None;
         let values = self.history_values_impl(time, work, Some(&mut points))?;
-        let bounds = self.history_value_bounds_impl(time, work, points.as_deref())?;
+        let bounds = self.history_value_bounds_impl(time, work, points.as_deref(), None)?;
         Ok((values, bounds))
     }
     /// Original physical PWL observation with the held-consumer request owner.
@@ -700,7 +703,7 @@ impl Trajectory {
         &self,
         time: f64,
         work: &crate::transition_source_plan::Work,
-        mut points: Option<&mut Option<Vec<Option<(f64, I)>>>>,
+        mut points: Option<&mut PhysicalPointBuffer>,
     ) -> Result<Vec<f64>, Error> {
         work.debit(2, 0)?;
         work.debit(2, self.config.pwl.len() as u64)?;
@@ -774,13 +777,14 @@ impl Trajectory {
         time: f64,
         work: &crate::transition_source_plan::Work,
     ) -> Result<Vec<I>, Error> {
-        self.history_value_bounds_impl(time, work, None)
+        self.history_value_bounds_impl(time, work, None, None)
     }
-    fn history_value_bounds_impl(
-        &self,
+    fn history_value_bounds_impl<'a>(
+        &'a self,
         time: f64,
-        work: &crate::transition_source_plan::Work,
+        work: &'a crate::transition_source_plan::Work,
         points: Option<&[Option<(f64, I)>]>,
+        mut ranges: Option<(&mut Vec<Option<StagedRange<'a>>>, I, bool)>,
     ) -> Result<Vec<I>, Error> {
         work.debit(2, 0)?;
         work.debit(2, (self.config.pwl.len() * 2) as u64)?;
@@ -792,6 +796,36 @@ impl Trajectory {
                 continue;
             }
             if self.is_shaped(k) {
+                if let Some((ranges, window, right)) = ranges.as_mut() {
+                    if !*right {
+                        // Reach this branch in the original left-source order.
+                        // No readers or placeholders exist for an all-unshaped request.
+                        while ranges.len() < k {
+                            crate::history_storage::push_vec(ranges, None, work)?;
+                        }
+                        let curve = self.exact_sources[k]
+                            .as_ref()
+                            .ok_or_else(|| unresolved("physical source curve missing"))?;
+                        let reader = StagedRange::new(curve, *window, work)?;
+                        crate::history_storage::push_vec(ranges, Some(reader), work)?;
+                    }
+                    // Pay both ownership moves before taking the reader slot.
+                    work.debit(
+                        2,
+                        (2 * std::mem::size_of::<Option<StagedRange<'_>>>()
+                            .div_ceil(std::mem::size_of::<usize>())
+                            + 4) as u64,
+                    )?;
+                    let reader = ranges[k]
+                        .take()
+                        .ok_or_else(|| unresolved("physical source curve missing"))?;
+                    let (reader, bounds) = reader
+                        .endpoint(*right)?
+                        .ok_or_else(|| unresolved("physical source point has no certificate"))?;
+                    ranges[k] = Some(reader);
+                    values.push(bounds);
+                    continue;
+                }
                 if let Some(points) = points {
                     work.debit(
                         2,
@@ -856,28 +890,47 @@ impl Trajectory {
                 "invalid guard time interval",
             ));
         }
-        let left = self.history_value_bounds(time.lo, work)?;
-        let right = self.history_value_bounds(time.hi, work)?;
+        let mut ranges = Vec::new();
+        let left =
+            self.history_value_bounds_impl(time.lo, work, None, Some((&mut ranges, time, false)))?;
+        let right = self.history_value_bounds_impl(
+            time.hi,
+            work,
+            None,
+            (!ranges.is_empty()).then_some((&mut ranges, time, true)),
+        )?;
         work.debit(2, (left.len() * 2) as u64)?;
         let mut values: Vec<_> = left.iter().zip(right).map(|(&a, b)| a.hull(b)).collect();
-        let mut derivatives = Vec::new();
+        // Only the staged route adds this buffer. Fund its exact logical
+        // capacity before allocating, so pushes cannot trigger implicit growth.
+        let mut derivatives = if ranges.is_empty() {
+            Vec::new()
+        } else {
+            work.debit(2, (2 * self.config.pwl.len()) as u64)?;
+            Vec::with_capacity(self.config.pwl.len())
+        };
         for (k, source) in self.config.pwl.iter().enumerate() {
             work.step()?;
             if let Some(Some(source)) = self.config.analytic_sources.get(k) {
                 let (v, d) = crate::analytic_source::range(source, time, work)?;
                 values[k] = v;
+                if !ranges.is_empty() {
+                    work.debit(2, 2)?;
+                }
                 derivatives.push(d);
                 continue;
             }
             if self.is_shaped(k) {
-                let curve = self.exact_sources[k]
-                    .as_ref()
-                    .ok_or_else(|| unresolved("physical source curve missing"))?;
-                curve.charge_forcing_read(work, time.lo, true)?;
-                curve.charge_forcing_read(work, time.hi, true)?;
-                let (physical_values, physical_slope) = self.exact_sources[k]
-                    .as_ref()
-                    .and_then(|curve| curve.range(time))
+                work.debit(
+                    2,
+                    (std::mem::size_of::<Option<StagedRange<'_>>>()
+                        .div_ceil(std::mem::size_of::<usize>())
+                        + 2) as u64,
+                )?;
+                let (physical_values, physical_slope) = ranges[k]
+                    .take()
+                    .ok_or_else(|| unresolved("physical source curve missing"))?
+                    .finish()?
                     .ok_or_else(|| unresolved("cannot bound original source shape"))?;
                 values[k] = physical_values;
                 work.debit(2, 2)?;
@@ -1043,6 +1096,7 @@ impl Trajectory {
 
     /// Shape-aware guards must use their complete physical source partition.
     /// Unknown/non-affine source expressions retain a conservative refusal.
+    #[allow(clippy::too_many_arguments)]
     pub(crate) fn shaped_roots_history(
         &self,
         guard: &crate::ir::Expression,
@@ -1946,3 +2000,7 @@ impl Root {
         serde_json::json!({"bounds":[self.bounds.lo,self.bounds.hi],"slope":[self.slope.lo,self.slope.hi],"segment":self.segment,"ends":self.ends.iter().map(|i|[i.lo,i.hi]).collect::<Vec<_>>(),"source_time":format!("{:?}",self.source_time)})
     }
 }
+
+#[cfg(test)]
+#[path = "shaped_range_tests.rs"]
+mod shaped_range_tests;

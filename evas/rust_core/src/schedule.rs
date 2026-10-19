@@ -2157,7 +2157,10 @@ fn schedule_with_history(
             if let Some(w) = history_work {
                 w.step()?;
             }
-            if !(events[cluster_end].bounds().lo <= cluster_hi) {
+            if !matches!(
+                events[cluster_end].bounds().lo.partial_cmp(&cluster_hi),
+                Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
+            ) {
                 break;
             }
             cluster_hi = cluster_hi
@@ -2209,7 +2212,10 @@ fn schedule_with_history(
                     if let Some(w) = history_work {
                         w.step()?;
                     }
-                    if !(events[extension_end].bounds().lo <= extension_hi) {
+                    if !matches!(
+                        events[extension_end].bounds().lo.partial_cmp(&extension_hi),
+                        Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
+                    ) {
                         break;
                     }
                     extension_hi = extension_hi
@@ -2244,7 +2250,10 @@ fn schedule_with_history(
             if let Some(w) = history_work {
                 w.step()?;
             }
-            if !(events[end].moment.bounds().lo <= hi.max(time)) {
+            if !matches!(
+                events[end].moment.bounds().lo.partial_cmp(&hi.max(time)),
+                Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
+            ) {
                 break;
             }
             let first = &events[start];

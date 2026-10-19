@@ -146,6 +146,7 @@ fn expression(
         _ => None,
     }
 }
+#[allow(clippy::too_many_arguments)]
 pub(super) fn apply(
     model: &EventModel,
     trajectory: &Trajectory,

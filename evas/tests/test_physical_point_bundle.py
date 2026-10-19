@@ -17,6 +17,7 @@ class PhysicalPointBundle(unittest.TestCase):
      source_errors=dict(c=.03125),source_shapes=dict(c=[dict(time_numerator='0',time_denominator='1',value_V=0.),dict(time_numerator='1',time_denominator='1',value_V=1.)]))
    diag=json.loads(log.read_text())
   self.assertGreater(diag['counters'].get('history_point_bundle_strict_reuse',0),0)
+  self.assertGreater(diag['counters'].get('shaped_range_search_compare',0),0)
   for t,row,box in zip(times,r['solutions'],r['observation_evidence']['voltage_bounds_V']):
    t=F(t)
    for name,want in dict(s=min(F(1),max(F(0),2*(t-F(1,4)))),y=t*(1-t)+min(F(1,2),max(F(0),4*(t-F(1,2))))).items():

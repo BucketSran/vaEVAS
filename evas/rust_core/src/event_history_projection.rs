@@ -46,9 +46,9 @@ pub(super) fn for_model(
     // the second below constructs the actual projected coefficients.
     for guard in expressions.iter().flatten() {
         let row = crate::history_admission::affine_paid(guard, program, w)?;
-        for node in 1..count {
+        for (node, coefficient) in row[..count].iter().enumerate().skip(1) {
             w.step()?;
-            if row[node].zero() {
+            if coefficient.zero() {
                 continue;
             }
             let mut driven = false;

@@ -6,10 +6,7 @@ use crate::interval::{equal_products, Interval as I};
 use crate::ir::{Error, EventTrigger, Expression, Program};
 
 #[cfg(test)]
-use crate::ir::SCHEMA_VERSION;
-#[cfg(test)]
-#[path = "history_consumer_fixture.rs"]
-mod history_fixture;
+use crate::history_consumer_fixture as history_fixture;
 #[path = "event_history_projection.rs"]
 mod history_projection;
 

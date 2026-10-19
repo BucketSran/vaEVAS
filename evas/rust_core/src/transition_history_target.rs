@@ -1748,10 +1748,7 @@ mod lifecycle_tests {
 #[cfg(test)]
 mod predicate_bit_tests {
     use super::*;
-    use crate::ir::SCHEMA_VERSION;
-    mod fixture {
-        include!("history_consumer_fixture.rs");
-    }
+    use crate::history_consumer_fixture as fixture;
     #[test]
     fn shape_admission_predicate_signed_zero_candidates_remain_distinct_and_ordered() {
         let f = fixture::fixture();

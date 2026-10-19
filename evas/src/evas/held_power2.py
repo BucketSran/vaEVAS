@@ -9,6 +9,11 @@ from .syntax import (Expr, Assignment, ContributionStatement, Conditional, Loop,
 from .ir import Affine, StateRef, IntegerState, IntegerLiteral, IntegerPrimitive, Origin
 
 
+# Shared structural grammar only; source typing, domains and roles stay fresh.
+_SOURCE_PLAN_OPS = ('number', 'parameter', '/', '%', '<', '<=', '>', '>=',
+                    '==', '!=', '&&', '||', 'unary!', 'ternary')
+
+
 def reserve(owner, kind, amount=1, source=None):
     # Optional probes may stop only BEFORE new work. An active failure is never
     # caught or reset; every already performed debit remains on the same owner.
@@ -140,7 +145,14 @@ def target_aliases(compiler, statements):
         if not reserve(owner, 'held_power2_alias_candidate', 8, statement):
             return None
         if isinstance(statement, Assignment) and statement.index is None and compiler.model.variables.get(statement.name) == 'real':
-            candidates[statement.name] = statement
+            # A structurally impossible root cannot become an eligible alias.
+            # Pay before inspecting it, so no full original read/write proof is
+            # constructed merely for an unsupported multiply or operator root.
+            if not reserve(owner, 'held_power2_alias_root', 16, statement):
+                return None
+            root = statement.rhs
+            if type(root) is Expr and type(root.args) is tuple and root.op in _SOURCE_PLAN_OPS:
+                candidates[statement.name] = statement
     if not candidates:
         return candidates
     pending = [(statements, False), (compiler.model.initial, False), (compiler.model.events, False)]
@@ -189,7 +201,7 @@ def source_plan(compiler, root):
         nonlocal found, state_read
         if not reserve(owner, 'held_power2_source_visit', 32, item):
             return None
-        if type(item) is not Expr or type(item.args) is not tuple or item.op not in ('number', 'parameter', '/', '%', '<', '<=', '>', '>=', '==', '!=', '&&', '||', 'unary!', 'ternary'):
+        if type(item) is not Expr or type(item.args) is not tuple or item.op not in _SOURCE_PLAN_OPS:
             return None
         if not reserve(owner, 'held_power2_source_origin', 16, item):
             return None

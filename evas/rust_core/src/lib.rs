@@ -24,6 +24,8 @@ mod expression;
 mod guard_trajectory;
 mod held_integer_target;
 mod history_admission;
+#[cfg(test)]
+mod history_consumer_fixture;
 mod history_storage;
 mod idt;
 mod idtmod;

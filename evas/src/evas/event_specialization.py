@@ -24,7 +24,7 @@ UNKNOWN = object()
 
 
 
-def parameter_value(expr, parameters, memo):
+def parameter_value(expr, parameters, memo, work=None):
     key = id(expr)
     if key in memo:
         return memo[key][1]
@@ -33,9 +33,16 @@ def parameter_value(expr, parameters, memo):
     elif expr.op == "parameter":
         result = parameters.get(str(expr.value), UNKNOWN)
     else:
-        args = [parameter_value(arg, parameters, memo) for arg in expr.args]
+        if expr.op == "function_assign" and work is not None:
+            work.extra(expr, "function_assignment_parameter_metadata", 8)
+        args = [parameter_value(arg, parameters, memo, work) for arg in expr.args]
         result = UNKNOWN
-        if expr.op == "checked":
+        if expr.op == "function_assign":
+            # Only real copy-through preserves this parameter-only value. The
+            # integer conversion remains an obligation of the typed lowerer.
+            if expr.value == "real" and expr.result_type == "real" and len(args) == 1:
+                result = args[0]
+        elif expr.op == "checked":
             result = args[0]
         elif expr.op == "&&":
             if any(a is not UNKNOWN and not a for a in args):
@@ -157,6 +164,13 @@ def audit_event_body(compiler, statements, charge_native):
             return memo[id(root)][1]
         if root.op == "checked":
             value = resource_tree(root.args[0], memo)
+        elif root.op == "function_assign":
+            charge_native.extra(root, "function_assignment_resource_metadata", 4)
+            # Keep the real assignment's complete choice shape. Integer
+            # conversion belongs to the existing typed lowerer, never this
+            # private resource-only surrogate. Original shape audits all args.
+            value = (resource_tree(root.args[0], memo) if root.value == "real"
+                     else audit_lower(root))
         elif root.op == "index":
             value = index_read(root)
         elif root.op in BIT_OPS or root.op == "floor" or root.op in ("/", "%") and compiler.integer_type(root):
@@ -229,7 +243,16 @@ def audit_event_body(compiler, statements, charge_native):
                 continue
             seen[id(item)] = item
             charge_native(item, "event_audit")
-            if item.op not in VALUE_OPS:
+            if item.op == "function_assign":
+                charge_native.extra(item, "function_assignment_metadata", 4)
+                if (item.value not in ("real", "integer") or len(item.args) != 1
+                        or item.result_type != item.value):
+                    fail("invalid function assignment structure", item)
+                # Every child remains in the original-tree walk below. Copy-in,
+                # local and return integer conversions use their original proof.
+                if item.value == "integer":
+                    audit_lower(item, static_integer_audit=parameter_dead)
+            elif item.op not in VALUE_OPS:
                 message = "event bodies do not support history/operator calls" if item.op in OPERATOR_NAMES else "unsupported event value structure"
                 fail(message, item)
             if item.op == "number" and not math.isfinite(float(item.value)):
@@ -272,8 +295,8 @@ def audit_event_body(compiler, statements, charge_native):
     parameter_memo = {}
 
     def parameter_predicate(statement):
-        a = parameter_value(statement.left, compiler.cache, parameter_memo)
-        b = parameter_value(statement.right, compiler.cache, parameter_memo)
+        a = parameter_value(statement.left, compiler.cache, parameter_memo, charge_native)
+        b = parameter_value(statement.right, compiler.cache, parameter_memo, charge_native)
         if a is UNKNOWN or b is UNKNOWN:
             return None
         return {"<":a<b, "<=":a<=b, ">":a>b, ">=":a>=b}[statement.relation]
@@ -333,12 +356,12 @@ def audit_event_body(compiler, statements, charge_native):
     return charge_native
 
 
-def specialize_event_body(statements, parameters):
+def specialize_event_body(statements, parameters, *, work=None):
     """New execution view after audit; only bound module parameters are known."""
     memo = {}
 
     def known(expr):
-        return parameter_value(expr, parameters, memo)
+        return parameter_value(expr, parameters, memo, work)
 
     def body(items):
         result = []
