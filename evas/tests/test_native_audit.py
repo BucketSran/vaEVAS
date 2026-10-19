@@ -48,13 +48,13 @@ class NativeAuditTests(unittest.TestCase):
         self.assertEqual(o.counts['wire_visit']-before['wire_visit'],expanded(p))
         self.assertEqual(expanded(p),expanded(wire))
         self.assertEqual(o.used,sum(o.counts.values()))
-        self.assertEqual(o.counts['copy_atom']+o.counts['copy_container'],o.counts['wire_visit'])
+        self.assertEqual(o.counts['copy_atom']-before['copy_atom']+o.counts['copy_container']-before['copy_container'],o.counts['wire_visit']-before['wire_visit'])
         self.assertEqual(check_ir(p)[1],expanded(p))
 
     def test_two_events_two_targets_naturally_exhaust_same_owner_and_retry_twice(self):
         p=compile_program();o=p._native_audit
         successful=0
-        for _ in range(100):
+        for _ in range(100001):
             try:p.to_dict();successful+=1
             except CompileError as e:
                 self.assertEqual(e.diagnostic['code'],'resource_budget');break

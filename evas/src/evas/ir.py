@@ -359,5 +359,6 @@ class Program:
 
     def to_dict(self) -> dict:
         audit = getattr(self, "_native_audit", None)
-        check_ir(self, work=audit.ir_work if audit is not None else None)
+        check_ir(self, work=audit.ir_work if audit is not None else None,
+                 cache=audit.ir_cache if audit is not None else None)
         return audit.materialize(self) if audit is not None and audit.active else asdict(self)

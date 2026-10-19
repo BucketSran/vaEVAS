@@ -20,6 +20,8 @@ class NativeAudit:
         self.event_views = {}
         self.event_view_calls = 0
         self.activations = 0
+        self.debit("ir_cache_create")
+        self.ir_cache = {}
 
     def debit(self, kind, amount=1, item=None, *, event=None, legacy=False):
         if amount < 0:

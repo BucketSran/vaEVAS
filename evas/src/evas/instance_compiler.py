@@ -60,7 +60,7 @@ class Compilation:
         self.native_audit.debit("emit_field",len(fields(Program)))
         result = Program(self.nodes, tuple(self.contributions), tuple(self.states), tuple(self.events), tuple(self.operators),
                          step_bounds=tuple(self.step_bounds))
-        check_ir(result, work=self.native_audit.ir_work)
+        check_ir(result, work=self.native_audit.ir_work, cache=self.native_audit.ir_cache)
         if any(isinstance(c.rhs, Forcing) for c in result.contributions):
             # Preserve R6's original, pre-scalarization component role audit.
             # It owns its existing source-proof phase; no reduced Program is
@@ -107,7 +107,7 @@ class Compilation:
             result = emit_forcing_ir(Program, result.nodes, tuple(contributions),
                                     result.states, result.events, result.operators,
                                     step_bounds=result.step_bounds)
-            check_ir(result, work=self.native_audit.ir_work)
+            check_ir(result, work=self.native_audit.ir_work, cache=self.native_audit.ir_cache)
         # A replacement Program must keep the SAME owner for expanded transport.
         object.__setattr__(result, "_native_audit", self.native_audit)
         if self.source_rational_origins:
@@ -1220,7 +1220,7 @@ class InstanceCompiler:
         return value
 
     def checked_ir(self, value, origin=None):
-        return check_ir(value, origin, work=self.compilation.native_audit.ir_work)
+        return check_ir(value, origin, work=self.compilation.native_audit.ir_work, cache=self.compilation.native_audit.ir_cache)
 
     def native_event_integer(self, expr, resolve, charge):
         # This is called only after the original route classified a finite
