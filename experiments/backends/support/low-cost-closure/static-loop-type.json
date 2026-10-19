@@ -1,5 +1,5 @@
 {
-  "status": "local branch compiler type fix; full candidate acceptance pending",
+  "status": "branch fix with complete singleCI independently accepted; original027 and new dual400 acceptance remain incomplete",
   "checked_at_utc": "2026-10-19T01:30:11.452582+00:00",
   "base_revision": "0d8f76a35c51d612429cc5e23f9a146431456901",
   "capabilities": [
@@ -49,7 +49,7 @@
   "qualification": {
     "new_original_or_revised400_PASS": 0,
     "original027_rerun": false,
-    "fullPython_executor": "GitHub CI only; new candidate pending",
+    "fullPython_executor": "GitHub CI only; completed single run39186237865 at eadacd22",
     "Spectre_or_formalQ": false
   },
   "limits": [
@@ -78,5 +78,34 @@
       "scope": "production one-leaf metadata and new7methods; owning docs and generated traceability follow-up closed",
       "doc_receipt_sha256": "23bb26d8f6dfb3f16b0be5a8cc9199698ffe2af85eb127ccabad134686c804e3"
     }
+  },
+  "ci": {
+    "run": 39186237865,
+    "head": "eadacd22fae4225fc409e973b8e31137ab7cabfd",
+    "url": "https://github.com/BucketSran/vaEVAS/actions/runs/39186237865",
+    "unique_methods_passed": 2397,
+    "shards": [
+      619,
+      647,
+      558,
+      573
+    ],
+    "method_or_setup_skip": 0,
+    "missing_or_duplicate": 0,
+    "jobs_success": 15,
+    "platform_install_reinstall_negative_controls": 2,
+    "coverage_sha256": "a5b906749683314f7d1f6e515d089b0b419f0e585750371e695258db7b7cb09f",
+    "independent_review_sha256": "dc3cbeacceffa19c8bcf7d41fb949ae7ec451ba01d46fc87c0092fef1426e878",
+    "local_and_remote_kernel_equality_claimed": false
+  },
+  "current_original027_compile": {
+    "status": "REJECTED at unchanged aggregate budget; compiler-only observation, not original request scoring",
+    "used": 100003,
+    "requested": 6,
+    "cap": 100000,
+    "kind": "ir_fields",
+    "kernel_calls": 0,
+    "checker_calls": 0,
+    "observation_sha256": "79af375f76dd1bf8548d3076d3299c3cb789f567f57821de910ea82d36185c73"
   }
 }
