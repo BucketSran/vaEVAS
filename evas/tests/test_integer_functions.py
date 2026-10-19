@@ -109,6 +109,24 @@ class AdditionalContracts(unittest.TestCase):
         self.assertEqual([row['voltages'][r['nodes'].index('y')] for row in r['solutions']],[1,-1,-1])
 
 class ExistingControls(unittest.TestCase):
+    def test_real_function_parameter_result_uses_real_division(self):
+        # VAMS 2.4 4.7.3 copies 3 into real x before the real return is
+        # divided. Its quotient is 1.5; the separate exact integer default is 1.
+        source=(PREFIX+'parameter real ratio=identity(3)/2; '
+                'parameter integer exact=identity(2)/2; '
+                'analog function real identity; input x; real x; begin identity=x; end endfunction '
+                'analog begin V(y)<+ratio+exact; end endmodule')
+        compiled=compile_sources({'real-function-parameter.va':source},[Instance('dut','m',{'y':'y'},{})])
+        result=solve(compiled,[],[[]],kernel=KERNEL)
+        self.assertEqual(result['solutions'][0]['voltages'][result['nodes'].index('y')],2.5)
+    def test_real_function_parameter_keeps_integer_intermediate_and_assignment_guards(self):
+        definition='analog function real identity; input x; real x; begin identity=x; end endfunction '
+        for value,code in [('identity((2147483647+1)-1)','unsupported_integer_arithmetic'),
+                           ('identity(3)/2','parameter_type')]:
+            source=PREFIX+definition+'parameter integer n='+value+'; analog begin V(y)<+n; end endmodule'
+            with self.subTest(value=value), self.assertRaises(CompileError) as raised:
+                compile_sources({'real-function-parameter.va':source},[Instance('dut','m',{'y':'y'},{})])
+            self.assertEqual(raised.exception.diagnostic['code'],code)
     def test_old_real_function_through_rust(self):
         self.assertEqual(output('analog function real f; input x; real x,t; begin t=x/2; f=t; end endfunction','f(3.0)'),1.5)
     def test_unused_real_function_cannot_hide_voltage_access(self):

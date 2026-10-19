@@ -1,14 +1,20 @@
 //! Same Controller retries after new rational transition history was prepared.
 use super::*;
-use crate::ir::{Tolerances, TransientInputs};
+use crate::ir::{Program, Tolerances, TransientInputs};
 
 fn fixture(good: bool) -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
-    let program = serde_json::from_str(if good {
+    let mut program: Program = serde_json::from_str(if good {
         include_str!("../../tests/fixtures/rational-transition-rollback/good.json")
     } else {
         include_str!("../../tests/fixtures/rational-transition-rollback/bad.json")
     })
     .unwrap();
+    // IR32 leaves these rational-transition Programs unchanged and only adds
+    // optional analytic_sources to TransientInputs; this trajectory is PWL.
+    // Keep the archived IR31 intact while constructing the current test input.
+    assert_eq!(program.schema_version, 31);
+    assert_eq!(crate::ir::SCHEMA_VERSION, 32, "re-audit the fixture");
+    program.schema_version = crate::ir::SCHEMA_VERSION;
     let model = EventModel::new(
         program,
         vec!["u".into()],

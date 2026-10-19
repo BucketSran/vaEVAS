@@ -795,10 +795,16 @@ pub(crate) mod tests {
         // full PWL inputs and nineteen nodes. Time/rate rescaling preserves
         // the dyadic control's scalar limiter answers but requires exact
         // nonbinary64 root arithmetic. Original default Work is unchanged.
-        let q: crate::ir::Request = serde_json::from_str(include_str!(
+        let mut q: crate::ir::Request = serde_json::from_str(include_str!(
             "../../../tests/fixtures/factor-topology19-nonbinary-time.json"
         ))
         .unwrap();
+        // IR32 preserves this Program shape; its new optional analytic_sources
+        // field defaults to empty for this PWL request. Keep the archived IR31.
+        assert_eq!(q.program.schema_version, 31);
+        assert_eq!(SCHEMA_VERSION, 32, "re-audit the fixture");
+        assert!(q.transient.as_ref().unwrap().analytic_sources.is_empty());
+        q.program.schema_version = SCHEMA_VERSION;
         let (result, report) =
             crate::diagnostics::capture(crate::diagnostics::Options::default(), || crate::run(q));
         let response = result.unwrap();

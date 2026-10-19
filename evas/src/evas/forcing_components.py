@@ -5,7 +5,7 @@ actual driven nodes, original ownership and disjoint output components again.
 The full expression is retained, including masked arms and zero references.
 """
 import math
-from .ir import Affine, Binary, Select
+from .ir import Affine, Binary, Select, Transition
 
 
 def source_forcing_tree(value, allowed_nodes, compiler):
@@ -167,6 +167,13 @@ def split_source_quadratic(value, allowed_nodes, compiler):
     general coefficients or crossing decisions.
     """
     if not isinstance(value, Binary) or value.op not in ('add','multiply'):
+        return None
+    operators = compiler.compilation.operators
+    compiler.compilation.native_audit.debit('forcing_candidate_history_scope', 1 + len(operators))
+    # This marker serves the held Transition consumer. Pure polynomial and
+    # continuous/implicit relations retain their existing kernel route. This
+    # table is complete before emission; final whole-Program audits still apply.
+    if not operators or any(not isinstance(op, Transition) for op in operators):
         return None
     def degree(root):
         memo, pending = {}, [(root, False)]

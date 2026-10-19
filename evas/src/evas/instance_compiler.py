@@ -54,11 +54,44 @@ class Compilation:
     # References only: bind_hierarchy/parse_sources already own these objects.
     # No original-tree proof is visited or charged without a forcing marker.
     forcing_original_bindings: list[tuple[Model, dict[str, int], str]] = field(default_factory=list)
+    pending_contributions: list = field(init=False, repr=False)
+    contribution_emission_index: int = field(default=0, init=False, repr=False)
+    contribution_emission_error: Exception | None = field(default=None, init=False, repr=False)
 
     def __post_init__(self):
         self.indices = {name: i for i, name in enumerate(self.nodes)}
+        self.native_audit.debit("contribution_queue_create")
+        self.pending_contributions = []
+
+    def emit_pending_contributions(self):
+        if self.contribution_emission_error is not None:
+            raise self.contribution_emission_error
+        if not self.pending_contributions:
+            return
+        try:
+            while self.contribution_emission_index < len(self.pending_contributions):
+                # Pay the record/field reads and possible failure reference.
+                self.native_audit.debit("contribution_queue_visit", 4)
+                compiler, contributions = self.pending_contributions[self.contribution_emission_index]
+                try:
+                    compiler.emit_contributions(contributions)
+                except CompileError as error:
+                    error.diagnostic.setdefault("instance", compiler.instance.name)
+                    raise
+                self.contribution_emission_index += 1
+            self.native_audit.debit("contribution_queue_release", 3 * len(self.pending_contributions))
+            self.pending_contributions.clear()
+            self.contribution_emission_index = 0
+        except Exception as error:
+            # A partially emitted compilation cannot resume or publish. Keep
+            # its first failure and partial state, without replaying emitters.
+            self.contribution_emission_error = error
+            raise
 
     def program(self) -> Program:
+        # Frontend has now compiled every instance's real states/operators.
+        # Repeated Program reads never emit or bill these contributions again.
+        self.emit_pending_contributions()
         self.native_audit.debit("program_copy",5+len(self.contributions)+len(self.states)+len(self.events)+len(self.operators)+len(self.step_bounds))
         self.native_audit.debit("emit_field",len(fields(Program)))
         result = Program(self.nodes, tuple(self.contributions), tuple(self.states), tuple(self.events), tuple(self.operators),
@@ -114,7 +147,7 @@ class Compilation:
         if self.history_consumer_candidate:
             from .history_consumer_scope import original_reads
             if not result.operators or any(not isinstance(op, Transition) for op in result.operators):
-                raise CompileError("ordinary history consumer requires a complete Transition-only program")
+                raise CompileError("decision predicates must depend only on input/inout ports unless the complete ordinary history consumer program has only Transition histories")
             self.native_audit.debit("history_source_copy",len(result.contributions))
             contributions=list(result.contributions)
             for model,node_ids,owner in self.forcing_original_bindings:
@@ -500,7 +533,10 @@ class InstanceCompiler:
         finally:
             self.forcing_ordinary_active = False
             self.ordinary_integer_bounds = None
-        self.emit_contributions(contributions)
+        # Retain references, not AST/IR copies, until the complete operator
+        # table can select the contribution consumer independently of order.
+        self.compilation.native_audit.debit("contribution_queue_retain", 3)
+        self.compilation.pending_contributions.append((self, contributions))
 
     def validate_branch_presence(self, statements):
         # An absent potential contribution is a zero-flow/open branch in VA,

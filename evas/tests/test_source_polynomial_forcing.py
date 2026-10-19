@@ -2,7 +2,7 @@
 from pathlib import Path
 from fractions import Fraction
 import copy,json,unittest
-from evas import Instance, CompileError, KernelError, compile_sources, transient
+from evas import Instance, CompileError, KernelError, compile_sources, solve, transient
 ROOT=Path(__file__).resolve().parents[2]
 KERNEL=ROOT/'evas/rust_core/target/debug/evas-kernel'
 PREFIX='''`include "disciplines.vams"
@@ -10,6 +10,108 @@ module product(a,b,c,y); input a,b,c; output y; electrical a,b,c,y; real q;
 analog begin @(initial_step) q=0; @(cross(V(c)-0.5,+1)) q=1;
 '''
 GUARDS = ["LANG", "ANALOG", "EVENT-ORDER", "TIMED-OPERATOR", "COMPOSE"]
+
+class LegacyDispatchContracts(unittest.TestCase):
+ def test_quadratic_beside_quartic_keeps_original_polynomial_route(self):
+  from evas.ir import Forcing
+  source='''`include "disciplines.vams"
+module legacy(a,b,y); input a,b; output y; electrical a,b,y;
+analog begin V(y)<+V(a)*V(b)+pow(V(a)+1,4)/2; end endmodule'''
+  p=compile_sources({'old-polynomial.va':source},[Instance('dut','legacy',dict(a='a',b='b',y='y'),{})])
+  # This algebraic relation already has a polynomial kernel consumer. The
+  # held-history Forcing marker would replace that public execution route.
+  self.assertFalse(any(isinstance(c.rhs,Forcing) for c in p.contributions))
+  result=solve(p,['a','b'],[[.5,.75]],kernel=KERNEL)
+  self.assertEqual(result['solutions'][0]['voltages'][result['nodes'].index('y')],93/32)
+ def test_inout_algebraic_feedback_beside_integral_keeps_original_dae_route(self):
+  from evas.ir import Forcing
+  source='''`include "disciplines.vams"
+module legacy(z,y); inout z,y; electrical z,y;
+analog begin V(z)<+idt(1,0.3125); V(y)<+V(z)-V(y)*V(y); end endmodule'''
+  p=compile_sources({'old-dae.va':source},[Instance('dut','legacy',dict(z='z',y='y'),{})])
+  # Compilation preserves the original implicit relation y+y*y=z. This
+  # syntax test grants no waveform qualification to the DAE support probe.
+  self.assertFalse(any(isinstance(c.rhs,Forcing) for c in p.contributions))
+ def test_cross_instance_order_preserves_quadratic_source_and_held_state(self):
+  source='''`include "disciplines.vams"
+module mixed(a,b,y); input a,b; output y; electrical a,b,y; real q;
+analog begin @(initial_step) q=0; @(timer(0.5)) q=1;
+V(y)<+V(a)*V(b)+q; end endmodule
+module history(m); output m; electrical m; real q;
+analog begin @(initial_step) q=0; @(timer(0.25)) q=1;
+V(m)<+transition(q,0,0.125,0.125); end endmodule'''
+  mixed=Instance('mixed_dut','mixed',dict(a='a',b='b',y='y'),{})
+  history=Instance('history_dut','history',dict(m='m'),{})
+  # Independent formula y=t*(1-t)+[t>=1/2]. An unrelated held history
+  # cannot make its admission or waveform depend on instance compile order.
+  expected=[Fraction(0),Fraction(3,16),Fraction(19,16),Fraction(1)]
+  for instances in ([mixed,history],[history,mixed]):
+   with self.subTest(order=[item.name for item in instances]):
+    p=compile_sources({'ordered-source-history.va':source},instances)
+    result=transient(p,{'a':[[0,0],[1,1]],'b':[[0,1],[1,0]]},
+                     [0,.25,.75,1],stop=1,max_step=1,kernel=KERNEL)
+    n=result['nodes'].index('y')
+    for row,frame,want in zip(result['solutions'],result['observation_evidence']['voltage_bounds_V'],expected):
+     actual=row['voltages'][n];lo,hi=frame[n]
+     self.assertLessEqual(abs(actual-float(want)),1e-10)
+     self.assertLessEqual(Fraction.from_float(lo),want)
+     self.assertGreaterEqual(Fraction.from_float(hi),want)
+
+class ContributionEmissionLifecycle(unittest.TestCase):
+ def compilation(self,source,connections,has_operators=False):
+  from evas.frontend import parse_sources
+  from evas.hierarchy import bind_hierarchy
+  from evas.instance_compiler import Compilation,InstanceCompiler
+  models=parse_sources({'emission-lifecycle.va':source})
+  inst=Instance('dut','m',connections,{})
+  # Match the real frontend's scalarization/event normalization before the
+  # instance compiler; retain the original source for its final role audit.
+  bindings=bind_hierarchy(models,[inst],Instance)
+  inst,model,nets=bindings[0]
+  compilation=Compilation(('0',*sorted(set(nets.values())-{'0'})),has_operators)
+  compilation.has_waveform_operators=has_operators
+  compilation.held_power2_bindings=bindings
+  compilation.held_power2_source_models=models
+  InstanceCompiler(inst,model,nets,compilation,source_model=models[model.name]).compile()
+  return compilation
+ def test_repeated_program_reads_keep_one_relation_and_one_emission_charge(self):
+  c=self.compilation('''`include "disciplines.vams"
+module m(y); output y; electrical y;
+analog begin V(y)<+0.125; end endmodule''',dict(y='y'))
+  first=c.program();visits=c.native_audit.counts['contribution_queue_visit']
+  second=c.program()
+  self.assertEqual(first.contributions,second.contributions)
+  self.assertEqual(c.native_audit.counts['contribution_queue_visit'],visits)
+  for p in [first,second]:
+   result=solve(p,[],[[]],kernel=KERNEL)
+   self.assertEqual(result['solutions'][0]['voltages'][result['nodes'].index('y')],0.125)
+ def test_partial_emission_failure_keeps_its_instance_and_cannot_reappend(self):
+  c=self.compilation('''`include "disciplines.vams"
+module m(a,b,c); inout a,b,c; electrical a,b,c;
+analog begin V(a,b)<+1; V(a,c)<+2; end endmodule''',dict(a='a',b='b',c='b'))
+  with self.assertRaisesRegex(CompileError,'distinct local contribution branches alias') as first:
+   c.program()
+  partial=tuple(c.contributions);visits=c.native_audit.counts['contribution_queue_visit']
+  for _ in range(2):
+   with self.assertRaises(CompileError) as again:c.program()
+   self.assertEqual(again.exception.diagnostic,first.exception.diagnostic)
+   self.assertEqual(again.exception.diagnostic['instance'],'dut')
+   self.assertEqual(tuple(c.contributions),partial)
+   self.assertEqual(c.native_audit.counts['contribution_queue_visit'],visits)
+ def test_original_audit_failure_after_emission_does_not_reemit_on_retry(self):
+  c=self.compilation('''`include "disciplines.vams"
+module m(a,b,y,m); input a,b; output y,m; electrical a,b,y,m; real q,unused;
+analog begin @(initial_step) q=0; @(timer(0.5)) q=1;
+unused=0*V(y); V(y)<+V(a)*V(b)+q;
+V(m)<+transition(q,0,0.125,0.125); end endmodule''',dict(a='a',b='b',y='y',m='m'),True)
+  with self.assertRaises(CompileError) as first:c.program()
+  partial=tuple(c.contributions);visits=c.native_audit.counts['contribution_queue_visit']
+  for _ in range(2):
+   with self.assertRaises(CompileError) as again:c.program()
+   self.assertEqual(again.exception.diagnostic,first.exception.diagnostic)
+   self.assertEqual(again.exception.diagnostic['code'],'unsupported_forcing_scope')
+   self.assertEqual(tuple(c.contributions),partial)
+   self.assertEqual(c.native_audit.counts['contribution_queue_visit'],visits)
 
 class SourcePolynomialForcing(unittest.TestCase):
  def run_case(self,body,expected):

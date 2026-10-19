@@ -28,7 +28,11 @@ def inline_functions(model: Model) -> Model:
                 args = item.args[:1] if item.op == 'checked' else item.args
                 pending.extend((a, False) for a in args)
                 continue
-            if item.op == 'checked':
+            if item.op == 'checked' or item.op == 'function_assign' and item.value == 'real':
+                # A real copy preserves the computational tree. Keep its
+                # typed AST node and ordinary lowering/audit visits, without
+                # counting that metadata as another expanded arithmetic node.
+                # Integer assignments still count their conversion operation.
                 depth, size = memo[id(item.args[0])]
             else:
                 depth = 1 + max((memo[id(a)][0] for a in item.args), default=0)

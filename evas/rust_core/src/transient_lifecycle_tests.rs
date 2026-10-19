@@ -2264,10 +2264,17 @@ fn held29_trajectory() -> Trajectory {
     .unwrap()
 }
 fn held29_program() -> Program {
-    serde_json::from_str(include_str!(
+    let mut program: Program = serde_json::from_str(include_str!(
         "../../tests/fixtures/held-integer29-target-retry.json"
     ))
-    .unwrap()
+    .unwrap();
+    // IR32 leaves this held-integer Program shape unchanged and only adds
+    // optional analytic_sources to TransientInputs. The trajectory has none.
+    // Keep the archived IR31 intact while constructing the current test input.
+    assert_eq!(program.schema_version, 31);
+    assert_eq!(SCHEMA_VERSION, 32, "re-audit the fixture");
+    program.schema_version = SCHEMA_VERSION;
+    program
 }
 fn held29_controller(
     model: &EventModel,

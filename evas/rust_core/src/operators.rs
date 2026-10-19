@@ -3167,7 +3167,7 @@ impl Operators {
         root: &crate::exact_source::RootTime,
         window: I,
     ) -> Option<(f64, I)> {
-        root.refine(window)?;
+        let window = root.refine(window)?;
         // Continuous networks retain their own local clock and observation
         // certificates. Only transition histories use this absolute-time form.
         if !matches!(self.entries.get(index)?, Runtime::Transition { .. }) {

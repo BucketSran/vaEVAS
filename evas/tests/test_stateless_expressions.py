@@ -315,6 +315,18 @@ class StatelessExpressionContracts(unittest.TestCase):
         program=compile_expr(balanced(1600),declarations=function)
         self.assertEqual(values(solve(program,list(INPUTS),[[0,0,0,2]],kernel=KERNEL)),[1600])
 
+    def test_real_function_original_expanded_size_boundary_still_rejects(self):
+        function='analog function real twice; input x; real x; begin twice=x+x; end endfunction '
+        expression='V(u)'
+        for _ in range(15): expression='twice('+expression+')'
+        # V(u) has three computational nodes. Fifteen doublings have
+        # 4*2**15-1 = 131071 nodes, beyond the unchanged 100000-node limit.
+        # Type-copy metadata cannot either shrink this tree or raise its cap.
+        for _ in range(2):
+            with self.assertRaises(CompileError) as raised:
+                compile_expr(expression,declarations=function)
+            self.assertEqual(raised.exception.diagnostic['code'],'resource_budget')
+
     def test_discarded_decisions_cannot_escape_electrical_node_indices(self):
         source=('`include "disciplines.vams"\nmodule m(u,y); input u; output y; electrical u,y; electrical [1:0] bus; '
                 'analog function real discard; input x; real x,tmp; '
@@ -355,8 +367,13 @@ class StatelessExpressionContracts(unittest.TestCase):
 
     def test_transparent_function_result_retains_integer_checks(self):
         function='analog function real identity; input x; real x; begin identity=x; end endfunction '
+        # The real formal/return makes identity(2)/2 real arithmetic with an
+        # exact value of 1. The argument's original integer overflow still
+        # rejects before a real copy or later cancellation can hide it.
         with self.assertRaisesRegex(CompileError,'integer parameter arithmetic'):
-            compile_expr('0',declarations=function+'parameter integer n=identity(2)/2;')
+            compile_expr('0',declarations=function+'parameter integer n=identity((2147483647+1)-1);')
+        quotient=compile_expr('n',declarations=function+'parameter integer n=identity(2)/2;')
+        self.assertEqual(values(solve(quotient,list(INPUTS),[[0,0,0,0]],kernel=KERNEL)),[1])
         p=compile_expr('V(a)>n',declarations=function+'parameter integer n=identity(2);')
         self.assertEqual(values(solve(p,list(INPUTS),[[1,0,0,0],[3,0,0,0]],kernel=KERNEL)),[0,1])
 

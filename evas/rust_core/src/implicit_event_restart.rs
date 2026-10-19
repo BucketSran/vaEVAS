@@ -494,10 +494,16 @@ mod tests {
     }
 
     fn fixture() -> (Program, Trajectory) {
-        let p: Program = serde_json::from_str(include_str!(
+        let mut p: Program = serde_json::from_str(include_str!(
             "../../tests/fixtures/implicit-event-restart/program.json"
         ))
         .unwrap();
+        // This lifecycle fixture uses the unchanged Program shape. IR32 only
+        // adds optional analytic_sources to TransientInputs; this input is PWL.
+        // Construct a current test input without rewriting the archived IR31.
+        assert_eq!(p.schema_version, 31);
+        assert_eq!(crate::ir::SCHEMA_VERSION, 32, "re-audit the fixture");
+        p.schema_version = crate::ir::SCHEMA_VERSION;
         let config = serde_json::from_value(json!({"pwl":[[[0.,0.],[1.,0.]]],"output_times":[0.,0.25,0.5,0.75,1.],"stop":1.,"max_step":1.})).unwrap();
         (p, Trajectory::new(config, 1).unwrap())
     }
