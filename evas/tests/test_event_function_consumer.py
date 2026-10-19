@@ -4,7 +4,8 @@ import os, unittest
 from pathlib import Path
 from fractions import Fraction
 from evas import compile_sources, Instance, transient, CompileError, KernelError
-KERNEL=Path(os.environ['EVAS_TEST_KERNEL'])
+EVAS=Path(__file__).resolve().parents[1]
+KERNEL=Path(os.environ.get('EVAS_TEST_KERNEL',str(EVAS/'rust_core/target/debug/evas-kernel')))
 PREFIX='`include "disciplines.vams"\nmodule m(y); output y; electrical y; real s; '
 def program(definition, rhs):
     text=PREFIX+definition+' analog begin @(initial_step) s=0; @(timer(0.25)) s='+rhs+'; V(y)<+s; end endmodule'
