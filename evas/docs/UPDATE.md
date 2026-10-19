@@ -4,7 +4,7 @@
 逐项证据见[证据索引](development/capability-evidence.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
 
-## 本地候选 0.24.0 / IR31：直接电压的事件整数转换
+## 开发检查点 0.24.0 / IR31：直接电压的事件整数转换
 
 事件体标量integer赋值的直接外部输入电压探针，显式转换为最近signed32整数，半整数远离零。
 每次事件先认证原输入整个盒具有唯一合法结果，再执行后置clamp；real复合表达式、内部节点、普通贡献及历史目标未由此扩大。
@@ -14,7 +14,7 @@
 期限预检按需取得精确根，已证明可精确表示的dyadic有理值使用付费点包围；原预算与精度不变。
 [联合控制与041收据](../../experiments/backends/support/low-cost-closure/source-budget-foundations.json)记录仍未通过的原041，不计新PASS。
 公开窄控制已通过，当前开发夹具须从VA重编译到IR31；旧保存IR和历史收据不改号。
-完整Python、安装与原始/修订400仍待同一最终候选验收，已接受成绩仍绑定下面的wave21，未新增完整任务PASS或Spectre资格。
+wave22同177份运行输入／同release核已独审验收原始314/19/67、修订315/17/68，两套均清理400/400，新增027和142，旧通过无回退。单次完整CI39193253152/head6d3c8a93实跑2424项及两平台安装负控通过；此前2423PASS加1文案断言FAIL的CI独立保留。总目标仍差85，持续推进检查阻止有事可做时结束。完整身份见[本轮收据](../../experiments/backends/support/low-cost-closure/continuation-wave22.json)，未新增Spectre资格。
 
 ## 开发检查点 0.23.0 / IR30：source Forcing与独立保持历史
 
