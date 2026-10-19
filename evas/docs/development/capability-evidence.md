@@ -58,6 +58,15 @@ IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和�
 范围见[合同](../math/events.md#declaration-initializers)与[公开正反例](../../tests/test_declaration_initializers.py)。
 声明常量不授予一般输入采样、只读设置或ordinary局部量支持。
 
+[仅初始化状态的普通别名合同](../math/events.md#initial-only-ordinary-alias)
+登记 LANG、EVENT-ORDER 和 COMPOSE 的分支开发入口。
+[状态与逐位置控制](../../tests/test_initial_ordinary_alias.py)要求保留初值、初始化输出、
+每次求值的顺序别名、完整源误差，以及无关 Transition 实例排列下的独立数值答案。
+[准入控制](../../tests/test_initial_ordinary_alias_admission.py)要求拒绝直接或传递设置依赖、
+依赖目标的 bound-step 激活条件及 indexed probe，并保留原非 A 入口。
+2026-10-19 主区联合检查159项通过，使用当前贡献队列和内核，覆盖上述准入、初始化、
+预算和两种实例排列。完整交付 CI 与原件400验收仍待执行，不增加 Spectre 配对或正式共同资格。
+
 [低成本闭包](../../../experiments/backends/support/low-cost-closure/README.md)补充 LANG、LIN、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS 和 COMPOSE 的分支证据。
 合同分别见[有限点初值与别名](../math/events.md#input-initialization)、[typed整数与有限幂](../math/events.md#typed-integer-closure)及[普通条件与有理输出](../math/solving.md#普通-analog-条件)。
 公开控制覆盖源码顺序、精确数组槽、真实根处读取、signed余数、有限pow类型与资源、分支临时量和正分母事实。

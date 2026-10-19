@@ -1367,6 +1367,47 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 独立公开回归见 [15项角色与顺序控制](../../tests/test_event_ordinary_scratch.py)，
 本次没有新增实际 Spectre 配对或371原件通过结论。
 
+<a id="initial-only-ordinary-alias"></a>
+
+### 仅初始化状态的普通全路径别名
+
+原标量 `real` 只有 `initial_step` 写者、没有运行事件读写或触发设置依赖时，
+普通 analog 求值可在每次读取之前通过本次全路径赋值建立独立别名。
+例如 `@(initial_step) q=7; q=2*V(u); V(y)<+q;` 保留 q 的状态槽和初值7，
+普通输出读取当前物理输入的两倍。初始化中的所有语句仍完整降低和检查，
+初始化输出保留各自调用位置的快照；后续普通覆盖不能消除非法初值或未选臂的义务。
+
+新增目标写入及其传递普通定义必须位于全部初始化和运行回调声明之后。
+前序 StateRef 或夹在普通写入之间的 initial_step 不通过这条新入口取得资格，
+以免把声明位置的旧状态替换成最终 Frame 状态。这个顺序门是当前支持域，不是语言合法性判断。
+普通别名按原源码顺序更新，条件两臂合并；缺臂只能保留本次求值已经定义的值。
+别名 RHS 可使用参数、实际外部 input/inout 电压及原机制合法的本实例持久状态，
+包括既有 integer 状态的合法选择。读取仍由原 lowerer 和实际 Frame 的 bounds 处理，
+本入口不扩展整数范围、事件写者或 history 资格。时间、算子、output/internal/foreign
+电压及未定义局部依赖仍拒绝，零系数和未选臂同样参与审计。
+新增目标不接受 integer、数组或普通循环携带，不向 waveform 设置或运行回调提供旧值。
+其他实例声明的 output/inout 连接会保守排除该输入节点，即使其贡献最终为零。
+这条证明仅接受未索引的标量电气 probe；`V(u[0])` 等 indexed probe 本轮保守拒绝，
+不以原向量名查询标量 node id。原有非 A 的向量输入入口不变。
+设置依赖沿普通赋值、表达式全部操作数、条件谓词与两臂传播，零系数和未选臂不能消除它。
+例如 `e=q; $bound_step(e)` 和 `if(q>0)$bound_step(0.125)` 均拒绝；
+直接或传递依赖新增目标的条件也不能激活 bound-step 设置。
+
+`initial_ordinary_alias.py::admit` 在原源码上检查角色与全路径写前读，
+`instance_compiler.py` 保留 State 初始化并复用普通顺序 alias 环境，IR32不变。
+所有新增遍历、复制与别名事实使用同一个 NativeAudit；激活时保留此前已累计工作，
+原100000总限额与失败后不退款合同不变。
+公开独立回归见 [test_initial_ordinary_alias.py](../../tests/test_initial_ordinary_alias.py)，
+覆盖初值/本次值分离、同回调先后赋值后的状态选择、查询网格不变性、源误差band、
+原初始化输出及非法隐藏依赖、自然预算耗尽和两次同owner重试。
+设置传递依赖、条件激活及向量 foreign 拒绝的公开编译控制见
+[test_initial_ordinary_alias_admission.py](../../tests/test_initial_ordinary_alias_admission.py)。
+组合回归还要求 A 与无关 Transition 实例交换编译顺序时，保留逐位置贡献、
+原 q 初值槽及真实半沿。独立答案为 `a=t`、`b=1-t` 下的 `y=t(1-t)`、`z=y+1`，
+不以另一个排列的输出充当数值 oracle。主线在完整实例编译后统一发射已经降低的贡献，
+A 入口不改变该队列、单次发射、失败后禁止重放或原预算合同。
+这是局部开发合同，没有新增原件通过或 Spectre 对照成绩。
+
 <a id="multiple-event-writers"></a>
 
 <a id="多事件块写同一状态pr25-已交付"></a>

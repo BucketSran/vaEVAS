@@ -36,10 +36,10 @@ class EventOrdinaryScratch(unittest.TestCase):
   with self.assertRaisesRegex(CompileError,'follow callback'):
    compile_sources({'scratch.va':source},[Instance('M','m',dict(u='u',y='y',z='z'))])
 
- def test_initial_only_persistent_writer_retains_the_old_rejection(self):
+ def test_initial_only_total_alias_preserves_its_initial_state(self):
   source=HEAD+'@(initial_step)e=1;e=2;V(y)<+e;V(z)<+q;end endmodule'
-  with self.assertRaisesRegex(CompileError,'ordinary analog assignment target'):
-   compile_sources({'scratch.va':source},[Instance('M','m',dict(u='u',y='y',z='z'))])
+  program=compile_sources({'scratch.va':source},[Instance('M','m',dict(u='u',y='y',z='z'))])
+  self.assertEqual([(state.name,state.initial) for state in program.states],[('e',1.),('q',0.)])
  def test_zero_trip_original_loop_old_read_is_rejected(self):
   source=HEAD.replace('real e,q;','real e,q;integer i;')+'@(timer(0.25))begin for(i=0;i<0;i=i+1)q=e;e=1;q=e;end '+TAIL
   with self.assertRaisesRegex(CompileError,'scratch loop'):

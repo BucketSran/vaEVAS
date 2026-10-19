@@ -352,6 +352,12 @@ class InstanceCompiler:
         source_model = self.event_body_source_model or self.initial_math_source_model
         for name in analog_writers:
             owner.debit("ordinary_scratch_candidate")
+            if name in persistent and self.model.variables[name] == "real" and name not in event_writers:
+                from .initial_ordinary_alias import admit
+                if admit(self, name, persistent, analog_writers, source_model):
+                    owner.debit("copy_element")
+                    ordinary_scratch.add(name)
+                continue
             if name not in persistent or self.model.variables[name] != "real" or name not in event_writers:
                 continue
             owner.activate(self.model.initial[0].token if self.model.initial else None)
