@@ -168,6 +168,9 @@ IR22 的隔离观察事件另支持执行时的 `sqrt`、`abs`、`min`、`max`�
 - 标量 `case` 使用精确相等和源码首个匹配分支，最多 16 个非 default 标签，至多一个 default。
   互异数值字面量标签采用平衡比较树；参数标签或重叠标签保留首匹配顺序，仍检查表达式展开预算。
   独立回归见 [case 选择](../../tests/test_case_statements.py)。
+- 已有 cross/timer 写者的原始标量 real，在逐回调先写后读和普通源码顺序可证明时，
+  可同时作为[回调临时值与普通别名](../math/events.md#ordinary-event-scratch)。保留事件状态槽，
+  这条窄路径不接受含数组的原模型、循环携带别名、跨回调旧读或仅初始化写者。
 - 普通 analog 体接受 [`$bound_step(expr)`](../math/events.md#bound-step)，按顺序局部环境记录请求。
   初始化体、事件体及新历史调用仍拒绝；具体运行路径和动态值限制见链接契约。
 - 表达式支持括号、单目正负、加减、乘法和除法。变量分母的连续认证见[有理连续流](../math/continuous.md#selected-flow)。

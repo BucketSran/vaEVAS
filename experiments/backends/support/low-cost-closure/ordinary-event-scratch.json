@@ -1,0 +1,86 @@
+{
+  "status": "reviewed local integration; fullPython and original371 remain pending",
+  "checked_at_utc": "2026-10-19T02:09:51.297836+00:00",
+  "base_revision": "a87e3b3a",
+  "capabilities": [
+    "LANG",
+    "EVENT-ORDER",
+    "COMPOSE"
+  ],
+  "contract": "Retain source scalar real event state, while source-ordered ordinary writes use separate alias environment. Every read is dominated by a write in the same body; original model has no arrays; ordinary writers follow all callback declarations. Original hidden AST,loops,source-order scans and new containers share100000 NativeAudit.",
+  "sources": {
+    "evas/src/evas/instance_compiler.py": "6d6eb004b3e5b043dd9f299b231b7dae2052f4669dd94bc73fd690e086fcf65d",
+    "evas/tests/test_event_ordinary_scratch.py": "5f0ae21f81ed202fe3e2840a0ef59aa9da34efb91824912b079bcfe65a424dd1"
+  },
+  "independent_oracle": "For constant driven u=0.5, ordinary e=2*u yields y=1 at every observation; callback e=u+1;q=e at0.25 yields z=[0,0,1.5,1.5,1.5].",
+  "green": {
+    "methods": 57,
+    "new_methods": 15,
+    "elapsed_s": 1.113079541013576,
+    "guardian_timeout_s": 90,
+    "cleanup_confirmed": true,
+    "source_unchanged": true,
+    "receipt_sha256": "d5421b85654e2ae972c616059a2d263d099e4d3cb03680c9c88b73bddb5b2d25",
+    "kernel_sha256": "bdbfb3039a2a3b7b8176c7f28e8b5b6f474aaa5ea33a973ba63ba4fadf337fbe",
+    "Rust_inputs_unchanged": true,
+    "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ordinary-scratch-primary-green/RESULT.json",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "test_event_ordinary_scratch",
+      "test_local_state",
+      "test_event_body_input_aliases",
+      "test_declaration_initializers",
+      "-v"
+    ]
+  },
+  "review": {
+    "spec_v2_sha256": "cf4b7b0ec17bbe0d0f85b0859e6374a10f3801d4d7b429dce52db71ab1ec1c53",
+    "standards_v2_sha256": "e1749ec9daf58dc9a454704242edbf5620a9b86cb8859e2cd6e554c05ed5b5bf",
+    "open_findings": 0,
+    "fixed_findings": [
+      "Source array identity bypass independently reproduced then rejected",
+      "Actual256 inner expression visits previously free now pay same owner30to286"
+    ],
+    "spec_v2_receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ordinary-scratch-review-spec-v2.json",
+    "standards_v2_receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ordinary-scratch-review-standards-v2.json",
+    "docs": {
+      "spec": {
+        "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ordinary-scratch-doc-review-spec-v2.json",
+        "sha256": "fbebdafa86208514b161a3c0e49688a411215efbbbfb44418f6cc0e19e730561",
+        "open_findings": 0
+      },
+      "standards": {
+        "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ordinary-scratch-doc-review-standards.json",
+        "sha256": "5b60f7864d99e5dfa05c07628ebcb238560f211995dad428c67cc132dcac1215",
+        "open_findings": 0
+      }
+    }
+  },
+  "early_checks": {
+    "passed": true,
+    "runtime_checked": true,
+    "receipt_sha256": "7dbc70883f8b6ce032e1acd220c8dd7a0a7b98132d61e7e6407e1a254d2f4d71",
+    "acceptance_complete": false,
+    "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ordinary-scratch-early.json",
+    "command": [
+      "python3",
+      "-B",
+      "scripts/evas_check_policy.py",
+      "--early-checks",
+      "--kernel",
+      "evas/rust_core/target/debug/evas-kernel",
+      "--report",
+      "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ordinary-scratch-early.json"
+    ]
+  },
+  "limits": [
+    "Array models,loop carry,trigger/settings reads,crosscallback oldreads and initialonly persistent writers not added",
+    "371 full history/clamp path still private and unqualified",
+    "No new original/revised400 PASS, actualSpectre or formalQ claim; complete receipts local task runs"
+  ],
+  "fullPython_executor": "GitHub CI only at next mature batch",
+  "availability": "local-only"
+}

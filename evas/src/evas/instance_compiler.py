@@ -25,7 +25,7 @@ from .native_audit import NativeAudit
 from .rational_predicates import condition_positive_facts, normalize_positive_quotient_comparison
 from .initialization_aliases import bind_initial_voltage_aliases, bind_runtime_voltage_aliases, bind_event_body_aliases
 from .syntax import (CompileError, Model, contains_operator, contains_decision,
-                     Assignment as SyntaxAssignment, Conditional as SyntaxConditional, Display as SyntaxDisplay,
+                     Assignment as SyntaxAssignment, Conditional as SyntaxConditional, Display as SyntaxDisplay, Event as SyntaxEvent,
                      Loop, ContributionStatement, BoundStep, OPERATOR_NAMES, DECISION_NAMES)
 
 if TYPE_CHECKING:
@@ -235,9 +235,10 @@ class InstanceCompiler:
             persistent.update(writes(event.body))
             if any(trigger.kind in ("cross", "timer") for trigger in event.triggers):
                 event_writers.update(writes(event.body))
-        all_writers = persistent | set(writes(self.model.analog))
+        analog_writers = set(writes(self.model.analog))
+        all_writers = persistent | analog_writers
         immutable_names = set(self.model.variable_initializers) - all_writers - declaration_writers - set(self.model.arrays)
-        self.local_variables = set(writes(self.model.analog)) - persistent
+        self.local_variables = analog_writers - persistent
         self.preserve_analog_structure = self.compilation.preserve_structure or bool(self.local_variables)
         def expression_reads(expr):
             if expr is None:
@@ -263,6 +264,114 @@ class InstanceCompiler:
                     if hasattr(statement, field):
                         names.update(reads(getattr(statement, field)))
             return names
+        # A real event scratch may also be assigned in the ordinary body.
+        # Its old ordinary value is irrelevant only when every event read is
+        # dominated by a same-callback write. Retain the event state slot and
+        # give ordinary evaluation a separate source-ordered alias environment.
+        owner = self.compilation.native_audit
+        owner.debit("copy_container")
+        ordinary_scratch = set()
+        source_model = self.event_body_source_model or self.initial_math_source_model
+        for name in analog_writers:
+            owner.debit("ordinary_scratch_candidate")
+            if name not in persistent or self.model.variables[name] != "real" or name not in event_writers:
+                continue
+            owner.activate(self.model.initial[0].token if self.model.initial else None)
+            owner.debit("ordinary_scratch_scalar_identity")
+            if source_model.arrays or source_model.variables.get(name) != "real":
+                raise CompileError("ordinary/event scratch requires an original scalar identity without arrays",
+                                   code="unsupported_local_event", instance=self.instance.name)
+            def scratch_reads(expr):
+                if expr is None:
+                    return False
+                self.compilation.native_audit.extra(expr, "ordinary_scratch_visit")
+                return ((expr.op == "parameter" and expr.value == name)
+                        or any(scratch_reads(arg) for arg in expr.args))
+            def scratch_loop_touches(body):
+                for item in body:
+                    owner.extra(item, "ordinary_scratch_loop_statement")
+                    if isinstance(item, SyntaxAssignment) and item.name == name:
+                        return True
+                    for field in ("rhs", "left", "right", "index", "start", "limit", "update"):
+                        if scratch_reads(getattr(item, field, None)):
+                            return True
+                    if isinstance(item, SyntaxDisplay):
+                        for arg in item.args:
+                            if scratch_reads(arg):
+                                return True
+                    for field in ("then_body", "else_body", "body"):
+                        if scratch_loop_touches(getattr(item, field, ())):
+                            return True
+                return False
+            def scratch_body(body, assigned=False, *, ordinary=False):
+                for item in body:
+                    self.compilation.native_audit.extra(item, "ordinary_scratch_statement")
+                    for field in ("rhs", "left", "right", "index", "start", "limit", "update"):
+                        if scratch_reads(getattr(item, field, None)) and not assigned:
+                            raise CompileError("ordinary/event scratch is not assigned before use" if ordinary else "ordinary/event scratch requires a same-callback write before every read",
+                                               code="unsupported_local_event", instance=self.instance.name)
+                    if isinstance(item, SyntaxDisplay):
+                        for arg in item.args:
+                            if scratch_reads(arg) and not assigned:
+                                raise CompileError("ordinary/event scratch display reads a prior evaluation",
+                                                   code="unsupported_local_event", instance=self.instance.name)
+                    if isinstance(item, SyntaxConditional):
+                        yes_assigned = scratch_body(item.then_body, assigned, ordinary=ordinary)
+                        no_assigned = scratch_body(item.else_body, assigned, ordinary=ordinary)
+                        assigned = yes_assigned and no_assigned
+                    elif isinstance(item, Loop):
+                        # No loop-carried alias proof is introduced here.
+                        if scratch_loop_touches(item.body):
+                            raise CompileError("ordinary/event scratch loop requires a separate carry proof",
+                                               code="unsupported_local_event", instance=self.instance.name)
+                    elif isinstance(item, SyntaxAssignment) and item.name == name:
+                        assigned = True
+                return assigned
+            owner.debit("copy_container")
+            owner.debit("copy_element", len(source_model.events))
+            source_events = list(source_model.events)
+            owner.debit("copy_container")
+            owner.debit("copy_element", len(source_model.analog))
+            original_pending = list(source_model.analog)
+            owner.debit("copy_container")
+            ordinary_writers = []
+            while original_pending:
+                item = original_pending.pop()
+                self.compilation.native_audit.extra(item, "ordinary_scratch_source_order")
+                if isinstance(item, SyntaxEvent):
+                    owner.debit("copy_element")
+                    source_events.append(item)
+                elif isinstance(item, SyntaxAssignment) and item.name == name:
+                    owner.debit("copy_element")
+                    ordinary_writers.append(item)
+                else:
+                    for field in ("then_body", "else_body", "body"):
+                        children = getattr(item, field, ())
+                        owner.debit("copy_element", len(children))
+                        original_pending.extend(children)
+            for item in ordinary_writers:
+                for event in source_events:
+                    self.compilation.native_audit.extra(item, "ordinary_scratch_source_compare")
+                    a, b = item.token, event.token
+                    if a.source != b.source or (a.line, a.column) <= (b.line, b.column):
+                        raise CompileError("ordinary/event scratch must follow callback declarations",
+                                           code="unsupported_local_event", instance=self.instance.name)
+            scratch_body(source_model.initial)
+            scratch_body(source_model.analog, ordinary=True)
+            for event in source_events:
+                for trigger in event.triggers:
+                    if any(scratch_reads(arg) for arg in trigger.arguments):
+                        raise CompileError("ordinary/event scratch cannot drive an event trigger",
+                                           code="unsupported_local_event", instance=self.instance.name)
+                scratch_body(event.body)
+            owner.debit("copy_element")
+            ordinary_scratch.add(name)
+        if ordinary_scratch:
+            owner.debit("copy_container")
+            owner.debit("copy_element", len(self.local_variables) + len(ordinary_scratch))
+            self.ordinary_alias_variables = self.local_variables | ordinary_scratch
+        else:
+            self.ordinary_alias_variables = self.local_variables
         referenced = reads(self.model.initial) | reads(self.model.analog)
         for event in self.model.events:
             referenced.update(reads(event.body))
@@ -1863,7 +1972,7 @@ class InstanceCompiler:
         def resolve(name):
             if name in env:
                 return env[name]
-            if name in self.local_variables:
+            if name in self.ordinary_alias_variables:
                 raise CompileError(f"{self.model.source}: local variable {name!r} is not assigned before use")
             return self.symbol(name)
         return self.typed_resolve(resolve)
@@ -2106,7 +2215,7 @@ class InstanceCompiler:
                         self.checked_ir(value, origin)
                         emitted.append((branch, value))
                 for name in sorted(set(then_env) | set(else_env) | set(result)):
-                    if name not in self.local_variables:
+                    if name not in self.ordinary_alias_variables:
                         continue
                     yes_reachable = all(a <= b for a, b in yes_domains.values())
                     no_reachable = all(a <= b for a, b in no_domains.values())
@@ -2131,7 +2240,7 @@ class InstanceCompiler:
                         validate_integer=self.validate_integer_value)
                     self.checked_ir(result[name], origin)
             else:
-                if statement.name not in self.local_variables:
+                if statement.name not in self.ordinary_alias_variables:
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog assignment target must be a local variable")
                 if conditional and self.contains_history_call(statement.rhs):
                     raise CompileError(f"{self.model.source}:{statement.token.line}: history waveform call sites must be unconditional")
