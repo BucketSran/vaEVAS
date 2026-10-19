@@ -14,7 +14,7 @@
 期限预检按需取得精确根，已证明可精确表示的dyadic有理值使用付费点包围；原预算与精度不变。
 [联合控制与041收据](../../experiments/backends/support/low-cost-closure/source-budget-foundations.json)记录仍未通过的原041，不计新PASS。
 公开窄控制已通过，当前开发夹具须从VA重编译到IR31；旧保存IR和历史收据不改号。
-wave22同177份运行输入／同release核已独审验收原始314/19/67、修订315/17/68，两套均清理400/400，新增027和142，旧通过无回退。单次完整CI39193253152/head6d3c8a93实跑2424项及两平台安装负控通过；此前2423PASS加1文案断言FAIL的CI独立保留。总目标仍差85，持续推进检查阻止有事可做时结束。完整身份见[本轮收据](../../experiments/backends/support/low-cost-closure/continuation-wave22.json)，未新增Spectre资格。
+wave22同177份运行输入／同release核已独审验收原始314/19/67、修订316/16/68，两套均清理400/400，新增027和142，旧通过无回退。单次完整CI39193253152/head6d3c8a93实跑2424项及两平台安装负控通过；此前2423PASS加1文案断言FAIL的CI独立保留。总目标仍差84，持续推进检查阻止有事可做时结束。运行源码和CI身份见[wave22收据](../../experiments/backends/support/low-cost-closure/continuation-wave22.json)；[材料r2收据](../../experiments/backends/support/low-cost-closure/continuation-wave22-materials-r2.json)另存075原判误拒／漏检证明、14项校准及正式725行／32边沿通过，原075仍FAIL。397+2+1件均为同wave22源核，未新增Spectre资格。
 
 ## 开发检查点 0.23.0 / IR30：source Forcing与独立保持历史
 

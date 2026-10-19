@@ -1,0 +1,127 @@
+{
+  "status": "independently accepted material-only checkpoint;400PASS goal incomplete84;authorized implementation continues",
+  "availability": "repository-contained summary;fullsources/rawresults/localdefinitions arelocal-only",
+  "at_utc": "2026-10-19T04:37:01.972830+00:00",
+  "candidate": "wave22-continuation-ir31",
+  "production_revision": "ab92831773a76894e090c5622b541fa6e5ad94f3",
+  "source_count": 177,
+  "ir_schema": 31,
+  "package": "0.24.0",
+  "kernel_sha256": "69c46e155808cd37e288894504613dcd8bebd219c1006c4946073f132d627aac",
+  "accepted_runtime_and_CI": {
+    "path": "experiments/backends/support/low-cost-closure/continuation-wave22.json",
+    "sha256": "58f18f204bda8ef48cab8f4e62a4ac92d7fd1872ce9b8c3c6a2a9403b866a333"
+  },
+  "CI_reuse": "Same177runtime/build inputs andsame69c46release asacceptedwave22. Reuse CI39193253152 at6d3c8a93:2424uniquePASS,15jobs,install/reinstall/negativecontrols;no newfullsuite andno claim covering currentruntimeWIP.",
+  "original400": {
+    "PASS": 314,
+    "FAIL": 19,
+    "REJECTED": 67,
+    "TIMEOUT": 0,
+    "completed": 333,
+    "cleanup": 400,
+    "075": "FAILunchanged"
+  },
+  "revised400": {
+    "PASS": 316,
+    "FAIL": 16,
+    "REJECTED": 68,
+    "TIMEOUT": 0,
+    "completed": 332,
+    "cleanup": 400,
+    "composition": "397samewave22original+2samewave22previousrevised012107+1newformalrevised075",
+    "only_delta_from315": [
+      "075 FAIL -> PASS"
+    ],
+    "old315_lost": [],
+    "identity": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave22-materials-r2/revised-full400/IDENTITY.json",
+      "sha256": "c9455336d0c0f177010b12117df1db3592342aeaebd3693898dd64033359ef22"
+    },
+    "results": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave22-materials-r2/revised-full400/RESULTS.json",
+      "sha256": "f0a097b99ff4065ecbaaf852bef61e37a5b315887bbce264a7a25d3be23b92a5"
+    },
+    "immutable400map": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/material075-accepted-cases400.json",
+      "sha256": "2af3e0f9449b74cc544a0655af7bbe2bcca963c854e42a6f8821c68c354e411e"
+    }
+  },
+  "075_basis": {
+    "problem": "Oldadjacentstep<=.40 checker rejects a correct500ps finite slope across two500ps observations andaccepts instantaneousjump controls. Sparse-grid repair alone cannot prove finite-edge property.",
+    "independent_oracle": "Fraction reference fromfrozenphysicalstimulus,public500pstimer/tr500ps;all365originalrows agree,maxabsoluteerror4.868894008630153e-17V. NoEVAS helper orcandidateoutput-derived expectation.",
+    "only_material_changes": "VA/model/inputPWL/stop180ns/maxstep500ps unchanged. Add250psstrobeoutputall andseparatefiniteedgegate that alsorequires completeunchangedoldchecker/.40threshold.",
+    "precision_unchanged": {
+      "vabstol": 1e-12,
+      "reltol": 1e-10
+    },
+    "budgets_unchanged": [
+      100000,
+      128,
+      8192,
+      1000000000,
+      120,
+      150
+    ],
+    "calibration_controls": 14,
+    "controls": "Correctfiniteedge+initialwithinoriginaltol accepted;coarsegrid,instantjump,wronginitial,missingmidpoint,noedge,holdloss,resetfailure,wrongpeak/input,missingoldsample,NaN rejected.",
+    "actual_formal_samples": 725,
+    "all_original_samples_retained": 365,
+    "direct_finite_edges": 32,
+    "rising": 31,
+    "falling": 1,
+    "interpolated_witnesses": 0,
+    "beloworiginaltolerancechange": "3.72231275648862e-17V at140.5ns recorded,not treatedasresolvableedge.",
+    "proposal": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/proposals/075-observation-grid/MANIFEST.json",
+      "sha256": "11a31d9e291ccde9b1b5808849bb4e87a907ab49e78b928bcdcc5ef9f99e82ca"
+    },
+    "calibration": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/proposals/075-observation-grid/finite-edge-calibration.json",
+      "sha256": "3f4c010f0ab5a132b53741966ae4141ac30563f13b054bd3350d7b85cd6c58d8"
+    },
+    "actualpostcheck": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave22-materials-r2/075-actual-postcheck.json",
+      "sha256": "b1a94a7dfeabe54c7d55e5b2a931a4fd0ba9884b965aa3727a603874d7348a9e"
+    },
+    "materials": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/materials-r2/MANIFEST.json",
+      "sha256": "a691dd5204b1e8c52f6039f393697f85483f59898f066795b967223696ad51a8"
+    }
+  },
+  "independent_reviews": {
+    "spec": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/material075-full400-spec-review.json",
+      "sha256": "54001dd8b763778fe5c195930971f1227fadca9111cb54f66bade8ae8b9181a5"
+    },
+    "standards": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/material075-full400-standards-review.json",
+      "sha256": "365ec1fd228e7128ac79e81de05b4000d710c84a7082e5af1e15df0e2901b715"
+    }
+  },
+  "continuation_checker": {
+    "exacttrustedcommand_replay": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-checker-material075-replay.json",
+      "sha256": "71964ca7480ba42b6b401b39d12297c8d98ae57bacd303547484ca802ba691ed"
+    },
+    "decision": "block316/400,84actionable;repeatedStop doesnotwaive",
+    "nativeStop": "humantrustedexactdefinition,nativetriggerstillunobserved"
+  },
+  "remaining": 84,
+  "groups": {
+    "G1": 13,
+    "G2": 9,
+    "G3": 23,
+    "G4": 10,
+    "G5": 11,
+    "G6": 2,
+    "G7": 16
+  },
+  "target400_complete": false,
+  "primary_WIP": "371proofbookkeeping,346compactintegerproducer,369typedfunctions/mixedForcing areexcludedfromthisacceptedsource/kernel/400score.",
+  "authority": "samecurrent/branch/draftPR208/Issue214;no merge,Spectre/externalcompute/r53/commonQ/publicreleaseexpansion",
+  "groups_source": {
+    "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/rootcause-plan-20261019/current84.json",
+    "sha256": "68d7f00742b71fff51f150332361af4055d4dbda93e27b7b33d4a2d141b910df"
+  }
+}
