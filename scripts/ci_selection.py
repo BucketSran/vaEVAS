@@ -43,6 +43,9 @@ MAINTENANCE_FILES = {
     'scripts/tests/test_task_continuation_policy.py',
     'scripts/tests/test_task_continuation_execution.py',
     'scripts/tests/fixtures/continuation-wave21-313.json',
+    'scripts/tests/test_task_continuation_checkpoints.py',
+    'scripts/tests/test_task_continuation_review_execution.py',
+    'scripts/tests/fixtures/continuation-wave26-zero-gain.json',
     'scripts/tests/test_traceability.py',
     'scripts/tests/test_diagnostic_inventory.py', 'scripts/tests/test_workspaces.py',
 }

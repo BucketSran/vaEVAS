@@ -23,7 +23,10 @@ class RoutingTests(unittest.TestCase):
                  'scripts/tests/test_task_continuation.py',
                  'scripts/tests/test_task_continuation_policy.py',
                  'scripts/tests/test_task_continuation_execution.py',
-                 'scripts/tests/fixtures/continuation-wave21-313.json')
+                 'scripts/tests/fixtures/continuation-wave21-313.json',
+                 'scripts/tests/test_task_continuation_checkpoints.py',
+                 'scripts/tests/test_task_continuation_review_execution.py',
+                 'scripts/tests/fixtures/continuation-wave26-zero-gain.json')
         for path in paths:
             with self.subTest(path=path):
                 self.assertEqual(ci.classify([path]), ci.flags('maintenance'))
