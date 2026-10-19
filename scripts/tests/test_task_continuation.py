@@ -88,6 +88,20 @@ class ContinuationChecks(unittest.TestCase):
         self.opt_in_runtime(0)
         self.assertEqual(self.invoke().get('decision'), 'block')
 
+    def test_bounded_window_resumes_313_without_erasing_unknown_native_history(self):
+        self.opt_in_runtime(None)
+        self.assertNotIn('decision', self.invoke())
+        update_runtime(self.root / 'scope.json', {
+            'event_id': 'bounded-window', 'operation': 'activate_bounded_execution',
+            'task_id': 'historical-313-replay', 'authority_ref': 'authorized-bounded-fallback',
+            'total_command_s': 14400})
+        decision = self.invoke()
+        self.assertEqual(decision.get('decision'), 'block', decision)
+        runtime = json.loads((self.root / 'runtime.json').read_text())
+        self.assertIsNone(runtime['prior_consumed_s'])
+        self.assertIsNone(runtime['accounting']['native_history']['prior_consumed_s'])
+        self.assertEqual(sum(r['revised_result'] == 'PASS' for r in self.queue['cases']), 313)
+
     def record_running_019(self):
         self.opt_in_runtime(0)
         path = self.root / 'scope.json'

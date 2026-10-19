@@ -2,6 +2,7 @@
 import importlib.util
 import hashlib
 import json
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import subprocess
 import sys
@@ -48,6 +49,187 @@ class RuntimePolicyTests(unittest.TestCase):
         return self.policy.initialize_runtime(
             self.scope, task_id='task', authority_ref='human-message',
             prior_consumed_s=0, config=config)
+
+    def activate_bounded(self, **changes):
+        request = {'operation': 'activate_bounded_execution', 'event_id': 'activate-bounded',
+                   'task_id': 'task', 'authority_ref': 'human-command-budget',
+                   'total_command_s': 120}
+        request.update(changes)
+        return self.policy.update_runtime(self.scope, request)
+
+    def test_bounded_activation_retains_unknown_native_history_and_cannot_reset_its_window(self):
+        self.policy.initialize_runtime(self.scope, task_id='task', authority_ref='old-authority')
+        before = self.scope.read_bytes()
+        result = self.activate_bounded(total_command_s=80)
+        self.assertEqual(result['decision'], 'bounded_execution_activated')
+        state = self.policy.read_runtime(self.scope)
+        self.assertIsNone(state['prior_consumed_s'])
+        self.assertIsNone(state['accounting']['native_history']['prior_consumed_s'])
+        budget = self.policy.evaluate(state, {'goal_complete': False, 'runnable': True})['budget']
+        self.assertEqual(budget['mode'], 'bounded_command_seconds')
+        self.assertEqual(budget['unit'], 'command_deadline_seconds')
+        self.assertEqual(budget['available_s'], 60)
+        self.assertTrue(self.activate_bounded(total_command_s=80)['replayed'])
+        with self.assertRaises(self.policy.PolicyError):
+            self.activate_bounded(event_id='try-reset')
+        self.assertEqual(self.policy.read_runtime(self.scope), state)
+        self.assertEqual(self.scope.read_bytes(), before)
+
+    def bounded_admit(self, **changes):
+        values = {'allocation_s': 20, 'command_timeout_s': 10,
+                  'command_deadline_utc': (datetime.now(timezone.utc) +
+                                           timedelta(seconds=10)).isoformat(),
+                  'intent_digest': 'a' * 64, 'guard_allowance_s': 5.05,
+                  'harness_process_sha256':
+                      'd0833e133f10d95e4433c993afa5580e2da194dd13514d2cff7997dfb43daf6b'}
+        values.update(changes)
+        return self.admit(**values)
+
+    def bounded_finish(self, name='bounded-finished.json', attempt_id='attempt-a', **changes):
+        attempt = self.policy.read_runtime(self.scope)['attempts'][attempt_id]
+        values = {'action_id': attempt['action_id'], 'attempt_id': attempt_id,
+                  'execution_id': attempt['execution_id'],
+                  'observed_at_utc': datetime.now(timezone.utc).isoformat(),
+                  'deadline_utc': attempt['command_deadline_utc'],
+                  'command_timeout_s': attempt['command_timeout_s'],
+                  'intent_digest': attempt['intent_digest'],
+                  'guard_allowance_s': attempt['guard_allowance_s'],
+                  'harness_process_sha256': attempt['harness_process_sha256'],
+                  'accounting_mode': 'bounded_command_seconds',
+                  'budget_unit': 'command_deadline_seconds',
+                  'active_intervals': [], 'metering_complete': False,
+                  'cleanup_confirmed': True}
+        values.update(changes)
+        return self.reconcile(name, **values)
+
+    def test_bounded_whole_allocation_charges_sum_even_for_the_same_actor(self):
+        self.fresh()
+        self.activate_bounded(total_command_s=80)
+        self.bounded_admit()
+        self.bounded_admit(event_id='claim-b', action_id='action-b', attempt_id='attempt-b',
+                           execution_id='host-job-b')
+        self.bounded_finish()
+        self.bounded_finish('bounded-b.json', attempt_id='attempt-b', status='failed')
+        state = self.policy.read_runtime(self.scope)
+        result = self.policy.evaluate(state, {'goal_complete': False, 'runnable': True})
+        self.assertEqual(result['budget']['consumed_s'], 40)
+        self.assertEqual(result['budget']['available_s'], 20)
+        self.assertEqual(state['attempts']['attempt-a']['active_intervals'], [])
+        path = self.root / 'bounded-finished.json'
+        self.assertTrue(self.policy.update_runtime(self.scope, {
+            'operation': 'reconcile', 'event_id': 'bounded-finished.json', 'task_id': 'task',
+            'receipt': {'path': str(path),
+                        'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}})['replayed'])
+        with self.assertRaises(self.policy.PolicyError):
+            self.activate_bounded(event_id='cannot-reset-after-spend')
+        self.assertEqual(self.policy.read_runtime(self.scope)['attempts']['attempt-a']['consumed_s'], 20)
+
+    def test_bounded_activation_requires_authority_and_refuses_nonempty_native_state(self):
+        self.fresh()
+        with self.assertRaises(self.policy.PolicyError):
+            self.activate_bounded(authority_ref='')
+        self.admit()
+        with self.assertRaises(self.policy.PolicyError):
+            self.activate_bounded()
+
+    def test_bounded_admission_cannot_use_a_timeout_larger_than_its_reservation(self):
+        self.fresh()
+        self.activate_bounded()
+        with self.assertRaises(self.policy.PolicyError):
+            self.bounded_admit(allocation_s=5)
+        self.assertEqual(self.policy.read_runtime(self.scope)['attempts'], {})
+
+    def test_bounded_guard_boundary_rejects_unknown_harness_or_missing_allowance(self):
+        self.fresh()
+        self.activate_bounded()
+        for changes in ({'harness_process_sha256': 'f' * 64}, {'guard_allowance_s': 3},
+                        {'allocation_s': 10}):
+            with self.subTest(changes=changes), self.assertRaises(self.policy.PolicyError):
+                self.bounded_admit(**changes)
+        self.assertEqual(self.policy.read_runtime(self.scope)['attempts'], {})
+
+    def test_pre_guard_fix_settled_charge_is_preserved_but_unsettled_legacy_cannot_release(self):
+        self.fresh()
+        self.activate_bounded()
+        self.bounded_admit()
+        self.bounded_finish()
+        state = self.policy.read_runtime(self.scope)
+        for key in ('guard_allowance_s', 'harness_process_sha256'):
+            del state['attempts']['attempt-a'][key]
+        (self.root / 'runtime.json').write_text(json.dumps(state))
+        before = (self.root / 'runtime.json').read_bytes()
+        result = self.policy.evaluate(self.policy.read_runtime(self.scope),
+                                      {'goal_complete': False, 'runnable': True})
+        self.assertEqual(result['budget']['consumed_s'], 20)
+        self.assertEqual(result['budget']['pre_guard_fix_settled_attempt_ids'], ['attempt-a'])
+        self.assertEqual((self.root / 'runtime.json').read_bytes(), before)
+        state['attempts']['attempt-a'].update(settled=False, consumed_s=0, status='reserved')
+        (self.root / 'runtime.json').write_text(json.dumps(state))
+        unknown = self.policy.evaluate(self.policy.read_runtime(self.scope),
+                                       {'goal_complete': False, 'runnable': True})
+        self.assertEqual(unknown['decision'], 'unknown')
+        self.assertEqual(unknown['budget']['reserved_s'], 20)
+        with self.assertRaises(self.policy.PolicyError):
+            self.bounded_admit(event_id='cannot-bypass-legacy', action_id='new', attempt_id='new')
+
+    def test_bounded_unknown_retains_reservation_and_cannot_redispatch(self):
+        self.fresh()
+        self.activate_bounded()
+        self.bounded_admit()
+        self.bounded_finish(status='unknown', cleanup_confirmed=False)
+        state = self.policy.read_runtime(self.scope)
+        result = self.policy.evaluate(state, {'goal_complete': False, 'runnable': True})
+        self.assertEqual(result['decision'], 'unknown')
+        self.assertEqual(result['budget']['reserved_s'], 20)
+        self.assertFalse(state['attempts']['attempt-a']['settled'])
+        self.assertEqual(self.bounded_admit(event_id='retry-existing')['decision'],
+                         'reconcile_required')
+        with self.assertRaises(self.policy.PolicyError):
+            self.bounded_admit(event_id='unsafe-new', action_id='new', attempt_id='new')
+
+    def test_bounded_real_progress_and_reviewed_replan_reset_only_the_observation_window(self):
+        self.fresh(stagnation_s=20, initial_exploration_s=90)
+        self.activate_bounded()
+        self.bounded_admit()
+        self.bounded_finish()
+        snapshot = {'goal_complete': False, 'runnable': True}
+        self.assertEqual(self.policy.evaluate(self.policy.read_runtime(self.scope), snapshot)
+                         ['decision'], 'replan_required')
+        path = self.root / 'bounded-finished.json'
+        evidence = {'path': str(path), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
+        state = self.policy.read_runtime(self.scope)
+        progress = self.receipt('bounded-progress.json', kind='progress', progress_id='bounded-fact',
+            category='exploration', at_utc=datetime.fromtimestamp(
+                state['attempts']['attempt-a']['observed_at_s'], timezone.utc).isoformat(),
+            evidence=evidence, changes_decision='fixed command receipt determines next probe',
+            validator={'kind': 'project_check', 'identity': 'qualified-check',
+                       'author': 'worker-a', 'accepted': True}, active_intervals=[])
+        self.policy.update_runtime(self.scope, {'operation': 'progress', 'event_id': 'progress',
+                                               'task_id': 'task', 'receipt': progress})
+        result = self.policy.evaluate(self.policy.read_runtime(self.scope), snapshot)
+        self.assertEqual(result['decision'], 'continue')
+        self.assertEqual(result['budget']['consumed_s'], 20)
+        self.assertEqual(result['routes']['route-a']['observation_command_s'], 0)
+        self.bounded_admit(event_id='second', action_id='second', attempt_id='second',
+                           execution_id='second')
+        self.bounded_finish('second-result.json', attempt_id='second')
+        state = self.policy.read_runtime(self.scope)
+        self.assertEqual(self.policy.evaluate(state, snapshot)['decision'], 'replan_required')
+        old = state['routes']['route-a']['plan']
+        plan = dict(old, experiment='inspect a different intermediate state')
+        review = self.receipt('bounded-replan.json', kind='replan', action_id='second',
+            attempt_id='second', previous_plan_digest=self.policy.plan_digest(old),
+            new_plan_digest=self.policy.plan_digest(plan), trigger='stagnation',
+            addresses_trigger='change the discriminating probe', next_check='fixed state comparison',
+            validator={'kind': 'independent_review', 'identity': 'reviewer',
+                       'author': 'worker-a', 'accepted': True}, active_intervals=[])
+        self.policy.update_runtime(self.scope, {'operation': 'replan', 'event_id': 'bounded-replan',
+            'task_id': 'task', 'route_id': 'route-a', 'author': 'worker-a', 'plan': plan,
+            'receipt': review})
+        result = self.policy.evaluate(self.policy.read_runtime(self.scope), snapshot)
+        self.assertEqual(result['decision'], 'continue')
+        self.assertEqual(result['budget']['consumed_s'], 40)
+        self.assertEqual(result['routes']['route-a']['observation_command_s'], 0)
 
     def admit(self, **changes):
         request = {'event_id': 'claim-1', 'operation': 'admit', 'task_id': 'task',

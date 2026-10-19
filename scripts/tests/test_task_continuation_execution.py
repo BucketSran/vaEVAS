@@ -92,6 +92,204 @@ class ExecutionAdapterTests(unittest.TestCase):
         arguments.update(changes)
         return self.execution.execute_action(self.scope, self.admission, self.argv, **arguments)
 
+    def activate_command_mode(self, total=120, **config):
+        scope = json.loads(self.scope.read_text())
+        scope['current']['continuation']['runtime']['path'] = 'bounded-runtime.json'
+        self.scope.write_text(json.dumps(scope))
+        policy.initialize_runtime(self.scope, task_id='task', authority_ref='original-authority',
+                                  prior_consumed_s=None, config=config)
+        return policy.update_runtime(self.scope, {'operation': 'activate_bounded_execution',
+            'event_id': 'activate-command-budget', 'task_id': 'task',
+            'authority_ref': 'human-bounded-command-authorization', 'total_command_s': total})
+
+    @unittest.skipUnless(HAS_HARNESS, 'external Harness unavailable; no fallback runner')
+    def test_bounded_tiny_reservation_cannot_ignore_guardian_and_cleanup_allowance(self):
+        self.activate_command_mode()
+        self.admission['allocation_s'] = .1
+        with self.assertRaises(policy.PolicyError):
+            self.run_action(agent_meter=None, controlled_test=False, timeout_s=.1)
+        self.assertFalse(self.marker.exists())
+        self.assertEqual(policy.read_runtime(self.scope)['attempts'], {})
+
+    @unittest.skipUnless(HAS_HARNESS, 'external Harness unavailable; no fallback runner')
+    def test_bounded_production_command_runs_without_native_meter_and_charges_whole_allocation(self):
+        self.activate_command_mode(total=12)
+        self.admission['allocation_s'] = 9
+        result = self.run_action(agent_meter=None, controlled_test=False, timeout_s=3)
+        self.assertEqual(result['decision'], 'collected', result)
+        self.assertTrue(result['settled'])
+        self.assertEqual(result['execution']['accounting_mode'], 'bounded_command_seconds')
+        self.assertEqual(result['execution']['active_intervals'], [])
+        self.assertFalse(result['execution']['metering_complete'])
+        self.assertFalse(result['native_agent_metering'])
+        self.assertEqual(result['execution']['status'], 'completed')
+        state = policy.read_runtime(self.scope)
+        self.assertIsNone(state['prior_consumed_s'])
+        self.assertEqual(state['attempts']['attempt-019']['consumed_s'], 9)
+        self.assertEqual(self.execution.recover_action(
+            self.scope, 'attempt-019', harness_root=HARNESS)['decision'], 'collected')
+        self.assertEqual(self.marker.read_text(), 'started\n')
+
+    @unittest.skipUnless(HAS_HARNESS, 'external Harness unavailable; no fallback runner')
+    def test_bounded_limits_and_controlled_meter_refuse_before_any_process_starts(self):
+        self.activate_command_mode(total=12)
+        for allocation in (10, 2):
+            self.admission['allocation_s'] = allocation
+            with self.subTest(allocation=allocation), self.assertRaises(policy.PolicyError):
+                self.run_action(agent_meter=None, controlled_test=False, timeout_s=3)
+        self.admission['allocation_s'] = 3
+        with self.assertRaisesRegex(ValueError, 'controlled-test'):
+            self.run_action()
+        unavailable = self.run_action(agent_meter=None, controlled_test=False, timeout_s=3,
+                                      harness_root=self.root / 'missing-Harness')
+        self.assertEqual(unavailable['decision'], 'execution_unavailable')
+        self.assertFalse(self.marker.exists())
+        self.assertEqual(policy.read_runtime(self.scope)['attempts'], {})
+
+    @unittest.skipUnless(HAS_HARNESS, 'external Harness unavailable; no fallback runner')
+    def test_bounded_same_actor_parallel_commands_share_one_summed_budget(self):
+        self.activate_command_mode(total=24)
+        barrier = threading.Barrier(3)
+        outcomes, errors = [], []
+        def execute(index):
+            admission = dict(self.admission, event_id=f'bounded-{index}', allocation_s=9,
+                             action_id=f'bounded-{index}', attempt_id=f'bounded-{index}',
+                             execution_id=f'bounded-{index}')
+            try:
+                barrier.wait(timeout=3)
+                outcomes.append(self.execution.execute_action(self.scope, admission, self.argv,
+                    directory=self.root / f'parallel-{index}', cwd=self.root, timeout_s=2,
+                    harness_root=HARNESS))
+            except BaseException as error:
+                errors.append(error)
+        workers = [threading.Thread(target=execute, args=(index,)) for index in range(3)]
+        for worker in workers:
+            worker.start()
+        for worker in workers:
+            worker.join(timeout=5)
+        self.assertTrue(all(not worker.is_alive() for worker in workers))
+        self.assertEqual(len(outcomes), 2, outcomes)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIsInstance(errors[0], policy.PolicyError)
+        self.assertEqual(self.marker.read_text(), 'started\nstarted\n')
+        state = policy.read_runtime(self.scope)
+        self.assertEqual({attempt['actor'] for attempt in state['attempts'].values()}, {'worker-019'})
+        budget = policy.evaluate(state, {'goal_complete': False, 'runnable': True})['budget']
+        self.assertEqual(budget['consumed_s'], 18)
+        self.assertEqual(budget['available_s'], 0)
+
+    @unittest.skipUnless(HAS_HARNESS, 'external Harness unavailable; no fallback runner')
+    def test_bounded_owner_loss_retains_full_guard_reservation_and_guardian_stops_late_work(self):
+        self.activate_command_mode()
+        self.admission['allocation_s'] = 6
+        late = self.root / 'must-not-run-after-guardian.txt'
+        self.argv = [sys.executable, '-B', '-c',
+            'import time,sys;from pathlib import Path;from datetime import datetime,timezone;'
+            'time.sleep(.5);Path(sys.argv[1]).write_text(datetime.now(timezone.utc).isoformat());'
+            'time.sleep(3);Path(sys.argv[2]).write_text("too late")', str(self.marker), str(late)]
+        payload = self.root / 'owner-loss.json'
+        payload.write_text(json.dumps({'scope': str(self.scope), 'admission': self.admission,
+            'argv': self.argv, 'directory': str(self.root / 'command'), 'root': str(self.root)}))
+        runner = self.root / 'owner-loss.py'
+        runner.write_text('import json,os,sys\nfrom pathlib import Path\n'
+            f'sys.path.insert(0, {str(SCRIPTS)!r})\n'
+            'import task_continuation_execution as a\n'
+            '_,j=a._harness()\nold=j.Journal.emit\n'
+            'def stop(self,event,**fields):\n'
+            '    old(self,event,**fields)\n'
+            '    if event=="process_started": os._exit(79)\n'
+            'j.Journal.emit=stop\np=json.loads(Path(sys.argv[1]).read_text())\n'
+            'a.execute_action(p["scope"],p["admission"],p["argv"],\n'
+            '    directory=p["directory"],cwd=p["root"],timeout_s=.1)\n')
+        owner = subprocess.run([sys.executable, '-B', str(runner), str(payload)],
+                               capture_output=True, text=True, timeout=3)
+        self.assertEqual(owner.returncode, 79, owner.stderr)
+        try:
+            time.sleep(4)
+            self.assertTrue(self.marker.exists())
+            self.assertFalse(late.exists(), 'guardian must stop work beyond its real lifetime')
+            intent = json.loads((self.root / 'command/execution.intent.json').read_text())
+            self.assertGreater(self.marker.read_text(), intent['deadline_utc'])
+            self.assertEqual(intent['guard_allowance_s'], 5.05)
+            self.assertEqual(self.run_action(agent_meter=None, controlled_test=False,
+                                             timeout_s=.1)['decision'], 'unknown')
+            state = policy.read_runtime(self.scope)
+            self.assertEqual(state['attempts']['attempt-019']['allocation_s'], 6)
+            self.assertFalse(state['attempts']['attempt-019']['settled'])
+            budget = policy.evaluate(state, {'goal_complete': False, 'runnable': True})['budget']
+            self.assertEqual(budget['reserved_s'], 6)
+            (self.root / 'owner-loss-result.json').write_text(json.dumps({
+                'owner_returncode': owner.returncode, 'declared_timeout_s': .1,
+                'guard_allowance_s': 5.05, 'reserved_s': budget['reserved_s'],
+                'early_marker_after_declared_deadline': True, 'late_marker_exists': late.exists(),
+                'harness_process_sha256': intent['harness_process_sha256']}))
+        finally:
+            events = (self.root / 'command/events.jsonl').read_text().splitlines()
+            for event in map(json.loads, events):
+                if event['event'] == 'process_started':
+                    try:
+                        import signal
+                        os.killpg(event['group_pid'], signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+
+    @unittest.skipUnless(HAS_HARNESS, 'external Harness unavailable; no fallback runner')
+    def test_bounded_failure_timeout_and_cancellation_charge_each_whole_allocation(self):
+        self.activate_command_mode()
+        for kind in ('failure', 'timeout', 'cancelled'):
+            admission = dict(self.admission, event_id=kind, action_id=kind,
+                             attempt_id=kind, execution_id=kind, allocation_s=6)
+            argv = [sys.executable, '-B', '-c', 'raise SystemExit(4)' if kind == 'failure'
+                    else 'import time;time.sleep(1)']
+            cancel = threading.Event()
+            if kind == 'cancelled':
+                cancel.set()
+            result = self.execution.execute_action(self.scope, admission, argv,
+                directory=self.root / kind, cwd=self.root, timeout_s=.1,
+                cancel=cancel, harness_root=HARNESS)
+            self.assertEqual(result['decision'], 'collected', result)
+            self.assertTrue(result['settled'])
+            self.assertEqual(result['execution']['status'], 'cancelled' if kind == 'cancelled' else 'failed')
+            self.assertEqual(policy.read_runtime(self.scope)['attempts'][kind]['consumed_s'], 6)
+        self.assertEqual(policy.evaluate(policy.read_runtime(self.scope),
+            {'goal_complete': False, 'runnable': True})['budget']['consumed_s'], 18)
+
+    @unittest.skipUnless(HAS_HARNESS, 'external Harness unavailable; no fallback runner')
+    def test_bounded_crash_recovery_collects_journal_or_receipt_without_rerun_or_double_charge(self):
+        self.activate_command_mode()
+        for point in ('before-receipt', 'after-receipt'):
+            admission = dict(self.admission, event_id=point, action_id=point,
+                             attempt_id=point, execution_id=point, allocation_s=8)
+            payload = self.root / (point + '.json')
+            payload.write_text(json.dumps({'scope': str(self.scope), 'admission': admission,
+                'argv': self.argv, 'directory': str(self.root / point), 'root': str(self.root)}))
+            runner = self.root / (point + '.py')
+            runner.write_text(
+                'import json,os,sys\nfrom pathlib import Path\n'
+                f'sys.path.insert(0, {str(SCRIPTS)!r})\n'
+                'import task_continuation_execution as adapter\n'
+                'p=json.loads(Path(sys.argv[1]).read_text())\n'
+                + ('_,journal=adapter._harness()\nwrite=journal.atomic_json\n'
+                   'def stop(path,value):\n'
+                   '    if path.name=="execution.receipt.json": os._exit(79)\n'
+                   '    return write(path,value)\njournal.atomic_json=stop\n'
+                   if point == 'before-receipt' else
+                   'update=adapter.policy.update_runtime\n'
+                   'def stop(scope,request):\n'
+                   '    if request["operation"]=="reconcile": os._exit(79)\n'
+                   '    return update(scope,request)\nadapter.policy.update_runtime=stop\n')
+                + 'adapter.execute_action(p["scope"],p["admission"],p["argv"],\n'
+                  '    directory=p["directory"],cwd=p["root"],timeout_s=2)\n')
+            crash = subprocess.run([sys.executable, '-B', str(runner), str(payload)],
+                                   capture_output=True, text=True, timeout=8)
+            self.assertEqual(crash.returncode, 79, crash.stderr)
+            for _ in range(2):
+                result = self.execution.recover_action(self.scope, point, harness_root=HARNESS)
+                self.assertEqual(result['decision'], 'collected')
+                self.assertTrue(result['settled'])
+            self.assertEqual(policy.read_runtime(self.scope)['attempts'][point]['consumed_s'], 8)
+        self.assertEqual(self.marker.read_text(), 'started\nstarted\n')
+
     def test_missing_native_agent_meter_refuses_before_marker_process_starts(self):
         before = (self.scope.read_bytes(), (self.root / 'cases400.json').read_bytes())
         result = self.execution.execute_action(

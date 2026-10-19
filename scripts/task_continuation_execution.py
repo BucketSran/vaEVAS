@@ -1,8 +1,8 @@
 """Bind one existing action to the maintained Harness process runner.
 
 The runtime referenced by scope is the only budget/attempt record. Harness owns
-process creation, deadlines, logs and cleanup. No native agent meter is bundled;
-the default refuses dispatch instead of counting process wall time as agent work.
+process creation, deadlines, logs and cleanup. Native mode needs a trusted agent
+meter. Explicit bounded mode charges whole command allocations, never agent time.
 """
 from __future__ import annotations
 
@@ -32,6 +32,11 @@ def _context(admission):
     return {key: admission[key] for key in (
         'task_id', 'route_id', 'action_id', 'attempt_id', 'execution_id', 'actor',
         'input_digest')}
+
+
+def _intent_digest(intent):
+    return hashlib.sha256(json.dumps(intent, sort_keys=True, separators=(',', ':'),
+                                     allow_nan=False).encode()).hexdigest()
 
 
 def _meter_report(ref, context, controlled_test):
@@ -106,7 +111,7 @@ def _collect(scope_path, path, receipt, *, started, controlled_test):
 
 
 def _receipt(context, intent, result, meter=None, meter_ref=None):
-    return {'kind': 'execution', **context,
+    receipt = {'kind': 'execution', **context,
             'controlled_test': intent['controlled_test'],
             'status': ('unknown' if result['cleanup_confirmed'] is not True
                        else 'completed' if result['execution'] == 'ok' and result['returncode'] == 0
@@ -119,6 +124,14 @@ def _receipt(context, intent, result, meter=None, meter_ref=None):
             'process_wall_s': result['elapsed_s'],
             **{key: result[key] for key in ('execution', 'returncode', 'cleanup_confirmed',
                                            'stdout', 'stderr')}}
+    if intent.get('accounting_mode') == policy.BOUNDED_MODE:
+        receipt.update(accounting_mode=policy.BOUNDED_MODE,
+                       budget_unit='command_deadline_seconds',
+                       command_timeout_s=intent['timeout_s'], intent_digest=_intent_digest(intent))
+        if 'guard_allowance_s' in intent:
+            receipt.update(guard_allowance_s=intent['guard_allowance_s'],
+                           harness_process_sha256=intent['harness_process_sha256'])
+    return receipt
 
 
 def execute_action(scope_path, admission, argv, *, directory, cwd=None, timeout_s=90,
@@ -136,6 +149,10 @@ def execute_action(scope_path, admission, argv, *, directory, cwd=None, timeout_
     directory = Path(directory).resolve()
     admission['execution_ref'] = str(directory)
     runtime = policy.read_runtime(scope_path)
+    mode = policy.accounting_mode(runtime)
+    bounded = mode == policy.BOUNDED_MODE
+    if bounded and (controlled_test or agent_meter is not None):
+        raise ValueError('bounded command mode does not accept controlled-test or native agent meters')
     if admission.get('task_id') != runtime['task_id']:
         raise ValueError('admission task identity differs from the runtime')
     existing = runtime['actions'].get(admission['action_id'])
@@ -158,7 +175,7 @@ def execute_action(scope_path, admission, argv, *, directory, cwd=None, timeout_
                 raise ValueError('existing action cannot be reused for a different command')
         return recover_action(scope_path, existing['attempt_id'], directory=directory,
                               harness_root=harness_root, controlled_test=controlled_test)
-    if agent_meter is None:
+    if agent_meter is None and not bounded:
         return {'decision': 'metering_unavailable', 'started': False,
                 'reason': 'native active-agent metering provider is unavailable',
                 'native_agent_metering': False}
@@ -167,14 +184,22 @@ def execute_action(scope_path, admission, argv, *, directory, cwd=None, timeout_
     if type(timeout_s) not in (int, float) or not 0 < timeout_s <= 90:
         raise ValueError('one narrow command must have a deadline within 90 seconds')
     context = _context(admission)
-    preflight_ref = agent_meter.preflight(context)
-    preflight = _meter_report(preflight_ref, context, controlled_test)
-    if (preflight.get('available') is not True or
-            preflight.get('metering_complete') is not True):
-        return {'decision': 'metering_unavailable', 'started': False,
-                'reason': 'agent meter reports no coverage', 'native_agent_metering': False}
+    preflight_ref = None
+    if not bounded:
+        preflight_ref = agent_meter.preflight(context)
+        preflight = _meter_report(preflight_ref, context, controlled_test)
+        if (preflight.get('available') is not True or
+                preflight.get('metering_complete') is not True):
+            return {'decision': 'metering_unavailable', 'started': False,
+                    'reason': 'agent meter reports no coverage', 'native_agent_metering': False}
     try:
         process, journal = _harness(harness_root)
+        harness_sha = hashlib.sha256(Path(process.__file__).read_bytes()).hexdigest()
+        guard = None
+        if bounded:
+            if getattr(process, '_SOURCE_SHA256', None) != harness_sha:
+                raise ValueError('loaded Harness code differs from its current source identity')
+            guard = policy.command_guard_allowance(harness_sha)
     except (ImportError, ValueError) as error:
         return {'decision': 'execution_unavailable', 'started': False,
                 'reason': str(error), 'native_agent_metering': False}
@@ -184,37 +209,46 @@ def execute_action(scope_path, admission, argv, *, directory, cwd=None, timeout_
         intent_path = directory / 'execution.intent.json'
         if intent_path.exists():
             raise ValueError('output directory already belongs to an execution')
-        decision = policy.update_runtime(scope_path, admission)
-        if decision['decision'] != 'admitted' or decision.get('replayed'):
-            return {**decision, 'started': False}
+        deadline_monotonic = time.monotonic() + timeout_s
         intent = {'binding': context, 'argv': argv,
                   'cwd': str(Path(cwd).resolve()) if cwd else str(directory),
                   'controlled_test': controlled_test is True, 'timeout_s': timeout_s,
+                  'accounting_mode': mode, 'allocation_s': admission['allocation_s'],
+                  'deadline_monotonic': deadline_monotonic,
                   'max_output_bytes': max_output_bytes,
                   'deadline_utc': (datetime.now(timezone.utc) +
                                    timedelta(seconds=timeout_s)).isoformat(),
                   'meter_preflight': preflight_ref,
-                  'harness_process_sha256': hashlib.sha256(
-                      Path(process.__file__).read_bytes()).hexdigest()}
+                  'harness_process_sha256': harness_sha}
+        if bounded:
+            intent['guard_allowance_s'] = guard
+            admission.update(command_timeout_s=timeout_s,
+                             command_deadline_utc=intent['deadline_utc'],
+                             guard_allowance_s=guard, harness_process_sha256=harness_sha,
+                             intent_digest=_intent_digest(intent))
+        decision = policy.update_runtime(scope_path, admission)
+        if decision['decision'] != 'admitted' or decision.get('replayed'):
+            return {**decision, 'started': False}
         journal.atomic_json(intent_path, intent)
         wrapped = [sys.executable, '-B', '-c',
                    'import os,sys;os.chdir(sys.argv[1]);'
                    'os.execvpe(sys.argv[2],sys.argv[2:],os.environ)', intent['cwd'], *argv]
         result = process.run_process(
-            wrapped, directory=directory, stage='check', deadline=time.monotonic() + timeout_s,
+            wrapped, directory=directory, stage='check', deadline=deadline_monotonic,
             cancel=cancel or threading.Event(),
             journal=journal.Journal(directory, call_id=context['execution_id']),
             max_output_bytes=max_output_bytes)
         meter_ref, meter = None, None
-        try:
-            meter_ref = agent_meter.collect(context)
-            meter = _meter_report(meter_ref, context, controlled_test)
-            if meter.get('available') is not True:
-                raise ValueError('agent meter has lost execution coverage')
-        except Exception as error:
-            # The command already finished. Keep its durable result and reservation.
-            result['meter_error'] = type(error).__name__ + ': ' + str(error)
-            meter_ref, meter = None, None
+        if not bounded:
+            try:
+                meter_ref = agent_meter.collect(context)
+                meter = _meter_report(meter_ref, context, controlled_test)
+                if meter.get('available') is not True:
+                    raise ValueError('agent meter has lost execution coverage')
+            except Exception as error:
+                # The command already finished. Keep its durable result and reservation.
+                result['meter_error'] = type(error).__name__ + ': ' + str(error)
+                meter_ref, meter = None, None
         receipt = _receipt(context, intent, result, meter, meter_ref)
         if result.get('meter_error'):
             receipt['meter_error'] = result['meter_error']
@@ -246,6 +280,18 @@ def recover_action(scope_path, attempt_id, *, directory=None, harness_root=None,
             return {'decision': 'unknown', 'started': False,
                     'reason': 'admission exists but no durable Harness intent was found'}
         intent = json.loads(intent_path.read_text())
+        mode = policy.accounting_mode(runtime)
+        if intent.get('accounting_mode', policy.NATIVE_MODE) != mode:
+            raise ValueError('execution intent accounting mode differs from its runtime')
+        if mode == policy.BOUNDED_MODE and (
+                intent['timeout_s'] != attempt['command_timeout_s'] or
+                intent['deadline_utc'] != attempt['command_deadline_utc'] or
+                _intent_digest(intent) != attempt['intent_digest']):
+            raise ValueError('bounded command intent or deadline differs from its admission')
+        if mode == policy.BOUNDED_MODE and 'guard_allowance_s' in attempt and any(
+                intent.get(key) != attempt[key] for key in
+                ('guard_allowance_s', 'harness_process_sha256')):
+            raise ValueError('bounded command guardian allowance differs from its admission')
         if intent.get('controlled_test') is not (controlled_test is True):
             raise ValueError('recovery requires the original explicit test mode')
         context = intent['binding']

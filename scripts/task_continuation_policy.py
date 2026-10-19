@@ -4,7 +4,8 @@ The caller is a trusted execution/project adapter. Receipt hashes bind content;
 they do not authenticate a host or establish native-agent metering coverage.
 That adapter owns readiness and purpose classification of the actual command.
 Plan text, a purpose string and a successful admission are not project acceptance.
-All durations are seconds of active agent work, never process wall time.
+Native accounting uses active-agent seconds. An explicitly authorized bounded
+mode charges whole command allocations in command-deadline seconds instead.
 Only the referenced runtime file and its lock are written, never scope/queue.
 """
 from __future__ import annotations
@@ -23,6 +24,23 @@ import tempfile
 
 DEFAULTS = {'total_agent_s': 14400, 'closeout_fraction': .25,
             'stagnation_s': 1800, 'initial_exploration_s': 3600, 'renewal_s': 1800}
+NATIVE_MODE = 'native_agent_active_seconds'
+BOUNDED_MODE = 'bounded_command_seconds'
+# This reviewed Harness adds three guardian seconds, polls surviving descendants
+# at 0.05 seconds, and permits two seconds for owner cleanup/reaping.
+HARNESS_GUARD_CONTRACTS = {
+    'd0833e133f10d95e4433c993afa5580e2da194dd13514d2cff7997dfb43daf6b': 5.05}
+
+
+def command_guard_allowance(harness_process_sha256):
+    try:
+        return HARNESS_GUARD_CONTRACTS[harness_process_sha256]
+    except (KeyError, TypeError) as error:
+        raise PolicyError('unreviewed Harness guardian lifetime; bounded dispatch denied') from error
+
+
+def accounting_mode(state):
+    return state.get('accounting', {}).get('mode', NATIVE_MODE)
 
 
 class PolicyError(ValueError):
@@ -136,6 +154,16 @@ def _validate_state(state):
         _number(state['prior_consumed_s'], 'prior_consumed_s')
     if 'prior_consumed_s' not in state:
         raise PolicyError('missing historical usage is unknown, never zero')
+    if accounting_mode(state) not in (NATIVE_MODE, BOUNDED_MODE):
+        raise PolicyError('unsupported accounting mode')
+    if accounting_mode(state) == BOUNDED_MODE:
+        account = state['accounting']
+        if (account.get('unit') != 'command_deadline_seconds' or
+                account.get('native_history', {}).get('prior_consumed_s') !=
+                state['prior_consumed_s'] or _number(account.get('total_command_s'),
+                                                     'total_command_s') <= 0):
+            raise PolicyError('inconsistent bounded-command accounting')
+        _text(account.get('authority_ref'), 'bounded authority_ref')
     settings = state.get('config')
     if not isinstance(settings, dict) or set(settings) != set(DEFAULTS):
         raise PolicyError('invalid policy configuration')
@@ -150,13 +178,26 @@ def _validate_state(state):
     for attempt_id, attempt in state['attempts'].items():
         _number(attempt['allocation_s'], 'allocation_s')
         _number(attempt['consumed_s'], 'consumed_s')
+        bounded = accounting_mode(state) == BOUNDED_MODE
+        if bounded and (attempt.get('accounting_mode') != BOUNDED_MODE or
+                attempt['active_intervals'] or
+                attempt['consumed_s'] != (attempt['allocation_s'] if attempt['settled'] else 0) or
+                not 0 < _number(attempt.get('command_timeout_s'), 'command_timeout_s') <=
+                min(90, attempt['allocation_s'])):
+            raise PolicyError('inconsistent bounded-command execution state')
+        if bounded and 'guard_allowance_s' in attempt:
+            guard = command_guard_allowance(attempt.get('harness_process_sha256'))
+            if (attempt['guard_allowance_s'] != guard or
+                    attempt['allocation_s'] + 1e-9 < attempt['command_timeout_s'] + guard):
+                raise PolicyError('command allocation does not cover its reviewed guardian boundary')
         if (attempt['route_id'] not in state['routes'] or
                 state['actions'][attempt['action_id']]['attempt_id'] != attempt_id or
                 attempt['status'] not in ('reserved', 'running', 'completed', 'failed',
                                           'cancelled', 'unknown') or
                 type(attempt['settled']) is not bool or
                 type(attempt['metering_unknown']) is not bool or
-                _seconds(attempt['active_intervals']) != attempt['consumed_s']):
+                (not bounded and
+                 _seconds(attempt['active_intervals']) != attempt['consumed_s'])):
             raise PolicyError('inconsistent execution state')
     return state
 
@@ -209,25 +250,33 @@ def _digest(value):
 
 def _budget(state):
     attempts = list(state['attempts'].values())
-    consumed = state['prior_consumed_s']
-    if consumed is None or any(a.get('metering_unknown') or a['status'] == 'unknown'
+    bounded = accounting_mode(state) == BOUNDED_MODE
+    legacy_pending = bounded and any(not a['settled'] and 'guard_allowance_s' not in a
+                                     for a in attempts)
+    consumed = 0 if bounded else state['prior_consumed_s']
+    if consumed is None or legacy_pending or any(a.get('metering_unknown') or a['status'] == 'unknown'
                                for a in attempts):
         known = False
     else:
         known = True
-    consumed = (consumed or 0) + _actor_seconds(attempts)
+    consumed = (consumed or 0) + _charged_seconds(state, attempts)
     reserved = sum(max(0, a['allocation_s'] - a['consumed_s'])
                    for a in attempts if not a['settled'])
     closeout_attempts = [a for a in attempts if a['purpose'] == 'closeout']
-    closeout = _actor_seconds(closeout_attempts) + sum(
+    closeout = _charged_seconds(state, closeout_attempts) + sum(
         max(0, a['allocation_s'] - a['consumed_s'])
         for a in closeout_attempts if not a['settled'])
-    reserve = max(0, state['config']['total_agent_s'] *
+    total = state['accounting']['total_command_s'] if bounded else state['config']['total_agent_s']
+    reserve = max(0, total *
                   state['config']['closeout_fraction'] - closeout)
-    return {'consumed_s': consumed if known else None,
+    return {'mode': accounting_mode(state),
+            'unit': 'command_deadline_seconds' if bounded else 'agent_active_seconds',
+            'consumed_s': consumed if known else None,
             'known_consumed_s': consumed, 'reserved_s': reserved,
+            'pre_guard_fix_settled_attempt_ids': ([aid for aid, a in state['attempts'].items()
+                if a['settled'] and 'guard_allowance_s' not in a] if bounded else []),
             'unallocated_closeout_s': reserve,
-            'available_s': max(0, state['config']['total_agent_s'] -
+            'available_s': max(0, total -
                                consumed - reserved - reserve) if known else None}
 
 
@@ -276,25 +325,61 @@ def _actor_seconds(attempts):
     return sum(_seconds(intervals) for intervals in actors.values())
 
 
+def _charged_seconds(state, attempts):
+    if accounting_mode(state) == BOUNDED_MODE:
+        return sum(a['consumed_s'] for a in attempts)
+    return _actor_seconds(attempts)
+
+
+def _activate_bounded(state, request, continuation):
+    _authorize(continuation)
+    if accounting_mode(state) != NATIVE_MODE or 'accounting' in state:
+        raise PolicyError('accounting mode is already fixed; activation cannot reset a budget')
+    authority = _text(request.get('authority_ref'), 'bounded authority_ref')
+    if any(state[key] for key in ('attempts', 'actions', 'routes', 'progress')) or (
+            state['prior_consumed_s'] not in (None, 0)):
+        raise PolicyError('nonempty native accounting cannot migrate to a fresh command budget')
+    total = _number(request.get('total_command_s'), 'total_command_s')
+    if total <= 0 or total > state['config']['total_agent_s']:
+        raise PolicyError('bounded total must fit the existing authorized numeric ceiling')
+    state['accounting'] = {'mode': BOUNDED_MODE, 'unit': 'command_deadline_seconds',
+        'total_command_s': total, 'authority_ref': authority,
+        'activated_at_utc': datetime.now(timezone.utc).isoformat(),
+        'native_history': {'mode': NATIVE_MODE, 'prior_consumed_s': state['prior_consumed_s'],
+                           'authority_ref': state['authority_ref']}}
+    return {'decision': 'bounded_execution_activated', 'mode': BOUNDED_MODE,
+            'unit': 'command_deadline_seconds'}
+
+
 def _route_status(state, route_id):
     route = state['routes'][route_id]
     attempts = [a for a in state['attempts'].values() if a['route_id'] == route_id]
     intervals = [row for a in attempts for row in a['active_intervals']]
-    active = _seconds(intervals)
+    bounded = accounting_mode(state) == BOUNDED_MODE
+    active = _charged_seconds(state, attempts) if bounded else _seconds(intervals)
     anchor = route['observation_anchor_s']
     if route.get('progress_at_s') is not None:
-        before = [[start, min(end, route['progress_at_s'])]
-                  for start, end in intervals if start < route['progress_at_s']]
-        anchor = max(anchor, _seconds(before))
+        if bounded:
+            prior = sum(a['consumed_s'] for a in attempts
+                        if a.get('observed_at_s', math.inf) <= route['progress_at_s'])
+        else:
+            before = [[start, min(end, route['progress_at_s'])]
+                      for start, end in intervals if start < route['progress_at_s']]
+            prior = _seconds(before)
+        anchor = max(anchor, prior)
     observed = max(0, active - anchor)
-    exploration = _actor_seconds([a for a in attempts if a['purpose'] == 'exploration'])
+    exploration = _charged_seconds(state, [a for a in attempts if a['purpose'] == 'exploration'])
     reason = route['required_reason']
     if not reason and observed >= state['config']['stagnation_s']:
         reason = 'stagnation'
     if not reason and exploration >= route['exploration_limit_s']:
         reason = 'exploration_exhausted'
     return {'decision': 'replan_required' if reason else 'continue', 'reason': reason,
-            'active_union_s': active, 'observation_active_s': observed,
+            'mode': accounting_mode(state),
+            'unit': 'command_deadline_seconds' if bounded else 'agent_active_seconds',
+            'charged_s': active,
+            **({'command_charged_s': active, 'observation_command_s': observed} if bounded else
+               {'active_union_s': active, 'observation_active_s': observed}),
             'exploration_consumed_s': exploration,
             'exploration_limit_s': route['exploration_limit_s']}
 
@@ -336,6 +421,8 @@ def _reconcile(state, request, scope_path):
         raise PolicyError('unknown execution status')
     if attempt['settled'] and status != attempt['status']:
         raise PolicyError('settled execution cannot return to a different status')
+    if accounting_mode(state) == BOUNDED_MODE:
+        return _reconcile_bounded(attempt, receipt, ref, status)
     if attempt['settled'] and receipt.get('metering_complete') is not True:
         raise PolicyError('settled metering cannot be downgraded by a late notification')
     observed = _time(receipt.get('observed_at_utc'))
@@ -370,6 +457,39 @@ def _reconcile(state, request, scope_path):
     return {'decision': 'collected' if status in ('completed', 'failed', 'cancelled')
             else 'observe' if status == 'running' else 'unknown',
             'attempt_id': receipt['attempt_id'], 'settled': attempt['settled']}
+
+
+def _reconcile_bounded(attempt, receipt, ref, status):
+    if (receipt.get('accounting_mode') != BOUNDED_MODE or
+            receipt.get('budget_unit') != 'command_deadline_seconds' or
+            any(receipt.get(key) != attempt[key] for key in
+                ('intent_digest', 'command_timeout_s')) or
+            receipt.get('deadline_utc') != attempt['command_deadline_utc'] or
+            receipt.get('active_intervals') != [] or
+            receipt.get('metering_complete') is not False or
+            receipt.get('agent_meter_receipt') is not None or
+            receipt.get('meter_source_kind') is not None):
+        raise PolicyError('bounded receipt must bind its command deadline without native metering')
+    if 'guard_allowance_s' in attempt:
+        if any(receipt.get(key) != attempt[key] for key in
+               ('guard_allowance_s', 'harness_process_sha256')):
+            raise PolicyError('bounded receipt changed its reviewed guardian boundary')
+    elif not attempt['settled']:
+        attempt.update(status='unknown', receipt=ref)
+        return {'decision': 'unknown', 'attempt_id': receipt['attempt_id'], 'settled': False}
+    observed = _time(receipt.get('observed_at_utc'))
+    if observed < attempt.get('observed_at_s', 0):
+        raise PolicyError('stale execution observation')
+    terminal = status in ('completed', 'failed', 'cancelled')
+    if terminal and receipt.get('cleanup_confirmed') is not True:
+        raise PolicyError('completed command requires confirmed Harness cleanup')
+    if status == 'running' and _time(receipt['deadline_utc']) <= observed:
+        raise PolicyError('running execution has no future deadline')
+    attempt.update(status=status, observed_at_s=observed, receipt=ref,
+                   deadline_utc=receipt['deadline_utc'], metering_unknown=False,
+                   consumed_s=attempt['allocation_s'] if terminal else 0, settled=terminal)
+    return {'decision': 'collected' if terminal else 'observe' if status == 'running' else 'unknown',
+            'attempt_id': receipt['attempt_id'], 'settled': terminal}
 
 
 def _validator(receipt, author, *, independent=False):
@@ -468,7 +588,7 @@ def _replan(state, request, scope_path, continuation):
     if (status['reason'] == 'exploration_exhausted' and not renewal):
         raise PolicyError('exhausted route requires authorized renewal or closeout')
     route.update(plan=plan, plan_digest=plan_digest(plan), required_reason=None,
-                 observation_anchor_s=status['active_union_s'], replan_receipt=ref)
+                 observation_anchor_s=status['charged_s'], replan_receipt=ref)
     return {'decision': 'replanned', 'route_id': route_id}
 
 
@@ -509,6 +629,22 @@ def _admit(state, request, scope, continuation, scope_path):
     purpose = request.get('purpose', 'exploration')
     if allocation <= 0 or purpose not in ('exploration', 'work', 'closeout'):
         raise PolicyError('positive allocation and known purpose required')
+    command = {}
+    if accounting_mode(state) == BOUNDED_MODE:
+        timeout = _number(request.get('command_timeout_s'), 'command_timeout_s')
+        harness_sha = request.get('harness_process_sha256')
+        guard = command_guard_allowance(harness_sha)
+        deadline = request.get('command_deadline_utc')
+        remaining = _time(deadline) - datetime.now(timezone.utc).timestamp()
+        digest = _text(request.get('intent_digest'), 'intent_digest')
+        if (not 0 < timeout <= 90 or allocation + 1e-9 < timeout + guard or
+                request.get('guard_allowance_s') != guard or
+                not 0 < remaining <= timeout + .1 or len(digest) != 64 or
+                any(char not in '0123456789abcdef' for char in digest)):
+            raise PolicyError('command allocation must cover timeout, guardian and cleanup allowance')
+        command = {'accounting_mode': BOUNDED_MODE, 'command_timeout_s': timeout,
+                   'command_deadline_utc': deadline, 'intent_digest': digest,
+                   'guard_allowance_s': guard, 'harness_process_sha256': harness_sha}
     budget = _budget(state)
     available = budget['available_s']
     if available is None:
@@ -544,7 +680,7 @@ def _admit(state, request, scope, continuation, scope_path):
         raise PolicyError('route requires replan before another action')
     exploration_attempts = [a for a in state['attempts'].values()
                             if a['route_id'] == route_id and a['purpose'] == 'exploration']
-    allocated = _actor_seconds(exploration_attempts) + sum(
+    allocated = _charged_seconds(state, exploration_attempts) + sum(
         max(0, a['allocation_s'] - a['consumed_s'])
         for a in exploration_attempts if not a['settled'])
     if purpose == 'exploration' and allocated + allocation > route['exploration_limit_s']:
@@ -559,7 +695,7 @@ def _admit(state, request, scope, continuation, scope_path):
         'execution_id': _text(request.get('execution_id', attempt_id), 'execution_id'),
         'execution_ref': (None if request.get('execution_ref') is None else
                           _text(request['execution_ref'], 'execution_ref')),
-        'active_intervals': []}
+        'active_intervals': [], **command}
     return {'decision': 'admitted', 'action_id': action_id, 'attempt_id': attempt_id,
             'execution_id': state['attempts'][attempt_id]['execution_id']}
 
@@ -578,7 +714,9 @@ def update_runtime(scope_path, request):
             if previous['request_digest'] != digest:
                 raise PolicyError('event ID reused for a different request')
             return dict(previous['result'], replayed=True)
-        if request.get('operation') == 'admit':
+        if request.get('operation') == 'activate_bounded_execution':
+            result = _activate_bounded(state, request, continuation)
+        elif request.get('operation') == 'admit':
             result = _admit(state, request, scope, continuation, scope_path)
         elif request.get('operation') == 'reconcile':
             result = _reconcile(state, request, scope_path)
