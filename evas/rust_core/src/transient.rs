@@ -45,6 +45,10 @@ mod source_floor_tests;
 mod native_floor_combination_tests;
 
 #[cfg(test)]
+#[path = "transient_ordinary_integer_prefix_tests.rs"]
+mod ordinary_integer_prefix_tests;
+
+#[cfg(test)]
 #[path = "source_selected_slew_tests.rs"]
 mod source_selected_slew_tests;
 #[path = "event_time_provenance.rs"]

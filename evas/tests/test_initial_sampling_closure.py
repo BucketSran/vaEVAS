@@ -205,9 +205,19 @@ class RuntimeVoltageAliases(unittest.TestCase):
             self.assertEqual([row['voltages'][result['nodes'].index(name)]
                               for row in result['solutions']], [0.,expected,expected])
 
-    def test_future_mutable_state_history_time_and_output_aliases_reject(self):
-        aliases = [('a=V(u,r);', 'a=V(u,r);'),
-                   ('', 'a=V(u,r);'), ('a=q;', ''),
+    def test_reassigned_affine_alias_samples_its_event_position_and_holds(self):
+        # Migrate exactly the former before/after repeated affine definition.
+        # u(t)=t gives the sampled value1/2, which must still be held at t=1.
+        # The later ordinary redefinition does not turn q into a live voltage.
+        program = self.compile('@(initial_step)q=0; a=V(u,r); '
+                               '@(timer(0.5))q=a; a=V(u,r); V(y,r)<+q;')
+        result = transient(program, {'u': [[0,0],[1,1]]}, [0,.25,.75,1],
+                           stop=1, max_step=1, kernel=KERNEL)
+        self.assertEqual([row['voltages'][result['nodes'].index('y')]
+                          for row in result['solutions']], [0.,0.,.5,.5])
+
+    def test_future_state_history_time_and_output_aliases_reject(self):
+        aliases = [('', 'a=V(u,r);'), ('a=q;', ''),
                    ('a=V(y,r);', ''), ('a=0*V(y,r);', ''),
                    ('a=$abstime;', ''), ('a=idt(V(u,r),0);', ''),
                    ('if(V(u,r)>0) a=V(u,r);', '')]

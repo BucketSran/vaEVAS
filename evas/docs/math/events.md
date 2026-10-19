@@ -1367,6 +1367,28 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 独立公开回归见 [15项角色与顺序控制](../../tests/test_event_ordinary_scratch.py)，
 本次没有新增实际 Spectre 配对或371原件通过结论。
 
+<a id="ordinary-event-prefix"></a>
+
+### 回调位置的普通纯输入前缀（本地候选）
+
+没有初始化、事件或循环写者的标量 `real`，可以在回调体中读取其源码前缀。
+例如 `a=V(u); @(timer(0.25))q=a; a=2*V(u); V(y)<+a;`，
+q 在事件根读取该位置的输入，普通输出仍读取后续的两倍输入。
+a 不变成保持状态，也不从上次 analog 求值取值；不同回调位置保留各自的前缀。
+
+前缀只依赖实例参数和实际物理 input/inout；传递定义按原源码顺序解析，
+条件合并要求两臂都有合法定义和纯输入谓词。写前读、后置定义、时间、
+内部或其他实例输出、算子、数组和循环携带仍拒绝，零系数和未选臂也参与检查。
+这张绑定只供回调体使用，不进入 trigger、direction、tolerance 或只读设置。
+运行时仍使用当前根的完整输入盒，不能用代表点消除真实采样不确定性。
+
+`initialization_aliases.py` 复用旧需求遍历，只为旧路径不能绑定的新需求留下即时提示；
+`ordinary_event_prefix.py` 再对完整原树作付费资格检查，
+`instance_compiler.py::aliases_at` 按回调 token 取该位置的表达式。
+没有新需求时沿用旧路径，避免为旧 typed-target 程序增加扫描和复制费用。
+公开控制见 [test_ordinary_event_prefix.py](../../tests/test_ordinary_event_prefix.py)，
+包括独立数值答案、查询加密、隐藏依赖以及原100000预算边界的完整 wire 对照。
+
 <a id="initial-only-ordinary-alias"></a>
 
 ### 仅初始化状态的普通全路径别名
@@ -1377,7 +1399,8 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 普通输出读取当前物理输入的两倍。初始化中的所有语句仍完整降低和检查，
 初始化输出保留各自调用位置的快照；后续普通覆盖不能消除非法初值或未选臂的义务。
 
-新增目标写入及其传递普通定义必须位于全部初始化和运行回调声明之后。
+新增目标写入必须位于全部初始化和运行回调声明之后。
+传递普通定义若只依赖参数和实际物理输入，可位于回调之前；这不授予目标状态的前序读取。
 前序 StateRef 或夹在普通写入之间的 initial_step 不通过这条新入口取得资格，
 以免把声明位置的旧状态替换成最终 Frame 状态。这个顺序门是当前支持域，不是语言合法性判断。
 普通别名按原源码顺序更新，条件两臂合并；缺臂只能保留本次求值已经定义的值。
@@ -1407,6 +1430,35 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 不以另一个排列的输出充当数值 oracle。主线在完整实例编译后统一发射已经降低的贡献，
 A 入口不改变该队列、单次发射、失败后禁止重放或原预算合同。
 这是局部开发合同，没有新增原件通过或 Spectre 对照成绩。
+
+<a id="ordinary-integer-event-prefix"></a>
+
+### 事件读取的普通 integer Floor 前缀（本地候选）
+
+单个普通标量 integer 可由物理输入的 `floor` 赋值及后续常量夹位组成前缀，
+并只在其后声明的运行回调体内被读取。编译器把完整原赋值和夹位放在每个读取回调之前，
+复用已有 integer 状态、原树 Floor 证明和顺序事件语句。
+例如先写 `ratio=floor(V(u)+0.5); if(ratio<1)ratio=1;`，
+再在 timer 中执行 `q=q+ratio;`，每次读取的是当前事件根处重新计算的 ratio。
+
+顺序为输入原树求值、Floor、signed32 赋值检查、常量夹位，再执行原回调体。
+溢出不能被后置夹位掩盖；原输入盒跨 Floor bin 时仍拒绝，除非原机制给出有效来源证书。
+当前切片不接受多个 Floor 前缀、数组、初始读取或写者、事件写者、普通贡献或别名读取，
+也不进入 display、触发器或设置。它不扩展一般连续 Floor 或 observer 权限，IR32不变。
+
+公开状态轨迹会包含 ratio 及其工程初值0；原模型的每次读取都由同回调前置赋值支配，
+不能读取这个初值。accepted/candidate Frame 仍共同拥有该槽及其 bounds，失败时完整回退。
+`ordinary_integer_event_prefix.py` 检查原模型和执行模型的完整角色，
+`instance_compiler.py` 将前缀交给原范围分析、原事件审计和执行路径；
+全部新扫描、保留和复制都先计入原 NativeAudit。没有候选时恢复原直接事件体路径。
+
+公开正反例见 [test_ordinary_integer_event_prefix.py](../../tests/test_ordinary_integer_event_prefix.py)。
+[真实 Controller 控制](../../rust_core/src/transient_ordinary_integer_prefix_tests.rs)
+使用当前公开编译器生成的 IR，核对非空 warm 前缀、同一 Controller 两次晚期失败后的合法重试，
+以及原共享 Work 自然耗尽后的两次粘性拒绝；完整 Frame 包含无关状态、历史、电路、队列和输出。
+该控制覆盖静态日历，不外推到 Held/History 日历。
+局部证据见[普通前缀收据](../../../experiments/backends/support/low-cost-closure/ordinary-prefix.json)，
+原件234定向通过不替代同源400、完整 CI 或安装验收，也没有新增 Spectre 或共同资格。
 
 <a id="multiple-event-writers"></a>
 

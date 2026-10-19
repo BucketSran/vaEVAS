@@ -92,6 +92,10 @@ def bind_event_body_aliases(compiler, writes):
     types and every original decision arm are audited by the same lowerer as
     initialization; no initial value or persistent state substitutes an input.
     """
+    # A routing hint, rebuilt by this mandatory demand walk; it is not an
+    # eligibility proof and retains no source or lowered expression.
+    compiler.event_body_prefix_demand = False
+
     def local_reads(root, seen):
         pending = [root]
         while pending:
@@ -140,6 +144,13 @@ def bind_event_body_aliases(compiler, writes):
     pending, seen = list(demanded), set()
     while pending:
         name = pending.pop()
+        if name not in scalar_names and not compiler.event_body_prefix_demand:
+            # The old binder cannot supply this demanded ordinary local. Only
+            # this new route pays to retain a hint; old aliases do no new walk,
+            # allocate no hint container and incur no new owner charge.
+            compiler.compilation.native_audit.extra(
+                source.declaration_token, 'ordinary_prefix_demand_hint')
+            compiler.event_body_prefix_demand = True
         expression = definitions.get(name)
         if expression is None:
             continue

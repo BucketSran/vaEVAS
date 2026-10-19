@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "status": "local scoped integration verified;complete delivery pending",
+  "at_utc": "2026-10-19T19:15:05.350285+00:00",
+  "capabilities": [
+    "LANG",
+    "EVENT-ORDER",
+    "EVENT-CONDITIONS",
+    "TRANSITION",
+    "COMPOSE"
+  ],
+  "base_evas_source": "1dfa8424092c592be3ea19a2e2892a9ae2a3f231",
+  "ir_version": 32,
+  "package_version": "0.24.0",
+  "runtime_files_sha256": {
+    "evas/src/evas/ordinary_event_prefix.py": "eadc7c1b9eb420c79e4c7efc3485a119c2babd463183939bc9626a2bb20b4cdc",
+    "evas/src/evas/ordinary_integer_event_prefix.py": "f14dc646123fe4af3bb1dc789dd9d506fa3d1787addb4b26fe505b9129aed482",
+    "evas/src/evas/initial_ordinary_alias.py": "1de4a6b178abc0462fcb5e13b3760b6dad12f3419ebde23967fd652def87e660",
+    "evas/src/evas/initialization_aliases.py": "b7ed999475f98b8788036d2fd0423ff6162ba53941dfb1ece3639ceb0e417952",
+    "evas/src/evas/instance_compiler.py": "c77d86d54228589cf2c1d4ad58c7c5ed0ae11ae90cdce219c4e1f6e4c64808f5"
+  },
+  "kernel": {
+    "sha256": "193cb9bb6e5ce2a2758974833e9daedaaf01b5335d979a787a48342d5fc30983",
+    "profile": "release",
+    "rust_runtime_change": false,
+    "reuse": "Python frontend and Rust test-only delta;final release source binding remains a delivery obligation"
+  },
+  "scope": {
+    "real_prefix": "Current-root pure input expression bound at each callback source position;no held local or settings expansion",
+    "integer_prefix": "Single event-only scalar original Floor assignment then constant clamps;existing signed32 assignment before clamp;no general continuous Floor",
+    "public_seed": "ratio state and engineering zero are visible in protocol;all original VA reads follow the callback prefix",
+    "calendar": "ratio joint control covers static calendar only"
+  },
+  "checks": {
+    "common_python": {
+      "methods": 134,
+      "pass": 134,
+      "skip": 0,
+      "receipt": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-prefix-consumers-r4/execution.receipt.json",
+        "sha256": "0ef1d855cc627d7948596102a456feb879eb8d4895f8317b7702f86083c877ce",
+        "availability": "local-only in ignored task runs"
+      }
+    },
+    "updated_integer_module": {
+      "methods": 11,
+      "pass": 11,
+      "skip": 0,
+      "receipt": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-integer-prefix-final-controls-r6/execution.receipt.json",
+        "sha256": "a168a264208d5eea45acbe4d34cb2719ff0257f473c807d3e4e8ea388b383dd0",
+        "availability": "local-only in ignored task runs"
+      },
+      "reuse": "10 overlap prior134;one new frontend-to-Rust-fixture parity method;135 distinct coverage across runs,not a single135 run"
+    },
+    "controller": {
+      "methods": 2,
+      "pass": 2,
+      "receipt": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/234-controller-joint-r2/execution.receipt.json",
+        "sha256": "9d94b36de117520bd2ee9edef1514576fdaecaa87839925d11e9963a38014589",
+        "availability": "local-only in ignored task runs"
+      },
+      "public_generated_request_sha256": "d6d23279f5f95eda41a124a3af2fa5b4912342aa2c3d8678993c558e0be48d0a",
+      "work_exhaustion": {
+        "limit": 1000000000,
+        "actual_prepares": 1150,
+        "spent": 1000025191,
+        "sticky_retries": 2
+      },
+      "failed_trials": 2,
+      "full_frame": [
+        "states and bounds",
+        "solution and certified voltage bounds",
+        "value/time proofs",
+        "full Circuit equations/tolerances/cache",
+        "all Transition histories/queues",
+        "calendar/event cursor",
+        "nonempty records/display/outputs"
+      ],
+      "retry": "original Controller and owner;legal retry equals clean after normalizing only independent factor allocation address"
+    },
+    "preflight": {
+      "status": "passed",
+      "policy_methods": 30,
+      "checks": [
+        "ruff E9,F63,F7,F82",
+        "Rust format",
+        "diagnostic inventory",
+        "traceability",
+        "validation version identities",
+        "git diff whitespace"
+      ],
+      "receipt": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-preflight-r1/execution.receipt.json",
+        "sha256": "acb8c1e89697f5aeb72a1721529e420f55403bba229eb651651e608370221803",
+        "availability": "local-only in ignored task runs"
+      }
+    },
+    "clippy": {
+      "status": "passed",
+      "scope": "stable workspace all-targets with -D warnings",
+      "receipt": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-clippy-r3/execution.receipt.json",
+        "sha256": "144c3f7312c77d6ddd48aabbe314a966daf0d9d39f5f6cce4491354b97a5f3c1",
+        "availability": "local-only in ignored task runs"
+      },
+      "retained_failure": "r1 output_limit from build artifacts inside execution directory; r3 uses separate target directory; r2 admission rejected wrong maintenance case reference before execution"
+    }
+  },
+  "original234": {
+    "status": "complete original checker passed",
+    "checker": "7edges/7checks",
+    "result": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/234-original-common-r4/RESULT.json",
+      "sha256": "98b04334356ee95de27f19648846f275d878a5c2d1fe8dde4d89f8049eccd1f5",
+      "availability": "local-only in ignored task runs"
+    },
+    "response_sha256": "7ea1206fd21a873d97e003950009fb4e029e5d974f5b6ae1d070668d1f13839a",
+    "independent_samples": 8,
+    "independent_analysis": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/234-math-eight-r1/analysis/INDEPENDENT-EIGHT.json",
+      "sha256": "113970c23f73c2539bcea4bb3cd50373a5b7a247e4fd3aa4ba053172048b801d",
+      "availability": "local-only in ignored task runs"
+    },
+    "extra_math_kernel_invocations": 0,
+    "aggregate_credit": 0
+  },
+  "compatibility": {
+    "original_cap": 100000,
+    "fixed_old_source_sha256": "2071555869fc4bb90e83e54ccc859aa9d89d7beaf934218acade489f9ffc12da",
+    "k225": {
+      "compile": 82919,
+      "full_wire": 99899,
+      "status": "passed"
+    },
+    "k226": "original resource_budget rejection retained",
+    "R3": "234 empty-path regression fixed",
+    "R4": "common pure-prefix no-demand duplicate scan fixed",
+    "evidence": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-oldtyped-prefix-green-r4/execution.receipt.json",
+      "sha256": "562b378eed3cb803036745af882c1a5c4b23a33bd42f23a6efd3a4589a3b350b",
+      "availability": "local-only in ignored task runs"
+    }
+  },
+  "review": {
+    "independent_reviewer": "/root/grant_review",
+    "R3": "resolved",
+    "R4": "resolved;final state_range expectation correction verified11 methods",
+    "ratio_joint": "closed for static calendar",
+    "method": "independent read-only source and actual receipt review;reviewer did not rerun"
+  },
+  "retained_failures": [
+    "initial Floor fixture import missing",
+    "real-prefix held guard source-order leak red/fixed",
+    "234R3 and commonR4 real old budget regressions red/fixed",
+    "Rust joint first build test0.0.2 typo",
+    "r5 negative expected integer_range;actual state_range;corrected r6 passed"
+  ],
+  "delivery": {
+    "baseline_original_pass": 314,
+    "baseline_revised_pass": 317,
+    "baseline_remaining": 83,
+    "new_common_whole400_credit": 0,
+    "full_original400": "pending final freeze authorized once",
+    "full_revised400": "pending final freeze authorized once",
+    "complete_python_executor": "GitHub CI only",
+    "installation": "pending matching candidate",
+    "original037": "private later kernel reaches condition_precision;new Rust proof work not integrated",
+    "spectre_invocations": 0,
+    "new_formal_qualification": false,
+    "merged": false
+  },
+  "decision_trail": "runs/evas-source-shape-20261017/overnight-integer-20261018/decisions.tsv (local-only canonical trail)"
+}

@@ -70,9 +70,16 @@ class EventBodyInputAliases(unittest.TestCase):
             with self.subTest(event=event), self.assertRaises(CompileError):
                 self.compile('a=(V(u,r)>0.5)?1:0; @(initial_step)q=0; '+event+' V(y,r)<+q;')
 
-    def test_non_dominating_mutable_and_cross_callback_definitions_reject(self):
+    def test_later_reassignment_preserves_the_earlier_callback_prefix(self):
+        # The callback occurs between the two source assignments, so it reads
+        # the selected first value1 at t=.5. The later ordinary value.5 cannot
+        # replace it. Initial sampling keeps its separate single-writer gate.
+        p = self.compile('@(initial_step)q=0; a=(V(u,r)>0)?1:0; '
+                         '@(timer(0.5))q=a; a=V(u,r); V(y,r)<+q;')
+        self.assertEqual(self.values(self.run_samples(p)), [0,1,1])
+
+    def test_non_dominating_and_cross_callback_definitions_reject(self):
         cases = [('','a=(V(u,r)>0)?1:0;'),
-                 ('a=(V(u,r)>0)?1:0;','a=V(u,r);'),
                  ('if(V(u,r)>0)a=1;',''),
                  ('a=V(u,r); @(timer(0.125))a=V(u,r);',''),
                  ('a=b;b=a;','')]

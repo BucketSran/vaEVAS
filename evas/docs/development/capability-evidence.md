@@ -58,6 +58,13 @@ IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和�
 范围见[合同](../math/events.md#declaration-initializers)与[公开正反例](../../tests/test_declaration_initializers.py)。
 声明常量不授予一般输入采样、只读设置或ordinary局部量支持。
 
+[回调位置的普通纯输入前缀](../math/events.md#ordinary-event-prefix)与
+[事件读取的 integer Floor 前缀](../math/events.md#ordinary-integer-event-prefix)
+补充 LANG、EVENT-ORDER、EVENT-CONDITIONS、TRANSITION 和 COMPOSE 的本地候选证据。
+[紧凑收据](../../../experiments/backends/support/low-cost-closure/ordinary-prefix.json)
+记录公开数值正反控、原预算边界、当前前端生成 IR 的一致性及同 Controller 完整 Frame 控制。
+原234定向完整通过与统一400分开；本候选尚待完整 CI、安装和最终同源双轨验收，没有新增 Spectre 或正式共同资格。
+
 [仅初始化状态的普通别名合同](../math/events.md#initial-only-ordinary-alias)
 登记 LANG、EVENT-ORDER 和 COMPOSE 的分支开发入口。
 [状态与逐位置控制](../../tests/test_initial_ordinary_alias.py)要求保留初值、初始化输出、

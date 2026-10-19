@@ -1,0 +1,25 @@
+`include "disciplines.vams"
+module joint(u,y,h);
+input u;output y,h;electrical u,y,h;
+integer ratio,q,keep;
+real spare;
+analog begin
+    @(initial_step) begin q=0;keep=7;spare=0;end
+    ratio=$floor((V(u)/0.9)*15+0.5);
+    if(ratio<1)ratio=1;
+    @(timer(0.125)) begin
+        q=ratio;spare=0.25;
+        $display("ratio=%d q=%d keep=%d",ratio,q,keep);
+    end
+    @(timer(0.5)) begin
+        q=ratio;spare=0.75;
+        $display("ratio=%d q=%d keep=%d",ratio,q,keep);
+    end
+    @(timer(0.875)) begin
+        q=ratio;spare=0.5;
+        $display("ratio=%d q=%d keep=%d",ratio,q,keep);
+    end
+    V(y)<+transition((q>>0)&1,0,0.125,0.125);
+    V(h)<+transition(spare,0,0.125,0.125);
+end
+endmodule

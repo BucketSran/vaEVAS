@@ -291,9 +291,20 @@ class InstanceCompiler:
         # A declaration does not become held state just because another variable
         # has an event writer. Walk writes (including conditional/loop bodies),
         # so event targets retain the VA declaration default of zero.
-        def writes(statements):
+        floor_prefix_candidates = None
+        def writes(statements, *, ordinary=False):
+            nonlocal floor_prefix_candidates
             for statement in statements:
                 if isinstance(statement, SyntaxAssignment):
+                    # Reuse this existing mandatory writer traversal as a
+                    # syntax-only dispatch hint. No hint container exists for
+                    # old programs without a top-level integer Floor writer.
+                    if (ordinary and statement.index is None and statement.rhs.op == "floor"
+                            and self.model.variables.get(statement.name) == "integer"):
+                        self.compilation.native_audit.debit("integer_prefix_candidate_hint", 4, statement)
+                        if floor_prefix_candidates is None:
+                            floor_prefix_candidates = []
+                        floor_prefix_candidates.append(statement.name)
                     if statement.index is not None and statement.name in self.array_elements:
                         # A dynamic write can select any declared slot.
                         yield from (f'{statement.name}[{k}]'
@@ -313,10 +324,19 @@ class InstanceCompiler:
             persistent.update(writes(event.body))
             if any(trigger.kind in ("cross", "timer") for trigger in event.triggers):
                 event_writers.update(writes(event.body))
-        analog_writers = set(writes(self.model.analog))
+        analog_writers = set(writes(self.model.analog, ordinary=True))
         all_writers = persistent | analog_writers
         immutable_names = set(self.model.variable_initializers) - all_writers - declaration_writers - set(self.model.arrays)
         self.local_variables = analog_writers - persistent
+        self.integer_event_prefix = None
+        if floor_prefix_candidates is not None:
+            from .ordinary_integer_event_prefix import qualify as integer_event_prefix
+            plan = integer_event_prefix(self)
+            if plan.names:
+                self.integer_event_prefix = plan
+                # Every internal slot read is dominated by its same-callback
+                # original prefix. The hint above grants no qualification.
+                self.local_variables.difference_update(plan.names)
         self.preserve_analog_structure = self.compilation.preserve_structure or bool(self.local_variables)
         def expression_reads(expr):
             if expr is None:
@@ -472,6 +492,10 @@ class InstanceCompiler:
         self.initial_voltage_aliases = bind_initial_voltage_aliases(self, writes)
         self.runtime_voltage_aliases = bind_runtime_voltage_aliases(self, writes)
         self.event_body_aliases = bind_event_body_aliases(self, writes)
+        self.ordinary_event_prefixes = None
+        if self.event_body_prefix_demand:
+            from .ordinary_event_prefix import bind as bind_ordinary_event_prefixes
+            self.ordinary_event_prefixes = bind_ordinary_event_prefixes(self, writes)
         self.active_event_aliases = {}
         seeds = self.bind_declaration_initializers(event_writers, immutable_names)
         # No-writer declaration values belong to the variable namespace. They
@@ -481,7 +505,7 @@ class InstanceCompiler:
         self.initialize_states()
         from .event_real_ranges import floor_use_sites
         self.event_floor_range_facts = floor_use_sites(
-            [event.body for event in self.model.events],
+            [(event.body if self.integer_event_prefix is None else self.integer_event_prefix.body(event, self.compilation.native_audit)) for event in self.model.events],
             [name for name in self.state_names if self.model.variables[name] == 'real'],
             self.parameter, integer_type=self.integer_type)
         self.infer_integer_state_ranges()
@@ -493,7 +517,7 @@ class InstanceCompiler:
             self.active_event_aliases = self.aliases_at(event.token, body=True)
             self.runtime_event_checks = self.checked_event_context(event)
             view = self.compilation.native_audit.event_view((self.instance.name, event_index))
-            native_allowances[id(event)] = audit_event_body(self, event.body, view)
+            native_allowances[id(event)] = audit_event_body(self, (event.body if self.integer_event_prefix is None else self.integer_event_prefix.body(event, self.compilation.native_audit)), view)
         for event in self.model.events:
             self.active_event_aliases = self.aliases_at(event.token)
             self.runtime_event_checks = self.checked_event_context(event)
@@ -507,8 +531,14 @@ class InstanceCompiler:
                 return tuple(replace(item, then_body=retained(item.then_body), else_body=retained(item.else_body))
                              if isinstance(item, SyntaxConditional) else item
                              for item in body if id(item) in self.event_reachable_statements)
-            execution = specialize_event_body(retained(event.body), self.cache,
-                                              work=native_allowances[id(event)])
+            if self.integer_event_prefix is None:
+                execution = specialize_event_body(retained(event.body), self.cache,
+                                                  work=native_allowances[id(event)])
+            else:
+                prefix = self.integer_event_prefix.event_prefixes.get(event.token, ())
+                self.compilation.native_audit.debit("integer_prefix_execution_copy", 1 + len(prefix) + len(event.body), event)
+                execution = specialize_event_body((*prefix, *retained(event.body)), self.cache,
+                                                  work=native_allowances[id(event)])
             self.active_event_aliases = self.aliases_at(event.token, body=True)
             self.compilation.events.append(self.make_ir(Event, event_trigger, self.body(execution), origin))
         self.active_event_aliases = {}
@@ -611,8 +641,12 @@ class InstanceCompiler:
         aliases = self.constant_local_aliases | self.runtime_voltage_aliases
         if body:
             aliases |= self.event_body_aliases
-        return {name: value for name, value in aliases.items()
-                if name in self.model.local_alias_scopes.get(token, ())}
+        result = {name: value for name, value in aliases.items()
+                  if name in self.model.local_alias_scopes.get(token, ())}
+        prefixes = getattr(self, 'ordinary_event_prefixes', None)
+        if body and prefixes:
+            result.update(prefixes.get(token, {}))
+        return result
 
     def bind_declaration_initializers(self, event_writers, immutable_names):
         # Declarations either seed existing event state or bind a no-writer
@@ -1137,7 +1171,7 @@ class InstanceCompiler:
                 elif isinstance(statement, SyntaxConditional):
                     yield from writes(statement.then_body)
                     yield from writes(statement.else_body)
-        writers = [writer for event in self.model.events for writer in writes(event.body)]
+        writers = [writer for event in self.model.events for writer in writes((event.body if self.integer_event_prefix is None else self.integer_event_prefix.body(event, self.compilation.native_audit)))]
         for name in self.state_names:
             if self.model.variables[name] != "integer":
                 continue
@@ -1492,7 +1526,7 @@ class InstanceCompiler:
                 low, high = self.integral_bounds(value)
                 bounds = (int(low), int(high))
             initial[name] = event_index_domains.clamp(bounds)
-        bodies = [event.body for event in self.model.events]
+        bodies = [(event.body if self.integer_event_prefix is None else self.integer_event_prefix.body(event, self.compilation.native_audit)) for event in self.model.events]
         def parameters(name):
             return self.parameter(name)
         from .integer_invariants import proof_parameters
@@ -2353,6 +2387,12 @@ class InstanceCompiler:
         domains = dict(self.integer_state_ranges if domains is None else domains)
         emitted = []
         for statement in statements:
+            if (self.integer_event_prefix is not None and not conditional
+                    and statement.token in self.integer_event_prefix.moved_tokens):
+                # The complete original statement is audited and executed in
+                # each qualified callback; no continuous consumer exists.
+                self.compilation.native_audit.debit("integer_prefix_ordinary_transfer", 1, statement)
+                continue
             if isinstance(statement, BoundStep):
                 if contains_operator(statement.rhs):
                     raise CompileError(f'{self.model.source}:{statement.token.line}: $bound_step requires an expression without new waveform call sites')

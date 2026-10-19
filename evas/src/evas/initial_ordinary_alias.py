@@ -170,6 +170,25 @@ def admit(compiler, name, persistent, analog_writers, source):
                 return False
         return True
 
+    def source_only(expr, env):
+        # A source-only transitive definition has the same current value on
+        # both sides of a callback. It reads no held state the callback changes.
+        # The initial-only target itself still has to follow every callback.
+        charge(expr, 'pure_source_expression', 1 + len(expr.args))
+        if expr.op == 'parameter':
+            safe = expr.value in source.parameters or expr.value in env and env[expr.value][3]
+        elif expr.op == 'node':
+            safe = (not expr.args and (expr.value == '0' or
+                    source.directions.get(expr.value) in ('input', 'inout')
+                    and compiler.node_ids.get(expr.value) not in foreign))
+        else:
+            safe = (expr.op not in OPERATOR_NAMES and
+                    expr.op not in ('time', 'index', 'array', 'call', 'floor'))
+        for child in expr.args:
+            child_safe = source_only(child, env)
+            safe = safe and child_safe
+        return safe
+
     def flow(body, env, *, active_dependent=False):
         charge(source.declaration_token, 'environment_copy', 1 + len(env))
         env = dict(env)
@@ -183,6 +202,8 @@ def admit(compiler, name, persistent, analog_writers, source):
             if isinstance(item, Conditional):
                 left = expression(item.left, env, ordinary=True)
                 right = expression(item.right, env, ordinary=True)
+                pure_guard = source_only(item.left, env)
+                pure_guard = source_only(item.right, env) and pure_guard
                 charge(item, 'guard_dependency')
                 guard_dependent = active_dependent or left[1] or right[1]
                 yes = flow(item.then_body, env, active_dependent=guard_dependent)
@@ -194,32 +215,39 @@ def admit(compiler, name, persistent, analog_writers, source):
                     if yes[ref] is no[ref]:
                         merged[ref] = yes[ref]
                     else:
-                        safe = left[0] and right[0] and yes[ref][0] and no[ref][0]
+                        # Pure branch values alone do not certify a prefix:
+                        # before callbacks, its selecting guard must be pure
+                        # input too. Otherwise retain the original order gate.
+                        safe = (left[0] and right[0] and yes[ref][0] and no[ref][0]
+                                and (pure_guard or follows_callbacks(item)))
                         charge(item, 'merge_dependency')
                         dependent = (guard_dependent or yes[ref][1] or no[ref][1])
                         if ref == name and not safe:
                             fail(item, 'has an uncertified ordinary guard dependency')
-                        charge(item, 'merge_binding', 3)
-                        merged[ref] = (safe, dependent, item)
+                        charge(item, 'merge_binding', 4)
+                        merged[ref] = (safe, dependent, item,
+                                       pure_guard and yes[ref][3] and no[ref][3])
                 env = merged
                 continue
             if isinstance(item, Assignment):
                 safe, dependent = expression(item.rhs, env, ordinary=True)
+                pure = source_only(item.rhs, env)
                 charge(item, 'binding_dependency')
                 dependent = active_dependent or dependent
                 ordered = follows_callbacks(item)
                 if item.name == name and not ordered:
                     fail(item, 'requires its ordinary definitions after every initial/runtime callback')
-                safe = safe and ordered
+                safe = safe and (ordered or pure)
                 if item.index is not None:
                     _, index_dependent = expression(item.index, env, ordinary=True)
                     charge(item, 'index_dependency')
                     dependent = index_dependent or dependent
                     safe = False
+                    pure = False
                 if item.name == name and not safe:
                     fail(item, 'depends on time, history, an unresolved local, or a foreign/output/indexed node')
-                charge(item, 'binding', 3)
-                env[item.name] = (safe, dependent, item)
+                charge(item, 'binding', 4)
+                env[item.name] = (safe, dependent, item, pure)
             elif isinstance(item, (ContributionStatement, BoundStep)):
                 expression(item.rhs, env, ordinary=True, setting=isinstance(item, BoundStep))
                 if isinstance(item, BoundStep):
