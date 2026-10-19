@@ -1,6 +1,8 @@
 """Replay the real accepted313/400 checkpoint through the Stop command contract."""
 import copy
+from datetime import datetime, timedelta, timezone
 import hashlib
+import importlib
 import json
 from pathlib import Path
 import subprocess
@@ -11,6 +13,9 @@ import unittest
 
 SCRIPT = Path(__file__).resolve().parents[1] / 'check_task_continuation.py'
 FIXTURE = Path(__file__).resolve().parent / 'fixtures/continuation-wave21-313.json'
+sys.path.insert(0, str(SCRIPT.parent))
+initialize_runtime = importlib.import_module('task_continuation_policy').initialize_runtime
+update_runtime = importlib.import_module('task_continuation_policy').update_runtime
 
 
 class ContinuationChecks(unittest.TestCase):
@@ -58,6 +63,94 @@ class ContinuationChecks(unittest.TestCase):
     def test_repeated_stop_is_still_blocked_without_progress(self):
         event = dict(self.event, stop_hook_active=True)
         self.assertEqual(self.invoke(event=event).get('decision'), 'block')
+
+    def opt_in_runtime(self, prior_consumed_s):
+        self.scope['current']['continuation'] = {
+            'status': 'active', 'runtime': {'schema_version': 1, 'path': 'runtime.json'}}
+        path = self.root / 'scope.json'
+        path.write_text(json.dumps(self.scope))
+        (self.root / 'cases400.json').write_text(json.dumps(self.queue))
+        initialize_runtime(path, task_id='historical-313-replay',
+                           authority_ref='fixture-authorized-window',
+                           prior_consumed_s=prior_consumed_s)
+
+    def test_unknown_active_usage_does_not_force_unbudgeted_continuation(self):
+        self.opt_in_runtime(None)
+        self.assertNotIn('decision', self.invoke())
+        self.assertEqual(self.scope['current']['revised400']['passed'], 313)
+
+    def test_exhausted_execution_window_can_report_unfinished_work(self):
+        self.opt_in_runtime(14400)
+        self.assertNotIn('decision', self.invoke())
+        self.assertFalse(self.scope['current']['revised400'].get('target400_complete', False))
+
+    def test_opted_in_available_budget_still_blocks_the_historical_stop(self):
+        self.opt_in_runtime(0)
+        self.assertEqual(self.invoke().get('decision'), 'block')
+
+    def record_running_019(self):
+        self.opt_in_runtime(0)
+        path = self.root / 'scope.json'
+        update_runtime(path, {
+            'event_id': 'claim-019', 'operation': 'admit',
+            'task_id': 'historical-313-replay', 'route_id': 'route-019',
+            'action_id': 'action-019', 'attempt_id': 'attempt-019',
+            'actor': 'worker', 'case_ids': ['019'], 'ready': True,
+            'execution_id': 'job-019', 'input_digest': 'fixture-source',
+            'allocation_s': 60, 'purpose': 'exploration',
+            'plan': {'hypothesis': 'input stage', 'experiment': 'inspect fixed input',
+                     'criterion': 'compare intermediate value'}})
+        now = datetime.now(timezone.utc)
+        receipt = self.root / 'running-019.json'
+        receipt.write_text(json.dumps({
+            'kind': 'execution', 'task_id': 'historical-313-replay',
+            'route_id': 'route-019', 'action_id': 'action-019',
+            'attempt_id': 'attempt-019', 'input_digest': 'fixture-source',
+            'execution_id': 'job-019', 'status': 'running',
+            'observed_at_utc': now.isoformat(),
+            'deadline_utc': (now + timedelta(hours=1)).isoformat(),
+            'active_intervals': [], 'metering_complete': True}))
+        update_runtime(path, {
+            'event_id': 'running-019', 'operation': 'reconcile',
+            'task_id': 'historical-313-replay', 'receipt': {
+                'path': receipt.name, 'sha256': hashlib.sha256(receipt.read_bytes()).hexdigest()}})
+
+    def test_running_case_does_not_hide_86_unassigned_ready_actions(self):
+        self.record_running_019()
+        self.assertEqual(self.invoke().get('decision'), 'block')
+
+    def test_only_ready_case_already_running_can_wait(self):
+        self.record_running_019()
+        # Keep the same 400 IDs and acceptance count; only readiness changes.
+        for row in self.queue['cases']:
+            if row['revised_result'] != 'PASS' and row['case_id'] != '019':
+                receipt = self.root / (row['case_id'] + '-wait.json')
+                receipt.write_text(json.dumps({'case_id': row['case_id'],
+                                               'blocker_kind': 'external_dependency',
+                                               'next_check': 'fixture dependency restored'}))
+                row['continuation_block'] = {'kind': 'external_dependency', 'evidence': {
+                    'path': receipt.name, 'sha256': hashlib.sha256(receipt.read_bytes()).hexdigest()}}
+        self.assertNotIn('decision', self.invoke())
+
+    def test_explicit_stop_probe_blocks_once_and_records_same_turn_continuation(self):
+        self.scope['current']['continuation'] = {
+            'status': 'paused', 'user_pause': {'message_ref': 'EVAS waits for workflow checks'},
+            'native_stop_probe': {'nonce': 'fixture-probe', 'receipt': 'native-probe.jsonl'}}
+        event = dict(self.event, turn_id='fixture-turn')
+        self.assertEqual(self.invoke(event=event).get('decision'), 'block')
+        self.assertNotIn('decision', self.invoke(event=dict(event, stop_hook_active=True)))
+        rows = [json.loads(line) for line in (self.root / 'native-probe.jsonl').read_text().splitlines()]
+        self.assertEqual([row['outcome'] for row in rows], ['block_once', 'same_turn_continuation'])
+        self.assertEqual({row['turn_id'] for row in rows}, {'fixture-turn'})
+        self.assertNotIn('decision', self.invoke(event=dict(event, turn_id='later-turn')))
+
+    def test_stop_probe_cannot_overwrite_task_or_escape_its_evidence_directory(self):
+        self.scope['current']['continuation'] = {
+            'status': 'paused', 'user_pause': {'message_ref': 'human pause'},
+            'native_stop_probe': {'nonce': 'fixture-probe', 'receipt': '../escape.jsonl'}}
+        decision = self.invoke(event=dict(self.event, turn_id='fixture-turn'))
+        self.assertEqual(decision.get('decision'), 'block')
+        self.assertIn('probe receipt', decision['reason'])
 
     def test_other_thread_and_non_stop_events_are_unaffected(self):
         self.assertNotIn('decision', self.invoke(event=dict(self.event, session_id='another-thread')))

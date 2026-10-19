@@ -349,7 +349,7 @@ python3 -B scripts/check_workspaces.py --assets --json > runs/workspace-assets.j
 
 ## 长任务持续推进检查
 
-`check_task_continuation.py` 接入 Codex 原生 `Stop` hook，只读现有任务 `scope.json`
+`check_task_continuation.py` 接入 Codex 原生 `Stop` hook，读取现有任务 `scope.json`
 及 `current.remaining_closure_ledger` 指向的固定编号 `001..target` 队列。它不另建队列、不调度进程，也不执行仿真。
 总体目标未达且有待做动作时，返回原生 `decision: block` 继续当前主对话；重复结束尝试不会绕过检查。
 候选冻结、CI阶段闭合及旧早间审阅时间都不等于总体任务结束。
@@ -375,6 +375,46 @@ Codex要求用户通过 `/hooks` 审阅并信任非托管hook，信任前不得�
 
 该检查只能阻止已有状态所显示的提前结束，不能认证修复价值、用户授权真实性或仿真语义。
 快照回归复用本次实际313/400及87项待做动作的无损字段投影，属于维护检查，不计EVAS成绩。
+
+需要额度、停滞与恢复控制时，在原 `current.continuation` 中用
+`runtime: {schema_version: 1, path: "continuation-runtime.json"}` 引用唯一运行账。
+[task_continuation_policy.py](task_continuation_policy.py) 提供初始化、原子准入、收据结算、进展和重规划判定；
+动作只引用现有队列编号，不复制业务结果。旧任务没有这个引用时保留原 Stop 行为。
+初始化时未知的既有消耗保持未知，只有明确授权的新执行窗口才能指定零起点。恢复不能再次初始化覆盖原账。
+
+默认总额为 240 代理分钟，包含 25% 收尾预留；探索路线初始 60 代理分钟、最多一次常规续期 30 分钟。
+30 分钟路线主动时间无有效进展时需重规划。观察时间按同路线区间并集计算，投入按各执行者累计。
+正常等待不清零已用时间；改名、换执行者和重复通知也不会恢复额度。
+同一队列项的开发动作沿用已登记路线，改假设描述、输入版本或拆分不能另领探索额度。
+同一份证据改进展类别也不刷新观察时间。收尾动作的语义和授权由可信项目入口判断，
+`purpose: closeout` 这个字段本身不能证明它是收尾。
+项目验收器或适用独立审查提供进展依据，退出码为零和工具调用次数不算有效进展。
+
+[task_continuation_execution.py](task_continuation_execution.py) 是现有 Harness `run_process` 的薄适配。
+它在派发前取得预占，复用原进程期限、日志、收据和清理。恢复查询同一动作及输出目录，
+已经完成则收取，仍运行或未知则不重派。模块不自带调度服务、业务队列或另一套进程守护器。
+收据哈希只绑定内容，不能认证来源；调用它的宿主适配器必须提供可信执行身份与主动时间计量。
+
+**当前没有随此模块交付 Codex 原生代理主动时间提供方。** 缺少计量时，执行入口返回
+`metering_unavailable` 且不启动命令。进程墙钟和模型 turn 总时长都不能冒充代理主动时间。
+测试中的 `controlled_test` 计量只用于阈值和恢复回归，生产路径不自动接纳它。
+运行账中的额度耗尽、合法等待或计量未知允许报告未完成状态并结束当前轮，不能写成项目完成。
+真正运行中的命令仍受原执行器期限约束；主代理与子代理全部活动的硬额度控制尚未具备。
+
+```sh
+python3 -B -m unittest discover -s scripts/tests -p 'test_task_continuation*.py' -v
+```
+
+真实命令集成使用本机已有的 circuit-harness checkout。缺少该依赖时，相关集成检查明确跳过，
+基础拒绝与政策检查仍运行；跳过不代表进程集成或宿主接入通过。
+政策、真实进程和原生 hook 是三个不同验证范围，不能用其中一种的通过替代另外两种。
+
+实际 Stop 回调可用一次性诊断验证：在原 continuation 中明确设置
+`native_stop_probe: {nonce: "<unique-probe>", receipt: "native-stop-probe.jsonl"}`。
+探针在已绑定主会话最多阻断一次，并仅向本任务的探针收据追加记录。第二次 Stop 同一 `turn_id`
+且 `stop_hook_active=true` 时记录接续。该诊断会先于暂停判定运行，因此只在获准验证回调时启用，
+验证后移除配置。手工向脚本输入同样 JSON 仍只是协议回放；必须观察真实宿主触发与接续才能声称原生生效。
+探针不新增 hook 事件、不授予执行权限，也不解决计量缺口。新增事件定义仍需按宿主机制审阅并信任。
 
 ## 生成和检查追溯矩阵
 
