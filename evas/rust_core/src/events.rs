@@ -159,6 +159,7 @@ pub(crate) fn affine(
         }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
+        | Expression::IntegerRound { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {
@@ -1218,6 +1219,7 @@ impl EventModel {
             match expr {
                 Expression::Forcing { value, .. } => reads_other_writer(value, event, writers),
                 Expression::CheckedIndex { index, .. }
+                | Expression::IntegerRound { value: index, .. }
                 | Expression::CheckedInteger { value: index, .. } => {
                     reads_other_writer(index, event, writers)
                 }

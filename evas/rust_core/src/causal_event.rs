@@ -90,6 +90,26 @@ pub(crate) fn classify(
         }
         match v {
             serde_json::Value::Object(m) => {
+                if m.get("op").and_then(|v| v.as_str()) == Some("integer_round") {
+                    if let Some(w) = work {
+                        let size = crate::event_floor::encoded_size(v, w)?;
+                        crate::event_floor::charge(
+                            w,
+                            size.saturating_mul(8),
+                            "integer_round_qualification_copy",
+                        )?;
+                    }
+                    let expr: E = serde_json::from_value(v.clone())
+                        .map_err(|e| Error::new("invalid_ir", e.to_string()))?;
+                    if let E::IntegerRound { value, .. } = expr {
+                        if input_operand(&value, driven, work)?.is_none() {
+                            return Err(Error::new(
+                                "unsupported_integer_conversion",
+                                "integer conversion requires actual driven inputs",
+                            ));
+                        }
+                    }
+                }
                 if m.get("op").and_then(|v| v.as_str()) == Some("event_math")
                     && m.get("function").and_then(|v| v.as_str()) == Some("floor")
                 {

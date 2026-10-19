@@ -138,6 +138,7 @@ fn interval_evaluate(expr: &Expression, values: &[I]) -> Result<IntervalValue, E
         }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
+        | Expression::IntegerRound { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. }

@@ -32,7 +32,7 @@ EVAS 的价值需要由电压域工程行为证明：在正确时刻采样，保
 每类都检查初始化、事件前后读值、历史延续、多个实例和误差控制，再扩展反馈及更复杂组合。
 支持结论仍只维护在总表中。晶体管、电流与电荷方程不属于当前范围；性能优化排在行为与精度之后。
 
-当前开发版本为 **EVAS 0.23.0 / IR30**，尚未发布到公共索引或打tag，PR208草稿未合并。IR30新增受限source Forcing与独立held Transition；原有IR29右移／按位与、保持目标、原树事件Floor、源因子及字面零支路保留。Forcing与这些新Floor／typed Native／Slew的混合仍拒绝，旧route优先。数学合同见[算子说明](docs/math/operators.md#independent-source-forcing-beside-held-histories)，历史版本见[更新记录](docs/UPDATE.md)。
+当前本地候选为 **EVAS 0.24.0 / IR31**，尚未发布到公共索引或打tag，PR208草稿未合并；新候选的完整CI、安装和两轨400仍待验收。IR31增加事件体标量integer赋值根的直接物理输入电压转换，最近整数且半整数远离零，完整原值盒须证明同一signed32 bin；[合同及边界](docs/math/events.md#ir31-候选事件中的直接电压到-integer-转换)单独维护。IR30新增受限source Forcing与独立held Transition；原有IR29右移／按位与、保持目标、原树事件Floor、源因子及字面零支路保留。Forcing与这些新Floor／typed Native／Slew的混合仍拒绝，旧route优先。数学合同见[算子说明](docs/math/operators.md#independent-source-forcing-beside-held-histories)，历史版本见[更新记录](docs/UPDATE.md)。
 
 当前wave21生产提交 `a201378e` 绑定176份源码／构建输入、IR30、0.23.0和release核 `7e7ae92ae2de`。原件400份已完整执行：312通过、19失败、69拒绝，331完成，清理400/400；这不表示400份全部PASS。13+387件同源，旧312、303和基线198通过保留，旧19份失败checker字典相同，相对wave20新增PASS为0。原041在默认1e9证明预算下 `step_budget` 拒绝，checker未运行；R6作者独立PASS不替代统一结果。
 修订材料另轨400为313通过、17失败、70拒绝，清理400/400；398份同材料复用本轮原件结果，另两份为修订012通过、107因 `condition_precision` 拒绝。它不替换原件计数。距离全部PASS，原件还差88份，修订轨还差87份；350只是进展节点。
@@ -480,11 +480,11 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 
 ### IR 版本与迁移
 
-Program 和成功 Response 的 `schema_version` 均为 **29**，Python 适配器与 Rust 内核同步检查。
+Program 和成功 Response 的 `schema_version` 均为 **31**，Python 适配器与 Rust 内核同步检查。
 旧版本或未知整数版本先于载荷解码返回 `unsupported_ir_version`；版本缺失/错误类型及当前格式错误返回
-`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–25 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
+`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–30 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
 前端与内核须配套使用。IR24 的源误差项兼容原数值形式，另接受严格的物理曲线对象；
-JSON Program/Response 版本必须为 29；IR29新增受限右移、按位与及纯保持目标，旧载荷须从原VA重编译。IR27新增事件体 typed Add 与常量非零 Remainder。IR26新增实际驱动仿射输入的原生事件 `floor`，IR25及更旧载荷须重新编译。IR25新增原生 `tanh` 数学算子。IR24 扩展源误差描述，IR23 新增有界事件循环和紧凑数组读写；IR22 引入 `event_math`，仅扩展完整 IR 证明隔离的观察事件；
+JSON Program/Response 版本必须为 31；IR31新增直接物理输入的事件整数转换，IR30新增受限source Forcing与独立held Transition。IR29新增受限右移、按位与及纯保持目标，旧载荷须从原VA重编译。IR27新增事件体 typed Add 与常量非零 Remainder。IR26新增实际驱动仿射输入的原生事件 `floor`，IR25及更旧载荷须重新编译。IR25新增原生 `tanh` 数学算子。IR24 扩展源误差描述，IR23 新增有界事件循环和紧凑数组读写；IR22 引入 `event_math`，仅扩展完整 IR 证明隔离的观察事件；
 物理联立、初始化和固定 start=0 timer 的数学边界保持。IR21 保留 `step_bounds`，新增变量分母的 `divide` 表达式、顺序初始化和事件输出记录。
 `step_bounds` 保存每次 `$bound_step` 的值、激活条件和源码身份。
 IR19 引入的纯数学函数格式继续保留；不能只给旧 JSON 改版本号。
@@ -493,7 +493,7 @@ IR21 将初始化扩展到 real/integer 的顺序赋值、默认零值及受限�
 初始化先于算子历史、守卫日程、首次电压求解和 t=0 事件；详见[初始化契约](docs/math/events.md#input-initialization)。
 IR1–25 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
 
-仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR29，
+仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR31，
 保留每项 manifest/source SHA256 及失败诊断；原 IR、历史波形和收据不改写：
 
 ```sh

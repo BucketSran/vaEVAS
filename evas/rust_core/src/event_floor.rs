@@ -57,6 +57,7 @@ pub(crate) fn new_operand_charged(e: &E, w: &Work) -> Result<bool, Error> {
 pub(crate) fn contains_charged(e: &E, w: &Work) -> Result<bool, Error> {
     charge(w, 1, "floor_source_dispatch_scan")?;
     Ok(match e {
+        E::IntegerRound { .. } => true,
         E::EventMath {
             function: F::Floor,
             args,
@@ -119,6 +120,7 @@ pub(crate) fn display_operand(e: &E, work: Option<&Work>) -> Result<bool, Error>
             | E::IntegerPrimitive { .. }
             | E::ArrayRead { .. }
             | E::CheckedIndex { .. }
+            | E::IntegerRound { .. }
             | E::CheckedInteger { .. } => false,
             E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
                 allowed(left, w)? && allowed(right, w)?
@@ -558,6 +560,27 @@ pub(crate) fn resolve(
     ) -> Result<E, Error> {
         charge(w, 1, "floor_source_ast")?;
         Ok(match e {
+            E::IntegerRound { value, origin } => {
+                charge(w, 1, "integer_round_source_visit")?;
+                let E::Affine { constant, terms } = value.as_ref() else {
+                    return Err(invalid("integer conversion requires direct input"));
+                };
+                let mut bound = I::point(*constant);
+                for term in terms {
+                    charge(w, 4, "integer_round_source_interval")?;
+                    let input = local
+                        .floor_bound(term.node)
+                        .or_else(|| nodes.get(term.node).copied())
+                        .ok_or_else(|| invalid("integer conversion input missing"))?;
+                    bound = bound + I::point(term.coefficient) * input;
+                }
+                charge(w, 8, "integer_round_source_decision")?;
+                let v = crate::event_numeric::nearest_box(bound, origin)?;
+                E::Affine {
+                    constant: v.lo,
+                    terms: vec![],
+                }
+            }
             E::EventMath {
                 function: F::Floor,
                 args,

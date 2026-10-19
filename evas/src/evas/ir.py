@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 30
+SCHEMA_VERSION = 31
 
 
 @dataclass(frozen=True)
@@ -99,6 +99,13 @@ class CheckedIndex:
 
 
 @dataclass(frozen=True)
+class IntegerRound:
+    value: "Expression"
+    origin: Origin
+    op: str = field(default="integer_round", init=False)
+
+
+@dataclass(frozen=True)
 class CheckedInteger:
     value: "Expression"
     origin: Origin
@@ -135,7 +142,7 @@ class IntegerPrimitive:
     op: str = field(default="integer_primitive", init=False)
 
 
-Expression = Forcing | IntegerPrimitive | ArrayRead | CheckedInteger | CheckedIndex | Affine | Binary | Power | Select | StateRef | OperatorRef | EventMath
+Expression = IntegerRound | Forcing | IntegerPrimitive | ArrayRead | CheckedInteger | CheckedIndex | Affine | Binary | Power | Select | StateRef | OperatorRef | EventMath
 
 
 @dataclass(frozen=True)

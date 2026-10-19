@@ -266,3 +266,13 @@ IR23 允许独立测量实例在普通 timer/cross 回调及正常 final_step �
 见[固定接口合同](../../validation/event_runtime/IR23-CONTRACT.md)。
 [三个实际 Spectre 控制](../../../experiments/backends/support/event-runtime-control/README.md)
 验证顺序数组、嵌套循环与整数商余；它们不代表原 CDS 整题已通过。
+
+
+### IR31 本地候选的直接电压到整数转换
+
+事件体标量 integer 赋值的原始 RHS 若为一个外部输入电压探针，候选入口保留
+显式 `IntegerRound`，并在实际请求的每次事件中证明原值整个盒具有同一个合法
+signed32 最近整数。半整数远离零，后置 clamp 不免除转换前的范围检查。
+原值盒跨 bin、内部节点、real 复合 RHS、非整数 real 常量及 history 仍拒绝。
+准入不计完整任务 PASS。数学合同、代码与独立证据见
+[事件转换合同](../math/events.md#ir31-候选事件中的直接电压到-integer-转换)。

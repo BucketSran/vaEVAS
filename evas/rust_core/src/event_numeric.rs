@@ -9,7 +9,10 @@ pub(crate) fn integral(e: &E, p: &Program) -> bool {
             .first()
             .and_then(|i| p.states.get(*i))
             .is_some_and(|s| s.kind == crate::ir::StateKind::Integer),
-        E::IntegerPrimitive { .. } | E::CheckedInteger { .. } | E::CheckedIndex { .. } => true,
+        E::IntegerPrimitive { .. }
+        | E::IntegerRound { .. }
+        | E::CheckedInteger { .. }
+        | E::CheckedIndex { .. } => true,
         E::Affine { constant, terms } => terms.is_empty() && constant.fract() == 0.,
         E::State { state } => p.states[*state].kind == crate::ir::StateKind::Integer,
         E::Add { left, right } | E::Multiply { left, right } => {
@@ -33,6 +36,7 @@ pub(crate) fn contains_operator(e: &E) -> bool {
     match e {
         E::ArrayRead { index, .. }
         | E::CheckedIndex { index, .. }
+        | E::IntegerRound { value: index, .. }
         | E::CheckedInteger { value: index, .. } => contains_operator(index),
         E::Operator { .. } => true,
         E::EventMath { args, .. } => args.iter().any(contains_operator),
@@ -57,6 +61,7 @@ pub(crate) fn contains_math(e: &E) -> bool {
     match e {
         E::IntegerPrimitive { .. }
         | E::ArrayRead { .. }
+        | E::IntegerRound { .. }
         | E::CheckedInteger { .. }
         | E::CheckedIndex { .. }
         | E::EventMath { .. } => true,
@@ -88,9 +93,9 @@ pub(crate) fn dependencies(e: &E, p: &Program, owner: &str) -> Result<AffineStat
                 leaves(index, out);
                 out.extend(states.iter().map(|&state| E::State { state }));
             }
-            E::CheckedIndex { index, .. } | E::CheckedInteger { value: index, .. } => {
-                leaves(index, out)
-            }
+            E::CheckedIndex { index, .. }
+            | E::IntegerRound { value: index, .. }
+            | E::CheckedInteger { value: index, .. } => leaves(index, out),
             E::Power { base, .. } => leaves(base, out),
             E::Select {
                 left,
@@ -147,6 +152,27 @@ pub(crate) fn validate(e: &E, p: &Program, owner: &str) -> Result<(), Error> {
             args,
             origin,
         } => crate::integer_primitive::validate(*function, args, origin, p, owner)?,
+        E::IntegerRound { value, origin } => {
+            if origin.instance != owner
+                || origin.source.is_empty()
+                || origin.line == 0
+                || origin.column == 0
+                || !origin.valid_expansion()
+            {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "invalid integer conversion origin",
+                ));
+            }
+            if !matches!(value.as_ref(), E::Affine { constant, terms } if *constant == 0. && terms.len() <= 2 && terms.iter().all(|t| t.coefficient == 1. || t.coefficient == -1.) && (terms.len() < 2 || terms[0].node != terms[1].node && terms[0].coefficient == -terms[1].coefficient))
+            {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "integer conversion requires original direct input probe",
+                ));
+            }
+            validate(value, p, owner)?;
+        }
         E::CheckedInteger { value, origin } => {
             if origin.instance != owner
                 || origin.source.is_empty()
@@ -309,6 +335,12 @@ fn bind_math(e: &E, p: &Program, owner: &str, nodes: &[f64], states: &[f64]) -> 
             )?),
             terms: vec![],
         },
+        E::IntegerRound { .. } => {
+            return Err(Error::new(
+                "event_condition",
+                "integer conversion requires bound source proof owner",
+            ))
+        }
         E::CheckedInteger { value, origin } => {
             let v = self::value(value, p, owner, nodes, states)
                 .map_err(|e| checked_error(e, "integer_range", origin))?;
@@ -503,6 +535,12 @@ fn bounds_in(
             &mut |state| crate::integer_primitive::point(states[state], origin),
             &mut || Ok(()),
         )?)),
+        E::IntegerRound { .. } => {
+            return Err(Error::new(
+                "event_condition",
+                "integer conversion requires bound source proof owner",
+            ))
+        }
         E::CheckedInteger { value, origin } => checked_integer(
             bounds_in(value, nodes, states, proofs)
                 .map_err(|e| checked_error(e, "integer_range", origin))?,
@@ -719,4 +757,38 @@ fn checked_error(e: Error, kind: &'static str, origin: &crate::ir::Origin) -> Er
     } else {
         e
     }
+}
+
+/// Monotonic round-to-nearest, ties away from zero, on the complete original enclosure.
+pub(crate) fn nearest_box(v: I, origin: &crate::ir::Origin) -> Result<I, Error> {
+    if !v.finite() || v.lo > v.hi {
+        return Err(Error::new(
+            "nonfinite_arithmetic",
+            format!(
+                "integer conversion requires finite ordered input at {}",
+                origin.label()
+            ),
+        ));
+    }
+    let a = v.lo.round();
+    let b = v.hi.round();
+    if a < f64::from(i32::MIN) || b > f64::from(i32::MAX) {
+        return Err(Error::new(
+            "integer_range",
+            format!(
+                "original real-to-integer result exceeds signed32 before clamp at {}",
+                origin.label()
+            ),
+        ));
+    }
+    if a != b {
+        return Err(Error::new(
+            "event_condition",
+            format!(
+                "original real-to-integer enclosure spans multiple rounding bins at {}",
+                origin.label()
+            ),
+        ));
+    }
+    Ok(I::point(a))
 }

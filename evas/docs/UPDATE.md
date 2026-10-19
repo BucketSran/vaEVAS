@@ -4,6 +4,16 @@
 逐项证据见[证据索引](development/capability-evidence.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
 
+## 本地候选 0.24.0 / IR31：直接电压的事件整数转换
+
+事件体标量integer赋值的直接外部输入电压探针，显式转换为最近signed32整数，半整数远离零。
+每次事件先认证原输入整个盒具有唯一合法结果，再执行后置clamp；real复合表达式、内部节点、普通贡献及历史目标未由此扩大。
+新转换与事件Floor借同一原请求Work，完整原树角色及两次失败重试、全部Controller状态回滚保持；
+[数学合同](math/events.md#ir31-候选事件中的直接电压到-integer-转换)和独立45点oracle限定行为范围。
+本候选还保留静态下标源整数类型、回调临时值与普通别名分离、同请求付费不可变IR结构缓存修复。
+公开窄控制已通过，当前开发夹具须从VA重编译到IR31；旧保存IR和历史收据不改号。
+完整Python、安装与原始/修订400仍待同一最终候选验收，已接受成绩仍绑定下面的wave21，未新增完整任务PASS或Spectre资格。
+
 ## 开发检查点 0.23.0 / IR30：source Forcing与独立保持历史
 
 受限source Forcing按实际物理源选择值，独立Transition继续消费已提交的held state；完整原树角色、原Program／Trajectory身份、private Reduction及同请求Work在初始化、准备和失败重试中保留。旧source-rational路线优先，Forcing与新Floor、typed Native及Slew混合明确拒绝，完整合同见[算子说明](math/operators.md#independent-source-forcing-beside-held-histories)。

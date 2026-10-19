@@ -27,6 +27,9 @@ mod root_refinement;
 mod root_window_tests;
 
 #[cfg(test)]
+#[path = "transient_integer_round_tests.rs"]
+mod integer_round_tests;
+#[cfg(test)]
 #[path = "transient_source_factor_tests.rs"]
 mod source_factor_lifecycle_tests;
 #[cfg(test)]

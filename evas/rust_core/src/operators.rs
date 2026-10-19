@@ -862,6 +862,7 @@ fn reset_terms(expr: &Expression) -> Result<ResetTerms, Error> {
         }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
+        | Expression::IntegerRound { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {
@@ -959,6 +960,7 @@ fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
         }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
+        | Expression::IntegerRound { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {

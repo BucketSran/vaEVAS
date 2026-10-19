@@ -139,6 +139,7 @@ pub(crate) fn bind(
         }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
+        | Expression::IntegerRound { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {

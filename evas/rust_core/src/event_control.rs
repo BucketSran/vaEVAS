@@ -30,6 +30,8 @@ struct Summary {
     floor: bool,
     constant: Option<f64>,
     event_only: bool,
+    round_pending: bool,
+    round_invalid: bool,
 }
 fn binary_scale(v: f64) -> bool {
     let b = v.abs().to_bits();
@@ -119,6 +121,7 @@ pub(crate) fn admit<'a>(
     let mut stack = vec![(&value, 0usize, false)];
     let mut items = 0usize;
     let mut copy_items = 0usize;
+    let mut invalid_round_role = false;
     let mut summaries = std::collections::HashMap::<usize, Summary>::new();
     while !stack.is_empty() {
         if let Some(w) = work {
@@ -167,6 +170,7 @@ pub(crate) fn admit<'a>(
                     summary.coefficient |= c.coefficient;
                     summary.floor |= c.floor;
                     summary.event_only |= c.event_only;
+                    summary.round_invalid |= c.round_invalid || c.round_pending;
                 }
             }
             Value::Object(m) => {
@@ -182,6 +186,23 @@ pub(crate) fn admit<'a>(
                     summary.coefficient |= c.coefficient;
                     summary.floor |= c.floor;
                     summary.event_only |= c.event_only;
+                    summary.round_invalid |= c.round_invalid;
+                    if c.round_pending {
+                        // Only new conversion sites pay for role lookup. This
+                        // is the existing bounded mandatory postorder, with no
+                        // second walk, payload clone, or request owner.
+                        if let Some(w) = work {
+                            crate::event_floor::charge(w, 16, "integer_round_role_validation")?;
+                        }
+                        let allowed = m.get("kind").and_then(Value::as_str) == Some("assign")
+                            && m.get("rhs").is_some_and(|rhs| std::ptr::eq(rhs, child))
+                            && m.get("state")
+                                .and_then(Value::as_u64)
+                                .and_then(|state| usize::try_from(state).ok())
+                                .and_then(|state| program.states.get(state))
+                                .is_some_and(|state| state.kind == crate::ir::StateKind::Integer);
+                        summary.round_invalid |= !allowed;
+                    }
                 }
                 let child = |name: &str| m.get(name).map(get).unwrap_or_default();
                 summary.event_only |= m.get("op").and_then(Value::as_str).is_some_and(|op| {
@@ -199,6 +220,10 @@ pub(crate) fn admit<'a>(
                         {
                             summary.constant = m.get("constant").and_then(Value::as_f64);
                         }
+                    }
+                    Some("integer_round") => {
+                        summary.floor = true;
+                        summary.round_pending = true;
                     }
                     Some("divide") => summary.operand = true,
                     Some("add") => {
@@ -231,7 +256,16 @@ pub(crate) fn admit<'a>(
         if let Some(w) = work {
             crate::event_floor::charge(w, 8, "floor_source_admission_copy")?;
         }
+        if depth == 0 {
+            invalid_round_role = summary.round_pending || summary.round_invalid;
+        }
         summaries.insert(key, summary);
+    }
+    if invalid_round_role {
+        return Err(Error::new(
+            "invalid_ir",
+            "integer_round is only allowed as the RHS root of a scalar integer assignment",
+        ));
     }
     let (floor_events, source_floor) =
         floor_metadata(&value, &summaries, program.events.len(), work)?;

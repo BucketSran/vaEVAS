@@ -13,6 +13,7 @@ pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
         }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
+        | Expression::IntegerRound { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. }
@@ -103,6 +104,7 @@ fn predicate_nodes(expr: &Expression, nodes: &mut BTreeSet<usize>) {
             predicate_nodes(else_value, nodes);
         }
         Expression::CheckedIndex { index, .. }
+        | Expression::IntegerRound { value: index, .. }
         | Expression::CheckedInteger { value: index, .. } => predicate_nodes(index, nodes),
         Expression::ArrayRead { index, .. } => predicate_nodes(index, nodes),
         Expression::IntegerPrimitive { .. }
@@ -143,6 +145,7 @@ fn predicate_degree(expr: &Expression) -> Option<u8> {
         ),
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
+        | Expression::IntegerRound { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. }
@@ -224,6 +227,7 @@ pub(crate) fn validate_source_select_predicates(
         }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
+        | Expression::IntegerRound { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {
@@ -363,6 +367,7 @@ impl Accumulator {
             }
             Expression::IntegerPrimitive { .. }
             | Expression::ArrayRead { .. }
+            | Expression::IntegerRound { .. }
             | Expression::CheckedInteger { .. }
             | Expression::CheckedIndex { .. }
             | Expression::EventMath { .. }
@@ -574,6 +579,7 @@ pub(crate) fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, E
         )),
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
+        | Expression::IntegerRound { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. }

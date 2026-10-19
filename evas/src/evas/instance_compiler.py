@@ -9,7 +9,7 @@ from fractions import Fraction
 from typing import TYPE_CHECKING
 
 from .ir import (Affine, Term, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
-                 IntegerPrimitive, IntegerLiteral, IntegerState, ArrayRead, ArrayWrite, CheckedInteger, CheckedIndex, Loop as RuntimeLoop, EventMath, Origin, Program, Power, Select, Forcing, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
+                 IntegerPrimitive, IntegerLiteral, IntegerState, ArrayRead, ArrayWrite, IntegerRound, CheckedInteger, CheckedIndex, Loop as RuntimeLoop, EventMath, Origin, Program, Power, Select, Forcing, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
 from .lowering import lower, scale, UnsupportedConstantPower, FiniteIntegerUnavailable
 from .limits import check_ir
 from .integer_invariants import SourceProofRequest
@@ -755,7 +755,20 @@ class InstanceCompiler:
             table = self.integer_expression_table(expr, resolve, nodes, args, kwargs)
             if table is not None:
                 return table
-            return lower(expr, typed, nodes, self.model.source, *args, **kwargs)
+            value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)
+            if assignment_root and not self.integral(value) and expr.op == "voltage":
+                if not isinstance(value, Affine) or not self.expression_nodes(value).issubset(self.allowed_condition_nodes):
+                    raise CompileError("integer conversion requires a direct physical input probe", token=expr.token, instance=self.instance.name)
+                from .integer_invariants import ProofBudgetExceeded
+                work = self.compilation.integer_proof_owner
+                try:
+                    work.activate()
+                    work.charge()
+                except ProofBudgetExceeded as error:
+                    raise CompileError(str(error), code="resource_budget", token=expr.token, instance=self.instance.name) from error
+                origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
+                return self.make_ir(IntegerRound, value, origin)
+            return value
         except CompileError as error:
             if (error.diagnostic['code'] in ('unsupported_local_event', 'unsupported_event_state_dependency')
                     and 'location' not in error.diagnostic):
@@ -775,7 +788,7 @@ class InstanceCompiler:
         # Do not introduce an implicit real-to-integer rounding rule.
         if isinstance(expression, Affine):
             return not expression.terms and expression.constant.is_integer()
-        if isinstance(expression, (CheckedIndex, CheckedInteger, IntegerPrimitive)):
+        if isinstance(expression, (IntegerRound, CheckedIndex, CheckedInteger, IntegerPrimitive)):
             return True
         if isinstance(expression, ArrayRead):
             return all(self.compilation.states[state].kind == "integer" for state in expression.states)
@@ -791,6 +804,8 @@ class InstanceCompiler:
 
     def integral_bounds(self, expression):
         self.compilation.native_audit.extra(expression, "bound_visit")
+        if isinstance(expression, IntegerRound):
+            return -2147483648, 2147483647
         if isinstance(expression, IntegerPrimitive):
             if expression.function == 'remainder':
                 divisor = expression.args[1]

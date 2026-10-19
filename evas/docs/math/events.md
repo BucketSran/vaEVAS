@@ -1896,3 +1896,38 @@ integer 常量，先解释为32位无符号数，计数大于等于32时结果�
 在实际操作前预付同一Work。运行期Work100000耗尽回归是缩限单元控制，不代表生产1e9额度自然耗尽；
 编译aggregate100000的原额度耗尽证据与此分开。原Frame字段复制和首轮serde转换保持旧边界，
 不计作新增target reservation已覆盖的工作。
+
+
+### IR31 候选：事件中的直接电压到 integer 转换
+
+此分支候选为事件体的 `integer code; code = V(input);` 增加显式
+`IntegerRound(value, origin)`。输入必须是原始语法中的单个电压探针，引用实际
+外部 driven 输入或 ground。原始 real 复合表达式、非整数 real 常量赋值、
+时间表达式、history、普通连续赋值和内部节点不由此入口扩展。
+
+[Verilog-AMS LRM 2.4 §4.2.1.1](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+规定最近整数与半整数远离零。因此 `1.5` 转换为 2，`-1.5` 转换为 -2。
+这里通过单调最近整数函数计算整个原始输入盒的两个端点；端点结果必须相等，
+且均在 signed32 范围内。转换先于程序随后写出的 clamp。跨整数 bin 或跨溢出
+边界的盒显式拒绝，不能用代表值、下游 clamp 或事件输出采样点代替证书。
+每个事件的输入盒重新绑定到该请求的实际 PWL 和根窗；plateau 不作为生命周期不变量。
+
+代码复用 `event_floor::Request` 的完整原请求绑定、`Work` 和候选局部状态。
+`event_control` 在原始有界 postorder 扫描中验证角色：新节点只能是标量 integer
+赋值的 RHS 根；real 目标、外层算术或选择、display、trigger、贡献及 operator 输入均拒绝。
+所有原始 children 仍完成结构与资源审计；新增角色查询先向同一 Work 付费，不复制 payload。
+`event_control` 将新节点纳入原始树扫描；`causal_event` 验证实际 driven 依赖；
+`event_floor::resolve` 对本次原输入盒付费并替换已证明的整数点；
+`event_numeric` 拒绝未经该 owner 解析的点/盒消费者。原始 RHS 语法检查及未选臂审计
+仍先执行，转换不会消除源程序中的整数溢出或其他域错误。
+
+独立回归为 `tests/test_integer_round.py`，包含精确有理数 oracle 的 45 个 binary64
+输入、正负 tie 与邻 ULP、signed32 边界、原值盒、非 binary cross 根窗、后续事件读取、
+同刻写者和 clamp/保持目标/Transition 消费者。`transient_integer_round_tests.rs`
+将 Floor 与新转换放入同一实际 Controller：两次最终电压拒绝后重试保留 accepted
+历史，原 1e9 owner 自然耗尽后两次重试不获得额度。此为本地候选证据，
+原142的CLI诊断已完整运行，但原worker/checker和最终共同候选验收尚未完成；
+不增加任何完整任务 PASS，也未取得新的 Spectre 对齐证据。
+
+线格式升至 IR31，Python 包与 kernel 候选身份为 0.24.0；IR30 和 IR31 相互拒绝。
+旧保存请求应从原 VA 重新编译，不能只改 `schema_version`。

@@ -95,6 +95,7 @@ pub(crate) fn affine(expr: &Expression, program: &Program) -> Result<Vec<I>, Err
         }
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
+        | Expression::IntegerRound { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {
