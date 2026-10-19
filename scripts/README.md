@@ -347,6 +347,35 @@ python3 -B scripts/check_workspaces.py --assets --json > runs/workspace-assets.j
 [退出清单](../docs/contributing/workspaces.md#retiring-work)处理。脚本只观察，不创建快照、修改索引、
 移动、清理或删除资产，也不自动读取远端 PR 状态。
 
+## 长任务持续推进检查
+
+`check_task_continuation.py` 接入 Codex 原生 `Stop` hook，只读现有任务 `scope.json`
+及 `current.remaining_closure_ledger` 指向的固定编号 `001..target` 队列。它不另建队列、不调度进程，也不执行仿真。
+总体目标未达且有待做动作时，返回原生 `decision: block` 继续当前主对话；重复结束尝试不会绕过检查。
+候选冻结、CI阶段闭合及旧早间审阅时间都不等于总体任务结束。
+
+```sh
+python3 -B scripts/check_task_continuation.py --scope runs/<task>/scope.json \
+  --session-id <main-thread-id> --print-hook-config
+python3 -B -m unittest discover -s scripts/tests -p test_task_continuation.py -v
+```
+
+第一条命令生成绑定该主对话的原生hook配置，不自动安装或信任它。将输出合入该工作区现有
+`.codex/hooks.json` 的 `hooks.Stop`，保留其他hook；任务专用绝对路径配置只在本地保留。
+Codex要求用户通过 `/hooks` 审阅并信任非托管hook，信任前不得声称实时结束拦截已生效。
+配置和协议见[官方hook文档](https://learn.chatgpt.com/docs/hooks#stop)。
+
+仅 `current.continuation.deadline_utc` 是当前执行窗口的截止；未设置表示不从旧审阅时间推断截止。
+明确暂停使用 `current.continuation.status: paused` 和 `user_pause.message_ref` 记录用户指令。
+全部队列通过还需现有总体验收标记及 `delivery_checks` 闭合，不能只修改通过计数。
+若所有未通过项确实依赖外部条件，可在原队列对应项加 `continuation_block`，列明
+`kind: external_dependency|human_decision` 和 `evidence: {path, sha256}`；该JSON收据必须匹配
+`case_id`、`blocker_kind` 并提供 `next_check`。内部缺能力、未知数学或单项阻塞不会停止其他工作。
+状态损坏或绑定主对话目录移出工作区时，返回明确的原生阻止决定；不影响其他主对话和用户 `Interrupt`。
+
+该检查只能阻止已有状态所显示的提前结束，不能认证修复价值、用户授权真实性或仿真语义。
+快照回归复用本次实际313/400及87项待做动作的无损字段投影，属于维护检查，不计EVAS成绩。
+
 ## 生成和检查追溯矩阵
 
 ```sh
