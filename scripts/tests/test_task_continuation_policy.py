@@ -102,6 +102,138 @@ class RuntimePolicyTests(unittest.TestCase):
         values.update(changes)
         return self.reconcile(name, **values)
 
+    def budget_grant(self, **changes):
+        scope = json.loads(self.scope.read_text())
+        deadline = scope['current']['continuation'].setdefault(
+            'deadline_utc', (datetime.now(timezone.utc) + timedelta(hours=6)).isoformat())
+        self.scope.write_text(json.dumps(scope))
+        receipt = {'kind': 'bounded_budget_grant', 'task_id': 'task',
+                   'grant_id': 'human-sixhour-window', 'additional_command_s': 120,
+                   'expected_previous_total_command_s': 80, 'deadline_utc': deadline,
+                   'authority_ref': 'human-message-sixhour',
+                   'user_authorization': 'Start the next six-hour repair window.'}
+        receipt.update(changes)
+        path = self.root / 'grant.json'
+        path.write_text(json.dumps(receipt))
+        return {'operation': 'grant_bounded_budget', 'event_id': 'grant-event',
+                'task_id': 'task', 'receipt': {'path': str(path),
+                    'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}}
+
+    def test_bounded_budget_grant_preserves_spend_and_replays_after_recovery(self):
+        self.fresh()
+        self.activate_bounded(total_command_s=80)
+        self.bounded_admit()
+        self.bounded_finish()
+        before = self.policy.read_runtime(self.scope)
+        request = self.budget_grant()
+        result = self.policy.update_runtime(self.scope, request)
+        self.assertEqual(result['decision'], 'bounded_budget_granted')
+        after = self.policy.read_runtime(self.scope)
+        self.assertEqual(after['accounting']['total_command_s'], 200)
+        for key in ('attempts', 'actions', 'routes', 'progress', 'prior_consumed_s'):
+            self.assertEqual(after[key], before[key])
+        self.assertEqual(self.policy.evaluate(after, {
+            'goal_complete': False, 'runnable': True})['budget']['consumed_s'], 20)
+        # A restarted adapter reads the same durable event rather than appending again.
+        spec = importlib.util.spec_from_file_location('recovered_policy', SCRIPT)
+        recovered = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(recovered)
+        self.assertTrue(recovered.update_runtime(self.scope, request)['replayed'])
+        self.assertEqual(recovered.read_runtime(self.scope), after)
+        duplicate = dict(request, event_id='different-event-same-grant')
+        self.assertTrue(recovered.update_runtime(self.scope, duplicate)['grant_reused'])
+        self.assertEqual(recovered.read_runtime(self.scope)['accounting']['total_command_s'], 200)
+
+    def test_bounded_budget_grant_refuses_unsettled_unknown_and_unbound_authority(self):
+        self.fresh()
+        self.activate_bounded(total_command_s=80)
+        request = self.budget_grant()
+        self.bounded_admit()
+        before = self.policy.read_runtime(self.scope)
+        with self.assertRaises(self.policy.PolicyError):
+            self.policy.update_runtime(self.scope, request)
+        self.assertEqual(self.policy.read_runtime(self.scope), before)
+        self.bounded_finish()
+        for changes in ({'authority_ref': ''}, {'user_authorization': ''},
+                        {'additional_command_s': 0}, {'additional_command_s': float('nan')},
+                        {'expected_previous_total_command_s': 81},
+                        {'deadline_utc': (datetime.now(timezone.utc) -
+                                          timedelta(seconds=1)).isoformat()}):
+            with self.subTest(changes=changes):
+                request = self.budget_grant(**changes)
+                before = self.policy.read_runtime(self.scope)
+                with self.assertRaises(self.policy.PolicyError):
+                    self.policy.update_runtime(self.scope, request)
+                self.assertEqual(self.policy.read_runtime(self.scope), before)
+        request = self.budget_grant()
+        path = self.root / 'runtime.json'
+        state = json.loads(path.read_text())
+        state['attempts']['attempt-a']['metering_unknown'] = True
+        path.write_text(json.dumps(state))
+        with self.assertRaises(self.policy.PolicyError):
+            self.policy.update_runtime(self.scope, request)
+
+    def test_bounded_budget_grant_atomic_failure_and_conflicting_replay(self):
+        from unittest.mock import patch
+        self.fresh()
+        self.activate_bounded(total_command_s=80)
+        request = self.budget_grant()
+        before = self.policy.read_runtime(self.scope)
+        with patch.object(self.policy, '_write', side_effect=OSError('interrupted before commit')):
+            with self.assertRaises(OSError):
+                self.policy.update_runtime(self.scope, request)
+        self.assertEqual(self.policy.read_runtime(self.scope), before)
+        self.policy.update_runtime(self.scope, request)
+        after = self.policy.read_runtime(self.scope)
+        changed = self.budget_grant(additional_command_s=121)
+        with self.assertRaises(self.policy.PolicyError):
+            self.policy.update_runtime(self.scope, changed)
+        with self.assertRaises(self.policy.PolicyError):
+            self.policy.update_runtime(self.scope, dict(changed, event_id='new-event'))
+        self.assertEqual(self.policy.read_runtime(self.scope), after)
+
+    def test_new_grant_protects_fresh_closeout_even_after_prior_closeout_spend(self):
+        self.fresh()
+        self.activate_bounded(total_command_s=80)
+        self.bounded_admit(purpose='closeout', allocation_s=60)
+        self.bounded_finish()
+        self.policy.update_runtime(self.scope, self.budget_grant())
+        result = self.policy.evaluate(self.policy.read_runtime(self.scope), {
+            'goal_complete': False, 'runnable': True})['budget']
+        self.assertEqual(result['consumed_s'], 60)
+        self.assertEqual(result['unallocated_closeout_s'], 30)
+        self.assertEqual(result['available_s'], 110)
+
+    def test_grant_recovery_after_pause_expiry_or_next_window_does_not_add_credit(self):
+        self.fresh()
+        self.activate_bounded(total_command_s=80)
+        request = self.budget_grant()
+        self.policy.update_runtime(self.scope, request)
+        for index, changes in enumerate([
+                {'status': 'paused'},
+                {'status': 'active', 'deadline_utc': (datetime.now(timezone.utc) -
+                                                    timedelta(seconds=1)).isoformat()},
+                {'status': 'active', 'deadline_utc': (datetime.now(timezone.utc) +
+                                                    timedelta(hours=12)).isoformat()}]):
+            scope = json.loads(self.scope.read_text())
+            scope['current']['continuation'].update(changes)
+            self.scope.write_text(json.dumps(scope))
+            with self.subTest(changes=changes):
+                reused = self.policy.update_runtime(self.scope, dict(
+                    request, event_id='recover-grant-' + str(index)))
+                self.assertTrue(reused['grant_reused'])
+                self.assertEqual(self.policy.read_runtime(self.scope)[
+                    'accounting']['total_command_s'], 200)
+        # A different authorization is still bound to the current execution window.
+        changed = json.loads((self.root / 'grant.json').read_text())
+        changed['grant_id'] = 'unbound-new-grant'
+        path = self.root / 'different-grant.json'
+        path.write_text(json.dumps(changed))
+        fresh = dict(request, event_id='must-not-add', receipt={
+            'path': str(path), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()})
+        with self.assertRaises(self.policy.PolicyError):
+            self.policy.update_runtime(self.scope, fresh)
+
     def test_bounded_whole_allocation_charges_sum_even_for_the_same_actor(self):
         self.fresh()
         self.activate_bounded(total_command_s=80)

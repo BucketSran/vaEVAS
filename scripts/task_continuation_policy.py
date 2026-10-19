@@ -164,6 +164,23 @@ def _validate_state(state):
                                                      'total_command_s') <= 0):
             raise PolicyError('inconsistent bounded-command accounting')
         _text(account.get('authority_ref'), 'bounded authority_ref')
+        grants = account.get('budget_grants', {})
+        if not isinstance(grants, dict):
+            raise PolicyError('budget grants must be an object')
+        previous = None
+        for grant_id, grant in grants.items():
+            result = grant['result']
+            prior = _number(result.get('previous_total_command_s'), 'grant prior ceiling')
+            extra = _number(result.get('additional_command_s'), 'grant additional allowance')
+            total = _number(result.get('total_command_s'), 'grant total ceiling')
+            if (result.get('grant_id') != grant_id or extra <= 0 or prior + extra != total or
+                    (previous is not None and prior != previous)):
+                raise PolicyError('inconsistent budget grant history')
+            previous = total
+        if previous is not None and previous != account['total_command_s']:
+            raise PolicyError('bounded ceiling differs from its grant history')
+        if 'closeout_charge_target_s' in account:
+            _number(account['closeout_charge_target_s'], 'closeout_charge_target_s')
     settings = state.get('config')
     if not isinstance(settings, dict) or set(settings) != set(DEFAULTS):
         raise PolicyError('invalid policy configuration')
@@ -270,8 +287,10 @@ def _budget(state):
         max(0, a['allocation_s'] - a['consumed_s'])
         for a in closeout_attempts if not a['settled'])
     total = state['accounting']['total_command_s'] if bounded else state['config']['total_agent_s']
-    reserve = max(0, total *
-                  state['config']['closeout_fraction'] - closeout)
+    target = (state['accounting'].get('closeout_charge_target_s',
+              total * state['config']['closeout_fraction']) if bounded else
+              total * state['config']['closeout_fraction'])
+    reserve = max(0, target - closeout)
     return {'mode': accounting_mode(state),
             'unit': 'command_deadline_seconds' if bounded else 'agent_active_seconds',
             'consumed_s': consumed if known else None,
@@ -352,6 +371,58 @@ def _activate_bounded(state, request, continuation):
                            'authority_ref': state['authority_ref']}}
     return {'decision': 'bounded_execution_activated', 'mode': BOUNDED_MODE,
             'unit': 'command_deadline_seconds'}
+
+
+def _grant_bounded_budget(state, request, continuation, scope_path):
+    """Append one explicit human-authorized grant without resetting execution history."""
+    if accounting_mode(state) != BOUNDED_MODE:
+        raise PolicyError('budget grants require existing bounded-command accounting')
+    receipt, ref = _receipt(request, scope_path)
+    grant_id = _text(receipt.get('grant_id'), 'grant_id')
+    account = state['accounting']
+    previous = account.get('budget_grants', {}).get(grant_id)
+    try:
+        identity = _digest(receipt)
+    except (TypeError, ValueError) as error:
+        raise PolicyError('grant authorization requires finite JSON content') from error
+    # Retrieving an existing grant never creates authority or another allowance.
+    if previous is not None:
+        if previous['receipt_digest'] != identity:
+            raise PolicyError('grant identity reused for a different authorization')
+        return dict(previous['result'], grant_reused=True)
+    _authorize(continuation)
+    authority = _text(receipt.get('authority_ref'), 'grant authority_ref')
+    _text(receipt.get('user_authorization'), 'grant user_authorization')
+    if (receipt.get('kind') != 'bounded_budget_grant' or
+            receipt.get('task_id') != state['task_id'] or
+            continuation.get('deadline_utc') is None or
+            receipt.get('deadline_utc') != continuation['deadline_utc']):
+        raise PolicyError('budget grant must bind the current task and authorized deadline')
+    additional = _number(receipt.get('additional_command_s'), 'additional_command_s')
+    previous_total = _number(receipt.get('expected_previous_total_command_s'),
+                             'expected_previous_total_command_s')
+    if additional <= 0 or not math.isfinite(previous_total + additional):
+        raise PolicyError('budget grant must add a finite positive command allowance')
+    if (previous_total != account['total_command_s'] or
+            any(not attempt['settled'] for attempt in state['attempts'].values()) or
+            _budget(state)['consumed_s'] is None):
+        raise PolicyError('budget grant requires the exact prior ceiling and fully reconciled usage')
+    total = previous_total + additional
+    closeout = _charged_seconds(state, [a for a in state['attempts'].values()
+                                        if a['purpose'] == 'closeout'])
+    # Prior delivery work cannot spend the reserve attached to this new window.
+    account['closeout_charge_target_s'] = max(
+        account.get('closeout_charge_target_s',
+                    previous_total * state['config']['closeout_fraction']), closeout
+    ) + additional * state['config']['closeout_fraction']
+    result = {'decision': 'bounded_budget_granted', 'grant_id': grant_id,
+              'previous_total_command_s': previous_total,
+              'additional_command_s': additional, 'total_command_s': total}
+    account.setdefault('budget_grants', {})[grant_id] = {
+        'receipt': ref, 'receipt_digest': identity, 'authority_ref': authority,
+        'granted_at_utc': datetime.now(timezone.utc).isoformat(), 'result': result}
+    account['total_command_s'] = total
+    return result
 
 
 def _route_status(state, route_id):
@@ -906,6 +977,8 @@ def update_runtime(scope_path, request):
             return dict(previous['result'], replayed=True)
         if request.get('operation') == 'activate_bounded_execution':
             result = _activate_bounded(state, request, continuation)
+        elif request.get('operation') == 'grant_bounded_budget':
+            result = _grant_bounded_budget(state, request, continuation, scope_path)
         elif request.get('operation') == 'admit':
             result = _admit(state, request, scope, continuation, scope_path)
         elif request.get('operation') == 'reconcile':

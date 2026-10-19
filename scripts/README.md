@@ -450,6 +450,24 @@ python3 -B scripts/check_task_continuation.py --scope runs/<task>/scope.json \
 命令准入、期限、停滞拒派和恢复可独立验证；它们不证明宿主能在主对话结束后自动唤醒。
 原生 Stop 尚未实际观察到回调时，只能报告当前受控批次与未完成状态，不能承诺无人值守接续。
 
+用户明确授权新执行窗口后，可通过原运行账的 `grant_bounded_budget` 操作追加命令额度。
+它要求既有模式为 `bounded_command_seconds`、全部动作已结算且消耗已知；不会重新初始化账本。
+请求沿用 `task_id`、稳定 `event_id` 和 `receipt: {path, sha256}`。授权收据包含：
+
+| 字段 | 含义 |
+| --- | --- |
+| `kind: bounded_budget_grant`、`task_id`、`grant_id` | 绑定原任务和唯一追加身份 |
+| `authority_ref`、`user_authorization` | 用户授权的来源和原文，由可信协调者核对 |
+| `deadline_utc` | 必须等于 scope 中当前执行窗口的硬截止 |
+| `expected_previous_total_command_s` | 必须与原账当前总额一致，防止对旧快照重复追加 |
+| `additional_command_s` | 新增有限正数额度，单位仍为命令期限秒 |
+
+使用上述 `--runtime-request` 入口提交请求。相同事件重复收取不再次追加；换事件但复用同一
+`grant_id` 和相同收据内容，也只返回历史结果。暂停、过期或后续窗口仍可收取历史 grant，
+这不授予新的执行权限。复用身份但修改授权内容会拒绝。中断恢复继续使用原请求和收据。
+原 attempts、actions、reviews、进展、费用和原生计量未知历史均保留。
+新增额度按原收尾比例另作预留，历史收尾费用不能提前消耗这份预留。墙钟硬截止与案例预算独立保持。
+
 ```sh
 python3 -B -m unittest discover -s scripts/tests -p 'test_task_continuation*.py' -v
 ```
