@@ -183,7 +183,7 @@ def _validate_state(state):
                 attempt['active_intervals'] or
                 attempt['consumed_s'] != (attempt['allocation_s'] if attempt['settled'] else 0) or
                 not 0 < _number(attempt.get('command_timeout_s'), 'command_timeout_s') <=
-                min(90, attempt['allocation_s'])):
+                attempt['allocation_s']):
             raise PolicyError('inconsistent bounded-command execution state')
         if bounded and 'guard_allowance_s' in attempt:
             guard = command_guard_allowance(attempt.get('harness_process_sha256'))
@@ -637,7 +637,7 @@ def _admit(state, request, scope, continuation, scope_path):
         deadline = request.get('command_deadline_utc')
         remaining = _time(deadline) - datetime.now(timezone.utc).timestamp()
         digest = _text(request.get('intent_digest'), 'intent_digest')
-        if (not 0 < timeout <= 90 or allocation + 1e-9 < timeout + guard or
+        if (timeout <= 0 or allocation + 1e-9 < timeout + guard or
                 request.get('guard_allowance_s') != guard or
                 not 0 < remaining <= timeout + .1 or len(digest) != 64 or
                 any(char not in '0123456789abcdef' for char in digest)):

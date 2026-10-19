@@ -12,6 +12,7 @@ import fcntl
 import hashlib
 import importlib
 import json
+import math
 from pathlib import Path
 import sys
 import threading
@@ -155,6 +156,11 @@ def execute_action(scope_path, admission, argv, *, directory, cwd=None, timeout_
         raise ValueError('bounded command mode does not accept controlled-test or native agent meters')
     if admission.get('task_id') != runtime['task_id']:
         raise ValueError('admission task identity differs from the runtime')
+    if (type(timeout_s) not in (int, float) or not math.isfinite(timeout_s) or
+            timeout_s <= 0):
+        raise ValueError('command deadline must be a finite positive number')
+    if not bounded and timeout_s > 90:
+        raise ValueError('one narrow command must have a deadline within 90 seconds')
     existing = runtime['actions'].get(admission['action_id'])
     if existing:
         attempt = runtime['attempts'][existing['attempt_id']]
@@ -181,8 +187,6 @@ def execute_action(scope_path, admission, argv, *, directory, cwd=None, timeout_
                 'native_agent_metering': False}
     if not isinstance(argv, list) or not argv or any(not isinstance(a, str) for a in argv):
         raise ValueError('argv must be a nonempty list of strings')
-    if type(timeout_s) not in (int, float) or not 0 < timeout_s <= 90:
-        raise ValueError('one narrow command must have a deadline within 90 seconds')
     context = _context(admission)
     preflight_ref = None
     if not bounded:

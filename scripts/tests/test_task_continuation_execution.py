@@ -131,6 +131,109 @@ class ExecutionAdapterTests(unittest.TestCase):
         self.assertEqual(self.marker.read_text(), 'started\n')
 
     @unittest.skipUnless(HAS_HARNESS, 'external Harness unavailable; no fallback runner')
+    def test_bounded_150_second_deadline_runs_immediate_command(self):
+        self.activate_command_mode(total=240)
+        self.admission['allocation_s'] = 155.05
+        result = self.run_action(agent_meter=None, controlled_test=False, timeout_s=150)
+        self.assertEqual(result['decision'], 'collected', result)
+        self.assertTrue(result['settled'])
+        self.assertTrue(result['execution']['cleanup_confirmed'])
+        self.assertEqual(result['execution']['command_timeout_s'], 150)
+        self.assertEqual(result['execution']['guard_allowance_s'], 5.05)
+        self.assertFalse(result['native_agent_metering'])
+        self.assertEqual(self.marker.read_text(), 'started\n')
+        state = policy.read_runtime(self.scope)
+        attempt = state['attempts']['attempt-019']
+        self.assertEqual(attempt['command_timeout_s'], 150)
+        self.assertEqual(attempt['allocation_s'], 155.05)
+        self.assertEqual(attempt['consumed_s'], 155.05)
+        self.assertEqual(attempt['active_intervals'], [])
+
+    @unittest.skipUnless(HAS_HARNESS, 'external Harness unavailable; no fallback runner')
+    def test_bounded_150_second_deadline_refuses_short_reservation_or_total_budget(self):
+        self.activate_command_mode(total=240)
+        for allocation, reason in ((150, 'timeout, guardian and cleanup'),
+                                   (181, 'protected or unavailable budget')):
+            with self.subTest(allocation=allocation):
+                self.admission['allocation_s'] = allocation
+                before = policy.read_runtime(self.scope)
+                with self.assertRaisesRegex(policy.PolicyError, reason):
+                    self.run_action(agent_meter=None, controlled_test=False, timeout_s=150)
+                self.assertEqual(policy.read_runtime(self.scope), before)
+                self.assertFalse(self.marker.exists())
+                self.assertFalse((self.root / 'command' / 'execution.intent.json').exists())
+                self.assertFalse((self.root / 'command' / 'events.jsonl').exists())
+
+    @unittest.skipUnless(HAS_HARNESS, 'external Harness unavailable; no fallback runner')
+    def test_bounded_replay_preserves_original_150_second_deadline_and_parameters(self):
+        self.activate_command_mode(total=240)
+        self.admission['allocation_s'] = 155.05
+        self.run_action(agent_meter=None, controlled_test=False, timeout_s=150)
+        intent_path = self.root / 'command' / 'execution.intent.json'
+        original = intent_path.read_bytes()
+        intent = json.loads(original)
+        replay = self.run_action(agent_meter=None, controlled_test=False, timeout_s=150)
+        self.assertEqual(replay['decision'], 'collected', replay)
+        self.assertFalse(replay['started'])
+        self.assertEqual(replay['execution']['command_timeout_s'], 150)
+        self.assertEqual(replay['execution']['deadline_utc'], intent['deadline_utc'])
+        for changes in ({'timeout_s': 90}, {'timeout_s': 120},
+                        {'timeout_s': 150, 'cwd': self.root / 'other-cwd'},
+                        {'timeout_s': 150, 'max_output_bytes': 1024}):
+            with self.subTest(changes=changes), self.assertRaisesRegex(
+                    ValueError, 'different command'):
+                self.run_action(agent_meter=None, controlled_test=False, **changes)
+        self.assertEqual(intent_path.read_bytes(), original)
+        attempt = policy.read_runtime(self.scope)['attempts']['attempt-019']
+        self.assertEqual(attempt['command_timeout_s'], 150)
+        self.assertEqual(attempt['command_deadline_utc'], intent['deadline_utc'])
+        self.assertEqual(attempt['consumed_s'], 155.05)
+        self.assertEqual(self.marker.read_text(), 'started\n')
+
+    def test_bounded_invalid_deadlines_refuse_before_dispatch(self):
+        self.activate_command_mode(total=240)
+        self.admission['allocation_s'] = 155.05
+        before = policy.read_runtime(self.scope)
+        for timeout in (float('nan'), float('inf'), float('-inf'), -1, 0,
+                        True, False, '150', None):
+            with self.subTest(timeout=timeout), self.assertRaises(ValueError):
+                self.run_action(agent_meter=None, controlled_test=False, timeout_s=timeout)
+        self.assertEqual(policy.read_runtime(self.scope), before)
+        self.assertFalse(self.marker.exists())
+        self.assertFalse((self.root / 'command').exists())
+
+    @unittest.skipUnless(HAS_HARNESS, 'external Harness unavailable; no fallback runner')
+    def test_bounded_replay_rejects_boolean_timeout_equal_to_original_one_second_deadline(self):
+        self.activate_command_mode(total=12)
+        self.admission['allocation_s'] = 6.05
+        first = self.run_action(agent_meter=None, controlled_test=False, timeout_s=1)
+        self.assertEqual(first['execution']['status'], 'completed', first)
+        intent_path = self.root / 'command' / 'execution.intent.json'
+        original = intent_path.read_bytes()
+        before = policy.read_runtime(self.scope)
+        with self.assertRaisesRegex(ValueError, 'finite positive number'):
+            self.run_action(agent_meter=None, controlled_test=False, timeout_s=True)
+        self.assertEqual(policy.read_runtime(self.scope), before)
+        self.assertEqual(intent_path.read_bytes(), original)
+        self.assertEqual(self.marker.read_text(), 'started\n')
+
+    @unittest.skipUnless(HAS_HARNESS, 'external Harness unavailable; no fallback runner')
+    def test_native_default_deadline_stays_90_seconds_and_rejects_longer_deadlines(self):
+        for timeout in (90.01, 120, 150):
+            with self.subTest(timeout=timeout), self.assertRaises(ValueError):
+                self.run_action(timeout_s=timeout)
+        self.assertFalse(self.marker.exists())
+        self.assertEqual(policy.read_runtime(self.scope)['attempts'], {})
+        result = self.execution.execute_action(
+            self.scope, self.admission, self.argv, directory=self.root / 'command',
+            cwd=self.root, agent_meter=self.meter, controlled_test=True,
+            harness_root=HARNESS)
+        self.assertEqual(result['decision'], 'collected', result)
+        intent = json.loads((self.root / 'command' / 'execution.intent.json').read_text())
+        self.assertEqual(intent['timeout_s'], 90)
+        self.assertEqual(self.marker.read_text(), 'started\n')
+
+    @unittest.skipUnless(HAS_HARNESS, 'external Harness unavailable; no fallback runner')
     def test_bounded_limits_and_controlled_meter_refuse_before_any_process_starts(self):
         self.activate_command_mode(total=12)
         for allocation in (10, 2):
