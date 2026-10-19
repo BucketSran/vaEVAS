@@ -9,6 +9,8 @@ use crate::operators::Operators;
 use crate::pwl::{Root, Trajectory};
 use std::sync::Arc;
 
+#[path = "schedule_history_bookkeeping.rs"]
+mod history_bookkeeping;
 pub(crate) const EVENT_BUDGET: usize = 1_000_000;
 pub(crate) const CAUSAL_MICROEVENT_BUDGET: usize = 64;
 
@@ -24,6 +26,27 @@ pub(crate) struct ScheduledEvent {
 
 /// Every calendar leaf must prove the same mathematical root independently.
 /// A representative or overlapping discovery boxes are never an identity.
+pub(crate) fn copy_calendar(
+    events: &[ScheduledEvent],
+    model: &EventModel,
+) -> Result<Vec<ScheduledEvent>, Error> {
+    let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) else {
+        return Ok(events.to_vec());
+    };
+    w.debit(2, 0)?;
+    w.debit(
+        2,
+        (events.len() as u64).saturating_mul(
+            std::mem::size_of::<ScheduledEvent>().div_ceil(std::mem::size_of::<usize>()) as u64,
+        ),
+    )?;
+    let mut out = Vec::with_capacity(events.len());
+    for event in events {
+        w.step()?;
+        out.push(event.clone_history(w)?)
+    }
+    Ok(out)
+}
 pub(crate) fn common_root(events: &[ScheduledEvent]) -> Option<crate::exact_source::RootTime> {
     let first = events.first()?.exact_root()?;
     for event in events.iter().skip(1) {
@@ -40,6 +63,13 @@ fn serial_transition_cluster(
     events: &mut [ScheduledEvent],
     model: &EventModel,
 ) -> Result<bool, Error> {
+    // Qualification fixes every guard_operator set to empty for this route.
+    // Avoid scanning a legacy dynamic-provider cluster that cannot apply.
+    if let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) {
+        w.debit(2, 0)?;
+        w.step()?;
+        return Ok(false);
+    }
     if !events.iter().any(|e| {
         model.guard_operators[e.event].iter().any(|&o| {
             matches!(
@@ -398,13 +428,12 @@ pub(crate) fn ordered_observation(
     let first = events
         .first()
         .ok_or_else(|| unresolved("local physical observation has no event identity"))?;
-    if events
-        .iter()
-        .any(|event| certified_order(first, event, model) != Some(std::cmp::Ordering::Equal))
-    {
-        return Err(unresolved(
-            "local observation cannot merge distinct physical events",
-        ));
+    for event in events {
+        if history_bookkeeping::order(first, event, model)? != Some(std::cmp::Ordering::Equal) {
+            return Err(unresolved(
+                "local observation cannot merge distinct physical events",
+            ));
+        }
     }
     let mut proofs = Vec::new();
     let mut delta = None;
@@ -742,13 +771,18 @@ fn contract_zero_timer_group(
             index,
         } = event.moment
         {
-            let exact = Clock {
+            let clock = Clock {
                 start,
                 period,
                 index,
-            }
-            .bounds()
-            .ok_or_else(|| unresolved("fixed timer exact clock has no finite bounds"))?;
+            };
+            let exact =
+                if let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) {
+                    clock.bounds_with_work(w)?
+                } else {
+                    clock.bounds()
+                }
+                .ok_or_else(|| unresolved("fixed timer exact clock has no finite bounds"))?;
             if exact != I::point(time) || bounds.lo > time || bounds.hi < time {
                 return Err(unresolved(
                     "fixed timer cannot share the zero-tolerance point",
@@ -771,13 +805,23 @@ fn order_fixed_timers(
     next_lower: Option<f64>,
 ) -> Result<(), Error> {
     let mut uncertified = false;
-    events.sort_by(|a, b| {
-        let order = certified_order(a, b, model).unwrap_or_else(|| {
-            uncertified = true;
-            std::cmp::Ordering::Equal
+    if let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) {
+        history_bookkeeping::sort(events, w, |a, b| {
+            let order = history_bookkeeping::order(a, b, model)?.unwrap_or_else(|| {
+                uncertified = true;
+                std::cmp::Ordering::Equal
+            });
+            Ok(order.then(a.event.cmp(&b.event)))
+        })?;
+    } else {
+        events.sort_by(|a, b| {
+            let order = certified_order(a, b, model).unwrap_or_else(|| {
+                uncertified = true;
+                std::cmp::Ordering::Equal
+            });
+            order.then(a.event.cmp(&b.event))
         });
-        order.then(a.event.cmp(&b.event))
-    });
+    }
     if uncertified {
         return Err(unresolved("cannot certify exact fixed timer order"));
     }
@@ -785,6 +829,10 @@ fn order_fixed_timers(
     let mut previous: Option<f64> = None;
     let mut groups = 0;
     while start < events.len() {
+        if let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) {
+            w.debit(2, 0)?;
+            w.step()?;
+        }
         // The controller permits the initial batch and at most this many
         // subsequent causal batches. Enforce the same limit while building
         // the connected cluster, before repeated extension can outgrow it.
@@ -798,7 +846,10 @@ fn order_fixed_timers(
         groups += 1;
         let mut end = start + 1;
         while end < events.len() {
-            match certified_order(&events[start], &events[end], model) {
+            if let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) {
+                w.step()?;
+            }
+            match history_bookkeeping::order(&events[start], &events[end], model)? {
                 Some(std::cmp::Ordering::Equal) => end += 1,
                 Some(_) => break,
                 None => return Err(unresolved("cannot certify exact fixed timer group")),
@@ -864,6 +915,11 @@ fn add_timer(
     boundary: Option<&TimerBoundary<'_>>,
     time_proofs: Option<&crate::transient::time_provenance::TimeProofs>,
 ) -> Result<(), Error> {
+    let history_work = crate::analytic_request::proof_owner(model).map(|o| o.work());
+    if let Some(w) = history_work {
+        w.debit(2, 0)?;
+        w.debit(2, 16)?;
+    }
     let stop = config.stop;
     let forced_points = !config.strobetimes.is_empty();
     let zero_tolerance = matches!(
@@ -956,6 +1012,9 @@ fn add_timer(
     }
     let mut previous = None;
     for index in 0..=EVENT_BUDGET {
+        if let Some(w) = history_work {
+            w.debit(2, 24)?;
+        }
         // index is bounded below 2^53, so its f64 conversion is exact. The
         // enclosure covers both product and sum. Choosing its upper endpoint
         // cannot fire early, including when the source omitted time_tol. The
@@ -969,11 +1028,22 @@ fn add_timer(
             index,
         };
         if zero_tolerance
-            && exact_clock.order(Clock {
-                start: stop,
-                period: 0.,
-                index: 0,
-            }) == Some(std::cmp::Ordering::Greater)
+            && if let Some(w) = history_work {
+                exact_clock.order_with_work(
+                    Clock {
+                        start: stop,
+                        period: 0.,
+                        index: 0,
+                    },
+                    w,
+                )?
+            } else {
+                exact_clock.order(Clock {
+                    start: stop,
+                    period: 0.,
+                    index: 0,
+                })
+            } == Some(std::cmp::Ordering::Greater)
         {
             break;
         }
@@ -981,20 +1051,29 @@ fn add_timer(
             if (index as f64).mul_add(period.lo, start.lo) == f64::INFINITY {
                 break;
             }
-            exact_clock
-                .bounds()
-                .ok_or_else(|| unresolved("zero-tolerance timer has no finite exact bounds"))?
+            (if let Some(w) = history_work {
+                exact_clock.bounds_with_work(w)?
+            } else {
+                exact_clock.bounds()
+            })
+            .ok_or_else(|| unresolved("zero-tolerance timer has no finite exact bounds"))?
         } else if forced_points && start.lo == start.hi && period.lo == period.hi {
             // A forced solve point must not be crossed only because interval
             // arithmetic widened an otherwise exactly ordered source clock.
             // A held clock qualifies only when both current parameters are
             // exact singletons. Keep uncertain held-timer bounds unchanged.
-            crate::exact_time::Clock {
-                start: start.lo,
-                period: period.lo,
-                index,
+            {
+                let clock = Clock {
+                    start: start.lo,
+                    period: period.lo,
+                    index,
+                };
+                if let Some(w) = history_work {
+                    clock.bounds_with_work(w)?
+                } else {
+                    clock.bounds()
+                }
             }
-            .bounds()
             .unwrap_or_else(|| start + I::point(index as f64) * period)
         } else if index == 0 {
             start
@@ -1015,10 +1094,18 @@ fn add_timer(
                 period: 0.,
                 index: 0,
             };
-            match clock.order(endpoint) {
+            match if let Some(w) = history_work {
+                clock.order_with_work(endpoint, w)?
+            } else {
+                clock.order(endpoint)
+            } {
                 Some(std::cmp::Ordering::Greater) => break,
                 Some(_) => {
-                    if let Some(tight) = clock.bounds() {
+                    if let Some(tight) = if let Some(w) = history_work {
+                        clock.bounds_with_work(w)?
+                    } else {
+                        clock.bounds()
+                    } {
                         bounds = tight;
                     }
                 }
@@ -1088,7 +1175,7 @@ fn add_timer(
                 "event calendar exceeds 1,000,000 events",
             ));
         }
-        events.push(ScheduledEvent {
+        let event = ScheduledEvent {
             fixed_predecessor: None,
             time,
             event,
@@ -1111,7 +1198,12 @@ fn add_timer(
                     index,
                 }
             },
-        });
+        };
+        if let Some(w) = history_work {
+            crate::history_storage::push_vec(events, event, w)?
+        } else {
+            events.push(event)
+        }
         previous = Some(time);
         if period.hi <= 0.0 || bounds == I::point(stop) {
             break;
@@ -1247,6 +1339,10 @@ pub(crate) fn independent_epoch_with_time_proofs(
     after: Option<f64>,
     time_proofs: Option<&crate::transient::time_provenance::TimeProofs>,
 ) -> Result<Vec<ScheduledEvent>, Error> {
+    if let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) {
+        w.debit(2, 0)?;
+        w.debit(2, model.triggers.len() as u64)?;
+    }
     let changed = vec![true; model.triggers.len()];
     schedule_with_history(
         model,
@@ -1528,15 +1624,33 @@ fn schedule_with_history(
     held: Option<HeldCalendar<'_>>,
     scope: CalendarScope<'_>,
 ) -> Result<Vec<ScheduledEvent>, Error> {
+    let history_work = crate::analytic_request::proof_owner(model).map(|o| o.work());
+    if let Some(w) = history_work {
+        w.debit(2, 0)?;
+    }
     let _timing = crate::diagnostics::span("event.calendar");
 
-    let mut events: Vec<_> = held.as_ref().map_or_else(Vec::new, |h| {
-        h.pending
-            .iter()
-            .filter(|e| !h.changed[e.event])
-            .cloned()
-            .collect()
-    });
+    let mut events = if let Some(w) = history_work {
+        let mut events = Vec::new();
+        if let Some(held) = &held {
+            for event in held.pending {
+                w.step()?;
+                if !held.changed[event.event] {
+                    let copied = event.clone_history(w)?;
+                    crate::history_storage::push_vec(&mut events, copied, w)?;
+                }
+            }
+        }
+        events
+    } else {
+        held.as_ref().map_or_else(Vec::new, |h| {
+            h.pending
+                .iter()
+                .filter(|e| !h.changed[e.event])
+                .cloned()
+                .collect()
+        })
+    };
     // A timer-only network needs no guard trajectory certification.
     let bounds = if model.guards.iter().any(Option::is_some) {
         Some(GuardBounds::for_model(
@@ -1552,9 +1666,11 @@ fn schedule_with_history(
             let circuit = model.circuit_at(
                 &model.initial(),
                 &vec![0.; model.program.operators.len()],
-                &trajectory.value_bounds(time),
+                &crate::event_value_proof::history::input_bounds(model, trajectory, time)?,
             )?;
-            circuit.solve(&trajectory.values(time))?;
+            circuit.solve(&crate::event_value_proof::history::inputs(
+                model, trajectory, time,
+            )?)?;
         }
         for (index, leaf) in model.triggers.iter().enumerate() {
             if !scope.includes(model, index) || model.dynamic_guards[index] {
@@ -1566,7 +1682,6 @@ fn schedule_with_history(
             {
                 continue;
             }
-            let event = &model.program.events[leaf.event];
             let EventTrigger::Cross {
                 guard, direction, ..
             } = &leaf.trigger
@@ -1576,29 +1691,61 @@ fn schedule_with_history(
             // A state-independent guard is affine on the union of the knots
             // of its nonzero input coefficients. Unrelated knots must not
             // introduce artificial near-boundary root uncertainty.
-            let active_inputs = bounds.active_inputs(index);
-            let input_nodes = model
-                .driven
-                .iter()
-                .map(|name| {
-                    model
-                        .program
-                        .nodes
-                        .iter()
-                        .position(|node| node == name)
-                        .unwrap()
-                })
-                .collect::<Vec<_>>();
-            let projected_guard = bounds.exact_input_expression(index);
-            let physical = trajectory.shaped_roots(
-                guard,
-                projected_guard.as_ref(),
-                &input_nodes,
-                &active_inputs,
-                *direction,
-                held.as_ref().and_then(|h| h.after),
-            )?;
-            let mut knots = trajectory.input_knots(&active_inputs);
+            let active_inputs = if let Some(w) = history_work {
+                bounds.active_inputs_history(index, w)?
+            } else {
+                bounds.active_inputs(index)
+            };
+            let input_nodes = if let Some(w) = history_work {
+                let nodes = crate::analytic_request::proof_owner(model)
+                    .expect("paid calendar role")
+                    .input_nodes();
+                w.debit(2, nodes.len() as u64)?;
+                nodes.to_vec()
+            } else {
+                model
+                    .driven
+                    .iter()
+                    .map(|name| {
+                        model
+                            .program
+                            .nodes
+                            .iter()
+                            .position(|node| node == name)
+                            .unwrap()
+                    })
+                    .collect::<Vec<_>>()
+            };
+            let projected_guard = if let Some(w) = history_work {
+                bounds.exact_input_expression_history(index, w)?
+            } else {
+                bounds.exact_input_expression(index)
+            };
+            let physical = if let Some(w) = history_work {
+                trajectory.shaped_roots_history(
+                    guard,
+                    projected_guard.as_ref(),
+                    &input_nodes,
+                    &active_inputs,
+                    *direction,
+                    held.as_ref().and_then(|h| h.after),
+                    w,
+                )?
+            } else {
+                trajectory.shaped_roots(
+                    guard,
+                    projected_guard.as_ref(),
+                    &input_nodes,
+                    &active_inputs,
+                    *direction,
+                    held.as_ref().and_then(|h| h.after),
+                )?
+            };
+            let mut knots = if let Some(w) = history_work {
+                trajectory.history_input_knots(&active_inputs, w)?
+            } else {
+                trajectory.input_knots(&active_inputs)
+            };
             if let Some(after) = held.as_ref().and_then(|h| h.after) {
                 knots.retain(|t| *t > after);
                 knots.insert(0, after);
@@ -1606,20 +1753,41 @@ fn schedule_with_history(
             if knots.len() < 2 {
                 continue;
             }
-            let values: Vec<_> = knots
-                .iter()
-                .map(|&time| bounds.values(&trajectory.value_bounds(time))[index])
-                .collect();
-            let roots = physical
-                .map_or_else(|| trajectory.roots(&knots, &values, *direction), Ok)
-                .map_err(|mut error| {
-                    error
-                        .message
-                        .push_str(&format!(" at {}", event.origin.label()));
-                    error
-                })?;
+            let mut values = Vec::new();
+            for &time in &knots {
+                let inputs =
+                    crate::event_value_proof::history::input_bounds(model, trajectory, time)?;
+                let value = if let Some(w) = history_work {
+                    bounds.value_history(index, &inputs, w)?
+                } else {
+                    bounds.values(&inputs)[index]
+                };
+                if let Some(w) = history_work {
+                    crate::history_storage::push_vec(&mut values, value, w)?
+                } else {
+                    values.push(value)
+                }
+            }
+            let roots = match physical {
+                Some(roots) => roots,
+                None => {
+                    if let Some(w) = history_work {
+                        trajectory.roots_history(&knots, &values, *direction, w)?
+                    } else {
+                        trajectory.roots(&knots, &values, *direction)?
+                    }
+                }
+            };
             let source_curve = if roots.is_empty() {
                 None
+            } else if let Some(w) = history_work {
+                history_bookkeeping::curve(
+                    trajectory,
+                    guard,
+                    projected_guard.as_ref(),
+                    &input_nodes,
+                    w,
+                )?
             } else {
                 let input_nodes = model
                     .driven
@@ -1645,19 +1813,28 @@ fn schedule_with_history(
                     })
             };
             for root in roots {
-                let root = root.with_source_time(source_curve.as_ref());
+                let root = if let Some(w) = history_work {
+                    root.with_source_time_history(source_curve.as_ref(), w)?
+                } else {
+                    root.with_source_time(source_curve.as_ref())
+                };
                 if events.len() == EVENT_BUDGET {
                     return Err(Error::new(
                         "event_budget",
                         "event calendar exceeds 1,000,000 events",
                     ));
                 }
-                events.push(ScheduledEvent {
+                let event = ScheduledEvent {
                     fixed_predecessor: None,
                     time: root.bounds.hi,
                     event: index,
                     moment: Moment::Cross(root),
-                });
+                };
+                if let Some(w) = history_work {
+                    crate::history_storage::push_vec(&mut events, event, w)?
+                } else {
+                    events.push(event)
+                }
             }
         }
     }
@@ -1905,7 +2082,37 @@ fn schedule_with_history(
     }
     if let Some(after) = held.as_ref().and_then(|h| h.after) {
         let retained = held.as_ref().unwrap().retained_fixed_prefix(after);
-        if events.iter().any(|event| {
+        if let Some(w) = history_work {
+            for event in &events {
+                w.step()?;
+                let proven_later = if event.time > after {
+                    let root = event.exact_root_with_work(w)?;
+                    let mut paid = crate::exact_source::history_paid::Paid::new(w);
+                    let point = paid
+                        .binary(after)
+                        .map(crate::exact_source::history_paid::root);
+                    let point = paid.finish(point)?;
+                    if let (Some(a), Some(b)) = (root, point) {
+                        a.order_with_work(&b, w)?.is_gt()
+                    } else {
+                        false
+                    }
+                } else {
+                    false
+                };
+                let linked = event.fixed_predecessor.is_some()
+                    && retained
+                        .binary_search_by(|time| time.total_cmp(&event.time))
+                        .is_ok()
+                    && event.time > after;
+                if event.bounds().lo <= after && !proven_later && !linked {
+                    return Err(unresolved(
+                        "future event window overlaps the accepted event boundary",
+                    ));
+                }
+            }
+        } else {
+            if events.iter().any(|event| {
             let proven_later = event.exact_root().zip(crate::exact_source::RootTime::point(after)).is_some_and(|(a,b)|event.time>after&&a.order(&b)==std::cmp::Ordering::Greater)
                 || matches!(event.moment, Moment::Anchored {delta,..} if delta.lo > operators.and_then(Operators::local_epoch).map_or(f64::INFINITY,|(_,start)|start) && event.time>after)
                 || (event.fixed_predecessor.is_some()
@@ -1917,22 +2124,42 @@ fn schedule_with_history(
         }) {
             return Err(unresolved("future event window overlaps the accepted event boundary"));
         }
+        }
     }
-    events.sort_by(|a, b| {
-        a.moment
-            .bounds()
-            .lo
-            .total_cmp(&b.moment.bounds().lo)
-            .then(a.event.cmp(&b.event))
-    });
+    if let Some(w) = history_work {
+        history_bookkeeping::sort(&mut events, w, |a, b| {
+            Ok(a.moment
+                .bounds_with_work(w)?
+                .lo
+                .total_cmp(&b.moment.bounds_with_work(w)?.lo)
+                .then(a.event.cmp(&b.event)))
+        })?;
+    } else {
+        events.sort_by(|a, b| {
+            a.moment
+                .bounds()
+                .lo
+                .total_cmp(&b.moment.bounds().lo)
+                .then(a.event.cmp(&b.event))
+        });
+    }
     let mut start = 0;
     while start < events.len() {
+        if let Some(w) = history_work {
+            w.step()?;
+        }
         // Find the whole connected enclosure cluster before attempting an
         // exact ordering certificate. Moments without that proof retain the
         // existing simultaneous-root and ambiguity checks below.
         let mut cluster_end = start + 1;
         let mut cluster_hi = events[start].bounds().hi.max(events[start].time);
-        while cluster_end < events.len() && events[cluster_end].bounds().lo <= cluster_hi {
+        while cluster_end < events.len() {
+            if let Some(w) = history_work {
+                w.step()?;
+            }
+            if !(events[cluster_end].bounds().lo <= cluster_hi) {
+                break;
+            }
             cluster_hi = cluster_hi
                 .max(events[cluster_end].bounds().hi)
                 .max(events[cluster_end].time);
@@ -1945,17 +2172,13 @@ fn schedule_with_history(
             continue;
         }
         if cluster_end > start + 1
-            && events[start..cluster_end].iter().all(|e| {
-                e.moment.clock().is_some()
-                    || matches!(e.moment, Moment::Cross(_) | Moment::Anchored { .. })
-            })
-            && events[start..cluster_end].iter().all(|a| {
-                events[start..cluster_end]
-                    .iter()
-                    .all(|b| certified_order(a, b, model).is_some())
-            })
+            && history_bookkeeping::independent_kinds(&events[start..cluster_end], model)?
+            && history_bookkeeping::all_ordered(&events[start..cluster_end], model)?
         {
             loop {
+                if let Some(w) = history_work {
+                    w.step()?;
+                }
                 order_fixed_timers(
                     &mut events[start..cluster_end],
                     model,
@@ -1982,21 +2205,26 @@ fn schedule_with_history(
                 // bounded by the controller's shared microevent budget.
                 let mut extension_end = cluster_end + 1;
                 let mut extension_hi = next.bounds().hi.max(next.time);
-                while extension_end < events.len()
-                    && events[extension_end].bounds().lo <= extension_hi
-                {
+                while extension_end < events.len() {
+                    if let Some(w) = history_work {
+                        w.step()?;
+                    }
+                    if !(events[extension_end].bounds().lo <= extension_hi) {
+                        break;
+                    }
                     extension_hi = extension_hi
                         .max(events[extension_end].bounds().hi)
                         .max(events[extension_end].time);
                     extension_end += 1;
                 }
                 for index in cluster_end..extension_end {
+                    if let Some(w) = history_work {
+                        w.step()?;
+                    }
                     let next = &events[index];
                     if !(next.moment.clock().is_some()
                         || matches!(next.moment, Moment::Cross(_) | Moment::Anchored { .. }))
-                        || events[start..index]
-                            .iter()
-                            .any(|event| certified_order(event, next, model).is_none())
+                        || history_bookkeeping::any_unordered(&events[start..index], next, model)?
                     {
                         return Err(unresolved(
                             "cannot certify exact ordering of the next event while extending the connected cluster",
@@ -2012,7 +2240,13 @@ fn schedule_with_history(
         let mut time = events[start].time;
         // Include uncertain nominal times on either side of the chosen time.
         let mut hi = events[start].moment.bounds().hi;
-        while end < events.len() && events[end].moment.bounds().lo <= hi.max(time) {
+        while end < events.len() {
+            if let Some(w) = history_work {
+                w.step()?;
+            }
+            if !(events[end].moment.bounds().lo <= hi.max(time)) {
+                break;
+            }
             let first = &events[start];
             let next = &events[end];
             let same_guard = match (
@@ -2020,12 +2254,28 @@ fn schedule_with_history(
                 &model.triggers[next.event].trigger,
             ) {
                 (EventTrigger::Cross { guard: a, .. }, EventTrigger::Cross { guard: b, .. }) => {
-                    a == b
-                        || (!model.dynamic_guards[first.event]
-                            && !model.dynamic_guards[next.event]
-                            && bounds
-                                .as_ref()
-                                .is_some_and(|b| b.same_zero_set(first.event, next.event)))
+                    let equal = if let Some(w) = history_work {
+                        crate::history_admission::same_expression(a, b, w)?
+                    } else {
+                        a == b
+                    };
+                    let projected = if !equal
+                        && !model.dynamic_guards[first.event]
+                        && !model.dynamic_guards[next.event]
+                    {
+                        if let Some(bounds) = bounds.as_ref() {
+                            if let Some(w) = history_work {
+                                bounds.same_zero_set_history(first.event, next.event, w)?
+                            } else {
+                                bounds.same_zero_set(first.event, next.event)
+                            }
+                        } else {
+                            false
+                        }
+                    } else {
+                        false
+                    };
+                    equal || projected
                 }
                 (
                     EventTrigger::HeldTimer {
@@ -2041,7 +2291,11 @@ fn schedule_with_history(
                 ) => a == b && p == q,
                 _ => false,
             };
-            if !first.moment.coincides(&next.moment, same_guard) {
+            if !if let Some(w) = history_work {
+                history_bookkeeping::coincides(&first.moment, &next.moment, same_guard, w)?
+            } else {
+                first.moment.coincides(&next.moment, same_guard)
+            } {
                 return Err(unresolved(
                     "cannot certify ordering of distinct events with overlapping time bounds",
                 ));
@@ -2051,6 +2305,9 @@ fn schedule_with_history(
             end += 1;
         }
         for event in &mut events[start..end] {
+            if let Some(w) = history_work {
+                w.step()?;
+            }
             let leaf = &model.triggers[event.event];
             let spec = &model.program.events[leaf.event];
             if !event.moment.accepts(time, &leaf.trigger) {
@@ -2317,6 +2574,7 @@ mod exact_deadline_review_tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![],
@@ -2488,6 +2746,7 @@ mod held_calendar_review_tests {
         let m = EventModel::new(p, vec![], crate::ir::Tolerances::default()).unwrap();
         let t = Trajectory::new(
             crate::ir::TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 pwl: vec![],
                 strobetimes: vec![],
@@ -2607,6 +2866,35 @@ impl Moment {
     }
 }
 impl ScheduledEvent {
+    fn clone_history(&self, w: &crate::transition_source_plan::Work) -> Result<Self, Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 8)?;
+        let moment = match &self.moment {
+            Moment::Cross(root) => Moment::Cross(root.clone_history(w)?),
+            Moment::Timer {
+                bounds,
+                start,
+                period,
+                index,
+            } => Moment::Timer {
+                bounds: *bounds,
+                start: *start,
+                period: *period,
+                index: *index,
+            },
+            _ => {
+                return Err(unresolved(
+                    "history calendar escaped independent Cross/Timer gate",
+                ))
+            }
+        };
+        Ok(Self {
+            time: self.time,
+            event: self.event,
+            moment,
+            fixed_predecessor: self.fixed_predecessor,
+        })
+    }
     fn exact_root_with_work(
         &self,
         w: &crate::transition_source_plan::Work,
@@ -2921,5 +3209,26 @@ mod forcing_phase_accounting_tests {
             );
             assert_eq!(exact.physical_order_at(time), Some(want));
         }
+    }
+}
+
+#[cfg(test)]
+impl ScheduledEvent {
+    pub(crate) fn analytic_test_snapshot(&self) -> serde_json::Value {
+        let moment = match &self.moment {
+            Moment::Cross(root) => {
+                serde_json::json!({"kind":"cross","root":root.analytic_test_snapshot()})
+            }
+            Moment::Timer {
+                bounds,
+                start,
+                period,
+                index,
+            } => {
+                serde_json::json!({"kind":"timer","bounds":[bounds.lo,bounds.hi],"start":start,"period":period,"index":index})
+            }
+            _ => panic!("non-independent moment escaped analytic event scope"),
+        };
+        serde_json::json!({"time":self.time,"event":self.event,"moment":moment,"fixed_predecessor":self.fixed_predecessor})
     }
 }

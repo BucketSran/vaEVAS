@@ -46,6 +46,7 @@ fn select(left: Expression, right: Expression, owner: &str) -> Expression {
 fn trajectory(points: Vec<[f64; 2]>) -> Trajectory {
     Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             pwl: vec![points],
             output_times: vec![0., 1.],

@@ -706,7 +706,15 @@ impl Conditions {
             proof_attempts: &mut usize,
             loop_iterations: &mut usize,
         ) -> Result<(), Error> {
-            if let Some(w) = states.floor_work() {
+            if let Some(w) = states.history_work() {
+                w.debit(2, 0)?;
+                w.debit(
+                    2,
+                    (context.node_count as u64)
+                        .saturating_mul(2)
+                        .saturating_add(1),
+                )?;
+            } else if let Some(w) = states.floor_work() {
                 crate::event_floor::charge(w, context.node_count + 1, "floor_source_copy")?;
             }
             let bounds = context.bounds.as_ref();
@@ -722,6 +730,9 @@ impl Conditions {
                 numeric_nodes[node] = value;
             }
             for step in body {
+                if let Some(w) = states.history_work() {
+                    w.step()?;
+                }
                 if let Some(w) = states.floor_work() {
                     crate::event_floor::charge(w, 1, "floor_source_ast")?;
                 }
@@ -922,8 +933,11 @@ impl Conditions {
                                     )?;
                                 }
                             }
-                            exact
-                                .and_then(|v| crate::exact_source::enclosure(&v))
+                            let proved = match exact.as_ref() {
+                                Some(v) => states.try_enclosure(v)?,
+                                None => None,
+                            };
+                            proved
                                 .filter(|v| value.lo <= v.lo && v.hi <= value.hi)
                                 .unwrap_or(value)
                         } else {
@@ -1028,7 +1042,7 @@ impl Conditions {
                             {
                                 return Err(original);
                             }
-                            states.prepay_comparison(&ns)?;
+                            ys.prepay_comparison(&ns)?;
                             states.merge(ys, &ns);
                             written.copy_from_slice(&yw);
                             actions.extend(ya);

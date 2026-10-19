@@ -424,6 +424,7 @@ mod sharing_tests {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![vec![[0., 0.], [1., 1.]]],

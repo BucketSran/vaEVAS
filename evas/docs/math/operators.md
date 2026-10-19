@@ -136,6 +136,55 @@ loader ERROR entries, omitted 18 real methods, and ended with 10 successful,
 four failed, and one upstream-dependent skipped job. Those records remain;
 no green result is composed across runs.
 
+### 同支路二次源直接项的本地候选
+
+后续 IR31 本地候选把单个混合加法中的纯物理输入项 `f` 与原有仿射事件／保持项 `r` 分开绑定，
+但二者仍属于同一个电压支路，原关系始终是 `V(p)-V(n)=f+r`。
+`f` 只允许实际 driven 输入的仿射叶、加法及总次数不超过二的乘法；
+二次项内不接受 Select。例子是 `V(a)*V(b)+transition(q,0,tr,tr)`。
+所有原读义务与未选臂仍检查；Forcing 输出不能被其他支路、事件或算子反向读取。
+本地后续候选把内部保持历史采样、普通 Select 目标与 typed 目标接到同一已付费历史图，
+按实际 Frame 的点与盒求值；物理源仍只能来自 actual driven 输入。
+checked 项中的零系数读义务也完整保留，Forcing 输出反馈、Floor 混合以及事件／初始化角色中的
+native 算术不因该桥接而取得资格。更广组合仍需单独认证。
+
+编译器保留同一 `BranchIdentity` 的源项与残余贡献；装配层按支路相加。
+reduced 方程暂去掉 `f` 只用于求候选，不能作为完整输出证书。
+投影在候选点与盒上补回 `f` 后，重新检查原 `f+r` 的全部支路残差，通过后才可提交。
+同一候选阶段的重复投影恢复已认证的完整盒并重新验残差，不重复相加；
+同刻状态改变须构造新的候选 Circuit。
+
+原请求 Work 支付全树扫描、节点映射、源数学、残差证明及候选复制。
+阶段键和投影盒缓存的存储、查找与 clone 也先付费；缓存不重置预算，失败保持 sticky。
+生命周期检查比较完整 Frame，包括原方程、点与盒、阶段／缓存、历史、日历和输出记录。
+默认预算自然耗尽后不重置或补充 Work。两次失败重试仍支付实际发生的前置工作，
+用量只增不退；失败不改变已提交状态。独立 operator clone 与 passive observation 的历史表达式
+深复制均按实际 Runtime AST 先付费，不能用另一份 TargetPlan 构造费用抵扣。
+
+生产者在 [forcing_components.py](../../src/evas/forcing_components.py) 和
+[instance_compiler.py](../../src/evas/instance_compiler.py)；
+[forcing_graph.rs](../../rust_core/src/forcing_graph.rs)独立验证原树、实际 provider 与 reduction 映射，
+[solver.rs](../../rust_core/src/solver.rs)核完整支路残差。
+[公开合同](../../tests/test_source_polynomial_forcing.py)用独立点／盒答案检查同支路、反向支路、
+多输出、额外查询与禁止反馈，内核私有测试检查自然耗尽和完整回滚。
+这是未合并的局部合同。canonical 联合控制通过后，原369仍在同一默认1e9 Work下拒绝，
+未进入 checker；它未证明原369或全部400通过，也未扩大实际 Spectre 资格。
+历史图、阶段键和缓存必须随完整候选 Frame 回退，不能通过新建预算 owner 绕过该拒绝。
+
+### 同请求物理点值与原始盒的局部复用
+
+IR32本地候选在同一次事件根窗准备中，把物理输入的代表值与原始误差盒作为一次局部结果取得。
+shaped PWL的严格有理求值本来同时返回两者；先前两次API调用各丢弃一半结果，现在只执行一次。
+临时存储、写入和读取仍由原Work事前支付，不进入Frame或跨请求缓存。不同根、窗口、状态、阶段和
+provider每次重新构造；精确根窄化只修改另一份已付费的候选输入，不改原始物理盒。
+
+完整窗口与斜率证明仍独立执行。原始盒求值现在提前到代表值处，因此成功路径值与盒保持，预算不足时
+先拒绝哪笔费用可能改变；不声称失败次序逐字相同。analytic与未整形旧路径的成功结果和费用保持。
+[公开控制](../../tests/test_physical_point_bundle.py)用独立Fraction检查保持采样、物理盒与额外观察；
+内核控制核对真实严格求值body由2到1、宽有理数、同代表时间的不同根及阶段、原1e9自然耗尽和两次完整回滚。
+代码在`pwl.rs::history_point_bundle`与`transient.rs`根窗准备入口，`exact_source.rs`保留原严格数学。
+原369、371的新候选完整请求仍在相同预算位置拒绝，未运行checker；这项局部改进尚未闭合其首阻塞。
+
 ### Continuous source intent and held target intent
 
 An ordinary contribution can describe a voltage that changes whenever its physical
@@ -394,6 +443,37 @@ Frame 其他旧字段的复制仍属原消费者边界，不追称全部由 type
 它们检查原整数子节点、未选依赖、真实非 point Frame 拒绝、零时刻种子及同 Controller 回退。
 其中 held target 的 100000 缩限 Work 控制只证明同 owner、事前拒绝及重试不退款；
 不能称为默认 1e9 自然耗尽。Native 与 Floor 的实际混合耗尽及事务控制仍由融合候选单独建立。
+
+### 保持目标中的正二次幂商与余数表示候选
+
+对原状态整个已证明域均为非负 signed32 整数、除数为正二次幂常量的保持目标，
+前端可将 `/2^k` 与 `%2^k` 表示为现有 IR31 的 `ShiftRight` 与 `BitAnd`。
+这只改变表示与实际生成工作；原类型、完整状态域、中间溢出及商的有限 bin 门仍先检查。
+负值、非二次幂及不能满足原证明的组合继续走原路径。
+源常量表达式如 `n/(4/2)` 保留原常量算术结果及其全部检查，不要求调用者把合法常量改写成字面值。
+
+所有原 Select 条件、两臂、Origin 与状态依赖保持。`n%1` 即使数值恒为零也保留对 `n` 的原依赖。
+real 别名仍是 real；只有无条件单写者、全部用途均为同实例精确 Transition 目标时，
+才传播原 AST 进行该目标角色的独立证明，不向普通贡献、trigger 或 display 授予整数资格。
+查找、扫描、常量分派与原树检查使用同一 NativeAudit Work；
+已有失败不因尝试另一种表示而重置或退款。完整 wire 仍对每个展开边计费。
+省去的是已不再生成的临时商表及其复制，不能删除仍实际发生的费用。
+
+表示选择还需扫描全部原模型的普通 analog、initial 和 initial_step 体，包含展开前的零次循环、
+隐藏分支及跨实例读。任一普通或初始电压／算子读取仍保留旧表示，避免把原历史或初始种子消费者
+带入尚未认证的 typed calendar。扫描逐候选重新付费，不缓存可变的 model 列表、绑定或范围事实。
+[旧普通历史](../../tests/test_held_power2_history_compat.py)与
+[跨实例初始种子](../../tests/test_initial_compact_compat.py)核对原行为，
+后者的两种实例顺序均须保持独立答案 `[1,1]`。该兼容回退会使原346继续生成旧表，
+已有原件 Native100000 拒绝仍保留；typed 与普通历史 calendar 的组合是下一独立修复。
+
+实现为 [held_power2.py](../../src/evas/held_power2.py)、
+[integer_table_composition.py](../../src/evas/integer_table_composition.py)及实例编译器。
+[公开目标控制](../../tests/test_held_power2_targets.py)、
+[表组合控制](../../tests/test_integer_table_composition.py)与
+[原判定复用控制](../../tests/test_decision_raw_reuse.py)检查常量表达式、原角色、隐藏臂、
+跨实例绑定和同 owner 失败重试；真实 IR31 内核另验独立整数答案。
+本地窄控制不代表原346通过；原修两轨完整400仍须绑定同一最终源码与内核。
 
 ### 外部源选择目标与实时电压读出
 

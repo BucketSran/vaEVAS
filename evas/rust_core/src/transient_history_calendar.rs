@@ -21,9 +21,8 @@ pub(super) fn initialize(
         until,
         &model.tolerances,
         model
-            .floor_source
-            .as_ref()
-            .map(|r| r.source.clone())
+            .source_context
+            .clone()
             .or_else(|| model.dc_projection.as_ref().map(|dc| dc.source.clone())),
     )?;
     let calendar = history_epoch(

@@ -22,6 +22,8 @@ type AffineFactor = Arc<OnceLock<Result<linear::Factorization, Error>>>;
 pub struct Circuit {
     pub nodes: Vec<String>,
     pub(crate) forcing_phase: Option<(usize, f64)>,
+    forcing_bounds: Vec<(usize, [f64; 2])>,
+    forcing_offsets: Vec<(usize, f64)>,
     equations: Vec<Equation>,
     driven: Vec<usize>,
     unknown: Vec<usize>,
@@ -40,6 +42,57 @@ pub struct Circuit {
 struct DenseResidual {
     start: usize,
     coefficients: Vec<f64>,
+}
+
+impl Circuit {
+    /// Prepay actual candidate storage. The cached factorization is an Arc.
+    pub(crate) fn charge_history_copy(
+        &self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<(), Error> {
+        w.debit(2, 15)?;
+        w.debit(
+            2,
+            (2 + 3 * self.forcing_bounds.len() + 2 * self.forcing_offsets.len()) as u64,
+        )?;
+        for node in &self.nodes {
+            w.step()?;
+            w.debit(2, node.len() as u64)?;
+        }
+        w.debit(
+            2,
+            (self.driven.len() + self.unknown.len() + self.unknown_columns.len()) as u64,
+        )?;
+        for equation in &self.equations {
+            w.step()?;
+            w.debit(
+                2,
+                (9 + equation.branch.instance.len()
+                    + equation.branch.local_positive.len()
+                    + equation.branch.local_negative.len()
+                    + 2 * equation.rhs_terms.len()
+                    + 2 * equation.coefficients.len()) as u64,
+            )?;
+            for expression in equation.nonlinear.iter().chain(&equation.original_rhs) {
+                crate::history_admission::charge_expression_copy(expression, w)?;
+            }
+            for origin in &equation.origins {
+                w.step()?;
+                w.debit(2, origin.len() as u64)?;
+            }
+        }
+        for row in &self.driven_coefficients {
+            w.step()?;
+            w.debit(2, (2 * row.len()) as u64)?;
+        }
+        for residual in &self.dense_residuals {
+            w.step()?;
+            if let Some(residual) = residual {
+                w.debit(2, (1 + residual.coefficients.len()) as u64)?;
+            }
+        }
+        Ok(())
+    }
 }
 
 impl DenseResidual {
@@ -261,6 +314,8 @@ impl Circuit {
         };
         Ok(Self {
             forcing_phase: None,
+            forcing_bounds: Vec::new(),
+            forcing_offsets: Vec::new(),
             nodes,
             equations,
             driven,
@@ -807,6 +862,75 @@ impl Circuit {
         }
     }
 
+    // Graph reserves all scans, output-node metadata and the returned vector.
+    // This is the reduced nominal view of the very same installed physical
+    // phase; it never removes a same-branch residual or relabels an input.
+    pub(crate) fn forcing_legacy_voltage_view(
+        &self,
+        identity: usize,
+        time: f64,
+        values: &[f64],
+        expected: &[usize],
+    ) -> Result<Vec<f64>, Error> {
+        let invalid = || {
+            Error::new(
+                "invalid_ir",
+                "forcing reduced view does not match installed phase/source offsets",
+            )
+        };
+        if !time.is_finite()
+            || values.len() != self.nodes.len()
+            || values.iter().any(|v| !v.is_finite())
+        {
+            return Err(invalid());
+        }
+        for (i, &node) in expected.iter().enumerate() {
+            if node == 0 || node >= values.len() || expected[..i].contains(&node) {
+                return Err(invalid());
+            }
+        }
+        match self.forcing_phase {
+            None => {
+                if !self.forcing_offsets.is_empty() || !self.forcing_bounds.is_empty() {
+                    return Err(invalid());
+                }
+                return Ok(values.to_vec());
+            }
+            Some(phase) if phase == (identity, time) => (),
+            _ => return Err(invalid()),
+        }
+        if self.forcing_offsets.len() != expected.len()
+            || self.forcing_bounds.len() != expected.len()
+        {
+            return Err(invalid());
+        }
+        let mut reduced = values.to_vec();
+        for (i, ((&node, &(cached, offset)), &(bound_node, bounds))) in expected
+            .iter()
+            .zip(&self.forcing_offsets)
+            .zip(&self.forcing_bounds)
+            .enumerate()
+        {
+            if cached != node
+                || bound_node != node
+                || !offset.is_finite()
+                || !bounds[0].is_finite()
+                || !bounds[1].is_finite()
+                || bounds[0] > bounds[1]
+                || self.forcing_offsets[..i]
+                    .iter()
+                    .any(|(prior, _)| *prior == node)
+            {
+                return Err(invalid());
+            }
+            reduced[node] -= offset;
+            if !reduced[node].is_finite() {
+                return Err(invalid());
+            }
+        }
+        Ok(reduced)
+    }
+
     pub(crate) fn install_forcing_phase(
         &mut self,
         identity: usize,
@@ -814,6 +938,22 @@ impl Circuit {
         solution: &mut Solution,
         rows: Vec<ForcingRow>,
     ) -> Result<(), Error> {
+        let already_applied = match self.forcing_phase {
+            Some(phase) if phase == (identity, time) => true,
+            Some(_) => {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "forcing a different physical phase requires a fresh candidate circuit",
+                ))
+            }
+            None => false,
+        };
+        if !already_applied {
+            // The Graph prepaid this exact output storage before this call.
+            // Reserve once so pushes cannot add uncharged growth copies.
+            self.forcing_bounds = Vec::with_capacity(rows.len());
+            self.forcing_offsets = Vec::with_capacity(rows.len());
+        }
         let boxes = solution.certified_voltage_bounds.as_mut().ok_or_else(|| {
             Error::new("invalid_ir", "forcing requires original observation boxes")
         })?;
@@ -829,17 +969,54 @@ impl Circuit {
                 .ok_or_else(|| {
                     Error::new("invalid_ir", "forcing relation lost from reduced circuit")
                 })?;
-            if !equation.rhs_terms.is_empty() || !equation.nonlinear.is_empty() {
+            // Every non-source residual remains in the same assembled branch.
+            // Source-output independence was audited before reduction; no row
+            // may use this output as an input or feed another consumer.
+            if !equation.nonlinear.is_empty() {
                 return Err(Error::new(
                     "invalid_ir",
-                    "forcing provisional row was not independent",
+                    "forcing residual must use the existing affine phase",
                 ));
             }
-            // The actual phase-bound RHS and original relation replace the
-            // provisional zero. Unknown coefficients/factor remain identical.
-            equation.rhs_constant = rhs;
-            solution.voltages[node] = value;
-            boxes[node] = [bound.lo.min(value), bound.hi.max(value)];
+            if !already_applied {
+                equation.rhs_constant += rhs;
+                solution.voltages[node] += value;
+                let prior = I {
+                    lo: boxes[node][0],
+                    hi: boxes[node][1],
+                };
+                let combined = prior + bound;
+                boxes[node] = [
+                    combined.lo.min(solution.voltages[node]),
+                    combined.hi.max(solution.voltages[node]),
+                ];
+                equation.original_rhs.push(original.clone());
+            }
+            if already_applied {
+                // Event closure can recertify the reduced row before projecting
+                // the same immutable physical phase again. Restore that phase's
+                // complete certified box, not the newly written residual box.
+                boxes[node] = self
+                    .forcing_bounds
+                    .iter()
+                    .find(|(n, _)| *n == node)
+                    .map(|(_, b)| *b)
+                    .ok_or_else(|| Error::new("invalid_ir", "missing forcing phase box"))?;
+            } else {
+                self.forcing_bounds.push((node, boxes[node]));
+                self.forcing_offsets.push((node, value));
+            }
+            // Repeated same-phase queries recheck the existing complete branch
+            // point/box certificate, without accumulating the source a second time.
+            let original = equation
+                .original_rhs
+                .iter()
+                .cloned()
+                .reduce(|left, right| Expression::Add {
+                    left: Box::new(left),
+                    right: Box::new(right),
+                })
+                .unwrap();
             let point_rhs = expression::evaluate(&original, &solution.voltages)?.value;
             let lhs = solution.voltages[positive] - solution.voltages[negative];
             let limit = self.tolerances.absolute
@@ -866,6 +1043,30 @@ impl Circuit {
         solution.max_residual_ratio = ratio;
         self.forcing_phase = Some((identity, time));
         Ok(())
+    }
+
+    #[cfg(test)]
+    pub(crate) fn forcing_frame_snapshot(&self) -> serde_json::Value {
+        let equations: Vec<_> = self
+            .equations
+            .iter()
+            .map(|e| {
+                serde_json::json!({
+            "branch":e.branch,"positive":e.positive,"negative":e.negative,
+            "rhs_constant":e.rhs_constant,"rhs_terms":e.rhs_terms,"coefficients":e.coefficients,
+            "nonlinear":e.nonlinear,"original_rhs":e.original_rhs,"origins":e.origins})
+            })
+            .collect();
+        let dense: Vec<_> = self
+            .dense_residuals
+            .iter()
+            .map(|d| d.as_ref().map(|d| (d.start, &d.coefficients)))
+            .collect();
+        serde_json::json!({"nodes":self.nodes,"forcing_phase":self.forcing_phase,"forcing_bounds":self.forcing_bounds,"forcing_offsets":self.forcing_offsets,"equations":equations,
+            "driven":self.driven,"unknown":self.unknown,"unknown_columns":self.unknown_columns,
+            "tolerances":self.tolerances,"driven_coefficients":self.driven_coefficients,"dense_residuals":dense,
+            "affine_factor_identity":self.affine_factor.as_ref().map(|f|Arc::as_ptr(f) as usize),
+            "affine_factor_initialized":self.affine_factor.as_ref().map(|f|f.get().is_some())})
     }
 
     fn check_affine_residuals(&self, values: &[f64]) -> Result<(f64, f64), Error> {
@@ -1168,3 +1369,81 @@ mod tests {
 #[cfg(test)]
 #[path = "solver_cache_tests.rs"]
 mod cache_tests;
+
+#[cfg(test)]
+mod forcing_offset_cache_tests {
+    use super::*;
+    use serde_json::json;
+    #[test]
+    fn forcing_offset_cache_preserves_residual_and_rejects_malformed_phase() {
+        let p: Program = serde_json::from_value(json!({"schema_version":crate::ir::SCHEMA_VERSION,
+            "nodes":["0","u","y"],"contributions":[{"positive":2,"negative":0,
+            "branch":{"instance":"dut","local_positive":"p","local_negative":"r","kind":"voltage"},
+            "origin":{"source":"offset-cache.va","line":1,"column":1,"instance":"dut"},
+            "rhs":{"op":"affine","constant":0,"terms":[]}}]}))
+        .unwrap();
+        let mut c = Circuit::new(p, &["u".into()], Tolerances::default()).unwrap();
+        let values = [0., 0., 0.75];
+        assert_eq!(
+            c.forcing_legacy_voltage_view(9, 0.75, &values, &[2])
+                .unwrap(),
+            values
+        );
+        c.forcing_phase = Some((9, 0.75));
+        c.forcing_offsets = vec![(2, 0.25)];
+        c.forcing_bounds = vec![(2, [0.75, 0.75])];
+        let before = c.forcing_frame_snapshot();
+        for _ in 0..2 {
+            assert_eq!(
+                c.forcing_legacy_voltage_view(9, 0.75, &values, &[2])
+                    .unwrap(),
+                [0., 0., 0.5]
+            );
+        }
+        assert_eq!(before, c.forcing_frame_snapshot());
+        let mut cases = vec![];
+        let mut bad = c.clone();
+        bad.forcing_offsets.clear();
+        cases.push(bad);
+        let mut bad = c.clone();
+        bad.forcing_offsets[0].1 = f64::NAN;
+        cases.push(bad);
+        let mut bad = c.clone();
+        bad.forcing_offsets[0].0 = 99;
+        cases.push(bad);
+        let mut bad = c.clone();
+        bad.forcing_bounds[0].0 = 1;
+        cases.push(bad);
+        let mut bad = c.clone();
+        bad.forcing_bounds[0].1 = [1., 0.];
+        cases.push(bad);
+        let mut bad = c.clone();
+        bad.forcing_phase = None;
+        cases.push(bad);
+        let mut bad = c.clone();
+        bad.forcing_phase = Some((8, 0.75));
+        cases.push(bad);
+        let mut bad = c.clone();
+        bad.forcing_phase = Some((9, 0.5));
+        cases.push(bad);
+        for bad in cases {
+            for _ in 0..2 {
+                assert_eq!(
+                    bad.forcing_legacy_voltage_view(9, 0.75, &values, &[2])
+                        .unwrap_err()
+                        .kind,
+                    "invalid_ir"
+                );
+            }
+        }
+        for nodes in [vec![], vec![2, 2], vec![0], vec![99]] {
+            assert_eq!(
+                c.forcing_legacy_voltage_view(9, 0.75, &values, &nodes)
+                    .unwrap_err()
+                    .kind,
+                "invalid_ir"
+            );
+        }
+        assert_eq!(before, c.forcing_frame_snapshot());
+    }
+}

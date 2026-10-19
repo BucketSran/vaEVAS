@@ -1,0 +1,83 @@
+{
+  "program": {
+    "nodes": [
+      "0",
+      "x",
+      "y"
+    ],
+    "contributions": [
+      {
+        "branch": {
+          "instance": "XD",
+          "local_positive": "0",
+          "local_negative": "y",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 2,
+        "rhs": {
+          "constant": -0.0,
+          "terms": [
+            {
+              "node": 0,
+              "coefficient": 1.0
+            },
+            {
+              "node": 1,
+              "coefficient": -1.0
+            }
+          ],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/sine-source-three/source-value-r1/public/source_probe.va",
+          "line": 2,
+          "column": 74,
+          "instance": "XD",
+          "expansion": []
+        }
+      }
+    ],
+    "states": [],
+    "events": [],
+    "operators": [],
+    "schema_version": 32,
+    "step_bounds": []
+  },
+  "driven": [
+    "x"
+  ],
+  "samples": [],
+  "transient": {
+    "pwl": [
+      []
+    ],
+    "analytic_sources": [
+      {
+        "kind": "sine",
+        "freq": 1.0,
+        "sinephase": 0.0,
+        "ampl": 0.25,
+        "sinedc": 0.5,
+        "source_name": "VX",
+        "terminals": [
+          "x",
+          "0"
+        ],
+        "polarity": 1,
+        "parameter_origin": "explicit-v1"
+      }
+    ],
+    "output_times": [
+      0.0,
+      0.125,
+      1.0
+    ],
+    "stop": 1.0,
+    "max_step": 0.125
+  },
+  "tolerances": {
+    "absolute": 1e-12,
+    "relative": 1e-10
+  }
+}

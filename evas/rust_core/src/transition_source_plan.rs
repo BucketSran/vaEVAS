@@ -37,6 +37,10 @@ impl Default for Work {
     }
 }
 impl Work {
+    #[cfg(test)]
+    pub(crate) fn same_owner(&self, other: &Self) -> bool {
+        Arc::ptr_eq(&self.0, &other.0)
+    }
     pub(crate) fn spent(&self) -> u64 {
         self.0.work.load(Ordering::Relaxed)
     }
@@ -272,6 +276,9 @@ impl ProofContext {
         work.debit(2, copied.saturating_add(lookup) as u64)?;
         trajectory.charge_source_copy(&work)?;
         Self::new(program, trajectory, driven, work)
+    }
+    pub(crate) fn trajectory_arc(&self) -> Arc<Trajectory> {
+        self.trajectory.clone()
     }
     pub(crate) fn program_arc(&self) -> Arc<Program> {
         self.program.clone()
@@ -1953,6 +1960,7 @@ mod proof_cache_tests {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![vec![[0., values[0]], [1., values[1]]]],
@@ -2315,6 +2323,7 @@ mod proof_cache_tests {
         );
         let noisy = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: Some(vec![crate::ir::SourceError::Voltage(0.01)]),
                 strobetimes: vec![],
                 pwl: vec![vec![[0., 0.], [1., 1.]]],
@@ -2784,5 +2793,14 @@ mod dc_dispatch_budget_tests {
                 "step_budget"
             );
         }
+    }
+}
+#[cfg(test)]
+impl ProofContext {
+    pub(crate) fn analytic_cache_snapshot(&self) -> serde_json::Value {
+        assert!(self.proofs.lock().unwrap().is_empty());
+        assert!(self.cuts.lock().unwrap().is_empty());
+        assert!(self.factor_structural.get().is_none());
+        serde_json::json!({"program":*self.program,"physical_config":self.trajectory.config,"knots":self.trajectory.knots,"solver_points":self.trajectory.solver_points,"driven":self.driven,"input_nodes":self.input_nodes,"proof_cache":0,"cuts_cache":0,"factor_structural_initialized":false})
     }
 }

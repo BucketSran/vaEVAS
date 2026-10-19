@@ -23,6 +23,10 @@ mod initialization;
 mod root_refinement;
 
 #[cfg(test)]
+#[path = "transient_history_consumer_tests.rs"]
+mod history_consumer_tests;
+
+#[cfg(test)]
 #[path = "transient_root_window_tests.rs"]
 mod root_window_tests;
 
@@ -70,10 +74,34 @@ impl Frame {
     }
     fn candidate_clone(&self) -> Result<Self, Error> {
         // Charge before copying the target runtime, including observation phases.
+        let proof_maps = if let Some(w) = self.operators.history_copy_work() {
+            w.debit(2, 0)?;
+            w.debit(
+                2,
+                (8 + self.states.len()
+                    + 2 * self.state_bounds.len()
+                    + self.solution.voltages.len()
+                    + self
+                        .solution
+                        .certified_voltage_bounds
+                        .as_ref()
+                        .map_or(0, |v| 2 * v.len())) as u64,
+            )?;
+            self.circuit.charge_history_copy(w)?;
+            Some((
+                crate::event_value_proof::history::copy_map(&self.value_proofs, w)?,
+                time_provenance::copy_history(&self.time_proofs, w)?,
+            ))
+        } else {
+            None
+        };
+
         let operators = self.operators.candidate_clone()?;
+        let (value_proofs, time_proofs) =
+            proof_maps.unwrap_or_else(|| (self.value_proofs.clone(), self.time_proofs.clone()));
         Ok(Self {
-            value_proofs: self.value_proofs.clone(),
-            time_proofs: self.time_proofs.clone(),
+            value_proofs,
+            time_proofs,
             time: self.time,
             states: self.states.clone(),
             state_bounds: self.state_bounds.clone(),
@@ -183,7 +211,7 @@ impl Controller {
             let [lo, hi] = r.observation_time_bounds.unwrap_or([r.time, r.time]);
             t.hull(I { lo, hi })
         });
-        let inputs = trajectory.range(window)?.0;
+        let inputs = crate::event_value_proof::history::input_range(model, trajectory, window)?.0;
         let projection = crate::event_accuracy::GuardBounds::held(
             &model.program,
             &model.driven,
@@ -431,6 +459,10 @@ fn prepare_root_window_selected_impl(
     events: &[usize],
     refine_ordinary_phase: bool,
 ) -> Result<(Frame, crate::event_conditions::Selection, Vec<f64>), Error> {
+    let history_work = crate::analytic_request::proof_owner(model).map(|o| o.work());
+    if let Some(w) = history_work {
+        w.debit(2, 0)?;
+    }
     if let Some(graph) = &model.forcing {
         graph.ensure_live()?;
     }
@@ -442,13 +474,15 @@ fn prepare_root_window_selected_impl(
             "floor_source_exact_enclosure",
         )?;
     }
-    let proofs_valid = match &model.forcing {
-        Some(graph) => crate::event_value_proof::valid_with_work(
+    let proof_work = history_work.or_else(|| model.forcing.as_ref().map(|g| g.request_work()));
+    let proofs_valid = if let Some(w) = proof_work {
+        crate::event_value_proof::valid_with_work(
             &accepted.value_proofs,
             &accepted.state_bounds,
-            graph.request_work(),
-        )?,
-        None => crate::event_value_proof::valid(&accepted.value_proofs, &accepted.state_bounds),
+            w,
+        )?
+    } else {
+        crate::event_value_proof::valid(&accepted.value_proofs, &accepted.state_bounds)
     };
     if !proofs_valid {
         return Err(Error::new(
@@ -456,20 +490,24 @@ fn prepare_root_window_selected_impl(
             "accepted exact value proof outside matching state enclosure",
         ));
     }
-    if let Some(graph) = &model.forcing {
-        graph.request_work().debit(
+    if let Some(w) = proof_work {
+        w.debit(
             2,
             (accepted.time_proofs.len() as u64)
                 .saturating_mul(16)
                 .saturating_add(16),
         )?;
     }
+
     for (&state, proof) in &accepted.time_proofs {
         let refined = match accepted.state_bounds.get(state) {
-            Some(bounds) => match &model.forcing {
-                Some(graph) => proof.refine_with_work(*bounds, graph.request_work())?,
-                None => proof.refine(*bounds),
-            },
+            Some(bounds) => {
+                if let Some(w) = proof_work {
+                    proof.refine_with_work(*bounds, w)?
+                } else {
+                    proof.refine(*bounds)
+                }
+            }
             None => None,
         };
         if refined.is_none() {
@@ -531,41 +569,87 @@ fn prepare_root_window_selected_impl(
     // still belongs to every installed history and recorded event below.
     // In particular an OLD source cut may precede the root inside that window.
     frozen.bounds = base.event_bounds_at_root(time, time_bounds, exact_root)?;
-    let mut inputs = trajectory.values(time);
-    let mut input_bounds = trajectory.range(time_bounds)?.0;
+    // This bundle belongs only to this candidate and complete EventMoment.
+    // Every invocation, including a retry or a same-time state change, builds
+    // its own physical point. It cannot enter accepted history or a cache.
+    let (mut inputs, point_bounds) = if let Some(w) = history_work {
+        let (values, bounds) = trajectory.history_point_bundle(time, w)?;
+        // `values` is a separately paid Vec, copied from the raw strict result
+        // during the original values loop. Exact-root narrowing never touches
+        // the temporary strict tuple or the independently returned raw bounds.
+        (values, Some(bounds))
+    } else {
+        (
+            crate::event_value_proof::history::inputs(model, trajectory, time)?,
+            None,
+        )
+    };
+    let mut input_bounds =
+        crate::event_value_proof::history::input_range(model, trajectory, time_bounds)?.0;
     if let Some(root) = exact_root {
         for (index, bounds) in input_bounds.iter_mut().enumerate() {
-            if let Some(value) = trajectory
-                .exact_sources
-                .get(index)
-                .and_then(Option::as_ref)
-                .and_then(|c| c.at_root(root))
-            {
-                use num_traits::ToPrimitive;
-                if let Some((proved, nominal)) = crate::exact_source::enclosure(&value)
-                    .zip(value.to_f64())
-                    .filter(|(v, nominal)| {
-                        bounds.lo <= v.lo
-                            && v.hi <= bounds.hi
-                            && v.lo <= *nominal
-                            && *nominal <= v.hi
-                    })
-                {
+            if let Some(w) = history_work {
+                w.step()?;
+            }
+            let value =
+                if let Some(curve) = trajectory.exact_sources.get(index).and_then(Option::as_ref) {
+                    if let Some(w) = history_work {
+                        curve.at_root_history(root, w)?
+                    } else {
+                        curve.at_root(root)
+                    }
+                } else {
+                    None
+                };
+            if let Some(value) = value {
+                let proved = if let Some(w) = history_work {
+                    crate::exact_source::enclosure_with_work(&value, w)?
+                } else {
+                    crate::exact_source::enclosure(&value)
+                };
+                let nominal = if let Some(w) = history_work {
+                    let mut p = crate::exact_source::history_paid::Paid::new(w);
+                    let v = p.nearest(&value);
+                    p.finish(v)?
+                } else {
+                    use num_traits::ToPrimitive;
+                    value.to_f64()
+                };
+                if let Some((proved, nominal)) = proved.zip(nominal).filter(|(v, n)| {
+                    bounds.lo <= v.lo && v.hi <= bounds.hi && v.lo <= *n && *n <= v.hi
+                }) {
                     *bounds = proved;
-                    // Settlement reads the physical root. Observation at the
-                    // execution representative keeps its separate inputs below.
                     inputs[index] = nominal;
                 }
             }
         }
     }
-    let observation_inputs = trajectory.value_bounds(time);
-    let point_root = (time_bounds.lo == time_bounds.hi)
-        .then(|| crate::exact_source::RootTime::point(time))
-        .flatten();
-    let proof_root = exact_root
-        .filter(|r| r.refine(time_bounds).is_some())
-        .or(point_root.as_ref());
+    let observation_inputs = if let Some(raw_bounds) = point_bounds {
+        raw_bounds
+    } else {
+        crate::event_value_proof::history::input_bounds(model, trajectory, time)?
+    };
+    let point_root = if time_bounds.lo == time_bounds.hi {
+        if let Some(w) = history_work {
+            let mut p = crate::exact_source::history_paid::Paid::new(w);
+            let value = p.binary(time).map(crate::exact_source::history_paid::root);
+            p.finish(value)?
+        } else {
+            crate::exact_source::RootTime::point(time)
+        }
+    } else {
+        None
+    };
+    let root_valid = if let Some(r) = exact_root {
+        if let Some(w) = history_work {
+            r.refine_with_work(time_bounds, w)?.is_some()
+        } else {
+            r.refine(time_bounds).is_some()
+        }
+    } else {
+        false
+    };
+    let proof_root = exact_root.filter(|_| root_valid).or(point_root.as_ref());
     let value_context = crate::event_value_proof::Context::try_new(
         model,
         trajectory,
@@ -620,7 +704,7 @@ fn prepare_root_window_selected_impl(
     // maps until stable, rebuilding assignments from accepted state each time.
     // This is an observation closure, never a chain of provisional histories.
     for _ in 0..=model.program.operators.len() {
-        let observed_time_proofs = time_provenance::apply(
+        let observed_time_proofs = time_provenance::apply_charged(
             model,
             trajectory,
             &physical_selection,
@@ -628,7 +712,7 @@ fn prepare_root_window_selected_impl(
             exact_root,
             old_bounds,
             &prepared.bounds,
-        );
+        )?;
         let (mapped, values, bounds) = frozen.observed_after_with_time_proofs(
             time_bounds,
             &prepared.bounds,
@@ -666,7 +750,12 @@ fn prepare_root_window_selected_impl(
         if let Some(r) = &model.floor_source {
             crate::event_floor::charge(r.work(), 1024, "floor_source_exact_enclosure")?;
         }
-        if let Some(bounds) = crate::exact_source::enclosure(value) {
+        let bounds = if let Some(w) = history_work {
+            crate::exact_source::enclosure_with_work(value, w)?
+        } else {
+            crate::exact_source::enclosure(value)
+        };
+        if let Some(bounds) = bounds {
             prepared.bounds[state] = bounds;
         }
     }
@@ -677,7 +766,7 @@ fn prepare_root_window_selected_impl(
         .filter(|&s| old_bounds[s] != prepared.bounds[s] || old_bounds[s].lo != old_bounds[s].hi)
         .collect();
 
-    let physical_time_proofs = time_provenance::apply(
+    let physical_time_proofs = time_provenance::apply_charged(
         model,
         trajectory,
         &physical_selection,
@@ -685,7 +774,7 @@ fn prepare_root_window_selected_impl(
         exact_root,
         old_bounds,
         &prepared.bounds,
-    );
+    )?;
     let mut operators = frozen.advanced_until_with_value_proofs(
         time_bounds,
         &prepared.states,
@@ -706,17 +795,27 @@ fn prepare_root_window_selected_impl(
         &value_context,
     )?;
     for (&state, value) in &replay_values {
-        if let Some(bounds) = crate::exact_source::enclosure(value) {
+        let bounds = if let Some(w) = history_work {
+            crate::exact_source::enclosure_with_work(value, w)?
+        } else {
+            crate::exact_source::enclosure(value)
+        };
+        if let Some(bounds) = bounds {
             replay.bounds[state] = bounds;
         }
     }
-    if physical_value_proofs != replay_values {
+    let same_values = if let Some(w) = history_work {
+        crate::event_value_proof::history::equal(&physical_value_proofs, &replay_values, w)?
+    } else {
+        physical_value_proofs == replay_values
+    };
+    if !same_values {
         return Err(Error::new(
             "event_consistency",
             "exact event value replay changed",
         ));
     }
-    let replay_time_proofs = time_provenance::apply(
+    let replay_time_proofs = time_provenance::apply_charged(
         model,
         trajectory,
         &physical_selection,
@@ -724,7 +823,7 @@ fn prepare_root_window_selected_impl(
         exact_root,
         old_bounds,
         &replay.bounds,
-    );
+    )?;
     let history_replay = frozen.advanced_until_with_value_proofs(
         time_bounds,
         &replay.states,
@@ -735,10 +834,19 @@ fn prepare_root_window_selected_impl(
         Some(&replay_time_proofs),
         Some(&replay_values),
     )?;
+    let same_times = if let Some(w) = history_work {
+        time_provenance::equal_history(&physical_time_proofs, &replay_time_proofs, w)?
+    } else {
+        physical_time_proofs == replay_time_proofs
+    };
     if prepared.states != replay.states
-        || physical_time_proofs != replay_time_proofs
+        || !same_times
         || prepared.bounds != replay.bounds
-        || !history_replay.same_reset_history(&operators)
+        || !if let Some(w) = history_work {
+            history_replay.same_reset_history_paid(&operators, w)?
+        } else {
+            history_replay.same_reset_history(&operators)
+        }
     {
         return Err(Error::new(
             "event_consistency",
@@ -806,7 +914,9 @@ fn prepare_root_window_selected_impl(
         let bounds = operators.bounds(time)?;
         let mut circuit = model.circuit_at(&prepared.states, &values, &observation_inputs)?;
         circuit.reuse_affine_factor_from(&prepared.circuit);
-        let mut solution = circuit.solve(&trajectory.values(time))?;
+        let mut solution = circuit.solve(&crate::event_value_proof::history::inputs(
+            model, trajectory, time,
+        )?)?;
         let (_, nodes) = model.certify_observation(
             &model.conditions.select(&[], &observation_inputs)?,
             &observation_inputs,
@@ -819,7 +929,7 @@ fn prepare_root_window_selected_impl(
         prepared.solution = solution;
         prepared.circuit = circuit;
     }
-    let time_proofs = time_provenance::apply(
+    let time_proofs = time_provenance::apply_charged(
         model,
         trajectory,
         &selection,
@@ -827,7 +937,7 @@ fn prepare_root_window_selected_impl(
         exact_root,
         old_bounds,
         &prepared.bounds,
-    );
+    )?;
     let value_proofs = crate::event_value_proof::apply_charged(
         model,
         &selection,
@@ -939,7 +1049,8 @@ fn prepare_batch_until(
         .collect();
     // The display consumer reuses the same immutable physical root/binding.
     // No representative-time Floor evaluation is allowed to choose a new bin.
-    let display_root = if model.forcing.is_some() {
+    // history-only display_context is None; do not build an unused root proof.
+    let display_root = if model.forcing.is_some() || model.history_admission.is_some() {
         None
     } else {
         moment.exact_root.cloned().or_else(|| {
@@ -1146,14 +1257,10 @@ fn prepare_calendar_batch(
         crate::diagnostics::counter("forcing_prefix_calendar_root", 1);
     }
     let exact_root = event_root(model, scheduled)?;
-    let (ids, bounds) = match &model.forcing {
-        Some(graph) => (
-            crate::schedule::event_ids_with_work(scheduled, graph.request_work())?,
-            crate::schedule::event_bounds_hull_with_work(
-                scheduled,
-                I::point(time),
-                graph.request_work(),
-            )?,
+    let (ids, bounds) = match calendar_proof_work(model) {
+        Some(work) => (
+            crate::schedule::event_ids_with_work(scheduled, work)?,
+            crate::schedule::event_bounds_hull_with_work(scheduled, I::point(time), work)?,
         ),
         None => (
             scheduled.iter().map(|e| e.event).collect::<Vec<_>>(),
@@ -1195,10 +1302,24 @@ fn prepare_calendar_batch(
     Ok((next, records))
 }
 
-// Opt-in accessors keep the original unmarked calendar consumers unchanged.
+// Every marked calendar consumer borrows the prepared request's existing Work.
+// No source context is created here; unmarked consumers retain their old route.
+fn calendar_proof_work(model: &EventModel) -> Option<&crate::transition_source_plan::Work> {
+    model
+        .forcing
+        .as_ref()
+        .map(|graph| graph.request_work())
+        .or_else(|| {
+            model
+                .history_admission
+                .as_ref()
+                .map(|token| token.context.borrow_work())
+        })
+        .or_else(|| model.analytic_request.as_ref().map(|r| r.work()))
+}
 fn event_bounds(model: &EventModel, event: &ScheduledEvent) -> Result<I, Error> {
-    match &model.forcing {
-        Some(graph) => event.bounds_with_work(graph.request_work()),
+    match calendar_proof_work(model) {
+        Some(work) => event.bounds_with_work(work),
         None => Ok(event.bounds()),
     }
 }
@@ -1206,8 +1327,8 @@ fn event_root(
     model: &EventModel,
     events: &[ScheduledEvent],
 ) -> Result<Option<crate::exact_source::RootTime>, Error> {
-    match &model.forcing {
-        Some(graph) => crate::schedule::common_root_with_work(events, graph.request_work()),
+    match calendar_proof_work(model) {
+        Some(work) => crate::schedule::common_root_with_work(events, work),
         None => Ok(crate::schedule::common_root(events)),
     }
 }
@@ -1218,10 +1339,10 @@ fn record_ambiguous_event(
     site: &str,
     time: f64,
 ) -> Result<(), Error> {
-    if let Some(graph) = &model.forcing {
+    if let Some(work) = calendar_proof_work(model) {
         // Error diagnostics must not invoke the legacy exact-root/bounds
         // helpers a second time outside the owned phase reservation.
-        graph.request_work().debit(2, 64)?;
+        work.debit(2, 64)?;
         crate::diagnostics::record(
             "ambiguous_query",
             "rejected",
@@ -1241,8 +1362,8 @@ fn event_order(
     event: &ScheduledEvent,
     time: f64,
 ) -> Result<Option<std::cmp::Ordering>, Error> {
-    match &model.forcing {
-        Some(graph) => event.physical_order_for_query_with_work(time, model, graph.request_work()),
+    match calendar_proof_work(model) {
+        Some(work) => event.physical_order_for_query_with_work(time, model, work),
         None => Ok(event.physical_order_for_query(time, model, trajectory)),
     }
 }
@@ -1250,8 +1371,8 @@ fn source_root_bounds(
     model: &EventModel,
     root: &crate::exact_source::RootTime,
 ) -> Result<Option<I>, Error> {
-    match &model.forcing {
-        Some(graph) => root.bounds_with_work(graph.request_work()),
+    match calendar_proof_work(model) {
+        Some(work) => root.bounds_with_work(work),
         None => Ok(root.bounds()),
     }
 }
@@ -1268,8 +1389,20 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
         ));
     }
     let mut transient = request.transient.unwrap();
+    let analytic = !transient.analytic_sources.is_empty();
+    let work = if analytic {
+        Some(crate::transition_source_plan::Work::default())
+    } else {
+        None
+    };
+    if let Some(w) = &work {
+        crate::analytic_source::charge_config(&transient, w)?;
+        crate::analytic_source::charge_config(&request.program, w)?;
+        crate::analytic_source::charge_config(&request.driven, w)?;
+        crate::analytic_source::validate_names(&transient, &request.driven, w)?;
+    }
     transient.max_step = crate::step_bounds::history_cap(&request.program, transient.max_step)?;
-    let mut trajectory = Trajectory::new(transient.clone(), request.driven.len())?;
+    let mut trajectory = Trajectory::new_with_work(transient.clone(), request.driven.len(), work)?;
     if request.program.states.is_empty()
         && request.program.events.is_empty()
         && request.program.operators.is_empty()
@@ -1282,20 +1415,43 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
             None,
         );
     }
+    let analytic_request = if analytic {
+        Some(crate::analytic_request::Request::prepare(
+            &request.program,
+            &trajectory,
+            &request.driven,
+        )?)
+    } else {
+        None
+    };
     // Bind the actual original program before initialization can rewrite any
     // initial predicate or input clamp. The private reduction changes only
     // audited independent forcing output rows, and is never the original IR.
-    let forcing = crate::forcing_graph::Graph::partition(
-        &mut request.program,
-        &trajectory,
-        &request.driven,
-        &request.tolerances,
-    )?;
+    let forcing = if analytic_request.is_some() {
+        // Request::prepare audited every raw contribution and rejects Forcing.
+        // An analytic request never enters the independent Graph factory.
+        None
+    } else {
+        crate::forcing_graph::Graph::partition(
+            &mut request.program,
+            &trajectory,
+            &request.driven,
+            &request.tolerances,
+        )?
+    };
     let program = crate::initialization::resolve(
         request.program,
         &request.driven,
-        &trajectory.value_bounds(0.0),
+        &trajectory.checked_value_bounds(0.0)?,
     )?;
+    if let Some(token) = &analytic_request {
+        crate::event_floor::check_provided_binding(
+            token.context(),
+            &program,
+            &trajectory,
+            &request.driven,
+        )?;
+    }
     let mut request = Request {
         program,
         transient: Some(transient.clone()),
@@ -1413,12 +1569,38 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
         }
     };
 
-    let mut model = EventModel::new_with_trajectory(
-        request.program,
-        request.driven,
-        request.tolerances,
-        Some(&trajectory),
-    )?;
+    let mut model = if let Some(token) = &analytic_request {
+        if forcing.is_some() {
+            return Err(Error::new(
+                "unsupported_analytic_source_consumer",
+                "analytic request cannot grant another physical capability",
+            ));
+        }
+        let model = EventModel::new_with_context(
+            request.program,
+            request.driven,
+            request.tolerances,
+            Some(&trajectory),
+            Some(token.context().clone()),
+        )?;
+        token.activate(model, &trajectory)?
+    } else {
+        match &forcing {
+            Some(graph) => EventModel::new_with_forcing(
+                request.program,
+                request.driven,
+                request.tolerances,
+                &trajectory,
+                graph.prepare_execution()?,
+            )?,
+            None => EventModel::new_with_trajectory(
+                request.program,
+                request.driven,
+                request.tolerances,
+                Some(&trajectory),
+            )?,
+        }
+    };
     model.forcing = forcing;
     let step_bounds = crate::step_bounds::Bounds::new(&model.program)?;
     if model.floor_source.is_some() {
@@ -1465,7 +1647,7 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
             &model.tolerances,
             match &model.forcing {
                 Some(g) => Some(g.source_context(&model.program, &trajectory, &model.driven)?),
-                None => model.floor_source.as_ref().map(|r| r.source.clone()),
+                None => model.source_context.clone(),
             },
         )?;
         (operators, crossings)
@@ -1479,7 +1661,7 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
             &model.tolerances,
             match &model.forcing {
                 Some(g) => Some(g.source_context(&model.program, &trajectory, &model.driven)?),
-                None => model.floor_source.as_ref().map(|r| r.source.clone()),
+                None => model.source_context.clone(),
             },
         )?;
         let crossings = schedule(&model, &trajectory, &operators)?;
@@ -1492,7 +1674,34 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
                 "forcing bootstrap provider bridge is not implemented",
             ));
         }
-        let operators = if !model.typed_transition_targets.is_empty() {
+        let operators = if let Some(token) = &model.history_admission {
+            Operators::new_history_consumer(
+                token.clone(),
+                &initial,
+                prediction_end(&model, &trajectory, crossings.first()),
+            )?
+        } else if model
+            .forcing
+            .as_ref()
+            .is_some_and(|g| g.requires_composed_history())
+        {
+            let graph = model.forcing.as_ref().unwrap();
+            Operators::new_until_with_forcing_execution(
+                &model.program,
+                &trajectory,
+                &model.driven,
+                &initial,
+                if model.typed_transition_targets.is_empty() {
+                    initial_bounds
+                } else {
+                    Some(initial_bounds.unwrap_or(&declaration_bounds))
+                },
+                &model.typed_transition_targets,
+                prediction_end(&model, &trajectory, crossings.first()),
+                &model.tolerances,
+                graph.prepare_execution()?,
+            )?
+        } else if !model.typed_transition_targets.is_empty() {
             Operators::new_until_with_held_points(
                 &model.program,
                 &trajectory,
@@ -1513,7 +1722,7 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
                 initial_bounds.expect("bounded bootstrap has a prepared enclosure"),
                 prediction_end(&model, &trajectory, crossings.first()),
                 &model.tolerances,
-                model.floor_source.as_ref().map(|r| r.source.clone()),
+                model.source_context.clone(),
             )?
         } else {
             Operators::new_until_with_source_context(
@@ -1527,7 +1736,7 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
                     Some(g) => {
                         Some(g.source_context(&model.program, &trajectory, &model.driven)?)
                     }
-                    None => model.floor_source.as_ref().map(|r| r.source.clone()),
+                    None => model.source_context.clone(),
                 },
             )?
         };
@@ -1552,19 +1761,23 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
     let circuit = model.circuit_at(
         &initial,
         &operators.values(0.0)?,
-        &trajectory.value_bounds(0.0),
+        &crate::event_value_proof::history::input_bounds(&model, &trajectory, 0.0)?,
     )?;
     let mut accepted = Frame {
         value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.0,
-        solution: circuit.solve(&trajectory.values(0.0))?,
+        solution: circuit.solve(&crate::event_value_proof::history::inputs(
+            &model,
+            &trajectory,
+            0.0,
+        )?)?,
         state_bounds: initial_bounds,
         states: initial,
         circuit,
         operators,
     };
-    let inputs = trajectory.value_bounds(0.0);
+    let inputs = crate::event_value_proof::history::input_bounds(&model, &trajectory, 0.0)?;
     let (state_bounds, node_bounds) = model.certify_observation(
         &model.conditions.select(&[], &inputs)?,
         &inputs,
@@ -1582,6 +1795,13 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
             &mut accepted.solution,
             &mut accepted.circuit,
         )?;
+    }
+    if let Some(token) = &model.analytic_request {
+        let cells =
+            trajectory.config.output_times.len().saturating_mul(
+                model.program.nodes.len() * 8 + model.program.states.len() * 4 + 64,
+            );
+        token.work().debit(2, cells as u64)?;
     }
     let mut trace = TransientTrace {
         display_records: Vec::new(),
@@ -1764,6 +1984,11 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
                 },
             )?;
         while output < trace.times.len() && trace.times[output] < controller.accepted.time {
+            if let Some(token) = &model.analytic_request {
+                token
+                    .work()
+                    .debit(2, (controller.outputs.len() * 64 + 16) as u64)?;
+            }
             let index = controller
                 .outputs
                 .iter()
@@ -1885,13 +2110,20 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
         } else {
             if !model.program.operators.is_empty() {
                 let source_root = controller.accepted.operators.source_root_at(time)?;
-                let source_window = source_root
+                let certified_window = source_root
                     .as_ref()
                     .map(|root| source_root_bounds(&model, root))
                     .transpose()?
-                    .flatten()
-                    .or_else(|| controller.accepted.operators.source_window_at(time))
-                    .unwrap_or(I::point(time));
+                    .flatten();
+                let source_window = if let Some(window) = certified_window {
+                    window
+                } else {
+                    controller
+                        .accepted
+                        .operators
+                        .source_window_checked(time)?
+                        .unwrap_or(I::point(time))
+                };
                 let next = crate::diagnostics::outcome(
                     "history_candidate",
                     time,
@@ -1933,8 +2165,9 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
                 // change their equation coefficients without a state event.
                 // Certify the selected equations before committing this frame;
                 // reuse a factor only when its coefficients still agree.
-                let inputs = trajectory.values(time);
-                let input_bounds = trajectory.value_bounds(time);
+                let inputs = crate::event_value_proof::history::inputs(&model, &trajectory, time)?;
+                let input_bounds =
+                    crate::event_value_proof::history::input_bounds(&model, &trajectory, time)?;
                 let mut selected_circuit = if model
                     .program
                     .contributions
@@ -2053,6 +2286,12 @@ fn run_stateless_transient(
 ) -> Result<Response, Error> {
     let _timing = crate::diagnostics::span("controller.stateless");
 
+    if let Some(w) = trajectory.analytic_work() {
+        w.debit(
+            2,
+            (trajectory.config.output_times.len() * 4 + program.nodes.len() + 32) as u64,
+        )?;
+    }
     let times = trajectory.config.output_times.clone();
     let nodes = program.nodes.clone();
     let bounded = !program.step_bounds.is_empty();
@@ -2074,15 +2313,15 @@ fn run_stateless_transient(
     loop {
         let solved = if let Some(math) = &mut math {
             math.solve(
-                &trajectory.values(time),
-                &trajectory.value_bounds(time),
+                &trajectory.checked_values(time)?,
+                &trajectory.checked_value_bounds(time)?,
                 time,
                 &trajectory.exact_sources,
             )
         } else {
             circuit.as_mut().unwrap().solve(
-                &trajectory.values(time),
-                &trajectory.value_bounds(time),
+                &trajectory.checked_values(time)?,
+                &trajectory.checked_value_bounds(time)?,
                 previous.as_ref().map(|s| s.voltages.as_slice()),
                 time,
                 &trajectory.exact_sources,
@@ -2093,6 +2332,9 @@ fn run_stateless_transient(
             error
         })?;
         if sample < times.len() && time == times[sample] {
+            if let Some(w) = trajectory.analytic_work() {
+                w.debit(2, (solution.voltages.len() * 8 + 32) as u64)?;
+            }
             solutions.push(solution.clone());
             sample += 1;
         }
@@ -2203,6 +2445,7 @@ mod tests {
         let model = EventModel::new(program, vec!["u".into()], tolerances).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [3.0, 1.0]]],
@@ -2281,6 +2524,7 @@ mod tests {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 pwl: vec![vec![[0., 0.], [2., 4.], [4., -4.], [24., -4.]]],
                 output_times: vec![0., 4., 24.],
@@ -2426,6 +2670,7 @@ mod tests {
         // isolates reset-time uncertainty rather than PWL interpolation error.
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![
@@ -2666,6 +2911,7 @@ mod tests {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 pwl: vec![vec![[0., 0.], [5e-6, 0.]]],
                 output_times: vec![0., 0.5e-6, 4.5e-6],
@@ -2864,6 +3110,7 @@ mod tests {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![
@@ -2954,6 +3201,7 @@ mod tests {
         let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [1.0, 1.0], [2.0, 0.0]]],
@@ -3384,3 +3632,7 @@ mod event_control_tests;
 #[cfg(test)]
 #[path = "transient_rational_transition_tests.rs"]
 mod rational_transition_tests;
+
+#[cfg(test)]
+#[path = "transient_analytic_tests.rs"]
+mod analytic_tests;

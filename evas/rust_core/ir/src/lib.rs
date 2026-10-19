@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 31;
+pub const SCHEMA_VERSION: u32 = 32;
 
 pub fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -659,6 +659,8 @@ fn source_errors<'de, D: serde::Deserializer<'de>>(
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct TransientInputs {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub analytic_sources: Vec<Option<AnalyticSource>>,
     #[serde(
         default,
         rename = "pwl_errors_V",
@@ -767,4 +769,20 @@ pub struct ModelPortabilityAdvisory {
     pub message: &'static str,
     pub operator: usize,
     pub origin: String,
+}
+
+/// Explicit finite source-value contract; no vendor default is inferred.
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+pub enum AnalyticSource {
+    Sine {
+        sinedc: f64,
+        ampl: f64,
+        freq: f64,
+        sinephase: f64,
+        source_name: String,
+        terminals: [String; 2],
+        polarity: i8,
+        parameter_origin: String,
+    },
 }

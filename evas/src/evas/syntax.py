@@ -189,6 +189,8 @@ class Function:
     variables: frozenset[str]
     body: tuple[Assignment | Conditional | Loop, ...]
     token: Token
+    return_type: str = "real"
+    variable_types: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -666,14 +668,11 @@ class Parser:
     def function(self) -> Function:
         token = self.take("analog")
         self.take("function")
-        if self.token.text == "integer":
-            self.fail("analog function return type currently requires real")
-        if self.token.text == "real":
-            self.take("real")
+        return_type = self.take().text if self.token.text in ("integer", "real") else "real"
         name = self.name()
         self.take(";")
-        inputs, variables = [], set()
-        while self.token.text in ("input", "real"):
+        inputs, variables, variable_types = [], set(), {}
+        while self.token.text in ("input", "real", "integer"):
             kind = self.take().text
             names = self.names()
             target = inputs if kind == "input" else variables
@@ -683,12 +682,13 @@ class Parser:
                 inputs.extend(names)
             else:
                 variables.update(names)
+                variable_types.update({n:kind for n in names})
             self.take(";")
         if not inputs or not set(inputs) <= variables:
-            self.fail("function requires typed real input arguments", token)
+            self.fail("function requires typed input arguments", token)
         body = self.statements(conditional=True)
         self.take("endfunction")
-        return Function(name, tuple(inputs), frozenset(variables), body, token)
+        return Function(name, tuple(inputs), frozenset(variables), body, token, return_type, variable_types)
 
     def monitored_event(self, token, initial=None):
         """Parse after @(; only top-level callers can split initialization."""

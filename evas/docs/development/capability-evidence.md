@@ -313,3 +313,11 @@ wave17已验收IR28候选的[事件typed余数与减法合同](../math/events.md
 IR29位运算与纯保持目标、原树事件Floor、无状态源因子和字面零电流支路已合入本地候选，合同见[算子手册](../math/operators.md#native-held-bits29)。新增公开正反控见[整数保持目标](../../tests/test_native_held_bits29.py)、[原树Floor](../../tests/test_source_floor_event.py)、[源因子](../../tests/test_source_factor.py)与[零电流](../../tests/test_scs_zero_current.py)。定向测试和各lane审查不替代同源统一400、完整Python与安装验收，本候选尚不改写历史303。history-forcing仍在隔离快照，0统一原件信用。
 
 [按需期限根与付费精确dyadic包围](../../../experiments/backends/support/low-cost-closure/source-budget-foundations.json)补充EVENT-ORDER、TRANSITION与COMPOSE的局部开发证据。IR31主候选联合控制69个去重Rust方法与25个Python方法通过，默认请求预算耗尽与完整Controller回滚保留；041仍在56.4/68ns处预算拒绝，未运行checker，不新增完整400成绩。独立5089例只验证数学函数，不替代真实owner计费控制。
+
+
+IR32本地共同候选涉及LANG、COMPOSE、TRANSITION、DEV:scs-input、CROSS、TIMER、EVENT-ORDER：
+普通保持历史消费者、受限共享Forcing和解析源值已合批，联合199个唯一Python方法、110个不同lib测试及6个native测试通过。
+原369、371完整请求仍在1e9预算拒绝，原346仍未闭合；完整400、完整Python CI及安装待验收，不增加既有317成绩。
+全量迭代已观察到旧PASS027因typed目标聚合审计超出原100000预算而回退；修复与重验未闭合，本候选不满足旧通过保留条件。
+显式typed源值、PWL根窗采样和direct-held事件，合同见[事件手册](../math/events.md#ir32-private-candidate-explicit-analytic-source-values)。
+本条只导航候选合同，不增加成熟支持、共同Q或400通过数；Spectre默认和一般history组合仍未支持。

@@ -1,6 +1,7 @@
 //! Bounded exact binary64 source arithmetic for phase and ordinary conditions.
 //! Curves retain original rational knots; rounded clamp knots are never inputs.
 mod forcing_point;
+pub(crate) mod history_paid;
 use crate::interval::Interval as I;
 use crate::ir::Expression;
 use num_rational::BigRational as R;
@@ -603,6 +604,8 @@ impl Curve {
     }
 
     pub(crate) fn at(&self, time: f64) -> Option<(f64, I)> {
+        #[cfg(test)]
+        crate::diagnostics::counter("strict_curve_at_body", 1);
         let value = self.value(&binary(time)?, &mut Budget(0))?;
         let bounds = enclosure(&value)?;
         Some((value.to_f64()?, bounds))

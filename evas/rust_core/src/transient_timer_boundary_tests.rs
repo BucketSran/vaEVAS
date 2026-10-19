@@ -43,6 +43,7 @@ fn trajectory(bad: bool) -> Trajectory {
     };
     Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             pwl: vec![pwl],
             strobetimes: vec![0., 0.125, 0.25, 0.5, 0.75, 1.],

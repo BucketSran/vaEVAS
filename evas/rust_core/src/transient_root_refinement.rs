@@ -21,8 +21,8 @@ impl Controller {
         let prepared = crate::settlement::prepare_window(
             model,
             (&blocks, &roots),
-            (&trajectory.values(event.time), &inputs),
-            &trajectory.value_bounds(event.time),
+            (&trajectory.checked_values(event.time).ok()?, &inputs),
+            &trajectory.checked_value_bounds(event.time).ok()?,
             &self.accepted.states,
             &evaluation.values,
             &self.accepted.state_bounds,
@@ -34,7 +34,7 @@ impl Controller {
             .conditions
             .select_at_roots(&blocks, &inputs, &roots, &self.accepted.state_bounds)
             .ok()?;
-        let point_inputs = trajectory.value_bounds(event.time);
+        let point_inputs = trajectory.checked_value_bounds(event.time).ok()?;
         let observation = model.conditions.select(&[], &point_inputs).ok()?;
         let sampled_program = model
             .selected_program_at_roots(&prepared.bounds, &inputs, &roots)
@@ -81,8 +81,8 @@ impl Controller {
         let prepared = crate::settlement::prepare_window(
             model,
             (&blocks, &roots),
-            (&trajectory.values(event.time), &inputs),
-            &trajectory.value_bounds(event.time),
+            (&trajectory.checked_values(event.time).ok()?, &inputs),
+            &trajectory.checked_value_bounds(event.time).ok()?,
             &self.accepted.states,
             &[],
             &self.accepted.state_bounds,
@@ -94,7 +94,7 @@ impl Controller {
             .conditions
             .select_at_roots(&blocks, &inputs, &roots, &self.accepted.state_bounds)
             .ok()?;
-        let point_inputs = trajectory.value_bounds(event.time);
+        let point_inputs = trajectory.checked_value_bounds(event.time).ok()?;
         let observation = model.conditions.select(&[], &point_inputs).ok()?;
         let sampled_program = model
             .selected_program_at_roots(&prepared.bounds, &inputs, &roots)
@@ -134,13 +134,17 @@ impl Controller {
     ) -> Result<(), Error> {
         crate::diagnostics::counter("root_preflight_calls", 1);
         let (next, _, end) = self.prepare_events_until(model, trajectory, crossings, None)?;
-        if let Some(time) = next.operators.next_breakpoint(next.time).filter(|&time| {
-            time > next.time
-                && time <= trajectory.config.stop
-                && crossings
-                    .get(end)
-                    .is_none_or(|event| time < event.bounds().lo)
-        }) {
+        if let Some(time) = next
+            .operators
+            .next_breakpoint_checked(next.time)?
+            .filter(|&time| {
+                time > next.time
+                    && time <= trajectory.config.stop
+                    && crossings
+                        .get(end)
+                        .is_none_or(|event| time < event.bounds().lo)
+            })
+        {
             prepare_root_window(
                 model,
                 trajectory,
@@ -164,6 +168,11 @@ impl Controller {
         trajectory: &Trajectory,
         crossings: &mut [ScheduledEvent],
     ) -> Result<(), Error> {
+        if let Some(token) = &model.analytic_request {
+            token
+                .work()
+                .debit(2, (model.triggers.len() + crossings.len() + 32) as u64)?;
+        }
         let Some(event) = crossings.get(self.event) else {
             return Ok(());
         };
@@ -258,7 +267,11 @@ impl Controller {
             );
         }
         let mut remaining = crate::dynamic_roots::REFINEMENT_WORK;
-        let mut candidate = crossings.to_vec();
+        let mut candidate = if model.analytic_request.is_some() {
+            crate::schedule::copy_calendar(crossings, model)?
+        } else {
+            crossings.to_vec()
+        };
         // At most a target trial and one legacy fallback, sharing the work
         // budget. Every trial starts from self.accepted, not failed history.
         let mut last_failure = failure;
@@ -298,7 +311,15 @@ impl Controller {
             );
             match result {
                 Ok(()) => {
-                    crossings[self.event] = candidate[self.event].clone();
+                    crossings[self.event] = if model.analytic_request.is_some() {
+                        crate::schedule::copy_calendar(
+                            std::slice::from_ref(&candidate[self.event]),
+                            model,
+                        )?
+                        .remove(0)
+                    } else {
+                        candidate[self.event].clone()
+                    };
                     return Ok(());
                 }
                 Err(error) => last_failure = Some(error),
@@ -355,6 +376,7 @@ mod tests {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0., 0.], [3., 3.]]],

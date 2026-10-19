@@ -462,6 +462,7 @@ mod tests {
     fn trajectory() -> Trajectory {
         Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, -0.1], [1.0, 1.1]]],
@@ -552,6 +553,7 @@ mod tests {
         }
         let mut t = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, -0.25], [1.0, 1.25]]],
@@ -594,6 +596,7 @@ mod tests {
             };
             let mut t = Trajectory::new(
                 TransientInputs {
+                    analytic_sources: vec![],
                     pwl_errors_v: None,
                     strobetimes: Vec::new(),
                     pwl: vec![points],
@@ -644,6 +647,7 @@ mod tests {
         }
         let mut t = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 1.5], [4.0, 1.5]]],

@@ -5,6 +5,8 @@ use crate::interval::Interval as I;
 use crate::ir::{EventMathFunction as F, Expression as E};
 use num_rational::BigRational as R;
 use num_traits::{Signed, Zero};
+#[path = "event_history_proof.rs"]
+pub(crate) mod history;
 
 pub(crate) type Proofs = std::collections::BTreeMap<usize, R>;
 
@@ -13,6 +15,7 @@ pub(crate) struct Context<'a> {
     nodes: Vec<Option<R>>,
     operators: Vec<I>,
     floor_work: Option<crate::transition_source_plan::Work>,
+    history_work: Option<crate::transition_source_plan::Work>,
     floor_bounds: Option<Vec<I>>,
 }
 impl<'a> Context<'a> {
@@ -27,6 +30,9 @@ impl<'a> Context<'a> {
         states: &'a Proofs,
         root: Option<&crate::exact_source::RootTime>,
     ) -> Result<Self, crate::ir::Error> {
+        if crate::analytic_request::proof_owner(model).is_some() {
+            return history::context_new(model, trajectory, inputs, states, root);
+        }
         if let Some(request) = &model.floor_source {
             request.check_source(trajectory)?;
             // Context::new invokes at_root at most once per actual driven input.
@@ -92,6 +98,9 @@ impl<'a> Context<'a> {
         Ok(result)
     }
     pub(crate) fn try_with_operators(&self, operators: &[I]) -> Result<Self, crate::ir::Error> {
+        if self.history_work.is_some() {
+            return history::context_operators(self, operators);
+        }
         if let Some(w) = &self.floor_work {
             crate::event_floor::charge(
                 w,
@@ -119,6 +128,7 @@ impl<'a> Context<'a> {
             nodes: self.nodes.clone(),
             operators: operators.to_vec(),
             floor_work: self.floor_work.clone(),
+            history_work: self.history_work.clone(),
             floor_bounds: self.floor_bounds.clone(),
         }
     }
@@ -170,6 +180,7 @@ impl<'a> Context<'a> {
             nodes,
             operators: Vec::new(),
             floor_work: None,
+            history_work: None,
             floor_bounds: None,
         }
     }
@@ -181,6 +192,7 @@ pub(crate) struct LocalState {
     exact: Vec<Option<R>>,
     nodes: Option<Vec<Option<R>>>,
     floor_work: Option<crate::transition_source_plan::Work>,
+    history_work: Option<crate::transition_source_plan::Work>,
     floor_bounds: Option<Vec<I>>,
 }
 impl std::ops::Deref for LocalState {
@@ -191,6 +203,9 @@ impl std::ops::Deref for LocalState {
 }
 impl LocalState {
     fn prepay_copy(&self) -> Result<(), crate::ir::Error> {
+        if self.history_work.is_some() {
+            return history::charge_local_copy(self);
+        }
         if let Some(w) = &self.floor_work {
             let mut items = 16
                 + self.bounds.len() * 4
@@ -215,6 +230,9 @@ impl LocalState {
         Ok(self.clone())
     }
     pub(crate) fn try_value(&self, e: &E, nodes: &[I]) -> Result<Option<R>, crate::ir::Error> {
+        if let Some(w) = self.history_work.as_ref() {
+            return history::value(self, e, nodes, w);
+        }
         let Some(w) = &self.floor_work else {
             return Ok(self.value(e, nodes));
         };
@@ -228,6 +246,9 @@ impl LocalState {
         .map_err(|_| crate::ir::Error::new("step_budget", "source floor provenance work exhausted"))
     }
     pub(crate) fn prepay_comparison(&self, other: &Self) -> Result<(), crate::ir::Error> {
+        if self.history_work.is_some() {
+            return history::charge_local_comparison(self, other);
+        }
         if let Some(w) = &self.floor_work {
             crate::event_floor::charge(
                 w,
@@ -236,6 +257,16 @@ impl LocalState {
             )?;
         }
         Ok(())
+    }
+    pub(crate) fn history_work(&self) -> Option<&crate::transition_source_plan::Work> {
+        self.history_work.as_ref()
+    }
+    pub(crate) fn try_enclosure(&self, value: &R) -> Result<Option<I>, crate::ir::Error> {
+        if let Some(w) = &self.history_work {
+            crate::exact_source::enclosure_with_work(value, w)
+        } else {
+            Ok(enclosure(value))
+        }
     }
     pub(crate) fn floor_bound(&self, n: usize) -> Option<I> {
         self.floor_bounds.as_ref()?.get(n).copied()
@@ -250,6 +281,9 @@ impl LocalState {
         bounds: &[I],
         context: Option<&Context<'_>>,
     ) -> Result<Self, crate::ir::Error> {
+        if context.is_some_and(|c| c.history_work.is_some()) {
+            return history::local_new(bounds, context.unwrap());
+        }
         if let Some(w) = context.and_then(|c| c.floor_work.as_ref()) {
             let c = context.unwrap();
             crate::event_floor::charge(
@@ -283,6 +317,7 @@ impl LocalState {
             exact: bounds.iter().map(|v| point(*v)).collect(),
             nodes: None,
             floor_work: None,
+            history_work: None,
             floor_bounds: None,
         }
     }
@@ -313,6 +348,9 @@ impl LocalState {
         nodes: &[I],
         bounds: I,
     ) -> Result<(), crate::ir::Error> {
+        if self.history_work.is_some() {
+            return history::assign(self, state, expr, nodes, bounds);
+        }
         let has_floor = if let Some(w) = self.floor_work() {
             crate::event_floor::contains_charged(expr, w)?
         } else {
@@ -365,6 +403,20 @@ impl LocalState {
     pub(crate) fn merge(&mut self, yes: Self, no: &Self) {
         *self = yes;
         for (a, b) in self.exact.iter_mut().zip(&no.exact) {
+            #[cfg(test)]
+            if let (Some(a), Some(b)) = (a.as_ref(), b.as_ref()) {
+                crate::diagnostics::counter(
+                    "history_merge_large_pairs",
+                    usize::from(
+                        a.numer()
+                            .bits()
+                            .max(a.denom().bits())
+                            .max(b.numer().bits())
+                            .max(b.denom().bits())
+                            > 512,
+                    ),
+                );
+            }
             if *a != *b {
                 *a = None;
             }
@@ -607,6 +659,9 @@ pub(crate) fn apply_charged(
     after: &[I],
     context: &Context<'_>,
 ) -> Result<Proofs, crate::ir::Error> {
+    if let Some(w) = context.history_work.as_ref() {
+        return history::apply(model, selection, inputs, before, after, context, w);
+    }
     let Some(w) = context.floor_work.as_ref() else {
         return Ok(apply(model, selection, inputs, before, after, context));
     };
@@ -737,6 +792,7 @@ mod native_floor_tests {
             exact: vec![],
             nodes: Some(vec![binary(0.), Some(R::new((-1).into(), 3.into()))]),
             floor_work: None,
+            history_work: None,
             floor_bounds: None,
         };
         let node = E::Affine {

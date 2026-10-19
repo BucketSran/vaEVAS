@@ -22,6 +22,38 @@ impl Root {
             source_time: Some(crossing.time),
         })
     }
+    pub(crate) fn with_source_time_history(
+        mut self,
+        curve: Option<&crate::exact_source::Curve>,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Self, Error> {
+        w.debit(2, 0)?;
+        w.step()?;
+        if let Some(curve) = curve {
+            if let Some(time) = curve.root_in_history(self.segment, self.ends, self.bounds, w)? {
+                if let Some(bounds) = time.bounds_with_work(w)? {
+                    self.bounds = I {
+                        lo: self.bounds.lo.max(bounds.lo),
+                        hi: self.bounds.hi.min(bounds.hi),
+                    };
+                    self.source_time = Some(time);
+                }
+            }
+        }
+        Ok(self)
+    }
+    fn from_physical_history(
+        crossing: crate::exact_source::Crossing,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<Self>, Error> {
+        Ok(crossing.time.bounds_with_work(w)?.map(|bounds| Self {
+            bounds,
+            slope: crossing.slope,
+            segment: [crossing.segment[0].lo, crossing.segment[1].hi],
+            ends: crossing.ends,
+            source_time: Some(crossing.time),
+        }))
+    }
     pub(crate) fn with_source_time(mut self, curve: Option<&crate::exact_source::Curve>) -> Self {
         if let Some(time) = curve.and_then(|c| c.root_in(self.segment, self.ends, self.bounds)) {
             if let Some(bounds) = time.bounds() {
@@ -43,6 +75,62 @@ impl Root {
 
     /// Search representable times using an exact sign predicate on the original
     /// numerator a*t1 - a*t + b*t - b*t0. No rounded time differences enter it.
+    fn refine_representable_history(
+        &mut self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<(), Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 16)?;
+        let [a, b] = self.ends;
+        if a.lo != a.hi || b.lo != b.hi || a.lo == b.lo {
+            return Ok(());
+        }
+        let sign = |time| -> Result<Option<i8>, Error> {
+            w.debit(2, crate::exact_time::TRIPLE_SIGN_FEE)?;
+            Ok(sum_products_sign(&[
+                (a.lo, self.segment[1]),
+                (-a.lo, time),
+                (b.lo, time),
+                (-b.lo, self.segment[0]),
+            ]))
+        };
+        let guess = self.segment[0] + (a.lo / (a.lo - b.lo)) * (self.segment[1] - self.segment[0]);
+        let lower = self.bounds.lo.max(self.segment[0]).max(0.);
+        let upper = self.bounds.hi.min(self.segment[1]);
+        if !lower.is_finite() || !upper.is_finite() || lower > upper {
+            return Ok(());
+        }
+        for time in [guess, lower, upper] {
+            w.step()?;
+            if time.is_finite() && time >= lower && time <= upper && sign(time)? == Some(0) {
+                self.bounds = I::point(time);
+                return Ok(());
+            }
+        }
+        let (mut lo, mut hi) = (lower.to_bits(), upper.to_bits());
+        while lo <= hi {
+            w.step()?;
+            let mid = lo + (hi - lo) / 2;
+            let time = f64::from_bits(mid);
+            let Some(value) = sign(time)? else {
+                return Ok(());
+            };
+            if value == 0 {
+                self.bounds = I::point(time);
+                return Ok(());
+            }
+            let before = if b.lo > a.lo { value < 0 } else { value > 0 };
+            if before {
+                lo = mid + 1
+            } else {
+                if mid == 0 {
+                    return Ok(());
+                }
+                hi = mid - 1
+            }
+        }
+        Ok(())
+    }
     fn refine_representable(&mut self) {
         let [a, b] = self.ends;
         if a.lo != a.hi || b.lo != b.hi || a.lo == b.lo {
@@ -180,6 +268,34 @@ impl Root {
             && expression_error.magnitude() <= etol
     }
 
+    pub(crate) fn coincides_history(
+        &self,
+        other: &Self,
+        identical: bool,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<bool, Error> {
+        w.debit(2, 0)?;
+        if let Some(order) = self.exact_order_with_work(other, w)? {
+            return Ok(order == std::cmp::Ordering::Equal);
+        }
+        w.debit(2, 16)?;
+        if self.bounds.lo == self.bounds.hi && self.bounds == other.bounds {
+            return Ok(true);
+        }
+        if self.segment != other.segment {
+            return Ok(false);
+        }
+        if identical {
+            return Ok(true);
+        }
+        let [a, b] = self.ends;
+        let [c, d] = other.ends;
+        if ![a, b, c, d].iter().all(|v| v.lo == v.hi) {
+            return Ok(false);
+        }
+        w.debit(2, crate::exact_time::PAIR_SIGN_FEE)?;
+        Ok(equal_products(a.lo, d.lo, c.lo, b.lo))
+    }
     pub fn coincides(&self, other: &Self, identical_guard: bool) -> bool {
         if let Some(order) = self.exact_order(other) {
             return order == std::cmp::Ordering::Equal;
@@ -207,6 +323,7 @@ pub(crate) struct Trajectory {
     source_errors: Vec<f64>,
     pub(crate) exact_sources: Vec<Option<crate::exact_source::Curve>>,
     original_source_count: usize,
+    analytic_work: Option<crate::transition_source_plan::Work>,
 }
 
 impl Trajectory {
@@ -229,6 +346,9 @@ impl Trajectory {
         work: &crate::transition_source_plan::Work,
         names: [&'static str; 3],
     ) -> Result<(), Error> {
+        if !self.config.analytic_sources.is_empty() {
+            crate::analytic_source::charge_config(&self.config.analytic_sources, work)?;
+        }
         let debit = |items: usize| -> Result<(), Error> {
             work.debit(2, items as u64)?;
             crate::diagnostics::counter(names[1], items);
@@ -505,6 +625,9 @@ impl Trajectory {
         Ok((values, derivatives))
     }
     pub(crate) fn range(&self, time: I) -> Result<(Vec<I>, Vec<I>), Error> {
+        if let Some(w) = self.analytic_work() {
+            return self.history_range(time, w);
+        }
         if !time.finite() || time.lo < 0.0 || time.hi > self.config.stop || time.lo > time.hi {
             return Err(Error::new(
                 "event_resolution",
@@ -550,7 +673,256 @@ impl Trajectory {
         }
         Ok((values, derivatives))
     }
+    /// One lexical request only. No certificate is retained across root, phase,
+    /// state, trajectory or owner changes.
+    pub(crate) fn history_point_bundle(
+        &self,
+        time: f64,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<(Vec<f64>, Vec<I>), Error> {
+        // No allocation or new fee on analytic/unshaped legacy paths. The
+        // first actual strict shaped result allocates this local paid buffer.
+        let mut points = None;
+        let values = self.history_values_impl(time, work, Some(&mut points))?;
+        let bounds = self.history_value_bounds_impl(time, work, points.as_deref())?;
+        Ok((values, bounds))
+    }
+    /// Original physical PWL observation with the held-consumer request owner.
+    /// This uses no forcing graph or replacement IR and retains source errors.
+    pub(crate) fn history_values(
+        &self,
+        time: f64,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Vec<f64>, Error> {
+        self.history_values_impl(time, work, None)
+    }
+    fn history_values_impl(
+        &self,
+        time: f64,
+        work: &crate::transition_source_plan::Work,
+        mut points: Option<&mut Option<Vec<Option<(f64, I)>>>>,
+    ) -> Result<Vec<f64>, Error> {
+        work.debit(2, 0)?;
+        work.debit(2, self.config.pwl.len() as u64)?;
+        let mut values = Vec::with_capacity(self.config.pwl.len());
+        for (index, source) in self.config.pwl.iter().enumerate() {
+            work.step()?;
+            if let Some(Some(source)) = self.config.analytic_sources.get(index) {
+                let b = crate::analytic_source::range(source, I::point(time), work)?.0;
+                values.push(b.lo + (b.hi - b.lo) * 0.5);
+                continue;
+            }
+            if self.is_shaped(index) {
+                if let Some(curve) = self.exact_sources[index].as_ref() {
+                    curve.charge_forcing_read(work, time, false)?;
+                    if let Some((value, bounds)) = curve.at(time) {
+                        if let Some(points) = points.as_deref_mut() {
+                            if points.is_none() {
+                                work.debit(2, 0)?;
+                                work.debit(
+                                    2,
+                                    3 + (self.config.pwl.len() as u64).saturating_mul(
+                                        std::mem::size_of::<Option<(f64, I)>>()
+                                            .div_ceil(std::mem::size_of::<usize>())
+                                            as u64,
+                                    ),
+                                )?;
+                                *points = Some(vec![None; self.config.pwl.len()]);
+                            }
+                            work.debit(
+                                2,
+                                1 + std::mem::size_of::<Option<(f64, I)>>()
+                                    .div_ceil(std::mem::size_of::<usize>())
+                                    as u64,
+                            )?;
+                            points.as_mut().expect("paid local storage")[index] =
+                                Some((value, bounds));
+                        }
+                        values.push(value);
+                        continue;
+                    }
+                }
+            }
+            let (mut lo, mut hi) = (0, source.len());
+            while lo < hi {
+                work.step()?;
+                let mid = lo + (hi - lo) / 2;
+                if source[mid][0] < time {
+                    lo = mid + 1
+                } else {
+                    hi = mid
+                }
+            }
+            let value = if source[lo][0] == time {
+                source[lo][1]
+            } else {
+                let [start, a] = source[lo - 1];
+                let [end, b] = source[lo];
+                if a == b {
+                    a
+                } else {
+                    let fraction = (time - start) / (end - start);
+                    (1. - fraction) * a + fraction * b
+                }
+            };
+            values.push(value);
+        }
+        Ok(values)
+    }
+    pub(crate) fn history_value_bounds(
+        &self,
+        time: f64,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Vec<I>, Error> {
+        self.history_value_bounds_impl(time, work, None)
+    }
+    fn history_value_bounds_impl(
+        &self,
+        time: f64,
+        work: &crate::transition_source_plan::Work,
+        points: Option<&[Option<(f64, I)>]>,
+    ) -> Result<Vec<I>, Error> {
+        work.debit(2, 0)?;
+        work.debit(2, (self.config.pwl.len() * 2) as u64)?;
+        let mut values = Vec::with_capacity(self.config.pwl.len());
+        for (k, source) in self.config.pwl.iter().enumerate() {
+            work.step()?;
+            if let Some(Some(source)) = self.config.analytic_sources.get(k) {
+                values.push(crate::analytic_source::range(source, I::point(time), work)?.0);
+                continue;
+            }
+            if self.is_shaped(k) {
+                if let Some(points) = points {
+                    work.debit(
+                        2,
+                        1 + std::mem::size_of::<Option<(f64, I)>>()
+                            .div_ceil(std::mem::size_of::<usize>())
+                            as u64,
+                    )?;
+                    if let Some((_, bounds)) = points[k] {
+                        crate::diagnostics::counter("history_point_bundle_strict_reuse", 1);
+                        values.push(bounds);
+                        continue;
+                    }
+                }
+                let curve = self.exact_sources[k]
+                    .as_ref()
+                    .ok_or_else(|| unresolved("physical source curve missing"))?;
+                curve.charge_forcing_read(work, time, false)?;
+                values.push(
+                    curve
+                        .at(time)
+                        .ok_or_else(|| unresolved("physical source point has no certificate"))?
+                        .1,
+                );
+                continue;
+            }
+            let (mut lo, mut hi) = (0, source.len());
+            while lo < hi {
+                work.step()?;
+                let mid = lo + (hi - lo) / 2;
+                if source[mid][0] < time {
+                    lo = mid + 1
+                } else {
+                    hi = mid
+                }
+            }
+            let error = I {
+                lo: -self.source_errors[k],
+                hi: self.source_errors[k],
+            };
+            let point = if source[lo][0] == time {
+                I::point(source[lo][1])
+            } else {
+                let [start, a] = source[lo - 1];
+                let [end, b] = source[lo];
+                I::point(a)
+                    + (I::point(b) - I::point(a))
+                        * ((I::point(time) - I::point(start)) / (I::point(end) - I::point(start)))
+            };
+            values.push(point + error);
+        }
+        Ok(values)
+    }
+    pub(crate) fn history_range(
+        &self,
+        time: I,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<(Vec<I>, Vec<I>), Error> {
+        work.debit(2, 0)?;
+        if !time.finite() || time.lo < 0.0 || time.hi > self.config.stop || time.lo > time.hi {
+            return Err(Error::new(
+                "event_resolution",
+                "invalid guard time interval",
+            ));
+        }
+        let left = self.history_value_bounds(time.lo, work)?;
+        let right = self.history_value_bounds(time.hi, work)?;
+        work.debit(2, (left.len() * 2) as u64)?;
+        let mut values: Vec<_> = left.iter().zip(right).map(|(&a, b)| a.hull(b)).collect();
+        let mut derivatives = Vec::new();
+        for (k, source) in self.config.pwl.iter().enumerate() {
+            work.step()?;
+            if let Some(Some(source)) = self.config.analytic_sources.get(k) {
+                let (v, d) = crate::analytic_source::range(source, time, work)?;
+                values[k] = v;
+                derivatives.push(d);
+                continue;
+            }
+            if self.is_shaped(k) {
+                let curve = self.exact_sources[k]
+                    .as_ref()
+                    .ok_or_else(|| unresolved("physical source curve missing"))?;
+                curve.charge_forcing_read(work, time.lo, true)?;
+                curve.charge_forcing_read(work, time.hi, true)?;
+                let (physical_values, physical_slope) = self.exact_sources[k]
+                    .as_ref()
+                    .and_then(|curve| curve.range(time))
+                    .ok_or_else(|| unresolved("cannot bound original source shape"))?;
+                values[k] = physical_values;
+                work.debit(2, 2)?;
+                derivatives.push(physical_slope);
+                continue;
+            }
+            let mut slope = None;
+            for pair in source.windows(2) {
+                work.step()?;
+                if pair[0][0] < time.hi && pair[1][0] > time.lo
+                    || time.lo == time.hi && pair[0][0] <= time.lo && time.lo <= pair[1][0]
+                {
+                    let d = (I::point(pair[1][1]) - I::point(pair[0][1]))
+                        / (I::point(pair[1][0]) - I::point(pair[0][0]));
+                    slope = Some(slope.map_or(d, |previous: I| previous.hull(d)));
+                }
+            }
+            for &[t, v] in source {
+                work.step()?;
+                if t > time.lo && t < time.hi {
+                    values[k] = values[k].hull(
+                        I::point(v)
+                            + I {
+                                lo: -self.source_errors[k],
+                                hi: self.source_errors[k],
+                            },
+                    );
+                }
+            }
+            work.debit(2, 2)?;
+            derivatives.push(slope.unwrap_or(I::ZERO));
+        }
+        Ok((values, derivatives))
+    }
     pub(crate) fn new(config: TransientInputs, driven_count: usize) -> Result<Self, Error> {
+        Self::new_with_work(config, driven_count, None)
+    }
+    pub(crate) fn analytic_work(&self) -> Option<&crate::transition_source_plan::Work> {
+        self.analytic_work.as_ref()
+    }
+    pub(crate) fn new_with_work(
+        config: TransientInputs,
+        driven_count: usize,
+        analytic_work: Option<crate::transition_source_plan::Work>,
+    ) -> Result<Self, Error> {
         let invalid = || {
             Error::new("invalid_inputs", "PWL sources must start at 0, strictly increase and cover stop; output times must strictly increase within [0,stop]; stop/max_step must be positive and finite")
         };
@@ -574,8 +946,16 @@ impl Trajectory {
         {
             return Err(invalid());
         }
+        crate::analytic_source::validate_config(&config, analytic_work.as_ref())?;
         let mut knots = vec![0.0, config.stop];
-        for source in &config.pwl {
+        for (index, source) in config.pwl.iter().enumerate() {
+            if config
+                .analytic_sources
+                .get(index)
+                .is_some_and(Option::is_some)
+            {
+                continue;
+            }
             if source.len() < 2
                 || source[0][0] != 0.0
                 || source.last().unwrap()[0] < config.stop
@@ -609,7 +989,13 @@ impl Trajectory {
             .zip(&source_errors)
             .enumerate()
             .map(|(index, (p, error))| {
-                if let Some(shape) = config
+                if config
+                    .analytic_sources
+                    .get(index)
+                    .is_some_and(Option::is_some)
+                {
+                    Ok(None)
+                } else if let Some(shape) = config
                     .pwl_errors_v
                     .as_ref()
                     .and_then(|errors| errors[index].shape())
@@ -640,6 +1026,7 @@ impl Trajectory {
             config,
             knots,
             source_errors,
+            analytic_work,
         })
     }
 
@@ -656,6 +1043,59 @@ impl Trajectory {
 
     /// Shape-aware guards must use their complete physical source partition.
     /// Unknown/non-affine source expressions retain a conservative refusal.
+    pub(crate) fn shaped_roots_history(
+        &self,
+        guard: &crate::ir::Expression,
+        projected: Option<&crate::ir::Expression>,
+        nodes: &[usize],
+        active: &[usize],
+        direction: i8,
+        after: Option<f64>,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<Vec<Root>>, Error> {
+        w.debit(2, 0)?;
+        let mut shaped = false;
+        for &index in active {
+            w.step()?;
+            if self.is_shaped(index) {
+                shaped = true;
+                break;
+            }
+        }
+        if !shaped {
+            return Ok(None);
+        }
+        let empty = crate::exact_source::TimeProofs::new();
+        let mut curve =
+            self.original_guard_curve_history(guard, nodes, self.config.stop, &empty, w)?;
+        if curve.is_none() {
+            if let Some(projected) = projected {
+                curve = self.original_guard_curve_history(
+                    projected,
+                    nodes,
+                    self.config.stop,
+                    &empty,
+                    w,
+                )?
+            }
+        }
+        let curve =
+            curve.ok_or_else(|| unresolved("cannot certify guard on shaped original sources"))?;
+        let crossings = curve
+            .crossings_history(direction, self.config.stop, w)?
+            .ok_or_else(|| unresolved("cannot enumerate physical source crossings"))?;
+        let mut roots = Vec::new();
+        for crossing in crossings {
+            w.step()?;
+            let root = Root::from_physical_history(crossing, w)?
+                .ok_or_else(|| unresolved("cannot enclose physical source crossing"))?;
+            if after.is_some_and(|time| root.bounds.hi <= time) {
+                continue;
+            }
+            crate::history_storage::push_vec(&mut roots, root, w)?;
+        }
+        Ok(Some(roots))
+    }
     pub(crate) fn shaped_roots(
         &self,
         guard: &crate::ir::Expression,
@@ -757,6 +1197,56 @@ impl Trajectory {
         )
     }
 
+    pub(crate) fn original_identity_history(
+        &self,
+        index: usize,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<bool, crate::ir::Error> {
+        w.debit(2, 0)?;
+        w.step()?;
+        if index >= self.original_source_count {
+            return Ok(false);
+        }
+        let Some(points) = self.config.pwl.get(index) else {
+            return Ok(false);
+        };
+        for point in points {
+            w.step()?;
+            if point[0] != point[1] {
+                return Ok(false);
+            }
+        }
+        match self.exact_sources.get(index).and_then(Option::as_ref) {
+            Some(curve) => curve.identity_history(w),
+            None => Ok(false),
+        }
+    }
+    pub(crate) fn original_guard_curve_history(
+        &self,
+        guard: &crate::ir::Expression,
+        input_nodes: &[usize],
+        end: f64,
+        states: &crate::exact_source::TimeProofs,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Option<crate::exact_source::Curve>, crate::ir::Error> {
+        work.debit(2, 0)?;
+        work.step()?;
+        if !end.is_finite() || end < 0. {
+            return Ok(None);
+        }
+        let Some(nodes) = input_nodes.get(..self.original_source_count) else {
+            return Ok(None);
+        };
+        crate::exact_source::Curve::expression_history(
+            guard,
+            nodes,
+            &self.exact_sources[..self.original_source_count],
+            end,
+            states,
+            work,
+        )
+    }
+
     pub(crate) fn original_guard_curve_with_states(
         &self,
         guard: &crate::ir::Expression,
@@ -796,6 +1286,26 @@ impl Trajectory {
         )
     }
 
+    pub(crate) fn checked_value_bounds(&self, time: f64) -> Result<Vec<I>, Error> {
+        if self.config.analytic_sources.is_empty() {
+            return Ok(self.value_bounds(time));
+        }
+        let w = self
+            .analytic_work
+            .as_ref()
+            .ok_or_else(|| Error::new("invalid_ir", "missing analytic request owner"))?;
+        self.history_value_bounds(time, w)
+    }
+    pub(crate) fn checked_values(&self, time: f64) -> Result<Vec<f64>, Error> {
+        if self.config.analytic_sources.is_empty() {
+            return Ok(self.values(time));
+        }
+        let w = self
+            .analytic_work
+            .as_ref()
+            .ok_or_else(|| Error::new("invalid_ir", "missing analytic request owner"))?;
+        self.history_values(time, w)
+    }
     pub(crate) fn values(&self, time: f64) -> Vec<f64> {
         self.config
             .pwl
@@ -826,6 +1336,40 @@ impl Trajectory {
             .collect()
     }
 
+    pub(crate) fn history_input_knots(
+        &self,
+        inputs: &[usize],
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Vec<f64>, Error> {
+        w.debit(2, 0)?;
+        let mut knots = Vec::new();
+        crate::history_storage::push_vec(&mut knots, 0., w)?;
+        crate::history_storage::push_vec(&mut knots, self.config.stop, w)?;
+        for &input in inputs {
+            w.step()?;
+            for point in &self.config.pwl[input] {
+                w.step()?;
+                if point[0] < self.config.stop {
+                    crate::history_storage::push_vec(&mut knots, point[0], w)?;
+                }
+            }
+        }
+        crate::history_storage::sort(&mut knots, w, |a, b| {
+            w.step()?;
+            Ok(a.total_cmp(b))
+        })?;
+        let mut unique = 0;
+        for i in 0..knots.len() {
+            w.step()?;
+            if unique == 0 || knots[unique - 1] != knots[i] {
+                w.step()?;
+                knots[unique] = knots[i];
+                unique += 1
+            }
+        }
+        knots.truncate(unique);
+        Ok(knots)
+    }
     pub(crate) fn input_knots(&self, inputs: &[usize]) -> Vec<f64> {
         let mut knots = vec![0.0, self.config.stop];
         for &input in inputs {
@@ -847,13 +1391,45 @@ impl Trajectory {
         values: &[I],
         direction: i8,
     ) -> Result<Vec<Root>, Error> {
+        self.roots_impl(knots, values, direction, None)
+    }
+    pub(crate) fn roots_history(
+        &self,
+        knots: &[f64],
+        values: &[I],
+        direction: i8,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Vec<Root>, Error> {
+        w.debit(2, 0)?;
+        self.roots_impl(knots, values, direction, Some(w))
+    }
+    fn roots_impl(
+        &self,
+        knots: &[f64],
+        values: &[I],
+        direction: i8,
+        work: Option<&crate::transition_source_plan::Work>,
+    ) -> Result<Vec<Root>, Error> {
         let mut result = Vec::new();
-        if values.iter().any(|v| !v.finite() || v.sign().is_none()) {
+        let mut invalid = false;
+        for v in values {
+            if let Some(w) = work {
+                w.step()?
+            }
+            if !v.finite() || v.sign().is_none() {
+                invalid = true;
+                break;
+            }
+        }
+        if invalid {
             return Err(unresolved(
                 "cannot determine cross sign at a PWL knot within arithmetic bounds",
             ));
         }
         for index in 0..values.len() - 1 {
+            if let Some(w) = work {
+                w.debit(2, 24)?;
+            }
             let (a, b) = (values[index], values[index + 1]);
             let segment = [knots[index], knots[index + 1]];
             let duration = I::point(segment[1]) - I::point(segment[0]);
@@ -893,8 +1469,13 @@ impl Trajectory {
             };
             if let Some((mut root, sign)) = crossing {
                 if direction == 0 || direction == sign {
-                    root.refine_representable();
-                    result.push(root);
+                    if let Some(w) = work {
+                        root.refine_representable_history(w)?;
+                        crate::history_storage::push_vec(&mut result, root, w)?;
+                    } else {
+                        root.refine_representable();
+                        result.push(root);
+                    }
                 }
             }
         }
@@ -1085,6 +1666,7 @@ mod tests {
     fn flat_generated_source_keeps_its_enclosure_error() {
         let mut trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0., 0.], [1., 0.]]],
@@ -1110,6 +1692,7 @@ mod tests {
         let points = vec![[0.0, -1.0], [2.0, 1.0]];
         let mut trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![points.clone()],
@@ -1266,6 +1849,28 @@ mod exact_mixed_order_tests {
 
 // borrow original Root metadata, never run rational_time to price it.
 impl Root {
+    pub(crate) fn clone_history(
+        &self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Self, Error> {
+        w.debit(2, 0)?;
+        w.debit(
+            2,
+            std::mem::size_of::<Self>().div_ceil(std::mem::size_of::<usize>()) as u64,
+        )?;
+        let source_time = self
+            .source_time
+            .as_ref()
+            .map(|r| r.clone_with_work(w))
+            .transpose()?;
+        Ok(Self {
+            bounds: self.bounds,
+            slope: self.slope,
+            segment: self.segment,
+            ends: self.ends,
+            source_time,
+        })
+    }
     pub(crate) fn rational_time_with_work(
         &self,
         w: &crate::transition_source_plan::Work,
@@ -1332,5 +1937,12 @@ impl Root {
         }
         w.debit(2, crate::exact_time::TRIPLE_SIGN_FEE)?;
         Ok(self.exact_order(other))
+    }
+}
+
+#[cfg(test)]
+impl Root {
+    pub(crate) fn analytic_test_snapshot(&self) -> serde_json::Value {
+        serde_json::json!({"bounds":[self.bounds.lo,self.bounds.hi],"slope":[self.slope.lo,self.slope.hi],"segment":self.segment,"ends":self.ends.iter().map(|i|[i.lo,i.hi]).collect::<Vec<_>>(),"source_time":format!("{:?}",self.source_time)})
     }
 }

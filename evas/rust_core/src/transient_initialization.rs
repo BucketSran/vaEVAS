@@ -440,13 +440,17 @@ fn prepare_stage(
     if blocks.is_empty() {
         return Ok((before.to_vec(), before_bounds.to_vec(), Vec::new()));
     }
-    let inputs = trajectory.value_bounds(0.);
+    let inputs = crate::event_value_proof::history::input_bounds(model, trajectory, 0.)?;
     let empty_proofs = crate::event_value_proof::Proofs::new();
-    let root = crate::exact_source::RootTime::point(0.);
-    let context = model
-        .floor_source
-        .as_ref()
-        .map(|_| {
+    let root = if let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) {
+        let mut p = crate::exact_source::history_paid::Paid::new(w);
+        let v = p.binary(0.).map(crate::exact_source::history_paid::root);
+        p.finish(v)?
+    } else {
+        crate::exact_source::RootTime::point(0.)
+    };
+    let context = (model.floor_source.is_some() || model.history_admission.is_some())
+        .then(|| {
             crate::event_value_proof::Context::try_new(
                 model,
                 trajectory,
@@ -471,11 +475,24 @@ fn prepare_stage(
     }
     let mut direct = vec![0.; model.program.nodes.len()];
     if let Some(request) = &model.floor_source {
-        for (&node, value) in request.input_nodes()?.iter().zip(trajectory.values(0.)) {
+        for (&node, value) in
+            request
+                .input_nodes()?
+                .iter()
+                .zip(crate::event_value_proof::history::inputs(
+                    model, trajectory, 0.,
+                )?)
+        {
             direct[node] = value;
         }
     } else {
-        for (name, value) in model.driven.iter().zip(trajectory.values(0.)) {
+        for (name, value) in model
+            .driven
+            .iter()
+            .zip(crate::event_value_proof::history::inputs(
+                model, trajectory, 0.,
+            )?)
+        {
             direct[model.program.nodes.iter().position(|n| n == name).unwrap()] = value;
         }
     }
@@ -628,6 +645,7 @@ mod tests {
     fn trajectory(value: f64) -> Trajectory {
         Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0., value], [1., value]]],
@@ -756,6 +774,7 @@ mod tests {
     fn nonseed_trajectory(good: bool) -> Trajectory {
         Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![vec![

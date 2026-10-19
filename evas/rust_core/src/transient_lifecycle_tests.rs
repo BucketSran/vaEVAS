@@ -35,6 +35,7 @@ fn relocalization_fixture() -> (EventModel, Trajectory, Controller, Vec<Schedule
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![vec![[0., 0.], [1., 1.]]],
@@ -412,6 +413,7 @@ pub(super) fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEve
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![vec![[0., 0.], [1., 0.]]],
@@ -627,6 +629,7 @@ pub(super) fn nonlinear_horizon_fixture(
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![],
@@ -897,6 +900,7 @@ fn two_delays_accuracy_failure_discard_and_earlier_retry_preserve_frame() {
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![vec![[0.0, 0.0], [3.0, 1.0]]],
@@ -972,6 +976,7 @@ fn delayed_timer_root_fixture(
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![vec![[0., 0.], [0.31, 0.31]]],
@@ -1539,6 +1544,7 @@ fn raw_source_held_epoch_fixture_at(
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![vec![[0., 0.1], [1., 0.9]]],
@@ -1832,6 +1838,7 @@ fn native_integer_failed_prefix_rolls_back_and_retries_same_controller() {
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: vec![],
             pwl: vec![],
@@ -1925,6 +1932,7 @@ fn bounded_cold_transition_seed_survives_two_failed_same_controller_callbacks() 
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: vec![],
             pwl: vec![vec![[0., 0.2], [2., 0.2]]],
@@ -2070,6 +2078,7 @@ fn integer28_runtime_failures_roll_back_twice_in_same_controller() {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![],
@@ -2171,6 +2180,7 @@ fn bits29_checked_children_fail_before_discard_and_roll_back_twice() {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![],
@@ -2241,6 +2251,7 @@ fn bits29_checked_children_fail_before_discard_and_roll_back_twice() {
 fn held29_trajectory() -> Trajectory {
     Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: vec![],
             pwl: vec![],

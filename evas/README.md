@@ -32,7 +32,10 @@ EVAS 的价值需要由电压域工程行为证明：在正确时刻采样，保
 每类都检查初始化、事件前后读值、历史延续、多个实例和误差控制，再扩展反馈及更复杂组合。
 支持结论仍只维护在总表中。晶体管、电流与电荷方程不属于当前范围；性能优化排在行为与精度之后。
 
-当前开发检查点为 **EVAS 0.24.0 / IR31**，完整CI、安装与两轨400已按下述身份验收，尚未发布到公共索引或打tag，PR208草稿未合并。IR31增加事件体标量integer赋值根的直接物理输入电压转换，最近整数且半整数远离零，完整原值盒须证明同一signed32 bin；[合同及边界](docs/math/events.md#ir31-候选事件中的直接电压到-integer-转换)单独维护。IR30新增受限source Forcing与独立held Transition；原有IR29右移／按位与、保持目标、原树事件Floor、源因子及字面零支路保留。Forcing与这些新Floor／typed Native／Slew的混合仍拒绝，旧route优先。数学合同见[算子说明](docs/math/operators.md#independent-source-forcing-beside-held-histories)，历史版本见[更新记录](docs/UPDATE.md)。
+最近已验收检查点为 **EVAS 0.24.0 / IR31**，完整CI、安装与两轨400已按下述身份验收，尚未发布到公共索引或打tag，PR208草稿未合并。IR31增加事件体标量integer赋值根的直接物理输入电压转换，最近整数且半整数远离零，完整原值盒须证明同一signed32 bin；[合同及边界](docs/math/events.md#ir31-候选事件中的直接电压到-integer-转换)单独维护。IR30新增受限source Forcing与独立held Transition；原有IR29右移／按位与、保持目标、原树事件Floor、源因子及字面零支路保留。该检查点的Forcing与新Floor／typed Native／Slew混合仍拒绝，旧route优先。数学合同见[算子说明](docs/math/operators.md#independent-source-forcing-beside-held-histories)，历史版本见[更新记录](docs/UPDATE.md)。
+
+当前源码另有 **0.24.0 / IR32 本地候选**：增加受限普通历史消费者、同支路二次源项与保持历史的组合、保持整数目标的紧凑表示，以及显式参数的解析正弦输入值。原请求Work、全部准入审计和精度预算保留；IR31保存请求须从原VA重编译。联合199个唯一Python方法、110个不同Rust单元测试及6个原生测试通过，两轴审查的问题已闭合。完整400、完整Python CI与安装仍待本候选验收，不能沿用下述IR31成绩。原369、371在新候选完整请求中仍被原1e9预算拒绝，原346仍有展开及derived clock组合缺口；三项均未新增PASS。数学合同见[算子手册](docs/math/operators.md#同支路二次源直接项的本地候选)与[解析源值合同](docs/math/events.md#ir32-private-candidate-explicit-analytic-source-values)。
+全量迭代已观察到旧PASS027因typed目标聚合审计超出原100000预算而回退；修复与重验未闭合，本候选不满足旧通过保留条件。
 
 当前wave22生产快照 `ab928317` 绑定177份源码／构建输入、IR31、0.24.0和release核 `69c46e155808`，测试辅助提交为 `6d3c8a93`。原始400保持314通过、19失败、67拒绝，333完成；材料r3修订另轨400为317通过、15失败、68拒绝，332完成，两轨均清理400/400、零超时。原件新增027、142；修订轨先由075、再由077新增通过，旧316通过零回退，旧19份原失败checker字典不变。修订轨由同wave22的396份原执行、既有修订012／107／075及新正式执行的077组成。全部PASS仍差83项，350只是节点。
 075原相邻样本平滑判据会误拒正确斜坡并放过瞬时跳变，独立Fraction参考与14项正负控制已证。修订仅增加250ps直接观察和必要的有限边沿检查，仍要求完整原checker及其0.40阈值；原VA、物理输入、时长、maxstep、精度和全部预算保持。正式725行保留原365点，32个直接边沿通过，两轴独审闭合；原075仍为FAIL。
@@ -488,11 +491,11 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 
 ### IR 版本与迁移
 
-Program 和成功 Response 的 `schema_version` 均为 **31**，Python 适配器与 Rust 内核同步检查。
+本私有候选的 Program 和成功 Response 的 `schema_version` 均为 **32**，Python 适配器与 Rust 内核同步检查。
 旧版本或未知整数版本先于载荷解码返回 `unsupported_ir_version`；版本缺失/错误类型及当前格式错误返回
 `invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–30 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
 前端与内核须配套使用。IR24 的源误差项兼容原数值形式，另接受严格的物理曲线对象；
-JSON Program/Response 版本必须为 31；IR31新增直接物理输入的事件整数转换，IR30新增受限source Forcing与独立held Transition。IR29新增受限右移、按位与及纯保持目标，旧载荷须从原VA重编译。IR27新增事件体 typed Add 与常量非零 Remainder。IR26新增实际驱动仿射输入的原生事件 `floor`，IR25及更旧载荷须重新编译。IR25新增原生 `tanh` 数学算子。IR24 扩展源误差描述，IR23 新增有界事件循环和紧凑数组读写；IR22 引入 `event_math`，仅扩展完整 IR 证明隔离的观察事件；
+JSON Program/Response 版本必须为 32；IR32私有候选新增显式typed analytic physical source值，合同见[事件手册](docs/math/events.md#ir32-private-candidate-explicit-analytic-source-values)，成熟验收仍为上文IR31。IR31新增直接物理输入的事件整数转换，IR30新增受限source Forcing与独立held Transition。IR29新增受限右移、按位与及纯保持目标，旧载荷须从原VA重编译。IR27新增事件体 typed Add 与常量非零 Remainder。IR26新增实际驱动仿射输入的原生事件 `floor`，IR25及更旧载荷须重新编译。IR25新增原生 `tanh` 数学算子。IR24 扩展源误差描述，IR23 新增有界事件循环和紧凑数组读写；IR22 引入 `event_math`，仅扩展完整 IR 证明隔离的观察事件；
 物理联立、初始化和固定 start=0 timer 的数学边界保持。IR21 保留 `step_bounds`，新增变量分母的 `divide` 表达式、顺序初始化和事件输出记录。
 `step_bounds` 保存每次 `$bound_step` 的值、激活条件和源码身份。
 IR19 引入的纯数学函数格式继续保留；不能只给旧 JSON 改版本号。
@@ -501,7 +504,7 @@ IR21 将初始化扩展到 real/integer 的顺序赋值、默认零值及受限�
 初始化先于算子历史、守卫日程、首次电压求解和 t=0 事件；详见[初始化契约](docs/math/events.md#input-initialization)。
 IR1–25 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
 
-仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR31，
+仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR32，
 保留每项 manifest/source SHA256 及失败诊断；原 IR、历史波形和收据不改写：
 
 ```sh

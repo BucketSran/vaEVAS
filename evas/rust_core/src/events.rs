@@ -7,7 +7,7 @@ use crate::solver::Circuit;
 use std::cell::RefCell;
 use std::collections::BTreeSet;
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct AffineState {
     pub(crate) constant: f64,
     pub(crate) nodes: Vec<f64>,
@@ -22,6 +22,48 @@ pub(crate) struct AffineState {
 }
 
 impl AffineState {
+    pub(crate) fn held_row(
+        row: &[I],
+        program: &Program,
+        dependencies: BTreeSet<usize>,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Self, Error> {
+        work.debit(
+            2,
+            (program.nodes.len() + program.states.len() + program.operators.len()) as u64,
+        )?;
+        let mut states = Vec::with_capacity(program.states.len());
+        for value in &row[program.nodes.len()..program.nodes.len() + program.states.len()] {
+            work.step()?;
+            if value.lo != value.hi {
+                return Err(Error::new(
+                    "condition_precision",
+                    "held target coefficients require exact point rows",
+                ));
+            }
+            states.push(value.lo);
+        }
+        let constant = *row
+            .last()
+            .ok_or_else(|| Error::new("invalid_ir", "missing held target row"))?;
+        if constant.lo != constant.hi {
+            return Err(Error::new(
+                "condition_precision",
+                "held target constant has uncertain coefficients",
+            ));
+        }
+        Ok(Self {
+            constant: constant.lo,
+            nodes: vec![0.; program.nodes.len()],
+            states,
+            operators: vec![0.; program.operators.len()],
+            has_variables: !dependencies.is_empty(),
+            state_dependencies: dependencies,
+            node_dependencies: BTreeSet::new(),
+            operator_dependencies: BTreeSet::new(),
+        })
+    }
+
     // Actual owned storage, including the private dense operator coefficients.
     // This is used only by the opt-in forcing clone admission.
     pub(crate) fn owned_copy_items(&self) -> usize {
@@ -491,6 +533,8 @@ pub(crate) struct TriggerLeaf {
 }
 
 pub(crate) struct EventModel {
+    pub(crate) analytic_request: Option<std::sync::Arc<crate::analytic_request::Request>>,
+    pub(crate) history_admission: Option<std::sync::Arc<crate::history_admission::Admission>>,
     pub(crate) typed_transition_targets: BTreeSet<usize>,
     pub(crate) source_context: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
     pub(crate) program: Program,
@@ -553,8 +597,86 @@ impl EventModel {
         provided: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
         request_entry: bool,
     ) -> Result<Self, Error> {
-        let admission =
+        Self::build_with_execution(
+            program,
+            driven,
+            tolerances,
+            trajectory,
+            provided,
+            request_entry,
+            None,
+        )
+    }
+    pub(crate) fn new_with_forcing(
+        program: Program,
+        driven: Vec<String>,
+        tolerances: Tolerances,
+        trajectory: &crate::pwl::Trajectory,
+        execution: crate::forcing_graph::PreparedExecution,
+    ) -> Result<Self, Error> {
+        Self::build_with_execution(
+            program,
+            driven,
+            tolerances,
+            Some(trajectory),
+            None,
+            false,
+            Some(execution),
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    fn build_with_execution(
+        program: Program,
+        driven: Vec<String>,
+        tolerances: Tolerances,
+        trajectory: Option<&crate::pwl::Trajectory>,
+        provided: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
+        request_entry: bool,
+        execution: Option<crate::forcing_graph::PreparedExecution>,
+    ) -> Result<Self, Error> {
+        let composed = execution.is_some();
+        let composed_history = execution
+            .as_ref()
+            .is_some_and(|e| e.requires_composed_history());
+        let mut provided = match execution {
+            Some(execution) => Some(execution.context(
+                &program,
+                trajectory.ok_or_else(|| {
+                    Error::new(
+                        "invalid_ir",
+                        "forcing execution requires physical trajectory",
+                    )
+                })?,
+                &driven,
+            )?),
+            None => provided,
+        };
+        let mut admission =
             crate::event_control::admit(&program, provided.as_ref().map(|s| s.borrow_work()))?;
+        // The mandatory structural phase supplies only an old-refusal shape.
+        // Establish the original request owner here, before new role traversal,
+        // source qualification, relation expansion or any candidate copy.
+        if admission.history_candidate() && provided.is_none() {
+            if !request_entry {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "history consumer requires its original prepared source context",
+                ));
+            }
+            let context = crate::transition_source_plan::ProofContext::new_held(
+                &program,
+                trajectory.ok_or_else(|| {
+                    Error::new(
+                        "unsupported_condition",
+                        "history consumer requires original physical trajectory",
+                    )
+                })?,
+                &driven,
+                admission.copy_items,
+            )?;
+            admission = crate::event_control::admit(&program, Some(context.borrow_work()))?;
+            provided = Some(context);
+        }
         if trajectory.is_none() && admission.source_floor() {
             return Err(Error::new(
                 "unsupported_floor",
@@ -575,7 +697,7 @@ impl EventModel {
         } else {
             None
         };
-        if floor_source.is_none() {
+        if floor_source.is_none() && !composed {
             if let Some(source) = &provided {
                 crate::event_floor::check_provided_binding(
                     source,
@@ -636,21 +758,50 @@ impl EventModel {
             }
             check_state(state.initial.constant()?, &state.kind)?;
         }
-        for c in &program.contributions {
-            crate::continuous::validate_selection(&c.rhs, &program, &driven, &c.origin.instance)
-                .or_else(|error| {
-                    if error.kind == "unsupported_transient" && crate::analog::has_select(&c.rhs) {
-                        crate::continuous::validate_integral_input(
-                            &c.rhs,
-                            &program,
-                            &c.origin.instance,
-                        )?;
-                        crate::causal_voltage::history_selection(&c.rhs, &program, &driven)
-                    } else {
-                        Err(error)
-                    }
-                })?;
+        if composed && admission.history_candidate() {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing ordinary contribution predicates require a composed history admission",
+            ));
         }
+        let history_admission = if admission.history_candidate() {
+            Some(crate::history_admission::Admission::new(
+                &program,
+                &driven,
+                source_context
+                    .as_ref()
+                    .ok_or_else(|| Error::new("invalid_ir", "missing prepared history owner"))?
+                    .clone(),
+            )?)
+        } else {
+            let legacy_selection = (|| {
+                for c in &program.contributions {
+                    crate::continuous::validate_selection(
+                        &c.rhs,
+                        &program,
+                        &driven,
+                        &c.origin.instance,
+                    )
+                    .or_else(|error| {
+                        if error.kind == "unsupported_transient"
+                            && crate::analog::has_select(&c.rhs)
+                        {
+                            crate::continuous::validate_integral_input(
+                                &c.rhs,
+                                &program,
+                                &c.origin.instance,
+                            )?;
+                            crate::causal_voltage::history_selection(&c.rhs, &program, &driven)
+                        } else {
+                            Err(error)
+                        }
+                    })?;
+                }
+                Ok::<_, Error>(())
+            })();
+            legacy_selection?;
+            None
+        };
         let shaped = program
             .contributions
             .iter()
@@ -739,13 +890,25 @@ impl EventModel {
             }
             Ok(())
         }
+        let original_role_work = history_admission
+            .as_ref()
+            .map(|token| token.context.borrow_work())
+            .or_else(|| floor_source.as_ref().map(|r| r.work()))
+            .or_else(|| {
+                if composed_history {
+                    source_context.as_ref().map(|c| c.borrow_work())
+                } else {
+                    None
+                }
+            })
+            .or_else(|| trajectory.and_then(|t| t.analytic_work()));
         for (index, event) in program.events.iter().enumerate() {
             validate_displays(
                 &event.body,
                 &program,
                 &event.origin.instance,
                 passive_events[index],
-                floor_source.as_ref().map(|r| r.work()),
+                original_role_work,
             )?;
         }
         let mut actions = Vec::new();
@@ -756,7 +919,7 @@ impl EventModel {
             &passive_events,
             &driven,
             &admission,
-            floor_source.as_ref().map(|r| r.work()),
+            original_role_work,
         )?;
         let general_events: Vec<_> = passive_events
             .iter()
@@ -915,6 +1078,8 @@ impl EventModel {
         passive_conditions.prepare(&projected, &node_inputs)?;
         let typed_transition_targets = admission.targets;
         let mut model = Self {
+            analytic_request: None,
+            history_admission,
             typed_transition_targets,
             source_context,
             conditions,
@@ -940,6 +1105,27 @@ impl EventModel {
             initial_values,
         };
         model.check_guard_dependencies()?;
+        if composed_history
+            && (model.dynamic_guards.iter().any(|&v| v)
+                || model.relocalized_guards.iter().any(|&v| v)
+                || model.guard_operators.iter().any(|v| !v.is_empty()))
+        {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "composed forcing requires the original independent physical event calendar",
+            ));
+        }
+        if model.history_admission.is_some()
+            && (model.floor_source.is_some()
+                || !model.typed_transition_targets.is_empty()
+                || model.dynamic_guards.iter().any(|&x| x)
+                || model.guard_operators.iter().any(|ops| !ops.is_empty()))
+        {
+            return Err(Error::new(
+                "unsupported_condition",
+                "ordinary history consumer requires the independent held-Transition event calendar",
+            ));
+        }
         // Reuse dependency metadata already audited above. Original Transition
         // products plus an internal history cross cannot use the legacy affine
         // network map; direct/implicit supported callers incur no DC proof.
@@ -1436,29 +1622,57 @@ impl EventModel {
         fired: &[usize],
         operators: &[I],
     ) -> Result<std::borrow::Cow<'_, Program>, Error> {
+        let history_work = self
+            .history_admission
+            .as_ref()
+            .map(|token| token.context.borrow_work());
+        if let Some(w) = history_work {
+            w.debit(2, self.program.nodes.len() as u64)?;
+        }
         let mut nodes = vec![I::ZERO; self.program.nodes.len()];
         for (name, &value) in self.driven.iter().zip(inputs) {
-            let index = self
-                .program
-                .nodes
-                .iter()
-                .position(|n| n == name)
-                .ok_or_else(|| Error::new("invalid_inputs", "unknown driven node"))?;
+            let index = if let Some(w) = history_work {
+                let mut found = None;
+                for (index, node) in self.program.nodes.iter().enumerate() {
+                    w.step()?;
+                    if node == name {
+                        found = Some(index);
+                        break;
+                    }
+                }
+                found
+            } else {
+                self.program.nodes.iter().position(|n| n == name)
+            }
+            .ok_or_else(|| Error::new("invalid_inputs", "unknown driven node"))?;
             nodes[index] = value;
         }
         // This function changes contribution Select nodes only. With none in
         // the complete original RHS trees, the validated program is identical;
         // borrow it rather than cloning every unrelated event statement.
-        if self
-            .program
-            .contributions
-            .iter()
-            .all(|c| !crate::analog::has_select(&c.rhs))
+        if self.history_admission.is_none()
+            && self
+                .program
+                .contributions
+                .iter()
+                .all(|c| !crate::analog::has_select(&c.rhs))
         {
             return Ok(std::borrow::Cow::Borrowed(&self.program));
         }
-        let mut p = self.program.clone();
-        for c in &mut p.contributions {
+        let mut p = if let Some(token) = &self.history_admission {
+            let w = token.context.borrow_work();
+            let bytes = crate::event_floor::admission_bytes(&self.program, w)?;
+            w.debit(2, bytes.len().saturating_mul(32) as u64)?;
+            serde_json::from_slice::<Program>(&bytes)
+                .map_err(|e| Error::new("invalid_ir", e.to_string()))?
+        } else {
+            self.program.clone()
+        };
+        for (index, c) in p.contributions.iter_mut().enumerate() {
+            if let Some(token) = &self.history_admission {
+                c.rhs = token.resolve(index, &nodes, states, operators)?;
+                continue;
+            }
             let expression = self.resolve_root_selects(&c.rhs, fired)?;
             c.rhs = crate::continuous::resolve_selection(
                 &expression,
@@ -1793,6 +2007,49 @@ impl EventModel {
     }
 
     fn check_guard_dependencies(&mut self) -> Result<(), Error> {
+        if let Some(token) = &self.history_admission {
+            let w = token.context.borrow_work();
+            let affected = token.condition_affected(&self.program)?;
+            for leaf in &self.triggers {
+                w.step()?;
+                match &leaf.trigger {
+                    EventTrigger::Cross { guard, .. } => {
+                        let row = crate::history_admission::affine_paid(guard, &self.program, w)?;
+                        for (i, value) in row[..row.len() - 1].iter().enumerate() {
+                            w.step()?;
+                            if value.zero() {
+                                continue;
+                            }
+                            let mut driven = i == 0;
+                            if i < self.program.nodes.len() && !driven {
+                                for &node in token.context.event_input_nodes() {
+                                    w.step()?;
+                                    if node == i {
+                                        driven = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if !driven {
+                                return Err(Error::new("unsupported_condition","ordinary history consumer requires an independent original event calendar"));
+                            }
+                        }
+                    }
+                    EventTrigger::Timer { .. } => (),
+                    _ => {
+                        return Err(Error::new(
+                            "unsupported_condition",
+                            "ordinary history consumer requires independent cross/timer events",
+                        ))
+                    }
+                }
+                w.debit(2, 2)?;
+                self.relocalized_guards.push(false);
+                self.guard_operators.push(BTreeSet::new());
+            }
+            self.conditions.check_dependencies(&affected)?;
+            return Ok(());
+        }
         // Conservative undirected equation connectivity, excluding fixed inputs
         // and ground. No floating-point sensitivity threshold can hide feedback.
         let assembled = crate::assembly::assemble(

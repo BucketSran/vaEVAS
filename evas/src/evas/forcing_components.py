@@ -156,3 +156,47 @@ def residual_checks(compiler, roots, checks):
             result.append(value)
             include(value)
     return tuple(result)
+
+
+def split_source_quadratic(value, allowed_nodes, compiler):
+    """One source-only quadratic Add term beside an unchanged legacy term.
+
+    Candidate typing is charged to the existing native request audit. The full
+    original role/health audit runs only after a marker is actually emitted.
+    Branch orientation is handled by emit_contributions, without distributing
+    general coefficients or crossing decisions.
+    """
+    if not isinstance(value, Binary) or value.op not in ('add','multiply'):
+        return None
+    def degree(root):
+        memo, pending = {}, [(root, False)]
+        while pending:
+            item, exiting = pending.pop()
+            compiler.compilation.native_audit.debit('forcing_candidate_visit')
+            if id(item) in memo:
+                continue
+            if isinstance(item, Affine):
+                compiler.compilation.native_audit.debit('forcing_candidate_term',len(item.terms))
+                memo[id(item)] = (int(bool(item.terms)) if math.isfinite(item.constant) and all(
+                    math.isfinite(t.coefficient) and t.node in allowed_nodes for t in item.terms) else None)
+            elif isinstance(item, Binary) and item.op in ('add','multiply'):
+                if not exiting:
+                    pending.append((item,True))
+                    pending.extend(((item.right,False),(item.left,False)))
+                else:
+                    a,b=memo[id(item.left)],memo[id(item.right)]
+                    degree=None if a is None or b is None else (a+b if item.op=='multiply' else max(a,b))
+                    memo[id(item)]=degree if degree is not None and degree<=2 else None
+            else:
+                memo[id(item)]=None
+        return memo[id(root)]
+    if degree(value)==2 and compiler.compilation.operators:
+        return value, compiler.make_ir(Affine,0.,())
+    if value.op!='add':
+        return None
+    left,right=degree(value.left),degree(value.right)
+    if left==2 and right is None:
+        return value.left,value.right
+    if right==2 and left is None:
+        return value.right,value.left
+    return None

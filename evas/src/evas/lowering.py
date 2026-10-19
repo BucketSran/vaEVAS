@@ -186,6 +186,31 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
             {"node_declarations": node_declarations})
         if result is not None:
             return result
+    if expr.op == 'function_assign':
+        # Closed constant binders do not audit every signed32 intermediate.
+        # Keep new integer functions out of that route until it owns that proof.
+        check = getattr(parameters, 'function_integer_assignment', None)
+        if expr.value == 'integer' and check is None:
+            fail('integer functions require a typed instance expression context',
+                 code='unsupported_function_conversion')
+        value = lower(expr.args[0], parameters, nodes, source, operators, preserve_structure,
+                      decisions, validate_decision, decision_scope, indices,
+                      memo=memo, node_declarations=node_declarations)
+        if expr.value == 'real':
+            return value
+        if isinstance(value, Affine) and not value.terms:
+            number = value.constant
+            if not math.isfinite(number):
+                fail('function integer assignment requires a finite signed 32-bit result', code='unsupported_function_conversion')
+            fraction, whole = math.modf(number)
+            rounded = whole + (math.copysign(1., fraction) if abs(fraction) >= .5 else 0.)
+            if not -2147483648 <= rounded <= 2147483647:
+                fail('function integer assignment exceeds signed 32-bit range', code='unsupported_function_conversion')
+            return _make(work, Affine, rounded, ())
+        if check(expr, value):
+            return value
+        fail('function integer assignment requires a constant or proven signed 32-bit integer expression',
+             code='unsupported_function_conversion')
     if expr.op == 'floor':
         if len(expr.args) != 1:
             fail('floor requires one real argument', code='unsupported_floor')

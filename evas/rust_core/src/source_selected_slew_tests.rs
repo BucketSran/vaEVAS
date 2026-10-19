@@ -42,6 +42,7 @@ fn fixture_with_dc(
     let model = EventModel::new(program, driven, Tolerances::default()).unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: vec![],
             pwl: if dc {

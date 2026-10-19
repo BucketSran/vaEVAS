@@ -59,6 +59,7 @@ struct Scan<'a> {
     scan_native_bits: bool,
     native_tail: [u8; 32],
     native_bits: bool,
+    references: Option<&'a mut BTreeSet<usize>>,
 }
 impl Write for Scan<'_> {
     fn write(&mut self, data: &[u8]) -> std::io::Result<usize> {
@@ -89,6 +90,13 @@ impl Write for Scan<'_> {
                         self.rejected = true;
                     }
                     continue;
+                }
+                if let Some(refs) = &mut self.references {
+                    // Pay comparison/storage before insertion, even for a zero read.
+                    self.work
+                        .debit(2, (refs.len() + 2) as u64)
+                        .map_err(|e| std::io::Error::other(e.message))?;
+                    refs.insert(n);
                 }
                 self.rejected |= self.forbidden.contains(&n);
                 self.number = None;
@@ -124,6 +132,7 @@ fn inspect_with_bits<T: serde::Serialize>(
         scan_native_bits,
         native_tail: [0; 32],
         native_bits: false,
+        references: None,
     };
     serde_json::to_writer(&mut scan, value)
         .map_err(|e| Error::new("resource_budget", e.to_string()))?;
@@ -139,7 +148,91 @@ fn inspect<T: serde::Serialize>(
 ) -> Result<usize, Error> {
     inspect_with_bits(value, work, forbidden, false).map(|(bytes, _)| bytes)
 }
-fn audit(e: &E, sources: &BTreeSet<usize>, owner: &str, work: &Work) -> Result<bool, Error> {
+// Original legacy footprint reads are not source-value leaves. Every internal
+// coordinate must have an independently audited acyclic history relation.
+fn inspect_history_reads<T: serde::Serialize>(
+    value: &T,
+    p: &Program,
+    driven: &[String],
+    sources: &BTreeSet<usize>,
+    outputs: &BTreeSet<usize>,
+    work: &Work,
+) -> Result<bool, Error> {
+    work.debit(2, 129)?;
+    let mut references = BTreeSet::new();
+    let mut scan = Scan {
+        work,
+        forbidden: outputs,
+        tail: [0; 7],
+        used: 0,
+        number: None,
+        rejected: false,
+        bytes: 0,
+        scan_native_bits: false,
+        native_tail: [0; 32],
+        native_bits: false,
+        references: Some(&mut references),
+    };
+    serde_json::to_writer(&mut scan, value)
+        .map_err(|e| Error::new("resource_budget", e.to_string()))?;
+    if scan.rejected {
+        return Err(scope());
+    }
+    let mut qualified_history = false;
+    for node in references {
+        work.step()?;
+        if node >= p.nodes.len() {
+            return Err(Error::new(
+                "invalid_ir",
+                "invalid forcing footprint coordinate",
+            ));
+        }
+        if !sources.contains(&node) {
+            crate::history_admission::qualify_forcing_read(node, p, driven, work)?;
+            qualified_history = true;
+        }
+    }
+    Ok(qualified_history)
+}
+
+// Only Graph can construct this execution capability. It proves the actual
+// reduced Program and provider while retaining the complete original owner.
+pub(crate) struct PreparedExecution {
+    graph: Arc<Graph>,
+}
+impl PreparedExecution {
+    pub(crate) fn requires_composed_history(&self) -> bool {
+        self.graph.shared_history
+    }
+    pub(crate) fn charge_operator_construction(&self) -> Result<(), Error> {
+        // Each legacy Transition slot may own one reduced Program clone.
+        // The original serialized-byte bound includes AST/container/string
+        // storage and covers the shallower reduced program. New target proof
+        // and leaf expansion debit their own shared Work separately.
+        self.graph.charge(
+            "forcing_shared_constructor_storage",
+            self.graph
+                .copy_items
+                .saturating_mul(self.graph.dimensions.saturating_add(1))
+                .saturating_add(
+                    self.graph
+                        .dimensions
+                        .saturating_mul(self.graph.dimensions)
+                        .saturating_mul(16),
+                ),
+        )
+    }
+    pub(crate) fn context(
+        &self,
+        p: &Program,
+        t: &Trajectory,
+        driven: &[String],
+    ) -> Result<Arc<ProofContext>, Error> {
+        self.graph.source_context(p, t, driven)
+    }
+}
+
+fn audit(e: &E, sources: &BTreeSet<usize>, owner: &str, work: &Work) -> Result<(u8, bool), Error> {
     work.step()?;
     match e {
         E::Affine { constant, terms } => {
@@ -151,15 +244,20 @@ fn audit(e: &E, sources: &BTreeSet<usize>, owner: &str, work: &Work) -> Result<b
             {
                 return Err(scope());
             }
-            Ok(!terms.is_empty())
+            Ok((u8::from(!terms.is_empty()), false))
         }
         E::Add { left, right } | E::Multiply { left, right } => {
-            let a = audit(left, sources, owner, work)?;
-            let b = audit(right, sources, owner, work)?;
-            if matches!(e, E::Multiply { .. }) && a && b {
+            let (a, a_select) = audit(left, sources, owner, work)?;
+            let (b, b_select) = audit(right, sources, owner, work)?;
+            let degree = if matches!(e, E::Multiply { .. }) {
+                a + b
+            } else {
+                a.max(b)
+            };
+            if degree > 2 || degree > 1 && (a_select || b_select) {
                 return Err(scope());
             }
-            Ok(a || b)
+            Ok((degree, a_select || b_select))
         }
         E::Select {
             left,
@@ -177,11 +275,14 @@ fn audit(e: &E, sources: &BTreeSet<usize>, owner: &str, work: &Work) -> Result<b
             {
                 return Err(scope());
             }
-            audit(left, sources, owner, work)?;
-            audit(right, sources, owner, work)?;
-            let a = audit(then_value, sources, owner, work)?;
-            let b = audit(else_value, sources, owner, work)?;
-            Ok(a || b)
+            let (l, _) = audit(left, sources, owner, work)?;
+            let (r, _) = audit(right, sources, owner, work)?;
+            let (a, _) = audit(then_value, sources, owner, work)?;
+            let (b, _) = audit(else_value, sources, owner, work)?;
+            if [l, r, a, b].into_iter().any(|degree| degree > 1) {
+                return Err(scope());
+            }
+            Ok((a.max(b), true))
         }
         _ => Err(scope()),
     }
@@ -268,6 +369,7 @@ pub(crate) struct Graph {
     mapping: Vec<usize>,
     outputs: Vec<Output>,
     dimensions: usize,
+    shared_history: bool,
     copy_items: usize,
     tolerances: Tolerances,
     reduction: Reduction,
@@ -313,6 +415,7 @@ impl Graph {
             .iter()
             .map(|&k| mapping[k])
             .collect::<BTreeSet<_>>();
+        let mut shared_history = false;
         let mut output_nodes = BTreeSet::new();
         for c in &p.contributions {
             if let E::Forcing {
@@ -333,8 +436,35 @@ impl Graph {
                 }
                 audit(value, &sources, &origin.instance, &work)?;
                 audit_shaped(value, &shaped_nodes, false, &work)?;
+                let _ = checked; // Qualified after every output is known.
+            }
+        }
+        for c in &p.contributions {
+            work.step()?;
+            if let E::Forcing { checked, .. } = &c.rhs {
                 for expression in checked {
-                    audit(expression, &sources, &origin.instance, &work)?;
+                    work.step()?;
+                    // Only the existing structural zero-read footprint has a
+                    // legacy provenance role. Real checked numeric expressions
+                    // retain their source-only, every-intermediate contract.
+                    let footprint = if let E::Affine { constant, terms } = expression {
+                        work.debit(2, terms.len() as u64)?;
+                        *constant == 0. && terms.iter().all(|term| term.coefficient == 0.)
+                    } else {
+                        false
+                    };
+                    if footprint {
+                        shared_history |= inspect_history_reads(
+                            expression,
+                            p,
+                            driven,
+                            &sources,
+                            &output_nodes,
+                            &work,
+                        )?;
+                    } else {
+                        audit(expression, &sources, &c.origin.instance, &work)?;
+                    }
                     audit_shaped(expression, &shaped_nodes, false, &work)?;
                 }
             }
@@ -344,7 +474,23 @@ impl Graph {
         for c in &p.contributions {
             if !matches!(c.rhs, E::Forcing { .. }) {
                 if output_nodes.contains(&c.positive) || output_nodes.contains(&c.negative) {
-                    return Err(scope());
+                    let name_bytes = c.branch.instance.len()
+                        + c.branch.local_positive.len()
+                        + c.branch.local_negative.len()
+                        + 4;
+                    work.debit(
+                        2,
+                        bytes.saturating_add(p.contributions.len().saturating_mul(name_bytes))
+                            as u64,
+                    )?;
+                    if !p.contributions.iter().any(|marked| {
+                        matches!(marked.rhs, E::Forcing { .. })
+                            && marked.branch == c.branch
+                            && marked.positive == c.positive
+                            && marked.negative == c.negative
+                    }) {
+                        return Err(scope());
+                    }
                 }
                 inspect(&c.rhs, &work, &output_nodes)?;
             }
@@ -353,7 +499,14 @@ impl Graph {
             .filter(|n| !sources.contains(n))
             .collect();
         inspect(&p.states, &work, &legacy_unknowns)?;
-        inspect(&p.events, &work, &legacy_unknowns)?;
+        for event in &p.events {
+            work.step()?;
+            // This composition samples history only under the independent
+            // original physical event calendar, never a new history cross.
+            inspect(&event.trigger, &work, &legacy_unknowns)?;
+        }
+        shared_history |=
+            inspect_history_reads(&p.events, p, driven, &sources, &output_nodes, &work)?;
         inspect(&p.operators, &work, &output_nodes)?;
         inspect(&p.step_bounds, &work, &legacy_unknowns)?;
         // Both branches must have finite original intermediate domains over
@@ -407,24 +560,36 @@ impl Graph {
         // Admission borrows the very same ledger after the original forcing
         // role and inactive-arm health audits. Metadata identifies unsupported
         // consumers; it is not a new Floor or typed-target proof factory.
+        if native_bits {
+            // This bridge admits certified typed Transition targets only. Raw
+            // event/initial/setting native consumers remain outside its scope,
+            // including never-selected branches and zero-trip bodies.
+            for bits in [
+                inspect_with_bits(&p.events, &work, &BTreeSet::new(), true)?.1,
+                inspect_with_bits(&p.states, &work, &BTreeSet::new(), true)?.1,
+                inspect_with_bits(&p.step_bounds, &work, &BTreeSet::new(), true)?.1,
+            ] {
+                if bits {
+                    return Err(scope());
+                }
+            }
+        }
         let admission = crate::event_control::admit(p, Some(&work))?;
-        if admission.source_floor() || !admission.targets.is_empty() || native_bits {
+        if admission.source_floor() {
             return Err(scope());
         }
+        shared_history |= !admission.targets.is_empty();
         drop(admission);
         // This vertical deliberately retains only existing bare held histories.
-        if p.operators.is_empty()
-            || p.operators.iter().any(|o| {
-                !matches!(
-                    o,
-                    OperatorSpec::Transition {
-                        input: E::State { .. },
-                        ..
-                    }
-                )
-            })
-        {
+        if p.operators.is_empty() {
             return Err(scope());
+        }
+        for operator in &p.operators {
+            work.step()?;
+            let OperatorSpec::Transition { input, .. } = operator else {
+                return Err(scope());
+            };
+            shared_history |= !matches!(input, E::State { .. });
         }
         // Upper bounds include container/string overhead in actual owned clones.
         let copy_items = bytes.saturating_mul(16).saturating_add(p.nodes.len() * 64);
@@ -468,6 +633,7 @@ impl Graph {
             mapping,
             outputs,
             dimensions: p.nodes.len(),
+            shared_history,
             copy_items,
             tolerances: tol.clone(),
             reduction,
@@ -493,6 +659,12 @@ impl Graph {
             return Err(scope());
         }
         Ok(())
+    }
+    pub(crate) fn prepare_execution(self: &Arc<Self>) -> Result<PreparedExecution, Error> {
+        self.charge("forcing_prepared_execution", 1)?;
+        Ok(PreparedExecution {
+            graph: self.clone(),
+        })
     }
     pub(crate) fn source_context(
         &self,
@@ -586,6 +758,12 @@ impl Graph {
     pub(crate) fn work_used(&self) -> u64 {
         self.context.source_work_used()
     }
+    pub(crate) fn requires_composed_history(&self) -> bool {
+        self.shared_history
+    }
+    pub(crate) fn input_nodes(&self) -> &[usize] {
+        &self.mapping
+    }
     pub(crate) fn request_work(&self) -> &Work {
         &self.ledger
     }
@@ -604,13 +782,29 @@ impl Graph {
     pub(crate) fn ensure_live(&self) -> Result<(), Error> {
         self.charge("forcing_entry_budget", 0)
     }
-    pub(crate) fn legacy_voltage_view(&self, values: &[f64]) -> Result<Vec<f64>, Error> {
-        self.charge("forcing_legacy_projection_copy", values.len())?;
-        let mut reduced = values.to_vec();
-        for o in &self.outputs {
-            reduced[o.node] = 0.;
-        }
-        Ok(reduced)
+    pub(crate) fn legacy_voltage_view(
+        &self,
+        time: f64,
+        values: &[f64],
+        circuit: &Circuit,
+    ) -> Result<Vec<f64>, Error> {
+        let count = self.outputs.len();
+        self.charge(
+            "forcing_legacy_projection_copy",
+            values
+                .len()
+                .saturating_mul(2)
+                .saturating_add(count.saturating_mul(count).saturating_mul(2))
+                .saturating_add(count.saturating_mul(8))
+                .saturating_add(8),
+        )?;
+        let expected: Vec<_> = self.outputs.iter().map(|o| o.node).collect();
+        circuit.forcing_legacy_voltage_view(
+            Arc::as_ptr(&self.context) as usize,
+            time,
+            values,
+            &expected,
+        )
     }
     pub(crate) fn charge_frame_storage(
         &self,
@@ -623,7 +817,12 @@ impl Graph {
         // arbitrary-precision certificates are added from the current frame.
         self.charge(
             "forcing_frame_copy",
-            self.copy_items + self.dimensions * self.dimensions * 16 + states * 64 + voltages * 16,
+            self.copy_items
+                + self.dimensions * self.dimensions * 16
+                + states * 64
+                + voltages * 16
+                + 1
+                + self.outputs.len() * 2,
         )?;
         for value in values.values() {
             self.charge_rational(value)?;
@@ -747,6 +946,7 @@ impl Graph {
             self.copy_items + self.dimensions * 64,
         )?;
         let (values, boxes) = self.source.forcing_values_bounds(time, &self.ledger)?;
+        crate::diagnostics::counter("forcing_project_source_samples", values.len());
         let mut nominal = vec![0.; self.dimensions];
         let mut nodes = vec![I::ZERO; self.dimensions];
         for ((&n, &v), &b) in self.mapping.iter().zip(&values).zip(&boxes) {
@@ -796,6 +996,11 @@ impl Graph {
         // The circuit replaces the provisional row with the original resolved
         // relation and checks its residual before the Frame can be accepted.
         self.charge("forcing_copy_items", self.copy_items.saturating_mul(2))?;
+        self.charge("forcing_phase_bound_storage", 2 + self.outputs.len() * 5)?;
+        self.charge(
+            "forcing_phase_bound_lookup",
+            self.outputs.len().saturating_mul(self.outputs.len() + 1),
+        )?;
         circuit.install_forcing_phase(Arc::as_ptr(&self.context) as usize, time, solution, rows)
     }
 }

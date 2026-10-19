@@ -620,10 +620,22 @@ fn bounds_in(
                     if floored.lo == floored.hi {
                         floored
                     } else {
-                        proofs
-                            .and_then(|s| s.value(e, nodes))
-                            .as_ref()
-                            .and_then(crate::exact_source::enclosure)
+                        let proved = if let Some(local) = proofs {
+                            if local.history_work().is_some() {
+                                match local.try_value(e, nodes)? {
+                                    Some(v) => local.try_enclosure(&v)?,
+                                    None => None,
+                                }
+                            } else {
+                                local
+                                    .value(e, nodes)
+                                    .as_ref()
+                                    .and_then(crate::exact_source::enclosure)
+                            }
+                        } else {
+                            None
+                        };
+                        proved
                             .filter(|v| v.lo == v.hi && floored.lo <= v.lo && v.hi <= floored.hi)
                             .ok_or_else(|| {
                                 Error::new(

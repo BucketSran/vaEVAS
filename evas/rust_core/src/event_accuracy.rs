@@ -5,6 +5,14 @@ use crate::affine_bounds::affine;
 use crate::interval::{equal_products, Interval as I};
 use crate::ir::{Error, EventTrigger, Expression, Program};
 
+#[cfg(test)]
+use crate::ir::SCHEMA_VERSION;
+#[cfg(test)]
+#[path = "history_consumer_fixture.rs"]
+mod history_fixture;
+#[path = "event_history_projection.rs"]
+mod history_projection;
+
 pub(crate) fn unresolved(message: &str) -> Error {
     Error::new("event_resolution", message)
 }
@@ -24,6 +32,9 @@ impl GuardBounds {
         model: &crate::events::EventModel,
         states: Option<&[I]>,
     ) -> Result<Self, Error> {
+        if crate::analytic_request::proof_owner(model).is_some() {
+            return history_projection::for_model(model, states);
+        }
         if model.dc_projection.is_none() {
             return match states {
                 Some(states) => {
@@ -321,6 +332,24 @@ impl GuardBounds {
     }
 
     /// Only a proven zero coefficient permits ignoring an input breakpoint.
+    pub(crate) fn active_inputs_history(
+        &self,
+        expression: usize,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Vec<usize>, Error> {
+        w.debit(2, 0)?;
+        let mut out = Vec::new();
+        for (i, coefficient) in self.coefficients[expression][..self.driven_count]
+            .iter()
+            .enumerate()
+        {
+            w.step()?;
+            if !coefficient.zero() {
+                crate::history_storage::push_vec(&mut out, i, w)?
+            }
+        }
+        Ok(out)
+    }
     pub(crate) fn active_inputs(&self, expression: usize) -> Vec<usize> {
         self.coefficients[expression][..self.driven_count]
             .iter()
@@ -332,6 +361,64 @@ impl GuardBounds {
     /// Reuse the certified circuit projection as an exact source expression.
     /// A non-point coefficient or remaining state/operator column cannot be
     /// rounded into the unique physical curve required for root provenance.
+    pub(crate) fn exact_input_expression_history(
+        &self,
+        expression: usize,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<Expression>, Error> {
+        w.debit(2, 0)?;
+        w.step()?;
+        if self.symbolic[expression].is_some() {
+            return Ok(None);
+        }
+        let row = &self.coefficients[expression];
+        for v in row {
+            w.step()?;
+            if v.lo != v.hi {
+                return Ok(None);
+            }
+        }
+        for v in &row[self.driven_count..row.len() - 1] {
+            w.step()?;
+            if !v.zero() {
+                return Ok(None);
+            }
+        }
+        let mut terms = Vec::new();
+        for (v, &node) in row[..self.driven_count].iter().zip(&self.input_nodes) {
+            w.step()?;
+            if !v.zero() {
+                crate::history_storage::push_vec(
+                    &mut terms,
+                    crate::ir::Term {
+                        node,
+                        coefficient: v.lo,
+                    },
+                    w,
+                )?
+            }
+        }
+        Ok(row.last().map(|last| Expression::Affine {
+            constant: last.lo,
+            terms,
+        }))
+    }
+    pub(crate) fn value_history(
+        &self,
+        expression: usize,
+        inputs: &[I],
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<I, Error> {
+        w.debit(2, 0)?;
+        w.step()?;
+        let row = &self.coefficients[expression];
+        let mut value = *row.last().unwrap();
+        for (&a, &v) in row.iter().zip(inputs) {
+            w.step()?;
+            value = value + a * v
+        }
+        Ok(value)
+    }
     pub(crate) fn exact_input_expression(&self, expression: usize) -> Option<Expression> {
         if self.symbolic[expression].is_some() {
             return None;
@@ -411,6 +498,46 @@ impl GuardBounds {
             + self.operator_value(expression, operators)
     }
 
+    pub(crate) fn same_zero_set_history(
+        &self,
+        first: usize,
+        second: usize,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<bool, Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 4)?;
+        if self.symbolic[first].is_some() || self.symbolic[second].is_some() {
+            return Ok(false);
+        }
+        let a = &self.coefficients[first];
+        let b = &self.coefficients[second];
+        for v in a.iter().chain(b) {
+            w.step()?;
+            if v.lo != v.hi {
+                return Ok(false);
+            }
+        }
+        let mut pivot = None;
+        for (i, v) in a.iter().enumerate() {
+            w.step()?;
+            if !v.zero() {
+                pivot = Some(i);
+                break;
+            }
+        }
+        let Some(pivot) = pivot else { return Ok(false) };
+        w.step()?;
+        if b[pivot].zero() {
+            return Ok(false);
+        }
+        for (x, y) in a.iter().zip(b) {
+            w.debit(2, crate::exact_time::PAIR_SIGN_FEE)?;
+            if !equal_products(x.lo, b[pivot].lo, y.lo, a[pivot].lo) {
+                return Ok(false);
+            }
+        }
+        Ok(true)
+    }
     pub(crate) fn same_zero_set(&self, first: usize, second: usize) -> bool {
         if self.symbolic[first].is_some() || self.symbolic[second].is_some() {
             return false;
@@ -526,6 +653,69 @@ mod tests {
     use super::*;
     use crate::ir::Expression;
     use proptest::prelude::*;
+    #[test]
+    fn bookkeeping_r2_direct_projection_matches_legacy_bits() {
+        let input =
+            serde_json::json!({"op":"affine","constant":0.,"terms":[{"node":1,"coefficient":1.}]});
+        let constant = |v: f64| serde_json::json!({"op":"affine","constant":v,"terms":[]});
+        for guard in [
+            serde_json::json!({"op":"add","left":input,"right":constant(-0.375)}),
+            serde_json::json!({"op":"divide","left":input,"right":constant(3.)}),
+            constant(-0.),
+        ] {
+            let mut value = history_fixture::fixture();
+            value["program"]["events"][1]["trigger"] = serde_json::json!({"kind":"cross","guard":guard,"direction":1,"time_tolerance":1e-10,"expression_tolerance":1e-10});
+            let request: crate::ir::Request = serde_json::from_value(value).unwrap();
+            let trajectory =
+                crate::pwl::Trajectory::new(request.transient.unwrap(), request.driven.len())
+                    .unwrap();
+            let model = crate::events::EventModel::new_with_trajectory(
+                request.program,
+                request.driven,
+                request.tolerances,
+                Some(&trajectory),
+            )
+            .unwrap();
+            let states: Vec<_> = model.initial().into_iter().map(I::point).collect();
+            for held in [false, true] {
+                let legacy = if held {
+                    GuardBounds::held(
+                        &model.program,
+                        &model.driven,
+                        &model.dynamic_guards,
+                        &states,
+                    )
+                } else {
+                    GuardBounds::new(&model.program, &model.driven, &model.dynamic_guards)
+                }
+                .unwrap();
+                let paid =
+                    GuardBounds::for_model(&model, held.then_some(states.as_slice())).unwrap();
+                let bits = |rows: &Vec<Vec<I>>| {
+                    rows.iter()
+                        .map(|row| {
+                            row.iter()
+                                .map(|v| (v.lo.to_bits(), v.hi.to_bits()))
+                                .collect::<Vec<_>>()
+                        })
+                        .collect::<Vec<_>>()
+                };
+                assert_eq!(bits(&paid.coefficients), bits(&legacy.coefficients));
+                assert_eq!(
+                    bits(&paid.state_coefficients),
+                    bits(&legacy.state_coefficients)
+                );
+                assert_eq!(
+                    bits(&paid.operator_coefficients),
+                    bits(&legacy.operator_coefficients)
+                );
+                assert_eq!(paid.input_nodes, legacy.input_nodes);
+                assert_eq!(paid.node_count, legacy.node_count);
+                assert_eq!(paid.driven_count, legacy.driven_count);
+                assert_eq!(paid.symbolic, legacy.symbolic);
+            }
+        }
+    }
 
     fn same_projection(guard: &[I], nodes: &[Vec<I>], width: usize) {
         validate_projection(nodes, guard.len() - 1, width).unwrap();

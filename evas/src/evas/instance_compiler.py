@@ -11,9 +11,11 @@ from typing import TYPE_CHECKING
 from .ir import (Affine, Term, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
                  IntegerPrimitive, IntegerLiteral, IntegerState, ArrayRead, ArrayWrite, IntegerRound, CheckedInteger, CheckedIndex, Loop as RuntimeLoop, EventMath, Origin, Program, Power, Select, Forcing, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
 from .lowering import lower, scale, UnsupportedConstantPower, FiniteIntegerUnavailable
-from .limits import check_ir
+from .limits import check_ir, MAX_IR_ITEMS
+from .integer_table_composition import compose_integer_table
+from . import held_power2
 from .integer_invariants import SourceProofRequest
-from .forcing_components import source_forcing_tree, audit_original_reads, residual_checks
+from .forcing_components import source_forcing_tree, audit_original_reads, residual_checks, split_source_quadratic
 from .input_rational_scope import input_rational_tree
 from .compact_source_select import compact_source_assignment
 from .integer_prefix import factor_integer_prefix
@@ -48,6 +50,7 @@ class Compilation:
     source_rational_origins: list[Origin] = field(default_factory=list)
     source_rational_nodes: set[int] = field(default_factory=lambda: {0})
     settled_integer_reads: bool = False
+    history_consumer_candidate: bool = False
     # References only: bind_hierarchy/parse_sources already own these objects.
     # No original-tree proof is visited or charged without a forcing marker.
     forcing_original_bindings: list[tuple[Model, dict[str, int], str]] = field(default_factory=list)
@@ -108,6 +111,48 @@ class Compilation:
                                     result.states, result.events, result.operators,
                                     step_bounds=result.step_bounds)
             check_ir(result, work=self.native_audit.ir_work, cache=self.native_audit.ir_cache)
+        if self.history_consumer_candidate:
+            from .history_consumer_scope import original_reads
+            if not result.operators or any(not isinstance(op, Transition) for op in result.operators):
+                raise CompileError("ordinary history consumer requires a complete Transition-only program")
+            self.native_audit.debit("history_source_copy",len(result.contributions))
+            contributions=list(result.contributions)
+            for model,node_ids,owner in self.forcing_original_bindings:
+                reads=original_reads(model,node_ids,self.native_audit)
+                self.native_audit.debit("history_source_visit")
+                reads.discard(0)
+                if not reads:
+                    continue
+                index=None
+                for i,c in enumerate(contributions):
+                    self.native_audit.debit("history_source_visit")
+                    if c.origin.instance==owner and c.positive not in reads and c.negative not in reads:
+                        index=i
+                        break
+                if index is None:
+                    raise CompileError("original history reads require an owning contribution")
+                # Keep discarded source reads in the original Program. The
+                # kernel follows these zero terms before simplifying values.
+                def emit(cls,*args):
+                    self.native_audit.debit("emit_object")
+                    self.native_audit.debit("emit_field",len(fields(cls)))
+                    return cls(*args)
+                terms=[]
+                self.native_audit.debit("history_source_copy")
+                for n in range(len(result.nodes)):
+                    self.native_audit.debit("history_source_visit")
+                    if n in reads:
+                        self.native_audit.debit("history_source_copy")
+                        terms.append(emit(Term,n,0.))
+                self.native_audit.debit("history_source_copy",len(terms))
+                footprint=emit(Affine,0.,tuple(terms))
+                contribution=contributions[index]
+                rhs=emit(Binary,"add",contribution.rhs,footprint)
+                self.native_audit.debit("emit_field",len(fields(Contribution)))
+                contributions[index]=replace(contribution,rhs=rhs)
+            self.native_audit.debit("program_copy",5+len(contributions))
+            result=replace(result,contributions=tuple(contributions))
+            check_ir(result,work=self.native_audit.ir_work,cache=self.native_audit.ir_cache)
         # A replacement Program must keep the SAME owner for expanded transport.
         object.__setattr__(result, "_native_audit", self.native_audit)
         if self.source_rational_origins:
@@ -441,6 +486,13 @@ class InstanceCompiler:
                 # Both facts are sound; a coarser entry transfer must not
                 # replace a stronger existing state-independent writer proof.
                 self.ordinary_integer_bounds[state] = (max(low, old_low), min(high, old_high))
+        self.held_power2_alias_candidates = held_power2.target_aliases(self, statements)
+        if (held_power2.reserve(self.compilation.native_audit, "held_power2_alias_ready_setup", 2)
+                and self.held_power2_alias_candidates
+                and held_power2.reserve(self.compilation.native_audit, "held_power2_alias_ready_container", 2)):
+            self.held_power2_ready = {}
+        else:
+            self.held_power2_ready = None
         try:
             self.forcing_ordinary_active = True
             _, contributions = self.execute_analog(statements, {})
@@ -887,6 +939,12 @@ class InstanceCompiler:
         def lookup(name):
             return resolve(name)
         lookup.native_work = lambda kind, amount: self.compilation.native_audit.debit(kind,amount)
+        def function_integer_assignment(expr, value):
+            if not self.integer_type(expr.args[0]) or not self.integral(value):
+                return False
+            low, high = self.integral_bounds(value)
+            return -2147483648 <= low <= high <= 2147483647
+        lookup.function_integer_assignment = function_integer_assignment
         lookup.integer_arithmetic = self.integer_arithmetic
         lookup.integer_bitwise = self.integer_bitwise
         lookup.finite_power = self.finite_power
@@ -1338,6 +1396,18 @@ class InstanceCompiler:
                 code="unsupported_integer_arithmetic", token=expr.token, instance=self.instance.name)
         origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line, expr.token.column,
                         self.instance.name, expr.expansion)
+        if isinstance(numerator, Select):
+            owner = self.compilation.native_audit
+            # Prepay dispatch and callback bindings before creating them. An inactive old route may skip an
+            # optional probe before insufficient headroom incurs any new work.
+            if owner.active or owner.used + 8 <= MAX_IR_ITEMS:
+                owner.debit('integer_compose_dispatch', 8, expr)
+                mapped = compose_integer_table(numerator, expr.op, divisor,
+                    owner=owner, source=expr, make=self.make_ir)
+                if mapped is not None:
+                    self.checked_ir(mapped, origin)
+                    self.expression_decision_origins.add(origin)
+                    return mapped
         def tree(start, end):
             if start == end:
                 return self.make_ir(Affine, float(start), ())
@@ -1581,6 +1651,24 @@ class InstanceCompiler:
         resolve = self.typed_resolve(resolve)
         target_charge = None
         target_checked = False
+        target_source = expr.args[0]
+        if expr.op == "transition" and self.forcing_ordinary_active:
+            owner = self.compilation.native_audit
+            if held_power2.reserve(owner, "held_power2_target_dispatch", 8, expr):
+                alias = (self.held_power2_ready.get(str(target_source.value))
+                         if target_source.op == "parameter" and self.held_power2_ready is not None else None)
+                if alias is not None:
+                    target_source = alias
+                plan = held_power2.source_plan(self, target_source)
+                if alias is not None and plan is None:
+                    raise CompileError("held target alias source binding changed", token=target_source.token)
+                if plan is not None and held_power2.compatible_program(self, target_source):
+                    owner.activate(target_source)
+                    owner.debit("held_power2_target_binding", 8, target_source)
+                    from .native_audit import Charge
+                    target_charge = Charge(owner, None)
+                    target_checked = True
+                    resolve.integer_arithmetic = lambda item, a, b: held_power2.arithmetic(self, plan, item, a, b)
         if expr.op == "transition":
             def native_target(item):
                 nonlocal target_charge, target_checked
@@ -1610,7 +1698,7 @@ class InstanceCompiler:
                 self.validate_decision_expression(item, value)
             else:
                 self.checked_ir(value, getattr(value, "origin", None))
-        value = lower(expr.args[0], resolve, input_nodes, self.model.source,
+        value = lower(target_source, resolve, input_nodes, self.model.source,
                   (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "cos", "exp", "ln", "sqrt", "tanh", "idt", "laplace_nd", "laplace_np", "ddt") else nested_fixed if expr.op in ("absdelay", "slew") else None,
                       preserve_structure=True, decisions=target_select,
                       validate_decision=target_decision, node_declarations=True)
@@ -2078,24 +2166,56 @@ class InstanceCompiler:
             else:
                 raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected value must remain piecewise-affine or a supported rational expression")
 
-    def expression_select(self, expr, relation, left, right, then_value, else_value, *, register=True):
-        origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line, expr.token.column,
-                        self.instance.name, expr.expansion)
-        result = self.make_ir(Select, relation, left, right, then_value, else_value, origin)
+    def expression_select(self, expr, relation, left, right, then_value, else_value, *, register=True, raw=None):
+        owner = self.compilation.native_audit
+        owner.debit("decision_reuse_dispatch")
+        if raw is None:
+            origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line, expr.token.column,
+                            self.instance.name, expr.expansion)
+            result = self.make_ir(Select, relation, left, right, then_value, else_value, origin)
+        else:
+            # Prepay the exact-role/identity metadata checks before reading the
+            # proposed object. This is not a cached semantic or range verdict.
+            owner.debit("decision_reuse_metadata", 16, expr)
+            if (not isinstance(raw, Select) or raw.relation != relation or
+                    raw.left is not left or raw.right is not right or
+                    raw.then_value is not then_value or raw.else_value is not else_value or
+                    not isinstance(raw.origin, Origin) or
+                    raw.origin.source != (expr.token.source or self.model.source) or
+                    raw.origin.line != expr.token.line or raw.origin.column != expr.token.column or
+                    raw.origin.instance != self.instance.name or raw.origin.expansion is not expr.expansion):
+                raise CompileError("decision reuse requires the original decision and source role", token=expr.token)
+            origin, result = raw.origin, raw
+        # Always call the original checker. Only its same-owner, strongly held
+        # transitive-immutable identity cache can avoid a second structural walk.
         self.checked_ir(result, origin)
-        if (_predicate_degree(left) is None or _predicate_degree(right) is None or
-                not self.selected_value_supported(result)):
+        predicate_affine = _predicate_degree(left) is not None and _predicate_degree(right) is not None
+        if (not predicate_affine or not self.selected_value_supported(result)):
             if self.input_rational_candidate(result):
                 self.request_input_rational(origin)
             elif self.source_forcing_candidate(result):
                 pass
             else:
                 raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: decision predicates and every arm must be affine or input-selected piecewise-affine")
-        if not (self.expression_nodes(left) | self.expression_nodes(right)).issubset(self.allowed_condition_nodes):
-            raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: decision predicates must depend only on input/inout ports")
+        predicate_nodes = self.expression_nodes(left) | self.expression_nodes(right)
+        if not predicate_nodes.issubset(self.allowed_condition_nodes):
+            if not self.history_condition_candidate(predicate_affine,origin,predicate_nodes):
+                raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: decision predicates must depend only on input/inout ports")
         if register:
             self.expression_decision_origins.add(origin)
         return result
+
+    def history_condition_candidate(self,predicate_affine,origin,predicate_nodes):
+        # This is source dispatch only. It grants no execution permission:
+        # original-source and whole-Program audits remain mandatory.
+        self.compilation.native_audit.activate(origin)
+        self.compilation.native_audit.debit("history_candidate_visit",2+len(predicate_nodes),origin)
+        if (not predicate_affine or
+                not getattr(self.compilation, "has_waveform_operators", False) or
+                any(node < 0 or node >= len(self.compilation.nodes) for node in predicate_nodes)):
+            return False
+        self.compilation.history_consumer_candidate=True
+        return True
 
     @staticmethod
     def contains_history_call(expr):
@@ -2122,7 +2242,11 @@ class InstanceCompiler:
             normalized = normalize_positive_quotient_comparison(relation, left, right, positive_facts)
             if normalized is not None:
                 relation, left, right = normalized
-            return self.expression_select(item, relation, left, right, then_value, else_value)
+                return self.expression_select(item, relation, left, right, then_value, else_value)
+            # The original raw tree has already been checked above. Retain it
+            # unchanged; all expression semantics below are still checked fresh.
+            self.compilation.native_audit.debit("decision_reuse_call", 2, item)
+            return self.expression_select(item, relation, left, right, then_value, else_value, raw=raw)
         def waveform(op):
             if conditional and self.contains_history_call(op):
                 raise CompileError(f"{self.model.source}:{op.token.line}: history waveform call sites must be unconditional")
@@ -2205,9 +2329,12 @@ class InstanceCompiler:
                 right = self.lower_local(statement.right, result, preserve_structure=True, positive_facts=positive_facts)
                 self.checked_ir(left, origin)
                 self.checked_ir(right, origin)
-                if not self.expression_nodes(left).issubset(self.allowed_condition_nodes) or not self.expression_nodes(right).issubset(self.allowed_condition_nodes):
-                    raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates must depend only on input/inout ports")
-                if _predicate_degree(left) is None or _predicate_degree(right) is None:
+                predicate_affine = _predicate_degree(left) is not None and _predicate_degree(right) is not None
+                predicate_nodes = self.expression_nodes(left) | self.expression_nodes(right)
+                if not predicate_nodes.issubset(self.allowed_condition_nodes):
+                    if not self.history_condition_candidate(predicate_affine,origin,predicate_nodes):
+                        raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates must depend only on input/inout ports")
+                if not predicate_affine:
                     if self.input_rational_candidate(left) and self.input_rational_candidate(right):
                         self.request_input_rational(origin)
                     else:
@@ -2259,6 +2386,17 @@ class InstanceCompiler:
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog assignment target must be a local variable")
                 if conditional and self.contains_history_call(statement.rhs):
                     raise CompileError(f"{self.model.source}:{statement.token.line}: history waveform call sites must be unconditional")
+                candidate = None
+                if held_power2.reserve(self.compilation.native_audit, "held_power2_alias_dispatch", 4, statement):
+                    candidate = (self.held_power2_alias_candidates.get(statement.name)
+                                 if self.held_power2_alias_candidates is not None and self.held_power2_ready is not None else None)
+                if not conditional and candidate is statement:
+                    plan = held_power2.source_plan(self, statement.rhs)
+                    if plan is not None and held_power2.compatible_program(self, statement.rhs):
+                        self.compilation.native_audit.activate(statement)
+                        self.compilation.native_audit.debit("held_power2_alias_ready", 4, statement)
+                        self.held_power2_ready[statement.name] = statement.rhs
+                        continue
                 value = self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure, conditional=conditional, positive_facts=positive_facts)
                 self.checked_ir(value, self.make_ir(Origin, self.model.source, statement.token.line, statement.token.column, self.instance.name))
                 if self.model.variables[statement.name] == "integer":
@@ -2267,13 +2405,19 @@ class InstanceCompiler:
         return result, emitted
 
     def emit_contributions(self, analog_contributions):
+        mixed = {}
+        for index, (_, expression) in enumerate(analog_contributions):
+            parts = split_source_quadratic(expression, self.allowed_condition_nodes, self)
+            if parts is not None:
+                mixed[index] = parts
+                self.forcing_seen = True
         checked = ()
         if self.forcing_seen:
             forbidden, roots = set(), []
-            for statement, expression in analog_contributions:
-                if source_forcing_tree(expression, self.allowed_condition_nodes, self):
+            for index, (statement, expression) in enumerate(analog_contributions):
+                if index in mixed or source_forcing_tree(expression, self.allowed_condition_nodes, self):
                     forbidden.update(self.node_ids[str(arg.value)] for arg in statement.branch.args)
-                    roots.append(expression)
+                    roots.append(mixed[index][0] if index in mixed else expression)
             forbidden.discard(0)
             if not forbidden:
                 raise CompileError('new forcing expression requires an independent output consumer',
@@ -2283,7 +2427,7 @@ class InstanceCompiler:
                 raise CompileError('forcing checked expression copy budget exceeded', code='resource_budget')
             checked = residual_checks(self, roots, self.forcing_checks)
         bound_branches = {}
-        for branch_statement, expression in analog_contributions:
+        for index, (branch_statement, expression) in enumerate(analog_contributions):
             branch = branch_statement.branch
             lower(branch, self.parameter, self.node_ids, self.model.source, node_declarations=True)  # validates both target nodes
             local_p, local_n = (str(arg.value) for arg in branch.args)
@@ -2296,8 +2440,14 @@ class InstanceCompiler:
             sign = 1.0 if (local_p, local_n) == pair else -1.0
             origin = self.make_ir(Origin, branch.token.source or self.model.source, branch.token.line, branch.token.column, self.instance.name, branch.expansion)
             identity = self.make_ir(BranchIdentity, self.instance.name, *pair)
+            if index in mixed:
+                source, residual = mixed[index]
+                value = self.make_ir(Forcing, self.scale_ir(source, sign), origin, checked)
+                checked = ()
+                self.compilation.contributions.append(self.make_ir(Contribution, identity, p, n, value, origin))
+                expression = residual
             value = self.scale_ir(expression, sign)
-            if self.forcing_seen and source_forcing_tree(value, self.allowed_condition_nodes, self):
+            if index not in mixed and self.forcing_seen and source_forcing_tree(value, self.allowed_condition_nodes, self):
                 value = self.make_ir(Forcing, value, origin, checked)
                 checked = ()
             self.compilation.contributions.append(self.make_ir(Contribution, identity, p, n, value, origin))

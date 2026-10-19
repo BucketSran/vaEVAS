@@ -16,7 +16,7 @@ from .frontend import Instance, compile_sources, parse_sources
 from .node_elaboration import scalarize_nodes
 from .parameters import bind_parameters
 from .runtime import DEFAULT_TIMEOUT, transient
-from .scs_sources import POINT_BUDGET, voltage_points
+from .scs_sources import POINT_BUDGET, voltage_points, analytic_source
 from .syntax import Token, _SUFFIX
 from .strobe import FIELDS as STROBE_FIELDS, expand as expand_strobe
 
@@ -356,6 +356,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
     if any(a>=b for a,b in zip(times,times[1:])):
         fail('output times collapse at binary64 resolution')
     waveforms,rounding,source_errors,pulse_proofs,source_shapes={},{},{},{},{}
+    analytic_sources={}
     occupied={'0',*saved,*[n for nodes,_,_ in source_specs for n in nodes],
               *[n for _,nodes,_,_ in devices for n in nodes],
               *[n for _,nodes,_,_ in behavioral_sources for n in nodes],
@@ -380,6 +381,10 @@ def load_scs(path: str | Path) -> ScsTestbench:
             behavioral_sources.append((token,nodes,reference,0.))
         if net in waveforms:
             source_fail('multiple voltage sources drive the same node')
+        if settings.get('type')=='sine':
+            analytic_sources[net]=analytic_source(settings,nodes,token.text,source_fail)
+            waveforms[net]=[]
+            continue
         points,error,proof=voltage_points(settings,stop,source_fail)
         waveforms[net]=[[t,v if floating or nodes[1]=='0' else -v] for t,v in points]
         rounding[token.text]=error
@@ -475,6 +480,8 @@ def load_scs(path: str | Path) -> ScsTestbench:
         fail(f'save names unknown scalar nodes: {sorted(unknown)}')
     manifest=dict(models=list(sources),instances=instances,tolerances=effective,
                   transient=dict(sources=waveforms,output_times=times,stop=stop,max_step=step,**strobe))
+    if analytic_sources:
+        manifest['transient']['analytic_sources']=analytic_sources
     if source_errors:
         manifest['transient']['source_errors']=source_errors
     if source_shapes:

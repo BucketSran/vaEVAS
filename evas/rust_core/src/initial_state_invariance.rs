@@ -227,7 +227,11 @@ pub(crate) fn unchanged_with_inputs(
             p.nodes.len()
         ];
         nodes[0] = I::ZERO;
-        for (name, bounds) in model.driven.iter().zip(trajectory.value_bounds(0.)) {
+        for (name, bounds) in model
+            .driven
+            .iter()
+            .zip(trajectory.checked_value_bounds(0.).ok()?)
+        {
             nodes[p.nodes.iter().position(|node| node == name)?] = bounds;
         }
         Some(prove_at_inputs(

@@ -16,17 +16,42 @@ fn constant(x: f64) -> E {
         terms: vec![],
     }
 }
-fn scale(x: f64, e: E) -> E {
-    if x == 1. {
-        e
-    } else {
-        E::Multiply {
-            left: Box::new(constant(x)),
-            right: Box::new(e),
-        }
+fn boxed_paid(e: E, work: Option<&crate::transition_source_plan::Work>) -> Result<Box<E>, Error> {
+    if let Some(w) = work {
+        w.debit(2, 1)?;
     }
+    Ok(Box::new(e))
+}
+fn scale_paid(
+    x: f64,
+    e: E,
+    work: Option<&crate::transition_source_plan::Work>,
+) -> Result<E, Error> {
+    if x == 1. {
+        return Ok(e);
+    }
+    Ok(E::Multiply {
+        left: boxed_paid(constant(x), work)?,
+        right: boxed_paid(e, work)?,
+    })
 }
 pub(crate) fn expand(e: &E, p: &Program, driven: &[String]) -> Result<E, Error> {
+    expand_metered(e, p, driven, None)
+}
+pub(crate) fn expand_paid(
+    e: &E,
+    p: &Program,
+    driven: &[String],
+    paid: &crate::transition_source_plan::Work,
+) -> Result<E, Error> {
+    expand_metered(e, p, driven, Some(paid))
+}
+fn expand_metered(
+    e: &E,
+    p: &Program,
+    driven: &[String],
+    paid: Option<&crate::transition_source_plan::Work>,
+) -> Result<E, Error> {
     fn walk(
         e: &E,
         p: &Program,
@@ -34,7 +59,12 @@ pub(crate) fn expand(e: &E, p: &Program, driven: &[String]) -> Result<E, Error> 
         active: &mut BTreeSet<usize>,
         work: &mut usize,
         depth: usize,
+        paid: Option<&crate::transition_source_plan::Work>,
     ) -> Result<E, Error> {
+        if let Some(w) = paid {
+            w.step()?;
+        }
+
         if depth > 64 || *work == 0 {
             return Err(Error::new(
                 "condition_precision",
@@ -42,34 +72,76 @@ pub(crate) fn expand(e: &E, p: &Program, driven: &[String]) -> Result<E, Error> 
             ));
         }
         *work -= 1;
-        let mut recurse = |e: &E| walk(e, p, driven, active, work, depth + 1);
+        let mut recurse = |e: &E| walk(e, p, driven, active, work, depth + 1, paid);
         Ok(match e {
             E::Affine { constant: c, terms } => {
                 let mut out = constant(*c);
                 for term in terms {
+                    if let Some(w) = paid {
+                        w.step()?;
+                    }
                     let n = term.node;
                     if n == 0 {
                         continue;
                     }
-                    let value = if driven.contains(&p.nodes[n]) {
+                    let is_driven = if let Some(w) = paid {
+                        let mut found = false;
+                        for name in driven {
+                            w.step()?;
+                            w.debit(2, name.len().min(p.nodes[n].len()) as u64)?;
+                            if name == &p.nodes[n] {
+                                found = true;
+                                break;
+                            }
+                        }
+                        found
+                    } else {
+                        driven.contains(&p.nodes[n])
+                    };
+                    let value = if is_driven {
+                        if let Some(w) = paid {
+                            w.debit(2, 2)?;
+                        }
                         E::Affine {
                             constant: 0.,
                             terms: vec![term.clone()],
                         }
                     } else {
+                        if let Some(w) = paid {
+                            w.debit(2, 1)?;
+                        }
                         if !active.insert(n) {
                             return Err(unsupported());
                         }
-                        let contributions: Vec<_> = p
-                            .contributions
-                            .iter()
-                            .filter(|c| c.positive == n || c.negative == n)
-                            .collect();
+                        let mut contributions = Vec::new();
+                        for c in &p.contributions {
+                            if let Some(w) = paid {
+                                w.step()?;
+                            }
+                            if c.positive == n || c.negative == n {
+                                if let Some(w) = paid {
+                                    w.debit(2, 1)?;
+                                }
+                                contributions.push(c);
+                            }
+                        }
                         let Some(first) = contributions.first() else {
                             return Err(unsupported());
                         };
-                        if contributions.iter().any(|c| c.branch != first.branch) {
-                            return Err(unsupported());
+                        for c in &contributions {
+                            if let Some(w) = paid {
+                                w.step()?;
+                                w.debit(
+                                    2,
+                                    (c.branch.instance.len()
+                                        + c.branch.local_positive.len()
+                                        + c.branch.local_negative.len())
+                                        as u64,
+                                )?;
+                            }
+                            if c.branch != first.branch {
+                                return Err(unsupported());
+                            }
                         }
                         // V(p,n)=rhs determines either endpoint only after the
                         // other endpoint has independently been determined.
@@ -84,6 +156,9 @@ pub(crate) fn expand(e: &E, p: &Program, driven: &[String]) -> Result<E, Error> 
                         let mut value = if reference == 0 {
                             constant(0.)
                         } else {
+                            if let Some(w) = paid {
+                                w.debit(2, 2)?;
+                            }
                             walk(
                                 &E::Affine {
                                     constant: 0.,
@@ -97,37 +172,38 @@ pub(crate) fn expand(e: &E, p: &Program, driven: &[String]) -> Result<E, Error> 
                                 active,
                                 work,
                                 depth + 1,
+                                paid,
                             )?
                         };
                         for c in contributions {
                             let sign = if c.positive == n { 1. } else { -1. };
-                            let rhs = walk(&c.rhs, p, driven, active, work, depth + 1)?;
+                            let rhs = walk(&c.rhs, p, driven, active, work, depth + 1, paid)?;
                             value = E::Add {
-                                left: Box::new(value),
-                                right: Box::new(scale(sign, rhs)),
+                                left: boxed_paid(value, paid)?,
+                                right: boxed_paid(scale_paid(sign, rhs, paid)?, paid)?,
                             };
                         }
                         active.remove(&n);
-                        scale(term.coefficient, value)
+                        scale_paid(term.coefficient, value, paid)?
                     };
                     out = E::Add {
-                        left: Box::new(out),
-                        right: Box::new(value),
+                        left: boxed_paid(out, paid)?,
+                        right: boxed_paid(value, paid)?,
                     };
                 }
                 out
             }
             E::Add { left, right } => E::Add {
-                left: Box::new(recurse(left)?),
-                right: Box::new(recurse(right)?),
+                left: boxed_paid(recurse(left)?, paid)?,
+                right: boxed_paid(recurse(right)?, paid)?,
             },
             E::Multiply { left, right } => E::Multiply {
-                left: Box::new(recurse(left)?),
-                right: Box::new(recurse(right)?),
+                left: boxed_paid(recurse(left)?, paid)?,
+                right: boxed_paid(recurse(right)?, paid)?,
             },
             E::Divide { left, right } => E::Divide {
-                left: Box::new(recurse(left)?),
-                right: Box::new(recurse(right)?),
+                left: boxed_paid(recurse(left)?, paid)?,
+                right: boxed_paid(recurse(right)?, paid)?,
             },
             E::Select {
                 relation,
@@ -138,17 +214,26 @@ pub(crate) fn expand(e: &E, p: &Program, driven: &[String]) -> Result<E, Error> 
                 origin,
             } => E::Select {
                 relation: *relation,
-                left: Box::new(recurse(left)?),
-                right: Box::new(recurse(right)?),
-                then_value: Box::new(recurse(then_value)?),
-                else_value: Box::new(recurse(else_value)?),
-                origin: origin.clone(),
+                left: boxed_paid(recurse(left)?, paid)?,
+                right: boxed_paid(recurse(right)?, paid)?,
+                then_value: boxed_paid(recurse(then_value)?, paid)?,
+                else_value: boxed_paid(recurse(else_value)?, paid)?,
+                origin: {
+                    if let Some(w) = paid {
+                        w.debit(2, (4 + origin.source.len() + origin.instance.len()) as u64)?;
+                        for (label, _) in &origin.expansion {
+                            w.step()?;
+                            w.debit(2, (label.len() + 1) as u64)?;
+                        }
+                    }
+                    origin.clone()
+                },
             },
             E::State { .. } | E::Operator { .. } => e.clone(),
             _ => return Err(unsupported()),
         })
     }
-    walk(e, p, driven, &mut BTreeSet::new(), &mut 8192, 0)
+    walk(e, p, driven, &mut BTreeSet::new(), &mut 8192, 0, paid)
 }
 
 pub(crate) fn bounds(e: &E, nodes: &[I], states: &[I], operators: &[I]) -> Result<I, Error> {

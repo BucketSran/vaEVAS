@@ -1,4 +1,4 @@
-"""Represent supported voltage sources as continuous PWL, without time sampling."""
+"""Preserve supported voltage sources as PWL or typed analytic descriptors."""
 from fractions import Fraction as Q
 import math
 
@@ -103,3 +103,19 @@ def voltage_points(settings, stop, fail):
                                       time_denominator=str(t.denominator),value_V=v)
                                   for t,v in shape]
     return points, _upper_float(rounding,fail), proof
+
+
+def analytic_source(settings, nodes, name, fail):
+    """Preserve explicit input parameters; no waveform samples or defaults."""
+    if '0' not in nodes:
+        fail('floating analytic source values require a separate topology certificate', unsupported=True)
+    allowed={'type','sinedc','ampl','freq','sinephase'}
+    if set(settings)!=allowed:
+        fail('sine source-value requires explicit sinedc/ampl/freq/sinephase and no other settings; vendor defaults are unresolved', unsupported=True)
+    if any(type(settings[k]) is not float or not math.isfinite(settings[k]) for k in allowed-{'type'}):
+        fail('sine parameters must be finite scalar numbers')
+    if settings['freq']<=0:
+        fail('sine source-value currently supports positive frequency only', unsupported=True)
+    return dict(kind='sine',**{k:settings[k] for k in allowed-{'type'}},
+                source_name=name,terminals=list(nodes),polarity=1 if nodes[1]=='0' or '0' not in nodes else -1,
+                parameter_origin='explicit-v1')

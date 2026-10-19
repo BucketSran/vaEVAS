@@ -315,6 +315,31 @@ cross 叶子保留 `guard_value`；timer 叶子不伪造 guard 值，只保留�
 
 <a id="input-initialization"></a>
 
+## 标量 analog function 的源类型保留候选
+
+函数的返回值、形参和局部变量保留声明的 `integer`／`real` 类型。
+传入 integer 形参、赋给 integer 局部量及返回 integer 结果时，分别执行该次赋值的转换；
+最近整数的半整数向远离零方向舍入，随后检查 signed32 范围。
+整数操作数的除法向零截断，余数与被除数同号；real 形参不会因实参写成整数而变成整数除法。
+例如 integer 函数先把实参 `2.5` 复制到 integer 形参 `x`，再计算 `x/2`，结果为 `1`；
+real 形参下的 `3/2` 为 `1.5`。未赋值的 integer 返回槽从零开始。
+
+内部展开节点 `function_assign` 保留各次赋值的类型义务与顺序，不是新的线协议节点。
+未使用的实参、局部赋值和未选中的分支仍保留检查义务；不能先消去它们再判断整数范围。
+动态 real 值不能仅凭函数返回类型取得整数资格，必须通过现有完整输入域证明。
+后置 clamp 不替代原中间值检查，也不开放一般电压表达式到整数的转换。
+需要实例类型绑定的调用在尚无该绑定的参数默认值、数组维度等入口明确拒绝；
+这表示当前实现范围有限，不表示这些源程序不合法。
+未调用的定义仍按原有结构规则校验，不能据此声称已验证所有未执行路径的数值域。
+
+语法类型由 [syntax.py](../../src/evas/syntax.py) 保存，
+[elaboration.py](../../src/evas/elaboration.py) 保留展开义务，
+[lowering.py](../../src/evas/lowering.py) 和
+[instance_compiler.py](../../src/evas/instance_compiler.py) 使用原整数算术与绑定检查。
+[独立公开合同](../../tests/test_integer_functions.py)覆盖复制顺序、正负舍入、除法类型、
+默认返回、溢出、未使用实参及名字绑定。本节描述本地候选；完整原修两轨400、CI与安装仍须绑定最终统一源码，
+不能把函数窄检查通过记为原369通过。
+
 ## 实际驱动输入的比较与有限点初值
 
 EVAS 接受 `@(initial_step) q=(V(in)>H);`，`q` 可为 real 或 integer。
@@ -1931,3 +1956,35 @@ integer 常量，先解释为32位无符号数，计数大于等于32时结果�
 
 线格式升至 IR31，Python 包与 kernel 候选身份为 0.24.0；IR30 和 IR31 相互拒绝。
 旧保存请求应从原 VA 重新编译，不能只改 `schema_version`。
+
+
+## IR32 private candidate: explicit analytic source values
+
+本节保留最初私有候选的锚点；实现已合入IR32本地共同候选，完整交付仍待验收。
+解析源切片只扩展物理输入值，不扩展正弦 guard、物理事件 sqrt 或 source×history。
+`DEV:scs-input`、`CROSS`、`TIMER`、`EVENT-ORDER` 的新增证据尚未获得交付验收；
+原件400与成熟IR31状态不变。显式 `sinedc/ampl/freq/sinephase` 通过 typed descriptor 传输，
+保留原终端、source名称、极性与参数出处。正 finite freq 是本实现支持域；
+未确证的厂商默认、AC phase、Meg完整后缀仍拒绝，不能由局部通过推断 Spectre 对齐。
+
+物理定义为 `polarity*(sinedc+ampl*sin(2*pi*freq*t+pi*sinephase/180))`。
+时间和全部参数先作为区间组合 phase，再调用已有有限 Taylor sin 证书。
+point、range与导数均保留区间；非binary PWL根用其真实根窗包围正弦，绝不创建有理正弦证明。
+phase与导数移相超出已有有限域时拒绝，不使用PWL拟合或nominal回退。
+
+请求入口创建唯一原 Work，原 limits `[128,8192,1000000000]` 不变。
+`AnalyticRequest` 私有能力在完整原program/provider/driven绑定后，只准常量初始化、
+直接仿射事件赋值、独立原PWL cross或fixed timer，以及直接held输出。resolve前后必须通过
+原binding逐字相等，不能借初始化或Graph reduction改写token。所有guard原始依赖均审核，
+包括0系数；sine、internal voltage或隐藏未知分支不取得guard根能力。
+
+`ProofOwner::History/Analytic` 只统一共同数学/拷贝的付费入口，不能授予History准入。
+旧直接投影算法与fold顺序不变，History bit镜像回归仍需通过。
+候选Frame、calendar、proof maps、空Operators与output存储在同Work下预付；拒绝不发布
+物理state、calendar、record或output，已用Work不返还。
+
+代码由 `scs_sources.py`/`scs.py`、`runtime.py`、IR32 `AnalyticSource`、
+`analytic_source.rs`、`analytic_request.rs`、`pwl.rs` 与共同event paid调用负责。
+公共1/6根采样与1/8 timer使用独立Fraction/Taylor答案；额外query、显式拒绝和原1e9自然耗尽
+的完整Frame两retry检查保留于原私有证据；共同候选还运行公开入口联合控制。
+完整Python由CI执行，局部结果不能替代交付CI，IR31原有完整400成绩不能移到IR32。

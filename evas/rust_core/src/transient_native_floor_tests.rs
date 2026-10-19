@@ -38,6 +38,7 @@ fn nf_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
             "positive":2,"negative":0,"rhs":{"op":"operator","operator":0},"origin":o}]})).unwrap();
     let t = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: vec![],
             pwl: vec![vec![[0., 0.03], [0.2, 0.03], [0.4, 0.09], [1., 0.09]]],

@@ -23,6 +23,8 @@ mod exact_time;
 mod expression;
 mod guard_trajectory;
 mod held_integer_target;
+mod history_admission;
+mod history_storage;
 mod idt;
 mod idtmod;
 mod initialization;
@@ -204,3 +206,7 @@ mod tests {
 }
 
 mod math_functions;
+
+mod analytic_source;
+
+mod analytic_request;

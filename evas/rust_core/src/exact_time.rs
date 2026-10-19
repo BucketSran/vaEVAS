@@ -192,6 +192,46 @@ pub(crate) const PAIR_SIGN_FEE: u64 = 64 * (136 + 4 * 2 * 2 * 68 + 68 + 4 * 16);
 pub(crate) const TRIPLE_SIGN_FEE: u64 = 64 * (200 + 8 * (3 * 3 + 3 * 2 * 100) + 100);
 pub(crate) const ENCLOSE_SIGN_CALLS: u64 = 66; // two endpoints + <=64 rank bisections
 impl Clock {
+    pub(crate) fn bounds_with_work(
+        self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<I>, crate::ir::Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 16)?;
+        if self.index > crate::schedule::EVENT_BUDGET {
+            return Ok(None);
+        }
+        let rounded = (self.index as f64).mul_add(self.period, self.start);
+        if !rounded.is_finite() {
+            return Ok(None);
+        }
+        let point = |start| Self {
+            start,
+            period: 0.,
+            index: 0,
+        };
+        let Some(order) = self.order_with_work(point(rounded), w)? else {
+            return Ok(None);
+        };
+        let bounds = match order {
+            std::cmp::Ordering::Less => I {
+                lo: rounded.next_down(),
+                hi: rounded,
+            },
+            std::cmp::Ordering::Equal => I::point(rounded),
+            std::cmp::Ordering::Greater => I {
+                lo: rounded,
+                hi: rounded.next_up(),
+            },
+        };
+        if !bounds.finite()
+            || self.order_with_work(point(bounds.lo), w)? == Some(std::cmp::Ordering::Less)
+            || self.order_with_work(point(bounds.hi), w)? == Some(std::cmp::Ordering::Greater)
+        {
+            return Ok(None);
+        }
+        Ok(Some(bounds))
+    }
     pub(crate) fn order_with_work(
         self,
         other: Self,

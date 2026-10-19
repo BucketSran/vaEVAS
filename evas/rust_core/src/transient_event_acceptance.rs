@@ -87,6 +87,16 @@ fn observation_seed(
     Ok(seed)
 }
 
+#[cfg(test)]
+pub(super) fn test_observation_seed(
+    model: &EventModel,
+    phases: &[(Frame, Vec<ScheduledEvent>)],
+    phase: usize,
+    time: f64,
+) -> Result<Frame, Error> {
+    observation_seed(model, phases, phase, time)
+}
+
 // Held roots already have their final certificates. History roots need the
 // extended candidate trajectory, bounded first by independent deadlines.
 pub(super) enum CalendarPlan {
@@ -158,6 +168,23 @@ impl PreparedEvents {
         calendar: &[ScheduledEvent],
         strategy: Strategy,
     ) -> Result<Self, Error> {
+        if let Some(token) = &model.analytic_request {
+            // Bound shallow phase/record vectors and the complete phase-output
+            // scan before any candidate allocation. Deep Frames/roots retain
+            // their own paid clone methods below. At most 64 causal microevents.
+            let outputs = trajectory.config.output_times.len() as u64;
+            let events = calendar.len() as u64;
+            let row =
+                (model.program.nodes.len() * 8 + model.program.states.len() * 16 + 512) as u64;
+            token.work().debit(
+                2,
+                outputs
+                    .saturating_mul(events.saturating_add(1))
+                    .saturating_mul(128)
+                    .saturating_add(events.saturating_mul(row))
+                    .saturating_add(16_384),
+            )?;
+        }
         // Close old-flow observation/reset before predicting changed flow.
         // All subsequent work owns a candidate; the accepted frame, event
         // cursor, records and old calendar remain intact on every error.
@@ -181,7 +208,7 @@ impl PreparedEvents {
             (controller.accepted.candidate_clone()?, Vec::new()),
             (
                 next.candidate_clone()?,
-                calendar[controller.event..end].to_vec(),
+                crate::schedule::copy_calendar(&calendar[controller.event..end], model)?,
             ),
         ];
         let mut microevents = 0;
@@ -268,7 +295,7 @@ impl PreparedEvents {
                 strategy,
                 CalendarScope::Bounded,
             )?;
-            let physical_batch = future[..batch.end].to_vec();
+            let physical_batch = crate::schedule::copy_calendar(&future[..batch.end], model)?;
             static_cursor += batch.end;
             next = batch.frame;
             future = batch.future;
@@ -411,9 +438,14 @@ impl Controller {
                             }
                             cluster_end += 1;
                         }
-                        calendar[end..(cluster_end + 1).min(calendar.len())].to_vec()
+                        crate::schedule::copy_calendar(
+                            &calendar[end..(cluster_end + 1).min(calendar.len())],
+                            model,
+                        )?
                     }
-                    CalendarScope::Bounded => calendar[end..].to_vec(),
+                    CalendarScope::Bounded => {
+                        crate::schedule::copy_calendar(&calendar[end..], model)?
+                    }
                 };
                 self.prepare_physical_history(
                     model,
@@ -514,14 +546,14 @@ impl Controller {
                 hook(&mut next);
             }
         });
-        let inputs = trajectory.value_bounds(next.time);
-        // Legacy bounds certify only the independently reduced rows. Its zero
-        // coordinates are private and must be replaced by original forcing
-        // certificates below before the candidate leaves this transaction.
+        let inputs = trajectory.checked_value_bounds(next.time)?;
+        // Legacy bounds certify the residual rows. Remove only an installed
+        // source offset from this exact physical phase; a nonzero same-branch
+        // residual remains live. Full original certificates are rechecked below.
         let projected = model
             .forcing
             .as_ref()
-            .map(|g| g.legacy_voltage_view(&next.solution.voltages))
+            .map(|g| g.legacy_voltage_view(next.time, &next.solution.voltages, &next.circuit))
             .transpose()?;
         let legacy_voltages = projected.as_deref().unwrap_or(&next.solution.voltages);
         let (_, nodes) = model.certify_observation(
@@ -843,6 +875,7 @@ mod tests {
         .unwrap();
         let mut trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![vec![[0., 0.3], [0.5, 0.3]]],
@@ -1327,6 +1360,7 @@ mod passive_seed_review {
         assert_eq!(model.passive_events, vec![true, false]);
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 pwl: vec![],
                 output_times: vec![0., 0.75, 1.875, 2.5],

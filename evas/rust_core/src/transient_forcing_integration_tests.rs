@@ -89,10 +89,23 @@ fn raw_forcing_rejects_floor_before_shared_owner_or_initialization() {
     rejects_scope(v);
 }
 #[test]
-fn raw_forcing_rejects_native_bits_even_when_same_numeric_transition_values() {
+fn raw_forcing_certifies_typed_native_target_with_same_numeric_transition_values() {
     let mut v = request_value();
     add_native(&mut v);
-    rejects_scope(v);
+    let result = crate::run(request(v)).unwrap();
+    for (row, &time) in result
+        .solutions
+        .iter()
+        .zip(&result.transient.as_ref().unwrap().times)
+    {
+        assert_eq!(row.voltages[2], time);
+        if time == 0. {
+            assert_eq!(row.voltages[3], 0.);
+        }
+        if time >= 0.375 {
+            assert_eq!(row.voltages[3], 1.);
+        }
+    }
 }
 #[test]
 fn raw_forcing_rejects_slew_instead_of_silently_selecting_other_dispatch() {

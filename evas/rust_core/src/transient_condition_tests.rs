@@ -6,6 +6,7 @@ use serde_json::{json, Value};
 fn source(points: &[[f64; 2]]) -> Trajectory {
     Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![points.to_vec()],

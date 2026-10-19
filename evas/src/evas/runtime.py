@@ -29,17 +29,22 @@ def solve(program: Program, driven: list[str], samples: list[list[float]], *,
 
 def transient(program: Program, sources: dict[str, list[list[float]]],
               output_times: list[float], *, stop: float, max_step: float,
+              analytic_sources: dict[str, dict] | None = None,
               source_errors: dict[str, float] | None = None,
               source_shapes: dict[str, list[dict]] | None = None,
               strobetimes=None, strobeperiod=None, strobedelay=0.0, skipstart=0.0, skipstop=None,
               kernel: str | Path | None = None, vabstol: float | None = None, reltol: float | None = None,
               absolute: float | None = None, relative: float | None = None,
               timeout: float | None = DEFAULT_TIMEOUT) -> dict:
-    """Advance PWL physical inputs in Rust; observations are post-event values."""
+    """Advance typed physical inputs in Rust; observations are post-event values."""
     request = dict(program=program.to_dict(), driven=list(sources), samples=[],
                    transient=dict(pwl=list(sources.values()), output_times=output_times,
                                   stop=stop, max_step=max_step),
                    tolerances=_tolerances(vabstol, reltol, absolute, relative))
+    if analytic_sources is not None:
+        if not isinstance(analytic_sources,dict) or set(analytic_sources)-set(sources):
+            raise ValueError('analytic_sources must map driven names to typed descriptors')
+        request['transient']['analytic_sources']=[analytic_sources.get(n) for n in sources]
     if source_errors is not None or source_shapes is not None:
         source_errors = {} if source_errors is None else source_errors
         source_shapes = {} if source_shapes is None else source_shapes

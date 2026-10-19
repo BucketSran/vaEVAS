@@ -7,7 +7,7 @@ from .syntax import Assignment, Conditional, Event, Expr, Loop, Model, OPERATOR_
 
 
 def inline_functions(model: Model) -> Model:
-    """Substitute real input-only functions; never duplicate history call sites."""
+    """Substitute typed input-only functions; never duplicate history call sites."""
     if not model.functions:
         return model
     def fail(message, token, *, code="compile_error"):
@@ -92,9 +92,14 @@ def inline_functions(model: Model) -> Model:
             if item.op in OPERATOR_NAMES:
                 fail('function arguments cannot contain history call sites', item.token)
             pending.extend(item.args)
-        local = dict(zip(function.inputs, args))
+        def assignment(value, kind, token):
+            return Expr('function_assign', kind, (value,), token, result_type=kind)
+        local = {n:assignment(value, function.variable_types[n], expr.token)
+                 for n,value in zip(function.inputs,args)}
+        if function.return_type == 'integer':
+            local[name] = Expr('number', 0., (), function.token, result_type='integer')
         names = function.variables | {name}
-        obligations.extend(args)
+        obligations.extend(local[n] for n in function.inputs)
         def statements(body, bindings, expansion_depth):
             for statement in body:
                 # Branch descent and calls share a budget: separately bounded
@@ -129,7 +134,9 @@ def inline_functions(model: Model) -> Model:
                     fail('pure analog function assignments require scalar targets', statement.token)
                 if statement.name not in names:
                     fail('function assignments must target its local variables or return value', statement.token)
-                bindings[statement.name] = unpack(expand(statement.rhs, bindings, names, (*stack, name), expansion_depth+1), obligations)
+                value = unpack(expand(statement.rhs, bindings, names, (*stack, name), expansion_depth+1), obligations)
+                kind = function.return_type if statement.name == name else function.variable_types[statement.name]
+                bindings[statement.name] = assignment(value, kind, statement.token)
                 bounded(bindings[statement.name])
                 obligations.append(bindings[statement.name])
             return bindings
@@ -137,10 +144,10 @@ def inline_functions(model: Model) -> Model:
         if name not in local:
             fail('function must assign its return value', function.token)
         # Retain every argument and RHS through instance binding, including
-        # discarded decisions and aliases. Only the real result is substituted
+        # discarded decisions and aliases. Only the typed result is substituted
         # into the caller's computation; closed index/operator contexts stay local.
         bounded(local[name])
-        return replace(checked(local[name], obligations, expr), result_type="real")
+        return replace(checked(local[name], obligations, expr), result_type=function.return_type)
 
     def body(statements):
         from .syntax import Display
@@ -165,7 +172,7 @@ def inline_functions(model: Model) -> Model:
                 result.append(replace(statement, **updates))
         return tuple(result)
 
-    # Validate even unused declarations with symbolic real arguments, so bad
+    # Validate even unused declarations structurally, so bad
     # names, access/filter calls and recursive definitions cannot hide unused.
     for function in model.functions.values():
         dummy = Expr('call', function.name,

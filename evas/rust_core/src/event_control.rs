@@ -11,8 +11,12 @@ pub(crate) struct Admission<'a> {
     source_floor: bool,
     pub(crate) targets: std::collections::BTreeSet<usize>,
     pub(crate) copy_items: usize,
+    history_candidate: bool,
 }
 impl<'a> Admission<'a> {
+    pub(crate) fn history_candidate(&self) -> bool {
+        self.history_candidate
+    }
     pub(crate) fn program(&self) -> &'a Program {
         self.program
     }
@@ -93,6 +97,168 @@ fn floor_metadata(
 }
 fn floor_metadata_cost(event_count: usize) -> usize {
     32usize.saturating_add(event_count.saturating_mul(32))
+}
+
+// Dispatch metadata only. Reuse the mandatory original Value and its existing
+// 100000 structural allowance. The table stores node coordinates, never copied
+// expressions or an expanded voltage graph. Insufficient metadata leaves the
+// established route in charge; it does not grant admission or fresh work.
+fn history_candidate(
+    value: &Value,
+    items: &mut usize,
+    work: Option<&crate::transition_source_plan::Work>,
+) -> Result<bool, Error> {
+    struct Scan<'a> {
+        items: &'a mut usize,
+        work: Option<&'a crate::transition_source_plan::Work>,
+        error: Option<Error>,
+    }
+    let mut scan = Scan {
+        items,
+        work,
+        error: None,
+    };
+    fn candidate(value: &Value, scan: &mut Scan<'_>) -> Option<bool> {
+        fn visit(scan: &mut Scan<'_>) -> Option<()> {
+            if *scan.items >= 100_000 {
+                return None;
+            }
+            if let Some(w) = scan.work {
+                if let Err(error) = w.step() {
+                    scan.error = Some(error);
+                    return None;
+                }
+            }
+            *scan.items += 1;
+            crate::diagnostics::counter("history_structural_metadata_visits", 1);
+            Some(())
+        }
+        fn selected(value: &Value, scan: &mut Scan<'_>) -> Option<bool> {
+            visit(scan)?;
+            match value {
+                Value::Object(m) => {
+                    if m.get("op").and_then(Value::as_str) == Some("select") {
+                        return Some(true);
+                    }
+                    for child in m.values() {
+                        if selected(child, scan)? {
+                            return Some(true);
+                        }
+                    }
+                }
+                Value::Array(a) => {
+                    for child in a {
+                        if selected(child, scan)? {
+                            return Some(true);
+                        }
+                    }
+                }
+                _ => (),
+            }
+            Some(false)
+        }
+        fn reads(value: &Value, nodes: &[usize], scan: &mut Scan<'_>) -> Option<bool> {
+            visit(scan)?;
+            match value {
+                Value::Object(m) => {
+                    if let Some(n) = m.get("node").and_then(Value::as_u64) {
+                        for &node in nodes {
+                            visit(scan)?;
+                            if n as usize == node {
+                                return Some(true);
+                            }
+                        }
+                    }
+                    for child in m.values() {
+                        if reads(child, nodes, scan)? {
+                            return Some(true);
+                        }
+                    }
+                }
+                Value::Array(a) => {
+                    for child in a {
+                        if reads(child, nodes, scan)? {
+                            return Some(true);
+                        }
+                    }
+                }
+                _ => (),
+            }
+            Some(false)
+        }
+        fn guarded(value: &Value, nodes: &[usize], scan: &mut Scan<'_>) -> Option<bool> {
+            visit(scan)?;
+            match value {
+                Value::Object(m) => {
+                    if m.get("op").and_then(Value::as_str) == Some("select") {
+                        for key in ["left", "right"] {
+                            if let Some(v) = m.get(key) {
+                                if reads(v, nodes, scan)? {
+                                    return Some(true);
+                                }
+                            }
+                        }
+                    }
+                    for child in m.values() {
+                        if guarded(child, nodes, scan)? {
+                            return Some(true);
+                        }
+                    }
+                }
+                Value::Array(a) => {
+                    for child in a {
+                        if guarded(child, nodes, scan)? {
+                            return Some(true);
+                        }
+                    }
+                }
+                _ => (),
+            }
+            Some(false)
+        }
+        let Some(operators) = value.get("operators").and_then(Value::as_array) else {
+            return Some(false);
+        };
+        let mut transition = false;
+        for operator in operators {
+            visit(scan)?;
+            if operator.get("kind").and_then(Value::as_str) == Some("transition") {
+                transition = true;
+                break;
+            }
+        }
+        if !transition {
+            return Some(false);
+        }
+        let Some(contributions) = value.get("contributions").and_then(Value::as_array) else {
+            return Some(false);
+        };
+        let mut outputs = Vec::new();
+        for c in contributions {
+            visit(scan)?;
+            let positive = c.get("positive").and_then(Value::as_u64)?;
+            let negative = c.get("negative").and_then(Value::as_u64)?;
+            if (negative == 0 || positive == 0) && selected(c.get("rhs")?, scan)? {
+                visit(scan)?;
+                outputs.push(if negative == 0 { positive } else { negative } as usize);
+            }
+        }
+        if outputs.is_empty() {
+            return Some(false);
+        }
+        for c in contributions {
+            visit(scan)?;
+            if guarded(c.get("rhs")?, &outputs, scan)? {
+                return Some(true);
+            }
+        }
+        Some(false)
+    }
+    let found = candidate(value, &mut scan);
+    if let Some(error) = scan.error {
+        return Err(error);
+    }
+    Ok(found.unwrap_or(false))
 }
 
 pub(crate) fn validate(program: &Program) -> Result<Admission<'_>, Error> {
@@ -344,7 +510,9 @@ pub(crate) fn admit<'a>(
             "checked event arithmetic cannot appear in an event trigger",
         ));
     }
+    let history_candidate = history_candidate(&value, &mut items, work)?;
     Ok(Admission {
+        history_candidate,
         program,
         floor_events,
         source_floor,

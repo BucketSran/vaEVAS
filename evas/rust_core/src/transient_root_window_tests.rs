@@ -30,6 +30,7 @@ fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
     let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             pwl: vec![vec![[0., 0.], [0.3, 0.], [0.4, 0.9], [0.8, 0.9]]],
             output_times: vec![0., 0.05, 0.2, 0.325, 0.45, 0.8],

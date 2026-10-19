@@ -20,6 +20,7 @@ fn fixture(good: bool) -> (EventModel, Trajectory, Controller, Vec<ScheduledEven
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: vec![],
             pwl: vec![vec![[0., 0.16], [1., 0.16]]],

@@ -6,6 +6,8 @@ use crate::interval::Interval as I;
 use crate::ir::{EventMathFunction, Expression, StateKind, Term};
 use crate::pwl::Trajectory;
 use std::collections::BTreeSet;
+#[path = "event_history_time.rs"]
+mod history;
 
 pub(crate) use crate::exact_source::TimeProofs;
 
@@ -129,6 +131,51 @@ fn expression_with_points(
         // No zero cancellation or unknown scalar equivalence is a provenance proof.
         _ => None,
     }
+}
+
+pub(crate) fn apply_charged(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    selection: &Selection,
+    before: &TimeProofs,
+    root: Option<&RootTime>,
+    before_bounds: &[I],
+    after_bounds: &[I],
+) -> Result<TimeProofs, crate::ir::Error> {
+    if let Some(w) = crate::event_value_proof::history::work(model) {
+        return history::apply(
+            model,
+            trajectory,
+            selection,
+            before,
+            root,
+            before_bounds,
+            after_bounds,
+            w,
+        );
+    }
+    Ok(apply(
+        model,
+        trajectory,
+        selection,
+        before,
+        root,
+        before_bounds,
+        after_bounds,
+    ))
+}
+pub(crate) fn copy_history(
+    source: &TimeProofs,
+    w: &crate::transition_source_plan::Work,
+) -> Result<TimeProofs, crate::ir::Error> {
+    history::copy_map(source, w)
+}
+pub(crate) fn equal_history(
+    a: &TimeProofs,
+    b: &TimeProofs,
+    w: &crate::transition_source_plan::Work,
+) -> Result<bool, crate::ir::Error> {
+    history::equal(a, b, w)
 }
 
 pub(crate) fn apply(
@@ -302,6 +349,7 @@ mod tests {
         let m = EventModel::new(p, vec!["alias".into()], Tolerances::default()).unwrap();
         let t = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 pwl: vec![vec![[0., 0.], [1., 1.]]],
                 output_times: vec![0., 1.],
@@ -930,6 +978,7 @@ mod held_review_tests {
     fn trajectory(fake: Vec<[f64; 2]>) -> Trajectory {
         let mut t = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 pwl: vec![vec![[0., 0.], [0.25, 0.25], [1., 1.]], fake],
                 strobetimes: vec![],
@@ -1092,6 +1141,7 @@ mod held_point_tests {
     fn trajectory(good: bool) -> Trajectory {
         Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![vec![

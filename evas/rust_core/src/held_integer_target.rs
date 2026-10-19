@@ -528,6 +528,7 @@ mod auxiliary_budget_tests {
     fn context(p: &Program, limit: u64) -> Arc<ProofContext> {
         let trajectory = crate::pwl::Trajectory::new(
             crate::ir::TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![],

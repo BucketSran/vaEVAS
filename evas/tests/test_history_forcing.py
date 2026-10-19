@@ -227,7 +227,7 @@ V(y)<+transition(q,0,0.125,0.125);end endmodule"""},
                 self.assertEqual(current_engine.rsplit('-',1)[0],previous_engine.rsplit('-',1)[0])
                 self.assertTrue(current_engine.endswith('-0.24.0'))
                 self.assertTrue(previous_engine.endswith('-0.21.0'))
-                self.assertEqual(current.pop('schema_version'),31)
+                self.assertEqual(current.pop('schema_version'),32)
                 self.assertEqual(previous.pop('schema_version'),28)
                 self.assertEqual(current,previous)
                 self.assertFalse(any(k.startswith('forcing_') for k in diag['counters']))

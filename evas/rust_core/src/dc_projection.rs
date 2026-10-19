@@ -216,6 +216,7 @@ mod tests {
         })).unwrap();
         let t = Trajectory::new(
             crate::ir::TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![vec![[0., 0.75], [2., 0.75]], vec![[0., 0.25], [2., 0.25]]],

@@ -35,6 +35,7 @@ fn fixture_with_period(
     let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: vec![],
             pwl: vec![vec![[0., 0.], [1., 1.]]],
@@ -272,6 +273,7 @@ fn branch_review_same_controller_failure_keeps_history_proof_records_then_retrie
     let traj = |points| {
         Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 pwl: vec![points],
                 strobetimes: vec![],

@@ -1,0 +1,161 @@
+//! Public Rust consumer for the startup history, source gate and clock sample.
+use evas_kernel::{
+    ir::{Request, SCHEMA_VERSION},
+    run,
+};
+use serde_json::json;
+#[path = "../src/history_consumer_fixture.rs"]
+mod source_fixture;
+use source_fixture::fixture;
+#[test]
+fn actual_transition_half_edge_and_same_clock_sample() {
+    let request: Request = serde_json::from_value(fixture()).unwrap();
+    let result =
+        run(request).expect("startup history gate must execute through the public Rust consumer");
+    assert_eq!(result.solutions.len(), 8);
+    let core = [0., 0., 0., 0., 0., 0.625, 0.625, 0.625];
+    let sampled = [0., 0., 0., 0., 0., 0., 0.625, 0.625];
+    for (i, row) in result.solutions.iter().enumerate() {
+        assert!(
+            (row.voltages[3] - core[i]).abs() < 1e-9,
+            "core at {}: {:?}",
+            i,
+            row.voltages
+        );
+        assert!(
+            (row.voltages[4] - sampled[i]).abs() < 1e-9,
+            "sample at {}: {:?}",
+            i,
+            row.voltages
+        );
+        assert!((row.voltages[5] - core[i]).abs() < 1e-9);
+    }
+}
+
+#[test]
+fn history_gate_without_downstream_clamp() {
+    let mut value = fixture();
+    value["program"]["contributions"][3]["rhs"] =
+        json!({"op":"affine","constant":0.,"terms":[{"node":3,"coefficient":1.}]});
+    let request: Request = serde_json::from_value(value).unwrap();
+    run(request).expect("single source-affine history gate must execute");
+}
+#[test]
+fn history_gate_without_sample_or_clamp() {
+    let mut value = fixture();
+    value["program"]["events"]
+        .as_array_mut()
+        .unwrap()
+        .truncate(1);
+    value["program"]["contributions"][3]["rhs"] =
+        json!({"op":"affine","constant":0.,"terms":[{"node":3,"coefficient":1.}]});
+    let request: Request = serde_json::from_value(value).unwrap();
+    run(request).expect("single history gate without callback sampling must execute");
+}
+
+#[test]
+fn midpoint_adjacent_floats_preserve_strict_history_comparison() {
+    let mut value = fixture();
+    let midpoint = 0.625_f64;
+    let before = f64::from_bits(midpoint.to_bits() - 1);
+    let after = f64::from_bits(midpoint.to_bits() + 1);
+    value["transient"]["output_times"] = json!([0., before, midpoint, after, 1.]);
+    let result = run(serde_json::from_value(value).unwrap())
+        .expect("adjacent queries must not change the physical gate");
+    assert_eq!(result.solutions[1].voltages[3], 0.);
+    assert_eq!(result.solutions[2].voltages[3], 0.);
+    assert!((result.solutions[3].voltages[3] - 0.625).abs() < 1e-10);
+}
+#[test]
+fn invalid_history_graphs_and_masked_domains_are_rejected() {
+    for kind in [
+        "cycle",
+        "double_driver",
+        "floating",
+        "masked_divisor",
+        "bilinear_guard",
+        "foreign_state",
+        "nonfinite_hidden_arm",
+        "unused_non_transition",
+    ] {
+        let mut value = fixture();
+        let node =
+            |n: usize| json!({"op":"affine","constant":0.,"terms":[{"node":n,"coefficient":1.}]});
+        match kind {
+            "cycle" => value["program"]["contributions"][1]["rhs"]["then_value"] = node(5),
+            "double_driver" => {
+                let mut c = value["program"]["contributions"][1].clone();
+                c["branch"]["instance"] = json!("other");
+                c["origin"]["instance"] = json!("other");
+                c["rhs"] = json!({"op":"affine","constant":1.,"terms":[]});
+                value["program"]["contributions"]
+                    .as_array_mut()
+                    .unwrap()
+                    .push(c);
+            }
+            "floating" => {
+                value["program"]["nodes"]
+                    .as_array_mut()
+                    .unwrap()
+                    .push(json!("floating"));
+                value["program"]["contributions"][3]["rhs"]["left"] = node(6);
+            }
+            "masked_divisor" => {
+                value["program"]["contributions"][3]["rhs"]["then_value"] = json!({"op":"divide","left":{"op":"affine","constant":1.,"terms":[]},"right":{"op":"affine","constant":0.,"terms":[]}})
+            }
+            "bilinear_guard" => {
+                value["program"]["contributions"][3]["rhs"]["left"] =
+                    json!({"op":"multiply","left":node(1),"right":node(2)})
+            }
+            "nonfinite_hidden_arm" => {
+                value["program"]["contributions"][3]["rhs"]["then_value"] = json!({"op":"multiply","left":{"op":"affine","constant":f64::MAX,"terms":[]},"right":{"op":"affine","constant":2.,"terms":[]}})
+            }
+            "unused_non_transition" => {
+                let mut origin = value["program"]["operators"][0]["origin"].clone();
+                origin["column"] = json!(2);
+                value["program"]["operators"].as_array_mut().unwrap().push(json!({"kind":"abs_delay","input":{"op":"state","state":0},"delay":0.125,"origin":origin}));
+            }
+            _ => {
+                value["program"]["states"]
+                    .as_array_mut()
+                    .unwrap()
+                    .push(json!({"instance":"other","name":"foreign","kind":"real","initial":0.}));
+                value["program"]["contributions"][3]["rhs"]["then_value"] =
+                    json!({"op":"state","state":2});
+            }
+        }
+        assert!(
+            run(serde_json::from_value(value).unwrap()).is_err(),
+            "unsupported {kind} was silently admitted"
+        );
+    }
+}
+
+#[test]
+fn paid_delayed_transition_queue_reaches_the_ordinary_consumer() {
+    let mut value = fixture();
+    value["program"]["operators"][0]["delay"] = json!(0.0625);
+    value["transient"]["output_times"] = json!([0., 0.5, 0.5625, 0.625, 0.6875, 0.71875, 0.75, 1.]);
+    let (result, report) = evas_kernel::diagnostics::capture(Default::default(), || {
+        run(serde_json::from_value(value).unwrap())
+    });
+    let result = result.expect("paid held delay queue must preserve physical startup timing");
+    let startup = [0., 0., 0., 0.25, 0.5, 0.625, 0.75, 1.];
+    let core = [0., 0., 0., 0., 0., 0.625, 0.625, 0.625];
+    let sampled = [0., 0., 0., 0., 0., 0., 0.625, 0.625];
+    for (i, row) in result.solutions.iter().enumerate() {
+        assert_eq!(row.voltages[2], startup[i]);
+        assert_eq!(row.voltages[3], core[i]);
+        assert_eq!(row.voltages[4], sampled[i]);
+        assert_eq!(row.voltages[5], core[i]);
+        assert!(row.max_residual_ratio <= 1.);
+    }
+    assert!(
+        report
+            .counters
+            .get("history_storage_growth")
+            .copied()
+            .unwrap_or(0)
+            > 0
+    );
+}

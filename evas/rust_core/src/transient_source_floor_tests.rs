@@ -14,6 +14,7 @@ fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
         "contributions":[{"branch":{"instance":"M","local_positive":"out","local_negative":"ref","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"operator","operator":0},"origin":o}]})).unwrap();
     let t = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: vec![],
             pwl: vec![vec![[0., 0.03], [1., 0.03]]],
@@ -497,6 +498,7 @@ fn long_named_zero_floor_fixture() -> (EventModel, Trajectory) {
     })).unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: vec![],
             pwl,
