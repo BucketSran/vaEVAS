@@ -273,7 +273,8 @@ def elaborate_loops(model: Model, parameter):
 
     def substitute_value(expr, indices, memo):
         if expr.op == 'parameter' and expr.value in indices:
-            return Expr('number', float(indices[expr.value]), (), expr.token)
+            # The static control is validated signed32 before it enters indices.
+            return Expr('number', float(indices[expr.value]), (), expr.token, result_type='integer')
         path = (*expr.expansion,*indices.items())
         if len(path) > MAX_SOURCE_NESTING:
             fail('expanded call-site identity depth budget exceeded', expr.token, code="resource_budget")

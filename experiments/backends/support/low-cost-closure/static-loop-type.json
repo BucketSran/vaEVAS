@@ -1,0 +1,82 @@
+{
+  "status": "local branch compiler type fix; full candidate acceptance pending",
+  "checked_at_utc": "2026-10-19T01:30:11.452582+00:00",
+  "base_revision": "0d8f76a35c51d612429cc5e23f9a146431456901",
+  "capabilities": [
+    "LANG",
+    "EVENT-ORDER"
+  ],
+  "contract": "Only validated static scalar integer/genvar loop-index replacement retains source integer type. Preserve original token, order, control assignments, signed32 checks and all4096/100000 budgets. Real operands retain real type.",
+  "sources": {
+    "evas/src/evas/elaboration.py": "83831cef826e704a96f1a2e29bc507f351448173498af66328b306319d93e934",
+    "evas/tests/test_static_loop_integer_type.py": "e2eb35534f231577ccefa37ef85e6dc289174e83276fa2f8d096c6022405c3ad"
+  },
+  "independent_oracles": [
+    "Literal signed-remainder expected sequences[-2,-1,0,1],nested[0,1,2,3],genvar[0,1,0,1]; Fraction interprets constant public IR without EVAS evaluator",
+    "Public default Rust consumer displays q=-2,-1,0,1 in source order; saved output [0,1,1] at0/1/2"
+  ],
+  "red": {
+    "scope": "actual main checkout before production hunk; same final7method test",
+    "tests": 7,
+    "errors": 3,
+    "failed_negative_subcases": 2,
+    "receipt_sha256": "6518b1fa4b09cbb6df885f0e596360e76e9a1046bddc61f3701acd2896429796",
+    "stderr_sha256": "2ffbeeb9004949eecad4177162c9a0c8152c2c33c3e02510514b329a38551718"
+  },
+  "green": {
+    "scope": "7new methods plus66existing loop/integer compatibility methods; not completePython",
+    "passed": 73,
+    "elapsed_s": 80.686,
+    "guardian_timeout_s": 90,
+    "cleanup_confirmed": true,
+    "receipt_sha256": "178fd626369880f89e295e41e6094ae952d330744014b18751827aa2084a11c1",
+    "stderr_sha256": "c91fbcdf827fa32ba96b2ceeeaf0b70057150e0caeac4b5507ce4449888aef09",
+    "kernel_sha256": "bdbfb3039a2a3b7b8176c7f28e8b5b6f474aaa5ea33a973ba63ba4fadf337fbe",
+    "Rust_inputs_unchanged": true
+  },
+  "early_checks": {
+    "passed": true,
+    "acceptance_complete": false,
+    "full400": false,
+    "receipt_sha256": "71a556e1ca0523d99df9c7de894bfde940331cb9d6ac44237b60e8a89507cf9c"
+  },
+  "compatibility": [
+    "Real literal/variable operands still reject",
+    "Intermediate overflow rejected before remainder or outer multiplication byzero",
+    "Body writes to index, signed32 control overflow and4096 total expansion still reject",
+    "Existing event/genvar/initial loops and typed integer arithmetic passed"
+  ],
+  "qualification": {
+    "new_original_or_revised400_PASS": 0,
+    "original027_rerun": false,
+    "fullPython_executor": "GitHub CI only; new candidate pending",
+    "Spectre_or_formalQ": false
+  },
+  "limits": [
+    "Historical memory-only027 type counterfactual still reached cumulative100001>100000; no quota changed and no complete027PASS claimed",
+    "Other027 history/array/Floor consumers remain independent obligations",
+    "Full receipts and frozen original inputs retained local-only in the existing task run; hashes do not provide public downloads"
+  ],
+  "prior_art": {
+    "standard": "Accellera Verilog-AMS2.4 sections3.4/3.5 and5.7: integer/genvar source types and procedural loop order; https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf",
+    "legacy": "Fixed6cb6fa7a parser.py1032..1054 and1118..1125 validates finite integer genvar then stores float NumberLiteral without source type; historical behavior is not type authority",
+    "public_implementation": "OpenVAF-Reloaded fdf2522b70f42793f64b1c72f0195c96dea0cc19, openvaf/hir_ty/src/inference.rs inspected; no genvar-specific branch found in this file. This search did not establish the public compiler's genvar substitution behavior. No source copied or compiler integrated. https://github.com/OpenVAF/OpenVAF-Reloaded/blob/fdf2522b70f42793f64b1c72f0195c96dea0cc19/openvaf/hir_ty/src/inference.rs",
+    "papers": "No numerical algorithm or paper needed for preserving existing source-type metadata; no new algorithm dependency",
+    "decision": "Keep local one-leaf metadata fix rather than port a different compiler or broaden integer_type",
+    "public_implementation_source_sha256": "73d668ed3b93e381f167c4b66c464ad7ae89057d85e5f3c913e312f19479ffb3"
+  },
+  "independent_review": {
+    "spec": {
+      "receipt_sha256": "44fe578bf7685e6151a2646721a1ebc41cdcfd0e1920fba802cb807034a5cc84",
+      "findings": 0,
+      "scope": "production one-leaf metadata and new7methods; owning docs and generated traceability follow-up closed",
+      "doc_receipt_sha256": "7661266c33655084ca5de9f5fe982bf8e4f7b12daa9bf9e435e7bf1222a26dc6"
+    },
+    "standards": {
+      "receipt_sha256": "022c4029a0327d676968b1e5dd8a3a60e0493ac1babde5e8e73c5f53b323f022",
+      "findings": 0,
+      "scope": "production one-leaf metadata and new7methods; owning docs and generated traceability follow-up closed",
+      "doc_receipt_sha256": "23bb26d8f6dfb3f16b0be5a8cc9199698ffe2af85eb127ccabad134686c804e3"
+    }
+  }
+}

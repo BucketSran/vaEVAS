@@ -667,6 +667,14 @@ IR24、Rust整数写入检查、事件求解、误差预算和候选提交与回
 `integer_constants.py`、`parameters.py`、`hierarchy.py` 与 `node_elaboration.py` 共享常量类型语义，
 实例编译复用既有整数检查。独立正反例见 [test_integer_math_closure.py](../../tests/test_integer_math_closure.py)。
 
+静态展开中的scalar integer和genvar循环下标也保留源integer类型。
+`elaboration.py::substitute_value` 只给已通过固定边界及signed32检查的循环下标替换叶保留此类型，
+不把数值恰为整数的real常量或变量改为integer。`j=-2..1` 的 `j%16` 因此依次为-2、-1、0、1；
+原中间溢出、控制变量写者和4096展开上限继续检查。
+[独立编译与公共内核回归](../../tests/test_static_loop_integer_type.py)检查常量IR、执行顺序和拒绝控制；
+[分支证据](../../../experiments/backends/support/low-cost-closure/static-loop-type.json)仅认证这个类型修复，
+不证明完整原请求的累计预算或后续历史消费者已闭合。
+
 运行期整数指数的有限 `pow` 扩展要求底数为正的常量二进制幂，指数源类型为 integer，
 且已证明的整个指数域在 [-32,32] 内。`finite_math.py` 只生成有限且可精确表示的 binary64 常量叶，
 例如 `pow(2.0,n)` 和 `1.0/pow(2.0,n)`，结果保持 real 类型。
