@@ -3022,6 +3022,19 @@ impl Operators {
         next_event: Option<I>,
         next_root: Option<crate::exact_source::RootTime>,
     ) -> Result<(), Error> {
+        let mut next_root = next_root;
+        self.check_deadline_order_deferred(after, next_event, || Ok(next_root.take()))
+    }
+
+    /// Evaluate the physical event root only when an ordering consumer needs it.
+    /// The provider keeps the original same-request proof owner and errors.
+    pub(crate) fn check_deadline_order_deferred(
+        &self,
+        after: f64,
+        next_event: Option<I>,
+        mut root: impl FnMut() -> Result<Option<crate::exact_source::RootTime>, Error>,
+    ) -> Result<(), Error> {
+        let mut next_root = None;
         if let Some(event) = next_event {
             for entry in &self.entries {
                 if let Runtime::Transition {
@@ -3029,9 +3042,15 @@ impl Operators {
                     ..
                 } = entry
                 {
-                    source.check_incoming(after, event, next_root.as_ref())?;
+                    if next_root.is_none() {
+                        next_root = Some(root()?);
+                    }
+                    source.check_incoming(after, event, next_root.as_ref().unwrap().as_ref())?;
                 } else if let Runtime::SourceSlew(source) = entry {
-                    source.check_incoming(after, event, next_root.as_ref())?;
+                    if next_root.is_none() {
+                        next_root = Some(root()?);
+                    }
+                    source.check_incoming(after, event, next_root.as_ref().unwrap().as_ref())?;
                 }
             }
         }
@@ -3071,18 +3090,25 @@ impl Operators {
             }
         }
         for (index, deadline) in deadlines.iter().enumerate() {
-            if next_event.is_some_and(|event| {
+            if let Some(event) = next_event {
                 let accounted = (event.lo == event.hi && event == deadline.bounds)
-                    || deadline.strictly_ordered_with(event)
-                    || next_root
+                    || deadline.strictly_ordered_with(event);
+                if deadline.overlaps(event) && !accounted {
+                    if next_root.is_none() {
+                        next_root = Some(root()?);
+                    }
+                    if !next_root
                         .as_ref()
-                        .is_some_and(|root| deadline.coincides_root(root));
-                deadline.overlaps(event) && !accounted
-            }) {
-                return Err(Error::new(
-                    "event_resolution",
-                    format!("cannot certify transition deadline ordering relative to user event: after={after:e}, deadline={deadline:?}, event={next_event:?}, exact={next_root:?}"),
-                ));
+                        .unwrap()
+                        .as_ref()
+                        .is_some_and(|root| deadline.coincides_root(root))
+                    {
+                        return Err(Error::new(
+                            "event_resolution",
+                            format!("cannot certify transition deadline ordering relative to user event: after={after:e}, deadline={deadline:?}, event={next_event:?}, exact={next_root:?}"),
+                        ));
+                    }
+                }
             }
             for other in &deadlines[index + 1..] {
                 if deadline.overlaps(other.bounds)
@@ -4371,5 +4397,103 @@ mod held_nested_select_audit_tests {
             let bounds = retry.bounds(time).unwrap()[0];
             assert!(bounds.lo <= exact && exact <= bounds.hi);
         }
+    }
+}
+
+#[cfg(test)]
+mod deferred_deadline_proof_controls {
+    use super::*;
+    fn held() -> Operators {
+        let origin =
+            serde_json::json!({"source":"deadline.va","line":1,"column":1,"instance":"dut"});
+        let p:Program=serde_json::from_value(serde_json::json!({
+          "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","y"],
+          "states":[{"instance":"dut","name":"q","kind":"real","initial":0}],
+          "operators":[{"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.25,"fall":0.25,"origin":origin}],
+          "contributions":[{"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},"positive":1,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}]})).unwrap();
+        let t = Trajectory::new(
+            crate::ir::TransientInputs {
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![],
+                output_times: vec![0., 2.],
+                stop: 2.,
+                max_step: 0.125,
+            },
+            0,
+        )
+        .unwrap();
+        let mut o = Operators::new(&p, &t, &[], &[0.]).unwrap();
+        o.advance(0.25, I::point(0.25), &[1.], &[I::ONE], &[0])
+            .unwrap();
+        o
+    }
+    #[test]
+    fn separated_event_does_not_request_an_unused_exact_root() {
+        let o = held();
+        o.check_deadline_order_deferred(0.25, Some(I { lo: 1., hi: 1.1 }), || {
+            panic!("separated deadline consumed an unnecessary proof")
+        })
+        .unwrap();
+        o.check_deadline_order_deferred(0.25, None, || {
+            panic!("no pending event has no exact proof")
+        })
+        .unwrap();
+    }
+    #[test]
+    fn overlapping_event_still_requires_the_original_exact_identity() {
+        let o = held();
+        let window = I {
+            lo: 0.374,
+            hi: 0.376,
+        };
+        let mut calls = 0;
+        o.check_deadline_order_deferred(0.25, Some(window), || {
+            calls += 1;
+            Ok(crate::exact_source::RootTime::point(0.375))
+        })
+        .unwrap();
+        assert_eq!(calls, 1);
+        let error = o
+            .check_deadline_order_deferred(0.25, Some(window), || {
+                Ok(crate::exact_source::RootTime::point(0.4))
+            })
+            .unwrap_err();
+        assert_eq!(error.kind, "event_resolution");
+        let error = o
+            .check_deadline_order_deferred(0.25, Some(window), || Ok(None))
+            .unwrap_err();
+        assert_eq!(error.kind, "event_resolution");
+    }
+    #[test]
+    fn exhausted_original_proof_owner_propagates_and_leaves_history_unchanged() {
+        let o = held();
+        let before = o.clone();
+        let w = crate::transition_source_plan::Work::limited([128, 8192, 0]);
+        let mut helpers = 0;
+        for _ in 0..2 {
+            let error = o
+                .check_deadline_order_deferred(
+                    0.25,
+                    Some(I {
+                        lo: 0.374,
+                        hi: 0.376,
+                    }),
+                    || {
+                        w.debit(2, 1)?;
+                        helpers += 1;
+                        Ok(crate::exact_source::RootTime::point(0.375))
+                    },
+                )
+                .unwrap_err();
+            assert_eq!(error.kind, "step_budget");
+            assert_eq!(helpers, 0);
+            assert!(o.same_reset_history(&before));
+            for t in [0.25, 0.375, 0.5, 0.625, 1.] {
+                assert_eq!(o.values(t).unwrap(), before.values(t).unwrap());
+                assert_eq!(o.bounds(t).unwrap(), before.bounds(t).unwrap());
+            }
+        }
+        assert_eq!(w.spent(), 2);
     }
 }

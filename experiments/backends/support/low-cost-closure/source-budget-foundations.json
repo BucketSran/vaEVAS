@@ -1,0 +1,102 @@
+{
+  "status": "reviewed foundations integrated with IR31; original041 still rejected",
+  "availability": "repository-contained summary; bulk execution receipts local-only",
+  "at_utc": "2026-10-19T02:53:23.311135+00:00",
+  "base_revision": "d8f4986c",
+  "capabilities": [
+    "EVENT-ORDER",
+    "TRANSITION",
+    "COMPOSE"
+  ],
+  "sources": {
+    "evas/rust_core/src/exact_source.rs": "613251fb348dd35a47bf7858779aff10a213ad1ff5d73fc845b60a503b8f84fb",
+    "evas/rust_core/src/operators.rs": "465235d98182006b5a91d53d45dd27a82a4658ee92dc2f1052d46b09a2aa2d7c",
+    "evas/rust_core/src/transient.rs": "4a50384de4455ed171244b70f451de0207cf6dea80b548bdc990a967d1859493"
+  },
+  "changes": {
+    "deferred_root": "Pending event exact root is requested at most once per deadline check, only if source incoming proof or an unresolved overlap needs it. Strictly ordered deadlines retain their existing proof; source checks and final acceptance remain mandatory. Same request Work and original helper failures propagate.",
+    "exact_dyadic": "Prepay limb scans from same Work. Exact finite binary64 is proved by power-of-two denominator, at most53 significant numerator bits and occupied exponents[-1074,1023]. Then pay and execute the pinned rational-to-f64 helper only; generic outward enclosure remains full-cost fallback. No increased quota, refund, new owner or persistent cache."
+  },
+  "primary": {
+    "joint_rust_unique_pass": 69,
+    "python_pass": 25,
+    "kernel_sha256": "8c73ffff4255c3aa35b4d31eb877f34dac80a4eedd12fe01275a2687d4f30af6",
+    "joint_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/source041-primary-joint-controls/RESULT.json",
+      "sha256": "c7a170b95b7e302d1039321f5e3f23cda04f16a4588ad695270bafab1ac5eeb8"
+    },
+    "python_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/source041-integer-primary-public/RESULT.json",
+      "sha256": "713996c245b317ec3d6b7265c396829f3c60bb1c8b560bd2a89be641c0b7d4c6"
+    },
+    "original041_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/source041-primary-original-diagnostic/RESULT.json",
+      "sha256": "84b1c09b0c5e9b867ea31828d46d08aa5abcb0a149b519eb19b444da60c81669"
+    },
+    "original041_diagnostic": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/source041-primary-original-diagnostic.json",
+      "sha256": "8e6f0f571b94a3137172bbf3ca51c4cf4e86b516aa0460aa86d752c7f4a09f02"
+    },
+    "original041_status": "step_budget still rejected; no checker run",
+    "new400_PASS": 0,
+    "early_checks": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/source041-primary-early.json",
+      "sha256": "0cd50cf6dd89365ceaa2cc40a3c4027edf5deade2800e1fae8e6fa0a39f88bbe"
+    }
+  },
+  "private": {
+    "frozen_patch": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/source041-ledger/foundation.patch",
+      "sha256": "fb90c2c95cc0e79a45bf72a19483c3890625b174cedcab9352c71b5d6f080045"
+    },
+    "source_map": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/source041-ledger/foundation-frozen.json",
+      "sha256": "3f2226ae7f904278a9b7cc371aab774eadd5ff2644215d86602f58f8a8d79ab6"
+    },
+    "unique_rust_pass": 65,
+    "scoped_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/source041-ledger/foundation-final-scoped/RESULT.json",
+      "sha256": "4ddf7c299aed64314c0e758faf9228835e07e9bc122409f71fa287b2cd8ebf1c"
+    },
+    "original041_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/source041-ledger/foundation-final-original041/RESULT.json",
+      "sha256": "e83504be1d06a714cb3e0ef74872010b75a043ec7855d22a1f77ada6a7635c40"
+    },
+    "progress_ns": 56.4,
+    "requested_ns": 68,
+    "controller_preparations": 686,
+    "root_refinements": 36,
+    "dyadic_helpers": 685,
+    "still_budget_exhausted": true
+  },
+  "independent_review": {
+    "spec": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/source041-foundation-review-spec.json",
+      "sha256": "28d2746dc38f45a2bc29a32288372e5194271a44584eacbd1d5847d1ac29f9d4"
+    },
+    "standards": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/source041-foundation-review-standards.json",
+      "sha256": "28a4c0991599588eba6767a9577fd92eb749a5300e512fd1a24d680d6ef75426"
+    },
+    "independent_math_cases": 5089,
+    "math_probe_scope": "Extracted actual frozen Rust functions with pinned BigRational types, compared with old enclosure and exact normalized rational containment; no Python Fraction oracle. Work stub means mathematics only, not charging proof.",
+    "findings": 0,
+    "primary_integration": {
+      "spec": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/source041-foundation-integration-review-spec.json",
+        "sha256": "ab64011c31704adb876c9f8cd8cdece68695a49289ce7f124b8671b4874c7f63"
+      },
+      "standards": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/source041-foundation-integration-review-standards.json",
+        "sha256": "d32210530328fc7faf6a82cf51b3abf0fe3716f6aa9e916bf23b9fae680c5f9f"
+      }
+    }
+  },
+  "limits": [
+    "Original1e9/8192/128 and local exact limits unchanged. Calling-thread diagnostic counters overlap and are not summed as total work.",
+    "Natural original1e9 exhaustion and sameController twice retry covered in joint scoped control, not only reduced-budget unit tests.",
+    "RootTime memo hypothesis produced0hits in original041 and is parked outside this patch.",
+    "No new same-final400, fullPython, installation or Spectre qualification; old accepted scores still bind wave21."
+  ],
+  "evidence_correction": "Independent review corrected an initial Python Fraction oracle description. The5089-case probe was Rust with pinned BigRational normalized containment and old-enclosure comparison. Initial wording and correction remain in integration review."
+}

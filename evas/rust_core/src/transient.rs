@@ -1707,18 +1707,23 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
             controller.refine_pending_input_root(&model, &trajectory, &mut crossings)?;
             preflighted_event = Some(controller.event);
         }
-        controller.accepted.operators.check_deadline_order(
-            controller.accepted.time,
-            crossings
-                .get(controller.event)
-                .map(|e| event_bounds(&model, e))
-                .transpose()?,
-            crossings
-                .get(controller.event)
-                .map(|e| event_root(&model, std::slice::from_ref(e)))
-                .transpose()?
-                .flatten(),
-        )?;
+        controller
+            .accepted
+            .operators
+            .check_deadline_order_deferred(
+                controller.accepted.time,
+                crossings
+                    .get(controller.event)
+                    .map(|e| event_bounds(&model, e))
+                    .transpose()?,
+                || {
+                    crossings
+                        .get(controller.event)
+                        .map(|e| event_root(&model, std::slice::from_ref(e)))
+                        .transpose()
+                        .map(Option::flatten)
+                },
+            )?;
         // t=0 is processed after initial_step and before the initial observation.
         // Later events are reached by the same loop after advancing to their time.
         if controller.event < crossings.len()
@@ -1741,18 +1746,23 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
             controller.refine_pending_input_root(&model, &trajectory, &mut crossings)?;
             preflighted_event = Some(controller.event);
         }
-        controller.accepted.operators.check_deadline_order(
-            controller.accepted.time,
-            crossings
-                .get(controller.event)
-                .map(|e| event_bounds(&model, e))
-                .transpose()?,
-            crossings
-                .get(controller.event)
-                .map(|e| event_root(&model, std::slice::from_ref(e)))
-                .transpose()?
-                .flatten(),
-        )?;
+        controller
+            .accepted
+            .operators
+            .check_deadline_order_deferred(
+                controller.accepted.time,
+                crossings
+                    .get(controller.event)
+                    .map(|e| event_bounds(&model, e))
+                    .transpose()?,
+                || {
+                    crossings
+                        .get(controller.event)
+                        .map(|e| event_root(&model, std::slice::from_ref(e)))
+                        .transpose()
+                        .map(Option::flatten)
+                },
+            )?;
         while output < trace.times.len() && trace.times[output] < controller.accepted.time {
             let index = controller
                 .outputs
@@ -1903,17 +1913,19 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
                         &[],
                     ),
                 )?;
-                next.operators.check_deadline_order(
+                next.operators.check_deadline_order_deferred(
                     time,
                     crossings
                         .get(controller.event)
                         .map(|e| event_bounds(&model, e))
                         .transpose()?,
-                    crossings
-                        .get(controller.event)
-                        .map(|e| event_root(&model, std::slice::from_ref(e)))
-                        .transpose()?
-                        .flatten(),
+                    || {
+                        crossings
+                            .get(controller.event)
+                            .map(|e| event_root(&model, std::slice::from_ref(e)))
+                            .transpose()
+                            .map(Option::flatten)
+                    },
                 )?;
                 controller.accepted = next;
             } else {

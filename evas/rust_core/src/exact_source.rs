@@ -350,7 +350,7 @@ impl Curve {
         fn mul(b: u64) -> u64 {
             linear(b).saturating_pow(2).saturating_mul(16)
         }
-        fn div(b: u64) -> u64 {
+        pub(super) fn div(b: u64) -> u64 {
             // Knuth: <=L quotient digits; each digit has <=2 estimate
             // corrections, sub_mul and possible addback, plus normalization.
             linear(b).saturating_pow(2).saturating_mul(16)
@@ -1363,7 +1363,7 @@ mod event_prefix_fees {
     fn mul(b: u64) -> u64 {
         l(b).saturating_pow(2).saturating_mul(16)
     }
-    fn div(b: u64) -> u64 {
+    pub(super) fn div(b: u64) -> u64 {
         mul(b)
     }
     fn gcd(b: u64) -> u64 {
@@ -1450,6 +1450,40 @@ pub(crate) fn enclosure_with_work(
     value: &R,
     w: &crate::transition_source_plan::Work,
 ) -> Result<Option<I>, crate::ir::Error> {
+    // A dyadic with at most53 significant numerator bits and an exponent in
+    // binary64's exact range needs no reconstructed endpoint rationals. Pay
+    // for both trailing-zero scans before proving that property.
+    event_prefix_fees::metadata(w, 32)?;
+    let bits = event_prefix_fees::width(value);
+    w.debit(2, event_prefix_fees::l(bits).saturating_mul(32))?;
+    let numerator = value.numer();
+    let denominator = value.denom();
+    let denominator_power = denominator.trailing_zeros();
+    let exact = if numerator.is_zero() {
+        true
+    } else if let (Some(nz), Some(dz)) = (numerator.trailing_zeros(), denominator_power) {
+        let significant = numerator.bits() - nz;
+        let low = i128::from(nz) - i128::from(dz);
+        let high = i128::from(numerator.bits()) - 1 - i128::from(dz);
+        denominator.bits() == dz + 1 && significant <= 53 && low >= -1074 && high <= 1023
+    } else {
+        false
+    };
+    if exact {
+        // Same pinned ratio_to_f64 reservation as the first part of enclosure;
+        // no binary(endpoint) or rational comparisons are executed on this path.
+        let q = bits.saturating_add(56);
+        w.debit(
+            2,
+            event_prefix_fees::div(q)
+                .saturating_add(event_prefix_fees::l(q).saturating_mul(64))
+                .saturating_add(64),
+        )?;
+        crate::diagnostics::counter("forcing_exact_dyadic_enclosure", 1);
+        return Ok(value.to_f64().filter(|v| v.is_finite()).map(I::point));
+    }
+    // Failed shape recognition spends its work; the unchanged generic helper
+    // retains its full original reservation and mathematical refusal boundary.
     charge_enclosure_with_work(value, w)?;
     crate::diagnostics::counter("forcing_prefix_enclosure_helpers", 1);
     Ok(enclosure(value))
@@ -1687,5 +1721,97 @@ impl RootTime {
         };
         w.debit(2, event_prefix_fees::enclosure(b))?;
         Ok(self.local_bounds(clock))
+    }
+}
+
+#[cfg(test)]
+mod dyadic_enclosure_work_controls {
+    use super::*;
+    use crate::transition_source_plan::Work;
+
+    #[test]
+    fn repeated_exact_binary_values_fit_the_same_owned_small_work_allowance() {
+        let work = Work::limited([128, 8192, 1_000_000]);
+        // 3/2 is exactly binary64. No endpoint reconstruction/comparison is
+        // needed after a paid exact-representability proof.
+        let value = R::new(3.into(), 2.into());
+        for _ in 0..64 {
+            assert_eq!(
+                enclosure_with_work(&value, &work).unwrap(),
+                Some(I::point(1.5))
+            );
+        }
+        assert!(work.spent() > 0 && work.spent() <= 1_000_000);
+    }
+    #[test]
+    fn independent_binary_extremes_and_nonbinary_enclosures_are_preserved() {
+        let work = Work::default();
+        let power = |n: usize| R::from_integer(1.into()).numer().clone() << n;
+        let exact = [
+            (R::new(3.into(), 2.into()), 1.5),
+            (R::new(1.into(), power(1074)), f64::from_bits(1)),
+            (R::from_integer((power(53) - 1u8) << 971), f64::MAX),
+            (R::new(power(53) - 1u8, power(53)), 1f64.next_down()),
+            (R::from_integer(power(1023)), 2f64.powi(1023)),
+            (R::zero(), 0.),
+        ];
+        for (q, x) in exact {
+            assert_eq!(enclosure_with_work(&q, &work).unwrap(), Some(I::point(x)));
+            assert_eq!(
+                enclosure_with_work(&(-q), &work).unwrap(),
+                Some(I::point(-x))
+            );
+        }
+        for (q, expected) in [
+            (
+                R::new(1.into(), 3.into()),
+                I {
+                    lo: 1. / 3.,
+                    hi: (1f64 / 3.).next_up(),
+                },
+            ),
+            (
+                R::new(1.into(), power(1075)),
+                I {
+                    lo: 0.,
+                    hi: f64::from_bits(1),
+                },
+            ),
+            (
+                R::from_integer(power(53) + 1u8),
+                I {
+                    lo: 9_007_199_254_740_992.,
+                    hi: 9_007_199_254_740_994.,
+                },
+            ),
+        ] {
+            assert_eq!(enclosure_with_work(&q, &work).unwrap(), Some(expected));
+            assert_eq!(
+                enclosure_with_work(&(-q), &work).unwrap(),
+                Some(I {
+                    lo: -expected.hi,
+                    hi: -expected.lo
+                })
+            );
+        }
+    }
+    #[test]
+    fn small_owner_exhaustion_is_sticky_before_any_dyadic_or_fallback_body() {
+        let work = Work::limited([128, 8192, 0]);
+        for q in [R::new(3.into(), 2.into()), R::new(1.into(), 3.into())] {
+            for _ in 0..2 {
+                let before = work.spent();
+                let (result, report) = crate::diagnostics::capture(Default::default(), || {
+                    enclosure_with_work(&q, &work)
+                });
+                assert_eq!(result.unwrap_err().kind, "step_budget");
+                assert_eq!(
+                    report.counters.get("forcing_prefix_enclosure_helpers"),
+                    None
+                );
+                assert_eq!(report.counters.get("forcing_exact_dyadic_enclosure"), None);
+                assert!(work.spent() >= before);
+            }
+        }
     }
 }

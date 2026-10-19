@@ -11,6 +11,8 @@
 新转换与事件Floor借同一原请求Work，完整原树角色及两次失败重试、全部Controller状态回滚保持；
 [数学合同](math/events.md#ir31-候选事件中的直接电压到-integer-转换)和独立45点oracle限定行为范围。
 本候选还保留静态下标源整数类型、回调临时值与普通别名分离、同请求付费不可变IR结构缓存修复。
+期限预检按需取得精确根，已证明可精确表示的dyadic有理值使用付费点包围；原预算与精度不变。
+[联合控制与041收据](../../experiments/backends/support/low-cost-closure/source-budget-foundations.json)记录仍未通过的原041，不计新PASS。
 公开窄控制已通过，当前开发夹具须从VA重编译到IR31；旧保存IR和历史收据不改号。
 完整Python、安装与原始/修订400仍待同一最终候选验收，已接受成绩仍绑定下面的wave21，未新增完整任务PASS或Spectre资格。
 

@@ -217,6 +217,26 @@ recompilation or reconstruction of the complete original source context is allow
 
 ### Exact physical reads and one request budget
 
+The current IR31 candidate avoids constructing a pending event's exact root when
+existing strict ordering already proves the deadline relationship. Source incoming
+checks and unresolved overlaps still request the original root, at most once per
+check, using the same request Work. Optional absence and helper failure retain
+their original meanings; no candidate state is committed by this preflight.
+
+For rational enclosure, a paid representability check recognizes exact finite
+binary64 dyadics. It checks a power-of-two denominator, at most 53 significant
+numerator bits, and occupied exponents from -1074 through 1023. A recognized value
+pays for the pinned conversion helper and becomes an exact point. Other values
+pay for and execute the complete original outward-enclosure path, in addition to
+the recognition cost. Scans and helper work are prepaid from the original owner;
+no budget, precision or exact-arithmetic limit changes.
+
+The [foundation evidence](../../../experiments/backends/support/low-cost-closure/source-budget-foundations.json)
+records 69 unique combined Rust controls and 25 Python methods on the IR31 primary
+candidate, plus 5089 independent mathematical cases on the private frozen functions.
+Original 041 still exhausts its 1e9 request budget at 56.4 of 68 ns. Its checker
+has not run, and this partial progress adds no complete-task PASS.
+
 For shaped PWL reads, `Curve::try_forcing_point` uses the original rational knots.
 Exact signed cross products certify comparisons. A floating quotient is only a
 guess. Exact equality certifies a point, or explicit comparisons certify an
