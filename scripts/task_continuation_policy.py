@@ -175,6 +175,9 @@ def _validate_state(state):
     for key in ('routes', 'actions', 'attempts', 'events', 'progress'):
         if not isinstance(state.get(key), dict):
             raise PolicyError(f'{key} must be an object')
+    for key in ('reviews', 'review_units', 'goal_checkpoints'):
+        if key in state and not isinstance(state[key], dict):
+            raise PolicyError(f'{key} must be an object')
     for attempt_id, attempt in state['attempts'].items():
         _number(attempt['allocation_s'], 'allocation_s')
         _number(attempt['consumed_s'], 'consumed_s')
@@ -398,6 +401,190 @@ def _receipt(request, scope_path):
     return value, copy.deepcopy(ref)
 
 
+def _verified_ref(scope_path, ref):
+    if not isinstance(ref, dict):
+        raise PolicyError('evidence requires a path and sha256')
+    raw = (Path(scope_path).parent / _text(ref.get('path'), 'evidence.path')).read_bytes()
+    if hashlib.sha256(raw).hexdigest() != ref.get('sha256'):
+        raise PolicyError('evidence content hash differs')
+    return raw
+
+
+def review_key(contract):
+    """Identify one declared review scope, including dependencies and evidence."""
+    if (not isinstance(contract, dict) or not {'unit_id', 'axis', 'author', 'inputs'} <= set(contract)
+            or set(contract) - {'unit_id', 'axis', 'author', 'inputs', 'previous_review'}):
+        raise PolicyError('review contract requires unit_id, axis, author and inputs')
+    for key in ('unit_id', 'axis', 'author'):
+        _text(contract[key], key)
+    if contract.get('previous_review') is not None:
+        _text(contract['previous_review'], 'previous_review')
+    refs = contract['inputs']
+    if not isinstance(refs, list) or not refs:
+        raise PolicyError('review requires frozen inputs')
+    paths = []
+    for ref in refs:
+        if not isinstance(ref, dict) or set(ref) != {'path', 'sha256'}:
+            raise PolicyError('review inputs require path and sha256')
+        paths.append(_text(ref['path'], 'review input path'))
+        digest = _text(ref['sha256'], 'review input sha256')
+        if len(digest) != 64 or any(c not in '0123456789abcdef' for c in digest):
+            raise PolicyError('invalid review input digest')
+    if len(paths) != len(set(paths)):
+        raise PolicyError('duplicate review input path')
+    return _digest(contract)
+
+
+def validate_review_contract(scope_path, contract):
+    review_key(contract)
+    for ref in contract['inputs']:
+        _verified_ref(scope_path, ref)
+    return copy.deepcopy(contract)
+
+
+def _review_unit(contract):
+    return _digest([contract['unit_id'], contract['axis']])
+
+
+def review_reuse(scope_path, contract):
+    """Reuse the latest complete review only while every declared input matches.
+
+    The adapter must declare transitive dependencies and acceptance evidence;
+    a path list cannot discover missing dependencies or authenticate its author.
+    """
+    state = read_runtime(scope_path)
+    key = review_key(contract)
+    unit = state.get('review_units', {}).get(_review_unit(contract), {})
+    row = state.get('reviews', {}).get(unit.get('latest'))
+    if not row or row['key'] != key or row['status'] not in ('approved', 'changes_requested'):
+        return None
+    try:
+        validate_review_contract(scope_path, contract)
+        _verified_ref(scope_path, row['receipt'])
+        _verified_ref(scope_path, row['result'])
+        _verified_ref(scope_path, row['execution_receipt'])
+        for finding in row['findings']:
+            _verified_ref(scope_path, finding['evidence'])
+    except (OSError, ValueError, KeyError):
+        return None
+    return {'decision': 'review_reused', 'status': row['status'], 'review_key': key,
+            'findings': copy.deepcopy(row['findings']), 'receipt': row['receipt']}
+
+
+def _review(state, request, scope_path):
+    receipt, ref = _receipt(request, scope_path)
+    if receipt.get('kind') != 'review':
+        raise PolicyError('review receipt required')
+    attempt = _bound_receipt(state, receipt)
+    contract = receipt.get('contract')
+    key = review_key(contract)
+    if key != receipt['input_digest'] or attempt['actor'] == contract['author']:
+        raise PolicyError('review must bind frozen inputs and an independent executor')
+    if not attempt['settled']:
+        raise PolicyError('review requires settled execution; reconcile first')
+    # One execution can yield one result. Late files cannot upgrade a timeout or
+    # incomplete result; an authorized retry uses a new action and its allocation.
+    records = state.setdefault('reviews', {})
+    aid = receipt['attempt_id']
+    if aid in records:
+        return {'decision': 'review_recorded', 'status': records[aid]['status'],
+                'review_key': records[aid]['key']}
+    execution = json.loads(_verified_ref(scope_path, attempt['receipt']))
+    unit = state.setdefault('review_units', {}).setdefault(_review_unit(contract),
+                                                          {'open_findings': {}})
+    findings = []
+    status, error = 'incomplete', None
+    if execution.get('execution') == 'timeout':
+        status = 'timed_out'
+    elif (attempt['status'] == 'completed' and execution.get('execution') == 'ok'
+          and execution.get('returncode') == 0 and execution.get('cleanup_confirmed') is True
+          and receipt.get('outcome') == 'completed'):
+        try:
+            if contract.get('previous_review') != unit.get('latest_complete'):
+                raise PolicyError('review predecessor changed; recollect the current open findings')
+            validate_review_contract(scope_path, contract)
+            output = json.loads(_verified_ref(scope_path, receipt.get('result')))
+            if output.get('review_key') != key or output.get('reviewer') != attempt['actor']:
+                raise PolicyError('review output identity differs')
+            findings = output.get('findings')
+            if not isinstance(findings, list):
+                raise PolicyError('review findings must be explicit')
+            seen = set()
+            for row in findings:
+                fid = _text(row.get('id'), 'finding id')
+                if fid in seen or row.get('status') not in ('open', 'resolved'):
+                    raise PolicyError('duplicate or invalid finding')
+                seen.add(fid)
+                _text(row.get('detail'), 'finding detail')
+                _verified_ref(scope_path, row.get('evidence'))
+                if row['evidence'] not in contract['inputs']:
+                    raise PolicyError('finding evidence must belong to the frozen review inputs')
+                old = unit['open_findings'].get(fid)
+                if row['status'] == 'resolved' and (old is None or
+                        old['evidence']['sha256'] == row['evidence']['sha256']):
+                    raise PolicyError('resolution requires an open finding and changed evidence')
+            if set(unit['open_findings']) - seen:
+                raise PolicyError('unresolved findings cannot silently disappear')
+            status = 'changes_requested' if any(row['status'] == 'open' for row in findings) else 'approved'
+        except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
+            status, findings, error = 'incomplete', [], str(exc)
+    row = {'key': key, 'contract': copy.deepcopy(contract), 'status': status,
+           'receipt': ref, 'execution_receipt': attempt['receipt'],
+           'result': receipt.get('result'), 'findings': findings, 'error': error}
+    records[aid] = row
+    unit['latest'] = aid
+    if status in ('approved', 'changes_requested'):
+        unit['open_findings'] = {item['id']: item for item in findings if item['status'] == 'open'}
+        unit['latest_complete'] = aid
+    return {'decision': 'review_recorded', 'status': status, 'review_key': key,
+            'error': error}
+
+
+def _goal_checkpoint(state, request, scope_path):
+    """Consume project-owned comparison facts; CI green alone has no goal credit."""
+    receipt, ref = _receipt(request, scope_path)
+    if receipt.get('kind') != 'goal_checkpoint':
+        raise PolicyError('goal checkpoint receipt required')
+    attempt = _bound_receipt(state, receipt)
+    if not attempt['settled']:
+        raise PolicyError('checkpoint requires settled execution')
+    _validator(receipt, attempt['actor'])
+    _verified_ref(scope_path, receipt.get('evidence'))
+    comparison = _text(receipt.get('comparison_id'), 'comparison_id')
+    metric = _text(receipt.get('metric'), 'metric')
+    facts = receipt.get('assessment', {})
+    for field in ('complete', 'comparable', 'checkpoint_due'):
+        if type(facts.get(field)) is not bool:
+            raise PolicyError('checkpoint must explicitly report completeness, comparability and due state')
+    for field in ('before', 'after', 'target', 'expected_min_gain'):
+        _number(facts.get(field), field)
+    if (facts['target'] <= 0 or facts['before'] > facts['target'] or facts['after'] > facts['target']
+            or facts['expected_min_gain'] <= 0):
+        raise PolicyError('invalid project goal comparison')
+    key = _digest([receipt['route_id'], metric, comparison])
+    records = state.setdefault('goal_checkpoints', {})
+    if key in records:
+        if records[key]['assessment'] != facts or records[key]['evidence'] != receipt['evidence']:
+            raise PolicyError('goal comparison identity reused for different facts')
+        return {'decision': 'duplicate_goal_checkpoint'}
+    route = state['routes'][receipt['route_id']]
+    if receipt.get('plan_digest') != route['plan_digest']:
+        raise PolicyError('goal checkpoint must bind the current route plan')
+    comparable = facts['complete'] and facts['comparable'] and facts['checkpoint_due']
+    gain = facts['after'] - facts['before']
+    reason = ('goal_regression' if gain < 0 else 'goal_no_growth') if (
+        comparable and gain < facts['expected_min_gain'] and facts['after'] < facts['target']) else None
+    records[key] = {'receipt': ref, 'assessment': facts, 'evidence': receipt['evidence'],
+                    'route_id': receipt['route_id'], 'metric': metric,
+                    'net_gain': gain if comparable else None, 'replan_reason': reason}
+    if reason:
+        route['required_reason'] = route['required_reason'] or reason
+    elif comparable and gain >= facts['expected_min_gain']:
+        route['progress_at_s'] = max(attempt['observed_at_s'], route.get('progress_at_s') or 0)
+    return {'decision': 'replan_required' if reason else 'goal_checkpoint_recorded',
+            'net_gain': gain if comparable else None, 'reason': reason}
+
+
 def _bound_receipt(state, receipt):
     if receipt.get('task_id') != state['task_id']:
         raise PolicyError('receipt task identity differs')
@@ -512,7 +699,7 @@ def _progress(state, request, scope_path):
     if attempt['status'] not in ('completed', 'failed', 'cancelled'):
         raise PolicyError('progress requires an observed execution result')
     _validator(receipt, attempt['actor'])
-    if receipt.get('category') not in ('acceptance', 'exploration'):
+    if receipt.get('category') not in ('acceptance', 'exploration', 'verification'):
         raise PolicyError('unknown progress category')
     _text(receipt.get('changes_decision'), 'changes_decision')
     _text(receipt.get('progress_id'), 'progress_id')
@@ -541,7 +728,10 @@ def _progress(state, request, scope_path):
     state['progress'][key] = {'receipt': ref, 'progress_id': receipt['progress_id'],
                               'evidence_identity': key, 'category': receipt['category']}
     route = state['routes'][receipt['route_id']]
-    route['progress_at_s'] = max(at, route.get('progress_at_s') or at)
+    # Checks establish correctness. Only a project goal comparison or new
+    # discriminating exploration evidence may advance the observation anchor.
+    if receipt['category'] == 'exploration':
+        route['progress_at_s'] = max(at, route.get('progress_at_s') or at)
     if receipt.get('premise_refuted') is True:
         route['required_reason'] = 'premise_refuted'
     return {'decision': 'progress_recorded'}
@@ -722,6 +912,10 @@ def update_runtime(scope_path, request):
             result = _reconcile(state, request, scope_path)
         elif request.get('operation') == 'progress':
             result = _progress(state, request, scope_path)
+        elif request.get('operation') == 'review':
+            result = _review(state, request, scope_path)
+        elif request.get('operation') == 'goal_checkpoint':
+            result = _goal_checkpoint(state, request, scope_path)
         elif request.get('operation') == 'replan':
             result = _replan(state, request, scope_path, continuation)
         else:

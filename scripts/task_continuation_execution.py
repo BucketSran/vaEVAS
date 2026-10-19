@@ -7,6 +7,7 @@ meter. Explicit bounded mode charges whole command allocations, never agent time
 from __future__ import annotations
 
 from contextlib import contextmanager
+import copy
 from datetime import datetime, timedelta, timezone
 import fcntl
 import hashlib
@@ -75,9 +76,9 @@ def _harness(root=None):
 
 
 @contextmanager
-def _owner(directory):
+def _owner(directory, lock_name='.continuation-owner.lock'):
     directory.mkdir(parents=True, exist_ok=True)
-    with (directory / '.continuation-owner.lock').open('a') as stream:
+    with (directory / lock_name).open('a') as stream:
         try:
             fcntl.flock(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
@@ -259,6 +260,104 @@ def execute_action(scope_path, admission, argv, *, directory, cwd=None, timeout_
         path = directory / 'execution.receipt.json'
         journal.atomic_json(path, receipt)
         return _collect(scope_path, path, receipt, started=True, controlled_test=controlled_test)
+
+
+def execute_review(scope_path, admission, argv, *, review_contract, directory, result_path,
+                   cwd=None, timeout_s=90, agent_meter=None, controlled_test=False,
+                   harness_root=None, cancel=None, max_output_bytes=16 * 1024 * 1024):
+    """Bind a frozen review to execute_action and the same runtime registry.
+
+    The caller supplies a reviewer command and its JSON output path. Harness
+    controls that local process group; this does not cancel remote inference.
+    Results are recorded once, so late output cannot upgrade a settled review.
+    """
+    admission = dict(admission)
+    admission.setdefault('execution_id', admission['attempt_id'])
+    review_contract = copy.deepcopy(review_contract)
+    key = policy.review_key(review_contract)
+    if admission['input_digest'] != key or admission['actor'] == review_contract['author']:
+        raise ValueError('review requires its frozen input identity and an independent actor')
+    if not isinstance(argv, list) or not argv or any(not isinstance(a, str) for a in argv):
+        raise ValueError('argv must be a nonempty list of strings')
+    argv = list(argv)
+    directory, result_path = Path(directory).resolve(), Path(result_path).resolve()
+    runtime = policy.read_runtime(scope_path)
+    if admission['task_id'] != runtime['task_id']:
+        raise ValueError('admission task identity differs from the runtime')
+    existing = runtime['actions'].get(admission['action_id'])
+    intent = {'binding': _context(admission), 'contract': review_contract, 'argv': argv,
+              'result_path': str(result_path), 'timeout_s': timeout_s,
+              'cwd': str(Path(cwd).resolve()) if cwd else str(directory),
+              'controlled_test': controlled_test is True, 'max_output_bytes': max_output_bytes}
+    with _owner(directory, '.continuation-review.lock') as owned:
+        if not owned:
+            return {'decision': 'execution_busy', 'started': False}
+        intent_path = directory / 'review.intent.json'
+        if intent_path.exists():
+            if json.loads(intent_path.read_text()) != intent:
+                raise ValueError('existing action cannot change its review contract or output command')
+        elif existing:
+            raise ValueError('existing action has no bound review intent')
+        if not existing:
+            policy.validate_review_contract(scope_path, review_contract)
+            reused = policy.review_reuse(scope_path, review_contract)
+            if reused is not None:
+                return {**reused, 'started': False}
+            if result_path.exists():
+                raise ValueError('review result path already exists before dispatch')
+        try:
+            _, journal = _harness(harness_root)
+        except (ImportError, ValueError) as error:
+            return {'decision': 'execution_unavailable', 'started': False,
+                    'reason': str(error), 'native_agent_metering': False}
+        if not intent_path.exists():
+            journal.atomic_json(intent_path, intent)
+        # Existing actions always recover their execution before any cache lookup
+        # or current-input check. They can still need cleanup or reconciliation.
+        execution = execute_action(scope_path, admission, argv, directory=directory,
+            cwd=cwd, timeout_s=timeout_s, agent_meter=agent_meter,
+            controlled_test=controlled_test, harness_root=harness_root,
+            cancel=cancel, max_output_bytes=max_output_bytes)
+        if 'execution' not in execution or execution.get('settled') is not True:
+            return execution
+        receipt_path = directory / 'review.receipt.json'
+        if receipt_path.exists():
+            receipt = json.loads(receipt_path.read_text())
+            if (receipt.get('contract') != review_contract or any(
+                    receipt.get(name) != admission[name] for name in
+                    ('task_id', 'action_id', 'attempt_id', 'route_id', 'input_digest'))):
+                raise ValueError('review receipt differs from its bound execution intent')
+            if receipt.get('result') is not None and receipt['result'].get('path') != str(result_path):
+                raise ValueError('review receipt output differs from its bound execution intent')
+        else:
+            observed = execution['execution']
+            outcome = ('timed_out' if observed.get('execution') == 'timeout' else
+                       'completed' if observed.get('status') == 'completed'
+                       and observed.get('execution') == 'ok' and observed.get('returncode') == 0
+                       and observed.get('cleanup_confirmed') is True else 'incomplete')
+            try:
+                policy.validate_review_contract(scope_path, review_contract)
+            except (OSError, ValueError):
+                outcome = 'incomplete'
+            try:
+                result_ref = _ref(result_path)
+            except OSError:
+                result_ref = None
+            receipt = {'kind': 'review', **{name: admission[name] for name in
+                ('task_id', 'action_id', 'attempt_id', 'route_id', 'input_digest')},
+                'contract': review_contract, 'outcome': outcome, 'result': result_ref}
+            journal.atomic_json(receipt_path, receipt)
+        ref = _ref(receipt_path)
+        recorded = policy.update_runtime(scope_path, {
+            'event_id': 'review:' + admission['attempt_id'] + ':' + ref['sha256'],
+            'operation': 'review', 'task_id': admission['task_id'], 'receipt': ref})
+        # The durable row records what was reviewed then. Recovery still needs
+        # current applicability before returning an approval to the caller.
+        if recorded['status'] in ('approved', 'changes_requested') and policy.review_reuse(
+                scope_path, review_contract) is None:
+            recorded = {**recorded, 'historical_status': recorded['status'],
+                        'status': 'incomplete', 'error': 'review evidence is no longer applicable'}
+        return {**execution, **recorded, 'review_receipt': ref}
 
 
 def recover_action(scope_path, attempt_id, *, directory=None, harness_root=None,

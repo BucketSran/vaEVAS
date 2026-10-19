@@ -14,7 +14,7 @@ from pathlib import Path
 import shlex
 import sys
 
-from task_continuation_policy import evaluate, read_runtime
+from task_continuation_policy import evaluate, read_runtime, update_runtime
 
 
 class StateError(ValueError):
@@ -248,10 +248,18 @@ def hook_config(scope_path, session_id):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--scope', type=Path, required=True)
-    parser.add_argument('--session-id', required=True)
+    parser.add_argument('--session-id')
     parser.add_argument('--print-hook-config', action='store_true')
+    parser.add_argument('--runtime-request', type=Path,
+                        help='apply a bound project receipt to the existing runtime')
     args = parser.parse_args()
-    if args.print_hook_config:
+    if args.runtime_request:
+        if args.session_id or args.print_hook_config:
+            parser.error('runtime collection and native Stop are separate invocation modes')
+        result = update_runtime(args.scope, read_object(args.runtime_request))
+    elif not args.session_id:
+        parser.error('--session-id is required for the native Stop mode')
+    elif args.print_hook_config:
         result = hook_config(args.scope, args.session_id)
     else:
         try:

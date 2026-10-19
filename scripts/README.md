@@ -390,6 +390,39 @@ Codex要求用户通过 `/hooks` 审阅并信任非托管hook，信任前不得�
 `purpose: closeout` 这个字段本身不能证明它是收尾。
 项目验收器或适用独立审查提供进展依据，退出码为零和工具调用次数不算有效进展。
 
+检查结果使用 `progress.category: verification`；兼容的 `acceptance` 类别也只登记证据，
+不刷新路线观察窗口。`exploration` 必须提供改变下一步决策的新证据。
+项目在约定检查点将完整、可比较的目标结果提交为 `goal_checkpoint` 收据，绑定已有动作、
+当前路线计划、比较编号及证据哈希。`assessment` 明确给出 `before/after/target/expected_min_gain`
+和 `complete/comparable/checkpoint_due`。例如本轮全量成绩317→317、CI全绿，目标预期至少新增1项，
+会登记 `goal_no_growth` 并拒绝该路线原样派发；需沿用原路线完成独立审查的重规划。
+未完成的运行、尚未到检查点或不可比较的结果只记录观察，不触发这个判定。
+重复收取不清零额度；独立路线继续可用。原始评分、固定编号和总体完成仍由项目验收器负责，
+通用策略不从局部检查数量推断目标，也不能认证项目提供的比较事实。
+
+项目收取证据仍使用同一入口和运行账：
+
+```sh
+python3 -B scripts/check_task_continuation.py --scope runs/<task>/scope.json \
+  --runtime-request runs/<task>/checkpoint-request.json
+```
+
+请求包含 `operation: goal_checkpoint`、原 `task_id`、稳定 `event_id` 和 `receipt: {path, sha256}`。
+它不会改写scope或业务队列；原Stop调用及其用户信任定义保持兼容。
+
+`task_continuation_execution.execute_review` 将审查接入同一 `execute_action`。
+审查契约指定 `unit_id/axis/author/inputs`，输入应含固定diff、受影响依赖、验收依据和待关闭问题。
+完整结论仅对这些文件的原字节有效；新版本通过 `previous_review` 引用上一条完整审查的attempt ID。
+未关闭finding必须保持稳定ID，关闭需引用本次冻结的新证据。缺项、旧版本并发结果、输出身份不符
+或损坏证据都不能成为通过。缓存只适用于完全相同的输入，不能代替新差分和依赖审查。
+审查输出为 `{review_key, reviewer, findings}`，每项finding含 `id/status/detail/evidence`，
+状态为 `open` 或 `resolved`；明确空列表表示未发现问题，不接受缺失结果文件。
+
+审查的deadline由原Harness执行器控制，超时、清理未知、缺失结果均不会通过；迟到输出不能升级已结算结果。
+恢复先收取原动作，再查询缓存；重试须新动作并占用原总额度。真实本地进程测试覆盖预写通过文件后超时、
+缓存不重派、恢复不重复扣费及输入失效。此控制限于Harness管理的本地进程组及结果接纳，
+不证明Codex原生子代理、逃离进程组的工具或远端推理已停止；这些执行方式不能冒充受控审查。
+
 [task_continuation_execution.py](task_continuation_execution.py) 是现有 Harness `run_process` 的薄适配。
 它在派发前取得预占，复用原进程期限、日志、收据和清理。恢复查询同一动作及输出目录，
 已经完成则收取，仍运行或未知则不重派。模块不自带调度服务、业务队列或另一套进程守护器。
