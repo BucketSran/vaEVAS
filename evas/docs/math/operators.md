@@ -406,8 +406,8 @@ OR 的多个零叶共用一个回调体；正时刻邻居由原事件事务处�
 `Operators::new_until_with_bootstrap_bounds_and_source`；原生位目标沿 `new_until_with_held_points`。
 公开行为和精度负控见 [test_transition_bootstrap_bounds.py](../../tests/test_transition_bootstrap_bounds.py)，
 同 owner 重试、隐藏 real 臂及构造耗尽见 `transient_initialization` 的 Rust 测试。
-原019整例与交付CI的[工程证据](../../../experiments/backends/support/low-cost-closure/mixed-cold-transition.json)单独维护，
-不据此更新未完成验收的400汇总或 Spectre资格。
+原019整例、同源双轨400与交付CI的[工程证据](../../../experiments/backends/support/low-cost-closure/mixed-cold-transition.json)单独维护，
+不据此宣称400全部PASS或新增Spectre／共同Q资格。
 
 未中断变化在实际接受时刻 te 发生，
 选择完整上/下沿时间 D，则

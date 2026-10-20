@@ -376,7 +376,7 @@ Spectre 回调探针也说明不能只比较最终计数而忽略跳变侧，或
 本地0.24.1／IR32候选保留实际real包围和全部integer point依赖；最终原019完整通过原checker，四性质零失配。
 见[混合冷目标合同](../../../evas/docs/math/operators.md#混合实数与整数冷目标的本地候选)、
 [公开正反控](../../../evas/tests/test_transition_bootstrap_bounds.py)和[紧凑收据](../../../experiments/backends/support/low-cost-closure/mixed-cold-transition.json)。
-完整400尚未取得本候选的验收结果，旧汇总不变，也没有新增Spectre资格。
+同源原400已独审为318通过，修订轨321通过，旧通过零回退；未新增Spectre资格或评分任务。
 
 可复用任务应同时检查real相位与integer时钟、零回调次数、无额外初始边沿，以及放大后误差仍须受预算约束。
 普通Select与原生位投影需要各自的正例；隐藏real臂、跨owner和包装实数目标保留负控。

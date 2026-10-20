@@ -326,9 +326,11 @@ transient_passive_tests.rs、event_value_proof.rs覆盖。原244已在wave14统�
 
 [混合实数与整数冷目标本地候选](../math/operators.md#混合实数与整数冷目标的本地候选)补充同组能力。
 普通整数 Select 与原生位投影分别保留 point 依赖，裸 real 目标保留实际非 point 盒。
-最终本地候选的原019完整通过原 checker，原120/150秒与精度不变；完整400在首例前被进程身份安全门拦住，
-交付CI的三处旧版本断言已修正，8项身份检查通过；新完整CI的2644个不同Python方法及两平台安装通过，Rust655通过、1项忽略。
-当前仍以wave27的原317／修订320为已验收汇总，不把个案结果另加进旧400。
+原019完整通过原 checker，原120/150秒与精度不变。同源原400已独审为318通过、19失败、63拒绝，
+修订400为321通过、15失败、64拒绝；旧通过全部保留，仅019新增，剩79项。
+前两次部分运行及费用保留，最后400份原执行均为新行；修订为本次396＋4组成。
+完整CI的2644个不同Python方法及两平台安装通过，Rust655通过、1项忽略。
+输入、版本差异和工程验收限制见[混合冷目标收据](../../../experiments/backends/support/low-cost-closure/mixed-cold-transition.json)。
 
 wave17已验收IR28候选的[事件typed余数与减法合同](../math/events.md#事件体运行期余数与二元减法ir28-本地候选)
 及[公共正反控](../../tests/test_native_integer28.py)补充LANG、EVENT-ORDER、EVENT-CONDITIONS与COMPOSE。

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "status": "verified_complete_original019_and_deliveryCI;full400_blocked_before_dispatch;draft_PR208;not_merged",
-  "recorded_at_utc": "2026-10-20T08:48:01.033724+00:00",
+  "status": "independently_accepted_original318_revised321_remaining79;draft_PR208;not_merged",
+  "recorded_at_utc": "2026-10-20T10:15:02.822806+00:00",
   "capabilities": [
     "TRANSITION",
     "EVENT-ORDER",
@@ -57,6 +57,16 @@
       "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original019-final-r1/response.json",
       "sha256": "29245915e36da89de59bb152b2ec9292483dc462b124958da3819f88cb725702",
       "availability": "local-only retained task evidence"
+    },
+    "formal_original400_result": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-candidate/execution/019/RESULT.json",
+      "sha256": "f11361e558d5016a4087bed229a7f8b710f2671ffd749f82a4474756218930ab",
+      "availability": "local-only retained task evidence"
+    },
+    "formal_original400_response": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-candidate/execution/019/response.json",
+      "sha256": "29245915e36da89de59bb152b2ec9292483dc462b124958da3819f88cb725702",
+      "availability": "local-only retained task evidence"
     }
   },
   "checks": {
@@ -98,6 +108,11 @@
         "availability": "local-only retained task evidence"
       },
       "runtime_build202_unchanged": true
+    },
+    "documentation_final": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-delivery-check/check.json",
+      "sha256": "5ff8abef759b55172ac62e0d837f871477c162163ecf4b9333e76d8ce7284f89",
+      "availability": "local-only retained task evidence"
     }
   },
   "delivery_ci": {
@@ -132,36 +147,171 @@
     }
   },
   "full400": {
-    "status": "blocked_infrastructure;not_accepted",
-    "original_dispatches": 0,
-    "original_executed": 0,
+    "status": "independently_accepted_same_frozen_source",
+    "original_counts": {
+      "PASS": 318,
+      "FAIL": 19,
+      "REJECTED": 63
+    },
+    "revised_counts": {
+      "PASS": 321,
+      "FAIL": 15,
+      "REJECTED": 64
+    },
+    "original_executed": 400,
+    "revised_new_executed": 4,
+    "revised_original_same_source_reused": 396,
+    "original_cleaned": 400,
+    "revised_composed_cleaned": 400,
+    "original_timeout": 0,
+    "revised_timeout": 0,
     "original_outer": {
-      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/remaining80-final-original400-20261020/execution.receipt.json",
-      "sha256": "69cd4b7ac3167460db0f01577960b820d5c8878757720a084470a0280e00466a",
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/remaining80-monotone-original400-20261020/execution.receipt.json",
+      "sha256": "e066a620b2d06cc8ee5e30ac6d5da5cc5cc5cee6b74689de4c91bd93cf04583a",
       "availability": "local-only retained task evidence"
     },
-    "revised_dispatches": 0,
-    "reason": "Historic complete PGIDs are present again,while recorded wall-minus-monotonic offsets differ by5330.75s. Existing identity gate refuses. No gate relaxation or redispatch.",
-    "charged_failed_outer_s": 1805.05,
-    "clock_history_limit": "Sleep-excluding mach_absolute_time is observed locally;the complete historical clock trajectory was not recorded and is not inferred from endpoint offsets."
+    "revised_outer": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/remaining80-monotone-revised4-20261020/execution.receipt.json",
+      "sha256": "5eb271ddd55a41d562f540ec6163b9bb79b386e53d6a06bf4e3cec18a39dcf58",
+      "availability": "local-only retained task evidence"
+    },
+    "original_results": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-candidate/execution/RESULTS.json",
+      "sha256": "44e5a82709416be6252ced055c68fd54b939aaa0c1ba1aaa921bd50da4388b15",
+      "availability": "local-only retained task evidence"
+    },
+    "original_summary": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-candidate/execution/SUMMARY.json",
+      "sha256": "1cd067b2340c157384b5d7785de19284064d6c9ab320b9e6c8e7d345e3869886",
+      "availability": "local-only retained task evidence"
+    },
+    "revised_results": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-revised-candidate/revised-full400/RESULTS.json",
+      "sha256": "4ca153ff69895621626cbafff355e84d6ad8703dfeaedeb8b87f904b7083c60c",
+      "availability": "local-only retained task evidence"
+    },
+    "revised_summary": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-revised-candidate/revised-full400/SUMMARY.json",
+      "sha256": "0713aa9263f2ba73e1766264a2dc591f7fc956be4cf987526247dce18f267d76",
+      "availability": "local-only retained task evidence"
+    },
+    "composition_identity": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-revised-candidate/revised-full400/IDENTITY.json",
+      "sha256": "d3ec1889949cf52b200068e7e3666f2161ce89e0cd178e66e06cb692e826314a",
+      "availability": "local-only retained task evidence"
+    },
+    "retention": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-revised-candidate/revised-full400/RETENTION.json",
+      "sha256": "40b47df0cbab7db03f73d6c67fea1bd9a2373cd4d8e8ceada10daac1222324f9",
+      "availability": "local-only retained task evidence"
+    },
+    "complete_original_comparison": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-original400-comparison.json",
+      "sha256": "76adad518d13eae2398b353ece8d0e31b393da915e494304c266fb48ff7678c3",
+      "availability": "local-only retained task evidence"
+    },
+    "same_source_receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-candidate/release/RECEIPT.json",
+      "sha256": "7b7f290a8b3b6134d4b73587bbd3062a88e715bde86e4717e19dc873e839c8f5",
+      "availability": "local-only retained task evidence"
+    },
+    "source_freeze": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/acceptance-source-r3/fixed-source.json",
+      "sha256": "23370298ec779cae7892ed3ed02ecbcc74768a71643d012fa590945207f42bdc",
+      "availability": "local-only retained task evidence"
+    },
+    "execution_scope": "All400original rows are fresh in the final complete action. Revised uses396of those rows plus4freshsame-source revised rows. Neither earlier0/362partial supplies a final row.",
+    "prior_pass_retained": {
+      "original": 317,
+      "revised": 320
+    },
+    "new_pass": [
+      "019"
+    ],
+    "lost_pass": [],
+    "response_comparison": {
+      "prior_original_PASS": 317,
+      "raw_hash_equal": 0,
+      "complete_JSON_equal_after_removing_top_level_engine": 317,
+      "previous_engine": "0.24.0",
+      "current_engine": "0.24.1",
+      "prior19FAIL_checker_dictionaries_equal": 19
+    },
+    "supplemental": {
+      "case012": "passed_sample_gate",
+      "case075": "725directrows;32finiteedges;passed",
+      "case077": "405directrows;unchangedrationaladditiveoracle;passed",
+      "case107": "rejected;no_saved_DUT_response;not_evaluable"
+    },
+    "failed_attempts": [
+      {
+        "status": "blocked_infrastructure;not_accepted",
+        "original_dispatches": 0,
+        "original_executed": 0,
+        "original_outer": {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/remaining80-final-original400-20261020/execution.receipt.json",
+          "sha256": "69cd4b7ac3167460db0f01577960b820d5c8878757720a084470a0280e00466a",
+          "availability": "local-only retained task evidence"
+        },
+        "revised_dispatches": 0,
+        "reason": "Historic complete PGIDs are present again,while recorded wall-minus-monotonic offsets differ by5330.75s. Existing identity gate refuses. No gate relaxation or redispatch.",
+        "charged_failed_outer_s": 1805.05,
+        "clock_history_limit": "Sleep-excluding mach_absolute_time is observed locally;the complete historical clock trajectory was not recorded and is not inferred from endpoint offsets."
+      },
+      {
+        "status": "failed_partial_not_accepted",
+        "executed": 362,
+        "dispatches": 362,
+        "charged_s": 1805.05,
+        "outer": {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/remaining80-recovery-original400-20261020/execution.receipt.json",
+          "sha256": "a09cd72773075da579b6349dcae70b3cf5a8f5ae50bc202ebd415366a5698526",
+          "availability": "local-only retained task evidence"
+        },
+        "reason": "Final absence check observed a same-number group;the retained error alone does not uniquely identify it as a new group."
+      }
+    ],
+    "independent_acceptance": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-final-acceptance.json",
+      "sha256": "5fbc55c2d0da507aa3a41b8cec5c1a85825045afbff1fb99124d77b4ab03bebf",
+      "availability": "local-only retained task evidence"
+    }
   },
   "accepted_aggregate": {
-    "source_revision": "5f0f13202e67e28f06bdf783208b402bba70e146",
-    "original_passed": 317,
-    "revised_passed": 320,
-    "remaining_to400": 80,
-    "local019_not_added_to_old_rows": true,
-    "receipt": "experiments/backends/support/low-cost-closure/ordinary-common-three.json",
-    "latest_candidate_case_claim": "Original019 complete individual PASS is independent of the unchanged historical400 aggregate."
+    "source_revision": "159c0512081db43b6663ffca478fd04b961c43dc",
+    "runtime_production_revision": "0a8dc512291aac5c1648ccb45ea099dcb6b77106",
+    "original_passed": 318,
+    "original_failed": 19,
+    "original_rejected": 63,
+    "revised_passed": 321,
+    "revised_failed": 15,
+    "revised_rejected": 64,
+    "remaining_to400": 79,
+    "all400PASS": false,
+    "previous_aggregate": {
+      "source_revision": "5f0f13202e67e28f06bdf783208b402bba70e146",
+      "original_passed": 317,
+      "revised_passed": 320,
+      "remaining_to400": 80,
+      "local019_not_added_to_old_rows": true,
+      "receipt": "experiments/backends/support/low-cost-closure/ordinary-common-three.json",
+      "latest_candidate_case_claim": "Original019 complete individual PASS is independent of the unchanged historical400 aggregate."
+    },
+    "acceptance": "Independent original and revised400 reviews;complete final-source executions,CI and installation identities retained."
   },
   "deferred": {
     "case038": "Original prototype reached independent nonbinary clamp root condition_precision near35.183ns;prototype retained outside production,zero PASS credit.",
     "next_candidates": [
       "074",
-      "093",
-      "364"
+      "364",
+      "093"
     ],
-    "expected_gain": "potential three complete cases;deeper consumers unverified,not a pass forecast"
+    "expected_gain": "potential three complete cases;deeper consumers unverified,not a pass forecast",
+    "root_analysis": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/next-batch-root-analysis.json",
+      "sha256": "622b2cc795ffd03e22aa9d612ccf4a02efcfdb79675963fd7837cc7475ec94eb",
+      "availability": "local-only retained task evidence"
+    }
   },
   "reviews": {
     "spec": {
@@ -213,10 +363,35 @@
       "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/final-documentation-spec-r2-review.json",
       "sha256": "138cfad5ca055d505c7f00ec4eb3fba2457f26950b40617f67cf268578d4e19f",
       "availability": "local-only retained task evidence"
+    },
+    "original_full400": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-original400-independent-review.json",
+      "sha256": "bfb9799de075e4a85b400ebb59a6f0ef7a8b01c06359821fab425a762295d8d3",
+      "availability": "local-only retained task evidence"
+    },
+    "revised_full400": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-revised400-independent-review.json",
+      "sha256": "e3cd43c259b2b4ba517668c26601978021578e28f7bc8df6274fc8cfa9cbbb64",
+      "availability": "local-only retained task evidence"
+    },
+    "process_spec": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-spec-review-r2.json",
+      "sha256": "0b8bcf8f5fb86054fc9051eb4471ae75c367cb6cc51a6845ae31893d648b238c",
+      "availability": "local-only retained task evidence"
+    },
+    "process_standards": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-standards-review-r2.json",
+      "sha256": "a1c5b0e1fa6b5808fd76c34f256ea0e12da932252da54ba0e49fdd86a4c628a0",
+      "availability": "local-only retained task evidence"
+    },
+    "documentation_final": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-documentation-spec-review.json",
+      "sha256": "f9beca19ca7b4a3860d00c3cb2d17cbde0de13f2a4848b171e8f45678de525e9",
+      "availability": "local-only retained task evidence"
     }
   },
   "limits": [
-    "Original and revised full400 aggregates retain prior accepted source identity.",
+    "The400-row revised aggregate is321PASS,15FAIL,64REJECTED;79remain. Source481matchesCI159c;202runtime/buildinputs match production0a8dc. Raw response hashes change with the engine version.",
     "No new Spectre run or common Q qualification.",
     "Raw logs/archive/binary are local-only;public CI and maintained tests provide the public sources.",
     "No budget reset,grant,case timeout,checker or precision change."
@@ -241,5 +416,44 @@
       "evas/tests/test_history_forcing.py"
     ],
     "corrected_local_identity_passed": 8
+  },
+  "process_recovery": {
+    "implementation_scope": "Task-local admission adapters only;scientificworker/checker/runtime unchanged.",
+    "original_adapter_sha256": "9ebd0ac44a34c7fc042160391b5a1fe25d7428a8746e2c27622ddabfa9ca6690",
+    "revised_adapter_sha256": "fc3179853fa13a794bfd403587f731e6be4a8d4b0b14290e2d1a944ea3015de2",
+    "controls_passed": 30,
+    "controls": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-controls-r2/controls.json",
+      "sha256": "f3e42c55494b2f0dd23a24c2f2e375a88ef5a4c1eda20898966c00f3d3808556",
+      "availability": "local-only retained task evidence"
+    },
+    "controls_execution": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-controls-r2/execution.receipt.json",
+      "sha256": "4070f430c07039c70245d0a70043f2ef19cc46f3c92870f80b7a8fc109a5c663",
+      "availability": "local-only retained task evidence"
+    },
+    "actual_prior_gate": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-controls-r2/actual-prior-gate.json",
+      "sha256": "0a5e925be2672af9028af3cc8f261612bac2c3bea0b9715ed164f59e9424b1d7",
+      "availability": "local-only retained task evidence"
+    },
+    "premise": "Ordinary same-visibility Darwin POSIX context and exact byte-bound Harness guardian wait/reap contract. Visible leaderless groups and unknown starts refuse;ESRCH alone is insufficient.",
+    "monotone_reuse": "Only this campaign caches an old lifetime closure;each use first revalidates all original source/journal/receipt hashes and the same group set/reap contract.",
+    "prior_failures_charged_s": 3610.1,
+    "new_grant": false,
+    "renewal_s": 0,
+    "wrapper_rework": {
+      "first": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-postprocess/execution.receipt.json",
+        "sha256": "d710efa7fed25c071df9144aba042e0d33cdebced10e0e59c5d8946c4687c3a3",
+        "availability": "local-only retained task evidence"
+      },
+      "first_scope": "Completed only012/107postcheck before legacySystemExit0;notfullcomposition;125.05scharge retained.",
+      "final": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-postprocess-r2/execution.receipt.json",
+        "sha256": "ee9fe5d7c12d5a3887a2aa04aa5e14f9f33d04af49e8d3f0b1a1ce55dc84a8bb",
+        "availability": "local-only retained task evidence"
+      }
+    }
   }
 }
