@@ -324,6 +324,11 @@ transient_passive_tests.rs、event_value_proof.rs覆盖。原244已在wave14统�
 每节点signed32检查及预算耗尽沿原owner保持。冷种子桥只借用真实Prepared.bounds初始化全Transition图中的裸同实例real状态目标，
 并保留固定timer0调度门、初始电压认证及同Controller失败重试；更广初态和历史组合仍拒绝。原077已完整执行，但原checker仍为FAIL。首个失败是原网格跨边沿插值，实际查询保持值正确；诊断不改变原FAIL，后续性质未重评，未计077新增PASS。
 
+[混合实数与整数冷目标本地候选](../math/operators.md#混合实数与整数冷目标的本地候选)补充同组能力。
+普通整数 Select 与原生位投影分别保留 point 依赖，裸 real 目标保留实际非 point 盒。
+最终本地候选的原019完整通过原 checker，原120/150秒与精度不变；完整400与交付CI尚待同源验收，
+当前仍以wave27的原317／修订320为已验收汇总，不把pilot另加进旧400。
+
 wave17已验收IR28候选的[事件typed余数与减法合同](../math/events.md#事件体运行期余数与二元减法ir28-本地候选)
 及[公共正反控](../../tests/test_native_integer28.py)补充LANG、EVENT-ORDER、EVENT-CONDITIONS与COMPOSE。
 同源统一候选的原069、335已通过原checker，完整400为302/19/79；单次完整Python2314项及两平台0.21/IR28安装通过，范围仍限上述合同。

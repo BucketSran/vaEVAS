@@ -22,11 +22,31 @@ pub(crate) fn dependencies(
 ) -> Result<BTreeSet<usize>, Error> {
     audit(e, p, owner, &mut |amount| context.charge(amount))
 }
+
+/// The old scalar integer Select consumer needs no native bit operation.
+/// Its complete structural integer dependency set must still be point-valued.
+pub(crate) fn scalar_dependencies(
+    e: &E,
+    p: &Program,
+    owner: &str,
+    context: &ProofContext,
+) -> Result<BTreeSet<usize>, Error> {
+    audit_mode(e, p, owner, &mut |amount| context.charge(amount), false)
+}
 fn audit(
     e: &E,
     p: &Program,
     owner: &str,
     work: &mut impl FnMut(usize) -> Result<(), Error>,
+) -> Result<BTreeSet<usize>, Error> {
+    audit_mode(e, p, owner, work, true)
+}
+fn audit_mode(
+    e: &E,
+    p: &Program,
+    owner: &str,
+    work: &mut impl FnMut(usize) -> Result<(), Error>,
+    require_bits: bool,
 ) -> Result<BTreeSet<usize>, Error> {
     fn operand(
         o: &O,
@@ -105,7 +125,7 @@ fn audit(
     let mut ds = BTreeSet::new();
     let mut bits = false;
     visit(e, p, owner, &mut ds, &mut bits, work)?;
-    if !bits {
+    if require_bits && !bits {
         return Err(refused());
     }
     Ok(ds)

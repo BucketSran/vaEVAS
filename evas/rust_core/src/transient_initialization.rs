@@ -135,6 +135,7 @@ pub(super) struct Prepared {
     pub(super) bounds: Vec<I>,
     pub(super) records: Vec<EventRecord>,
     pub(super) bounded_held_transition_seeds: bool,
+    pub(super) source_context: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
     zero: BTreeSet<usize>,
 }
 impl Prepared {
@@ -229,7 +230,7 @@ pub(super) fn prepare(
     let mut seeds = BTreeSet::new();
     // Only the ordinary fixed-timer schedule has a bounded cold constructor.
     // All other compositions retain the original point-seed certificate.
-    let mut bounded_held_transition_seeds = !model.program.operators.is_empty()
+    let bounded_fixed_timers = !model.program.operators.is_empty()
         && !model.relocalized_guards.iter().any(|&v| v)
         && !model.dynamic_guards.iter().any(|&v| v)
         && model.guard_operators.iter().all(|ops| ops.is_empty())
@@ -239,17 +240,12 @@ pub(super) fn prepare(
                 EventTrigger::Timer { .. } | EventTrigger::InitialStep { .. }
             )
         });
+    let mut bounded_held_transition_seeds = bounded_fixed_timers;
     for (spec_index, spec) in model.program.operators.iter().enumerate() {
-        bounded_held_transition_seeds &= match spec {
-            OperatorSpec::Transition {
-                input: Expression::State { state },
-                origin,
-                ..
-            } => model.program.states.get(*state).is_some_and(|s| {
-                s.kind == crate::ir::StateKind::Real && s.instance == origin.instance
-            }),
-            _ => false,
-        };
+        bounded_held_transition_seeds &=
+            crate::operators::bare_real_transition_state(spec, &model.program).is_some()
+                || matches!(spec, OperatorSpec::Transition { .. })
+                    && model.typed_transition_targets.contains(&spec_index);
         if let OperatorSpec::Transition { input, origin, .. } = spec {
             if model.typed_transition_targets.contains(&spec_index) {
                 let context = model.source_context.as_ref().expect("typed owner");
@@ -385,8 +381,20 @@ pub(super) fn prepare(
     // Other held values may retain arithmetic uncertainty in Prepared/Frame;
     // they are not exact inputs to any cold history in this restricted graph.
     // Keep the existing all-point rule for every other operator composition.
-    let point_states = if bounded_held_transition_seeds {
+    let point_states = if bounded_held_transition_seeds && model.typed_transition_targets.is_empty()
+    {
         BTreeSet::new()
+    } else if bounded_held_transition_seeds {
+        model
+            .source_context
+            .as_ref()
+            .expect("typed owner")
+            .charge(8 + 8 * seeds.len())?;
+        seeds
+            .iter()
+            .copied()
+            .filter(|&s| model.program.states[s].kind == crate::ir::StateKind::Integer)
+            .collect()
     } else if model
         .program
         .operators
@@ -397,6 +405,12 @@ pub(super) fn prepare(
     } else {
         (0..model.program.states.len()).collect()
     };
+    let ids: Vec<_> = zero.iter().copied().collect();
+    let mut mixed = MixedCold {
+        original_points: point_states,
+        allowed: bounded_fixed_timers,
+        qualified: None,
+    };
     let (initial_states, initial_bounds, mut records) = prepare_stage(
         model,
         trajectory,
@@ -404,9 +418,8 @@ pub(super) fn prepare(
         &initial_ids,
         &before,
         &before_bounds,
-        &point_states,
+        &mut mixed,
     )?;
-    let ids: Vec<_> = zero.iter().copied().collect();
     let (states, bounds, timer_records) = prepare_stage(
         model,
         trajectory,
@@ -414,19 +427,125 @@ pub(super) fn prepare(
         &ids,
         &initial_states,
         &initial_bounds,
-        &point_states,
+        &mut mixed,
     )?;
     records.extend(timer_records);
+    let source_context = match mixed.qualified {
+        Some((context, _)) => {
+            bounded_held_transition_seeds = true;
+            Some(context)
+        }
+        None => model.source_context.clone(),
+    };
     Ok(Some(Prepared {
         states,
         bounds,
         records,
         bounded_held_transition_seeds,
+        source_context,
         zero,
     }))
 }
 
 type PreparedStage = (Vec<f64>, Vec<I>, Vec<EventRecord>);
+
+struct MixedCold {
+    original_points: BTreeSet<usize>,
+    allowed: bool,
+    qualified: Option<(
+        std::sync::Arc<crate::transition_source_plan::ProofContext>,
+        BTreeSet<usize>,
+    )>,
+}
+impl MixedCold {
+    fn accepts(
+        &mut self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        states: &[f64],
+        bounds: &[I],
+    ) -> Result<bool, Error> {
+        if !self.allowed {
+            return Ok(false);
+        }
+        if self.qualified.is_none() {
+            let context = match &model.source_context {
+                Some(context) => context.clone(),
+                None => {
+                    match model.mixed_cold_context.get() {
+                        Some(context) => context.clone(),
+                        None => {
+                            let work = model
+                                .mixed_cold_work
+                                .get_or_init(crate::transition_source_plan::Work::default);
+                            let context = crate::transition_source_plan::ProofContext::event_request_with_work(
+                            &model.program, trajectory, &model.driven,
+                            model.source_copy_items, work.clone())?;
+                            let _ = model.mixed_cold_context.set(context);
+                            model
+                                .mixed_cold_context
+                                .get()
+                                .expect("retained cold owner")
+                                .clone()
+                        }
+                    }
+                }
+            };
+            crate::event_floor::check_provided_binding(
+                &context,
+                &model.program,
+                trajectory,
+                &model.driven,
+            )?;
+            context.charge(1)?;
+            let mut required_points = BTreeSet::new();
+            let mut bare_real = false;
+            for spec in &model.program.operators {
+                context.charge(16 + spec.origin().instance.len())?;
+                if crate::operators::bare_real_transition_state(spec, &model.program).is_some() {
+                    bare_real = true;
+                    continue;
+                }
+                let OperatorSpec::Transition { input, origin, .. } = spec else {
+                    return Ok(false);
+                };
+                let dependencies = match crate::held_integer_target::scalar_dependencies(
+                    input,
+                    &model.program,
+                    &origin.instance,
+                    &context,
+                ) {
+                    Ok(dependencies) => dependencies,
+                    Err(scope) if scope.kind == "unsupported_held_integer_target" => {
+                        return Ok(false)
+                    }
+                    Err(failure) => return Err(failure),
+                };
+                crate::held_integer_target::merge_dependencies(
+                    &mut required_points,
+                    &dependencies,
+                    &mut |amount| context.charge(amount),
+                )?;
+            }
+            if !bare_real {
+                return Ok(false);
+            }
+            self.qualified = Some((context, required_points));
+        }
+        let (context, points) = self.qualified.as_ref().unwrap();
+        context.charge(
+            8 + states
+                .len()
+                .saturating_mul(points.len() + 1)
+                .saturating_mul(8),
+        )?;
+        Ok(states
+            .iter()
+            .zip(bounds)
+            .enumerate()
+            .all(|(index, (&s, &b))| !points.contains(&index) || b == I::point(s)))
+    }
+}
 
 fn prepare_stage(
     model: &EventModel,
@@ -435,7 +554,7 @@ fn prepare_stage(
     ids: &[usize],
     before: &[f64],
     before_bounds: &[I],
-    point_states: &BTreeSet<usize>,
+    mixed: &mut MixedCold,
 ) -> Result<PreparedStage, Error> {
     if blocks.is_empty() {
         return Ok((before.to_vec(), before_bounds.to_vec(), Vec::new()));
@@ -524,14 +643,21 @@ fn prepare_stage(
         || bounds
             .iter()
             .zip(&states)
-            .enumerate()
-            .any(|(index, (&b, &s))| {
-                !s.is_finite()
-                    || !b.finite()
-                    || s < b.lo
-                    || s > b.hi
-                    || point_states.contains(&index) && b != I::point(s)
-            })
+            .any(|(&b, &s)| !s.is_finite() || !b.finite() || s < b.lo || s > b.hi)
+    {
+        return Err(unsupported(
+            "transition bootstrap requires finite final point state certificates",
+        ));
+    }
+    // Finite boxes and nominal containment have already passed. Only the
+    // old point requirement may demand the additional mixed-target proof.
+    // Continue this transaction; do not rerun any callback or certification.
+    if bounds
+        .iter()
+        .zip(&states)
+        .enumerate()
+        .any(|(index, (&b, &s))| mixed.original_points.contains(&index) && b != I::point(s))
+        && !mixed.accepts(model, trajectory, &states, &bounds)?
     {
         return Err(unsupported(
             "transition bootstrap requires finite final point state certificates",
@@ -1160,6 +1286,112 @@ mod tests {
             "state_bounds":prepared.bounds.iter().map(|b|[b.lo,b.hi]).collect::<Vec<_>>(),
             "transition_bounds_at_zero":[initial.lo,initial.hi]})
         );
+    }
+
+    fn scalar_mixed_model(hidden_real: bool) -> EventModel {
+        let mut value = serde_json::to_value(&model().program).unwrap();
+        value["nodes"].as_array_mut().unwrap().push(json!("z"));
+        value["states"]
+            .as_array_mut()
+            .unwrap()
+            .push(json!({"instance":"dut","name":"c","kind":"integer","initial":0}));
+        value["events"][0]["body"]
+            .as_array_mut()
+            .unwrap()
+            .push(json!({"kind":"assign","state":1,"rhs":{"op":"affine","constant":1,"terms":[]}}));
+        let origin = json!({"source":"init.va","line":2,"column":1,"instance":"dut"});
+        let mut input = json!({"op":"select","relation":"gt",
+            "left":{"op":"state","state":1},
+            "right":{"op":"affine","constant":0,"terms":[]},
+            "then_value":{"op":"affine","constant":0.9,"terms":[]},
+            "else_value":{"op":"affine","constant":0,"terms":[]},"origin":origin});
+        if hidden_real {
+            input["else_value"] = json!({"op":"state","state":0});
+        }
+        value["operators"]
+            .as_array_mut()
+            .unwrap()
+            .push(json!({"kind":"transition",
+            "input":input,"delay":0,"rise":0.1,"fall":0.1,"origin":origin}));
+        value["contributions"].as_array_mut().unwrap().push(json!({
+            "branch":{"instance":"dut","local_positive":"q","local_negative":"r","kind":"voltage"},
+            "positive":3,"negative":0,"rhs":{"op":"operator","operator":1},"origin":origin}));
+        EventModel::new(
+            serde_json::from_value(value).unwrap(),
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-8,
+                relative: 0.,
+            },
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn mixed_scalar_cold_proof_retains_one_owner_and_original_boxes_on_retry() {
+        let model = scalar_mixed_model(false);
+        let trajectory = trajectory(0.2);
+        let original = serde_json::to_value(&model.program).unwrap();
+        let first = prepare(&model, &trajectory).unwrap().unwrap();
+        let context = first.source_context.as_ref().unwrap();
+        let spent = context.borrow_work().spent();
+        assert!(spent > 0);
+        assert!(first.bounds[0].lo < first.bounds[0].hi);
+        assert_eq!(first.bounds[1], I::ONE);
+        let second = prepare(&model, &trajectory).unwrap().unwrap();
+        assert!(std::sync::Arc::ptr_eq(
+            context,
+            second.source_context.as_ref().unwrap()
+        ));
+        assert!(context.borrow_work().spent() > spent);
+        assert_eq!(first.states, second.states);
+        assert_eq!(first.bounds, second.bounds);
+        assert_eq!(serde_json::to_value(&model.program).unwrap(), original);
+        let histories = Operators::new_until_with_bootstrap_bounds_and_source(
+            &model.program,
+            &trajectory,
+            &model.driven,
+            &first.states,
+            &first.bounds,
+            1.,
+            &model.tolerances,
+            first.source_context.clone(),
+        )
+        .unwrap();
+        let box_at_zero = histories.bounds(0.).unwrap()[0];
+        assert!(box_at_zero.lo <= first.bounds[0].lo && box_at_zero.hi >= first.bounds[0].hi);
+    }
+
+    #[test]
+    fn mixed_scalar_cold_hidden_real_arm_and_exhausted_owner_stay_rejected() {
+        let model = scalar_mixed_model(true);
+        let trajectory = trajectory(0.2);
+        let original = serde_json::to_value(&model.program).unwrap();
+        let mut spent = 0;
+        for _ in 0..2 {
+            assert_eq!(
+                prepare(&model, &trajectory).err().unwrap().kind,
+                "unsupported_initial_history"
+            );
+            let now = model.mixed_cold_work.get().unwrap().spent();
+            assert!(now > spent);
+            spent = now;
+        }
+        assert_eq!(serde_json::to_value(&model.program).unwrap(), original);
+        let model = scalar_mixed_model(false);
+        let work = crate::transition_source_plan::Work::limited([128, 8192, 0]);
+        assert!(model.mixed_cold_work.set(work.clone()).is_ok());
+        let mut spent = 0;
+        for _ in 0..2 {
+            assert_eq!(
+                prepare(&model, &trajectory).err().unwrap().kind,
+                "step_budget"
+            );
+            assert!(model.mixed_cold_work.get().unwrap().same_owner(&work));
+            assert!(work.spent() > spent);
+            spent = work.spent();
+            assert!(model.mixed_cold_context.get().is_none());
+        }
     }
 
     #[test]

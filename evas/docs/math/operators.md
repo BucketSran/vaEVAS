@@ -365,7 +365,8 @@ consumers, and uncertain numerical source leaves remain outside this slice.
 `transition(q,0.125,0.5,0.5)` 从 t=0 起即为1；延迟不产生一条额外初始边沿。
 
 构造前只处理精确固定零时刻 timer，回调各执行一次。所有分支的读值必须仅依赖 held 状态和直接驱动输入，
-顺序赋值、共享旧状态、writer 与整数检查仍保留。最终完整状态向量必须有限，且逐项得到 point 证书。
+顺序赋值、共享旧状态、writer 与整数检查仍保留。默认要求最终完整状态向量有限且逐项得到 point 证书；
+后面的有界冷种子合同另行限定可保留非 point 盒的裸 real 目标。
 一个 point 证书表示精确区间只包含提交值；不能把带舍入区间的状态当作精确种子。
 首个电压解和电压误差仍在历史构造后认证，通过后才发布帧、日程游标和事件记录。
 OR 的多个零叶共用一个回调体；正时刻邻居由原事件事务处理。
@@ -381,6 +382,31 @@ OR 的多个零叶共用一个回调体；正时刻邻居由原事件事务处�
 公开编译/内核的独立行为锚点见 `test_transition_initialization.py`，
 同对象失败重试见 `transient_initialization` 的 Rust 测试；这些是开发证据，不能单独代替 Spectre 对齐资格。
 [实际有限配对](../../../experiments/backends/support/README.md#initial-transition-seed)覆盖开、关及直接滤波三个初态反例；不扩展一般历史反馈支持。
+
+### 混合实数与整数冷目标的本地候选
+
+固定 timer 与 initial_step 的全 Transition 图可以组合两类独立目标。
+裸同实例 real 状态使用实际 `Prepared.bounds`；纯同实例整数投影或 Select 的全部结构依赖
+必须是实际有限 point 盒，且等于对应提交整数。普通 `c?0.9:0` 与原生位投影分别沿原消费者执行。
+未选臂、零项、类型、owner 和 signed32 检查保留；实数包装表达式、跨实例状态、电压、
+其他历史及不满足原固定日程门的组合不由这条路径准入。
+
+若零回调令实数精确值为 `x`、提交值为 `s`、证书为 `B`，仍要求 `x∈B` 且 `s∈B`，
+冷历史由 `Transition::enclosed(s,B,...)` 构造。不会改成 `[s,s]`，也不添加初始边沿。
+整数目标各自验证 point 依赖，不能借另一目标的非 point 许可。后续电压放大仍消费完整 `B`。
+
+普通整数 Select 的附加资格只在原 point 种子认证实际拒绝后启动。
+有限性和名义值包含检查先通过，再由独立依赖集合验证 point 要求，继续当前有序初始与零 timer 事务。
+新增资格不重跑回调或状态认证；原事务的 replay 认证仍执行，成功后才发布帧、记录和日程。
+新增原树扫描、集合合并和绑定复制先向同一个原请求 source Work 付费；失败的资格或上下文构造
+在同一 EventModel 保留该 owner，重试不重置费用。构造器再次核原 Program、物理轨迹和驱动绑定。
+原成功准备路径不进入这次附加扫描。
+
+入口为 `transient_initialization::prepare`、`held_integer_target::scalar_dependencies` 与
+`Operators::new_until_with_bootstrap_bounds_and_source`；原生位目标沿 `new_until_with_held_points`。
+公开行为和精度负控见 [test_transition_bootstrap_bounds.py](../../tests/test_transition_bootstrap_bounds.py)，
+同 owner 重试、隐藏 real 臂及构造耗尽见 `transient_initialization` 的 Rust 测试。
+最终本地候选的原019已完整通过原 checker；完整400与交付CI尚待同源验收，不据此更新400汇总或 Spectre资格。
 
 未中断变化在实际接受时刻 te 发生，
 选择完整上/下沿时间 D，则
@@ -420,7 +446,8 @@ Native R5 为含 typed `ShiftRight`、`BitAnd` 的 Transition 目标增加私有
 原树可含已准入的 typed 整数子树、实常量仿射投影和 Select。所有原臂与零项先审计，
 电压、时间、其他算子、real state、跨实例状态、数组及 CheckedInteger 依赖仍拒绝。
 这条消费者只供普通独立日程中的全 Transition 图，不开放一般连续整数关系、梯度、
-trigger、history calendar、动态重定位 guard 或反馈。旧目标在混合图中仍保留原冷 point 要求。
+trigger、history calendar、动态重定位 guard 或反馈。旧目标在混合图中仍保留原冷 point 要求；
+上节本地候选只为已独立合格的裸 real 目标保留实际非 point 冷盒。
 
 每个保持 epoch 的 `HeldPoints` 借用实际 Prepared 或 Frame 的 state bounds，
 要求有限、`lo=hi`、与对应名义状态相同且在 signed32 内。不能由名义值重建 point 盒，

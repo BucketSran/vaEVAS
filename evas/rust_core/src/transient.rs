@@ -1752,7 +1752,7 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
                 initial_bounds.expect("bounded bootstrap has a prepared enclosure"),
                 prediction_end(&model, &trajectory, crossings.first()),
                 &model.tolerances,
-                model.source_context.clone(),
+                prepared.as_ref().and_then(|p| p.source_context.clone()),
             )?
         } else {
             Operators::new_until_with_source_context(

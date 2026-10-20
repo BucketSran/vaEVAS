@@ -495,6 +495,20 @@ enum Runtime {
     SlewCascade(crate::slew_cascade::Cascade),
 }
 
+pub(crate) fn bare_real_transition_state(spec: &OperatorSpec, program: &Program) -> Option<usize> {
+    let OperatorSpec::Transition {
+        input: Expression::State { state },
+        origin,
+        ..
+    } = spec
+    else {
+        return None;
+    };
+    program.states.get(*state).and_then(|s| {
+        (s.kind == crate::ir::StateKind::Real && s.instance == origin.instance).then_some(*state)
+    })
+}
+
 fn transition_input(
     expression: &Expression,
     program: &Program,
@@ -2284,17 +2298,40 @@ impl Operators {
                     "invalid or duplicate operator call-site identity",
                 ));
             }
-            if initial_bounds.is_some()
-                && typed_targets.is_none()
-                && !matches!(spec,
-                OperatorSpec::Transition {input: Expression::State {state}, origin, ..}
-                    if program.states.get(*state).is_some_and(|s|
-                        s.kind == crate::ir::StateKind::Real && s.instance == origin.instance))
-            {
-                return Err(Error::new(
+            if let Some(actual) = initial_bounds.filter(|_| {
+                typed_targets.is_none() && bare_real_transition_state(spec, program).is_none()
+            }) {
+                let refusal = || {
+                    Error::new(
                     "unsupported_initial_history",
                     "bounded bootstrap requires only bare same-owner real-state Transition targets",
-                ));
+                )
+                };
+                let (Some(context), OperatorSpec::Transition { input, .. }) = (&shared, spec)
+                else {
+                    return Err(refusal());
+                };
+                crate::event_floor::check_provided_binding(context, program, trajectory, driven)?;
+                let dependencies = crate::held_integer_target::scalar_dependencies(
+                    input,
+                    program,
+                    &origin.instance,
+                    context,
+                )
+                .map_err(|error| {
+                    if error.kind == "unsupported_held_integer_target" {
+                        refusal()
+                    } else {
+                        error
+                    }
+                })?;
+                context.charge(4 + 4 * dependencies.len())?;
+                if dependencies
+                    .iter()
+                    .any(|&state| actual[state] != I::point(states[state]))
+                {
+                    return Err(refusal());
+                }
             }
             let input = match spec {
                 OperatorSpec::Idt { input, .. }
@@ -2317,15 +2354,23 @@ impl Operators {
                 continue;
             }
             if typed_targets.is_some() {
-                // Opt-in typed targets do not inherit the separate077 bare-real
-                // nonpoint exception, including old targets in the same graph.
+                // The existing bare-real constructor consumes its actual box.
+                // Other untyped targets retain the original point-seed gate;
+                // typed targets above still prove their own point dependencies.
                 let (_, deps, _) =
                     crate::continuous::integral_dependency_edges(input, program, &origin.instance)?;
                 let actual = initial_bounds.expect("held cold frame");
-                if deps
+                let nonpoint = deps
                     .iter()
-                    .any(|&s| actual.get(s).is_none_or(|b| b.lo != b.hi))
-                {
+                    .any(|&s| actual.get(s).is_none_or(|b| b.lo != b.hi));
+                if nonpoint {
+                    shared
+                        .as_ref()
+                        .expect("typed owner")
+                        .charge(16 + origin.instance.len())?;
+                    if bare_real_transition_state(spec, program).is_some() {
+                        continue;
+                    }
                     return Err(Error::new(
                         "unsupported_initial_history",
                         "typed target composition retains the original cold point-seed gate",
