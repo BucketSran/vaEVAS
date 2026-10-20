@@ -90,9 +90,16 @@ When writing a PR body, load the shared `pr` skill for presentation. This skill
 owns vaEVAS scope, evidence and publication requirements. Apply these project
 adaptations to the generic `pr` template:
 
-- Use the repository PR template when one exists; otherwise select useful sections
-  from `pr`. A short PR can combine or omit headings while retaining the problem,
-  resulting behavior, actual checks and material limits.
+- Use the [repository template](../../../.github/pull_request_template.md) as
+  optional prompts. Small changes can use a few paragraphs without headings;
+  omit empty sections rather than filling every prompt.
+- Lead with the problem and final behavior across the entire PR. Add implementation
+  reasons when they help review, then explain what the checks establish and what
+  remains unverified. A long-running PR's description covers its cumulative scope;
+  recent iteration progress stays in the existing task entry.
+- Keep current-candidate checks separate from older complete evaluations, with
+  their revisions and denominators. Link detailed counts, hashes and execution
+  history. A local case pass does not update an older aggregate.
 - Include a diagram, tree or diff sketch only when it helps explain the change.
 - For a behavior fix, show observed before/after evidence when available. If the
   baseline was not run, say so and distinguish the reported or inferred prior
@@ -102,7 +109,11 @@ adaptations to the generic `pr` template:
 
 Write the title and body about the final change, including meaningful design or
 compatibility decisions. Link the relevant contracts and evidence; omit abandoned
-approaches and stale counts. Use the full skill names: `pr` formats the description;
+approaches and stale counts. For experiment changes, summarize the question,
+comparison conditions, result and supported next action; link the complete report.
+For corrected conclusions and task updates, follow the
+[existing-record conventions](../../../docs/agents/issue-tracker.md#maintain-the-existing-record).
+Use the full skill names: `pr` formats the description;
 `show-me-your-work` records decisions during execution.
 
 Describe the component's changed behavior and actual checks. Benchmark-only work

@@ -14,6 +14,34 @@ For EVAS accuracy or performance tasks, use the
 when defining the outcome and checks. Inspect existing mechanisms and the current task
 status before proposing missing work or reopening a deferred optimization.
 
+## Maintain the existing record
+
+Use the [task template](../../.github/ISSUE_TEMPLATE/task.md) as optional prompts.
+A small issue can use a few sentences for the problem and completion condition.
+For larger work, explain the problem, outcome and acceptance, then the approach,
+current result, blocker and next checkpoint. Include a decision with a recommendation
+only when a real choice remains. Record agreed dates; use dependencies and checkpoints
+when a completion date is unknown.
+
+Keep the title about the stable outcome. Maintain one dated current summary at the
+top, linking the existing progress table, owner and evidence instead of starting
+another tracker. Summaries of that table retain its revision and scope. Keep
+current-candidate observations separate from older accepted totals; partial passes,
+successful execution and reference qualification are different claims.
+
+Preserve prior results, failures, costs and acceptance obligations under dated
+history or a `<details>` block. Label their checkpoint so an old "current" does not
+read as the latest state. When a conclusion changes, mark the earlier summary as
+superseded and link its correction while retaining the original observations.
+Update only the authorized records; if an earlier record is outside scope, identify
+the stale claim and link the correction from the record being updated.
+
+PR descriptions explain the cumulative delivery using
+[the PR skill](../../.agents/skills/vaevas-prepare-pr/SKILL.md#draft-the-pr-description).
+Experiment reports keep the question, setup, source identity, execution owner,
+results, limits and supported next action together. PRs and issues link those
+reports and retain only the conclusions needed for review or the next decision.
+
 ## Shared planning skills
 
 `to-spec` and `to-tickets` use this tracker when publication is covered by the

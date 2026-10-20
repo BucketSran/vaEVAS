@@ -26,7 +26,8 @@ checks. Discussion, review, check selection and execution have different outcome
 carry forward the user's scope and [authorization](../../../CONTRIBUTING.md#scope-and-authorization).
 
 Use [domain docs](../../../docs/agents/domain.md) for terminology and decisions,
-and [tracker conventions](../../../docs/agents/issue-tracker.md) for task records.
+and [tracker conventions](../../../docs/agents/issue-tracker.md#maintain-the-existing-record)
+when creating or updating task scope, progress, decisions or historical conclusions.
 Reuse a settled acceptance criterion or specification. Ask only about unresolved
 decisions that affect the requested outcome; inspect available facts yourself.
 
