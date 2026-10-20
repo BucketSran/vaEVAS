@@ -10,9 +10,9 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from test_affine import KERNEL
 
 ROOT = Path(__file__).resolve().parents[1]
-KERNEL = ROOT / 'rust_core/target/debug/evas-kernel'
 
 
 class IdentityCLI(unittest.TestCase):
@@ -27,7 +27,7 @@ class IdentityCLI(unittest.TestCase):
         identity = json.loads(result.stdout)
         self.assertEqual(identity['identity_version'], 1)
         self.assertEqual(identity['package']['name'], 'evas-rebuild')
-        self.assertEqual(identity['package']['version'], '0.24.0')
+        self.assertEqual(identity['package']['version'], '0.24.1')
         self.assertIsNone(identity['package']['build_revision'])
         self.assertEqual(identity['kernel']['status'], 'not_requested')
         self.assertEqual(identity['compatibility']['ir_schema_version'], 32)
@@ -47,7 +47,7 @@ class IdentityCLI(unittest.TestCase):
             self.assertEqual(process.returncode, 0, process.stderr.read())
         self.assertEqual(identity['identity_version'], 1)
         self.assertEqual(identity['name'], 'evas-kernel')
-        self.assertEqual(identity['version'], '0.24.0')
+        self.assertEqual(identity['version'], '0.24.1')
         self.assertIsNone(identity['build_revision'])
         self.assertEqual(identity['ir_schema_version'], 32)
         self.assertIsNone(identity['request_protocol_version'])
@@ -143,7 +143,7 @@ class IdentityCLI(unittest.TestCase):
                                     env=dict(os.environ, PYTHONPATH=str(ROOT / 'src') + os.pathsep + directory))
             self.assertEqual(result.returncode, 0, result.stderr)
             package = json.loads(result.stdout)['package']
-            self.assertEqual(package['version'], '0.24.0')
+            self.assertEqual(package['version'], '0.24.1')
             self.assertEqual(package['metadata_source'], 'source_pyproject')
 
     def test_identity_bypasses_simulation_configuration_and_artifacts(self):

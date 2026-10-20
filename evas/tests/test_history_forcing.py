@@ -225,7 +225,7 @@ V(y)<+transition(q,0,0.125,0.125);end endmodule"""},
                 # differences. Every physical/certificate/record field stays.
                 current_engine=current.pop('engine');previous_engine=previous.pop('engine')
                 self.assertEqual(current_engine.rsplit('-',1)[0],previous_engine.rsplit('-',1)[0])
-                self.assertTrue(current_engine.endswith('-0.24.0'))
+                self.assertTrue(current_engine.endswith('-0.24.1'))
                 self.assertTrue(previous_engine.endswith('-0.21.0'))
                 self.assertEqual(current.pop('schema_version'),32)
                 self.assertEqual(previous.pop('schema_version'),28)
