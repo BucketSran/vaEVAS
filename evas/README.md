@@ -34,6 +34,8 @@ EVAS 的价值需要由电压域工程行为证明：在正确时刻采样，保
 
 最近已验收检查点为 **EVAS 0.24.0 / IR32**，生产提交 `5f0f1320`、本地release核 `2676e7e640f1`。wave27原始400为317通过、19失败、64拒绝；材料r3修订轨为320通过、15失败、65拒绝，剩80项。两轨相对wave26均只新增037、114、234，旧通过零回退，旧314个原始响应哈希与19份失败checker字典不变。修订轨使用本次同源396份原执行和4份修订执行，未用旧批补行。完整CI的2641个不同Python方法及双平台安装、重装和负控通过，最终双轨和身份已独审。202份运行及构建输入与481份冻结打包源码分别计数，内核身份各自保留，见[最终共同收据](../experiments/backends/support/low-cost-closure/ordinary-common-three.json)。400全部PASS目标未完成，PR208保持草稿，尚未合并或发布公共索引/tag。
 
+续推0.24.1候选为混合real与integer冷Transition保留独立认证，原019已在最终release完整通过原checker，61项定向检查通过。完整400在首例派发前被进程身份安全门拦住，旧汇总保持原身份。首次CI的三处旧版本断言已修正；新完整交付CI的15项检查通过，2644个不同Python方法实际通过，Rust655通过及1项忽略，双平台安装、重装和负控通过。合同、实际失败与身份见[混合冷目标收据](../experiments/backends/support/low-cost-closure/mixed-cold-transition.json)。
+
 此前IR31检查点增加事件体标量integer赋值根的直接物理输入电压转换，最近整数且半整数远离零，完整原值盒须证明同一signed32 bin；[合同及边界](docs/math/events.md#ir31-候选事件中的直接电压到-integer-转换)单独维护。IR30受限source Forcing与独立held Transition、IR29右移与按位与等原有边界保留。IR31保存请求须从原VA重编译为IR32。数学合同见[算子说明](docs/math/operators.md#independent-source-forcing-beside-held-histories)，历史版本见[更新记录](docs/UPDATE.md)。
 
 IR32增加受限普通历史消费者、同支路二次源项与保持历史的组合、保持整数目标的紧凑表示，以及显式参数的解析正弦输入值。原请求Work、全部准入审计和精度预算保留。早期局部候选的199个唯一Python方法、110个不同Rust单元测试及6个原生测试保留其开发身份；最终验收使用上述wave27同源双轨和CI。原369、371仍被原1e9预算拒绝，原346仍有展开及derived clock组合缺口。数学合同见[算子手册](docs/math/operators.md#同支路二次源直接项的本地候选)与[解析源值合同](docs/math/events.md#ir32-private-candidate-explicit-analytic-source-values)。

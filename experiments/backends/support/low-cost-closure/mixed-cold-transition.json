@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "status": "verified_complete_original019_and_deliveryCI;full400_blocked_before_dispatch;draft_PR208;not_merged",
+  "recorded_at_utc": "2026-10-20T08:48:01.033724+00:00",
+  "capabilities": [
+    "TRANSITION",
+    "EVENT-ORDER",
+    "EVENT-CONDITIONS",
+    "COMPOSE"
+  ],
+  "production_revision": "0a8dc512291aac5c1648ccb45ea099dcb6b77106",
+  "package": "0.24.1",
+  "ir_schema": 32,
+  "release_kernel_sha256": "3551db2dcdc6b19c5e9df3a195b3f08f2a0cf5ad5cda5207670f46d7a8eeee01",
+  "runtime_build_input_count": 202,
+  "frozen_git_package_source_count": 481,
+  "contract": "evas/docs/math/operators.md#混合实数与整数冷目标的本地候选",
+  "public_regression": "evas/tests/test_transition_bootstrap_bounds.py",
+  "behavior": {
+    "trigger": "fixed zero timer with bare real state transition and scalar integer Select transition",
+    "before": "original019 rejected: transition bootstrap requires finite final point state certificates",
+    "after": "original019 completed with its original checker passed;four properties zero mismatch",
+    "real_seed": "actual finite enclosing box retained including rounding uncertainty",
+    "integer_seed": "all original integer arms and point dependencies audited",
+    "source_work": "same request owner retained across failed qualification/context construction and retries;no extra callback or stage replay",
+    "excluded": [
+      "wrapped real expressions",
+      "foreign state",
+      "voltage targets",
+      "other histories",
+      "nonfixed schedules"
+    ]
+  },
+  "original019": {
+    "result": {
+      "family": "019",
+      "cli_returncode": 0,
+      "status": "completed",
+      "seconds": 0.18920991598861292,
+      "kernel_sha256": "3551db2dcdc6b19c5e9df3a195b3f08f2a0cf5ad5cda5207670f46d7a8eeee01",
+      "checker": {
+        "status": "passed",
+        "note": "wraps=13 clock_toggles=13 phase_range=0.008/0.997 slopes=47987653.26245392/93006574.76139978 expected=4.800e+07/9.300e+07; P_PERIODIC_PHASE_UPDATE mismatch_count=0; P_WRAPPED_PHASE_RANGE mismatch_count=0; P_WRAP_TOGGLES_CLOCK mismatch_count=0; P_CONTROLLED_EDGE_RATE mismatch_count=0"
+      },
+      "response_sha256": "29245915e36da89de59bb152b2ec9292483dc462b124958da3819f88cb725702"
+    },
+    "kernel_timeout_s": 120,
+    "worker_timeout_s": 150,
+    "checker": "unchanged original",
+    "precision": "unchanged",
+    "execution": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original019-final-r1/execution.receipt.json",
+      "sha256": "e7dc41cf2f7ff5d93ffe41ca631aa96ac0cfc3a3a90f70f3e0ef4e83e8c13185",
+      "availability": "local-only retained task evidence"
+    },
+    "response": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original019-final-r1/response.json",
+      "sha256": "29245915e36da89de59bb152b2ec9292483dc462b124958da3819f88cb725702",
+      "availability": "local-only retained task evidence"
+    }
+  },
+  "checks": {
+    "scoped_python": {
+      "passed": 61,
+      "method_or_setup_skipped": 0,
+      "execution": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/python019-final-r2/execution.receipt.json",
+        "sha256": "efb6196b0533108d00064820262a3bed8e31ada9c7e791e0c63a4869b60e67fc",
+        "availability": "local-only retained task evidence"
+      }
+    },
+    "scoped_rust": {
+      "passed": 11,
+      "failed": 0,
+      "filtered": 631,
+      "execution": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/rust019-scoped-r2/execution.receipt.json",
+        "sha256": "c638875f4d47a21ec98bbaba21c69bc951ec29166341ac5a3dcedc519b79ef20",
+        "availability": "local-only retained task evidence"
+      },
+      "source_boundary": "Before final equivalent Clippy argument/Option cleanup and version metadata;final code independently reviewed;full final Rust coverage belongs to CI."
+    },
+    "lint": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/lint019-final-r3/execution.receipt.json",
+      "sha256": "870d657e75620a6c4424ad645055df504eba4e2cdd7aa10e58a29dceb43e8bd7",
+      "availability": "local-only retained task evidence"
+    },
+    "identity_correction": {
+      "passed": 8,
+      "execution": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/identity019-green-r1/execution.receipt.json",
+        "sha256": "baf87b0a1da2a2685a04231feb0673906fea72b5fc1aaaf8ab3e547526a81814",
+        "availability": "local-only retained task evidence"
+      },
+      "lint": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/identity019-lint-r1/execution.receipt.json",
+        "sha256": "df0ae316fe5899b7c1fad9e61e8758a3281d78a800a69f2f4f2f12c8b10b54bc",
+        "availability": "local-only retained task evidence"
+      },
+      "runtime_build202_unchanged": true
+    }
+  },
+  "delivery_ci": {
+    "run": 39394363248,
+    "head": "159c0512081db43b6663ffca478fd04b961c43dc",
+    "url": "https://github.com/BucketSran/vaEVAS/actions/runs/39394363248",
+    "status": "independently_accepted",
+    "jobs_success": 15,
+    "python_unique_executed_passed": 2644,
+    "python_shards": [
+      797,
+      620,
+      639,
+      588
+    ],
+    "python_modules": 255,
+    "python_reused": 0,
+    "python_missing_or_duplicate": 0,
+    "python_method_or_setup_skipped": 0,
+    "rust_passed": 655,
+    "rust_performance_ignored": 1,
+    "source_identity": "All202 runtime/build inputs match original019 production0a8dc;onlytwo identity/reference test files differ at159c. Exact new481sdist members checked independently.",
+    "install_reinstall_negative_controls": [
+      "Ubuntu24.04x86_64Python3.10 PASS",
+      "macOS14arm64Python3.12 PASS"
+    ],
+    "platform_kernel_boundary": "Localrelease andCI/wheel binaries have their own hashes;not claimed byte-identical.",
+    "summary": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/ci-r2-summary.json",
+      "sha256": "960e529f9ff83fa2f7ed8bc0a4b99257bc97f47c87aef94ef953ea94a6a4bb68",
+      "availability": "local-only retained task evidence"
+    }
+  },
+  "full400": {
+    "status": "blocked_infrastructure;not_accepted",
+    "original_dispatches": 0,
+    "original_executed": 0,
+    "original_outer": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/remaining80-final-original400-20261020/execution.receipt.json",
+      "sha256": "69cd4b7ac3167460db0f01577960b820d5c8878757720a084470a0280e00466a",
+      "availability": "local-only retained task evidence"
+    },
+    "revised_dispatches": 0,
+    "reason": "Historic complete PGIDs are present again,while recorded wall-minus-monotonic offsets differ by5330.75s. Existing identity gate refuses. No gate relaxation or redispatch.",
+    "charged_failed_outer_s": 1805.05,
+    "clock_history_limit": "Sleep-excluding mach_absolute_time is observed locally;the complete historical clock trajectory was not recorded and is not inferred from endpoint offsets."
+  },
+  "accepted_aggregate": {
+    "source_revision": "5f0f13202e67e28f06bdf783208b402bba70e146",
+    "original_passed": 317,
+    "revised_passed": 320,
+    "remaining_to400": 80,
+    "local019_not_added_to_old_rows": true,
+    "receipt": "experiments/backends/support/low-cost-closure/ordinary-common-three.json",
+    "latest_candidate_case_claim": "Original019 complete individual PASS is independent of the unchanged historical400 aggregate."
+  },
+  "deferred": {
+    "case038": "Original prototype reached independent nonbinary clamp root condition_precision near35.183ns;prototype retained outside production,zero PASS credit.",
+    "next_candidates": [
+      "074",
+      "093",
+      "364"
+    ],
+    "expected_gain": "potential three complete cases;deeper consumers unverified,not a pass forecast"
+  },
+  "reviews": {
+    "spec": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/019-spec-review-r3.json",
+      "sha256": "ba9ae16a6b9fefe426f4ae663df776c66aec68eef73d35a4feac1d5f9e6c0113",
+      "availability": "local-only retained task evidence"
+    },
+    "standards": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/019-standards-review-r3.json",
+      "sha256": "229549a4320a8f901aed669c35370beae79a03a19ae2efe9c26db681da594b2b",
+      "availability": "local-only retained task evidence"
+    },
+    "original": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/final-original400-independent-review.json",
+      "sha256": "c79211017b78a0bcb44fcc7240c6fbcec87ea319628463b97e7de2d92968b82a",
+      "availability": "local-only retained task evidence"
+    },
+    "source_and_installation": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/final-ci-independent-review.json",
+      "sha256": "47afa08464a33d9ee368090bafa990eef4d0b7d2876bf8f352a68668dba1fe00",
+      "availability": "local-only retained task evidence"
+    },
+    "process_recovery": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/process-clock-recovery-review.json",
+      "sha256": "df67b2266ddde7b19b4f4d21155ab450c20e8592cf247e41ba0d61605ee29d23",
+      "availability": "local-only retained task evidence"
+    },
+    "identity_spec": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/019-identity-spec-review.json",
+      "sha256": "cfed5e66e35287cfe14ca11e84bcfbd20c329e4a8ad9494095103d3a2c55863b",
+      "availability": "local-only retained task evidence"
+    },
+    "identity_standards": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/019-identity-standards-review.json",
+      "sha256": "3eb2f73ca29b6886c8c3a7ed9f0dab00d4652ec0e005f6121a594a95cb4329dd",
+      "availability": "local-only retained task evidence"
+    },
+    "documentation_spec": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/final-documentation-spec-review.json",
+      "availability": "local-only retained task evidence",
+      "sha256": "8b2449f0e6eab54336be5e50b40aa5264c8d77e2e366608a6d0c0e3a70ec6880"
+    },
+    "ci_r2": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/final-ci-r2-independent-review.json",
+      "sha256": "716815a8a7d7bb8eded0c74b873e44bf11436034543e20d87596e119234c90c5",
+      "availability": "local-only retained task evidence"
+    },
+    "documentation_spec_r2": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/final-documentation-spec-r2-review.json",
+      "sha256": "138cfad5ca055d505c7f00ec4eb3fba2457f26950b40617f67cf268578d4e19f",
+      "availability": "local-only retained task evidence"
+    }
+  },
+  "limits": [
+    "Original and revised full400 aggregates retain prior accepted source identity.",
+    "No new Spectre run or common Q qualification.",
+    "Raw logs/archive/binary are local-only;public CI and maintained tests provide the public sources.",
+    "No budget reset,grant,case timeout,checker or precision change."
+  ],
+  "delivery_revision": "159c0512081db43b6663ffca478fd04b961c43dc",
+  "previous_failed_ci": {
+    "run": 39391226864,
+    "url": "https://github.com/BucketSran/vaEVAS/actions/runs/39391226864",
+    "head": "0a8dc512291aac5c1648ccb45ea099dcb6b77106",
+    "status": "failed_requires_corrected_full_revalidation",
+    "two_platform_installation": "independently reviewed;both exact sdists481matching tracked source members+7generated",
+    "python_executed": 2644,
+    "python_passed": 2641,
+    "python_failed": 3,
+    "method_or_setup_skipped": 0,
+    "rust_passed": 655,
+    "rust_ignored": 1,
+    "coverage": "skipped_due_failed_shard",
+    "failure": "Three test_identity expected0.24.0 vs actual0.24.1. Runtime behavior failures not observed in this run.",
+    "corrected_test_files": [
+      "evas/tests/test_identity.py",
+      "evas/tests/test_history_forcing.py"
+    ],
+    "corrected_local_identity_passed": 8
+  }
+}

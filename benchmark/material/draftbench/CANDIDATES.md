@@ -368,6 +368,20 @@ Spectre 回调探针也说明不能只比较最终计数而忽略跳变侧，或
 不能把安全拒绝算作波形通过，也不能用少数查询点一致证明没有漏根。这里只记录候选，不新增评分任务。
 
 
+### BC-0003 增补：混合冷目标不能丢失实数舍入盒
+
+原019在固定零时刻timer中同时更新real相位和integer时钟，再分别进入`transition`。
+旧EVAS要求整个冷状态为point，拒绝合法的实数舍入盒。只验证原生位目标还不能覆盖原模型的普通`c?0.9:0`。
+这是已观察的仿真器组合缺口，不是已证实的VA模型缺陷。
+本地0.24.1／IR32候选保留实际real包围和全部integer point依赖；最终原019完整通过原checker，四性质零失配。
+见[混合冷目标合同](../../../evas/docs/math/operators.md#混合实数与整数冷目标的本地候选)、
+[公开正反控](../../../evas/tests/test_transition_bootstrap_bounds.py)和[紧凑收据](../../../experiments/backends/support/low-cost-closure/mixed-cold-transition.json)。
+完整400尚未取得本候选的验收结果，旧汇总不变，也没有新增Spectre资格。
+
+可复用任务应同时检查real相位与integer时钟、零回调次数、无额外初始边沿，以及放大后误差仍须受预算约束。
+普通Select与原生位投影需要各自的正例；隐藏real臂、跨owner和包装实数目标保留负控。
+当前只补开发候选记录，不新增题目或评分分母。
+
 <a id="bc-0004"></a>
 
 ## BC-0004：输入限幅与 VCO 相位历史
