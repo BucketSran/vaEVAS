@@ -18,10 +18,35 @@ pub(crate) fn selected(expression: &Expression) -> bool {
     }
 }
 
+/// A selected slew whose sources occur only in Select predicates. Every
+/// numerical value leaf is a constant or held state, so a shaped physical
+/// source can decide cuts but never supplies a value, even with zero weight.
+pub(crate) fn predicate_only_sources(expression: &Expression) -> bool {
+    fn value(e: &Expression) -> bool {
+        match e {
+            Expression::Affine { terms, .. } => terms.is_empty(),
+            Expression::State { .. } => true,
+            Expression::Select {
+                then_value,
+                else_value,
+                ..
+            } => value(then_value) && value(else_value),
+            Expression::Add { left, right }
+            | Expression::Multiply { left, right }
+            | Expression::Divide { left, right } => value(left) && value(right),
+            Expression::Power { base, .. } => value(base),
+            _ => false,
+        }
+    }
+    selected(expression) && value(expression)
+}
+
 #[derive(Clone)]
 pub(crate) struct SourceSlew {
     plan: Arc<Plan>,
     history: HeldSlew,
+    // Per-cut paid enclosure of exact_root - representative, computed once.
+    offsets: Arc<[std::sync::OnceLock<Option<I>>]>,
 }
 impl SourceSlew {
     pub(crate) fn new(
@@ -57,16 +82,43 @@ impl SourceSlew {
             targets.push((cut.clone(), target.value, target.bounds));
         }
         let history = HeldSlew::new((seed.value, seed.bounds), targets, rise, fall, stop)?;
-        Ok(Self { plan, history })
+        let offsets = (0..plan.cuts().len())
+            .map(|_| std::sync::OnceLock::new())
+            .collect();
+        Ok(Self {
+            plan,
+            history,
+            offsets,
+        })
     }
     pub(crate) fn value(&self, time: f64) -> Result<f64, Error> {
         self.history.value(time)
     }
     pub(crate) fn bounds(&self, time: f64) -> Result<I, Error> {
-        self.history.range(I::point(time))
+        self.range(I::point(time))
     }
     pub(crate) fn range(&self, time: I) -> Result<I, Error> {
-        self.history.range(time)
+        let window = self.history.range(time)?;
+        if time.lo != time.hi || window.lo == window.hi {
+            return Ok(window);
+        }
+        // A point after a cut whose binary64 window is wider than the
+        // limiter's resolution: locate the exact cut once (paid) and use it.
+        let Some(index) = self.history.point_epoch(time.lo) else {
+            return Ok(window);
+        };
+        let offset = match self.offsets[index].get() {
+            Some(offset) => *offset,
+            None => {
+                let offset = self.plan.exact_cut_offset(index)?;
+                let _ = self.offsets[index].set(offset);
+                offset
+            }
+        };
+        match offset {
+            Some(offset) => self.history.point_range_with_offset(time.lo, index, offset),
+            None => Ok(window),
+        }
     }
     pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
         self.history.next_breakpoint(after)
