@@ -442,7 +442,7 @@ impl Curve {
             let stop_value = p.binary(stop)?;
             let zero = p.binary(0.)?;
             let mut out = Vec::new();
-            for pair in self.0.windows(2) {
+            for (index, pair) in self.0.windows(2).enumerate() {
                 p.pay(1)?;
                 let (a, x) = &pair[0];
                 let (b, y) = &pair[1];
@@ -476,6 +476,13 @@ impl Curve {
                 if !p.cmp(&time, &zero)?.is_gt() || p.cmp(&time, &stop_value)?.is_gt() {
                     continue;
                 }
+                // Same exact-arrival side as the unpaid reader.
+                let after = if !y.is_zero() || p.cmp(&time, &stop_value)?.is_eq() {
+                    None
+                } else {
+                    p.pay(2)?;
+                    self.0.get(index + 2).map(|(_, z)| rational_sign(z))
+                };
                 let segment = [p.enclose(a)?, p.enclose(b)?];
                 let ends = [p.enclose(x)?, p.enclose(y)?];
                 let window = I {
@@ -497,6 +504,7 @@ impl Curve {
                         segment,
                         ends,
                         slope,
+                        after,
                     },
                 )?;
             }
@@ -845,6 +853,7 @@ mod crossing_staged_contract_tests {
             assert_eq!(old.segment, new.segment);
             assert_eq!(old.ends, new.ends);
             assert_eq!(old.slope, new.slope);
+            assert_eq!(old.after, new.after);
         }
     }
 
@@ -863,6 +872,8 @@ mod crossing_staged_contract_tests {
         assert_eq!(new[0].slope, I { lo: 3., hi: 6. });
         assert_eq!(new[1].slope, I::point(-9.));
         assert_eq!(new[0].ends, [I::point(-1.), I::ZERO]);
+        // The exact arrival at1/3 leaves on the rising piece to2/3.
+        assert_eq!((new[0].after, new[1].after), (Some(1), None));
     }
 
     #[test]

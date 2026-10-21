@@ -337,9 +337,10 @@ impl Controller {
     }
 }
 
-// Current policy chooses the certified mathematical root as the actual cross
-// observation. Its enclosure and fired-root constraints travel together; b is
-// only a representative. No late-trigger policy is silently substituted.
+// A cross observation samples continuous values on the certified root
+// enclosure; its body conditions read the right limit tau+ (post_root_scope).
+// The enclosure and fired-root constraints travel together; b is only a
+// representative. No late-trigger policy is silently substituted.
 #[derive(Clone, Copy)]
 struct EventMoment<'a> {
     exact_root: Option<&'a crate::exact_source::RootTime>,
@@ -1330,32 +1331,57 @@ fn prepare_batch_until(
     Ok((next, records))
 }
 
-/// Right-limit observation facts for one all-cross calendar batch (LRM 2.4
-/// 5.10.3.1: the event occurs after the crossing). Sides come from strict
-/// sign-changing source roots. Derivative signs come from the accepted
-/// pre-event histories on [lo, next_up(hi)], which covers (tau, tau+e] for
-/// every root tau in the batch window. Paid history contexts keep the earlier
-/// g(tau)=0 observation; no certificate failure is turned into a choice.
+/// Right-limit observation facts for one calendar batch (LRM 2.4 5.10.3.1:
+/// a cross event occurs after the crossing). A body fired only by cross
+/// leaves reads at tau+; a body fired by a timer leaf keeps that exact time.
+/// Sides come from source roots: strict sign changes, or exact arrivals and
+/// their next affine piece. Derivative signs come from the accepted pre-event
+/// histories on [lo, next_up(hi)], which covers (tau, tau+e] for every root
+/// tau in the batch window. A same-time timer may change an operator history
+/// before tau+, so a mixed batch uses input-only derivatives. Paid calendar
+/// contexts install sides without history derivatives. A missing fact is
+/// refused by the conditions; only certificate gaps are tolerated here.
 fn post_root_scope(
     model: &EventModel,
     trajectory: &Trajectory,
     accepted: &Frame,
     scheduled: &[ScheduledEvent],
-) -> crate::event_conditions::PostRootSides {
-    let all_cross = !scheduled.is_empty()
-        && scheduled.iter().all(|e| {
-            matches!(
-                model.triggers.get(e.event).map(|leaf| &leaf.trigger),
-                Some(EventTrigger::Cross { .. })
-            )
-        });
-    if !all_cross || calendar_proof_work(model).is_some() || model.forcing.is_some() {
-        return crate::event_conditions::PostRootSides::install(Vec::new(), Vec::new());
+) -> Result<crate::event_conditions::PostRootSides, Error> {
+    let cross = |leaf: usize| {
+        matches!(
+            model.triggers.get(leaf).map(|leaf| &leaf.trigger),
+            Some(EventTrigger::Cross { .. })
+        )
+    };
+    let paid = calendar_proof_work(model);
+    if let Some(work) = paid {
+        // Fund the leaf scans below; paid contexts make no history query here.
+        let n = scheduled.len() as u64;
+        work.debit(2, n.saturating_mul(n).saturating_add(n).saturating_add(16))?;
+    }
+    let mut events = Vec::new();
+    for e in scheduled {
+        let body = model.triggers[e.event].event;
+        if !events.contains(&body)
+            && scheduled
+                .iter()
+                .all(|other| model.triggers[other.event].event != body || cross(other.event))
+        {
+            events.push(body);
+        }
     }
     let sides: Vec<_> = scheduled
         .iter()
+        .filter(|e| cross(e.event))
         .filter_map(|e| e.post_root_side().map(|side| (e.event, side)))
         .collect();
+    if paid.is_some() {
+        return Ok(crate::event_conditions::PostRootSides::install(
+            sides,
+            Vec::new(),
+            events,
+        ));
+    }
     let lo = scheduled
         .iter()
         .map(|e| e.bounds().lo)
@@ -1366,33 +1392,62 @@ fn post_root_scope(
         .fold(f64::NEG_INFINITY, f64::max)
         .next_up()
         .min(trajectory.config.stop);
+    // Budget, resource and IR failures are not certificate gaps.
+    let gap = |error: &Error| {
+        !matches!(
+            error.kind,
+            "step_budget"
+                | "resource_budget"
+                | "event_budget"
+                | "event_loop_budget"
+                | "forcing_entry_budget"
+                | "invalid_ir"
+                | "invalid_inputs"
+        )
+    };
     let mut slopes = Vec::new();
-    if lo < hi {
-        let events: Vec<_> = scheduled
-            .iter()
-            .map(|e| model.triggers[e.event].event)
-            .collect();
-        let candidates = model.conditions.right_limit_candidates(&events);
+    if lo < hi && !events.is_empty() {
+        let window = match trajectory.range(I { lo, hi }) {
+            Ok((window, _)) => window,
+            Err(error) if gap(&error) => Vec::new(),
+            Err(error) => return Err(error),
+        };
+        let all_cross = scheduled.iter().all(|e| cross(e.event));
+        let candidates = if window.is_empty() {
+            Vec::new()
+        } else {
+            model
+                .conditions
+                .right_limit_candidates(&events, &window, !all_cross)
+        };
         if !candidates.is_empty() {
-            if let Ok(guards) = crate::guard_trajectory::GuardTrajectory::new(
+            match crate::guard_trajectory::GuardTrajectory::new(
                 model,
                 trajectory,
                 &accepted.operators,
             ) {
-                for (predicate, expression, owner) in candidates {
-                    if let Some(side) = guards
-                        .range(expression, I { lo, hi }, owner)
-                        .ok()
-                        .and_then(|(_, slope)| slope.sign())
-                        .filter(|side| *side != 0)
-                    {
-                        slopes.push((predicate, side));
+                Ok(guards) => {
+                    for (predicate, expression, owner) in candidates {
+                        match guards.range(expression, I { lo, hi }, owner) {
+                            // A zero enclosure is a proven plateau.
+                            Ok((_, slope)) => {
+                                if let Some(side) = slope.sign() {
+                                    slopes.push((predicate, side));
+                                }
+                            }
+                            Err(error) if gap(&error) => {}
+                            Err(error) => return Err(error),
+                        }
                     }
                 }
+                Err(error) if gap(&error) => {}
+                Err(error) => return Err(error),
             }
         }
     }
-    crate::event_conditions::PostRootSides::install(sides, slopes)
+    Ok(crate::event_conditions::PostRootSides::install(
+        sides, slopes, events,
+    ))
 }
 
 fn prepare_calendar_batch(
@@ -1438,7 +1493,7 @@ fn prepare_calendar_batch(
     if model.forcing.is_some() {
         crate::diagnostics::counter("forcing_prefix_calendar_root", 1);
     }
-    let _post_root = post_root_scope(model, trajectory, accepted, scheduled);
+    let _post_root = post_root_scope(model, trajectory, accepted, scheduled)?;
     let exact_root = event_root(model, scheduled)?;
     let (ids, bounds) = match calendar_proof_work(model) {
         Some(work) => (

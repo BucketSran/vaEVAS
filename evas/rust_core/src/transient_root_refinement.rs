@@ -3,6 +3,31 @@
 //! failure. Later history/output certificates remain mandatory in every case.
 use super::*;
 
+/// The batch's tau+ reading for this single-event probe, without history
+/// derivatives; a probe that cannot certify a branch just returns no demand.
+fn post_root_probe(
+    model: &EventModel,
+    event: &ScheduledEvent,
+) -> crate::event_conditions::PostRootSides {
+    let cross = matches!(
+        model.triggers[event.event].trigger,
+        EventTrigger::Cross { .. }
+    );
+    crate::event_conditions::PostRootSides::install(
+        event
+            .post_root_side()
+            .filter(|_| cross)
+            .map(|side| vec![(event.event, side)])
+            .unwrap_or_default(),
+        Vec::new(),
+        if cross {
+            vec![model.triggers[event.event].event]
+        } else {
+            Vec::new()
+        },
+    )
+}
+
 impl Controller {
     fn filter_root_budget(
         &self,
@@ -17,13 +42,7 @@ impl Controller {
         let (inputs, slopes) = trajectory.range(event.bounds()).ok()?;
         let blocks = [model.triggers[event.event].event];
         let roots = [event.event];
-        let _post_root = crate::event_conditions::PostRootSides::install(
-            event
-                .post_root_side()
-                .map(|side| vec![(event.event, side)])
-                .unwrap_or_default(),
-            Vec::new(),
-        );
+        let _post_root = post_root_probe(model, event);
         let evaluation = self.accepted.operators.evaluation(event.time).ok()?;
         let prepared = crate::settlement::prepare_window(
             model,
@@ -85,13 +104,7 @@ impl Controller {
         let (inputs, slopes) = trajectory.range(event.bounds()).ok()?;
         let blocks = [model.triggers[event.event].event];
         let roots = [event.event];
-        let _post_root = crate::event_conditions::PostRootSides::install(
-            event
-                .post_root_side()
-                .map(|side| vec![(event.event, side)])
-                .unwrap_or_default(),
-            Vec::new(),
-        );
+        let _post_root = post_root_probe(model, event);
         let prepared = crate::settlement::prepare_window(
             model,
             (&blocks, &roots),

@@ -78,6 +78,44 @@ mod tests {
     }
 
     #[test]
+    fn post_root_reads_use_certified_sides_and_refuse_an_unsided_zero() {
+        let origin = serde_json::json!({"source":"right.va","line":1,"column":1,"instance":"dut"});
+        let u = serde_json::json!({"op":"affine","constant":0.0,"terms":[{"node":1,"coefficient":1.0}]});
+        let zero = serde_json::json!({"op":"affine","constant":0.0,"terms":[]});
+        let assign = |v: f64| serde_json::json!([{"kind":"assign","state":0,"rhs":{"op":"affine","constant":v,"terms":[]}}]);
+        let program: Program = serde_json::from_value(serde_json::json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u"],"contributions":[],
+            "states":[{"instance":"dut","name":"q","kind":"real","initial":0.0}],
+            "events":[{"origin":origin,"trigger":{"kind":"cross","guard":u,"direction":0,
+                "time_tolerance":0.001,"expression_tolerance":0.001},
+                "body":[{"kind":"if","relation":"gt","left":u,"right":zero,
+                    "then_body":assign(1.0),"else_body":assign(2.0),"origin":origin}]}]
+        }))
+        .unwrap();
+        let mut conditions = Conditions::new(&program).unwrap();
+        conditions.prepare(&program, &["u".to_string()]).unwrap();
+        let select = |sides: Vec<(usize, i8)>, events: Vec<usize>| {
+            let _scope = PostRootSides::install(sides, Vec::new(), events);
+            conditions
+                .select_at_roots(&[0], &[I::ZERO], &[0], &[I::ZERO])
+                .map(|selection| selection.decisions)
+        };
+        // A timer-fired body observes g(t)=0 at its own time.
+        assert_eq!(select(vec![], vec![]).unwrap(), vec![(0, false)]);
+        // A tau+ body reads the certified side; 0 is a proven plateau.
+        assert_eq!(select(vec![(0, 1)], vec![0]).unwrap(), vec![(0, true)]);
+        assert_eq!(select(vec![(0, -1)], vec![0]).unwrap(), vec![(0, false)]);
+        assert_eq!(select(vec![(0, 0)], vec![0]).unwrap(), vec![(0, false)]);
+        // Without one consistent side the exact zero proves nothing at tau+.
+        for sides in [vec![], vec![(0, 1), (0, -1)]] {
+            assert_eq!(select(sides, vec![0]).unwrap_err().kind, "event_condition");
+        }
+        // The scope is restored after each batch.
+        assert_eq!(post_root_side(0), None);
+        assert!(!post_root_event(0));
+    }
+
+    #[test]
     fn empty_and_inactive_selections_preserve_results_but_reject_unknown_indices() {
         let origin = serde_json::json!({"source":"empty.va","line":1,"column":1,"instance":"M"});
         let program:Program=serde_json::from_value(serde_json::json!({
@@ -145,19 +183,24 @@ struct Predicate {
 }
 
 // LRM 2.4 section 5.10.3.1: a cross event occurs after the threshold crossing,
-// inside the time/expression tolerance box. EVAS observes the right limit
-// tau+ of a certified transverse root. Continuous values keep their root
-// enclosure there. A predicate with the same exact zero set as a fired guard
-// g, d = k*g, has sign k*s where s is the certified crossing side. Another
-// state-independent predicate proved exactly zero at tau takes the sign of its
-// certified time derivative on (tau, tau+e]. Without these certificates the
-// earlier g(tau)=0 observation is kept.
+// inside the time/expression tolerance box. A body fired only by cross leaves
+// observes the right limit tau+ of its certified roots. Continuous values keep
+// their root enclosure there. A predicate with the same exact zero set as a
+// fired guard g, d = k*g, has sign k*s where s is the certified side of g just
+// after tau (0: proven plateau). Another state-independent predicate proved
+// exactly zero at tau takes the sign of its certified time derivative on
+// (tau, tau+e]. A time-varying difference that is exactly zero at tau without
+// either certificate cannot be decided by g(tau)=0; it is refused unless both
+// branches are proved equivalent. A body fired by a timer leaf in the same
+// batch executes at that exact time, where the fired guards certify g(t)=0.
 #[derive(Default)]
 struct PostRoot {
-    // (calendar leaf, crossing side)
+    // (calendar leaf, certified guard sign just after its root; 0: plateau)
     sides: Vec<(usize, i8)>,
-    // (predicate, strict derivative sign on the post-root interval)
+    // (predicate, certified derivative sign on the post-root interval; 0: plateau)
     slopes: Vec<(usize, i8)>,
+    // Event bodies fired only by cross leaves in this batch; they read at tau+.
+    events: Vec<usize>,
 }
 thread_local! {
     static POST_ROOT: std::cell::RefCell<PostRoot> =
@@ -168,8 +211,18 @@ thread_local! {
 /// scope restores the enclosing value, so nothing survives its batch.
 pub(crate) struct PostRootSides(PostRoot);
 impl PostRootSides {
-    pub(crate) fn install(sides: Vec<(usize, i8)>, slopes: Vec<(usize, i8)>) -> Self {
-        Self(POST_ROOT.with(|cell| cell.replace(PostRoot { sides, slopes })))
+    pub(crate) fn install(
+        sides: Vec<(usize, i8)>,
+        slopes: Vec<(usize, i8)>,
+        events: Vec<usize>,
+    ) -> Self {
+        Self(POST_ROOT.with(|cell| {
+            cell.replace(PostRoot {
+                sides,
+                slopes,
+                events,
+            })
+        }))
     }
 }
 impl Drop for PostRootSides {
@@ -185,7 +238,7 @@ fn unique(entries: &[(usize, i8)], key: usize) -> Option<i8> {
     found.all(|s| s == first).then_some(first)
 }
 
-/// Certified crossing side of a fired leaf just after its root, if any.
+/// Certified guard side of a fired leaf just after its root, if any.
 pub(crate) fn post_root_side(leaf: usize) -> Option<i8> {
     POST_ROOT.with(|cell| unique(&cell.borrow().sides, leaf))
 }
@@ -194,17 +247,41 @@ fn post_root_slope(predicate: usize) -> Option<i8> {
     POST_ROOT.with(|cell| unique(&cell.borrow().slopes, predicate))
 }
 
+/// Whether this event body reads at the right limit of its cross roots.
+fn post_root_event(event: usize) -> bool {
+    POST_ROOT.with(|cell| cell.borrow().events.contains(&event))
+}
+
 fn side_value(side: i8) -> I {
     match side {
-        1 => I { lo: f64::MIN_POSITIVE, hi: f64::MAX },
-        -1 => I { lo: -f64::MAX, hi: -f64::MIN_POSITIVE },
+        1 => I {
+            lo: f64::MIN_POSITIVE,
+            hi: f64::MAX,
+        },
+        -1 => I {
+            lo: -f64::MAX,
+            hi: -f64::MIN_POSITIVE,
+        },
         _ => I::ZERO,
     }
 }
 
-/// Sign-only enclosure of d = k*g just after the root; [0,0] without a side.
-fn post_root_value(leaf: usize, ratio: i8) -> I {
-    side_value(post_root_side(leaf).map_or(0, |side| side * ratio))
+/// Root observation of a predicate with the same exact zero set as a fired guard.
+#[derive(Clone, Copy, PartialEq)]
+enum RootRead {
+    /// Certified value: k*s just after tau, or g(t)=0 for a timer-fired body.
+    Value(I),
+    /// d(tau)=0 is proved, but its side just after tau is not certified.
+    Unsided,
+}
+
+/// Root facts shared by one event body walk.
+#[derive(Clone, Copy)]
+struct RootFacts<'a> {
+    at_root: &'a [bool],
+    certified: &'a [bool],
+    // The body reads at the right limit tau+ of its cross roots.
+    post: bool,
 }
 
 pub(crate) struct Conditions {
@@ -706,23 +783,58 @@ impl Conditions {
     }
 
     /// State-independent ordinary predicates of the given event bodies, with
-    /// their owner instance, for post-root derivative certificates.
+    /// their owner instance, for post-root derivative certificates. A predicate
+    /// whose enclosure over the whole batch window excludes zero never needs
+    /// one. `input_only` omits operator columns, whose same-time history a
+    /// timer in the batch may change before tau+.
     pub(crate) fn right_limit_candidates(
         &self,
         events: &[usize],
+        window: &[I],
+        input_only: bool,
     ) -> Vec<(usize, &Expression, &str)> {
+        let Some(bounds) = self.bounds.as_ref() else {
+            return Vec::new();
+        };
+        let values = bounds.values_with_operators(window, &[]);
         self.predicates
             .iter()
             .enumerate()
-            .filter(|(_, p)| {
+            .filter(|(i, p)| {
                 events.contains(&p.event)
                     && self.active_events.get(p.event).copied().unwrap_or(false)
                     && !p.numeric
                     && p.dependencies.state_dependencies.is_empty()
                     && p.dependencies.operator_dependencies.is_empty()
+                    && values.get(*i).is_none_or(|v| !(v.lo > 0.0 || v.hi < 0.0))
+                    && (!input_only || (!bounds.symbolic(*i) && bounds.operator_free(*i)))
             })
             .map(|(i, p)| (i, &p.expression, p.origin.instance.as_str()))
             .collect()
+    }
+
+    /// Whether a condition difference can change between tau and te>tau:
+    /// it reads a voltage, an operator history, or a state written in this
+    /// body from such a value. A time-invariant exact tie keeps its value.
+    fn time_varying(&self, predicate: usize, varying: &[bool]) -> bool {
+        let p = &self.predicates[predicate];
+        let inputs = match self.bounds.as_ref() {
+            Some(bounds) if !p.numeric && !bounds.symbolic(predicate) => {
+                !bounds.input_free(predicate)
+            }
+            _ => {
+                p.dependencies
+                    .node_dependencies
+                    .iter()
+                    .any(|&node| node != 0)
+                    || !p.dependencies.operator_dependencies.is_empty()
+            }
+        };
+        inputs
+            || p.dependencies
+                .state_dependencies
+                .iter()
+                .any(|&state| varying[state])
     }
 
     pub(crate) fn select(&self, events: &[usize], inputs: &[I]) -> Result<Selection, Error> {
@@ -764,25 +876,46 @@ impl Conditions {
             .as_ref()
             .map(|b| b.values_with_operators(inputs, operators))
             .unwrap_or_default();
+        // at_root: a fired guard with the same exact zero set proves d(tau)=0.
+        // certified: that root read also decides the body's observation.
         let mut at_root = vec![false; self.predicates.len()];
-        let mut root_values: Vec<Option<I>> = vec![None; self.predicates.len()];
+        let mut certified = vec![false; self.predicates.len()];
+        let mut root_reads: Vec<Option<RootRead>> = vec![None; self.predicates.len()];
         let mut conflicting = vec![false; self.predicates.len()];
         for &leaf in fired_leaves {
             if let Some(predicates) = self.root_predicates.get(leaf) {
                 for &(predicate, ratio) in predicates {
-                    let value = post_root_value(leaf, ratio);
-                    match root_values[predicate] {
-                        Some(old) if old != value => conflicting[predicate] = true,
-                        _ => root_values[predicate] = Some(value),
-                    }
+                    let read = if post_root_event(self.predicates[predicate].event) {
+                        post_root_side(leaf).map_or(RootRead::Unsided, |side| {
+                            RootRead::Value(side_value(side * ratio))
+                        })
+                    } else {
+                        RootRead::Value(I::ZERO)
+                    };
+                    root_reads[predicate] = match (root_reads[predicate], read) {
+                        (None | Some(RootRead::Unsided), read) => Some(read),
+                        (old, RootRead::Unsided) => old,
+                        (Some(old), read) => {
+                            conflicting[predicate] |= old != read;
+                            Some(old)
+                        }
+                    };
                 }
             }
         }
-        for (predicate, value) in root_values.into_iter().enumerate() {
+        for (predicate, read) in root_reads.into_iter().enumerate() {
             // Inconsistent same-root sides are not a proof; keep the root box.
-            if let Some(value) = value.filter(|_| !conflicting[predicate]) {
-                values[predicate] = value;
-                at_root[predicate] = true;
+            match read.filter(|_| !conflicting[predicate]) {
+                Some(RootRead::Value(value)) => {
+                    values[predicate] = value;
+                    at_root[predicate] = true;
+                    certified[predicate] = true;
+                }
+                Some(RootRead::Unsided) => {
+                    values[predicate] = I::ZERO;
+                    at_root[predicate] = true;
+                }
+                None => {}
             }
         }
         #[allow(clippy::too_many_arguments)] // Keep the recursive event-selection context explicit.
@@ -800,7 +933,8 @@ impl Conditions {
             operators: &[I],
             states: &mut crate::event_value_proof::LocalState,
             written: &mut [bool],
-            at_root: &[bool],
+            varying: &mut [bool],
+            root: RootFacts<'_>,
             proof_attempts: &mut usize,
             loop_iterations: &mut usize,
         ) -> Result<(), Error> {
@@ -865,7 +999,8 @@ impl Conditions {
                             operators,
                             states,
                             written,
-                            at_root,
+                            varying,
+                            root,
                             proof_attempts,
                             loop_iterations,
                         )?;
@@ -891,7 +1026,8 @@ impl Conditions {
                             operators,
                             states,
                             written,
-                            at_root,
+                            varying,
+                            root,
                             proof_attempts,
                             loop_iterations,
                         )?;
@@ -909,7 +1045,12 @@ impl Conditions {
                                     .checked_value(*predicate, inputs, states, operators)?
                             };
                             let (yes, no) = crate::event_numeric::sign(p.relation, value);
-                            if !value.finite() || !(yes || no) {
+                            // Same tau+ rule as an ordinary condition; loop bounds
+                            // have no derivative certificate.
+                            let unsided = root.post
+                                && value.zero()
+                                && context.time_varying(*predicate, varying);
+                            if !value.finite() || !(yes || no) || unsided {
                                 return Err(Error::new(
                                     "event_condition",
                                     format!(
@@ -946,7 +1087,8 @@ impl Conditions {
                                 operators,
                                 states,
                                 written,
-                                at_root,
+                                varying,
+                                root,
                                 proof_attempts,
                                 loop_iterations,
                             )?;
@@ -964,7 +1106,8 @@ impl Conditions {
                                 operators,
                                 states,
                                 written,
-                                at_root,
+                                varying,
+                                root,
                                 proof_attempts,
                                 loop_iterations,
                             )?;
@@ -993,32 +1136,45 @@ impl Conditions {
                             }
                             states.try_assign(a.state, &a.expression, &numeric_nodes, value)?;
                             written[a.state] = true;
+                            // A value read from a voltage or history at te varies
+                            // with te, although its enclosure is taken at tau.
+                            let deps = &a.dependencies;
+                            varying[a.state] = deps.node_dependencies.iter().any(|&node| node != 0)
+                                || !deps.operator_dependencies.is_empty()
+                                || deps.state_dependencies.iter().any(|&state| varying[state]);
                         }
                     }
                     Step::Display(index) => ordered.push(SelectedStep::Display(*index)),
                     Step::If { predicate, yes, no } => {
                         let p = &predicates[*predicate];
-                        let value = if p.numeric {
-                            crate::event_numeric::bounds_with_proofs(
-                                &p.expression,
-                                &numeric_nodes,
-                                states,
-                            )?
+                        // A root read is certified only when this read uses it.
+                        let (value, certified) = if p.numeric {
+                            (
+                                crate::event_numeric::bounds_with_proofs(
+                                    &p.expression,
+                                    &numeric_nodes,
+                                    states,
+                                )?,
+                                false,
+                            )
                         } else if p.dependencies.state_dependencies.is_empty()
                             && !bounds.unwrap().symbolic(*predicate)
                         {
-                            values[*predicate]
-                        } else if at_root[*predicate]
+                            (values[*predicate], root.certified[*predicate])
+                        } else if root.at_root[*predicate]
                             && p.dependencies
                                 .state_dependencies
                                 .iter()
                                 .all(|&state| !written[state])
                         {
-                            values[*predicate]
+                            (values[*predicate], root.certified[*predicate])
                         } else {
-                            bounds
-                                .unwrap()
-                                .checked_value(*predicate, inputs, states, operators)?
+                            (
+                                bounds
+                                    .unwrap()
+                                    .checked_value(*predicate, inputs, states, operators)?,
+                                false,
+                            )
                         };
                         let value = if value.sign().is_none() {
                             let exact = states.try_value(&p.expression, &numeric_nodes)?;
@@ -1041,24 +1197,38 @@ impl Conditions {
                         } else {
                             value
                         };
-                        // Right limit of a state-independent value proved zero at tau.
-                        let value = if value.zero()
-                            && !at_root[*predicate]
-                            && !p.numeric
-                            && p.dependencies.state_dependencies.is_empty()
-                        {
-                            post_root_slope(*predicate).map_or(value, side_value)
+                        // At tau+ an exact zero decides nothing by itself: use the
+                        // derivative side of a state-independent value, or a
+                        // time-invariant tie. Otherwise neither branch is proved.
+                        let mut unsided = false;
+                        let value = if root.post && value.zero() && !certified {
+                            let slope = (!p.numeric
+                                && p.dependencies.state_dependencies.is_empty())
+                            .then(|| post_root_slope(*predicate))
+                            .flatten();
+                            match slope {
+                                Some(side) => side_value(side),
+                                None => {
+                                    unsided = context.time_varying(*predicate, varying);
+                                    value
+                                }
+                            }
                         } else {
                             value
                         };
                         let (yes_proved, no_proved) = match p.relation {
+                            _ if unsided => (false, false),
                             Relation::Lt => (value.hi < 0.0, value.lo >= 0.0),
                             Relation::Le => (value.hi <= 0.0, value.lo > 0.0),
                             Relation::Gt => (value.lo > 0.0, value.hi <= 0.0),
                             Relation::Ge => (value.lo >= 0.0, value.hi < 0.0),
                         };
                         if !value.finite() || !(yes_proved || no_proved) {
-                            let original = Error::new("event_condition", format!("cannot certify {:?} condition at {}: difference in [{:e}, {:e}]", p.relation, p.origin.label(), value.lo, value.hi));
+                            let original = if unsided {
+                                Error::new("event_condition", format!("cannot certify {:?} condition at {} just after its crossing root: the difference is exactly zero at tau and has no one-sided certificate", p.relation, p.origin.label()))
+                            } else {
+                                Error::new("event_condition", format!("cannot certify {:?} condition at {}: difference in [{:e}, {:e}]", p.relation, p.origin.label(), value.lo, value.hi))
+                            };
                             if !value.finite() || *proof_attempts > MAX_BRANCH_PROOF_ATTEMPTS - 2 {
                                 return Err(original);
                             }
@@ -1076,6 +1246,8 @@ impl Conditions {
                             let mut ns = states.try_clone()?;
                             let mut yw = written.to_vec();
                             let mut nw = written.to_vec();
+                            let mut yv = varying.to_vec();
+                            let mut nv = varying.to_vec();
                             let yr = walk(
                                 yes,
                                 values,
@@ -1090,7 +1262,8 @@ impl Conditions {
                                 operators,
                                 &mut ys,
                                 &mut yw,
-                                at_root,
+                                &mut yv,
+                                root,
                                 proof_attempts,
                                 loop_iterations,
                             );
@@ -1108,7 +1281,8 @@ impl Conditions {
                                 operators,
                                 &mut ns,
                                 &mut nw,
-                                at_root,
+                                &mut nv,
+                                root,
                                 proof_attempts,
                                 loop_iterations,
                             );
@@ -1147,12 +1321,14 @@ impl Conditions {
                                 || !no_display
                                 || !same_bounds
                                 || yw != nw
+                                || yv != nv
                             {
                                 return Err(original);
                             }
                             ys.prepay_comparison(&ns)?;
                             states.merge(ys, &ns);
                             written.copy_from_slice(&yw);
+                            varying.copy_from_slice(&yv);
                             actions.extend(ya);
                             ordered.extend(yo);
                             // The chosen writes are identical. Keep the reads from
@@ -1178,7 +1354,8 @@ impl Conditions {
                             operators,
                             states,
                             written,
-                            at_root,
+                            varying,
+                            root,
                             proof_attempts,
                             loop_iterations,
                         )?;
@@ -1205,6 +1382,7 @@ impl Conditions {
             let mut states =
                 crate::event_value_proof::LocalState::try_with_context(before_bounds, proofs)?;
             let mut written = vec![false; self.state_count];
+            let mut varying = vec![false; self.state_count];
             walk(
                 &self.bodies[event],
                 &values,
@@ -1219,7 +1397,12 @@ impl Conditions {
                 operators,
                 &mut states,
                 &mut written,
-                &at_root,
+                &mut varying,
+                RootFacts {
+                    at_root: &at_root,
+                    certified: &certified,
+                    post: post_root_event(event),
+                },
                 &mut proof_attempts,
                 &mut loop_iterations,
             )?;
