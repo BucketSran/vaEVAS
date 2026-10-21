@@ -3,7 +3,7 @@
 Parameter/local/state environments belong to this instance. Global node indices,
 operator/state IDs and output order belong to Compilation; no loop-captured state.
 """
-from dataclasses import dataclass, field, fields, replace
+from dataclasses import dataclass, field, fields, is_dataclass, replace
 import math
 from fractions import Fraction
 from typing import TYPE_CHECKING
@@ -52,6 +52,8 @@ class Compilation:
     source_rational_nodes: set[int] = field(default_factory=lambda: {0})
     # Deferred (origin, diagnostic) pairs; see readout_scope.check.
     readout_pending: list = field(default_factory=list)
+    # Physical sampled sqrt/ln sites: (origin, voltage nodes of the argument).
+    sampled_math_reads: list = field(default_factory=list)
     settled_integer_reads: bool = False
     history_consumer_candidate: bool = False
     # References only: bind_hierarchy/parse_sources already own these objects.
@@ -191,6 +193,14 @@ class Compilation:
             check_ir(result,work=self.native_audit.ir_work,cache=self.native_audit.ir_cache)
         # A replacement Program must keep the SAME owner for expanded transport.
         object.__setattr__(result, "_native_audit", self.native_audit)
+        # A physical sampled sqrt/ln argument must read actual driven inputs.
+        # A node any contribution drives is an electrical unknown (or a
+        # conflicting source), outside the sampled contract: keep the refusal.
+        if self.sampled_math_reads:
+            targets = {node for c in result.contributions for node in (c.positive, c.negative)} - {0}
+            for origin, nodes in self.sampled_math_reads:
+                if nodes & targets:
+                    raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: nonconstant mathematical functions require a waveform contribution")
         pending = list(self.readout_pending)
         if self.source_rational_origins:
             trees = [input_rational_tree(c.rhs, self.source_rational_nodes) for c in result.contributions]
@@ -203,6 +213,25 @@ class Compilation:
         if pending:
             readout_scope.check(result, pending, self.native_audit)
         return result
+
+
+def state_reads(expression):
+    """State indices read anywhere in an IR expression, every arm included."""
+    found, seen, pending = set(), set(), [expression]
+    while pending:
+        item = pending.pop()
+        if id(item) in seen:
+            continue
+        seen.add(id(item))
+        if isinstance(item, StateRef):
+            found.add(item.state)
+        elif isinstance(item, ArrayRead):
+            found.update(item.states)
+        if isinstance(item, (tuple, list)):
+            pending.extend(item)
+        elif is_dataclass(item) and not isinstance(item, type):
+            pending.extend(getattr(item, f.name) for f in fields(item))
+    return found
 
 
 def _predicate_degree(expression, memo=None):
@@ -554,6 +583,7 @@ class InstanceCompiler:
                 execution = specialize_event_body((*prefix, *retained(event.body)), self.cache,
                                                   work=native_allowances[id(event)])
             self.active_event_aliases = self.aliases_at(event.token, body=True)
+            self.event_sampled_states = set()
             self.compilation.events.append(self.make_ir(Event, event_trigger, self.body(execution), origin))
         self.active_event_aliases = {}
         statements = unroll_loops(self.model, self.parameter)
@@ -894,12 +924,19 @@ class InstanceCompiler:
             typed.event_math = math_value
             kwargs["decisions"] = self.event_select
             kwargs.pop("validate_decision", None)
-        elif sampled_values:
-            # Physical sampled sqrt/ln; the kernel certifies each domain over
-            # the complete actual argument enclosure at the event.
+        elif sampled_values and getattr(self, "sampled_math_slot", False):
+            # Physical sampled sqrt/ln, only in an event assignment value; the
+            # kernel certifies each domain over the complete actual argument
+            # enclosure at the event. The argument must apply to a sample: a
+            # voltage read now, or a state this event already assigned from
+            # one. Anything else returns None and keeps the original refusal.
             def sampled_math(item, args):
+                nodes = frozenset(self.expression_nodes(args[0]) - {0})
+                if not nodes and not (state_reads(args[0]) & self.event_sampled_states):
+                    return None
                 origin = self.make_ir(Origin, item.token.source or self.model.source, item.token.line,
                     item.token.column, self.instance.name, item.expansion)
+                self.compilation.sampled_math_reads.append((origin, nodes))
                 return self.make_ir(EventMath, item.op, args, origin)
             typed.sampled_math = sampled_math
         try:
@@ -2085,10 +2122,16 @@ class InstanceCompiler:
                     raise CompileError(f"{self.model.source}:{statement.token.line}: assignment target must be an instance state")
                 # Reset feedback checks need voltage dependencies even
                 # when a coefficient cancels or underflows to zero.
-                value = self.lower_event_value(statement.rhs, self.symbol, self.node_ids, preserve_structure=True,
-                                         decisions=self.expression_select, validate_decision=self.validate_decision_expression, node_declarations=True,
-                                         indices=self.event_index_read,
-                                         integer_assignment_root=self.model.variables[statement.name] == "integer")
+                self.sampled_math_slot = True
+                try:
+                    value = self.lower_event_value(statement.rhs, self.symbol, self.node_ids, preserve_structure=True,
+                                             decisions=self.expression_select, validate_decision=self.validate_decision_expression, node_declarations=True,
+                                             indices=self.event_index_read,
+                                             integer_assignment_root=self.model.variables[statement.name] == "integer")
+                finally:
+                    self.sampled_math_slot = False
+                if self.expression_nodes(value) - {0} or state_reads(value) & self.event_sampled_states:
+                    self.event_sampled_states.add(self.state_ids[statement.name])
                 if self.model.variables[statement.name] == "integer" and not self.integral(value):
                     raise CompileError("integer assignment requires integral state arithmetic")
                 result.extend(self.event_assignment(self.state_ids[statement.name], value, origin,

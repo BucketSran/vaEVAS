@@ -132,6 +132,26 @@ fn invalid_history_graphs_and_masked_domains_are_rejected() {
 }
 
 #[test]
+fn bilinear_guard_over_live_nodes_is_not_a_readout_output() {
+    // Regression control for the readout row route: contributions[3] targets
+    // the unread grounded node "top", but its predicate is the product of two
+    // live circuit nodes and reads no held state or operator sample. The row
+    // route must not own it, so the original refusal must stand.
+    let node = |n: usize| json!({"op":"affine","constant":0.,"terms":[{"node":n,"coefficient":1.}]});
+    let mut value = fixture();
+    value["program"]["contributions"][3]["rhs"]["left"] =
+        json!({"op":"multiply","left":node(1),"right":node(2)});
+    let error = run(serde_json::from_value(value).unwrap())
+        .expect_err("bilinear guard without a held leaf must not be admitted");
+    assert!(
+        error.message.contains("readout")
+            || error.message.contains("affine")
+            || error.message.contains("predicate"),
+        "unexpected error: {error:?}"
+    );
+}
+
+#[test]
 fn paid_delayed_transition_queue_reaches_the_ordinary_consumer() {
     let mut value = fixture();
     value["program"]["operators"][0]["delay"] = json!(0.0625);

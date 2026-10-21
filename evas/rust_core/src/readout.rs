@@ -88,6 +88,143 @@ fn needs_readout(e: &E) -> bool {
     }
 }
 
+/// A held state or operator sample anywhere in the tree.
+fn has_leaf(e: &E) -> bool {
+    match e {
+        E::State { .. } | E::Operator { .. } => true,
+        E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
+            has_leaf(left) || has_leaf(right)
+        }
+        E::Power { base, .. } => has_leaf(base),
+        E::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => [left, right, then_value, else_value].iter().any(|e| has_leaf(e)),
+        _ => false,
+    }
+}
+
+/// A tree that reads at least one live circuit voltage.
+fn live_node(e: &E) -> bool {
+    match e {
+        E::Affine { terms, .. } => !terms.is_empty(),
+        E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
+            live_node(left) || live_node(right)
+        }
+        E::Power { base, .. } => live_node(base),
+        E::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => [left, right, then_value, else_value].iter().any(|e| live_node(e)),
+        _ => false,
+    }
+}
+
+/// Predicate degree with held states and operator samples frozen as gains.
+fn held_gain_degree(e: &E) -> Option<u8> {
+    match e {
+        E::Affine { terms, .. } => Some(u8::from(!terms.is_empty())),
+        E::State { .. } | E::Operator { .. } => Some(0),
+        E::Add { left, right } => Some(held_gain_degree(left)?.max(held_gain_degree(right)?)),
+        E::Multiply { left, right } => {
+            let d = held_gain_degree(left)? + held_gain_degree(right)?;
+            (d <= 1).then_some(d)
+        }
+        E::Divide { left, right } => {
+            let d = held_gain_degree(left)?;
+            (held_gain_degree(right)? == 0).then_some(d)
+        }
+        E::Power { base, exponent } => {
+            let d = held_gain_degree(base)?;
+            (d == 0 || *exponent == 1).then_some(d)
+        }
+        E::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => Some(
+            held_gain_degree(left)?
+                .max(held_gain_degree(right)?)
+                .max(held_gain_degree(then_value)?)
+                .max(held_gain_degree(else_value)?),
+        ),
+        _ => None,
+    }
+}
+
+/// Shape 1 (held-gain decision): a nonaffine predicate coupling a held state
+/// or operator sample with a live voltage that becomes affine once the held
+/// leaves are frozen. Decisions over held values only (q*q>0) or over live
+/// voltages only (V(a)*V(b)>0) are not this shape.
+fn held_gain_decision(left: &E, right: &E) -> bool {
+    (predicate_degree(left).is_none() || predicate_degree(right).is_none())
+        && (has_leaf(left) || has_leaf(right))
+        && (live_node(left) || live_node(right))
+        && held_gain_degree(left).is_some()
+        && held_gain_degree(right).is_some()
+}
+
+/// Every nonaffine decision in this value is a held-gain decision, and there
+/// is at least one. `None` when a nonaffine decision has another shape.
+fn held_gain_value(e: &E) -> Option<bool> {
+    match e {
+        E::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => {
+            let nonaffine = predicate_degree(left).is_none() || predicate_degree(right).is_none();
+            if nonaffine && !held_gain_decision(left, right) {
+                return None;
+            }
+            let mut any = nonaffine;
+            for child in [left, right, then_value, else_value] {
+                any |= held_gain_value(child)?;
+            }
+            Some(any)
+        }
+        E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
+            Some(held_gain_value(left)? | held_gain_value(right)?)
+        }
+        E::Power { base, .. } => held_gain_value(base),
+        _ => Some(false),
+    }
+}
+
+/// Shape 2 (stateless algebraic instance): the contribution's instance owns no
+/// state, event, operator or step bound and the value reads no held leaf, so
+/// it is a pure function of live node voltages at each row.
+fn stateless_owner(program: &Program, c: &Contribution) -> bool {
+    let instance = &c.origin.instance;
+    !has_leaf(&c.rhs)
+        && *instance == c.branch.instance
+        && program.states.iter().all(|s| s.instance != *instance)
+        && program.events.iter().all(|e| e.origin.instance != *instance)
+        && program
+            .operators
+            .iter()
+            .all(|o| o.origin().instance != *instance)
+        && program
+            .step_bounds
+            .iter()
+            .all(|b| b.origin.instance != *instance)
+}
+
+/// Whether the row route owns this nonaffine decision output.
+fn owned(program: &Program, c: &Contribution) -> bool {
+    stateless_owner(program, c) || held_gain_value(&c.rhs) == Some(true)
+}
+
 fn structural(e: &E, nodes: &mut BTreeSet<usize>, depth: usize) -> Result<(), Error> {
     if depth > 256 {
         return Err(scope("readout expression is too deep"));
@@ -202,10 +339,16 @@ fn expose(e: &E, leaves: &mut Vec<E>, base: usize) -> E {
 impl Plan {
     /// Partition qualifying readout outputs. `None` leaves the request intact.
     pub(crate) fn split(program: &mut Program, driven: &[String]) -> Result<Option<Self>, Error> {
+        // Only the two owned shapes engage this route; any other nonaffine
+        // decision (for example V(a)*V(b)>0 beside held state, or q*q>0)
+        // stays with the core program, which keeps its own refusal.
         let candidates: Vec<_> = (0..program.contributions.len())
             .filter(|&i| needs_readout(&program.contributions[i].rhs))
             .collect();
-        if candidates.is_empty() {
+        if !candidates
+            .iter()
+            .any(|&i| owned(program, &program.contributions[i]))
+        {
             return Ok(None);
         }
         let original_nodes = program.nodes.len();
@@ -257,6 +400,11 @@ impl Plan {
         };
         for &i in &candidates {
             qualifies(i)?;
+            if !owned(program, &program.contributions[i]) {
+                return Err(scope(
+                    "a nonlinear decision output requires a held-gain decision or a stateless algebraic owner",
+                ));
+            }
         }
         // Once engaged, other unread decision outputs of the same request use
         // the same row evaluation instead of the affine event representation.
@@ -456,13 +604,19 @@ fn evaluate(e: &E, values: &[f64], boxes: &[I]) -> Result<(f64, I), Error> {
         }
         E::Power { base, exponent } => {
             let (a, x) = evaluate(base, values, boxes)?;
-            let mut v = a;
-            let mut b = x;
-            for _ in 1..*exponent {
-                v *= a;
-                b = b * x;
+            // `structural` admits only exponents 1..=32, so this guard is
+            // defensive; x**0 is exactly 1 and must not fall through as x.
+            if *exponent == 0 {
+                (1., I::ONE)
+            } else {
+                let mut v = a;
+                let mut b = x;
+                for _ in 1..*exponent {
+                    v *= a;
+                    b = b * x;
+                }
+                (v, b)
             }
-            (v, b)
         }
         E::Select {
             relation,
@@ -565,6 +719,50 @@ mod tests {
         let error =
             evaluate(&quotient, &[0., 0.1], &[I::ZERO, I { lo: -0.1, hi: 0.1 }]).unwrap_err();
         assert_eq!(error.kind, "nonfinite_arithmetic");
+    }
+
+    #[test]
+    fn power_zero_is_one() {
+        let zero_power = expr(json!({"op":"power","base":node(1),"exponent":0}));
+        let (v, b) = evaluate(&zero_power, &[0., 2.], &[I::ZERO, I { lo: 1.5, hi: 2.5 }]).unwrap();
+        assert_eq!(v, 1.);
+        assert_eq!(b, I::ONE);
+    }
+
+    fn program(rhs: E, with_state: bool) -> Program {
+        let o = origin();
+        serde_json::from_value(json!({"schema_version":crate::ir::SCHEMA_VERSION,
+            "nodes":["0","u","v","y"],
+            "states": if with_state {json!([{"instance":"M","name":"g","kind":"real","initial":1.}])} else {json!([])},
+            "contributions":[{"origin":o,"branch":{"instance":"M","local_positive":"y","local_negative":"zz","kind":"voltage"},
+                "positive":3,"negative":0,"rhs":rhs}]}))
+        .unwrap()
+    }
+
+    #[test]
+    fn only_held_gain_or_stateless_algebraic_decisions_are_owned() {
+        let state = json!({"op":"state","state":0});
+        let select = |left: serde_json::Value| {
+            expr(json!({"op":"select","relation":"gt","left":left,"right":constant(0.5),
+                "then_value":constant(0.),"else_value":constant(1.),"origin":origin()}))
+        };
+        let bilinear = select(json!({"op":"multiply","left":node(1),"right":node(2)}));
+        let held_only = select(json!({"op":"multiply","left":state.clone(),"right":state.clone()}));
+        let held_gain = select(json!({"op":"multiply","left":state.clone(),"right":node(1)}));
+        for e in [&bilinear, &held_only, &held_gain] {
+            assert!(needs_readout(e));
+        }
+        // Beside held state (the history_consumer bilinear_guard shape), a
+        // live-only product is not owned; neither is a held-only product.
+        let p = program(bilinear.clone(), true);
+        assert!(!owned(&p, &p.contributions[0]));
+        let p = program(held_only, true);
+        assert!(!owned(&p, &p.contributions[0]));
+        let p = program(held_gain, true);
+        assert!(owned(&p, &p.contributions[0]));
+        // The same live-only product is owned when its instance is stateless.
+        let p = program(bilinear, false);
+        assert!(owned(&p, &p.contributions[0]));
     }
 
     #[test]
