@@ -289,6 +289,25 @@ fn invalid(message: &str) -> Error {
     Error::new("event_resolution", message)
 }
 
+/// One paid exact conversion of a binary64 observation time. Every history
+/// entry of a single query reads the same rational instead of converting the
+/// same float again. Only `new` builds it, so `exact` always equals `time`.
+pub(crate) struct ObservedTime {
+    time: f64,
+    exact: Option<crate::exact_source::RootTime>,
+}
+impl ObservedTime {
+    pub(crate) fn new(time: f64, w: &crate::transition_source_plan::Work) -> Result<Self, Error> {
+        use crate::exact_source::history_paid::{root, Paid};
+        let mut p = Paid::new(w);
+        let exact = p.binary(time).map(root);
+        Ok(Self {
+            time,
+            exact: p.finish(exact)?,
+        })
+    }
+}
+
 fn deadline(bounds: I, scale: f64, sum: Option<[f64; 3]>) -> Result<Deadline, Error> {
     // Supported-slice time-resolution gate: representative-at-upper-bound
     // displacement must be <= 1% of the declared delay/edge time. This is not
@@ -579,16 +598,18 @@ impl Transition {
         })();
         p.finish(result)
     }
-    fn history_exact_point(
+    fn history_exact_point_at(
         &self,
-        time: f64,
+        time: &ObservedTime,
         w: &crate::transition_source_plan::Work,
     ) -> Result<Option<(f64, I)>, Error> {
-        use crate::exact_source::history_paid::{root, Paid};
+        use crate::exact_source::history_paid::Paid;
+        let Some(time) = time.exact.as_ref() else {
+            return Ok(None);
+        };
         let mut p = Paid::new(w);
         let result = (|| {
-            let time = root(p.binary(time)?);
-            let value = p.accept(self.history_exact_at(&time, w))??;
+            let value = p.accept(self.history_exact_at(time, w))??;
             let bounds = p.enclose(&value)?;
             let nearest = p.nearest(&value)?;
             (bounds.lo <= nearest && nearest <= bounds.hi).then_some((nearest, bounds))
@@ -670,6 +691,14 @@ impl Transition {
 
     pub(crate) fn input_changed_from(&self, old: &Self) -> bool {
         self.input_revision != old.input_revision
+    }
+
+    /// Whether an advance with this target installs it. Only an installed
+    /// target reads its optional exact proof; queue pops and edge settlement
+    /// never change `input`/`input_bounds`, so callers may ask before advancing.
+    pub(crate) fn installs_target(&self, input: f64, bounds: I, may_change: bool) -> bool {
+        input != self.input
+            || (may_change && (bounds.lo != bounds.hi || bounds != self.input_bounds))
     }
 
     /// Advance a private prediction through queued targets, without changing
@@ -836,10 +865,19 @@ impl Transition {
         time: f64,
         w: &crate::transition_source_plan::Work,
     ) -> Result<f64, Error> {
+        self.history_value_at(&ObservedTime::new(time, w)?, w)
+    }
+    /// `history_value` for a time already converted once for the whole query.
+    pub(crate) fn history_value_at(
+        &self,
+        observed: &ObservedTime,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<f64, Error> {
+        let time = observed.time;
         if !time.is_finite() {
             return Err(invalid("nonfinite transition observation time"));
         }
-        if let Some((value, _)) = self.history_exact_point(time, w)? {
+        if let Some((value, _)) = self.history_exact_point_at(observed, w)? {
             return Ok(value);
         }
         w.debit(2, 16)?;
@@ -859,12 +897,14 @@ impl Transition {
         }
         Ok(value)
     }
-    pub(crate) fn history_value_bounds(
+    /// `history_value_bounds` for a time already converted once for the query.
+    pub(crate) fn history_value_bounds_at(
         &self,
-        time: f64,
+        observed: &ObservedTime,
         w: &crate::transition_source_plan::Work,
     ) -> Result<I, Error> {
-        if let Some((_, bounds)) = self.history_exact_point(time, w)? {
+        let time = observed.time;
+        if let Some((_, bounds)) = self.history_exact_point_at(observed, w)? {
             return Ok(bounds);
         }
         w.debit(2, 32)?;
@@ -1678,8 +1718,7 @@ impl Transition {
         if input == self.input && bounds != self.input_bounds && !may_change {
             return Err(invalid("cannot certify unchanged transition input history"));
         }
-        let uncertain_write = may_change && (bounds.lo != bounds.hi || bounds != self.input_bounds);
-        if input != self.input || uncertain_write {
+        if self.installs_target(input, bounds, may_change) {
             let exact_target = if let Some(w) = work {
                 use crate::exact_source::history_paid::Paid;
                 let mut p = Paid::new(w);

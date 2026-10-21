@@ -2225,9 +2225,7 @@ impl Operators {
                             program,
                             &origin.instance,
                         )
-                        .is_ok_and(|(nodes, _, operators)| {
-                            nodes.is_empty() && operators.is_empty()
-                        })
+                        .is_ok_and(|(nodes, _, operators)| nodes.is_empty() && operators.is_empty())
                 }
                 _ => false,
             };
@@ -2242,7 +2240,14 @@ impl Operators {
             }
         }
         let mut result = Self::new_until_with_held_points(
-            program, trajectory, driven, states, bounds, typed_targets, context, horizon,
+            program,
+            trajectory,
+            driven,
+            states,
+            bounds,
+            typed_targets,
+            context,
+            horizon,
             tolerances,
         )?;
         result.typed_calendar = true;
@@ -3111,10 +3116,11 @@ impl Operators {
         let entry = &self.entries[index];
         let result = match entry {
             Runtime::Transition { history, .. } => {
+                // One clone, one payment: a typed Spec pays its own copy (on the
+                // same owner ledger), every other entry pays the frame owner.
                 if let Some(spec) = self.held_targets.get(&index) {
                     history.charge_held_copy(&|amount| spec.charge(amount))?;
-                }
-                if let Some(w) = self.history_copy_work() {
+                } else if let Some(w) = self.history_copy_work() {
                     history.charge_held_copy(&|n| w.debit(2, n as u64))?;
                 }
                 let mut history = (**history).clone();
@@ -3404,6 +3410,8 @@ impl Operators {
         if let Some(w) = self.history_copy_work() {
             w.debit(2, self.entries.len() as u64)?;
         }
+        // Every Transition entry reads the same exact query time.
+        let mut observed: Option<crate::transition::ObservedTime> = None;
         self.entries.iter().enumerate().try_fold(
             Vec::<f64>::with_capacity(self.entries.len()),
             |mut values, (index, entry)| {
@@ -3440,7 +3448,10 @@ impl Operators {
                     Runtime::AbsDelay(history) => history.value(time)?,
                     Runtime::Transition { history, .. } => {
                         if let Some(w) = self.history_copy_work() {
-                            history.history_value(time, w)?
+                            if observed.is_none() {
+                                observed = Some(crate::transition::ObservedTime::new(time, w)?);
+                            }
+                            history.history_value_at(observed.as_ref().unwrap(), w)?
                         } else {
                             history.value(time)?
                         }
@@ -3736,6 +3747,8 @@ impl Operators {
         if let Some(w) = self.history_copy_work() {
             w.debit(2, (self.entries.len() * 2) as u64)?;
         }
+        // Every Transition entry reads the same exact query time.
+        let mut observed: Option<crate::transition::ObservedTime> = None;
         self.entries.iter().enumerate().try_fold(
             Vec::<I>::with_capacity(self.entries.len()),
             |mut bounds, (index, entry)| {
@@ -3795,7 +3808,16 @@ impl Operators {
                     Runtime::SourceSlew(history) => history.bounds(time)?,
                     Runtime::SlewCascade(history) => history.value_bounds(time)?,
                     Runtime::AbsDelay(history) => history.value_bounds(time),
-                    Runtime::Transition { history, .. } => if let Some(w)=self.history_copy_work(){history.history_value_bounds(time,w)?}else{history.value_bounds(time)?},
+                    Runtime::Transition { history, .. } => {
+                        if let Some(w) = self.history_copy_work() {
+                            if observed.is_none() {
+                                observed = Some(crate::transition::ObservedTime::new(time, w)?);
+                            }
+                            history.history_value_bounds_at(observed.as_ref().unwrap(), w)?
+                        } else {
+                            history.value_bounds(time)?
+                        }
+                    }
                 };
                 bounds.push(bound);
                 Ok(bounds)
@@ -4054,6 +4076,10 @@ impl Operators {
         }
         let physical_value_proofs = value_proofs
             .map(|proofs| -> Result<_, Error> {
+                if self.isolated_parameters.is_empty() {
+                    // Nothing to strip: borrow the validated map, never copy it.
+                    return Ok(std::borrow::Cow::Borrowed(proofs));
+                }
                 let mut physical = if let Some(w) = &shared_work {
                     crate::event_value_proof::history::copy_map(proofs, w)?
                 } else {
@@ -4066,10 +4092,10 @@ impl Operators {
                         physical.remove(&state);
                     }
                 }
-                Ok(physical)
+                Ok(std::borrow::Cow::Owned(physical))
             })
             .transpose()?;
-        let value_proofs = physical_value_proofs.as_ref();
+        let value_proofs = physical_value_proofs.as_deref();
         let physical_states = physical_parameters(states, &self.isolated_parameters, |value| value);
         let physical_bounds = physical_parameters(bounds, &self.isolated_parameters, I::point);
         let states = physical_states.as_ref();
@@ -4383,32 +4409,13 @@ impl Operators {
                             .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
                         let may_change =
                             changed.iter().any(|s| input.state_dependencies.contains(s));
-                        let target_proof = if let Some(w) = &shared_work {
-                            crate::event_value_proof::history::held_value(
-                                expression,
-                                program,
-                                bounds,
-                                value_proofs,
-                                w,
-                            )?
-                        } else if self.history_admission.is_some() {
-                            None
-                        } else {
-                            transition_value_proof(expression, program, bounds, value_proofs)?
-                        };
+                        // Pay the nominal target (same amounts as before) before
+                        // evaluating it.
                         if let Some(token) = &self.history_admission {
-                            let w = token.context.borrow_work();
-                            w.debit(2, input.states.len().min(states.len()) as u64)?;
-                            history.advance_at_with_history_work(
-                                time,
-                                time_bounds,
-                                input.value(&[], states)?,
-                                enclosure,
-                                may_change,
-                                exact_root,
-                                target_proof.as_ref(),
-                                w,
-                            )?;
+                            token
+                                .context
+                                .borrow_work()
+                                .debit(2, input.states.len().min(states.len()) as u64)?;
                         } else if let Some(w) = &shared_work {
                             w.debit(
                                 2,
@@ -4419,10 +4426,44 @@ impl Operators {
                                         .saturating_mul(input.state_dependencies.len() + 1))
                                     as u64,
                             )?;
+                        }
+                        let nominal = input.value(&[], states)?;
+                        // A target proof is read only when the history installs
+                        // this target; an unchanged held target never consumes it,
+                        // so do not replay (or pay for) a discarded proof.
+                        let target_proof =
+                            if !history.installs_target(nominal, enclosure, may_change) {
+                                None
+                            } else if let Some(w) = &shared_work {
+                                crate::diagnostics::counter("history_target_proof_replays", 1);
+                                crate::event_value_proof::history::held_value(
+                                    expression,
+                                    program,
+                                    bounds,
+                                    value_proofs,
+                                    w,
+                                )?
+                            } else if self.history_admission.is_some() {
+                                None
+                            } else {
+                                transition_value_proof(expression, program, bounds, value_proofs)?
+                            };
+                        if let Some(token) = &self.history_admission {
                             history.advance_at_with_history_work(
                                 time,
                                 time_bounds,
-                                input.value(&[], states)?,
+                                nominal,
+                                enclosure,
+                                may_change,
+                                exact_root,
+                                target_proof.as_ref(),
+                                token.context.borrow_work(),
+                            )?;
+                        } else if let Some(w) = &shared_work {
+                            history.advance_at_with_history_work(
+                                time,
+                                time_bounds,
+                                nominal,
                                 enclosure,
                                 may_change,
                                 exact_root,
@@ -4433,7 +4474,7 @@ impl Operators {
                             history.advance_at_with_proofs(
                                 time,
                                 time_bounds,
-                                input.value(&[], states)?,
+                                nominal,
                                 enclosure,
                                 may_change,
                                 exact_root,
