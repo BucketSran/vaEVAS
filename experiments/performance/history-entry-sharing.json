@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "issue": "https://github.com/BucketSran/vaEVAS/issues/138",
+  "slice": "P14 second slice: per-entry copy-on-write for Operators entries and shared immutable tables",
+  "baseline_revision": "e2c7aac73def4e505d9a8910a741244dd2d5604e",
+  "branch": "codex/p14-history-sharing-slice2",
+  "candidate_identity": {
+    "status": "local branch, not merged; raw evidence local-only under runs/performance-p14-20261017/",
+    "operators_rs_sha256": "1a473f011f23202cd103db6bbe7c418e99b8dc2a18f24a294c4a2f00e01860a9",
+    "transition_filter_rs_sha256": "5547fa122766926021f453726dc812c75c9bde70e99829fc3e1eade60939752c",
+    "kernels": {
+      "baseline_sha256": "2811849ac510a1e29870cbbeaf62754e87301cd3f027af864336db61582f77da",
+      "candidate_sha256": "1411e2df9178c27546d74b23607313a59a583d9b9f557c4b58bad1618c681529"
+    }
+  },
+  "change": {
+    "class": "A (sharing/copy elimination only)",
+    "items": [
+      "Operators.entries: Vec<Runtime> -> Vec<Arc<Runtime>>; trials share entries and deep-copy one entry only on in-place mutation via Arc::make_mut (idt reset advance, transition history advance, idt_mod ordinary-phase flag, certificate replay)",
+      "changes_on_advance, direct, isolated_parameters -> Arc<[..]> shared slices (immutable after construction)",
+      "new diagnostics counter history_entry_copy_on_write reports materialized entry copies",
+      "transition_filter.rs single_filter_budget read path adjusted for the Arc entries"
+    ],
+    "unchanged": "numeric order, tolerances, certification, event scheduling, replay acceptance, request protocol"
+  },
+  "method": {
+    "host": "Apple arm64, macOS 26.3.2; shared host with concurrent unrelated builds (load 5-10); all slow samples retained",
+    "boundary": "Python JSON serialize + process spawn + kernel read/decode/run/encode + Python response parse; excludes VA compilation and checks",
+    "configuration": "cargo build --release --locked; identical requests and tolerances; baseline/candidate alternating, diagnostic on/off paired per repeat; repeats=5 per side"
+  },
+  "batches": [
+    {
+      "name": "final six-case batch (shipped binary)",
+      "raw": "runs/performance-p14-20261017/paired-final/receipt.json (local-only)",
+      "successful_configurations": 120,
+      "failed_configurations": 0,
+      "cases": [
+        "pwl-8193",
+        "idt-8193",
+        "pwl_idt-8193",
+        "nonlinear_idt-8193",
+        "timer-8193",
+        "cross-8193"
+      ],
+      "end_to_end_ms_median_range": {
+        "pwl-8193": {
+          "baseline": [
+            87.37,
+            77.35,
+            113.63
+          ],
+          "candidate": [
+            93.52,
+            74.32,
+            185.8
+          ]
+        },
+        "idt-8193": {
+          "baseline": [
+            141.76,
+            135.18,
+            213.41
+          ],
+          "candidate": [
+            134.86,
+            130.44,
+            138.6
+          ]
+        },
+        "pwl_idt-8193": {
+          "baseline": [
+            338.15,
+            316.89,
+            371.14
+          ],
+          "candidate": [
+            310.55,
+            289.15,
+            445.84
+          ]
+        },
+        "nonlinear_idt-8193": {
+          "baseline": [
+            853.36,
+            500.37,
+            1527.19
+          ],
+          "candidate": [
+            571.58,
+            497.01,
+            1493.3
+          ]
+        },
+        "timer-8193": {
+          "baseline": [
+            113.71,
+            92.82,
+            173.24
+          ],
+          "candidate": [
+            142.99,
+            91.56,
+            173.26
+          ]
+        },
+        "cross-8193": {
+          "baseline": [
+            80.67,
+            79.97,
+            91.84
+          ],
+          "candidate": [
+            86.9,
+            78.81,
+            740.77
+          ]
+        }
+      },
+      "verdict": "every case's ranges overlap; medians move in both directions across batches; no stable difference"
+    },
+    {
+      "name": "exploratory six-case batch (pre-clippy-fix binary, overlapped local test activity; kept for outlier record)",
+      "raw": "runs/performance-p14-20261017/paired/receipt.json (local-only)",
+      "successful_configurations": 120,
+      "failed_configurations": 0,
+      "cases": [
+        "pwl-8193",
+        "idt-8193",
+        "pwl_idt-8193",
+        "nonlinear_idt-8193",
+        "timer-8193",
+        "cross-8193"
+      ],
+      "end_to_end_ms_median_range": {
+        "pwl-8193": {
+          "baseline": [
+            77.23,
+            47.05,
+            81.51
+          ],
+          "candidate": [
+            58.37,
+            47.26,
+            91.08
+          ]
+        },
+        "idt-8193": {
+          "baseline": [
+            194.32,
+            138.01,
+            213.02
+          ],
+          "candidate": [
+            207.52,
+            132.55,
+            224.62
+          ]
+        },
+        "pwl_idt-8193": {
+          "baseline": [
+            325.91,
+            199.14,
+            408.87
+          ],
+          "candidate": [
+            335.23,
+            207.51,
+            528.96
+          ]
+        },
+        "nonlinear_idt-8193": {
+          "baseline": [
+            499.64,
+            495.17,
+            666.99
+          ],
+          "candidate": [
+            498.89,
+            492.88,
+            921.8
+          ]
+        },
+        "timer-8193": {
+          "baseline": [
+            157.47,
+            126.37,
+            169.47
+          ],
+          "candidate": [
+            152.47,
+            139.6,
+            156.6
+          ]
+        },
+        "cross-8193": {
+          "baseline": [
+            105.92,
+            82.17,
+            141.54
+          ],
+          "candidate": [
+            105.6,
+            79.52,
+            136.78
+          ]
+        }
+      },
+      "note": "batch overlapped local cargo test activity and host load; ranges overlap on every case"
+    },
+    {
+      "name": "pwl_idt/idt re-measurement and kernel-only alternation",
+      "raw": "runs/performance-p14-20261017/paired-quiet/receipt.json, runs/performance-p14-20261017/kernel-alternate.json (local-only)",
+      "pwl_idt_end_to_end_ms": {
+        "baseline_median_range": [
+          195.5,
+          187.74,
+          282.98
+        ],
+        "candidate_median_range": [
+          297.7,
+          192.58,
+          358.88
+        ]
+      },
+      "pwl_idt_kernel_only_alternating_ms": {
+        "baseline_median_range": [
+          258.52,
+          165.36,
+          290.53
+        ],
+        "candidate_median_range": [
+          256.59,
+          168.89,
+          341.69
+        ]
+      },
+      "verdict": "no measurable difference; candidate min/max bracket baseline under host load"
+    }
+  ],
+  "diagnostics": {
+    "pwl_idt-8193": {
+      "baseline": {
+        "history_clone_span_ms": 2.14,
+        "history_clone_calls": 24576,
+        "history_clone_operator_slots": 24576
+      },
+      "candidate": {
+        "history_clone_span_ms": 0.98,
+        "history_clone_calls": 24576,
+        "history_clone_operator_slots": 24576,
+        "history_entry_copy_on_write": 0
+      },
+      "unchanged_counters": "circuit_solve_calls 32769, certificate_cache_hits 16384, linear_rhs_solves 32769 on both kernels"
+    },
+    "interpretation": "history_clone_operator_slots keeps its original meaning (slots nominally covered by the trial clone) for comparability; the new history_entry_copy_on_write counter reports deep copies actually performed. Six bench cases materialize zero entries per trial; idt-reset and transition mutation paths are exercised by the Rust regressions."
+  },
+  "correctness": {
+    "byte_identity": "Every case x repeat x kernel x diagnostic-mode response is byte-identical (single distinct output sha256 per case), including events and observation enclosures.",
+    "triangle": "validate_triangle checked exact Fraction integral containment and the original requested voltage budget on every pwl_idt execution.",
+    "tests": "cargo test --release --locked: 392 passed, 1 pre-existing ignored; PYTHONPATH=evas/src full evas/tests discovery: 1813 passed; experiments/performance calibration: 5 passed."
+  },
+  "conclusions": [
+    "Copy elimination is real (zero deep-copied operator entries per trial on all six bench cases) but end-to-end time is unchanged within host variance; recorded as no measurable difference, no speedup claimed.",
+    "Remaining pwl_idt trial hotspots sit outside this slice: per-trial Circuit rebuild in settlement::prepare (circuit.prepare ~36 ms of ~162 ms kernel.run, P05 scope) and nonlinear Jacobian rebuilds (P03, parallel slice)."
+  ],
+  "abandoned": []
+}
