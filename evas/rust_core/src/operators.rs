@@ -1073,10 +1073,9 @@ pub(crate) struct Operators {
     pub(crate) source_context: Option<Arc<crate::transition_source_plan::ProofContext>>,
     forcing_context: Option<Arc<crate::transition_source_plan::ProofContext>>,
     shared_history: bool,
-    // Ordinary typed held targets in an existing history-root calendar. It is
-    // frame identity only: queries, advances and copies use the same accounting
-    // as the accepted independent typed path (typed Specs pay their own copies),
-    // never a history-admission or shared-history capability.
+    // Ordinary typed held targets in an existing history-root calendar. Untyped
+    // entries pay copies/advances on the shared owner and typed Specs pay their
+    // own copies once; never a history-admission or shared-history capability.
     typed_calendar: bool,
     history_targets: std::collections::BTreeMap<usize, history_target::TargetPlan>,
     history_predicates: Vec<history_target::TargetPlan>,
@@ -1511,6 +1510,7 @@ impl Operators {
                     .as_ref()
                     .filter(|c| {
                         self.shared_history
+                            || self.typed_calendar
                             || c.original_binding().1.analytic_work().is_some()
                     })
                     .map(|c| c.borrow_work())
@@ -1527,7 +1527,9 @@ impl Operators {
             .or_else(|| {
                 self.source_context
                     .as_ref()
-                    .filter(|c| c.original_binding().1.analytic_work().is_some())
+                    .filter(|c| {
+                        self.typed_calendar || c.original_binding().1.analytic_work().is_some()
+                    })
                     .map(|c| c.borrow_work())
             });
         if let Some(w) = copy_work {
@@ -4016,7 +4018,9 @@ impl Operators {
         source_time_proofs: Option<&crate::exact_source::TimeProofs>,
     ) -> Result<(), Error> {
         let _timing = crate::diagnostics::span("history.advance");
-        let shared_work = if self.shared_history {
+        // A typed calendar meters its untyped held entries on the shared owner;
+        // typed Specs still pay their own copies (candidate_clone skips them).
+        let shared_work = if self.shared_history || self.typed_calendar {
             let w = self
                 .source_context
                 .as_ref()
