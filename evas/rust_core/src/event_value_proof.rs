@@ -444,7 +444,11 @@ impl LocalState {
             .and_then(enclosure)
             .filter(|v| bounds.lo <= v.lo && v.hi <= bounds.hi);
         self.bounds[state] = tighter.unwrap_or(bounds);
-        self.exact[state] = exact.filter(|_| tighter.is_some());
+        // A finite singleton certified enclosure is itself the exact binary
+        // value, exactly as `new` treats singleton input bounds.
+        self.exact[state] = exact
+            .filter(|_| tighter.is_some())
+            .or_else(|| point(self.bounds[state]));
     }
     pub(crate) fn merge(&mut self, yes: Self, no: &Self) {
         *self = yes;
@@ -868,5 +872,54 @@ mod native_floor_tests {
         ];
         assert_eq!(local.value(&expr, &nodes), binary(-1.));
         assert!(local.value_with_work(&expr, &nodes, &mut || None).is_err());
+    }
+}
+
+#[cfg(test)]
+mod singleton_assignment_tests {
+    use super::*;
+    fn node(n: usize) -> E {
+        E::Affine {
+            constant: 0.,
+            terms: vec![crate::ir::Term {
+                node: n,
+                coefficient: 1.,
+            }],
+        }
+    }
+    // x = 0.45 + (V(1) - s): exact binary64 inputs give 2^-54, not a tie.
+    fn residual() -> E {
+        E::Add {
+            left: Box::new(E::Affine {
+                constant: 0.45,
+                terms: vec![crate::ir::Term {
+                    node: 2,
+                    coefficient: 1.,
+                }],
+            }),
+            right: Box::new(E::Multiply {
+                left: Box::new(E::Affine {
+                    constant: -1.,
+                    terms: vec![],
+                }),
+                right: Box::new(E::State { state: 0 }),
+            }),
+        }
+    }
+    #[test]
+    fn certified_singleton_assignment_is_an_exact_value_but_a_box_is_not() {
+        // Node 1 is an unsolved electrical node; its certified sample enters
+        // only through the assignment's enclosure.
+        let nodes = [I::ZERO, I { lo: f64::NEG_INFINITY, hi: f64::INFINITY }, I::point(0.28)];
+        let mut local = LocalState::new(&[I::ZERO]);
+        local.assign(0, &node(1), &nodes, I::point(0.73));
+        assert_eq!(local.exact[0], binary(0.73));
+        let x = local.value(&residual(), &nodes).unwrap();
+        assert_eq!(x, R::new(1.into(), (1u64 << 54).into()));
+        // A nonsingleton enclosure still carries no exact provenance.
+        let mut boxed = LocalState::new(&[I::ZERO]);
+        boxed.assign(0, &node(1), &nodes, I { lo: 0.73, hi: 0.73f64.next_up() });
+        assert_eq!(boxed.exact[0], None);
+        assert_eq!(boxed.value(&residual(), &nodes), None);
     }
 }
