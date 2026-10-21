@@ -1,4 +1,4 @@
-"""Version 23: voltage/event IR with pure arithmetic for isolated observers.
+"""Version 30: voltage/event IR with typed integers and forcing markers.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 23
+SCHEMA_VERSION = 32
 
 
 @dataclass(frozen=True)
@@ -62,6 +62,14 @@ class Select:
 
 
 @dataclass(frozen=True)
+class Forcing:
+    value: "Expression"
+    origin: Origin
+    checked: tuple["Expression", ...] = ()
+    op: str = field(default="forcing", init=False)
+
+
+@dataclass(frozen=True)
 class StateRef:
     state: int
     op: str = field(default="state", init=False)
@@ -75,7 +83,7 @@ class OperatorRef:
 
 @dataclass(frozen=True)
 class EventMath:
-    function: Literal["sqrt", "abs", "min", "max"]
+    function: Literal["sqrt", "abs", "min", "max", "floor", "ln"]
     args: tuple["Expression", ...]
     origin: Origin
     op: str = field(default="event_math", init=False)
@@ -88,6 +96,13 @@ class CheckedIndex:
     last: int
     origin: Origin
     op: str = field(default="checked_index", init=False)
+
+
+@dataclass(frozen=True)
+class IntegerRound:
+    value: "Expression"
+    origin: Origin
+    op: str = field(default="integer_round", init=False)
 
 
 @dataclass(frozen=True)
@@ -107,7 +122,27 @@ class ArrayRead:
     op: str = field(default="array_read", init=False)
 
 
-Expression = ArrayRead | CheckedInteger | CheckedIndex | Affine | Binary | Power | Select | StateRef | OperatorRef | EventMath
+@dataclass(frozen=True)
+class IntegerLiteral:
+    value: int
+    op: str = field(default="integer_literal", init=False)
+
+
+@dataclass(frozen=True)
+class IntegerState:
+    state: int
+    op: str = field(default="integer_state", init=False)
+
+
+@dataclass(frozen=True)
+class IntegerPrimitive:
+    function: Literal["add", "subtract", "remainder", "shift_right", "bit_and"]
+    args: tuple["IntegerLiteral | IntegerState | IntegerPrimitive", ...]
+    origin: Origin
+    op: str = field(default="integer_primitive", init=False)
+
+
+Expression = IntegerRound | Forcing | IntegerPrimitive | ArrayRead | CheckedInteger | CheckedIndex | Affine | Binary | Power | Select | StateRef | OperatorRef | EventMath
 
 
 @dataclass(frozen=True)
@@ -181,7 +216,7 @@ class Sin:
 
 @dataclass(frozen=True)
 class MathFunction:
-    function: Literal["cos", "exp", "ln", "sqrt"]
+    function: Literal["cos", "exp", "ln", "sqrt", "tanh"]
     input: Expression
     origin: Origin
     kind: str = field(default="math", init=False)
@@ -192,7 +227,7 @@ class State:
     instance: str
     name: str
     kind: Literal["real", "integer"]
-    initial: float | Select
+    initial: float | Expression
 
 
 @dataclass(frozen=True)
@@ -330,5 +365,7 @@ class Program:
     step_bounds: tuple[StepBound, ...] = ()
 
     def to_dict(self) -> dict:
-        check_ir(self)
-        return asdict(self)
+        audit = getattr(self, "_native_audit", None)
+        check_ir(self, work=audit.ir_work if audit is not None else None,
+                 cache=audit.ir_cache if audit is not None else None)
+        return audit.materialize(self) if audit is not None and audit.active else asdict(self)

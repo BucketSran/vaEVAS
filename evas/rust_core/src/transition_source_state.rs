@@ -15,14 +15,24 @@ pub(crate) struct Source {
     time: f64,
     last_root: Option<RootTime>,
     last_window: I,
+    // Last physical target/cut consumed. It can follow the user root while
+    // remaining inside that event's original discovery window.
+    cursor: RootTime,
 }
 
+pub(crate) struct TargetStep {
+    pub(crate) target: Target,
+    pub(crate) changed: bool,
+    pub(crate) window: I,
+    pub(crate) root: Option<RootTime>,
+}
 pub(crate) struct Prepared {
     pub(crate) source: Source,
     pub(crate) target: Target,
     pub(crate) changed: bool,
     pub(crate) time_bounds: I,
     pub(crate) exact_root: Option<RootTime>,
+    pub(crate) steps: Vec<TargetStep>,
 }
 
 fn same_plan(left: &Arc<Plan>, right: &Arc<Plan>) -> bool {
@@ -51,6 +61,7 @@ impl Source {
                 time: 0.,
                 last_root: RootTime::point(0.),
                 last_window: I::ZERO,
+                cursor: RootTime::point(0.).unwrap(),
             },
             point,
             changed,
@@ -76,12 +87,59 @@ impl Source {
     ) -> Result<(), Error> {
         self.plan.check_incoming(after, bounds, root)
     }
+    /// Rebase only a cloned observation cursor inside an already certified
+    /// post-event phase. No source cut may have been consumed after the query.
+    pub(crate) fn rebase_observation(&mut self, time: f64) -> Result<(), Error> {
+        if time >= self.time {
+            return Ok(());
+        }
+        let query = RootTime::point(time);
+        if !self
+            .last_root
+            .as_ref()
+            .zip(query.as_ref())
+            .is_some_and(|(root, query)| {
+                root.refine(self.last_window).is_some()
+                    && root.order(query) != std::cmp::Ordering::Greater
+            })
+            || query
+                .as_ref()
+                .is_none_or(|q| self.cursor.order(q) == std::cmp::Ordering::Greater)
+            || self
+                .plan
+                .next_after(time)
+                .is_some_and(|cut| cut <= self.time)
+        {
+            return Err(Error::new(
+                "event_resolution",
+                "output query cannot rebase its certified source phase",
+            ));
+        }
+        self.time = time;
+        // This is an ordinary observation. The event's original root/window
+        // still belongs to the immutable accepted frame, not this point query.
+        self.last_root = None;
+        self.last_window = I::point(time);
+        self.cursor = query.unwrap();
+        Ok(())
+    }
+    #[cfg(test)] // The old None-proof boundary remains a direct negative control.
     pub(crate) fn prepare(
         &self,
         time: f64,
         bounds: I,
         states: &[I],
         root: Option<&RootTime>,
+    ) -> Result<Prepared, Error> {
+        self.prepare_with_epochs(time, bounds, states, root, None)
+    }
+    pub(crate) fn prepare_with_epochs(
+        &self,
+        time: f64,
+        bounds: I,
+        states: &[I],
+        root: Option<&RootTime>,
+        epochs: Option<&crate::exact_source::TimeProofs>,
     ) -> Result<Prepared, Error> {
         if !time.is_finite()
             || !bounds.finite()
@@ -110,26 +168,16 @@ impl Source {
         }
         self.plan
             .check_incoming(self.time, proof_window, effective_root)?;
-        if self
-            .plan
-            .next_after(self.time)
-            .is_some_and(|cut| cut < time)
-        {
-            return Err(Error::new(
-                "event_consistency",
-                "source history skipped a required physical boundary",
-            ));
-        }
         let mut cached = None;
         for plan in &self.certified {
-            if plan.same_context(states)? {
+            if plan.same_epoch_context(states, epochs)? {
                 cached = Some(plan.clone());
                 break;
             }
         }
         let next = match cached {
             Some(plan) => plan,
-            None => Arc::new(self.plan.rebind(states)?),
+            None => Arc::new(self.plan.rebind_with_epochs(states, epochs)?),
         };
         let mut certified = self.certified.clone();
         if !certified.iter().any(|plan| same_plan(plan, &next)) {
@@ -140,21 +188,88 @@ impl Source {
         let unchanged = same_plan(&self.plan, &next);
         if time == self.time && !unchanged {
             return Err(Error::new(
-                "event_consistency",
-                "changed source epoch at the same time requires previous frame replay",
+                "event_resolution",
+                "source event overlaps an unproved source-target boundary: changed same-time epoch requires previous frame replay",
             ));
         }
-        let target = if unchanged && (!self.plan.due_at(time) || time == self.time) {
-            self.target.clone()
-        } else {
-            next.prepare(time, &self.target)?
-        };
+        let moment = effective_root
+            .cloned()
+            .or_else(|| RootTime::point(time))
+            .ok_or_else(|| Error::new("event_resolution", "missing source phase root"))?;
+        let upper = RootTime::point(time).unwrap();
+        let mut target = self.target.clone();
+        let mut cursor = self.cursor.clone();
+        let mut steps = Vec::new();
+        if !(time == self.time && unchanged) {
+            if moment.order(&cursor) == std::cmp::Ordering::Less {
+                return Err(Error::new(
+                    "event_resolution",
+                    "source epoch would reverse a consumed physical root",
+                ));
+            }
+            // Close OLD held flow strictly before the user root, then install
+            // the new held epoch at that root, then close its flow up to the
+            // representative. Distinct roots are never collapsed into one.
+            for cut in self.plan.cuts().iter().filter(|cut| {
+                cut.exact.order(&self.cursor) == std::cmp::Ordering::Greater
+                    && cut.exact.order(&moment) == std::cmp::Ordering::Less
+            }) {
+                self.plan.debit_boundary()?;
+                if cut.bounds.hi < proof_window.lo || cut.bounds.lo > proof_window.hi {
+                    return Err(Error::new(
+                        "event_consistency",
+                        "source history skipped a required physical boundary",
+                    ));
+                }
+                let value = self.plan.prepare_root(&cut.exact, &target)?;
+                let changed = !self.spec.equal_targets(&value, &target)?;
+                steps.push(TargetStep {
+                    target: value.clone(),
+                    changed,
+                    window: cut.bounds,
+                    root: Some(cut.exact.clone()),
+                });
+                target = value;
+            }
+            let value = next.prepare_root(&moment, &target)?;
+            let changed = !self.spec.equal_targets(&value, &target)?;
+            steps.push(TargetStep {
+                target: value.clone(),
+                changed,
+                window: proof_window,
+                root: effective_root.cloned(),
+            });
+            target = value;
+            cursor = moment.clone();
+            for cut in next.cuts().iter().filter(|cut| {
+                cut.exact.order(&moment) == std::cmp::Ordering::Greater
+                    && cut.exact.order(&upper) != std::cmp::Ordering::Greater
+            }) {
+                next.debit_boundary()?;
+                if cut.bounds.hi < proof_window.lo || cut.bounds.lo > proof_window.hi {
+                    return Err(Error::new(
+                        "event_consistency",
+                        "source history skipped a required physical boundary",
+                    ));
+                }
+                let value = next.prepare_root(&cut.exact, &target)?;
+                let changed = !self.spec.equal_targets(&value, &target)?;
+                steps.push(TargetStep {
+                    target: value.clone(),
+                    changed,
+                    window: cut.bounds,
+                    root: Some(cut.exact.clone()),
+                });
+                target = value;
+                cursor = cut.exact.clone();
+            }
+        }
         let changed = !target.same_certificate(&self.target)
             && !self.spec.equal_targets(&target, &self.target)?;
-        let cut = next.cut_at(time);
-        let time_bounds = cut.map_or(proof_window, |cut| cut.bounds);
-        let exact_root = cut
-            .map(|cut| cut.exact.clone())
+        let time_bounds = steps.last().map_or(proof_window, |s| s.window);
+        let exact_root = steps
+            .last()
+            .and_then(|s| s.root.clone())
             .or_else(|| effective_root.cloned());
         Ok(Prepared {
             source: Self {
@@ -163,14 +278,53 @@ impl Source {
                 certified,
                 target: target.clone(),
                 time,
-                last_root: exact_root.clone(),
-                last_window: time_bounds,
+                last_root: effective_root.cloned(),
+                last_window: proof_window,
+                cursor,
             },
             target,
             changed,
             time_bounds,
             exact_root,
+            steps,
         })
+    }
+    /// Close only the OLD held epoch before sampling the user event. Keep the
+    /// original execution cursor so final settlement can replay the new epoch.
+    pub(crate) fn prepare_prefix(
+        &self,
+        window: I,
+        root: Option<&RootTime>,
+    ) -> Result<(Self, Vec<TargetStep>), Error> {
+        self.plan.check_incoming(self.time, window, root)?;
+        let mut source = self.clone();
+        let mut steps = Vec::new();
+        let Some(root) = root else {
+            return Ok((source, steps));
+        };
+        for cut in self.plan.cuts().iter().filter(|cut| {
+            cut.exact.order(&self.cursor) == std::cmp::Ordering::Greater
+                && cut.exact.order(root) == std::cmp::Ordering::Less
+        }) {
+            self.plan.debit_boundary()?;
+            if cut.bounds.hi < window.lo || cut.bounds.lo > window.hi {
+                return Err(Error::new(
+                    "event_consistency",
+                    "source history skipped a required physical boundary",
+                ));
+            }
+            let target = self.plan.prepare_root(&cut.exact, &source.target)?;
+            let changed = !self.spec.equal_targets(&target, &source.target)?;
+            steps.push(TargetStep {
+                target: target.clone(),
+                changed,
+                window: cut.bounds,
+                root: Some(cut.exact.clone()),
+            });
+            source.target = target;
+            source.cursor = cut.exact.clone();
+        }
+        Ok((source, steps))
     }
     /// Copy only successful immutable proofs into a replay candidate. History,
     /// target and cursor still start from the original accepted frame.
@@ -201,6 +355,7 @@ impl Source {
                 .all(|(a, b)| same_plan(a, b))
             && self.last_root == other.last_root
             && self.last_window == other.last_window
+            && self.cursor == other.cursor
     }
 }
 
@@ -215,6 +370,52 @@ mod sharing_tests {
 
     fn source() -> Source {
         source_with_threshold(json!({"op":"affine","constant":0.5,"terms":[]}), 1.)
+    }
+
+    #[test]
+    fn old_prefix_and_new_epoch_use_distinct_exact_roots_once() {
+        let source = source();
+        let before = source.clone();
+        let time = 0.5_f64.next_up();
+        let window = I {
+            lo: 0.5_f64.next_down(),
+            hi: time,
+        };
+        let root = RootTime::from_clock(
+            crate::exact_time::Clock {
+                start: 0.1,
+                period: 0.4,
+                index: 1,
+            },
+            window,
+        )
+        .unwrap();
+        assert_eq!(
+            root.order(&RootTime::point(0.5).unwrap()),
+            std::cmp::Ordering::Greater
+        );
+        let (prefix, steps) = source.prepare_prefix(window, Some(&root)).unwrap();
+        assert_eq!(steps.len(), 1);
+        assert_eq!(steps[0].target.value, 1.);
+        assert_eq!(steps[0].root, RootTime::point(0.5));
+        assert_eq!(prefix.target().value, 1.);
+        assert!(source.same_epoch(&before));
+        let final_epoch = prefix
+            .prepare(time, window, &[I::point(2.)], Some(&root))
+            .unwrap();
+        assert_eq!(final_epoch.steps.len(), 1);
+        assert_eq!(final_epoch.steps[0].root, Some(root.clone()));
+        assert_eq!(final_epoch.target.value, 2.);
+        let retained = final_epoch.source.clone();
+        let repeat = retained
+            .prepare(time, I::point(time), &[I::point(2.)], None)
+            .unwrap();
+        assert!(repeat.steps.is_empty());
+        assert!(retained.same_epoch(&repeat.source));
+        assert!(source
+            .prepare(time, I::point(time), &[I::point(2.)], Some(&root))
+            .is_err());
+        assert!(source.same_epoch(&before));
     }
 
     fn source_with_threshold(threshold: serde_json::Value, initial: f64) -> Source {
@@ -234,6 +435,7 @@ mod sharing_tests {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![vec![[0., 0.], [1., 1.]]],
@@ -273,6 +475,37 @@ mod sharing_tests {
     }
 
     #[test]
+    fn observation_cursor_requires_post_root_proof_and_preserves_accepted_epoch() {
+        let (query, mut window, root) = nonpoint_moment();
+        window.hi = query.next_up();
+        let accepted = source()
+            .prepare(window.hi, window, &[I::ONE], Some(&root))
+            .unwrap()
+            .source;
+        let before = accepted.clone();
+        let mut observed = accepted.clone();
+        observed.rebase_observation(query).unwrap();
+        let prepared = observed
+            .prepare(query, I::point(query), &[I::ONE], None)
+            .unwrap();
+        assert!(!prepared.changed);
+        assert_eq!(prepared.time_bounds, I::point(query));
+        assert!(prepared.exact_root.is_none());
+        assert!(accepted.same_epoch(&before));
+
+        let mut rejected = accepted.clone();
+        assert!(rejected.rebase_observation(window.lo).is_err());
+        assert!(rejected.same_epoch(&before));
+        let mut unproved = source()
+            .prepare(0.25, I::point(0.25), &[I::ONE], None)
+            .unwrap()
+            .source;
+        let original = unproved.clone();
+        assert!(unproved.rebase_observation(0.2).is_err());
+        assert!(unproved.same_epoch(&original));
+    }
+
+    #[test]
     fn same_time_reentry_retains_complete_root_window_without_overwriting_new_evidence() {
         let (time, window, root) = nonpoint_moment();
         let first = source()
@@ -306,22 +539,23 @@ mod sharing_tests {
         assert_eq!(later.time_bounds, I::point(time.next_up()));
         assert!(later.exact_root.is_none());
 
-        // Explicit inconsistent evidence reaches the unchanged transition
-        // guard; a retained window must not repair a newly supplied root.
-        let bad = retained
+        // A retained window cannot repair newly supplied inconsistent evidence.
+        let error = retained
             .prepare(time, I::point(time), &[I::ONE], Some(&root))
+            .err()
             .unwrap();
-        assert_eq!(bad.time_bounds, I::point(time));
+        assert_eq!(error.kind, "condition_precision");
+        assert!(retained.same_epoch(&before));
         let mut history = crate::transition::Transition::new(0., 0., 0.125, 0.125).unwrap();
         let old_history = history.clone();
         let error = history
             .advance_at_with_exact(
                 time,
-                bad.time_bounds,
-                bad.target.value,
-                bad.target.bounds,
-                bad.changed,
-                bad.exact_root.as_ref(),
+                I::point(time),
+                retained.target.value,
+                retained.target.bounds,
+                true,
+                Some(&root),
             )
             .unwrap_err();
         assert_eq!(error.kind, "event_resolution");

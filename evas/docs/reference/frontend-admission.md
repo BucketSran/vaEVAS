@@ -14,7 +14,7 @@
 `M_PI_2`、`M_PI_4`、`M_1_PI`、`M_2_PI`、`M_2_SQRTPI`、`M_SQRT2`、`M_SQRT1_2`。
 例如，显式包含后 ``V(y) <+ `M_TWO_PI;`` 使用标准小数舍入为 binary64 的值。
 `M_PI` 保留原 literal 及 binary64 值；数学常量依据标准定义，不读取商业仿真器头文件。
-没有该 include 或用户 define 时，数学宏仍未定义。`default_transition` 是独立编译指令，仍未支持。
+没有该 include 或用户 define 时，数学宏仍未定义。
 调用者提供的同路径文件总是优先，空头文件不等价于标准定义。
 不搜索机器文件系统，不隐式为没有 include 的模型添加 discipline。
 
@@ -42,6 +42,23 @@ nature 的 abstol 也不改变 manifest 的求解容差。
 实现入口是 `frontend.py`、`preprocessor.py`、`syntax.py` 与
 `standard_headers.py`；独立公开编译回归在 `tests/test_compile_admission.py`。
 该有限准入修复不等价于完整 Spectre/VAMS 语法兼容性认证。
+
+## transition 默认边沿
+
+PR208候选按VAMS 2.4 §10.3接受模块外的 `` `default_transition constant_expression``。
+它按活跃源码顺序作用于后续调用，include共享当前值，独立源码根各自初始化，后续指令不追改已解析模块。
+时间表达式须为有限正编译常量，可用宏，不能引用模块参数；整数除法与溢出沿用原常量检查。
+模块内指令和未知宏仍拒绝。零值指令需要实现定义的非零默认策略，本候选尚未提供，明确拒绝。
+
+依据§4.5.8，缺省或绑定后为零的rise/fall取当前默认。`transition(q)`的delay取0，
+`transition(q,td)`保留td，显式非零rise/fall优先；仅给rise时fall沿用rise，包括实例参数覆盖后的值。
+例如默认2、`transition(q,0,t,4)`在t=0时使用2和4，t=3时使用3和4。
+没有该指令时，原三／四参数调用与rise到fall的缺省规则保持；缺省或零rise仍明确拒绝。
+
+`preprocessor.py`把默认值附于活跃Token，`syntax.py`补缺少的参数，
+`instance_compiler.py`在实例常量绑定后替换零边沿，继续使用原IR与内核。
+[独立回归](../../tests/test_default_transition_directive.py)核对默认斜坡、include顺序、源码根和实例隔离及拒绝边界。
+这是未合并候选，尚无本切片实际Spectre对齐证据；原件结果另在[统一进度表](../COMPARISON.md#progress-board)维护。
 
 ## ANSI 端口声明
 
@@ -109,6 +126,10 @@ IR22 的隔离观察事件另支持执行时的 `sqrt`、`abs`、`min`、`max`�
   `{"u[0]":"a", "u[1]":"b"}` 的显式位连接；模块内部的整向量连接按各自声明顺序配对。
   `V(bus[index])` 接受实例常量或展开后的 genvar 下标。每个节点与贡献保留独立身份；
   electrical 与方向声明必须有相同范围。含向量模块展开后的节点上限为 4096，动态位选、切片、拼接仍拒绝。
+- 已有 cross/timer 写者的标量 `integer`、`real` 可在声明中给有限实例常量初值。
+  先完整验证声明种子，再执行原 `initial_step` 覆盖；声明本身不能制造事件状态角色。
+  只读设置、ordinary 局部量、数组和输入采样不纳入，类型及常量降低限制见
+  [声明初值合同](../math/events.md#declaration-initializers)。
 - `initial_step or initial_step("dc")` 等只含初始化叶、且至少含一个无分析限定叶的 OR，
   归并为一次初始化体。重复叶不重复执行，也不生成零时刻 timer。
   纯初始化中的 real/integer 还接受[实际 driven 输入比较](../math/events.md#input-initialization)，
@@ -147,6 +168,9 @@ IR22 的隔离观察事件另支持执行时的 `sqrt`、`abs`、`min`、`max`�
 - 标量 `case` 使用精确相等和源码首个匹配分支，最多 16 个非 default 标签，至多一个 default。
   互异数值字面量标签采用平衡比较树；参数标签或重叠标签保留首匹配顺序，仍检查表达式展开预算。
   独立回归见 [case 选择](../../tests/test_case_statements.py)。
+- 已有 cross/timer 写者的原始标量 real，在逐回调先写后读和普通源码顺序可证明时，
+  可同时作为[回调临时值与普通别名](../math/events.md#ordinary-event-scratch)。保留事件状态槽，
+  这条窄路径不接受含数组的原模型、循环携带别名、跨回调旧读或仅初始化写者。
 - 普通 analog 体接受 [`$bound_step(expr)`](../math/events.md#bound-step)，按顺序局部环境记录请求。
   初始化体、事件体及新历史调用仍拒绝；具体运行路径和动态值限制见链接契约。
 - 表达式支持括号、单目正负、加减、乘法和除法。变量分母的连续认证见[有理连续流](../math/continuous.md#selected-flow)。
@@ -158,6 +182,12 @@ IR22 的隔离观察事件另支持执行时的 `sqrt`、`abs`、`min`、`max`�
   整型贡献 `n+m+k` 也可能因中间范围拒绝；显式 `1.0*n` 提升为 real 后沿用实数规则。
   `n/2.0` 使用实数除法；
   返回 real 的函数即使返回 `7`，`f(0)/2` 也为 3.5。
+- 本分支接受有限整数值域中的 `& | ^ ~ << >>`，适用于整型参数默认值、初始化、事件赋值和普通 analog 表达式。
+  具体32位语义、值域证明和拒绝范围见[有限整数位运算](../math/events.md#integer-bitops)。
+  该切片不增加IR指令，仍使用IR24的常量和比较选择。
+- 本分支的三参数`idtmod(expr,ic,modulus)`将offset缺省为0，
+  两参数`slew(expr,rise)`将fall缺省为`-rise`。显式参数优先，设置仍须是满足定义域的有限实例常数，
+  其余输入和组合限制见[算子合同](../math/operators.md)。
 - 事件中的 `$display` 与受限被动初始化、`final_step` 输出见[记录契约](../math/events.md#display-records)。
   实际选中的显示参数也受同刻跨块读写限制；未选分支不产生显示记录。
   `$abstime` 为内核驱动的合成时间节点，不再创建积分历史；调用者不能覆盖它。
@@ -192,6 +222,9 @@ IR21 引入了声明为标量 `integer` 的固定边界 `for`，初始化、终�
 `for(i=0;i<3;i=i+1)` 退出后 i=3，`for(i=2;i<2;i=i+1)` 不执行循环体但 i=2。
 循环体不得写自己的控制变量，运行期状态边界仍拒绝。
 独立回归见 [整数循环](../../tests/test_integer_loops.py)。
+静态代入保留scalar integer和genvar下标的源integer类型，余数等后续表达式继续按源类型检查，
+不按常量数值推断real为integer。独立正反控及实际内核顺序见
+[静态循环类型回归](../../tests/test_static_loop_integer_type.py)。
 总迭代与展开语句各限 4096，事件及其体内叶子分别计数；每个展开的历史调用分别占用一个算子槽。
 也支持一维 real/integer 变量数组：实例常量范围和静态下标，总元素数限 4096，
 数组元素在绑定后展开为独立标量。事件体还接受可证明范围内的 integer 动态下标。
@@ -233,3 +266,31 @@ IR23 允许独立测量实例在普通 timer/cross 回调及正常 final_step �
 见[固定接口合同](../../validation/event_runtime/IR23-CONTRACT.md)。
 [三个实际 Spectre 控制](../../../experiments/backends/support/event-runtime-control/README.md)
 验证顺序数组、嵌套循环与整数商余；它们不代表原 CDS 整题已通过。
+
+<a id="bounded-event-loops"></a>
+
+### 带物理输出模块的有界 while 与运行期 for
+
+`while (c) s`（VAMS 2.4 过程循环）以及带贡献模块中不能走运行期循环的事件 for，
+只有在静态证明最大迭代次数 B≤64 时接受。`loop_bounds.py` 在解析后、按模块
+（不代入实例参数）计算 integer 标量的闭合区间不变式：默认/初值、初始化和全部事件写入
+迭代求不动点，必要时把仍在移动的端点放宽到 signed32，再逐个事件体检查映射回不变式；
+普通 analog 写入的变量视为未知。循环按抽象逐次展开，条件在某次必然为假时得到 B。
+例如 p∈[0,7]、`p=p+req`（req∈[0,7]）后 `while (p>=8) p=p-8;` 的 B=1。
+
+接受后改写为 B+1 个连续的 `if (c) s;`。这与原循环逐位等价：c 一旦为假，到下一个相同
+测试之间不执行任何语句，后续测试仍为假。最后一个分支已证明不可达，但保留供结构检查，
+内核仍按区间认证每次条件。real 条件、未知参数、未收敛不变式或超过 64 次时，
+while 返回 `unsupported_loop_bound`；for 保留原运行期循环路径及其诊断。
+普通 analog、初始化体和函数中的 while 同样拒绝。事件、初始化或函数体中的 `$bound_step`
+返回 `unsupported_task_context`，不再报语法错误。回归见 [test_while_loops.py](../../tests/test_while_loops.py)。
+
+
+### IR31 本地候选的直接电压到整数转换
+
+事件体标量 integer 赋值的原始 RHS 若为一个外部输入电压探针，候选入口保留
+显式 `IntegerRound`，并在实际请求的每次事件中证明原值整个盒具有同一个合法
+signed32 最近整数。半整数远离零，后置 clamp 不免除转换前的范围检查。
+原值盒跨 bin、内部节点、real 复合 RHS、非整数 real 常量及 history 仍拒绝。
+准入不计完整任务 PASS。数学合同、代码与独立证据见
+[事件转换合同](../math/events.md#ir31-候选事件中的直接电压到-integer-转换)。

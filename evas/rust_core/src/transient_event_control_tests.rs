@@ -128,6 +128,7 @@ fn later_array_failure_rolls_back_prefix_displays_and_old_history_then_retries()
     let trajectory = |value| {
         Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![vec![[0., value], [1., value]]],
@@ -151,6 +152,7 @@ fn later_array_failure_rolls_back_prefix_displays_and_old_history_then_retries()
     let solution = circuit.solve(&good.values(0.)).unwrap();
     let mut controller = Controller {
         accepted: Frame {
+            value_proofs: Default::default(),
             time_proofs: Default::default(),
             time: 0.,
             states,

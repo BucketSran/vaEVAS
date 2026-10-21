@@ -1,7 +1,8 @@
 # 有历史的波形算子
 
-适用范围：当前 IR19 的直接输入基础算子路径。能力 ID 为 TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE；
-支持与缺口见[四后端支持范围](../COMPARISON.md)。独立需求和手算答案由 validation 的专项契约维护。
+This chapter covers direct-input history operators and the explicitly bounded joint paths below.
+Capability IDs are TRANSITION, ABSDELAY, SLEW, DYNAMICS, and COMPOSE.
+See the [support matrix](../COMPARISON.md) for delivery status. Independent contracts and worked answers belong to validation.
 
 积分反馈、联合复位、高阶滤波及内部节点/算子输入的 `ddt` 由[连续动态章节](continuous.md)维护。
 本页的直接输入限制不自动推广到联合网络。需要历史的算子按实例与调用点保存历史；
@@ -68,6 +69,284 @@ idt 复位可能改变当刻输出，须按[积分生命周期](#生命周期组
 IR 保存 operators 与调用点引用。结构依赖在数值绑定前检查，零乘数、相消、下溢和跨实例连接
 不能隐藏不支持的反馈/guard。当前重绑算子值的路径没有新的矩阵分解复用性能结论。
 
+## IR29 检查点的证明边界
+
+本批 IR29、包版本 0.22.0 的171份生产输入已在wave20原件统一400和完整delivery CI验收，
+原件312通过、19失败、69拒绝。严格保持整数目标、源 Select 分解和事件 Floor证书消费者
+的数学边界保持。验收与两轨计数见[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)。
+Forcing 降阶执行不在本批，
+这里不授予它与这些消费者组合的支持，也没有新增 Spectre 对齐资格。
+
+三条路线保留原表达式及结构依赖，旧准入成功时保持原 dispatch 和费用。
+新增 source 消费者使用请求绑定的 `Arc<ProofContext>`，克隆候选继承同一个 Work，
+失败不退款，重试不新建 owner。绑定包含 common `initialization::resolve` 与
+`input_clamp::lower` 后的完整 prepared Program、Trajectory 和 driven 映射；
+相同数值的其他源配置、其他 Program 或 reduced Program 不代替这个绑定。
+同一请求同时使用多个新消费者时，必须由融合入口贯通这个 Arc，另用实际组合控制验收。
+
+| 阶段 | 保留的限额与职责 |
+| --- | --- |
+| Python 编译证明 | 原 100000 工作量；Native 的 `NativeAuditOwner` 与 Floor 的 `ProofWork` 属于各自既有阶段，不因数字相同而成为同一账本。新路线从请求开始累计实际工作，激活 aggregate 检查不新增 credit；旧无新特性请求保留原每实例额度与可选推理行为。 |
+| Rust 必经 IR 准入 | 原 100000 值或容器、depth96；内部 `Admission` 元数据不增加 wire 字段，不代替 source 资格证明。 |
+| source Work | 原 `[128,8192,1000000000]`，分别限制计划、根材料和工作；新增遍历、依赖比较、复制、dense 辅助和实际证明均在执行前收费。 |
+| 局部 exact helper | 原 200000 操作、4096 bits，以及适用的 512 节点、64 深度边界；调用前向原 source Work 预付，不以局部限额替换请求总额。 |
+
+候选计算与发布分离。最终历史、关系及电压认证失败时，丢弃候选状态、盒、证明、历史队列、
+日程、显示记录和输出；已经消耗的 Work 保留。下述单 lane 控制各自只证明其冻结身份，
+不能把缩限耗尽、旧核或未执行的组合当成生产默认预算的共同证明。
+
+Floor 的输入证明可复用实际传入的有限单点盒 `[p,p]`。原根处有理值只有在其外向包围
+包含于这个盒时才采用，因此该值必等于 `binary(p)`，与现有单点证书相同。
+这条路线直接使用该证书，省去实际 `at_root` 调用；非点输入仍执行原助手并预付原200000额度。
+源绑定检查先执行，保存的输入盒保持原样，不由名义值构造新点盒；无 Floor 的旧路线保持原次序。
+
+零时刻 timer 的全部原树赋值集合为空时，任何种子集合都与它不相交，因而无需构造 bootstrap
+依赖证明。只在 Floor 路线提前返回，先检查同一 Work 的耗尽状态；普通算子构造、事件及电压
+验证仍照常执行。这两项只省去不再执行的证明，不改变任何预算或仍执行助手的费率。
+
+## Independent source forcing beside held histories
+
+This IR30, package 0.23.0 development checkpoint uses production commit `a201378e`,
+176 source/build inputs, and release kernel `7e7ae92ae2de`. It is not a public release or
+tag; PR208 remains a draft. All 400 original requests executed: 312 PASS, 19 FAIL,
+and 69 REJECTED, with cleanup 400/400. The previous 312, 303, and baseline 198
+passes remain, and all 19 old failed-checker dictionaries are unchanged. Wave21
+adds zero original PASS over wave20. Unified original 041 is `step_budget`
+REJECTED at the unchanged default 1e9 budget; its checker did not run. The isolated
+R6 author PASS is separate evidence and gives no unified PASS credit.
+
+The separately versioned revised 400 is 313 PASS, 17 FAIL, and 70 REJECTED.
+It reuses 398 identical-material results from this original run and the actual
+revised 012 PASS and 107 `condition_precision` REJECTED runs. Executing all 400
+requests is distinct from passing all 400: 88 originals and 87 revised requests
+remain without PASS. No new Spectre qualification is claimed.
+
+Single CI run `39169679908` at auxiliary head `8e507c51` completed all 15 jobs
+successfully. All 2390 unique Python methods passed in shards 621/605/638/526,
+with no missing, duplicate, method-skipped, or setup-skipped entries. Linux
+x86_64/Python3.10 and macOS arm64/Python3.12 installation and negative controls
+passed. All 176 production inputs match; remote and wheel kernels retain their
+own hashes. The independent CI review binds the actual source, package, and method
+identities. The separate publication receipt records the document review.
+
+The original/revised execution reviews and CI collector receipts are identified
+in the curated low-cost-closure evidence. Failed CI `39168731444` stopped before
+full Python or installs. Failed CI `39169086325` reported 2372 PASS and three
+loader ERROR entries, omitted 18 real methods, and ended with 10 successful,
+four failed, and one upstream-dependent skipped job. Those records remain;
+no green result is composed across runs.
+
+### 同支路二次源直接项的本地候选
+
+后续 IR31 本地候选把单个混合加法中的纯物理输入项 `f` 与原有仿射事件／保持项 `r` 分开绑定，
+但二者仍属于同一个电压支路，原关系始终是 `V(p)-V(n)=f+r`。
+`f` 只允许实际 driven 输入的仿射叶、加法及总次数不超过二的乘法；
+二次项内不接受 Select。例子是 `V(a)*V(b)+transition(q,0,tr,tr)`。
+所有原读义务与未选臂仍检查；Forcing 输出不能被其他支路、事件或算子反向读取。
+本地后续候选把内部保持历史采样、普通 Select 目标与 typed 目标接到同一已付费历史图，
+按实际 Frame 的点与盒求值；物理源仍只能来自 actual driven 输入。
+checked 项中的零系数读义务也完整保留，Forcing 输出反馈、Floor 混合以及事件／初始化角色中的
+native 算术不因该桥接而取得资格。更广组合仍需单独认证。
+
+编译器保留同一 `BranchIdentity` 的源项与残余贡献；装配层按支路相加。
+reduced 方程暂去掉 `f` 只用于求候选，不能作为完整输出证书。
+投影在候选点与盒上补回 `f` 后，重新检查原 `f+r` 的全部支路残差，通过后才可提交。
+同一候选阶段的重复投影恢复已认证的完整盒并重新验残差，不重复相加；
+同刻状态改变须构造新的候选 Circuit。
+
+原请求 Work 支付全树扫描、节点映射、源数学、残差证明及候选复制。
+阶段键和投影盒缓存的存储、查找与 clone 也先付费；缓存不重置预算，失败保持 sticky。
+生命周期检查比较完整 Frame，包括原方程、点与盒、阶段／缓存、历史、日历和输出记录。
+默认预算自然耗尽后不重置或补充 Work。两次失败重试仍支付实际发生的前置工作，
+用量只增不退；失败不改变已提交状态。独立 operator clone 与 passive observation 的历史表达式
+深复制均按实际 Runtime AST 先付费，不能用另一份 TargetPlan 构造费用抵扣。
+
+生产者在 [forcing_components.py](../../src/evas/forcing_components.py) 和
+[instance_compiler.py](../../src/evas/instance_compiler.py)；
+[forcing_graph.rs](../../rust_core/src/forcing_graph.rs)独立验证原树、实际 provider 与 reduction 映射，
+[solver.rs](../../rust_core/src/solver.rs)核完整支路残差。
+[公开合同](../../tests/test_source_polynomial_forcing.py)用独立点／盒答案检查同支路、反向支路、
+多输出、额外查询与禁止反馈，内核私有测试检查自然耗尽和完整回滚。
+这是未合并的局部合同。canonical 联合控制通过后，原369仍在同一默认1e9 Work下拒绝，
+未进入 checker；它未证明原369或全部400通过，也未扩大实际 Spectre 资格。
+历史图、阶段键和缓存必须随完整候选 Frame 回退，不能通过新建预算 owner 绕过该拒绝。
+
+### 同请求物理点值与原始盒的局部复用
+
+IR32本地候选在同一次事件根窗准备中，把物理输入的代表值与原始误差盒作为一次局部结果取得。
+shaped PWL的严格有理求值本来同时返回两者；先前两次API调用各丢弃一半结果，现在只执行一次。
+临时存储、写入和读取仍由原Work事前支付，不进入Frame或跨请求缓存。不同根、窗口、状态、阶段和
+provider每次重新构造；精确根窄化只修改另一份已付费的候选输入，不改原始物理盒。
+
+完整窗口与斜率证明仍独立执行。原始盒求值现在提前到代表值处，因此成功路径值与盒保持，预算不足时
+先拒绝哪笔费用可能改变；不声称失败次序逐字相同。analytic与未整形旧路径的成功结果和费用保持。
+[公开控制](../../tests/test_physical_point_bundle.py)用独立Fraction检查保持采样、物理盒与额外观察；
+内核控制核对真实严格求值body由2到1、宽有理数、同代表时间的不同根及阶段、原1e9自然耗尽和两次完整回滚。
+代码在`pwl.rs::history_point_bundle`与`transient.rs`根窗准备入口，`exact_source.rs`保留原严格数学。
+原369、371的新候选完整请求仍在相同预算位置拒绝，未运行checker；这项局部改进尚未闭合其首阻塞。
+
+### Continuous source intent and held target intent
+
+An ordinary contribution can describe a voltage that changes whenever its physical
+source changes. For example, `V(out) <+ V(clk)>vth ? gain*V(in) : 0` chooses a
+source expression at the actual query time. It does not sample `V(in)` at a clock
+event or install the chosen value as a held Transition target. The existing
+`transition(q,td,tr,tf)` still consumes the committed state `q` and maintains its
+own instance and call-site history. The two components remain independent.
+
+Forcing admits grounded voltage outputs beside at least one `Transition` with a bare `State` input.
+Each forcing output has one contribution, one undriven output node, and ground as
+the other terminal. Other relations cannot share or read that output. The held
+component can use driven inputs and states, but it cannot depend on the forcing
+output. This boundary excludes feedback, coupled output equations, and a forcing
+expression used as a Transition target.
+
+The value tree contains source-affine leaves, addition, multiplication by a
+structurally source-independent value, and source `Select`. Both source-dependent
+factors in a product are rejected. Every Select retains its comparison, both
+value arms, and source ownership. The frontend tries the existing representation
+first. A Forcing marker records a candidate after that representation fails its
+own shape check. It is not a topology certificate or a catch-all recovery from
+numerical, domain, or resource errors.
+
+### Original dependencies and physical provider identity
+
+The frontend audits the complete original AST across the compilation's instances.
+Unused assignments, local aliases, zero coefficients, discarded intermediates,
+function arms, and unselected branches still carry dependencies. A voltage probe
+on a contribution target is a write. Other voltage probes are reads. A forcing
+output read anywhere in the original components rejects the candidate, even if
+scalarization would remove that read. The original per-compilation proof ledger
+pays this audit. Requests without a marker keep the old route without this scan.
+
+The kernel independently checks all transported expression trees and owners.
+Before selection, every arm in the forcing value and retained checked trees must
+have a finite domain over the actual request's physical source range. Zero multiplication or a
+later clamp cannot hide a nonfinite child. State, event, operator, and step-bound
+dependencies must also satisfy the component separation rules.
+
+The provider consists of the original physical PWL curves, stop time, and source
+error configuration. Appended or substituted sources do not qualify. A nonzero
+source band requires an already validated exact physical shape. That shape may
+serve a predicate, but it cannot enter a numerical value leaf, including an
+inactive or zero-coefficient numerical read. Unknown uncertainty remains a refusal.
+The predicate follows the certified physical curve, not a rounded nominal PWL or
+an endpoint-derived reconstruction. Exact shape identity does not make two
+otherwise different request configurations interchangeable.
+
+### Private reduction and projection into the original phase
+
+`forcing_graph::Graph::partition` retains the original Program and Trajectory
+binding in `ProofContext`. After the original audits, the graph replaces only
+independent forcing RHSs with zero in its private execution Program. A private
+`Reduction` token binds that exact execution wire and the driven mapping. The
+original binding and the execution projection have different roles.
+
+Initialization and input clamp still run through their common entries. The graph
+checks the resulting execution Program and actual provider against its token.
+An arbitrary reduced Program cannot claim equality with the original Program.
+In particular, the full prepared Program equality required by Floor remains
+strict. This Forcing slice rejects source Floor, typed integer targets, and raw
+ShiftRight/BitAnd event consumers, including inactive arms and zero-trip loops.
+It preserves the earlier Add/Subtract/Remainder controller scope. Continuous local
+observation providers, Slew, and other history operator bridges remain excluded.
+
+At each accepted or candidate phase, `Graph::project` reads physical values and
+outward boxes at the actual time. It resolves Select predicates from certified
+interval signs, or from the existing exact point-sign proof when needed. It then
+evaluates the selected original value tree and its interval. The value and box
+must satisfy the original absolute and relative voltage tolerances.
+
+`Circuit::install_forcing_phase` replaces each provisional zero row with the
+resolved original relation. It checks the original point residual, the interval
+residual, and the remaining affine relations before recording the phase identity
+and time. Initial, candidate, and observation paths must all pass this projection.
+A successful reduced solve alone is not an output certificate. No per-query
+recompilation or reconstruction of the complete original source context is allowed.
+
+### Exact physical reads and one request budget
+
+The current IR31 candidate avoids constructing a pending event's exact root when
+existing strict ordering already proves the deadline relationship. Source incoming
+checks and unresolved overlaps still request the original root, at most once per
+check, using the same request Work. Optional absence and helper failure retain
+their original meanings; no candidate state is committed by this preflight.
+
+For rational enclosure, a paid representability check recognizes exact finite
+binary64 dyadics. It checks a power-of-two denominator, at most 53 significant
+numerator bits, and occupied exponents from -1074 through 1023. A recognized value
+pays for the pinned conversion helper and becomes an exact point. Other values
+pay for and execute the complete original outward-enclosure path, in addition to
+the recognition cost. Scans and helper work are prepaid from the original owner;
+no budget, precision or exact-arithmetic limit changes.
+
+The [foundation evidence](../../../experiments/backends/support/low-cost-closure/source-budget-foundations.json)
+records 69 unique combined Rust controls and 25 Python methods on the IR31 primary
+candidate, plus 5089 independent mathematical cases on the private frozen functions.
+Original 041 still exhausts its 1e9 request budget at 56.4 of 68 ns. Its checker
+has not run, and this partial progress adds no complete-task PASS.
+
+For shaped PWL reads, `Curve::try_forcing_point` uses the original rational knots.
+Exact signed cross products certify comparisons. A floating quotient is only a
+guess. Exact equality certifies a point, or explicit comparisons certify an
+outward two-neighbor enclosure. Knot and plateau shortcuts require exact binary
+representability. Interpolation retains the original rational arithmetic and its
+bit limits. An uncertified guess pays for the unchanged strict helper before
+fallback. A budget error propagates immediately and never enables fallback.
+
+The graph, physical provider helpers, and retained proof context use the same
+request Work. Traversals, name comparisons, serialization, clones, dense work,
+and exact arithmetic require payment before the work they own. Original limits
+remain 128 plans, 8192 root materials, and 1000000000 work units, with the existing
+local exact-helper limits. Failure gives no refund and retry creates no new owner.
+
+The isolated R6 natural-exhaustion control repeats actual physical reads under
+the default 1000000000 limit. Its later two Static retries use the same Controller
+and preserve accepted Frame, histories, calendar, cursor, and outputs. Those
+receipts do not establish the integrated candidate's prefix costs or rollback.
+The integrated control has additionally exercised 2693 actual calendar candidate
+preparations and 2693 certified physical reads on that same original limit. Its
+next reservation failed at 1000014079 work units. Two production Static retries
+performed no further prefix or physical helpers and preserved the full accepted
+Frame, histories, calendar, cursor, records, and outputs. This is focused local
+evidence. Final production, original/revised400, and single-run CI receipts are
+identified in the delivery status above and the curated evidence index; independent
+The independent CI review confirms the final run and its source/package bindings.
+
+Prefix accessors reserve original exact-root, enclosure, clock and phase work
+before invocation. The actual private dense operator coefficients are included
+in candidate-clone storage. Requests that require an unproved Dynamic guard to
+be re-evaluated during a Forcing phase query return `unsupported_forcing_scope`.
+They do not run the older predicate/GuardTrajectory recovery without a bound.
+Timer and exact-Cross phase proofs retain their original mathematical answers.
+Continuous local observations cannot enter this provider graph, and that bridge
+is explicitly refused before local proof construction or Frame copying.
+
+A failed candidate must discard state and interval changes, operator queues,
+proofs, phase data, calendar changes, display records, and outputs together.
+Consumed Work remains charged. Final shared-owner composition requires actual
+same-request default-budget exhaustion and two retries through the production
+Controller, together with successful-prefix cost checks. A reduced limit is only
+a charge-order locator and cannot replace that natural-exhaustion evidence.
+
+### Code and evidence map
+
+| Contract | Implementation | Focused evidence |
+| --- | --- | --- |
+| Candidate marker and original AST audit | [forcing_components.py](../../src/evas/forcing_components.py), `source_forcing_tree`, `audit_original_reads`, and `residual_checks`; [instance_compiler.py](../../src/evas/instance_compiler.py), `Compilation` and `source_forcing_candidate` | [original binding controls](../../tests/test_history_forcing_binding.py) |
+| Owner, domain, component separation, private reduction, and phase selection | [forcing_graph.rs](../../rust_core/src/forcing_graph.rs), `Graph::partition`, `source_context`, `resolve`, and `project` | [source forcing controls](../../tests/test_history_forcing.py) |
+| Physical shape and source uncertainty | [pwl.rs](../../rust_core/src/pwl.rs), `forcing_shaped_inputs`, `forcing_request_value_bounds`, and `forcing_predicate_reads` | [shaped provider controls](../../tests/test_history_forcing_shaped.py) |
+| Certified rational point reads and paid fallback | [forcing_point.rs](../../rust_core/src/exact_source/forcing_point.rs), `Curve::try_forcing_point`; `Trajectory::forcing_values_bounds` | [point controls](../../tests/test_history_forcing_point.py) |
+| Original row residuals and phase identity | [solver.rs](../../rust_core/src/solver.rs), `Circuit::install_forcing_phase` | [lifecycle controls](../../rust_core/src/transient_forcing_tests.rs) |
+| Controller entry, retained Work, candidate copies, and paid calendar/phase access | [transient.rs](../../rust_core/src/transient.rs), [operators.rs](../../rust_core/src/operators.rs), [exact source prefixes](../../rust_core/src/exact_source.rs), [clock prefixes](../../rust_core/src/exact_time.rs), [calendar prefixes](../../rust_core/src/schedule.rs), and [integration controls](../../rust_core/src/transient_forcing_integration_tests.rs) | Final integrated receipt pending |
+
+The local R6 contract and identity are retained in the
+[isolated handoff](../../../runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-lanes/history-forcing/r6/final-handoff.json).
+Those ignored receipts are local evidence, not a public reproducibility archive.
+There is no new Spectre alignment evidence. Slew, other history operators,
+general nonlinear value products, Forcing/history feedback, Forcing with Floor or native typed
+consumers, and uncertain numerical source leaves remain outside this slice.
+
 ## transition
 
 接受本实例已提交标量状态与常数的仿射输入。保持量条件的 `Select` 可以嵌在算术内部，
@@ -86,7 +365,8 @@ IR 保存 operators 与调用点引用。结构依赖在数值绑定前检查，
 `transition(q,0.125,0.5,0.5)` 从 t=0 起即为1；延迟不产生一条额外初始边沿。
 
 构造前只处理精确固定零时刻 timer，回调各执行一次。所有分支的读值必须仅依赖 held 状态和直接驱动输入，
-顺序赋值、共享旧状态、writer 与整数检查仍保留。最终完整状态向量必须有限，且逐项得到 point 证书。
+顺序赋值、共享旧状态、writer 与整数检查仍保留。默认要求最终完整状态向量有限且逐项得到 point 证书；
+后面的有界冷种子合同另行限定可保留非 point 盒的裸 real 目标。
 一个 point 证书表示精确区间只包含提交值；不能把带舍入区间的状态当作精确种子。
 首个电压解和电压误差仍在历史构造后认证，通过后才发布帧、日程游标和事件记录。
 OR 的多个零叶共用一个回调体；正时刻邻居由原事件事务处理。
@@ -102,6 +382,32 @@ OR 的多个零叶共用一个回调体；正时刻邻居由原事件事务处�
 公开编译/内核的独立行为锚点见 `test_transition_initialization.py`，
 同对象失败重试见 `transient_initialization` 的 Rust 测试；这些是开发证据，不能单独代替 Spectre 对齐资格。
 [实际有限配对](../../../experiments/backends/support/README.md#initial-transition-seed)覆盖开、关及直接滤波三个初态反例；不扩展一般历史反馈支持。
+
+### 混合实数与整数冷目标的本地候选
+
+固定 timer 与 initial_step 的全 Transition 图可以组合两类独立目标。
+裸同实例 real 状态使用实际 `Prepared.bounds`；纯同实例整数投影或 Select 的全部结构依赖
+必须是实际有限 point 盒，且等于对应提交整数。普通 `c?0.9:0` 与原生位投影分别沿原消费者执行。
+未选臂、零项、类型、owner 和 signed32 检查保留；实数包装表达式、跨实例状态、电压、
+其他历史及不满足原固定日程门的组合不由这条路径准入。
+
+若零回调令实数精确值为 `x`、提交值为 `s`、证书为 `B`，仍要求 `x∈B` 且 `s∈B`，
+冷历史由 `Transition::enclosed(s,B,...)` 构造。不会改成 `[s,s]`，也不添加初始边沿。
+整数目标各自验证 point 依赖，不能借另一目标的非 point 许可。后续电压放大仍消费完整 `B`。
+
+普通整数 Select 的附加资格只在原 point 种子认证实际拒绝后启动。
+有限性和名义值包含检查先通过，再由独立依赖集合验证 point 要求，继续当前有序初始与零 timer 事务。
+新增资格不重跑回调或状态认证；原事务的 replay 认证仍执行，成功后才发布帧、记录和日程。
+新增原树扫描、集合合并和绑定复制先向同一个原请求 source Work 付费；失败的资格或上下文构造
+在同一 EventModel 保留该 owner，重试不重置费用。构造器再次核原 Program、物理轨迹和驱动绑定。
+原成功准备路径不进入这次附加扫描。
+
+入口为 `transient_initialization::prepare`、`held_integer_target::scalar_dependencies` 与
+`Operators::new_until_with_bootstrap_bounds_and_source`；原生位目标沿 `new_until_with_held_points`。
+公开行为和精度负控见 [test_transition_bootstrap_bounds.py](../../tests/test_transition_bootstrap_bounds.py)，
+同 owner 重试、隐藏 real 臂及构造耗尽见 `transient_initialization` 的 Rust 测试。
+原019整例、同源双轨400与交付CI的[工程证据](../../../experiments/backends/support/low-cost-closure/mixed-cold-transition.json)单独维护，
+不据此宣称400全部PASS或新增Spectre／共同Q资格。
 
 未中断变化在实际接受时刻 te 发生，
 选择完整上/下沿时间 D，则
@@ -128,12 +434,161 @@ Rust 另检查队列/边沿的候选回退；新增同刻电压目标与变化�
 所需观察点缺失、原始状态逐点差以及 callback 窗口/计数证据不足仍保留；不据此宣称一般 timer 或后端全对齐。
 连续电压输入、嵌套、动态参数、缺省 rise/零边沿和算子反馈尚未支持。
 
+<a id="native-held-bits29"></a>
+
+### 严格保持整数目标的本地候选
+
+Native R5 为含 typed `ShiftRight`、`BitAnd` 的 Transition 目标增加私有消费者。
+例如 `0.9*((q>>1)&1)` 的 q 必须是同实例 integer 保持状态，移位计数必须是
+`IntegerLiteral`。逻辑右移先按 32 位无符号位型移位，再解释为 signed32；
+计数按 32 位无符号值解释，达到 32 时结果为零。每个被执行的整数子节点仍先验 signed32，
+不能用外层 `&0`、后置 clamp 或未变的最终位值掩盖内层溢出或除零。
+
+原树可含已准入的 typed 整数子树、实常量仿射投影和 Select。所有原臂与零项先审计，
+电压、时间、其他算子、real state、跨实例状态、数组及 CheckedInteger 依赖仍拒绝。
+这条消费者只供普通独立日程中的全 Transition 图，不开放一般连续整数关系、梯度、
+trigger、history calendar、动态重定位 guard 或反馈。旧目标在混合图中仍保留原冷 point 要求；
+上节本地候选只为已独立合格的裸 real 目标保留实际非 point 冷盒。
+
+每个保持 epoch 的 `HeldPoints` 借用实际 Prepared 或 Frame 的 state bounds，
+要求有限、`lo=hi`、与对应名义状态相同且在 signed32 内。不能由名义值重建 point 盒，
+也不能取 midpoint。typed 结果给出精确整数 point，外层实系数仍保留原向外舍入包围。
+例如系数 0.9 的误差不能因最终名义值有限而清零。Select 只按已审计且可证明稳定的条件选臂。
+
+冷构造复用 `Transition::enclosed`，不伪造 t=0 的 advance 边沿。回调按原句序写候选状态后，
+根据完整依赖重新求目标，再交给原 Transition 队列、期限和电压验收。实现为
+[held_integer_target.rs](../../rust_core/src/held_integer_target.rs)、
+[integer_primitive.rs](../../rust_core/src/integer_primitive.rs)、
+[operators.rs](../../rust_core/src/operators.rs) 与
+[transient_initialization.rs](../../rust_core/src/transient_initialization.rs)。
+依赖集查找、owner 字节比较、集合插入及合并、原树和历史队列复制均先向同一 source Work 预付。
+集合辅助费采用覆盖 key、link、header、分配及重平衡的保守上界，不假设未收费的常数时间查找。
+Frame 其他旧字段的复制仍属原消费者边界，不追称全部由 typed target 费用覆盖。
+
+独立控制见 [test_native_held_bits29.py](../../tests/test_native_held_bits29.py)、
+[test_held_integer_targets.py](../../tests/test_held_integer_targets.py) 和
+[transient_lifecycle_tests.rs](../../rust_core/src/transient_lifecycle_tests.rs)。
+它们检查原整数子节点、未选依赖、真实非 point Frame 拒绝、零时刻种子及同 Controller 回退。
+其中 held target 的 100000 缩限 Work 控制只证明同 owner、事前拒绝及重试不退款；
+不能称为默认 1e9 自然耗尽。Native 与 Floor 的实际混合耗尽及事务控制仍由融合候选单独建立。
+
+### 保持目标中的正二次幂商与余数表示候选
+
+对原状态整个已证明域均为非负 signed32 整数、除数为正二次幂常量的保持目标，
+前端可将 `/2^k` 与 `%2^k` 表示为现有 IR31 的 `ShiftRight` 与 `BitAnd`。
+这只改变表示与实际生成工作；原类型、完整状态域、中间溢出及商的有限 bin 门仍先检查。
+负值、非二次幂及不能满足原证明的组合继续走原路径。
+源常量表达式如 `n/(4/2)` 保留原常量算术结果及其全部检查，不要求调用者把合法常量改写成字面值。
+
+所有原 Select 条件、两臂、Origin 与状态依赖保持。`n%1` 即使数值恒为零也保留对 `n` 的原依赖。
+real 别名仍是 real；只有无条件单写者、全部用途均为同实例精确 Transition 目标时，
+才传播原 AST 进行该目标角色的独立证明，不向普通贡献、trigger 或 display 授予整数资格。
+查找、扫描、常量分派与原树检查使用同一 NativeAudit Work；
+已有失败不因尝试另一种表示而重置或退款。完整 wire 仍对每个展开边计费。
+省去的是已不再生成的临时商表及其复制，不能删除仍实际发生的费用。
+
+表示选择还需扫描全部原模型的普通 analog、initial 和 initial_step 体，包含展开前的零次循环、
+隐藏分支及跨实例读。任一普通或初始电压／算子读取仍保留旧表示，避免把原历史或初始种子消费者
+带入尚未认证的 typed calendar。扫描逐候选重新付费，不缓存可变的 model 列表、绑定或范围事实。
+[旧普通历史](../../tests/test_held_power2_history_compat.py)与
+[跨实例初始种子](../../tests/test_initial_compact_compat.py)核对原行为，
+后者的两种实例顺序均须保持独立答案 `[1,1]`。该兼容回退会使原346继续生成旧表，
+已有原件 Native100000 拒绝仍保留；typed 与普通历史 calendar 的组合是下一独立修复。
+
+组合后的 typed history calendar 只是帧身份，不授予历史准入。typed 目标经自身 Spec 支付复制、求值与查询克隆；
+普通保持目标（裸 real 状态与只读同实例状态和常量的整数 Select）在同一共享 owner 上支付复制与推进，
+每次克隆只付一次。普通目标仅在历史实际安装新目标时重放精确目标证明；目标未变的推进不重算、不收费。
+同一查询的全部条目共用一次查询时间的精确转换；无隔离参数时直接借用已校验的值证明而不复制。
+控制见 [test_group_event_calendar.py](../../tests/test_group_event_calendar.py) 与
+[混合 calendar 计费测试](../../rust_core/src/history_calendar_typed_target_tests.rs)。
+
+实现为 [held_power2.py](../../src/evas/held_power2.py)、
+[integer_table_composition.py](../../src/evas/integer_table_composition.py)及实例编译器。
+[公开目标控制](../../tests/test_held_power2_targets.py)、
+[表组合控制](../../tests/test_integer_table_composition.py)与
+[原判定复用控制](../../tests/test_decision_raw_reuse.py)检查常量表达式、原角色、隐藏臂、
+跨实例绑定和同 owner 失败重试；真实 IR31 内核另验独立整数答案。
+本地窄控制不代表原346通过；原修两轨完整400仍须绑定同一最终源码与内核。
+
 ### 外部源选择目标与实时电压读出
 
 分段保持目标可以由外部 PWL 源的可认证条件选择，例如
 `transition(V(ctrl)>0.5 ? q : 0,0,tr,tr)`。EVAS 按源的实际切点更新目标，
 保留切点区间和原实数根身份；不能因为两个根落入同一浮点区间就把它们合并。
-目标叶子仍须是保持量或常量，`transition(V(ctrl),...)` 这类连续目标仍拒绝。
+目标叶子须是保持量、常量，或运行时证明为整段 DC 的原始外部输入。
+前端只保留 DC 候选的原 AST，并不从初始读数生成常量。
+`transition_source_plan::ProofContext::transition_dc_leaves` 复用 slew 的原源审计、
+共享 Work 和逐节点缓存：每个原依赖（包括零系数和未选分支）都必须来自 ground 或
+本次 driven 输入；原物理 `Curve.affine_on([0,stop])` 必须返回零斜率及可精确表示的
+binary64 常量。端点相等不足以证明 DC，未来脉冲和非零输入误差管继续拒绝。
+有形状误差的输入仍须先通过原公共不确定性门，不能只取名义折线。
+
+证明只替换目标值叶子的输入项，保持 Select 判定、状态所有权、实例和调用点身份；
+原乘加仍按结构保留，避免先舍入完整目标而掩盖后续放大的误差。
+`operators::Operators::new_until` 在构造历史前保存已证树，后续 advance、复位和重试
+复用既有 held/rational transition 包围和事务路径，不重新采样输入。
+旧 held-only 和源选择常量的路径保持；内部节点、历史值和实际变化的连续目标仍拒绝。
+[独立合同](../../tests/test_transition_dc_target.py)覆盖 held 翻转、实例／调用点、复位、
+未来脉冲、误差管、零权依赖及乘法误差放大；Rust 回归检查共享预算耗尽、失败候选及同对象重试。
+该切片已随wave15统一候选通过原193的完整请求与原checker；证据见[低成本闭包收据](../../../experiments/backends/support/low-cost-closure/evidence.json)。没有新增实际Spectre对齐或共同资格。
+
+普通输出或强制观察点可能满足 `tau <= tq < b`：真实 timer 已发生，执行代表时刻却略晚于观察点。
+例如 binary64 的 `3*1ns < 6*500ps < b`。该点应读取回调后的状态，不能再次推进已位于 b 的源游标。
+候选分支在 `transient_event_acceptance::observation_seed` 克隆所选物理阶段后，仅重定位源的观察游标。
+`Source::rebase_observation` 要求原根与原窗口仍匹配、精确根不晚于 tq，且 `(tq,b]` 内没有已消费的源切点。
+它保留目标、计划与历史，清除该点不拥有的事件根／窗口，再按普通点完成电压认证；原接受帧和事件记录不变。
+无根证书、事件前查询或跨源切点的重定位仍拒绝，不把 tq 伪造成事件根。
+独立 Fraction 回归见 `test_source_shape` 的相邻观察点、回调状态、有限斜坡与强制点核对；
+Rust 回归检查成功／失败观察都不改写原 epoch。
+这项观察游标修复本身不解除源目标谓词状态须为单点的限制，也不开放相异源切点与用户事件窗口的未认证重叠。
+[101/314 诊断收据](../../../experiments/backends/support/source-shape/history-101-314.json)保留原拒绝和后续拒绝；没有新增实际 Spectre 对照或对齐资格。
+
+PR208的101后续候选只扩展不依赖源节点或历史算子的仿射保持状态谓词。
+令左右差的完整有向包围为`D=[L,U]`，`q>c`在L>0时为真、U<=0时为假；
+`q>=c`在L>=0时为真、U<0时为假。`<`和`<=`对称处理，其余情况明确拒绝。
+这里的q表示完整仿射式，不以区间中点替代状态，也不把非点阈值转成精确源切点。
+含源依赖的非点谓词、非仿射谓词及不确定端点继续走原拒绝路径。
+
+实现由`transition_source_plan::Spec::held_decision`复用`affine_bounds`，完整结构依赖仍参与缓存上下文和rebind。
+源cut枚举、物理根、窗口检查、目标叶子验证及原证明预算保持。
+[公开回归](../../tests/test_source_state_predicates.py)检查真／假、跨阈值拒绝和查询一致性；
+Rust回归另检查严格与非严格端点、重新绑定及失败后原计划保留。
+这只解除101的谓词首阻塞，原件在120ns仍因相异根窗口重叠拒绝，未记为原checker通过。
+
+PR208的共用根窗证书进一步接收可严格排序的相异源切点与timer根。设原发现窗口为
+`W=[a,b]`，真实事件根为`r`，源切点为`c`。原binary64输入保留为有界有理数，
+按精确值区分`c<r`、`c=r`和`r<c`；原窗口仍随历史安装与事件记录保留。
+源计划必须完整枚举根点目标和每个开放区间模式，不能仅凭根序放行。
+相邻源切点`c0<c1`之间没有binary64内部点时，以`(c0+c1)/2`作为严格有理内部见证，验证原表达式，
+不把浮点代表值当作该区间。孤立第三目标、来源不明或算术预算不足仍拒绝。
+
+候选分三步移交。先消费旧保持阶段中`cursor<c<r`的源切点，形成事件读取前的旧历史；
+随后在`r`读取物理输入和旧算子值、顺序执行用户赋值、安装新保持目标；
+最后消费新计划中`r<c<=b`的切点。每一步保留自己的精确根和包围窗口。
+`Source::cursor`标记已消费物理边界，事件根与原发现窗口另存；同一时刻无变化重入幂等，
+普通输出仅查询所选阶段，不能消费切点或覆盖接受历史。
+
+物理源采样由原有理曲线在`r`求值，名义值与包围同时更新。Transition在完整采样小窗上
+有精确仿射证明`v(t)=A+B*t`时，用`A+B*r`的有理答案生成名义值和有向包围，
+下游纯数学算子按依赖顺序重算。没有仿射证明时保留区间认证，不能把不确定性归零。
+连续网络保留自己的局部时钟与原事件观察证书，不套用Transition的绝对时间表达式。
+物理事件及被动观察者读取完成后，执行代表时刻的输出帧另用该时刻的输入和已推进算子重新求解、认证；
+不能把根处电压解直接当作代表／查询输出，也不能为输出重采样已经捕获的保持状态。
+显示记录的重放使用同一物理电压快照，独立保存数据并随失败候选丢弃；查询帧不参与事件重放。
+时序不确定性仍进入中断边沿与未来历史，输出按原电压预算验收。
+
+旧计划只有在全部模式及根点目标证书一致、叶子结构依赖未变、源guard依赖未变时才复用；
+否则重新绑定并计入原计划预算。请求级计划128、源切点8192、总工作1,000,000,000及
+每次有理操作原上限保持。连续边沿结束点可用精确有理次序证明已完成，但排队激活、
+不可表达的微小中断边沿和未知根仍受原限制。相异非点根恰好拥有完全相同最小浮点窗口时，原身份门仍保守拒绝；多个目标阶段进入filter/integral的组合明确拒绝。
+
+独立公开回归见[根窗证书测试](../../tests/test_source_root_windows.py)，以Fraction推导
+101根在时间切点前、314根在源角点后、精确相等、放大一百万倍的物理根读取，
+并核对普通、加密及强制查询。无证根、第三目标、未知源误差和sub-ULP反向中断脉冲
+保留拒绝。`transient_root_window_tests.rs`在同一控制器注入最终历史认证失败，
+检查旧源游标、队列、记录、输出和接受帧均不变，修正后重试与干净控制器一致。
+[本轮收据](../../../experiments/backends/support/source-shape/root-window-certificate.json)
+绑定实际执行身份与原件结果；本切片没有新增实际Spectre对齐或共同Q资格。
 
 同一执行时刻的内部重入，必须一起保留已验证的精确根与时间包围。例如，时钟参数
 `0.1` 和 `0.2` 的原 binary64 值相加，其精确和不一定等于调度器使用的单个浮点时刻。
@@ -173,6 +628,19 @@ Rust 另检查队列/边沿的候选回退；新增同刻电压目标与变化�
 不能证明事件次序/方向或同一舍入目标确实未变时返回 `event_resolution`。
 
 这是一种保守验收：没有自动提高运算精度或放宽阈值，区间相关性丢失可能拒绝实际误差很小的模型。
+点查询若已有精确有理起点、折线和终点证明，则复用该证明计算查询时刻的有理电压，
+再向外包围到 binary64；不把已知起点重新视为独立区间变量。
+同一证明也用于名义点值，按现有有理数转 binary64 路径舍入，并核验该值位于包围内；
+因此不会把代表时间取上界造成的位移留在已可精确求值的波形中。
+名义输出与有理包围的差仍计入同一电压预算，证明存在不保证通过。
+缺少证明、目标或历史仍有不确定性，以及待生效目标可能影响查询时，保留原区间路径。
+这一收紧不改变范围观测、积分 forcing 或历史提交流程；有证明的重定目标也可能改善所存名义值。
+有理值如 `1/3` 仍保留舍入包围，
+后续电压放大和采样历史仍需验收。对应 Rust 正反例位于 `transition.rs` 的
+`exact_transition_line_tests`，检查非 binary64 起点的点值恢复和上下边沿终点两侧。
+公开入口回归 `test_transition_point_proof.py` 使用独立 PWL 有理插值答案，
+并保留正确舍入仍无法满足过严电压预算的拒绝例。已证明延迟起点后的点值可恢复严格预算；
+待生效目标窗口、非点目标、采样历史和网络放大仍保留各自不确定性与拒绝条件。
 收紧容差通常不增加输出点或 Newton 次数，而可能使当前算法无法通过认证；区间传播本身增加运算和存储。
 上述历史证书仅针对成功接受的计算点及固定参考，不包含源代码到 IR 的常量舍入、
 驱动 PWL 求值误差、名义事件相位或物理模型误差。事件路径另把直接 PWL 求值包围
@@ -665,7 +1133,8 @@ ordinary phase；修复后全部40,840个原 Spectre 保存时刻已配对，第
 
 受限相位子集包括 `idtmod(u, ic, modulus, offset)` 与 `sin(x)`，用于 D2 类
 电压域相位模型。依据 Verilog-AMS LRM 2.4 的 `idtmod(expr, ic, modulus, offset)`
-形式，当前只接受显式有限常量初值、显式正有限 modulus 和有限 offset；省略 modulus 的
+形式，当前接受显式有限常量初值、显式正有限 modulus 和有限 offset；三参数调用的
+`offset` 按该标准 §4.5.5 默认为 0。省略 modulus 的
 无界积分形式不映射到本算子，仍应使用普通 `idt` 或明确拒绝。
 
 `idtmod` 的输入为直接驱动、连续 PWL 的仿射组合，不接受内部节点、
@@ -737,7 +1206,8 @@ wrapped 相位本身是不连续输出。严格区间若横跨 wrap 点，默认
 ## slew
 
 输入为直接驱动连续 PWL 的仿射组合，固定正限速 r+ 和负限速 r-，初态 y(0)=u(0)。
-三参数须显式提供，`rise>0`、`fall<0` 为有限实例常数，限速单位为输入单位/秒。
+`rise>0`、`fall<0` 为有限实例常数，限速单位为输入单位/秒。按 Verilog-AMS LRM 2.4
+§4.5.9，两参数调用的 `fall` 默认为 `-rise`；显式第三参数优先。未提供限速的调用仍拒绝。
 在输入斜率 a 恒定的分段上：y<u 时以 r+ 追赶，y>u 时以 r- 追赶，y=u 时选择
 `clip(a,r-,r+)`；相交后重新判断跟踪或追赶模式。
 对于当前输出斜率 s，候选相交时刻为 `tc=t0+(u0-y0)/(s-a)`，只有分母、方向与段内次序可认证才采用。
@@ -768,6 +1238,37 @@ r+=1/16、r-=-1/8，交点为 T+192/5；T+40 的正确输出2.2，旧版错误�
 Spectre 的反向追赶偏差随步长细化下降；这是波形证据，不是私有算法或 LRM 违规的结论。
 本实现允许上述内部仿射电压投影和下述两级固定前馈。状态输入、更深嵌套、动态/缺省限速、跳变和
 经过历史状态的反馈尚未支持。
+
+### 源 Select 值树的受限分解候选
+
+Factor R3 只扩展单个无状态、无事件的 source-only slew：一条同实例仿射输出关系、
+一个动态算子，其输入来自直接驱动 PWL、原常量及可证明零误差的 DC 叶。
+值树接受有限仿射叶、Add 和单侧固定标量的 Multiply；谓词两侧不能再含 Select。
+所有原臂、抵消项和零系数项均参与审计。内部电压、状态、其他算子、跨实例来源、非点源误差、
+一般 Divide、Power、多个动态调用及反馈仍拒绝。
+
+必经 DC 叶审计同时计算形式数：叶为 1，Add 与 Multiply 将两侧数量相乘，
+Select 将两个值臂数量相加，计数在 8193 饱和。至多 8192 个形式保持旧入口与旧扣费；
+只有超过该上限且资格完整的树进入分解路线，不能把其他旧拒绝转成 fallback。
+新路线按原谓词和原运算次序逐次查询，不枚举所有值臂的笛卡尔积，也不改写目标算式。
+
+`Spec` 与 `Plan` 保留全部源角点和精确 `RootTime`。断点的严格或非严格比较与开区间 witness
+各自使用有理证明，不能用舍入的 binary64 时间替代。`HeldSlew` 消费目标及其区间，
+非二进制目标的舍入误差继续经外部增益验收，不按输出网格重建轨迹。
+新路线用原位可失败 heapsort 和精确有理相等去重。每次实际 `RootTime::order` 前，
+按原 bit 与 limb 上界预付比较费；循环、索引、header 交换、原 limb 存储及丢弃也先收费。
+排序不另分配数组、不克隆 BigInt、不缓存判定，也不为未执行的二次方数量比较预留费用。
+排序失败只可能重排尚未发布的局部材料，不能恢复 Work 或替换 accepted 历史。
+
+实现为 [source_factor.rs](../../rust_core/src/transition_source_plan/source_factor.rs)、
+[transition_source_plan.rs](../../rust_core/src/transition_source_plan.rs) 与
+[source_slew.rs](../../rust_core/src/source_slew.rs)。新路线沿用请求唯一的 100000 结构审计
+及原 source Work，遍历、来源字符串、复制、proof 查找和 dense 辅助均先收费；旧小树不增加新证明。
+[test_source_factor.py](../../tests/test_source_factor.py) 用 Fraction 独立核对 15 阈值目标、
+限速轨迹、额外查询不变性、隐藏依赖、所有权和高增益拒绝。
+[transient_source_factor_tests.rs](../../rust_core/src/transient_source_factor_tests.rs) 及分解模块的
+Rust 控制覆盖 8192 边界、同代表时间的不同精确根、排序去重、原预算自然耗尽和候选回退。
+19 节点、15 个独立选择的非二进制时间 derived 控制保留原 1e9 预算；它不替代原件 checker 验收。
 
 ### 两级固定 slew 的完整分段历史
 
@@ -872,12 +1373,92 @@ C3 固定前馈先定义输入历史的 value/bounds、语义断点与可证明�
 | `exp(x)` | 有限 x≤512；[-512,512] 缩小参数、正项 Taylor 级数及余项，再外向平方还原；x<-512 使用单调尾界 | 正端超出 512 或输入非有限时拒绝认证 |
 | `ln(x)` | 所有正的有限输入，包括正 subnormal；二进制分解后用 atanh 级数 | 非正输入拒绝 |
 | `sqrt(x)` | 非负有限输入；端点的平方用精确乘积符号核对 | 零点导数不能用于需要有限导数的动态 guard |
+| `tanh(x)` / `$tanh(x)`（IR25开发候选） | 有限实输入；负指数恒等式、单调端点和偶对称导数包围 | 原参数表达式非有限时拒绝；不扩展事件数学或非线性反馈 |
+
+### 事件 Floor 的原树证书候选
+
+Floor R3 为此前不支持的非二进事件输入定义有限工程数学合同。它保留原 binary64 叶构成的
+Add、Multiply、Divide 树，以这些叶的精确有理表达式 r 为参考，认证唯一整数 k 满足
+`k <= r < k+1`。点执行、盒转移、赋值、条件、display、joint preview、因果证书与重放
+使用同一个 k。`.03/.9*15+.5` 的原有理值小于 1，Floor 为 0，即使普通 f64 算式得到 1；
+输入 `.09` 时结果为 1，不能将原 Divide 换成预舍入 reciprocal。
+这不是一般实数 Floor 支持，也不是新增 Spectre 对齐。
+
+输入限实际 physical source 和常量构成的次数不超过一的树。每个原 Divide 的除数都须是
+有限非零实例常量，未选臂也检查；每个原子节点仍按原顺序检查域、有限性和溢出。
+零系数、抵消、后置 clamp 或位掩码不能隐藏非法子节点。常量 real 别名只有在初始化及
+全部原赋值均证明为相同常量时才准入，不能由一个初值推断任意保持状态恒定。
+local state、time、内部节点和 history 依赖仍拒绝。真实输入或根的不确定区间跨 bin 时拒绝，
+不能把 nominal 曲线当作误差管的精确物理值。Floor 结果保持 real，写入 integer 时另验 signed32。
+
+[源编译入口](../../src/evas/source_floor_event.py) 保留旧有限表与二进原生 Floor 的优先级，
+新路线不接管它们的资源或域错误。Rust 的
+[event_control.rs](../../rust_core/src/event_control.rs) 在原必经 IR 遍历内生成私有 Admission；
+None factory 直接消费标记，不再免费扫描事件前缀。provided 入口先检查同 Work 的 sticky 状态。
+R3 的末尾元数据 helper 在 root lookup、summary lookup、Vec 分配和写入、完整第二遍 any 之前，
+先预付 `32+32*events.len()` 个原逻辑工作单位；后续 event-only 与 trigger 检查保留自己的费用。
+这不是修改原预算，也不能把事后扣费称为覆盖先前工作。旧无新 Floor 的 None 请求不新建 source owner。
+
+[event_floor.rs](../../rust_core/src/event_floor.rs) 与
+[event_value_proof.rs](../../rust_core/src/event_value_proof.rs) 在同一绑定的 immutable physical Context
+内逐消费者重算 paired certificate。每次实际扫描、复制、rational limb、包络、dense 求值及 helper
+均事前收费，没有 decision journal 或缓存。后段耗尽仍使完整候选回滚。
+消费者入口包括 `event_conditions.rs`、`events.rs`、`settlement.rs` 和 `transient.rs`。
+
+独立 Fraction 与原树负控见 [test_source_floor_event.py](../../tests/test_source_floor_event.py)，
+覆盖相邻 bin、真正源误差跨 bin、隐藏依赖、未选臂零除数及直接 Floor 谓词。
+[transient_source_floor_tests.rs](../../rust_core/src/transient_source_floor_tests.rs) 保留真实 Controller 的
+晚电压拒绝、历史回退和原 Work 自然耗尽控制。自然 1e9 的已执行证据属于 R2 身份；
+R3 新增的三个 admission 控制核对末尾费用的首次拒绝、同 owner 两次 retry、精确余额构表与完整 any。
+R2 release 和大范围回归的复用不能称为 R3 release 或 R3 自然耗尽重测。
+本切片只接事件消费者；连续 Floor、history forcing 以及与 typed target 的组合验收不由单 lane 结果授予。
+
+### 无状态 selected-Ln 的有限查询路径
+
+开发切片接受单个 `ln` 的原始输入内含嵌套源 `Select`，例如
+`ln(max(abs(V(u)-0.2),0.1))` 的源码等价结构。整个程序必须没有状态、事件和
+step bound，只含一条仿射电压关系、一个未知输出，其余节点由原始 PWL 直接驱动。
+这不扩展 cross、history、内部反馈或一般数学 DAG。既有仿射 `ln` 和闭合 Ln/Exp 成功路径
+不进入新增审计或创建新增证明拥有者。IR 和包版本不变。
+
+`source_math::selected_ln` 对原树所有谓词和分支做一次 100000 项结构审计，保留
+零系数与未选臂依赖。每次查询在原物理源值和区间上解析嵌套谓词，区间已决定时不做
+精确证明；必要时由同一个 `ProofContext` 的既有 source Work 预扣每 helper 200000，
+再调用原 exact-source 点符号算法。原 source 总限额 1e9 和局部精确运算限额 200000、
+4096 bits 均保留。遍历、项、复制、dense helper 和 ln 的固定内部工作在执行前收费，
+耗尽不会因查询、克隆或重试而恢复。原结构审计不当作 source 额度使用。
+
+输出使用既有 `math_functions::ln` 外向包围与关系电压验收。不会把选中输入只在 PWL
+端点采样后插值。例如输入从 0.7 到 -0.3，两个端点的 abs 均为 0.5，但内部必须经过
+clamp 0.1。每次下游求解使用独立 trial，定义域或电压拒绝不保留其缓存。
+新增有限回归见 `test_selected_ln.py` 和 selected-Ln Rust 单元测试。原135已在提交
+`c8dc2a7b` 的163输入、IR28与release核 `406d7b27da50` 统一400通过原checker；
+历史IR27独立pilot保留原身份，不另行相加。该验收不扩大上述数学边界或Q资格。
 
 负指数尾部不依赖平台 `exp` 的下溢结果。对于有限 `x<-512`，单调性给出
 `0 < exp(x) < exp(-512)`，内核使用 `[0, exp(-512) 的外向上界]`。
 这个包围约宽 `4.4e-223`；它保留绝对误差证书，但不承诺尾部的相对精度。
 连续积分中的 `exp` forcing 使用 Taylor jet，并随已接受的积分状态延续；
 事件改变 held 参数时只更新 forcing，不重新应用初值。正指数 `x>512` 仍拒绝。
+
+`tanh` 的语言依据是LRM2.4表4-15：两种调用拼写同属全实数域，结果为real。
+EVAS的有限包围是额外的工程合同，不保证平台数学库逐位一致。
+裸调用优先绑定同模块声明的用户函数，合法同名变量仍可读取；显式 `$tanh` 始终表示内建函数。
+
+设 `a=abs(x)`，在 `0<=a<=256` 内计算已认证的 `e=exp(-2a)`，再外向计算
+`T=(1-e)/(1+e)`；负输入取奇对称结果。乘以2是范围内的精确二进制缩放。
+`a>256` 先进入分支，以 `[0, exp(-512)的外向上界]` 包围e，完全不计算可能溢出的 `2a`。
+因此有限最大binary64参数仍有证书；源码中先发生的非有限乘加不能借饱和结果隐藏。
+输入区间按tanh单调性分别计算两个端点，并使用数学值域 `[-1,1]` 与结果相交。
+
+导数用 `4e/(1+e)^2`，避免饱和端用 `1-T*T` 造成抵消。
+导数为偶函数，随abs(x)增大而递减；最远端给下界，最近端给上界，跨零区间的上界为精确1。
+导数包围再与数学范围 `[0,1]` 相交；尾部允许保守零下界。
+代表值单独使用平台tanh，并继续按既有电压与源不确定性链验收，不能把libm输出当作证明。
+
+实现为 `math_functions.rs::tanh/tanh_derivative` 与 `operators.rs::Function` 的原调用点链；
+[公开合同](../../tests/test_tanh_waveform.py)覆盖函数值、原输入不确定性、输出放大、非有限源算术及名字兼容。
+独立高精度参考只作测试oracle，不进入求解器。124/240已在wave12统一IR25候选完整通过原checker；237另有source乘数学算子消费者限制，不能按tanh解析成功算作完成。
 
 上表的认证用于运行时表达式。实例常量折叠仍保存平台 binary64 值，身份随编译材料记录，
 不建立同一套函数区间证明。纯函数不新增物理历史，复位许可随输入依赖传播。
@@ -888,3 +1469,13 @@ C3 固定前馈先定义输入历史的 value/bounds、语义断点与可证明�
 [operators.rs](../../rust_core/src/operators.rs)。[公开回归](../../tests/test_unary_functions.py)
 检查函数、拒绝边界及嵌套调用；[独立有限校准](../../validation/calibrate_elementary.py)
 把实际 Rust 区间实现与高精度参考比较。有限点校准通过不能扩大上面的认证域。
+
+### 初始化后的闭合实数幂常量
+
+有限实现支持一个无观察者的初始化只读标量：模型只有一条real初始化赋值、没有声明初值或运行期事件，普通analog只含电压贡献。剔除未使用声明后，该目标必须是唯一存活状态。编译器先审计完整源码依赖及writer，确认初始表达式仅由实例参数和闭合有理算术构成，才允许普通贡献读取其保留的AST。其他初始读取、未来writer、ordinary alias、数组和初始输出不进入新路径；既有声明常量、整数有限pow和half-power路径保持；旧lowering接受时不启动新证明；只有原pow指数拒绝分类才启动闭合证明。新证明的有理后序遍历复用已收费的子项类型事实，不重新解释source integer除法，逐项检查signed32中间范围。
+
+新实指数路径仅接受正底、闭合非整数指数，另包含完整原参数审计后的零指数恒等式。它不支持运行期pow。底数、指数及其原除法保留为IR算术；`pow(x,y)`使用现有`ln(x)`和`exp(y*ln(x))`两级native Math，倒数也保留原Divide。Python不计算pow代表点，不从证明区间取中点作为精确初始化State。
+
+`initial_constant_math.py`拥有源码资格、变量namespace及每请求共享100000项证明账本；`instance_compiler.py`只在该证明成立时省去相应运行期State。`source_math.rs`只允许同实例、更早且已证明闭合的Ln/Exp依赖链，保留统一Audit和Operators拥有者，不开放一般嵌套源数学。`operators.rs`与`math_functions.rs`重新包围原系数、ln/exp和舍入，最终`gain*V(input)`仍经过原关系root boxes与原电压精度验收。
+
+独立答案、原算式算术误差、源顺序/隐藏依赖拒绝、实例隔离、raw IR所有权/前向引用、共享证明预算及强放大拒绝见`test_constant_initial_power.py`。该切片已随wave15统一候选通过原120的完整请求与原checker，仍未合并；它不授予动态实指数或状态依赖transition timing支持，也不增加共同资格。

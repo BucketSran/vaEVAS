@@ -57,12 +57,12 @@ fn affine_degree(expression: &Expression, allowed: &HashSet<usize>) -> Result<u8
 fn predicate(
     expression: &Expression,
     owner: &str,
-    _kind: &StateKind,
+    kind: &StateKind,
     nodes: &[I],
     allowed: &HashSet<usize>,
 ) -> Result<f64, Error> {
-    fn check(e: &Expression, owner: &str, allowed: &HashSet<usize>) -> Result<(), Error> {
-        match e {
+    fn check(e: &Expression, owner: &str, allowed: &HashSet<usize>) -> Result<u8, Error> {
+        Ok(match e {
             Expression::Select {
                 left,
                 right,
@@ -77,20 +77,29 @@ fn predicate(
                 for predicate in [left, right] {
                     check(predicate, owner, allowed)?;
                 }
-                check(then_value, owner, allowed)?;
-                check(else_value, owner, allowed)?;
+                check(then_value, owner, allowed)?.max(check(else_value, owner, allowed)?)
             }
-            Expression::Add { left, right } | Expression::Multiply { left, right } => {
-                check(left, owner, allowed)?;
-                check(right, owner, allowed)?;
+            Expression::Add { left, right } => {
+                check(left, owner, allowed)?.max(check(right, owner, allowed)?)
             }
-            _ => {
-                affine_degree(e, allowed)?;
+            Expression::Multiply { left, right } => {
+                let degree = check(left, owner, allowed)? + check(right, owner, allowed)?;
+                if degree > 1 {
+                    return Err(unsupported(
+                        "initial expression must be structurally affine",
+                    ));
+                }
+                degree
             }
-        }
-        Ok(())
+            _ => affine_degree(e, allowed)?,
+        })
     }
-    check(expression, owner, allowed)?;
+    let degree = check(expression, owner, allowed)?;
+    if matches!(kind, StateKind::Integer) && degree != 0 {
+        return Err(unsupported(
+            "integer initialization cannot implicitly sample a real voltage",
+        ));
+    }
     validate(expression, nodes.len())?;
     let result = resolve_selects(expression, nodes).map_err(|mut error| {
         if error.kind == "condition_precision" {
@@ -98,24 +107,34 @@ fn predicate(
         }
         error
     })?;
-    // State.initial currently stores an exact value, not an uncertainty interval.
-    // Require no voltage reads remain after selecting source-dependent arms.
-    fn constant(e: &Expression) -> bool {
-        match e {
-            Expression::Affine { terms, .. } => terms.is_empty(),
-            Expression::Add { left, right } | Expression::Multiply { left, right } => {
-                constant(left) && constant(right)
+    // State.initial and every downstream history use an exact binary64 value.
+    // Propagate original input enclosures; a nominal evaluation is not proof.
+    fn enclosure(e: &Expression, nodes: &[I]) -> Result<I, Error> {
+        Ok(match e {
+            Expression::Affine { constant, terms } => {
+                terms.iter().fold(I::point(*constant), |value, term| {
+                    value + I::point(term.coefficient) * nodes[term.node]
+                })
             }
-            Expression::Power { base, .. } => constant(base),
-            _ => false,
-        }
+            Expression::Add { left, right } => enclosure(left, nodes)? + enclosure(right, nodes)?,
+            Expression::Multiply { left, right } => {
+                enclosure(left, nodes)? * enclosure(right, nodes)?
+            }
+            Expression::Power { base, exponent } => {
+                let base = enclosure(base, nodes)?;
+                (0..*exponent).fold(I::ONE, |value, _| value * base)
+            }
+            _ => return Err(unsupported("unsupported selected initial expression")),
+        })
     }
-    if !constant(&result) {
-        return Err(unsupported(
-            "initial expression must select constant values",
+    let bounds = enclosure(&result, nodes)?;
+    if !bounds.finite() || bounds.lo != bounds.hi {
+        return Err(Error::new(
+            "initialization_precision",
+            "initial value is not finite and point-certified",
         ));
     }
-    Ok(crate::expression::evaluate(&result, &[])?.value)
+    Ok(bounds.lo)
 }
 
 pub(crate) fn resolve(
@@ -342,5 +361,148 @@ mod tests {
         });
         let resolved = resolve(p, &["u".into()], &[I::point(0.9)]).unwrap();
         assert_eq!(resolved.states[0].initial.constant().unwrap(), 1.);
+    }
+
+    #[test]
+    fn sampled_initial_values_are_candidate_local_and_retry_after_late_failure() {
+        let mut original = predicate_program();
+        original.states[0].initial = StateInitial::Predicate(Expression::Affine {
+            constant: 0.125,
+            terms: vec![Term {
+                node: 1,
+                coefficient: 0.5,
+            }],
+        });
+        let mut later = original.states[0].clone();
+        later.instance = "other".into();
+        later.name = "sample".into();
+        later.initial = StateInitial::Predicate(Expression::Affine {
+            constant: 0.,
+            terms: vec![Term {
+                node: 2,
+                coefficient: 1.,
+            }],
+        });
+        original.states.push(later);
+        let inputs = ["u".into(), "y".into()];
+        // First state can be certified before the second state fails. Nothing
+        // from this candidate is installed in the reusable source program.
+        let error = resolve(
+            original.clone(),
+            &inputs,
+            &[I::point(1.), I { lo: 1., hi: 2. }],
+        )
+        .unwrap_err();
+        assert_eq!(error.kind, "initialization_precision");
+        assert!(error.message.contains("other:sample"));
+        assert!(original
+            .states
+            .iter()
+            .all(|s| matches!(s.initial, StateInitial::Predicate(_))));
+        let first = resolve(original.clone(), &inputs, &[I::point(1.), I::point(0.25)]).unwrap();
+        assert_eq!(first.states[0].initial.constant().unwrap(), 0.625);
+        assert_eq!(first.states[1].initial.constant().unwrap(), 0.25);
+        let second = resolve(original, &inputs, &[I::point(2.), I::point(0.5)]).unwrap();
+        assert_eq!(second.states[0].initial.constant().unwrap(), 1.125);
+        assert_eq!(second.states[1].initial.constant().unwrap(), 0.5);
+    }
+
+    #[test]
+    fn sampling_refuses_nonrepresentable_sums_and_all_arm_nonlinearity() {
+        let mut p = predicate_program();
+        p.states[0].initial = StateInitial::Predicate(Expression::Affine {
+            constant: 0.2,
+            terms: vec![Term {
+                node: 1,
+                coefficient: 1.,
+            }],
+        });
+        // Exact binary64 0.1 + exact binary64 0.2 is not a binary64 point.
+        assert_eq!(
+            resolve(p, &["u".into()], &[I::point(0.1)])
+                .unwrap_err()
+                .kind,
+            "initialization_precision"
+        );
+        let mut p = predicate_program();
+        let StateInitial::Predicate(Expression::Select { else_value, .. }) =
+            &mut p.states[0].initial
+        else {
+            unreachable!()
+        };
+        let voltage = Expression::Affine {
+            constant: 0.,
+            terms: vec![Term {
+                node: 1,
+                coefficient: 1.,
+            }],
+        };
+        **else_value = Expression::Multiply {
+            left: Box::new(voltage.clone()),
+            right: Box::new(voltage),
+        };
+        // The inactive branch must retain its structural validity obligation.
+        assert_eq!(
+            resolve(p, &["u".into()], &[I::point(1.)]).unwrap_err().kind,
+            "unsupported_initialization"
+        );
+    }
+
+    #[test]
+    fn selected_voltage_arms_remain_exact_and_integer_sampling_is_refused() {
+        let mut p = predicate_program();
+        let StateInitial::Predicate(Expression::Select { then_value, .. }) =
+            &mut p.states[0].initial
+        else {
+            unreachable!()
+        };
+        **then_value = Expression::Affine {
+            constant: -0.25,
+            terms: vec![Term {
+                node: 1,
+                coefficient: 1.,
+            }],
+        };
+        let selected = resolve(p.clone(), &["u".into()], &[I::point(1.)]).unwrap();
+        assert_eq!(selected.states[0].initial.constant().unwrap(), 0.75);
+        p.states[0].kind = StateKind::Integer;
+        assert_eq!(
+            resolve(p, &["u".into()], &[I::point(1.25)])
+                .unwrap_err()
+                .kind,
+            "unsupported_initialization"
+        );
+    }
+
+    #[test]
+    fn internal_samples_require_the_complete_original_voltage_closure() {
+        let mut p = predicate_program();
+        p.states[0].initial = StateInitial::Predicate(Expression::Affine {
+            constant: 0.,
+            terms: vec![Term {
+                node: 2,
+                coefficient: 1.,
+            }],
+        });
+        let contribution = serde_json::json!({
+            "branch":{"instance":"dut","local_positive":"y","local_negative":"0","kind":"voltage"},
+            "positive":2,"negative":0,
+            "rhs":{"op":"affine","constant":0.5,"terms":[]},
+            "origin":{"source":"initial.va","line":1,"column":2,"instance":"dut"}
+        });
+        p.contributions
+            .push(serde_json::from_value(contribution.clone()).unwrap());
+        let resolved = resolve(p.clone(), &["u".into()], &[I::point(1.)]).unwrap();
+        assert_eq!(resolved.states[0].initial.constant().unwrap(), 0.5);
+        // The independent 0.5 term can seed q, but the complete same-branch
+        // equation y = 0.5 + q contradicts q = y. Never publish that seed.
+        let mut feedback = contribution;
+        feedback["rhs"] = serde_json::json!({"op":"state","state":0});
+        p.contributions
+            .push(serde_json::from_value(feedback).unwrap());
+        assert_eq!(
+            resolve(p, &["u".into()], &[I::point(1.)]).unwrap_err().kind,
+            "unsupported_initialization"
+        );
     }
 }

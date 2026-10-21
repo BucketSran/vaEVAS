@@ -1,0 +1,496 @@
+--- original/instruction
++++ proposal-v1/instruction
+@@ -24,7 +24,7 @@
+ ## Required Behavior
+ 
+ Generate a sampled, zero-mean, noise-like deterministic perturbation and add it
+-to `V(vin_i)`. The output is piecewise constant between sample events:
++to `V(vin_i)`. The perturbation `vout_o - V(vin_i)` is piecewise constant between sample events:
+ 
+ ```text
+ vout_o = V(vin_i) + sigma * sample
+@@ -35,6 +35,15 @@
+ ```text
+ [-1.0, -0.5, 0.0, 0.5, 1.0, 0.5, 0.0, -0.5]
+ ```
++
++The first timer update occurs at t=0 and selects -1.0. A trace row at t=0
++observes that update after initialization and timer processing. Subsequent updates
++at n*dt select entry n modulo eight. At a later update instant, a trace
++may observe the value immediately before or immediately after that event,
++but may not report an intermediate perturbation level. The input contribution follows the current
++V(vin_i) continuously, including between timer updates. Do not sample and hold
++the input or smooth either the output or the perturbation. There is no transition
++phase exemption from these requirements.
+ 
+ Every complete eight-sample period is exactly zero mean, and every perturbation must remain bounded within `[-sigma, +sigma]`.
+ 
+--- original/gold
++++ proposal-v1/gold
+@@ -12,13 +12,12 @@
+     parameter real sigma = 0.01;   // Dither scale (V)
+     parameter real dt    = 0.5n;   // Sampling interval (s)
+ 
+-    real noise, vout, sample;
++    real noise, sample;
+     integer sample_idx;
+ 
+     analog begin
+         @(initial_step) begin
+             noise = 0.0;
+-            vout  = 0.0;
+             sample_idx = 0;
+         end
+ 
+@@ -33,10 +32,9 @@
+             else if ((sample_idx % 8) == 7) sample = 0.0;
+             else sample = -0.5;
+             noise = sigma * sample;
+-            vout  = V(vin_i) + noise;
+         end
+ 
+-        V(vout_o) <+ transition(vout, 0, dt/10, dt/10);
++        V(vout_o) <+ V(vin_i) + noise;
+     end
+ 
+ endmodule
+--- original/task_077.py
++++ proposal-v1/task_077.py
+@@ -1,331 +1,122 @@
+-"""Task-specific checker for canonical v4 DUT 077."""
+-from __future__ import annotations
+-
+-from bisect import bisect_right
++"""Proposed 077 checker. Direct rows only; independent per-instance clocks."""
++from fractions import Fraction
+ import math
+ 
+-from ..api import Checker
+-from .stimulus_relative import diagnostic, pass_note, require_signals
++PROPERTY_IDS = ('P_PERIODIC_UPDATE', 'P_SAMPLE_HOLD', 'P_ADDITIVE_OUTPUT',
++                'P_DETERMINISTIC_SEQUENCE', 'P_ZERO_MEAN_DITHER')
++SEQUENCE = (-1., -.5, 0., .5, 1., .5, 0., -.5)
++TRACE_CASES = (('default', 'vout_default', .01, .5e-9),
++               ('override', 'vout_override', .037, .8e-9))
++MIN_COMPLETE_INTERVALS, MAX_COMPLETE_INTERVALS = 24, 128
++LEVEL_TOLERANCE_FRACTION = .06
++MAXSTEP = 50e-12
+ 
+ 
+-PROPERTY_IDS = (
+-    "P_PERIODIC_UPDATE",
+-    "P_SAMPLE_HOLD",
+-    "P_ADDITIVE_OUTPUT",
+-    "P_DETERMINISTIC_SEQUENCE",
+-    "P_ZERO_MEAN_DITHER",
+-)
+-
+-SEQUENCE = (-1.0, -0.5, 0.0, 0.5, 1.0, 0.5, 0.0, -0.5)
+-TRACE_CASES = (
+-    ("default", "vout_default", 0.01, 0.5e-9),
+-    ("override", "vout_override", 0.037, 0.8e-9),
+-)
+-TRANSITION_GUARD_FRACTION = 0.12
+-LEVEL_TOLERANCE_FRACTION = 0.06
+-MIN_COMPLETE_INTERVALS = 24
+-MAX_COMPLETE_INTERVALS = 128
+-STABLE_PROBE_PHASES = (TRANSITION_GUARD_FRACTION, 0.5, 0.88)
++def fail(prop, category, **details):
++    return False, prop + ':' + category + ':' + repr(details)
+ 
+ 
+-def _invalid_trace(category: str, observed: str) -> tuple[bool, str]:
+-    return False, diagnostic(
+-        "P_ADDITIVE_OUTPUT",
+-        category,
+-        expected="finite_complete_ordered_trace",
+-        observed=observed,
+-        event="full_trace",
+-    )
++def root_bracket(index, dt):
++    """Adjacent binary64 numbers enclosing exact decimal parameter n*dt."""
++    root = Fraction(str(dt)) * index
++    rounded = float(root)
++    value = Fraction.from_float(rounded)
++    return (math.nextafter(rounded, -math.inf) if value > root else rounded,
++            math.nextafter(rounded, math.inf) if value < root else rounded)
+ 
+ 
+-def _finite(value: object) -> bool:
+-    try:
+-        return math.isfinite(value)  # type: ignore[arg-type]
+-    except (TypeError, ValueError):
+-        return False
++def row_intervals(time, dt):
++    # Only at the enclosing floats may the trace observe either event side.
++    n = max(0, int(Fraction.from_float(time) // Fraction(str(dt))))
++    for k in (n, n + 1):
++        if k > 0:
++            lo, hi = root_bracket(k, dt)
++            if lo <= time <= hi:
++                return (k - 1, k)
++    return (n,)
+ 
+ 
+-def _validate_rows(
+-    rows: list[dict[str, float]], required: set[str]
+-) -> tuple[bool, str]:
+-    for row_index, row in enumerate(rows):
+-        missing = sorted(required - set(row))
+-        if missing:
+-            return _invalid_trace(
+-                "invalid_trace",
+-                f"row={row_index},missing={','.join(missing)}",
+-            )
+-        for signal in sorted(required):
+-            if not _finite(row[signal]):
+-                return _invalid_trace(
+-                    "nonfinite_trace_value",
+-                    f"row={row_index},signal={signal}",
+-                )
+-
+-    for row_index, (left, right) in enumerate(zip(rows, rows[1:]), start=1):
+-        step = right["time"] - left["time"]
+-        if not _finite(step):
+-            return _invalid_trace("nonfinite_derived_time_step", f"row={row_index}")
+-        if step < 0.0:
+-            return _invalid_trace("unordered_trace", f"row={row_index}")
+-    return True, ""
++def _check_parameter_case(rows, *, label, output, sigma, dt):
++    if not math.isfinite(sigma) or sigma < 0 or not math.isfinite(dt) or dt <= 0:
++        return fail('P_ADDITIVE_OUTPUT', 'invalid_parameters')
++    count = math.floor(rows[-1]['time'] / dt)
++    if rows[-1]['time'] >= root_bracket(count + 1, dt)[0]:
++        count += 1
++    if not MIN_COMPLETE_INTERVALS <= count <= MAX_COMPLETE_INTERVALS:
++        return fail('P_PERIODIC_UPDATE', 'coverage', case=label, intervals=count)
++    tol = max(1e-6, .06 * sigma)
++    buckets = [[] for _ in range(count)]
++    amplitude = 0.
++    for ri, row in enumerate(rows):
++        t = row['time']
++        residual = row[output] - row['vin_i']
++        if not math.isfinite(residual):
++            return fail('P_ADDITIVE_OUTPUT', 'nonfinite_residual', row=ri)
++        amplitude = max(amplitude, abs(residual))
++        if abs(residual) > sigma + tol:
++            return fail('P_ZERO_MEAN_DITHER', 'amplitude_bound', row=ri, case=label)
++        choices = row_intervals(t, dt)
++        errors = [abs(residual - sigma * SEQUENCE[n % 8]) for n in choices]
++        if min(errors) > tol:
++            return fail('P_ADDITIVE_OUTPUT', 'current_vin_level', row=ri, case=label)
++        if sigma and min(errors) / sigma > .06:
++            return fail('P_DETERMINISTIC_SEQUENCE', 'normalized_level', row=ri, case=label)
++        # A boundary row is checked above but never averaged into an interval.
++        if len(choices) == 1 and choices[0] < count:
++            buckets[choices[0]].append((t, residual))
++    if abs(amplitude - sigma) > tol:
++        return fail('P_ADDITIVE_OUTPUT', 'sigma_mismatch', case=label)
++    levels = []
++    for n, values in enumerate(buckets):
++        if not values:
++            return fail('P_PERIODIC_UPDATE', 'missing_interval', case=label, interval=n)
++        start, stop = n * dt, (n + 1) * dt
++        # Require direct observations near both ends, never synthesize probes.
++        eps = 16 * math.ulp(stop)
++        if values[0][0] - start > MAXSTEP + eps or stop - values[-1][0] > MAXSTEP + eps:
++            return fail('P_PERIODIC_UPDATE', 'missing_edge_coverage', case=label, interval=n)
++        vals = [v for _, v in values]
++        if max(vals) - min(vals) > tol:
++            return fail('P_SAMPLE_HOLD', 'hold_span', case=label, interval=n)
++        # A deterministic direct representative per interval prevents raw-row weighting.
++        level = min(values, key=lambda tv: abs(tv[0] - (start + .5 * dt)))[1]
++        levels.append(level / sigma if sigma else 0.)
++    means = [math.fsum(levels[n:n+8]) / 8 for n in range(0, count - 7, 8)]
++    if not means or max(map(abs, means)) > .04:
++        return fail('P_ZERO_MEAN_DITHER', 'cycle_mean', case=label, means=means)
++    return True, f'{label}:intervals={count},cycles={len(means)}'
+ 
+ 
+-def _interpolate(
+-    rows: list[dict[str, float]],
+-    times: list[float],
+-    signal: str,
+-    target: float,
+-) -> float:
+-    right = bisect_right(times, target)
+-    if right == 0:
+-        return rows[0][signal]
+-    left = right - 1
+-    if times[left] == target or right == len(rows):
+-        return rows[left][signal]
+-
+-    t0 = times[left]
+-    t1 = times[right]
+-    if t1 == t0:
+-        return rows[right][signal]
+-    alpha = (target - t0) / (t1 - t0)
+-    return rows[left][signal] + alpha * (rows[right][signal] - rows[left][signal])
+-
+-
+-def _interpolate_within_interval(
+-    rows: list[dict[str, float]],
+-    times: list[float],
+-    signal: str,
+-    target: float,
+-    stop: float,
+-) -> float:
+-    right = bisect_right(times, target)
+-    if right == 0 or right == len(rows):
+-        return _interpolate(rows, times, signal, target)
+-    left = right - 1
+-    if times[left] == target:
+-        return rows[left][signal]
+-    if times[right] >= stop:
+-        # The row at ``stop`` belongs to the next timer interval.  A sparse
+-        # trace must not smear that update backwards into the held interval.
+-        return rows[left][signal]
+-    return _interpolate(rows, times, signal, target)
+-
+-
+-def _check_parameter_case(
+-    rows: list[dict[str, float]],
+-    *,
+-    label: str,
+-    output: str,
+-    sigma: float,
+-    dt: float,
+-) -> tuple[bool, str]:
+-    horizon_ratio = rows[-1]["time"] / dt
+-    if not _finite(horizon_ratio):
+-        return _invalid_trace("nonfinite_derived_horizon", f"case={label}")
+-    complete_intervals = math.floor(horizon_ratio + 1e-9)
+-    if complete_intervals < MIN_COMPLETE_INTERVALS:
+-        return False, diagnostic(
+-            "P_PERIODIC_UPDATE",
+-            f"{label}_insufficient_coverage",
+-            expected=f"complete_intervals>={MIN_COMPLETE_INTERVALS}",
+-            observed=f"complete_intervals={complete_intervals}",
+-            event=label,
+-        )
+-    if complete_intervals > MAX_COMPLETE_INTERVALS:
+-        return _invalid_trace(
+-            "unexpected_trace_horizon",
+-            f"case={label},complete_intervals={complete_intervals}",
+-        )
+-
+-    tolerance = max(1e-6, LEVEL_TOLERANCE_FRACTION * sigma)
+-    if not _finite(tolerance):
+-        return _invalid_trace("nonfinite_derived_tolerance", f"case={label}")
+-
+-    interval_levels: list[float] = []
+-    max_level_error = 0.0
+-    max_hold_span = 0.0
+-    sample_cursor = 0
+-    times = [row["time"] for row in rows]
+-    for interval in range(complete_intervals):
+-        start = interval * dt
+-        stable_start = start + TRANSITION_GUARD_FRACTION * dt
+-        stop = (interval + 1) * dt
+-        if not all(_finite(value) for value in (start, stable_start, stop)):
+-            return _invalid_trace(
+-                "nonfinite_derived_interval_boundary",
+-                f"case={label},interval={interval}",
+-            )
+-
+-        while (
+-            sample_cursor + 1 < len(rows)
+-            and rows[sample_cursor + 1]["time"] <= start + 1e-15
+-        ):
+-            sample_cursor += 1
+-        sampled_vin = rows[sample_cursor]["vin_i"]
+-        if not _finite(sampled_vin):
+-            return _invalid_trace(
+-                "nonfinite_derived_sampled_vin",
+-                f"case={label},interval={interval}",
+-            )
+-
+-        stable = [
+-            (row_index, row["time"], row[output] - sampled_vin)
+-            for row_index, row in enumerate(rows)
+-            if stable_start <= row["time"] < stop
+-        ]
+-        stable.extend(
+-            (
+-                -1,
+-                probe_time,
+-                _interpolate_within_interval(
+-                    rows,
+-                    times,
+-                    output,
+-                    probe_time,
+-                    stop,
+-                )
+-                - sampled_vin,
+-            )
+-            for probe_time in (
+-                start + phase * dt for phase in STABLE_PROBE_PHASES
+-            )
+-        )
+-        if any(not _finite(value) for _, _, value in stable):
+-            return _invalid_trace(
+-                "nonfinite_derived_noise",
+-                f"case={label},interval={interval}",
+-            )
+-
+-        expected = sigma * SEQUENCE[interval % len(SEQUENCE)]
+-        if not _finite(expected):
+-            return _invalid_trace(
+-                "nonfinite_derived_expected_level",
+-                f"case={label},interval={interval}",
+-            )
+-        stable_values = [value for _, _, value in stable]
+-        hold_span = max(stable_values) - min(stable_values)
+-        if not _finite(hold_span):
+-            return _invalid_trace(
+-                "nonfinite_derived_hold_span",
+-                f"case={label},interval={interval}",
+-            )
+-        max_hold_span = max(max_hold_span, hold_span)
+-
+-        for row_index, stable_time, value in stable:
+-            level_error = abs(value - expected)
+-            if not _finite(level_error):
+-                return _invalid_trace(
+-                    "nonfinite_derived_level_error",
+-                    f"row={row_index},signal={output}",
+-                )
+-            max_level_error = max(max_level_error, level_error)
+-            if level_error > tolerance:
+-                location = (
+-                    f"row={row_index}"
+-                    if row_index >= 0
+-                    else f"time={stable_time:.4e}"
+-                )
+-                return False, diagnostic(
+-                    "P_SAMPLE_HOLD",
+-                    f"{label}_level_or_hold_mismatch",
+-                    expected="public_level_throughout_stable_interval",
+-                    observed=f"interval={interval},{location}",
+-                    event=label,
+-                )
+-
+-        interval_level = _interpolate_within_interval(
+-            rows,
+-            times,
+-            output,
+-            start + 0.5 * dt,
+-            stop,
+-        ) - sampled_vin
+-        if not _finite(interval_level):
+-            return _invalid_trace(
+-                "nonfinite_derived_interval_level",
+-                f"case={label},interval={interval}",
+-            )
+-        interval_levels.append(interval_level)
+-
+-    amplitude = max(abs(value) for value in interval_levels)
+-    amplitude_error = abs(amplitude - sigma)
+-    if not _finite(amplitude) or not _finite(amplitude_error):
+-        return _invalid_trace("nonfinite_derived_amplitude", f"case={label}")
+-    if amplitude_error > tolerance:
+-        return False, diagnostic(
+-            "P_ADDITIVE_OUTPUT",
+-            f"{label}_sigma_mismatch",
+-            expected=f"sigma={sigma:.6g}",
+-            observed=f"amplitude={amplitude:.6g}",
+-            event=label,
+-        )
+-
+-    normalized = [value / sigma for value in interval_levels]
+-    if not all(_finite(value) for value in normalized):
+-        return _invalid_trace("nonfinite_derived_normalized_level", f"case={label}")
+-    sequence_errors = [
+-        abs(value - SEQUENCE[index % len(SEQUENCE)])
+-        for index, value in enumerate(normalized)
+-    ]
+-    if not all(_finite(value) for value in sequence_errors):
+-        return _invalid_trace("nonfinite_derived_sequence_error", f"case={label}")
+-    sequence_error = max(sequence_errors)
+-    if sequence_error > LEVEL_TOLERANCE_FRACTION:
+-        return False, diagnostic(
+-            "P_DETERMINISTIC_SEQUENCE",
+-            f"{label}_sequence_or_dt_mismatch",
+-            expected=f"public_sequence_at_dt={dt:.4e}",
+-            observed=f"max_normalized_error={sequence_error:.4f}",
+-            event=label,
+-        )
+-
+-    cycle_means = []
+-    for start in range(0, len(normalized) - 7, 8):
+-        cycle_mean = math.fsum(normalized[start : start + 8]) / 8
+-        if not _finite(cycle_mean):
+-            return _invalid_trace("nonfinite_derived_cycle_mean", f"case={label}")
+-        cycle_means.append(cycle_mean)
+-    if not cycle_means or max(abs(value) for value in cycle_means) > 0.04:
+-        return False, diagnostic(
+-            "P_ZERO_MEAN_DITHER",
+-            f"{label}_cycle_mean_mismatch",
+-            expected="each_eight_sample_mean=0",
+-            observed="cycle_mean_out_of_tolerance",
+-            event=label,
+-        )
+-
+-    detail = (
+-        f"{label}:intervals={complete_intervals},sigma={amplitude:.6g},dt={dt:.4e},"
+-        f"level_error={max_level_error:.6g},hold_span={max_hold_span:.6g},"
+-        f"sequence_error={sequence_error:.4f}"
+-    )
+-    return True, detail
+-
+-
+-def check_noise_gen(rows: list[dict[str, float]]) -> tuple[bool, str]:
+-    required = {"time", "vin_i", *(output for _, output, _, _ in TRACE_CASES)}
+-    missing = require_signals(rows, required, "P_ADDITIVE_OUTPUT")
+-    if missing is not None:
+-        return False, missing
+-    valid, detail = _validate_rows(rows, required)
+-    if not valid:
+-        return False, detail
+-
++def check_noise_gen(rows):
++    required = {'time', 'vin_i', *(case[1] for case in TRACE_CASES)}
++    if not rows:
++        return fail('P_ADDITIVE_OUTPUT', 'zero_rows')
++    for i, row in enumerate(rows):
++        if not required.issubset(row):
++            return fail('P_ADDITIVE_OUTPUT', 'missing_signal', row=i)
++        try:
++            finite = all(math.isfinite(row[s]) for s in required)
++        except (ValueError, TypeError):
++            finite = False
++        if not finite:
++            return fail('P_ADDITIVE_OUTPUT', 'nonfinite', row=i)
++        if row['time'] < 0:
++            return fail('P_PERIODIC_UPDATE', 'negative_time', row=i)
++        if i:
++            delta = row['time'] - rows[i-1]['time']
++            if delta <= 0:
++                return fail('P_PERIODIC_UPDATE', 'unordered_or_duplicate', row=i)
++            if delta > MAXSTEP + 16 * math.ulp(row['time']):
++                return fail('P_PERIODIC_UPDATE', 'observation_gap', row=i)
++    if rows[0]['time'] != 0:
++        return fail('P_PERIODIC_UPDATE', 'missing_t0')
+     details = []
+     for label, output, sigma, dt in TRACE_CASES:
+-        passed, detail = _check_parameter_case(
+-            rows,
+-            label=label,
+-            output=output,
+-            sigma=sigma,
+-            dt=dt,
+-        )
+-        if not passed:
+-            return False, detail
++        ok, detail = _check_parameter_case(rows, label=label, output=output, sigma=sigma, dt=dt)
++        if not ok:
++            return ok, detail
+         details.append(detail)
+-    return True, pass_note(PROPERTY_IDS, " ".join(details))
++    return True, 'PASS ' + ','.join(PROPERTY_IDS) + ' ' + ' '.join(details)
+ 
+-
+-CHECKER_ID = "v4_077_dither_noise_like_deterministic_source"
+-CHECKER: Checker = check_noise_gen
++CHECKER_ID = 'v4_077_dither_noise_like_deterministic_source_additive_hold_proposal_v1'
++CHECKER = check_noise_gen

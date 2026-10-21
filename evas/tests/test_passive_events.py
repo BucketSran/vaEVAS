@@ -64,10 +64,44 @@ class PassiveEvents(unittest.TestCase):
         with self.assertRaisesRegex(KernelError,'simultaneous event condition reads state written by another'):
             run(p)
 
-    def test_uncertain_voltage_condition_remains_rejected(self):
+    def test_condition_at_exact_cross_root_keeps_strict_comparison(self):
         p=program('if(V(y)>0.5) seen=1;',dut_rhs='V(u)')
+        # y=u=.5 at the physical root, independently of its rounded time. The
+        # passive body reads at tau+ (LRM 2.4 5.10.3.1), where y=u rises, so
+        # the condition decidable just after the root fires: seen=1.
+        result=run(p,points=[[0,.1],[1,.9]])
+        self.assertEqual(final(result),[1,1,100,0])
+        self.assertEqual(len(result['transient']['events']),2)
+        # Negative control: a falling observed node crosses the threshold from
+        # above (u(t)=0.9-0.8t, root at t=0.5), so y<0.5 just after the root
+        # and the body must not fire. Cross fires in either direction here.
+        p=program('if(V(y)>0.5) seen=1;',dut_rhs='V(u)',
+                  trigger='cross(V(u)-0.5,0,0.001,0.001)')
+        falling=run(p,points=[[0,.9],[1,.1]])
+        self.assertEqual(final(falling),[1,0,100,0])
+        # The same root with the comparison reversed fires instead.
+        p=program('if(V(y)<0.5) seen=1;',dut_rhs='V(u)',
+                  trigger='cross(V(u)-0.5,0,0.001,0.001)')
+        self.assertEqual(final(run(p,points=[[0,.9],[1,.1]])),[1,1,100,0])
+        self.assertEqual(final(run(p,points=[[0,.9],[1,.1]]))[1],1)
+        # Negative control: the observed node is not provably monotone. q jumps
+        # at the root, so the pre-root trajectory derivative of y is no
+        # certificate and the strict comparison stays refused.
+        p=program('if(V(y)>0.5) seen=1;',dut_rhs='q-V(u)')
         with self.assertRaisesRegex(KernelError,'event_condition'):
-            run(p,points=[[0,.1],[1,.9]])
+            run(p,points=[[0,0],[1,1]])
+        # A true input band at a fixed timer has no exact root identity.
+        p=compile_sources({'band.va': '''`include "disciplines.vams"
+module dut(u,y); input u; output y; electrical u,y;
+analog begin V(y)<+V(u); end endmodule
+module obs(y); input y; electrical y; real seen;
+analog begin @(initial_step) seen=0;
+@(timer(0.5,0,0.001)) if(V(y)>0.5) seen=1;
+end endmodule'''}, [Instance('D','dut',{'u':'u','y':'y'}),
+                    Instance('M','obs',{'y':'y'})])
+        with self.assertRaisesRegex(KernelError,'event_condition'):
+            transient(p,{'u':[[0,.5],[1,.5]]},[0,1],stop=1,max_step=1,
+                      source_errors={'u':1e-12},kernel=KERNEL)
 
     def test_nonrepresentable_root_retains_tau_sample_interval(self):
         p=program('seen=V(y);due=$abstime+0.25;',dut_rhs='q+V(u)',

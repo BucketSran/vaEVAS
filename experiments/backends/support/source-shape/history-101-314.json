@@ -1,0 +1,3350 @@
+{
+  "schema_version": 1,
+  "scope": "PR208 original101/314 source-cursor diagnosis and affected subset revalidation; not full400/213 rerun",
+  "baseline_head": "105bb34f9f4ddbc6de744c272778cfb6eadd6b97",
+  "baseline_dut": "553eb83bbaaa10e867abcc7b0d1e4cf26c75adb5",
+  "baseline_kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+  "candidate_build": {
+    "base_head": "105bb34f9f4ddbc6de744c272778cfb6eadd6b97",
+    "kernel_sha256": "25347806e27569fa5540b68c8283c17b7ac54ff1e6c4078b42b67cba92e99721",
+    "debug_kernel_sha256": "b21831e14f31c23fa0be468ae491601df87fbb2e755ee70fbe3a4d91443aa020",
+    "source_files": {
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "03467610db7d5563c99f2ffcf65c8f258175575fff18a38ca89dc5854439d651",
+      "evas/src/evas/array_elaboration.py": "922fd600f57b039b4f2e2b2242af03dd7830a464e0b31272260c82d11217d278",
+      "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+      "evas/src/evas/display.py": "c53802f643b2405e1f3da36596a8d4674aebf409635232ded3dc52f852f38b5c",
+      "evas/src/evas/elaboration.py": "a7a435e8d2361e7abf2b047b68210b1b25f656e24b40155fe969e9b4c593bc4a",
+      "evas/src/evas/errors.py": "4716787d137c2232e13d9b9b7231b407d5c87a38c755345c63bc9df91a45a158",
+      "evas/src/evas/event_index_domains.py": "c5558bdff652f64b5ddfdc72e32230f8a8330f9fa4798e1c09b7e95344bcaa39",
+      "evas/src/evas/event_specialization.py": "e62efc8b23dc8a3d0b28adad005c3ce31b057fa77fe0171df9e5d7c65ada7b3b",
+      "evas/src/evas/frontend.py": "310159f89cea075ff3f35a7d46e7177dfd8888eb8841528ddb924be45768854a",
+      "evas/src/evas/hierarchy.py": "ec8cd24105bfb646f28874dd40fe0923ae51ca5d22b45b1be0e6153347a7a10b",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/instance_compiler.py": "64f2df1c52327645a6b5c010ce41c92507298cbae317ff486c6fc5edd0b65b0c",
+      "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/src/evas/ir.py": "b55291f1ae7cf3725f5480739cf7f8830513a1ef00fba0de9b588a2bfcc45b45",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/src/evas/lowering.py": "8b95c03b9d4b3bd86fb3cf853bc45a878f7a15a8e04a5798102487defc26ed03",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/node_elaboration.py": "eaa06faf21bea22a2ef477605c2d4c2c167b5f99a2083f356733e08eae1a5cf5",
+      "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/src/evas/predicate_structure.py": "0f145fafcf1a926877f555207da48d54e6334e8ffbde1d9b385499ea74d11543",
+      "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+      "evas/src/evas/protocol.py": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+      "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+      "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+      "evas/src/evas/runtime.py": "f7fb4d7d4b46facce3422e646a53845e782338e7ae1494cf7f957d9e6e722d10",
+      "evas/src/evas/scs.py": "647b3b4e34fe130860fce20634fbb30a01e4c0110bc5fa9e20f092fb12356283",
+      "evas/src/evas/scs_sources.py": "1fab2c390f33c4c6221969bbbb192265636caf5063d20fd735e5e247b22cfb8d",
+      "evas/src/evas/standard_headers.py": "efe0b2421d400ac723cfdf71c5d406cdef510dc89d3556ad999e2253600ec88e",
+      "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+      "evas/src/evas/syntax.py": "766c424ec8b6c1f8a9e6fa9416aebe91e274d52ffd9ba486fa75291e5efcd38f",
+      "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+      "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+      "evas/rust_core/src/affine_bounds.rs": "074445000a0dc47246b9f7bcd4d299062668fc5d7772e958e95587f2e7b6edee",
+      "evas/rust_core/src/analog.rs": "1505d79dc24df924c7544da0a0fdfa9a6280bffb67f5ee191dad0ff2f13ad484",
+      "evas/rust_core/src/assembly.rs": "beab047ea57b6510e00e897b1caf02e437f3a30bd1567f92bc39c0a7e40b62f9",
+      "evas/rust_core/src/batch.rs": "ba227471ba388b4efd361e9a523352b7626bb80cd51141a00ca2b1c97eed2888",
+      "evas/rust_core/src/causal_event.rs": "907e6c283a281e9f07d022a44e6ad53ba91484f938e4a0d9e5d1b23ab032ef79",
+      "evas/rust_core/src/causal_voltage.rs": "8eab2a5a636f43999f51f015b2fd3bb82cc1e73b50ac389c0e0412de65d75da6",
+      "evas/rust_core/src/continuous.rs": "517d6574c6594857f8bc77bf829c714afe9a6f2bb5bc693dabf997ec432112fe",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "90d3fd2b904f5aece03b56fae587776d281cfc0e24348272e15597fc145bc46f",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_readout.rs": "637028c3dd24d06665ea5849d3e90666a3e41585b96cffb692910b041e135e84",
+      "evas/rust_core/src/continuous_runtime.rs": "6df2d30f8f67cf9039425b820abc614232e2a7ed02c973b99f18d6899f570403",
+      "evas/rust_core/src/continuous_select.rs": "8d6ac91199f325c78382da900debdf12504db7dd488869104b1a246a16cac111",
+      "evas/rust_core/src/continuous_select_cache_tests.rs": "2e9fe77ecd33b3d1ddcf5c1ab6834e5d9ea8abff9900db9f41bc1e5f2a2f0423",
+      "evas/rust_core/src/continuous_select_candidates.rs": "88017ad10779a666d82873230413ffbebaf95d13610c7c7795f100f2e1f1635b",
+      "evas/rust_core/src/continuous_step_simplify.rs": "70094c4ce51e296a92523cbe7bc7f83318f10798fd8aa81b105ce83bd413e0de",
+      "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+      "evas/rust_core/src/direct_derivative.rs": "606fa88155ae14278fef573f9c9c9615206ec58bd150ffaf12fb9577f0f56940",
+      "evas/rust_core/src/display.rs": "041ff1a89745233cd060578c91f34eb5c9979223f42535af1dca401180b94075",
+      "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+      "evas/rust_core/src/event_accuracy.rs": "e82c0b5ef998211b01af0ec3fab69ac833432b4a26dd908af392b514b170d43e",
+      "evas/rust_core/src/event_conditions.rs": "ce7c29bd2d38c7faeb67efcbdc471d9c6c9ac476e277312965b9668b542f73d4",
+      "evas/rust_core/src/event_control.rs": "37e728c2ab5493f378ae6653744605c44d78a7ce806df3fd6b21497d4274b098",
+      "evas/rust_core/src/event_numeric.rs": "7c48b8670ce0c205a92c04e54be845ba26e59ae8424e9e75638a5be4a0ba2da9",
+      "evas/rust_core/src/event_time_provenance.rs": "15833c15b5f8cc2481988887c7976120c85848aa2042e8746603d60a5647c2d3",
+      "evas/rust_core/src/event_value_proof.rs": "db427243c8bb11f14c9743f10eb2290cfd4150d1a5f273dbc8ee1580fa069f96",
+      "evas/rust_core/src/events.rs": "500431a4b310086761d2a2cef9cd68187ff08f242dd9fb5f7ef0c070ece59622",
+      "evas/rust_core/src/events_certificate_cache_tests.rs": "6f0900e6e8149c49a230a527719e34ae2d95f28eaac09b9d423961bf222c7938",
+      "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+      "evas/rust_core/src/exact_source.rs": "519313bd72079207bbe847b262f6be4efa2f272e5b3bb0798766815706ee9f10",
+      "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+      "evas/rust_core/src/expression.rs": "81c1eb4bd3fc122006d7feb9841f1ad19f2e71a296ddad1fef45dfa8c5d41f4a",
+      "evas/rust_core/src/filter_budget.rs": "94807ee47a346648b5eb4d7d4af03366c0f1f1b79a0e67f636fc279c90b67656",
+      "evas/rust_core/src/guard_trajectory.rs": "e9db1cd8db29d735f5ba84cb9b0432711f7db3ba312b9932a63a84cba41b4147",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "acdbdc83beef8cae53188c6335d7b99f9fe56ebb75d5318bbbd7a1f8e92fd2a1",
+      "evas/rust_core/src/implicit_dynamics.rs": "b30206f4dde77fc2220a942c896e8a5d5673a6f8efdd7f49f45db717597469a8",
+      "evas/rust_core/src/implicit_event_restart.rs": "d8b45dc327f0675ee2463c5047364716a4b692812e21ca44afca4b6d2bad5bd0",
+      "evas/rust_core/src/initial_state_invariance.rs": "74f5c1c625dbf19e4d653e85c649a668f590421018549c29a9cca83e62463438",
+      "evas/rust_core/src/initialization.rs": "209ad8ccdda14057fa2aa7b4d744c27ebb9d9df14d95141025c34dcfe23d2fc9",
+      "evas/rust_core/src/initialization_nodes.rs": "61aee737fbcf29bd236649d4532b7364503cf59bb1a56ed8ea1614a8de25d6e4",
+      "evas/rust_core/src/input_clamp.rs": "5c3010afc080801aabd1bbe6b839dac21c714d8f49eaf0ad4aee6fa413f1ac59",
+      "evas/rust_core/src/interval.rs": "75b04de91716ce2bbb523dc3c703036081bec4909f154a277b973bbccf9ef785",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/interval_zero_product_tests.rs": "882420755b22f048f6cc88b643ce2a07eb2ec44fa4510193c731b793b9c77afd",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "8f211b465b19d062033392ef6defbc1bdc66b34c7be9172ab3c41e32a9e7b3d1",
+      "evas/rust_core/src/lib.rs": "2e7a3e61bde0c2aae696eff4aa588e02d0663926cc7e101b2f38abfa1fcb2b07",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+      "evas/rust_core/src/math_functions.rs": "a57b876344f203b03d3dc0a2bb8f49bce673abd35619f55552c0a0d29b7f13a0",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "b9c44deb78ec185e6209754736454a761cdd69f92114c67a04bed3b4e4796647",
+      "evas/rust_core/src/nonlinear_root_window.rs": "7341efc680fc3f1a247803651875bdc115791426f587acdcb8b10d9386e302dd",
+      "evas/rust_core/src/nonlinear_value_memo_tests.rs": "0b065a2b0bc8694ac0de2aa232b6dfc261ffaa68c3fcf29a2c7b0fe255d57679",
+      "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+      "evas/rust_core/src/operators.rs": "f42e06f32af664271c675bb6714e77b8e912ce78da98cb73c7d1a947744f5724",
+      "evas/rust_core/src/passive_events.rs": "1843badd4a4f4c6ef63e79df58d2d6fa72634b116d56d1d25f7147f819574339",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/portability.rs": "c101c1075de370d3622ad270bb0ca7bdf73c6ba2b3ed6ddd940a45a3c8134cb4",
+      "evas/rust_core/src/pwl.rs": "8c17bd4cf3121989b9591c1a17390c3a18451b96fafca754368973df498d4ff5",
+      "evas/rust_core/src/reset_dependencies.rs": "3f894fe282b3e22b7d07e7022a9e9aa9e6e06dc641591bdae25c0a7acf26f51f",
+      "evas/rust_core/src/schedule.rs": "d18c68fb5efcd068bb0b4cb6946dfb246ea9184cd0297f91551fddf1588847ef",
+      "evas/rust_core/src/schedule_timer_boundary_tests.rs": "99b19e3b98cb05226b8548de2b621172fe069b7a1fbf36f7451c1ec493fb0c32",
+      "evas/rust_core/src/settlement.rs": "5cf1fa2ede0cc0805f6418d76706adabae35b98eb25f4a264838d7add893a289",
+      "evas/rust_core/src/settlement_bounds.rs": "b597865d41187a586bda5c7b47297749c87e8e51c5867f250e29d972d3eb4686",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/slew_cascade.rs": "26b9cedd714dd24893d2076818d84c8905525da29c900c4df97bf9a7c40cc7b8",
+      "evas/rust_core/src/solver.rs": "71a06b3980a0dfdd5d0112edfa47de5113a68d16b5331ffc903bfbe3e7dbaa82",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "bc791c33b49c78259c0efa4b89203758830b6f90b461058d6a526ada5e1b2a94",
+      "evas/rust_core/src/step_bounds.rs": "7b34202c102b72aef2e19f2af1c28236cd6b3d4ba739cdbdf79e09b526331731",
+      "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+      "evas/rust_core/src/transient.rs": "7f0c81e508cf48e14f184748b42464800c3277210af387e03cce226ee20caff0",
+      "evas/rust_core/src/transient_condition_tests.rs": "0a8dfc626381785993cdf3476e808a12ee6688cbeae81495451f312f0266d10c",
+      "evas/rust_core/src/transient_event_acceptance.rs": "1857edfebd39d1e6ccab9619220535398fc687b79c19985e399820d45020f33a",
+      "evas/rust_core/src/transient_event_control_tests.rs": "49f5f3c4c829bbd1a063446921898b7ad936f88ab20ef3e0b023613d6590e47a",
+      "evas/rust_core/src/transient_history_calendar.rs": "a444c9555a0b63ea72d2ae82b5a309494825e90a321b29c44fc5a9bd649676cf",
+      "evas/rust_core/src/transient_idt_tests.rs": "caaf846459e576549a5cf53e6b8f715c0d32b33496b241f419d5a2f3e2771530",
+      "evas/rust_core/src/transient_initialization.rs": "57f21b3df0fa1b4f5a5c6f9e2a517c8f4b57f9a632e6d4f1c2235dac91449728",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "584b2c1bb2043265b8708bbde1b34a8a8251e00dad45d41859f068e16616f698",
+      "evas/rust_core/src/transient_passive_tests.rs": "85eb5d501a7a06eae676ebcfb0ec426e5de0b89eff9dd43de449835f0d5bdd9b",
+      "evas/rust_core/src/transient_root_refinement.rs": "6bbb6b7df5676fe65038b227284d811666f105c01a7848480f81c95962fe466c",
+      "evas/rust_core/src/transient_time_proof_tests.rs": "70ef120b678cb4cb05908c4b5c9bde2db87a0eafb78507b09239d2b681c9e95f",
+      "evas/rust_core/src/transient_timer_boundary_tests.rs": "f5ea68af5178dc6c22ce112df1ae9e9523d1d3e12c8658de4b5d8ce1f601be28",
+      "evas/rust_core/src/transient_window_tests.rs": "b56afa40d9683445c745455dd19a9d35a4ab9247e5a184a3dfb6246c2ca628ad",
+      "evas/rust_core/src/transition.rs": "4d880dee369ea2ca900b89ec193949b94b221e1989d8adfcb489d915bf0890cd",
+      "evas/rust_core/src/transition_filter.rs": "94b63ec1985c3eeb376216cd7501e1caef177411260d61519849b53035e982b4",
+      "evas/rust_core/src/transition_filter_input.rs": "845679115ff39c13cfb951ea93786070a4a142b57af2aa28480efcf5d46b5e42",
+      "evas/rust_core/src/transition_history_target.rs": "6ea098b83c6e72ee2454919934d2b1bf53ffb477a1dec5368acb534bd0c7ad38",
+      "evas/rust_core/src/transition_integral.rs": "e5e32e03013915527e80c646ceecfba86d65161dbfa4c6df6c1ad0f8282447ed",
+      "evas/rust_core/src/transition_source_plan.rs": "6a1cfa5e320cc4850b26cf8c5b5a71b6fa60364c902e307744f2be7d60c9e14e",
+      "evas/rust_core/src/transition_source_state.rs": "ffbd84e811b1abcaf41f0daad196023fefa1bc1e523279830ba05392338354d8",
+      "evas/rust_core/ir/src/lib.rs": "79137934a1fe7dcc35c95e317961902218a7e6ef7248a9cdb51be8fc5d61e55c",
+      "evas/pyproject.toml": "31f84287c6257f2f424e850df9451aac643aea94636eb4de4829785ea9b1de9e",
+      "evas/rust_core/Cargo.toml": "750f906a7ae10f2c6e0ae9cbee5787c1c286d66e1aad88a285bd9684c7ba1ad5",
+      "evas/rust_core/Cargo.lock": "a60ef97b215300e2665d2e9864d6bbbdb7b2bce468873f8c3cdba0fec858f5c5",
+      "evas/rust_core/ir/Cargo.toml": "ee626ead9fe9620b9b48c956bef41d283578683d25bc879b20f25730adf325f0"
+    },
+    "source_archive_sha256": "73728a603fcfa862d53f20dddf165524801cf0a839afce8dce0ceadab0593dd9",
+    "source_diff_sha256": "9be4f59e8022edf9b5ebed7e738a4bf0e0d47c9c02f82e123eb79ddd7ac39edd",
+    "build_command": "cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml",
+    "build_gate": "pass",
+    "compiler": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2\n",
+    "availability": "local-only"
+  },
+  "root_cause": "A certified post-timer output tau<=tq<b advanced Source::prepare backwards from cursor b; originals101/314 first hit at3ns/14ns. Independent minimal public cases fail on baseline and pass on candidate.",
+  "fix": "Only disposable event-phase observation seeds rebase source cursor when last root refines its original window, is at/before query and no source cut was consumed after query. Keep targets/history/plans and accepted frame; normal prepare remains monotonic.",
+  "remaining": {
+    "101": {
+      "classification": "existing support/admission restriction",
+      "reason": "source-target predicate state must be point-valued; real recurrence y has outward rounding enclosure",
+      "checker": "not_run"
+    },
+    "314": {
+      "classification": "existing numerical composition certification restriction",
+      "reason": "At52ns distinct timer root follows source corner, but root enclosures overlap and current source-target preflight does not certify their composition",
+      "checker": "not_run"
+    }
+  },
+  "original_criteria": {
+    "kernel_timeout_s": 120,
+    "worker_timeout_s": 150,
+    "precision": "original decks and default/effective settings; no changed stimulus/output grid/tolerance",
+    "checker_identity_sha256": "fad863fde1c4e4651480e0813fccb1fa43fd0dd023d79020f22737025c91567f",
+    "checker_source_files_verified": 427,
+    "normalization_sha256": "492bab585735c4480581d8f18f54bfc7bdd58a1cb02cde49ed30808049bea541",
+    "formal_benchmark": false
+  },
+  "baseline_reproductions": [
+    {
+      "label": "baseline-red1",
+      "results": [
+        {
+          "family": "101",
+          "cli_returncode": 2,
+          "status": "rejected",
+          "seconds": 0.025316083047073334,
+          "kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+          "checker": {
+            "status": "not_run"
+          },
+          "diagnostic": {
+            "kind": "event_consistency",
+            "message": "invalid source history advancement time",
+            "diagnostic_version": 1,
+            "code": "kernel.event_consistency",
+            "stage": "kernel",
+            "category": "unknown",
+            "capability": null
+          },
+          "cleanup_confirmed": true
+        },
+        {
+          "family": "314",
+          "cli_returncode": 2,
+          "status": "rejected",
+          "seconds": 0.10416674998123199,
+          "kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+          "checker": {
+            "status": "not_run"
+          },
+          "diagnostic": {
+            "kind": "event_consistency",
+            "message": "invalid source history advancement time",
+            "diagnostic_version": 1,
+            "code": "kernel.event_consistency",
+            "stage": "kernel",
+            "category": "unknown",
+            "capability": null
+          },
+          "cleanup_confirmed": true
+        }
+      ],
+      "identity_sha256": "e7291ac1f25e0058ea537377f2fb65dff0a83045258ddc3238dc6020d8fce4e7"
+    },
+    {
+      "label": "baseline-red2",
+      "results": [
+        {
+          "family": "101",
+          "cli_returncode": 2,
+          "status": "rejected",
+          "seconds": 0.01999779196921736,
+          "kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+          "checker": {
+            "status": "not_run"
+          },
+          "diagnostic": {
+            "kind": "event_consistency",
+            "message": "invalid source history advancement time",
+            "diagnostic_version": 1,
+            "code": "kernel.event_consistency",
+            "stage": "kernel",
+            "category": "unknown",
+            "capability": null
+          },
+          "cleanup_confirmed": true
+        },
+        {
+          "family": "314",
+          "cli_returncode": 2,
+          "status": "rejected",
+          "seconds": 0.1052933749742806,
+          "kernel_sha256": "ce8ad6db916f91c38e597db62a4720010a9e7d442c61bd20310911ed6d42f60a",
+          "checker": {
+            "status": "not_run"
+          },
+          "diagnostic": {
+            "kind": "event_consistency",
+            "message": "invalid source history advancement time",
+            "diagnostic_version": 1,
+            "code": "kernel.event_consistency",
+            "stage": "kernel",
+            "category": "unknown",
+            "capability": null
+          },
+          "cleanup_confirmed": true
+        }
+      ],
+      "identity_sha256": "99dbadeb653c782e3901013b63e3f1c3ca565d1ee6e9264c42779565216b1e8e"
+    }
+  ],
+  "affected": {
+    "fixed_count": 115,
+    "selection": "prior fixed112 plus101,314,347",
+    "counts": {
+      "status": {
+        "completed": 66,
+        "rejected": 49
+      },
+      "checker": {
+        "passed": 58,
+        "not_run": 49,
+        "failed": 8
+      },
+      "cleanup_confirmed": 115,
+      "complete_response_unchanged": 66,
+      "response_differences": 0
+    },
+    "rows": [
+      {
+        "family": "001",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "data_edges=6 up_edges=2 down_edges=2 overlap_frac=0.0000 direction_up=2/2 direction_down=2/2 none=2/2 wrong_direction=0 missing_direction=0 false_pulse=0 strict_pulses=4 rail_failures=0 clear_failures=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "001-bang-bang-phase-detector",
+        "source_files": {
+          "submission/bbpd_ref.va": "225f74b409fcfd4801f07e46cf84dbd61a2a895f51a095239cfd5ded406ea5b2",
+          "testbench/trusted_replay_test.scs": "41cd2e820304c4e90fb9f4435e784610816520a034c8a12aae19bf06394b113c"
+        },
+        "input_identity_sha256": "33dcce19170a3edf951612d838ce0e1eb7828fc0d5841d377e6d3a9633b9268a",
+        "result_sha256": "4a44f5f21ebc5bc12bc7f7fee8cf85a77577620dabb409d857abb2af5c9c5481",
+        "process_sha256": "6af99402d296d466ebe60bb97afbfc6a875dba8bf03d0511fc909ff4dc3ef824",
+        "response_sha256": "f9eb9fa7001a711e0422ad6a877bb8b4d9142bd0dc92ed3f4a881d1c6b5a2fc8"
+      },
+      {
+        "family": "002",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "samples=10 main_codes=10 cal_codes=[0, 1, 2, 3] mismatches=0 monotonic_errors=0 diff_span=0.6188 max_diff_error=0.0000 max_cm_error=0.0000 hold_intervals=9 hold_violations=0 max_hold_span=0.0000"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "002-capacitive-sar-feedback-dac",
+        "source_files": {
+          "submission/cdac_cal.va": "c7414e3ed6628fe36b697e4ff68c8b9b4c1122c6efeb734b6dabc54a56b96ff7",
+          "testbench/trusted_replay_test.scs": "0710a3e4a464185ead96accd5322068695f9483c32269ada1000b8373f34657f"
+        },
+        "input_identity_sha256": "b55c58942a753af729c562a124c2eee379509703bd0e4d2973061c81120e3a0e",
+        "result_sha256": "596485512dec6dda269030787477dadd28c44fda432269cc9d505cbf16c6904c",
+        "process_sha256": "bec4790cd1e1c669eeab03a37a32dbab28d449f5c58a2409888bc755b2edf650",
+        "response_sha256": "d8519c8274f68e0499770a082b2b0cbed91f2e7029bde7908a13836b595504f3"
+      },
+      {
+        "family": "004",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "clock_edges=27 initial=0.45 edge_mismatches=0 hold_intervals=26 hold_violations=0 async_hold_failures=0 range=(0.050,0.850) coverage={'reset': 2, 'increment': 11, 'decrement': 14, 'upper_clamp': 3, 'lower_clamp': 1}"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "004-trim-calibration-controller",
+        "source_files": {
+          "submission/cdac_calibration.va": "8b8280f388de59ddcc3afa683ae480fac2104f0c08f285a9e12bd84e520d059d",
+          "testbench/trusted_replay_test.scs": "cef969eb40d295df9d6c919ff945e7b96100dc292ae9bddaa27d7d0d1f99de13"
+        },
+        "input_identity_sha256": "7fb5d0a985c4bce8db4cfbbe3a8d8c91ce967d12915ab45eb2043a7fe7126f4f",
+        "result_sha256": "044b5a8946d5aa8cbc9a4c6bc342ea48e4b3a846eb49e92a1638d2104ddcdecc",
+        "process_sha256": "9e631077390440d2293bd157ac7ffb7a8cab3f3fadc35c76c0d185d2e2681609",
+        "response_sha256": "87ca5e735c7884fdbaf835a8f974099a138055e6cb1d923e573f92afa963a1fa"
+      },
+      {
+        "family": "006",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "active_clocks=11 reset_samples=1 active_sequence=2,0,3,1,2,0,3,1,2,0,3,1 failures=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "006-element-shuffler",
+        "source_files": {
+          "submission/element_shuffler.va": "ffa2e5481e99f9e7359fbe272e21ecfad876e9e8534793198d8c178eb6065032",
+          "testbench/trusted_replay_test.scs": "d48f9c058c33159f48df4763976531f1a297304ac0db53e70636e7f916080de8"
+        },
+        "input_identity_sha256": "ba18e57784ce00eaa86480209628106f94aa4ccbeeb224ce6079335267045fe2",
+        "result_sha256": "1b414449adf71dd3c6332e33d9f1e3f2484094a3fca59ba5c9777a9961e00021",
+        "process_sha256": "04955ed6443e4ce771fd18817b50e8ac9c7d9101c080cec647124bd3d556e808",
+        "response_sha256": "93003ea58965928cfeaab34ab23eb481d3bb591d620d5020dcd3c949ff42cca5"
+      },
+      {
+        "family": "008",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "clock_edges=33 initial=0.3 edge_mismatches=0 hold_intervals=32 hold_violations=0 range=(0.050,0.850) coverage={'reset': 1, 'increase': 12, 'decrease': 18, 'deadband': 2, 'upper_clamp': 2, 'lower_clamp': 3}"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "008-gain-trim-controller",
+        "source_files": {
+          "submission/gain_trim_controller.va": "103054afefe63f01645831bd7df1dcab3ea4386aa0fe2131616cdfeb127c2d63",
+          "testbench/trusted_replay_test.scs": "5a0cc96d17fdb25a1515e496e2d631a1628763caf95c0c20a017caa2f52ea365"
+        },
+        "input_identity_sha256": "6e20d5023ccbe5b926fa1affe1d64c558335e3231a519bb015d6bb27e7388887",
+        "result_sha256": "05250a18526b6fddb5b486465b0aeee49afd0bae21b752740acaa85533c118ee",
+        "process_sha256": "958cb0fe8baba81fb6fa7374f532ba8cd0c44684ed959de5ae669311623518f8",
+        "response_sha256": "d5ba1f3aae98ebfd1b28d42cf7709c9f1bab27db70c7fb67b805156ff84ce994"
+      },
+      {
+        "family": "010",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "offset_decisions=LLLHHLL expected=LLLHHLL diffs_mv=[-12.0,-1.0,4.0,8.0,16.0,-1.0,-13.0] mismatches=0 below_offset_positive=True above_offset_positive=True strict_samples=LLLLLHLHHLHLL properties_checked=P_RISING_EDGE_SAMPLE,P_OFFSET_DECISION,P_LATCH_HOLD,P_RAIL_REFERENCE"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "010-offset-comparator",
+        "source_files": {
+          "submission/cmp_offset_ref.va": "b718483b1f6846222087804d53bcfc02fa46f601085fdeb2488853034eaaee1d",
+          "testbench/trusted_replay_test.scs": "fda2239e3d1e3c4202ff494a66cdf272deb3706af34a63324af439c178af992c"
+        },
+        "input_identity_sha256": "893b442cd9fdb71b337fc91542ed23432f07157165accf0cd413f19c3cec1a71",
+        "result_sha256": "ac9e64d8ffbe9f63bcf1db8311413f270aee5ac24e0ed1cbf7126ed1d6a90f67",
+        "process_sha256": "549909f4d7434ba684ec5267f8d140957cab343a23a7194ff8e7a3c1fa7e3c54",
+        "response_sha256": "5e2e4b8ce25924a1b702ee9aa876df000783f9b2bc53695620fa3eccd4ecab7d"
+      },
+      {
+        "family": "012",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/012/submission/clk_divider_ref.va:98:30: unsupported expression '>'",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/012/submission/clk_divider_ref.va",
+            "line": 98,
+            "column": 30
+          }
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "012-clock-divider",
+        "source_files": {
+          "submission/clk_divider_ref.va": "a16016a244516767ffb04c82d3de8a4a81330baf0f1bdb42dfb677c99789e71e",
+          "testbench/trusted_replay_test.scs": "91e5e3de5b106bcf1ab6fa26b7447e5682463f340d2421ec0badde44323b3bd0"
+        },
+        "input_identity_sha256": "fe87d20a68407110b157d76a20101c5ec3666f9b68a7bf9265ee6dd39d9bdef6",
+        "result_sha256": "f91716e403b05db53fa60dd63d2a31dcf9a30459c5d5369dfee4f8d8c87310f9",
+        "process_sha256": "bb6efd3d10e0ba588f292842603df8381215378f9361f8055dc350963ea249a6",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "017",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/017/submission/cmp_strongarm.va:22:12: expected ';', got '='; outside affine-voltage syntax",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/017/submission/cmp_strongarm.va",
+            "line": 22,
+            "column": 12
+          }
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "017-strongarm-style-latch-comparator",
+        "source_files": {
+          "submission/cmp_strongarm.va": "b52a6b93137f0bf635e7758aa959babf0b080b83562dc4c527b0fc503bd6119a",
+          "testbench/trusted_replay_test.scs": "61349a3a98867908fcc17cf4a9dbc32c12c9714980dd1fb0f4d818bd12e4f8b0"
+        },
+        "input_identity_sha256": "33a4c746c0847ae06f04af5b0e623c3d33817a2a162e774492082fa9637d69d3",
+        "result_sha256": "e336b33eb2f03ba509295878bd3da2b735e28988b8dd08534b0f33e1ec118b71",
+        "process_sha256": "46842cfd8802c5b7e796da36bebbb7a7dc89aca869ad8f76da67ef1d77b0df72",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "026",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "event_resolution",
+          "message": "output query cannot certify its physical event phase",
+          "diagnostic_version": 1,
+          "code": "kernel.event_resolution",
+          "stage": "kernel",
+          "category": "numerical",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "026-digital-phase-accumulator-with-modulo-wrap",
+        "source_files": {
+          "submission/phase_accumulator_timer_wrap_ref.va": "5348e4c9eab599ab6d91aef4b17f2eb2ab09bf515251b925ccb23d040c27f9ea",
+          "testbench/trusted_replay_test.scs": "59ac05b2deb16edc71862030e341eeb02c202e136af9475917d1bb6a855054be"
+        },
+        "input_identity_sha256": "3e7d387f5f3abb469d72656aa696a1557a93dadda4005196d9d6c013962a9b32",
+        "result_sha256": "c1c7be0e603cf5fffd5020e349e005ff90820b6ecc7f772ee58d7e84889894c0",
+        "process_sha256": "44cd1ee4febf0d7c36c00a507f1e1637e2fd82028c1e3f9d4809d1988dfe4ad2",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "036",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/036/submission/power_on_reset_detector.va:20: ordinary analog assignment target must be a local variable",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "036-power-on-reset-detector",
+        "source_files": {
+          "submission/power_on_reset_detector.va": "9c9528620f51d8469bb108d8c550678af90d4aa3da0170756cf562ac43bca99e",
+          "testbench/trusted_replay_test.scs": "1482cd574928f17ea0f78e1063537598305d010c83ed8abc53807b1993f23762"
+        },
+        "input_identity_sha256": "d7335c22d0842e614902c528e13e0deb3705091ae781cb3e40b48e850440ca5f",
+        "result_sha256": "003d0245b21b6934abfbace44f0a7cbe5503febb4af6d088cc2046e6b73471fd",
+        "process_sha256": "e5c2c3066d2d8d9dee9ad4bc691f0d410d351cd2eabd905eb03bae074ce3aecc",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "040",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "ptat_ctat edge_checks=31; P_RESET_REFERENCE mismatch_count=0; P_INPUT_CLAMP mismatch_count=0; P_PTAT_TREND mismatch_count=0; P_CTAT_PTAT_AVERAGE mismatch_count=0; P_REFERENCE_BOUNDS mismatch_count=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "040-ptat-ctat-reference-generator",
+        "source_files": {
+          "submission/ptat_ctat_reference_generator.va": "556bbeec439ce2c9aab2f9047c26431f3868ecd48bcc68a8e0e2338b2ccbd227",
+          "testbench/trusted_replay_test.scs": "b61cabb6123e85b53c00c1c1435cbe9e156af46a1be5918934b38505bbf5dccd"
+        },
+        "input_identity_sha256": "6075f7d23f586f827740d4ab6d0a81ab4c9f88569f945df9b8bc9da50ed2c218",
+        "result_sha256": "21e566a09d02c4cd708756d60499c6bee2b4c4fe2e927d1f33b428f46279053a",
+        "process_sha256": "daf29a01c4ae2d391e641369c16239c4ca1c545c5c8854e928a298c644b7b897",
+        "response_sha256": "902c6a2a8f686602fd22bada312254b57188055c29dc354adc3889863956fe93"
+      },
+      {
+        "family": "043",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_043 checked=117 mismatch_count=0 coverage=clock_rises=30 regions=['high', 'low'] memory=['high', 'low']; P_RESET_NEUTRAL checked=4 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_HYSTERESIS_STATE_UPDATE checked=29 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_GAINED_LIMITER_TRANSFER checked=28 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_OUTPUT_LIMITS checked=28 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_STATE_METRIC checked=28 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "043-soft-hysteretic-limiter",
+        "source_files": {
+          "submission/soft_hysteretic_limiter.va": "253add655e0babaee4f7cee6062d03120fb94ef0e5cb517fa3ed2c2ce61ae11e",
+          "testbench/trusted_replay_test.scs": "0288267a92703732c9ae8efd6bff0fd2cb6aca1ed7257705351c954186778db6"
+        },
+        "input_identity_sha256": "b1d2cff33d625b9f75d1f19c8fdbee2d72a2ff3f1f54a817cf1dae1d7c9e9abe",
+        "result_sha256": "eda8bb388b523418f101ddfd67c248ae4f9420b7755d1dae73afc9b0e54e4994",
+        "process_sha256": "4c78a55a6d5a72bc71ad131e570f3663008c77c075a06c564f32a36cb81b8040",
+        "response_sha256": "c044548878bb267f2eeb227ea8063afd7740f38eea70d594a9b902a3d8edff2f"
+      },
+      {
+        "family": "044",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "reset=True updates=4 positive=2 negative=2 post_done_holds=4 update_errors=0 metric_errors=0 clamp_errors=0; P_RESET_SEARCH_STATE mismatch_count=0; P_SIGNED_TRIAL_UPDATE mismatch_count=0; P_SUCCESSIVE_STEP_HALVING mismatch_count=0; P_FOUR_STEP_DONE mismatch_count=0; P_TRIM_CLAMP mismatch_count=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "044-successive-approximation-calibration-search-fsm",
+        "source_files": {
+          "submission/successive_approximation_calibration_search_fsm.va": "1ef22dbbd26a1fa0707f5986cab0f4b1fb2c3cedc6bbe50323161864ca3867ca",
+          "testbench/trusted_replay_test.scs": "8a7b3200a0edd8ff26dba1c06b8f85f1b7efc57d75e09491b6a5b4160e46ebaa"
+        },
+        "input_identity_sha256": "ebac1b768be6c701dc89e8497a284f295f83bbd590164e42419567b539e21bd2",
+        "result_sha256": "f0a2bfe1c9aa266747421fd1979996d6405eb962dc125217ad5a5d9a3c51486e",
+        "process_sha256": "8235133ea3480c71671e27f9e225c11bfbdd2df94cec089c3f1c32766ad16bad",
+        "response_sha256": "1305e82e117c59503240643462c3bc4b242d6306d557643eca834c79cb07654e"
+      },
+      {
+        "family": "047",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "below_hi=0.000 above_hi=0.000 inside_rise_hi=1.000 inside_fall_hi=1.000 span=0.900; P_INITIAL_WINDOW_STATE mismatch_count=0; P_INSIDE_WINDOW_HIGH mismatch_count=0; P_BOUNDARY_EXCLUSION mismatch_count=0; P_BIDIRECTIONAL_CROSSINGS mismatch_count=0; P_RAIL_SMOOTHING mismatch_count=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "047-window-comparator-detector",
+        "source_files": {
+          "submission/window_comparator_ref.va": "bb81596762dfd4770dd6f1eef69cd77d1bcfca4b80b4161f53c4d38a34b39248",
+          "testbench/trusted_replay_test.scs": "540afae84037e061819e937c7f0d2bdb9e3529a4866bd86f13f2361be03d6e8f"
+        },
+        "input_identity_sha256": "f43ee25a1a162aaccfeea8fa7689d0fa002cbb0b57b21a7ec77d5da0c289a997",
+        "result_sha256": "f0c80acf3aff9423f98fb178ca606fe9414bfcefd20ce63556f78b44d127474d",
+        "process_sha256": "fe06719cace1147174059af68c46edaf40eb2c55ff23b828d3659040fa718ef2",
+        "response_sha256": "10e5f532bfb3bd2d07055bb86a7bc40b7568b0884a74a7789345dabe7d845372"
+      },
+      {
+        "family": "048",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/048/submission/bin_to_therm_8b.va:19:50: unsupported expression '<'",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/048/submission/bin_to_therm_8b.va",
+            "line": 19,
+            "column": 50
+          }
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "048-bin-to-thermometer-decoder-8b",
+        "source_files": {
+          "submission/bin_to_therm_8b.va": "3b52a0e6d61b1f2180c90eb551ceb23aadac7d16787721ee33610751452a5959",
+          "testbench/trusted_replay_test.scs": "adfcca6843a4316385da8b61363c1dddaf4ec6fbcf1fa7e9a9003f982eef2562"
+        },
+        "input_identity_sha256": "5af502c726cdae993faff1dbf532ea6dd4d1ca0001ae874654d4cedb3877e6f8",
+        "result_sha256": "7769cff0fb628f542148a6a4eec831728cc3b7f083a6bc41ce0a9bc48456181b",
+        "process_sha256": "25c802fbae03f76bdda3f0dd1ee0fc255e7deb43c21017427de660ac9d10a511",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "049",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/049/submission/therm_to_bin_8b.va:36:50: unsupported expression '<'",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/049/submission/therm_to_bin_8b.va",
+            "line": 36,
+            "column": 50
+          }
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "049-thermometer-to-binary-encoder-8b",
+        "source_files": {
+          "submission/therm_to_bin_8b.va": "c52eb0518cad226e3f7ae3719fe720728043d935c93eab39e596b55bd1465100",
+          "testbench/trusted_replay_test.scs": "bdb2024ba79112a10b18dbae07feee21d7520ef82d4d6d4c50088485c55b4507"
+        },
+        "input_identity_sha256": "0ce48f270808fbba96cd273acd2e8bea5877ec0b62b23f5f8463477c57fb3b74",
+        "result_sha256": "b0f0da64c530907618a109a25ab346f3c8ff97fa02ae98ccaa06eb15f7dc5c8d",
+        "process_sha256": "b32963830c3eb485ea4e83f32d831e89d6ec290dbe1b5c58745a95af32cf90d7",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "051",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "edges=5 hold=5 codes=[0, 90, 195, 60, 167] max_err=0.0000 max_hold_err=0.0000"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "051-latched-bus-dac8",
+        "source_files": {
+          "submission/latched_bus_dac8.va": "d05dcac81bbe77e8ad4af969f4395d062bc44d882dcd88ccaea416a4b0fddd17",
+          "testbench/trusted_replay_test.scs": "539bf803022700675ea4c852d3e7bf48d8027391081731155d04116cbece5feb"
+        },
+        "input_identity_sha256": "f31051de6ed44525c4a97d895a0d464a1b996fda3285f965f82d793f30a7830a",
+        "result_sha256": "c2d62cda04aa66101b08817d2addb52791f0c90bba06ca63490c102d671aaf40",
+        "process_sha256": "fa09b2f6bd178d18fb4a5d4ef30215f6521313c8f5076f4d8edcf4aed360281c",
+        "response_sha256": "bf92a31a504675d831c9ea58b347007836e296ca023c498b6d4d0b3131dbab86"
+      },
+      {
+        "family": "055",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "edges=48 low_density=0.300 high_density=0.750"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "055-first-order-sigma-delta-modulator",
+        "source_files": {
+          "submission/first_order_sigma_delta_modulator.va": "d2257c0b8402fd9662d25214eb3b59db62369e413d3a220dcaeebbf50258b511",
+          "testbench/trusted_replay_test.scs": "474f706bd7e2573b9a77a6454a3adecda44091a4cf37e8594334f0d564676a8f"
+        },
+        "input_identity_sha256": "63bb0e9fb636f47e14b78d7d784e1d5d2ebf82e76f03bdbb44174a345a707faf",
+        "result_sha256": "98bd442a9445eb5b4a3fa1af460dc76ea6d20b793f4d61599291ef24e45968bb",
+        "process_sha256": "09f0ff9d13f67ba5da3651b69e1182d66370811fac4257e9a61e62de2ab732ac",
+        "response_sha256": "46422913aaec168ed26a3bf505068fd987c72427fb00a7588723a90ba87ddec1"
+      },
+      {
+        "family": "056",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "unsupported_transient",
+          "message": "ordinary analog conditionals are not supported in transient event equations",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_transient",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "056-config-latch-32b-clocked",
+        "source_files": {
+          "submission/config_latch_32b.va": "2e40a6c377b3f57bc921f56f442ea2a9bdf1ee92a04870daf1d22cbd36d24fd4",
+          "testbench/trusted_replay_test.scs": "fa3fa0897500d20fe94d426de8405e7259d53a97dafbe32fae250199a32062f5"
+        },
+        "input_identity_sha256": "48e466cdfd19125b0e29754a301829e668694956f4d947fa2c86713ad5e939c5",
+        "result_sha256": "d4b3e5a24fbadd521f3dc903595a96e2d7a13f7f56951e961fcc205ce842f582",
+        "process_sha256": "6bb26d61b98076c87a3a6c2f46f3b5792dd9485b1ca0a9c09f8e577671809bfd",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "057",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "resource_budget",
+          "category": "resource",
+          "stage": "compile",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/057/submission/config_shift_reg_64b.va: event integer domains failed the post-fixpoint verification",
+          "hint": "Reduce compiler expansion or depth; this is an implementation budget.",
+          "instance": "XDUT"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "057-config-shift-register-64b",
+        "source_files": {
+          "submission/config_shift_reg_64b.va": "123fa6794931e65dc589e347760b214e8a2f1b479850e7d683d74c602756d5f5",
+          "testbench/trusted_replay_test.scs": "174da9f553b4ce9c1600c94cf35f18bcc14030de15a680f61d6607a19f5bee11"
+        },
+        "input_identity_sha256": "4b3b55fac50a466f774ba56637da53fbf8ae70ef893995e73f33c6fc5b69cc06",
+        "result_sha256": "5b0034e72d342296ebdf4ec0b6154ed57241a8645f0011cca1337312403c98c7",
+        "process_sha256": "f1aafe55f6324f259d3d56af697d9bca7b96647305257843900faf87afa777fc",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "058",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "unsupported_transient",
+          "message": "ordinary analog conditionals are not supported in transient event equations",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_transient",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "058-masked-config-update-32b",
+        "source_files": {
+          "submission/masked_config_update_32b.va": "f04d486d5371d1a5a399f4ce6ce560116f9895376d899e8716c2afd48229fbdf",
+          "testbench/trusted_replay_test.scs": "407ce2eb835cc16a0224a7e35798db37be0653a61d8590991c2503030e7e6c6c"
+        },
+        "input_identity_sha256": "38aaff7edb501ebc0883372ac71b37109b10b401f6a5ce51e52a2fafa15cf558",
+        "result_sha256": "1720cb0cf629c76fb90a9349e2471525f6aad27397a4818ab3b87e8ed7af6264",
+        "process_sha256": "e7206af6e312e35bd6674898727dd1a60721df0a33465bc0930cbb93b57e4bc0",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "065",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "unsupported_source_uncertainty",
+          "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_source_uncertainty",
+          "stage": "kernel",
+          "category": "unknown",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "065-enable-gated-clock-pulse",
+        "source_files": {
+          "submission/enable_gated_clock_pulse.va": "026cffe9f6fab6d38d769fce6b19aba38d7c042561c72e4314449c5973523117",
+          "testbench/trusted_replay_test.scs": "cd95247de03293252142aba3b3b088fa2718cfc84f07f687ca10b58e29db7da7"
+        },
+        "input_identity_sha256": "6d93b7d7e9ac84af9b1fff064966069151e6b4377436f09d866a72bd51956cea",
+        "result_sha256": "88e3d9719a80fb29d93f57bb46962842dbb96a4e9cdd0acb1cd81129a51ee575",
+        "process_sha256": "cb3fcac8f16f7a531ba00725187b4f6ff0dc66e88fc9a54cf1f0cfb44b760bcb",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "071",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "acquisition_limited_sample_hold finite_windows=3 settling_windows=3 hold_windows=3 hold_failures=0 metric=3/3 max_late_error=0.093; P_RESET mismatch_count=0; P_ACQUISITION_ENABLE mismatch_count=0; P_FINITE_ACQUISITION mismatch_count=0; P_ACQUISITION_CONVERGENCE mismatch_count=0; P_HOLD mismatch_count=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "071-acquisition-limited-sample-and-hold",
+        "source_files": {
+          "submission/acquisition_limited_sample_hold.va": "4482266e8bef4f54761e3b0e547efe28e37460aea448eba731d208f9eba9fa30",
+          "testbench/trusted_replay_test.scs": "0ce11e9b10fa884b3bcf698f4ddb5d9a788fc16b1a18a19b021b76d2224f92b4"
+        },
+        "input_identity_sha256": "06e62c0efa5354d9b21a9b511b7d5a172cd99deda8b80a9529d80d5651245cc2",
+        "result_sha256": "bcef7f689d97dcf72f99186db0d02559f45d044aa026303fb9382f2fea62da22",
+        "process_sha256": "565f037ee15e099ea7c1ed166d5b503d2c2d6bdd135c919c013fba30ccdfcc35",
+        "response_sha256": "719742c6076b08155f03f22f9900bb513dfa0c10e07874b121957f5cb3ff2650"
+      },
+      {
+        "family": "072",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "unsupported_initial_event",
+          "category": "unsupported",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates",
+          "hint": "Use an unqualified initialization leaf and constant values or a real driven-input comparison.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/072/submission/sample_hold_aperture_ref.va",
+            "line": 26,
+            "column": 13
+          },
+          "instance": "XDUT"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "072-aperture-delay-track-and-hold",
+        "source_files": {
+          "submission/sample_hold_aperture_ref.va": "f74d7f1740c8ee489d3fcfc0cd2d6b15c71eab006fcc31b5952b0b659cead058",
+          "testbench/trusted_replay_test.scs": "4a828a847ca56f91ab1207ff1950dfd3145c93b960c0d5cb2f333a038227a0e9"
+        },
+        "input_identity_sha256": "f9e2e60bf26c882559f48306294eb507dbc53d69099ace0e871cc7a190bf898a",
+        "result_sha256": "20f80a3e65edf8b45837d4f7ff3e70f196031976f7b5cb073736f9de3ecc7444",
+        "process_sha256": "41bdbd4a9a0e18a3dc2c2f91f603f7be29706695bf390144afd19a961c87569c",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "076",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/076/submission/clk_burst_gen.va:4:1: undefined or unsupported macro 'default_transition'",
+          "hint": null,
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/076/submission/clk_burst_gen.va",
+            "line": 4,
+            "column": 1
+          }
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "076-burst-clock-source",
+        "source_files": {
+          "submission/clk_burst_gen.va": "bbd6ece2d9db07e93f472c279d023776d367e47742231d148437937eaaa1a181",
+          "testbench/trusted_replay_test.scs": "48e0cf3d1827da8473bf3484829fd4abe7311a69413561ccb906ff15d25c6bea"
+        },
+        "input_identity_sha256": "ef500c3c409debd6fd9500c0526821cf961f65de2a9b326095b7fcfcfa37b1b4",
+        "result_sha256": "e996a33b01ea820dbbae453aaaa157093e122aa5a0c6c772143cac792f627972",
+        "process_sha256": "9415d92e846773faf97519262b039d926b5be1be5d2b06f1756b7c9bab2d5dd5",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "077",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "unsupported_integer_arithmetic",
+          "category": "unsupported",
+          "stage": "binding",
+          "capability": "LANG",
+          "message": "bounded integer division/modulo exceeds quotient-bin budget (256)",
+          "hint": "Use explicit real operands if real arithmetic is intended; typed integer division/overflow are not supported.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/077/submission/noise_gen_ref.va",
+            "line": 27,
+            "column": 29
+          },
+          "instance": "IDUT_DEFAULT"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "077-dither-noise-like-deterministic-source",
+        "source_files": {
+          "submission/noise_gen_ref.va": "6955a79b9af3fe82974f10ab657c099b3501c5accb00bb3977b0c9fb7dcb2700",
+          "testbench/trusted_replay_test.scs": "0774c630c0a6eb22704064b845ffbff35160b83593e48f17716136e616b2b7b9"
+        },
+        "input_identity_sha256": "4bfd283f95d9e2dba3fda430901ed06b10b1f08a7704485339ee6b9013e92ce4",
+        "result_sha256": "02c996a0e4bb4800ab68c63dcb3627f2b86deaaf47f72e030c813b82bb10c79e",
+        "process_sha256": "a387e48d0364aa90123559016320c508d79dd72b815daeed4f7bd9ef3de78e63",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "078",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/078/submission/prbs7_ref.va:39:28: unsupported expression '>'",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/078/submission/prbs7_ref.va",
+            "line": 39,
+            "column": 28
+          }
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "078-lfsr-prbs-generator",
+        "source_files": {
+          "submission/prbs7_ref.va": "d91582110c584095666ea9704dbd0767eeb1adf4b7e0d63aee05af0416a32fd9",
+          "testbench/trusted_replay_test.scs": "b2a32780c39a3f336716968e3861b9a2666b677f5d23c56d455068a940f1b33a"
+        },
+        "input_identity_sha256": "ec60a4e7606a9a1cdddba8375efbfb9453246ba43cfa83ce9dd626cec3c80937",
+        "result_sha256": "c15f8a39fdd67819481629667d9ba95d1fa559a551b4412ffe31856fb641cc6c",
+        "process_sha256": "2a39177ab74979abf91aa870772fdf67d773d799dcb1d6c9df2130dd8463b148",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "079",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "unsupported_transient",
+          "message": "transient expressions must be jointly affine in voltage and state",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_transient",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": null,
+          "warnings": [
+            {
+              "code": "ignored_scs_option",
+              "severity": "warning",
+              "option": "errpreset",
+              "requested_value": "conservative",
+              "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-10, vabstol=1e-12, max_step=2e-08.",
+              "location": {
+                "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/079/testbench/trusted_replay_test.scs",
+                "line": 11,
+                "column": 32
+              },
+              "effective_controls": {
+                "vabstol": 1e-12,
+                "reltol": 1e-10,
+                "max_step": 2e-08
+              }
+            }
+          ]
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "079-ramp-step-source",
+        "source_files": {
+          "submission/bound_step_period_guard_ref.va": "3d7776b27743e3fa8561a6163ef27e240f150800a3e5b4485ca0dd79b40e4c1b",
+          "testbench/trusted_replay_test.scs": "440a6cb343eeecd62fa0babe109bfb30bfcdc33c2bc2d950613f07d86e74716a"
+        },
+        "input_identity_sha256": "b1fe6da12b631fc9608cd6e4342e7f399c86831c38264bd781cce4dc431e45c7",
+        "result_sha256": "d044226b69e454dea1c6a41efc4c2ab6ff338f4c16bcc045c4696c1b6d541c21",
+        "process_sha256": "97305c2cb36ff515f32eebffe493e3bcd94001b9f6e0644428cf2905de830f12",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "081",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/081/submission/adpll_ratio_hop_ref.va:172:13: expected a non-reserved identifier",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/081/submission/adpll_ratio_hop_ref.va",
+            "line": 172,
+            "column": 13
+          }
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "081-adpll-ratio-hop-timer",
+        "source_files": {
+          "submission/adpll_ratio_hop_ref.va": "c8531b00892fc9d5d511b1c738dac790c25736a27779d5ed5f1abc4f79266a8b",
+          "testbench/trusted_replay_test.scs": "014f4517f4c107ad638af7ecf45b901b8519d86ab41b0e0142ca71a0cfd61249"
+        },
+        "input_identity_sha256": "26fc28404cbe56b46ab070e4fefe132556c9d291d8fdefeac63bf050b7c5a925",
+        "result_sha256": "c7df0c12540de586507583823c6a3a3e81689d1de5bb9f67b68e62b69986c8ba",
+        "process_sha256": "dac50c8dfa42bb5d1dfeaf71e734ad8e7e4306a24ab4985b0afe1f72932a4cf1",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "084",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "data_edges=8 clk_period=2.000e-08 up=4/4 dn=4/4 none=0/0 overlap_frac=0.0000 retimed_checks=16 retimed_max_error=0.0000 supply_span=0.900"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "084-bbpd-data-edge-alignment",
+        "source_files": {
+          "submission/bbpd_data_edge_alignment_ref.va": "1164eb06e8ad92d5c84b7a1e2359f91d1cbc7575cfa47ace07a70d9f97a3b7ef",
+          "testbench/trusted_replay_test.scs": "c80f4a6ac78479e5cc0f9d9d3351f1b56864cec41d36d34f0aa34dc04cbe5cb8"
+        },
+        "input_identity_sha256": "b35d7215ccb8f5e57337be6b959f9b9024ba707d6bbaa7fa7944335e6dc82c42",
+        "result_sha256": "7807cc080ca1d43e6f92fd127564acf7ae470b10d79c25c871f4fbaf3e6539cc",
+        "process_sha256": "2403e20669b3aefcfcb61e0eb7dded6749213f40eb703b23e75e0a763a78168e",
+        "response_sha256": "cffa2cbbb09ac0f28e4934164e9fb6b479aa8ea79f4d753f986d8feaefca0ff3"
+      },
+      {
+        "family": "088",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/088/submission/cppll_timer_ref.va:88:31: expected '=', got '('; outside affine-voltage syntax",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/088/submission/cppll_timer_ref.va",
+            "line": 88,
+            "column": 31
+          },
+          "warnings": [
+            {
+              "code": "ignored_scs_option",
+              "severity": "warning",
+              "option": "errpreset",
+              "requested_value": "conservative",
+              "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-10, vabstol=1e-12, max_step=5e-09.",
+              "location": {
+                "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/088/testbench/trusted_replay_test.scs",
+                "line": 16,
+                "column": 30
+              },
+              "effective_controls": {
+                "vabstol": 1e-12,
+                "reltol": 1e-10,
+                "max_step": 5e-09
+              }
+            }
+          ]
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "088-cppll-tracking-reacquire-timer",
+        "source_files": {
+          "submission/cppll_timer_ref.va": "bbb3cb5378b77259511fccea7493cd36fad1b178b377df6826af0a83e1ba752d",
+          "submission/ref_step_clk.va": "f8de09092ea34d34681cbf6ea2b8eddca3a43d4177abb0b42393e3150feb98db",
+          "testbench/trusted_replay_test.scs": "adddbe8dbd895e84f48921979e2a809de33b3353f890b008a1ca88d69a47011e"
+        },
+        "input_identity_sha256": "e81bbc7c3f5f3e1c2d573496ae2c9612d78a7e461a95411ed2dea0667993b15e",
+        "result_sha256": "fd17f24ff60a14e5f81cd6c7bf4ef573846dae636d0ba58c2b90481a4ea7f7c0",
+        "process_sha256": "d7aee46c5d088d2c70d1740f65315f876d8eec90333df878adbdc1dd25c4b8ce",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "089",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "default:cycle0:delay_ps=163.333,expected_ps=165.000,err_ps=1.667 default:cycle1:delay_ps=120.000,expected_ps=125.000,err_ps=5.000 instance=default supply_span=1.000 scale_ps=200.000 seen_rail_error=0.000 override:cycle0:delay_ps=135.000,expected_ps=135.000,err_ps=0.000 override:cycle1:delay_ps=145.000,expected_ps=145.000,err_ps=0.000 instance=override supply_span=1.000 scale_ps=100.000 seen_rail_error=0.000"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "089-edge-crossing-interval-timer",
+        "source_files": {
+          "submission/cross_interval_163p333_ref.va": "a3c9b1aa8630a9446009793cdcd0132db40a0162c9c3147a2004f8c8b8ce3b03",
+          "testbench/trusted_replay_test.scs": "d1f0c7d8bc36f644349c9df7946460e8b61c1ca21a6c720198d1157b7f1cd6e2"
+        },
+        "input_identity_sha256": "b518b9dac5b24f846dcff6d13e07bd5e33d1820be28a55d0f0c7ac5d442b52a9",
+        "result_sha256": "71db0c7ea5e79e403a47098c81c41d7c74363693d5a337d8b99d3b1505770079",
+        "process_sha256": "a6be01b63f023e65944848d84cc46abb1f94fbecde5c8a743e3b710be0280ae8",
+        "response_sha256": "a23290679ebc3fdee7b07d14e5cbefee13e131c2edd3867f61dd60e6fe367c34"
+      },
+      {
+        "family": "091",
+        "status": "completed",
+        "checker": {
+          "status": "failed",
+          "note": "checked=230 active=1 hold_edges=0 clears=2 polarity=+1/-0 settled_rows=0 errors=5 first=voutp@4.480ns=0.45750 expected=0.47250"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "091-chopper-stabilized-differential-amplifier",
+        "source_files": {
+          "submission/chopper_gain_core.va": "a187940becd8e0cd1f6b84b6f0efa22f692d432b5c7355b68ea3d09514025053",
+          "submission/chopper_stabilized_differential_amplifier.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
+          "submission/synchronous_lp_state.va": "73863b2313e1b959bebb84be44a4f5bda974edd1b0e9299f5319f42b5402ece8",
+          "testbench/trusted_replay_test.scs": "41f0ba7c3094fd58a68fe01f9d0018c6a3c4275c4e898974a6bb8ff87491fa7d"
+        },
+        "input_identity_sha256": "65c98583d20a0c155994acab0a01bff90f37491e909c73b890fcc9a7cf269492",
+        "result_sha256": "3108bfd0e8025f91b86fcc516fa8ca1334dfcaed1af246525c887f6ef1040687",
+        "process_sha256": "33f8133438250fd203db6f836ffd42ad7c5e9966ccb4a8153d5358141cdde858",
+        "response_sha256": "c544904d5176f447f466b5e9c0fdbffbafe113634da9f28ba70897fefdaa690b"
+      },
+      {
+        "family": "097",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/097/submission/programmable_stimulus_sequencer.va:24:38: unsupported expression '>'",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/097/submission/programmable_stimulus_sequencer.va",
+            "line": 24,
+            "column": 38
+          }
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "097-programmable-stimulus-sequencer",
+        "source_files": {
+          "submission/programmable_stimulus_sequencer.va": "e921949c1c6798a2961c51c7d86dc766a705247e2547d9061902eb51d3bc462b",
+          "testbench/trusted_replay_test.scs": "94f0dc24ab8214bb92b0553c17498def8c0fc1f23c29ac16f85d2ed5fc23ed0f"
+        },
+        "input_identity_sha256": "67ae831d87e80d34e447555b475b21e8359b9a4e15cf0b6923d3dd30f5612e4f",
+        "result_sha256": "3c2d95f2ebe1d64ca050b917064d1fbc22ecdc89faf88ae8539b6ab9c7ef18a2",
+        "process_sha256": "febc8bf1f9b2743eb70518d2f92492c5a893ed5d92f9f959060957102096168e",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "098",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "unsupported_initial_event",
+          "category": "unsupported",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "unsupported initial_step value: initial_step values require constant-valued arms selected by input predicates",
+          "hint": "Use an unqualified initialization leaf and constant values or a real driven-input comparison.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/098/submission/ref_step_clk.va",
+            "line": 25,
+            "column": 13
+          },
+          "instance": "XREF",
+          "warnings": [
+            {
+              "code": "ignored_scs_option",
+              "severity": "warning",
+              "option": "errpreset",
+              "requested_value": "conservative",
+              "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-10, vabstol=1e-12, max_step=2.5e-10.",
+              "location": {
+                "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/098/testbench/trusted_replay_test.scs",
+                "line": 12,
+                "column": 32
+              },
+              "effective_controls": {
+                "vabstol": 1e-12,
+                "reltol": 1e-10,
+                "max_step": 2.5e-10
+              }
+            }
+          ]
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "098-reference-step-clock",
+        "source_files": {
+          "submission/ref_step_clk.va": "f8de09092ea34d34681cbf6ea2b8eddca3a43d4177abb0b42393e3150feb98db",
+          "testbench/trusted_replay_test.scs": "9bf6542fbecf67f0f2ace0c20571ca879420d994eae13301deec3e8b80b18502"
+        },
+        "input_identity_sha256": "277465cac9d103e4a74ab08daf981c2dad88cde1d6b8a4df28259fcf7e748e89",
+        "result_sha256": "dba364ffc8db7694454ccd41257f51f42c0c5a478040549eaa1f9a04043ecf34",
+        "process_sha256": "bffa3e4551a0dcee49dcb5508452992bd884c017b7f4ea821af3ddf99717c0e3",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "100",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "unsupported_initial_history",
+          "message": "changed initial transition seeds require a calendar independent of held state and histories",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_initial_history",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": "COMPOSE"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "100-sample-hold-droop-front-end",
+        "source_files": {
+          "submission/sample_hold_droop_ref.va": "2318eaa20f41011613a14d9f50e301fb32aed85dd0a34e3ee4d0e9517e197276",
+          "testbench/trusted_replay_test.scs": "2eb3f59220beb51a107e783ce3da07480fb3eed15d6444660b8b454103997848"
+        },
+        "input_identity_sha256": "7f222ecef0ce82cc2928d39bfba6c886cc38594f183659d786b0c324e618bf79",
+        "result_sha256": "9389a3d812a0c8d2f2983653d459eb6b36af2b49b8e0b87581900b0182dea169",
+        "process_sha256": "87641dedffe3b6c054dbd463eaa780ce8b1476c477ca4f1f74b35bc1219c23e8",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "101",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "condition_precision",
+          "message": "all source-target predicate state must be point-valued",
+          "diagnostic_version": 1,
+          "code": "kernel.condition_precision",
+          "stage": "kernel",
+          "category": "unknown",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "101-settling-time-measurement",
+        "source_files": {
+          "submission/settling_time_measurement_tb.va": "4a49bef6f64d4da2d4c5f510aa3fa414dda0fd9c5d8939e111ad8a9b2a7bd42c",
+          "testbench/trusted_replay_test.scs": "f217ecf38e20b6af3bc3c34f2a8a7b2473d6720bee6c02b7a89180ba5c1c5b58"
+        },
+        "input_identity_sha256": "04b9081f94c853901d733e927b9530fb5298ae92206ec9ee3360931c7d362ca3",
+        "result_sha256": "d550d29161d3d4e6b7f3428643e4860869fce241842f76d1de7424a0732036da",
+        "process_sha256": "4a9f2f9e116dd975aba089ba9eb4dfbfce8a1524afe1308c13112d4b5977c9dc",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "103",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "waveform_accuracy",
+          "message": "cannot certify same-time forward error at dcmpn: bound 1.7867101231145404e-12, budget 1e-12",
+          "diagnostic_version": 1,
+          "code": "kernel.waveform_accuracy",
+          "stage": "kernel",
+          "category": "numerical",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "103-clocked-sar-comparator",
+        "source_files": {
+          "submission/clocked_sar_comparator.va": "8a0b835d6c8868507969e5369a461872df4adb83ec8f783702c7f3358228f828",
+          "testbench/trusted_replay_test.scs": "9228d5c96a84e9b8a90c9776a07c07ab8d5c6347beda684fb0301bb611e583ae"
+        },
+        "input_identity_sha256": "5e0c3bfa4e1f01350025c1a38b8822cf81902c7fde552c6bd204e84b5c277350",
+        "result_sha256": "e1470d9a3b7e6f86aecaaae9abd8f7bbd29b6ee051b4e0ec5ff8f3af00a1cf93",
+        "process_sha256": "1865da3870ac6138f396456ea821c7a2d4a813764c2bc8734573295c47aec902",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "104",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "edges; P_RISING_EDGE_CAPTURE mismatch_count=0; P_INTEREDGE_HOLD mismatch_count=0; P_NO_FALLING_EDGE_CAPTURE mismatch_count=0; P_UNITY_SAMPLE_GAIN mismatch_count=0; P_PARAMETERIZED_THRESHOLD mismatch_count=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "104-sample-and-hold-ideal",
+        "source_files": {
+          "submission/source_sample_hold.va": "a66479a2af6264fdddb5c9db9542bcf95dda47441f928af36dc3e0ecc6d67597",
+          "testbench/trusted_replay_test.scs": "0e9bdd5a6cb2b7e69b9fe923c48d85b5a6c5d915ede64101dcb25a883289d16c"
+        },
+        "input_identity_sha256": "5d2d29f007ccc8f94307b3ceb1204f5a269e9745b874518af968f54e988683f9",
+        "result_sha256": "87f51bc0b930b9a19669beca0188f470aec4286f0fe163ea7292bfd2fd614dc6",
+        "process_sha256": "3e5ba466aa39023eff8c81aeb2b19f3781b21ae38fc7bba5c8eb47d40158ad56",
+        "response_sha256": "a33a72793842db1b017f7e30813d4aa8bb881c9b6e2658a3fecca856c825ddec"
+      },
+      {
+        "family": "106",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "reset_checks; P_INITIAL_RESET_LOW mismatch_count=0; P_FALLING_EDGE_RESET_LOW mismatch_count=0; P_POSITIVE_DIFFERENTIAL_DECISION mismatch_count=0; P_NEGATIVE_DIFFERENTIAL_DECISION mismatch_count=0; P_EQUAL_INPUT_RESET_STATE mismatch_count=0; P_LATCHED_HOLD_AND_TIMING mismatch_count=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "106-clocked-comparator-reset-low",
+        "source_files": {
+          "submission/clocked_comparator_reset_low.va": "5d9af9d5777136c3859f65d7d8a0b3e681afe28eb59e618f7f2ee11a5159cc3c",
+          "testbench/trusted_replay_test.scs": "88b1ed9cb6c1aa4f5688f2045ffb168c370d0d318536ceb9f8d0f81cc7e39898"
+        },
+        "input_identity_sha256": "0e271c3bd4e51e066ab58ac91e40e789a9bb03891ec0b5c81350009ea917cb2d",
+        "result_sha256": "8ac89295bc05c0dd80dbd6f3872e60191b9668d056695d1fbd19e1c7d2f2ca1a",
+        "process_sha256": "5a2bfa36452fb0b6f2c353ba91db7e2f285a52fc70a0f45b22dc6744e8e41bca",
+        "response_sha256": "5b8db89a6017ee506112c1c5276cd96ccf697407f090c785b13b0bedc7019e37"
+      },
+      {
+        "family": "109",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "event_condition",
+          "message": "cannot certify jointly affine event expression",
+          "diagnostic_version": 1,
+          "code": "kernel.event_condition",
+          "stage": "kernel",
+          "category": "unknown",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "109-comparator-offset-calibration-loop",
+        "source_files": {
+          "submission/comparator_offset_calibration_loop.va": "9f732659741e4c80aae4c362e2c3bcfb2efc9c130e8619192c08a1339e0396c1",
+          "submission/support/support_offset_comparator.va": "0120957db71ff0ef099d179c675dee5a923b071986adb3e0993336185b88f56b",
+          "testbench/public_support/support_offset_comparator.va": "0120957db71ff0ef099d179c675dee5a923b071986adb3e0993336185b88f56b",
+          "testbench/trusted_replay_test.scs": "e9a29db0124e174203f0926f99301c95a53c6d303ebcce3db84cccad51871094"
+        },
+        "input_identity_sha256": "13277d67ff647e7a190976131260dc46f6c11da59ce2ef0b5d2aced9aacf1f23",
+        "result_sha256": "304b0905b6d867215dfd32c92e92aed81c118e6cbec8e6087e829c982e5d2742",
+        "process_sha256": "7c268b30de5c7527f14751017d3ae1bf36255a00609594a768ebbfa2d7a19c20",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "117",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "waveform_accuracy",
+          "message": "cannot certify same-time forward error at vout: bound 2.9778502051909e-12, budget 1e-12",
+          "diagnostic_version": 1,
+          "code": "kernel.waveform_accuracy",
+          "stage": "kernel",
+          "category": "numerical",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "117-time-diff-detector",
+        "source_files": {
+          "submission/time_diff_detector.va": "a6fccfc28fd6d9327182c14a4c69ae1e787f9c5100c2a8930b1b4504eba6a3a5",
+          "testbench/trusted_replay_test.scs": "e3ecaf0b412c72b74d3ab008d8e342be22efddb4985c09d498f57cd8656e995e"
+        },
+        "input_identity_sha256": "85cf76fe52c3a3b2bc1e624dedc20377676b59bdc39583645655ad9a01e0fb74",
+        "result_sha256": "79decf798c4cf382e0f74a9346ee828feb7cebeafa3b820b2015deef17ce404e",
+        "process_sha256": "1f87bf6ebb4a65fcb0d60bcf70065d7b670eb96155e53d9ceeffcb8c659e40be",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "178",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "sum; P_PROGRESS_INITIAL_STATE mismatch_count=0; P_SEQUENTIAL_ONEHOT_ASSERTION mismatch_count=0; P_ACCUMULATING_PROGRESS_BITS mismatch_count=0; P_SUM_COUNT_OUTPUT mismatch_count=0; checked_property_ids=P_PROGRESS_INITIAL_STATE,P_SEQUENTIAL_ONEHOT_ASSERTION,P_ACCUMULATING_PROGRESS_BITS,P_SUM_COUNT_OUTPUT"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "178-onehot-progress-encoder",
+        "source_files": {
+          "submission/onehot_progress_encoder.va": "47bdb94a185d8d979c1ca505b65ef4f35143e1b82101e786a6dc766e06b8a77d",
+          "testbench/trusted_replay_test.scs": "fc9728674659e9a976cd208d22e21169cc034fb7685b84437b0b762f175758fe"
+        },
+        "input_identity_sha256": "df8cff3f62ea88e0fd872806a97e6e84d7bedfb1919db1040e7db7ddb98d6f61",
+        "result_sha256": "5784135de4d42c1f4ea3e4865424e7f44e61711d078e62dee5f88f859af94767",
+        "process_sha256": "8c79fa6949b6642f6edd9d8ec8e98dc00237e3585973d9c7c1bf396fe43cc681",
+        "response_sha256": "3b67380210c92998c509c2577a54ddf26627720562ccad7eef4808aafa3fc11a"
+      },
+      {
+        "family": "184",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_184 checked=388 mismatch_count=0 coverage=clock_rises=17 decisions=[0, 1] offset_steps=8 phase_transitions=2; P_TWO_PHASE_CLOCKED_FLOW checked=210 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_REFERENCE_AND_CODE_INITIALIZATION checked=11 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_RDAC_REFINEMENT_SEQUENCE checked=78 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_OFFSET_SEARCH_BISECTION checked=89 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "184-offset-rdac-search-flow",
+        "source_files": {
+          "submission/offset_rdac_search_flow.va": "7c38ff09beb38cf091a61f7ebe54b915c8d6dd408cde4dcbe8c579aaa3e60dee",
+          "testbench/trusted_replay_test.scs": "8b91cc2518a6f9b6caa3733167edf4a18f9e7158201e06e804c6687df5b8d913"
+        },
+        "input_identity_sha256": "faca9f03ead198acf22ec81e7be4c3fe9a9892b28e89173126f1301a4acfd42d",
+        "result_sha256": "f3c3dcfcdb278137e8a862fb5d204a3941f23cff82f427e346d59f0eb7185b5e",
+        "process_sha256": "38b615040edce3d6bc6066c61c3edd1ab6fc4e8e8cf5e4d0ddba4c4f320a98a2",
+        "response_sha256": "6b40ce02f728439f39fb3d1ee3ec89f19471e2d306f230171cbbf6099913e8fb"
+      },
+      {
+        "family": "191",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "checked=30 sar_rises=7 final_bit=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "191-sar-das-logic-6b",
+        "source_files": {
+          "submission/sar_das_logic_6b.va": "25071c60dc4f70755645e13b70c4325d04310d00f241a136d7f8e42ae00b92e4",
+          "testbench/trusted_replay_test.scs": "c23bbda66ec4ed595f9a9cb2a74d7562370c7a45420a9fb11b5b82e3f78b9f61"
+        },
+        "input_identity_sha256": "ba7033b4b01b648470be49be68dce35fbf9daf9b69d7aa4dfdfe7a4998ef69c2",
+        "result_sha256": "97887e1c26eb3f6121120b98171005b4fa415e25902c63e2ee9dd8bc5fb6fc1b",
+        "process_sha256": "1a47e72a39063160e245bebcce2b65d16678944af175f459f165666d006cbc02",
+        "response_sha256": "f4329131fc772a2c547185e0464ec231722726b5c9ab3276cac48477c23b850b"
+      },
+      {
+        "family": "198",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "checked=4 low_codes=2 high_codes=2 max_error=0.0000"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "198-qtz-differential-2level",
+        "source_files": {
+          "submission/qtz_differential_2level.va": "0a4f7a339a042be492231e843eea7d329c47d5029dda52ff57f64655bf723bcb",
+          "testbench/trusted_replay_test.scs": "6db379f865d327561eef3ce772525fa0a0c5e760107a4c2bd61a591df2a7fd36"
+        },
+        "input_identity_sha256": "ee9fa34bb7d90d40b2b63510b6cc8d8ece18f94656425701007466206f9230c8",
+        "result_sha256": "554e233f23e455472a9a4f8ce658d394490099dda07f8d9aca940de761133df7",
+        "process_sha256": "b371ddce6032c1666951b40ece7d89da44ae2452d12e3568b74740ef494c6205",
+        "response_sha256": "25a79cdb7a058253b981c30b4d4bf0dcc5854def7d09e793bb928222c55c3a6c"
+      },
+      {
+        "family": "199",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "checked=364 ready_edges=4 max_ready_dac_error=0.00000"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "199-l2-7b-dac-ready",
+        "source_files": {
+          "submission/l2_7b_dac_ready.va": "c7f1604e8f0347703a420beca19850de69b0050609021567bf7398f444b271db",
+          "testbench/trusted_replay_test.scs": "eb2a6ec17acdd3f28bd10194afb60c8e8a4db534fc5c2b245c9229bd95ff0f54"
+        },
+        "input_identity_sha256": "5febfa488a10c5631b6864b23a63af53c7c54bfbc372107dfee6b7c5e9bf3a03",
+        "result_sha256": "6753799928cec14bc4b64c3fc930e3743e310669f1bbc91c818b8a3ed9d7abbe",
+        "process_sha256": "a7e051daed035b565d5dea242ccac4412fa02a81eeef4620082ec67447c977e3",
+        "response_sha256": "d6cfd9e46d6e707a5ff6d9d0428ffffacd2185f4faf9830c0ff8157bf141adc0"
+      },
+      {
+        "family": "200",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "P_FIRST_READY_EDGE_ARMS_ONLY mismatch_count=0; P_READY_SAMPLES_FOUR_BITS mismatch_count=0; P_SWITCHED_WEIGHT_DENOMINATOR mismatch_count=0; P_BIPOLAR_CDAC_OUTPUT mismatch_count=0; ready_edges=3; checked_edges=3; distinct_codes=2; max_err=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "200-l2-cdac-4b-switch",
+        "source_files": {
+          "submission/l2_cdac_4b_switch.va": "280d786beed2653e7abff38324ee2b5657d27bf171aa7ba66a053001c0c2d27c",
+          "testbench/trusted_replay_test.scs": "eab8211cb17a27f57e28c6a1702db8dbc21ded7ecf1ff4c4e6b11e714f7b92be"
+        },
+        "input_identity_sha256": "2aec5e4e890a7dd14f3207f1e7f0bfdfdeac33406eda69adb554a211b22228ea",
+        "result_sha256": "26644ad463127d23d20878fd5fdc24e9db16b8cd5285ea5a76544aec356efc3c",
+        "process_sha256": "39ede240b3eea4a6b790e781686885afd843de9f42407fca89b1a988e1516a44",
+        "response_sha256": "1a986edd860c37bb0da4ca7cb5874e8ab7705dd71e1764a24182d764b8980d5f"
+      },
+      {
+        "family": "204",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "all_samples_match checked=4 tol=0.0200; P_ON_EACH_RISING_RDY_CROSSING_SAMPLE mismatch_count=0; P_TEXT_WEIGHTED_CODE_16_DIN5_8 mismatch_count=0; P_EACH_DIN_TERM_IS_1_WHEN mismatch_count=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "204-va-dac-6b-se",
+        "source_files": {
+          "submission/va_dac_6b_se.va": "a6da320ef2484ff11e710b84d18dd802ee7361a9adcdcb1487dcb55d90995f44",
+          "testbench/trusted_replay_test.scs": "3d3d592104b7fdf05aeb27c7c183de11880246817febc8c0501591c3d5f7147e"
+        },
+        "input_identity_sha256": "d2103d08a6b9530ea093f8478e83f69feef11f4516c3855c17e806f6ebc872dc",
+        "result_sha256": "7c4d6127bd3c01a9248c18322409da819a425a4d4bcce75d2409917105d1c197",
+        "process_sha256": "1a47dd7c373c1f28869cd7459dfdc7c5a82d114d4cf0e1f5a1deedff5cc4435a",
+        "response_sha256": "85975b2866157b47032cbf2fa4406ac9d08f0b9f182bfd3c709f9e6889f37677"
+      },
+      {
+        "family": "205",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "checked=6 decisions=[0, 1, 1, 0] max_error=0.00000"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "205-offset-halving-search",
+        "source_files": {
+          "submission/offset_halving_search.va": "e79cfbb3706deb51ed920c403399b8aeff11a1a67008488fc205971e1d506771",
+          "testbench/trusted_replay_test.scs": "3232779f0680a6edd1fe018643421f4abb37a82d5f856cf354482e68187f8b8e"
+        },
+        "input_identity_sha256": "d48e83c16acd76abeac43d875dc45554182756c02fd4595b383b6799fd803ded",
+        "result_sha256": "d59705e6955c5cae20a3a8e260284a7c9e529aa278be8e8860afd70177809606",
+        "process_sha256": "3c1ced5f3e679428335d89baf378ff6cb5115bf355afbb12a4c4fd0074cb76ab",
+        "response_sha256": "bcfc8c327548e8d7f05dd6b6137521d95fd063ca8ec1cbea18ffb9eedfdc1f31"
+      },
+      {
+        "family": "206",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "cmpck_events=6 errors=0 coverage=True falling=3 positive=1 negative=1 equal=1; P_INITIALIZE_BOTH_DECISION_OUTPUTS_HIGH_WHENEVER mismatch_count=0; diagnostic_schema=v4-checker-diagnostic-v1 status=pass category=behavior_pass event=stimulus_relative event_context=stimulus_relative expected=public_contract observed=trace"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "206-sar-comparator-reset-high",
+        "source_files": {
+          "submission/sar_comparator_reset_high.va": "2b6fdbe6b0827dbe69840118814dc5e535d85f7d47e6ca2d1cf1556d0a1e6c06",
+          "testbench/trusted_replay_test.scs": "8b9f2a7f4e4aec9ba8ce195829e4345e8e6419d55f5185bd7a09891b293cdc5a"
+        },
+        "input_identity_sha256": "87f2fb20ff28867a879b3aa6109d54d891dadfeb774a2d26ad180d0d1b8b219f",
+        "result_sha256": "0dcdaafbb90aca4a348a31d7f51918ae29ff0f8572b29d5814c64c4528897114",
+        "process_sha256": "69c5e5e3b6f21a81091bc4e56bb6e533b8d3b3cea0e7c806e3c4c8cebb904864",
+        "response_sha256": "9d919ca122d820d138a5cfc5d3821100765f1bff39877fba7cbead36e28bdef4"
+      },
+      {
+        "family": "207",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "vout=-0.844,-0.281,0.281,0.844 d0=0.900,0.000,0.900 d1=0.900,0.900 d2=0.900,0.000,0.900 d3=0.900,0.900 hold_checks=6"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "207-dac-restore-4bit-clocked",
+        "source_files": {
+          "submission/dac_restore_4bit_clocked.va": "7de91d547b8140a720b06dd0723c0e85c89a80237eebbde16f93db648370a027",
+          "testbench/trusted_replay_test.scs": "c1f736cb19d925257903994d097e1fd0b7ebe79dcb8b223dbcf708dc06fd65da"
+        },
+        "input_identity_sha256": "e73f53ee65ed3f808bde6da0d6d9cd7689a1eaadfdabc7f17374e7a3a5df6a39",
+        "result_sha256": "45b7d390f7c30c84e9255b47b067a236b7142ce3b7c765dde990bed6d92516b5",
+        "process_sha256": "ddec8044c4b7383f6c8ce354f3b322cdded0deda998abd10535eea3c3033bcc7",
+        "response_sha256": "f24fc225909039fa6d87bf9e39b60a2eedb35fa688d0cb6905f59a7dfa7fc34e"
+      },
+      {
+        "family": "208",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "checked=7 codes=[1, 31, 112, 6, 127] max_error=0.00000"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "208-dac-restore-7bit-clocked",
+        "source_files": {
+          "submission/dac_restore_7bit_clocked.va": "4e63b4d70119005f95bc7a8181ddf5d2d488184457b79af101437b9474442202",
+          "testbench/trusted_replay_test.scs": "9e21de489cb790434f991eecfd621dec264869973490160cb160fa1a45e29604"
+        },
+        "input_identity_sha256": "e37f32a1f4540ec6c63dc7238d67d26d4ebc4b8fcec348132a5a92330e6c6465",
+        "result_sha256": "6a4e7293d47bb8a36bd17717e607a874d8461958586365124e8134d7a92b23af",
+        "process_sha256": "54146551f23a44182e5a254945b0b205577e6285836ef36d0d9103a8a4b7397d",
+        "response_sha256": "b87d0834219434069f4be5b06ea54e75c4a5a1b3418432b8ad8eeac3c8e85dec"
+      },
+      {
+        "family": "209",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "restore6_edges=5 codes=[0, 63, 12, 45, 18] max_err=0.0000"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "209-dac-restore-6bit-1p8",
+        "source_files": {
+          "submission/dac_restore_6bit_1p8.va": "0b5f56865d7dbab420ff1d9a14b5d21c324aadfd688c79225a0a60d8eac47f4a",
+          "testbench/trusted_replay_test.scs": "64f1fe595b2301dad7b4bb0161c7258fc0d3356b9b4cb098585e8f9484672761"
+        },
+        "input_identity_sha256": "9e2a3e619370b79a9db809beee629604f30af9d69316e83f5a0b926ef3462e8a",
+        "result_sha256": "8f43cdcea9b90045f0418dfd729b6c34e5349ebc1d969c2270ed9d3080345b77",
+        "process_sha256": "bf0bb3645e9058e7ad2e65853280676f3f06f06a0c6002ebd923f7df5d0075d6",
+        "response_sha256": "b624481a99b417cb0eefdbb1af1431732beaec0273fff3a163fe67ac1a06f895"
+      },
+      {
+        "family": "210",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "edges=5 max_sample_err=0.0000 max_hold_err=0.0000 nontracking=3"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "210-sample-hold-5v-clock",
+        "source_files": {
+          "submission/sample_hold_5v_clock.va": "c76e5b4fdd785684ee57d4de23ce9e994f5e1ae6a4a7863396de924b38c4ce89",
+          "testbench/trusted_replay_test.scs": "51fbaff29911b429f8c15d0015462c68c03d651b62aea664f9653d39752a0104"
+        },
+        "input_identity_sha256": "ece73355ed93547ab2656a52cee7ac9982f8836f42d8bb6821191616c8a4529e",
+        "result_sha256": "6eca5751afa5a751701786c71da6c034d9ecaa1b3be4941df05e1d02b8644fb0",
+        "process_sha256": "57f1c8df2ba744f69ea58489eba058cdd8e4b64b3ff758981c1a25d20be88916",
+        "response_sha256": "1cf5d1b90ae45622e20669484befd9bf4f88430d719798dfd0f561180ac13816"
+      },
+      {
+        "family": "213",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "signed_dac_samples=4 hold_checks=3 max_err=0.0000"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "213-tool-4bit-sar-signed-dac",
+        "source_files": {
+          "submission/tool_4bit_sar_signed_dac.va": "d8b8bad8b9bf1831f048f28bc25c679a97a667d96f66f699912ee972375da3c9",
+          "testbench/trusted_replay_test.scs": "bf95fd7de8c2213bc209fd6932753616dbcdb81af39c3f1b8000a2b03628fa70"
+        },
+        "input_identity_sha256": "dc65d77651d9171a6f9a0968050881174f6419893031ff1aeda8797ab395c6fe",
+        "result_sha256": "b7f43dde2f1b653cd796880ca7bbd129caf87f3833570e478e81a039cbeaa19c",
+        "process_sha256": "bd0159e96412ff4b7083b35d7178c079690e075edf1bf7c0a8232bf40c19b569",
+        "response_sha256": "622b334a6122e8cc07303ae24085d7646fe2410f4df259338fb1c05b1962b58e"
+      },
+      {
+        "family": "214",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "decisions=3 resets=3 positive=True negative=True equal=True"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "214-comparator-reset-low-1p8",
+        "source_files": {
+          "submission/comparator_reset_low_1p8.va": "8a1364917f028ad370ab80060c228828043f8ed15447bb11d5e4c95533782e42",
+          "testbench/trusted_replay_test.scs": "7e350ed8df46b1092bf97da15a1c0ef944c7601788c39fe8548ab6e845b72b43"
+        },
+        "input_identity_sha256": "e023d88f187063964966e16c1030e3962fbd9a098537408f30b94a12a0dc4529",
+        "result_sha256": "e4996ff48007a8361bea68db9d88dbcf16ab97756bc43522e012804bec04f822",
+        "process_sha256": "9de8c9520fdf73c57765635e5a8b208a39b5ec6eb275d876a43a4785eb925db3",
+        "response_sha256": "e2d591747358ebaa0fcf1330b6146f8bd8ba8821875d58db9b416844b058ebf9"
+      },
+      {
+        "family": "261",
+        "status": "completed",
+        "checker": {
+          "status": "failed",
+          "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_261_falling_edge_calibration_sampler: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_OUT_FLAG_AND_METRIC_TO"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "261-falling-edge-calibration-sampler",
+        "source_files": {
+          "submission/falling_edge_calibration_sampler.va": "f42e8cac70444c120cb0f0afa742cf0c0d5bc00dbc5633d4ac162988e375770b",
+          "testbench/trusted_replay_test.scs": "ab466d182b97ae3bc03a9c47ed577e7a234790593d5d5cbb7f755e1ec912c8f9"
+        },
+        "input_identity_sha256": "107727fe79510825bc11a0d12b9d30853b4c894ac491ea4f73599af2a1e61c38",
+        "result_sha256": "c96be6ba4ed7021047b684b5b9c34a9b0f5e5bf98e1a9fd49368f544cf690366",
+        "process_sha256": "9138808c873c123259be703ee0905c8c5e43b7dd79f12b92157197fdcf774a36",
+        "response_sha256": "8e86c4efb0febf74f7be6feba7e2fc28b01854d3155587cda203ced98c2e2c6b"
+      },
+      {
+        "family": "262",
+        "status": "completed",
+        "checker": {
+          "status": "failed",
+          "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_262_resettable_phase_toggle_monitor: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_ALL_OBSERVABLE_STATE_TO_0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "262-resettable-phase-toggle-monitor",
+        "source_files": {
+          "submission/resettable_phase_toggle_monitor.va": "26f34031b6ad82c40d37e2e52f1954c949be639931d2d8cacc2d1d66e6ddded6",
+          "testbench/trusted_replay_test.scs": "72ebaa616e33f0e891117127c181008266e0cc5ca16dfcbe25dc98ad8c011a99"
+        },
+        "input_identity_sha256": "c59b17cf1c51e84e6d092d60ca8bee464d7df23edebe6a16047b00f7b0c779c4",
+        "result_sha256": "9119bf9fd3d29ea05482b1debe5391cc5160418678e6581975c0a4a874486a8f",
+        "process_sha256": "14e9ee80902e3df501afb9835f6e89383c47e364d579164cc382dfe1df7f6a19",
+        "response_sha256": "39c971f7f3ebc658f60a1bd5f86993c23fdb4f42402727dd977804b74891d9e4"
+      },
+      {
+        "family": "263",
+        "status": "completed",
+        "checker": {
+          "status": "failed",
+          "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_263_settling_progress_counter: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_A_SAMPLED_PROGRESS_COUNT_TO"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "263-settling-progress-counter",
+        "source_files": {
+          "submission/settling_progress_counter.va": "b78fbde91c74ed0eaa7142aa49bd5e581e4e9cc98bdcf8a339b317e08342fc92",
+          "testbench/trusted_replay_test.scs": "d41fc3c1d053075f5f8a114924a35e4fc325cee96f7941d22f8732acc0d6f5df"
+        },
+        "input_identity_sha256": "d62c9a181c19256f81802d424a0fd93163336cad4d7d5b56dcf157bef6169eab",
+        "result_sha256": "3def591b8a3993981d9318841a03dc2241801c817808f3a4404bc2ed47b5cb63",
+        "process_sha256": "0f1408a4715df35f0ab47426084a594458b2302d814603b63d84e88fee153d33",
+        "response_sha256": "5ea2f23fe9dfdafe3a7669aaa0eb21dea8d68a60026070b2c77c516dceeda7bd"
+      },
+      {
+        "family": "264",
+        "status": "completed",
+        "checker": {
+          "status": "failed",
+          "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_264_enable_qualified_bias_hold: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_THE_HELD_BIAS_OUTPUT_FLAG"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "264-enable-qualified-bias-hold",
+        "source_files": {
+          "submission/enable_qualified_bias_hold.va": "d13db89ca40a09426120849682680a75d12b91bb8c242a65c390fe8de38675f8",
+          "testbench/trusted_replay_test.scs": "09d0bd26450fa6966e199a7c9f2b0ada30e1bc7297dc5fe68393bac883d0d746"
+        },
+        "input_identity_sha256": "6c7f7dfa53e8d6ef2f175f721801cf08f1dd190678c27d53962cc0745e4f8a46",
+        "result_sha256": "5f270f0318db26441c9b5c62560ce399c1f7303dbc73676e64cc20a185487696",
+        "process_sha256": "27f55848d69ef580ac4c258a9fda37545303564b5b5e40927d254a85735a83a6",
+        "response_sha256": "75656d01f4b1734602af1e5311de14130c9afb6418a879b42d4ab5afc8e7af44"
+      },
+      {
+        "family": "265",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/265/submission/dynamic_supply_enable_driver.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "265-dynamic-supply-enable-driver",
+        "source_files": {
+          "submission/dynamic_supply_enable_driver.va": "34b739a4c34531a6f3ab00e55492def283093626c843756daf654428ce46718b",
+          "testbench/trusted_replay_test.scs": "39c21f493b0bfbd87e851c9e65182527bd6a413e49b0609ff315769039b3a2a5"
+        },
+        "input_identity_sha256": "1e550c04bab9f355231c04cf562d7d45cd792d42bb4596adf6221d1ec57e59a4",
+        "result_sha256": "d8793516a7e9bdd9bc04c155158eeae78ac22ccd1ce2ebca65ea33bac434e5e1",
+        "process_sha256": "48269f24dff4430114bde42d19c6427834490b77bff76d622845d9a7781c34ac",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "266",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/266/submission/local_domain_buffer_translator.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "266-local-domain-buffer-translator",
+        "source_files": {
+          "submission/local_domain_buffer_translator.va": "71447eb3d9d0ceae10d162c3639be437120ce10f365ffc7af51fd18fef6e45cf",
+          "testbench/trusted_replay_test.scs": "d08bf765721607ed7fdb49d47a1cf1029ece7d2a833ec6d550db872583837f92"
+        },
+        "input_identity_sha256": "f72bec67d7c9e998ea37199dd97d8d7709f6b5f665e8b9241899c88add751008",
+        "result_sha256": "0854500c41ea38e6583e9f52d2e047f363edbdd61b803f7939d7151d7d9ba365",
+        "process_sha256": "70370af0587669145f8bc78d70779631b3661a1bf4bc64ce24366709c3ab6384",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "267",
+        "status": "completed",
+        "checker": {
+          "status": "failed",
+          "note": "property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_267_clocked_power_ready_sampler: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_THE_READY_COUNT_AND_ALL"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "267-clocked-power-ready-sampler",
+        "source_files": {
+          "submission/clocked_power_ready_sampler.va": "e444f52f3da19e63c7233556694fbe33a92c1b1fb311c8f09143b36d74c1902d",
+          "testbench/trusted_replay_test.scs": "319455e8562d24121b878c5618b7159b5158d20b53d65be3d361fef56533175d"
+        },
+        "input_identity_sha256": "9f3eca8bf02155a6a12b319faac16e4ebb56f4fc36f036538db13a3ea4dbc28d",
+        "result_sha256": "cb1b3067d2f07cb84807a54dc7c2ed347ef440f390dd541f38cf2232d8273051",
+        "process_sha256": "b96fefab0dc8a9ca283f1501b61c3f09622706e1393f0be44be84d4174ee7288",
+        "response_sha256": "d37d74147c9a8a65cf64941bab63622867aee1a30f780c94810bfcabac340c0d"
+      },
+      {
+        "family": "268",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/268/submission/mode_selected_bias_driver.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "268-mode-selected-bias-driver",
+        "source_files": {
+          "submission/mode_selected_bias_driver.va": "f2d0a82513f809268ce6761b04c1bf0d4d265da0bfb370e9aea179c6bd8777a2",
+          "testbench/trusted_replay_test.scs": "80a1b29e0e4f379138fbd0c2dd19f4a412c934490337f9f0e2d5a853c2a73441"
+        },
+        "input_identity_sha256": "74fa0bd7a94d9dd8d45776d18b79e10dc46c0cbffb6426d4f39b99d79e8a9d47",
+        "result_sha256": "03f989d3a16f9b50937f27c1e6217fa95249af199cc8cfc2e4fc5d1471ccbd2e",
+        "process_sha256": "7ef034a2bebac6ef23617e0707a81f779767cdabac90b55b04c7487d7ae785b5",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "269",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "samples; P_CLAMP_THE_ENABLED_INPUT_BETWEEN_THE mismatch_count=0; P_DRIVE_A_SATURATION_FLAG_WHEN_EITHER mismatch_count=0; P_CLEAR_OUTPUT_FLAG_AND_RECOVERY_METRIC mismatch_count=0; P_COMPUTE_LIMITED_CLAMP_V_VIN_VLO mismatch_count=0; P_DRIVE_SAT_VHI_WHEN_ENABLED_AND mismatch_count=0; P_DRIVE_THE_RECOVERY_METRIC_AS mismatch_count=0; checked_property_ids=P_CLAMP_THE_ENABLED_INPUT_BETWEEN_THE,P_DRIVE_A_SATURATION_FLAG_WHEN_EITHER,P_CLEAR_OUTPUT_FLAG_AND_RECOVERY_METRIC,P_COMPUTE_LIMITED_CLAMP_V_VIN_VLO,P_DRIVE_SAT_VHI_WHEN_ENABLED_AND,P_DRIVE_THE_RECOVERY_METRIC_AS"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "269-saturation-recovery-limiter",
+        "source_files": {
+          "submission/saturation_recovery_limiter.va": "7cad00720a765ecf58acf86b6f4329f0f2b892ae716de4c79c67b7eb4db1ab2e",
+          "testbench/trusted_replay_test.scs": "c449f596a937907768a77da6b192977c2d5b59010a5e3d4e2fbdd72abd56b55d"
+        },
+        "input_identity_sha256": "ac7a83def9bda69173c18ea94935ddbee2ff7588add90a14cc0e0cbea717db49",
+        "result_sha256": "760514b531fc33bf9f3aeaf1875e98cef5a583664b309df42c75284184a26093",
+        "process_sha256": "c6f74cba7690ebeaebbac3ff02fb42a85391ad55a52721379ddcb63af7a03b53",
+        "response_sha256": "06caecd5ef6c7d0dc3886df2e3b38211aa70768442a01ab353e6bfcbad1788c6"
+      },
+      {
+        "family": "271",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "samples; P_INITIALIZE_EVENT_COUNT_SAMPLE_COUNT_RATE mismatch_count=0; P_FOR_THE_SAME_GATED_SAMPLE_WINDOW mismatch_count=0; checked_property_ids=P_INITIALIZE_EVENT_COUNT_SAMPLE_COUNT_RATE,P_FOR_THE_SAME_GATED_SAMPLE_WINDOW"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "271-windowed-event-rate-monitor",
+        "source_files": {
+          "submission/windowed_event_rate_monitor.va": "ecc40ab640276f1a9d1f854d240d295dd9273404498b6bd39fc8a4f2b3a51ba0",
+          "testbench/trusted_replay_test.scs": "14df05bf45048f15dc671f39eb33fc4b7c7f3fae4e079a9de463df4f356908f6"
+        },
+        "input_identity_sha256": "186553f00701b807c73cc73199f6426cc1f6cfb97331b50b6d630930b866910c",
+        "result_sha256": "8e83e79f0e1fcc75f9013695e1d610529fa173190514f420b1edf637b11429bb",
+        "process_sha256": "7d7e129670ac0fe7d047475bf1237212c7f8ac11ff8d54da25bb8019be4f37dd",
+        "response_sha256": "0c0b062e05dd67bb26781bfca9a8db7969ba74494b382a2382bf8201ce673dbb"
+      },
+      {
+        "family": "274",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/274/submission/rail_normalized_metric_mapper.va:24:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "274-rail-normalized-metric-mapper",
+        "source_files": {
+          "submission/rail_normalized_metric_mapper.va": "60d2316707d7df2a20ebd0d19fb733f7321472fc48f0c866f499ab1e5c1536b8",
+          "testbench/trusted_replay_test.scs": "862055177ef3369593a6750a1131a3af434f54c59d70ee97f9f1fdca1702910a"
+        },
+        "input_identity_sha256": "bf048608ee378138e1736de31073fe8853969432e65034bfc0434b229237e708",
+        "result_sha256": "05e409a46e3548f15492d6f3feb24fa61d89fd42f87dea58f3578eab0996be8e",
+        "process_sha256": "63c339ac7f88e520efba550d4635c391e63fcb3405c6b32c55926e5dfd372f3c",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "275",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_275_deterministic_energy_accumulator_edges; P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE mismatch_count=0; P_INITIALIZE_THE_ACCUMULATOR_STATE_AND_ALL mismatch_count=0; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_INITIALIZE_THE_ACCUMULATOR_STATE_AND_ALL"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "275-deterministic-energy-accumulator",
+        "source_files": {
+          "submission/deterministic_energy_accumulator.va": "78b3cdfc067121a2a37dbec9fa1b4862b697d4602ed25db9f4d0eb58f24d9bf5",
+          "testbench/trusted_replay_test.scs": "af40aff6391fda1948c036c3d847fb4f8cdf36fca5dea7b652cd050d4cab5566"
+        },
+        "input_identity_sha256": "9f745fe24d6101f32aaf2f5cad6441a71cf9b94b639a3e7cc9344de701546565",
+        "result_sha256": "185151da310664c9579848bedabd7b29d07b2b131480be48590ba8c66ed716f3",
+        "process_sha256": "ae621d5b85258cf21a7187d4f404a098114b228b3b9ff0e4bd0e6ba2490fb81b",
+        "response_sha256": "69440b8750dbf250d585c9e3ea2d036ff527bee55af27065720e5e4e5005d5d2"
+      },
+      {
+        "family": "276",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_276_bounded_tail_dither_shaper_edges; P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE mismatch_count=0; P_FOR_EACH_VALID_UPDATE_COMPUTE mismatch_count=0; P_TEXT_X0_CLIP01_V_IN0_V mismatch_count=0; P_RESET_DISABLED_AND_OUT_OF_RANGE mismatch_count=0; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_FOR_EACH_VALID_UPDATE_COMPUTE,P_TEXT_X0_CLIP01_V_IN0_V,P_RESET_DISABLED_AND_OUT_OF_RANGE"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "276-bounded-tail-dither-shaper",
+        "source_files": {
+          "submission/bounded_tail_dither_shaper.va": "cc15ebeca90c44f1ba0c31e139992d7cd3b853411c83d485282581284fbdef9c",
+          "testbench/trusted_replay_test.scs": "06bcba07ff7640f7e918ac7e04044a8ac3a12512f9355039a11d02904a4ef5ac"
+        },
+        "input_identity_sha256": "c9c9934ccf62a3bb54be17d8b23447633844028b71f675798d879000c9d912e3",
+        "result_sha256": "5ff577c77360cf955d1de6c85068605df0e2a8048f65bfc0ad2e7fff7c3ae49b",
+        "process_sha256": "c9badd419261a940caff76c4b371706bbe2ca54203d365e4e3c4fe66b9fb7ced",
+        "response_sha256": "6085cdd81044a3f48c81188f456841f32ca797e5c81ce2caec588f62296d8b64"
+      },
+      {
+        "family": "277",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/277/submission/calibration_bit_select_flag.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "277-calibration-bit-select-flag",
+        "source_files": {
+          "submission/calibration_bit_select_flag.va": "5fd4107ec3978bb14fb1de74732273647518a7eac293185f98ee249891ba9114",
+          "testbench/trusted_replay_test.scs": "4dda921bd4ba1fc3dcb8ece2f56ba47f629dbdb4dcbc7f013256de2bfdc80786"
+        },
+        "input_identity_sha256": "048980fdce97045222b98c99721f58b3e475e66fb27c009501da534be5c89ce7",
+        "result_sha256": "df53b2fe509f1df29fc2df54f59c3f0701bf3bf0e54352ef8f864f5386098174",
+        "process_sha256": "932037d677d7c7609fdbd4509fc6dc2ef37ae3ad31b10cd70889027685816316",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "278",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/278/submission/lane_mask_replication_driver.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "278-lane-mask-replication-driver",
+        "source_files": {
+          "submission/lane_mask_replication_driver.va": "b574e4233bc6a9a852d94c2d218adf09a27e1b8793c582aa09b3c75fc261120b",
+          "testbench/trusted_replay_test.scs": "85b1c040a5610903b4b85de2a487fb8e2165cf8acab1dcffe9bf3731357377d8"
+        },
+        "input_identity_sha256": "648ac9a126f889ff87e5dcd103d3809e8cfc7110913e9ecd198607a32bffbbbf",
+        "result_sha256": "2e8f205540216d21cfd12bf63a812db1a3c3ed4ae187f35b56dc103dab7061b0",
+        "process_sha256": "332c800e32633e66083b0f5ef2c7bfc9c5a526bd7795f8b39dfa22590f5c9d18",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "279",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/279/submission/explicit_sar_slice_router.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "279-explicit-sar-slice-router",
+        "source_files": {
+          "submission/explicit_sar_slice_router.va": "cf2a105f335ca10d053061b4d349abcaca0bdd3e131a35740ecf61bd7bc05b8b",
+          "testbench/trusted_replay_test.scs": "e75210da8b323f1777a5125c34b2460949498e249dc26a36e71c47d169870e75"
+        },
+        "input_identity_sha256": "0c608ccdbb73512f719b229412fd8be4e2bf5fb5369dcc8ec85dd4944e2fcdd6",
+        "result_sha256": "ff83be0d977f249629f59bc4e6aefe21fb2e6bfd4e1c5130fee4bf734cbf869b",
+        "process_sha256": "5af5cc60ded425582d90112c22d306bf669b130b1398a151f2771bd5615ab481",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "280",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/280/submission/ready_reduction_fault_monitor.va:22:9: decision predicates and every arm must be affine or input-selected piecewise-affine",
+          "hint": null,
+          "instance": "XDUT"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "280-ready-reduction-fault-monitor",
+        "source_files": {
+          "submission/ready_reduction_fault_monitor.va": "4a433aad94de1cef3c812950fb011a714e57c2fe1cc5b0d18499a8e393fe2cd4",
+          "testbench/trusted_replay_test.scs": "96175da01888cd1616b93d629df3cbd6d495f1d1ee94f35b3f5e0427b7c5396f"
+        },
+        "input_identity_sha256": "922f57a54751a1b1daa2063457ad5098f99162fddb8b2484a29bf8beacf48b6b",
+        "result_sha256": "0726476e85a5265957b3a548e6aaa8220eb414dbdf8215e48462a01f9750efbb",
+        "process_sha256": "50522c3c6943f651f4d8242271029fd048255125c7263de695358f57de61c72c",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "284",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "samples=13 max_err=0.0000"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "284-calibration-affine-transform",
+        "source_files": {
+          "submission/calibration_affine_transform.va": "2bfc5b4d441486b51f1490bf3d6918f5dbe53ecb456ada2d1e66fe0f67afc1b5",
+          "testbench/trusted_replay_test.scs": "4cbc6b0baec9d76ebe9761f41df1c6ef28ec99bc11d10d84c8a14b0941f8d250"
+        },
+        "input_identity_sha256": "dddcb52f97ca92f71f7def785bc91877bbc9e61161e685df19d12a3e02e2d11f",
+        "result_sha256": "fea9b0283d71bd61d9481f6b5c7f26c06a488e0658612557e70ed0749b0d75b7",
+        "process_sha256": "a8bf5161a9dfb397ed1eaa640c06838579b0581da92f799701d8d54239361291",
+        "response_sha256": "f53f30327dc29c910d8e83015fa87a3431f1ad4c0bdc684996910cc16242c0da"
+      },
+      {
+        "family": "293",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "samples=18 max_err=0.0000"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "293-reference-settling-window-monitor",
+        "source_files": {
+          "submission/reference_settling_window_monitor.va": "82002346b7485e840d54b990e38f21a609265ffaadc965e8628aed978cd7a0e5",
+          "testbench/trusted_replay_test.scs": "d9d66c74910740adcc18f95216a33a3792f4f95cc2d1da7a137027f836725b03"
+        },
+        "input_identity_sha256": "798894e935bdf957a0c01cc33242b1aa25681573961bc7cc4baf8419de5e9b52",
+        "result_sha256": "e14d006a7846e27944ac9da63bfa95bd98b551929a4d1cdd373ce37cb3227bc9",
+        "process_sha256": "b610eccb3ff3229974af75aa971266d9b5e7b6e7c9dafc7afc6e5ee0c14ec439",
+        "response_sha256": "19dbfc280ce353794c0c9bb8c3e4cee6429c98a0107588b0277b424b52948650"
+      },
+      {
+        "family": "294",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "samples=16 max_err=0.0000"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "294-power-enable-turnon-delay-gate",
+        "source_files": {
+          "submission/power_enable_turnon_delay_gate.va": "048899b62449bbdf5b6d7e2543f3ca92ec39ca9ed4ffe1652b49fe31a94bbd7b",
+          "testbench/trusted_replay_test.scs": "0713dc9909b6b6198eceefbad00f55664340d7ccdabfcecf64c2d5645d3188e9"
+        },
+        "input_identity_sha256": "75fe9df0e3d073e9bf64df0fe2ba07694f98f00ebe58754866078f0be6330314",
+        "result_sha256": "36bb6b947f867b858a87f7a40efec5c001f4519577750fe84c0ab7efe63e0a63",
+        "process_sha256": "3f5c6f2edd9f875886ff4c24865673fab377b4a719c94fcf6d0ffe47e9016d14",
+        "response_sha256": "d284132785a3cce3d7b43014f10dc152982ea859cf3f6f2066f12be058da1e17"
+      },
+      {
+        "family": "299",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/299/submission/sine_vco_idtmod_bound_step.va:23:19: idtmod requires 4 explicit arguments",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/299/submission/sine_vco_idtmod_bound_step.va",
+            "line": 23,
+            "column": 19
+          }
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "299-sine-vco-idtmod-bound-step",
+        "source_files": {
+          "submission/sine_vco_idtmod_bound_step.va": "e7d4b7824584139fc18980b04c6c1b4d20191c0cd0436ba10251a008387e0737",
+          "testbench/trusted_replay_test.scs": "0b4d1ef6c23b55ef856e9fcec26b4a0d480e8a1e1132d57e3d9209d6da332927"
+        },
+        "input_identity_sha256": "d36c7924e9c696889e263a131ab1089686ee154251012f73559bd79b3552b162",
+        "result_sha256": "5966b6e5c0ab682ee5b9d3ee5a48182861fd23695543489e221d5b88e8e8ffeb",
+        "process_sha256": "c5a2ab0392dd71747a049bf8210efd6cce41f7cb1351119cccaf061d26176a74",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "300",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/300/submission/differential_vco_clip_idtmod.va:29:19: idtmod requires 4 explicit arguments",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/300/submission/differential_vco_clip_idtmod.va",
+            "line": 29,
+            "column": 19
+          }
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "300-differential-vco-clip-idtmod",
+        "source_files": {
+          "submission/differential_vco_clip_idtmod.va": "22c20737692188eabfa6414fc3f36a2f522cd7a0d8521eb111f6595e8e0fcbd7",
+          "testbench/trusted_replay_test.scs": "9aa2b68f509f7446ed8230e4ee2293575b277a23d2e7a90b9a6316cc832afec4"
+        },
+        "input_identity_sha256": "aabf373e84e51377eaf68eef706b367b1436047d07af552bac1e1ee06a7e1cda",
+        "result_sha256": "2e6156aa4ad2108daddda7019764779c8ff564efd74be5eee846e1ff9ffa5c80",
+        "process_sha256": "882b0a9e67ec0474545a03f9fefe7b9e81b11ec14b59f1167dffb10e5aea699f",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "301",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "unsupported_initial_event",
+          "category": "unsupported",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "unsupported initial_step value: /Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/301/testbench/public_support/ref_fb_clk.va: unknown parameter 'half'",
+          "hint": "Use an unqualified initialization leaf and constant values or a real driven-input comparison.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/301/testbench/public_support/ref_fb_clk.va",
+            "line": 29,
+            "column": 13
+          },
+          "instance": "XREF"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "301-charge-pump-pfd-state-machine",
+        "source_files": {
+          "submission/charge_pump_pfd_state_machine.va": "ed4b8ad67f64d64f99bed5b80da62a754a3206e55ad17de5862839d04d1d2d3e",
+          "submission/support/ref_fb_clk.va": "2be4ce511ab257fdd8097ceaa93cfa95a8ef2b26bcbfd88d0a7c64f20a5bd614",
+          "testbench/public_support/ref_fb_clk.va": "2be4ce511ab257fdd8097ceaa93cfa95a8ef2b26bcbfd88d0a7c64f20a5bd614",
+          "testbench/trusted_replay_test.scs": "b03baa20d95c43560487baed2f0b19fddc3ed201ac8e9e09497dee294df7b74c"
+        },
+        "input_identity_sha256": "35bb7b4629084a545857ed1fc86d64e93bdfd9211c5a67148004cd80ad4548e7",
+        "result_sha256": "815b68eaca94d7d5dff5c03a277fc2967e3f7920781c1e2b1da1553646d274e1",
+        "process_sha256": "827251c3d76a938a1e7766620d4da35a2651131bed5c54957de75acf8fd429ca",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "302",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/302/submission/fracn_pll_timer_ref.va:94:31: expected '=', got '('; outside affine-voltage syntax",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/302/submission/fracn_pll_timer_ref.va",
+            "line": 94,
+            "column": 31
+          }
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "302-fractional-n-divider-accumulator-flow",
+        "source_files": {
+          "submission/fracn_pll_timer_ref.va": "585eeba6729ef2e8d1bf4189f98fbba992955a32943236715bb678aaad9fb814",
+          "submission/support/ref_step_clk.va": "b2903c6ad950df0b02ddaf7d078b7a41bf16e6b25e0742445971a7d90c40700b",
+          "testbench/public_support/ref_step_clk.va": "b2903c6ad950df0b02ddaf7d078b7a41bf16e6b25e0742445971a7d90c40700b",
+          "testbench/trusted_replay_test.scs": "bad08439c13e5c6c125a9b4ba6d5e39f435568c4982eaa8ba526de917acb4b57"
+        },
+        "input_identity_sha256": "9d9840d6c1649643fddbebac4fa13bf472e36f964ce8973e27b27fb098f6e785",
+        "result_sha256": "0cb17ccc5e73b2c5d4a818bd8d8cd60d134f1619b08cf25906353c543ca56719",
+        "process_sha256": "5ddb60ead20f7913cf95b91adeb25a22e6420ecbcff8f8eb5e1227256b8e9d31",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "306",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_306 checked=12 reset_checked=48 reset_errors=0 late_reset_checked=33 late_reset_errors=0 ready_seen=True metric_dynamic=True trim_response=True premature_ready=0 vout_errors=0 metric_errors=0; P_ON_RESET_CLEAR_THE_TRIM_STATE mismatch_count=0; P_DECODE_TRIM_2_TRIM_0_AS mismatch_count=0; P_WHILE_CAL_EN_IS_HIGH_UPDATE mismatch_count=0; P_DRIVE_VOUT_FROM_THE_CORRECTED_DIFFERENTIAL mismatch_count=0; P_EXPOSE_THE_ACTIVE_CORRECTION_ON_OFFSET mismatch_count=0; P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE mismatch_count=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "306-instrumentation-amplifier-offset-trim",
+        "source_files": {
+          "submission/diff_gain_core.va": "2d549e8953c3ed3a1f48a345c992d26c9757df44d64813602afd1ae84f990a67",
+          "submission/instrumentation_amp_offset_trim_top.va": "6ce944ea3175be28d20f73016a95ab1e33ae6b8c7c00ad2d1a45df4b720248ea",
+          "submission/offset_trim_controller.va": "09263576c99f2f8709f4a785d1e1ee603a1cc01bc23944ed9e6aa9295e81ff0d",
+          "testbench/trusted_replay_test.scs": "ad2c8b88787c70c3d4eb6e9d76a28acf721b50226f174e62719243255c56957e"
+        },
+        "input_identity_sha256": "3a2b233b4055ec4729334d918006ba436279fb56c0e71fcf7fbd0d9f171fde3a",
+        "result_sha256": "b52b2414543e39e49efb92df85f9565755bbd4539a26b1395cbcaf100ac828b2",
+        "process_sha256": "2f268db61892640dd05665d88e061ff41c6531d8c8e93cf212f7e9b207b780c4",
+        "response_sha256": "8e2813388935423c3389d65e0578de6b121a18066fa32e77f72e983926541603"
+      },
+      {
+        "family": "308",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "event_condition",
+          "message": "cannot certify Lt condition at /Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/308/submission/signal_sample_latch.va:21:13 (XDUT/XSIG): difference in [-1.1102230246251565e-16, 1.1102230246251565e-16]",
+          "diagnostic_version": 1,
+          "code": "kernel.event_condition",
+          "stage": "kernel",
+          "category": "unknown",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "308-correlated-double-sampler-offset-cancel",
+        "source_files": {
+          "submission/correlated_double_sampler_top.va": "db849cecb33313d295c4af7c9f63db5157c711ec56dff073b04419e3dd0c6a4d",
+          "submission/reset_sample_latch.va": "7b12a99fbed050b0d8b344ba75be5a6f607fb09eaae81ad9466441c177c40347",
+          "submission/signal_sample_latch.va": "224f9e3b5f845b56fa9a9158a926007e675743f74cf941b622798ba710ea2505",
+          "testbench/trusted_replay_test.scs": "36279b0948c4ffc4f1b965292f7354c5b32ae1d51abed1554a72ef0b6df4c189"
+        },
+        "input_identity_sha256": "beed14ed9ef8c47bf3431e2ef6ec0b4e86c26e78e18dd5f67df23a781990984d",
+        "result_sha256": "17c451f12e5e26f9fe5d2c9c0c256ccb3d3c2e0cb369bbe96ed728554f11d7cb",
+        "process_sha256": "52c8bee213864eac37d8c7555d896c776d4f6acad8dfc7504d530386c8af93ec",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "309",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_309 reset_edges=1 autozero_edges=3 evaluation_edges=7 order_errors=0 edge_errors=0 hold_checked=765 hold_errors=0 offset_span=0.244 high_expected=True low_expected=True; P_ON_RESET_CLEAR_STORED_OFFSET_DECISION mismatch_count=0; P_DURING_AN_AUTO_ZERO_CLOCK_UPDATE mismatch_count=0; P_DURING_AN_EVALUATION_CLOCK_UPDATE_WITH mismatch_count=0; P_DRIVE_DECISION_HIGH_FOR_CORRECTED_NONNEGATIVE mismatch_count=0; P_EXPOSE_STORED_OFFSET_ON_OFFSET_STORE mismatch_count=0; P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE mismatch_count=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "309-autozero-comparator-preamplifier",
+        "source_files": {
+          "submission/autozero_comparator_preamplifier_top.va": "60810604f9a0c64b31085f5148f6f7300a6e1f6962019f9acbfb426ff505897a",
+          "submission/clocked_comparator_core.va": "4530b1dcd2d62c3b9a2f10b5005d3f04afab158f555eede726e8bdd87abbd6c6",
+          "submission/offset_store_cell.va": "fd20d222d280bbbd780e1768cefb6deac5476dcf8a396304b912563a79b425e3",
+          "testbench/trusted_replay_test.scs": "9c9d8232fc3304b0ff3c7741fd5fabadab10e340aa0b91664908ef98ece8c126"
+        },
+        "input_identity_sha256": "6072f922faabc5660c5056b6f0ffae04f4f529af2e35f991f84e820f6c931a4c",
+        "result_sha256": "2466f79254a8931707e7b076cea24ca784060cbf41ff03bcf415f78f8d7a4537",
+        "process_sha256": "31e09eb2fde3ef7963436f6acddb782ac285e2b64c6d5bc71dfcc02d864ae63f",
+        "response_sha256": "931b590ec4c1f813c9f710147f4aa7087b40140744b128192041e74d5bd95d13"
+      },
+      {
+        "family": "310",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "event_resolution",
+          "message": "cannot certify ordering of operator deadlines: Deadline { continuous_end: true, bounds: Interval { lo: 2.522441363729718e-8, hi: 2.5224413637297194e-8 }, sum: None, exact: None } and Deadline { continuous_end: true, bounds: Interval { lo: 2.522441363729718e-8, hi: 2.5224413637297194e-8 }, sum: None, exact: None }",
+          "diagnostic_version": 1,
+          "code": "kernel.event_resolution",
+          "stage": "kernel",
+          "category": "numerical",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "310-bootstrapped-sampler-charge-metric",
+        "source_files": {
+          "submission/bootstrapped_sampler_charge_metric.va": "91d08c036d1ae40c598d7446ee4d61b635b723137833a327a552b1f637b0886c",
+          "testbench/trusted_replay_test.scs": "1035734aa1f5249e1115b847e42585850f1b7c1e0e31c25832fc54edf1386c9c"
+        },
+        "input_identity_sha256": "6a78bea9419fecb040dfaa71520e52cfcf095db92534a8d683a5fcb42065ce9a",
+        "result_sha256": "12bbfca48aadae70965f8942d00a2db82937886b07132d3acface1c460b6dc7e",
+        "process_sha256": "6d11fda1ec4af0d2916c6ec3f915faf99e55965d902dd4af21f9580f9cd3b2fc",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "311",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "unsupported_initial_history",
+          "message": "transition bootstrap events must read only held state and directly driven inputs",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_initial_history",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": "COMPOSE"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "311-muxed-track-hold-array-readout",
+        "source_files": {
+          "submission/muxed_track_hold_array_top.va": "39967755a077565721699b0c635321b915c214e9247e47da8087b02cd6db2cdb",
+          "submission/readout_mux.va": "2bcdc7fe1f71b11bbc7652b29cc49ff4b1d4ee5266f7a57c804a1c88a7d831b9",
+          "submission/track_hold_cell.va": "deb85447c953998b2d9cc46728e8ec243e66daf2e201e988f490afea7add51c3",
+          "testbench/trusted_replay_test.scs": "94ec40a9fc952c5d020ecc90c3ddc0e40b24f57ec048af332e7cbe0590a38761"
+        },
+        "input_identity_sha256": "c380c3acd5362091e14e5c18a24f4a4c08e4d0385f340378dd629ab6863d5d64",
+        "result_sha256": "951327fdb7e0faf7184d61a70c16567a9a09f62abc5235eb70b0fa5f716672bd",
+        "process_sha256": "97e4a5cedcbf4bea1fbca121f375be13b68a3e34b3a9b47cf31932926487989d",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "312",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "unsupported_initial_history",
+          "message": "transition bootstrap events must read only held state and directly driven inputs",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_initial_history",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": "COMPOSE"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "312-interleaved-adc-skew-monitor",
+        "source_files": {
+          "submission/interleaved_adc_skew_monitor_top.va": "ed63c1ff2252aba6b5d3d5d78d32796b8e51a77f1904a83c8f7866e4c9317894",
+          "submission/sample_pair_latch.va": "2e6bbf7bed644e265e008c68d98a8e3e121b461597d4094c4ad9487ffca7b7c4",
+          "submission/skew_metric_core.va": "b262aa9f57843e418cda03b9dc4b1a99c4a43d7d30646162d4d41665cd295113",
+          "testbench/trusted_replay_test.scs": "3f36fabc8630e60923719e2dd28c84663f11058d98345c21aeea1a9df2577a94"
+        },
+        "input_identity_sha256": "dae58fb4ba5636c0efdc21d883f78317329f86ddd6bc33952f66bb834d57535e",
+        "result_sha256": "5f8225cd4c0e15f5dd6c63db5bd57f7e2852606944241ac24f4647f1c2478e82",
+        "process_sha256": "57d22a32cc42e1146aec3f4216563f5df9e5dc91f0fc9c1bb82e6e720c15109a",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "314",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "event_resolution",
+          "message": "user event overlaps an unproved source-target boundary: incoming [5.19999999999999958e-8,5.20000000000000090e-8], cut [5.20000000000000024e-8,5.20000000000000024e-8], root order Some(Greater)",
+          "diagnostic_version": 1,
+          "code": "kernel.event_resolution",
+          "stage": "kernel",
+          "category": "numerical",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "314-hysteretic-window-comparator",
+        "source_files": {
+          "submission/hysteretic_window_comparator.va": "0c4eb5bd49730e92095128cf4255fe6f3f7bca0e5bd99296d0f88a7367c91cb6",
+          "testbench/trusted_replay_test.scs": "fc4c7fa63506e314fe7f04e3f6d6707b83590b6a680cf306ed3fc7fb73a4f561"
+        },
+        "input_identity_sha256": "7496c2542ce0aef2858fb0b80cf88c289a9e4b48aa53ed8d40eb67b28fc0ad0f",
+        "result_sha256": "3561a9364c2f4edb42db7c341b680c0c68d4689d88aa52e619fb8a871661d82d",
+        "process_sha256": "f52babddc4dd4d1af34cdefaa6e554fc764c6b8c218240a1d7b30940d61876d5",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "320",
+        "status": "completed",
+        "checker": {
+          "status": "failed",
+          "note": "v4_320 checked=15 codes=[0, 3, 12, 15] reset_clear=True disabled_clear=True metric_errors=11 settled_errors=0 target_errors=12 clear_errors=0 step_errors=0 edge_update_errors=9 settled_seen=True early_settled_errors=0 missing_settled_errors=0; P_ON_RESET_OR_WHEN_DISABLED_CLEAR mismatch_count=0; P_ON_EACH_ENABLED_RISING_CLK_EDGE mismatch_count=9; P_APPLY_A_CODE_DEPENDENT_SETTLING_STEP mismatch_count=0; P_EXPOSE_THE_CURRENT_TARGET_ON_TARGET mismatch_count=23; P_ASSERT_SETTLED_AFTER_THE_REMAINING_ERROR mismatch_count=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "320-code-dependent-dac-buffer-settling",
+        "source_files": {
+          "submission/code_dependent_dac_buffer_top.va": "bc0255ce852f524c294f41f4f4cc4717f6c6db8c212d0f5e141d98a9fe559919",
+          "submission/ideal_code_dac.va": "0459ab51a8fb1a6b6329ec6b0ccf4026a77789c3da8b8dbbc09126711d923be4",
+          "submission/settling_buffer_state.va": "d76eeeda2151bef77ff56da6cdaf2756e7b9a654632b4cdc2071b4584a106093",
+          "testbench/trusted_replay_test.scs": "91c9631ff2a85b0a552dec315a11930a2ab54a6743780c9125cac24401d0fe0f"
+        },
+        "input_identity_sha256": "460ab3e9fb56a2c9784712d92181e876bec39fa1491bd1129757c14b646c038c",
+        "result_sha256": "b59dd3b5cf4fc565387875e7591f5a1dacc96b4ae5dd63c9ea63b53a93ce457f",
+        "process_sha256": "676385ee325cc9ff55cfcc965de91c19b933d13ae6d5b3c28c13d8b7c35d3378",
+        "response_sha256": "728079e110b57fa30276b4acf9cecd9a7be370c52ad00b598e22a7648d87b419"
+      },
+      {
+        "family": "321",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_321 checked=10 up_only=4 dn_only=4 holds=2 reset_clear=True disabled_clear=True step_errors=0 metric_errors=0 balance_errors=0; P_ON_RESET_OR_WHEN_DISABLED_DRIVE mismatch_count=0; P_ON_EACH_RISING_CLK_EDGE_OBSERVE mismatch_count=0; P_INCREASE_VCTRL_FOR_UP_ONLY_DECREASE mismatch_count=0; P_DRIVE_IMBALANCE_METRIC_FROM_THE_ACCUMULATED mismatch_count=0; P_ASSERT_BALANCED_ONLY_WHEN_THE_RECENT mismatch_count=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "321-charge-pump-pulse-balancer",
+        "source_files": {
+          "submission/charge_pump_pulse_balancer.va": "1475974dc4f4e8f986a933fdab685c719c7b8b4abacc7bb5867c6a694a6b367d",
+          "testbench/trusted_replay_test.scs": "9785137a3b820299428b7d17bad16bcfa06ccc8275efa6dea9d78f06b72b30f0"
+        },
+        "input_identity_sha256": "e36be5f82c5b3c744592a8431f3fc1154f44aa70d4c8db081e36a55fe36107ec",
+        "result_sha256": "d9366fc7b34ee9c14d17f5112ac44543617ab4135ebb5fd8e3d43beeab4c5a59",
+        "process_sha256": "2a9688a60caca1054b6b62d2fd2dae00cfe52b0b0e7ea784030432bc0a2e2dea",
+        "response_sha256": "2dadaf65327907eb097c5d8618b43167ee2201d53f9f1c11be61ca6cece83a0c"
+      },
+      {
+        "family": "322",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_1020 checked=304 sources=[0, 1] reset_clear=True disabled_clear=True switch_seen=True out_errors=16 glitch_errors=0 metric_errors=0 metric_high_outside_window_errors=0 valid_errors=2 valid_early_errors=0 clear_errors=0; P_ON_RESET_OR_WHEN_DISABLED_DRIVE mismatch_count=0; P_ROUTE_CLK_A_WHEN_SEL_IS mismatch_count=0; P_WHEN_SEL_CHANGES_WAIT_UNTIL_BOTH mismatch_count=0; P_EXPOSE_A_SWITCH_EVENT_ON_SWITCH mismatch_count=0; P_ASSERT_VALID_AFTER_THE_SELECTED_SOURCE mismatch_count=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "322-glitchless-clock-mux-selector",
+        "source_files": {
+          "submission/glitchless_clock_mux_selector.va": "671e523a0aa85de327fd4d68906f568b9cfc4aff388443374772065b5b954b70",
+          "testbench/trusted_replay_test.scs": "fd535d0221b93df4b4cc39010e7de4690a88312291519e61cf677e752389239d"
+        },
+        "input_identity_sha256": "eb95df65358ff90168f94dfda7a0480a7cf028e9e17675a672e37e819eb44bb8",
+        "result_sha256": "83f169fe26dff854ba948dfb27c9cc64256d9900849d1813b5d4e8634b0e058b",
+        "process_sha256": "0917df3b7299eb74b6df7cfec04a67a856189f812ffb908dfa9722fea44fa17d",
+        "response_sha256": "d09d7f5bab7db2c27e00a61543f8e91964ace610ff586fdad5c70ab028a32691"
+      },
+      {
+        "family": "327",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_327 checked=12 early_events=1 late_events=1 early_misses=0 late_misses=0 lock_seen=True early_edge_misses=0 late_edge_misses=0 early_false_positives=0 late_false_positives=0 open_streak_reached=True eye_max=0.900 early_lock_errors=0 missing_lock_errors=0 mutex_errors=0 range_errors=0 valid_misses=0 reset_clear=True disabled_clear=True clear_errors=0; P_ON_RESET_OR_WHEN_DISABLED_CLEAR mismatch_count=0; P_ON_EACH_SAMPLING_CLOCK_EDGE_COMPARE mismatch_count=0; P_RAISE_EARLY_OR_LATE_ACCORDING_TO mismatch_count=0; P_DRIVE_EYE_METRIC_FROM_RECENT_TRANSITION mismatch_count=0; P_ASSERT_LOCK_HINT_AFTER_FOUR_CONSECUTIVE mismatch_count=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "327-cdr-eye-monitor",
+        "source_files": {
+          "submission/cdr_eye_monitor_top.va": "fd463a6ebd95591292abc526d5eee1038ebfc18adad38ae8ef918fdc6db0ecc6",
+          "submission/edge_margin_sampler.va": "ff775fb900bec2c51393d1ac6a36633f7135b0013787511be5f94f659a5260a9",
+          "submission/eye_metric_filter.va": "280fd85979cd7203a06499df90993674f10d2fdeebca6b6e0f65611edb818d31",
+          "testbench/trusted_replay_test.scs": "fb034c484bb73669b21982f1a2afc75dce45d49cb0a8631d7b685c56702b7a46"
+        },
+        "input_identity_sha256": "e39dcd09d86eb960562406b10f4a0bbb869d2793a965a00392b4af737092fbca",
+        "result_sha256": "c3e3a9627b36c4cd4c2b49baa3e4ffe4da44c540497bd91d29ade04b12bb9d36",
+        "process_sha256": "e63879cc08e96f8e00626040181038b55f4396c80997f38e070f633112027599",
+        "response_sha256": "f98dadc4f71165a9c07a4518b6be01d3e3acae4c6d998dcf0dd696d75b8f1bc7"
+      },
+      {
+        "family": "331",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "condition_precision",
+          "message": "all source-target predicate state must be point-valued",
+          "diagnostic_version": 1,
+          "code": "kernel.condition_precision",
+          "stage": "kernel",
+          "category": "unknown",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "331-dfe-error-proxy-loop",
+        "source_files": {
+          "submission/decision_history.va": "09a41ac35b14d8931df6fb627451c0b04f7c181acba3ac7c1bccb1cfcf069da8",
+          "submission/dfe_error_proxy_loop_top.va": "dd6ddd07404947db86c58eb16283935e3e49cbc15fb71947d6c1ab06a042a272",
+          "submission/feedback_correction_core.va": "34e3ac45fbd4558a2bb5d4d6aeaf79ad02f499c9ceec6ef06694b61bf77c411d",
+          "testbench/trusted_replay_test.scs": "eb30d8f2f84701189191cf58be5d8861e57e44124f8c003aa6c63b88040bd389"
+        },
+        "input_identity_sha256": "c0e3db06bd48657073daa9480eeb7b2262e3a4e03286ff977cf3041de38dab14",
+        "result_sha256": "dd93610e3891c1fe29cac4766aaa05e84330bc137814f79309e984e1408b9187",
+        "process_sha256": "3ba3131556d3996cea819f7fe0c526033e201bd2a54a6d0164afe1636170c530",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "341",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_1039 checked=22 reset_clear=True disabled_clear=True done_seen=True not_done_seen=True ramp_seen=True target_drop_seen=True soft_errors=0 metric_errors=0 done_errors=0 clear_errors=0 step_errors=0 clamp_errors=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "341-buck-soft-start-ramp-controller",
+        "source_files": {
+          "submission/buck_soft_start_ramp_controller.va": "d9ad22cd8cf888584de32c612c9d55c72949f9b890ed287d4dd7f5625a36ce1f",
+          "testbench/trusted_replay_test.scs": "92e511070cb8b1bda35d7844d58c690089aba910ba774db8b7067b74502fccba"
+        },
+        "input_identity_sha256": "c281649e27379b3d573b5af8f4a8046a93db27582d572196eed0bf0c1963bf94",
+        "result_sha256": "7d9b81986e5d066fcb5ba4e717e377f7f4b5cb12ed372e7b17d8b3176ca2127d",
+        "process_sha256": "26c4f3130a1db186039b8696399708df52d9c46890d1a3a6ce9514ba3c7759e5",
+        "response_sha256": "8ab7375d45d2da9464d410604680dcf3aa8ba11855b41e433a6cb5c948bdff64"
+      },
+      {
+        "family": "342",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_342 checked=3 mismatch_count=0 reset_clear=True reset_checks=14 trial_checks=15 completion_hold_checks=621 codes=[0, 7, 15]"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "342-sar-adc-system-4b",
+        "source_files": {
+          "submission/binary_weighted_cdac.va": "26e7545f439d18fa93973fed12b0543190a8c6da86c151b6b2902aab732b7612",
+          "submission/sample_hold.va": "b24033193e5e073d70996b347292b45afcbd2b49d3117faaf51745f38cb7c97c",
+          "submission/sar_adc_top.va": "bbefb24a14e56365bfe12a9a81a5a1282b307f2543ba76a62c21a125ad258a8c",
+          "submission/sar_comparator.va": "19802db02a59d426a41d00d93a4019482c2ac41d8970f4000688b86c3800981b",
+          "submission/sar_controller.va": "60df6bc19496b5f5b941376668e99fc60299423bf8d4570926432e08847be770",
+          "testbench/trusted_replay_test.scs": "a367e327c57429c800c5dc5ef8faa242d5e831a95c9e35650cbe34a1a438e587"
+        },
+        "input_identity_sha256": "575038f28e1d9ca3a1304a49c432e67c378f69658908afdb4451c002f47b0e7f",
+        "result_sha256": "60d89896051345bfd99c64e7098636d44c9c193ca34fb0d7230e370933728e7b",
+        "process_sha256": "3c0d5d985065f55811f02ac10562bc2d6431468a5d557fd7ac464ac07e214d85",
+        "response_sha256": "3fb7f775a5f6255cfae0c2e0a9a764fad4727bb1034583497bfa8b684dc507dd"
+      },
+      {
+        "family": "345",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_345 checked=35 mismatch_count=0 reset_clear=True directions=['down', 'up'] final_code=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "345-offset-calibrated-comparator-system",
+        "source_files": {
+          "submission/calibrated_comparator_top.va": "3a80dac7142aae182ac879d5487d7a97f36dce548de46a55c66fde0978981cd9",
+          "submission/calibration_fsm.va": "3623192e83e03c11b3ed96e176a247a12f23a5ff26c39279d42daa5ec6a01b62",
+          "submission/comparator_core.va": "595827f2e5e0c7ceb94697b9804a8e8a8e40b818afacf62bf1b64554e99fe525",
+          "submission/offset_dac.va": "9da00c80b79cd621b9621bfcfd01f4f50f70c4396c535e0974b065b6b9b96025",
+          "testbench/trusted_replay_test.scs": "6557952cb2f3432c7d3ad66ed0dd17bcb6922fa7b2774cfc4f2e4fcb4562c4aa"
+        },
+        "input_identity_sha256": "eaf5b90e21f88f716093b674b363438cd62771d49891ebe13331307e534135e8",
+        "result_sha256": "712da92a5f7434e826bf5f79c3529963706d76bf1e4731f95252712485086b5f",
+        "process_sha256": "57eeee59bbe1ca9d0c17bfa88ee84ab9ec7724a6000caac1b31515ab7a13b77a",
+        "response_sha256": "86c73d73187a1bbf12a4e3d465e2b702dd76fccc6296975277465bda70686c76"
+      },
+      {
+        "family": "347",
+        "status": "completed",
+        "checker": {
+          "status": "failed",
+          "note": "v4_347 checked=20 mismatch_count=2 startup_seen=True brownout_seen=True async_clear=True async_checks=394 mismatch_detail=P_PWR_SEQUENCE_ORDER mismatch_count=1 sample_time=1.351e-07 expected=rst_n_core=0 observed=rst_n_core=1 metric_gap=1; P_PWR_SEQUENCE_ORDER mismatch_count=1 sample_time=1.451e-07 expected=en_ana=0 observed=en_ana=1 metric_gap=1"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "347-power-reset-sequencer-system",
+        "source_files": {
+          "submission/enable_sequencer.va": "1955ff0a7575a610cfc69ca27a5ac851c34213cc44df033b4be2322d693d9764",
+          "submission/por_detector.va": "f4284e7a329d48f893dda36842b43370a078c7a09be59f89d13d872822a0a4ce",
+          "submission/power_reset_seq_top.va": "bf3796b5dadee6be331cad8f2f87142fe3f72ec8aed7c013a65b21b098d346c1",
+          "submission/ready_flag.va": "2e89160c8a0f291e245508b9bed60f1473564a3f63012d8ea5cd0c5919108894",
+          "submission/reset_synchronizer.va": "c387d13f69fcb5abc7b517a668b6ea2406b10a93691b8fb2b0a67397ad1e597d",
+          "testbench/trusted_replay_test.scs": "a780e9d0ee709e992a2b4962b5a079c8bdacfac300f8eb690aa664772dfe63cc"
+        },
+        "input_identity_sha256": "e22bc37ff1b5dca24ae2687747a539ae93c4f615fe8b83d68abf2c83f7c2cf85",
+        "result_sha256": "18143c0042edcc19d027cd981620dc733a7010b28d1e8b3ba70629a649e9a1dd",
+        "process_sha256": "0e28d89251b077949bc5688fd5bd1d9410a69401168bf21ab4c685365a633d6b",
+        "response_sha256": "986851df65b16fbf3d87964d954938bb0ef46b0be05278f581c658d6b67be2ef"
+      },
+      {
+        "family": "348",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/348/submission/gain_controller.va:52:35: expected ')', got '&'; outside affine-voltage syntax",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/348/submission/gain_controller.va",
+            "line": 52,
+            "column": 35
+          }
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "348-vga-gain-calibration-loop",
+        "source_files": {
+          "submission/gain_controller.va": "5a794e840fb0ee4aae2e5a4c37e37f152c2334710dccd0fc11be8ddacf9e63ff",
+          "submission/lock_detector.va": "da76cfc18b2748bd30fd30df3fe952e85828210c663c21b0cd47f8b506f39c31",
+          "submission/peak_detector.va": "e9d4776d496bccb63f33b9b317320360999c2fe5398677424d916a1f5bdd4529",
+          "submission/vga_cal_loop_top.va": "4367db4d4c86bd6119d484847b86ffea99290d4dfacb96fa6638fce2d73c495e",
+          "submission/vga_model.va": "4f880ed6acdc65ca12091408cb03dcc0504b54a2677ff2810d90966fd3a37c57",
+          "testbench/trusted_replay_test.scs": "81957c522419a4bc9cd88855917c52d3a23022550b16f1d2c523e7d0ba754870"
+        },
+        "input_identity_sha256": "997bb4299cee249e373daba4505e14cf7b95d9adb274a4d6fd57db7da1d6d21b",
+        "result_sha256": "54b76cf55f77535e2263706a9608e4699fab77e6df805a3f05ae799b9c90e2be",
+        "process_sha256": "c12cf7157443f015327cf4b4bf86a241b78519f9344905aff3a900ec72a2b437",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "349",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "syntax_error",
+          "category": "unknown",
+          "stage": "parse",
+          "capability": "LANG",
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/349/submission/mux_controller.va:54:34: expected ')', got '&'; outside affine-voltage syntax",
+          "hint": "Check the supported syntax and the source location.",
+          "location": {
+            "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/349/submission/mux_controller.va",
+            "line": 54,
+            "column": 34
+          }
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "349-multichannel-sample-readout",
+        "source_files": {
+          "submission/mux_controller.va": "662246fbd08bd30811407948363dfdccee6ea1f9ea024339bff63c2f9a9e28c9",
+          "submission/output_driver.va": "978385959e2ce966619aae1133c573a66f8de9e1b9333ee39997d40d8beebb4c",
+          "submission/sample_hold_bank.va": "5a41d645905bbedd0140a205b0a98142a36571371962eca78178030cdbb22075",
+          "submission/sample_mux_readout_top.va": "d1038e9690d3c7681d35e48c2cc1f15b43b4de885cb5d1e14f70b8696bc3f9df",
+          "testbench/trusted_replay_test.scs": "13ac2d25756e420f70ac17fbac50cabf598c9419485c884ada101a064a02846e"
+        },
+        "input_identity_sha256": "518c9777564609975865b557aed49c402cf0611be7cda5f38dd1a426c3995c6a",
+        "result_sha256": "d9a6a7ce9db3c4f0894d1b3c44c68d44f25033cc907cd3833d21e9d04ef50037",
+        "process_sha256": "5e20af8bdd56767df4c8a06e4c67ccacba16ad0566b8f81398eda53c12242721",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "352",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "P_OUTPUT_TRANSFER checked=15 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_EDGE_METRIC checked=15 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_SATURATION checked=15 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_EXCITATION checked=1 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "352-ctle-equalizer-macro",
+        "source_files": {
+          "submission/ctle_equalizer.va": "26469a3a22f53785457280f0071dd641f620f09eb7b8b937905afc3cf9fefa8a",
+          "testbench/trusted_replay_test.scs": "d3beb5ca0aff17ed17910a0e4dbebf7fc70a3cc0d7b6125e9d2cb988ad853fec"
+        },
+        "input_identity_sha256": "d98f9e72eea18da90b43d6c738f732e152a1be6573c9d12852d4d53421654142",
+        "result_sha256": "9645c65cf4d5692b742d8b763aee8d436562c61495cd28acfcbd4264d0aa7465",
+        "process_sha256": "6951beed31e2782248f410ca48dbaf7dfa1a87b1b1e085facd74f0dfeb5247c5",
+        "response_sha256": "4e19de08db48ba0e66695853690d4f0d72d0cb0ab640f6066de41509cfc04acf"
+      },
+      {
+        "family": "353",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "P_MAIN_TAP checked=18 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_PRE_TAP checked=18 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_POST_TAP checked=18 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_OUTPUT_SUM checked=18 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_RESET_HISTORY_CLEAR checked=1 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0 ; P_EXCITATION checked=1 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "353-ffe-transmitter-3tap",
+        "source_files": {
+          "submission/ffe_tx_3tap.va": "345a1a24f8e6f785a0b951de381cb99ea04c37b1df8980b01e3b96d15d5e45b6",
+          "testbench/trusted_replay_test.scs": "3630230aff338c903cec5fe246299c4be5ae0472d0f4745c9ee7f2837ccf3a00"
+        },
+        "input_identity_sha256": "5db23b618c7aacef59f09d92f069e01c79e4776a72f6eb59a0b0e9a2d8ddf545",
+        "result_sha256": "903e38712ad282e89f7743a4acc543a47b07bf6065209bcc80dcd64cf471c746",
+        "process_sha256": "169a40caf3738247fe9d8ad0b7a1602c5be0c873a9023902e54184443f202682",
+        "response_sha256": "8469207351a434eba72e17131b1c97e12f700af9c3cab94cfedfed8e6f07520e"
+      },
+      {
+        "family": "355",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "diagnostic_version": 1,
+          "kind": "compile_error",
+          "code": "compile_error",
+          "category": "unknown",
+          "stage": "compile",
+          "capability": null,
+          "message": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/355/submission/gray_mapper.va:23: ordinary analog if leaves local variable 'lsb_bit' unassigned",
+          "hint": null,
+          "instance": "XDUT/u_gray_mapper"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "355-pam4-tx-driver",
+        "source_files": {
+          "submission/gray_mapper.va": "146072ca1a4ce4525f07bcc6d5ded646b06712dd74394409174ed0c8c912ea51",
+          "submission/level_dac.va": "b9bb93d903d130e0cb6c9e05febc90823913ae356acc2ba2e2e7575cb8b1cffe",
+          "submission/pam4_tx_top.va": "791b7ec361bf6f43318ec36fd3fa29a5d728ee718da6ca791dccd1486a89d949",
+          "submission/preemphasis_driver.va": "bf0aaf3c40204900a75e1f754a54245af15b64abfc57ebed484a1fe7f80fc912",
+          "testbench/trusted_replay_test.scs": "00f1d317265601849a1a673ae7aeb4fcea6c2d049f43bf6c35f83c83a45a440e"
+        },
+        "input_identity_sha256": "f86e4409afeb28f779fc971709deb0386eb4d1ea1a3d2a9e65cfe0435c1296f1",
+        "result_sha256": "3e858c92eb1bf824273fd0887c826ae58cd47a16ca9e75374ad1e87f0b9e1b14",
+        "process_sha256": "299a540ceab06905172e4ea0d2964e3449bac3fb1f0c29d401aa10fc375b14c7",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "356",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "condition_precision",
+          "message": "isolated source-target point or third boundary value",
+          "diagnostic_version": 1,
+          "code": "kernel.condition_precision",
+          "stage": "kernel",
+          "category": "unknown",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "356-sst-driver-impedance-macro",
+        "source_files": {
+          "submission/sst_driver_macro.va": "fefd26ab9366972a407635dc0d226c9f2a594f5b192c6779ab23911926509a2c",
+          "testbench/trusted_replay_test.scs": "3db34d1646b12d063baa92219b079238de393c67aa21f951ea42e293c8cfe262"
+        },
+        "input_identity_sha256": "b108b9e29599b9c06c1fb4327e0d42ef5493d9f92323caa4cb74f98a19753730",
+        "result_sha256": "85235bc05c34ba23f9fe29fa55f0355fb56b30ab911a593e49507dbccf4d11aa",
+        "process_sha256": "4989832b4873aef28c150961938afddb59796953d2999a9e0af7c04a0f01cd0c",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "357",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "unsupported_cross",
+          "message": "simultaneous event condition reads state written by another selected block at /Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/v4-gold-main-20261016-232304/cases/357/submission/bbpd.va:70:13 (XDUT/u_bbpd)",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_cross",
+          "stage": "kernel",
+          "category": "unsupported",
+          "capability": "CROSS"
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "357-bangbang-cdr-loop",
+        "source_files": {
+          "submission/bbpd.va": "8f8fbaf51164ee6521f60a0af8851b85d4d31bf96d8c459bd38e6d49408ecbb0",
+          "submission/cdr_top.va": "2c595d5cd5768fdff848444a3302ca1a053034db471141faea419731f8be2b40",
+          "submission/loop_filter_code.va": "e1dcd5e65948b9d1571454419c990d491437d6694b321ddfe60acdfc0dabe6e3",
+          "submission/phase_rotator.va": "ae9fa33513e4f17b6fe2886bbfcaa880bddf304b002101d5b733de3fcc940176",
+          "testbench/trusted_replay_test.scs": "ef640e8403dd7fb707f8da3509364aa5cec014949f14789708117d49bfd20983"
+        },
+        "input_identity_sha256": "057170e816a3e5a4091852fc51da8c6f051d0446624079f0ea9fa2481535afa8",
+        "result_sha256": "3239c3e5d33cce5c2f6503c50d16b6a6e19830b5d3fbe65c91349b6949a2f05c",
+        "process_sha256": "fae8f9c11003bbe4c3f7dcc5622e2a80857a67d395177c644984f077d3cd632c",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "361",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "waveform_accuracy",
+          "message": "cannot certify same-time forward error at XDUT:edge_error: bound 1.605321431341622e-11, budget 1.0999999998544504e-11",
+          "diagnostic_version": 1,
+          "code": "kernel.waveform_accuracy",
+          "stage": "kernel",
+          "category": "numerical",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "361-dll-delay-line-lock",
+        "source_files": {
+          "submission/delay_line.va": "cf8f8a56ab287887a4796f49cc107e4a1246ff1496d35a784b50993d97695499",
+          "submission/dll_top.va": "f2fabea87043ac4ba69e83f3ebcde34ae3174ed923091b783bc6980ce3efe235",
+          "submission/lock_detector.va": "1d0514b5bfbb38c3fbd9b6b146ba98c4b8a9f68d02000b5213dce2265bc18ae6",
+          "submission/phase_detector.va": "9d8cb6100d83b65970f337b2b3022f73aa0f791eb2b04dcaac6b3d404b4d32b2",
+          "testbench/trusted_replay_test.scs": "af951b194c9949bd5bc6a9798725c35de74691daa6792efec21859598cd25af9"
+        },
+        "input_identity_sha256": "03c6a63427b8eccc5c06a72b37cb26a0eda6fe6199f40d90306f57fccfd56d7c",
+        "result_sha256": "6a5b692f9e86aea74b2bb482ab0f155b7512c7b80a87aebe4289826b5773d04f",
+        "process_sha256": "a1c83b68192496bf484349b7e1e4b0de1b6a4f02fa1606be4a7e9b1d38bb6502",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "363",
+        "status": "rejected",
+        "checker": {
+          "status": "not_run"
+        },
+        "diagnostic": {
+          "kind": "unsupported_source_uncertainty",
+          "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds",
+          "diagnostic_version": 1,
+          "code": "kernel.unsupported_source_uncertainty",
+          "stage": "kernel",
+          "category": "unknown",
+          "capability": null
+        },
+        "baseline_status": "rejected",
+        "complete_response_unchanged": null,
+        "cleanup_confirmed": true,
+        "task_name": "363-fractional-n-synthesizer-mini-loop",
+        "source_files": {
+          "submission/accumulator.va": "e85287eab7ba2247840abf602134aac06e5462d27e185e59e149f91b2d3a8407",
+          "submission/fracn_synth_top.va": "e247bfa9f71b3486a159a18dccf874a93ad2a03825b1c1a78cfc8a86a668b3b7",
+          "submission/multi_modulus_divider.va": "e64142f80aa21d098ff11ff5e53a6deab55886af451de3e4ef8c79c49108b026",
+          "submission/ratio_monitor.va": "96e4064b0c1c563dbbbf7cb93ca672a62ad960f06649b3d3bb3fdb34adc8b741",
+          "testbench/trusted_replay_test.scs": "8cd690be555276ddd3bc9c679e44b58c30305563ad91c6cc22f447da5cec68fe"
+        },
+        "input_identity_sha256": "4b5d7aed8b121d22b954b37d08aae5757fcbb4e0adf7b5a3cf2211f04654736b",
+        "result_sha256": "38e33c6024e970bcbedfe19f07fee9831025c4b03b1a1ae80ac5419ddb9b355f",
+        "process_sha256": "9463f0cd454f7f3cf086b1d9eaea45d214e8e717bc5d87720a2248e203506cd4",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "family": "367",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "P_RESET_DISABLE_CLEAR status=PASS mismatch_count=0 allowed=0 checks=3 expected=gain=4,vout=vcm,metrics_flags=0 observed=max_clear_gap=0 time=0 gap=0 | P_LEVEL_GAIN_CONTROL status=PASS mismatch_count=0 allowed=2 checks=18 expected=level=abs(vin-vcm),gain_moves_to_target observed=clock_checks=18 time=0 gap=0 | P_VGA_FILTER_RESPONSE status=PASS mismatch_count=0 allowed=1 checks=18 expected=alpha=0.25_toward_unclamped_vga_then_rail_clip observed=samples=18 time=0 gap=0 | P_CLIP_AND_SETTLE status=PASS mismatch_count=1 allowed=1 checks=18 expected=clip_on_raw_excursion,settled_after_three observed=clip_seen=True settled_seen=True time=5.9025e-08 gap=1"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "367-baseband-agc-filter-chain",
+        "source_files": {
+          "submission/agc_chain_top.va": "19c55b926bbbbf0511137ec65b38cbf83b39900fc66c294468f3bfc257e02ce5",
+          "submission/filter_stage.va": "a9150d5541e461a25c2c3a59f407f2565cd9b49d3b2e4743ca6dabd59f514e0f",
+          "submission/gain_controller.va": "d2fb3135aff3f2787a27b0de6d24231d8eb6390ad419299561b6996413baff41",
+          "submission/level_meter.va": "432efb337f3e3abb41dcc9fc4725c7d1acb12d0f75d09aad2c852ac7dad4b93e",
+          "submission/vga_stage.va": "27d06d9213cf72d99e1047563e8053fd6ff8e38485e3520f250bb998ec53b290",
+          "testbench/trusted_replay_test.scs": "5a409bd7ff3e63980c59abb8bf8d758201fe4d0fb9adc8b6cffd15577656c900"
+        },
+        "input_identity_sha256": "390dc48c11cdf3bfc56ad493dead55463b2ffcd9b4b852c0812f237240d8812d",
+        "result_sha256": "1e8cbfa8905783bc7f19a5f02b93d00b08f3cf334248c23ceabf873f256625cf",
+        "process_sha256": "00ad8db6e84940c157e4130f6b93947c2cca5025a95f4653d25d1f198bf3194b",
+        "response_sha256": "961c6c8295bc0ec25909f7b77579c146d9af5b06c07573a41bc3cc4508cff0e4"
+      },
+      {
+        "family": "375",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_nonoverlap_clock rise=8 fall=7 errors=0 overlap=0 dead_seen=True valid_seen=True reset_clear=True disabled_clear=True disable_clears=True clear_errors=0 valid_errors=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "375-nonoverlap-clock-generator",
+        "source_files": {
+          "submission/nonoverlap_clock_generator.va": "987fce5a593b448297f6b09059ce2ca44305a93df9418d86507dfa76b3353cad",
+          "testbench/trusted_replay_test.scs": "39d4e0511a1ce718a753acfa5adb4f7ecb2a25075987a01fc8d9024ffa1e316e"
+        },
+        "input_identity_sha256": "2d23524e968b8ed5fef456f169b89249330cb31a8e71a3d71dea6a58df37614c",
+        "result_sha256": "d0c8e1dace8ddade6be678d3b95ae3a56ae68c080629eb7dd87d218c0bd2c4c5",
+        "process_sha256": "b20351f3820468b2332bb5ffa57b7b5a98ae1ec15bc2feca143b3884dbe21ae1",
+        "response_sha256": "dfe367511d510b0d4a6fbcc1ea1e9706ee0860d4fbe1bd4e1279aee9b4b7007b"
+      },
+      {
+        "family": "376",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_pwm_ramp checked=21 wraps=2 highs=13 lows=5 errors=0 reset_clear=True disabled_clear=True clear_errors=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "376-pwm-ramp-modulator-front-end",
+        "source_files": {
+          "submission/pwm_ramp_modulator.va": "89ad02b6b11d7d4512009e9104a59810cb9d8dc960fe89dddcbe3aa8379184ed",
+          "testbench/trusted_replay_test.scs": "6ab72e88c5e4f67820bf0bc1858d84d45628a1caeeabc9ba858dceefef8de425"
+        },
+        "input_identity_sha256": "f7607c32d93ee14f9fc0d7bdebb716708df5325d3896efe2d57c290591db01e0",
+        "result_sha256": "e9f345b78252e79531d87ecb9863ae7d03b462e9db017c7d7c58f9e2f073abf5",
+        "process_sha256": "8697fbff03636882db7a1c400a9dd5678e56e900ef53f4808805e1c438caf115",
+        "response_sha256": "f7b97fbcafefd886dc8e152b72534d96e49cddc8b9a8a33d27418c39385fb507"
+      },
+      {
+        "family": "379",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_periodic_sampler checked=12 disabled_hold_checks=2 metric_nonzero=True errors=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "379-periodic-sampler-aperture-metric",
+        "source_files": {
+          "submission/periodic_sampler_aperture_metric.va": "7a6dfbd4c1e0e5b72ac01dbb862a4ce9a67fcc4a867f3985fcdece421c1eebe2",
+          "testbench/trusted_replay_test.scs": "00070125d0f16759477ef06cec9282a59f1c3b6e9ce25375d0bf99531a8ace27"
+        },
+        "input_identity_sha256": "e9fbc6cbb792fce26a6c1fab6727972233d39bca95f5026d91dac6e4dda480a0",
+        "result_sha256": "5d0c119286698046a460e4f5139d343763150f5fe817a764a69ee157edb97466",
+        "process_sha256": "84d4d9c49f7f3286c56cc3da37d1ed099aef6c369d2f293112b45780ab502216",
+        "response_sha256": "3f0d3d6e56a6acb8ee2fc20af87b7bbcf96f06a40ed5c9ca711b2ed486a1c260"
+      },
+      {
+        "family": "382",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_programmable_divider checked=32 toggles=9 divisors=[1, 2, 3, 6, 8, 9, 11] clk_errors=0 metric_errors=0 valid_errors=0 first_error_time=None reset_clear=True disabled_clear=True clear_errors=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "382-programmable-frequency-divider",
+        "source_files": {
+          "submission/programmable_frequency_divider.va": "099ae5dd624af3673a7c32ea61573194b1e66674c48dfaf24ec77b54add82997",
+          "testbench/trusted_replay_test.scs": "d9dc464563507fdb5b2328c5e3e216eacb4f8daaba40e165f3fa83fb0df6a9a8"
+        },
+        "input_identity_sha256": "fc5ea3c606a33a51f549bef7dfce1c1a458df06f025a27ce7804c976eb131bcc",
+        "result_sha256": "c619e8f947ba555c1ba7ba79cb025c96f2ee401a5bc1498a8fa5668dd35bff97",
+        "process_sha256": "78258be85c28cf5e505e30386db28e60626a74eca80402a9024682bc7c6191ae",
+        "response_sha256": "94fe4280f6bb32e24b0f89aad90899e8ef2b06b30e5d6c44bcfa58d0aaf47dc0"
+      },
+      {
+        "family": "394",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "task=v4_394_pam4_slicer_gray_decoder | P_RESET_DISABLE_CLEAR:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_RISING_EDGE_SAMPLE_HOLD:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_PAM4_THRESHOLDS:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_GRAY_MAPPING:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_LEVEL_METRIC:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | coverage=hold_checks:3,inactive_rows:150,levels:4,samples:10"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "394-pam4-slicer-gray-decoder",
+        "source_files": {
+          "submission/pam4_slicer_gray_decoder.va": "21b261dc32fff4cbcdf1ef38f3bfed35fe1531a39ff85b1ecdd8817d71a87abc",
+          "testbench/trusted_replay_test.scs": "5c56bfc482218c7a1201f439c908ea340d9c32adf14cf44a97f6b94ddf9ecd9f"
+        },
+        "input_identity_sha256": "c72a5d2585bb5112490ea69876a9fd8c4b7dcf8a7db1840e5f35922deb5c9a2d",
+        "result_sha256": "257ce76215c5d0e2c4ffe44b32672e45550440bb9a45ceeeca794e408723d6e5",
+        "process_sha256": "758fb820d728a328c4dbf91765cceabe0fb84aa56fe1a9134cd0a4c18c4937fc",
+        "response_sha256": "02d11fb9a3afb9237cdd44dfd60d48f53479f99f69039de4eb97b98d464dec1e"
+      },
+      {
+        "family": "395",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "task=v4_395_clock_data_valid_qualifier | P_RESET_DISABLE_CLEAR:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_DATA_EDGE_RESTART:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_CLOCKED_AGE:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_INCLUSIVE_WINDOW:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_REGISTERED_METRIC:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | coverage=age3_samples:2,clock_edges:13,data_edges:4,expired_samples:4,inactive_rows:149"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "395-clock-data-valid-qualifier",
+        "source_files": {
+          "submission/clock_data_valid_qualifier.va": "ac6bcabda38775e0970e8fc03b2cd20dadfdfa21a480465e998d6a024d80c887",
+          "testbench/trusted_replay_test.scs": "58170e2b23c39ac5bd838c118a493ed6e87bc0e909cd594176ebc47f2e8fc913"
+        },
+        "input_identity_sha256": "dace4f408de434e4cd2d34b014297ef7543d200529a150b5a6228b736beaba03",
+        "result_sha256": "76e6851a97507f2ea000bc8bde39092ec07857c9388fea1b6126fcfe5cdd0650",
+        "process_sha256": "e77a512a1f8d2ce3c7b183803f7bc5d6a57373c99a804102598e3d5b94392d22",
+        "response_sha256": "984b7b494a937747859e9655acba31316d405d063daa0e8be7c2fce86c3fed12"
+      },
+      {
+        "family": "397",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "v4_baseband_trim checked=17 gain_codes=[0, 1, 2, 4, 5, 6, 7] offset_codes=[1, 2, 3, 4, 6, 7] clipped=True disabled=True errors=0 hold_checked=16 hold_errors=0"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "397-baseband-offset-gain-trim-macro",
+        "source_files": {
+          "submission/baseband_offset_gain_trim_macro.va": "6533b05122c22a13d16fa31ef202dcb0d89bdcdf3b233bf4b8e8d578104cf082",
+          "testbench/trusted_replay_test.scs": "cbf9ecce0b3be426a3bbb8b1256b4f5c4960a7ef97c61836416cf001a12260db"
+        },
+        "input_identity_sha256": "f10218e47bd42f4ed995ef08117b4ad9ae3f286805f1507b1459bb8fefa0ef0a",
+        "result_sha256": "6092085fb732c1b16f9f1324dfcd7ca9c881d6279b2338d4ed17e20463c2aad8",
+        "process_sha256": "03ff29e20693b14323f0de172f2d05af170fc7f9884f7609b8abda2139e173eb",
+        "response_sha256": "4a41aeadb56abafa19c7ebd4553475e6db6a56923ee018717b6c53105ec7ba7b"
+      },
+      {
+        "family": "399",
+        "status": "completed",
+        "checker": {
+          "status": "passed",
+          "note": "task=v4_399_supply_supervisor_brownout_por | P_RESET_DISABLE_SAFE:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_UVLO_HYSTERESIS:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_RELEASE_DELAY:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_DIP_RESTART:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | P_STATE_METRICS:mismatch_count=0 expected=contract_satisfied observed=contract_satisfied time=NA gap=0 | coverage=clock_edges:17,fall_crossings:1,inactive_rows:175,released_samples:556,rise_crossings:2; diagnostic_schema=v4-checker-diagnostic-v1 status=pass category=behavior_pass event=stimulus_relative event_context=stimulus_relative expected=public_contract observed=trace"
+        },
+        "diagnostic": null,
+        "baseline_status": "completed",
+        "complete_response_unchanged": true,
+        "cleanup_confirmed": true,
+        "task_name": "399-supply-supervisor-brownout-por",
+        "source_files": {
+          "submission/supply_supervisor_brownout_por.va": "ccfab693d04837c0f8d19d8e12fa17720ca356afd52c139aeaf6bc7bf9d76d5d",
+          "testbench/trusted_replay_test.scs": "01ed2cbd0c15032b37a6b7d3327e62f0595b55661f577c1be66708a560b389af"
+        },
+        "input_identity_sha256": "cb0457bcad3d8ae637fd27273478db8acc738359b42d37227453ffe024b20e2c",
+        "result_sha256": "d92d70c97076abbd460627d6c662c8e0085f1a34e666077f1ecc1d87dce2d4f9",
+        "process_sha256": "9b7104a29761dfee904bd88c7c3dd979828ba2acf248bc34517355a54debdfbc",
+        "response_sha256": "6bfe553335ea30e551658301a563466900a264df582adbdefb763146f724f248"
+      }
+    ]
+  },
+  "independent_checks": {
+    "public_python_consumers": {
+      "passed": 99,
+      "log_sha256": "1bd0bf40c9f06e4eacdaa1a6174f41e37466f5085a3298b1d1c88068cf00310c"
+    },
+    "rust_kernel": {
+      "passed": 402,
+      "ignored": 1,
+      "log_sha256": "419167d84e1e965098e772f6bc45ba44d1af819fd55c266d34122b5350cceef0"
+    },
+    "rust_ir": {
+      "passed": 2,
+      "log_sha256": "8c3505210d979a2ba3c4c3e0d57fa25a0fd8302c4f1915f94e2ae36e04b15cf8"
+    },
+    "red_log_sha256": "4e52c4e24cd52336ffe87b07e82977b7b53214f1978bea279127fb9d15ad90a9",
+    "green_log_sha256": "6bb023dbbbb3d538ba5c6ec7ab499bfcf2c03ce09ad021760d83a24700f94550",
+    "oracle": "Fraction from original binary64 timer period and finite linear ramp; physical callback state and root enclosure; ordinary/forced queries"
+  },
+  "research": {
+    "standard": "Verilog-AMS LRM2.4 section4.5.8 transition and5.10.3.3 timer: piecewise held smoothing, timer point at or beyond root; reuse operators.md fixed references",
+    "legacy": "6cb6fa7a7dac70fc0d4120126d8cf74258e6637b:evas/rust_core/src/transition.rs and evas/simulator/event_transition_plan.py; point-history diagnostic planner, no certified root/window equivalent",
+    "public_implementation": "Gnucap100e7469fa2f758b4de0492ec1374266820cbfcd mgsim/d_va_absdelay.cc tr_advance/tr_regress; reuse operators.md tr_accept comparison; point simulation cannot replace enclosure certificates",
+    "paper": {
+      "title": "Goldstein et al. Multiscale Representation of Simulated Time (2018)",
+      "url": "https://www.research.autodesk.com/publications/multiscale-representation-of-simulated-time/",
+      "relevance": "Floating point scheduling representation and root distinction; no drop-in validated history proof API"
+    },
+    "decision": "Reuse current candidate-owned source plan and immutable exact-root/window certificates. Diagnose boundary invariant before changing semantics; no new integration or dependencies."
+  },
+  "limits": [
+    "Both original requests remain refused, so zero additional original-checker passes.",
+    "No new actual Spectre execution, no new alignment/qualification.",
+    "Old fixed400/213 evidence and denominators unchanged; scoped subset only.",
+    "347 complete response identical, old checker failure and te=tau preserved.",
+    "Draft PR208; not merged."
+  ],
+  "availability": {
+    "raw": "local-only",
+    "root": "runs/evas-source-shape-20261017/history-advance-101-314",
+    "source_snapshot": "final-release/source.tar.gz",
+    "original_raw": "affected-originals/<family>/{response.json,RESULT.json,PROCESS.json}",
+    "public": "This compact receipt and public regression; original gold source/waveform archive is not published"
+  }
+}

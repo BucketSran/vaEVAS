@@ -157,9 +157,146 @@ pub(crate) fn sqrt(input: I) -> Result<I, Error> {
     })
 }
 
+// For a>=0 use exp(-2a), never exp(2a). Above256 the existing
+// exp(-512) analytic upper bound encloses the complete remaining tail.
+// Branch before multiplying by2 so even finite f64::MAX has no overflow.
+fn tanh_negative_exp(a: f64) -> Result<I, Error> {
+    let value = if a > 256.0 {
+        I {
+            lo: 0.0,
+            hi: exp_point(-512.0)?.hi,
+        }
+    } else {
+        exp_point(-2.0 * a)?
+    };
+    Ok(I {
+        lo: value.lo.max(0.0),
+        hi: value.hi.min(1.0),
+    })
+}
+
+fn tanh_positive_point(a: f64) -> Result<I, Error> {
+    let e = tanh_negative_exp(a)?;
+    let value = (I::ONE - e) / (I::ONE + e);
+    // Mathematical range, independent of the nominal platform tanh.
+    Ok(I {
+        lo: value.lo.max(0.0),
+        hi: value.hi.min(1.0),
+    })
+}
+
+fn tanh_point(x: f64) -> Result<I, Error> {
+    if x < 0.0 {
+        Ok(-tanh_positive_point(-x)?)
+    } else {
+        tanh_positive_point(x)
+    }
+}
+
+/// Monotone real tanh, bounded with the already certified exponential map.
+pub(crate) fn tanh(input: I) -> Result<I, Error> {
+    if !input.finite() || input.lo > input.hi {
+        return Err(domain("tanh requires a finite ordered input interval"));
+    }
+    Ok(I {
+        lo: tanh_point(input.lo)?.lo,
+        hi: tanh_point(input.hi)?.hi,
+    })
+}
+
+fn tanh_derivative_point(a: f64) -> Result<I, Error> {
+    let e = tanh_negative_exp(a)?;
+    let denominator = I::ONE + e;
+    // 4e/(1+e)^2 avoids subtracting a rounded saturated tanh square from1.
+    let value = I::point(4.0) * e / (denominator * denominator);
+    Ok(I {
+        lo: value.lo.max(0.0),
+        hi: value.hi.min(1.0),
+    })
+}
+
+/// sech^2 is even and decreases with |x|. Crossing zero gives exact upper1.
+pub(crate) fn tanh_derivative(input: I) -> Result<I, Error> {
+    if !input.finite() || input.lo > input.hi {
+        return Err(domain(
+            "tanh derivative requires a finite ordered input interval",
+        ));
+    }
+    let far = input.lo.abs().max(input.hi.abs());
+    let near = if input.lo <= 0.0 && input.hi >= 0.0 {
+        0.0
+    } else {
+        input.lo.abs().min(input.hi.abs())
+    };
+    Ok(I {
+        lo: tanh_derivative_point(far)?.lo,
+        hi: tanh_derivative_point(near)?.hi,
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn tanh_high_precision_reference_points_and_derivatives() {
+        // Independently generated with Decimal.exp at500 digits, using
+        // (exp(x)-exp(-x))/(exp(x)+exp(-x)) and4/(exp(x)+exp(-x))^2.
+        for (x, value, derivative) in [
+            (0.1, 0.09966799462495582, 0.9900662908474398),
+            (0.5, 0.46211715726000974, 0.7864477329659274),
+            (1.0, 0.7615941559557649, 0.4199743416140261),
+            (2.0, 0.9640275800758169, 0.07065082485316447),
+            (10.0, 0.9999999958776927, 8.244614455767397e-9),
+            (30.0, 1.0, 3.502604305078608e-26),
+            (256.0, 1.0, 1.7509964148212205e-222),
+        ] {
+            let bounds = tanh(I::point(x)).unwrap();
+            let slope = tanh_derivative(I::point(x)).unwrap();
+            assert!(bounds.lo <= value && value <= bounds.hi, "{x}: {bounds:?}");
+            assert!(
+                slope.lo <= derivative && derivative <= slope.hi,
+                "{x}: {slope:?}"
+            );
+            assert_eq!(tanh(I::point(-x)).unwrap(), -bounds);
+            assert_eq!(tanh_derivative(I::point(-x)).unwrap(), slope);
+        }
+    }
+
+    #[test]
+    fn tanh_monotone_endpoints_and_derivative_peak() {
+        assert_eq!(tanh(I::ZERO).unwrap(), I::ZERO);
+        assert_eq!(tanh_derivative(I::ZERO).unwrap(), I::ONE);
+        let range = tanh(I { lo: -1.0, hi: 2.0 }).unwrap();
+        assert_eq!(range.lo, tanh(I::point(-1.0)).unwrap().lo);
+        assert_eq!(range.hi, tanh(I::point(2.0)).unwrap().hi);
+        let slope = tanh_derivative(I { lo: -1.0, hi: 2.0 }).unwrap();
+        assert_eq!(slope.lo, tanh_derivative(I::point(2.0)).unwrap().lo);
+        assert_eq!(slope.hi, 1.0);
+        let negative = tanh_derivative(I { lo: -2.0, hi: -1.0 }).unwrap();
+        assert_eq!(negative.lo, slope.lo);
+        assert_eq!(negative.hi, tanh_derivative(I::point(1.0)).unwrap().hi);
+    }
+
+    #[test]
+    fn tanh_tail_branch_precedes_scaling_and_rejects_nonfinite_input() {
+        for x in [257.0, 600.0, 1000.0, f64::MAX] {
+            let bounds = tanh(I::point(x)).unwrap();
+            let slope = tanh_derivative(I::point(x)).unwrap();
+            assert!(bounds.lo > 0.999999999999 && bounds.hi == 1.0);
+            assert_eq!(slope.lo, 0.0);
+            assert!(slope.hi > 0.0 && slope.hi < 1e-220);
+        }
+        for input in [
+            I::point(f64::INFINITY),
+            I::point(f64::NEG_INFINITY),
+            I::point(f64::NAN),
+            I { lo: 1.0, hi: -1.0 },
+        ] {
+            assert!(tanh(input).is_err());
+            assert!(tanh_derivative(input).is_err());
+        }
+    }
+
     #[test]
     fn exact_identities_and_domains() {
         assert_eq!(exp(I::ZERO).unwrap(), I::ONE);

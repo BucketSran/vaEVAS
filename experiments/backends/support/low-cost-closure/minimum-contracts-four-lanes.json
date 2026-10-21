@@ -1,0 +1,418 @@
+{
+  "schema_version": 1,
+  "status": "local_uncommitted_minimum_contracts",
+  "recorded_at_utc": "2026-10-20T17:36:50.775936+00:00",
+  "base_commit": "19cf340fb816df798b7f41cf200971081572d8d5",
+  "branch": "codex/evas-source-shape",
+  "version": "0.24.1",
+  "ir": 32,
+  "publication": "uncommitted; not merged/released; existing draft PR208 unchanged",
+  "access": "Raw evidence, binaries and execution logs are local-only on T7; hashes are not public download links.",
+  "evidence_root": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021",
+  "source_root": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current",
+  "source_identity": {
+    "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/review/final-source.json",
+    "sha256": "d081776658da14e2d69bb9ae76e08419f50a660a89fa48a0ff984a9d70836149"
+  },
+  "changed_sources": {
+    "evas/rust_core/src/analytic_source.rs": "d6c781c4e48466aee4f348c298812009862fe6c762d48832135d3237b89d0f6d",
+    "evas/rust_core/src/dc_projection.rs": "cf601d3191dfa4dbaba156e81876d864cbe5360db31321c894ffa9bc4352bafb",
+    "evas/rust_core/src/event_time_provenance.rs": "42385e9e983e79b94805f5c0e5be4c559d9e457e7d3443d334c30e43ac74179a",
+    "evas/rust_core/src/events.rs": "c9db2fa63737f63cc64f7bf668ba901d32eb721e262bafbb1f1c36394d446662",
+    "evas/rust_core/src/history_admission.rs": "48246828b4a9ca885a789146daf3cf0487aff723b078ad72cbdb044a5b376106",
+    "evas/rust_core/src/transition_source_plan.rs": "8e2ad45a0a8fd26d954b9bf31ef33584156b454ec64d3f2810737aec82322ed0",
+    "evas/src/evas/scs.py": "ceae2e318c8de9a5306802a1d78615525e1993e8726663e18d6bf83d6a253136",
+    "evas/src/evas/scs_sources.py": "23a4212466366474c9d9c17edf2c9c025fb8a0d163aa20d69c3487cf03676491",
+    "evas/tests/test_analytic_sources.py": "3edc072b6172b9b76a5607f6413f21a386b0b33ac4adef926e03ac98bbca697f",
+    "evas/tests/test_dc_held_ramp_contract.py": "1d5fa7227f887ed89f69022aad6cf453cf1033b2253bd49b4b790b1688b57e72",
+    "evas/tests/test_deadline_origin_contract.py": "5af89104df4ec7a17036a2ccc4b75a2c00f2eb9887e59bf1165d0dc278f4c558",
+    "evas/tests/test_held_timer_provenance.py": "add9c011b11a0dc9bb5e44cb1cfeb8dbfb8c8796796dccdce43983d31754a030",
+    "evas/tests/test_history_owner_contract.py": "c94f08238d14d45a237705e9861c52d5bcf6236084c8d3078b209462c90a2d18",
+    "evas/tests/test_scs_native_source_contract.py": "f7d9b0fb5f6df8ad80e1df44292e45fddf4b8bf2d69e42489cddddc86bba80bc"
+  },
+  "kernel": {
+    "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/abcd-kernel3/fc2c6c22b425b3f3c36e1652e72b2f579f81bfdf2454eac961312fa0eaff5b05/evas-kernel",
+    "sha256": "fc2c6c22b425b3f3c36e1652e72b2f579f81bfdf2454eac961312fa0eaff5b05"
+  },
+  "rust_test_binary": {
+    "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/abcd-rust-tests3/01a1791c2556cd9c2c8442554371115cf837a3497587bc117cd10646846fe3cf/kernel-tests",
+    "sha256": "01a1791c2556cd9c2c8442554371115cf837a3497587bc117cd10646846fe3cf"
+  },
+  "rust_build": {
+    "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/abcd-build3/execution.receipt.json",
+    "sha256": "cb9032155e6699f88f9e081aa13ded182d400f31087f54ac291d1c7e1cc559ec"
+  },
+  "rust_build_inputs_match_current": true,
+  "checks": {
+    "python_unique_passed": 46,
+    "rust_unique_passed": 39,
+    "duplicates": 0,
+    "early_integration_groups": 3,
+    "executions": [
+      {
+        "action": "acd-python-final",
+        "language": "python",
+        "count": 36,
+        "tests": [
+          "test_kernel_rejects_unknown_origin_and_nonzero_forged_default (test_scs_native_source_contract.NativeSourceKernelContracts.test_kernel_rejects_unknown_origin_and_nonzero_forged_default)",
+          "test_native_default_and_phase20_70_follow_zero_phase_in_actual_kernel (test_scs_native_source_contract.NativeSourceKernelContracts.test_native_default_and_phase20_70_follow_zero_phase_in_actual_kernel)",
+          "test_Meg_decimal_exponent_and_signed_values_without_frequency_domain_changes (test_scs_native_source_contract.NativeSourceParserContracts.test_Meg_decimal_exponent_and_signed_values_without_frequency_domain_changes)",
+          "test_continued_statement_preserves_parameter_reference_tokens (test_scs_native_source_contract.NativeSourceParserContracts.test_continued_statement_preserves_parameter_reference_tokens)",
+          "test_native_Meg_M_m_preserve_distinct_scales (test_scs_native_source_contract.NativeSourceParserContracts.test_native_Meg_M_m_preserve_distinct_scales)",
+          "test_native_origin_keeps_original_tokens_and_small_signal_phase_metadata (test_scs_native_source_contract.NativeSourceParserContracts.test_native_origin_keeps_original_tokens_and_small_signal_phase_metadata)",
+          "test_omitted_zero_phase_has_native_origin_not_explicit_origin (test_scs_native_source_contract.NativeSourceParserContracts.test_omitted_zero_phase_has_native_origin_not_explicit_origin)",
+          "test_phase20_70_do_not_become_transient_sinephase (test_scs_native_source_contract.NativeSourceParserContracts.test_phase20_70_do_not_become_transient_sinephase)",
+          "test_unknown_spellings_delay_modulation_and_parameters_stay_rejected (test_scs_native_source_contract.NativeSourceParserContracts.test_unknown_spellings_delay_modulation_and_parameters_stay_rejected)",
+          "test_nextafter_duration_and_declaration_order_do_not_merge_histories (test_deadline_origin_contract.DeadlineOriginContract.test_nextafter_duration_and_declaration_order_do_not_merge_histories)",
+          "test_shared_nonpoint_held_epoch_equal_shifts_match_independent_ramps (test_deadline_origin_contract.DeadlineOriginContract.test_shared_nonpoint_held_epoch_equal_shifts_match_independent_ramps)",
+          "test_shared_origin_different_fixed_shifts_preserve_physical_waveforms (test_deadline_origin_contract.DeadlineOriginContract.test_shared_origin_different_fixed_shifts_preserve_physical_waveforms)",
+          "test_unproved_irrational_interrupted_deadlines_remain_rejected (test_deadline_origin_contract.DeadlineOriginContract.test_unproved_irrational_interrupted_deadlines_remain_rejected)",
+          "test_bound_step_caps_committed_controller_segments (test_dc_held_ramp_contract.DcHeldRampContract.test_bound_step_caps_committed_controller_segments)",
+          "test_dc_rail_product_restarts_at_exact_held_timer_epochs (test_dc_held_ramp_contract.DcHeldRampContract.test_dc_rail_product_restarts_at_exact_held_timer_epochs)",
+          "test_extra_queries_preserve_wrap_and_future_phase (test_dc_held_ramp_contract.DcHeldRampContract.test_extra_queries_preserve_wrap_and_future_phase)",
+          "test_future_rail_change_is_not_a_whole_domain_dc_certificate (test_dc_held_ramp_contract.DcHeldRampContract.test_future_rail_change_is_not_a_whole_domain_dc_certificate)",
+          "test_nonzero_source_tube_cannot_be_replaced_by_nominal_dc (test_dc_held_ramp_contract.DcHeldRampContract.test_nonzero_source_tube_cannot_be_replaced_by_nominal_dc)",
+          "test_shifted_initial_epoch_does_not_reuse_the_zero_epoch (test_dc_held_ramp_contract.DcHeldRampContract.test_shifted_initial_epoch_does_not_reuse_the_zero_epoch)",
+          "test_exact_nonbinary_division_offset_preserves_physical_phase (test_held_timer_provenance.HeldTimerProvenance.test_exact_nonbinary_division_offset_preserves_physical_phase)",
+          "test_future_amplification_keeps_inherited_arithmetic_error (test_held_timer_provenance.HeldTimerProvenance.test_future_amplification_keeps_inherited_arithmetic_error)",
+          "test_point_offset_changes_follow_selected_assignment_order (test_held_timer_provenance.HeldTimerProvenance.test_point_offset_changes_follow_selected_assignment_order)",
+          "test_point_start_state_and_held_offset_preserve_query_phase (test_held_timer_provenance.HeldTimerProvenance.test_point_start_state_and_held_offset_preserve_query_phase)",
+          "test_explicit_source_saved_bounds_polarity_and_passive_queries (test_analytic_sources.AnalyticSourceContracts.test_explicit_source_saved_bounds_polarity_and_passive_queries)",
+          "test_nonbinary_physical_root_sample_and_timer (test_analytic_sources.AnalyticSourceContracts.test_nonbinary_physical_root_sample_and_timer)",
+          "test_unsupported_parameter_and_original_role_combinations (test_analytic_sources.AnalyticSourceContracts.test_unsupported_parameter_and_original_role_combinations)",
+          "test_entire_domain_not_last_query (test_dc_factor.DcFactor.test_entire_domain_not_last_query)",
+          "test_nearby_different_history_roots_remain_distinct (test_dc_factor.DcFactor.test_nearby_different_history_roots_remain_distinct)",
+          "test_non_affine_supply_tree_is_not_partially_rounded (test_dc_factor.DcFactor.test_non_affine_supply_tree_is_not_partially_rounded)",
+          "test_old_linear_history_with_variable_supply_stays_legacy (test_dc_factor.DcFactor.test_old_linear_history_with_variable_supply_stays_legacy)",
+          "test_original_root_error_survives_future_voltage_amplification (test_dc_factor.DcFactor.test_original_root_error_survives_future_voltage_amplification)",
+          "test_original_scale_cross_instance (test_dc_factor.DcFactor.test_original_scale_cross_instance)",
+          "test_original_zero_weight_source_dependencies_and_owner_are_audited (test_dc_factor.DcFactor.test_original_zero_weight_source_dependencies_and_owner_are_audited)",
+          "test_shape_positive_band_refuses_even_with_exact_physical_curve (test_dc_factor.DcFactor.test_shape_positive_band_refuses_even_with_exact_physical_curve)",
+          "test_zero_nonrepresentable_and_error_refuse (test_dc_factor.DcFactor.test_zero_nonrepresentable_and_error_refuse)",
+          "test_zero_operator_factor_keeps_legacy_plateau_rejection (test_dc_factor.DcFactor.test_zero_operator_factor_keeps_legacy_plateau_rejection)"
+        ],
+        "binding": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/acd-python-final/BINDING.json",
+          "sha256": "70d9e2740654766f7b8e45780e5fef04528f4922121ab6fb947a41a69234d9c5"
+        },
+        "receipt": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/acd-python-final/execution.receipt.json",
+          "sha256": "f6af545dab5b99cf6acc54824f152ffcdc3f4f95892fa96513e26d5b6118c22f"
+        },
+        "stdout": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/acd-python-final/check.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/acd-python-final/check.stderr.log",
+          "sha256": "abbc869c234a787bd03f6140d25f5ffc2d81ceb5fe875399d048e478d692e7c3"
+        },
+        "all_inputs_match_current": true
+      },
+      {
+        "action": "b-python-final",
+        "language": "python",
+        "count": 10,
+        "tests": [
+          "test_distinct_producer_states_reach_their_own_consumers (test_history_owner_contract.HistoryOwnerContract.test_distinct_producer_states_reach_their_own_consumers)",
+          "test_instance_order_and_extra_queries_preserve_values_and_epochs (test_history_owner_contract.HistoryOwnerContract.test_instance_order_and_extra_queries_preserve_values_and_epochs)",
+          "test_raw_foreign_state_is_rejected_at_the_public_kernel_boundary (test_history_owner_contract.HistoryOwnerContract.test_raw_foreign_state_is_rejected_at_the_public_kernel_boundary)",
+          "test_original_discarded_bilinear_alias_is_rejected (test_history_consumer.HistoryConsumer.test_original_discarded_bilinear_alias_is_rejected)",
+          "test_original_discarded_floating_read_reaches_public_kernel_rejection (test_history_consumer.HistoryConsumer.test_original_discarded_floating_read_reaches_public_kernel_rejection)",
+          "test_original_zero_trip_loop_is_rejected_before_scalarization (test_history_consumer.HistoryConsumer.test_original_zero_trip_loop_is_rejected_before_scalarization)",
+          "test_public_source_bounded_trim_ready_bits_and_top_clamp (test_history_consumer.HistoryConsumer.test_public_source_bounded_trim_ready_bits_and_top_clamp)",
+          "test_uncertain_original_clock_source_keeps_the_existing_scope_refusal (test_history_consumer.HistoryConsumer.test_uncertain_original_clock_source_keeps_the_existing_scope_refusal)",
+          "test_dispatch_rejects_unknown_nodes_and_absent_history_without_rescanning (test_history_consumer.HistoryDispatchBudget.test_dispatch_rejects_unknown_nodes_and_absent_history_without_rescanning)",
+          "test_dispatch_reuses_affinity_without_walking_trees (test_history_consumer.HistoryDispatchBudget.test_dispatch_reuses_affinity_without_walking_trees)"
+        ],
+        "binding": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/b-python-final/BINDING.json",
+          "sha256": "baf79bc4e6f59d375fb3413ff4f99060509bd4508226fa99d37edc1221ec20c2"
+        },
+        "receipt": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/b-python-final/execution.receipt.json",
+          "sha256": "2ec4b0f5a5834eb56183f715830964a885e9cd4b5b8770482357cbc68d9ac273"
+        },
+        "stdout": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/b-python-final/check.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/b-python-final/check.stderr.log",
+          "sha256": "238fae55cd22601278afd0af1819c98134003ade5a4c79600f26faa9c4eab7c6"
+        },
+        "all_inputs_match_current": true
+      },
+      {
+        "action": "d-rust-green3",
+        "language": "rust",
+        "count": 12,
+        "tests": [
+          "dc_projection::tests::held_ramp_dispatch_hint_has_one_total_branch_visit_allowance",
+          "dc_projection::tests::held_ramp_long_owner_comparison_exhausts_its_actual_work_before_reading",
+          "dc_projection::tests::held_ramp_does_not_create_a_new_default_work_owner",
+          "dc_projection::tests::held_ramp_rejects_foreign_state_even_with_a_matching_original_binding",
+          "dc_projection::tests::held_ramp_rejects_a_different_original_program_with_the_same_source_owner",
+          "dc_projection::tests::held_ramp_audits_original_unknown_source_even_at_zero_weight",
+          "dc_projection::tests::retained_projection_comparison_uses_the_same_exhausted_owner",
+          "dc_projection::tests::scalar_fact_work_is_shared_and_sticky",
+          "dc_projection::tests::held_ramp_naturally_exhausts_shared_work_and_refuses_both_retries",
+          "dc_projection::tests::held_ramp_constant_division_wrapper_does_not_hide_the_candidate",
+          "dc_projection::tests::held_ramp_canonical_branch_sign_keeps_the_same_physical_ramp",
+          "dc_projection::tests::projected_source_history_rejects_trial_without_mutating_accepted_engine"
+        ],
+        "binding": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/d-rust-green3/BINDING.json",
+          "sha256": "3a9ea7b28fa7cbc5190b16dde73dfde8cd455afb5255c7252316e6cac307c283"
+        },
+        "receipt": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/d-rust-green3/execution.receipt.json",
+          "sha256": "a3813464a3c3ea41eeae39ab2cafab44568ddb52e69d36757ee5c8888c1c0dab"
+        },
+        "stdout": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/d-rust-green3/check.stdout.log",
+          "sha256": "9600e39091c44eb7603a6eebd27896c86a3cb3eacfda15a0e4926c34f75bfb56"
+        },
+        "stderr": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/d-rust-green3/check.stderr.log",
+          "sha256": "f264d285693b5fdc6beefc4c1e3af25230517a6cb085ca0427687c91a9eeede0"
+        },
+        "all_inputs_match_current": true
+      },
+      {
+        "action": "b-rust-final",
+        "language": "rust",
+        "count": 4,
+        "tests": [
+          "history_admission::owner_contract_tests::original_voltage_interface_survives_foreign_owner_resolution",
+          "history_admission::owner_contract_tests::failed_resolution_retries_in_same_admission_without_mutating_binding",
+          "history_admission::owner_contract_tests::foreign_raw_state_and_wrong_original_binding_remain_rejected",
+          "history_admission::owner_contract_tests::actual_resolution_work_exhaustion_stays_sticky_for_two_retries"
+        ],
+        "binding": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/b-rust-final/BINDING.json",
+          "sha256": "7a1865ef7fa8b7da979b14e512af9fd19d74618e21deb5639ce98ddcf446a51e"
+        },
+        "receipt": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/b-rust-final/execution.receipt.json",
+          "sha256": "5f8c5ae6b0552d1f229f82b8068826147176bca5f6c5fa565ff54f11317e6636"
+        },
+        "stdout": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/b-rust-final/check.stdout.log",
+          "sha256": "7dc2f9f8a92463f0ba02feae6385cc9068f70489920583e5960807080daef07e"
+        },
+        "stderr": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/b-rust-final/check.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "all_inputs_match_current": true
+      },
+      {
+        "action": "c-rust-final",
+        "language": "rust",
+        "count": 23,
+        "tests": [
+          "transient::time_provenance::held_point_tests::exact_nonbinary_scalar_offset_preserves_time_and_original_bounds",
+          "transient::time_provenance::held_point_tests::nonpoint_and_hidden_unknown_offsets_never_become_time_certificates",
+          "transient::time_provenance::held_point_tests::held_point_seed_offsets_follow_source_order_and_after_bounds",
+          "transient::time_provenance::held_point_tests::failed_nonbinary_offset_candidate_retries_same_controller_without_leaks",
+          "transient::time_provenance::held_point_tests::failed_held_point_candidate_retries_same_controller_with_future_history_and_error",
+          "transition::exact_deadline_tests::split_fixed_arithmetic_is_exact_and_stays_bounded_by_discovery",
+          "transition::exact_deadline_review_tests::mismatched_or_malformed_exact_window_rejects_before_queue_mutation",
+          "transition::exact_transition_line_tests::exact_deadline_orders_closed_boxes_without_ordering_unknown_real_times",
+          "transition::exact_deadline_tests::shared_anchor_and_interrupted_line_need_distinct_end_certificates",
+          "schedule::exact_deadline_review_tests::anchored_absolute_root_is_not_shifted_again_by_common_root",
+          "transition::exact_deadline_tests::fresh_exact_proof_preserves_deadlines_and_improves_only_proved_point_values",
+          "operators::exact_deadline_review_tests::evaluation_rejects_incompatible_exact_window_without_changing_history",
+          "schedule::common_exact_root_tests::fixed_clock_and_history_root_require_mathematical_equality",
+          "schedule::common_exact_root_tests::identical_discovery_boxes_do_not_prove_common_root",
+          "schedule::exact_history_root_tests::exact_history_refinement_retains_discovery_and_distinguishes_subulp_roots",
+          "schedule::timer_boundary_tests::stale_or_duplicate_consumption_cannot_authorize_rescheduling",
+          "schedule::timer_boundary_tests::exact_anchor_orders_clocks_but_does_not_consume_a_different_leaf",
+          "schedule::timer_boundary_tests::ambiguous_moments_do_not_prove_clock_identity_or_common_anchor",
+          "transient::timer_boundary_tests::changed_timer_failure_is_atomic_and_retryable_in_both_calendars",
+          "transient::timer_boundary_tests::live_filter_installed_candidate_final_gate_failure_retries_same_controller",
+          "transition::exact_transition_line_tests::ordered_real_deadlines_do_not_authorize_a_representative_that_skips_the_next_one",
+          "schedule::held_calendar_review_tests::same_numeric_bounds_proof_replacement_clear_and_cancel_rebuild_calendar",
+          "schedule::forcing_phase_accounting_tests::forcing_unproved_dynamic_phase_is_explicit_scope_error_without_guard_fallback"
+        ],
+        "binding": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/c-rust-final/BINDING.json",
+          "sha256": "2b49c9d357bbf4798bcf7f8725a130a0545a2088b0f936c6b4a66bda1c0fc1a6"
+        },
+        "receipt": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/c-rust-final/execution.receipt.json",
+          "sha256": "608cd18e51afbe3213f0c0a4a5d306dcdd98306c143a3390a2654f0fce9c6a1e"
+        },
+        "stdout": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/c-rust-final/check.stdout.log",
+          "sha256": "06090a2a28f78d83072bb38adfe00db1b3b4473af3a4e86dd51c4bb80e4ac27f"
+        },
+        "stderr": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/c-rust-final/check.stderr.log",
+          "sha256": "e773625b28e6fd2fc552e78f4c5d912f1e20fdec07396103192d0a826157eadd"
+        },
+        "all_inputs_match_current": true
+      }
+    ],
+    "early_integration": {
+      "report": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/early-final/report.json",
+        "sha256": "a0a26cecd6bdc9c933d0855165a04066423d6345d2de4eb6918c76036c9e2dac"
+      },
+      "receipt": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/early-final/execution.receipt.json",
+        "sha256": "c3d9469f11f09e3abfb1f20f68124ffb9ecc5d4176edc2ae3963d6edfb0b4151"
+      },
+      "statuses": [
+        {
+          "check": "representation",
+          "status": "passed"
+        },
+        {
+          "check": "integer-budget",
+          "status": "passed"
+        },
+        {
+          "check": "initial-budget",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "lanes": {
+    "A": {
+      "functions": [
+        "scs._Statement.number",
+        "scs.load_scs",
+        "scs_sources.analytic_source",
+        "analytic_source::validate_config"
+      ],
+      "contract": "Exact Meg/M/m scales; restricted ground-connected native transient sine defaults sinephase to zero degrees; phase metadata does not shift transient angle.",
+      "oracle": "SI fixed values, token origins and quarter-period sine values/enclosures",
+      "new_python": 9,
+      "red": [
+        "executor/acd-red1"
+      ],
+      "limits": [
+        "Combined phase and nonzero sinephase rejected uniformly; MEG/meg unsupported without a claim about Spectre legality.",
+        "Prior official-document and Spectre21.1 archive evidence only; no current-original 074/093/364 acceptance."
+      ],
+      "test": "evas/tests/test_scs_native_source_contract.py"
+    },
+    "B": {
+      "functions": [
+        "history_admission::Admission::resolve",
+        "history_admission::resolve_original_expression",
+        "history_admission::history_bounds"
+      ],
+      "contract": "Expand predicates for proof while retaining original electrical value interfaces and original owner validation; use one shared Work.",
+      "oracle": "Independent per-instance q/8+1/2 with distinct initial values and event times",
+      "new_python": 3,
+      "final_rust": 4,
+      "red": [
+        "executor/b-red3"
+      ],
+      "limits": [
+        "b-red1 and b-red2 passed the old kernel and do not count as fault reproduction.",
+        "Does not resolve original390 later Work frontier or establish full390 pass."
+      ],
+      "test": "evas/tests/test_history_owner_contract.py"
+    },
+    "C": {
+      "functions": [
+        "event_time_provenance::expression_with_points",
+        "RootTime::affine"
+      ],
+      "contract": "Ordinary held timer exact rational offsets retain common-root identity and original after-state bounds.",
+      "oracle": "Fraction(binary64(0.1))+k/6 and independent linear transition formulas",
+      "new_python": 4,
+      "final_rust": 23,
+      "red": [
+        "executor/c-red2"
+      ],
+      "limits": [
+        "Initial singular fixture is not a target-defect RED.",
+        "Paid history/forcing path and original186 rejection remain outside this extension.",
+        "Python nextafter-duration voltage tolerance does not prove one-ULP deadline discrimination; distinct-root Rust controls carry that obligation."
+      ],
+      "test": "evas/tests/test_deadline_origin_contract.py"
+    },
+    "D": {
+      "functions": [
+        "dc_projection::DcProjection::held_ramp_candidate",
+        "dc_projection::DcProjection::with_source",
+        "dc_projection::DcProjection::ramp_view",
+        "transition_source_plan::ProofContext::exact_dc_expression",
+        "events::EventModel::selected_program_with_lineage"
+      ],
+      "contract": "Whole-request exact nonzero physical DC supply times original held-time ramp, same original Program and Work; bounded canonical-orientation dispatch hint.",
+      "oracle": "Independent Fraction sawtooth with shifted epoch and post-event endpoint values; actual committed controller segments for bound_step",
+      "new_python": 6,
+      "final_rust": 12,
+      "red": [
+        "executor/acd-red1"
+      ],
+      "limits": [
+        "No dynamic operators or continuous Transition-target extension.",
+        "Future supply variation, source-error tubes, unknown zero-weight dependencies, foreign state, wrong binding and exhausted Work reject.",
+        "Does not establish full079 acceptance."
+      ],
+      "test": "evas/tests/test_dc_held_ramp_contract.py"
+    }
+  },
+  "negative_and_iteration_records": {
+    "retained": "Original REDs, failed fixtures/assertions, intermediate kernels and diagnostics remain in executor.",
+    "examples": [
+      "A Meg/default old rejection",
+      "B initial two non-triggering fixtures; real third invalid_ir RED; incorrect spent-counter assertion corrected without runtime Work changes; raw-owner negative endpoint selector fixed",
+      "C initial singular fixture, real ordering RED, zero-match filter excluded",
+      "D positive failures before bounded canonical-orientation hint correction; temporary backtrace diagnostic build excluded from final identity"
+    ]
+  },
+  "budget": {
+    "total_ceiling_command_seconds": 61200,
+    "authorized_added_seconds": 25200,
+    "user_text": "追加7小时，共用且不跑全量回归",
+    "receipt": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/min-contracts-20261021/executor/budget-authorization.json",
+      "sha256": "70cc68a9882b9b46640c8eafaf545f9e31a352ed03498b95631139cdc94a0bb9"
+    },
+    "at_review": {
+      "mode": "bounded_command_seconds",
+      "unit": "command_deadline_seconds",
+      "consumed_s": 37911.85,
+      "known_consumed_s": 37911.85,
+      "reserved_s": 0,
+      "pre_guard_fix_settled_attempt_ids": [
+        "workflow-fallback-maintenance-20261019"
+      ],
+      "unallocated_closeout_s": 6300.0,
+      "available_s": 16988.15
+    },
+    "remaining_including_closeout_reserve_s": 23288.15,
+    "phase_charged_s": 2266.55
+  },
+  "unchanged_scores": {
+    "original400": {
+      "PASS": 318,
+      "FAIL": 19,
+      "REJECTED": 63
+    },
+    "revised400": {
+      "PASS": 321,
+      "FAIL": 15,
+      "REJECTED": 64
+    },
+    "remaining_revised": 79,
+    "new_whole_case_PASS": 0
+  },
+  "unrun_obligations": [
+    "Full Python regression, complete Rust suite and delivery CI",
+    "Release-kernel and installation acceptance",
+    "Original400/revised400; individual full target cases were not executed this phase",
+    "New Spectre pairing and common qualification"
+  ],
+  "prior_plan": "https://github.com/BucketSran/vaEVAS/issues/214#issuecomment-6296060539",
+  "next_scope": "Keep prior whole-case priority P1/P2/P3/P4=0/16/42/21; minimum shared contracts are locally verified prerequisites, not whole-case PASS credit. Next isolate full consumer frontiers on current original inputs before deciding wider regression."
+}

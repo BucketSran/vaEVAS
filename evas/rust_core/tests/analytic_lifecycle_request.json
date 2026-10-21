@@ -1,0 +1,766 @@
+{
+  "driven": [
+    "x",
+    "clk",
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "x14",
+    "x15",
+    "x16",
+    "x17",
+    "x18",
+    "x19",
+    "x20",
+    "x21",
+    "x22",
+    "x23",
+    "x24",
+    "x25",
+    "x26",
+    "x27",
+    "x28",
+    "x29",
+    "x30",
+    "x31",
+    "x32"
+  ],
+  "program": {
+    "contributions": [
+      {
+        "branch": {
+          "instance": "XD",
+          "kind": "voltage",
+          "local_negative": "y",
+          "local_positive": "0"
+        },
+        "negative": 35,
+        "origin": {
+          "column": 173,
+          "expansion": [],
+          "instance": "XD",
+          "line": 2,
+          "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/sine-source-three/source-value-r2/public/lifecycle.va"
+        },
+        "positive": 0,
+        "rhs": {
+          "left": {
+            "constant": -1.0,
+            "op": "affine",
+            "terms": []
+          },
+          "op": "multiply",
+          "right": {
+            "op": "state",
+            "state": 0
+          }
+        }
+      }
+    ],
+    "events": [
+      {
+        "body": [
+          {
+            "kind": "assign",
+            "rhs": {
+              "constant": 0.0,
+              "op": "affine",
+              "terms": [
+                {
+                  "coefficient": -1.0,
+                  "node": 0
+                },
+                {
+                  "coefficient": 1.0,
+                  "node": 2
+                }
+              ]
+            },
+            "state": 0
+          }
+        ],
+        "origin": {
+          "column": 109,
+          "expansion": [],
+          "instance": "XD",
+          "line": 2,
+          "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/sine-source-three/source-value-r2/public/lifecycle.va"
+        },
+        "trigger": {
+          "direction": 1,
+          "expression_tolerance": 1e-09,
+          "guard": {
+            "left": {
+              "constant": 0.0,
+              "op": "affine",
+              "terms": [
+                {
+                  "coefficient": -1.0,
+                  "node": 0
+                },
+                {
+                  "coefficient": 1.0,
+                  "node": 1
+                }
+              ]
+            },
+            "op": "add",
+            "right": {
+              "constant": -0.5,
+              "op": "affine",
+              "terms": []
+            }
+          },
+          "kind": "cross",
+          "time_tolerance": 1e-12
+        }
+      },
+      {
+        "body": [
+          {
+            "kind": "assign",
+            "rhs": {
+              "constant": 0.0,
+              "op": "affine",
+              "terms": [
+                {
+                  "coefficient": -1.0,
+                  "node": 0
+                },
+                {
+                  "coefficient": 1.0,
+                  "node": 2
+                }
+              ]
+            },
+            "state": 0
+          }
+        ],
+        "origin": {
+          "column": 141,
+          "expansion": [],
+          "instance": "XD",
+          "line": 2,
+          "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/sine-source-three/source-value-r2/public/lifecycle.va"
+        },
+        "trigger": {
+          "direction": 1,
+          "expression_tolerance": 1e-09,
+          "guard": {
+            "left": {
+              "constant": 0.0,
+              "op": "affine",
+              "terms": [
+                {
+                  "coefficient": -1.0,
+                  "node": 0
+                },
+                {
+                  "coefficient": 1.0,
+                  "node": 1
+                }
+              ]
+            },
+            "op": "add",
+            "right": {
+              "constant": -2.5,
+              "op": "affine",
+              "terms": []
+            }
+          },
+          "kind": "cross",
+          "time_tolerance": 1e-12
+        }
+      }
+    ],
+    "nodes": [
+      "0",
+      "clk",
+      "x",
+      "x1",
+      "x10",
+      "x11",
+      "x12",
+      "x13",
+      "x14",
+      "x15",
+      "x16",
+      "x17",
+      "x18",
+      "x19",
+      "x2",
+      "x20",
+      "x21",
+      "x22",
+      "x23",
+      "x24",
+      "x25",
+      "x26",
+      "x27",
+      "x28",
+      "x29",
+      "x3",
+      "x30",
+      "x31",
+      "x32",
+      "x4",
+      "x5",
+      "x6",
+      "x7",
+      "x8",
+      "x9",
+      "y"
+    ],
+    "operators": [],
+    "schema_version": 32,
+    "states": [
+      {
+        "initial": 0.0,
+        "instance": "XD",
+        "kind": "real",
+        "name": "h"
+      }
+    ],
+    "step_bounds": []
+  },
+  "samples": [],
+  "tolerances": {
+    "absolute": 1e-12,
+    "relative": 1e-10
+  },
+  "transient": {
+    "analytic_sources": [
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX",
+        "terminals": [
+          "x",
+          "0"
+        ]
+      },
+      null,
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX1",
+        "terminals": [
+          "x1",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX2",
+        "terminals": [
+          "x2",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX3",
+        "terminals": [
+          "x3",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX4",
+        "terminals": [
+          "x4",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX5",
+        "terminals": [
+          "x5",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX6",
+        "terminals": [
+          "x6",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX7",
+        "terminals": [
+          "x7",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX8",
+        "terminals": [
+          "x8",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX9",
+        "terminals": [
+          "x9",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX10",
+        "terminals": [
+          "x10",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX11",
+        "terminals": [
+          "x11",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX12",
+        "terminals": [
+          "x12",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX13",
+        "terminals": [
+          "x13",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX14",
+        "terminals": [
+          "x14",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX15",
+        "terminals": [
+          "x15",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX16",
+        "terminals": [
+          "x16",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX17",
+        "terminals": [
+          "x17",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX18",
+        "terminals": [
+          "x18",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX19",
+        "terminals": [
+          "x19",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX20",
+        "terminals": [
+          "x20",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX21",
+        "terminals": [
+          "x21",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX22",
+        "terminals": [
+          "x22",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX23",
+        "terminals": [
+          "x23",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX24",
+        "terminals": [
+          "x24",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX25",
+        "terminals": [
+          "x25",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX26",
+        "terminals": [
+          "x26",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX27",
+        "terminals": [
+          "x27",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX28",
+        "terminals": [
+          "x28",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX29",
+        "terminals": [
+          "x29",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX30",
+        "terminals": [
+          "x30",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX31",
+        "terminals": [
+          "x31",
+          "0"
+        ]
+      },
+      {
+        "ampl": 0.25,
+        "freq": 1.0,
+        "kind": "sine",
+        "parameter_origin": "explicit-v1",
+        "polarity": 1,
+        "sinedc": 0.5,
+        "sinephase": 0.0,
+        "source_name": "VX32",
+        "terminals": [
+          "x32",
+          "0"
+        ]
+      }
+    ],
+    "max_step": 0.125,
+    "output_times": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "pwl": [
+      [],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          3.0
+        ]
+      ],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    "stop": 1.0
+  }
+}

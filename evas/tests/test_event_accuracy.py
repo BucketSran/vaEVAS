@@ -43,7 +43,7 @@ class EventAccuracy(unittest.TestCase):
                 # arithmetic uncertainty still prevents a root certificate.
                 self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
 
-    def test_raw_ir_cannot_hide_voltage_products_in_any_event_expression(self):
+    def test_raw_ir_products_require_causal_assignment_and_keep_structural_voltage_checks(self):
         program = compile_event(model('''@(initial_step) held=0;
           @(cross(V(u,r)-0.5,1)) held=V(u,r); V(y,r)<+held;''',
                                       'real held;')).to_dict()
@@ -70,6 +70,16 @@ class EventAccuracy(unittest.TestCase):
             with self.subTest(position=position):
                 result = subprocess.run([str(KERNEL)], input=json.dumps(request),
                                         text=True, capture_output=True)
+                if position == 'assignment':
+                    # At u=1/2 the exact input-only product is
+                    # (u+1e-16*u-u)*(1e16*u). Floating cancellation to zero
+                    # would silently lose the original expression's value.
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    expected = Q(1e-16)*Q(1e16)/4
+                    response = json.loads(result.stdout)
+                    observed = response['solutions'][-1]['voltages'][p['nodes'].index('y')]
+                    self.assertLessEqual(abs(Q(observed)-expected), Q(1e-12))
+                    continue
                 self.assertEqual(result.returncode, 2)
                 self.assertEqual(json.loads(result.stderr)['kind'],
                                  'event_resolution' if position == 'guard' else 'unsupported_transient')
@@ -188,12 +198,13 @@ class EventAccuracy(unittest.TestCase):
             self.assertLessEqual(abs(Q(.1)+(Q(.9)-Q(.1))*Q(event['time'])-Q(threshold)), Q(1e-9))
 
     def test_unproved_internal_neighbouring_roots_still_reject(self):
-        # Structural internal-node provenance is not an original input proof,
-        # even if this particular relay has a simple mathematical answer.
+        # The feedback equation 3z=u needs a non-point 1/3 projection.
+        # Neither an acyclic alias proof nor rounded coefficients establish
+        # original root identity for these neighbouring internal thresholds.
         source=model('''@(initial_step) begin n=0; m=0; end
-          V(z,r)<+V(u,r);
-          @(cross(V(z,r)-0.5,1)) n=n+1;
-          @(cross(V(z,r)-0.5000000000000001,1)) m=m+1;
+          V(z,r)<+V(u,r)-2.0*V(z,r);
+          @(cross(V(z,r)-0.16666666666666666,1)) n=n+1;
+          @(cross(V(z,r)-0.16666666666666669,1)) m=m+1;
           V(y,r)<+1.0*n+m;''','integer n,m; electrical z;')
         with self.assertRaises(KernelError) as caught:
             execute_event(source,sources={'u':[[0,.1],[1,.9]]},

@@ -25,6 +25,7 @@ fn fixture() -> (EventModel, Trajectory, Frame) {
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![vec![[0.0, 0.0], [1.0, 1.0]]],
@@ -41,6 +42,7 @@ fn fixture() -> (EventModel, Trajectory, Frame) {
         .circuit_with(&states, &operators.values(0.0).unwrap())
         .unwrap();
     let frame = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.0,
         state_bounds: vec![I::ZERO],

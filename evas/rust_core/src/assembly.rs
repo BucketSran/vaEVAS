@@ -281,6 +281,7 @@ fn assemble_inner(
             "program has no voltage contributions",
         ));
     }
+    let source_rational = expression::input_rational_program(&program, &predicate_nodes);
     // Contributions share a branch only within one instance. Independent
     // ideal voltage sources in parallel must satisfy separate constraints.
     let mut branches: Vec<BranchIdentity> = Vec::new();
@@ -337,10 +338,11 @@ fn assemble_inner(
             error.message.push_str(&format!(" at {}", c.origin.label()));
             error
         })?;
-        expression::validate_select_predicates(&c.rhs, &predicate_nodes).map_err(|mut error| {
-            error.message.push_str(&format!(" at {}", c.origin.label()));
-            error
-        })?;
+        expression::validate_source_select_predicates(&c.rhs, &predicate_nodes, source_rational)
+            .map_err(|mut error| {
+                error.message.push_str(&format!(" at {}", c.origin.label()));
+                error
+            })?;
         branches.push(c.branch.clone());
         let branch = c.branch.clone();
         let equation = grouped.entry(c.branch).or_insert_with(|| Equation {

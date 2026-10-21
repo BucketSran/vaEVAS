@@ -11,6 +11,7 @@
 | 表中“通过”依据什么，精度怎样判定？ | [四后端评测标准](COMPARISON-METHODOLOGY.md) |
 | 新测试是否覆盖旧测试，还缺什么？ | [累计测试清单](../validation/paper/COVERAGE.md) |
 | 当前版本包含哪些改动？ | [版本记录](UPDATE.md) |
+| 现在完成了什么，还缺什么，下一步做什么？ | [功能进度总览](COMPARISON.md#progress-board)，原GAP依赖和验收见下方详细条目 |
 | 如何安装、设置观测或读取结果？ | 下方[接口参考](#接口参考) |
 | 电压、积分和事件怎样计算？ | [数学原理](math/README.md) |
 | 某项结论依据哪次实际实验？ | [证据索引](development/capability-evidence.md) |
@@ -50,7 +51,7 @@ docs/
 
 ## 文档维护约定
 
-- 支持范围总表只在 `COMPARISON.md` 维护。README、接口和开发文档链接该表，具体语法、算法与验收规则保留在各自契约中。
+- 支持范围总表及其第6节的统一功能缺口、优先级、依赖和验收路线只在 `COMPARISON.md` 维护。README、接口和开发文档链接该表，具体语法、算法与验收规则保留在各自契约中。
 - `COMPARISON-METHODOLOGY.md` 向读者解释评测内容、通过条件和精度依据。检查器公式、参数记录和复验流程放在 `development/COMPARISON.md`，条件卡记录每项测试定稿的数值。
 - `reference/` 维护接口；`math/` 维护行为、假设、数学方法、状态与误差、代码入口和拒绝边界。
 - `development/capability-evidence.md` 维护稳定能力 ID 与证据链接，供追溯工具读取。

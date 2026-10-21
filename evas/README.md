@@ -32,8 +32,49 @@ EVAS 的价值需要由电压域工程行为证明：在正确时刻采样，保
 每类都检查初始化、事件前后读值、历史延续、多个实例和误差控制，再扩展反馈及更复杂组合。
 支持结论仍只维护在总表中。晶体管、电流与电荷方程不属于当前范围；性能优化排在行为与精度之后。
 
-当前开发版本为 **EVAS 0.19.0 / IR23**，尚未发布到公共索引或打 tag。变化、验收范围和历史执行身份见[版本记录](docs/UPDATE.md)。
-IR23 增加隔离观察事件中的有界运行期循环、整数检查和数组读写；物理事件与历史输入的准入边界保留。
+最近完成 CI 与安装验收的检查点为 **EVAS 0.24.1 / IR32**，生产源码 `0a8dc512`、身份测试修正 `159c0512`，本地release核 `3551db2dcdc6`。当时同源原始400为318通过、19失败、63拒绝；材料r3修订轨为321通过、15失败、64拒绝，剩79项。两轨仅新增019，旧317／320个通过全部保留。旧317份原响应仅engine版本标识变化，去掉该字段后完整JSON相同；19份旧失败checker字典不变。修订轨由当次396份原执行和4份新修订执行组成，未用此前部分运行补行。202份运行及构建输入与481份冻结打包源码分别计数，见[混合冷目标收据](../experiments/backends/support/low-cost-closure/mixed-cold-transition.json)。400全部PASS目标未完成，PR208保持草稿，尚未合并或发布公共索引/tag。
+
+2026-10-21 的四路未提交候选实现了受限 native SCS 零相位入口、历史谓词的原电压接口、
+普通 held timer 的有理偏移，以及物理 DC 供电乘保持历元斜坡。
+最终 debug 核 `fc2c6c22b425` 对应46项不同 Python 方法、39项不同 Rust 测试及3类早期集成检查通过；
+源代码、原红例和边界见[最小合同收据](../experiments/backends/support/low-cost-closure/minimum-contracts-four-lanes.json)。
+该收据保留最小切片时点的局部结果；后续完整验证使用下面的新执行身份。
+
+同日六原件后续候选基于 `19cf340f` 的未提交源码，release核 `1132e1cac008`。
+完整 Rust 为730通过、0失败、1项原有忽略；单次完整 Python 的2691个不同方法全部通过，无遗漏、失败、错误或跳过。
+全新原始400为 **320通过、20失败、60拒绝**；材料r3修订轨为 **323通过、16失败、61拒绝，剩77项**。
+两轨新增362、391，旧318／321个通过全部保留；前后均完成的原337份、修订336份完整响应逐字节相同。
+修订轨使用本次396份原执行及4份新修订执行，012／075／077的独立后验通过，107仍拒绝且后验不可评估。
+391原checker六性质通过；079完成仿真但原checker仍FAIL，074／093／364／390仍拒绝。
+具体实现、独立正反例、阻塞和执行身份见[六原件收据](../experiments/backends/support/low-cost-closure/original-six.json)。
+源码及必要POSIX临时目录在Mac，完整实验与归档在T7；1132份冻结源码中的257份实际构建输入已核对。
+这份本地候选未运行新CI、安装或Spectre，没有新增共同Q资格；原失败、全额命令计费和旧检查点均保留。
+
+0.24.1为混合real与integer冷Transition保留独立认证，原019在最终release完整通过原checker，61项定向检查通过。前两次全量分别在0例、362例后被进程门禁拦住，失败记录与各1805.05秒计费保留；新全量经单调进程组生命周期门禁完整执行。首次CI三处旧版本断言已修正；完整交付CI `39394363248` 的15项检查通过，2644个不同Python方法实际通过，Rust655通过及1项忽略，双平台安装、重装和负控通过。工程验收未新增Spectre或共同Q资格。
+
+此前IR31检查点增加事件体标量integer赋值根的直接物理输入电压转换，最近整数且半整数远离零，完整原值盒须证明同一signed32 bin；[合同及边界](docs/math/events.md#ir31-候选事件中的直接电压到-integer-转换)单独维护。IR30受限source Forcing与独立held Transition、IR29右移与按位与等原有边界保留。IR31保存请求须从原VA重编译为IR32。数学合同见[算子说明](docs/math/operators.md#independent-source-forcing-beside-held-histories)，历史版本见[更新记录](docs/UPDATE.md)。
+
+IR32增加受限普通历史消费者、同支路二次源项与保持历史的组合、保持整数目标的紧凑表示，以及显式参数的解析正弦输入值。原请求Work、全部准入审计和精度预算保留。早期局部候选的199个唯一Python方法、110个不同Rust单元测试及6个原生测试保留其开发身份；最终验收使用上述wave27同源双轨和CI。原369、371仍被原1e9预算拒绝，原346仍有展开及derived clock组合缺口。数学合同见[算子手册](docs/math/operators.md#同支路二次源直接项的本地候选)与[解析源值合同](docs/math/events.md#ir32-private-candidate-explicit-analytic-source-values)。
+此前IR32迭代曾使旧PASS027触及原100000审计上限；wave26恢复旧通过，原始314、修订317。该历史失败及恢复身份保留；本次wave27再次完整验证旧通过不回退。
+
+本次接纳普通integer当前值与单点保持来源证明，原037、114、234在最终release核上完整通过原checker，响应与开发核074f28fd的对应结果逐字相同。完整误差盒、原Frame和共享Work保留。合同见[事件手册](docs/math/events.md#ordinary-current-integer-alias)，最终成绩与CI见[共同收据](../experiments/backends/support/low-cost-closure/ordinary-common-three.json)。
+
+本次还接纳[回调位置的普通纯输入前缀](docs/math/events.md#ordinary-event-prefix)与[事件读取的integer Floor前缀](docs/math/events.md#ordinary-integer-event-prefix)。早期135个不同Python方法跨运行通过，公开编译IR上的2项Rust控制覆盖同Controller完整Frame与共享Work。k225旧费用保持、k226仍按原100000上限拒绝，signed32及Floor bin边界不放宽。局部身份见[前缀收据](../experiments/backends/support/low-cost-closure/ordinary-prefix.json)，不与最终全量方法数相加。
+
+历史wave22生产快照 `ab928317` 绑定177份源码／构建输入、IR31、0.24.0和release核 `69c46e155808`，测试辅助提交为 `6d3c8a93`。原始400保持314通过、19失败、67拒绝，333完成；材料r3修订另轨400为317通过、15失败、68拒绝，332完成，两轨均清理400/400、零超时。原件新增027、142；修订轨先由075、再由077新增通过，旧316通过零回退，旧19份原失败checker字典不变。修订轨由同wave22的396份原执行、既有修订012／107／075及新正式执行的077组成。全部PASS仍差83项，350只是节点。
+075原相邻样本平滑判据会误拒正确斜坡并放过瞬时跳变，独立Fraction参考与14项正负控制已证。修订仅增加250ps直接观察和必要的有限边沿检查，仍要求完整原checker及其0.40阈值；原VA、物理输入、时长、maxstep、精度和全部预算保持。正式725行保留原365点，32个直接边沿通过，两轴独审闭合；原075仍为FAIL。
+077的说明把整个输出保持与实时输入加保持扰动混写。用户审阅具体提案后明确选择后者；修订保留原deck、参数和全部预算，只保持扰动、实时相加输入，完整checker核五性质。正式405直接行、独立Fraction校核、真实registry42项校准及完整400两轴独审通过；原077仍FAIL，未据此推断唯一原意。
+[材料r3收据](../experiments/backends/support/low-cost-closure/continuation-wave22-materials-r3.json)绑定修订依据、正式执行与完整400映射。
+单次完整delivery CI `39193253152` 在精确head `6d3c8a93` 实际15 jobs全部成功，2424个唯一Python方法通过，四分片705/514/634/571，无遗漏、重复、方法或setup跳过；两平台0.24/IR31安装、重装及负控通过。177份运行源码／构建输入与生产快照相同，本地、远端及wheel核各保留实际SHA。两轨输入、源核、预算、checker、覆盖与安装均已独审。
+此前CI `39192407319` 的2423PASS及1个旧错误文案断言FAIL保留，coverage因失败分片跳过；同一非法内部电压仍拒绝，一行测试预期修正后18项相关方法通过并双轴复核，再用上述单次完整CI重验，未跨run拼绿。原041仍默认1e9预算拒绝，048仍8192根材料预算拒绝；371、346及369未验收改动不混入本轮。400全部PASS目标未完成，原生Goal已由用户恢复并核实active；既有原生Stop检查在317/400且83项有事可做时的精确命令重放仍阻止结束；用户已信任本地定义，真实原生Stop触发仍未观察到。PR208保持草稿，未合并、未发布公共索引/tag，未新增Spectre或正式共同资格。
+[wave22紧凑收据](../experiments/backends/support/low-cost-closure/continuation-wave22.json)保留完整执行和独审身份；后续实现继续使用既有scope与400队列。
+
+历史wave21生产提交 `a201378e` 绑定176份源码／构建输入、IR30、0.23.0和release核 `7e7ae92ae2de`。原件400份已完整执行：312通过、19失败、69拒绝，331完成，清理400/400；这不表示400份全部PASS。13+387件同源，旧312、303和基线198通过保留，旧19份失败checker字典相同，相对wave20新增PASS为0。原041在默认1e9证明预算下 `step_budget` 拒绝，checker未运行；R6作者独立PASS不替代统一结果。
+修订材料另轨400为313通过、17失败、70拒绝，清理400/400；398份同材料复用本轮原件结果，另两份为修订012通过、107因 `condition_precision` 拒绝。它不替换原件计数。距离全部PASS，原件还差88份，修订轨还差87份；350只是进展节点。
+单次完整delivery CI `39169679908` 在辅助修复提交 `8e507c51` 实际15 jobs全部成功，2390个唯一方法通过，四分片621/605/638/526，无遗漏、重复、方法或setup跳过。Ubuntu x86_64/Python3.10与macOS arm64/Python3.12的0.23/IR30安装、重装及负控通过；176份源码／构建输入不变，远端回归和wheel核各保留实际SHA，不声称与本地release字节相同。CI执行身份、完整方法覆盖和两平台安装证据已独立复核。
+本轮先前CI `39168731444` 因inventory stale在完整Python前失败（0完整Python、0安装）；`39169086325` 完整失败，2375条为2372PASS及main/point/shaped三个loader ERROR，18个真实方法遗漏，15 jobs为10成功、4失败、1个上游失败导致coverage skip。两份原红记录保留，不跨run拼接全绿。PR208仍为草稿未合并，0.23是开发版本，未发布公共索引或tag；未新增Spectre共同资格，完整EVAS与400全部PASS目标未完成。
+
+IR28新增事件体 typed 二元Subtract与运行期Remainder除数；IR27的Add与常量Remainder继续保留；IR26的受限原生事件`floor`和IR25的原生`tanh`继续保留；IR24的物理PWL、有限采样算术与transition组合继续保留。
 范围与失败规则见[事件循环](docs/reference/frontend-admission.md#runtime-event-loops)和[事件数学](docs/math/events.md#event-math)；版本升级不代表支持表新增通过。
 
 <a id="model-handoff"></a>
@@ -240,16 +281,16 @@ DC 和 PWL 保留输入数值与所有拐点。PWL 末点之后保持最后的�
 pulse 的第 k 次起点为 `d+kP`，四个拐点为 `d+kP`、`d+kP+r`、
 `d+kP+r+w`、`d+kP+r+w+f`；要求 `r,f,P>0`、`d,w>=0`、`r+w+f<=P`。
 拐点由已解析的 binary64 参数用有理数计算，再舍入为保存的 binary64 时刻。
-不能精确表示的拐点会产生源电压误差界，该界随电压关系和固定 timer 的采样状态一起传播，
-输出误差超出 `vabstol/reltol` 预算时拒绝。时刻分辨率不能区分边沿时仍明确拒绝。
-例如 `delay=1e9 rise=.2` 的时刻舍入约为 `4.77e-8 s`；`0–1 V` 上升沿的源误差界约为 `2.39e-7 V`，
-经三倍增益后的误差也必须满足输出预算，方程残差很小不能代替这项检查。
-有源误差的请求目前只支持代数电压关系、初始化和固定 timer 采样；cross、保持状态 timer 及全部连续算子明确拒绝。
-它尚未解决带源时间误差的动态行为。没有源误差的原请求保留已有执行路径。
-`testbench.pulse_corner_proofs` 保留精确有理数拐点、舍入时刻和电压误差界，
-`pulse_corner_rounding_seconds` 保留最大时刻偏差。Python `transient` 及 manifest 可用
-`source_errors={"node": upper_bound_V}` 提供每个驱动源的有限非负绝对电压误差界，未列出的源为零；
-此选项不属于静态 `solve` API。
+不能精确表示的拐点仍保留源电压误差界。有限原始角点同时进入 IR24 的物理曲线描述，
+内核验证它在名义 PWL 的原误差带内，再按真实曲线求值、导数和 cross 根。
+每次有理数转 binary64 的误差仍随电压及采样状态传播，超出 `vabstol/reltol` 时拒绝。
+`testbench.pulse_corner_proofs` 保留角点、舍入时刻和原非零电压界；
+`pulse_corner_rounding_seconds` 保留最大时刻偏差。
+Python `transient` 及 manifest 以 `source_errors={"node": upper_bound_V}` 提供有限非负幅度界，
+另以 `source_shapes` 提供有限原始曲线。仅有幅度界的 cross、保持状态 timer 与算子请求仍拒绝。
+物理曲线最多 512 点，当前动态消费者限已支持的 cross、timer 与 transition；
+具体字段、证明和拒绝边界见[源曲线契约](docs/math/events.md#physical-source-shape)。
+此选项不属于静态 `solve` API，时刻分辨率不能区分边沿时仍拒绝。
 这不是通过输出网格采样近似 pulse；改变 maxstep 不改变源拐点。
 保存网格包含源折点，避免后续对保存的驱动电压做线性插值时漏掉窄脉冲。
 例如源在 `.25 s` 为零、`.375 s` 为 `1 V`、`.4375 s` 回零，即使 `maxstep=.5 s`，
@@ -316,13 +357,16 @@ CLI 与迁移工具共用 manifest 校验。`models` 和 `instances` 必须是�
 | 展开后的 IR 值与容器总数 | 100,000 |
 
 参数按有效依赖图迭代求值，声明顺序不改变依赖链限制。IR 大小检查计入每次引用的展开成本，
-同时缓存子图的计算结果；不会为了估算大小而先复制整个表达式树。纯函数的编译期
+同时缓存子图的计算结果；不会为了估算大小而先复制整个表达式树。原生事件审核还在同一请求的单一 NativeAudit 中，
+复用传递不可变 IR 子图已证明的深度和展开大小；缓存强引用对象，不能跨请求复用或缓存可变后代。
+每个父引用仍累计完整展开尺寸，序列化仍复制和计入全部 wire 项；新增查找、元数据扫描和缓存存储先扣原100000累计预算。
+见[独立缓存边界控制](tests/test_ir_cache.py)。纯函数的编译期
 校验义务按同一展开中的 AST 身份合并；义务不加入计算值替换或序列化的展开成本，
 函数赋值 RHS 和返回值仍检查原深度/大小上限。源 token 总数限 100,000，函数调用嵌套
 限 64；函数调用、表达式下降与条件体嵌套共同累计到 80 层展开深度预算，
 避免分别合规的嵌套相乘使编译器递归溢出；不另设累计校验图上限。
 超限时返回带源码位置的 `CompileError`。合法但过大的模型也可能被拒绝，
-包括旧版本偶尔能处理的长表达式。使用 IR23，不通过重关联算式或消去依赖绕过预算；
+包括旧版本偶尔能处理的长表达式。使用 IR28，不通过重关联算式或消去依赖绕过预算；
 更大的模型需要后续共享表达式 IR 或其他有独立验证的方案。
 
 `solve` / `transient` 的 `timeout` 默认 **300 秒**，只限制内核进程执行时间，
@@ -430,7 +474,7 @@ tests 通过的数目不折算为验证条件数；分组与运行方式见
 
 ## IR 与贡献契约
 
-当前实现使用 IR v23，保留模型步长请求 `step_bounds`、连续纯数学函数及 IR21 动态契约。
+当前实现使用 IR v24，保留模型步长请求 `step_bounds`、连续纯数学函数及 IR21 动态契约。
 IR23 新增 loop、array_read/array_write 和 checked_integer/checked_index；[执行合同](docs/reference/frontend-admission.md#runtime-event-loops)限定其范围。IR22 引入的 `event_math` 继续保留。每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
 `power` 含 `base` 和整数 `exponent`；半次幂编译为 `sqrt` 调用点。
@@ -473,19 +517,20 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 
 ### IR 版本与迁移
 
-Program 和成功 Response 的 `schema_version` 均为 **23**，Python 适配器与 Rust 内核同步检查。
+本私有候选的 Program 和成功 Response 的 `schema_version` 均为 **32**，Python 适配器与 Rust 内核同步检查。
 旧版本或未知整数版本先于载荷解码返回 `unsupported_ir_version`；版本缺失/错误类型及当前格式错误返回
-`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–22 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
-前端与内核须配套使用。IR23 新增有界事件循环和紧凑数组读写；IR22 引入 `event_math`，仅扩展完整 IR 证明隔离的观察事件；
+`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–30 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
+前端与内核须配套使用。IR24 的源误差项兼容原数值形式，另接受严格的物理曲线对象；
+JSON Program/Response 版本必须为 32；IR32私有候选新增显式typed analytic physical source值，合同见[事件手册](docs/math/events.md#ir32-private-candidate-explicit-analytic-source-values)，成熟验收仍为上文IR31。IR31新增直接物理输入的事件整数转换，IR30新增受限source Forcing与独立held Transition。IR29新增受限右移、按位与及纯保持目标，旧载荷须从原VA重编译。IR27新增事件体 typed Add 与常量非零 Remainder。IR26新增实际驱动仿射输入的原生事件 `floor`，IR25及更旧载荷须重新编译。IR25新增原生 `tanh` 数学算子。IR24 扩展源误差描述，IR23 新增有界事件循环和紧凑数组读写；IR22 引入 `event_math`，仅扩展完整 IR 证明隔离的观察事件；
 物理联立、初始化和固定 start=0 timer 的数学边界保持。IR21 保留 `step_bounds`，新增变量分母的 `divide` 表达式、顺序初始化和事件输出记录。
 `step_bounds` 保存每次 `$bound_step` 的值、激活条件和源码身份。
 IR19 引入的纯数学函数格式继续保留；不能只给旧 JSON 改版本号。
 IR18 将 `State.initial` 扩为有限常数或明确的 0/1 `select` 比较；
 IR21 将初始化扩展到 real/integer 的顺序赋值、默认零值及受限条件；输入仍限 ground/实际 driven 输入。
 初始化先于算子历史、守卫日程、首次电压求解和 t=0 事件；详见[初始化契约](docs/math/events.md#input-initialization)。
-IR1–22 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
+IR1–25 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
 
-仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR23，
+仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR32，
 保留每项 manifest/source SHA256 及失败诊断；原 IR、历史波形和收据不改写：
 
 ```sh

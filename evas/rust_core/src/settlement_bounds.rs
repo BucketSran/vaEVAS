@@ -70,7 +70,7 @@ fn affine_with_operators(
 
 #[path = "initial_state_invariance.rs"]
 mod initial_state_invariance;
-pub(crate) use initial_state_invariance::unchanged as unchanged_initial_states;
+pub(crate) use initial_state_invariance::unchanged_with_inputs as unchanged_initial_states;
 
 fn dot(row: &[I], values: &[I]) -> I {
     let dense = || {
@@ -414,6 +414,10 @@ impl Bounds {
         crate::diagnostics::counter("certificate_bounds_builds", 1);
         let bindings = RefCell::new(BTreeSet::new());
         let bind = |expr: &Expression| {
+            let expr = match &model.dc_projection {
+                Some(dc) => dc.view(expr)?,
+                None => expr,
+            };
             if operators.is_empty() {
                 affine(expr, p)
             } else {

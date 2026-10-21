@@ -1,0 +1,142 @@
+{
+  "status": "reviewed local IR31 integration; fullCI/install and two complete400 tracks pending",
+  "availability": "repository-contained curated summary; full execution receipts local-only",
+  "checked_at_utc": "2026-10-19T02:42:37.765276+00:00",
+  "base_revision": "dc4269e8",
+  "IR": 31,
+  "package": "0.24.0",
+  "capabilities": [
+    "LANG",
+    "EVENT-ORDER",
+    "TRANSITION",
+    "COMPOSE"
+  ],
+  "contract": "Only scalar integer event assignment RHS root from original direct physical voltage probe; nearest ties away fromzero; entire original inputbox same signed32 bin before clamp. Full original syntax/role audit; same Request and Work as existing Floor. No compound real RHS,internal node,array target,ordinary/history role expansion.",
+  "sources": {
+    "evas/pyproject.toml": "a2494d7a3837ad8debd3f4a05a2afe6722ecc72cef077a4e49656a1093d2f1f7",
+    "evas/rust_core/Cargo.lock": "a6ceab4766b3c6e4c3f9c9fb57d1fb0effb016fb796a9669a5201f17f06400ce",
+    "evas/rust_core/Cargo.toml": "770b245cc3716402c13fcdaf05b3bf1bfd1ceddf36335ce6220d225d766240fc",
+    "evas/rust_core/ir/src/lib.rs": "ce20011e53e10b239c81203f43690daabe3345ee2b49187584e08445eafd47f6",
+    "evas/rust_core/src/affine_bounds.rs": "9957c93dfb4e80ad58babfb71fc894a646d1dd2837df3f407097e1648e77b339",
+    "evas/rust_core/src/causal_event.rs": "7aeab9af397d71dc73fa1735a43bfe30f04a38df0369f5b46679b5442d7f4525",
+    "evas/rust_core/src/continuous_step_simplify.rs": "2484ccff17acccb96e4dc0615409012ca8cd455bb4ae890b8365191d729cc74a",
+    "evas/rust_core/src/display.rs": "bad500cc3dce48606596b5c33bd47d6e39eb4e8e99e3cb5dca32b2ce5cd07b57",
+    "evas/rust_core/src/event_control.rs": "0b27ed402d4b1033c898af053be2d3e3d5a74725e57193c9c148946507155b50",
+    "evas/rust_core/src/event_floor.rs": "a799dd5665e87c700702029527f3bdec293fcfede92cb6b86e2b2fcd97afdadd",
+    "evas/rust_core/src/event_numeric.rs": "26480748c926574dbd604467c021ae49484f9b7a2c0b5d3c92d14338f7e562e7",
+    "evas/rust_core/src/events.rs": "01477324b76fa5159fd9f6e223b81f8ba714e9cc86414187547560271ef18793",
+    "evas/rust_core/src/expression.rs": "0cbb159cc79da28be468f6c0ec13f42f271d0bba0183beda06764618b23ab922",
+    "evas/rust_core/src/operators.rs": "04b80fa2da400209985dd22ed071d6b787d1b935d914e84c4619a1dea439ddd1",
+    "evas/rust_core/src/solver.rs": "184a519ad3c1f15caa9d76f497f9f69f700ee4d27553c39f173f8e7600baf86e",
+    "evas/rust_core/src/transient.rs": "fa0b1a7d3354ffc5385153f4a87c3fcc7573d51f7f50c19e63a01fefa502c577",
+    "evas/src/evas/instance_compiler.py": "71354274449083269df7f665e24225a0ab1e5e8261dc655d91b2d2d0f5c48400",
+    "evas/src/evas/ir.py": "c77f058d244cb50c0030ecae6adff5a3f5db3e067abbc1567ed031815d827963",
+    "evas/tests/test_history_forcing.py": "21c6b5b1c0faf41354f95562e935c7e377012aa11e8b7650676596dc02b39592",
+    "evas/tests/test_identity.py": "df19e246151394fa11ebb5753d246fc91f6e248950cd747ebee75364a8c08ad0",
+    "evas/rust_core/src/transient_integer_round_tests.rs": "e9ade6027e17479fb95d113d5965e0c60f058c80eaf3ba46ee67c04eef759eed",
+    "evas/tests/test_integer_round.py": "b351cffc2f52db732f9541f2d170ee59aefc5507fac15f6bb993a5b419612652"
+  },
+  "independent_oracle": {
+    "TSV": "evas/tests/fixtures/integer-round-oracle.tsv",
+    "sha256": "ddb84eaea89ce5c0081bd641afbeec271b1e0f2223d157a6a7c0025c3ee8bc9e",
+    "points": 45,
+    "method": "Independent Fraction.from_float quotient/remainder nearest, tiesaway; signed32/halfULP/positive/negative boundaries. Both fresh reviews independently recalculated."
+  },
+  "primary_checks": {
+    "public7": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/integer-round-primary-public/RESULT.json",
+      "sha256": "ff854fe4edf021edbd87056df646f7639a26edddb7799bc80d136f263143f64e"
+    },
+    "shared_Controller_kernel2": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/integer-round-primary-kernel-controls/RESULT.json",
+      "sha256": "6ced3bb2ca1a11be3f70810bb8695e3a46457f7ac5c05589801e7d2e8db8ec84"
+    },
+    "oldFloor_rollback1": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/integer-round-primary-floor-rollback/RESULT.json",
+      "sha256": "0734797fece2af3d34f99710ba5a1909e2e2aae6cf3df95b02b0aafc9cc96ab4"
+    },
+    "single_owner_entry1": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/integer-round-primary-owner/RESULT.json",
+      "sha256": "6a767e933812f85cc5f2521ec79f338cf9a97d0697972109e13705721aeec88b"
+    },
+    "identity_Forcing18": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/integer-round-identity-compat/RESULT.json",
+      "sha256": "698c9d339c07836a76c6bb9f64eb030f91d96a72c4b3d2ed122e9bd01160996f"
+    },
+    "fixture_empty_filter_attempts": "Firstbundle includedtwo empty modulefilters, covered by exact actual4aux+4event_restart followups; emptyfilter methods are never counted",
+    "GUARDS_followup": "Only test metadata tag changed after public7; current source tracked by current fixture/consumer receipts. No numerical code changed.",
+    "early": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/integer-round-early.json",
+      "sha256": "61f7a1075e065ff54813a1f1228ffd78dcc1dfa77c80f2b7629c97c5b26d0253"
+    },
+    "format": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/integer-round-format-check/RESULT.json",
+      "sha256": "70a35a8be5bdbb449d95caaf16be80a000786727553ddd13e34b7aee52fa3248"
+    },
+    "kernel_sha256": "12b43bd4afe5156490362c54893ad23d59ac960a05a486cea39999da534fe226",
+    "fixture_and_auxiliary_methods_unique14": [
+      {
+        "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir31-fixture-primary-consumers/RESULT.json",
+        "sha256": "d6b17149c85b23e8a38a3f6993cd5d0cbcab0fb62be44111c28e35b263f65c44"
+      },
+      {
+        "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir31-fixture-primary-aux/RESULT.json",
+        "sha256": "6298715bf38cc86b637c852cc25ebe82b4fb9c704293072ea9fd52a1a8100e1e"
+      },
+      {
+        "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir31-fixture-primary-implicit-exact/RESULT.json",
+        "sha256": "300b4a4fe673bfd27eb08ba6f69c51d28e3e345c9e02d993b43c34da72547d66"
+      }
+    ],
+    "fixture_auxiliary_scope": "14unique methods selected for migrated fixtures and their ownership/collection bounds; not every method directly loads a migratedJSON."
+  },
+  "review": {
+    "spec": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/integer-round-review-spec-v2.json",
+      "sha256": "5161723964150ae2d33be777099a61d9f523fedfc900346600a4c6369a2468cd"
+    },
+    "standards": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/integer-round-review-standards-v2.json",
+      "sha256": "7c04714f0334ce821275e4f5641b273cef1bb74b8244998e170993ee05a748d8"
+    },
+    "integration_spec": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/integer-round-integration-review-spec.json",
+      "sha256": "d08fa5fa8529c19dde3b55114ef90e8e13ae0c7f38cbec185ab331eb49d31026"
+    },
+    "integration_standards": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/integer-round-integration-review-standards.json",
+      "sha256": "6ade43079ea5baa1969e99f6b4d84fc20a582e3e8f07c7a6ce3e904c375f053d"
+    }
+  },
+  "fixed_review_issue": "Raw real targets and wrapped Add over-admission were independently reproduced. Original mandatory postorder now retains pending/invalid descendant roles and only direct scalarinteger assign consumes pending.13 negative cases verify strict-role refusal; oldred includes forms already rejected with a different diagnostic, not13prior acceptances. Sameowner lookup prepaid16.",
+  "private_joint_ownership": "Same production1e9 default owner naturally exhausts after2186 prepares at1000003678;2retries fail before role/copy/helper; full acceptedFrame/proofs/history/queues/records/output retain signatures. Receipt remains private candidate, primary also reran matching sharedController methods.",
+  "fixture_migration": {
+    "regeneration": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/integer-conversion/compat-ir31/regeneration-receipt.json",
+      "sha256": "53e9a3f6531aa21c2263c1572a15c9b001aacbc5d5ee8265097514fb960ed058"
+    },
+    "command": [
+      "python3",
+      "-B",
+      "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/integer-conversion/compat-ir31/regenerate.py"
+    ],
+    "fixtures": 5,
+    "first4": "Full typedIR and allbranch/origins identical except version after actual originalVA/testproducer compilation",
+    "factor": "Original VA bytes UNKNOWN; saved explicit recoveredVA freshly compiled; invertible node-name permutation. Only17Origin.column+schema differ; wholeRequest878output points,error,tolerances unchanged.",
+    "factor_recovered_source": "evas/tests/fixtures/factor-topology19-nonbinary-time.va",
+    "old400_materials_changed": false
+  },
+  "original142_CLI_diagnostic": {
+    "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/integer142-primary-kernel-diagnostic/RESULT.json",
+    "sha256": "f7e75a63fc8906383765d7e40b51f4f85e91f0cd0accb3b43c8168e811e19304",
+    "elapsed_s": 14.192917791951913,
+    "status": "completed with cleanup; no archivedworker/checker score"
+  },
+  "limits": [
+    "Only local scoped controls; not fullPython,fullRust,CI,installation or full400 acceptance",
+    "Original059/060 compound RHS remain outside this feature",
+    "No new original/revised400 PASS or Spectre/formalQ claims",
+    "Source041 foundations and history371 are independent work and not included in this receipt"
+  ],
+  "fullPython_executor": "single GitHub CI after mature batch freeze"
+}

@@ -67,8 +67,8 @@ fn direct_points(
     for &time in &trajectory.knots {
         for ((&node, value), enclosure) in driven_nodes
             .iter()
-            .zip(trajectory.values(time))
-            .zip(trajectory.value_bounds(time))
+            .zip(trajectory.checked_values(time)?)
+            .zip(trajectory.checked_value_bounds(time)?)
         {
             nodes[node] = value;
             node_bounds[node] = enclosure;
@@ -133,7 +133,7 @@ fn projected_points(
     let mut points = Vec::new();
     let mut bounds = Vec::new();
     for &time in &trajectory.knots {
-        let value = projection.values(&trajectory.value_bounds(time))[0];
+        let value = projection.values(&trajectory.checked_value_bounds(time)?)[0];
         // Choose a finite representative inside the original-IR enclosure.
         // Keep a point/subnormal intact; halving both ends would lose it.
         let representative = if value.lo == value.hi {
@@ -403,6 +403,7 @@ enum Function {
     Exp,
     Ln,
     Sqrt,
+    Tanh,
 }
 impl From<crate::ir::MathFunction> for Function {
     fn from(value: crate::ir::MathFunction) -> Self {
@@ -411,6 +412,7 @@ impl From<crate::ir::MathFunction> for Function {
             crate::ir::MathFunction::Exp => Self::Exp,
             crate::ir::MathFunction::Ln => Self::Ln,
             crate::ir::MathFunction::Sqrt => Self::Sqrt,
+            crate::ir::MathFunction::Tanh => Self::Tanh,
         }
     }
 }
@@ -422,6 +424,7 @@ impl Function {
             Self::Exp => x.exp(),
             Self::Ln => x.ln(),
             Self::Sqrt => x.sqrt(),
+            Self::Tanh => x.tanh(),
         }
     }
     fn bounds(self, x: I) -> Result<I, Error> {
@@ -431,6 +434,7 @@ impl Function {
             Self::Exp => crate::math_functions::exp(x),
             Self::Ln => crate::math_functions::ln(x),
             Self::Sqrt => crate::math_functions::sqrt(x),
+            Self::Tanh => crate::math_functions::tanh(x),
         }
     }
     fn derivative(self, x: I) -> Result<I, Error> {
@@ -438,6 +442,7 @@ impl Function {
             Self::Sin => sin_bounds(x + constant_interval(FRAC_PI_2_BITS)),
             Self::Cos => Ok(-sin_bounds(x)?),
             Self::Exp => self.bounds(x),
+            Self::Tanh => crate::math_functions::tanh_derivative(x),
             Self::Ln => {
                 self.bounds(x)?;
                 Ok(I::ONE / x)
@@ -486,7 +491,22 @@ enum Runtime {
         history: Box<Transition>,
     },
     Slew(Slew),
+    SourceSlew(crate::source_slew::SourceSlew),
     SlewCascade(crate::slew_cascade::Cascade),
+}
+
+pub(crate) fn bare_real_transition_state(spec: &OperatorSpec, program: &Program) -> Option<usize> {
+    let OperatorSpec::Transition {
+        input: Expression::State { state },
+        origin,
+        ..
+    } = spec
+    else {
+        return None;
+    };
+    program.states.get(*state).and_then(|s| {
+        (s.kind == crate::ir::StateKind::Real && s.instance == origin.instance).then_some(*state)
+    })
 }
 
 fn transition_input(
@@ -528,6 +548,60 @@ fn transition_input(
         .chain([*row.last().unwrap()])
         .collect();
     Ok((input, coefficients))
+}
+
+fn transition_input_shared(
+    expression: &Expression,
+    program: &Program,
+    states: &[I],
+    owner: &str,
+    work: &crate::transition_source_plan::Work,
+) -> Result<(AffineState, Vec<I>), Error> {
+    crate::history_admission::validate_relation_paid(expression, program, owner, work)?;
+    crate::continuous::validate_selection(expression, program, &[], owner)?;
+    let (nodes, state_dependencies, operators) =
+        crate::continuous::integral_dependency_edges(expression, program, owner)?;
+    if nodes.iter().any(|&n| n != 0) || !operators.is_empty() {
+        return Err(Error::new(
+            "unsupported_operator",
+            "transition input must depend only on held instance state and constants",
+        ));
+    }
+    for form in crate::history_admission::target_forms(expression, work)? {
+        crate::history_admission::affine_paid(&form, program, work)?;
+    }
+    work.debit(2, (program.nodes.len() + program.operators.len()) as u64)?;
+    let selected = crate::history_admission::resolve_expression(
+        expression,
+        &vec![I::ZERO; program.nodes.len()],
+        states,
+        &vec![I::ZERO; program.operators.len()],
+        work,
+    )?;
+    crate::history_admission::validate_relation_paid(&selected, program, owner, work)?;
+    let mut input = affine(&selected, program, owner)?;
+    input.state_dependencies.extend(state_dependencies);
+    let row = crate::history_admission::affine_paid(&selected, program, work)?;
+    work.debit(2, (program.states.len() + 1) as u64)?;
+    let coefficients = row[program.nodes.len()..program.nodes.len() + program.states.len()]
+        .iter()
+        .copied()
+        .chain([*row.last().unwrap()])
+        .collect();
+    Ok((input, coefficients))
+}
+
+// Evaluate the selected original held expression, never its rounded affine row.
+// Admission still belongs to transition_input and its all-arm dependency audit.
+fn transition_value_proof(
+    expression: &Expression,
+    program: &Program,
+    bounds: &[I],
+    proofs: Option<&crate::event_value_proof::Proofs>,
+) -> Result<Option<num_rational::BigRational>, Error> {
+    let nodes = vec![I::ZERO; program.nodes.len()];
+    let selected = crate::continuous::resolve_selection(expression, program, &[], &nodes, bounds)?;
+    Ok(crate::event_value_proof::LocalState::with_proofs(bounds, proofs).value(&selected, &nodes))
 }
 
 const SIN_MAX_MAGNITUDE: f64 = 128.0;
@@ -692,7 +766,7 @@ fn contains_critical(input: I, critical: I, period: I) -> bool {
     (start..=end).any(|k| overlaps(input, critical + I::point(k as f64) * period))
 }
 
-fn sin_bounds(input: I) -> Result<I, Error> {
+pub(crate) fn sin_bounds(input: I) -> Result<I, Error> {
     if !input.finite() {
         return Err(Error::new(
             "waveform_accuracy",
@@ -835,7 +909,15 @@ impl ResetExpression {
 fn reset_terms(expr: &Expression) -> Result<ResetTerms, Error> {
     let mut result = ResetTerms::default();
     match expr {
-        Expression::ArrayRead { .. }
+        Expression::Forcing { .. } => {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing marker requires its owning independent component dispatcher",
+            ))
+        }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
+        | Expression::IntegerRound { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {
@@ -925,7 +1007,15 @@ fn reset_exact_sign(terms: &ResetTerms, states: &[I]) -> Result<Option<I>, Error
 
 fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
     let value = match expr {
-        Expression::ArrayRead { .. }
+        Expression::Forcing { .. } => {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing marker requires its owning independent component dispatcher",
+            ))
+        }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
+        | Expression::IntegerRound { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {
@@ -979,6 +1069,17 @@ fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
 
 #[derive(Clone, Default)]
 pub(crate) struct Operators {
+    held_targets: std::collections::BTreeMap<usize, Arc<crate::held_integer_target::Spec>>,
+    pub(crate) source_context: Option<Arc<crate::transition_source_plan::ProofContext>>,
+    forcing_context: Option<Arc<crate::transition_source_plan::ProofContext>>,
+    shared_history: bool,
+    // Ordinary typed held targets in an existing history-root calendar. Untyped
+    // entries pay copies/advances on the shared owner and typed Specs pay their
+    // own copies once; never a history-admission or shared-history capability.
+    typed_calendar: bool,
+    history_targets: std::collections::BTreeMap<usize, history_target::TargetPlan>,
+    history_predicates: Vec<history_target::TargetPlan>,
+    history_admission: Option<Arc<crate::history_admission::Admission>>,
     entries: Vec<Runtime>,
     changes_on_advance: Vec<bool>,
     direct: Vec<Option<DirectInput>>,
@@ -986,6 +1087,9 @@ pub(crate) struct Operators {
     horizon: f64,
     isolated_parameters: Vec<(usize, f64)>,
 }
+
+#[path = "transition_history_target.rs"]
+mod history_target;
 
 // Only structurally isolated instance slots are normalized here. The
 // Controller retains actual measurement states; physical history never uses
@@ -1057,7 +1161,7 @@ impl Evaluation<'_> {
             .transpose()?;
         let parameters = physical_parameters(parameters, &self.base.isolated_parameters, I::point);
         let parameters = parameters.as_ref();
-        let mut observed = self.base.clone();
+        let mut observed = self.base.candidate_clone()?;
         if let Some(continuous) = &self.base.continuous {
             observed.continuous = Some(Arc::new(match &physical_proofs {
                 Some(proofs) => continuous.mapped_event_with_time_proofs(
@@ -1078,8 +1182,19 @@ impl Evaluation<'_> {
                 history.advance_reset(self.time, time_bounds, reset.active(parameters)?)?;
             }
         }
-        let mut values = observed.values_reusing(self.time, Some(&self.values))?;
-        let mut bounds = observed.event_bounds(self.time, time_bounds)?;
+        let sampling_window = self
+            .exact_root
+            .as_ref()
+            .and_then(|root| root.refine(time_bounds))
+            .unwrap_or(time_bounds);
+        let mut values = observed.values_at_root(
+            self.time,
+            self.exact_root.as_ref(),
+            sampling_window,
+            Some(&self.values),
+        )?;
+        let mut bounds =
+            observed.event_bounds_at_root(self.time, time_bounds, self.exact_root.as_ref())?;
         for (i, entry) in observed.entries.iter().enumerate() {
             match entry {
                 Runtime::Continuous(slot)
@@ -1185,6 +1300,30 @@ impl Evaluation<'_> {
         proven: Option<&Operators>,
         proofs: Option<&crate::exact_source::TimeProofs>,
     ) -> Result<Operators, Error> {
+        self.advanced_until_with_value_proofs(
+            time_bounds,
+            states,
+            bounds,
+            changed,
+            horizon,
+            proven,
+            proofs,
+            None,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn advanced_until_with_value_proofs(
+        &self,
+        time_bounds: I,
+        states: &[f64],
+        bounds: &[I],
+        changed: &[usize],
+        horizon: f64,
+        proven: Option<&Operators>,
+        proofs: Option<&crate::exact_source::TimeProofs>,
+        value_proofs: Option<&crate::event_value_proof::Proofs>,
+    ) -> Result<Operators, Error> {
         let _timing = crate::diagnostics::span("history.advance_candidate");
         let physical_proofs = proofs
             .map(|proofs| {
@@ -1204,13 +1343,29 @@ impl Evaluation<'_> {
             })
             .transpose()?;
         let proofs = physical_proofs.as_ref();
+        let physical_value_proofs = value_proofs
+            .map(|values| {
+                if !crate::event_value_proof::valid(values, bounds) {
+                    return Err(Error::new(
+                        "event_resolution",
+                        "history value proof outside matching candidate state enclosure",
+                    ));
+                }
+                let mut physical = values.clone();
+                for &(state, _) in &self.base.isolated_parameters {
+                    physical.remove(&state);
+                }
+                Ok(physical)
+            })
+            .transpose()?;
+        let value_proofs = physical_value_proofs.as_ref();
         let states = physical_parameters(states, &self.base.isolated_parameters, |value| value);
         let bounds = physical_parameters(bounds, &self.base.isolated_parameters, I::point);
         let states = states.as_ref();
         let bounds = bounds.as_ref();
 
         let copying = crate::diagnostics::span("history.clone");
-        let mut candidate = self.base.clone();
+        let mut candidate = self.base.candidate_clone()?;
         drop(copying);
         if let Some(proven) = proven {
             if candidate.entries.len() != proven.entries.len() {
@@ -1260,17 +1415,370 @@ impl Evaluation<'_> {
             changed,
             self.exact_root.as_ref(),
             true,
+            value_proofs,
+            proofs,
         )?;
         Ok(candidate)
     }
 }
 
 impl Operators {
+    pub(crate) fn bind_forcing_context(
+        &mut self,
+        c: Arc<crate::transition_source_plan::ProofContext>,
+    ) -> Result<(), Error> {
+        self.forcing_context = Some(c);
+        self.charge_forcing_copy()
+    }
+    pub(crate) fn charge_forcing_copy(&self) -> Result<(), Error> {
+        let Some(c) = &self.forcing_context else {
+            return Ok(());
+        };
+        c.source_charge(
+            "forcing_operator_copy",
+            32 + self.entries.len() * 64
+                + self.direct.len() * 16
+                + self.changes_on_advance.len()
+                + self.isolated_parameters.len() * 2,
+        )?;
+        if (!self.shared_history && !self.history_targets.is_empty())
+            || self.continuous.is_some()
+            || self.direct.iter().any(Option::is_some)
+        {
+            return Err(Error::new(
+                "unsupported_forcing_scope",
+                "forcing runtime provider differs from audited bare held graph",
+            ));
+        }
+        if self.shared_history {
+            for plan in self.history_targets.values() {
+                plan.charge_copy()?;
+            }
+        }
+        for (index, e) in self.entries.iter().enumerate() {
+            let Runtime::Transition {
+                expression,
+                owner,
+                input,
+                input_bounds,
+                history,
+                source: None,
+                ..
+            } = e
+            else {
+                return Err(Error::new(
+                    "unsupported_forcing_scope",
+                    "forcing runtime provider differs from audited bare held graph",
+                ));
+            };
+            if !self.shared_history && !matches!(expression, Expression::State { .. }) {
+                return Err(Error::new(
+                    "unsupported_forcing_scope",
+                    "forcing requires bare held provider",
+                ));
+            }
+            if self.shared_history {
+                // This is the distinct Runtime-owned AST, not its affine row
+                // or a TargetPlan-owned expression. Pay before self.clone().
+                if let Some(spec) = self.held_targets.get(&index) {
+                    spec.charge_runtime_copy(expression, 0)?;
+                } else {
+                    crate::history_admission::charge_expression_copy(expression, c.borrow_work())?;
+                }
+            }
+            c.source_charge(
+                "forcing_operator_copy",
+                owner
+                    .len()
+                    .saturating_add(input.owned_copy_items())
+                    .saturating_add(input_bounds.len())
+                    .saturating_add(64),
+            )?;
+            history.charge_forcing_copy(c)?;
+        }
+        Ok(())
+    }
+    pub(crate) fn forcing_clone(&self) -> Result<Self, Error> {
+        self.candidate_clone()
+    }
+    pub(crate) fn history_copy_work(&self) -> Option<&crate::transition_source_plan::Work> {
+        self.history_admission
+            .as_ref()
+            .map(|token| token.context.borrow_work())
+            .or_else(|| {
+                self.source_context
+                    .as_ref()
+                    .filter(|c| {
+                        self.shared_history
+                            || self.typed_calendar
+                            || c.original_binding().1.analytic_work().is_some()
+                    })
+                    .map(|c| c.borrow_work())
+            })
+    }
+    pub(crate) fn candidate_clone(&self) -> Result<Self, Error> {
+        // Composed Forcing pays its Runtime AST through charge_forcing_copy,
+        // including the native Spec branch. This ordinary history copier only
+        // covers the original Admission and the analytic empty-operator role.
+        let copy_work = self
+            .history_admission
+            .as_ref()
+            .map(|token| token.context.borrow_work())
+            .or_else(|| {
+                self.source_context
+                    .as_ref()
+                    .filter(|c| {
+                        self.typed_calendar || c.original_binding().1.analytic_work().is_some()
+                    })
+                    .map(|c| c.borrow_work())
+            });
+        if let Some(w) = copy_work {
+            w.debit(2, 0)?;
+            w.debit(
+                2,
+                (self.changes_on_advance.len()
+                    + self.direct.len()
+                    + self.isolated_parameters.len() * 2) as u64,
+            )?;
+            for (index, entry) in self.entries.iter().enumerate() {
+                if self.held_targets.contains_key(&index) {
+                    // Typed held targets pay their AST, row and history copy
+                    // once through their own Spec below.
+                    continue;
+                }
+                let Runtime::Transition {
+                    expression,
+                    input,
+                    input_bounds,
+                    owner,
+                    history,
+                    source,
+                    ..
+                } = entry
+                else {
+                    return Err(Error::new(
+                        "invalid_ir",
+                        "non-Transition runtime entered a held history consumer",
+                    ));
+                };
+                if source.is_some() {
+                    return Err(Error::new(
+                        "invalid_ir",
+                        "source cursor entered a held history consumer",
+                    ));
+                }
+                crate::history_admission::charge_expression_copy(expression, w)?;
+                w.debit(
+                    2,
+                    (input.owned_copy_items() + input_bounds.len() * 2 + owner.len()) as u64,
+                )?;
+                history.charge_held_copy(&|n| w.debit(2, n as u64))?;
+            }
+            for plan in &self.history_predicates {
+                plan.charge_copy()?;
+            }
+        }
+        for (&index, spec) in &self.held_targets {
+            if let Runtime::Transition {
+                expression,
+                input,
+                input_bounds,
+                owner,
+                history,
+                ..
+            } = &self.entries[index]
+            {
+                spec.charge_runtime_copy(
+                    expression,
+                    input.states.len() + input.nodes.len() + input_bounds.len() + owner.len(),
+                )?;
+                history.charge_held_copy(&|amount| spec.charge(amount))?;
+            }
+        }
+        self.charge_forcing_copy()?;
+        Ok(self.clone())
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn refresh_history_targets(
+        &mut self,
+        time: f64,
+        window: I,
+        states: &[f64],
+        bounds: &[I],
+        changed: &[usize],
+        initial: bool,
+        exact_root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<(), Error> {
+        let shared_work = if self.shared_history {
+            let w = self
+                .source_context
+                .as_ref()
+                .ok_or_else(|| Error::new("invalid_ir", "shared target lost source owner"))?
+                .borrow_work();
+            w.debit(2, 0)?;
+            let count = self.history_targets.len().saturating_add(1);
+            // Topological metadata scans, BTree comparisons/edits and ordered
+            // indices only. AST/parent/curve payloads are charged separately.
+            w.debit(
+                2,
+                count
+                    .saturating_mul(count)
+                    .saturating_mul(count)
+                    .saturating_mul(32)
+                    .saturating_add(self.entries.len().saturating_mul(count).saturating_mul(8))
+                    as u64,
+            )?;
+            Some(w.clone())
+        } else {
+            None
+        };
+        let mut pending: BTreeSet<_> = self.history_targets.keys().copied().collect();
+        let mut ordered = Vec::new();
+        while !pending.is_empty() {
+            let next = pending
+                .iter()
+                .copied()
+                .find(|i| {
+                    self.history_targets[i]
+                        .dependencies
+                        .iter()
+                        .all(|d| !pending.contains(d))
+                })
+                .ok_or_else(|| {
+                    Error::new(
+                        "unsupported_operator",
+                        "transition target history dependency cycle is unsupported",
+                    )
+                })?;
+            pending.remove(&next);
+            ordered.push(next);
+        }
+        for index in ordered {
+            if self.entries.iter().any(|e|matches!(e,Runtime::TransitionFilter{parent,..}|Runtime::TransitionIntegral{parent,..} if *parent==index)) {
+                return Err(Error::new("unsupported_operator","integral/filter consumers of history-selected transition targets are unsupported"));
+            }
+            let old = &self.history_targets[&index];
+            if self.horizon <= time {
+                if let Runtime::Transition { history, .. } = &mut self.entries[index] {
+                    if let Some(w) = &shared_work {
+                        history.history_advance_time(time, w)?;
+                    } else {
+                        history.advance_time(time)?;
+                    }
+                }
+                continue;
+            }
+            let event_window = if shared_work.is_some() {
+                old.window_at_paid(time)?
+            } else {
+                old.window_at(time)
+            }
+            .map_or(window, |cut| cut.hull(window));
+            let mut until = self.horizon;
+            for d in &old.dependencies {
+                if let Some(parent) = self.history_targets.get(d) {
+                    if let Some(t) = if shared_work.is_some() {
+                        parent.next_after_paid(time)?
+                    } else {
+                        parent.next_after(time)
+                    } {
+                        until = until.min(t);
+                    }
+                }
+            }
+            let plan = old.prepared(time, event_window, bounds, &self.entries, until)?;
+            let Runtime::Transition {
+                input,
+                input_bounds,
+                history,
+                program,
+                owner,
+                ..
+            } = &mut self.entries[index]
+            else {
+                unreachable!()
+            };
+            let (next, row) = if let Some(w) = &shared_work {
+                transition_input_shared(&plan.selected, program, bounds, owner, w)?
+            } else {
+                transition_input(&plan.selected, program, bounds, owner)?
+            };
+            let level = row
+                .iter()
+                .zip(bounds.iter().copied().chain([I::ONE]))
+                .fold(I::ZERO, |a, (&b, c)| a + b * c);
+            let value = next.value(&[], states)?;
+            if initial {
+                let OperatorSpec::Transition {
+                    delay, rise, fall, ..
+                } = &program.operators[index]
+                else {
+                    unreachable!()
+                };
+                **history = if let Some(w) = &shared_work {
+                    Transition::history_enclosed(value, level, *delay, *rise, *fall, w)?
+                } else {
+                    Transition::enclosed(value, level, *delay, *rise, *fall)?
+                };
+            } else {
+                let same = if let Some(w) = &shared_work {
+                    crate::history_admission::same_expression_full(
+                        &plan.selected,
+                        &old.selected,
+                        w,
+                    )?
+                } else {
+                    plan.selected == old.selected
+                };
+                let may_change =
+                    !same || changed.iter().any(|s| next.state_dependencies.contains(s));
+                if let Some(w) = &shared_work {
+                    let root = if exact_root.is_some() {
+                        exact_root
+                    } else {
+                        old.root_at_paid(time)?
+                    };
+                    history.advance_at_with_history_work(
+                        time,
+                        event_window,
+                        value,
+                        level,
+                        may_change,
+                        root,
+                        None,
+                        w,
+                    )?;
+                } else {
+                    history.advance_at_with_exact(
+                        time,
+                        event_window,
+                        value,
+                        level,
+                        may_change,
+                        exact_root.or_else(|| old.root_at(time)),
+                    )?;
+                }
+            }
+            *input = next;
+            *input_bounds = row;
+            self.history_targets.insert(index, plan);
+        }
+        Ok(())
+    }
     pub(crate) fn exact_affine_value(
         &self,
         op: usize,
         local: bool,
+        bounds: I,
     ) -> Option<(num_rational::BigRational, num_rational::BigRational)> {
+        if !local {
+            if let Runtime::Transition { history, .. } = self.entries.get(op)? {
+                let mut history = (**history).clone();
+                history.advance_time(bounds.lo).ok()?;
+                return history.exact_affine_on(bounds);
+            }
+        }
         self.continuous.as_ref()?.exact_affine_value(op, local)
     }
 
@@ -1336,19 +1844,53 @@ impl Operators {
     }
 
     pub(crate) fn event_bounds(&self, time: f64, window: I) -> Result<Vec<I>, Error> {
-        if window.lo == window.hi {
-            return self.bounds(time);
+        self.event_bounds_with_root(time, window, None)
+    }
+
+    fn event_bounds_with_root(
+        &self,
+        time: f64,
+        window: I,
+        root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<Vec<I>, Error> {
+        let point = (window.lo == window.hi)
+            .then(|| self.bounds(time))
+            .transpose()?;
+        if window.lo == window.hi && root.is_none() {
+            return Ok(point.unwrap());
         }
+        let transition_window = if let Some(root) = root {
+            if let Some(w) = self.history_copy_work() {
+                root.refine_with_work(window, w)?.unwrap_or(window)
+            } else {
+                root.refine(window).unwrap_or(window)
+            }
+        } else {
+            window
+        };
         let continuous = self
             .continuous
             .as_ref()
+            .filter(|_| point.is_none())
             .map(|c| c.event_bounds(window))
             .transpose()?;
         // Value observation has a different contract from a cross guard:
         // it also covers reset histories and need not provide a derivative.
+        if let Some(w) = self.history_copy_work() {
+            w.debit(2, (self.entries.len() * 2) as u64)?;
+        }
         let mut bounds = Vec::with_capacity(self.entries.len());
         for (index, entry) in self.entries.iter().enumerate() {
             let bound = match entry {
+                Runtime::Transition { history, .. } => {
+                    if let Some(w) = self.history_copy_work() {
+                        history.history_observation_range(transition_window, w)?
+                    } else {
+                        history.observation_range(transition_window)?
+                    }
+                }
+                Runtime::SourceSlew(history) => history.range(transition_window)?,
+                _ if point.is_some() => point.as_ref().unwrap()[index],
                 Runtime::DirectDerivative(history) => history.range(window)?,
                 Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                 Runtime::Idt { history, .. } => history.value_range(window)?,
@@ -1378,7 +1920,6 @@ impl Operators {
                         ..
                     },
                 ) => function.bounds(*constant_bounds + *coefficient_bounds * bounds[*operator])?,
-                Runtime::Transition { history, .. } => history.value_range(window)?,
                 _ => {
                     return Err(Error::new(
                         "event_resolution",
@@ -1422,7 +1963,419 @@ impl Operators {
         horizon: f64,
         tolerances: &Tolerances,
     ) -> Result<Self, Error> {
+        Self::new_until_with_source_context(
+            program, trajectory, driven, states, horizon, tolerances, None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_until_with_bootstrap_bounds(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        bounds: &[I],
+        horizon: f64,
+        tolerances: &Tolerances,
+    ) -> Result<Self, Error> {
+        Self::new_until_with_seed_bounds(
+            program,
+            trajectory,
+            driven,
+            states,
+            horizon,
+            tolerances,
+            None,
+            Some(bounds),
+            None,
+            false,
+            None,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_until_with_bootstrap_bounds_and_source(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        bounds: &[I],
+        horizon: f64,
+        tolerances: &Tolerances,
+        shared: Option<Arc<crate::transition_source_plan::ProofContext>>,
+    ) -> Result<Self, Error> {
+        if shared.is_none() {
+            return Self::new_until_with_bootstrap_bounds(
+                program, trajectory, driven, states, bounds, horizon, tolerances,
+            );
+        }
+        Self::new_until_with_seed_bounds(
+            program,
+            trajectory,
+            driven,
+            states,
+            horizon,
+            tolerances,
+            shared,
+            Some(bounds),
+            None,
+            false,
+            None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_history_consumer(
+        token: Arc<crate::history_admission::Admission>,
+        states: &[f64],
+        horizon: f64,
+    ) -> Result<Self, Error> {
+        token.context.borrow_work().debit(2, 1)?;
+        let context = token.context.clone();
+        let work = context.borrow_work();
+        work.debit(2, 0)?;
+        let program = context.original_binding().0;
+        work.debit(2, (states.len() * 2) as u64)?;
+        let bounds: Vec<_> = states.iter().copied().map(I::point).collect();
+        let mut entries = Vec::new();
+        let mut origins = BTreeSet::new();
+        for spec in &program.operators {
+            work.step()?;
+            let OperatorSpec::Transition {
+                input,
+                delay,
+                rise,
+                fall,
+                origin,
+            } = spec
+            else {
+                return Err(Error::new(
+                    "unsupported_condition",
+                    "ordinary history consumer requires held Transition operators only",
+                ));
+            };
+            work.debit(
+                2,
+                origin
+                    .instance
+                    .len()
+                    .saturating_add(origin.source.len())
+                    .saturating_add(origin.expansion.len()) as u64,
+            )?;
+            if origin.instance.is_empty()
+                || origin.source.is_empty()
+                || origin.line == 0
+                || origin.column == 0
+                || !origin.valid_expansion()
+                || !origins.insert((
+                    &origin.instance,
+                    &origin.source,
+                    origin.line,
+                    origin.column,
+                    &origin.expansion,
+                ))
+            {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "invalid history consumer operator identity",
+                ));
+            }
+            let (affine, row) = crate::history_admission::held_input(
+                input,
+                program,
+                &origin.instance,
+                &bounds,
+                work,
+            )?;
+            work.debit(2, states.len() as u64)?;
+            let value = affine.value(&[], states)?;
+            let mut enclosure = I::ZERO;
+            for (&a, b) in row.iter().zip(bounds.iter().copied().chain([I::ONE])) {
+                work.step()?;
+                enclosure = enclosure + a * b;
+            }
+            let expression = crate::history_admission::copy_expression(input, work)?;
+            let history =
+                Transition::history_enclosed(value, enclosure, *delay, *rise, *fall, work)?;
+            work.debit(2, (origin.instance.len() + 3) as u64)?;
+            entries.push(Runtime::Transition {
+                expression,
+                program: context.program_arc(),
+                owner: origin.instance.clone(),
+                source: None,
+                input: affine,
+                input_bounds: row,
+                history: Box::new(history),
+            });
+        }
+        let mut history_predicates = Vec::new();
+        for index in 0..token.expanded.len() {
+            if let Some(p) = history_target::TargetPlan::predicate_specification(&token, index)? {
+                work.debit(2, 1)?;
+                history_predicates.push(p)
+            }
+        }
+        work.debit(2, (entries.len() * 2) as u64)?;
+        let mut result = Self {
+            changes_on_advance: vec![true; entries.len()],
+            direct: vec![None; entries.len()],
+            entries,
+            source_context: Some(context),
+            history_predicates,
+            history_admission: Some(token),
+            horizon,
+            ..Self::default()
+        };
+        result.refresh_history_predicates(0., I::ZERO, &bounds)?;
+        Ok(result)
+    }
+    fn refresh_history_predicates(
+        &mut self,
+        time: f64,
+        window: I,
+        bounds: &[I],
+    ) -> Result<(), Error> {
+        if time >= self.horizon {
+            return Ok(());
+        }
+        for plan in &mut self.history_predicates {
+            *plan = plan.prepared(time, window, bounds, &self.entries, self.horizon)?;
+        }
+        Ok(())
+    }
+    pub(crate) fn new_until_with_source_context(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        horizon: f64,
+        tolerances: &Tolerances,
+        shared: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
+    ) -> Result<Self, Error> {
+        Self::new_until_with_seed_bounds(
+            program, trajectory, driven, states, horizon, tolerances, shared, None, None, false,
+            None,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_until_with_held_points(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        bounds: &[I],
+        typed_targets: &BTreeSet<usize>,
+        context: Arc<crate::transition_source_plan::ProofContext>,
+        horizon: f64,
+        tolerances: &Tolerances,
+    ) -> Result<Self, Error> {
+        if typed_targets.is_empty()
+            || program
+                .operators
+                .iter()
+                .any(|s| !matches!(s, OperatorSpec::Transition { .. }))
+        {
+            return Err(Error::new(
+                "unsupported_held_integer_target",
+                "held integer targets require an all-Transition independent calendar",
+            ));
+        }
+        Self::new_until_with_seed_bounds(
+            program,
+            trajectory,
+            driven,
+            states,
+            horizon,
+            tolerances,
+            Some(context),
+            Some(bounds),
+            Some(typed_targets),
+            false,
+            None,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_until_with_typed_calendar(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        bounds: &[I],
+        typed_targets: &BTreeSet<usize>,
+        context: Arc<crate::transition_source_plan::ProofContext>,
+        horizon: f64,
+        tolerances: &Tolerances,
+    ) -> Result<Self, Error> {
+        crate::event_floor::check_provided_binding(&context, program, trajectory, driven)?;
+        context.charge(8 + program.operators.len() * 8 + states.len() * 4)?;
+        for (index, operator) in program.operators.iter().enumerate() {
+            // Do not admit an electrical/source-selected target or another
+            // operator merely because a different target has an integer proof.
+            // Typed targets pay through their own Spec; every other target
+            // must be an ordinary held Transition of same-owner state and
+            // constants (no node, operator or source dependency).
+            if typed_targets.contains(&index) {
+                continue;
+            }
+            let held = match operator {
+                OperatorSpec::Transition { input, origin, .. } => {
+                    bare_real_transition_state(operator, program).is_some()
+                        || crate::continuous::integral_dependency_edges(
+                            input,
+                            program,
+                            &origin.instance,
+                        )
+                        .is_ok_and(|(nodes, _, operators)| nodes.is_empty() && operators.is_empty())
+                }
+                _ => false,
+            };
+            if !held {
+                return Err(Error::new(
+                    "unsupported_held_integer_target",
+                    "typed history calendar requires typed integer or held-state Transition targets",
+                ));
+            }
+            if let OperatorSpec::Transition { input, .. } = operator {
+                crate::history_admission::charge_expression_copy(input, context.borrow_work())?;
+            }
+        }
+        let mut result = Self::new_until_with_held_points(
+            program,
+            trajectory,
+            driven,
+            states,
+            bounds,
+            typed_targets,
+            context,
+            horizon,
+            tolerances,
+        )?;
+        result.typed_calendar = true;
+        Ok(result)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_until_with_forcing_execution(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        bounds: Option<&[I]>,
+        targets: &BTreeSet<usize>,
+        horizon: f64,
+        tolerances: &Tolerances,
+        execution: crate::forcing_graph::PreparedExecution,
+    ) -> Result<Self, Error> {
+        let context = execution.context(program, trajectory, driven)?;
+        if !execution.requires_composed_history() {
+            return Err(Error::new(
+                "invalid_ir",
+                "shared target entry requires original composed qualification",
+            ));
+        }
+        execution.charge_operator_construction()?;
+        let w = context.borrow_work();
+        for (index, spec) in program.operators.iter().enumerate() {
+            w.step()?;
+            if !targets.contains(&index) {
+                let OperatorSpec::Transition { input, origin, .. } = spec else {
+                    return Err(Error::new(
+                        "unsupported_forcing_scope",
+                        "shared targets require Transition histories",
+                    ));
+                };
+                crate::history_admission::validate_relation_paid(
+                    input,
+                    program,
+                    &origin.instance,
+                    w,
+                )?;
+            }
+        }
+        Self::new_until_with_seed_bounds(
+            program,
+            trajectory,
+            driven,
+            states,
+            horizon,
+            tolerances,
+            Some(context),
+            bounds,
+            if targets.is_empty() {
+                None
+            } else {
+                Some(targets)
+            },
+            true,
+            None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_until_with_analytic_request(
+        token: &crate::analytic_request::Request,
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        bounds: Option<&[I]>,
+        targets: &BTreeSet<usize>,
+        horizon: f64,
+        tolerances: &Tolerances,
+    ) -> Result<Self, Error> {
+        if !token.fixed_timer_held_transitions() {
+            return Err(Error::new(
+                "unsupported_analytic_source_consumer",
+                "sampled operator entry requires its original joint role admission",
+            ));
+        }
+        crate::event_floor::check_provided_binding(token.context(), program, trajectory, driven)?;
+        Self::new_until_with_seed_bounds(
+            program,
+            trajectory,
+            driven,
+            states,
+            horizon,
+            tolerances,
+            Some(token.context().clone()),
+            bounds,
+            if targets.is_empty() {
+                None
+            } else {
+                Some(targets)
+            },
+            false,
+            Some(token),
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    fn new_until_with_seed_bounds(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        horizon: f64,
+        tolerances: &Tolerances,
+        shared: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
+        initial_bounds: Option<&[I]>,
+        typed_targets: Option<&BTreeSet<usize>>,
+        shared_history: bool,
+        analytic_token: Option<&crate::analytic_request::Request>,
+    ) -> Result<Self, Error> {
         let _timing = crate::diagnostics::span("history.prepare");
+        if let Some(bounds) = initial_bounds {
+            if states.len() != program.states.len()
+                || bounds.len() != states.len()
+                || states
+                    .iter()
+                    .zip(bounds)
+                    .any(|(&v, &b)| !v.is_finite() || !b.finite() || v < b.lo || v > b.hi)
+            {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "invalid bounded bootstrap state enclosure",
+                ));
+            }
+        }
         let owners = crate::passive_events::isolated_instances(program);
         let isolated_parameters = program
             .states
@@ -1433,9 +2386,12 @@ impl Operators {
             .collect::<Result<Vec<_>, Error>>()?;
         let physical_states = physical_parameters(states, &isolated_parameters, |value| value);
         let states = physical_states.as_ref();
+        let physical_bounds = initial_bounds
+            .map(|bounds| physical_parameters(bounds, &isolated_parameters, I::point));
+        let initial_bounds = physical_bounds.as_deref();
 
         let mut identities = BTreeSet::new();
-        for spec in &program.operators {
+        for (spec_index, spec) in program.operators.iter().enumerate() {
             let origin = spec.origin();
             if origin.instance.is_empty()
                 || origin.source.is_empty()
@@ -1459,6 +2415,41 @@ impl Operators {
                     "invalid or duplicate operator call-site identity",
                 ));
             }
+            if let Some(actual) = initial_bounds.filter(|_| {
+                typed_targets.is_none() && bare_real_transition_state(spec, program).is_none()
+            }) {
+                let refusal = || {
+                    Error::new(
+                    "unsupported_initial_history",
+                    "bounded bootstrap requires only bare same-owner real-state Transition targets",
+                )
+                };
+                let (Some(context), OperatorSpec::Transition { input, .. }) = (&shared, spec)
+                else {
+                    return Err(refusal());
+                };
+                crate::event_floor::check_provided_binding(context, program, trajectory, driven)?;
+                let dependencies = crate::held_integer_target::scalar_dependencies(
+                    input,
+                    program,
+                    &origin.instance,
+                    context,
+                )
+                .map_err(|error| {
+                    if error.kind == "unsupported_held_integer_target" {
+                        refusal()
+                    } else {
+                        error
+                    }
+                })?;
+                context.charge(4 + 4 * dependencies.len())?;
+                if dependencies
+                    .iter()
+                    .any(|&state| actual[state] != I::point(states[state]))
+                {
+                    return Err(refusal());
+                }
+            }
             let input = match spec {
                 OperatorSpec::Idt { input, .. }
                 | OperatorSpec::LaplaceNd { input, .. }
@@ -1470,6 +2461,39 @@ impl Operators {
                 | OperatorSpec::Slew { input, .. }
                 | OperatorSpec::IdtMod { input, .. } => input,
             };
+            if typed_targets.is_some_and(|ids| ids.contains(&spec_index)) {
+                crate::held_integer_target::dependencies(
+                    input,
+                    program,
+                    &origin.instance,
+                    shared.as_ref().expect("typed owner"),
+                )?;
+                continue;
+            }
+            if typed_targets.is_some() {
+                // The existing bare-real constructor consumes its actual box.
+                // Other untyped targets retain the original point-seed gate;
+                // typed targets above still prove their own point dependencies.
+                let (_, deps, _) =
+                    crate::continuous::integral_dependency_edges(input, program, &origin.instance)?;
+                let actual = initial_bounds.expect("held cold frame");
+                let nonpoint = deps
+                    .iter()
+                    .any(|&s| actual.get(s).is_none_or(|b| b.lo != b.hi));
+                if nonpoint {
+                    shared
+                        .as_ref()
+                        .expect("typed owner")
+                        .charge(16 + origin.instance.len())?;
+                    if bare_real_transition_state(spec, program).is_some() {
+                        continue;
+                    }
+                    return Err(Error::new(
+                        "unsupported_initial_history",
+                        "typed target composition retains the original cold point-seed gate",
+                    ));
+                }
+            }
             // Validate raw indices and ownership before any interval indexing.
             // The kernel must not assume a trusted Python producer.
             if matches!(
@@ -1479,6 +2503,7 @@ impl Operators {
                     | OperatorSpec::Ddt { .. }
                     | OperatorSpec::Math { .. }
                     | OperatorSpec::Transition { .. }
+                    | OperatorSpec::Slew { .. }
             ) {
                 crate::continuous::validate_integral_input(input, program, &origin.instance)?;
             } else {
@@ -1488,9 +2513,59 @@ impl Operators {
         let continuous =
             Continuous::new_until(program, trajectory, driven, states, horizon, tolerances)?
                 .map(Arc::new);
-        let source_work = crate::transition_source_plan::Work::default();
+        let needs_source_plan = program.operators.iter().any(|spec| match spec {
+            OperatorSpec::Transition { .. } => true,
+            OperatorSpec::Slew { input, .. } => crate::source_slew::selected(input),
+            _ => false,
+        });
+        let source_context = if shared.is_some() {
+            shared
+        } else {
+            needs_source_plan
+                .then(|| {
+                    crate::transition_source_plan::ProofContext::new(
+                        program,
+                        trajectory,
+                        driven,
+                        crate::transition_source_plan::Work::default(),
+                    )
+                })
+                .transpose()?
+        };
+        let history_work = if shared_history {
+            let context = source_context.as_ref().ok_or_else(|| {
+                Error::new("invalid_ir", "shared target lost original source owner")
+            })?;
+            context.borrow_work().debit(2, 1)?;
+            context.borrow_work().clone()
+        } else if let Some(w) = trajectory.analytic_work() {
+            // Analytic frames retain their original request ledger. Nonempty
+            // frames additionally require the complete sampled-role token;
+            // that token does not grant shared_history semantics.
+            let context = source_context.as_ref().ok_or_else(|| {
+                Error::new("invalid_ir", "analytic operator frame lost original owner")
+            })?;
+            let qualified = analytic_token.is_some_and(|token| {
+                token.fixed_timer_held_transitions() && Arc::ptr_eq(context, token.context())
+            });
+            if context.original_binding().1.analytic_work().is_none()
+                || (!program.operators.is_empty() && !qualified)
+            {
+                return Err(Error::new(
+                    "unsupported_analytic_source_consumer",
+                    "analytic operator frame requires its original empty or sampled capability",
+                ));
+            }
+            w.debit(2, 1)?;
+            w.clone()
+        } else {
+            crate::transition_source_plan::Work::limited([8192, 8192, 1_000_000_000])
+        };
         let mut entries = Vec::new();
+        let mut selected_slew_count = 0usize;
         let mut direct = Vec::new();
+        let mut history_targets = std::collections::BTreeMap::new();
+        let mut held_targets = std::collections::BTreeMap::new();
         for (index, spec) in program.operators.iter().enumerate() {
             let direct_input = match spec {
                 OperatorSpec::Idt { input, origin, .. }
@@ -1709,19 +2784,118 @@ impl Operators {
                     fall,
                     origin,
                 } => {
-                    let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
-                    let source = crate::transition_source_plan::Spec::new(
-                        input,
-                        program,
-                        trajectory,
-                        driven,
-                        &origin.instance,
-                        source_work.clone(),
-                    )?
-                    .map(|spec| {
-                        crate::transition_source_state::Source::initialized(spec, &state_bounds)
-                    })
-                    .transpose()?;
+                    if typed_targets.is_some_and(|ids| ids.contains(&index)) {
+                        let spec = crate::held_integer_target::Spec::new(
+                            input,
+                            program,
+                            &origin.instance,
+                            source_context.as_ref().unwrap().clone(),
+                        )?;
+                        let (value, bound) = spec.evaluate(
+                            input,
+                            states,
+                            initial_bounds.expect("held target borrows actual cold box"),
+                        )?;
+                        spec.charge(
+                            4 + program.nodes.len()
+                                + 2 * program.states.len()
+                                + program.operators.len(),
+                        )?;
+                        let constant = Expression::Affine {
+                            constant: value,
+                            terms: vec![],
+                        };
+                        let affine = affine(&constant, program, &origin.instance)?;
+                        // Charge the original target copy and stored dependency row
+                        // before allocation; Arc Spec itself never copies a tree.
+                        spec.charge_runtime_copy(input, program.states.len())?;
+                        entries.push(Runtime::Transition {
+                            expression: input.clone(),
+                            program: source_context.as_ref().unwrap().program_arc(),
+                            owner: origin.instance.clone(),
+                            source: None,
+                            input: affine,
+                            input_bounds: initial_bounds.expect("actual cold target box").to_vec(),
+                            history: Box::new(Transition::enclosed(
+                                value, bound, *delay, *rise, *fall,
+                            )?),
+                        });
+                        held_targets.insert(index, spec);
+                        continue;
+                    }
+                    let plan = if shared_history {
+                        history_target::TargetPlan::specification_shared(
+                            input,
+                            program,
+                            driven,
+                            &origin.instance,
+                            source_context.as_ref().unwrap().clone(),
+                        )?
+                    } else {
+                        history_target::TargetPlan::specification(
+                            input,
+                            program,
+                            trajectory,
+                            driven,
+                            &origin.instance,
+                            history_work.clone(),
+                        )?
+                    };
+                    if let Some(plan) = plan {
+                        let (affine, row) = transition_input(
+                            &Expression::Affine {
+                                constant: 0.,
+                                terms: vec![],
+                            },
+                            program,
+                            &states.iter().copied().map(I::point).collect::<Vec<_>>(),
+                            &origin.instance,
+                        )?;
+                        entries.push(Runtime::Transition {
+                            input: affine,
+                            input_bounds: row,
+                            history: Box::new(Transition::enclosed(
+                                0.,
+                                I::ZERO,
+                                *delay,
+                                *rise,
+                                *fall,
+                            )?),
+                            expression: input.clone(),
+                            program: Arc::new(program.clone()),
+                            owner: origin.instance.clone(),
+                            source: None,
+                        });
+                        history_targets.insert(index, plan);
+                        continue;
+                    }
+                    // Reuse the old Spec classification/leaf parsing. It only
+                    // requests DC proof when that existing parser finds a
+                    // voltage value leaf; old held dispatch spends no extra Work.
+                    let (dc_input, source_spec) =
+                        crate::transition_source_plan::Spec::transition_with_context(
+                            input,
+                            source_context.as_ref().unwrap().clone(),
+                            &origin.instance,
+                        )?;
+                    if shared_history && source_spec.is_some() {
+                        return Err(Error::new("unsupported_forcing_scope","composed forcing requires held or certified history-selected Transition targets"));
+                    }
+                    let input = dc_input.as_ref().unwrap_or(input);
+                    let expression = input.clone();
+                    let point_bounds;
+                    let state_bounds = match initial_bounds {
+                        Some(bounds) => bounds,
+                        None => {
+                            point_bounds = states.iter().copied().map(I::point).collect::<Vec<_>>();
+                            &point_bounds
+                        }
+                    };
+                    let source = source_spec
+                        .map(|spec| {
+                            crate::transition_source_state::Source::initialized(spec, state_bounds)
+                        })
+                        .transpose()?;
                     let (input, input_bounds, history, source) =
                         if let Some((source, point, changed)) = source {
                             let target = source.target();
@@ -1746,8 +2920,17 @@ impl Operators {
                                 Some(Box::new(source)),
                             )
                         } else {
-                            let (affine, row) =
-                                transition_input(input, program, &state_bounds, &origin.instance)?;
+                            let (affine, row) = if shared_history {
+                                transition_input_shared(
+                                    input,
+                                    program,
+                                    state_bounds,
+                                    &origin.instance,
+                                    &history_work,
+                                )?
+                            } else {
+                                transition_input(input, program, state_bounds, &origin.instance)?
+                            };
                             let bound = row
                                 .iter()
                                 .zip(state_bounds.iter().copied().chain([I::ONE]))
@@ -1761,14 +2944,8 @@ impl Operators {
                             )?;
                             (affine, row, history, None)
                         };
-                    let OperatorSpec::Transition {
-                        input: expression, ..
-                    } = spec
-                    else {
-                        unreachable!()
-                    };
                     entries.push(Runtime::Transition {
-                        expression: expression.clone(),
+                        expression,
                         program: Arc::new(program.clone()),
                         owner: origin.instance.clone(),
                         source,
@@ -1783,6 +2960,24 @@ impl Operators {
                     fall,
                     origin,
                 } => {
+                    if crate::source_slew::selected(input) {
+                        selected_slew_count += 1;
+                        if selected_slew_count > 32 {
+                            return Err(Error::new(
+                                "unsupported_operator",
+                                "selected slew is limited to 32 independent call sites",
+                            ));
+                        }
+                        entries.push(Runtime::SourceSlew(crate::source_slew::SourceSlew::new(
+                            input,
+                            source_context.as_ref().unwrap().clone(),
+                            &origin.instance,
+                            states,
+                            *rise,
+                            *fall,
+                        )?));
+                        continue;
+                    }
                     if let Some(parent) =
                         history_parent(input, program, driven, origin, FeedforwardKind::Slew)?
                     {
@@ -1836,18 +3031,37 @@ impl Operators {
                 | Runtime::AbsDelay(_)
                 | Runtime::LaplaceNd(_)
                 | Runtime::Slew(_)
+                | Runtime::SourceSlew(_)
                 | Runtime::SlewCascade(_) => false,
             };
             changes_on_advance.push(changes);
         }
-        Ok(Self {
+        let mut result = Self {
+            held_targets,
+            source_context,
+            forcing_context: None,
+            shared_history,
+            typed_calendar: false,
+            history_targets,
+            history_predicates: vec![],
+            history_admission: None,
             entries,
             changes_on_advance,
             direct,
             continuous,
             horizon,
             isolated_parameters,
-        })
+        };
+        result.refresh_history_targets(
+            0.,
+            I::ZERO,
+            states,
+            &states.iter().copied().map(I::point).collect::<Vec<_>>(),
+            &[],
+            true,
+            None,
+        )?;
+        Ok(result)
     }
 
     pub(crate) fn check_guard(&self, index: usize) -> Result<(), Error> {
@@ -1855,7 +3069,9 @@ impl Operators {
             .entries
             .get(index)
             .ok_or_else(|| Error::new("invalid_ir", "guard operator index out of range"))?;
-        if self.changes_on_advance[index] && !matches!(entry, Runtime::Continuous(_)) {
+        if self.changes_on_advance[index]
+            && !matches!(entry, Runtime::Continuous(_) | Runtime::Transition { .. })
+        {
             return Err(Error::new("unsupported_cross",
                 "cross requires a continuous epoch history; reset/transition history is unsupported"));
         }
@@ -1869,6 +3085,7 @@ impl Operators {
             Runtime::Continuous(_)
             | Runtime::Idt { .. }
             | Runtime::LaplaceNd(_)
+            | Runtime::Transition { .. }
             | Runtime::Math(_, SinInput::Direct(_)) => {}
             Runtime::Math(_, SinInput::Operator { operator, .. }) => self.check_guard(*operator)?,
             _ => {
@@ -1884,6 +3101,7 @@ impl Operators {
     pub(crate) fn keeps_guard_value(&self, index: usize) -> Result<bool, Error> {
         self.check_guard(index)?;
         match &self.entries[index] {
+            Runtime::Transition { .. } => Ok(true),
             Runtime::Continuous(slot) => self
                 .continuous
                 .as_ref()
@@ -1897,6 +3115,23 @@ impl Operators {
         self.check_guard(index)?;
         let entry = &self.entries[index];
         let result = match entry {
+            Runtime::Transition { history, .. } => {
+                // One clone, one payment: a typed Spec pays its own copy (on the
+                // same owner ledger), every other entry pays the frame owner.
+                if let Some(spec) = self.held_targets.get(&index) {
+                    history.charge_held_copy(&|amount| spec.charge(amount))?;
+                } else if let Some(w) = self.history_copy_work() {
+                    history.charge_held_copy(&|n| w.debit(2, n as u64))?;
+                }
+                let mut history = (**history).clone();
+                if let Some(w) = self.history_copy_work() {
+                    history.history_advance_time(time.lo, w)?;
+                    history.history_continuous_range(time, w)?
+                } else {
+                    history.advance_time(time.lo)?;
+                    history.continuous_range(time)?
+                }
+            }
             Runtime::Continuous(slot) => {
                 let c = self.continuous.as_ref().unwrap();
                 if !c.is_continuous(*slot) {
@@ -1983,19 +3218,187 @@ impl Operators {
         exact_root: Option<&crate::exact_source::RootTime>,
         window: I,
     ) -> Result<Evaluation<'_>, Error> {
-        if exact_root.is_some_and(|root| root.refine(window).is_none()) {
-            return Err(Error::new(
-                "event_resolution",
-                "exact event root is outside observation enclosure",
-            ));
-        }
+        let refined = if let Some(root) = exact_root {
+            let value = if let Some(w) = self.history_copy_work() {
+                root.refine_with_work(window, w)?
+            } else {
+                root.refine(window)
+            };
+            value.ok_or_else(|| {
+                Error::new(
+                    "event_resolution",
+                    "exact event root is outside observation enclosure",
+                )
+            })?
+        } else {
+            window
+        };
+        let owned = if let Some(root) = exact_root {
+            Some(if let Some(w) = self.history_copy_work() {
+                root.clone_with_work(w)?
+            } else {
+                root.clone()
+            })
+        } else {
+            None
+        };
         Ok(Evaluation {
-            exact_root: exact_root.cloned(),
+            exact_root: owned,
             base: self,
             time,
-            values: self.values(time)?,
+            values: self.values_at_root(time, exact_root, refined, None)?,
             bounds: self.bounds(time)?,
         })
+    }
+
+    fn values_at_root(
+        &self,
+        time: f64,
+        root: Option<&crate::exact_source::RootTime>,
+        window: I,
+        previous: Option<&[f64]>,
+    ) -> Result<Vec<f64>, Error> {
+        let Some(root) = root else {
+            return self.values_reusing(time, previous);
+        };
+        if let Some(w) = self.history_copy_work() {
+            let valid = root.refine_with_work(window, w)?.is_some();
+            if !valid {
+                return Err(Error::new(
+                    "event_resolution",
+                    "operator sample root is outside its proven window",
+                ));
+            }
+            if window.lo == window.hi && time == window.hi {
+                return self.values_reusing(time, previous);
+            }
+        }
+        let mut values = self.values_reusing(time, previous)?;
+        for index in 0..values.len() {
+            if let Some((nominal, _)) = self.root_affine_sample_paid(index, root, window)? {
+                values[index] = nominal;
+            } else if let Runtime::Math(
+                function,
+                SinInput::Operator {
+                    operator,
+                    coefficient,
+                    constant,
+                    ..
+                },
+            ) = &self.entries[index]
+            {
+                // Entries are in dependency order. Recompute downstream math
+                // after replacing its parent's representative sample.
+                values[index] = function.value(*constant + *coefficient * values[*operator]);
+                if !values[index].is_finite() {
+                    return Err(Error::new("numerical_failure", "nonfinite operator value"));
+                }
+            }
+        }
+        Ok(values)
+    }
+    fn root_affine_sample_paid(
+        &self,
+        index: usize,
+        root: &crate::exact_source::RootTime,
+        window: I,
+    ) -> Result<Option<(f64, I)>, Error> {
+        let Some(w) = self.history_copy_work() else {
+            return Ok(self.root_affine_sample(index, root, window));
+        };
+        let Some(window) = root.refine_with_work(window, w)? else {
+            return Ok(None);
+        };
+        let Some(Runtime::Transition { history, .. }) = self.entries.get(index) else {
+            return Ok(None);
+        };
+        history.charge_held_copy(&|n| w.debit(2, n as u64))?;
+        let mut history = (**history).clone();
+        history.history_advance_time(window.lo, w)?;
+        let Some((a, b)) = history.history_exact_affine_on(window, w)? else {
+            return Ok(None);
+        };
+        let mut p = crate::exact_source::history_paid::Paid::new(w);
+        let result = (|| {
+            let product = p.op(&b, root.rational(), '*')?;
+            let value = p.op(&a, &product, '+')?;
+            let bounds = p.enclose(&value)?;
+            let nominal = p.nearest(&value)?;
+            (bounds.lo <= nominal && nominal <= bounds.hi).then_some((nominal, bounds))
+        })();
+        p.finish(result)
+    }
+    fn root_affine_sample(
+        &self,
+        index: usize,
+        root: &crate::exact_source::RootTime,
+        window: I,
+    ) -> Option<(f64, I)> {
+        let window = root.refine(window)?;
+        // Continuous networks retain their own local clock and observation
+        // certificates. Only transition histories use this absolute-time form.
+        if !matches!(self.entries.get(index)?, Runtime::Transition { .. }) {
+            return None;
+        }
+        use num_traits::ToPrimitive;
+        let (a, b) = self.exact_affine_value(index, false, window)?;
+        let mut budget = crate::exact_source::Budget(0);
+        let product = budget.check(b * root.rational())?;
+        let value = budget.check(a + product)?;
+        let bounds = crate::exact_source::enclosure(&value)?;
+        let nominal = value.to_f64()?;
+        (bounds.lo <= nominal && nominal <= bounds.hi).then_some((nominal, bounds))
+    }
+    pub(crate) fn event_bounds_at_root(
+        &self,
+        time: f64,
+        window: I,
+        root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<Vec<I>, Error> {
+        let outside = if let Some(root) = root {
+            if let Some(w) = self.history_copy_work() {
+                root.refine_with_work(window, w)?.is_none()
+            } else {
+                root.refine(window).is_none()
+            }
+        } else {
+            false
+        };
+        if outside {
+            return Err(Error::new(
+                "event_resolution",
+                "operator sample root is outside its proven window",
+            ));
+        }
+        if self.history_admission.is_some() && window.lo == window.hi && time == window.hi {
+            return self.bounds(time);
+        }
+        let mut bounds = self.event_bounds_with_root(time, window, root)?;
+        if let Some(root) = root {
+            for index in 0..bounds.len() {
+                if let Some((_, exact)) =
+                    self.root_affine_sample_paid(index, root, window)?
+                        .filter(|(_, exact)| {
+                            bounds[index].lo <= exact.lo && exact.hi <= bounds[index].hi
+                        })
+                {
+                    bounds[index] = exact;
+                } else if let Runtime::Math(
+                    function,
+                    SinInput::Operator {
+                        operator,
+                        coefficient_bounds,
+                        constant_bounds,
+                        ..
+                    },
+                ) = &self.entries[index]
+                {
+                    bounds[index] = function
+                        .bounds(*constant_bounds + *coefficient_bounds * bounds[*operator])?;
+                }
+            }
+        }
+        Ok(bounds)
     }
 
     fn values_reusing(&self, time: f64, previous: Option<&[f64]>) -> Result<Vec<f64>, Error> {
@@ -2004,9 +3407,17 @@ impl Operators {
             .as_ref()
             .map(|c| c.values(time))
             .transpose()?;
+        if let Some(w) = self.history_copy_work() {
+            w.debit(2, self.entries.len() as u64)?;
+        }
+        // Every Transition entry reads the same exact query time.
+        let mut observed: Option<crate::transition::ObservedTime> = None;
         self.entries.iter().enumerate().try_fold(
             Vec::<f64>::with_capacity(self.entries.len()),
             |mut values, (index, entry)| {
+                if let Some(w) = self.history_copy_work() {
+                    w.step()?;
+                }
                 if let Some(previous) = previous {
                     if !self.changes_on_advance[index] {
                         values.push(previous[index]);
@@ -2035,8 +3446,18 @@ impl Operators {
                         } => function.value(*constant + *coefficient * values[*operator]),
                     },
                     Runtime::AbsDelay(history) => history.value(time)?,
-                    Runtime::Transition { history, .. } => history.value(time)?,
+                    Runtime::Transition { history, .. } => {
+                        if let Some(w) = self.history_copy_work() {
+                            if observed.is_none() {
+                                observed = Some(crate::transition::ObservedTime::new(time, w)?);
+                            }
+                            history.history_value_at(observed.as_ref().unwrap(), w)?
+                        } else {
+                            history.value(time)?
+                        }
+                    }
                     Runtime::Slew(history) => history.value(time)?,
+                    Runtime::SourceSlew(history) => history.value(time)?,
                     Runtime::SlewCascade(history) => history.value(time)?,
                 };
                 if !value.is_finite() {
@@ -2048,18 +3469,76 @@ impl Operators {
         )
     }
 
-    pub(crate) fn source_root_at(
-        &self,
-        time: f64,
-    ) -> Result<Option<crate::exact_source::RootTime>, Error> {
-        let mut root: Option<crate::exact_source::RootTime> = None;
-        for entry in &self.entries {
+    /// Called only on a disposable phase-observation seed. Physical histories,
+    /// targets and immutable proofs remain those of the selected event phase.
+    pub(crate) fn rebase_source_observation(&mut self, time: f64) -> Result<(), Error> {
+        for entry in &mut self.entries {
             if let Runtime::Transition {
                 source: Some(source),
                 ..
             } = entry
             {
-                if let Some(cut) = source.cut_at(time) {
+                source.rebase_observation(time)?;
+            }
+        }
+        Ok(())
+    }
+
+    fn source_cuts(entry: &Runtime) -> &[crate::transition_source_plan::Cut] {
+        match entry {
+            Runtime::Transition {
+                source: Some(source),
+                ..
+            } => source.cuts(),
+            Runtime::SourceSlew(source) => source.cuts(),
+            _ => &[],
+        }
+    }
+
+    pub(crate) fn source_root_at(
+        &self,
+        time: f64,
+    ) -> Result<Option<crate::exact_source::RootTime>, Error> {
+        let mut root: Option<crate::exact_source::RootTime> = None;
+        for plan in self
+            .history_targets
+            .values()
+            .chain(self.history_predicates.iter())
+        {
+            if let Some(r) = plan.root_at_paid(time)? {
+                let different = if let Some(old) = root.as_ref() {
+                    if let Some(w) = self.history_copy_work() {
+                        old.order_with_work(r, w)? != std::cmp::Ordering::Equal
+                    } else {
+                        old.order(r) != std::cmp::Ordering::Equal
+                    }
+                } else {
+                    false
+                };
+                if different {
+                    return Err(Error::new("event_resolution",format!("distinct history target roots share representative {time:e}: {:?} and {:?}",root,r)));
+                }
+                root = Some(if let Some(w) = self.history_copy_work() {
+                    r.clone_with_work(w)?
+                } else {
+                    r.clone()
+                });
+            }
+        }
+        for entry in &self.entries {
+            if let Some(w) = self.history_copy_work() {
+                w.step()?;
+            }
+            {
+                let cut = match entry {
+                    Runtime::Transition {
+                        source: Some(source),
+                        ..
+                    } => source.cut_at(time),
+                    Runtime::SourceSlew(source) => source.cut_at(time),
+                    _ => None,
+                };
+                if let Some(cut) = cut {
                     if root
                         .as_ref()
                         .is_some_and(|root| root.order(&cut.exact) != std::cmp::Ordering::Equal)
@@ -2076,7 +3555,7 @@ impl Operators {
         Ok(root)
     }
 
-    pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
+    fn physical_breakpoint(&self, after: f64) -> Option<f64> {
         self.entries
             .iter()
             .filter_map(|entry| match entry {
@@ -2097,9 +3576,160 @@ impl Operators {
                     .chain(source.as_ref().and_then(|s| s.next_after(after)))
                     .min_by(f64::total_cmp),
                 Runtime::Slew(history) => history.next_breakpoint(after),
+                Runtime::SourceSlew(history) => history.next_breakpoint(after),
                 Runtime::SlewCascade(history) => history.next_breakpoint(after),
             })
             .min_by(f64::total_cmp)
+    }
+
+    fn physical_breakpoint_checked(&self, after: f64) -> Result<Option<f64>, Error> {
+        let Some(w) = self.history_copy_work() else {
+            return Ok(self.physical_breakpoint(after));
+        };
+        w.debit(2, 0)?;
+        let mut next = None;
+        for entry in &self.entries {
+            w.step()?;
+            let Runtime::Transition {
+                history,
+                source: None,
+                ..
+            } = entry
+            else {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "invalid held history deadline entry",
+                ));
+            };
+            if let Some(time) = history.history_boundary(after, false, w)? {
+                next = Some(next.map_or(time, |old: f64| old.min(time)))
+            }
+        }
+        Ok(next)
+    }
+    pub(crate) fn next_breakpoint_checked(&self, after: f64) -> Result<Option<f64>, Error> {
+        if self.history_admission.is_none() {
+            return Ok(self.next_breakpoint(after));
+        }
+        let mut next = self.physical_breakpoint_checked(after)?;
+        for plan in self
+            .history_targets
+            .values()
+            .chain(&self.history_predicates)
+        {
+            if let Some(time) = plan.next_after_paid(after)? {
+                next = Some(next.map_or(time, |old: f64| old.min(time)))
+            }
+        }
+        Ok(next)
+    }
+    pub(crate) fn source_window_checked(&self, time: f64) -> Result<Option<I>, Error> {
+        if self.history_admission.is_none() {
+            return Ok(self.source_window_at(time));
+        }
+        let mut window = None;
+        for plan in &self.history_predicates {
+            if let Some(value) = plan.window_at_paid(time)? {
+                window = Some(window.map_or(value, |old: I| old.hull(value)))
+            }
+        }
+        Ok(window)
+    }
+    pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
+        self.physical_breakpoint(after)
+            .into_iter()
+            .chain(
+                self.history_targets
+                    .values()
+                    .chain(self.history_predicates.iter())
+                    .filter_map(|p| p.next_after(after)),
+            )
+            .min_by(f64::total_cmp)
+    }
+
+    pub(crate) fn next_breakpoint_for_event(
+        &self,
+        after: f64,
+        event: Option<&crate::schedule::ScheduledEvent>,
+        model: &crate::events::EventModel,
+    ) -> Result<Option<f64>, Error> {
+        let Some(event) = event else {
+            return self.next_breakpoint_checked(after);
+        };
+        let mut target = None;
+        for plan in self
+            .history_targets
+            .values()
+            .chain(&self.history_predicates)
+        {
+            if let Some(time) = plan.next_after_paid(after)? {
+                target = Some(target.map_or(time, |old: f64| old.min(time)))
+            }
+        }
+        let Some(target) = target else {
+            return self.physical_breakpoint_checked(after);
+        };
+        let mut aligned = target;
+        for plan in self
+            .history_targets
+            .values()
+            .chain(self.history_predicates.iter())
+        {
+            if let Some(window) = plan.window_at_paid(target)? {
+                if window.lo <= event.bounds().hi && event.bounds().lo <= window.hi {
+                    let crate::ir::EventTrigger::Cross { guard, .. } =
+                        &model.triggers[event.event].trigger
+                    else {
+                        return Err(Error::new(
+                            "event_resolution",
+                            "history target cut overlaps an unrelated timer",
+                        ));
+                    };
+                    let same_root = if let Some(a) = plan.root_at_paid(target)? {
+                        let common = if let Some(w) = self.history_copy_work() {
+                            crate::schedule::common_root_with_work(std::slice::from_ref(event), w)?
+                        } else {
+                            crate::schedule::common_root(std::slice::from_ref(event))
+                        };
+                        if let Some(b) = common {
+                            if let Some(w) = self.history_copy_work() {
+                                a.order_with_work(&b, w)? == std::cmp::Ordering::Equal
+                            } else {
+                                a.order(&b) == std::cmp::Ordering::Equal
+                            }
+                        } else {
+                            false
+                        }
+                    } else {
+                        false
+                    };
+                    if !same_root && !plan.coincides(target, guard, &model.driven)? {
+                        return Err(Error::new(
+                            "event_resolution",
+                            "history target cut overlaps an unproved user root",
+                        ));
+                    }
+                    aligned = event.time;
+                }
+            }
+        }
+        Ok(self
+            .physical_breakpoint_checked(after)?
+            .into_iter()
+            .chain([aligned])
+            .min_by(f64::total_cmp))
+    }
+
+    pub(crate) fn source_window_at(&self, time: f64) -> Option<I> {
+        self.history_targets
+            .values()
+            .chain(self.history_predicates.iter())
+            .filter_map(|p| p.window_at(time))
+            .chain(self.entries.iter().filter_map(|entry| match entry {
+                Runtime::SourceSlew(source) => source.cut_at(time).map(|cut| cut.bounds),
+                _ => None,
+            }))
+            .reduce(I::hull)
     }
 
     pub(crate) fn bounds(&self, time: f64) -> Result<Vec<I>, Error> {
@@ -2114,9 +3744,15 @@ impl Operators {
             .as_ref()
             .map(|c| c.bounds(time))
             .transpose()?;
+        if let Some(w) = self.history_copy_work() {
+            w.debit(2, (self.entries.len() * 2) as u64)?;
+        }
+        // Every Transition entry reads the same exact query time.
+        let mut observed: Option<crate::transition::ObservedTime> = None;
         self.entries.iter().enumerate().try_fold(
             Vec::<I>::with_capacity(self.entries.len()),
             |mut bounds, (index, entry)| {
+                if let Some(w)=self.history_copy_work(){w.step()?;}
                 if let Some(previous) = previous {
                     if !self.changes_on_advance[index] {
                         bounds.push(previous[index]);
@@ -2169,9 +3805,19 @@ impl Operators {
                         }
                     },
                     Runtime::Slew(history) => history.value_bounds(time),
+                    Runtime::SourceSlew(history) => history.bounds(time)?,
                     Runtime::SlewCascade(history) => history.value_bounds(time)?,
                     Runtime::AbsDelay(history) => history.value_bounds(time),
-                    Runtime::Transition { history, .. } => history.value_bounds(time)?,
+                    Runtime::Transition { history, .. } => {
+                        if let Some(w) = self.history_copy_work() {
+                            if observed.is_none() {
+                                observed = Some(crate::transition::ObservedTime::new(time, w)?);
+                            }
+                            history.history_value_bounds_at(observed.as_ref().unwrap(), w)?
+                        } else {
+                            history.value_bounds(time)?
+                        }
+                    }
                 };
                 bounds.push(bound);
                 Ok(bounds)
@@ -2185,6 +3831,64 @@ impl Operators {
         next_event: Option<I>,
         next_root: Option<crate::exact_source::RootTime>,
     ) -> Result<(), Error> {
+        let mut next_root = next_root;
+        self.check_deadline_order_deferred(after, next_event, || Ok(next_root.take()))
+    }
+
+    /// Evaluate the physical event root only when an ordering consumer needs it.
+    /// The provider keeps the original same-request proof owner and errors.
+    pub(crate) fn check_deadline_order_deferred(
+        &self,
+        after: f64,
+        next_event: Option<I>,
+        mut root: impl FnMut() -> Result<Option<crate::exact_source::RootTime>, Error>,
+    ) -> Result<(), Error> {
+        let mut next_root = None;
+        if let Some(w) = self.history_copy_work() {
+            w.debit(2, 0)?;
+            let mut deadlines = Vec::new();
+            for entry in &self.entries {
+                w.step()?;
+                let Runtime::Transition { history, .. } = entry else {
+                    return Err(Error::new(
+                        "unsupported_condition",
+                        "history deadline requires held Transition",
+                    ));
+                };
+                let mut next = history.history_deadlines(after, w)?;
+                crate::history_storage::append(&mut deadlines, &mut next, w)?;
+            }
+            for (i, d) in deadlines.iter().enumerate() {
+                w.step()?;
+                if let Some(event) = next_event {
+                    if d.overlaps(event) {
+                        if next_root.is_none() {
+                            next_root = Some(root()?);
+                        }
+                        if !d.history_accounted_event(
+                            event,
+                            next_root.as_ref().and_then(Option::as_ref),
+                            w,
+                        )? {
+                            return Err(Error::new(
+                                "event_resolution",
+                                "cannot certify history deadline ordering relative to user event",
+                            ));
+                        }
+                    }
+                }
+                for other in &deadlines[i + 1..] {
+                    w.step()?;
+                    if d.overlaps(other.bounds) && !d.history_pair_ordered(other, w)? {
+                        return Err(Error::new(
+                            "event_resolution",
+                            "cannot certify ordering of history deadlines",
+                        ));
+                    }
+                }
+            }
+            return Ok(());
+        }
         if let Some(event) = next_event {
             for entry in &self.entries {
                 if let Runtime::Transition {
@@ -2192,7 +3896,15 @@ impl Operators {
                     ..
                 } = entry
                 {
-                    source.check_incoming(after, event, next_root.as_ref())?;
+                    if next_root.is_none() {
+                        next_root = Some(root()?);
+                    }
+                    source.check_incoming(after, event, next_root.as_ref().unwrap().as_ref())?;
+                } else if let Runtime::SourceSlew(source) = entry {
+                    if next_root.is_none() {
+                        next_root = Some(root()?);
+                    }
+                    source.check_incoming(after, event, next_root.as_ref().unwrap().as_ref())?;
                 }
             }
         }
@@ -2209,21 +3921,21 @@ impl Operators {
                 Runtime::LaplaceNd(_) => Vec::new(),
                 Runtime::TransitionFilter { .. } | Runtime::TransitionIntegral { .. } => Vec::new(),
                 Runtime::Transition { history, .. } => history.deadlines(after),
-                Runtime::Slew(_) | Runtime::SlewCascade(_) => Vec::new(),
+                Runtime::Slew(_) | Runtime::SourceSlew(_) | Runtime::SlewCascade(_) => Vec::new(),
             })
             .collect();
         for entry in &self.entries {
-            if let Runtime::Transition {
-                source: Some(source),
-                ..
-            } = entry
             {
-                for cut in source.cuts().iter().filter(|cut| cut.time >= after) {
+                for cut in Self::source_cuts(entry)
+                    .iter()
+                    .filter(|cut| cut.time >= after)
+                {
                     let point = cut.bounds;
                     for deadline in &deadlines {
                         if deadline.overlaps(point)
                             && !deadline.coincides_root(&cut.exact)
                             && !deadline.ordered_with_point(point)
+                            && !deadline.ordered_with_root(&cut.exact)
                         {
                             return Err(Error::new("event_resolution","cannot certify transition deadline ordering relative to source-target cut"));
                         }
@@ -2232,19 +3944,35 @@ impl Operators {
             }
         }
         for (index, deadline) in deadlines.iter().enumerate() {
-            if next_event.is_some_and(|event| {
-                deadline.overlaps(event) && !(event.lo == event.hi && event == deadline.bounds)
-            }) {
-                return Err(Error::new(
-                    "event_resolution",
-                    "cannot certify transition deadline ordering relative to user event",
-                ));
+            if let Some(event) = next_event {
+                let accounted = (event.lo == event.hi && event == deadline.bounds)
+                    || deadline.strictly_ordered_with(event);
+                if deadline.overlaps(event) && !accounted {
+                    if next_root.is_none() {
+                        next_root = Some(root()?);
+                    }
+                    if !next_root
+                        .as_ref()
+                        .unwrap()
+                        .as_ref()
+                        .is_some_and(|root| deadline.coincides_root(root))
+                    {
+                        return Err(Error::new(
+                            "event_resolution",
+                            format!("cannot certify transition deadline ordering relative to user event: after={after:e}, deadline={deadline:?}, event={next_event:?}, exact={next_root:?}"),
+                        ));
+                    }
+                }
             }
             for other in &deadlines[index + 1..] {
-                if deadline.overlaps(other.bounds) && !deadline.coincides(other) {
+                if deadline.overlaps(other.bounds)
+                    && !deadline.coincides(other)
+                    && !deadline.serial_representatives(other)
+                    && !deadline.independent_end_checkpoints(other)
+                {
                     return Err(Error::new(
                         "event_resolution",
-                        "cannot certify ordering of operator deadlines",
+                        format!("cannot certify ordering of operator deadlines: {deadline:?} and {other:?}"),
                     ));
                 }
             }
@@ -2261,7 +3989,17 @@ impl Operators {
         bounds: &[I],
         changed: &[usize],
     ) -> Result<(), Error> {
-        self.advance_with_exact(time, time_bounds, states, bounds, changed, None, true)
+        self.advance_with_exact(
+            time,
+            time_bounds,
+            states,
+            bounds,
+            changed,
+            None,
+            true,
+            None,
+            None,
+        )
     }
 
     /// Consume accepted histories to the settlement boundary without installing
@@ -2272,8 +4010,20 @@ impl Operators {
         time_bounds: I,
         states: &[f64],
         bounds: &[I],
+        exact_root: Option<&crate::exact_source::RootTime>,
+        value_proofs: Option<&crate::event_value_proof::Proofs>,
     ) -> Result<(), Error> {
-        self.advance_with_exact(time, time_bounds, states, bounds, &[], None, false)
+        self.advance_with_exact(
+            time,
+            time_bounds,
+            states,
+            bounds,
+            &[],
+            exact_root,
+            false,
+            value_proofs,
+            None,
+        )
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -2286,8 +4036,66 @@ impl Operators {
         changed: &[usize],
         exact_root: Option<&crate::exact_source::RootTime>,
         install_source: bool,
+        value_proofs: Option<&crate::event_value_proof::Proofs>,
+        source_time_proofs: Option<&crate::exact_source::TimeProofs>,
     ) -> Result<(), Error> {
         let _timing = crate::diagnostics::span("history.advance");
+        // A typed calendar meters its untyped held entries on the shared owner;
+        // typed Specs still pay their own copies (candidate_clone skips them).
+        let shared_work = if self.shared_history || self.typed_calendar {
+            let w = self
+                .source_context
+                .as_ref()
+                .ok_or_else(|| Error::new("invalid_ir", "shared history lost original owner"))?
+                .borrow_work();
+            w.debit(2, 0)?;
+            w.debit(
+                2,
+                ((states.len() + bounds.len() + changed.len()).saturating_mul(16)
+                    + self
+                        .isolated_parameters
+                        .len()
+                        .saturating_mul(states.len() + 1)) as u64,
+            )?;
+            Some(w.clone())
+        } else {
+            None
+        };
+        let valid = match (value_proofs, shared_work.as_ref()) {
+            (Some(proofs), Some(w)) => {
+                crate::event_value_proof::valid_with_work(proofs, bounds, w)?
+            }
+            (Some(proofs), None) => crate::event_value_proof::valid(proofs, bounds),
+            _ => true,
+        };
+        if !valid {
+            return Err(Error::new(
+                "event_resolution",
+                "history value proof outside matching state enclosure",
+            ));
+        }
+        let physical_value_proofs = value_proofs
+            .map(|proofs| -> Result<_, Error> {
+                if self.isolated_parameters.is_empty() {
+                    // Nothing to strip: borrow the validated map, never copy it.
+                    return Ok(std::borrow::Cow::Borrowed(proofs));
+                }
+                let mut physical = if let Some(w) = &shared_work {
+                    crate::event_value_proof::history::copy_map(proofs, w)?
+                } else {
+                    proofs.clone()
+                };
+                for &(state, _) in &self.isolated_parameters {
+                    if let Some(w) = &shared_work {
+                        crate::event_value_proof::history::remove(&mut physical, state, w)?;
+                    } else {
+                        physical.remove(&state);
+                    }
+                }
+                Ok(std::borrow::Cow::Owned(physical))
+            })
+            .transpose()?;
+        let value_proofs = physical_value_proofs.as_deref();
         let physical_states = physical_parameters(states, &self.isolated_parameters, |value| value);
         let physical_bounds = physical_parameters(bounds, &self.isolated_parameters, I::point);
         let states = physical_states.as_ref();
@@ -2332,54 +4140,79 @@ impl Operators {
             else {
                 unreachable!()
             };
-            let (value, target_bounds, may_change, preview_bounds, preview_root) =
-                if let Some(source) = source {
-                    if install_source {
-                        let next = source.prepare(time, time_bounds, bounds, exact_root)?;
-                        (
-                            next.target.value,
-                            next.target.bounds,
-                            next.changed,
-                            next.time_bounds,
-                            next.exact_root,
-                        )
-                    } else {
-                        let old = source.target();
-                        (
-                            old.value,
-                            old.bounds,
-                            false,
-                            time_bounds,
-                            exact_root.cloned(),
-                        )
+            let (value, target_bounds, may_change, preview_bounds, preview_root) = if let Some(
+                source,
+            ) = source
+            {
+                if install_source {
+                    let next = source.prepare_with_epochs(
+                        time,
+                        time_bounds,
+                        bounds,
+                        exact_root,
+                        source_time_proofs,
+                    )?;
+                    if next.steps.iter().filter(|step| step.changed).count() > 1
+                        || next
+                            .steps
+                            .iter()
+                            .any(|step| step.changed && step.root.as_ref() != exact_root)
+                    {
+                        return Err(Error::new("unsupported_operator", "source-window multiple target phases need a joint filter/integral history certificate"));
                     }
-                } else {
-                    let may_change = changed.iter().any(|s| input.state_dependencies.contains(s));
-                    let (input, input_bounds) =
-                        transition_input(expression, program, bounds, owner)?;
-                    let target_bounds = input_bounds
-                        .iter()
-                        .zip(bounds.iter().copied().chain([I::ONE]))
-                        .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
                     (
-                        input.value(&[], states)?,
-                        target_bounds,
-                        may_change,
+                        next.target.value,
+                        next.target.bounds,
+                        next.changed,
+                        next.time_bounds,
+                        next.exact_root,
+                    )
+                } else {
+                    let (prefix, steps) = source.prepare_prefix(time_bounds, exact_root)?;
+                    if steps.iter().any(|step| step.changed) {
+                        return Err(Error::new("unsupported_operator", "source-window prefix needs a joint filter/integral history certificate"));
+                    }
+                    let old = prefix.target();
+                    (
+                        old.value,
+                        old.bounds,
+                        false,
                         time_bounds,
                         exact_root.cloned(),
                     )
-                };
+                }
+            } else {
+                let may_change = changed.iter().any(|s| input.state_dependencies.contains(s));
+                let (input, input_bounds) = transition_input(expression, program, bounds, owner)?;
+                let target_bounds = input_bounds
+                    .iter()
+                    .zip(bounds.iter().copied().chain([I::ONE]))
+                    .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
+                (
+                    input.value(&[], states)?,
+                    target_bounds,
+                    may_change,
+                    time_bounds,
+                    exact_root.cloned(),
+                )
+            };
             if !may_change && !reaches_deadline {
                 continue;
             }
+            let target_proof = if source.is_none() {
+                transition_value_proof(expression, program, bounds, value_proofs)?
+            } else {
+                None
+            };
             let mut preview = old.clone();
-            preview.advance_at_with_exact(
+            preview.advance_at_with_proofs(
                 time,
                 preview_bounds,
                 value,
                 target_bounds,
                 may_change,
                 preview_root.as_ref(),
+                target_proof.as_ref(),
             )?;
             let prediction = match entry {
                 Runtime::TransitionFilter { history, .. } => Runtime::TransitionFilter {
@@ -2418,7 +4251,17 @@ impl Operators {
                 )?));
             }
         }
-        for entry in &mut self.entries {
+        for (index, entry) in self.entries.iter_mut().enumerate() {
+            if self.history_targets.contains_key(&index) {
+                if let Runtime::Transition { history, .. } = entry {
+                    if let Some(w) = &shared_work {
+                        history.history_advance_time(time, w)?;
+                    } else {
+                        history.advance_time(time)?;
+                    }
+                }
+                continue;
+            }
             match entry {
                 Runtime::DirectDerivative(_) => {}
                 Runtime::Continuous(_) => {}
@@ -2443,7 +4286,19 @@ impl Operators {
                 } => {
                     if let Some(current) = source {
                         if !install_source {
-                            let old = current.target();
+                            let (prefix, steps) =
+                                current.prepare_prefix(time_bounds, exact_root)?;
+                            for step in &steps {
+                                history.advance_at_with_exact(
+                                    time,
+                                    step.window,
+                                    step.target.value,
+                                    step.target.bounds,
+                                    step.changed,
+                                    step.root.as_ref(),
+                                )?;
+                            }
+                            let old = prefix.target();
                             history.advance_at_with_exact(
                                 time,
                                 time_bounds,
@@ -2452,28 +4307,101 @@ impl Operators {
                                 false,
                                 exact_root,
                             )?;
+                            **current = prefix;
                             continue;
                         }
-                        let next = current.prepare(time, time_bounds, bounds, exact_root)?;
-                        history.advance_at_with_exact(
+                        let next = current.prepare_with_epochs(
                             time,
-                            next.time_bounds,
-                            next.target.value,
-                            next.target.bounds,
-                            next.changed,
-                            next.exact_root.as_ref(),
+                            time_bounds,
+                            bounds,
+                            exact_root,
+                            source_time_proofs,
                         )?;
+                        if next.steps.is_empty() {
+                            history.advance_at_with_exact(
+                                time,
+                                next.time_bounds,
+                                next.target.value,
+                                next.target.bounds,
+                                false,
+                                next.exact_root.as_ref(),
+                            )?;
+                        } else {
+                            for step in &next.steps {
+                                history.advance_at_with_exact(
+                                    time,
+                                    step.window,
+                                    step.target.value,
+                                    step.target.bounds,
+                                    step.changed,
+                                    step.root.as_ref(),
+                                )?;
+                            }
+                        }
                         *input = next.target.affine;
                         *input_bounds = next.target.coefficients;
                         **current = next.source;
+                    } else if let Some(spec) = self.held_targets.get(&index) {
+                        // Recheck the actual epoch even if a caller reports no
+                        // nominal writes. A certificate/box change is relevant.
+                        let (value, enclosure) = spec.evaluate(expression, states, bounds)?;
+                        let may_change = changed.iter().any(|s| spec.dependencies.contains(s))
+                            || spec
+                                .dependencies
+                                .iter()
+                                .any(|&s| input_bounds.get(s) != bounds.get(s));
+                        if may_change {
+                            spec.charge(1 + bounds.len())?;
+                            *input_bounds = bounds.to_vec();
+                        }
+                        if let Some(w) = &shared_work {
+                            history.advance_at_with_history_work(
+                                time,
+                                time_bounds,
+                                value,
+                                enclosure,
+                                may_change,
+                                exact_root,
+                                None,
+                                w,
+                            )?;
+                        } else {
+                            history.advance_at_with_proofs(
+                                time,
+                                time_bounds,
+                                value,
+                                enclosure,
+                                may_change,
+                                exact_root,
+                                None,
+                            )?;
+                        }
                     } else {
                         let may_change =
                             changed.iter().any(|s| input.state_dependencies.contains(s));
                         if may_change {
                             let (next_input, next_bounds) =
-                                transition_input(expression, program, bounds, owner)?;
+                                if let Some(token) = &self.history_admission {
+                                    crate::history_admission::held_input(
+                                        expression,
+                                        program,
+                                        owner,
+                                        bounds,
+                                        token.context.borrow_work(),
+                                    )?
+                                } else if let Some(w) = &shared_work {
+                                    transition_input_shared(expression, program, bounds, owner, w)?
+                                } else {
+                                    transition_input(expression, program, bounds, owner)?
+                                };
                             *input = next_input;
                             *input_bounds = next_bounds;
+                        }
+                        if let Some(token) = &self.history_admission {
+                            token
+                                .context
+                                .borrow_work()
+                                .debit(2, input_bounds.len().min(bounds.len() + 1) as u64)?;
                         }
                         let enclosure = input_bounds
                             .iter()
@@ -2481,23 +4409,239 @@ impl Operators {
                             .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
                         let may_change =
                             changed.iter().any(|s| input.state_dependencies.contains(s));
-                        history.advance_at_with_exact(
-                            time,
-                            time_bounds,
-                            input.value(&[], states)?,
-                            enclosure,
-                            may_change,
-                            exact_root,
-                        )?;
+                        // Pay the nominal target (same amounts as before) before
+                        // evaluating it.
+                        if let Some(token) = &self.history_admission {
+                            token
+                                .context
+                                .borrow_work()
+                                .debit(2, input.states.len().min(states.len()) as u64)?;
+                        } else if let Some(w) = &shared_work {
+                            w.debit(
+                                2,
+                                (input.states.len()
+                                    + input_bounds.len()
+                                    + changed
+                                        .len()
+                                        .saturating_mul(input.state_dependencies.len() + 1))
+                                    as u64,
+                            )?;
+                        }
+                        let nominal = input.value(&[], states)?;
+                        // A target proof is read only when the history installs
+                        // this target; an unchanged held target never consumes it,
+                        // so do not replay (or pay for) a discarded proof.
+                        let target_proof =
+                            if !history.installs_target(nominal, enclosure, may_change) {
+                                None
+                            } else if let Some(w) = &shared_work {
+                                crate::diagnostics::counter("history_target_proof_replays", 1);
+                                crate::event_value_proof::history::held_value(
+                                    expression,
+                                    program,
+                                    bounds,
+                                    value_proofs,
+                                    w,
+                                )?
+                            } else if self.history_admission.is_some() {
+                                None
+                            } else {
+                                transition_value_proof(expression, program, bounds, value_proofs)?
+                            };
+                        if let Some(token) = &self.history_admission {
+                            history.advance_at_with_history_work(
+                                time,
+                                time_bounds,
+                                nominal,
+                                enclosure,
+                                may_change,
+                                exact_root,
+                                target_proof.as_ref(),
+                                token.context.borrow_work(),
+                            )?;
+                        } else if let Some(w) = &shared_work {
+                            history.advance_at_with_history_work(
+                                time,
+                                time_bounds,
+                                nominal,
+                                enclosure,
+                                may_change,
+                                exact_root,
+                                target_proof.as_ref(),
+                                w,
+                            )?;
+                        } else {
+                            history.advance_at_with_proofs(
+                                time,
+                                time_bounds,
+                                nominal,
+                                enclosure,
+                                may_change,
+                                exact_root,
+                                target_proof.as_ref(),
+                            )?;
+                        }
                     }
                 }
-                Runtime::Slew(_) | Runtime::SlewCascade(_) => {}
+                Runtime::Slew(_) | Runtime::SourceSlew(_) | Runtime::SlewCascade(_) => {}
             }
+        }
+        if install_source {
+            self.refresh_history_targets(
+                time,
+                time_bounds,
+                states,
+                bounds,
+                changed,
+                false,
+                exact_root,
+            )?;
+            self.refresh_history_predicates(time, time_bounds, bounds)?;
         }
         Ok(())
     }
 
+    #[cfg(test)]
+    pub(crate) fn test_held_contexts(
+        &self,
+    ) -> Vec<Arc<crate::transition_source_plan::ProofContext>> {
+        self.held_targets
+            .values()
+            .map(|spec| spec.test_context())
+            .collect()
+    }
+
+    #[cfg(test)]
+    pub(crate) fn test_transition_histories(&self) -> Vec<Transition> {
+        self.entries
+            .iter()
+            .filter_map(|e| match e {
+                Runtime::Transition { history, .. } => Some(history.as_ref().clone()),
+                _ => None,
+            })
+            .collect()
+    }
+    pub(crate) fn same_reset_history_paid(
+        &self,
+        other: &Self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<bool, Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 6)?;
+        if self.shared_history != other.shared_history
+            || self.typed_calendar != other.typed_calendar
+            || self.horizon != other.horizon
+            || self.history_predicates.len() != other.history_predicates.len()
+            || self.history_targets.len() != other.history_targets.len()
+            || self.entries.len() != other.entries.len()
+        {
+            return Ok(false);
+        }
+        for (a, b) in self
+            .history_predicates
+            .iter()
+            .zip(&other.history_predicates)
+        {
+            w.step()?;
+            if !a.same_epoch_paid(b)? {
+                return Ok(false);
+            }
+        }
+        for ((a, ap), (b, bp)) in self.history_targets.iter().zip(&other.history_targets) {
+            w.step()?;
+            if a != b || !ap.same_epoch_paid(bp)? {
+                return Ok(false);
+            }
+        }
+        // The original history admission only permits held Transition runtimes.
+        // Preserve same_reset_history's meaning: source markers, not target-replay values.
+        for (a, b) in self.entries.iter().zip(&other.entries) {
+            w.step()?;
+            match (a, b) {
+                (
+                    Runtime::Transition { source: None, .. },
+                    Runtime::Transition { source: None, .. },
+                ) => (),
+                _ => {
+                    return Err(Error::new(
+                        "event_consistency",
+                        "history replay escaped admitted Transition runtimes",
+                    ))
+                }
+            }
+        }
+        if self.continuous.is_some() || other.continuous.is_some() {
+            return Err(Error::new(
+                "event_consistency",
+                "history replay escaped held histories",
+            ));
+        }
+        Ok(true)
+    }
+    #[cfg(test)]
+    pub(crate) fn same_forcing_frame(&self, other: &Self) -> bool {
+        self.shared_history == other.shared_history
+            && self.typed_calendar == other.typed_calendar
+            && self.changes_on_advance == other.changes_on_advance
+            && self.isolated_parameters == other.isolated_parameters
+            && self.same_reset_history(other)
+            && self.history_targets.iter().all(|(i, p)| {
+                other
+                    .history_targets
+                    .get(i)
+                    .is_some_and(|q| p.same_frame(q))
+            })
+            && self.held_targets.len() == other.held_targets.len()
+            && self
+                .held_targets
+                .iter()
+                .all(|(i, p)| other.held_targets.get(i).is_some_and(|q| Arc::ptr_eq(p, q)))
+            && self
+                .entries
+                .iter()
+                .zip(&other.entries)
+                .all(|(a, b)| match (a, b) {
+                    (
+                        Runtime::Transition {
+                            expression: ae,
+                            input: ai,
+                            input_bounds: ab,
+                            history: ah,
+                            owner: ao,
+                            ..
+                        },
+                        Runtime::Transition {
+                            expression: be,
+                            input: bi,
+                            input_bounds: bb,
+                            history: bh,
+                            owner: bo,
+                            ..
+                        },
+                    ) => ae == be && ai == bi && ab == bb && ah == bh && ao == bo,
+                    _ => false,
+                })
+    }
     pub(crate) fn same_reset_history(&self, other: &Self) -> bool {
+        if self.history_predicates.len() != other.history_predicates.len()
+            || self
+                .history_predicates
+                .iter()
+                .zip(&other.history_predicates)
+                .any(|(a, b)| !a.same_epoch(b))
+        {
+            return false;
+        }
+        if self.history_targets.len() != other.history_targets.len()
+            || self.history_targets.iter().any(|(i, p)| {
+                !other
+                    .history_targets
+                    .get(i)
+                    .is_some_and(|q| p.same_epoch(q))
+            })
+        {
+            return false;
+        }
         if self.horizon != other.horizon {
             return false;
         }
@@ -2511,6 +4655,8 @@ impl Operators {
                 .iter()
                 .zip(&other.entries)
                 .all(|(a, b)| match (a, b) {
+                    (Runtime::SourceSlew(a), Runtime::SourceSlew(b)) => a.same_history(b),
+                    (Runtime::SourceSlew(_), _) | (_, Runtime::SourceSlew(_)) => false,
                     (Runtime::Idt { history: a, .. }, Runtime::Idt { history: b, .. }) => {
                         a.same_reset_history(b)
                     }
@@ -2581,6 +4727,18 @@ fn reset_active(value: I) -> Result<bool, Error> {
 mod phase_operator_tests {
     use super::*;
 
+    fn uncertain_asymmetric_activation(frozen: &Evaluation<'_>) -> Result<Operators, Error> {
+        // Queue insertion is valid. Direction becomes undecidable when this
+        // asymmetric target activates; reject that private trial before commit.
+        let candidate = frozen.advanced(I::point(1.), &[0.25], &[I { lo: 0.2, hi: 0.3 }], &[0])?;
+        candidate.evaluation(1.125)?.advanced(
+            I::point(1.125),
+            &[0.25],
+            &[I { lo: 0.2, hi: 0.3 }],
+            &[],
+        )
+    }
+
     #[test]
     fn transition_filter_candidates_consume_old_edge_and_rollback_failed_targets() {
         use serde_json::json;
@@ -2590,7 +4748,7 @@ mod phase_operator_tests {
             "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","edge","filtered"],
             "states":[{"instance":"dut","name":"q","kind":"real","initial":0.25}],
             "operators":[
-                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.5,"origin":origin(1)},
+                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.75,"origin":origin(1)},
                 {"kind":"laplace_nd","input":{"op":"affine","constant":0,"terms":[{"node":2,"coefficient":1}]},"numerator":[1],"denominator":[1,0.25],"origin":origin(2)}],
             "contributions":[
                 {"branch":{"instance":"dut","local_positive":"edge","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin(3)},
@@ -2598,6 +4756,7 @@ mod phase_operator_tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![vec![[0., 0.], [3., 0.]]],
@@ -2612,7 +4771,7 @@ mod phase_operator_tests {
         assert!(base.single_filter_budget(3.).is_some());
         let original = base.bounds(3.).unwrap();
         let frozen = base.evaluation(1.).unwrap();
-        let failed = frozen.advanced(I::point(1.), &[0.25], &[I { lo: 0.2, hi: 0.3 }], &[0]);
+        let failed = uncertain_asymmetric_activation(&frozen);
         assert!(failed.is_err());
         assert_eq!(base.bounds(3.).unwrap(), original);
         let candidate = frozen
@@ -2641,7 +4800,7 @@ mod phase_operator_tests {
             "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","edge","filtered"],
             "states":[{"instance":"dut","name":"q","kind":"real","initial":0.25}],
             "operators":[
-                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.5,"origin":origin(1)},
+                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.75,"origin":origin(1)},
                 {"kind":"laplace_nd","input":{"op":"affine","constant":0,"terms":[{"node":2,"coefficient":1}]},"numerator":[1],"denominator":[1,0.25],"origin":origin(2)}],
             "contributions":[
                 {"branch":{"instance":"dut","local_positive":"edge","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"multiply","left":{"op":"affine","constant":2,"terms":[{"node":1,"coefficient":1}]},"right":{"op":"operator","operator":0}},"origin":origin(3)},
@@ -2649,6 +4808,7 @@ mod phase_operator_tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![vec![[0., 0.], [3., 3.]]],
@@ -2673,7 +4833,7 @@ mod phase_operator_tests {
         assert!(zero_base.bounds(1.).unwrap()[1].hi > 0.);
         let original = base.bounds(3.).unwrap();
         let frozen = base.evaluation(1.).unwrap();
-        let failed = frozen.advanced(I::point(1.), &[0.25], &[I { lo: 0.2, hi: 0.3 }], &[0]);
+        let failed = uncertain_asymmetric_activation(&frozen);
         assert!(failed.is_err());
         assert_eq!(base.bounds(3.).unwrap(), original);
         let candidate = frozen
@@ -2705,9 +4865,17 @@ mod phase_operator_tests {
         let accepted = candidate;
         let accepted_before = accepted.bounds(2.5).unwrap();
         let retry_base = accepted.evaluation(1.5).unwrap();
-        assert!(retry_base
+        let failed = retry_base
             .advanced(I::point(1.5), &[1.25], &[I { lo: 1.2, hi: 1.3 }], &[0])
-            .is_err());
+            .and_then(|candidate| {
+                candidate.evaluation(1.625)?.advanced(
+                    I::point(1.625),
+                    &[1.25],
+                    &[I { lo: 1.2, hi: 1.3 }],
+                    &[],
+                )
+            });
+        assert!(failed.is_err());
         assert_eq!(accepted.bounds(2.5).unwrap(), accepted_before);
         let retry = retry_base
             .advanced(I::point(1.5), &[-0.25], &[I::point(-0.25)], &[0])
@@ -2732,7 +4900,7 @@ mod phase_operator_tests {
             "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","edge","filtered"],
             "states":[{"instance":"dut","name":"q","kind":"real","initial":0.25}],
             "operators":[
-                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.5,"origin":origin(1)},
+                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.75,"origin":origin(1)},
                 {"kind":"idt","input":{"op":"affine","constant":0,"terms":[{"node":2,"coefficient":1}]},"ic":0.1,"origin":origin(2)}],
             "contributions":[
                 {"branch":{"instance":"dut","local_positive":"edge","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin(3)},
@@ -2740,6 +4908,7 @@ mod phase_operator_tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![vec![[0., 0.], [3., 0.]]],
@@ -2753,7 +4922,7 @@ mod phase_operator_tests {
         let base = Operators::new(&program, &trajectory, &["u".into()], &[0.25]).unwrap();
         let original = base.bounds(3.).unwrap();
         let frozen = base.evaluation(1.).unwrap();
-        let failed = frozen.advanced(I::point(1.), &[0.25], &[I { lo: 0.2, hi: 0.3 }], &[0]);
+        let failed = uncertain_asymmetric_activation(&frozen);
         assert!(failed.is_err());
         assert_eq!(base.bounds(3.).unwrap(), original);
         let candidate = frozen
@@ -2799,6 +4968,7 @@ mod phase_operator_tests {
         })).unwrap();
             let trajectory = Trajectory::new(
                 crate::ir::TransientInputs {
+                    analytic_sources: vec![],
                     pwl_errors_v: None,
                     strobetimes: Vec::new(),
                     pwl: vec![vec![[0.0, 0.0], [0.5, 0.0], [2.0, 0.0]]],
@@ -2898,6 +5068,7 @@ mod phase_operator_tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.25], [4.0, 0.25]]],
@@ -3035,6 +5206,7 @@ mod exact_deadline_review_tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![],
@@ -3242,6 +5414,7 @@ mod held_nested_select_audit_tests {
         let program: Program = serde_json::from_value(value).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![],
@@ -3291,5 +5464,196 @@ mod held_nested_select_audit_tests {
             let bounds = retry.bounds(time).unwrap()[0];
             assert!(bounds.lo <= exact && exact <= bounds.hi);
         }
+    }
+    #[test]
+    fn dc_target_keeps_accepted_history_after_failed_trial_and_retry() {
+        let (mut p, mut input) = fixture();
+        p.nodes.push("u".into());
+        if let Expression::Select { then_value, .. } = &mut input {
+            **then_value = Expression::Affine {
+                constant: 0.,
+                terms: vec![crate::ir::Term {
+                    node: 2,
+                    coefficient: 1.,
+                }],
+            };
+        }
+        let mut value = serde_json::to_value(p).unwrap();
+        value["operators"] = serde_json::json!([{
+            "kind":"transition", "input":input, "delay":0., "rise":0.25, "fall":0.25,
+            "origin":{"source":"dc-retry.va","line":1,"column":1,"instance":"dut"}
+        }]);
+        value["contributions"] = serde_json::json!([{
+            "branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},
+            "positive":1,"negative":0,"rhs":{"op":"operator","operator":0},
+            "origin":{"source":"dc-retry.va","line":1,"column":2,"instance":"dut"}
+        }]);
+        let program: Program = serde_json::from_value(value).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                analytic_sources: vec![],
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![vec![[0., 1.], [4., 1.]]],
+                output_times: vec![0., 4.],
+                stop: 4.,
+                max_step: 4.,
+            },
+            1,
+        )
+        .unwrap();
+        let mut accepted = Operators::new(&program, &trajectory, &["u".into()], &[0.]).unwrap();
+        accepted
+            .advance(1., I::point(1.), &[1.], &[I::ONE], &[0])
+            .unwrap();
+        let clean = accepted.clone();
+        let prefix = accepted.bounds(2.25).unwrap();
+        for _ in 0..2 {
+            let failed = accepted.evaluation(2.).unwrap().advanced(
+                I::point(2.),
+                &[0.],
+                &[I { lo: -1., hi: 1. }],
+                &[0],
+            );
+            assert!(failed.is_err());
+            assert!(accepted.same_reset_history(&clean));
+            assert_eq!(accepted.bounds(2.25).unwrap(), prefix);
+        }
+        let mut retry = accepted;
+        let mut clean = clean;
+        for history in [&mut retry, &mut clean] {
+            history
+                .advance(2., I::point(2.), &[0.], &[I::ZERO], &[0])
+                .unwrap();
+        }
+        for time in [2., 2.125, 2.25] {
+            assert_eq!(retry.bounds(time).unwrap(), clean.bounds(time).unwrap());
+            let exact = 1. - (4. * (time - 2.)).clamp(0., 1.);
+            let bounds = retry.bounds(time).unwrap()[0];
+            assert!(bounds.lo <= exact && exact <= bounds.hi);
+        }
+    }
+}
+
+#[cfg(test)]
+mod deferred_deadline_proof_controls {
+    use super::*;
+    fn held() -> Operators {
+        let origin =
+            serde_json::json!({"source":"deadline.va","line":1,"column":1,"instance":"dut"});
+        let p:Program=serde_json::from_value(serde_json::json!({
+          "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","y"],
+          "states":[{"instance":"dut","name":"q","kind":"real","initial":0}],
+          "operators":[{"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.25,"fall":0.25,"origin":origin}],
+          "contributions":[{"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},"positive":1,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}]})).unwrap();
+        let t = Trajectory::new(
+            crate::ir::TransientInputs {
+                analytic_sources: vec![],
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![],
+                output_times: vec![0., 2.],
+                stop: 2.,
+                max_step: 0.125,
+            },
+            0,
+        )
+        .unwrap();
+        let mut o = Operators::new(&p, &t, &[], &[0.]).unwrap();
+        o.advance(0.25, I::point(0.25), &[1.], &[I::ONE], &[0])
+            .unwrap();
+        o
+    }
+    #[test]
+    fn separated_event_does_not_request_an_unused_exact_root() {
+        let o = held();
+        o.check_deadline_order_deferred(0.25, Some(I { lo: 1., hi: 1.1 }), || {
+            panic!("separated deadline consumed an unnecessary proof")
+        })
+        .unwrap();
+        o.check_deadline_order_deferred(0.25, None, || {
+            panic!("no pending event has no exact proof")
+        })
+        .unwrap();
+    }
+    #[test]
+    fn overlapping_event_still_requires_the_original_exact_identity() {
+        let o = held();
+        let window = I {
+            lo: 0.374,
+            hi: 0.376,
+        };
+        let mut calls = 0;
+        o.check_deadline_order_deferred(0.25, Some(window), || {
+            calls += 1;
+            Ok(crate::exact_source::RootTime::point(0.375))
+        })
+        .unwrap();
+        assert_eq!(calls, 1);
+        let error = o
+            .check_deadline_order_deferred(0.25, Some(window), || {
+                Ok(crate::exact_source::RootTime::point(0.4))
+            })
+            .unwrap_err();
+        assert_eq!(error.kind, "event_resolution");
+        let error = o
+            .check_deadline_order_deferred(0.25, Some(window), || Ok(None))
+            .unwrap_err();
+        assert_eq!(error.kind, "event_resolution");
+    }
+    #[test]
+    fn exhausted_original_proof_owner_propagates_and_leaves_history_unchanged() {
+        let o = held();
+        let before = o.clone();
+        let w = crate::transition_source_plan::Work::limited([128, 8192, 0]);
+        let mut helpers = 0;
+        for _ in 0..2 {
+            let error = o
+                .check_deadline_order_deferred(
+                    0.25,
+                    Some(I {
+                        lo: 0.374,
+                        hi: 0.376,
+                    }),
+                    || {
+                        w.debit(2, 1)?;
+                        helpers += 1;
+                        Ok(crate::exact_source::RootTime::point(0.375))
+                    },
+                )
+                .unwrap_err();
+            assert_eq!(error.kind, "step_budget");
+            assert_eq!(helpers, 0);
+            assert!(o.same_reset_history(&before));
+            for t in [0.25, 0.375, 0.5, 0.625, 1.] {
+                assert_eq!(o.values(t).unwrap(), before.values(t).unwrap());
+                assert_eq!(o.bounds(t).unwrap(), before.bounds(t).unwrap());
+            }
+        }
+        assert_eq!(w.spent(), 2);
+    }
+}
+
+#[cfg(test)]
+impl Operators {
+    pub(crate) fn analytic_empty_snapshot(&self) -> serde_json::Value {
+        // This lane cannot acquire any history/operator/forcing capability.
+        assert!(
+            self.entries.is_empty()
+                && self.held_targets.is_empty()
+                && self.history_targets.is_empty()
+                && self.history_predicates.is_empty()
+        );
+        assert!(
+            self.history_admission.is_none()
+                && self.forcing_context.is_none()
+                && self.continuous.is_none()
+        );
+        assert!(
+            self.direct.is_empty()
+                && self.changes_on_advance.is_empty()
+                && self.isolated_parameters.is_empty()
+        );
+        serde_json::json!({"entries":0,"held_targets":0,"history_targets":0,"history_predicates":0,"history_admission":false,"forcing_context":false,"continuous":false,"direct":0,"changes_on_advance":0,"isolated_parameters":0,"horizon":self.horizon,"source_context":self.source_context.as_ref().map(|c|Arc::as_ptr(c) as usize)})
     }
 }

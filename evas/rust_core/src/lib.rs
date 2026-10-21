@@ -4,24 +4,37 @@ mod affine_bounds;
 mod analog;
 mod assembly;
 mod batch;
+mod causal_event;
+mod causal_voltage;
 mod continuous;
+mod dc_projection;
 pub mod diagnostics;
 mod display;
 mod dynamic_roots;
 mod event_accuracy;
 mod event_conditions;
 mod event_control;
+mod event_floor;
 mod event_numeric;
+mod event_value_proof;
 mod events;
 mod exact_source;
 mod exact_time;
 mod expression;
 mod guard_trajectory;
+mod held_integer_target;
+mod history_admission;
+mod history_calendar_typed_target;
+#[cfg(test)]
+mod history_consumer_fixture;
+mod history_storage;
 mod idt;
 mod idtmod;
 mod initialization;
 mod input_clamp;
+mod integer_primitive;
 
+mod forcing_graph;
 mod interval;
 pub mod ir;
 mod laplace;
@@ -32,6 +45,7 @@ mod operators;
 mod passive_events;
 mod portability;
 mod pwl;
+mod readout;
 mod reset_dependencies;
 mod schedule;
 mod settlement;
@@ -39,6 +53,8 @@ mod settlement_bounds;
 mod slew;
 mod slew_cascade;
 pub mod solver;
+mod source_math;
+mod source_slew;
 mod state_space;
 mod step_bounds;
 mod strobe;
@@ -68,11 +84,13 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
         if let Some(errors) = &config.pwl_errors_v {
             if errors.len() != request.driven.len()
                 || errors.len() != config.pwl.len()
-                || errors.iter().any(|e| !e.is_finite() || *e < 0.)
+                || errors
+                    .iter()
+                    .any(|e| !e.bound().is_finite() || e.bound() < 0.)
             {
                 return Err(Error::new("invalid_inputs", "pwl_errors_V must match driven PWL sources and contain nonnegative finite voltage bounds"));
             }
-            if errors.iter().any(|e| *e > 0.) {
+            if errors.iter().any(|e| e.bound() > 0.) {
                 let derivative_event =
                     request
                         .program
@@ -90,7 +108,24 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
                                     }),
                             )
                         })?;
-                if !request.program.operators.is_empty() || derivative_event {
+                let shaped = errors
+                    .iter()
+                    .all(|e| e.bound() == 0. || e.shape().is_some());
+                // A selected slew always takes the SourceSlew route, whose cuts
+                // use the physical curve like Transition plans. Admit it only
+                // when sources occur solely in predicates; source value leaves
+                // and other slew inputs keep this refusal.
+                let transition_only = request.program.operators.iter().all(|op| match op {
+                    ir::OperatorSpec::Transition { .. } => true,
+                    ir::OperatorSpec::Slew { input, .. } => {
+                        source_slew::predicate_only_sources(input)
+                    }
+                    _ => false,
+                });
+                let source_uncertainty_supported = source_math::candidate(&request.program)
+                    || (request.program.operators.is_empty() && !derivative_event)
+                    || (shaped && transition_only);
+                if !source_uncertainty_supported {
                     return Err(Error::new("unsupported_source_uncertainty", "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"));
                 }
             }
@@ -108,7 +143,10 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
         request.driven.push("$abstime".into());
         if let Some(transient) = &mut request.transient {
             if let Some(errors) = &mut transient.pwl_errors_v {
-                errors.push(0.);
+                errors.push(ir::SourceError::Voltage(0.));
+            }
+            if !transient.analytic_sources.is_empty() {
+                transient.analytic_sources.push(None);
             }
             transient
                 .pwl
@@ -181,3 +219,7 @@ mod tests {
 }
 
 mod math_functions;
+
+mod analytic_source;
+
+mod analytic_request;

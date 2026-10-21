@@ -1,0 +1,536 @@
+{
+  "schema_version": 1,
+  "kind": "original-six-local-candidate-complete-validation",
+  "date": "2026-10-21",
+  "status": "root_and_independent_review_accepted_local_candidate",
+  "issue": "https://github.com/BucketSran/vaEVAS/issues/214",
+  "base_commit": "19cf340fb816df798b7f41cf200971081572d8d5",
+  "branch": "codex/evas-source-shape",
+  "source_status": "local_uncommitted",
+  "team": "four gpt-6.1-sol/medium lanes; root sole experiment executor and finalreview",
+  "identity": {
+    "release_sha256": "1132e1cac008f9c7eee662cc923a01d40187b06ca4b1459b6d860c681860da45",
+    "debug_sha256": "0c9cf3235f9f4e2748807445d496f39fb285e108d86e4f27f9ad00ca5cd16deb",
+    "source_files": 1132,
+    "owning_build_inputs_matched": 257,
+    "release_receipt": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-recovery-snapshot-20261021/release/RECEIPT.json",
+      "sha256": "1dc3c24ce4d2be7cee9fbc5cde7c5e084d8b71ae552ec5e9ce5bec81afb5dd87"
+    },
+    "manifest": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-recovery-snapshot-20261021/release/source-manifest.json",
+      "sha256": "9a0179425f08b31f6bec3449d7bd7203d453c0236b5796dcf965f8a522a043f1"
+    },
+    "qualified_dirty_files": {
+      "benchmark/material/draftbench/CANDIDATES.md": "44555077d2b2b8bb28245155b6d65a6b2d36972d67e9b6fe9b78e65286a6daf2",
+      "evas/README.md": "254b4087fb092f48bc76180d129c7dd576ca367aab1f5e7957fd0ab507439ce0",
+      "evas/docs/development/TRACEABILITY.md": "d35edfb3d761c1a64b9bddac9b1ad3c5dc21efea93a7fd4f1f26b37e436c0b43",
+      "evas/docs/development/capability-evidence.md": "4be2a1004fdef2ce81793c6f8c90eacd048614a7f6f977db8408a57ec0db0aee",
+      "evas/docs/development/diagnostic-inventory.json": "ccafbf3ba20c69647341383a662eb105d163a87fe681124ce34276c611ac964b",
+      "evas/docs/math/continuous.md": "f297d4092b4f67d1b1e73d3aac28f0dbb682d0129d03f3359b29826158813d18",
+      "evas/docs/math/events.md": "815b25a1ce935a80f06a0bfa180a3009ed5deffe9c0508a5b248cfa4964f5fdf",
+      "evas/rust_core/src/analytic_request.rs": "f199dcb62071af42acc71213b67eca9b509fd6408ff83fa86219c7e1dbc4336a",
+      "evas/rust_core/src/analytic_sampled_consumer.rs": "f6555132f5c6281ffe15b6191abb1ddf5c2f617f692111d4224297e7b3932844",
+      "evas/rust_core/src/analytic_source.rs": "d6c781c4e48466aee4f348c298812009862fe6c762d48832135d3237b89d0f6d",
+      "evas/rust_core/src/continuous.rs": "548e916cc397e49205db72f409f00564030e4dab79dae415c72fa038b3d14ab7",
+      "evas/rust_core/src/continuous_select.rs": "495262cc523b82aacbb0c32c2857bac2476d04e52e84159daab65f093387fc8e",
+      "evas/rust_core/src/dc_projection.rs": "9acd4a2bea632681acf9d0a4bbbd0045ff800b5cae3fe9faf7bed24978e13584",
+      "evas/rust_core/src/event_history_time.rs": "dd5d3a578c20c8348d97413afa0382ad6f9e34b03689759ea24935aa6644ea5e",
+      "evas/rust_core/src/event_numeric.rs": "1787ba97fc7659f4ee22c4ca2f6e5dff16eee393622de8822e0a7a4a15550638",
+      "evas/rust_core/src/event_time_provenance.rs": "4325ab5d9578931ca7388cbf56ca664c28016c4f11d9304c7ea29c5eec3a9f89",
+      "evas/rust_core/src/events.rs": "e6228e37941fec0d3b67edce0884dbdeae9fd90d0d0f9a4415e58e9a532abb3e",
+      "evas/rust_core/src/exact_source.rs": "b8cf293da494a5b6efab0d294b04f28f0b2eca94c3f2480d0fa1c2e504cb3a4b",
+      "evas/rust_core/src/exact_source/forcing_point.rs": "92cf607d5bf3d35d436cb58c2de41d3348e2e536d27fd6cbcf6c79720db73a2c",
+      "evas/rust_core/src/exact_source/history_paid.rs": "4a166e22bf52e75e436075640075566385ff922b6ef614bafd04d989a3d63bd4",
+      "evas/rust_core/src/history_admission.rs": "48246828b4a9ca885a789146daf3cf0487aff723b078ad72cbdb044a5b376106",
+      "evas/rust_core/src/lib.rs": "86f68f3c336c4d2301570625d96277145e7baf7d90e16fe07e491c0cec68c038",
+      "evas/rust_core/src/operators.rs": "9fd504196e55275fa7487f263886f669c6843f9241f2c925c073e9847330fa15",
+      "evas/rust_core/src/pwl.rs": "340806ca996b5e4a4d80de685a37e8a82c0708bc91c8e572d483885efd008f5c",
+      "evas/rust_core/src/settlement.rs": "8779364796af504f0ec9ee482cd78d1fe16ad80690ad2e6a62534d8a489ebe11",
+      "evas/rust_core/src/transient.rs": "f9b332b3e73397f6f8f16e7a427c0eab0ea6de3cc75d79ae12948366323623d2",
+      "evas/rust_core/src/transient_analytic_tests.rs": "162e9781d903243250b728bb99217784775f722805df9710c8a3e64cf55eef43",
+      "evas/rust_core/src/transient_dc_held_ramp_tests.rs": "bba5ad88d192a6c08e97cff06cb7f26d88f3c95a74333989345167c14d42bd05",
+      "evas/rust_core/src/transient_event_acceptance.rs": "6ad6112605042729aa3f3b832d3299e85e2abf35907c5077cb51beffb5f2af68",
+      "evas/rust_core/src/transient_event_acceptance_paid_tests.rs": "281953436e0d2e95cd51e2e3930f41d1351502e1e937648f3f9b37cd51668547",
+      "evas/rust_core/src/transient_forcing_tests.rs": "f052d8fdbc3dadb04635936c78561037cf277bb28192130f6de716cb888e9d08",
+      "evas/rust_core/src/transient_history_consumer_tests.rs": "13af1fea581613f09f66295bc8f0db07d7ad2e369b71d2fdd3ae62da2d48b8a3",
+      "evas/rust_core/src/transition_history_target.rs": "649b345723634405e652d2366a742263b0fa18b054d9eca6110ceb8ae7cf3a75",
+      "evas/rust_core/src/transition_source_epoch_guard.rs": "cd207956285af74df1c5c472a57763a407d4a729ad8d0b0c47669f7c93eadadd",
+      "evas/rust_core/src/transition_source_plan.rs": "e13aa71df3c6373f8e11acc9052d4b96ebebdf10f8212ea396e53a4e4db0d6c9",
+      "evas/rust_core/src/transition_source_state.rs": "e5f6364fe4cd62fcc1e4ca81023a74136864139a26e37861beed419c0b39d6ea",
+      "evas/src/evas/scs.py": "ceae2e318c8de9a5306802a1d78615525e1993e8726663e18d6bf83d6a253136",
+      "evas/src/evas/scs_sources.py": "23a4212466366474c9d9c17edf2c9c025fb8a0d163aa20d69c3487cf03676491",
+      "evas/tests/test_analytic_sources.py": "bd94fa50dee8850bf86189f4ca566c1d9ab5083733818c0df2900e27b08cb6bd",
+      "evas/tests/test_dc_held_ramp_contract.py": "1d5fa7227f887ed89f69022aad6cf453cf1033b2253bd49b4b790b1688b57e72",
+      "evas/tests/test_deadline_origin_contract.py": "5af89104df4ec7a17036a2ccc4b75a2c00f2eb9887e59bf1165d0dc278f4c558",
+      "evas/tests/test_held_time_provenance.py": "a90c4c579703309b4f68dee9ccf504a12dcc32e14a7424e595c73a35ebd70a4e",
+      "evas/tests/test_held_timer_provenance.py": "add9c011b11a0dc9bb5e44cb1cfeb8dbfb8c8796796dccdce43983d31754a030",
+      "evas/tests/test_history_owner_contract.py": "c94f08238d14d45a237705e9861c52d5bcf6236084c8d3078b209462c90a2d18",
+      "evas/tests/test_live_transition_coefficient.py": "9923f953a8876ed6cf891ff1e8f6c8e834d14e741cb0b0680186d9f5c03541ed",
+      "evas/tests/test_original079_contract.py": "233d56929ef28d98ed6ed3e6a3e8d23fc9c44d0dde68b4c12e0db46353f1035b",
+      "evas/tests/test_original390_contract.py": "32a6df185c7c860431e567b1487ae657eb03dee167b3a0784da39c05d392bcc5",
+      "evas/tests/test_original391_contract.py": "92a2c8d965208ff8f1fafd256f592971f726caa8641702a9a3bb2a09aa4ec59a",
+      "evas/tests/test_original_source_consumers.py": "94539cbe92146496c64cbef6daf99c1b874c218d21c8406d65a6e7e5b36c1c06",
+      "evas/tests/test_scs_native_source_contract.py": "f7d9b0fb5f6df8ad80e1df44292e45fddf4b8bf2d69e42489cddddc86bba80bc",
+      "experiments/backends/support/low-cost-closure/README.md": "63c84f42f5c5d3b083e98829bfeed9d4307698030714fc8d548dda919b9fbb06",
+      "experiments/backends/support/low-cost-closure/minimum-contracts-four-lanes.json": "ffde6c48b900632aa90a85d2db116f1d6c5960af04dd7405c8410011d51976d1"
+    },
+    "postqualification_delta": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/review/postqualification-doc-delta.json",
+      "sha256": "65e7c17ba4fe2dddfb6c0ec93fef3a46bab3d77aa07874f435a6193c1b00a020"
+    },
+    "external_python_modules": 21,
+    "external_python_retention": "hashes_only_not_full_offline_replay",
+    "adapter_update": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/A/recovery-v3/ADAPTER_UPDATE.json",
+      "sha256": "100235b180a799df89ba4b7b81c4d9054128d05f930daa821d2cd1f005d11243"
+    }
+  },
+  "qualification": {
+    "rust": {
+      "passed": 730,
+      "failed": 0,
+      "ignored": 1,
+      "ignored_case": "performance_probes::profile_accuracy_components; unchanged opt-in performance test",
+      "receipt": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/executor/qualification-build3-20261021-rust/execution.receipt.json",
+        "sha256": "a15fcf7344a62176ba76fe5aa008390fa639394a8d6b67d2c87d43bfbfd53821"
+      }
+    },
+    "python": {
+      "passed": 2691,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "setup_skipped": 0,
+      "unique_methods": 2691,
+      "single_complete_run": true,
+      "shards": [
+        608,
+        669,
+        730,
+        684
+      ],
+      "profiles": "Actual release/debug/default fixture choices retained; not all onebinary.",
+      "receipt": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/executor/qualification-v2-build3-followup-20261021-python/execution.receipt.json",
+        "sha256": "d8a7a9165185cf18a59d23866beff3eaac11dde7d1a58a3b7422a646c2f08519"
+      }
+    },
+    "recovery_controls": {
+      "passed": 19,
+      "DUT_dispatches": 0,
+      "receipt": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/executor/recovery-fresh-controls2/execution.receipt.json",
+        "sha256": "60e78615ea289829f35ff58cd5724de4555c3527ee77a6acfcc3902c570a29a4"
+      }
+    },
+    "lint": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/executor/qualification2-lint/execution.receipt.json",
+      "sha256": "b2412d38466f2b09046750f7ca81597fd061ea32dd4e7887620f8c6936a4f662"
+    }
+  },
+  "scientific": {
+    "tracks": {
+      "original400": {
+        "previous_counts": {
+          "PASS": 318,
+          "FAIL": 19,
+          "REJECTED": 63
+        },
+        "current_counts": {
+          "PASS": 320,
+          "FAIL": 20,
+          "REJECTED": 60
+        },
+        "lost_pass": [],
+        "new_pass": [
+          "362",
+          "391"
+        ],
+        "transitions": [
+          {
+            "family": "079",
+            "before": "REJECTED",
+            "after": "FAIL"
+          },
+          {
+            "family": "362",
+            "before": "REJECTED",
+            "after": "PASS"
+          },
+          {
+            "family": "391",
+            "before": "REJECTED",
+            "after": "PASS"
+          }
+        ],
+        "checker_changed": [
+          "079",
+          "362",
+          "391"
+        ],
+        "physical_response_changes": [],
+        "baseline_results": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-candidate/execution/RESULTS.json",
+          "sha256": "44e5a82709416be6252ced055c68fd54b939aaa0c1ba1aaa921bd50da4388b15"
+        },
+        "denominator": 400,
+        "retained_pass_count": 318,
+        "response_bytes_equal_count": 337,
+        "response_equal_except_engine_count": 337
+      },
+      "revised400": {
+        "previous_counts": {
+          "PASS": 321,
+          "FAIL": 15,
+          "REJECTED": 64
+        },
+        "current_counts": {
+          "PASS": 323,
+          "FAIL": 16,
+          "REJECTED": 61
+        },
+        "lost_pass": [],
+        "new_pass": [
+          "362",
+          "391"
+        ],
+        "transitions": [
+          {
+            "family": "079",
+            "before": "REJECTED",
+            "after": "FAIL"
+          },
+          {
+            "family": "362",
+            "before": "REJECTED",
+            "after": "PASS"
+          },
+          {
+            "family": "391",
+            "before": "REJECTED",
+            "after": "PASS"
+          }
+        ],
+        "checker_changed": [
+          "079",
+          "362",
+          "391"
+        ],
+        "physical_response_changes": [],
+        "baseline_results": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/monotone-revised-candidate/revised-full400/RESULTS.json",
+          "sha256": "4ca153ff69895621626cbafff355e84d6ad8703dfeaedeb8b87f904b7083c60c"
+        },
+        "denominator": 400,
+        "retained_pass_count": 321,
+        "response_bytes_equal_count": 336,
+        "response_equal_except_engine_count": 336
+      }
+    },
+    "actual_dispatches": 404,
+    "revised_composition": "396 actual neworiginal rows +4 actual newrevised012075077107; no historicalpartial rows",
+    "comparison": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/full-results-v3/analysis-v4/COMPARISON.json",
+      "sha256": "902cbf1219fc7ed1b4dd6e6db64f118961078dcc1ab8508003ad733893f3ead0"
+    },
+    "postcheck": {
+      "012": {
+        "status": "passed_sample_gate",
+        "evidence": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/full-results-v3/postchecks/012-actual-postcheck.json",
+          "sha256": "5ccf622d64df9b39df9f85c40a58ecdc5e462b7cf477f22f7f3ebb511e9c4595"
+        }
+      },
+      "075": {
+        "status": "passed_direct_finite_edge_gate",
+        "evidence": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/full-results-v3/postchecks/075-actual-postcheck.json",
+          "sha256": "85a49a7537cae1e61c5c79f72329116d85122c00e316d71e6ec801e53579d443"
+        }
+      },
+      "077": {
+        "status": "passed_direct_rational_additive_oracle",
+        "evidence": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/full-results-v3/postchecks/077-actual-postcheck.json",
+          "sha256": "3c46c234cefa3c49ef0ea914ba228833deadba1ebad5ede928653d61a827a539"
+        }
+      },
+      "107": {
+        "status": "not_evaluable_no_saved_DUT_response",
+        "evidence": {
+          "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/full-results-v3/postchecks/107-actual-postcheck.json",
+          "sha256": "d800aeaf68d39b663ed411069f61b6eb4ca262421e8d268895cd65b54e9d1497"
+        }
+      }
+    },
+    "receipts": {
+      "original400": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/executor/six-final-recovery-20261021/original400/execution.receipt.json",
+        "sha256": "5e97bc7472e99c41cfa733c0fc6a553522eee02f1efaee9dffcb3bf6077d76a9"
+      },
+      "revised4": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/executor/six-final-recovery-20261021/revised4/execution.receipt.json",
+        "sha256": "976bed0ed920ab192abfd816e3a250c540d9994fb83d602ef8d4bbf3949ad9e6"
+      },
+      "postcheck": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/executor/six-final-recovery-20261021/postcheck/execution.receipt.json",
+        "sha256": "fb52d55e4f4972c7f61bada874e88e7a2cbf600d4f2f00c3dd2838d0f59ae6c2"
+      },
+      "analyse-v4": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/executor/six-final-recovery-20261021/analyse-v4/execution.receipt.json",
+        "sha256": "09331516052212a679147cba31693b8c2e65a0cc9c49fe24c45021bcff006b57"
+      }
+    },
+    "limits": {
+      "kernel_timeout_s": 120,
+      "worker_timeout_s": 150,
+      "work_budget": 1000000000,
+      "original_outer_s": 2400,
+      "revised_outer_s": 600,
+      "unchanged": "Original models/checkers/precision/material-specific approved save grids retained; total outerallocation amendment separately reviewed."
+    },
+    "remaining_original": 80,
+    "remaining_revised": 77,
+    "new362": "Full400 additional finding outside requested six; no singlefunction causal proof."
+  },
+  "implemented_contracts": [
+    {
+      "name": "source entry and independent sampled consumer",
+      "code": [
+        "evas/src/evas/scs.py",
+        "evas/src/evas/scs_sources.py",
+        "evas/rust_core/src/analytic_sampled_consumer.rs",
+        "evas/rust_core/src/analytic_source.rs"
+      ],
+      "tests": [
+        "evas/tests/test_scs_native_source_contract.py",
+        "evas/tests/test_original_source_consumers.py"
+      ],
+      "positive": "Meg/M/m and sinephase default; analytic/PWL/internal-time slot alignment; fixed Timer sequential extrema and held Transition/DC physical consumers.",
+      "negative": "Unknown or foreign roles, complete denominator box containing zero, source error and arbitrary analytic Cross/continuous targets remain rejected."
+    },
+    {
+      "name": "paid exact event and time provenance",
+      "code": [
+        "evas/rust_core/src/event_numeric.rs",
+        "evas/rust_core/src/event_time_provenance.rs",
+        "evas/rust_core/src/transient_event_acceptance.rs"
+      ],
+      "tests": [
+        "evas/tests/test_deadline_origin_contract.py",
+        "evas/tests/test_original390_contract.py",
+        "evas/tests/test_original391_contract.py",
+        "evas/rust_core/src/transient_event_acceptance_paid_tests.rs"
+      ],
+      "positive": "Physical root, execution representative time and held deadline distinguished; original391 full6-property checker passes; actual scan/copy/exact arithmetic remain paid.",
+      "negative": "Wrong owner/epoch, unsupported time relation, natural original Work exhaustion and two failed retries preserve transaction; no cost rate reduction."
+    },
+    {
+      "name": "DC rail and held epoch consumers",
+      "code": [
+        "evas/rust_core/src/transition_source_epoch_guard.rs",
+        "evas/rust_core/src/transition_source_plan.rs",
+        "evas/rust_core/src/transition_history_target.rs"
+      ],
+      "tests": [
+        "evas/tests/test_dc_held_ramp_contract.py",
+        "evas/tests/test_original079_contract.py",
+        "evas/rust_core/src/transient_dc_held_ramp_tests.rs"
+      ],
+      "positive": "Independent rational guard/phase answers, sparse/dense queries, actual bound_step accepted segments, reset and epoch history.",
+      "negative": "Changing rail, nonpoint source error, contradictory proof, wrong owner/trajectory and rollback retain rejection. Public contract success does not turn original079 checkerFAIL intoPASS."
+    }
+  ],
+  "target_frontiers": [
+    {
+      "id": "093",
+      "priority": "P1",
+      "status": "REJECTED",
+      "actual": "Strict Lt at source37:17; difference interval[-2.220446049250313e-16,+2.220446049250313e-16]. Final raw has no simulation time.",
+      "needed": "Paid strict same-source sample relation/high precision proof bound to actual sampling root and old extrema provenance; strict/non-strict equality, uncertainty, originalWork and rollback controls.",
+      "prior_only": "38ns/index38-minus-minimum37 +1.1057225329908805e-18V belongs to earlier independent diagnostic; not a finalrun measurement."
+    },
+    {
+      "id": "390",
+      "priority": "P1",
+      "status": "REJECTED",
+      "actual": "step_budget:999549128+1078112 exceeds original1000000000; no saved response/checker.",
+      "needed": "Full typed paid Program clone with exhaustive variants and struct fields; same NaN/Inf/depth96/value100000 rejection boundary, complete owner audit and actual naturalWork exhaustion/retry.",
+      "prior_only": "2.8ns and562774464 ProgramJSONcopy cost are older diagnostic9 facts; finalrun has no new caller profile."
+    },
+    {
+      "id": "079",
+      "priority": "P1 evidence investigation",
+      "status": "FAIL",
+      "actual": "Simulation completed34ns, originalP_GUARD_WINDOW highfraction0; saved0/20/34ns guard.9/0/0 and phase0/.45/.225.",
+      "needed": "Matching Spectre tran/save/strobe/default output contract and original savedtrace evidence before changing export rules; preserve original checker, deck, precision and maxstep.",
+      "limit": "Current sparse-grid contract is documented; no proved exportbug or checkerbug yet. Seven public math contracts and physicalstep evidence are separate."
+    },
+    {
+      "id": "074",
+      "priority": "P2",
+      "status": "REJECTED",
+      "actual": "Compile47:37 nonconstant sqrt in physical sampled RMS.",
+      "needed": "Physical Cross sampling, sequential mean-square state, whole-box sqrt domain/error propagation and real Transition consumer, with independent RMS/reset/enable and negative-domain controls."
+    },
+    {
+      "id": "364",
+      "priority": "P3",
+      "status": "REJECTED",
+      "actual": "Compile79 nonaffine ordinary analog if.",
+      "needed": "Continuous source×accepted Transition history whole-segment value/derivative/root and clamp error proof; overlapping histories, strict boundary, uncertainty and owner/budget controls."
+    },
+    {
+      "id": "391",
+      "priority": "complete for original case",
+      "status": "PASS",
+      "actual": "Originalchecker6/6 on frozen release; reset/disable, clamp, complement, metrics, two-cycle valid and pendingTransition allpassed.",
+      "needed": "Keep complete regression/independent original391 contracts; no arbitrary VCO or event-history generalization."
+    }
+  ],
+  "preserved_failed_attempts": [
+    {
+      "reason": "Initial fullqualification timeout/Rust natural-exhaustion assumption/Python filesystem and older expectations retained.",
+      "receipt": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/executor/final-fullchecks/execution.receipt.json",
+        "sha256": "3fdbc4430b625687f957b85d6f73384b0dfbb44701dbdaff89c72ac00007bc2d"
+      },
+      "status": "failed",
+      "charged_command_s": 1805.05,
+      "process_wall_s": 1799.9277711249888
+    },
+    {
+      "reason": "Second completePython2689PASS1FAIL1ERROR; message assertion and missing evidence parent repaired before fresh full2691.",
+      "receipt": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/executor/qualification-build3-20261021-python/execution.receipt.json",
+        "sha256": "cbea3123ee439b918c868d708e4d5bb655bedd1bc48d7b59a741dc5aa93d0aad"
+      },
+      "status": "failed",
+      "charged_command_s": 3305.05,
+      "process_wall_s": 500.8104400410084
+    },
+    {
+      "reason": "Fresh campaign rejected beforeDUT by historicalpartial identity gate;0dispatch.",
+      "receipt": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/executor/six-final-acceptance-20261021/original400/execution.receipt.json",
+        "sha256": "9797a39b52f1b5b2290ce773ea8ab6cb8e2f6e24a5d321f53e8415155595fd54"
+      },
+      "status": "failed",
+      "charged_command_s": 1805.05,
+      "process_wall_s": 2.187883042031899
+    },
+    {
+      "reason": "4PASS4fixtureERROR due missing journal sequence; fixed controls fresh19PASS.",
+      "receipt": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/executor/recovery-fresh-controls/execution.receipt.json",
+        "sha256": "fe6ed37e7c21a729fc34b5e45bbe4338b5882a56dd4921aa37beffcac412dbc1"
+      },
+      "status": "failed",
+      "charged_command_s": 65.05,
+      "process_wall_s": 0.43972604093141854
+    },
+    {
+      "reason": "Saved-result comparison assumed historical aggregate raw lived at root; explicit396+4 raw map fixed in newv4.",
+      "receipt": {
+        "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/executor/six-final-recovery-20261021/analyse/execution.receipt.json",
+        "sha256": "3c7f59df0e6abe2a21609b3752ab8fe97591552bfc4e4054b7490ccb67c3d3a3"
+      },
+      "status": "failed",
+      "charged_command_s": 125.05,
+      "process_wall_s": 11.578718750039116
+    }
+  ],
+  "reviews": {
+    "review/root-final-acceptance.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/review/root-final-acceptance.json",
+      "sha256": "daf715736ce145052d9161e0ab8ba7485cdc4066247722c3ab3d33b7f2668597"
+    },
+    "review/final-scientific-acceptance-review.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/review/final-scientific-acceptance-review.json",
+      "sha256": "822675b6502a0155dbb00c128982e6e80e742b632b3f6ac38d08132f9935dd05"
+    },
+    "review/full-qualification-evidence-review.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/review/full-qualification-evidence-review.json",
+      "sha256": "b703f0e8c521c9625ac84e11a64aefd0c90a03ac01286a7cdcd9c4ce001034b8"
+    },
+    "review/package-build3-correspondence.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/review/package-build3-correspondence.json",
+      "sha256": "52c20e035d79caa49ec9c697dd9753f1b90beb0cb166715c57e4f60c9496115b"
+    },
+    "review/postqualification-doc-delta.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/review/postqualification-doc-delta.json",
+      "sha256": "65e7c17ba4fe2dddfb6c0ec93fef3a46bab3d77aa07874f435a6193c1b00a020"
+    },
+    "B/final-original400-v3-review.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/B/final-original400-v3-review.json",
+      "sha256": "cb8f72daf742a497aac27d3cac50dd83f47e1d546266f2b8c90b5dddf3fd2dec"
+    },
+    "B/final-original400-v3-new362.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/B/final-original400-v3-new362.json",
+      "sha256": "4db399e48a719129897b884884dd99c841adb5b4397223a196fde4812741e9b4"
+    },
+    "B/final-original400-v3-frontier-supplement.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/B/final-original400-v3-frontier-supplement.json",
+      "sha256": "913a178aa105d767a57ab0b72b9c30fb45eff4be5f8d2ddc8b4e1c16163d65f3"
+    },
+    "B/issue214-program-copy-boundary.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/B/issue214-program-copy-boundary.json",
+      "sha256": "401a14a212a8d218467efb67f9f5cb12478cea2c754ab694934fdfbb9974e06a"
+    },
+    "D/final-six-v3-review.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/D/final-six-v3-review.json",
+      "sha256": "889658087096e2855fcadc4c5f0ee646d7d490469d38f8e6e09a1e228ee96750"
+    },
+    "D/final-priority-contracts.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/D/final-priority-contracts.json",
+      "sha256": "8bb0cfc6dcce965f53eaf2c4764c607e4edef4f54a15219adf4df44bb2ba4ce4"
+    },
+    "A/final-acceptance-v3-original400-terminal-review.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/A/final-acceptance-v3-original400-terminal-review.json",
+      "sha256": "3832349cc2c56f919c6ee6ca3ad5fc4ab63abd874be2c1f8997a990b640bd253"
+    },
+    "A/final-acceptance-v3-revised4-terminal-review.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/A/final-acceptance-v3-revised4-terminal-review.json",
+      "sha256": "bb55f00bf45022a5a39454b3a8615d90f1897240aa7d643ce45579927c2a295c"
+    },
+    "C/analysis-v4-historical-raw-repair-review.json": {
+      "path": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/C/analysis-v4-historical-raw-repair-review.json",
+      "sha256": "08ed28cd05976e2c03d31fc599be0826983a0aa6a11d69f30c576b170486489e"
+    }
+  },
+  "storage": {
+    "core": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-recovery-snapshot-20261021",
+    "results": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021",
+    "archive": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/final-archive",
+    "adapter_archive": "/Volumes/T7/vaEVAS/current/runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/original-six-20261021/final-archive-v3",
+    "visibility": "Local-only raw/models/waveforms/source archives; hashes are not public downloads."
+  },
+  "budget": {
+    "user_remaining_at_turn_start_s": 43200,
+    "common_ceiling_s": 81111.85,
+    "current": {
+      "mode": "bounded_command_seconds",
+      "unit": "command_deadline_seconds",
+      "consumed_s": 66544.1,
+      "known_consumed_s": 66544.1,
+      "reserved_s": 0,
+      "pre_guard_fix_settled_attempt_ids": [
+        "workflow-fallback-maintenance-20261019"
+      ],
+      "unallocated_closeout_s": 0,
+      "available_s": 14567.75
+    },
+    "unit": "command_deadline_seconds",
+    "rule": "All declared command deadlines+guard allowances fully charged including failures; not wall time or measured agentactive time."
+  },
+  "limits": [
+    "No claim all400PASS",
+    "No newCI or installation validation",
+    "No newSpectre or sharedQ",
+    "No commit,push,merge,release",
+    "Prior minimum-contracts and historicalcheckpoints remain immutable",
+    "Full qualification earlier failures preserved; no crossrun splice togreen"
+  ]
+}

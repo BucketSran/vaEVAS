@@ -188,7 +188,7 @@ class TransitionRejections(unittest.TestCase):
             self.assertAlmostEqual(row['voltages'][index], expected, delta=2e-12)
 
     def test_unsupported_inputs_settings_and_contexts(self):
-        for expression in ['transition(V(u,r),0,1n,1n)', 'transition(a,0,0,1n)',
+        for expression in ['transition(a,0,0,1n)',
                            'transition(a,-1n,1n,1n)', 'transition(a,0)',
                            'transition(transition(a,0,1n,1n),0,1n,1n)',
                            'transition(a,a,1n,1n)']:
@@ -197,6 +197,17 @@ class TransitionRejections(unittest.TestCase):
         for expression in ['transition(a*a,0,1n,1n)']:
             with self.subTest(expression=expression), self.assertRaises(KernelError):
                 run_transition(f'@(initial_step) a=0; V(y,r)<+{expression};',[0,1e-9],1e-9,declarations='real a;')
+        # The original voltage target is a DC candidate. Compilation alone
+        # cannot establish its physical source over the complete run.
+        program = compile_transition('V(y,r)<+transition(V(u,r),0,1n,1n);')
+        result = transient(program, {'u':[[0,1.25],[2e-9,1.25]]},
+                           [0,1e-9,2e-9], stop=2e-9, max_step=2e-9, kernel=KERNEL)
+        y = result['nodes'].index('y')
+        self.assertEqual([s['voltages'][y] for s in result['solutions']], [1.25]*3)
+        with self.assertRaises(KernelError) as caught:
+            transient(program, {'u':[[0,0],[2e-9,1.25]]}, [0,1e-9,2e-9],
+                      stop=2e-9, max_step=2e-9, kernel=KERNEL)
+        self.assertEqual(caught.exception.diagnostic['code'], 'kernel.unsupported_operator')
 
     def test_live_affine_products_preserve_old_inputs_and_use_current_voltage(self):
         # These exact expressions used to be structurally rejected. Keep the
@@ -264,15 +275,24 @@ class TransitionRejections(unittest.TestCase):
             with self.subTest(delay=delay, edge=edge), self.assertRaisesRegex(KernelError,'time resolution'):
                 run_transition(body,[0,start+32],start+32,declarations='real a;')
 
-    def test_nearby_user_and_operator_deadlines_cannot_round_to_ties(self):
+    def test_exact_deadline_order_and_unproved_representative_gap_remain_distinct(self):
         # Exact binary64 1 + .1 differs from binary64 1.1. Rounding both
         # deadlines to one timestamp is not a proof that they coincide.
         body = """@(initial_step) begin a=0; b=0; end
           @(timer(1,0,0.001)) a=1;
           @(timer(1.1,0,0.001)) b=1;
           V(y,r)<+transition(a,0.1,0.5,0.5)+b;"""
-        with self.assertRaisesRegex(KernelError,'deadline ordering'):
-            run_transition(body,[0,2],2)
+        times=[0,math.nextafter(1.1,0),1.1,1.35,2]
+        result=run_transition(body,times,2)
+        root=Fraction(1)+Fraction(.1)
+        self.assertLess(root,Fraction(1.1))
+        index=result['nodes'].index('y')
+        for t,row,bounds in zip(times,result['solutions'],result['observation_evidence']['voltage_bounds_V']):
+            want=max(Fraction(0),min(Fraction(1),(Fraction(t)-root)/Fraction(.5)))+int(Fraction(t)>=Fraction(1.1))
+            self.assertLessEqual(abs(Fraction(row['voltages'][index])-want),Fraction(2e-12))
+            lo,hi=map(Fraction,bounds[index])
+            self.assertLessEqual(lo,want)
+            self.assertLessEqual(want,hi)
         close = math.nextafter(.1, math.inf)
         body = f"""@(initial_step) a=0;
           @(timer(1,0,0.001)) a=1;

@@ -4,6 +4,21 @@
 面向使用者的支持结论只在[四后端支持范围](../COMPARISON.md)维护，详细接受与拒绝条件由所链接的契约维护。
 收据只证明其固定执行版本；下表仅登记 ID 与证据，供追溯工具读取，不维护第二份支持状态或当前 main 通过率。
 
+[四路最小合同](../../../experiments/backends/support/low-cost-closure/minimum-contracts-four-lanes.json)
+补充 LANG、ANALOG、TIMER、TRANSITION、EVENT-ORDER、TIMED-OPERATOR、COMPOSE 和 DYNAMICS 的本地开发证据。
+受限 SCS 入口、原电压接口、有理截止点及 DC 保持斜坡分别以独立答案和拒绝控制验收；
+最终同源46项 Python、39项 Rust 和3类早期集成检查通过。原红例、错误夹具及已解决的审查问题保留。
+该收据固定最小切片时点，不授予后续执行身份的信用。
+
+[六原件后续收据](../../../experiments/backends/support/low-cost-closure/original-six.json)
+补充上述能力及 EVENT-CONDITIONS 的本地证据：受限解析源与内部时间槽位对齐、固定timer顺序采样消费者、
+真实根与执行代表时间的来源、有理计算和候选扫描的实际付费、同owner DC保持历元与分段guard。
+release `1132e1cac008` 对应完整Rust730通过/0失败/1原有忽略，单次完整Python2691通过、零失败/错误/跳过。
+全新原400为320/20/60，同源396＋4修订轨为323/16/61；两轨新增362、391且旧通过零回退。
+391完整原checker通过，079运行完成但原checker失败，074／093／364／390保持未支持边界。
+原337份、修订336份共同完成的完整响应逐字节相同；独立后验和全量结果分别留证。
+该未提交候选没有新增CI、安装、Spectre或共同Q资格；21份外部Python模块仅保存哈希，不声称完整离线重放。
+
 [原 CDS 三例验收](../../../experiments/backends/support/event-runtime-control/README.md#original-cds)
 补充 LIN、TIMER、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE、PERFORMANCE 的开发证据。
 三条原请求通过原 checker 与实际 Spectre 有限配对；重复工作优化和时间来源修复的执行身份、原失败与限制由收据固定。
@@ -24,7 +39,16 @@
 
 [源折点保存修复](../../../experiments/backends/support/scs-source-observation/README.md)补充 DEV:scs-input 的有限开发证据；修复保存插值漏脉冲，不改变原Q成绩。
 
-[Pulse 源误差和保存策略](../../../experiments/backends/support/scs-source-uncertainty/README.md)补充 DEV:scs-input 与 TIMER 的有限开发证据；非零源误差仍不支持动态算子或 cross，不改变原Q成绩。
+[Pulse 源误差和保存策略](../../../experiments/backends/support/scs-source-uncertainty/README.md)补充 DEV:scs-input 与 TIMER 的有限开发证据；该历史执行仅支持幅度界。新的[物理源曲线证据](../../../experiments/backends/support/source-shape/README.md)扩展 CROSS、EVENT-ORDER、EVENT-CONDITIONS、TIMED-OPERATOR 与 COMPOSE 的有限组合；347 的已解释兼容差异和未合并状态保留；不改变原Q成绩。[P0逐项收据](../../../experiments/backends/support/source-shape/p0.json)补充同步两例、400五例及#119旧精度反例的当前核销，[固定112家族收据](../../../experiments/backends/support/source-shape/replay112.json)保留完整执行、拒绝与清理分母；[091/320收据](../../../experiments/backends/support/source-shape/diagnosis-091-320.json)补独立完整递推与原件实际参考。分类与后续验收由[统一清单](../COMPARISON.md#replay112)维护，拒绝项继续未支持。
+[GAP06有限除法采样](../../../experiments/backends/support/source-shape/gap06.json)补充EVENT-CONDITIONS、TIMED-OPERATOR与COMPOSE：八例独立递推及全部保存量通过，原checker3/8，五例严格根处复位差异及参考观察缺证保留。实际原deck参考8/8通过，有限稳定观察与完整原生波形分别记录；当前112分母及剩余拒绝见[唯一清单](../COMPARISON.md#gap06-sampling)。
+
+[固定候选400与213位置收据](../../../experiments/backends/support/source-shape/evaluation-400-71.json)补充LANG、EVENT-CONDITIONS、EVENT-ORDER、COMPOSE与QUALIFICATION的同源开发证据。两套平台内核、原判据和独立判据分别记录；完整分类、未支持与缺证只在[统一清单](../COMPARISON.md#evaluation-400-71)维护，不改变既有共同Q或合并状态。
+
+[101/314源游标诊断](../../../experiments/backends/support/source-shape/history-101-314.json)补充EVENT-ORDER、TIMED-OPERATOR与COMPOSE的相邻输出阶段修复。独立公开回归和候选隔离检查覆盖真实根之后、执行代表时刻之前的普通及强制观察；两份原件仍拒绝，后续限制见[统一清单](../COMPARISON.md#history-101-314)。没有新增实际参考或合并支持声明。
+
+[GAP20与保持谓词后续](../../../experiments/backends/support/source-shape/gap20-state-predicates.json)补充LANG、TRANSITION、EVENT-CONDITIONS、EVENT-ORDER与COMPOSE的有限开发证据。前端按源码顺序保留默认边沿；保持谓词仅以完整区间证明确定真／假，未认证根窗继续拒绝。314仅设计和正反例准备，未授予生产支持；原件状态及进度见[统一进度表](../COMPARISON.md#progress-board)，没有新增实际Spectre对齐或共同Q。
+
+[101/314共用根窗证书](../../../experiments/backends/support/source-shape/root-window-certificate.json)补充EVENT-ORDER、EVENT-CONDITIONS、TIMED-OPERATOR、TRANSITION与COMPOSE。独立Fraction回归覆盖相异根完整模式、旧历史前缀、根处物理采样及放大、查询和拒绝；同控制器失败重试检查候选隔离。原发现窗口和证明预算保持，连续网络仍用自身局部时钟证书。原件状态见[统一进度表](../COMPARISON.md#progress-board)，有限切片未合并，无新增实际Spectre或共同Q。
 
 [Pulse delay 缺省值](../../../experiments/backends/support/pulse-delay/README.md)补充 DEV:scs-input 的有限开发证据；仅省略 delay 取 0，其他源参数与误差约束保持，原 22 请求仍有后续拒绝。
 
@@ -33,6 +57,69 @@
 [固定 timer 的隐式 DAE 续算](../../../experiments/backends/implicit-event-restart/README.md)补充 DYNAMICS、TIMER、EVENT-ORDER 和 COMPOSE 的有限开发证据；物理 seed、步长与同控制器回退由独立测试核对，实际参考九点通过原 100 nV 门槛。一般事件窗/约束跳参仍拒绝，不新增 Q 资格。
 
 [初始化节点依赖](../../../experiments/backends/support/initial-node-dependencies/README.md)补充 LANG、LIN 和 COMPOSE 的有限开发证据；三个同源实际 Spectre 对照通过，不宣称原 MUX 任务完成。
+
+[有限整数位运算](../../../experiments/backends/support/integer-bitops/README.md)补充LANG、EVENT-ORDER和EVENT-CONDITIONS的分支开发证据。
+IR24保持不变，有限域降低为既有比较选择；常量、顺序XOR和普通掩码的独立回归见
+[test_integer_bitops.py](../../tests/test_integer_bitops.py)。原件完整请求及实际Spectre验收独立记录，不从局部通过推导一般整数支持。
+同一[分支收据](../../../experiments/backends/support/integer-bitops/evidence.json)补充TRANSITION、CROSS、SLEW和DYNAMICS：
+有理点值证明保留真实误差验收，标准算子缺省参数复用原IR；公开正反例分别见
+[点值回归](../../tests/test_transition_point_proof.py)和[默认参数回归](../../tests/test_operator_defaults.py)。
+最终统一400绑定同一源码；早期核心400与后续三件身份保留在`1de6896b`历史收据。
+后续有限点采样的实现与新候选身份见下述低成本闭包证据；原设计保留历史身份。
+
+[有限声明初值](../../../experiments/backends/support/declaration-initializers/evidence.json)补充LANG的分支证据，
+并检查既有cross/timer写者上的初始化组合。
+初值只为原有事件写者绑定有限实例常量，复用原类型检查、顺序初始化和IR24，
+范围见[合同](../math/events.md#declaration-initializers)与[公开正反例](../../tests/test_declaration_initializers.py)。
+声明常量不授予一般输入采样、只读设置或ordinary局部量支持。
+
+[回调位置的普通纯输入前缀](../math/events.md#ordinary-event-prefix)与
+[事件读取的 integer Floor 前缀](../math/events.md#ordinary-integer-event-prefix)
+补充 LANG、EVENT-ORDER、EVENT-CONDITIONS、TRANSITION 和 COMPOSE 的分支验收证据。
+[紧凑收据](../../../experiments/backends/support/low-cost-closure/ordinary-prefix.json)
+记录公开数值正反控、原预算边界、当前前端生成 IR 的一致性及同 Controller 完整 Frame 控制。
+原234局部身份保留；最终同源双轨、完整CI及安装已由[wave27共同收据](../../../experiments/backends/support/low-cost-closure/ordinary-common-three.json)闭合，原317、修订320、剩80。没有新增Spectre或正式共同资格。
+
+[仅初始化状态的普通别名合同](../math/events.md#initial-only-ordinary-alias)
+登记 LANG、EVENT-ORDER 和 COMPOSE 的分支开发入口。
+[状态与逐位置控制](../../tests/test_initial_ordinary_alias.py)要求保留初值、初始化输出、
+每次求值的顺序别名、完整源误差，以及无关 Transition 实例排列下的独立数值答案。
+[准入控制](../../tests/test_initial_ordinary_alias_admission.py)要求拒绝直接或传递设置依赖、
+依赖目标的 bound-step 激活条件及 indexed probe，并保留原非 A 入口。
+2026-10-19 主区联合检查159项通过，使用当前贡献队列和内核，覆盖上述准入、初始化、
+预算和两种实例排列。该159项为历史局部运行；最终交付使用wave27同源400及2641方法CI，不增加Spectre配对或正式共同资格。
+
+[低成本闭包](../../../experiments/backends/support/low-cost-closure/README.md)补充 LANG、LIN、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS 和 COMPOSE 的分支证据。
+合同分别见[有限点初值与别名](../math/events.md#input-initialization)、[typed整数与有限幂](../math/events.md#typed-integer-closure)及[普通条件与有理输出](../math/solving.md#普通-analog-条件)。
+公开控制覆盖源码顺序、精确数组槽、真实根处读取、signed余数、有限pow类型与资源、分支临时量和正分母事实。
+历史wave22生产快照 `ab928317` 绑定177份源码／构建输入、IR31、0.24.0和release核 `69c46e155808`，测试辅助提交为 `6d3c8a93`。原始400保持314通过、19失败、67拒绝，333完成；材料r3修订另轨400为317通过、15失败、68拒绝，332完成，两轨均清理400/400、零超时。原件新增027、142；修订轨先由075、再由077新增通过，旧316通过零回退，旧19份原失败checker字典不变。修订轨由同wave22的396份原执行、既有修订012／107／075及新正式执行的077组成。全部PASS仍差83项，350只是节点。
+075原相邻样本平滑判据会误拒正确斜坡并放过瞬时跳变，独立Fraction参考与14项正负控制已证。修订仅增加250ps直接观察和必要的有限边沿检查，仍要求完整原checker及其0.40阈值；原VA、物理输入、时长、maxstep、精度和全部预算保持。正式725行保留原365点，32个直接边沿通过，两轴独审闭合；原075仍为FAIL。
+077的说明把整个输出保持与实时输入加保持扰动混写。用户审阅具体提案后明确选择后者；修订保留原deck、参数和全部预算，只保持扰动、实时相加输入，完整checker核五性质。正式405直接行、独立Fraction校核、真实registry42项校准及完整400两轴独审通过；原077仍FAIL，未据此推断唯一原意。
+[材料r3收据](../../../experiments/backends/support/low-cost-closure/continuation-wave22-materials-r3.json)绑定修订依据、正式执行与完整400映射。
+单次完整delivery CI `39193253152` 在精确head `6d3c8a93` 实际15 jobs全部成功，2424个唯一Python方法通过，四分片705/514/634/571，无遗漏、重复、方法或setup跳过；两平台0.24/IR31安装、重装及负控通过。177份运行源码／构建输入与生产快照相同，本地、远端及wheel核各保留实际SHA。两轨输入、源核、预算、checker、覆盖与安装均已独审。
+此前CI `39192407319` 的2423PASS及1个旧错误文案断言FAIL保留，coverage因失败分片跳过；同一非法内部电压仍拒绝，一行测试预期修正后18项相关方法通过并双轴复核，再用上述单次完整CI重验，未跨run拼绿。原041仍默认1e9预算拒绝，048仍8192根材料预算拒绝；371、346及369未验收改动不混入本轮。400全部PASS目标未完成，原生Goal已由用户恢复并核实active；既有原生Stop检查在317/400且83项有事可做时的精确命令重放仍阻止结束；用户已信任本地定义，真实原生Stop触发仍未观察到。PR208保持草稿，未合并、未发布公共索引/tag，未新增Spectre或正式共同资格。
+[wave22紧凑收据](../../../experiments/backends/support/low-cost-closure/continuation-wave22.json)保留完整执行和独审身份；后续实现继续使用既有scope与400队列。
+
+[IR32恢复证据](../../../experiments/backends/support/low-cost-closure/continuation-ir32-recovery.json)补充LANG、CROSS、EVENT-ORDER与COMPOSE的分支增量。旧函数wrapper的事件、参数和compact消费者保留完整类型义务；[物理区间读取](../math/events.md#paid-shaped-range)减少实际重复工作并沿用原Work。214项Python、188项Rust及8项原生窄检查和两轴集成审查通过；同193输入/release `d4eaadba91fc` 的40原件诊断恢复38项旧通过，369/371仍同预算拒绝。完整400、交付CI及安装待验收，旧317仍只属于上述177份wave22源核。
+
+历史wave21生产提交 `a201378e` 绑定176份源码／构建输入、IR30、0.23.0和release核 `7e7ae92ae2de`。原件400份已完整执行：312通过、19失败、69拒绝，331完成，清理400/400；这不表示400份全部PASS。13+387件同源，旧312、303和基线198通过保留，旧19份失败checker字典相同，相对wave20新增PASS为0。原041在默认1e9证明预算下 `step_budget` 拒绝，checker未运行；R6作者独立PASS不替代统一结果。
+修订材料另轨400为313通过、17失败、70拒绝，清理400/400；398份同材料复用本轮原件结果，另两份为修订012通过、107因 `condition_precision` 拒绝。它不替换原件计数。距离全部PASS，原件还差88份，修订轨还差87份；350只是进展节点。
+单次完整delivery CI `39169679908` 在辅助修复提交 `8e507c51` 实际15 jobs全部成功，2390个唯一方法通过，四分片621/605/638/526，无遗漏、重复、方法或setup跳过。Ubuntu x86_64/Python3.10与macOS arm64/Python3.12的0.23/IR30安装、重装及负控通过；176份源码／构建输入不变，远端回归和wheel核各保留实际SHA，不声称与本地release字节相同。CI执行身份、完整方法覆盖和两平台安装证据已独立复核。
+本轮先前CI `39168731444` 因inventory stale在完整Python前失败（0完整Python、0安装）；`39169086325` 完整失败，2375条为2372PASS及main/point/shaped三个loader ERROR，18个真实方法遗漏，15 jobs为10成功、4失败、1个上游失败导致coverage skip。两份原红记录保留，不跨run拼接全绿。PR208仍为草稿未合并，0.23是开发版本，未发布公共索引或tag；未新增Spectre共同资格，完整EVAS与400全部PASS目标未完成。
+
+历史wave20使用171份输入、IR29/0.22.0、生产 `920d1dd1` 和release核 `d332432d7a94`，原件312/19/69、修订313/17/70；相对wave18新增018、023、061、062、087、147、187、195、202九份，原303及198通过保留，旧19失败字典相同，固定125为94/10/21。辅助测试／包装提交 `d2cba5f0` 的单次CI `39163153008` 实跑2369项全通过及两平台安装通过；首红 `39162066252` 的2367PASS、2非PASS及包装失败记录保留。
+
+[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)保留历史wave18提交 `c8dc2a7b` 的163份生产输入、IR28、0.21.0与release核 `406d7b27da50`，303通过、19失败、78拒绝，322完成，清理400/400。12件与其余388件经collector核验为同一执行身份；相对wave17新增135，原302及198通过全部保留，19份旧失败checker字典相同。原固定125成员从同次结果抽取仍为93通过、10失败、22拒绝，距350还差47份。单次完整delivery CI `39149288332` 在同一提交实跑2320项，四分片为611、574、545、590项，全部通过，无遗漏、重复或方法及setup跳过。Ubuntu Python3.10与macOS arm64 Python3.12的0.21/IR28安装、重装和负控通过；远端回归与wheel核各保留实际SHA，不声称与本地内核字节相同。
+[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)保留历史wave17提交 `3c870f31` 的162份生产输入、IR28、0.21.0与release核 `721190664d05`。完整400为302通过、19失败、79拒绝，321完成，10+390件身份一致，清理400/400。新增069、335，原300及198通过保留，19项旧失败字典相同；固定125仍93/10/22，距350差48份。077原checker FAIL及诊断保持。单次完整CI39146347930的2314项全通过、0方法及setup跳过，两平台0.21/IR28安装、重装和负控通过。
+[收据](../../../experiments/backends/support/low-cost-closure/evidence.json)保留历史wave16的162份生产源、IR27与release核 `e66a84673d59`，完整400为300通过、19失败、81拒绝，7+393件身份一致，清理400/400。新增324、377，原wave15的298及基线198通过保留，18项旧失败字典不变，077完整运行后仍为原checker失败。两平台IR27安装通过；完整CI2307方法中的1项旧拒绝断言已迁移，30项窄CI加2277项未变旧通过覆盖全部2307项，0方法跳过，原完整CI失败保留。
+历史wave12为292通过、18失败、90拒绝，158文件源码、IR25与release核 `83da6b2b521c` 的42+358件身份一致。
+原198及有效波10全部278通过保留，新增14份，无回退；18项旧checker失败字典保持。原固定125成员重算为92通过、9失败、24拒绝；历史波11失败候选及波8等旧收据保持原身份。
+历史波7逐例比较波6b新增129、137、138、224、233、295、296、380共8份、无回退；相对波5新增35份、无回退。296恢复。
+历史wave12的IR25增加native tanh；原checker、精度、证明预算保持。real初态只接有限点包围，integer电压采样仍拒绝。
+多项式guard与有限floor已纳入波7，guard乘加中间值溢出在同一冻结release核明确拒绝；历史反例和修复收据均保留。
+wave12时111的事件认证仍拒绝；波8纳入[隔离整数输出读取](../math/events.md#settled-integer-reads)及[点held时间证明](../math/events.md#held-time-point-proof)，更广组合仍回退或拒绝。后续Slew、证明缓存和tanh已进入wave12的292。初始化幂乘共享计费与整数证明耗尽退回TOP已独审；Rust457项与2项IR通过，原1项忽略。3项IR身份旧断言已同步为IR25，所属8项重验通过。本地Python2210项收齐，保留旧断言及未优化debug90秒超时原记录；CO-SH-01按既有CI opt1构建和原90秒请求重验通过，1af9772c的完整交付15项CI全部通过，含Python2210项和两平台安装；原漏夹具失败记录保留。原始材料local-only，无新增实际Spectre、正式r53或Q。
+四个过时passive夹具已改成真正负start加正period，7/7 private负控通过；合法过去单次timer仍按非正period合同处理。
+波5全Python执行2024项、2022通过，一项旧P/2拒绝期待已迁移并复验13方法，CO-SH-01在90秒超时且旧核对照待完成；不报告全绿。
 
 IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) 合入 main，补充 LANG、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE 和 DEV:scs-input。
 契约见[局部变量与条件支路](../../validation/ANALOG_CONDITIONS_CONTRACT.md)、
@@ -102,6 +189,10 @@ L1–L5 是表格导航 ID，不替换下表开发 ID；旧版本、原预算和
 IR19 增加纯数学函数，恒定 PWL 保留原输入位；契约见[纯数学函数](../math/operators.md#elementary-functions)，
 回归见[函数测试](../../tests/test_unary_functions.py)、[恒定输入测试](../../tests/test_constant_input_identity.py)，
 独立校准见[校准工具](../../validation/calibrate_elementary.py)。
+PR208补充[纯输入数学组合的观察点根盒](../math/solving.md#纯输入数学组合的观察点认证)及[公开正反例](../../tests/test_source_math.py)。原237已在wave14完整400通过；该轮295通过；两平台安装通过，完整2245项覆盖经b71317e0窄CI的33项与2212项未变通过复用闭合，原全量CI的两项失败保留。
+[无状态 selected-Ln 开发回归](../../tests/test_selected_ln.py)补充 ANALOG、DYNAMICS、COMPOSE 的有限证据：
+原源查询、内部 abs/clamp、定义域、隐藏依赖、真实同 owner 预算耗尽与拒绝不提交。
+范围见[数学函数](../math/operators.md#elementary-functions)。原135已在提交 `c8dc2a7b` 的163输入、IR28与406d统一400通过原checker；数学与预算、兼容及集成审查和实际root124/11/3检查单列于低成本闭包收据，不据此新增Q计数。
 静态输入与回调证书只解除已证明的义务；新旧成绩、具体工具版本和未完组合均在收据中分开记录。
 函数修复属于本轮源码交付；#162 的旧运行不计作当前 main 能力，#131 不动。
 
@@ -130,7 +221,7 @@ TIMER、CROSS、EVENT-ORDER、TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE�
 | 能力 ID | 契约或数学入口 | 验证与历史证据 |
 | --- | --- | --- |
 
-| LANG | [语法/API](../../README.md#实现范围)、[普通条件契约](../../validation/ANALOG_CONDITIONS_CONTRACT.md)、[局部量旧切片](../../validation/LOCAL_STATE_CONTRACT.md)、[当前顺序初始化](../math/events.md#同块顺序赋值与同刻联立求解)、[编译准入与标准环境](../reference/frontend-admission.md) | [case 开发测试](../../tests/test_case_statements.py)、[局部量/事件状态实际有限配对](../../../experiments/backends/local-state/README.md)、[局部量/事件状态回归](../../tests/test_local_state.py)、[表达式开发测试](../../tests/test_stateless_expressions.py)、[普通边界证书开发回归](../../tests/test_ordinary_boundary_certificates.py)、[EX-01 新 Spectre 有限对照](../../../experiments/backends/input-clamp/boundary-followup.json)、[普通条件历史检查](../../../experiments/archive/pr14-pr15-validation/results/analog-conditions-acceptance-review.json.gz)、[函数开发测试](../../tests/test_user_functions.py)、[函数分支测试](../../tests/test_function_branches.py)、[有限函数 Spectre 配对](../../../experiments/backends/function-branches/README.md)、[循环开发测试](../../tests/test_static_loops.py)、[事件体循环测试](../../tests/test_event_body_loops.py)、[向量测试](../../tests/test_vector_ports.py)、[测试台适配](../../tests/test_scs.py)、[SCS 向量连接](../../validation/SCS_VECTOR_CONTRACT.md)、[lint 边界测试](../../tests/test_lint.py)、[诊断盘点](../reference/diagnostics.md)、[来源登记](diagnostic-sources.md)、[源码出口清单](diagnostic-inventory.json)、[消费者诊断回归](../../tests/test_diagnostic_consumers.py)、[时序边界原因回归](../../tests/test_timed_boundary_diagnostics.py)、[来源行为回归](../../tests/test_diagnostic_sources.py)、[初始化循环旧切片](../../validation/INITIAL_STATIC_LOOP_CONTRACT.md)、[初始化循环开发测试](../../tests/test_initial_static_loops.py)、[初始化循环实际有限配对](../../../experiments/backends/initial-static-loop/README.md)、[初值/cross 测试](../../tests/test_initial_cross.py)、[输入比较初值](../../tests/test_input_initialization.py)、[八例实际有限配对](../../../experiments/backends/input-initialization/README.md)、[标准数学常量回归](../../tests/test_standard_constants.py)、[未引用私有节点回归](../../tests/test_unused_internal_nodes.py)、[标准头/私有节点实际有限对照与 exact 缺证](../../../experiments/backends/support/frontend-retained/README.md)、[严格准入回归](../../tests/test_compile_admission.py)、[实际准入与观测跟进](../../../experiments/backends/event-alignment/admission-observation-followup.md)；[case 契约](../../validation/CASE_STATEMENTS_CONTRACT.md)；[前端资源预算](../../README.md#frontend-boundaries) ；[耦合行为源回归](../../tests/test_scs_bsource.py) |
+| LANG | [语法/API](../../README.md#实现范围)、[普通条件契约](../../validation/ANALOG_CONDITIONS_CONTRACT.md)、[局部量旧切片](../../validation/LOCAL_STATE_CONTRACT.md)、[当前顺序初始化](../math/events.md#同块顺序赋值与同刻联立求解)、[编译准入与标准环境](../reference/frontend-admission.md) | [case 开发测试](../../tests/test_case_statements.py)、[局部量/事件状态实际有限配对](../../../experiments/backends/local-state/README.md)、[局部量/事件状态回归](../../tests/test_local_state.py)、[回调临时值与普通别名](../../tests/test_event_ordinary_scratch.py)、[表达式开发测试](../../tests/test_stateless_expressions.py)、[普通边界证书开发回归](../../tests/test_ordinary_boundary_certificates.py)、[EX-01 新 Spectre 有限对照](../../../experiments/backends/input-clamp/boundary-followup.json)、[普通条件历史检查](../../../experiments/archive/pr14-pr15-validation/results/analog-conditions-acceptance-review.json.gz)、[函数开发测试](../../tests/test_user_functions.py)、[函数分支测试](../../tests/test_function_branches.py)、[有限函数 Spectre 配对](../../../experiments/backends/function-branches/README.md)、[循环开发测试](../../tests/test_static_loops.py)、[静态下标源类型与公共内核顺序](../../tests/test_static_loop_integer_type.py)、[事件体循环测试](../../tests/test_event_body_loops.py)、[直接电压整数转换与独立45点oracle](../../tests/test_integer_round.py)、[向量测试](../../tests/test_vector_ports.py)、[测试台适配](../../tests/test_scs.py)、[SCS 向量连接](../../validation/SCS_VECTOR_CONTRACT.md)、[lint 边界测试](../../tests/test_lint.py)、[诊断盘点](../reference/diagnostics.md)、[来源登记](diagnostic-sources.md)、[源码出口清单](diagnostic-inventory.json)、[消费者诊断回归](../../tests/test_diagnostic_consumers.py)、[时序边界原因回归](../../tests/test_timed_boundary_diagnostics.py)、[来源行为回归](../../tests/test_diagnostic_sources.py)、[初始化循环旧切片](../../validation/INITIAL_STATIC_LOOP_CONTRACT.md)、[初始化循环开发测试](../../tests/test_initial_static_loops.py)、[初始化循环实际有限配对](../../../experiments/backends/initial-static-loop/README.md)、[初值/cross 测试](../../tests/test_initial_cross.py)、[输入比较初值](../../tests/test_input_initialization.py)、[八例实际有限配对](../../../experiments/backends/input-initialization/README.md)、[标准数学常量回归](../../tests/test_standard_constants.py)、[未引用私有节点回归](../../tests/test_unused_internal_nodes.py)、[标准头/私有节点实际有限对照与 exact 缺证](../../../experiments/backends/support/frontend-retained/README.md)、[严格准入回归](../../tests/test_compile_admission.py)、[实际准入与观测跟进](../../../experiments/backends/event-alignment/admission-observation-followup.md)；[case 契约](../../validation/CASE_STATEMENTS_CONTRACT.md)；[前端资源预算](../../README.md#frontend-boundaries)、[同请求不可变IR缓存与预算控制](../../tests/test_ir_cache.py) ；[耦合行为源回归](../../tests/test_scs_bsource.py) |
 | LIN | [求解](../math/solving.md) | [原矩阵检查点](../../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json) |
 | NONLINEAR | [求解与精度链](../math/solving.md#精度链的已修复反例与边界)、[瞬态契约](../../validation/NONLINEAR_TRANSIENT_CONTRACT.md) | [精度链检查点](../../../experiments/runs/parallel-gap-integration/results/precision-chain-checks.json) |
 | SPARSE | [稀疏分支](../math/solving.md#稀疏分支与性能边界) | [当前配对测量](../../../experiments/performance/README.md)、[历史 PR8](https://github.com/BucketSran/vaEVAS/pull/8)；[Issue57](https://github.com/BucketSran/vaEVAS/issues/57) |
@@ -222,3 +313,54 @@ EVAS 的全部 6,366 行计数符合名义时钟，四行严格差异仍保留�
 [有界运行期事件控制](../../../experiments/backends/support/event-runtime-control/README.md)补充 LANG、EVENT-CONDITIONS 和 EVENT-ORDER：三个实际 Spectre 控制按原 100 nV 门槛及精确整数答案验收；4096 迭代、signed32 中间检查、数组边界及晚失败回退见 test_event_runtime_loops.py。原 CDS 整题尚未完成，不新增 Q 成绩。
 
 保持目标中的嵌套 held `Select` 补充 TRANSITION 与 EVENT-CONDITIONS，见[原算式、结构负控与有限参考](../../../experiments/backends/support/held-transition-targets/README.md)。这里只验证保持量目标的分支展开，不表示完整 MUX 模型或历史谓词已经支持。
+
+[主动初始化输出的本地回归](../../tests/test_active_initial_output.py)补充 LANG、EVENT-ORDER、
+TRANSITION、COMPOSE 的开发证据，覆盖常量初始化快照、analog strobe别名与固定小数格式。
+主动模型仍拒绝初始电压/历史观察和状态写入型原始IR；独立审查已闭合，原076已在wave14完整400通过，且在wave15保留；交付覆盖与历史失败见低成本闭包收据。
+
+[受限原生事件floor](../../tests/test_native_event_floor.py)补充 LANG、EVENT-ORDER、CROSS、
+EVENT-CONDITIONS、COMPOSE 的本地开发证据，契约见[原生事件floor](../math/events.md#native-event-floor)。
+旧有限表IR逐字对照仅排除schema版本差异；同控制器跨bin失败/重试与精确有理取整预算分别由
+transient_passive_tests.rs、event_value_proof.rs覆盖。原244已在wave14统一400通过，且在wave15保留；两平台安装与逐ID复用覆盖见低成本闭包收据。
+
+[闭合初始化实数幂开发回归](../../tests/test_constant_initial_power.py)补充LANG、COMPOSE和NONLINEAR-TRANSIENT：初始只读AST经既有Ln/Exp与原关系root boxes消费，保留原除法、所有权及数值误差。只有单条闭合real初始赋值、无其他观察者/writer的有限结构进入新路径；运行期实指数不在此范围。独立审查已闭合，原120在wave15同源完整400通过原checker；实际原请求沿用120秒内核、150秒guardian及原精度，不据此提升Q计数。
+
+[精确DC供电系数与history guard投影](../math/events.md#精确dc供电系数与history-guard投影)补充CROSS、EVENT-CONDITIONS、TRANSITION和COMPOSE。
+[test_dc_factor.py](../../tests/test_dc_factor.py)覆盖幅值、符号、非零参考、跨实例所有权与放大后的原误差预算；同owner耗尽与失败重试有私有控制。
+原111在wave15同源完整400通过原checker；一般变化供电、非零误差和更广联合仿射历史仍拒绝。
+
+[事件体纯输入别名](../../tests/test_event_body_input_aliases.py)补充LANG、EVENT-ORDER和COMPOSE。
+只有原始标量唯一前序写者可进入新body映射，trigger和setting保持原映射；
+数组与零次循环原写者不得在展开后绕过资格，旧仿射数组及loop响应有独立字节对照。
+原377已随wave16统一IR27候选通过完整原checker；同批324也通过，统一400为300/19/81，不以局部结果另行相加。
+
+[原生事件整数](../../tests/test_native_integer_events.py)与[有界冷Transition种子](../../tests/test_transition_bootstrap_bounds.py)
+补充LANG、EVENT-ORDER、TRANSITION和COMPOSE。IR27只扩展事件体typed Add及常量非零Remainder，
+每节点signed32检查及预算耗尽沿原owner保持。冷种子桥只借用真实Prepared.bounds初始化全Transition图中的裸同实例real状态目标，
+并保留固定timer0调度门、初始电压认证及同Controller失败重试；更广初态和历史组合仍拒绝。原077已完整执行，但原checker仍为FAIL。首个失败是原网格跨边沿插值，实际查询保持值正确；诊断不改变原FAIL，后续性质未重评，未计077新增PASS。
+
+[混合实数与整数冷目标本地候选](../math/operators.md#混合实数与整数冷目标的本地候选)补充同组能力。
+普通整数 Select 与原生位投影分别保留 point 依赖，裸 real 目标保留实际非 point 盒。
+原019完整通过原 checker，原120/150秒与精度不变。同源原400已独审为318通过、19失败、63拒绝，
+修订400为321通过、15失败、64拒绝；旧通过全部保留，仅019新增，剩79项。
+前两次部分运行及费用保留，最后400份原执行均为新行；修订为本次396＋4组成。
+完整CI的2644个不同Python方法及两平台安装通过，Rust655通过、1项忽略。
+输入、版本差异和工程验收限制见[混合冷目标收据](../../../experiments/backends/support/low-cost-closure/mixed-cold-transition.json)。
+
+wave17已验收IR28候选的[事件typed余数与减法合同](../math/events.md#事件体运行期余数与二元减法ir28-本地候选)
+及[公共正反控](../../tests/test_native_integer28.py)补充LANG、EVENT-ORDER、EVENT-CONDITIONS与COMPOSE。
+同源统一候选的原069、335已通过原checker，完整400为302/19/79；单次完整Python2314项及两平台0.21/IR28安装通过，范围仍限上述合同。
+历史独立Ln135 pilot固定163输入、IR27与release核 `f1fe352c6c61`；该pilot保留原身份，不参与wave18计分，135只按本轮IR28统一400结果计入。
+IR29位运算与纯保持目标、原树事件Floor、无状态源因子和字面零电流支路已合入本地候选，合同见[算子手册](../math/operators.md#native-held-bits29)。新增公开正反控见[整数保持目标](../../tests/test_native_held_bits29.py)、[原树Floor](../../tests/test_source_floor_event.py)、[源因子](../../tests/test_source_factor.py)与[零电流](../../tests/test_scs_zero_current.py)。定向测试和各lane审查不替代同源统一400、完整Python与安装验收，本候选尚不改写历史303。history-forcing仍在隔离快照，0统一原件信用。
+
+[按需期限根与付费精确dyadic包围](../../../experiments/backends/support/low-cost-closure/source-budget-foundations.json)补充EVENT-ORDER、TRANSITION与COMPOSE的局部开发证据。IR31主候选联合控制69个去重Rust方法与25个Python方法通过，默认请求预算耗尽与完整Controller回滚保留；041仍在56.4/68ns处预算拒绝，未运行checker，不新增完整400成绩。独立5089例只验证数学函数，不替代真实owner计费控制。
+
+
+以下IR32早期局部候选记录保留历史身份，最终交付已由上述wave27收据验收；涉及LANG、COMPOSE、TRANSITION、DEV:scs-input、CROSS、TIMER与EVENT-ORDER。
+普通保持历史消费者、受限共享Forcing和解析源值已合批，联合199个唯一Python方法、110个不同lib测试及6个native测试通过。
+原369、371完整请求仍在1e9预算拒绝，原346仍未闭合；早期完整400、CI及安装未验收的状态不代表当前wave27状态。
+早期全量迭代曾使旧PASS027因typed目标聚合审计超出原100000预算而回退；该失败保留。wave26及本次wave27完整结果已证明旧通过恢复，不能删掉早期失败身份。
+显式typed源值、PWL根窗采样和direct-held事件，合同见[事件手册](../math/events.md#ir32-private-candidate-explicit-analytic-source-values)。
+本条只导航候选合同，不增加成熟支持、共同Q或400通过数；Spectre默认和一般history组合仍未支持。
+
+[普通integer当前值](../../../experiments/backends/support/low-cost-closure/ordinary-current-integer.json)补充LANG、EVENT-ORDER与COMPOSE；[普通单点保持来源](../../../experiments/backends/support/low-cost-closure/ordinary-point-lineage.json)补充EVENT-CONDITIONS、TRANSITION与COMPOSE。最终release核的037、114、234均完整通过原checker，完整盒、来源角色、Frame与共享预算控制保持。最终同源双轨原317、修订320及完整2641方法CI、双平台安装已独审，见[共同收据](../../../experiments/backends/support/low-cost-closure/ordinary-common-three.json)。这些结果不改变共同Q或新增Spectre资格。

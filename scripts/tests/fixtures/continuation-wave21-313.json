@@ -1,0 +1,898 @@
+{
+  "provenance": {
+    "scope_sha256": "dc9760a15f6460391998a26fb3c8a3406f9e0ffca6fca22e35160f493b458890",
+    "queue_sha256": "aeb21cf90aa721fabd6201ebe4dcb7d30ba29032c4bf96198a6b2826d0643899",
+    "projection": "Lossless IDs/verdicts and pending owner/next_action projection;passing rows stored as IDs. Scope includes only relevant original values;workspace/queue paths made portable."
+  },
+  "scope": {
+    "schema_version": 2,
+    "objective": {
+      "target": 400,
+      "morning_review_at": "2026-10-19T08:00:00+08:00",
+      "freeze_by": "2026-10-19T06:30:00+08:00",
+      "reserved_delivery_minutes_minimum": 90
+    },
+    "workspace": {
+      "root": ".",
+      "main_thread": "01a14f64-7c5f-7550-9dd0-56f132bcf0a1"
+    },
+    "current": {
+      "accepted_candidate": {
+        "candidate": "wave21-unified",
+        "status": "independently accepted and published to draftPR208;400PASSgoal incomplete",
+        "production_revision": "a201378eace259a2bda1c2515d6f54fb4bc213f8",
+        "source_count": 176,
+        "ir_schema": 30,
+        "kernel_sha256": "7e7ae92ae2de8a0b8d893c2c12326dcae2eb4b29ce4a397909c55d65c97145ad"
+      },
+      "revised400": {
+        "status": "independently accepted and published;398 unchanged versions reuse samewave21 original execution",
+        "passed": 313,
+        "failed": 17,
+        "rejected": 70,
+        "timeout": 0,
+        "remaining_to400": 87,
+        "target400_complete": false
+      },
+      "rework": {
+        "status": "Frozen morning checkpoint delivered;400PASSgoal remains incomplete",
+        "remaining_to400": 87,
+        "new_pass_credit_vs_wave20": 0,
+        "next": "08:00 review of actual results and remaining per-case blockers"
+      },
+      "running_original_or_full_python_jobs": [],
+      "frozen_for_morning_review": {
+        "status": "frozen",
+        "actual_source_frozen_at_utc": "2026-10-18T21:36:55.887836+00:00",
+        "production_revision": "a201378eace259a2bda1c2515d6f54fb4bc213f8",
+        "test_metadata_revision": "8e507c51585a5851e230fc39564e227dd6c77815",
+        "document_revision": "4163cd2c1817ec56f53d6c92d8ddaad79aa17b30",
+        "source_frozen_before06_30": true,
+        "publication_ready_with_at_least90min_before08_00": true,
+        "no_new_feature_work_in_this_frozen_candidate": true
+      },
+      "remaining_closure_ledger": "cases400.json"
+    }
+  },
+  "queue": {
+    "passed_ids": [
+      "001",
+      "002",
+      "003",
+      "004",
+      "005",
+      "006",
+      "007",
+      "008",
+      "009",
+      "010",
+      "011",
+      "012",
+      "013",
+      "014",
+      "015",
+      "016",
+      "017",
+      "018",
+      "020",
+      "021",
+      "022",
+      "023",
+      "024",
+      "025",
+      "026",
+      "028",
+      "029",
+      "030",
+      "031",
+      "032",
+      "033",
+      "034",
+      "035",
+      "040",
+      "042",
+      "043",
+      "044",
+      "045",
+      "046",
+      "047",
+      "050",
+      "051",
+      "052",
+      "053",
+      "054",
+      "055",
+      "056",
+      "057",
+      "058",
+      "061",
+      "062",
+      "064",
+      "066",
+      "067",
+      "068",
+      "069",
+      "071",
+      "072",
+      "073",
+      "076",
+      "078",
+      "080",
+      "082",
+      "083",
+      "084",
+      "085",
+      "086",
+      "087",
+      "089",
+      "090",
+      "092",
+      "094",
+      "095",
+      "096",
+      "098",
+      "099",
+      "100",
+      "101",
+      "103",
+      "104",
+      "105",
+      "106",
+      "108",
+      "110",
+      "111",
+      "113",
+      "115",
+      "117",
+      "118",
+      "119",
+      "120",
+      "121",
+      "122",
+      "123",
+      "124",
+      "125",
+      "126",
+      "127",
+      "128",
+      "129",
+      "130",
+      "131",
+      "132",
+      "133",
+      "134",
+      "135",
+      "136",
+      "137",
+      "138",
+      "139",
+      "141",
+      "143",
+      "144",
+      "145",
+      "146",
+      "147",
+      "148",
+      "149",
+      "150",
+      "151",
+      "152",
+      "153",
+      "154",
+      "155",
+      "156",
+      "158",
+      "159",
+      "160",
+      "161",
+      "162",
+      "165",
+      "166",
+      "167",
+      "169",
+      "171",
+      "172",
+      "173",
+      "174",
+      "175",
+      "176",
+      "177",
+      "178",
+      "179",
+      "180",
+      "181",
+      "182",
+      "183",
+      "184",
+      "187",
+      "188",
+      "190",
+      "191",
+      "192",
+      "193",
+      "194",
+      "195",
+      "196",
+      "197",
+      "198",
+      "199",
+      "200",
+      "201",
+      "202",
+      "203",
+      "204",
+      "205",
+      "206",
+      "207",
+      "208",
+      "209",
+      "210",
+      "213",
+      "214",
+      "215",
+      "216",
+      "217",
+      "218",
+      "220",
+      "221",
+      "223",
+      "224",
+      "225",
+      "226",
+      "227",
+      "228",
+      "229",
+      "230",
+      "231",
+      "232",
+      "233",
+      "235",
+      "236",
+      "237",
+      "238",
+      "239",
+      "240",
+      "241",
+      "242",
+      "243",
+      "244",
+      "246",
+      "247",
+      "248",
+      "250",
+      "251",
+      "252",
+      "253",
+      "254",
+      "255",
+      "256",
+      "257",
+      "258",
+      "259",
+      "265",
+      "266",
+      "268",
+      "269",
+      "270",
+      "271",
+      "272",
+      "273",
+      "274",
+      "275",
+      "276",
+      "277",
+      "278",
+      "279",
+      "280",
+      "281",
+      "282",
+      "283",
+      "284",
+      "285",
+      "286",
+      "287",
+      "288",
+      "289",
+      "290",
+      "291",
+      "292",
+      "293",
+      "294",
+      "295",
+      "296",
+      "297",
+      "298",
+      "299",
+      "300",
+      "303",
+      "304",
+      "305",
+      "306",
+      "307",
+      "309",
+      "310",
+      "311",
+      "312",
+      "314",
+      "315",
+      "317",
+      "318",
+      "319",
+      "321",
+      "322",
+      "323",
+      "324",
+      "326",
+      "327",
+      "328",
+      "334",
+      "335",
+      "336",
+      "337",
+      "338",
+      "339",
+      "341",
+      "342",
+      "345",
+      "348",
+      "350",
+      "352",
+      "353",
+      "354",
+      "355",
+      "366",
+      "367",
+      "368",
+      "370",
+      "372",
+      "374",
+      "375",
+      "376",
+      "377",
+      "378",
+      "379",
+      "380",
+      "381",
+      "382",
+      "383",
+      "384",
+      "385",
+      "386",
+      "387",
+      "388",
+      "389",
+      "392",
+      "393",
+      "394",
+      "395",
+      "396",
+      "397",
+      "398",
+      "399"
+    ],
+    "remaining": [
+      {
+        "case_id": "019",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "027",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "源类型丢失已证，反事实修复后仍aggregate100000拒绝；未实施/未放宽"
+      },
+      {
+        "case_id": "036",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "037",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "038",
+        "revised_result": "REJECTED",
+        "owner": "dc111_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      },
+      {
+        "case_id": "039",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "夜间前段逐文件核对语言/网表合法性及已知标准证据，禁止改刺激避开问题。"
+      },
+      {
+        "case_id": "041",
+        "revised_result": "REJECTED",
+        "owner": "dc111_compat",
+        "next_action": "定位原041实际失败调用链、此前累计消耗与本次833216工作量预约，查同Work prefix/physical reads/复制是否可在不改变数学合同与1e9限额下减少实际工作；窄正反控独审闭合后再按原120/150重跑原件。"
+      },
+      {
+        "case_id": "048",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "049",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "059",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "060",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "063",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "065",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "070",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "074",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "夜间前段逐文件核对语言/网表合法性及已知标准证据，禁止改刺激避开问题。"
+      },
+      {
+        "case_id": "075",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "077",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "079",
+        "revised_result": "REJECTED",
+        "owner": "dc111_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      },
+      {
+        "case_id": "081",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "夜间前段逐文件核对语言/网表合法性及已知标准证据，禁止改刺激避开问题。"
+      },
+      {
+        "case_id": "088",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "夜间前段逐文件核对语言/网表合法性及已知标准证据，禁止改刺激避开问题。"
+      },
+      {
+        "case_id": "091",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "093",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "夜间前段逐文件核对语言/网表合法性及已知标准证据，禁止改刺激避开问题。"
+      },
+      {
+        "case_id": "097",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "102",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "夜间前段逐文件核对语言/网表合法性及已知标准证据，禁止改刺激避开问题。"
+      },
+      {
+        "case_id": "107",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "先独立确定third-point完整transition语义及能力方案；保留timing和严格阈值，获授权后补窄正反控，再按原120/150预算重跑批准修订材料。"
+      },
+      {
+        "case_id": "109",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "112",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "夜间前段逐文件核对语言/网表合法性及已知标准证据，禁止改刺激避开问题。"
+      },
+      {
+        "case_id": "114",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "116",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "140",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "142",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "157",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "163",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "164",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "168",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "170",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "185",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "186",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "189",
+        "revised_result": "REJECTED",
+        "owner": "pow120_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      },
+      {
+        "case_id": "211",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "212",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "219",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "222",
+        "revised_result": "REJECTED",
+        "owner": "pow120_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      },
+      {
+        "case_id": "234",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "245",
+        "revised_result": "REJECTED",
+        "owner": "pow120_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      },
+      {
+        "case_id": "249",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "260",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "261",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "262",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "263",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "264",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "267",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "301",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "302",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "夜间前段逐文件核对语言/网表合法性及已知标准证据，禁止改刺激避开问题。"
+      },
+      {
+        "case_id": "308",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "313",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "316",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "320",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "325",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "329",
+        "revised_result": "REJECTED",
+        "owner": "dc111_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      },
+      {
+        "case_id": "330",
+        "revised_result": "REJECTED",
+        "owner": "dc111_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      },
+      {
+        "case_id": "331",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "332",
+        "revised_result": "REJECTED",
+        "owner": "dc111_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      },
+      {
+        "case_id": "333",
+        "revised_result": "REJECTED",
+        "owner": "dc111_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      },
+      {
+        "case_id": "340",
+        "revised_result": "REJECTED",
+        "owner": "dc111_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      },
+      {
+        "case_id": "343",
+        "revised_result": "REJECTED",
+        "owner": "dc111_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      },
+      {
+        "case_id": "344",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "夜间前段逐文件核对语言/网表合法性及已知标准证据，禁止改刺激避开问题。"
+      },
+      {
+        "case_id": "346",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "347",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "349",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "351",
+        "revised_result": "FAIL",
+        "owner": "coordinator",
+        "next_action": "读逐例source/checker与既有响应，冻结修订提案及独立正反例后按同输出重评分或重跑受影响输入。"
+      },
+      {
+        "case_id": "356",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "357",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "358",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "359",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "360",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "361",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "362",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "363",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "364",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "夜间前段逐文件核对语言/网表合法性及已知标准证据，禁止改刺激避开问题。"
+      },
+      {
+        "case_id": "365",
+        "revised_result": "REJECTED",
+        "owner": "dc111_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      },
+      {
+        "case_id": "369",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "夜间前段逐文件核对语言/网表合法性及已知标准证据，禁止改刺激避开问题。"
+      },
+      {
+        "case_id": "371",
+        "revised_result": "REJECTED",
+        "owner": "dc111_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      },
+      {
+        "case_id": "373",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "390",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "391",
+        "revised_result": "REJECTED",
+        "owner": "coordinator",
+        "next_action": "核原VA/网表与所有checker性质，建立全部已知依赖；按原预算运行完整原件以发现后续阻塞。"
+      },
+      {
+        "case_id": "400",
+        "revised_result": "REJECTED",
+        "owner": "dc111_compat",
+        "next_action": "收取该实现线固定候选，先直接消费者和窄原件，再按成熟度合批进入共同候选。"
+      }
+    ]
+  }
+}

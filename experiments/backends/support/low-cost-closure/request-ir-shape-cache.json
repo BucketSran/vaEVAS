@@ -1,0 +1,96 @@
+{
+  "status": "reviewed local primary integration; runtime and complete original400 pending",
+  "availability": "repository-contained curated summary; execution receipts local-only",
+  "checked_at_utc": "2026-10-19T02:20:47.614666+00:00",
+  "base_revision": "514b621a",
+  "capabilities": [
+    "LANG"
+  ],
+  "contract": "One request NativeAudit retains immutable IR shape facts, with strong object references and transitive immutability. Every parent edge accumulates full expanded size; original AST and complete wire materialization remain audited. Metadata and new cache work are prepaid from original100000; mutable descendants and cross-request reuse are excluded.",
+  "sources": {
+    "evas/src/evas/limits.py": "6f7767b68e5923576a09ca83ea0d3b05b8b0f18f349a8b3ad5cc1c916f28cc77",
+    "evas/src/evas/native_audit.py": "baf16d422beb37e9631ada6d432930bfb0e26b7ec03a226cf975f387d1d9a938",
+    "evas/src/evas/instance_compiler.py": "1397b2e263e4bc1caa51f3220e739cc4dc8ebaea032caa3180f942d21733d2f7",
+    "evas/src/evas/ir.py": "48f5f944219ccd5cfd28690dd4a704770fdc769e0ece795d183d0f1a2ec1d5de",
+    "evas/tests/test_ir_cache.py": "47e694674e4795ef754174413b2463813d66bb02ba454ce45593839262148935",
+    "evas/tests/test_native_audit.py": "5009a9f8fe580fbe0e196ec2afa6fb508c9bf7f04984f537b875e67f5460bece"
+  },
+  "baseline": {
+    "primary_compile_refusal_used": 100006,
+    "diagnostic_only_compile_work": 100323,
+    "diagnostic_only_complete_wire_work": 137388,
+    "diagnostic_only_means": "Aggregate refusal intentionally disabled only to measure work, not original acceptance",
+    "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/integer027-attribution/base-red.json",
+    "diagnostic": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/integer027-attribution/base-diagnostic.json"
+  },
+  "primary": {
+    "focused_methods": 25,
+    "new_cache_methods": 5,
+    "tag_followup_methods": 5,
+    "compile_used": 77084,
+    "complete_wire_used": 96230,
+    "wire_sha256": "e9dfc8ef86c30c89e2974357eb487a70727c5296d6a5e663dc85ccd00fb3b00c",
+    "wire_visit": 6381,
+    "kernel_or_checker_calls_in_compile_observation": 0,
+    "scoped_receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir-cache-primary-green/RESULT.json",
+    "scoped_receipt_sha256": "fc574a6fc05a9fa6f739319582d7aaafc35e40ade30d570b0dcc8006dccd8d24",
+    "compile_receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir-cache-primary-compile/RESULT.json",
+    "compile_receipt_sha256": "2337dc7fe212d2259df98c4cfec377930c801775b3411b2911d1caf413c1a112",
+    "observation": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir-cache-primary-observation.json",
+    "source_unchanged": true,
+    "cleanup_confirmed": true,
+    "complete_kernel_diagnostic": {
+      "status": "CLI original027 simulation completed, no checker",
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/integer027-primary-kernel-diagnostic/RESULT.json",
+      "receipt_sha256": "bce94e1e959e92d2fb465b97dbfd3b3665bda6594a78b2b3e0b70512327ee5cd",
+      "elapsed_s": 60.488238,
+      "kernel_sha256": "bdbfb3039a2a3b7b8176c7f28e8b5b6f474aaa5ea33a973ba63ba4fadf337fbe",
+      "guardian_timeout_s": 90,
+      "kernel_timeout_s": 120,
+      "new400_PASS": 0
+    }
+  },
+  "independent_review": {
+    "spec": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir-cache-review-spec-v2.json",
+      "sha256": "7c4f183b2040a263c730a4fa4a7faab935f578ec420281b216029a6df7cf2c0c",
+      "open_findings": 0
+    },
+    "standards": {
+      "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir-cache-review-standards-v2.json",
+      "sha256": "12e013520e46f0cced8782da0e5e7d7a546438cf0704f9049f0e74a2fe1a2642",
+      "open_findings": 0
+    },
+    "docs": {
+      "spec": {
+        "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir-cache-doc-review-spec.json",
+        "sha256": "8e19f6d44d59b6339af9f483678546debb28c4b245756262c87287b55a6752ca",
+        "open_findings": 0
+      },
+      "standards": {
+        "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir-cache-doc-review-standards.json",
+        "sha256": "d3fedb7d2596fd40c882fe9e67ea5b3c214c1f30afc5c2d36ba50958834b7b95",
+        "open_findings": 0
+      }
+    }
+  },
+  "fixed_review_issue": "fields metadata tuple was created before charge. Now existing schema length bounds the helper and is paid first; real Program exhaustion plus two retries call helper0times. Prior private version is actualred.",
+  "qualification": {
+    "new400_PASS": 0,
+    "same_final_dual400": "pending",
+    "fullPython_executor": "single GitHub CI at next mature batch",
+    "Spectre_or_formalQ": false
+  },
+  "limits": [
+    "Counts compared against514b621a ordinary-scratch baseline; earlier a87base differs by3items and is preserved separately",
+    "25method receipt precedes only added GUARDS metadata tag;5cache methods plus actual027 compile/wire rerun after tag",
+    "Default check_ir without cache retains old path; this change does not authorize mutable or dynamically rewritten Python schema",
+    "Kernel/checker/full400 scores are separate obligations; no increased allowance, refund or tree/wire omission"
+  ],
+  "early_checks": {
+    "passed": true,
+    "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir-cache-early.json",
+    "receipt_sha256": "384f8f78fabff061683ffc7007f333d5204d8165ab3d60b6a094331c0f2dae8f",
+    "scope": "three existing checks including two actual small Select consumers; full400 acceptance remains pending"
+  }
+}

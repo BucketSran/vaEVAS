@@ -35,6 +35,7 @@ fn relocalization_fixture() -> (EventModel, Trajectory, Controller, Vec<Schedule
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![vec![[0., 0.], [1., 1.]]],
@@ -51,6 +52,7 @@ fn relocalization_fixture() -> (EventModel, Trajectory, Controller, Vec<Schedule
     let operators = Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
     let circuit = model.circuit(&states).unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
@@ -121,6 +123,7 @@ fn timer_history_fixture() -> (EventModel, Trajectory, Controller, Vec<Scheduled
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
@@ -186,6 +189,7 @@ fn failed_new_timer_flow_horizon_rolls_back_then_corrected_retry_matches_clean()
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
@@ -409,6 +413,7 @@ pub(super) fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEve
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![vec![[0., 0.], [1., 0.]]],
@@ -426,6 +431,7 @@ pub(super) fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEve
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         state_bounds: states.iter().copied().map(I::point).collect(),
@@ -623,6 +629,7 @@ pub(super) fn nonlinear_horizon_fixture(
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![],
@@ -648,6 +655,7 @@ pub(super) fn nonlinear_horizon_fixture(
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[]).unwrap(),
@@ -769,6 +777,7 @@ pub(super) fn history_guard_fixture() -> (EventModel, Trajectory, Controller, Ve
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
@@ -891,6 +900,7 @@ fn two_delays_accuracy_failure_discard_and_earlier_retry_preserve_frame() {
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![vec![[0.0, 0.0], [3.0, 1.0]]],
@@ -906,6 +916,7 @@ fn two_delays_accuracy_failure_discard_and_earlier_retry_preserve_frame() {
         .circuit_with(&[], &operators.values(0.0).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.0,
         solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
@@ -965,6 +976,7 @@ fn delayed_timer_root_fixture(
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![vec![[0., 0.], [0.31, 0.31]]],
@@ -982,6 +994,7 @@ fn delayed_timer_root_fixture(
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
@@ -1118,6 +1131,7 @@ fn later_microevent_failure_rolls_back_entire_sequence_and_same_controller_retry
             .unwrap();
         let controller = Controller {
             accepted: Frame {
+                value_proofs: Default::default(),
                 time_proofs: Default::default(),
                 time: 0.,
                 solution: circuit.solve(&[0.]).unwrap(),
@@ -1318,6 +1332,7 @@ fn later_same_time_writer_conflict_rolls_back_whole_sequence_and_same_controller
             .unwrap();
         let controller = Controller {
             accepted: Frame {
+                value_proofs: Default::default(),
                 time_proofs: Default::default(),
                 time: 0.,
                 solution: circuit.solve(&[0.]).unwrap(),
@@ -1440,6 +1455,7 @@ fn shared_self_counter_conflict_preserves_frame_then_retries_in_same_controller(
     let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
     let mut controller = Controller {
         accepted: Frame {
+            value_proofs: Default::default(),
             time_proofs: Default::default(),
             time: 0.,
             states,
@@ -1528,6 +1544,7 @@ fn raw_source_held_epoch_fixture_at(
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             pwl: vec![vec![[0., 0.1], [1., 0.9]]],
@@ -1546,6 +1563,7 @@ fn raw_source_held_epoch_fixture_at(
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&trajectory.values(0.)).unwrap(),
@@ -1735,12 +1753,12 @@ fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_r
     let original_outputs = controller.outputs.clone();
     let mut bad_program = model.program.clone();
     // Fail during the second source root, after the first root and intervening
-    // timer have succeeded inside the candidate transaction. The uncertain
-    // held start touches the accepted boundary and cannot choose a priority.
+    // timer have succeeded inside the candidate transaction. z=idt(1,0)
+    // is the physical time, but its sampled history enclosure touches the
+    // accepted boundary. A driven-input rational proof cannot erase that width.
     bad_program.events[2].body.push(
         serde_json::from_value(json!({"kind":"assign","state":0,
-            "rhs":{"op":"affine","constant":-1.,
-                "terms":[{"node":1,"coefficient":3.}]}}))
+            "rhs":{"op":"affine","constant":0.,"terms":[{"node":3,"coefficient":1.}]}}))
         .unwrap(),
     );
     let bad = EventModel::new(bad_program, model.driven.clone(), model.tolerances.clone()).unwrap();
@@ -1791,4 +1809,698 @@ fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_r
             .collect::<Vec<_>>(),
         [0, 1, 2, 3]
     );
+}
+
+#[test]
+fn native_integer_failed_prefix_rolls_back_and_retries_same_controller() {
+    let origin = json!({"source":"integer-retry.va","line":1,"column":1,"instance":"dut"});
+    let program:Program=serde_json::from_value(json!({
+        "schema_version":SCHEMA_VERSION,"nodes":["0","y"],
+        "states":[{"instance":"dut","name":"n","kind":"integer","initial":2147483647.0},
+                  {"instance":"dut","name":"out","kind":"real","initial":0.0}],
+        "operators":[{"kind":"transition","input":{"op":"state","state":1},"delay":0,"rise":0.1,"fall":0.1,"origin":origin}],
+        "contributions":[{"branch":{"instance":"dut","local_positive":"p","local_negative":"r","kind":"voltage"},"positive":1,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}],
+        "events":[{"origin":origin,"trigger":{"kind":"timer","start":1,"period":1,"time_tolerance":1e-12,"enabled":true},"body":[
+            {"kind":"assign","state":1,"rhs":{"op":"affine","constant":4,"terms":[]}},
+            {"kind":"display","format":"prefix=%g","args":[{"op":"state","state":1}],"origin":origin},
+            {"kind":"assign","state":0,"rhs":{"op":"integer_primitive","function":"add","args":[{"op":"integer_state","state":0},{"op":"integer_literal","value":1}],"origin":origin}},
+            {"kind":"assign","state":1,"rhs":{"op":"affine","constant":0,"terms":[]}}
+        ]}]
+    })).unwrap();
+    let model = EventModel::new(
+        program,
+        vec![],
+        Tolerances {
+            absolute: 1e-10,
+            relative: 1e-10,
+        },
+    )
+    .unwrap();
+    let trajectory = Trajectory::new(
+        TransientInputs {
+            analytic_sources: vec![],
+            pwl_errors_v: None,
+            strobetimes: vec![],
+            pwl: vec![],
+            output_times: vec![0., 2.],
+            stop: 2.,
+            max_step: 1.,
+        },
+        0,
+    )
+    .unwrap();
+    let states = model.initial();
+    let (operators, mut calendar) =
+        history_calendar::initialize(&model, &trajectory, &states).unwrap();
+    let circuit = model
+        .circuit_with(&states, &operators.values(0.).unwrap())
+        .unwrap();
+    let mut controller = Controller {
+        accepted: Frame {
+            value_proofs: Default::default(),
+            time_proofs: Default::default(),
+            time: 0.,
+            solution: circuit.solve(&[]).unwrap(),
+            circuit,
+            operators,
+            state_bounds: states.iter().copied().map(I::point).collect(),
+            states,
+        },
+        event: 0,
+        records: vec![],
+        outputs: vec![],
+    };
+    let before = controller.accepted.clone();
+    let calendar_before: Vec<_> = calendar
+        .iter()
+        .map(|e| (e.event, e.time, e.bounds()))
+        .collect();
+    for _ in 0..2 {
+        let error = controller
+            .accept_history_events(&model, &trajectory, &mut calendar)
+            .unwrap_err();
+        assert_eq!(error.kind, "integer_range");
+        assert_eq!(controller.accepted.time, before.time);
+        assert_eq!(controller.accepted.states, before.states);
+        assert_eq!(controller.accepted.state_bounds, before.state_bounds);
+        assert_eq!(
+            controller.accepted.solution.voltages,
+            before.solution.voltages
+        );
+        assert_eq!(controller.accepted.value_proofs, before.value_proofs);
+        assert!(controller
+            .accepted
+            .operators
+            .same_reset_history(&before.operators));
+        assert_eq!(controller.event, 0);
+        assert!(controller.records.is_empty());
+        assert!(controller.outputs.is_empty());
+        assert_eq!(
+            calendar
+                .iter()
+                .map(|e| (e.event, e.time, e.bounds()))
+                .collect::<Vec<_>>(),
+            calendar_before
+        );
+    }
+}
+
+#[test]
+fn bounded_cold_transition_seed_survives_two_failed_same_controller_callbacks() {
+    let origin = json!({"source":"cold-retry.va","line":1,"column":1,"instance":"dut"});
+    let p:Program=serde_json::from_value(json!({"schema_version":SCHEMA_VERSION,"nodes":["0","u","y"],
+        "states":[{"instance":"dut","name":"out","kind":"real","initial":0},
+                  {"instance":"dut","name":"n","kind":"integer","initial":2147483647}],
+        "operators":[{"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.5,"origin":origin}],
+        "contributions":[{"branch":{"instance":"dut","local_positive":"p","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}],
+        "events":[
+            {"origin":origin,"trigger":{"kind":"timer","start":0,"period":0,"time_tolerance":1e-12,"enabled":true},"body":[{"kind":"assign","state":0,"rhs":{"op":"add","left":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},"right":{"op":"affine","constant":0.1,"terms":[]}}}]},
+            {"origin":origin,"trigger":{"kind":"timer","start":1,"period":1,"time_tolerance":1e-12,"enabled":true},"body":[
+                {"kind":"assign","state":0,"rhs":{"op":"affine","constant":4,"terms":[]}},
+                {"kind":"display","format":"candidate=%g","args":[{"op":"state","state":0}],"origin":origin},
+                {"kind":"assign","state":1,"rhs":{"op":"integer_primitive","function":"add","args":[{"op":"integer_state","state":1},{"op":"integer_literal","value":1}],"origin":origin}}
+            ]}
+        ]})).unwrap();
+    let model = EventModel::new(
+        p,
+        vec!["u".into()],
+        Tolerances {
+            absolute: 1e-10,
+            relative: 0.,
+        },
+    )
+    .unwrap();
+    let trajectory = Trajectory::new(
+        TransientInputs {
+            analytic_sources: vec![],
+            pwl_errors_v: None,
+            strobetimes: vec![],
+            pwl: vec![vec![[0., 0.2], [2., 0.2]]],
+            output_times: vec![0., 2.],
+            stop: 2.,
+            max_step: 1.,
+        },
+        1,
+    )
+    .unwrap();
+    let prepared = initialization::prepare(&model, &trajectory)
+        .unwrap()
+        .unwrap();
+    assert!(prepared.bounded_held_transition_seeds);
+    assert!(prepared.bounds[0].lo < prepared.bounds[0].hi);
+    let mut calendar = independent_schedule(&model, &trajectory).unwrap();
+    let cursor = prepared.cursor(&calendar).unwrap();
+    assert_eq!(cursor, 1);
+    let operators = Operators::new_until_with_bootstrap_bounds(
+        &model.program,
+        &trajectory,
+        &model.driven,
+        &prepared.states,
+        &prepared.bounds,
+        prediction_end(&model, &trajectory, calendar.get(cursor)),
+        &model.tolerances,
+    )
+    .unwrap();
+    let circuit = model
+        .circuit_at(
+            &prepared.states,
+            &operators.values(0.).unwrap(),
+            &trajectory.value_bounds(0.),
+        )
+        .unwrap();
+    let solution = circuit.solve(&trajectory.values(0.)).unwrap();
+    let inputs = trajectory.value_bounds(0.);
+    let (state_bounds, _) = model
+        .certify_observation(
+            &model.conditions.select(&[], &inputs).unwrap(),
+            &inputs,
+            &prepared.bounds,
+            &operators.bounds(0.).unwrap(),
+            &solution.voltages,
+            &prepared.states,
+        )
+        .unwrap();
+    let mut controller = Controller {
+        accepted: Frame {
+            value_proofs: Default::default(),
+            time_proofs: Default::default(),
+            time: 0.,
+            states: prepared.states,
+            state_bounds,
+            solution,
+            circuit,
+            operators,
+        },
+        event: cursor,
+        records: prepared.records,
+        outputs: vec![],
+    };
+    let before = controller.accepted.clone();
+    let original_records = serde_json::to_value(&controller.records).unwrap();
+    let original_calendar: Vec<_> = calendar
+        .iter()
+        .map(|e| (e.event, e.time, e.bounds()))
+        .collect();
+    let original_history_boxes = before.operators.bounds(0.).unwrap();
+    for _ in 0..2 {
+        let error = controller
+            .accept_changed_events(
+                &model,
+                &trajectory,
+                &mut calendar,
+                event_acceptance::Strategy::Static,
+            )
+            .unwrap_err();
+        assert_eq!(error.kind, "integer_range");
+        assert_eq!(controller.accepted.time, before.time);
+        assert_eq!(controller.accepted.states, before.states);
+        assert_eq!(controller.accepted.state_bounds, before.state_bounds);
+        assert_eq!(
+            controller.accepted.solution.voltages,
+            before.solution.voltages
+        );
+        assert_eq!(controller.accepted.value_proofs, before.value_proofs);
+        assert!(controller
+            .accepted
+            .operators
+            .same_reset_history(&before.operators));
+        assert_eq!(
+            controller.accepted.operators.bounds(0.).unwrap(),
+            original_history_boxes
+        );
+        assert_eq!(controller.event, cursor);
+        assert!(controller.outputs.is_empty());
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            original_records
+        );
+        assert_eq!(
+            calendar
+                .iter()
+                .map(|e| (e.event, e.time, e.bounds()))
+                .collect::<Vec<_>>(),
+            original_calendar
+        );
+    }
+}
+
+#[test]
+fn integer28_runtime_failures_roll_back_twice_in_same_controller() {
+    for (function, a, b) in [
+        ("subtract", -2147483648.0, 1.0),
+        ("subtract", 2147483647.0, -1.0),
+        ("remainder", 9.0, 0.0),
+        ("remainder", -2147483648.0, -1.0),
+    ] {
+        let origin = json!({"source":"integer-retry.va","line":1,"column":1,"instance":"dut"});
+        let program:Program=serde_json::from_value(json!({
+        "schema_version":SCHEMA_VERSION,"nodes":["0","y"],
+        "states":[{"instance":"dut","name":"n","kind":"integer","initial":a},
+                  {"instance":"dut","name":"out","kind":"real","initial":0.0},
+                  {"instance":"dut","name":"d","kind":"integer","initial":b}],
+        "operators":[{"kind":"transition","input":{"op":"state","state":1},"delay":0,"rise":0.1,"fall":0.1,"origin":origin}],
+        "contributions":[{"branch":{"instance":"dut","local_positive":"p","local_negative":"r","kind":"voltage"},"positive":1,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}],
+        "events":[{"origin":origin,"trigger":{"kind":"timer","start":1,"period":1,"time_tolerance":1e-12,"enabled":true},"body":[
+            {"kind":"assign","state":1,"rhs":{"op":"affine","constant":4,"terms":[]}},
+            {"kind":"display","format":"prefix=%g","args":[{"op":"state","state":1}],"origin":origin},
+            {"kind":"assign","state":0,"rhs":{"op":"integer_primitive","function":function,"args":[{"op":"integer_state","state":0},{"op":"integer_state","state":2}],"origin":origin}},
+            {"kind":"assign","state":1,"rhs":{"op":"affine","constant":0,"terms":[]}}
+        ]}]
+    })).unwrap();
+        let model = EventModel::new(
+            program,
+            vec![],
+            Tolerances {
+                absolute: 1e-10,
+                relative: 1e-10,
+            },
+        )
+        .unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                analytic_sources: vec![],
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![],
+                output_times: vec![0., 2.],
+                stop: 2.,
+                max_step: 1.,
+            },
+            0,
+        )
+        .unwrap();
+        let states = model.initial();
+        let (operators, mut calendar) =
+            history_calendar::initialize(&model, &trajectory, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.).unwrap())
+            .unwrap();
+        let mut controller = Controller {
+            accepted: Frame {
+                value_proofs: Default::default(),
+                time_proofs: Default::default(),
+                time: 0.,
+                solution: circuit.solve(&[]).unwrap(),
+                circuit,
+                operators,
+                state_bounds: states.iter().copied().map(I::point).collect(),
+                states,
+            },
+            event: 0,
+            records: vec![],
+            outputs: vec![],
+        };
+        let before = controller.accepted.clone();
+        let calendar_before: Vec<_> = calendar
+            .iter()
+            .map(|e| (e.event, e.time, e.bounds()))
+            .collect();
+        for _ in 0..2 {
+            let error = controller
+                .accept_history_events(&model, &trajectory, &mut calendar)
+                .unwrap_err();
+            assert_eq!(error.kind, "integer_range");
+            assert_eq!(controller.accepted.time, before.time);
+            assert_eq!(controller.accepted.states, before.states);
+            assert_eq!(controller.accepted.state_bounds, before.state_bounds);
+            assert_eq!(
+                controller.accepted.solution.voltages,
+                before.solution.voltages
+            );
+            assert_eq!(controller.accepted.value_proofs, before.value_proofs);
+            assert!(controller
+                .accepted
+                .operators
+                .same_reset_history(&before.operators));
+            assert_eq!(controller.event, 0);
+            assert!(controller.records.is_empty());
+            assert!(controller.outputs.is_empty());
+            assert_eq!(
+                calendar
+                    .iter()
+                    .map(|e| (e.event, e.time, e.bounds()))
+                    .collect::<Vec<_>>(),
+                calendar_before
+            );
+        }
+    }
+}
+
+#[test]
+fn bits29_checked_children_fail_before_discard_and_roll_back_twice() {
+    for (function, child, a, b, discard) in [
+        ("bit_and", "add", 2147483647.0, 1.0, 0),
+        ("shift_right", "subtract", -2147483648.0, 1.0, 32),
+        ("bit_and", "subtract", 2147483647.0, -1.0, 0),
+        ("shift_right", "add", 2147483647.0, 1.0, -1),
+    ] {
+        let origin = json!({"source":"integer-retry.va","line":1,"column":1,"instance":"dut"});
+        let program:Program=serde_json::from_value(json!({
+        "schema_version":SCHEMA_VERSION,"nodes":["0","y"],
+        "states":[{"instance":"dut","name":"n","kind":"integer","initial":a},
+                  {"instance":"dut","name":"out","kind":"real","initial":0.0},
+                  {"instance":"dut","name":"d","kind":"integer","initial":b}],
+        "operators":[{"kind":"transition","input":{"op":"state","state":1},"delay":0,"rise":0.1,"fall":0.1,"origin":origin}],
+        "contributions":[{"branch":{"instance":"dut","local_positive":"p","local_negative":"r","kind":"voltage"},"positive":1,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}],
+        "events":[{"origin":origin,"trigger":{"kind":"timer","start":1,"period":1,"time_tolerance":1e-12,"enabled":true},"body":[
+            {"kind":"assign","state":1,"rhs":{"op":"affine","constant":4,"terms":[]}},
+            {"kind":"display","format":"prefix=%g","args":[{"op":"state","state":1}],"origin":origin},
+            {"kind":"assign","state":0,"rhs":{"op":"integer_primitive","function":function,"args":[{"op":"integer_primitive","function":child,"args":[{"op":"integer_state","state":0},{"op":"integer_state","state":2}],"origin":origin},{"op":"integer_literal","value":discard}],"origin":origin}},
+            {"kind":"assign","state":1,"rhs":{"op":"affine","constant":0,"terms":[]}}
+        ]}]
+    })).unwrap();
+        let model = EventModel::new(
+            program,
+            vec![],
+            Tolerances {
+                absolute: 1e-10,
+                relative: 1e-10,
+            },
+        )
+        .unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                analytic_sources: vec![],
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![],
+                output_times: vec![0., 2.],
+                stop: 2.,
+                max_step: 1.,
+            },
+            0,
+        )
+        .unwrap();
+        let states = model.initial();
+        let (operators, mut calendar) =
+            history_calendar::initialize(&model, &trajectory, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.).unwrap())
+            .unwrap();
+        let mut controller = Controller {
+            accepted: Frame {
+                value_proofs: Default::default(),
+                time_proofs: Default::default(),
+                time: 0.,
+                solution: circuit.solve(&[]).unwrap(),
+                circuit,
+                operators,
+                state_bounds: states.iter().copied().map(I::point).collect(),
+                states,
+            },
+            event: 0,
+            records: vec![],
+            outputs: vec![],
+        };
+        let before = controller.accepted.clone();
+        let calendar_before: Vec<_> = calendar
+            .iter()
+            .map(|e| (e.event, e.time, e.bounds()))
+            .collect();
+        for _ in 0..2 {
+            let error = controller
+                .accept_history_events(&model, &trajectory, &mut calendar)
+                .unwrap_err();
+            assert_eq!(error.kind, "integer_range");
+            assert_eq!(controller.accepted.time, before.time);
+            assert_eq!(controller.accepted.states, before.states);
+            assert_eq!(controller.accepted.state_bounds, before.state_bounds);
+            assert_eq!(
+                controller.accepted.solution.voltages,
+                before.solution.voltages
+            );
+            assert_eq!(controller.accepted.value_proofs, before.value_proofs);
+            assert!(controller
+                .accepted
+                .operators
+                .same_reset_history(&before.operators));
+            assert_eq!(controller.event, 0);
+            assert!(controller.records.is_empty());
+            assert!(controller.outputs.is_empty());
+            assert_eq!(
+                calendar
+                    .iter()
+                    .map(|e| (e.event, e.time, e.bounds()))
+                    .collect::<Vec<_>>(),
+                calendar_before
+            );
+        }
+    }
+}
+
+fn held29_trajectory() -> Trajectory {
+    Trajectory::new(
+        TransientInputs {
+            analytic_sources: vec![],
+            pwl_errors_v: None,
+            strobetimes: vec![],
+            pwl: vec![],
+            output_times: vec![0., 2.],
+            stop: 2.,
+            max_step: 0.1,
+        },
+        0,
+    )
+    .unwrap()
+}
+fn held29_program() -> Program {
+    let mut program: Program = serde_json::from_str(include_str!(
+        "../../tests/fixtures/held-integer29-target-retry.json"
+    ))
+    .unwrap();
+    // IR32 leaves this held-integer Program shape unchanged and only adds
+    // optional analytic_sources to TransientInputs. The trajectory has none.
+    // Keep the archived IR31 intact while constructing the current test input.
+    assert_eq!(program.schema_version, 31);
+    assert_eq!(SCHEMA_VERSION, 32, "re-audit the fixture");
+    program.schema_version = SCHEMA_VERSION;
+    program
+}
+fn held29_controller(
+    model: &EventModel,
+    trajectory: &Trajectory,
+) -> (Controller, Vec<ScheduledEvent>) {
+    let states = model.initial();
+    let bounds: Vec<_> = states.iter().copied().map(I::point).collect();
+    let calendar = independent_schedule(model, trajectory).unwrap();
+    let operators = Operators::new_until_with_held_points(
+        &model.program,
+        trajectory,
+        &model.driven,
+        &states,
+        &bounds,
+        &model.typed_transition_targets,
+        model.source_context.as_ref().unwrap().clone(),
+        trajectory.config.stop,
+        &model.tolerances,
+    )
+    .unwrap();
+    let circuit = model
+        .circuit_with(&states, &operators.values(0.).unwrap())
+        .unwrap();
+    (
+        Controller {
+            accepted: Frame {
+                value_proofs: Default::default(),
+                time_proofs: Default::default(),
+                time: 0.,
+                states,
+                state_bounds: bounds,
+                solution: circuit.solve(&[]).unwrap(),
+                circuit,
+                operators,
+            },
+            event: 0,
+            records: vec![],
+            outputs: vec![],
+        },
+        calendar,
+    )
+}
+fn held29_unchanged(c: &Controller, before: &Frame) {
+    assert_eq!(c.accepted.time, before.time);
+    assert_eq!(c.accepted.states, before.states);
+    assert_eq!(c.accepted.state_bounds, before.state_bounds);
+    assert_eq!(c.accepted.solution.voltages, before.solution.voltages);
+    assert_eq!(c.accepted.value_proofs, before.value_proofs);
+    assert_eq!(c.accepted.time_proofs, before.time_proofs);
+    assert!(c.accepted.operators.same_reset_history(&before.operators));
+    assert_eq!(c.event, 0);
+    assert!(c.records.is_empty());
+    assert!(c.outputs.is_empty());
+}
+#[test]
+fn held29_target_failure_after_callback_rolls_back_entire_frame_twice() {
+    let trajectory = held29_trajectory();
+    let model = EventModel::new_with_trajectory(
+        held29_program(),
+        vec![],
+        Tolerances::default(),
+        Some(&trajectory),
+    )
+    .unwrap();
+    let provided = model.source_context.as_ref().unwrap().clone();
+    let helper = EventModel::new_with_context(
+        model.program.clone(),
+        vec![],
+        Tolerances::default(),
+        Some(&trajectory),
+        Some(provided.clone()),
+    )
+    .unwrap();
+    assert!(std::sync::Arc::ptr_eq(
+        helper.source_context.as_ref().unwrap(),
+        &provided
+    ));
+    let mut foreign_program = model.program.clone();
+    foreign_program.states[0].name.push_str("_foreign");
+    assert!(EventModel::new_with_context(
+        foreign_program,
+        vec![],
+        Tolerances::default(),
+        Some(&trajectory),
+        Some(provided.clone())
+    )
+    .is_err());
+    let mut foreign_config = trajectory.config.clone();
+    foreign_config.max_step *= 0.5;
+    let foreign_trajectory = Trajectory::new(foreign_config, 0).unwrap();
+    assert!(EventModel::new_with_context(
+        model.program.clone(),
+        vec![],
+        Tolerances::default(),
+        Some(&foreign_trajectory),
+        Some(provided.clone())
+    )
+    .is_err());
+    assert!(EventModel::new_with_context(
+        model.program.clone(),
+        vec![],
+        Tolerances::default(),
+        Some(&trajectory),
+        None
+    )
+    .is_err());
+    let (mut c, mut calendar) = held29_controller(&model, &trajectory);
+    let before = c.accepted.clone();
+    let original: Vec<_> = calendar
+        .iter()
+        .map(|e| (e.event, e.time, e.bounds()))
+        .collect();
+    for _ in 0..2 {
+        let error = c
+            .accept_history_events(&model, &trajectory, &mut calendar)
+            .unwrap_err();
+        assert_eq!(error.kind, "integer_range", "{}", error.message);
+        held29_unchanged(&c, &before);
+        assert_eq!(
+            calendar
+                .iter()
+                .map(|e| (e.event, e.time, e.bounds()))
+                .collect::<Vec<_>>(),
+            original
+        );
+    }
+}
+#[test]
+fn held29_actual_prepared_and_frame_point_boxes_cannot_be_normalized() {
+    let mut raw = serde_json::to_value(held29_program()).unwrap();
+    raw["events"][0]["trigger"]["start"] = json!(0.);
+    raw["operators"][0]["input"]["args"][0] = json!({"op":"integer_state","state":0});
+    let trajectory = held29_trajectory();
+    let model = EventModel::new_with_trajectory(
+        serde_json::from_value(raw).unwrap(),
+        vec![],
+        Tolerances::default(),
+        Some(&trajectory),
+    )
+    .unwrap();
+    let mut prepared = initialization::prepare(&model, &trajectory)
+        .unwrap()
+        .expect("actual zero-timer prepared frame");
+    assert_eq!(prepared.bounds[0], I::point(prepared.states[0]));
+    let build = |bounds: &[I]| {
+        Operators::new_until_with_held_points(
+            &model.program,
+            &trajectory,
+            &model.driven,
+            &prepared.states,
+            bounds,
+            &model.typed_transition_targets,
+            model.source_context.as_ref().unwrap().clone(),
+            2.,
+            &model.tolerances,
+        )
+    };
+    build(&prepared.bounds).unwrap();
+    prepared.bounds[0].lo -= 1.;
+    assert_eq!(
+        build(&prepared.bounds).err().unwrap().kind,
+        "unsupported_held_integer_target"
+    );
+    // The runtime reads the Frame box as well, even when &0 discards the bit.
+    let exact: Vec<_> = prepared.states.iter().copied().map(I::point).collect();
+    let mut ops = build(&exact).unwrap();
+    assert_eq!(
+        ops.advance(1., I::ONE, &prepared.states, &prepared.bounds, &[])
+            .unwrap_err()
+            .kind,
+        "unsupported_held_integer_target"
+    );
+}
+#[test]
+fn held29_two_events_two_targets_share_natural_work_exhaustion_and_retry() {
+    let mut raw = serde_json::to_value(held29_program()).unwrap();
+    raw["operators"][0]["input"]["args"][0] = json!({"op":"integer_state","state":0});
+    let mut second = raw["operators"][0].clone();
+    second["origin"]["column"] = json!(999);
+    second["input"]["args"][0] = json!({"op":"integer_state","state":1});
+    raw["operators"].as_array_mut().unwrap().push(second);
+    let mut event = raw["events"][0].clone();
+    event["trigger"]["start"] = json!(1.5);
+    event["body"] =
+        json!([{ "kind":"assign","state":1,"rhs":{"op":"affine","constant":1.,"terms":[]}}]);
+    raw["events"].as_array_mut().unwrap().push(event);
+    let trajectory = held29_trajectory();
+    let mut model = EventModel::new_with_trajectory(
+        serde_json::from_value(raw).unwrap(),
+        vec![],
+        Tolerances::default(),
+        Some(&trajectory),
+    )
+    .unwrap();
+    let work = crate::transition_source_plan::Work::limited([128, 8192, 100000]);
+    model.source_context = Some(
+        crate::transition_source_plan::ProofContext::source_math_with_work(
+            &model.program,
+            &trajectory,
+            &[],
+            10000,
+            work,
+        )
+        .unwrap(),
+    );
+    let (mut c, mut calendar) = held29_controller(&model, &trajectory);
+    let before = c.accepted.clone();
+    let mut copies = 0;
+    loop {
+        match c.accepted.operators.candidate_clone() {
+            Ok(_) => copies += 1,
+            Err(e) => {
+                assert_eq!(e.kind, "step_budget");
+                break;
+            }
+        }
+        assert!(copies < 10000);
+    }
+    assert!(copies > 2);
+    for _ in 0..2 {
+        assert_eq!(
+            c.accept_history_events(&model, &trajectory, &mut calendar)
+                .unwrap_err()
+                .kind,
+            "step_budget"
+        );
+        held29_unchanged(&c, &before);
+    }
 }

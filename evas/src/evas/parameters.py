@@ -5,6 +5,49 @@ from .limits import MAX_PARAMETER_DEPTH
 from .lowering import lower
 from .syntax import contains_operator, contains_decision
 from .integer_constants import check_integer_expression
+from . import integer_bits, integer_arithmetic
+from .ir import Affine
+
+
+def attach_constant_integer_arithmetic(lookup, model, instance_name=''):
+    """Attach typed constant division to a parameter lookup, retaining real /.
+
+    The source checker audits every original integer intermediate separately;
+    this callback supplies exact quotient semantics to existing real IR entry
+    points. It never infers source integer type from an integral float value.
+    """
+    def divide(expr, numerator, denominator):
+        if expr.op != '/' or not all(integer_bits.integer_type(
+                arg, {}, model.parameter_types, model.genvars) for arg in expr.args):
+            return None
+        # Structural consumers can lower substituted genvar controls directly.
+        # Audit the original subtree again before an already-folded numerator
+        # can hide integer overflow in a later cancellation.
+        pending, values = [expr], {}
+        while pending:
+            item = pending.pop()
+            if item.op == 'parameter' and item.value not in values:
+                values[item.value] = lookup(item.value)
+            pending.extend(item.args)
+        check_integer_expression(expr, model, values, check_literals=True, allow_division=True)
+        def fail(message):
+            raise CompileError(message, code='unsupported_integer_arithmetic',
+                               token=expr.token, instance=instance_name or None)
+        if not all(isinstance(value, Affine) and not value.terms
+                   and value.constant.is_integer() for value in (numerator, denominator)):
+            fail('integer parameter division requires constant integer operands')
+        a, b = int(numerator.constant), int(denominator.constant)
+        if not all(-2147483648 <= value <= 2147483647 for value in (a, b)):
+            fail('integer parameter division operand exceeds signed 32-bit range')
+        try:
+            value = integer_arithmetic.truncating_division(a, b)
+        except ValueError as error:
+            fail(str(error))
+        if not -2147483648 <= value <= 2147483647:
+            fail('integer parameter quotient exceeds signed 32-bit range')
+        return Affine(float(value), ())
+    lookup.integer_arithmetic = divide
+    return lookup
 
 
 def bind_parameters(model, overrides, instance_name):
@@ -29,6 +72,23 @@ def bind_parameters(model, overrides, instance_name):
         raise CompileError(f'{instance_name}: unknown parameter override',
                            code='parameter_override', instance=instance_name)
     dependencies, cache, active, depths = {}, {}, set(), {}
+    def lookup(name):
+        return cache[name]
+    def bitwise(expr, values):
+        if not all(integer_bits.integer_type(arg, {}, model.parameter_types, model.genvars)
+                   and isinstance(value, Affine) and not value.terms and value.constant.is_integer()
+                   for arg, value in zip(expr.args, values)):
+            raise CompileError('bitwise operands require typed integer expressions',
+                               code='unsupported_integer_bitwise', token=expr.token, instance=instance_name)
+        try:
+            value = integer_bits.evaluate(expr.op, *(int(value.constant) for value in values))
+        except ValueError as error:
+            raise CompileError(str(error), code='unsupported_integer_bitwise',
+                               token=expr.token, instance=instance_name) from error
+        return Affine(float(value), ())
+    lookup.integer_bitwise = bitwise
+    attach_constant_integer_arithmetic(lookup, model, instance_name)
+
     for name, expr in model.parameters.items():
         refs, pending = [], [] if name in overrides else [expr]
         while pending:
@@ -68,8 +128,8 @@ def bind_parameters(model, overrides, instance_name):
                                        code='parameter_override', token=model.parameters[name].token, instance=instance_name) from error
             else:
                 check_integer_expression(model.parameters[name], model, cache,
-                                         check_literals=model.parameter_types.get(name) == 'integer')
-                value = lower(model.parameters[name], lambda n: cache[n], {}, model.source).constant
+                                         check_literals=model.parameter_types.get(name) == 'integer', allow_division=True)
+                value = lower(model.parameters[name], lookup, {}, model.source).constant
             if not math.isfinite(value):
                 raise CompileError(f'{instance_name}: nonfinite parameter {name!r}',
                                    code='parameter_override' if name in overrides else 'parameter_dependency',
@@ -85,8 +145,8 @@ def bind_parameters(model, overrides, instance_name):
         for interval in ranges:
             def evaluate(endpoint):
                 if not isinstance(endpoint, float):
-                    check_integer_expression(endpoint, model, cache, check_literals=True)
-                return endpoint if isinstance(endpoint, float) else lower(endpoint, cache.__getitem__, {}, model.source).constant
+                    check_integer_expression(endpoint, model, cache, check_literals=True, allow_division=True)
+                return endpoint if isinstance(endpoint, float) else lower(endpoint, lookup, {}, model.source).constant
             lo = evaluate(interval.lower)
             hi = lo if interval.upper is None else evaluate(interval.upper)
             if interval.upper is not None and not lo < hi:

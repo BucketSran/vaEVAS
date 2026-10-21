@@ -71,11 +71,16 @@ class ConditionalEvents(unittest.TestCase):
         text = source('if (V(u,r)>=0.5) q=2; else q=3;',
                       trigger='cross(V(u,r)-0.5,1,0.001,0.001)')
         self.assertEqual(states(execute(text)), [0,2,2])
-        # The exact root is 1/3, where u=1. The representative may be later;
-        # an exact matching-guard certificate still proves u>1 is false at tau.
+        # The exact root is 1/3, where u=1. LRM 2.4 5.10.3.1 places the event
+        # after the crossing; the matching-guard certificate proves u>1 just
+        # after tau. A rounded representative cannot flip the falling side.
         text = source('if (V(u,r)>1) q=2; else q=3;',
                       trigger='cross(V(u,r)-1,1,0.001,0.001)')
         result = execute(text, points=[[0,0],[1,3]])
+        self.assertEqual(result['transient']['events'][0]['after'], [2])
+        text = source('if (V(u,r)>1) q=2; else q=3;',
+                      trigger='cross(V(u,r)-1,-1,0.001,0.001)')
+        result = execute(text, points=[[0,3],[1,0]])
         self.assertEqual(result['transient']['events'][0]['after'], [3])
 
     def test_rounded_equality_is_not_a_truth_certificate(self):
@@ -85,8 +90,15 @@ class ConditionalEvents(unittest.TestCase):
             self.assertEqual(exact>0 if relation=='>' else exact>=0, truth)
             self.assertEqual(.5*a+.5*b, .5)
             text = source(f'if (V(u,r){relation}0.5) q=2; else q=3;')
-            with self.subTest(a=a), self.assertRaisesRegex(KernelError,'event_condition.*conditions.va'):
-                execute(text, points=[[0,a],[1,b]])
+            with self.subTest(a=a):
+                # Original source provenance now proves the exact sign even
+                # when the representative rounds to equality.
+                result=execute(text, points=[[0,a],[1,b]])
+                self.assertEqual(result['transient']['events'][0]['after'],[2 if truth else 3])
+                # An amplitude band has no unique physical source value.
+                # Keep the original refusal detector for that unknown input.
+                with self.assertRaisesRegex(KernelError,'event_condition.*conditions.va'):
+                    execute(text, points=[[0,a],[1,b]],source_errors={'u':1e-12})
 
     def test_input_enclosure_reaches_sampled_state_certificate(self):
         text = source('if (V(u,r)>0) q=V(u,r)-0.5; else q=0;', rhs='1e16*q')

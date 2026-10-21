@@ -1,12 +1,12 @@
 # 事件、时间推进与历史
 
-适用范围：IR22 的 `cross`、固定/保持状态 `timer`、受限事件体条件、事件 OR、多事件写者及模型步长请求。
+适用范围：IR24 的 `cross`、固定/保持状态 `timer`、受限事件体条件、事件 OR、多事件写者及模型步长请求。
 能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE；支持与缺口见[四后端支持范围](../COMPARISON.md)。
 
 本页维护定位、顺序赋值和同刻关系。历史的复位、观察及未来传播见
 [共同生命周期](continuous.md#shared-lifecycle-closure)。
-数学根 tau、实际触发 te 与内部代表时刻 b 是不同对象；当前非点 cross 选择 te=tau。
-这是 EVAS 的观察约定，不能读成 LRM 要求所有事件体在真根处读取。
+数学根 tau、实际触发 te 与内部代表时刻 b 是不同对象；cross 事件体按[根后右极限](#cross-right-limit)
+`te=tau+` 读取：连续值取 tau 处包围，可认证符号的条件取根后一侧。
 
 <a id="bound-step"></a>
 
@@ -84,7 +84,7 @@ IR22 的本地源码候选扩展独立测量实例的统计表达式。物理事
 
 新增纯数学表达式只含 `sqrt`、`abs`、`min`、`max`，并组合原有加减乘除及整数幂。
 它们在事件执行时求值，不创建连续历史。已有可用的仿射求值和常量数学保留；
-非隔离事件仍须满足原联立仿射合同，其他一般函数及事件历史调用仍拒绝。
+物理事件的有限采样标量另见[因果算术合同](#causal-transition-composition)；其他一般函数及事件历史调用仍拒绝。
 
 例如，下列片段在可证明 `n>0` 时计算均值及标准差：
 
@@ -134,15 +134,32 @@ end
 
 ## 事件输出记录与时间
 
-受支持事件体中的 `$display` 按语句顺序求值，只输出实际选中分支。格式限 `%d`、`%g`、
-`%.Ng`（N 为 1–32）及 `%%`，格式转换数须与数值参数数目相同。结果保存在
+受支持事件体中的 `$display` 与 `$strobe` 共用输出记录，按语句顺序求值，只输出实际选中分支。
+格式限 `%d`、`%g`、`%.Ng`（N 为 1–32）、`%f`、`%.Nf`（N 为 0–32）及 `%%`。
+`%f` 默认保留六位小数，指定精度时保留相应小数位；格式转换数须与数值参数数目相同。结果保存在
 `transient.display_records`，每条包含 `time`、`event`、`origin`、`text`。
 记录与候选事件共同验收后提交；失败试算、丢弃与重试不重复输出。
 Python 响应检查要求 `event` 与 `time` 对应已提交事件，`origin` 属于该请求事件内的 `$display`。
 `origin` 是源码位置及实例的标签，用于定位语句；它本身不证明输出数值或事件精度。
 
 无电压贡献的被动模型可在 `initial_step` 中穿插常量初始化与输出；记录先于 `timer(0)`。
-带电压贡献模型的初始化输出仍拒绝。被动模型仍须有足够驱动约束，浮动节点不因只输出而合法。
+带电压贡献的模型可在初始化赋值之间输出常量快照。编译器在每条输出语句的位置读取参数和当时的
+初始化环境，捕获有限常量参数；后续赋值不会改写此前快照，物理状态与冷启动历史仍使用最后的初始化值。
+例如先输出默认 q=0、赋 q=3 再输出，记录为0和3，而初始transition种子为3。
+生成的初始事件只含已有IR的Display，不重新执行初始化赋值。Rust在普通初始化与零timer引导两条路径
+独立确认主动模型初始事件只含常量输出，不允许原始IR夹带状态写入或电压读取。
+
+本地候选仅允许常量输出参数及常量分支条件。主动初始化输出读取电压、历史算子、输入选择的状态值，
+在初始化循环内输出，或由含子实例的模型输出，均明确拒绝；不扩展一般初始化采样。
+被动模型仍须有足够驱动约束，浮动节点不因只输出而合法。
+独立回归见[主动初始化输出](../../tests/test_active_initial_output.py)，覆盖赋值前后快照、实例隔离、
+零timer的种子更新、拒绝重试、固定小数格式和原始IR拒绝边界。该本地候选尚待独立审查及原件checker验收。
+
+此处任务别名、接受后输出与实数格式依据
+[VAMS-2023 LRM §9.4.1、§9.4.3、§9.4.6](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf)。
+常量初始化快照及主动模型的有限准入是EVAS实现边界。Python的syntax.py保留初始化源序，
+instance_compiler.py::initialize_states捕获快照，display.py与Rust display.rs约束格式；
+transient.rs与transient_initialization.rs沿用现有候选记录提交。
 
 与零时刻 transition 种子更新组合时，本地集成候选先执行被动 `initial_step`，再执行固定零 timer，
 最后用最终状态构造历史。例如 initial 输出旧 n=0 后赋 n=3，timer 的输出应读到3。
@@ -160,6 +177,22 @@ Python 响应检查要求 `event` 与 `time` 对应已提交事件，`origin` �
 独立回归见 [输出记录](../../tests/test_display.py)和[事件时间](../../tests/test_event_time.py)。
 这些开发检查不提供本候选的实际 Spectre 对照。
 
+### 输入辅助的初始化种子不变证明（分支候选）
+
+当旧仿射证明不能确认种子不变时，有限输入辅助证明使用完整零时刻输入盒和初始状态盒，
+重放原始顺序赋值。未知条件合并两臂，未知内部电压与历史值保持未知；独立事件块还须通过
+读写集合检查。只有每个必需历史种子都与原值精确相等时才选用普通初始化路径。
+这份旁证不代替事件执行、整数检查、误差传播或事务回退，也不许可改变种子的混合OR事件。
+
+旧形式与具体初值两次尝试各保留200万额度，输入辅助重放只用第二次剩余部分。
+节点、集合、克隆和零时刻源查询在工作前扣费；精确求值器逐节点、逐算术操作扣同一总账，
+包括Power的每次乘法。耗尽即拒绝旁证，同一余额重试不能恢复额度。
+每表达式的512节点、64深度、4096位、20万精确操作及幂指数不超过32的限制继续生效，普通事件的预算作用域不变。
+实现见[初始化旁证](../../rust_core/src/initial_state_invariance.rs)和
+[精确状态求值](../../rust_core/src/event_value_proof.rs)，公开消费者见
+[初始化种子回归](../../tests/test_initial_seed_invariance.py)。缩放预算正反例验证累计收费，
+不代表已证明原件在固定200万额度下曾超限；统一原件验收单独记录。
+
 <a id="event-or"></a>
 
 <a id="cross-的事件-or090"></a>
@@ -170,6 +203,19 @@ Python 响应检查要求 `event` 与 `time` 对应已提交事件，`origin` �
 系数依赖当前状态或算子值时不适用；域错误、奇异系统和精度失败不能被当作缓存未命中而忽略。
 复用后还要重查原条件选路，不能用上次的状态证书替代本次结果。
 见[独立缓存回归](../../tests/test_certificate_cache.py)。
+
+### 源选择证明的共享（分支已验收，未合并）
+
+transition 与 source-selected Slew 可在同一请求内共享不可变的源分区与符号事实。
+证书绑定完整Program、原始输入曲线、实际节点映射、保持值绑定和精确RootTime；
+不同请求、不同输入误差或不同绑定不能按表达式拼写复用。每个算子调用仍拥有独立历史。
+原树所有臂、显式零项及依赖在查缓存前检查，缓存命中不能隐藏除零、状态或内部节点读取。
+
+共享不提高原cuts、符号或work上限。每个Plan物化根列表按长度收费，
+缓存保存的根列表副本也额外按长度收费；跨Plan取回副本仍收费。
+同一Plan中已审计的完整绑定guard可以避免重复物化，不能因此免掉其他Plan的预算。
+配额预留失败保持失败状态，不安装部分证书；控制器晚失败后重试不提交历史。
+这项复用不扩大Transition的isolated thirdpoint范围，也不证明整体性能提升。
 
 ### 共用精确根的边沿期限
 
@@ -227,9 +273,80 @@ cross 叶子保留 `guard_value`；timer 叶子不伪造 guard 值，只保留�
 动态 guard 的范围见下节，多块写同一状态的规则见
 [写者检查](#multiple-event-writers)。全部故障点的系统性注入和完整连续时间误差资格仍是验证缺口。
 
+<a id="declaration-initializers"></a>
+
+## 事件状态的声明初值
+
+本分支接受原本已有 cross/timer 写者的标量 `integer`、`real` 声明初值。
+例如 `integer n=2;` 给已有事件状态设置初值；声明赋值本身不能创建持久状态角色。
+有procedural写者的普通 analog 局部量、数组初值、其他变量依赖、电压采样、时间和算子调用仍拒绝。
+无procedural写者的有限常量声明另见下节，只读声明不因此变成参数。
+参数在每个实例绑定后，初值必须经既有类型降低证明为有限标量常量；这不开放全部合法常量表达式。
+
+所有显式声明初值先在实例私有临时表验证，再覆盖默认零环境，随后按原源码顺序执行 `initial_step`。
+因此声明 `n=2` 后的 `@(initial_step) n=7` 得到7；非法声明初值不能因稍后被覆盖而忽略。
+失败不返回部分 Program，下一次编译与其他实例不共享种子；声明赋值不在每次模拟求值时重做。
+
+源类型沿用原初始化合同：`real x=7/2` 的整数除法结果为3，显式 `7/2.0` 为3.5。
+整数中间溢出、非整型写入与非有限值仍拒绝，real 目标不删除整数检查。
+整数参数除法与有限余数范围现在按[typed 整数算术](#typed-integer-closure)绑定；声明初值仍须满足本节的有限标量常量条件。
+元数据只在前端保留，经函数、数组及层次展开传递，最终复用 IR24 的 `State.initial`。
+
+独立初值、后续事件和拒绝控制见[声明初值回归](../../tests/test_declaration_initializers.py)；
+完整原件及候选身份见[验收收据](../../../experiments/backends/support/declaration-initializers/evidence.json)。
+独立的 `initial_step` 已有[有限点电压采样](#input-initialization)；声明初值语法本身仍不接受电压表达式。
+
+<a id="immutable-declarations"></a>
+
+### 无过程写者的常量声明（分支已验收，未合并）
+
+标量integer或real显式声明初值若通过原有限常量、源类型及signed32中间检查，
+且整个原始analog树中没有对它的过程赋值，可作为实例私有的只读局部量使用。
+例如 `real start=0.25; @(timer(start)) q=1;` 不创建start状态，也不把start加入可覆盖参数空间。
+实例参数绑定后分别计算初值；外部不能以同名instance参数覆盖这个局部声明。
+
+写者检查覆盖initial_step、final_step、普通及运行事件、所有分支和循环，
+零次循环或死分支中的写入也会关闭只读资格。已有合法cross/timer状态的声明种子继续走原路径。
+所有显式初值即使未使用也必须验证；后续覆盖、未调用函数和死分支不能隐藏非法声明或整数溢出。
+变量之间的依赖、自引用、数组声明初值、电压与时间初值不进入这个常量入口。
+函数参数及函数局部名称按各自作用域绑定，不能借同名模块声明取得常量资格。
+公开隔离、命名空间和raw writer控制见
+[test_immutable_declarations.py](../../tests/test_immutable_declarations.py)。
+
 <a id="input-initialization"></a>
 
-## 实际驱动输入的比较初值
+## 标量 analog function 的源类型保留候选
+
+函数的返回值、形参和局部变量保留声明的 `integer`／`real` 类型。
+传入 integer 形参、赋给 integer 局部量及返回 integer 结果时，分别执行该次赋值的转换；
+最近整数的半整数向远离零方向舍入，随后检查 signed32 范围。
+整数操作数的除法向零截断，余数与被除数同号；real 形参不会因实参写成整数而变成整数除法。
+例如 integer 函数先把实参 `2.5` 复制到 integer 形参 `x`，再计算 `x/2`，结果为 `1`；
+real 形参下的 `3/2` 为 `1.5`。未赋值的 integer 返回槽从零开始。
+
+内部展开节点 `function_assign` 保留各次赋值的类型义务与顺序，不是新的线协议节点。
+未使用的实参、局部赋值和未选中的分支仍保留检查义务；不能先消去它们再判断整数范围。
+事件正文的原树审查验证 `function_assign` 的单子节点、类型与每次整数转换，
+随后继续遍历完整子树。real wrapper 在参数常量条件和 source-only compact event assignment
+中保留旧资格。整数 wrapper 不借此取得 array、index 或 held target 等额外角色。
+新增 metadata 查询和复制仍计入原编译审查 owner；未选分支与隐藏操作不会被常量特化消除。
+公开兼容与拒绝控制见 [test_event_function_consumer.py](../../tests/test_event_function_consumer.py)。
+
+动态 real 值不能仅凭函数返回类型取得整数资格，必须通过现有完整输入域证明。
+后置 clamp 不替代原中间值检查，也不开放一般电压表达式到整数的转换。
+需要实例类型绑定的调用在尚无该绑定的参数默认值、数组维度等入口明确拒绝；
+这表示当前实现范围有限，不表示这些源程序不合法。
+未调用的定义仍按原有结构规则校验，不能据此声称已验证所有未执行路径的数值域。
+
+语法类型由 [syntax.py](../../src/evas/syntax.py) 保存，
+[elaboration.py](../../src/evas/elaboration.py) 保留展开义务，
+[lowering.py](../../src/evas/lowering.py) 和
+[instance_compiler.py](../../src/evas/instance_compiler.py) 使用原整数算术与绑定检查。
+[独立公开合同](../../tests/test_integer_functions.py)覆盖复制顺序、正负舍入、除法类型、
+默认返回、溢出、未使用实参及名字绑定。本节描述本地候选；完整原修两轨400、CI与安装仍须绑定最终统一源码，
+不能把函数窄检查通过记为原369通过。
+
+## 实际驱动输入的比较与有限点初值
 
 EVAS 接受 `@(initial_step) q=(V(in)>H);`，`q` 可为 real 或 integer。
 初始化按源码顺序执行，后续语句读取先前赋值；未显式初始化的持久状态默认零。Verilog-A 比较结果为 0/1。
@@ -252,7 +369,9 @@ EVAS 接受 `@(initial_step) q=(V(in)>H);`，`q` 可为 real 或 integer。
 没有定义的端口、奇异或冲突电压关系，以及未认证的历史依赖仍拒绝；
 零系数、代数抵消和未走分支不能隐藏依赖。受限条件、逻辑与三元初值可组合实例常数、
 先前初始化值及直接驱动输入；integer 每次写入都须证明整型和范围。
-初值仍须为由输入谓词选择的常量臂，不接受一般 real 电压采样。
+real 状态还接受结构仿射的输入电压值，以及由输入谓词选择的仿射值臂。
+例如 `@(initial_step) q=0.5*V(in)+0.125;` 只采样零时刻，之后 q 保持该值。
+每个候选仍检查所有谓词、值臂和结构依赖。integer 值臂保持常量限制，不隐含采样或取整 real 电压。
 初态与电压互相选择的固定点、不能独立认证条件的贡献分支、比较式中的历史调用及分析专属生命周期仍不支持。
 状态依赖按需要解析，实例枚举顺序不决定结果；依赖环未证唯一时明确拒绝。
 单个联合电压闭包限256个未知量，状态依赖深度限128，总依赖工作限100000步。
@@ -261,15 +380,50 @@ EVAS 接受 `@(initial_step) q=(V(in)>H);`，`q` 可为 real 或 integer。
 不设置 epsilon。单点输入复用 binary64 乘积和的精确符号证明；
 非点输入复用向外舍入区间证明。区间横跨分支边界且无法证明时返回
 `initialization_precision`，附源码及状态身份，不猜测初值。
-选择后的初值是精确 0/1 单点，不引入一般初值算术的误差传播。
+比较表达式仍返回精确 0/1。real 采样值从原输入包围向外计算，
+只有结果有限且 `lo==hi` 才安装到 `State.initial`。源误差或算术舍入产生非点包围时，
+即使名义值可计算也返回 `initialization_precision`；当前没有一般初值区间状态传播。
 
-Python `instance_compiler.py` 独立 lowering 初值并保留结构/来源，IR18 的
-`State.initial` 为 number 或 `op=select` 对象。Rust `initialization.rs::resolve`
+Python `instance_compiler.py` 独立降低初值并保留结构与来源。IR24 的
+`State.initial` 复用 number 或既有表达式对象，包括 `affine`、加法、乘法、幂和 `select`；
+Python 类型注解由 `float | Select` 扩为 `float | Expression`，schema 未改变。Rust `initialization.rs::resolve`
 从 `Trajectory.value_bounds(0)` 及 `initialization_nodes.rs` 的局部电压证书解析整个候选集，成功后才安装常数。
 `EventModel.initial()`、算子构造和守卫调度使用同一组结果；
 之后才建立完整接受帧，执行合法 timer(0) 并输出首行。
 失败路径没有模型、日程、历史、接受帧或 trace 可提交。
 旧 schema 和畸形字段分别由版本/请求校验拒绝。
+
+### 前序局部别名与固定数组槽
+
+普通 analog 赋值可给初值或事件表达式提供别名。编译器只接全段唯一、无条件且在该事件前已执行的写者，
+按实例绑定参数并按源码顺序代入。纯实例常量别名可用于原有常量设置；
+real 输入仿射别名可用于初值，以及 cross guard 和事件体的当前电压读取。
+`a=V(in); @(cross(a-0.5,1)) q=a;` 在物理根处重新读取输入，不能把 a 的初始采样当作运行期常量。
+这不开放电压驱动的 timer 设置或 cross 方向、容差。
+
+固定数组下标逐槽处理。`a[0]=V(in); a[1]=2*a[0];` 仅为源码中已经写过的准确槽建立作用域，
+不因 a[0] 已写就允许提前读 a[1]。实例参数和既有下标检查负责确定槽，未证明的动态下标不获得此扩展。
+分支写者、多次写者、未来写者、状态反馈、输出依赖、时间及历史别名仍拒绝。
+cross guard继续只接原有连续仿射别名。事件体另接受纯输入的有限选择表达式，例如先定义
+`a=(V(in)>0.25)?V(in):0`，再在timer或cross回调中读取a。每次回调读取当前物理根输入，
+初始采样和后续保持值相互独立。受限的源integer选择量可作为依赖，但每个原中间值仍受signed32类型检查。
+非线性乘积、状态、时间、历史、内部或输出依赖仍拒绝，零系数及未选臂也须完成原审计。
+
+新事件体别名只接原源码中唯一、无条件、前序的普通标量写者。`frontend.py`保留层次绑定与循环展开前的
+原模型引用；`initialization_aliases.py`据此检查全部initial、ordinary及event写者，包括零次循环中的写者。
+新路径排除数组槽和循环产生的定义，传递依赖也逐项检查。既有仿射数组与循环能力按原合同保持。
+按事件体实际需求绑定的表达式保留原树；累计绑定按wire引用重复计数，仍受原100000项IR和深度上限约束，
+有限域256与决策展开4096上限不变。guard、方向、容差及timer设置使用原别名映射，不能借事件体映射扩大准入。
+
+`syntax.py::analog_block` 保留事件前的标量名字和 indexed Assignment 前缀，
+`array_elaboration.py::scalarize_arrays` 用既有元素绑定转换为精确槽。
+`initialization_aliases.py` 证明初始与运行别名，`instance_compiler.py` 在各自词法作用域使用它们。
+独立公开证据见 [test_frontend_closure.py](../../tests/test_frontend_closure.py) 与
+[test_initial_sampling_closure.py](../../tests/test_initial_sampling_closure.py)和
+[test_event_body_input_aliases.py](../../tests/test_event_body_input_aliases.py)，
+覆盖根处采样、实例隔离、源码顺序、原写者资格、旧数组及空循环兼容，以及源误差放大。
+[固定候选收据](../../../experiments/backends/support/low-cost-closure/evidence.json)区分局部原件验收与全量身份。
+这项表达式替换不改变事件排序、历史归属、接受与回退；历史波5的029、111仍有各自的内核事件定位阻塞，后续波6b的029及wave15精确DC投影下的111已通过原checker，一般联合仿射事件组合仍受限。
 
 [三个节点依赖实际对照](../../../experiments/backends/support/initial-node-dependencies/README.md)
 覆盖跨实例 transition 种子、耦合电压和非接地支路，有限原生观察均满足原 1e-9 V 门槛。
@@ -486,6 +640,352 @@ Spectre 的闭源实现不能由波形反推出完整算法；固定 V3 实验�
 容差内的差异可以与双方达标并存；超出独立契约的差异仍须作为失败保留。
 不能事后扩大容差、逐点任意平移波形，或用后端相互接近代替正确性判断。
 
+<a id="integer-bitops"></a>
+
+## 有限整数位运算
+
+本分支的有限标量实现接受 `&`、`|`、`^`、单目 `~`、`<<` 和 `>>`。
+操作数必须具有源语言的 integer 类型。`1.0`、real 参数和返回 real 的函数不能因数值恰好为整数而参与位运算。
+依据是 [VAMS LRM 2.4](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+§4.2.1、§4.2.9和§4.2.11。标准规定移位补零，右操作数按无符号解释。
+32位范围沿用EVAS现有signed32整数契约，不扩展为任意精度整数。
+
+对整数 `n`，先取位模式 `u=n mod 2^32`，再执行逐位逻辑或移位。
+左移丢弃超过32位的位，右移以零填充；移位量按32位无符号值解释，至少32位的移位结果为零。
+最后将结果最高位解释为符号位。因而 `(-1)>>1=2147483647`，`1<<31=-2147483648`。
+左移丢弃位是该运算本身的语义，不能使其子表达式中的普通整数加减乘溢出合法。
+算术移位、归约运算、带宽度的数字字面量和隐含real转换不属于本切片。
+
+参数绑定时直接折叠常量。含位运算的纯整数事件表达式若只读整数状态和参数，先证明独立状态域基数的乘积不超过256。
+每组状态绑定复用现有typed lowerer，逐个验证全部整数中间运算，随后把整个表达式降低为一次平衡`Select`树。
+这保留同一状态多次出现的相关性，避免逐运算嵌套选择的重复展开；不改变不含位运算的表达式。
+该机制不接受电压、数组、条件或历史调用。其他上下文继续按每个操作数区间构造有限树，域基数乘积也须不超过256。
+两种路径均在分配前检查组合预算，原表达式、选择树和全局IR预算继续适用。
+该办法枚举的是已证明的小输入域，不按32位宽穷举位模式。移位量须为实例常量。
+未证明值域、过大输入域或运行时移位量返回`unsupported_integer_bitwise`，不取近似值。
+`CheckedInteger`内部算术必须在截取成功区间之前已证明signed32安全，否则位运算拒绝。
+这样有限树常量化不会丢掉本应失败的中间检查。检查下标也采用相同的未截取范围要求。
+非字面量操作数的单值范围通过同臂`Select`保留整个原操作数的读取，包括比较谓词里的数组槽和下标。
+表中不同输入得到相同输出时也不删除状态谓词，以保留同刻其他事件块的读写冲突检查。
+静态`for`控制、数组声明界限和初始化静态数组循环体直接写位运算仍拒绝；
+普通genvar循环体在展开后接受常量移位。
+
+持久状态值域沿用`event_index_domains`的事件闭包、回边、顺序写入及中间状态联合范围。
+小输入域的抽象传递取全部输入组合结果的最小和最大值。
+此外，非负常量掩码`m`满足`0 <= (n & m) <= m`，这个包围不依赖`n`的初值。
+其他无法证明的传递保持未知，不能从某次初始化值推断整个仿真范围。
+
+实现入口是`integer_bits.py`的定宽运算与类型规则、`parameters.py`的常量绑定、
+`instance_compiler.py`的有限选择树及`event_index_domains.py`的范围传递。
+IR24、Rust整数写入检查、事件求解、误差预算和候选提交与回退均未改变。
+独立公共回归见[test_integer_bitops.py](../../tests/test_integer_bitops.py)，包括定宽负数边界、
+小型移位寄存器的顺序事件、普通analog掩码、参数默认值及拒绝控制。
+[证据说明](../../../experiments/backends/support/integer-bitops/README.md)区分本地验证和实际Spectre对照。
+
+<a id="typed-integer-closure"></a>
+
+## typed 整数除法、余数与有限 real 幂
+
+两个源 integer 操作数的 `/` 向零截断，`%` 满足 `n=d*q+r`，非零余数与被除数同号。
+例如 `-9/2=-4`、`-9%2=-1`。任一操作数为 real 时除法保留 real 语义；
+`real q=9/2` 得到4，`9.0/2` 得到4.5。参数默认值、范围端点和父实例覆盖均沿用源类型，
+覆盖参数仍使用原来的依赖替换规则。零除、signed32 中间溢出和 `INT_MIN/-1` 不因最终余数为零而合法。
+未知除数域继续拒绝，不能把 real 值恰好为整数当作源 integer。
+
+`integer_arithmetic.py` 对固定非零除数计算商与余数的有符号范围，
+`event_index_domains.py` 沿事件回边和顺序写入联合证明整个生命周期的范围。
+模计数器 `n=(n+1)%8` 可由此证明有限域；先检查 n+1，不能让 `%8` 掩盖中间溢出。
+`integer_constants.py`、`parameters.py`、`hierarchy.py` 与 `node_elaboration.py` 共享常量类型语义，
+实例编译复用既有整数检查。独立正反例见 [test_integer_math_closure.py](../../tests/test_integer_math_closure.py)。
+
+静态展开中的scalar integer和genvar循环下标也保留源integer类型。
+`elaboration.py::substitute_value` 只给已通过固定边界及signed32检查的循环下标替换叶保留此类型，
+不把数值恰为整数的real常量或变量改为integer。`j=-2..1` 的 `j%16` 因此依次为-2、-1、0、1；
+原中间溢出、控制变量写者和4096展开上限继续检查。
+[独立编译与公共内核回归](../../tests/test_static_loop_integer_type.py)检查常量IR、执行顺序和拒绝控制；
+[分支证据](../../../experiments/backends/support/low-cost-closure/static-loop-type.json)仅认证这个类型修复，
+不证明完整原请求的累计预算或后续历史消费者已闭合。
+
+运行期整数指数的有限 `pow` 扩展要求底数为正的常量二进制幂，指数源类型为 integer，
+且已证明的整个指数域在 [-32,32] 内。`finite_math.py` 只生成有限且可精确表示的 binary64 常量叶，
+例如 `pow(2.0,n)` 和 `1.0/pow(2.0,n)`，结果保持 real 类型。
+它复用既有 `Select`，单值域也保留原指数读取，不能掩盖同刻读写冲突。
+非整数指数、未知或过大域、非二进制幂底数及不能精确有限表示的原值不获得此扩展。
+原有常量幂路径按自身合同保留。
+
+有限域仍受256组合与4096实际展开决策预算、原源码和IR限制约束。
+资源审计包含参数死臂中实际生成的选择树，所有原操作数和整数中间检查保留。
+这不是一般 real `pow` 近似器，也没有新增opcode、时间证明或接受与回退策略。
+实现与原件状态见[紧凑证据](../../../experiments/backends/support/low-cost-closure/README.md)。
+
+### 事件体的原生 typed 加法与常量余数（IR27 本地候选）
+
+旧有限域表示优先。仅当其商分段或整数中间范围表示不足时，事件体可生成独立
+`integer_primitive`。第一版只包括源 integer 的 Add 和常量非零 signed32 除数的
+Remainder；叶只能是 `integer_literal`、同实例 integer `integer_state` 或同类子树。
+real 的整数点值、电压、时间、算子和实时 Floor 结果不能直接成为 typed 叶。
+源 Floor 仍须先通过原有输入/单 bin 证书并写入合法 integer 状态。
+
+`integer_primitive.rs` 对每个原节点执行 `i32::checked_add` 或 `checked_rem`。
+余数向零截断并与被除数同号，`INT_MIN % -1` 拒绝。点路径与盒路径共享这些操作，
+盒路径仅接受单点 signed32 state；不从非点盒选择代表值。原 counter 保留真实递增，
+后续取余、clamp 或写回不能挽救前一个节点的溢出。同回调每句读取前序局部写入，
+不同回调仍保留原同批次冲突规则。失败退出候选帧，不提交状态、历史、日历或输出。
+零时刻 timer 的冷启动依赖审计也识别新节点，但原冷历史 seed 的单点证书保持。
+输入点值与原 real 算术形成非点 `vout` 盒时，只有下述裸保持状态 Transition 门可保留该盒构造冷历史；其余组成保留原point要求。
+
+前端的新增 typed 构建逐节点扣原事件审计的100000额度，审计与最终构建复用同一 owner，
+不因重试恢复额度。原256域、4096决策、IR100000/depth96与精确证明512/depth64上限保留。
+可选有理来源解释继续扣原 `value_with_work` 调用方及 `Budget`，缺证或耗尽返回 unknown。
+`event_control.rs` 拒绝贡献、算子目标和事件 trigger 中的新节点；`causal_event.rs` 只为新节点
+开放实际驱动输入与保持 state 的路径，原 CheckedInteger/Floor/loop 门不变。
+
+独立公共例见 [test_native_integer_events.py](../../tests/test_native_integer_events.py)，
+同引擎失败后两次重试见 `transient_lifecycle_tests.rs` 的
+`native_integer_failed_prefix_rolls_back_and_retries_same_controller`。
+该切片已进入wave16统一候选，原324通过原checker；同候选的原377依赖事件体输入别名闭包。一般runtime除数、位运算、连续integer输出及内部反馈仍不在此范围。原077完整运行后仍为checker FAIL，首个4.896ns失败由原稀疏网格跨边沿插值造成，原FAIL保留，不由派生查询改判；身份和诊断边界见[低成本闭包收据](../../../experiments/backends/support/low-cost-closure/evidence.json)。
+
+### 事件体运行期余数与二元减法（IR28 本地候选）
+
+IR28 在上述源 typed 事件树中增加二元 `Subtract`，并接受 Remainder 的 typed
+运行期除数。叶类型、同 owner 审计、真实原节点 origin 和点 signed32 盒要求不变。
+前端仅在明确的 typed 余数表示不足处进入既有 native fallback，不捕获任意编译错误。
+旧有限域成功路径优先，旧表中确定的零除或越界行仍静态拒绝；字面量零除与常量中间溢出
+也不迁为运行期成功路径。宽域 state 的运行期零除在实际选中的原节点报错。
+
+对已接受的整数点，`a-b` 使用 `i32::checked_sub`，`a%d` 使用既有 `checked_rem`。
+减法先于父节点执行，即使父节点乘零、取余、clamp 或后续赋值也不能消除其溢出。
+余数满足 `a=d*trunc(a/d)+r`，非零余数与 a 同号，零除及 `INT_MIN%-1` 拒绝。
+例如 `-9%8=-1`，`(9-2+0.0)/2.0=3.5`；后者仍先检查源 integer 减法，
+再按原 real 规则传播数值误差。动态除数在每次使用处读当前局部 state，不能缓存写前值。
+成功余数的保守编译包围为 signed32 模数所允许的 `[-2147483647,2147483647]`，
+不据此替代执行时的零除、溢出和点盒检查。
+
+点与盒执行仍共用 `integer_primitive.rs::evaluate`，每个节点、操作数及操作扣同一 work
+回调；可选有理来源沿原调用者预算，耗尽保持 unknown 或原拒绝。Python 构建沿既有
+事件审计 owner 扣费，不新开 fallback 额度。普通贡献、trigger、算子目标、整数 Divide、
+单目负号、Multiply、位运算、Floor 和全局 CheckedInteger 准入均未扩展。
+零时刻依赖审计仅复用原 typed 节点验证，冷历史的裸 real StateRef 门不变。
+
+公共独立例见 [test_native_integer28.py](../../tests/test_native_integer28.py)。同一 Controller
+在真实除零或减法溢出后两次重试的回滚测试为
+`integer28_runtime_failures_roll_back_twice_in_same_controller`。这些开发例不代表
+原069/335通过、完整Python通过或安装验收；原件收益上界为两项，已验证新增PASS为零。
+
+### 裸保持状态 Transition 的有界冷初态（本地候选）
+
+固定精确timer0执行之后，原点执行值与 `Prepared.bounds` 是两套证据。
+例如binary64字面量的`.2+.1`名义值为`.30000000000000004`，实际原盒可为
+`[.3,.3000000000000001]`。它是有限有界初态，不能改成名义值的单点。
+
+本门仅接受整program的历史算子全部为Transition，每个原IR input都是裸、同owner、
+kind=real的StateRef，并走普通固定timer的 `independent_schedule` 分支。
+一般Select/仿射目标、DC voltage alias、其他算子、history-calendar以及dynamic/relocalized guard
+保留原point门。初始化语句、未选臂依赖、writer/整数检查和精确零时刻cursor不变。
+
+若名义状态为\(\hat x\)，原证书为\(X\)，冷历史直接由既有
+`Transition::enclosed(\hat x,X,delay,rise,fall)`构造settled初态。
+初始level在首个实际更新前始终包于\(X\)，delay/rise不产生伪t0边沿；
+不调用`advance_at(0)`伪造初始化转移。有限性、向量长度和名义值落在原盒内均先检查。
+`transient.rs`在历史构造前借用Prepared.bounds，`operators.rs`的专用私有入口沿原constructor
+与source_context/history_work创建一次历史，旧入口默认point行为不变。
+
+Frame.state_bounds和Operators的初始盒仍一起通过原 `model.certify_observation`。
+初始输出的误差放大超过原电压预算必须拒绝，有限初态不是单独的接受条件。
+失败前不发布frame、日历消费或输出。后续事件沿原Controller候选事务，失败后重试不能改变
+种子盒、历史、proof、records或outputs。观察网格不改变物理初态。
+
+独立公共合同见 [test_transition_bootstrap_bounds.py](../../tests/test_transition_bootstrap_bounds.py)。
+其Fraction答案取原binary64字面量，不来自EVAS输出；另有严格高增益拒绝、passive初始display
+保留和原nonbare目标拒绝。私有bootstrap测试记录实际state/history盒，同Controller回归在
+`transient_lifecycle_tests.rs::bounded_cold_transition_seed_survives_two_failed_same_controller_callbacks`。
+这些开发证据不替代原件checker、完整候选CI或安装验收。
+
+<a id="wave6-local-closure"></a>
+
+## 波6b起有限闭包与当前验收身份
+
+以下机制已纳入历史波6b的149文件源码与release核 `5935fd87` 全量：261通过、18失败、121拒绝，296相对波5回退。
+最新wave12固定158文件源码、IR25与release核 `83da6b2b521c` 的完整400为292通过、18失败、90拒绝。
+原198及有效波10的278份通过全部保留，新增14份，无回退；历史波11的十份Select回退已恢复。开发回归与精确提交CI状态见紧凑收据，机制合同不等于所有相关模型通过。固定身份、历史回退及后续开发边界见[紧凑收据](../../../experiments/backends/support/low-cost-closure/evidence.json)。
+
+held timer 仅在整个period包围非正且整个start包围严格为负时，认定过去单次事件的当前日程为空。
+后续状态更新仍会重建该timer日历，可将它改期到未来。负start配正period、跨零start或跨正周期制度的区间保持拒绝。
+`add_timer` 不修改trigger或接受状态。公开过去单次、重启及正period拒绝见
+[test_timer_closure.py](../../tests/test_timer_closure.py)；该文件的源误差负控止于前置准入，不证明内部跨零区间分支。
+
+已认证输入投影可为普通PWL alias根恢复原source `RootTime`。
+`GuardBounds::exact_input_expression` 只返回全部系数为点、无残留状态或算子列的原输入表达式。
+`schedule_with_history` 优先使用原guard曲线，投影回退仍须通过 `Curve::root_in` 的分段、端点与已发现根匹配。
+相同浮点包围不能代替同根证明；相邻不同有理根仍分开回调。
+别名两个transition期限与近根控制见 [test_scs_closure.py](../../tests/test_scs_closure.py)。
+
+零时transition bootstrap候选只要求种子依赖状态为点包围。
+无关real状态可以保留有限且包含名义值的非点包围，随后事件采样、历史和电压验收必须继续携带它。
+`transient_initialization.rs::prepare_stage` 不把非种子值压成点；非transition算子组合仍保留原全点限制。
+公开 `BootstrapNonseedBounds` 和Rust同控制器失败重试分别检查236形状的启动、后续放大拒绝及回退，
+不开放非点 `State.initial` 或一般bootstrap历史。该候选局部证据见
+[test_initial_sampling_closure.py](../../tests/test_initial_sampling_closure.py)。
+
+160形状的运行期整数除数候选将纯integer根表达式所读的联合StateRef域枚举为既有Select树。
+联合域须不超过256，每行复用原strict lower，保留signed32中间检查、真实除法与余数语义和全部状态读取。
+单值域也保留同刻读取依赖；零除域、未知或过大域继续拒绝，运行移位量未扩展。
+该入口由 `integer_expression_table` 触发，`integer_arithmetic.py` 提供有符号范围；4096决策和原IR预算保持。
+[test_integer_math_closure.py](../../tests/test_integer_math_closure.py)覆盖正负除数、除数改变、预算和隐蔽中间错误。
+160原件在波6b完整验收通过；069等未闭合的嵌套组合仍保留拒绝。
+
+### 波7有限 floor 合同
+
+`floor(x)` 与 `$floor(x)` 的内建结果保留real类型；结果碰巧为整数不赋予integer位运算身份。
+裸调用优先绑定同模块已声明的用户函数，包括其他函数体中的前向引用；`$floor` 始终显式调用内建函数。
+合法参数或局部名 `floor` 继续按变量读取。独立兼容控制见 [test_floor_syntax.py](../../tests/test_floor_syntax.py)。
+
+内建仅接受有限常量或在调用之前由原始源码证明的有限裁剪范围，再分解为既有选择树。
+联合区间划分不超过256，实际展开仍计4096决策和原IR预算；后置裁剪、testbench输入范围和观察到的数值不能充当前置证明。
+每个所选输入误差盒必须落在同一整数bin；跨边界或所选原算术中间值非有限时拒绝。
+保留原参数求值、signed32赋值检查、未选臂结构与源依赖检查，不用整数转换隐藏原除法或溢出。
+合同正反例见 [test_finite_floor.py](../../tests/test_finite_floor.py)。该机制已纳入波7固定150文件源码与release核 `1d0845b6` 的完整400验收，224通过原checker；050、052仍因source transition证明预算拒绝，预算未放宽。
+历史波7共269通过、18失败、113拒绝，不把floor入口可编译视为原件通过。波8纳入以下整数读取与点时间证明；后续Slew、证明缓存及tanh不计入当时272，已进入wave12。
+
+<a id="event-floor-ranges"></a>
+
+### 同一回调前序赋值的floor范围（分支已验收，未合并）
+
+事件中的real局部量若在该次使用之前已由源码赋值及裁剪证明有限范围，
+可用该范围构造既有floor选择树。例如先夹 `x` 到 `[0,7]`，再取 `$floor(x)`。
+每个回调从未知范围开始，事实按源码顺序传递；条件两臂取hull，
+未知循环写入清除事实。同一函数展开DAG在多个位置使用时取所有使用环境的共同安全包围，
+不能把某个调用点的窄范围带到另一回调、ordinary analog或初始化阶段。
+
+`$floor`仍返回real：`$floor(9/2.0)/2`为2.0，不能把外层除法变成integer除法。
+integer赋值只在独立证明整数值及signed32范围后消费该结果；原整数 `9/2` 仍先得到4。
+这项静态范围只用于有限分区，原可执行赋值、全部数值包围、溢出和除数域检查均保留。
+整个实际输入区间跨bin时拒绝，不能用名义值代替；原256分区、4096决策及100000 IR预算不变。
+公开顺序、跨回调和typed控制见
+[test_event_floor_ranges.py](../../tests/test_event_floor_ranges.py)。
+
+<a id="native-event-floor"></a>
+
+### 原生事件floor：实际驱动仿射输入的本地候选
+
+有限范围选择树仍是第一入口，原来成功的IR除schema外保持一致；256分区或其他资源拒绝不转入新路径。
+事件中的 `floor(8*V(vin))` 若缺少源码前置范围，可用IR26的单参数 `event_math/function=floor` 表示。
+新入口只接受参数及原始输入电压构成的仿射表达式，缩放系数限精确二进幂；非二进缩放/除法不以已舍入系数重建floor切点。
+producer审计原操作数，保留零系数、未选臂和原算术检查；
+内核按实际driven/ground节点再次审计。State、内部反馈、电压未知量、时间、一般事件数学均未因此开放。
+
+设原参数认证盒为 `[a,b]`，floor盒为 `[floor(a),floor(b)]`。两端不同时在该操作处拒绝，
+不能因后续饱和到同一值便抹去原中间不确定性。只有既有精确物理根/输入来源链在原盒内证明唯一值时，
+才可收紧floor盒；非零源误差没有这张来源证书，代表时刻与中点不能代替它。负数按向负无穷取整。
+例如 `floor(-0.5)=-1`；跨越-1的输入盒包含两个floor值，即使二者后来都夹成0也拒绝。
+
+floor在源码中返回real，`floor(3.0)/2`为1.5，不能直接作integer位运算操作数。
+每条原integer赋值仍检查精确整数值与signed32范围，后面的 `if(code>7)code=7` 不补救此前溢出。
+点求值、区间、精确有理值证明与状态写入分别保留原表达式顺序；失败候选不提交状态、记录、日历或proof。
+所有已有分区、IR、路径证明、精度与执行预算不变。
+
+前端由instance_compiler.py::finite_floor保留旧入口并审计新操作数；Rust event_numeric.rs执行点/盒求值，
+event_value_proof.rs复用LocalState、RootTime及有理数预算。settlement.rs把现有证明上下文送给causal_event.rs，
+后者只允许已证明实际驱动依赖的floor。该因果证书也用于贡献Select的预览、联立解和重放，未知反馈的原拒绝保留。
+同控制器跨bin失败与精确源重试由transient_passive_tests.rs检查，公共合同见
+[test_native_event_floor.py](../../tests/test_native_event_floor.py)。这仍是未合并候选，原checker与安装验收归主集成，
+不以原件能完成执行宣称通过或提高Q资格。023的同回调局部量除法和027的modulo不在此次范围。
+
+<a id="integer-prefix"></a>
+
+### 普通integer分支的共有前缀（分支已验收，未合并）
+
+普通analog中已声明integer目标的分支合并，可把两臂引用同一IR对象的整数前缀保留一次。
+例如两臂分别为 `prefix+2` 与 `prefix-3`，合并为 `prefix+(condition?2:-3)`。
+原两臂必须先分别通过整型及signed32检查；原guard、来源、未选臂名字和真实IR预算保留。
+该入口只接纯原始整数树，不移动State、历史、事件值或checked包装，也不按结构近似匹配不同对象。
+real目标及callback赋值不获得此重排。公开正反例见
+[test_integer_prefix.py](../../tests/test_integer_prefix.py)。
+
+<a id="rational-transition-levels"></a>
+
+### 中断边沿的有理保持目标（分支已验收，未合并）
+
+已证明来自原输入标量的保持目标，可沿用其精确有理依据计算中断及反向transition的期限。
+两个结束包围相同本身仍不证明同一数学期限；相邻不同期限不能合并。
+原目标表达式与held selection决定新边沿，不能把中断点的名义输出充当原目标。
+原采样误差、边沿误差及后续内部采样误差继续进入历史和未来放大验收。
+没有原标量证明的内部采样保留不确定性；真实source_errors不因有理证书变成零。
+这不扩大一般连续目标或非点时间证明。公开中断、反向及放大控制见
+[test_transition_rational_levels.py](../../tests/test_transition_rational_levels.py)。
+
+<a id="settled-integer-reads"></a>
+
+### 波8隔离整数输出读取
+
+普通整数编码表达式可使用已经证明的事件入口不变量与整个生命周期范围的交集，不能用入口事实覆盖更强的旧范围。
+这只适用于唯一扁平实例、无内部模拟节点、输入／输出实际网不同且输出实际网彼此不同的完整程序。
+每个输出必须恰有一条接地电压贡献；普通、声明初值、initial_step、事件、触发器、final_step及显示中的电压读取都只能来自输入。
+其他实例或观察者、内部网、反馈、端口别名及非唯一输出贡献均关闭证书，回到旧生命周期准入；不授予一般组合支持。
+
+缩小范围只在全部初始化、事件和final_step降低完成后，对普通表达式读取生效。
+例如声明 `q=259` 后，initial_step先取 `(q>>1)&1` 再把q置零，保存的仍为1。
+完整事件中的临时过冲不能当作普通输出观察，但其signed32中间错误也不能由随后裁剪消除。
+有限整数整式仍逐行检查原类型、每个原算术中间值与除数域，联合组合不超过256、展开决策不超过4096，原IR预算保持。
+单值表仍保留原状态读取；real除法仍是real。公开正反例见 [test_settled_integer_reads.py](../../tests/test_settled_integer_reads.py)。
+
+可选全局整数范围证明共享原100000工作量。耗尽时不再搜索，也不授予有限不变量，
+编译器退回完整signed32未知范围；原源码、索引、整数类型与运行时检查继续。
+因此旁证耗尽本身不挡住能由原路径执行的模型，仍需有限范围证明的表达式也不能借此获准。
+
+<a id="held-time-point-proof"></a>
+
+### 波8 held timer的点时间证明
+
+只有简单held timer的real状态start，且其已接受的前状态包围有限并满足 `lo==hi`，才能补充 `RootTime::point` 初始证明。
+已有效的原根证明继续优先，不能用非点包围的名义值或端点伪装精确时间。
+对原时间证明作加法时，除字面常数外，也可使用已证明且可由单个binary64精确表示的保持标量偏移。
+标量事实在同一回调中按源码赋值顺序更新；每个并列回调从相同已接受前状态独立开始。
+未知写入会清除标量事实，电压、历史、非点偏移和 `0*unknown` 均不能获得该证明。
+
+加法仍走原 `RootTime.shifted_fixed`，结果必须细化到原后状态包围；原数值包围、电压误差与事件阶段判据保持。
+因此 `.5/3` 等不能精确点表示的偏移继续回退，362仍有非点除法偏移限制；这不扩展一般时间生命周期或非点时间制度。
+公开顺序、阶段和未来误差负控见 [test_held_timer_provenance.py](../../tests/test_held_timer_provenance.py)。
+两个合同已在波8完整原件验收，194、098及026通过原checker；作者与独立审查收据见[紧凑证据](../../../experiments/backends/support/low-cost-closure/evidence.json)。
+
+#### 本地候选：普通 held timer 的有理偏移
+
+2026-10-21 的最小合同扩展上述普通路径：`LocalState` 从真实点输入证明的
+有理偏移无需再压成单个 binary64。例如 `due=$abstime+0.5/f`、`f=3`
+保留精确 `1/6`，下一事件为 `binary64(0.1)+1/6`，不能选择包围上端点作为物理时刻。
+`event_time_provenance::expression_with_points` 复用原标量证明，
+以 `RootTime::affine` 保存有理和，并继续用原后状态包围细化；原数值状态和误差不变。
+所有原操作数都须有证明，非点输入、隐藏 `0*unknown`、矛盾后状态包围仍不获证书。
+付费 history/forcing 路线仍走未扩展的 `event_history_time`，本合同不解除其偏移限制。
+
+完整普通消费者还需要事件发生位置的输入证明。`apply_with_context_charged`
+接收该次回调的 `event_value_proof::Context`，按源码顺序证明输入、限幅结果和下一期限。
+它使用已接受的前状态，不能从最终写回状态反推中间读值。并列回调各自从前状态开始；
+候选后状态盒只用于检查所得时间证明的包含关系。已有 analytic/history 付费 owner
+继续委托原路径，不借这个普通入口获得额外数学能力。
+
+[独立截止点测试](../../tests/test_deadline_origin_contract.py)按
+`t_k=binary64(0.1)+k/6` 和线性过渡公式检查相同及不同固定移位、多实例和查询不变性。
+[原 held timer 测试](../../tests/test_held_timer_provenance.py)保留赋值顺序和未来放大误差反控；
+Rust `held_point_tests` 检查同一 Controller 的失败重试，原 deadline/calendar 控制检查
+相同数值包围不代表共同根、相邻真实期限不能跳过。Python 的近邻 duration 波形比较
+受其电压容差限制，不单独证明一个 ULP 的期限差。此为未提交候选，无新 Spectre 或完整案例信用。
+
+#### 本地候选：历史谓词中的原电压接口
+
+当消费者读取另一个含 `Select` 的电压贡献时，展开树只用于证明依赖和选择谓词。
+`history_admission::Admission::resolve` 从原请求取贡献，递归解析选中分支，
+保留值树中的原电压接口。生产者 `V(port)=q/8`、消费者 `V(y)=V(port)+1/2`
+仍由两个实例各自的方程求解；不能将生产者的裸 `State(q)` 移进消费者的 owner。
+原 IR 的所有 owner、隐藏分支和原请求绑定检查先完成，新增遍历、展开与复制复用同一 Work。
+不确定谓词失败不改变原 Program；重试继续耗用原额度。
+
+[公开归属正反控](../../tests/test_history_owner_contract.py)采用不同初值和事件时间的两组实例，
+以 `q/8+1/2` 独立计算结果，并检查实例声明顺序、查询不变和非法裸跨实例 State。
+Rust `owner_contract_tests` 覆盖错误绑定、同 Admission 失败后重试及实际解析耗尽。
+普通仿射读出或直接 Transition 谓词未必触发这条路径，不能用它们通过来替代目标缺陷的红例。
+本合同不解决原390后续证明预算前沿，不增加完整390的通过数。
+
 ## PWL 与事件的执行契约
 
 这是限定实现范围，不是完整 Verilog-A 事件支持。语言依据见
@@ -503,7 +1003,7 @@ Spectre 的闭源实现不能由波形反推出完整算法；固定 V3 实验�
   的限定范围见[连续动态](continuous.md)。以下仿射事件规则继续适用。
   根据 IR 结构保留变量依赖，不以舍入为零的系数证明某项为常量。事件赋值 RHS 的双变量乘积仍拒绝，
   即使存在代数抵消也可能保守拒绝。贡献中的有限状态与算子乘积见下节；区间转换不能静默丢弃乘积项。
-  整数状态采用精确 signed 32-bit 范围，仅接受整数常数/整数状态运算，超范围报错，不模拟溢出或隐含取整。
+  整数状态采用精确 signed 32-bit 范围，仅接受整数常数/整数状态运算，普通整数算术超范围报错，不模拟其溢出或隐含取整；有限位运算按[定宽位模式](#integer-bitops)解释。
   real 状态可以在事件时采样仿射电压表达式。
 - 每个实际候选批次中，每个状态最多由一个 cross 或 timer 事件块写入。
   不同事件块可以在可证明不同批次触发时写同一状态；若同一批次实际选中的两个块写同一状态，
@@ -546,11 +1046,10 @@ Spectre 的闭源实现不能由波形反推出完整算法；固定 V3 实验�
 
 外部源可另给逐源的绝对电压误差上界。Python `transient` 的 `source_errors`
 按驱动节点命名；原生请求 `transient.pwl_errors_V` 按 `pwl/driven` 顺序排列，长度必须一致，
-每项为有限非负电压值。省略表示全零，显式 null 或错误长度拒绝。这不改变 Program IR。
+每项为有限非负电压值，或下述 IR24 的物理曲线描述。省略表示全零，显式 null 或错误长度拒绝。
 对于非零误差 `E`，`Trajectory.value_bounds` 在名义 PWL 插值的区间上加 `[-E,E]`，
 并清除该源的精确曲线证明。固定 timer 的 real 采样使用此区间；后续状态电压放大继续检查原误差预算。
-该请求目前拒绝所有算子、cross 和保持状态 timer，避免用单一幅度界冒充导数或根时刻证明。
-零误差源保留原路径。这是有限源误差支持，尚不涵盖动态消费者。
+仅有幅度界的请求拒绝所有算子、cross 和保持状态 timer，避免把单一幅度界当作导数或根时刻证明。零误差源保留原路径。
 
 SCS pulse 的原时间参数是已解析 binary64 的精确有理数。设精确拐点为 `t_k`，保存拐点为 `s_k`，
 `D=max(abs(s_k-t_k))`，最大原坡度 `L=abs(val1-val0)/min(rise,fall)`。
@@ -561,6 +1060,143 @@ SCS pulse 的原时间参数是已解析 binary64 的精确有理数。设精确
 [scs_sources.py](../../src/evas/scs_sources.py)、[pwl.rs](../../rust_core/src/pwl.rs) 和
 [test_source_uncertainty.py](../../tests/test_source_uncertainty.py)。原曲线的有理数角点和舍入差保留在运行元数据，
 不把保存 PWL 当作原 pulse 的精确定义。
+
+<a id="physical-source-shape"></a>
+
+### 已知物理源曲线
+
+IR24 的 `pwl_errors_V` 还接受 `{voltage_error_bound_V, exact_knots}`。每个角点含
+十进制整数字符串 `time_numerator`、正的 `time_denominator` 和有限 binary64 `value_V`。
+Python 保留 `source_errors` 的数值接口，另以 `source_shapes={节点名: 角点列表}` 提交曲线。
+这份描述声明唯一的连续物理 PWL，不表示幅度带内任意扰动。内核仍验证声明的非零投影误差。
+
+令名义曲线为 `n(t)`，物理曲线为 `f(t)`，声明幅度界为 `E`。
+两者角点的并集划分时间轴；每段上的 `f-n` 都是仿射函数。
+内核用精确有理数验证并集的每个端点满足 `|f-n|<=E`，从而证明整个 `[0,stop]` 的包含关系。
+实际电压取 `f(t)`，每次转 binary64 的向外舍入区间继续进入方程、状态与下游电压验收。
+已识别物理曲线后，投影带用于验证名义表示与物理输入的关系，不再作为任意噪声重复叠加。
+无法给出物理求值时仍保留名义插值和原幅度带的保守路径，不能无界接受。
+
+cross 在物理角点分区上完整枚举根，保留原有到零触发、方向、精确根排序和事件窗验收。
+不能在发生位移的名义角点之间直接插值来代替物理分区。已认证根通过现有 `RootTime`、日历与
+接受/候选 transition 历史传递；误差仍由各消费阶段检查。查询不改变历史，失败候选不提交状态或队列。
+
+guard若引用内部仿射节点，先复用`GuardBounds`已有的电路投影。仅当每个投影系数都是已认证点值、
+且没有未消去的状态或算子列时，才能重建原driven输入上的精确表达式，并进入同一物理曲线及根时刻证明。
+例如`z=2u`的`cross(z-1)`与直接`cross(2u-1)`保留同一根和根处采样；反向接地、浮动参考及
+可精确消元的仿射反馈也按原方程处理。区间系数不能取中点冒充唯一曲线，生成或裁剪的源仍不能获得原始输入身份。
+该有限恢复见[独立回归](../../tests/test_source_shape.py)和[B1实际参考及原请求复验](../../../experiments/backends/support/source-shape/b1.json)。
+
+曲线限 2 至 512 点、严格递增、始于零并覆盖 stop；整数解析长度不超过 1250 字符，
+有理运算分子/分母不超过 4096 位，复用现有运算与表达式预算。格式、顺序、覆盖或投影带不足时拒绝。
+SCS pulse 仅在该预算内附带原始角点，较大 pulse 保留幅度界和原消费者边界。
+本轮允许已支持的 cross、保持状态 timer 与 transition 组合；不开放非零源误差的
+idt、ddt、laplace、slew、absdelay。普通幅度带的拒绝边界保持，#131 同刻规则不变。
+
+代码入口为 `scs_sources.voltage_points`、`runtime.transient`、`Curve.shaped/range/crossings`、
+`Trajectory` 与 `schedule_with_history`。独立 Fraction 回归见
+[test_source_shape.py](../../tests/test_source_shape.py)，涵盖位移角点、舍入放大拒绝、反向接地、
+零宽脉冲、实例隔离、反馈、timer 复位及查询网格；内核测试检查全分区范围、到零与资源边界。
+实际参考及原请求结果见[物理源曲线证据](../../../experiments/backends/support/source-shape/README.md)。
+
+相异源切点与timer的发现窗口重叠时，限定根窗证书按精确根次序消费完整源模式，
+事件体仍按现行`te=tau`合同读取物理根，原窗口保留给历史和事件记录。
+旧保持阶段前缀、新目标安装和未来边沿须一起认证；有理内部见证、根处采样、
+查询／回滚与残余拒绝边界见[源目标历史合同](operators.md#外部源选择目标与实时电压读出)。
+这不是仅凭根序对一般近根组合的准入，也没有更改既有Spectre兼容差异。
+
+<a id="paid-shaped-range"></a>
+
+### 同一请求中的物理曲线区间读取
+
+`Trajectory::history_range([a,b], work)` 对已认证的物理 PWL 保留完整曲线，
+按原输入顺序先读取所有左端点，再读取所有右端点，最后组合区间与导数。
+值域是两个端点和所有严格内部角点值的 hull。导数包围所有与窗口相交的线段斜率；
+窗口为精确角点单点时，保留左右两段，不能只取执行代表时刻的一侧。
+有理角点与 binary64 窗口边界通过付费的精确比较确定次序。
+
+词法局部 `StagedRange` 借用 immutable `Curve` 和原请求 `Work`，
+三个阶段共用原 `Paid.local` 运算计数。左、右端点各求值一次；付费二分定位可能相交的
+线段后，仍按原升序逐一检查相交条件、内部角点和斜率。
+原六步插值、向外包围和 hull 顺序保持。该读取不裁剪输入，也不修改完整源、AST、隐藏臂、
+角色及父表达式资格审查。其他 `forcing_range` 消费者继续使用其原算法与费用。
+
+reader 仅在原左端点循环实际遇到 shaped 输入时建立。构造、slot、容量增长、结构移动、
+搜索和有理运算在执行前向同一 owner 付费。只有 None 或普通 Voltage 误差的旧路线不建 reader，
+保持原费用。reader 不进入 Frame 或跨请求缓存；失败不提交候选状态、日历、记录或输出，
+已花预算不返还。Work 错误直接传播，不退回名义值。原 128 个 plan、8192 个 cut、
+10⁹ 总 Work 和局部有理数限制不变。
+
+实现位于 `pwl.rs` 与 `exact_source/history_paid.rs`。
+[有理数生成器](../../tests/helpers/generate_shaped_range_oracle.py)独立生成多角点、
+非 binary 时间、精确角点、邻 ULP、subnormal 及斜率溢出控制；
+`shaped_range_tests.rs` 另比较旧完整区间的结果位并检验自然预算耗尽。
+`transient_history_consumer_tests.rs` 验证实际根窗、非点采样、完整 Frame 两次拒绝重试，
+原生 `history_consumer` 与公开 [物理点读取控制](../../tests/test_physical_point_bundle.py)
+检查生产消费者。减少重复工作不保证任意原件在固定总预算内完成。
+
+<a id="causal-transition-composition"></a>
+
+### 物理采样算术与 transition 组合
+
+IR24 候选允许事件赋值由本实例的保持状态和实际 driven 电压组成有限非线性标量算术。
+例如 `a=0.3*u*u; b=a; if(b-a<0)...` 按语句顺序求值，后续语句读此前赋值。
+每次赋值保留原表达式的区间包围；可用的有理数证明只能在原包围内收紧结果，未知证明立即清除。
+真实输入幅度不确定性不会变成精确值；下游放大仍须满足电压预算。
+电气未知量参与的非线性同刻反馈不在此范围，观察实例专用的数学函数、数组和循环也不能借此准入。
+结构扫描覆盖完整原事件体，包括条件和未走分支。
+
+物理采样标量还可调用 `sqrt` 与 `ln`（IR 增加 `event_math` 的 `ln` 函数名，未改 schema 版本）。
+只限非孤立观察实例的事件赋值值内、且不在判定谓词中；参数须作用于样本：
+读取实际 driven 电压，或读取本事件此前已由样本赋值的状态（例如 `s=s+x*x; q=sqrt(s/4)`）。
+参数读取任何贡献驱动的节点、只读未在本事件采样的保持值、或出现在 `if` 谓词、显示和孤立观察事件中时，
+仍报原诊断（前端 `nonconstant mathematical`，原始 IR 则由内核 `isolated observer` 拒绝）。
+定义域按完整参数包围判定：`sqrt` 要求下界不小于零，`ln` 要求下界严格大于零；
+名义样本合法而包围跨界时返回 `event_domain`，不按名义值放行。例如
+`td=td0+tau*ln(V(vdd)/d)` 在先把 d 夹到正下限后可求值。`exp`、`cos`、`tanh` 等其他函数在物理事件中仍拒绝。
+不确定源目前只在固定 timer 加代数消费者时进入该规则；`cross` 或 `transition` 消费者由
+`unsupported_source_uncertainty` 先行拒绝。回归见 [采样定义域](../../tests/test_group_math_sampled_domain.py)。
+
+有限实数除法也使用这条事件标量路径。例如先写`span=V(vdd,vss)`，按源码条件设置正下限，
+再计算`x=clip01((V(in)-V(vss))/span)`，后续递推必须读取本次更新后的span和x。
+计数率`(1.0*hits)/n`在先执行`n=n+1`之后使用新计数；这不是整数截断除法。
+对于分母包围`D=[L,H]`，只有`0`不属于D才能使用区间商；名义分母为正不能替代这一认证。
+裁剪按可证明的比较选择分支，仅求值选中臂，但两臂仍接受原结构审计。
+
+同刻贡献选择的名义预演也必须读取真实driven电压，不能先把全部节点设零后执行采样除法。
+电气未知量在预演中仍是占位值，依赖电压赋值状态的贡献谓词先由原规则拒绝，最终状态与电压由联合解和原区间证书验收。
+这一预演不提交状态或历史。`q=(q+x)/2`的有限递推、计数均值、裁剪两侧和正下限有独立有理数测试；
+分母区间跨零、误差经保持后放大、未知电压反馈及observer-only数学各有拒绝控制。
+八例原请求及实际参考的有限结果见[除法采样收据](../../../experiments/backends/support/source-shape/gap06.json)。
+严格根处复位导致的原checker失败及完整波形差异保留在[统一清单](../COMPARISON.md#gap06-sampling)。
+
+事件条件可读取无环电压网络中的已认证 transition 样本。网络先展开到实际输入、保持状态和
+冻结的算子样本，再检查依赖；同刻写入经电压网络返回条件的环仍拒绝。冻结样本不改变历史。
+连续 transition 也可作为另一 transition 目标谓词的输入，但叶子仍为保持值。
+`transition_history_target.rs` 对全部源角点、父历史边界和谓词根分区，按无环依赖顺序建立候选计划；
+源或保持状态修改后重建。缓存绑定原程序、轨迹、父历史修订和状态包围，查询不能移动目标切换时刻。
+候选共享请求级工作预算，失败不退还已消费的预算；积分或滤波器直接消费这类选择目标仍不支持。
+
+中断边沿只有在原物理分区内证明为同一直线 `v(t)=A+B*t` 时，才保留精确起点和直线证明。
+`Curve.affine_on` 检查区间内的全部角点，不能用端点连线替代折线。由直线与目标交点得到的
+精确结束时间仅补充原期限包围，不移动名义波形或重置误差。无法证明的中断结束次序仍拒绝。
+两个独立的连续边沿结束点可在同一代表步消费，因为它们不产生目标或状态的离散修改；
+待激活目标和零延迟开始不使用这条规则。每个原物理波形及查询误差检查仍分别保留。
+
+日历中相连的重叠根簇若至少含一个 transition guard，只有每个根都有独立精确证书、
+且每组的共同 binary64 代表时刻严格早于下一真实根时才可排序执行。
+真实根之间没有可用代表时刻时仍拒绝；同根分组、原容差与固定前驱保护保持。
+这不开放一个浮点时间间隔内的一般微事件执行，也不改变 #131 的同刻读取规则。
+
+实现由前端 `lowering.py`、`instance_compiler.py`、`event_specialization.py`，以及
+`settlement.rs`、`causal_event.rs`、`causal_voltage.rs`、`event_value_proof.rs`、
+`transition_history_target.rs`、`transition.rs` 与 `schedule.rs` 共同承担。
+独立回归见 [采样算术](../../tests/test_causal_event_math.py)、
+[数值关联](../../tests/test_event_value_precision.py)、
+[连续条件与排序](../../tests/test_transition_event_conditions.py)和
+[精确期限](../../tests/test_exact_transition_deadlines.py)。真实控制器的晚期失败、回滚和同实例重试
+由 `transient_lifecycle_tests.rs` 与 history-target 工作预算测试覆盖。
+实际参考与未通过原 checker 的兼容差异保留在[源曲线证据](../../../experiments/backends/support/source-shape/README.md)。
 
 对于没有外部源误差的请求，通过上述限制，固定状态下的方程系数不变，输入每个分段内的节点电压和 guard 都是时间的仿射函数。
 guard 的状态独立性允许提前生成事件日程。内核同时进行普通求解和保守误差界计算：
@@ -761,6 +1397,206 @@ EVAS 明确拒绝。实际 Spectre 在该原模型中不收敛并恢复越过断
 `EventModel::apply` 重放原赋值，`Bounds::new` 从原 IR 构造区间认证。每次试算均固定从
 s− 开始，因此求解、重放或缓存重试不会再累计一次事件。验收后才原子提交；失败时旧帧不变。
 
+
+<a id="ordinary-event-scratch"></a>
+
+### 回调临时值与普通赋值别名
+
+原源码中的标量 `real` 若已有 cross/timer 写者，也可在回调声明之后由普通 analog 语句重新赋值。
+例如回调 `e=V(u)+1; q=e;` 后接 `e=2*V(u); V(y)<+e;`，
+回调中的 q 读取该回调刚写入的 e，普通输出读取本次普通求值中的 `2*V(u)`。
+编译器保留 e 的事件状态槽，同时用独立的普通局部环境按源码顺序降低贡献；两种读取不能互换。
+
+每个回调、初始化体及普通求值中的 e 读取，都须由该体内先前的无条件写入覆盖；
+条件写入须在两臂都完成，跨回调旧读、缺臂写入及普通写前读仍拒绝。
+这条窄路径要求原模型不含数组，普通写者均位于全部回调声明之后；
+仅有初始化写者的持久状态、触发器或只读算子设置中的读取、循环携带的别名均未扩展。
+原始零次循环和未走分支仍参与结构检查，新增递归扫描及容器复制由同一个原100000累计预算先计费。
+独立公开回归见 [15项角色与顺序控制](../../tests/test_event_ordinary_scratch.py)，
+本次没有新增实际 Spectre 配对或371原件通过结论。
+
+<a id="ordinary-event-prefix"></a>
+
+### 回调位置的普通纯输入前缀（分支已验收，未合并）
+
+没有初始化、事件或循环写者的标量 `real`，可以在回调体中读取其源码前缀。
+例如 `a=V(u); @(timer(0.25))q=a; a=2*V(u); V(y)<+a;`，
+q 在事件根读取该位置的输入，普通输出仍读取后续的两倍输入。
+a 不变成保持状态，也不从上次 analog 求值取值；不同回调位置保留各自的前缀。
+
+前缀只依赖实例参数和实际物理 input/inout；传递定义按原源码顺序解析，
+条件合并要求两臂都有合法定义和纯输入谓词。写前读、后置定义、时间、
+内部或其他实例输出、算子、数组和循环携带仍拒绝，零系数和未选臂也参与检查。
+这张绑定只供回调体使用，不进入 trigger、direction、tolerance 或只读设置。
+运行时仍使用当前根的完整输入盒，不能用代表点消除真实采样不确定性。
+
+`initialization_aliases.py` 复用旧需求遍历，只为旧路径不能绑定的新需求留下即时提示；
+`ordinary_event_prefix.py` 再对完整原树作付费资格检查，
+`instance_compiler.py::aliases_at` 按回调 token 取该位置的表达式。
+没有新需求时沿用旧路径，避免为旧 typed-target 程序增加扫描和复制费用。
+公开控制见 [test_ordinary_event_prefix.py](../../tests/test_ordinary_event_prefix.py)，
+包括独立数值答案、查询加密、隐藏依赖以及原100000预算边界的完整 wire 对照。
+
+<a id="initial-only-ordinary-alias"></a>
+
+### 仅初始化状态的普通全路径别名
+
+原标量 `real` 只有 `initial_step` 写者、没有运行事件读写或触发设置依赖时，
+普通 analog 求值可在每次读取之前通过本次全路径赋值建立独立别名。
+例如 `@(initial_step) q=7; q=2*V(u); V(y)<+q;` 保留 q 的状态槽和初值7，
+普通输出读取当前物理输入的两倍。初始化中的所有语句仍完整降低和检查，
+初始化输出保留各自调用位置的快照；后续普通覆盖不能消除非法初值或未选臂的义务。
+
+新增目标写入必须位于全部初始化和运行回调声明之后。
+传递普通定义若只依赖参数和实际物理输入，可位于回调之前；这不授予目标状态的前序读取。
+前序 StateRef 或夹在普通写入之间的 initial_step 不通过这条新入口取得资格，
+以免把声明位置的旧状态替换成最终 Frame 状态。这个顺序门是当前支持域，不是语言合法性判断。
+普通别名按原源码顺序更新，条件两臂合并；缺臂只能保留本次求值已经定义的值。
+别名 RHS 可使用参数、实际外部 input/inout 电压及原机制合法的本实例持久状态，
+包括既有 integer 状态的合法选择。读取仍由原 lowerer 和实际 Frame 的 bounds 处理，
+本入口不扩展整数范围、事件写者或 history 资格。`$abstime` 与 sin/exp 等无记忆数学
+沿用普通局部量的同一取值合同（Issue214）；history 算子、output/internal/foreign
+电压及未定义局部依赖仍拒绝，零系数和未选臂同样参与审计。
+新增目标不接受 integer、数组或普通循环携带，不向 waveform 设置或运行回调提供旧值。
+其他实例声明的 output/inout 连接会保守排除该输入节点，即使其贡献最终为零。
+这条证明仅接受未索引的标量电气 probe；`V(u[0])` 等 indexed probe 本轮保守拒绝，
+不以原向量名查询标量 node id。原有非 A 的向量输入入口不变。
+设置依赖沿普通赋值、表达式全部操作数、条件谓词与两臂传播，零系数和未选臂不能消除它。
+例如 `e=q; $bound_step(e)` 和 `if(q>0)$bound_step(0.125)` 均拒绝；
+直接或传递依赖新增目标的条件也不能激活 bound-step 设置。
+
+`initial_ordinary_alias.py::admit` 在原源码上检查角色与全路径写前读，
+`instance_compiler.py` 保留 State 初始化并复用普通顺序 alias 环境，IR32不变。
+所有新增遍历、复制与别名事实使用同一个 NativeAudit；激活时保留此前已累计工作，
+原100000总限额与失败后不退款合同不变。
+公开独立回归见 [test_initial_ordinary_alias.py](../../tests/test_initial_ordinary_alias.py)，
+覆盖初值/本次值分离、同回调先后赋值后的状态选择、查询网格不变性、源误差band、
+原初始化输出及非法隐藏依赖、自然预算耗尽和两次同owner重试。
+设置传递依赖、条件激活及向量 foreign 拒绝的公开编译控制见
+[test_initial_ordinary_alias_admission.py](../../tests/test_initial_ordinary_alias_admission.py)。
+组合回归还要求 A 与无关 Transition 实例交换编译顺序时，保留逐位置贡献、
+原 q 初值槽及真实半沿。独立答案为 `a=t`、`b=1-t` 下的 `y=t(1-t)`、`z=y+1`，
+不以另一个排列的输出充当数值 oracle。主线在完整实例编译后统一发射已经降低的贡献，
+A 入口不改变该队列、单次发射、失败后禁止重放或原预算合同。
+这是局部开发合同，没有新增原件通过或 Spectre 对照成绩。
+
+<a id="ordinary-held-state"></a>
+
+### 普通 analog 变量的保持状态（Issue214 分支候选）
+
+LRM 2.4 §4.2、§5.3 的 analog 变量在两次求值之间保留取值：本次求值中未被先前写入支配的读取，
+看到上一次已接受的值。例如 `if (V(s)>vth && V(r)<=vth) q=1; else if (V(r)>vth && V(s)<=vth) q=0;`
+是电平敏感锁存器，`V(y)<+q` 在两个脉冲之间保持。`ordinary_held_state.py` 在原执行模型上检查角色，
+把这类变量改写成既有事件状态；不新增 IR 或内核消费者。
+
+设 H 为存在未支配读取（普通、回调或触发器位置）的普通写入变量，U 为写 H 的顶层普通语句。
+本切片要求：U 只含标量赋值与条件；U 内对 H 的读取都被同一路径上的 U 写入支配；
+赋值右侧只用常量、参数、事件/初始化状态及这些支配读取；谓词要么是实例常量系数的仿射电压原子，
+要么不含电压。于是固定谓词真值 p 时 `U(U(s,p),p)=U(s,p)`，稠密时间下 H 在原子穿越与回调之间分段恒定。
+同一原子（精确有理比例合并）的全部关系在零点的真值须等于某一侧，否则拒绝。
+
+保持槽 h 与普通当前值 `U(h,p(t))` 分开：普通求值在开头用改名局部量执行 U，所有普通读取得到当前值。
+提交规则为：`initial_step` 末尾执行 U；每个原子的上升/下降 cross 先把该原子强制到穿越前一侧执行 U，
+再在认证根上执行 U（内核同零集证明给出精确零点真值，因此到达零平台也正确）；
+读写 H 或 U 输入的回调先重建穿越前取值，再按源码位置执行 U 与原回调体，并在末尾再执行一次 U。
+共享原子零集的单叶 cross 回调接管该方向的提交。每个改写后的块以 `h=h` 结尾，
+任何两个这样的块落入同一候选批次都由既有同刻写者检查返回 `event_conflict`，不按源码顺序猜测。
+触发器读取的 H 须在离开零点一侧时不被写入，才保证槽值即当前值。
+
+右侧读电压的跟踪保持（需要任意节点的左极限）、读取上一值的非幂等更新（`q=q+1`、峰值检测）、
+时间原子、局部量输入、回调夹在 U 之间及数组/循环均回落到原路径和原诊断。
+公开正反例见 [test_ordinary_held_state.py](../../tests/test_ordinary_held_state.py)，
+包含锁存、贡献先读、初值保持、回调计数、精确零平台、动态 timer 与同刻提交拒绝。
+原036、249在原 checker 下通过；140 的下一阻塞为零边沿 transition，373 为内核 history 根证明。
+
+<a id="ordinary-integer-event-prefix"></a>
+
+### 事件读取的普通 integer Floor 前缀（分支已验收，未合并）
+
+单个普通标量 integer 可由物理输入的 `floor` 赋值及后续常量夹位组成前缀，
+并只在其后声明的运行回调体内被读取。编译器把完整原赋值和夹位放在每个读取回调之前，
+复用已有 integer 状态、原树 Floor 证明和顺序事件语句。
+例如先写 `ratio=floor(V(u)+0.5); if(ratio<1)ratio=1;`，
+再在 timer 中执行 `q=q+ratio;`，每次读取的是当前事件根处重新计算的 ratio。
+
+顺序为输入原树求值、Floor、signed32 赋值检查、常量夹位，再执行原回调体。
+溢出不能被后置夹位掩盖；原输入盒跨 Floor bin 时仍拒绝，除非原机制给出有效来源证书。
+当前切片不接受多个 Floor 前缀、数组、初始读取或写者、事件写者、普通贡献或别名读取，
+也不进入 display、触发器或设置。它不扩展一般连续 Floor 或 observer 权限，IR32不变。
+
+公开状态轨迹会包含 ratio 及其工程初值0；原模型的每次读取都由同回调前置赋值支配，
+不能读取这个初值。accepted/candidate Frame 仍共同拥有该槽及其 bounds，失败时完整回退。
+`ordinary_integer_event_prefix.py` 检查原模型和执行模型的完整角色，
+`instance_compiler.py` 将前缀交给原范围分析、原事件审计和执行路径；
+全部新扫描、保留和复制都先计入原 NativeAudit。没有候选时恢复原直接事件体路径。
+
+公开正反例见 [test_ordinary_integer_event_prefix.py](../../tests/test_ordinary_integer_event_prefix.py)。
+[真实 Controller 控制](../../rust_core/src/transient_ordinary_integer_prefix_tests.rs)
+使用当前公开编译器生成的 IR，核对非空 warm 前缀、同一 Controller 两次晚期失败后的合法重试，
+以及原共享 Work 自然耗尽后的两次粘性拒绝；完整 Frame 包含无关状态、历史、电路、队列和输出。
+该控制覆盖静态日历，不外推到 Held/History 日历。
+局部证据见[普通前缀收据](../../../experiments/backends/support/low-cost-closure/ordinary-prefix.json)，
+局部身份不叠加计分；最终同源双轨、完整CI及安装见[共同收据](../../../experiments/backends/support/low-cost-closure/ordinary-common-three.json)。没有新增Spectre或共同资格。
+
+<a id="ordinary-current-integer-alias"></a>
+
+### 保留事件状态的普通 integer 当前值别名（分支已验收，未合并）
+
+同一标量 integer 可以保留原 State 和 cross 写者，同时在普通 analog 求值中使用独立的当前值别名。
+这条路径要求原源码恰有一个无条件顶层普通赋值，且每个普通读取都位于该赋值之后。
+例如 `selector=(V(vsel)>vth)?1:0;` 后声明上升和下降 cross 写入 `selector=1/0`，
+再由普通 `if(selector==1)` 选择两路输入时，连续输出读取本轮输入计算的 selector，
+原 cross 仍更新其原有 State；两种值的命名空间保持分离。
+
+普通赋值的右侧只接受参数及直接当前 input/inout 物理源，拒绝其他局部量、旧状态、time、history，
+以及由其他实例输出驱动的输入。原数组、循环、声明初始化、第二写者和条件写者不进入此切片。
+写前读，以及初始化体、事件体、触发器或设置中的同名读取仍拒绝，包含零系数或未选分支中的读取。
+
+原两臂和全部子表达式先接受完整结构审计，再由既有 lowerer、决策操作数检查、`checked_ir`
+及 signed32 检查确认整数赋值。普通执行保留原整数验证，不删除原树、移动原赋值或新增状态槽。
+`ordinary_integer_current_alias.py` 的新资格工作由原 NativeAudit 的100000累计预算支付；
+既有写者遍历没有发现候选时，不启动新扫描或计费。此 integer 切片没有新增 IR 或 Rust 消费者权限。
+
+公开控制见 [test_ordinary_integer_current_alias.py](../../tests/test_ordinary_integer_current_alias.py)：
+核对原 cross 方向、`V(vsel)-V(0)-vth` guard、原赋值体，以及两次真实触发的 before/after 和 State 轨迹，
+并检查查询点不变性及原树负控。原114的258点 checker 定向通过；4个公开方法、11个既有 integer 前缀方法
+及旧 k225/k226 费用边界分别保留证据，不合并为新覆盖数。
+最终release原114及同源双轨、完整CI与安装已独审，见[共同收据](../../../experiments/backends/support/low-cost-closure/ordinary-common-three.json)。没有新增Spectre配对或共同资格。
+
+<a id="ordinary-point-lineage"></a>
+
+### 采样输入谓词与普通单点的保持值来源证明（分支已验收，未合并）
+
+采样状态和当前输入共同决定贡献分支时，先从原表达式树审计实际 driven 输入及保持状态的来源。
+同 owner 的全部回调、numeric actions、未选分支和零项均参加审计；
+`$abstime`、内部电压、贡献目标及经另一回调采入的非法依赖仍拒绝。
+原完整区间能够决定分支时，继续使用原区间认证。
+
+只有完整旧回退实际返回 `condition_precision`，才尝试保持值的精确来源证明。
+它限于没有事件批次、已触发根或物理 exact_root 的普通单点观察，且时间位于已接受 Frame 与原 stop 之间。
+旧路径成功及其它错误原样返回，包括旧路径在共享预算已耗尽时仍能完成的情况。
+
+设保持状态的原完整盒为 \(B_i\)，有效有理来源为 \(p_i\in B_i\)。
+新证明在原 binary64 叶子上精确递推 \(L(p,u(t))-R(p,u(t))\) 的符号，
+同时绑定实际 accepted Frame 的 proof map、原 Program、driven 身份及已验证源配置。
+另一 Frame 即使拥有相同盒，也不能替代当前证明；缺失证明、单点盒或代表点不能制造精确值。
+非输入或未知节点采用未知 mask。原状态盒、源盒及后续历史传播保持完整，成功 query 后逐项核对未缩窄。
+
+已有 `exact_knots` 可以证明一条确定物理曲线，其 binary64 PWL 投影仍可带非零包围带。
+本路径复用付费的 `forcing_shaped_inputs(work)` 资格门及当前 source box 包含检查；
+真实未知 band、缺失精确曲线或新增生成源继续拒绝。
+只有 `unsupported_forcing_scope` 转为无新证明；`step_budget` 与其它错误传播。
+这项来源证明不扩大一般 source-uncertainty 或非点事件窗口的支持。
+
+所有新增扫描、比较、分配及有理数运算预付到原 request Work。
+真实控制覆盖非空 Frame、两次晚拒绝后的合法重试、完整电路／历史／队列／输出回退，
+原十亿预算自然耗尽98次 query 后的两次粘性拒绝，以及已耗尽预算上旧回退的零新增费用。
+公开 Fraction 控制区分精确来源与代表点的相反符号，并核对加密查询不改物理历史。
+
+原037定向 checker 的45个边沿及5项属性通过；开发核、6项内部方法、独立公开控制及所有失败各保留身份。
+最终release原037及同源双轨已独审，原始317、修订320、剩80，见[共同收据](../../../experiments/backends/support/low-cost-closure/ordinary-common-three.json)。没有新增Spectre资格。
+源码、配置和限制见[单点来源证据](../../../experiments/backends/support/low-cost-closure/ordinary-point-lineage.json)。
+
 <a id="multiple-event-writers"></a>
 
 <a id="多事件块写同一状态pr25-已交付"></a>
@@ -797,13 +1633,58 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 
 [共同闭包](continuous.md#shared-lifecycle-closure)将复位后观察与未来历史分开，
 保留每次事件体的局部赋值顺序及整批提交。非点事件日志的可选 `observation_time_bounds`
-报告共同观测区间；`time` 是存储代表时刻，点事件省略区间字段。当前 cross 策略显式选择 te=tau，
-没有改成 Spectre 的晚触发条件取值；对照只证明所列样例的兼容差异。
+报告共同观测区间；`time` 是存储代表时刻，点事件省略区间字段。cross 条件按下节 `te=tau+` 选择。
 
-非点 cross 候选在数学根 tau 上认证赋值和条件，代表时刻 b 另作提交电压验收。
+非点 cross 候选在数学根 tau 的根盒上认证赋值，条件按下节在 tau+ 判定，代表时刻 b 另作提交电压验收。
 完整根盒保留源/历史误差；若条件差值与实际触发的仿射 guard 有精确的同零集证明，
-则使用 guard(tau)=0 判定等号。未触发 OR 叶子、timer、区间系数或单纯舍入相等不能提供这项证明。
-因此 `u=3t, cross(u-1)` 内的 `u>1` 在根处为假；不能因为 b 的微小舍入延迟把该条件改判为真。
+则按下节的根后一侧判定；没有一侧证书时不能用 guard(tau)=0 选择分支。
+未触发 OR 叶子、timer、区间系数或单纯舍入相等不能提供这项证明。
+因此 `u=3t, cross(u-1,+1)` 内的 `u>1` 为真；代表时刻 b 的舍入不参与这项判断。
+
+<a id="cross-right-limit"></a>
+
+### cross 事件体的根后右极限
+
+[LRM 2.4 §5.10.3.1](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+规定事件“shall occur after the threshold crossing”，并位于时间/表达式容差盒内。
+本批触发叶子全为 cross 的事件体取该窗口的右极限 `te=tau+`：连续量在 tau 连续，仍使用原根盒包围；
+在 tau 恰为零的条件差值需要根后一侧的证书：
+
+- 触发叶子：源 PWL 段两端 guard 值严格异号时，`(tau, 段末]` 上 guard 符号为段末符号 s；
+  guard 在节点处恰好到达零时，下一仿射段的末值符号给出 s，末值为零即已证平台 `s=0`。
+  条件差值 d 与 guard 有精确同零集 `d=k*g` 时，d 在 tau+ 的符号为 `sign(k)*s`。
+  物理源曲线与付费读取记录同一证书；在 stop 处到达的根没有一侧。
+- 其他无状态条件：在根盒上被证明恰为 `[0,0]` 时，用接受历史在 `[lo, next_up(hi)]`
+  上的导数包围；严格同号取该符号，恰为 `[0,0]` 即已证平台。同刻 timer 可能在 tau+ 之前改写
+  transition 等历史，含 timer 的混合批次只用不含算子列的条件。付费历史上下文只安装叶子一侧。
+- 右窗口：批次根盒 `[lo, hi]` 的右窗口 `W=[lo, next_up(hi)]` 含每个根 tau 的 `(tau, tau+e]`；
+  根可能落在 stop 时没有 W。事件体沿已选路径，用驱动输入在 W 上的包围重放赋值；
+  全为 cross 的非付费批次还读取接受历史在 W 上的包围，混合批次与付费上下文不读历史。
+  - 平台：差值对 W 上变化的输入、历史的一阶依赖恰为零时，te 时各读数与 tau 时相同，
+    tau 处证明的 `[0,0]` 即在 tau+ 成立。例如所读输入在 W 上恒定，
+    或本体内 `q=V(w)` 后 `V(w)-q` 精确抵消。floor 与实数转整数只有整个 W 都在同一档时才算恒定，
+    如 `w` 经过 0.5 时 `floor(3*w)` 恒为 1。
+  - 否则若差值在 W 上的包围已决定比较，按该结论取；例如包围为 `[0, e]` 时 `>=` 为真，`>` 仍无结论。
+- 与时间无关的相等保持原值：差值不含输入或算子列，所读状态也未在本事件体内由电压、历史赋值。
+- 其余恰为零的时变差值没有证书，包括锁存触发信号本身（`q=V(u); if (q>0.5)`）、
+  floor 参数在 tau 恰为整数且输入下降（tau 处值为 1，tau+ 为 0）、stop 处到达、相互矛盾的一侧、
+  导数跨零或无导数证书的条件；返回 `event_condition`，只有两臂行为完全相同时可继续。
+  循环条件使用同一规则。
+
+由 timer 叶子触发的事件体（含与 cross 同刻触发的 OR）在该精确时刻执行，触发 guard 证明 `g(t)=0`，
+点时刻比较保持原语义；同批的无关 timer 不改变 cross 事件体的读取。
+求导与右窗口证书的预算、资源与 IR 错误照常报告，不当作缺少证书；付费上下文的右窗口读数记入同一账本。
+已知限制：赋值的值仍取 tau 处根盒包围，对连续量即右极限；floor、取整等不连续运算的参数
+在 tau 恰落在断点上时，被赋的值仍是 tau 处的值，上述证书只保护恰为零的比较。
+
+例如 `u` 上升、`w` 同刻下降过 0.5 时，`cross(u-0.5) or cross(w-0.5)` 内
+`u>0.5` 为真、`w>0.5` 为假；`w` 恒为 0.5 时 `w>0.5` 仍为假、`w>=0.5` 为真。
+`u` 的 PWL 在 0.5 处另有节点时结论不变；`u` 在 0.5 触顶回落时 `u>=0.5` 为假。
+独立答案见 [test_cross_right_limit.py](../../tests/test_cross_right_limit.py)。
+入口为 `event_conditions.rs::PostRootSides`、`event_conditions.rs::Conditions::dependence`、
+`pwl.rs::Root::post_root_side`、`transient.rs::post_root_scope` 与 `transient.rs::right_window`。
+这只约束事件体读取；普通贡献式的 Select 是 tau 处的连续时间表达式，
+仍按原 `g(tau)=0` 判定，避免代表时刻电压验收与事件体选择不一致。
 其余条件先在可行输入盒内证明选择；若有限误差盒无法决定选择，只有两臂行为完全相同时才可继续，规则见下文。其他情况拒绝，点时刻 timer 保持原观察语义。
 数学与非线性连续重启见[根盒采样](continuous.md#事件修改的联合积分与复位)。
 数学根观察约定不等于其他仿真器的回调时刻。
@@ -820,7 +1701,8 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 读取 rst 并选择复位或采样。所有分支都做静态合法性检查，执行时只判断沿路径实际到达的条件。
 `initial_step` 的电压初始化只读实际 driven 输入。事件谓词按源码顺序读取同块先前写入，
 同时传播完整误差包围。例如 `q=q+1; if(q>=2) q=0;` 使用递增后的 q。
-物理事件的谓词不能依赖待联立求解的电压赋值状态、历史算子或经电压网络返回的状态；
+物理事件的谓词不能依赖待联立求解的电压赋值状态或经电压网络返回的状态；
+有限 transition 样本与无环网络的候选扩展见[组合边界](#causal-transition-composition)；
 独立测量实例的例外见下节。无法证明分支时拒绝。
 结构依赖先检查，再作区间消元；`0*q`、`q-q`、下溢系数均不能作为独立性证明。
 内部无状态网络如 `z=2*rst-1/4` 可以作为谓词来源。
@@ -842,6 +1724,14 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 其余条件使用根盒源包围。不能把普通 timer 或近似相等的表达式强行改成等号。
 例如 binary64 的 0.1→0.9 在 t=0.5 的实数插值比 0.5 大 `1/72057594037927936`，
 普通浮点插值却可得到 0.5。当前区间不能判定这个边界时会保守拒绝，不冒充精确实数比较器。
+
+区间未能判定时，普通（非 floor、非付费历史）事件体再用精确有理值重算谓词差。
+同块先前赋值若没有有理来源，但其认证包围恰为有限单点 `[c,c]`，该单点就是精确 binary64 值 c，
+与 `LocalState::new` 对单点输入盒的处理一致；非单点盒不制造精确值。
+例如先采样稳定 transition 节点 `s=V(held)=0.73`，再判断 `0.45+(V(vin)-s)<0`（`V(vin)=0.28`）：
+区间差为 `[-1.1e-16,1.1e-16]`，精确差为 `2^-54>0`，因此选择假分支。
+若保持的是 `0.73/3` 之类的非点盒，同样近乎相等的比较仍返回 `event_condition`。
+独立控制见 [test_event_singleton_exact.py](../../tests/test_event_singleton_exact.py)。
 
 无法确定的符号不一定改变结果。例如 `abs(h-ref)<=limit` 的内部正负选择若都能证明检查通过，并执行同样的 `good=1`，EVAS 可继续。它从同一完整误差盒分别检查两臂，要求赋值目标、顺序与原始 RHS 树逐项相同，局部状态包围逐位相同，且两臂均不含打印。空臂可以等价；公式不同但当前算出同一数值不能作为等价证明。两臂的所有读取和子条件均保留在写者检查与缓存键中，防止隐藏另一臂的跨块依赖。一次完整选择最多执行 64 次额外臂证明，超限仍拒绝。此规则不收紧误差盒，不引入 epsilon，也不把未知条件宣布为真或假。
 独立控制见 [test_event_branch_agreement.py](../../tests/test_event_branch_agreement.py)。
@@ -896,7 +1786,7 @@ initial_step 与固定 start=0 的 timer 保留原执行顺序，后者后续周
 独立初始测量不会要求旧方程越过已知物理事件预测到 stop。例如 `z′=q z²`、z(0)=1、q 初值 1，在 timer(.5) 将 q 改为 −1；真实曲线在 .5 前为 1/(1−t)，之后为 1/t。初始 Display 不能迫使 q=1 的旧流算到 t=2，因为旧流在 t=1 发散，而真实请求仍有限。
 仅在原 IR 证明初始实例完全隔离、且没有动态或历史 guard 时，初始化先预测到当前日历首个期限。再用候选初态重建 held timer 日历，预测到新的首个期限，完成未来历史与输出认证后一起提交。`due=0` 改为未来值或禁用会改变第二个期限；仍为零的 timer 保留给主循环执行，不把 initial 当成已消费 timer。初始测量体和 Display 只执行一次。其他初始化路径保留原策略。
 独立曲线、改期、零 timer 与查询网格检查见 [test_initial_observer_horizon.py](../../tests/test_initial_observer_horizon.py)。
-一般电路反馈谓词与非隔离非线性事件赋值仍未支持；隔离统计数学的有限扩展见[事件数学](#event-math)。
+一般电路反馈谓词与非线性电气联立赋值仍未支持；隔离统计数学的有限扩展见[事件数学](#event-math)。
 
 实现见[实例隔离与投影](../../rust_core/src/passive_events.rs)、
 [物理事件提交](../../rust_core/src/transient.rs)与[物理采样区间](../../rust_core/src/settlement_bounds.rs)。
@@ -1260,8 +2150,8 @@ The common acceptance refactor has a [six-model, two-setting preservation compar
 main `fbf896bb` 与未合并候选 #108 的差别须保留，候选的物理阶段输出及有界微事件事务
 不因接口被采用而成为已合并支持或完整 Spectre 对齐。
 
-数学根 tau、实际触发 te、执行代表值 b 是三个不同对象。当前 cross 选择 te=tau；
-其他触发策略需显式决定。窗口须携带所证明的根/触发身份、方向、来源与误差，
+数学根 tau、实际触发 te、执行代表值 b 是三个不同对象。当前 cross 条件按
+[`te=tau+`](#cross-right-limit) 选择；其他触发策略需显式决定。窗口须携带所证明的根/触发身份、方向、来源与误差，
 不能仅凭时间盒重叠合并两个事件。每次赋值、条件、电压采样、复位和后续历史共用一次 te。
 若 b 晚于 te，必须分别包围 te 前的旧流与 te 后的新流，不能将 b 当作物理采样时刻。
 查询属于哪个物理阶段也须证明，无法证明先后时拒绝，不能用代表值选择前态/后态。
@@ -1291,3 +2181,190 @@ C5 的每个 timer 参数先分类为实例常量、分段保持状态或连续�
 guard 的精确仿射根必须落在原隔离盒中。日程保留原盒和根身份，仅把执行观察盒与该有理数根的严格外包络相交，再使用上端代表。原方向、时间/表达式容差、stop 与因果前驱检查继续生效；旧流采样、状态映射和新历史种子共享这一观察盒。根证书用于查询和事件排序，两个有理数根即使共享同一个 binary64 外包络也不能合并。此精化复用原始 PWL 根证书的原则，没有把最近浮点数定义为事件时刻。
 
 原 E3 中 `idt(slope)` 在 timer `.25` 后斜率为 2，根恰为 `.5`，该查询读事件后状态。原 E5 的根为有理数 `1/3`，binary64 查询 `float(1/3)` 严格在根前，下一浮点查询在根后。完整原查询列表、邻接查询和稀疏布局由 [历史相位回归](../../tests/test_exact_affine_history_phase.py) 覆盖；一般多项式历史根仍不能由这一仿射证明决定相位。
+
+
+### 精确DC供电系数与history guard投影
+
+Transition输出乘原始输入供电差、再由内部节点cross采样时，可在投影矩阵中使用整段物理DC系数。
+该切片只接收原始已驱动输入/ground的仿射供电叶子；必须在整个`[0,stop]`零斜率、零误差、有限，
+完整乘子的精确有理值可表示为非零binary64。正负值均保留，零ground项本身不非法；
+零供电、变化源、正误差（包括有physical shape）、隐藏内部依赖和不可精确表示的差值明确拒绝。
+例如binary64的`0.9-0`可用，但`0.9-0.1`的精确差不能先浮点舍入为`0.8`再充当证明。
+
+`dc_projection::DcProjection`仅持有原贡献的受证行视图。原Program、贡献、guard树、Origin、
+方向和误差门不变，原始电压关系仍用于数值求解与forward-error验收。投影保留供电幅值和符号，
+不把`A*(T-0.5)`约成`T-0.5`，也不在另一个实例guard中生成foreign OperatorRef。
+`GuardTrajectory`继续使用原Transition epoch、原搜索窗和`RootTime`；等值盒不是history身份。
+
+资格来自既有贡献依赖解析的乘子标记，旧direct-affine和合法implicit分流不承担新DC审计。
+`EventModel`、guard/condition/settlement行与实际Operators初始化共用同一个不可变`ProofContext`及
+粘性的`Work`。新增树复制、比较、全域精确请求和成员查找均归该owner；耗尽或证明失败不重建owner。
+原依赖和未选臂所有权先审计，不能先用零系数/常量化隐藏非法引用。
+
+独立合同见`test_dc_factor.py`：正负供电、非零参考、跨实例与近邻不同history根、全域变化与误差拒绝，
+以及原根误差在后续电压放大后紧预算拒绝、宽预算返回区间包围独立有理真值。
+同engine失败重试与共享额度耗尽由`dc_projection`私有测试覆盖。原111已随wave15统一候选通过完整请求与原checker；身份与资源边界见[低成本闭包收据](../../../experiments/backends/support/low-cost-closure/evidence.json)，不据此开放一般联合仿射历史组合。
+
+### IR29 本地候选：typed 逻辑右移、按位与及严格保持目标
+
+IR29 / 0.22.0 在既有 typed 事件树中新增 `ShiftRight` 和 `BitAnd`。`>>` 的计数必须来自
+integer 常量，先解释为32位无符号数，计数大于等于32时结果为零，包括源 `-1`。
+例如 `-1>>1=2147483647`、`-1>>31=1`、`-1>>32=0`。`&` 对32位补码逐位求与。
+每个原 Add/Subtract/Rem 子节点仍先检查 signed32，父 `&0` 或 `>>32` 不抹掉子节点溢出。
+旧256有限域及4096决策表示成功时保持旧IR；不新增左移、Or/Xor、单目负号、Divide、
+普通连续integer贡献、trigger或一般CheckedInteger/Floor准入。
+
+新增 target 是独立 opt-in 消费者，限普通独立日历、全Transition图中的同owner integer
+保持状态纯函数。只接受严格projection/Select，原实数常量系数可用于投影；每个原依赖，
+包括未选分支和乘零后的依赖，都须经过结构/owner审计。实际Prepared/Frame盒须为与
+名义值一致的有限signed32整数点，real state即使当前为整数点也不满足typed叶要求。
+冷启动保留原point gate，不借用077裸real非点seed豁免。详细历史/误差合同见
+[严格保持整数目标](operators.md#native-held-bits29)。
+
+编译期 `Compilation.native_audit` 保存同一个累计账本。旧无新typed target的程序继续使用
+原每事件100000审计限制。首次新target启用aggregate100000限制时，已经发生的全部计费
+也计入，因此这是新组合入口更严格的工程准入。其后每个事件和target、失败fallback、
+重试、实际Source AST/typing/IR emission/metadata遍历以及展开wire/copy均沿同owner扣费，
+不为每target或重试重开额度。IR100000/depth96及其他原cap仍独立成立。
+`Program.to_dict` 对opt-in程序逐个展开引用并计费；同一Program重复调用不会退款。
+运行期沿原 `ProofContext` 的同一Work，旧无新target程序不创建新target proof。
+跨feature入口可通过 `EventModel::new_with_context` 借用调用方在Stage0前创建的原请求Arc；
+组合调用方不得为Floor、typed target或其他新消费者各建一个默认额度。
+
+公共回归在 `test_native_held_bits29.py`、`test_held_integer_targets.py`、
+`test_native_audit.py`。同Controller目标失败、实际Prepared/Frame非点拒绝和两事件两目标
+自然耗尽后两次重试见 `transient_lifecycle_tests.rs::held29_*`。它们是开发证据，
+不代表原061/062/027通过、完整Python/400、安装或发布验收。
+
+保持target的长owner及依赖集合辅助按[amount审计费用](operators.md#native-held-bits29)
+在实际操作前预付同一Work。运行期Work100000耗尽回归是缩限单元控制，不代表生产1e9额度自然耗尽；
+编译aggregate100000的原额度耗尽证据与此分开。原Frame字段复制和首轮serde转换保持旧边界，
+不计作新增target reservation已覆盖的工作。
+
+
+### IR31 候选：事件中的直接电压到 integer 转换
+
+此分支候选为事件体的 `integer code; code = V(input);` 增加显式
+`IntegerRound(value, origin)`。输入必须是原始语法中的单个电压探针，引用实际
+外部 driven 输入或 ground。原始 real 复合表达式、非整数 real 常量赋值、
+时间表达式、history、普通连续赋值和内部节点不由此入口扩展。
+
+[Verilog-AMS LRM 2.4 §4.2.1.1](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+规定最近整数与半整数远离零。因此 `1.5` 转换为 2，`-1.5` 转换为 -2。
+这里通过单调最近整数函数计算整个原始输入盒的两个端点；端点结果必须相等，
+且均在 signed32 范围内。转换先于程序随后写出的 clamp。跨整数 bin 或跨溢出
+边界的盒显式拒绝，不能用代表值、下游 clamp 或事件输出采样点代替证书。
+每个事件的输入盒重新绑定到该请求的实际 PWL 和根窗；plateau 不作为生命周期不变量。
+
+代码复用 `event_floor::Request` 的完整原请求绑定、`Work` 和候选局部状态。
+`event_control` 在原始有界 postorder 扫描中验证角色：新节点只能是标量 integer
+赋值的 RHS 根；real 目标、外层算术或选择、display、trigger、贡献及 operator 输入均拒绝。
+所有原始 children 仍完成结构与资源审计；新增角色查询先向同一 Work 付费，不复制 payload。
+`event_control` 将新节点纳入原始树扫描；`causal_event` 验证实际 driven 依赖；
+`event_floor::resolve` 对本次原输入盒付费并替换已证明的整数点；
+`event_numeric` 拒绝未经该 owner 解析的点/盒消费者。原始 RHS 语法检查及未选臂审计
+仍先执行，转换不会消除源程序中的整数溢出或其他域错误。
+
+独立回归为 `tests/test_integer_round.py`，包含精确有理数 oracle 的 45 个 binary64
+输入、正负 tie 与邻 ULP、signed32 边界、原值盒、非 binary cross 根窗、后续事件读取、
+同刻写者和 clamp/保持目标/Transition 消费者。`transient_integer_round_tests.rs`
+将 Floor 与新转换放入同一实际 Controller：两次最终电压拒绝后重试保留 accepted
+历史，原 1e9 owner 自然耗尽后两次重试不获得额度。此为本地候选证据，
+原142的CLI诊断已完整运行，但原worker/checker和最终共同候选验收尚未完成；
+不增加任何完整任务 PASS，也未取得新的 Spectre 对齐证据。
+
+线格式升至 IR31，Python 包与 kernel 候选身份为 0.24.0；IR30 和 IR31 相互拒绝。
+旧保存请求应从原 VA 重新编译，不能只改 `schema_version`。
+
+
+## IR32 private candidate: explicit analytic source values
+
+本节保留最初私有候选的锚点；实现已合入IR32本地共同候选，完整交付仍待验收。
+解析源切片只扩展物理输入值，不扩展正弦 guard、物理事件 sqrt 或 source×history。
+`DEV:scs-input`、`CROSS`、`TIMER`、`EVENT-ORDER` 的新增证据尚未获得交付验收；
+原件400与成熟IR31状态不变。显式 `sinedc/ampl/freq/sinephase` 通过 typed descriptor 传输，
+保留原终端、source名称、极性与参数出处。正 finite freq 是本实现支持域；
+早期候选拒绝厂商默认、AC phase 与 Meg 后缀；2026-10-21 本地入口扩展见下节，
+不能由局部通过推断完整 Spectre 对齐。
+
+物理定义为 `polarity*(sinedc+ampl*sin(2*pi*freq*t+pi*sinephase/180))`。
+时间和全部参数先作为区间组合 phase，再调用已有有限 Taylor sin 证书。
+point、range与导数均保留区间；非binary PWL根用其真实根窗包围正弦，绝不创建有理正弦证明。
+phase与导数移相超出已有有限域时拒绝，不使用PWL拟合或nominal回退。
+
+请求入口创建唯一原 Work，原 limits `[128,8192,1000000000]` 不变。
+`AnalyticRequest` 私有能力在完整原program/provider/driven绑定后，只准常量初始化、
+直接仿射事件赋值、独立原PWL cross或fixed timer，以及直接held输出。resolve前后必须通过
+原binding逐字相等，不能借初始化或Graph reduction改写token。所有guard原始依赖均审核，
+包括0系数；sine、internal voltage或隐藏未知分支不取得guard根能力。
+
+`ProofOwner::History/Analytic` 只统一共同数学/拷贝的付费入口，不能授予History准入。
+旧直接投影算法与fold顺序不变，History bit镜像回归仍需通过。
+候选Frame、calendar、proof maps、空Operators与output存储在同Work下预付；拒绝不发布
+物理state、calendar、record或output，已用Work不返还。
+
+代码由 `scs_sources.py`/`scs.py`、`runtime.py`、IR32 `AnalyticSource`、
+`analytic_source.rs`、`analytic_request.rs`、`pwl.rs` 与共同event paid调用负责。
+公共1/6根采样与1/8 timer使用独立Fraction/Taylor答案；额外query、显式拒绝和原1e9自然耗尽
+的完整Frame两retry检查保留于原私有证据；共同候选还运行公开入口联合控制。
+完整Python由CI执行，局部结果不能替代交付CI，IR31原有完整400成绩不能移到IR32。
+
+### 本地候选：受限 native SCS 零相位入口
+
+`scs.py` 接受精确拼写 `Meg=10^6`，保持 `M=10^6` 与 `m=10^-3` 的区别；
+小数、指数与独立正负号沿同一有限数值检查。`MEG`、`meg`、非法相邻后缀仍不在
+本入口范围内；这种受限拒绝不是 Spectre 的语言裁定。
+
+接地、无 delay/阻尼/调制的 transient 正弦仍要求显式 `sinedc`、`ampl` 和正 `freq`。
+缺省 `sinephase` 取0度，使用 `spectre-native-transient-zero-phase-v1`，
+显式相位保留 `explicit-v1`。Rust 拒绝未知标记和“缺省零”标记携带非零相位。
+标记声明规范化合同，不认证输入来源。原 token、位置、参数引用和解析 settings
+保存在 `testbench.sine_source_origins`，续行也保留各 token 的原位置。
+
+有限 `phase` 是独立小信号参数，保留在元数据中，不进入上述瞬态正弦公式；
+本候选不增加 AC 分析。`phase` 与非零 `sinephase` 同时出现的组合缺对照，统一拒绝，
+不按任务或具体相位值特判。已有单独显式非零 `sinephase` 合同保持。
+数值执行继续复用 `analytic_source::range`，没有新增采样近似。
+
+语义依据复用 Issue214 的官方文档调查及既有 Spectre21.1 源列证据，归档入口为
+`runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/scs-semantics-20261020/report.md`。
+归档仅支持所检查的有限无延迟源形态，旧093频率与当前原件不同；源列对照也不等于364混频输出通过。
+[独立入口测试](../../tests/test_scs_native_source_contract.py)用SI固定数值、原token序列、
+四分之一周期解析值及电压包围验证新入口，并保留非法参数和来源反控。
+本轮无新 Spectre，未给074、093、364整项增加通过信用。
+
+### 本地候选：固定 timer 采样与 held Transition
+
+`analytic_sampled_consumer::Admission` 为固定 timer 的采样状态和 held Transition
+建立单独的原请求能力。事件体支持受限的顺序赋值、条件分支及标量加乘除，
+可以先更新极值，再计算差值与比值。除数必须由当前完整误差盒证明不含零；
+非点正弦采样保留原误差，不能用名义值建立有理证明。
+Transition 目标保持为同实例的受限 held 表达式，目标选择条件限已声明的 integer 状态。
+物理 DC 因子仍须通过整个原请求的供电证明。
+
+`Operators::new_until_with_analytic_request` 接收同一私有 token 和原 Work，
+核对完整 Program、provider、driven 顺序及上下文身份后创建历史。
+所有隐藏分支、零系数依赖和 Origin 都先审计；它不授予一般 History、解析源 cross、
+状态驱动 timer 或 EventMath 能力。内部 `$abstime` 的注入同时追加非解析 provider 槽，
+保持外部 PWL、解析源及误差数组的位置对应；错误的原槽数和端口仍拒绝。
+
+解析源的当前样本盒与历史保持样本盒分别守真，也可能无法决定严格极值比较。
+例如相邻采样点落在正弦谷底两侧时，原 binary64 周期的确切 Clock 与理想十进制周期
+可以给出不同的“相等”结论。该候选尚未建立一般的解析样本关联证书；差盒含零时继续拒绝，
+不按名义值、输出误差阈值或相同外包盒决定分支。历史样本证明只能随真实赋值更新，
+不能由额外查询写入物理状态。上述零相位入口语义不等于严格历史比较已经获得证明。
+
+共同付费路径沿用原请求 Work。`PreparedEvents::prepare` 按实际到达的批次、phase 和
+query 收取遍历费用，浅容器扩容在分配和移动前付费；Frame 与 calendar 的深复制仍各自预付。
+`RootTime::refine_with_work` 首次查询先检验原发现盒包含真实根，再计算已付费 enclosure（只算一次并记忆）并取交集。
+之后的查询读取该记忆：它是精确点，或严格夹住真值的相邻浮点对，故对 binary64 端点可精确判定包含与否；
+只有发现盒端点落在该包围内部时才重复精确比较。失败或耗尽不安装记忆。
+通用 enclosure 使用原最近值转换、精确有理比较及相邻浮点端点，最后重新检验两端包含；
+数学上的未知结果与付费耗尽错误仍分别返回，不用新额度或较宽的盒换取通过。
+
+[采样合同](../../tests/test_original_source_consumers.py)以四分之一周期和线性边沿计算独立答案，
+检查顺序极值与比值、物理供电、输入顺序及非法隐藏依赖。
+`transient_analytic_tests` 的非空 Transition 控制检查真实误差传播，
+并在原请求额度耗尽后比较同一 Controller 的状态、历史、日历和输出。
+这些合同与原093完整 checker 分开记录；原074的物理 cross 与 sqrt 组合、
+原364的解析输入和 LO 历史乘积仍有独立的准入及证明缺口。

@@ -1,0 +1,54 @@
+{
+  "status": "current IR31 seeds regenerated and direct runtime controls passed; CI fuzz pending",
+  "availability": "curated repository summary; detailed receipts local-only",
+  "capabilities": [
+    "LANG",
+    "COMPOSE"
+  ],
+  "at_utc": "2026-10-19T02:56:12.340051+00:00",
+  "source_files": {
+    "evas/rust_core/fuzz/Cargo.lock": "168127a9d337f32bca2d67ea85215e1b6c0e641a686f3adb108cac3aa21c6a33",
+    "evas/rust_core/fuzz/seeds/static.json": "81419bd6b7bd3046340d439149456d9db20fbf30d868038604041e97227944d6",
+    "evas/rust_core/fuzz/seeds/native-integer.json": "ac0a7b3b8295e5c6ee80786a86c38c2cd223148d52188ab59617d7f688487fb0",
+    "evas/rust_core/fuzz/seeds/native-integer28.json": "f585e4a75cf6f7b99d69c713b6c50143c02ec4cc711c99f9d448a51264ed8346"
+  },
+  "contract": "All three whole requests genuinely recompiled using current producer paths. Complete request trees, origins, branches and float signs match old seeds except schema30 to31. Lock only changes kernel0.23 to0.24; exact dependencies unchanged.",
+  "receipts": {
+    "handoff.json": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/integer-conversion/compat-ir31/fuzz/handoff.json",
+      "sha256": "8cb3883857b329edcf7ced8dd3754b948d1e86abee5c322eb00a998934fbc12f"
+    },
+    "regeneration-receipt.json": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/integer-conversion/compat-ir31/fuzz/regeneration-receipt.json",
+      "sha256": "fa443194d4847fbc42ca33e616aff24912936da804749d72ac167dd9bb350d21"
+    },
+    "maintenance-receipt.json": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/integer-conversion/compat-ir31/fuzz/maintenance-receipt.json",
+      "sha256": "734fa1b6359141dc45d75d4e4aa0ef2d98dc0651b1dd03d7aec0200ebff7360d"
+    }
+  },
+  "current_runtime": {
+    "receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir31-fuzz-seeds-primary/RESULT.json",
+      "sha256": "e32bae30a209f5f455dcfa419bd7421b9b3dfaf54c068548019633d33f2c74ab"
+    },
+    "details": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir31-fuzz-seeds-runtime-details.json",
+      "sha256": "51167fab7dee712ea7400dc6ad155e19f4c460050d2d8ef10215a29ab88264d8"
+    },
+    "expected": "static affine .125+.5*.25=.25; native1%8=1; native28(9-2)%8=7",
+    "passed": 3
+  },
+  "independent_reviews": {
+    "spec": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir31-fuzz-review-spec.json",
+      "sha256": "9eaaf111fa65e24ee4116e91b3d5fedf6df7d8cd8ec0eed3935ee094b68cf261"
+    },
+    "standards": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ir31-fuzz-review-standards.json",
+      "sha256": "565c200ce3fb16258ece8349b40cbdcc0f4dc70c25e2aa3d17539a867871ad6b"
+    }
+  },
+  "offline_metadata": "Full locked offline metadata failed due to missing local r-efi6.0.0. No-deps metadata plus3localpackages and8directexactpins matched; this is not full graph or fuzz execution.",
+  "qualification": "No fullPython/fuzz mutation campaign/original400 credit; next single CI executor will run fuzz."
+}

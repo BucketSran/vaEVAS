@@ -144,9 +144,11 @@ class InitialDisplayTransition(unittest.TestCase):
                     self.assertEqual([(e['time'], e['kind']) for e in events_for(result, owner)
                                       if e['time'] > 0], [(0.25, 'timer')])
 
-    def test_failed_point_certificate_can_retry_without_program_or_record_mutation(self):
+    def test_nonbare_point_certificate_retries_without_program_or_record_mutation(self):
         text = source('@(timer(0,0,0)) a=V(u,r)+0.125;',
                       INITIAL + '\n@(timer(0,0,0)) $display("timer=%d",n);')
+        # Only bare State targets have the new bounded constructor.
+        text = text.replace('transition(a,', 'transition(a+0.0,')
         program = compile_pair(text)
         original = copy.deepcopy(program.to_dict())
         # 1/8 + 2^-60 cannot be stored exactly in binary64 near 1/8.

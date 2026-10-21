@@ -53,6 +53,7 @@ fn fixture_impl(nonlinear: bool) -> (EventModel, Trajectory, Controller, Vec<Sch
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             pwl: vec![vec![[0., 0.], [1., 1.]], vec![[0., 0.], [1., 3.]]],
             output_times: vec![0., 1.],
@@ -73,6 +74,7 @@ fn fixture_impl(nonlinear: bool) -> (EventModel, Trajectory, Controller, Vec<Sch
     let controller = Controller {
         accepted: Frame {
             time: 0.,
+            value_proofs: Default::default(),
             time_proofs: Default::default(),
             solution: circuit.solve(&trajectory.values(0.)).unwrap(),
             circuit,
@@ -212,6 +214,7 @@ fn nonlinear_time_proof_removal_or_update_preserves_physical_history_and_discard
         drop(mapped);
         assert_eq!(flow.bounds(0.4).unwrap(), prefix);
         assert_eq!(controller.accepted.time_proofs, original.time_proofs);
+        assert_eq!(controller.accepted.value_proofs, original.value_proofs);
         assert_eq!(controller.accepted.states, original.states);
     }
 }
@@ -283,4 +286,48 @@ fn nonlinear_new_time_proof_failed_candidate_retries_in_same_controller_without_
         let want = 0.4_f64.tanh();
         assert!(value.lo <= want && value.hi >= want);
     }
+}
+
+#[test]
+fn invalid_numeric_value_proof_preserves_controller_and_calendar_then_retries() {
+    use num_rational::BigRational as R;
+    let (model, trajectory, mut tested, mut calendar) = fixture();
+    tested
+        .accepted
+        .value_proofs
+        .insert(0, R::new(1.into(), 2.into()));
+    let old = tested.accepted.clone();
+    let keys = calendar
+        .iter()
+        .map(|e| (e.event, e.time, e.bounds()))
+        .collect::<Vec<_>>();
+    assert!(tested
+        .accept_relocalized(&model, &trajectory, &mut calendar)
+        .is_err());
+    assert_eq!(tested.accepted.value_proofs, old.value_proofs);
+    assert_eq!(tested.accepted.states, old.states);
+    assert!(tested.accepted.operators.same_reset_history(&old.operators));
+    assert!(tested.records.is_empty() && tested.outputs.is_empty());
+    assert_eq!(
+        calendar
+            .iter()
+            .map(|e| (e.event, e.time, e.bounds()))
+            .collect::<Vec<_>>(),
+        keys
+    );
+    tested.accepted.value_proofs.clear();
+    let (clean_model, clean_trajectory, mut clean, mut clean_calendar) = fixture();
+    tested
+        .accept_relocalized(&model, &trajectory, &mut calendar)
+        .unwrap();
+    clean
+        .accept_relocalized(&clean_model, &clean_trajectory, &mut clean_calendar)
+        .unwrap();
+    assert_eq!(tested.accepted.value_proofs, clean.accepted.value_proofs);
+    assert_eq!(tested.accepted.states, clean.accepted.states);
+    assert_eq!(tested.accepted.state_bounds, clean.accepted.state_bounds);
+    assert!(tested
+        .accepted
+        .operators
+        .same_reset_history(&clean.accepted.operators));
 }

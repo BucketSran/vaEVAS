@@ -206,6 +206,7 @@ mod tests {
         };
         let trajectory = Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 pwl: vec![vec![[0., 2.], [0.5, 3.], [1., 2.]]],
                 output_times: vec![0., stop],

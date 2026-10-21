@@ -1,4 +1,4 @@
-//! Fixed-rate slew of a continuous, directly driven PWL signal.
+//! Fixed-rate slew of continuous PWL inputs and certified held targets.
 //!
 //! Build semantic segments once. Queries neither accumulate integration error
 //! nor change history. Interval predicates certify mode/root ordering for the
@@ -366,6 +366,255 @@ impl Slew {
         self.breakpoints
             .get(self.breakpoints.partition_point(|time| *time <= after))
             .copied()
+    }
+}
+
+/// Analytic response to certified held targets. The target jumps; the output
+/// never does. Each epoch retains the physical source window, independently of
+/// its scheduling representative and of every other call site's history.
+#[derive(Clone, Debug)]
+struct HeldEpoch {
+    start: f64,
+    window: I,
+    value: f64,
+    bounds: I,
+    target: f64,
+    target_bounds: I,
+    rise: f64,
+    fall: f64,
+}
+
+impl HeldEpoch {
+    fn line(&self, rate: f64) -> Line {
+        Line::Limited {
+            start: self.start,
+            offset: 0.,
+            offset_bounds: self.window - I::point(self.start),
+            value: self.value,
+            value_bounds: self.bounds,
+            rate,
+        }
+    }
+    fn value(&self, time: f64) -> Result<f64, Error> {
+        // A representative may precede an uncertain physical start in a range
+        // query. Its zero-duration continuation is the incoming output.
+        let time = time.max(self.start);
+        finite(if self.target >= self.value {
+            self.line(self.rise).value(time).min(self.target)
+        } else {
+            self.line(self.fall).value(time).max(self.target)
+        })
+    }
+    fn range(&self, time: I) -> Result<I, Error> {
+        self.range_elapsed(bounded(time - self.window)?)
+    }
+    /// `delta` encloses the signed time since the exact epoch start.
+    fn range_elapsed(&self, delta: I) -> Result<I, Error> {
+        let elapsed = I {
+            lo: delta.lo.max(0.),
+            hi: delta.hi.max(0.),
+        };
+        let up = bounded(self.bounds + I::point(self.rise) * elapsed)?;
+        let down = bounded(self.bounds + I::point(self.fall) * elapsed)?;
+        let rising = I {
+            lo: up.lo.min(self.target_bounds.lo),
+            hi: up.hi.min(self.target_bounds.hi),
+        };
+        let falling = I {
+            lo: down.lo.max(self.target_bounds.lo),
+            hi: down.hi.max(self.target_bounds.hi),
+        };
+        // The held limiter is monotone in the initial and target voltages. If
+        // the gap cannot be signed, both modes are possible, rather than an
+        // epsilon-based choice or a reset to the nominal target.
+        bounded(if self.bounds.hi <= self.target_bounds.lo {
+            rising
+        } else if self.target_bounds.hi <= self.bounds.lo {
+            falling
+        } else {
+            rising.hull(falling)
+        })
+    }
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct HeldSlew {
+    epochs: Arc<[HeldEpoch]>,
+    breakpoints: Arc<[f64]>,
+    initial: f64,
+    initial_bounds: I,
+    stop: f64,
+}
+impl HeldSlew {
+    pub(crate) fn new(
+        initial: (f64, I),
+        targets: Vec<(crate::transition_source_plan::Cut, f64, I)>,
+        rise: f64,
+        fall: f64,
+        stop: f64,
+    ) -> Result<Self, Error> {
+        if !rise.is_finite() || rise <= 0. || !fall.is_finite() || fall >= 0. {
+            return Err(Error::new(
+                "invalid_ir",
+                "slew needs fixed finite rise > 0 and fall < 0",
+            ));
+        }
+        if !initial.0.is_finite()
+            || !initial.1.finite()
+            || targets.is_empty()
+            || targets[0].0.bounds != I::ZERO
+            || !stop.is_finite()
+            || stop <= 0.
+        {
+            return Err(unresolved("invalid held slew domain or initial enclosure"));
+        }
+        let mut epochs: Vec<HeldEpoch> = Vec::new();
+        let mut breakpoints = Vec::new();
+        for (cut, target, target_bounds) in targets {
+            if !target.is_finite()
+                || !target_bounds.finite()
+                || cut.time > stop
+                || target < target_bounds.lo
+                || target > target_bounds.hi
+                || epochs.last().is_some_and(|old| old.start >= cut.time)
+            {
+                return Err(unresolved("cannot order held slew source representatives"));
+            }
+            let (value, bounds) = match epochs.last() {
+                Some(old) => (old.value(cut.time)?, old.range(cut.bounds)?),
+                None => initial,
+            };
+            let epoch = HeldEpoch {
+                start: cut.time,
+                window: cut.bounds,
+                value,
+                bounds,
+                target,
+                target_bounds,
+                rise,
+                fall,
+            };
+            if let Some(old) = epochs.last() {
+                // Retain the existing local catchup construction. Only a
+                // certified interior catchup is a separate scheduler checkpoint;
+                // overlapping roots remain enclosed by the analytic min/max.
+                let gap = old.target_bounds - old.bounds;
+                let rate = match gap.sign() {
+                    Some(1) => Some(rise),
+                    Some(-1) => Some(fall),
+                    _ => None,
+                };
+                if let Some(rate) = rate {
+                    let root = bounded(old.window + gap / I::point(rate))?;
+                    if root.lo > old.window.hi && root.hi < cut.bounds.lo {
+                        breakpoints.push(root.hi);
+                    }
+                }
+            }
+            if cut.time > 0. {
+                breakpoints.push(cut.time);
+            }
+            epochs.push(epoch);
+        }
+        breakpoints.sort_by(f64::total_cmp);
+        breakpoints.dedup();
+        Ok(Self {
+            epochs: epochs.into(),
+            breakpoints: breakpoints.into(),
+            initial: initial.0,
+            initial_bounds: initial.1,
+            stop,
+        })
+    }
+    pub(crate) fn value(&self, time: f64) -> Result<f64, Error> {
+        self.check_query(I::point(time))?;
+        if time == 0. {
+            return Ok(self.initial);
+        }
+        let index = self.epochs.partition_point(|epoch| epoch.start <= time) - 1;
+        self.epochs[index].value(time)
+    }
+    fn check_query(&self, time: I) -> Result<(), Error> {
+        if !time.finite() || time.lo < 0. || time.hi > self.stop || time.lo > time.hi {
+            return Err(Error::new(
+                "invalid_inputs",
+                "held slew query outside its proven source domain",
+            ));
+        }
+        Ok(())
+    }
+    pub(crate) fn range(&self, time: I) -> Result<I, Error> {
+        self.check_query(time)?;
+        if time == I::ZERO {
+            return Ok(self.initial_bounds);
+        }
+        let index = self
+            .epochs
+            .partition_point(|epoch| epoch.window.hi <= time.lo)
+            .saturating_sub(1);
+        let mut bounds = self.epochs[index].range(time)?;
+        for epoch in &self.epochs[index + 1..] {
+            if epoch.window.lo > time.hi {
+                break;
+            }
+            bounds = bounds.hull(epoch.range(time)?);
+        }
+        if time.lo == 0. {
+            bounds = bounds.hull(self.initial_bounds);
+        }
+        Ok(bounds)
+    }
+    pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
+        self.breakpoints
+            .get(self.breakpoints.partition_point(|time| *time <= after))
+            .copied()
+    }
+    /// The unique epoch whose cut window lies at or before `time` while the
+    /// next cut window lies strictly after it. Only this epoch defines the
+    /// output at that point.
+    pub(crate) fn point_epoch(&self, time: f64) -> Option<usize> {
+        if !time.is_finite() || time <= 0. || time > self.stop {
+            return None;
+        }
+        let index = self
+            .epochs
+            .partition_point(|epoch| epoch.window.hi <= time)
+            .checked_sub(1)?;
+        if self
+            .epochs
+            .get(index + 1)
+            .is_some_and(|next| next.window.lo <= time)
+        {
+            return None;
+        }
+        Some(index)
+    }
+    /// Point output with the epoch start located by `offset`, an enclosure of
+    /// exact_start - start. The elapsed time is (time - start) - offset, which
+    /// retains the exact cut position instead of the cut's binary64 window.
+    /// Both this and the window range enclose the output; return their meet.
+    pub(crate) fn point_range_with_offset(
+        &self,
+        time: f64,
+        index: usize,
+        offset: I,
+    ) -> Result<I, Error> {
+        let window = self.range(I::point(time))?;
+        if self.point_epoch(time) != Some(index) || !offset.finite() {
+            return Ok(window);
+        }
+        let epoch = &self.epochs[index];
+        let delta = bounded((I::point(time) - I::point(epoch.start)) - offset)?;
+        let exact = epoch.range_elapsed(delta)?;
+        let lo = window.lo.max(exact.lo);
+        let hi = window.hi.min(exact.hi);
+        if lo > hi {
+            return Err(unresolved("held slew exact-start range is inconsistent"));
+        }
+        Ok(I { lo, hi })
+    }
+    pub(crate) fn same_history(&self, other: &Self) -> bool {
+        Arc::ptr_eq(&self.epochs, &other.epochs)
     }
 }
 

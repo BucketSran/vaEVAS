@@ -2,6 +2,7 @@
 GUARDS = ["LANG", "DEV:scs-input"]
 
 import json
+from fractions import Fraction as Q
 import tempfile
 from pathlib import Path
 import subprocess
@@ -244,14 +245,24 @@ class ScsContracts(unittest.TestCase):
                   tran='tran tran stop=1000000001 maxstep=1000000001')
         bench=load_scs(self.path)
         self.assertGreater(bench.manifest['transient']['source_errors']['u'],2e-7)
+        program=compile_sources(bench.sources,[Instance(**i) for i in bench.manifest['instances']])
+        generic={k:v for k,v in bench.manifest['transient'].items() if k!='source_shapes'}
         with self.assertRaises(KernelError):
-            simulate_scs(self.path,kernel=KERNEL)
-        original=self.path.read_text()
-        self.path.write_text(original+'opts options reltol=0 vabstol=5e-7\n')
+            transient(program,kernel=KERNEL,**generic)
         with self.assertRaisesRegex(KernelError,'at y'):
-            simulate_scs(self.path,kernel=KERNEL)
-        self.path.write_text(original+'opts options reltol=0 vabstol=1e-5\n')
+            transient(program,kernel=KERNEL,reltol=0,vabstol=5e-7,**generic)
+        transient(program,kernel=KERNEL,reltol=0,vabstol=1e-5,**generic)
         result=simulate_scs(self.path,kernel=KERNEL)
+        # The shaped path evaluates the physical pulse, including displaced
+        # corners. Independent rational arithmetic checks the actual voltage.
+        for t,values in zip(result['saved']['times'],result['saved']['values']):
+            elapsed=Q(t)-Q(1e9); edge=Q(.2)
+            expected=(Q(0) if elapsed<=0 else elapsed/edge if elapsed<edge
+                      else Q(1) if elapsed<2*edge else 3-elapsed/edge
+                      if elapsed<3*edge else Q(0))
+            actual=dict(zip(result['saved']['nodes'],values))
+            for name,gain in [('u',1),('y',3)]:
+                self.assertLessEqual(abs(Q(actual[name])-gain*expected),Q(1e-12)+Q(1e-10)*abs(Q(actual[name])))
         proof=result['testbench']['pulse_corner_proofs']['Vin']
         self.assertGreater(proof['voltage_error_bound_V'],2e-7)
         self.assertEqual(proof['value_rounding_error_V'],0.)
@@ -260,7 +271,7 @@ class ScsContracts(unittest.TestCase):
     def test_unknown_options_devices_discontinuities_and_sources_reject(self):
         cases=[('Vin (u 0) vsource type=sine ampl=1 freq=1',''),
                ('Vin (u 0) vsource type=dc dc=[0 1]',''),
-               ('Vin (u y) vsource dc=1',''),
+               ('Vin (u u) vsource dc=1',''),
                ('Vin (u 0) vsource dc=1','R1 (y 0) resistor r=1k'),
                ('Vin (u 0) vsource dc=1','opts options mystery=1p'),
                ('Vin (u 0) vsource dc=1','bad tran stop=1 maxstep=.1 errpreset=unknown'),

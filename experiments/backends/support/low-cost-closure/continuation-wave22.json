@@ -1,0 +1,164 @@
+{
+  "status": "independently accepted development checkpoint; goal400 incomplete and authorized implementation continues",
+  "availability": "repository-contained summary; complete source snapshots/raw outputs/receipts local-only",
+  "at_utc": "2026-10-19T03:26:03.056736+00:00",
+  "candidate": "wave22-continuation-ir31",
+  "production_revision": "ab92831773a76894e090c5622b541fa6e5ad94f3",
+  "test_metadata_revision": "6d3c8a938c607d37fb54e7109a43daa542e2d704",
+  "source_count": 177,
+  "source_count_boundary": "runtime/build inputs include Rust test modules; not capability count",
+  "package": "0.24.0",
+  "ir_schema": 31,
+  "local_release_kernel_sha256": "69c46e155808cd37e288894504613dcd8bebd219c1006c4946073f132d627aac",
+  "original400": {
+    "PASS": 314,
+    "FAIL": 19,
+    "REJECTED": 67,
+    "TIMEOUT": 0,
+    "completed": 333,
+    "cleanup": 400,
+    "new_PASS_vs_wave21": [
+      "027",
+      "142"
+    ],
+    "lost_old312": [],
+    "old19_checker_dictionaries_unchanged": true,
+    "identity": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave22-continuation-ir31/collected400/IDENTITY.json",
+      "sha256": "c8651923d58efd1cd3984dcccaf50dd2c07049bdecc8af30976d304e1ad806eb"
+    },
+    "results": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave22-continuation-ir31/collected400/RESULTS.json",
+      "sha256": "ecf46da26b1fd5766258ad80a8adba8e345bf3a1ecad357f73bbfc74c03e56f2"
+    },
+    "comparison": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/candidates/wave22-continuation-ir31/comparison-wave18.json",
+      "sha256": "5e95c23491884fa91d78c84979a81950aa9263a7f8ad1dc09b2ae4d53ecf2a58"
+    }
+  },
+  "revised400": {
+    "PASS": 315,
+    "FAIL": 17,
+    "REJECTED": 68,
+    "TIMEOUT": 0,
+    "completed": 332,
+    "cleanup": 400,
+    "composition": "398 actual original executions from this samewave22 + actual materials-r1 revised012PASS and107REJECTED",
+    "identity": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave22-materials-r1/revised-full400/IDENTITY.json",
+      "sha256": "a518789ec02b9f03994ac412e86d2634a32f32117c42670c04d35f7c1b218f41"
+    },
+    "results": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave22-materials-r1/revised-full400/RESULTS.json",
+      "sha256": "3401518efbdfa05a85d4c54a28478e2f8391059cb65ee268bf1c21b7aac5131b"
+    },
+    "retention": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave22-materials-r1/revised-full400/RETENTION.json",
+      "sha256": "fa4531fba3a6c2720f1c14837b852c45e8b290b318514ee643faf856884e0d54"
+    },
+    "accepted_version_map": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/publication-wave22-accepted-cases400.json",
+      "sha256": "a41e7cdfe28817e4d5b50182bd2031b476e7d03f7bf229479bb782ea857d1672"
+    }
+  },
+  "single_delivery_CI": {
+    "run": 39193253152,
+    "url": "https://github.com/BucketSran/vaEVAS/actions/runs/39193253152",
+    "head": "6d3c8a938c607d37fb54e7109a43daa542e2d704",
+    "jobs_success": 15,
+    "unique_Python_PASS": 2424,
+    "shards": [
+      705,
+      514,
+      634,
+      571
+    ],
+    "method_setup_skips_missing_duplicate": 0,
+    "two_platforms": "Ubuntu x86_64/Python3.10 and macOS arm64/Python3.12 installation/reinstallation/negative controls passed",
+    "local_remote_kernel_identity": "separate actual hashes; byte equality not claimed",
+    "coverage": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ci-wave22-final-full-coverage.json",
+      "sha256": "4700898ad76595d4500ee0ed06622a24110d41c7e6cab6768e57c2f1349030df"
+    },
+    "source_binding": "All177runtime/buildfiles match frozenab928317 and auxiliary6d3 test-only head; one existing strict rejection regex changed,18affectedmethods and two-axis review passed."
+  },
+  "independent_review": {
+    "dual400": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/wave22-dual400-independent-review.json",
+      "sha256": "de3df9ac1bdc8c3c40ae49c481f489fbc5c032cbc8571dbd64a5abd2e2c09bff"
+    },
+    "CI": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ci-wave22-final-independent-review.json",
+      "sha256": "0ca792158ec02e340aa63448bbdfa73886f939ec4fa9aab8f6f9d7edb6373874"
+    },
+    "findings_open": 0
+  },
+  "continuation_checker": {
+    "code_revision": "0d8f76a35c51d612429cc5e23f9a146431456901",
+    "original_regression": "actual313PASS/87actionable reproduced;16scenario tests and185maintenance methods passed",
+    "hook": "exact current-session local definition trusted by human; native Stop invocation still unobserved",
+    "current_replay": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-checker-wave22-replay.json",
+      "sha256": "1decb5ed1d4b60a8a4ab246bb8a908738dec378d240b4fff72569658d776feb8"
+    },
+    "current_decision": "block315/400 with85actionable, including repeatedStop; phase completion does not allow ending overall task"
+  },
+  "implementation_evidence": {
+    "static-loop-type.json": {
+      "path": "experiments/backends/support/low-cost-closure/static-loop-type.json",
+      "sha256": "9ed87af7985a4fdb98f6e221cf51081ef77dddc3d8b90d2313bbce4bfb4845cf"
+    },
+    "ordinary-event-scratch.json": {
+      "path": "experiments/backends/support/low-cost-closure/ordinary-event-scratch.json",
+      "sha256": "745e380e7772622e1b2022fc588e4e8912f9f76940c6f7fc755cc3a348115b66"
+    },
+    "request-ir-shape-cache.json": {
+      "path": "experiments/backends/support/low-cost-closure/request-ir-shape-cache.json",
+      "sha256": "e7e1d7d22df46e71ea3fedce6a18334e8be8985e8beac672753b98ece210d20a"
+    },
+    "integer-round.json": {
+      "path": "experiments/backends/support/low-cost-closure/integer-round.json",
+      "sha256": "cae0baee5d6557c8c19ec135a8a71396bf9f81428f96395f536604dcbe00b133"
+    },
+    "source-budget-foundations.json": {
+      "path": "experiments/backends/support/low-cost-closure/source-budget-foundations.json",
+      "sha256": "3bf99013b9ca6f719e2cb50b537cc7cadb30b89916cdcd0b0976ed5174514b9d"
+    },
+    "ir31-fuzz-seeds.json": {
+      "path": "experiments/backends/support/low-cost-closure/ir31-fuzz-seeds.json",
+      "sha256": "0ed3c3b2915f66899064186dd44e7c5c9637bfa8aacec4e4eb981dc0576d4715"
+    }
+  },
+  "remaining": 85,
+  "target400_complete": false,
+  "groups": {
+    "G1": 13,
+    "G2": 9,
+    "G3": 23,
+    "G4": 10,
+    "G5": 11,
+    "G6": 2,
+    "G7": 17
+  },
+  "ongoing": [
+    "371v1 withheld after two independent P2 charging findings; r2sameWork fix and P5/P6 evidence in private work, not in acceptedwave22.",
+    "346 paid constant leaf composition has real public positive controls but original346still100001 cumulative refusal; no completePASS credit.",
+    "041still1e9 proof-budget refusal at56.4/68ns. RHS-sharing prototype parked because no safe fee reduction proved.",
+    "048root quota8192 reflects actual root vector materialization;9proofs/247hits do not justify dropping per-copy charges."
+  ],
+  "failed_evidence": {
+    "CI39192407319": {
+      "unique_methods": 2424,
+      "PASS": 2423,
+      "FAIL": 1,
+      "failure": "same illegal internal voltage still rejected; only old expected diagnostic string mismatched",
+      "coverage": "skipped because failed shard; never combined with latergreen",
+      "summary": {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/ci-wave22-failure-summary.json",
+        "sha256": "4564fcf5809fc281efefd5241c247f1546bdd3bf4cc0c668d49a3f92b8b97cc0"
+      }
+    },
+    "packaging": "Initial freeze failed before receipt because legacy receipt lacked compiler key; partial archive and failure metadata retained, existing freezer corrected to actualpackage/kernel/rustc identity."
+  },
+  "authority": "same current/branch/draftPR208/Issue214; no merge,newSpectre,externalcompute,r53/commonQ/public release claim"
+}

@@ -4,10 +4,85 @@ use super::*;
 use crate::ir::{Expression, OperatorSpec, Statement};
 use std::collections::BTreeSet;
 
+/// Closed display-only records cannot change cold histories or observe a
+/// pre-initialization physical solution. Raw IR must satisfy this independently.
+pub(super) fn constant_outputs(body: &[Statement]) -> bool {
+    !body.is_empty()
+        && body.iter().all(|statement| match statement {
+            Statement::Display { args, .. } => args.iter().all(|arg| {
+                matches!(arg,
+            Expression::Affine { constant, terms } if constant.is_finite() && terms.is_empty())
+            }),
+            _ => false,
+        })
+}
+
 fn unsupported(message: &str) -> Error {
     Error::new("unsupported_initial_history", message)
 }
 fn check_expression(e: &Expression, model: &EventModel, owner: &str) -> Result<(), Error> {
+    if let Some(r) = &model.floor_source {
+        crate::event_floor::charge(r.work(), 1, "floor_source_initial_scan")?;
+    }
+    // Dependency audit only. Typed nodes remain event-body values; bootstrap
+    // execution and cold-history construction retain their existing owners.
+    match e {
+        Expression::EventMath {
+            function: crate::ir::EventMathFunction::Floor,
+            args,
+            ..
+        } if model
+            .floor_source
+            .as_ref()
+            .map(|r| crate::event_floor::contains_charged(e, r.work()))
+            .transpose()?
+            .unwrap_or(false) =>
+        {
+            model
+                .floor_source
+                .as_ref()
+                .unwrap()
+                .bootstrap_numeric(e, owner)?;
+            for child in args {
+                check_expression(child, model, owner)?;
+            }
+            return Ok(());
+        }
+        Expression::IntegerPrimitive { .. } => {
+            if let Some(request) = &model.floor_source {
+                return request.bootstrap_numeric(e, owner);
+            }
+            return crate::event_numeric::validate(e, &model.program, owner);
+        }
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
+            check_expression(left, model, owner)?;
+            return check_expression(right, model, owner);
+        }
+        Expression::Power { base, .. } => return check_expression(base, model, owner),
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => {
+            for child in [left, right, then_value, else_value] {
+                check_expression(child, model, owner)?;
+            }
+            return Ok(());
+        }
+        _ => (),
+    }
+    if let Some(request) = &model.floor_source {
+        if !request.bootstrap_dependencies(e, owner)?.1 {
+            return Err(unsupported(
+                "transition bootstrap events must read only held state and directly driven inputs",
+            ));
+        }
+        return Ok(());
+    }
     let (nodes, _, operators) =
         crate::continuous::integral_dependency_edges(e, &model.program, owner)?;
     let driven: BTreeSet<_> = model
@@ -59,6 +134,8 @@ pub(super) struct Prepared {
     pub(super) states: Vec<f64>,
     pub(super) bounds: Vec<I>,
     pub(super) records: Vec<EventRecord>,
+    pub(super) bounded_held_transition_seeds: bool,
+    pub(super) source_context: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
     zero: BTreeSet<usize>,
 }
 impl Prepared {
@@ -100,6 +177,9 @@ pub(super) fn prepare(
     model: &EventModel,
     trajectory: &Trajectory,
 ) -> Result<Option<Prepared>, Error> {
+    if let Some(request) = &model.floor_source {
+        request.source.charge(0)?;
+    }
     let zero: BTreeSet<_> = model
         .triggers
         .iter()
@@ -141,9 +221,64 @@ pub(super) fn prepare(
         .flat_map(|&i| model.program.events[i].assignments())
         .map(|a| a.state)
         .collect();
+    // With no zero-timer writes the original disjoint-seed test is true for
+    // every seed set. A source Floor request needs no bootstrap proof here;
+    // its ordinary target construction and event validation still follow.
+    if model.floor_source.is_some() && assigned.is_empty() {
+        return Ok(None);
+    }
     let mut seeds = BTreeSet::new();
-    for spec in &model.program.operators {
+    // Only the ordinary fixed-timer schedule has a bounded cold constructor.
+    // All other compositions retain the original point-seed certificate.
+    let bounded_fixed_timers = !model.program.operators.is_empty()
+        && !model.relocalized_guards.iter().any(|&v| v)
+        && !model.dynamic_guards.iter().any(|&v| v)
+        && model.guard_operators.iter().all(|ops| ops.is_empty())
+        && model.triggers.iter().all(|t| {
+            matches!(
+                t.trigger,
+                EventTrigger::Timer { .. } | EventTrigger::InitialStep { .. }
+            )
+        });
+    let mut bounded_held_transition_seeds = bounded_fixed_timers;
+    for (spec_index, spec) in model.program.operators.iter().enumerate() {
+        bounded_held_transition_seeds &=
+            crate::operators::bare_real_transition_state(spec, &model.program).is_some()
+                || matches!(spec, OperatorSpec::Transition { .. })
+                    && model.typed_transition_targets.contains(&spec_index);
         if let OperatorSpec::Transition { input, origin, .. } = spec {
+            if model.typed_transition_targets.contains(&spec_index) {
+                let context = model.source_context.as_ref().expect("typed owner");
+                let required = crate::held_integer_target::dependencies(
+                    input,
+                    &model.program,
+                    &origin.instance,
+                    context,
+                )?;
+                crate::held_integer_target::merge_dependencies(
+                    &mut seeds,
+                    &required,
+                    &mut |amount| context.charge(amount),
+                )?;
+                continue;
+            }
+            if let Some(request) = &model.floor_source {
+                let (dependencies, allowed) =
+                    request.bootstrap_dependencies(input, &origin.instance)?;
+                if !allowed {
+                    return Ok(None);
+                }
+                request.source.charge(
+                    dependencies
+                        .len()
+                        .saturating_add(seeds.len())
+                        .saturating_add(1)
+                        .saturating_pow(2)
+                        .saturating_mul(8),
+                )?;
+                seeds.extend(dependencies);
+                continue;
+            }
             match crate::events::affine(input, &model.program, &origin.instance) {
                 Ok(row)
                     if row.node_dependencies.is_empty() && row.operator_dependencies.is_empty() =>
@@ -180,13 +315,16 @@ pub(super) fn prepare(
     }
     if seeds.is_disjoint(&assigned)
         || crate::settlement_bounds::unchanged_initial_states(
-            &model.program,
+            model,
             &[initial_blocks.clone(), blocks.clone()],
             &seeds,
+            trajectory,
         )
     {
         return Ok(None);
     }
+    let before = model.initial();
+    let before_bounds: Vec<_> = before.iter().copied().map(I::point).collect();
     if model.guard_operators.iter().flatten().any(|&index| {
         matches!(
             model.program.operators[index],
@@ -215,6 +353,7 @@ pub(super) fn prepare(
             .contributions
             .iter()
             .any(|c| &c.origin.instance == owner)
+            && !constant_outputs(&model.program.events[block].body)
     }) {
         return Err(Error::new(
             "unsupported_initial_event",
@@ -237,8 +376,41 @@ pub(super) fn prepare(
     // Build candidates in language order; neither stage commits any history,
     // calendar consumption or record. Histories are constructed once from the
     // final seed only after both stages pass their certificates.
-    let before = model.initial();
-    let before_bounds: Vec<_> = before.iter().copied().map(I::point).collect();
+
+    // Transition constructors read only their complete structural seed set.
+    // Other held values may retain arithmetic uncertainty in Prepared/Frame;
+    // they are not exact inputs to any cold history in this restricted graph.
+    // Keep the existing all-point rule for every other operator composition.
+    let point_states = if bounded_held_transition_seeds && model.typed_transition_targets.is_empty()
+    {
+        BTreeSet::new()
+    } else if bounded_held_transition_seeds {
+        model
+            .source_context
+            .as_ref()
+            .expect("typed owner")
+            .charge(8 + 8 * seeds.len())?;
+        seeds
+            .iter()
+            .copied()
+            .filter(|&s| model.program.states[s].kind == crate::ir::StateKind::Integer)
+            .collect()
+    } else if model
+        .program
+        .operators
+        .iter()
+        .all(|spec| matches!(spec, OperatorSpec::Transition { .. }))
+    {
+        seeds
+    } else {
+        (0..model.program.states.len()).collect()
+    };
+    let ids: Vec<_> = zero.iter().copied().collect();
+    let mut mixed = MixedCold {
+        original_points: point_states,
+        allowed: bounded_fixed_timers,
+        qualified: None,
+    };
     let (initial_states, initial_bounds, mut records) = prepare_stage(
         model,
         trajectory,
@@ -246,8 +418,8 @@ pub(super) fn prepare(
         &initial_ids,
         &before,
         &before_bounds,
+        &mut mixed,
     )?;
-    let ids: Vec<_> = zero.iter().copied().collect();
     let (states, bounds, timer_records) = prepare_stage(
         model,
         trajectory,
@@ -255,17 +427,125 @@ pub(super) fn prepare(
         &ids,
         &initial_states,
         &initial_bounds,
+        &mut mixed,
     )?;
     records.extend(timer_records);
+    let source_context = match mixed.qualified {
+        Some((context, _)) => {
+            bounded_held_transition_seeds = true;
+            Some(context)
+        }
+        None => model.source_context.clone(),
+    };
     Ok(Some(Prepared {
         states,
         bounds,
         records,
+        bounded_held_transition_seeds,
+        source_context,
         zero,
     }))
 }
 
 type PreparedStage = (Vec<f64>, Vec<I>, Vec<EventRecord>);
+
+struct MixedCold {
+    original_points: BTreeSet<usize>,
+    allowed: bool,
+    qualified: Option<(
+        std::sync::Arc<crate::transition_source_plan::ProofContext>,
+        BTreeSet<usize>,
+    )>,
+}
+impl MixedCold {
+    fn accepts(
+        &mut self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        states: &[f64],
+        bounds: &[I],
+    ) -> Result<bool, Error> {
+        if !self.allowed {
+            return Ok(false);
+        }
+        if self.qualified.is_none() {
+            let context = match &model.source_context {
+                Some(context) => context.clone(),
+                None => {
+                    match model.mixed_cold_context.get() {
+                        Some(context) => context.clone(),
+                        None => {
+                            let work = model
+                                .mixed_cold_work
+                                .get_or_init(crate::transition_source_plan::Work::default);
+                            let context = crate::transition_source_plan::ProofContext::event_request_with_work(
+                            &model.program, trajectory, &model.driven,
+                            model.source_copy_items, work.clone())?;
+                            let _ = model.mixed_cold_context.set(context);
+                            model
+                                .mixed_cold_context
+                                .get()
+                                .expect("retained cold owner")
+                                .clone()
+                        }
+                    }
+                }
+            };
+            crate::event_floor::check_provided_binding(
+                &context,
+                &model.program,
+                trajectory,
+                &model.driven,
+            )?;
+            context.charge(1)?;
+            let mut required_points = BTreeSet::new();
+            let mut bare_real = false;
+            for spec in &model.program.operators {
+                context.charge(16 + spec.origin().instance.len())?;
+                if crate::operators::bare_real_transition_state(spec, &model.program).is_some() {
+                    bare_real = true;
+                    continue;
+                }
+                let OperatorSpec::Transition { input, origin, .. } = spec else {
+                    return Ok(false);
+                };
+                let dependencies = match crate::held_integer_target::scalar_dependencies(
+                    input,
+                    &model.program,
+                    &origin.instance,
+                    &context,
+                ) {
+                    Ok(dependencies) => dependencies,
+                    Err(scope) if scope.kind == "unsupported_held_integer_target" => {
+                        return Ok(false)
+                    }
+                    Err(failure) => return Err(failure),
+                };
+                crate::held_integer_target::merge_dependencies(
+                    &mut required_points,
+                    &dependencies,
+                    &mut |amount| context.charge(amount),
+                )?;
+            }
+            if !bare_real {
+                return Ok(false);
+            }
+            self.qualified = Some((context, required_points));
+        }
+        let (context, points) = self.qualified.as_ref().unwrap();
+        context.charge(
+            8 + states
+                .len()
+                .saturating_mul(points.len() + 1)
+                .saturating_mul(8),
+        )?;
+        Ok(states
+            .iter()
+            .zip(bounds)
+            .enumerate()
+            .all(|(index, (&s, &b))| !points.contains(&index) || b == I::point(s)))
+    }
+}
 
 fn prepare_stage(
     model: &EventModel,
@@ -274,51 +554,130 @@ fn prepare_stage(
     ids: &[usize],
     before: &[f64],
     before_bounds: &[I],
+    mixed: &mut MixedCold,
 ) -> Result<PreparedStage, Error> {
     if blocks.is_empty() {
         return Ok((before.to_vec(), before_bounds.to_vec(), Vec::new()));
     }
-    let inputs = trajectory.value_bounds(0.);
-    let selection = model
-        .conditions
-        .select_at_roots(blocks, &inputs, ids, before_bounds)?;
-    model.check_selection_writers(&selection)?;
-    let mut direct = vec![0.; model.program.nodes.len()];
-    for (name, value) in model.driven.iter().zip(trajectory.values(0.)) {
-        direct[model.program.nodes.iter().position(|n| n == name).unwrap()] = value;
-    }
-    let (states, display_records) = model.apply_with_displays(&selection, &direct, before, 0.)?;
-    let bounds = crate::settlement_bounds::Bounds::held_inputs(model, &selection)?.check_states(
-        model,
+    let inputs = crate::event_value_proof::history::input_bounds(model, trajectory, 0.)?;
+    let empty_proofs = crate::event_value_proof::Proofs::new();
+    let root = if let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) {
+        let mut p = crate::exact_source::history_paid::Paid::new(w);
+        let v = p.binary(0.).map(crate::exact_source::history_paid::root);
+        p.finish(v)?
+    } else {
+        crate::exact_source::RootTime::point(0.)
+    };
+    let context = (model.floor_source.is_some() || model.history_admission.is_some())
+        .then(|| {
+            crate::event_value_proof::Context::try_new(
+                model,
+                trajectory,
+                &inputs,
+                &empty_proofs,
+                root.as_ref(),
+            )
+        })
+        .transpose()?;
+    let selection = model.conditions.select_with_proofs(
+        blocks,
         &inputs,
+        ids,
         before_bounds,
-        &[],
-        &[],
-        &states,
+        context.as_ref(),
     )?;
+    model.check_selection_writers(&selection)?;
+    if let Some(request) = &model.floor_source {
+        request
+            .source
+            .charge(model.program.nodes.len().saturating_add(1))?;
+    }
+    let mut direct = vec![0.; model.program.nodes.len()];
+    if let Some(request) = &model.floor_source {
+        for (&node, value) in
+            request
+                .input_nodes()?
+                .iter()
+                .zip(crate::event_value_proof::history::inputs(
+                    model, trajectory, 0.,
+                )?)
+        {
+            direct[node] = value;
+        }
+    } else {
+        for (name, value) in model
+            .driven
+            .iter()
+            .zip(crate::event_value_proof::history::inputs(
+                model, trajectory, 0.,
+            )?)
+        {
+            direct[model.program.nodes.iter().position(|n| n == name).unwrap()] = value;
+        }
+    }
+    let (states, display_records) =
+        model.apply_with_displays_with_proofs(&selection, &direct, before, 0., context.as_ref())?;
+    let bounds = if context.is_some() {
+        model.certify_event_states_with_proofs(
+            &selection,
+            ids,
+            &inputs,
+            before_bounds,
+            &[],
+            &direct,
+            &states,
+            context.as_ref(),
+        )?
+    } else {
+        crate::settlement_bounds::Bounds::held_inputs(model, &selection)?.check_states(
+            model,
+            &inputs,
+            before_bounds,
+            &[],
+            &[],
+            &states,
+        )?
+    };
     if states.len() != model.program.states.len()
         || bounds.len() != states.len()
         || bounds
             .iter()
             .zip(&states)
-            .any(|(&b, &s)| !s.is_finite() || b != I::point(s))
+            .any(|(&b, &s)| !s.is_finite() || !b.finite() || s < b.lo || s > b.hi)
+    {
+        return Err(unsupported(
+            "transition bootstrap requires finite final point state certificates",
+        ));
+    }
+    // Finite boxes and nominal containment have already passed. Only the
+    // old point requirement may demand the additional mixed-target proof.
+    // Continue this transaction; do not rerun any callback or certification.
+    if bounds
+        .iter()
+        .zip(&states)
+        .enumerate()
+        .any(|(index, (&b, &s))| mixed.original_points.contains(&index) && b != I::point(s))
+        && !mixed.accepts(model, trajectory, &states, &bounds)?
     {
         return Err(unsupported(
             "transition bootstrap requires finite final point state certificates",
         ));
     }
     let (replay_states, replay_displays) =
-        model.apply_with_displays(&selection, &direct, before, 0.)?;
+        model.apply_with_displays_with_proofs(&selection, &direct, before, 0., context.as_ref())?;
     let same_displays = replay_displays.len() == display_records.len()
         && replay_displays.iter().zip(&display_records).all(|(a, b)| {
             a.time == b.time && a.event == b.event && a.origin == b.origin && a.text == b.text
         });
     if replay_states != states
         || !same_displays
-        || model
-            .conditions
-            .select_at_roots(blocks, &inputs, ids, before_bounds)?
-            != selection
+        || model.conditions.select_with_proofs(
+            blocks,
+            &inputs,
+            ids,
+            before_bounds,
+            context.as_ref(),
+        )? != selection
     {
         return Err(Error::new(
             "event_consistency",
@@ -412,6 +771,7 @@ mod tests {
     fn trajectory(value: f64) -> Trajectory {
         Trajectory::new(
             TransientInputs {
+                analytic_sources: vec![],
                 pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0., value], [1., value]]],
@@ -424,8 +784,15 @@ mod tests {
         .unwrap()
     }
     #[test]
-    fn rejected_initial_certificate_retries_on_the_same_model_without_seed_or_record_mutation() {
-        let model = model();
+    fn rejected_nonbare_initial_certificate_retries_without_seed_or_record_mutation() {
+        let mut model = model();
+        // The new bounded route deliberately excludes even an affine wrapper.
+        // Keep the former point-certificate refusal as a scope detector.
+        if let OperatorSpec::Transition { input, .. } = &mut model.program.operators[0] {
+            *input = serde_json::from_value(json!({"op":"add","left":{"op":"state","state":0},
+                "right":{"op":"affine","constant":0,"terms":[]}}))
+            .unwrap();
+        }
         let identity = serde_json::to_value(&model.program).unwrap();
         for _ in 0..2 {
             let error = prepare(&model, &trajectory(0.2)).err().unwrap();
@@ -486,5 +853,627 @@ mod tests {
         assert!(ready.cursor(&extra).is_err());
         assert_eq!(ready.cursor(&calendar).unwrap(), 1);
         assert_eq!(ready.records.len(), 1);
+    }
+
+    fn nonseed_model() -> EventModel {
+        let origin = json!({"source":"nonseed.va","line":1,"column":1,"instance":"dut"});
+        let c = |value| json!({"op":"affine","constant":value,"terms":[]});
+        let s = |state| json!({"op":"state","state":state});
+        let a = |state, rhs| json!({"kind":"assign","state":state,"rhs":rhs});
+        let u = json!({"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]});
+        let timer = |start| {
+            json!({"kind":"timer","start":start,"period":0,
+                                  "time_tolerance":1e-12,"enabled":true})
+        };
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":SCHEMA_VERSION,"nodes":["0","u","y"],
+            "states":[{"instance":"dut","name":"x","kind":"real","initial":0},
+                {"instance":"dut","name":"p","kind":"real","initial":0},
+                {"instance":"dut","name":"span","kind":"real","initial":0},
+                {"instance":"dut","name":"warm","kind":"real","initial":0}],
+            "events":[{"origin":origin,"trigger":timer(0.),"body":[a(2,c(1.)),
+                a(0,json!({"op":"multiply","left":c(0.45),"right":u}))]},
+                {"origin":origin,"trigger":timer(0.25),"body":[a(3,c(1.)),a(2,c(0.))]},
+                {"origin":origin,"trigger":timer(0.5),"body":[{"kind":"if",
+                    "relation":"gt","left":u,"right":c(0.),"then_body":[a(1,s(0))],
+                    "else_body":[a(1,c(0.))],"origin":origin}]}],
+            "operators":[{"kind":"transition","input":s(2),"delay":0,
+                "rise":0.125,"fall":0.5,"origin":origin}],
+            "contributions":[{"origin":origin,"branch":{"instance":"dut",
+                "local_positive":"p","local_negative":"r","kind":"voltage"},
+                "positive":2,"negative":0,"rhs":{"op":"add",
+                    "left":{"op":"multiply","left":c(1e12),"right":s(1)},
+                    "right":{"op":"operator","operator":0}}}]
+        }))
+        .unwrap();
+        EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-8,
+                relative: 0.,
+            },
+        )
+        .unwrap()
+    }
+
+    fn nonseed_trajectory(good: bool) -> Trajectory {
+        Trajectory::new(
+            TransientInputs {
+                analytic_sources: vec![],
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![vec![
+                    [0., 0.16],
+                    [0.25, 0.16],
+                    [0.5, if good { -0.16 } else { 0.16 }],
+                    [1., if good { -0.16 } else { 0.16 }],
+                ]],
+                output_times: vec![0., 0.125, 0.375, 0.75, 1.],
+                stop: 1.,
+                max_step: 1.,
+            },
+            1,
+        )
+        .unwrap()
+    }
+
+    fn nonseed_controller(
+        model: &EventModel,
+        trajectory: &Trajectory,
+    ) -> (Controller, Vec<ScheduledEvent>) {
+        let prepared = prepare(model, trajectory).unwrap().unwrap();
+        // .45*.16 is an independently nonrepresentable binary64 product.
+        assert!(prepared.bounds[0].lo < prepared.bounds[0].hi);
+        assert_eq!(prepared.bounds[2], I::ONE);
+        let operators =
+            Operators::new(&model.program, trajectory, &model.driven, &prepared.states).unwrap();
+        let circuit = model
+            .circuit_at(
+                &prepared.states,
+                &operators.values(0.).unwrap(),
+                &trajectory.value_bounds(0.),
+            )
+            .unwrap();
+        let solution = circuit.solve(&trajectory.values(0.)).unwrap();
+        let calendar = independent_schedule(model, trajectory).unwrap();
+        let event = prepared.cursor(&calendar).unwrap();
+        (
+            Controller {
+                accepted: Frame {
+                    value_proofs: Default::default(),
+                    time_proofs: Default::default(),
+                    time: 0.,
+                    states: prepared.states,
+                    state_bounds: prepared.bounds,
+                    operators,
+                    circuit,
+                    solution,
+                },
+                event,
+                records: prepared.records,
+                outputs: vec![],
+            },
+            calendar,
+        )
+    }
+
+    #[test]
+    fn bootstrap_nonseed_bounds_survive_same_controller_late_failure_and_retry() {
+        let model = nonseed_model();
+        let good = nonseed_trajectory(true);
+        let bad = nonseed_trajectory(false);
+        let (mut controller, mut calendar) = nonseed_controller(&model, &good);
+        let accept = |controller: &mut Controller,
+                      trajectory: &Trajectory,
+                      calendar: &mut Vec<ScheduledEvent>| {
+            controller.accept_changed_events(
+                &model,
+                trajectory,
+                calendar,
+                event_acceptance::Strategy::Static,
+            )
+        };
+        accept(&mut controller, &good, &mut calendar).unwrap();
+        assert_eq!(controller.accepted.time, 0.25);
+        assert!(controller.accepted.state_bounds[0].lo < controller.accepted.state_bounds[0].hi);
+        let before = controller.accepted.clone();
+        let records = serde_json::to_value(&controller.records).unwrap();
+        let cursor = controller.event;
+        let signature = |events: &[ScheduledEvent]| {
+            events
+                .iter()
+                .map(|event| {
+                    (
+                        event.event,
+                        event.time.to_bits(),
+                        event.bounds().lo.to_bits(),
+                        event.bounds().hi.to_bits(),
+                    )
+                })
+                .collect::<Vec<_>>()
+        };
+        let calendar_before = signature(&calendar);
+        let same_frame = |actual: &Frame, expected: &Frame| {
+            assert_eq!(actual.time, expected.time);
+            assert_eq!(actual.states, expected.states);
+            assert_eq!(actual.state_bounds, expected.state_bounds);
+            assert_eq!(actual.solution.voltages, expected.solution.voltages);
+            assert!(actual.operators.same_reset_history(&expected.operators));
+            assert_eq!(
+                actual.operators.bounds(actual.time).unwrap(),
+                expected.operators.bounds(expected.time).unwrap()
+            );
+            assert_eq!(
+                actual.operators.values(actual.time).unwrap(),
+                expected.operators.values(expected.time).unwrap()
+            );
+        };
+        let outputs = controller.outputs.clone();
+        for _ in 0..2 {
+            // Bad/good agree throughout the accepted prefix. Only the future
+            // .5 condition changes; bad forwards x's inherited uncertainty.
+            let error = accept(&mut controller, &bad, &mut calendar).unwrap_err();
+            assert!(
+                error.message.contains("forward error"),
+                "{} {}",
+                error.kind,
+                error.message
+            );
+            same_frame(&controller.accepted, &before);
+            assert_eq!(controller.event, cursor);
+            assert_eq!(signature(&calendar), calendar_before);
+            assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
+            assert_eq!(controller.outputs.len(), outputs.len());
+            for (actual, expected) in controller.outputs.iter().zip(&outputs) {
+                same_frame(actual, expected);
+            }
+        }
+        accept(&mut controller, &good, &mut calendar).unwrap();
+        let (mut clean, mut clean_calendar) = nonseed_controller(&model, &good);
+        accept(&mut clean, &good, &mut clean_calendar).unwrap();
+        accept(&mut clean, &good, &mut clean_calendar).unwrap();
+        same_frame(&controller.accepted, &clean.accepted);
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            serde_json::to_value(&clean.records).unwrap()
+        );
+        assert_eq!(signature(&calendar), signature(&clean_calendar));
+        // The unrelated span history falls from 1 to 0 over [.25,.75].
+        // A rejected p update cannot advance or replace its accepted edge.
+        assert_eq!(
+            controller.accepted.operators.values(0.5).unwrap(),
+            vec![0.5]
+        );
+        assert_eq!(controller.accepted.operators.values(1.).unwrap(), vec![0.]);
+        assert_eq!(controller.accepted.solution.voltages[2], 0.5);
+        assert!(controller.accepted.state_bounds[0].lo < controller.accepted.state_bounds[0].hi);
+    }
+
+    #[test]
+    fn bootstrap_nontransition_compositions_keep_the_existing_all_point_rule() {
+        let mut model = nonseed_model();
+        model.program.operators.push(
+            serde_json::from_value(json!({
+                "kind":"idt","input":{"op":"operator","operator":0},"ic":0,
+                "origin":{"source":"nonseed.va","line":1,"column":1,"instance":"dut"}
+            }))
+            .unwrap(),
+        );
+        let error = prepare(&model, &nonseed_trajectory(true)).err().unwrap();
+        assert_eq!(error.kind, "unsupported_initial_history");
+        assert!(
+            error.message.contains("finite final point"),
+            "{}",
+            error.message
+        );
+    }
+
+    #[test]
+    fn bootstrap_point_rule_still_covers_all_structural_transition_dependencies() {
+        let mut model = nonseed_model();
+        let OperatorSpec::Transition { input, .. } = &mut model.program.operators[0] else {
+            unreachable!()
+        };
+        *input = serde_json::from_value(json!({"op":"add","left":{"op":"state","state":2},
+            "right":{"op":"multiply","left":{"op":"affine","constant":0,"terms":[]},
+                     "right":{"op":"state","state":0}}}))
+        .unwrap();
+        assert_eq!(
+            prepare(&model, &nonseed_trajectory(true))
+                .err()
+                .unwrap()
+                .kind,
+            "unsupported_initial_history"
+        );
+    }
+    fn invariant_calendar_model() -> EventModel {
+        let mut p = nonseed_model().program;
+        let c = |value| json!({"op":"affine","constant":value,"terms":[]});
+        let u = json!({"op":"affine","constant":0.,"terms":[{"node":1,"coefficient":1.}]});
+        let origin = p.events[0].origin.clone();
+        p.events[0].body = serde_json::from_value(json!([
+            {"kind":"if","relation":"gt","left":u,"right":c(0.),
+             "then_body":[{"kind":"assign","state":2,"rhs":c(0.)}],
+             "else_body":[{"kind":"assign","state":2,"rhs":c(1.)}],"origin":origin},
+            {"kind":"assign","state":0,"rhs":{"op":"multiply","left":c(0.45),"right":u}}
+        ]))
+        .unwrap();
+        p.events[1].body = serde_json::from_value(json!([
+            {"kind":"assign","state":3,"rhs":c(1.)},
+            {"kind":"assign","state":2,"rhs":c(1.)}
+        ]))
+        .unwrap();
+        p.states.push(
+            serde_json::from_value(
+                json!({"instance":"dut","name":"due","kind":"real","initial":2}),
+            )
+            .unwrap(),
+        );
+        p.events.push(
+            serde_json::from_value(json!({"origin":origin,
+            "trigger":{"kind":"held_timer","start":{"op":"state","state":4},
+                "period":c(0.),"enabled":c(1.),"time_tolerance":1e-12},
+            "body":[{"kind":"assign","state":1,"rhs":c(0.)}]}))
+            .unwrap(),
+        );
+        let OperatorSpec::Transition { rise, fall, .. } = &mut p.operators[0] else {
+            unreachable!()
+        };
+        *rise = 0.5;
+        *fall = 0.125;
+        EventModel::new(
+            p,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-8,
+                relative: 0.,
+            },
+        )
+        .unwrap()
+    }
+    fn invariant_controller(
+        model: &EventModel,
+        t: &Trajectory,
+    ) -> (Controller, Vec<ScheduledEvent>) {
+        assert!(prepare(model, t).unwrap().is_none());
+        let states = model.initial();
+        let state_bounds = states.iter().copied().map(I::point).collect::<Vec<_>>();
+        let operators = Operators::new(&model.program, t, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_at(&states, &operators.values(0.).unwrap(), &t.value_bounds(0.))
+            .unwrap();
+        let solution = circuit.solve(&t.values(0.)).unwrap();
+        let calendar = schedule_held(model, t, &state_bounds).unwrap();
+        (
+            Controller {
+                accepted: Frame {
+                    states,
+                    state_bounds,
+                    operators,
+                    circuit,
+                    solution,
+                    time: 0.,
+                    value_proofs: Default::default(),
+                    time_proofs: Default::default(),
+                },
+                event: 0,
+                records: vec![],
+                outputs: vec![],
+            },
+            calendar,
+        )
+    }
+    #[test]
+    fn input_aware_seed_proof_keeps_ordinary_zero_execution_and_same_controller_late_retry() {
+        let model = invariant_calendar_model();
+        let good = nonseed_trajectory(true);
+        let bad = nonseed_trajectory(false);
+        let (mut controller, mut calendar) = invariant_controller(&model, &good);
+        let accept = |c: &mut Controller, t: &Trajectory, q: &mut Vec<ScheduledEvent>| {
+            c.accept_changed_events(&model, t, q, event_acceptance::Strategy::Held)
+        };
+        accept(&mut controller, &good, &mut calendar).unwrap();
+        assert_eq!(controller.accepted.time, 0.);
+        assert_eq!(controller.records.len(), 1);
+        assert!(controller.accepted.state_bounds[0].lo < controller.accepted.state_bounds[0].hi);
+        assert!(controller.accepted.value_proofs.contains_key(&0));
+        accept(&mut controller, &good, &mut calendar).unwrap();
+        assert_eq!(controller.accepted.time, 0.25);
+        let before = controller.accepted.clone();
+        let records = serde_json::to_value(&controller.records).unwrap();
+        let signature = |q: &[ScheduledEvent]| {
+            q.iter()
+                .map(|e| {
+                    (
+                        e.event,
+                        e.time.to_bits(),
+                        e.bounds().lo.to_bits(),
+                        e.bounds().hi.to_bits(),
+                    )
+                })
+                .collect::<Vec<_>>()
+        };
+        let queue = signature(&calendar);
+        let cursor = controller.event;
+        let same = |a: &Frame, b: &Frame| {
+            assert_eq!(a.time, b.time);
+            assert_eq!(a.states, b.states);
+            assert_eq!(a.state_bounds, b.state_bounds);
+            assert_eq!(a.value_proofs, b.value_proofs);
+            assert_eq!(a.time_proofs, b.time_proofs);
+            assert_eq!(a.solution.voltages, b.solution.voltages);
+            assert!(a.operators.same_reset_history(&b.operators));
+            for t in [0.375, 0.5, 0.75, 1.] {
+                assert_eq!(
+                    a.operators.values(t).unwrap(),
+                    b.operators.values(t).unwrap()
+                );
+                assert_eq!(
+                    a.operators.bounds(t).unwrap(),
+                    b.operators.bounds(t).unwrap()
+                );
+            }
+        };
+        let outputs = controller.outputs.clone();
+        for _ in 0..2 {
+            let error = accept(&mut controller, &bad, &mut calendar).unwrap_err();
+            assert_eq!(error.kind, "waveform_accuracy");
+            assert!(error.message.contains("forward error"));
+            same(&controller.accepted, &before);
+            assert_eq!(controller.event, cursor);
+            assert_eq!(signature(&calendar), queue);
+            assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
+            assert_eq!(controller.outputs.len(), outputs.len());
+            for (a, b) in controller.outputs.iter().zip(&outputs) {
+                same(a, b);
+            }
+        }
+        accept(&mut controller, &good, &mut calendar).unwrap();
+        let (mut clean, mut clean_calendar) = invariant_controller(&model, &good);
+        for _ in 0..3 {
+            accept(&mut clean, &good, &mut clean_calendar).unwrap();
+        }
+        same(&controller.accepted, &clean.accepted);
+        assert_eq!(signature(&calendar), signature(&clean_calendar));
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            serde_json::to_value(&clean.records).unwrap()
+        );
+        assert_eq!(
+            controller.records.iter().filter(|r| r.time == 0.).count(),
+            1
+        );
+        assert_eq!(
+            controller.accepted.operators.values(0.5).unwrap(),
+            vec![0.5]
+        );
+        assert_eq!(controller.accepted.operators.values(1.).unwrap(), vec![1.]);
+        assert!(controller.accepted.state_bounds[0].lo < controller.accepted.state_bounds[0].hi);
+    }
+
+    #[test]
+    fn bounded_cold_seed_passes_actual_state_box_to_existing_transition_constructor() {
+        use num_rational::BigRational as R;
+        let model = model();
+        let trajectory = trajectory(0.2);
+        let prepared = prepare(&model, &trajectory).unwrap().unwrap();
+        assert!(prepared.bounded_held_transition_seeds);
+        let exact = R::from_float(0.2).unwrap() + R::from_float(0.1).unwrap();
+        let b = prepared.bounds[0];
+        assert!(b.lo < b.hi);
+        assert!(R::from_float(b.lo).unwrap() <= exact && exact <= R::from_float(b.hi).unwrap());
+        let histories = Operators::new_until_with_bootstrap_bounds(
+            &model.program,
+            &trajectory,
+            &model.driven,
+            &prepared.states,
+            &prepared.bounds,
+            1.,
+            &model.tolerances,
+        )
+        .unwrap();
+        let initial = histories.bounds(0.).unwrap()[0];
+        for time in [0., 0.05, 0.5, 1.] {
+            let bounds = histories.bounds(time).unwrap()[0];
+            assert!(bounds.lo <= b.lo && bounds.hi >= b.hi);
+            assert_eq!(histories.values(time).unwrap()[0], prepared.states[0]);
+            assert_eq!(bounds, initial); // delay/rise must not invent a cold edge.
+        }
+        println!(
+            "ACTUAL_COLD_SEED_BOX {}",
+            json!({"states":prepared.states,
+            "state_bounds":prepared.bounds.iter().map(|b|[b.lo,b.hi]).collect::<Vec<_>>(),
+            "transition_bounds_at_zero":[initial.lo,initial.hi]})
+        );
+    }
+
+    fn scalar_mixed_model(hidden_real: bool) -> EventModel {
+        let mut value = serde_json::to_value(&model().program).unwrap();
+        value["nodes"].as_array_mut().unwrap().push(json!("z"));
+        value["states"]
+            .as_array_mut()
+            .unwrap()
+            .push(json!({"instance":"dut","name":"c","kind":"integer","initial":0}));
+        value["events"][0]["body"]
+            .as_array_mut()
+            .unwrap()
+            .push(json!({"kind":"assign","state":1,"rhs":{"op":"affine","constant":1,"terms":[]}}));
+        let origin = json!({"source":"init.va","line":2,"column":1,"instance":"dut"});
+        let mut input = json!({"op":"select","relation":"gt",
+            "left":{"op":"state","state":1},
+            "right":{"op":"affine","constant":0,"terms":[]},
+            "then_value":{"op":"affine","constant":0.9,"terms":[]},
+            "else_value":{"op":"affine","constant":0,"terms":[]},"origin":origin});
+        if hidden_real {
+            input["else_value"] = json!({"op":"state","state":0});
+        }
+        value["operators"]
+            .as_array_mut()
+            .unwrap()
+            .push(json!({"kind":"transition",
+            "input":input,"delay":0,"rise":0.1,"fall":0.1,"origin":origin}));
+        value["contributions"].as_array_mut().unwrap().push(json!({
+            "branch":{"instance":"dut","local_positive":"q","local_negative":"r","kind":"voltage"},
+            "positive":3,"negative":0,"rhs":{"op":"operator","operator":1},"origin":origin}));
+        EventModel::new(
+            serde_json::from_value(value).unwrap(),
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-8,
+                relative: 0.,
+            },
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn mixed_scalar_cold_proof_retains_one_owner_and_original_boxes_on_retry() {
+        let model = scalar_mixed_model(false);
+        let trajectory = trajectory(0.2);
+        let original = serde_json::to_value(&model.program).unwrap();
+        let first = prepare(&model, &trajectory).unwrap().unwrap();
+        let context = first.source_context.as_ref().unwrap();
+        let spent = context.borrow_work().spent();
+        assert!(spent > 0);
+        assert!(first.bounds[0].lo < first.bounds[0].hi);
+        assert_eq!(first.bounds[1], I::ONE);
+        let second = prepare(&model, &trajectory).unwrap().unwrap();
+        assert!(std::sync::Arc::ptr_eq(
+            context,
+            second.source_context.as_ref().unwrap()
+        ));
+        assert!(context.borrow_work().spent() > spent);
+        assert_eq!(first.states, second.states);
+        assert_eq!(first.bounds, second.bounds);
+        assert_eq!(serde_json::to_value(&model.program).unwrap(), original);
+        let histories = Operators::new_until_with_bootstrap_bounds_and_source(
+            &model.program,
+            &trajectory,
+            &model.driven,
+            &first.states,
+            &first.bounds,
+            1.,
+            &model.tolerances,
+            first.source_context.clone(),
+        )
+        .unwrap();
+        let box_at_zero = histories.bounds(0.).unwrap()[0];
+        assert!(box_at_zero.lo <= first.bounds[0].lo && box_at_zero.hi >= first.bounds[0].hi);
+    }
+
+    #[test]
+    fn mixed_scalar_cold_hidden_real_arm_and_exhausted_owner_stay_rejected() {
+        let model = scalar_mixed_model(true);
+        let trajectory = trajectory(0.2);
+        let original = serde_json::to_value(&model.program).unwrap();
+        let mut spent = 0;
+        for _ in 0..2 {
+            assert_eq!(
+                prepare(&model, &trajectory).err().unwrap().kind,
+                "unsupported_initial_history"
+            );
+            let now = model.mixed_cold_work.get().unwrap().spent();
+            assert!(now > spent);
+            spent = now;
+        }
+        assert_eq!(serde_json::to_value(&model.program).unwrap(), original);
+        let model = scalar_mixed_model(false);
+        let work = crate::transition_source_plan::Work::limited([128, 8192, 0]);
+        assert!(model.mixed_cold_work.set(work.clone()).is_ok());
+        let mut spent = 0;
+        for _ in 0..2 {
+            assert_eq!(
+                prepare(&model, &trajectory).err().unwrap().kind,
+                "step_budget"
+            );
+            assert!(model.mixed_cold_work.get().unwrap().same_owner(&work));
+            assert!(work.spent() > spent);
+            spent = work.spent();
+            assert!(model.mixed_cold_context.get().is_none());
+        }
+    }
+
+    #[test]
+    fn bounded_constructor_rejects_bad_boxes_and_every_nonbare_target_shape() {
+        let model = model();
+        let trajectory = trajectory(0.2);
+        let prepared = prepare(&model, &trajectory).unwrap().unwrap();
+        for bounds in [
+            vec![],
+            vec![I {
+                lo: f64::NAN,
+                hi: 1.,
+            }],
+            vec![I {
+                lo: f64::NEG_INFINITY,
+                hi: f64::INFINITY,
+            }],
+            vec![I::point(-1.)],
+        ] {
+            assert!(Operators::new_until_with_bootstrap_bounds(
+                &model.program,
+                &trajectory,
+                &model.driven,
+                &prepared.states,
+                &bounds,
+                1.,
+                &model.tolerances
+            )
+            .is_err());
+        }
+        let origin = json!({"source":"init.va","line":1,"column":1,"instance":"dut"});
+        let inputs = [
+            json!({"op":"add","left":{"op":"state","state":0},"right":{"op":"affine","constant":0,"terms":[]}}),
+            json!({"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]}),
+            json!({"op":"select","relation":"lt","left":{"op":"affine","constant":0,"terms":[]},"right":{"op":"affine","constant":1,"terms":[]},"then_value":{"op":"state","state":0},"else_value":{"op":"state","state":999},"origin":origin}),
+        ];
+        for input in inputs {
+            let mut p = model.program.clone();
+            if let OperatorSpec::Transition { input: target, .. } = &mut p.operators[0] {
+                *target = serde_json::from_value(input).unwrap();
+            }
+            assert!(Operators::new_until_with_bootstrap_bounds(
+                &p,
+                &trajectory,
+                &model.driven,
+                &prepared.states,
+                &prepared.bounds,
+                1.,
+                &model.tolerances
+            )
+            .is_err());
+        }
+        for (kind, owner) in [
+            (crate::ir::StateKind::Integer, "dut"),
+            (crate::ir::StateKind::Real, "foreign"),
+        ] {
+            let mut p = model.program.clone();
+            p.states[0].kind = kind;
+            p.states[0].instance = owner.into();
+            assert!(Operators::new_until_with_bootstrap_bounds(
+                &p,
+                &trajectory,
+                &model.driven,
+                &prepared.states,
+                &prepared.bounds,
+                1.,
+                &model.tolerances
+            )
+            .is_err());
+        }
+        // Low-level pure Transition support does not grant another operator a bounded seed.
+        let mut p = model.program.clone();
+        p.operators.push(serde_json::from_value(json!({"kind":"idt","input":{"op":"state","state":0},"ic":0,"origin":{"source":"init.va","line":2,"column":1,"instance":"dut"}})).unwrap());
+        assert!(Operators::new_until_with_bootstrap_bounds(
+            &p,
+            &trajectory,
+            &model.driven,
+            &prepared.states,
+            &prepared.bounds,
+            1.,
+            &model.tolerances
+        )
+        .is_err());
     }
 }

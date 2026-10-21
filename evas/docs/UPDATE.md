@@ -4,6 +4,87 @@
 逐项证据见[证据索引](development/capability-evidence.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
 
+## 本地候选 0.24.0 / IR32：普通历史消费者与显式解析源值
+
+原普通模拟体读取保持历史时，受限仿射谓词与目标沿同一物理Context、原Work和完整Frame验收。
+同支路二次源项与保持项组合、保持整数目标紧凑表示及标量integer函数保留原类型、域与隐藏依赖检查。
+解析正弦输入只接受已确证的显式参数；sine guard、一般source×history和未确证厂商默认仍不支持。
+旧IR31载荷须从原VA重新编译。合同见[算子手册](math/operators.md#同支路二次源直接项的本地候选)与
+[解析源值](math/events.md#ir32-private-candidate-explicit-analytic-source-values)。
+
+联合199个唯一Python、110个不同Rust单元测试和6个原生测试通过；两轴发现的复制角色、IR身份与测试元数据问题均已修复。
+局部物理点复用把同次请求的严格求值2次变为1次，区间证明及首次实际数学工作仍收费。
+完整400、完整Python CI和安装尚待本候选验收；原369、371仍在原1e9预算拒绝，未新增通过。
+全量迭代已观察到旧PASS027因typed目标聚合审计超出原100000预算而回退；修复与重验未闭合，本候选不满足旧通过保留条件。
+下述317/400仍只属于已验收的IR31源核，目标400未完成，PR208保持草稿。
+
+## 开发检查点 0.24.0 / IR31：直接电压的事件整数转换
+
+事件体标量integer赋值的直接外部输入电压探针，显式转换为最近signed32整数，半整数远离零。
+每次事件先认证原输入整个盒具有唯一合法结果，再执行后置clamp；real复合表达式、内部节点、普通贡献及历史目标未由此扩大。
+新转换与事件Floor借同一原请求Work，完整原树角色及两次失败重试、全部Controller状态回滚保持；
+[数学合同](math/events.md#ir31-候选事件中的直接电压到-integer-转换)和独立45点oracle限定行为范围。
+本候选还保留静态下标源整数类型、回调临时值与普通别名分离、同请求付费不可变IR结构缓存修复。
+期限预检按需取得精确根，已证明可精确表示的dyadic有理值使用付费点包围；原预算与精度不变。
+[联合控制与041收据](../../experiments/backends/support/low-cost-closure/source-budget-foundations.json)记录仍未通过的原041，不计新PASS。
+公开窄控制已通过，当前开发夹具须从VA重编译到IR31；旧保存IR和历史收据不改号。
+wave22同177份运行输入／同release核已独审验收原始314/19/67、材料r3修订317/15/68，两轨均清理400/400、零超时，旧316通过无回退。单次完整CI39193253152/head6d3c8a93实跑2424项及两平台安装负控通过；此前失败CI单独保留，当前runtime改动不混入。总目标仍差83，持续推进检查的精确命令重放继续阻止结束，原生Goal已核实active。运行源码与CI见[wave22收据](../../experiments/backends/support/low-cost-closure/continuation-wave22.json)；[材料r3收据与具体差异](../../experiments/backends/support/low-cost-closure/continuation-wave22-materials-r3.json)记录用户选定077实时输入＋保持扰动后，405直接行、完整五性质、42项真实registry校准与完整400双审通过，原077FAIL保留。396＋3＋1件同wave22源核；既有075有限边沿证据继承，未新增Spectre资格。
+
+## 开发检查点 0.23.0 / IR30：source Forcing与独立保持历史
+
+受限source Forcing按实际物理源选择值，独立Transition继续消费已提交的held state；完整原树角色、原Program／Trajectory身份、private Reduction及同请求Work在初始化、准备和失败重试中保留。旧source-rational路线优先，Forcing与新Floor、typed Native及Slew混合明确拒绝，完整合同见[算子说明](math/operators.md#independent-source-forcing-beside-held-histories)。
+
+当前wave21生产提交 `a201378e` 绑定176份源码／构建输入、IR30、0.23.0和release核 `7e7ae92ae2de`。原件400份已完整执行：312通过、19失败、69拒绝，331完成，清理400/400；这不表示400份全部PASS。13+387件同源，旧312、303和基线198通过保留，旧19份失败checker字典相同，相对wave20新增PASS为0。原041在默认1e9证明预算下 `step_budget` 拒绝，checker未运行；R6作者独立PASS不替代统一结果。
+修订材料另轨400为313通过、17失败、70拒绝，清理400/400；398份同材料复用本轮原件结果，另两份为修订012通过、107因 `condition_precision` 拒绝。它不替换原件计数。距离全部PASS，原件还差88份，修订轨还差87份；350只是进展节点。
+单次完整delivery CI `39169679908` 在辅助修复提交 `8e507c51` 实际15 jobs全部成功，2390个唯一方法通过，四分片621/605/638/526，无遗漏、重复、方法或setup跳过。Ubuntu x86_64/Python3.10与macOS arm64/Python3.12的0.23/IR30安装、重装及负控通过；176份源码／构建输入不变，远端回归和wheel核各保留实际SHA，不声称与本地release字节相同。CI执行身份、完整方法覆盖和两平台安装证据已独立复核。
+本轮先前CI `39168731444` 因inventory stale在完整Python前失败（0完整Python、0安装）；`39169086325` 完整失败，2375条为2372PASS及main/point/shaped三个loader ERROR，18个真实方法遗漏，15 jobs为10成功、4失败、1个上游失败导致coverage skip。两份原红记录保留，不跨run拼接全绿。PR208仍为草稿未合并，0.23是开发版本，未发布公共索引或tag；未新增Spectre共同资格，完整EVAS与400全部PASS目标未完成。
+
+下列旧版本“本地候选／待验收”描述保留其当时的候选快照；后续wave20／wave21验收不倒改旧记录。
+
+## 本地候选 0.22.0 / IR29：保持位目标与原树源证明
+
+新增受限signed32右移、按位与及纯保持Transition目标。移位数须是实例常量，实际状态盒须为同实例整数单点，完整原树依赖和逐节点溢出检查保留。事件原树Floor、无状态源因子和已证明字面零电流支路同时进入本地候选，范围见[算子合同](math/operators.md#native-held-bits29)。
+
+Native与Floor复用一个原Program、物理输入和请求预算。失败准备不发布状态、历史、日程或输出；耗尽后先拒绝重试。协议、包和当前开发夹具迁到29/0.22.0，历史材料与执行身份不改。本候选的统一400、完整Python及安装仍待验收，原303继续绑定IR28的wave18；Forcing保持隔离。
+
+## 本地候选 0.21.0 / IR28：事件 typed 余数除数与减法
+
+事件体的typed树新增二元Subtract并接受运行期typed余数除数，每个原节点保留signed32
+检查、当前局部state句序和点盒证书。旧有限表和预算、静态常量错误、同owner审计及事务
+回滚保留。普通贡献/历史目标、Divide、单目负号、Multiply、位运算、Floor和CheckedInteger
+未扩展。当前协议、包、开发fixtures/fuzz和身份测试迁到28/0.21.0，历史执行身份不改。
+公开正反例见[test_native_integer28.py](../tests/test_native_integer28.py)，合同见[事件手册](math/events.md#事件体运行期余数与二元减法ir28-本地候选)。
+原069/335、完整Python、安装和checker由主统一候选安排，本切片不报告新增原件PASS。
+
+## 本地候选 0.20.0 / IR27：事件 typed 整数
+
+事件体新增源 typed Add 与常量非零 Remainder。旧有限表示优先；新节点在每个原算术位置
+检查 signed32，盒求值要求单点 integer state，同回调保持原句序。普通贡献、历史算子目标、
+trigger、一般运行期除数与位运算仍不获得新准入。Floor 与 CheckedInteger 的原门保留。
+前端、内核、当前开发 fixtures 与身份测试迁移到IR27；历史记录不改写。
+数学合同与限制见[事件手册](math/events.md#事件体的原生-typed-加法与常量余数ir27-本地候选)。
+当前仅是待独审本地实现；原件checker、完整Python与安装验收由统一候选安排，不新增正式成绩。
+
+## 本地候选 IR26：受限原生事件floor
+
+新增 `event_math/function=floor`，仅准入原始实际驱动仿射输入的事件采样。旧有限floor选择树优先，
+每次原始integer写入、单bin、源误差与精确根证明继续检查；不扩展一般事件数学。
+前端、内核、当前fixtures和身份测试同步使用IR26；旧IR1–25从原VA重编译，历史收据不改写。
+[数学与生命周期合同](math/events.md#native-event-floor)及独立回归限定范围。原244已在wave14统一400通过，该候选295通过、18失败、87拒绝；安装与完整CI待验，
+不新增已合并支持或共同资格。
+
+## 开发候选 IR24：有限物理源曲线
+
+IR24 扩展请求中的源误差项，可携带不超过 512 点的精确有理角点。
+内核验证原非零投影带，按物理曲线求值及完整分区定位 cross，并继续传播数值舍入误差。
+它复用现有 transition 历史与保持状态 timer，不开放一般幅度不确定性或其他连续算子。
+[数学契约](math/events.md#physical-source-shape)与[实际参考](../../experiments/backends/support/source-shape/README.md)限定其范围。
+最终冻结内核完整执行23条原请求，原checker通过22/23；347有两处失败，
+已用独立有理数与实际 Spectre 诊断解释为精确根采样与晚回调的兼容差异。用户选择保留既有语义并交付未合并候选。
+采样算术保留原包围，有限无环 transition 目标与精确期限按[组合合同](math/events.md#causal-transition-composition)验证；
+观察实例专用数学函数及一般电气非线性反馈仍拒绝。
+此候选尚未合并；包版本沿用 0.19.0，前端与内核须配套使用 IR24，旧 IR1–23 从原 VA 重编译。
+
 ## EVAS 0.19.0 / IR23：有界事件循环与数组
 
 独立测量实例可在普通事件和 final_step 中使用运行期 integer 循环、带检查的数组读写。

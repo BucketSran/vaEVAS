@@ -14,15 +14,17 @@ from .limits import MAX_IR_ITEMS, check_ir
 from .lowering import lower, lower_decision
 from .syntax import Loop, Assignment, Conditional, Display, OPERATOR_NAMES, DECISION_NAMES
 from .display import validate_format
+from .integer_bits import OPS as BIT_OPS
+from .compact_source_select import compact_source_assignment
 
 PURE_MATH = frozenset(("sin", "cos", "exp", "ln", "sqrt"))
 VALUE_OPS = frozenset(("number", "parameter", "voltage", "time", "index", "checked",
-                       "+", "-", "*", "/", "%", "power", "unary+", "unary-")) | DECISION_NAMES | PURE_MATH
+                       "+", "-", "*", "/", "%", "power", "floor", "unary+", "unary-")) | DECISION_NAMES | PURE_MATH | BIT_OPS
 UNKNOWN = object()
 
 
 
-def parameter_value(expr, parameters, memo):
+def parameter_value(expr, parameters, memo, work=None):
     key = id(expr)
     if key in memo:
         return memo[key][1]
@@ -31,9 +33,16 @@ def parameter_value(expr, parameters, memo):
     elif expr.op == "parameter":
         result = parameters.get(str(expr.value), UNKNOWN)
     else:
-        args = [parameter_value(arg, parameters, memo) for arg in expr.args]
+        if expr.op == "function_assign" and work is not None:
+            work.extra(expr, "function_assignment_parameter_metadata", 8)
+        args = [parameter_value(arg, parameters, memo, work) for arg in expr.args]
         result = UNKNOWN
-        if expr.op == "checked":
+        if expr.op == "function_assign":
+            # Only real copy-through preserves this parameter-only value. The
+            # integer conversion remains an obligation of the typed lowerer.
+            if expr.value == "real" and expr.result_type == "real" and len(args) == 1:
+                result = args[0]
+        elif expr.op == "checked":
             result = args[0]
         elif expr.op == "&&":
             if any(a is not UNKNOWN and not a for a in args):
@@ -63,10 +72,10 @@ def parameter_value(expr, parameters, memo):
     return result
 
 
-def audit_event_body(compiler, statements):
+def audit_event_body(compiler, statements, charge_native):
     """Read-only original-tree admission using this instance's bindings/facts."""
     seen = {}
-    work = 0
+    compiler.native_integer_charge = charge_native
 
     def fail(message, item, code="compile_error"):
         raise CompileError(message, code=code, token=item.token,
@@ -79,8 +88,11 @@ def audit_event_body(compiler, statements):
                                          item.token, register=False)
 
     def selection(item, relation, left, right, yes, no):
-        return compiler.expression_select(item, relation, left, right, yes, no,
-                                          register=False)
+        # Sampled scalar guards need not be affine, but parameter pruning must
+        # not erase the original input/inout scope of nested decisions.
+        if not (compiler.expression_nodes(left) | compiler.expression_nodes(right)).issubset(compiler.allowed_condition_nodes):
+            fail("decision predicates must depend only on input/inout ports", item)
+        return compiler.event_select(item, relation, left, right, yes, no)
 
     def budget_select(item, relation, left, right, yes, no):
         # A resource-only shape, never an admission or dependency proof.
@@ -91,6 +103,26 @@ def audit_event_body(compiler, statements):
                         compiler.instance.name, item.expansion)
         return Select(relation, left, right, yes, no, origin)
 
+    implicit_powers = {}
+
+    def finite_power_tree(root):
+        # Only an actual finite lowering contributes implicit Select choices.
+        # Unsupported unused pure mathematics keeps its existing opaque shape;
+        # probing must not turn resource accounting into a domain admission.
+        if root.op != "power" or not compiler.integer_type(root.args[1]):
+            return None
+        if id(root) not in implicit_powers:
+            try:
+                value = compiler.lower_event(root, compiler.symbol, compiler.node_ids,
+                    preserve_structure=True, node_declarations=True,
+                    sampled_values=True, decisions=selection, indices=index_read)
+            except CompileError as error:
+                if error.diagnostic['code'] == 'resource_budget':
+                    raise
+                value = None
+            implicit_powers[id(root)] = (root, value if isinstance(value, Select) else None)
+        return implicit_powers[id(root)][1]
+
     def needs_choices(root):
         pending, visited = [root], set()
         while pending:
@@ -98,8 +130,9 @@ def audit_event_body(compiler, statements):
             if id(item) in visited:
                 continue
             visited.add(id(item))
-            if (item.op in DECISION_NAMES or item.op == "index" or
-                    item.op in ("/", "%") and compiler.integer_type(item)):
+            if (item.op in DECISION_NAMES or item.op in BIT_OPS or item.op in ("index", "floor") or
+                    item.op in ("/", "%") and compiler.integer_type(item) or
+                    item.op == "power" and finite_power_tree(item) is not None):
                 return True
             pending.extend(item.args)
         return False
@@ -109,9 +142,7 @@ def audit_event_body(compiler, statements):
                        integer_assignment_root=integer_assignment_root,
                        static_integer_audit=static_integer_audit)
         if needs_choices(root):
-            options.update(decisions=selection,
-                           validate_decision=compiler.validate_decision_expression,
-                           indices=index_read)
+            options.update(decisions=selection, indices=index_read)
         else:
             # One fixed binding, no registration/index/decision callbacks.
             # The existing memo contract keeps shared function obligations
@@ -120,7 +151,8 @@ def audit_event_body(compiler, statements):
         if compiler.numeric_observer_candidate():
             options.pop("memo", None)
             return compiler.lower_event_value(root, compiler.symbol, compiler.node_ids, **options)
-        return compiler.lower_event(root, compiler.symbol, compiler.node_ids, **options)
+        return compiler.lower_event(root, compiler.symbol, compiler.node_ids,
+                                    sampled_values=True, **options)
 
     def resource_tree(root, memo=None):
         # Only split_selection/event_assignment consume this private tree.
@@ -132,12 +164,21 @@ def audit_event_body(compiler, statements):
             return memo[id(root)][1]
         if root.op == "checked":
             value = resource_tree(root.args[0], memo)
+        elif root.op == "function_assign":
+            charge_native.extra(root, "function_assignment_resource_metadata", 4)
+            # Keep the real assignment's complete choice shape. Integer
+            # conversion belongs to the existing typed lowerer, never this
+            # private resource-only surrogate. Original shape audits all args.
+            value = (resource_tree(root.args[0], memo) if root.value == "real"
+                     else audit_lower(root))
         elif root.op == "index":
             value = index_read(root)
-        elif root.op in ("/", "%") and compiler.integer_type(root):
+        elif root.op in BIT_OPS or root.op == "floor" or root.op in ("/", "%") and compiler.integer_type(root):
             # The typed lowerer introduces quotient-bin decisions even when
             # there is no explicit source decision. Retain their real shape.
             value = audit_lower(root)
+        elif root.op == "power" and finite_power_tree(root) is not None:
+            value = finite_power_tree(root)
         elif root.op in ("number", "parameter", "voltage", "time"):
             value = audit_lower(root)
         else:
@@ -194,17 +235,24 @@ def audit_event_body(compiler, statements):
         return value
 
     def shape(root, *, integer_assignment=False, parameter_dead=False):
-        nonlocal work
         pending = [root]
         while pending:
             item = pending.pop()
+            charge_native.extra(item, "source_pop")
             if id(item) in seen:
                 continue
             seen[id(item)] = item
-            work += 1
-            if work > MAX_IR_ITEMS:
-                fail("original event audit exceeds expression budget", item, "resource_budget")
-            if item.op not in VALUE_OPS:
+            charge_native(item, "event_audit")
+            if item.op == "function_assign":
+                charge_native.extra(item, "function_assignment_metadata", 4)
+                if (item.value not in ("real", "integer") or len(item.args) != 1
+                        or item.result_type != item.value):
+                    fail("invalid function assignment structure", item)
+                # Every child remains in the original-tree walk below. Copy-in,
+                # local and return integer conversions use their original proof.
+                if item.value == "integer":
+                    audit_lower(item, static_integer_audit=parameter_dead)
+            elif item.op not in VALUE_OPS:
                 message = "event bodies do not support history/operator calls" if item.op in OPERATOR_NAMES else "unsupported event value structure"
                 fail(message, item)
             if item.op == "number" and not math.isfinite(float(item.value)):
@@ -230,7 +278,7 @@ def audit_event_body(compiler, statements):
                 # function obligation keeps its original lowering boundary.
                 for obligation in item.args[1:]:
                     audit_lower(obligation, static_integer_audit=parameter_dead)
-            if item.op in ("+", "-", "*", "/", "%", "unary+", "unary-") and compiler.integer_type(item):
+            if item.op in BIT_OPS or item.op in ("+", "-", "*", "/", "%", "unary+", "unary-") and compiler.integer_type(item):
                 # A real destination does not erase integer arithmetic in its
                 # source. Only a complete integer assignment may defer its
                 # final stored-value check to the kernel.
@@ -247,18 +295,15 @@ def audit_event_body(compiler, statements):
     parameter_memo = {}
 
     def parameter_predicate(statement):
-        a = parameter_value(statement.left, compiler.cache, parameter_memo)
-        b = parameter_value(statement.right, compiler.cache, parameter_memo)
+        a = parameter_value(statement.left, compiler.cache, parameter_memo, charge_native)
+        b = parameter_value(statement.right, compiler.cache, parameter_memo, charge_native)
         if a is UNKNOWN or b is UNKNOWN:
             return None
         return {"<":a<b, "<=":a<=b, ">":a>b, ">=":a>=b}[statement.relation]
 
     def body(items, parameter_dead=False):
-        nonlocal work
         for statement in items:
-            work += 1
-            if work > MAX_IR_ITEMS:
-                fail("original event audit exceeds statement budget", statement, "resource_budget")
+            charge_native(statement, "event_statement")
             if isinstance(statement, Loop):
                 compiler.validate_runtime_loop(statement)
                 for expr in (statement.start, statement.limit, statement.update):
@@ -298,7 +343,8 @@ def audit_event_body(compiler, statements):
                     # Reuse the actual bounded assignment expander. A separate
                     # source profiler can miss comparison operand choices.
                     compiler.event_assignment(compiler.state_ids.get(statement.name, 0),
-                                              budget_value, origin)
+                                              budget_value, origin,
+                                              compact_source=compact_source_assignment(compiler, statement, budget_value, origin))
                 if kind == "integer":
                     value = audit_lower(statement.rhs, integer_assignment_root=True,
                                         static_integer_audit=parameter_dead)
@@ -307,14 +353,15 @@ def audit_event_body(compiler, statements):
             else:
                 fail("unsupported statement in original event audit", statement)
     body(statements)
+    return charge_native
 
 
-def specialize_event_body(statements, parameters):
+def specialize_event_body(statements, parameters, *, work=None):
     """New execution view after audit; only bound module parameters are known."""
     memo = {}
 
     def known(expr):
-        return parameter_value(expr, parameters, memo)
+        return parameter_value(expr, parameters, memo, work)
 
     def body(items):
         result = []

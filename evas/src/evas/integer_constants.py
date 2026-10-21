@@ -1,15 +1,16 @@
 """Reject integer-parameter expressions whose semantics the real IR would lose.
 
-This is a conservative boundary, not a second arithmetic evaluator: integer
-division and overflow need a typed integer lowering path. Explicit real operands
+Division is admitted only at entry points with a typed constant callback.
+Every original integer arithmetic node still receives a signed32 audit. Explicit real operands
 use the existing real arithmetic. Legacy real-only expressions are unchanged.
 """
 from dataclasses import fields, is_dataclass
 from .errors import CompileError
 from .syntax import Expr, Token
+from . import integer_bits, integer_arithmetic
 
 
-def check_integer_expression(expr, model, values, *, check_literals=False):
+def check_integer_expression(expr, model, values, *, check_literals=False, allow_division=False):
     """Include literal-only expressions at new typed/boundary entry points."""
     names = {n for n,t in model.parameter_types.items() if t == 'integer'}
     def uses_integer(e):
@@ -33,13 +34,23 @@ def check_integer_expression(expr, model, values, *, check_literals=False):
             return args[0]
         if not args or None in args:
             return None
-        if e.op == '/':
-            fail(e)
         # Preserve the signed minimum literal, whose positive magnitude is one
         # beyond the signed range. Computed negation/overflow still rejects.
         if e.op == 'unary-' and e.args[0].op == 'number' and args[0] == 2147483648:
             return -2147483648
-        if e.op == '+': value = args[0]+args[1]
+        if e.op in integer_bits.OPS:
+            try:
+                return integer_bits.evaluate(e.op, *args)
+            except ValueError:
+                fail(e)
+        if e.op == '/':
+            if not allow_division or not integer_bits.integer_type(e, {}, model.parameter_types, getattr(model, 'genvars', ())):
+                fail(e)
+            try:
+                value = integer_arithmetic.truncating_division(*args)
+            except ValueError:
+                fail(e)
+        elif e.op == '+': value = args[0]+args[1]
         elif e.op == '-': value = args[0]-args[1]
         elif e.op == '*': value = args[0]*args[1]
         elif e.op == 'unary-': value = -args[0]
@@ -58,7 +69,7 @@ def check_integer_model(model, values):
         return
     def visit(value):
         if isinstance(value,Expr):
-            check_integer_expression(value,model,values)
+            check_integer_expression(value,model,values,allow_division=True)
         elif is_dataclass(value) and not isinstance(value,Token):
             for f in fields(value):
                 visit(getattr(value,f.name))

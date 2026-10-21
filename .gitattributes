@@ -8,3 +8,7 @@ benchmark/tasks/*/tests/triangle_oscillator.py linguist-generated=true
 # Generated receipts remain expandable; their readable counts live in CALIBRATION.md.
 experiments/benchmark_first_batch/calibration_receipt.json linguist-generated=true
 experiments/benchmark_first_batch/optimization/*receipt.json linguist-generated=true
+
+# Stored patches keep their original context bytes (receipts bind them by SHA),
+# so trailing whitespace in their context lines is content, not a style error.
+experiments/backends/support/low-cost-closure/*.patch -whitespace

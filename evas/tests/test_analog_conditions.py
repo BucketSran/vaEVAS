@@ -62,40 +62,61 @@ class OrdinaryAnalogConditionContracts(unittest.TestCase):
             for extra in bodies]
         self.assertEqual(expressions, [expressions[0]] * len(expressions))
 
-    def test_source_nonlinear_predicates_are_rejected_before_branch_pruning(self):
-        for predicate in ("V(u,r)*V(u,r)", "pow(V(u,r),2)",
-                          "V(u,r)*V(u,r)-V(u,r)*V(u,r)", "squared"):
-            for body in (f"if({predicate}>0.5) tmp=1; else tmp=0; V(y,r)<+tmp;",
-                         f"if({predicate}>0.5) begin end V(y,r)<+0;"):
-                with self.subTest(predicate=predicate, body=body):
-                    source = model("squared=V(u,r)*V(u,r); " + body,
-                                   declarations="real tmp,squared;")
-                    with self.assertRaisesRegex(CompileError, "affine"):
-                        compile_sources({"test.va": source}, [instance()])
+    def test_source_input_products_and_cancelled_predicates(self):
+        from fractions import Fraction
+        samples = [Fraction(-1), Fraction(-3, 4), Fraction(-1, 2),
+                   Fraction(0), Fraction(1, 2), Fraction(3, 4), Fraction(1)]
+        for predicate, cancelled in (("V(u,r)*V(u,r)", False),
+                                     ("V(u,r)*V(u,r)-V(u,r)*V(u,r)", True),
+                                     ("squared", False)):
+            for empty in (False, True):
+                body = (f"if({predicate}>0.5) begin end V(y,r)<+0;" if empty else
+                        f"if({predicate}>0.5) tmp=1; else tmp=0; V(y,r)<+tmp;")
+                with self.subTest(predicate=predicate, empty=empty):
+                    program = compile_sources({"test.va": model(
+                        "squared=V(u,r)*V(u,r); " + body,
+                        declarations="real tmp,squared;")}, [instance()])
+                    result = solve(program, ["u"], [[float(x)] for x in samples], kernel=KERNEL)
+                    expected = [int(not empty and not cancelled and x*x > Fraction(1, 2))
+                                for x in samples]
+                    self.assertEqual([row["voltages"][result["nodes"].index("y")]
+                                      for row in result["solutions"]], expected)
+        # Power remains outside the whole-program input product scope, even
+        # when its analog statement has no live result.
+        for body in ("if(pow(V(u,r),2)>0.5) tmp=1; else tmp=0; V(y,r)<+tmp;",
+                     "if(pow(V(u,r),2)>0.5) begin end V(y,r)<+0;"):
+            with self.subTest(body=body), self.assertRaisesRegex(CompileError, "affine"):
+                compile_sources({"test.va": model(body, declarations="real tmp;")}, [instance()])
 
-    def test_raw_ir_nonlinear_predicates_are_rejected_in_unreachable_arms(self):
-        program = compile_sources({"test.va": model("V(y,r)<+0;")}, [instance()]).to_dict()
-        u = {"op": "affine", "constant": 0,
-             "terms": [{"node": program["nodes"].index("u"), "coefficient": 1}]}
-        zero = {"op": "affine", "constant": 0, "terms": []}
-        one = {"op": "affine", "constant": 1, "terms": []}
+    def test_raw_ir_input_products_and_dead_power_arms(self):
+        from dataclasses import replace
+        from evas.ir import Affine, Binary, Origin, Power, Select, Term
+        program = compile_sources({"test.va": model("V(y,r)<+0;")}, [instance()])
+        u = Affine(0, (Term(program.nodes.index("u"), 1),))
+        zero, one = Affine(0, ()), Affine(1, ())
+        origin = Origin("raw.va", 1, 1, "dut")
         def select(left, then_value, else_value):
-            return {"op": "select", "relation": "gt", "left": left, "right": zero,
-                    "then_value": then_value, "else_value": else_value,
-                    "origin": {"source": "raw.va", "line": 1, "column": 1, "instance": "dut"}}
-        for predicate in ({"op": "multiply", "left": u, "right": u},
-                          {"op": "power", "base": u, "exponent": 2}):
-            for rhs in (select(predicate, one, zero),
-                        select(one, one, select(predicate, one, zero))):
-                with self.subTest(predicate=predicate, rhs=rhs):
-                    program["contributions"][0]["rhs"] = rhs
-                    raw = type("ProgramLike", (), {"to_dict": lambda self: program,
-                                                   "nodes": tuple(program["nodes"]), "states": ()})()
-                    # A source-knot value avoids accidental numerical rejection:
-                    # unsupported scope must be checked even if sign is obvious.
-                    with self.assertRaisesRegex(KernelError, "unsupported_condition.*affine"):
-                        transient(raw, {"u": [[0, 1], [1, 1]]}, [0.0],
-                                  stop=1.0, max_step=0.25, kernel=KERNEL)
+            return Select("gt", left, zero, then_value, else_value, origin)
+        for predicate in (Binary("multiply", u, u), Power(u, 2)):
+            for dead in (False, True):
+                rhs = select(predicate, one, zero)
+                if dead:
+                    rhs = select(one, one, rhs)
+                contribution = program.contributions[0]
+                sign = 1 if contribution.positive == program.nodes.index("y") else -1
+                raw = replace(program, contributions=(replace(contribution,
+                    rhs=Binary("multiply", Affine(sign, ()), rhs)),))
+                with self.subTest(predicate=predicate, dead=dead):
+                    if isinstance(predicate, Power):
+                        with self.assertRaisesRegex(KernelError, "unsupported_condition.*affine"):
+                            transient(raw, {"u": [[0, -1], [1, 1]]}, [0, 0.5, 1],
+                                      stop=1, max_step=0.25, kernel=KERNEL)
+                    else:
+                        result = transient(raw, {"u": [[0, -1], [1, 1]]}, [0, 0.5, 1],
+                                           stop=1, max_step=0.25, kernel=KERNEL)
+                        self.assertEqual([row["voltages"][result["nodes"].index("y")]
+                                          for row in result["solutions"]],
+                                         [1, 1, 1] if dead else [1, 0, 1])
 
     def test_v1_limiter_formula_and_boundaries(self):
         samples = [[-1.0], [-7/12], [0.0], [0.5], [2.0]]

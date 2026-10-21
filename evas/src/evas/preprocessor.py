@@ -4,11 +4,12 @@ No filesystem lookup. Tokens retain invocation/include locations and expansion
 paths, so preprocessing cannot collapse operator call-site identities.
 """
 from dataclasses import dataclass, replace
+from types import SimpleNamespace
 import posixpath
 import re
 from .errors import CompileError
 from .limits import MAX_IR_ITEMS, MAX_SOURCE_NESTING
-from .syntax import Token, _tokens
+from .syntax import Parser, Token, _tokens
 from .standard_headers import STANDARD_HEADERS
 
 
@@ -27,6 +28,17 @@ def preprocess_sources(sources):
         files[key] = _tokens(text, key, tolerant=True)[:-1]
     predefined = {'__VAMS_ENABLE__':Macro(None,()), '__LINE__':Macro(None,()), '__FILE__':Macro(None,())}
     count = 0
+
+    def retain(tokens):
+        nonlocal inside_module
+        output = []
+        for token in tokens:
+            if token.text == 'module':
+                inside_module = True
+            elif token.text == 'endmodule':
+                inside_module = False
+            output.append(replace(token, default_transition=default_transition))
+        return output
 
     def fail(message, token, *, code="compile_error"):
         raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
@@ -114,6 +126,7 @@ def preprocess_sources(sources):
         return output
 
     def file_tokens(name, ancestry=(), include_expansion=()):
+        nonlocal default_transition
         if name in ancestry or len(ancestry) >= MAX_SOURCE_NESTING:
             token = files[name][0] if files[name] else Token('', 'eof',1,1,name)
             fail('recursive or over-budget source include', token,
@@ -176,6 +189,38 @@ def preprocess_sources(sources):
                     fail('include call-site identity depth budget exceeded', token, code="resource_budget")
                 output.extend(file_tokens(target,(*ancestry,name),path))
                 continue
+            if name_of == 'default_transition':
+                if inside_module:
+                    fail('default_transition is allowed only outside module definitions', token)
+                i += 1
+                end = i
+                while end < len(tokens) and tokens[end].line == token.line:
+                    end += 1
+                value_tokens = expand(tokens[i:end])
+                if not value_tokens:
+                    fail('default_transition requires a positive constant expression', token)
+                for item in value_tokens:
+                    if item.kind == 'number' and not re.fullmatch(r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?[TGMkKmunpfa]?', item.text):
+                        fail('real literal requires digits on both sides of the decimal point', item, code='syntax_error')
+                parser = Parser('', token.source, tokens=[*value_tokens, replace(token, text='<eof>', kind='eof')])
+                expression = parser.expression()
+                if parser.token.kind != 'eof':
+                    fail('default_transition requires one constant expression', parser.token)
+                # Use the compiler's constant arithmetic rules without a module
+                # environment: directives cannot refer to module parameters.
+                from .lowering import lower
+                from .ir import Affine
+                from .integer_constants import check_integer_expression
+                check_integer_expression(expression, SimpleNamespace(parameter_types={}, source=token.source),
+                                         {}, check_literals=True)
+                def no_parameter(name):
+                    fail(f'default_transition requires a constant expression; unknown name {name!r}', token)
+                value = lower(expression, no_parameter, {}, token.source)
+                if not isinstance(value, Affine) or value.terms or value.constant <= 0:
+                    fail('default_transition requires a positive constant time; zero has no supported simulator default', token)
+                default_transition = value.constant
+                i = end
+                continue
             if name_of in ('define','undef'):
                 i += 1
                 if i == len(tokens) or tokens[i].kind != 'name' or tokens[i].line != token.line:
@@ -215,10 +260,10 @@ def preprocess_sources(sources):
             end = i+1
             while end < len(tokens):
                 t = tokens[end]
-                if t.kind == 'include' or t.kind == 'directive' and t.text[1:] in ('define','undef','ifdef','ifndef','elsif','else','endif'):
+                if t.kind == 'include' or t.kind == 'directive' and t.text[1:] in ('define','undef','ifdef','ifndef','elsif','else','endif','default_transition'):
                     break
                 end += 1
-            output.extend(expand(tokens[i:end])); i=end
+            output.extend(retain(expand(tokens[i:end]))); i=end
         if conditional:
             fail('unterminated conditional directive',tokens[-1])
         return output
@@ -228,6 +273,8 @@ def preprocess_sources(sources):
         # Independent roots are separate compilation units; include expansion
         # within each root shares this fresh macro and header-guard environment.
         macros = predefined.copy()
+        default_transition = None
+        inside_module = False
         tokens=file_tokens(name)
         # Validate only tokens retained by preprocessing. An unused macro
         # argument or inactive branch is not part of the compiled program.

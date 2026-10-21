@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "scope": "Existing cross/timer writer scalarinteger/real declarations with finite instance constant seeds only",
+  "candidate": {
+    "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/declaration-implementation/worker-final/candidate.json",
+    "sha256": "e220e03f31ac69b5468ccd033565796d147637175d6277d05eb98974cc89e663",
+    "availability": "local-only"
+  },
+  "candidate_files": {
+    "evas/src/evas/syntax.py": "0226571c940ca39e17e21927d1bd422e744b95ebf7b35720c46d8498d764acb6",
+    "evas/src/evas/elaboration.py": "52120626f2ff8ba22f8fe9cf1d6310d36ac5c9011485ba78746c06447ec9d9e2",
+    "evas/src/evas/instance_compiler.py": "e275c82425797c0b7baa1037a70995c1c3a6cb75fb9d1a7da6d843be8b06e237",
+    "evas/tests/test_declaration_initializers.py": "ae2963465046e32d13f215934f02ce975a3140c75aecc816ea98fc9ada6b3034"
+  },
+  "candidate_patch_sha256": "da3609d6bca5e4358a58107d26962c200ec58a7d231f7e885bc300961394380a",
+  "prior_art": {
+    "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/declaration-implementation/worker-final/prior-art.json",
+    "sha256": "0c8745ae5161dd9cc3c2a9768970ed97c748428c487872d1025a08caadd0aaa3",
+    "availability": "local-only"
+  },
+  "originals_from_final400": [
+    {
+      "family": "017",
+      "status": "rejected",
+      "checker": "not_run",
+      "cleanup_confirmed": true,
+      "result_sha256": "089cec8445f333c83ca1ff290236fcb17ba230ce3f404e76bf6387e350bb80c3",
+      "process_sha256": "866ed7dd1f6281f8eda3bcc0453e19f039fb45b6317cb67c9caba2137f60e0f9",
+      "diagnostic": {
+        "code": "unsupported_initial_event",
+        "kind": "compile_error",
+        "category": "unsupported",
+        "stage": "parse",
+        "capability": "LANG",
+        "message": "unsupported declaration initializer: declaration initialization requires a scalar cross/timer event target"
+      }
+    },
+    {
+      "family": "039",
+      "status": "rejected",
+      "checker": "not_run",
+      "cleanup_confirmed": true,
+      "result_sha256": "a45cc4c5b21e239db5d2d781ad410f86467268e1dce81cf477956325a60ad5d0",
+      "process_sha256": "bb93d6357975aea3f117278b8f8f47e9e342b83561b657a5eee10374476032b3",
+      "diagnostic": {
+        "code": "syntax_error",
+        "kind": "compile_error",
+        "category": "unknown",
+        "stage": "parse",
+        "capability": "LANG",
+        "message": "runs/v4-gold-main-20261016-232304/cases/039/submission/edge_interval_timer.va:7:1: expected 'module', got '('; outside affine-voltage syntax"
+      }
+    },
+    {
+      "family": "110",
+      "status": "completed",
+      "checker": "passed",
+      "cleanup_confirmed": true,
+      "result_sha256": "eb0c921dee1d9434e1c41f574ba255c19055c4258274614883e64dd1895dec35",
+      "process_sha256": "02d2ccb8a047eaa937a1384e54fbb765461d41e82644478efae10af372aa85ec",
+      "checker_note": "active_edges; P_DISABLED_COMMON_MODE mismatch_count=0; P_START_REINITIALIZATION mismatch_count=0; P_FALLING_CLOCK_UPDATES mismatch_count=0; P_DECISION_DIRECTED_STEP mismatch_count=0; P_REVERSAL_STEP_HALVING mismatch_count=0; P_COMMON_MODE_AND_DIFFERENTIAL mismatch_count=0"
+    },
+    {
+      "family": "112",
+      "status": "rejected",
+      "checker": "not_run",
+      "cleanup_confirmed": true,
+      "result_sha256": "9df6d838f553b8d224813c801ade806be25671907e09a639caf14203871a87cd",
+      "process_sha256": "9d6fe84abedf3e0b8e3e3c12159d2561db4bd886ad28bdd08fe2ee1676e04a14",
+      "diagnostic": {
+        "code": "syntax_error",
+        "kind": "compile_error",
+        "category": "unknown",
+        "stage": "parse",
+        "capability": "LANG",
+        "message": "runs/v4-gold-main-20261016-232304/cases/112/submission/latched_comparator_delay.va:29:39: unsupported expression '$'"
+      }
+    },
+    {
+      "family": "115",
+      "status": "completed",
+      "checker": "passed",
+      "cleanup_confirmed": true,
+      "result_sha256": "0a3521972f0624ae0cf7e098944a9342bfeeadc306d1b202cf1dd3a538226e21",
+      "process_sha256": "92022ff68e0fbdae138ea9ea77ebd6778503eead60da9eec145f5dc57deb2134",
+      "checker_note": "edges=4 checked=4 max_err=0.0000 marker_return_low=False; P_INITIAL_LOW mismatch_count=0; P_RISING_EDGE_COUNT mismatch_count=0; P_WRAP_MARKER mismatch_count=0; P_NONWRAP_LOW mismatch_count=0; P_PERIOD_FOUR mismatch_count=0"
+    }
+  ],
+  "full_final_manifest": {
+    "path": "experiments/backends/support/integer-bitops/evidence.json",
+    "sha256": "9417efdccb4e9f0070561136af99472c718bd6ceae1bbf22a7ecea8d19dc2792",
+    "field": "source_manifests.final400"
+  },
+  "red_history": [
+    {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/declaration-implementation/red-receipt.json",
+      "sha256": "f4d25866764423b8258b4ce454bfcd496316a5a04c97045573129ae41edd427e",
+      "availability": "local-only"
+    },
+    {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/declaration-implementation/red-expanded-receipt.json",
+      "sha256": "408272f8df230c1adfba3e9bfffeb1e376ab7429044b7de048e1a5738824f96d",
+      "availability": "local-only"
+    },
+    {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/declaration-implementation/red-typed.log",
+      "sha256": "27d5b1fae7f2cf1bdd770e3906c0227f53b2685b8cda6a3910b8b7dcffdbcea8",
+      "availability": "local-only"
+    },
+    {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/declaration-implementation/red-typed-test-snapshot.py",
+      "sha256": "ae2963465046e32d13f215934f02ce975a3140c75aecc816ea98fc9ada6b3034",
+      "availability": "local-only"
+    }
+  ],
+  "checks": [
+    {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/declaration-implementation/worker-final/focused-regressions.json",
+      "sha256": "4f7c42a69f36f43f4f80d6484af63c4889c98c8b0207be564a9d63a768442774",
+      "availability": "local-only"
+    },
+    {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/declaration-implementation/root-integrated.log",
+      "sha256": "85234c3a791b67256b81dd06c8af3d741e3cacfbb4a33311f3a125e0c96370d6",
+      "availability": "local-only"
+    },
+    {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/declaration-review/spec/result.json",
+      "sha256": "3d3c2123d9dcb83c7f42db0f0d0c4ebe511df7fe58228c4d068660143780448c",
+      "availability": "local-only"
+    },
+    {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/declaration-review/standards/result.json",
+      "sha256": "de0e97b9270295283d51b44a2fa1d21969bb14b85d6bef400fdbca791901f6b7",
+      "availability": "local-only"
+    }
+  ],
+  "limits": [
+    "Only existing cross/timer event writers; read-only and ordinary roles remain excluded",
+    "Constant seed typed lowering only; unsupported modulo and integer-parameter division remain rejected",
+    "112 random function and039 other-file syntax remain unsupported",
+    "Final publication CI separate; no actualSpectre or general input-sampling grant"
+  ]
+}

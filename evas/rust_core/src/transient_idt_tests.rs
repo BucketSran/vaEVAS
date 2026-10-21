@@ -10,6 +10,7 @@ const SCALES: [f64; 4] = [1.0, -2.0, 2.0, 0.5];
 fn source(tail: f64) -> Trajectory {
     Trajectory::new(
         TransientInputs {
+            analytic_sources: vec![],
             pwl_errors_v: None,
             strobetimes: Vec::new(),
             // Every corrected source preserves the complete accepted [0,1].
@@ -74,6 +75,7 @@ fn fixture() -> (EventModel, Trajectory, Frame) {
         .circuit_with(&states, &operators.values(0.0).unwrap())
         .unwrap();
     let initial = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.0,
         state_bounds: states.iter().copied().map(I::point).collect(),
@@ -218,6 +220,7 @@ fn corrected_future_preserves_accepted_prefix_and_invalidates_same_time_values()
         accepted.operators.bounds(1.0).unwrap()
     );
     let corrected = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         operators,
         ..accepted

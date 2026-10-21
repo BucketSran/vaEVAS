@@ -37,17 +37,17 @@ class TransitionAccuracy(unittest.TestCase):
         actual = result['solutions'][-1]['voltages'][y]
         self.assertLessEqual(abs(F(actual)-(F(sample)-F(start)-F(delay))),F(1e-3))
 
-    def test_delayed_start_roundoff_cannot_hide_behind_zero_residual(self):
+    def test_delayed_start_proof_recovers_physical_point_at_original_accuracy(self):
         start, delay = 1e12, .10005
         body = (f'@(initial_step) a=0; @(timer({start},0,1)) a=1; '
                 f'V(y,r)<+transition(a,{delay},1,1);')
         times = [0, start, start+.5, start+2]
-        # The old code accepted a 169.7265625 uV error with zero residual.
-        with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
-            execute(body, times, start+2, atol=1e-9)
-        result = execute(body, times, start+2, atol=1e-3)
+        # The old representative start displaced the ramp by 169.7265625 uV.
+        # The retained rational line recovers the physical value at the same
+        # original strict budget; a zero equation residual alone is insufficient.
+        result = execute(body, times, start+2, atol=1e-9)
         y = result['solutions'][2]['voltages'][result['nodes'].index('y')]
-        self.assertLessEqual(abs(F(y) - (F(1, 2)-F(delay))), F(1e-3))
+        self.assertLessEqual(abs(F(y) - (F(1, 2)-F(delay))), F(1e-9))
 
     def test_network_gain_is_included_in_history_error_budget(self):
         # An inexact 1/3 ramp value is amplified; checking the operator alone

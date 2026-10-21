@@ -347,6 +347,142 @@ python3 -B scripts/check_workspaces.py --assets --json > runs/workspace-assets.j
 [退出清单](../docs/contributing/workspaces.md#retiring-work)处理。脚本只观察，不创建快照、修改索引、
 移动、清理或删除资产，也不自动读取远端 PR 状态。
 
+## 长任务持续推进检查
+
+`check_task_continuation.py` 可接入支持本地命令 hook 的 Codex 原生 `Stop` 边界，读取现有任务 `scope.json`
+及 `current.remaining_closure_ledger` 指向的固定编号 `001..target` 队列。它不另建队列、不调度进程，也不执行仿真。
+总体目标未达且有待做动作时，返回原生 `decision: block` 继续当前主对话；重复结束尝试不会绕过检查。
+候选冻结、CI阶段闭合及旧早间审阅时间都不等于总体任务结束。
+
+```sh
+python3 -B scripts/check_task_continuation.py --scope runs/<task>/scope.json \
+  --session-id <main-thread-id> --print-hook-config
+python3 -B -m unittest discover -s scripts/tests -p test_task_continuation.py -v
+```
+
+第一条命令生成绑定该主对话的原生hook配置，不自动安装或信任它。将输出合入该工作区现有
+`.codex/hooks.json` 的 `hooks.Stop`，保留其他hook；任务专用绝对路径配置只在本地保留。
+Codex要求用户通过 `/hooks` 审阅并信任非托管hook，信任前不得声称实时结束拦截已生效。
+配置和协议见[官方hook文档](https://learn.chatgpt.com/docs/hooks#stop)。
+
+仅 `current.continuation.deadline_utc` 是当前执行窗口的截止；未设置表示不从旧审阅时间推断截止。
+明确暂停使用 `current.continuation.status: paused` 和 `user_pause.message_ref` 记录用户指令。
+全部队列通过还需现有总体验收标记及 `delivery_checks` 闭合，不能只修改通过计数。
+若所有未通过项确实依赖外部条件，可在原队列对应项加 `continuation_block`，列明
+`kind: external_dependency|human_decision` 和 `evidence: {path, sha256}`；该JSON收据必须匹配
+`case_id`、`blocker_kind` 并提供 `next_check`。内部缺能力、未知数学或单项阻塞不会停止其他工作。
+状态损坏或绑定主对话目录移出工作区时，返回明确的原生阻止决定；不影响其他主对话和用户 `Interrupt`。
+
+该检查只能阻止已有状态所显示的提前结束，不能认证修复价值、用户授权真实性或仿真语义。
+快照回归复用本次实际313/400及87项待做动作的无损字段投影，属于维护检查，不计EVAS成绩。
+
+需要额度、停滞与恢复控制时，在原 `current.continuation` 中用
+`runtime: {schema_version: 1, path: "continuation-runtime.json"}` 引用唯一运行账。
+[task_continuation_policy.py](task_continuation_policy.py) 提供初始化、原子准入、收据结算、进展和重规划判定；
+动作只引用现有队列编号，不复制业务结果。旧任务没有这个引用时保留原 Stop 行为。
+初始化时未知的既有消耗保持未知，只有明确授权的新执行窗口才能指定零起点。恢复不能再次初始化覆盖原账。
+
+默认总额为 240 代理分钟，包含 25% 收尾预留；探索路线初始 60 代理分钟、最多一次常规续期 30 分钟。
+30 分钟路线主动时间无有效进展时需重规划。观察时间按同路线区间并集计算，投入按各执行者累计。
+正常等待不清零已用时间；改名、换执行者和重复通知也不会恢复额度。
+同一队列项的开发动作沿用已登记路线，改假设描述、输入版本或拆分不能另领探索额度。
+同一份证据改进展类别也不刷新观察时间。收尾动作的语义和授权由可信项目入口判断，
+`purpose: closeout` 这个字段本身不能证明它是收尾。
+项目验收器或适用独立审查提供进展依据，退出码为零和工具调用次数不算有效进展。
+
+检查结果使用 `progress.category: verification`；兼容的 `acceptance` 类别也只登记证据，
+不刷新路线观察窗口。`exploration` 必须提供改变下一步决策的新证据。
+项目在约定检查点将完整、可比较的目标结果提交为 `goal_checkpoint` 收据，绑定已有动作、
+当前路线计划、比较编号及证据哈希。`assessment` 明确给出 `before/after/target/expected_min_gain`
+和 `complete/comparable/checkpoint_due`。例如本轮全量成绩317→317、CI全绿，目标预期至少新增1项，
+会登记 `goal_no_growth` 并拒绝该路线原样派发；需沿用原路线完成独立审查的重规划。
+未完成的运行、尚未到检查点或不可比较的结果只记录观察，不触发这个判定。
+重复收取不清零额度；独立路线继续可用。原始评分、固定编号和总体完成仍由项目验收器负责，
+通用策略不从局部检查数量推断目标，也不能认证项目提供的比较事实。
+
+项目收取证据仍使用同一入口和运行账：
+
+```sh
+python3 -B scripts/check_task_continuation.py --scope runs/<task>/scope.json \
+  --runtime-request runs/<task>/checkpoint-request.json
+```
+
+请求包含 `operation: goal_checkpoint`、原 `task_id`、稳定 `event_id` 和 `receipt: {path, sha256}`。
+它不会改写scope或业务队列；原Stop调用及其用户信任定义保持兼容。
+
+`task_continuation_execution.execute_review` 将审查接入同一 `execute_action`。
+审查契约指定 `unit_id/axis/author/inputs`，输入应含固定diff、受影响依赖、验收依据和待关闭问题。
+完整结论仅对这些文件的原字节有效；新版本通过 `previous_review` 引用上一条完整审查的attempt ID。
+未关闭finding必须保持稳定ID，关闭需引用本次冻结的新证据。缺项、旧版本并发结果、输出身份不符
+或损坏证据都不能成为通过。缓存只适用于完全相同的输入，不能代替新差分和依赖审查。
+审查输出为 `{review_key, reviewer, findings}`，每项finding含 `id/status/detail/evidence`，
+状态为 `open` 或 `resolved`；明确空列表表示未发现问题，不接受缺失结果文件。
+
+审查的deadline由原Harness执行器控制，超时、清理未知、缺失结果均不会通过；迟到输出不能升级已结算结果。
+恢复先收取原动作，再查询缓存；重试须新动作并占用原总额度。真实本地进程测试覆盖预写通过文件后超时、
+缓存不重派、恢复不重复扣费及输入失效。此控制限于Harness管理的本地进程组及结果接纳，
+不证明Codex原生子代理、逃离进程组的工具或远端推理已停止；这些执行方式不能冒充受控审查。
+
+[task_continuation_execution.py](task_continuation_execution.py) 是现有 Harness `run_process` 的薄适配。
+它在派发前取得预占，复用原进程期限、日志、收据和清理。恢复查询同一动作及输出目录，
+已经完成则收取，仍运行或未知则不重派。模块不自带调度服务、业务队列或另一套进程守护器。
+收据哈希只绑定内容，不能认证来源；调用它的宿主适配器必须提供可信执行身份与主动时间计量。
+
+**当前没有随此模块交付 Codex 原生代理主动时间提供方。** 原生计量模式缺少计量时，执行入口返回
+`metering_unavailable` 且不启动命令。进程墙钟和模型 turn 总时长都不能冒充代理主动时间。
+测试中的 `controlled_test` 计量只用于阈值和恢复回归，生产路径不自动接纳它。
+运行账中的额度耗尽、合法等待或计量未知允许报告未完成状态并结束当前轮，不能写成项目完成。
+真正运行中的命令仍受原执行器期限约束；主代理与子代理全部活动的硬额度控制尚未具备。
+
+需要先恢复受控执行时，可信协调者可以在同一运行账中明确激活 `bounded_command_seconds`。
+这是一项前向执行授权：保留原生计量的既有未知历史，记录授权依据与命令额度单位，
+只允许尚无动作的运行账激活一次。恢复、换事件 ID 或再次激活都不能清零额度。
+它不代表此前的代理分钟已结清，也不控制入口之外的主代理、子代理或直接工具调用。
+
+该模式按命令期限与已核守护器的后备、清理宽限一起预占；命令结束后保守扣除完整预占，
+不会把进程墙钟填写成代理主动时间。同一执行者并行的命令也逐项相加，已完成动作重复收取不重复扣除。
+命令期限默认 90 秒，原生计量模式仍以 90 秒为上限。受控命令模式可以显式指定更长的有限正数期限，
+但同一运行账必须覆盖完整期限与已核宽限，且满足剩余额度限制。例如宽限为 5.05 秒时，150 秒期限至少预占 155.05 秒。
+未知执行保留预占并先对账，不自动重派。新派发核对已加载 Harness 的实现身份；
+版本未经核验时拒绝套用旧宽限。恢复沿用原验证结论，不能因源码后来恢复而把旧失败改成成功，
+损坏或不匹配的收据也不能作为成功结果。探索、停滞和一次续期继续使用原路线与同一运行账，
+但计量单位明确为已扣除的命令期限秒数。有效进展仍需绑定项目证据，普通成功退出不会刷新观察窗口。
+命令准入、期限、停滞拒派和恢复可独立验证；它们不证明宿主能在主对话结束后自动唤醒。
+原生 Stop 尚未实际观察到回调时，只能报告当前受控批次与未完成状态，不能承诺无人值守接续。
+
+用户明确授权新执行窗口后，可通过原运行账的 `grant_bounded_budget` 操作追加命令额度。
+它要求既有模式为 `bounded_command_seconds`、全部动作已结算且消耗已知；不会重新初始化账本。
+请求沿用 `task_id`、稳定 `event_id` 和 `receipt: {path, sha256}`。授权收据包含：
+
+| 字段 | 含义 |
+| --- | --- |
+| `kind: bounded_budget_grant`、`task_id`、`grant_id` | 绑定原任务和唯一追加身份 |
+| `authority_ref`、`user_authorization` | 用户授权的来源和原文，由可信协调者核对 |
+| `deadline_utc` | 必须等于 scope 中当前执行窗口的硬截止 |
+| `expected_previous_total_command_s` | 必须与原账当前总额一致，防止对旧快照重复追加 |
+| `additional_command_s` | 新增有限正数额度，单位仍为命令期限秒 |
+
+使用上述 `--runtime-request` 入口提交请求。相同事件重复收取不再次追加；换事件但复用同一
+`grant_id` 和相同收据内容，也只返回历史结果。暂停、过期或后续窗口仍可收取历史 grant，
+这不授予新的执行权限。复用身份但修改授权内容会拒绝。中断恢复继续使用原请求和收据。
+原 attempts、actions、reviews、进展、费用和原生计量未知历史均保留。
+新增额度按原收尾比例另作预留，历史收尾费用不能提前消耗这份预留。墙钟硬截止与案例预算独立保持。
+
+```sh
+python3 -B -m unittest discover -s scripts/tests -p 'test_task_continuation*.py' -v
+```
+
+真实命令集成使用本机已有的 circuit-harness checkout。缺少该依赖时，相关集成检查明确跳过，
+基础拒绝与政策检查仍运行；跳过不代表进程集成或宿主接入通过。
+政策、真实进程和原生 hook 是三个不同验证范围，不能用其中一种的通过替代另外两种。
+
+实际 Stop 回调可用一次性诊断验证：在原 continuation 中明确设置
+`native_stop_probe: {nonce: "<unique-probe>", receipt: "native-stop-probe.jsonl"}`。
+探针在已绑定主会话最多阻断一次，并仅向本任务的探针收据追加记录。第二次 Stop 同一 `turn_id`
+且 `stop_hook_active=true` 时记录接续。该诊断会先于暂停判定运行，因此只在获准验证回调时启用，
+验证后移除配置。手工向脚本输入同样 JSON 仍只是协议回放；必须观察真实宿主触发与接续才能声称原生生效。
+探针不新增 hook 事件、不授予执行权限，也不解决计量缺口。新增事件定义仍需按宿主机制审阅并信任。
+
 ## 生成和检查追溯矩阵
 
 ```sh

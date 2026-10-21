@@ -1,0 +1,374 @@
+{
+  "schema_version": 1,
+  "capability_slice": "ordinary-current-integer-alias",
+  "status": "原114定向和公开控制已通过；当前接收源码字节匹配；新共同CI及统一400未完成",
+  "base_commit": "c8a39fea8f6c71125be4e62466f81ad3d056e915",
+  "identity": {
+    "runtime_files": 58,
+    "runtime_sha256": "7a5e2e811a5278b7b94b157dc85b3a717ace707c04925d2f1be40db5a8642a0e",
+    "runtime_sha256_recipe": "SHA256(UTF-8 json.dumps(identity.files,sort_keys=True,separators=(',',':')))",
+    "runtime_manifest": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-source-identity-reuse.json",
+      "sha256": "4755a0a8bd0718d4a092d16e7e9221fa3b924336cbdb6d488a2688edf86207a9"
+    },
+    "kernel_sha256": "193cb9bb6e5ce2a2758974833e9daedaaf01b5335d979a787a48342d5fc30983",
+    "production_files": {
+      "evas/src/evas/ordinary_integer_current_alias.py": "8f10cc41df3bdd9f8404b8a7dad1123e6dc1b8e010937b480892913b27199882",
+      "evas/src/evas/instance_compiler.py": "6c20bb90d379166022bfd012706df62158cfcfe0094ac70b890afabad716ef10"
+    },
+    "test": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/ordinary114-current-mux/source/evas/tests/test_ordinary_integer_current_alias.py",
+      "sha256": "d58e5145e05e970e42dca8bab8dbdc0b2088d96d167bd29a3cef9235aca630f5"
+    },
+    "original_fixture": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-gaps/ordinary114-current-mux/source/evas/tests/fixtures/ordinary114_current_mux.va",
+      "sha256": "c69e68df3f28e9c8e5c02b919143ddb116cf78023fb2d3467612204cb8c6ce3c"
+    }
+  },
+  "accepted_contract": [
+    "原标量integer保留原State及cross事件；仅普通求值使用独立的当前值别名。",
+    "原源码恰有一个无条件顶层普通赋值，全部普通读取受其源码顺序支配。",
+    "RHS仅参数和直接当前input/inout物理源；拒绝局部量、旧State、time、history、数组、原循环、展开checked函数及其他实例输出驱动的输入。",
+    "原事件体、初始化体、触发器和设置中的同名读取拒绝；原事件写入保留。",
+    "原两臂及全部子表达式参与扫描；既有lowerer、决策操作数验证、checked_ir及signed32义务保持；普通执行再次验证整数赋值。",
+    "新增资格扫描和复制计入原NativeAudit100000；无候选旧路径不增加扫描或计费；不新增owner/IR/Rust权限。"
+  ],
+  "evidence": {
+    "public_controls": {
+      "status": "PASS",
+      "methods": 4,
+      "scope": "当前选择输出、实际cross方向/guard/赋值体及before/after/State轨迹、查询不变性、10原树负控和foreign输入负控",
+      "references": [
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-controls-r2/SOURCE.json",
+          "sha256": "5e2efcaa1f7e68a864ad642b30ff774c56ac8b68a3d41aac34f146e4b8e71a50"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-controls-r2/check.process.json",
+          "sha256": "778f2579e6517a68d5c3ac773b9021d7edde3f48abf4dcac8e1d52510907d4d4"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-controls-r2/check.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-controls-r2/check.stderr.log",
+          "sha256": "47406b0e9fc5807aa3899b07aca6e1f19b25b2c6ed0d9d6af08504e2a61e0771"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-controls-r2/execution.receipt.json",
+          "sha256": "dce6a884eb5781fec56b8640c067022c9c9cf8158e0ab22972cdb782717c061e"
+        }
+      ]
+    },
+    "integer_prefix_compatibility": {
+      "status": "PASS",
+      "methods": 11,
+      "scope": "既有234整数Floor前缀、原signed32/box/消费者权限与自然费用兼容",
+      "references": [
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-integer-prefix-compat-r2/SOURCE.json",
+          "sha256": "dbd84f5e0599515e95207c2be5b6d15343104d530b2710d755c50089d3d8b68e"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-integer-prefix-compat-r2/check.process.json",
+          "sha256": "17f2cd24b0c127c107dde0e834726cd0b797d00cf675ec0eb0685d925a7e7105"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-integer-prefix-compat-r2/check.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-integer-prefix-compat-r2/check.stderr.log",
+          "sha256": "71f8f8ee03043e8e046b654e883bfe1cf949059ad7e8c09e83b496ced793b933"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-integer-prefix-compat-r2/execution.receipt.json",
+          "sha256": "a7beddf895f670477356ebc61e1672c77afcf80435fbc28cc653a7b248d1cf92"
+        }
+      ]
+    },
+    "old_typed_budget": {
+      "status": "PASS",
+      "methods": 1,
+      "k225_source_sha256": "2071555869fc4bb90e83e54ccc859aa9d89d7beaf934218acade489f9ffc12da",
+      "k225_compile_work": 82919,
+      "k225_full_wire_work": 99899,
+      "k226": "resource_budget; original100000 cap unchanged",
+      "references": [
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-oldtyped-budget-r1/SOURCE.json",
+          "sha256": "e0c8440c4c069e0fd06995630f308aca73afc45a7af28a7b1dddb46f25c89a74"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-oldtyped-budget-r1/check.process.json",
+          "sha256": "7a20e15b6392a2ddd7a1025828b6a9e35d652ec272834f3e15d34d4fb7d58d09"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-oldtyped-budget-r1/check.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-oldtyped-budget-r1/check.stderr.log",
+          "sha256": "9568dcd82b7db786eadd14b8a03dd551a37448c888e8a2862a40c7c335769c93"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-oldtyped-budget-r1/execution.receipt.json",
+          "sha256": "b60a04310e56ea4aaf1d1dad141fa1a56decc37f0a709428eb040f75eefeb5d5"
+        }
+      ]
+    },
+    "original114": {
+      "status": "PASS",
+      "checker_points": 258,
+      "checker_note": "checked=258 max_error=0.00000 modes=0,1; P_HIGH_SELECTS_VIN1 mismatch_count=0; P_LOW_SELECTS_VIN2 mismatch_count=0; P_BIDIRECTIONAL_SELECTION mismatch_count=0; P_NO_MIXING mismatch_count=0",
+      "additional_references": [
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-original-private-r1/RESULT.json",
+          "sha256": "80f3d9695f9aa1c182dc20e6fa77adc0c3d57226c4c207668b138333e882e9b1"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-original-private-r1/INPUTS.json",
+          "sha256": "d6c939448575458a142954b503d988059648e5d5df00050c7efdc3b5c6b54887"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-original-private-r1/response.json",
+          "sha256": "2c1d4200e402b16da594818837f2053e41e91d70f3300d7291694a2c88eefb55"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-original-private-r1/test-inputs/root-original-114.py",
+          "sha256": "406381a0418cf69f9a9c39ca41937507bde4d5a687804c6a166bf7620a1addc1"
+        }
+      ],
+      "references": [
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-original-private-r1/SOURCE.json",
+          "sha256": "1d42d3886c610a01699987016849942a8192fe18de75a84d2df8ed3048236f4b"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-original-private-r1/check.process.json",
+          "sha256": "57bae8654c90b6253ef917bdab3cf1307238c8ae564d3c04b5601e2ddb6c5ade"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-original-private-r1/check.stdout.log",
+          "sha256": "44e3ed1fdccb9eeb67d4dc74de575afcef1b1ce0b6e549ffd22faea06f226bc3"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-original-private-r1/check.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-original-private-r1/execution.receipt.json",
+          "sha256": "539c4e045ad7b707538b782777ef8acdeb779776cfecc685536fc28d41e84364"
+        }
+      ]
+    }
+  },
+  "retained_failures": {
+    "initial_public_red": {
+      "status": "EXPECTED_RED",
+      "reason": "原同字节114在普通selector赋值L15拒绝；0 kernel调用",
+      "references": [
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-red-r1/SOURCE.json",
+          "sha256": "2ea383c44ddd9119e9ca64b533a3b54a03f24e210337e29993eb15546e8cb2d7"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-red-r1/check.process.json",
+          "sha256": "acae70c15da343490c540a199592a975f86178b20a72d003b245278d5c3cfb0a"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-red-r1/check.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-red-r1/check.stderr.log",
+          "sha256": "6726eae829cee6e604a39cb383a55cc53ec3f1349e402bc96a66f173ff238c84"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-red-r1/execution.receipt.json",
+          "sha256": "cbc05bc18520c2a9fbc91581caaaa38749cc0aae107f70226527e482c719f6cb"
+        }
+      ]
+    },
+    "ground_expectation": {
+      "status": "3 PASS / 1 FAIL",
+      "reason": "测试漏写合法ground项：实际{0:-1,vsel:+1}；仅测试修为V(vsel)-V(0)-binary64(.45)，生产不变。后续真实event断言由r2覆盖。",
+      "references": [
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-controls-r1/SOURCE.json",
+          "sha256": "e0c8440c4c069e0fd06995630f308aca73afc45a7af28a7b1dddb46f25c89a74"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-controls-r1/check.process.json",
+          "sha256": "a917201e8838e28d2a1315b15e294d143010cb3cee9b87a197065fa752bc9174"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-controls-r1/check.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-controls-r1/check.stderr.log",
+          "sha256": "9b46686a933b8d56132a275a915605d70a97d415850e6d52e6d24ec8b863e929"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-mux-controls-r1/execution.receipt.json",
+          "sha256": "e5bb80eeda4366efd38afd4806627aeaa6a2c834353162e556913c6e4a099b54"
+        }
+      ]
+    },
+    "compatibility_fixture_missing": {
+      "status": "10 PASS / 1 ERROR",
+      "reason": "私有archive未含Rust joint原fixture，FileNotFoundError；按原字节补所需fixture后r2的11方法通过，无生产修改。",
+      "references": [
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-integer-prefix-compat-r1/SOURCE.json",
+          "sha256": "5e2efcaa1f7e68a864ad642b30ff774c56ac8b68a3d41aac34f146e4b8e71a50"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-integer-prefix-compat-r1/check.process.json",
+          "sha256": "d1f1d9e441cb29a061e9bd4841ff8b9a48798d26082d8f562074ef990165e5aa"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-integer-prefix-compat-r1/check.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-integer-prefix-compat-r1/check.stderr.log",
+          "sha256": "be884bfd806cc9543a72e95ffba874652143ddf74144267d5eb3e90885b56782"
+        },
+        {
+          "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-integer-prefix-compat-r1/execution.receipt.json",
+          "sha256": "76cc295dbd5e0e58582cf79a219c12c1f4f03cd80d75cc5c1bca899b4c2100cc"
+        }
+      ]
+    }
+  },
+  "review_references": [
+    {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-alias-design-review.json",
+      "sha256": "cb2a64a2aa0b13bedeab559f174473caea659a48531c2df30dcd6036d1908a2e"
+    },
+    {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/114-current-alias-source-review-r1.json",
+      "sha256": "070cf7998bf393815089e58e6fda97a469f35fc34e09b89f255141e02690ddc0"
+    }
+  ],
+  "review_status": "源码独审无open finding；设计114-V1事件noop检测缺口由r2真实方向/guard/赋值体、cross记录及State更新控制闭合。原源码审查文中的pending执行说明由上述后续证据补齐。",
+  "delivery_ci": {
+    "previous_run": 39312465964,
+    "previous_head": "c8a39fea8f6c71125be4e62466f81ad3d056e915",
+    "coverage": {
+      "discovered": 2628,
+      "executed": 2628,
+      "unique": 2628,
+      "module_count": 251,
+      "outcomes": {
+        "passed": 2619,
+        "error": 8,
+        "failed": 1
+      },
+      "missing_ids": [],
+      "extra_ids": [],
+      "duplicate_count": 0,
+      "all_discovery_lists_equal": true,
+      "method_skips": 0,
+      "setup_skip_count": 0,
+      "merged_job": "skipped because regression jobs failed;this audit reconstructs observed counts only"
+    },
+    "classification": "8项环境错误及1项旧拒绝（主线程归因），不能作为CI green；本地补救控制通过，远端重跑待完成。",
+    "previous_audit": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/ci39312465964/AUDIT.json",
+      "sha256": "7d7c802ec5cbd023e106c7f3085a8e8606f1566b86539ebc630b8917ce0e2153"
+    },
+    "local_repairs": [
+      {
+        "status": "PASS",
+        "methods": 13,
+        "references": [
+          {
+            "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-ci-default-kernel-green-r2/SOURCE.json",
+            "sha256": "78667beef1d2ecb63181031a81796c995574d95055473b2e2cf6fe753cbb8c81"
+          },
+          {
+            "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-ci-default-kernel-green-r2/check.process.json",
+            "sha256": "f525bf2efa33c6e3b0aac98e9a68d04816fc473b53dc33353ee063d9e3644266"
+          },
+          {
+            "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-ci-default-kernel-green-r2/check.stdout.log",
+            "sha256": "6747b37878012f30cd1fc1243d7e6d5b2e11fc70eaa56bf07bf3b8cd26873d8e"
+          },
+          {
+            "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-ci-default-kernel-green-r2/check.stderr.log",
+            "sha256": "8977f3f52d39f2c618c53feef8c43914e881798c334c7aca5c1ce270a759a2c2"
+          },
+          {
+            "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-ci-default-kernel-green-r2/execution.receipt.json",
+            "sha256": "463f90feec36d091c19a84cc6cd6fdd2953c985e03a0f7f61fc909cc309a1dec"
+          }
+        ]
+      },
+      {
+        "status": "PASS",
+        "methods": 21,
+        "references": [
+          {
+            "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-ci-frontend-closure-r1/SOURCE.json",
+            "sha256": "3c54248d1170f4fe11bde409c2caca0380fdf336674bf53c9ca1b4faadbc97de"
+          },
+          {
+            "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-ci-frontend-closure-r1/check.process.json",
+            "sha256": "6186f852e00ee1912810e2ce80dd5644e08f2f3ae2b3a6931f89b14ba411f708"
+          },
+          {
+            "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-ci-frontend-closure-r1/check.stdout.log",
+            "sha256": "bca2edb7df83de07cda7d53e92e30552de63bc24a3dc4ed287f67381c6c52777"
+          },
+          {
+            "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-ci-frontend-closure-r1/check.stderr.log",
+            "sha256": "cdc6d88a85d6364e4b3ce4357a1b98dd863b4a683c0d83bb14502384015dd192"
+          },
+          {
+            "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/common-ci-frontend-closure-r1/execution.receipt.json",
+            "sha256": "1b6e6340dd5128d58087786042df43b6a6a644db6681fad622f828cfd2234fd6"
+          }
+        ]
+      }
+    ]
+  },
+  "limits": {
+    "unified_score": "314/317 unchanged",
+    "fixed_original_remaining_denominator": 83,
+    "new_spectre_pair": false,
+    "new_qualification": false,
+    "unified_fixed400": "not claimed",
+    "new_delivery_ci": "pending",
+    "install_acceptance_for_114": "not claimed",
+    "source_reuse": "58个Python runtime文件和已核kernel同字节；不外推到未来Rust/源码变化。"
+  },
+  "receiving_status": "received and final same-source wave27 dual400/CI/install independently accepted;see final_delivery",
+  "received_common_original": {
+    "result": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/three-original114-common-r2/RESULT.json",
+      "sha256": "555e7a0a223285b49ad1c960ff0c95cd82b083c6b19282cfee627d140247dfec",
+      "availability": "local-only in ignored task runs"
+    },
+    "response_sha256": "2c1d4200e402b16da594818837f2053e41e91d70f3300d7291694a2c88eefb55",
+    "checker": {
+      "status": "passed",
+      "note": "checked=258 max_error=0.00000 modes=0,1; P_HIGH_SELECTS_VIN1 mismatch_count=0; P_LOW_SELECTS_VIN2 mismatch_count=0; P_BIDIRECTIONAL_SELECTION mismatch_count=0; P_NO_MIXING mismatch_count=0"
+    }
+  },
+  "received_common_kernel": "074f28fd901674ded933a092793144a292ee1d688e2793427ec52a6b83737bd3",
+  "received_common_evidence": "ordinary-prefix.json#common_three",
+  "historical_record_boundary": "既有源码、开发/私有内核、局部计数及失败均保留各自原身份；最终同源交付以final_delivery为准，局部计数不叠加。",
+  "final_delivery": {
+    "path": "experiments/backends/support/low-cost-closure/ordinary-common-three.json",
+    "sha256": "d123bd11014e5698905cda6bbcd9ba7cf0fbd705303fa56aef943be7b1b84500",
+    "production_revision": "5f0f13202e67e28f06bdf783208b402bba70e146",
+    "original_pass": 317,
+    "revised_pass": 320,
+    "remaining": 80,
+    "target400_complete": false
+  }
+}

@@ -2,10 +2,11 @@
 //! Resolve any conditions from original PWL enclosures, then certify the output.
 use crate::event_conditions::Selection;
 use crate::events::EventModel;
-use crate::expression::resolve_selects_with_sources;
+use crate::expression::{input_rational_tree, resolve_selects_with_sources};
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, Program, Solution, Tolerances};
 use crate::solver::Circuit;
+use std::collections::HashSet;
 
 struct Prepared {
     expressions: Vec<Expression>,
@@ -22,6 +23,7 @@ pub(crate) struct Analog {
     // solutions and physical history are never cached or committed here.
     prepared: Option<Prepared>,
     has_select: bool,
+    source_rational: bool,
 }
 
 pub(crate) fn has_select(expr: &Expression) -> bool {
@@ -36,6 +38,20 @@ pub(crate) fn has_select(expr: &Expression) -> bool {
 }
 
 impl Analog {
+    #[cfg(test)]
+    pub(crate) fn source_trial_has_cache(&self) -> bool {
+        self.prepared.is_some()
+    }
+
+    /// A selected stateless math query never commits a failed solver cache.
+    pub(crate) fn fresh_source_trial(&self) -> Result<Self, Error> {
+        Self::new(
+            self.program.clone(),
+            self.driven.clone(),
+            self.tolerances.clone(),
+        )
+    }
+
     pub(crate) fn new(
         program: Program,
         driven: Vec<String>,
@@ -44,11 +60,16 @@ impl Analog {
         // Validate the entire original IR, including unreachable arms and
         // predicates, before resolving any sample-dependent branch.
         Circuit::new(program.clone(), &driven, tolerances.clone())?;
-        let input_nodes = driven
+        let input_nodes: Vec<_> = driven
             .iter()
             .map(|name| program.nodes.iter().position(|n| n == name).unwrap())
             .collect();
         let has_select = program.contributions.iter().any(|c| has_select(&c.rhs));
+        let source_nodes: HashSet<_> = input_nodes.iter().copied().chain([0]).collect();
+        let source_rational = program
+            .contributions
+            .iter()
+            .all(|c| input_rational_tree(&c.rhs, &source_nodes).is_some());
         Ok(Self {
             program,
             driven,
@@ -56,6 +77,7 @@ impl Analog {
             tolerances,
             prepared: None,
             has_select,
+            source_rational,
         })
     }
 
@@ -92,7 +114,9 @@ impl Analog {
             // map, including merged contributions and redundant constraints.
             // The stateless polynomial extension uses Newton and a Krawczyk
             // certificate. Input-selected polynomial leaves remain outside
-            // the ordinary-condition contract; no unsupported IR is dropped.
+            // the ordinary-condition contract. A fully source-driven rational
+            // tree can reuse the same original-expression certificate after
+            // its input predicates resolve; no nominal input is substituted.
             let (model, circuit) =
                 match EventModel::new(frozen.clone(), self.driven.clone(), self.tolerances.clone())
                 {
@@ -100,10 +124,15 @@ impl Analog {
                         let circuit = model.circuit(&[])?;
                         (Some(model), circuit)
                     }
-                    Err(error) if error.kind == "unsupported_transient" && !self.has_select => (
-                        None,
-                        Circuit::new(frozen, &self.driven, self.tolerances.clone())?,
-                    ),
+                    Err(error)
+                        if error.kind == "unsupported_transient"
+                            && (!self.has_select || self.source_rational) =>
+                    {
+                        (
+                            None,
+                            Circuit::new(frozen, &self.driven, self.tolerances.clone())?,
+                        )
+                    }
                     Err(error) => return Err(error),
                 };
             self.prepared = Some(Prepared {
@@ -132,9 +161,8 @@ impl Analog {
                 })?;
             crate::observation::retain_bounds(&mut solution, bounds);
         } else {
-            prepared
-                .circuit
-                .check_waveform_accuracy(&solution, input_bounds)?;
+            let bounds = prepared.circuit.waveform_bounds(&solution, input_bounds)?;
+            crate::observation::retain_bounds(&mut solution, bounds);
         }
         Ok(solution)
     }

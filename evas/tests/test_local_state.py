@@ -58,12 +58,13 @@ class LocalStateContracts(unittest.TestCase):
         self.assertEqual(values(run(program)), [1, 1.25, 2, 2.25, 2.5])
 
     def test_event_cannot_capture_an_analog_local_at_an_ambiguous_sequence(self):
-        for body in ("a=V(u,r); @(timer(0.5)) q=a;",
+        # Unique input-affine aliases have public positive coverage in
+        # test_initial_sampling_closure; nonlinear and future aliases stay rejected.
+        for body in ("a=V(u,r)*V(u,r); @(timer(0.5)) q=a;",
                      "@(timer(0.5)) q=a; a=V(u,r);",
-                     "a=V(u,r); @(cross(a-0.5,1)) q=2;",
-                     "a=0.5; @(timer(a)) q=2;",
-                     "a=V(u,r); @(timer(0.5)) if(a>0) q=2;",
-                     "a=0.125; @(timer(0.5,0,a)) q=2;"):
+                     "a=V(u,r)*V(u,r); @(cross(a-0.5,1)) q=2;",
+                     "a=V(u,r)*V(u,r); @(timer(0.5)) if(a>0) q=2;",
+                     ):
             with self.subTest(body=body), self.assertRaisesRegex(CompileError, "event expressions cannot read ordinary analog local") as failure:
                 compile_local("@(initial_step) q=1; " + body + " V(y,r)<+q;")
             self.assertEqual(failure.exception.diagnostic["code"], "unsupported_local_event")
@@ -86,7 +87,7 @@ class LocalStateContracts(unittest.TestCase):
         for event in ("@(timer(0.5)) q=a;", "@(cross(a-0.5,1)) q=2;",
                       "@(timer(0.5)) if(a>0) q=2;", "@(timer(0.5,0,a)) q=2;"):
             with self.subTest(event=event), self.assertRaises(CompileError) as failure:
-                compile_local("@(initial_step) q=1;\na=V(u,r);\n" + event + "\nV(y,r)<+q;")
+                compile_local("@(initial_step) q=1;\na=V(u,r)*V(u,r);\n" + event + "\nV(y,r)<+q;")
             diagnostic=failure.exception.diagnostic
             self.assertEqual(diagnostic['code'],'unsupported_local_event')
             self.assertEqual(diagnostic['location']['source'],'local-state.va')
@@ -127,8 +128,19 @@ class LocalStateContracts(unittest.TestCase):
         program=compile_local('@(initial_step) q=1; a=1; V(y,r)<+a+q;', 'integer a; real q;')
         self.assertEqual(values(run(program)),[2]*5)
         self.assertEqual([(state.name,state.kind) for state in program.states],[('q','real')])
-        with self.assertRaisesRegex(CompileError, 'assignment target must be a local variable'):
-            compile_local('@(initial_step) begin a=0; q=1; end a=V(u,r); V(y,r)<+a+q;')
+        # A total ordinary write gets a source-ordered alias, while the
+        # initial a=0 and q=1 remain in their separate held state slots.
+        program=compile_local('@(initial_step) begin a=0; q=1; end a=V(u,r); V(y,r)<+a+q;')
+        result=run(program)
+        self.assertEqual(values(result),[1,1.25,1.5,1.75,2])
+        self.assertEqual([(state.name,state.initial) for state in program.states],
+                         [('a',0),('q',1)])
+        self.assertEqual(result['transient']['states'],[[0,1]]*5)
+        # The same initial/ordinary name still cannot feed a runtime event.
+        with self.assertRaisesRegex(CompileError,'initial-only ordinary alias.*runtime event') as failure:
+            compile_local('@(initial_step) begin a=0; q=1; end @(timer(0.5)) q=a; '
+                          'a=V(u,r); V(y,r)<+a+q;')
+        self.assertEqual(failure.exception.diagnostic['code'],'unsupported_local_event')
         with self.assertRaisesRegex(CompileError, 'integral'):
             compile_local('@(initial_step) q=1; a=V(u,r); V(y,r)<+a+q;', 'integer a; real q;')
 

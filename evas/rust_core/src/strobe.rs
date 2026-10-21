@@ -6,6 +6,12 @@ pub(crate) fn run(mut request: Request) -> Result<Response, Error> {
     if config.strobetimes.is_empty() {
         return crate::transient::run_inner(request);
     }
+    if !config.analytic_sources.is_empty() {
+        return Err(Error::new(
+            "unsupported_analytic_source_consumer",
+            "analytic strobe requires the original request owner before normalization",
+        ));
+    }
     // Validate the original grid before unioning: sorting must not repair a
     // malformed user request. Source knots remain independent of solve points.
     crate::pwl::Trajectory::new(config.clone(), request.driven.len())?;

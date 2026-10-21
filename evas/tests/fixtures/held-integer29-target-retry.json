@@ -1,0 +1,174 @@
+{
+  "nodes": [
+    "0",
+    "y"
+  ],
+  "contributions": [
+    {
+      "branch": {
+        "instance": "dut",
+        "local_positive": "r",
+        "local_negative": "y",
+        "kind": "voltage"
+      },
+      "positive": 0,
+      "negative": 1,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": -1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "operator": 0,
+          "op": "operator"
+        }
+      },
+      "origin": {
+        "source": "held-bits.va",
+        "line": 2,
+        "column": 191,
+        "instance": "dut",
+        "expansion": []
+      }
+    }
+  ],
+  "states": [
+    {
+      "instance": "dut",
+      "name": "n",
+      "kind": "integer",
+      "initial": 2147483646.0
+    },
+    {
+      "instance": "dut",
+      "name": "m",
+      "kind": "integer",
+      "initial": 0.0
+    },
+    {
+      "instance": "dut",
+      "name": "out",
+      "kind": "real",
+      "initial": 0.0
+    }
+  ],
+  "events": [
+    {
+      "trigger": {
+        "start": 1.0,
+        "period": 1.0,
+        "time_tolerance": 1e-12,
+        "enabled": true,
+        "kind": "timer"
+      },
+      "body": [
+        {
+          "state": 0,
+          "rhs": {
+            "op": "add",
+            "left": {
+              "state": 0,
+              "op": "state"
+            },
+            "right": {
+              "constant": 1.0,
+              "terms": [],
+              "op": "affine"
+            }
+          },
+          "kind": "assign"
+        },
+        {
+          "state": 2,
+          "rhs": {
+            "constant": 4.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "kind": "assign"
+        },
+        {
+          "format": "pending=%g",
+          "args": [
+            {
+              "state": 2,
+              "op": "state"
+            }
+          ],
+          "origin": {
+            "source": "held-bits.va",
+            "line": 2,
+            "column": 160,
+            "instance": "dut",
+            "expansion": []
+          },
+          "kind": "display"
+        }
+      ],
+      "origin": {
+        "source": "held-bits.va",
+        "line": 2,
+        "column": 129,
+        "instance": "dut",
+        "expansion": []
+      }
+    }
+  ],
+  "operators": [
+    {
+      "input": {
+        "function": "bit_and",
+        "args": [
+          {
+            "function": "add",
+            "args": [
+              {
+                "state": 0,
+                "op": "integer_state"
+              },
+              {
+                "value": 1,
+                "op": "integer_literal"
+              }
+            ],
+            "origin": {
+              "source": "held-bits.va",
+              "line": 2,
+              "column": 212,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "integer_primitive"
+          },
+          {
+            "value": 0,
+            "op": "integer_literal"
+          }
+        ],
+        "origin": {
+          "source": "held-bits.va",
+          "line": 2,
+          "column": 215,
+          "instance": "dut",
+          "expansion": []
+        },
+        "op": "integer_primitive"
+      },
+      "delay": 0.0,
+      "rise": 0.1,
+      "fall": 0.1,
+      "origin": {
+        "source": "held-bits.va",
+        "line": 2,
+        "column": 199,
+        "instance": "dut",
+        "expansion": []
+      },
+      "kind": "transition"
+    }
+  ],
+  "schema_version": 31,
+  "step_bounds": []
+}

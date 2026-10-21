@@ -1,0 +1,157 @@
+{
+  "schema": "evas-local-037-evidence-v1",
+  "publication": "curated_local_scoped_evidence;not_release_qualification",
+  "production_frozen": true,
+  "scope": {
+    "route": "ordinary-event-prefix-037234",
+    "scoped_wholecase_before": 0,
+    "scoped_wholecase_after": 1,
+    "global_314_317_unchanged": true,
+    "full400_rerun": false,
+    "route_limit_seconds": 5400,
+    "total_ledger_limit_seconds": 36000
+  },
+  "wholecase": {
+    "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-original-point-lineage-r6/RESULT.json",
+    "family": "037",
+    "cli_returncode": 0,
+    "status": "completed",
+    "seconds": 13.616159083030652,
+    "kernel_sha256": "bc07f50038229901d6eb9add3353f3fdedac3f05ca62fe5e7d73e660a0d2fc17",
+    "checker": {
+      "status": "passed",
+      "note": "rectifier edge_checks=45 attack=9 decay=33 rect_p90=0.0000; P_FULL_WAVE_RECTIFICATION mismatch_count=0; P_RESET_ENVELOPE mismatch_count=0; P_PEAK_ATTACK mismatch_count=0; P_BOUNDED_DECAY mismatch_count=0; P_ENVELOPE_LAG_METRIC mismatch_count=0"
+    },
+    "response_sha256": "83527a2a35627616509ecf513b33b68f39a85c1593fb3944a48a793b87fc28d2",
+    "input_worker_checker": "original unchanged archive worker and original input/checker; no weakened precision or reset semantics"
+  },
+  "internal": {
+    "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-point-lineage-internal-r6/check.stdout.log",
+    "passed": 6,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 632,
+    "profile": "test opt-level=2; debug_assertions=true; overflow_checks=true",
+    "natural_default_work_exhaustion": {
+      "cap": 1000000000,
+      "real_queries": 98,
+      "sticky_retries": 2
+    },
+    "legacy_exhausted_fallback": {
+      "success": true,
+      "new_lineage_demands": 0,
+      "spent_unchanged": true
+    },
+    "full_frame": "warm nonempty records/outputs; two late failures; legal retry; full circuit/proofs/history/queue; nonpoint seed boxes preserved elementwise"
+  },
+  "kernel_profile": {
+    "receipt": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-point-lineage-build-r6/execution.intent.json",
+    "profile": "dev",
+    "opt_level": 0,
+    "debug_assertions": true,
+    "overflow_checks": true
+  },
+  "contract": {
+    "entry": "only original condition_precision after full old fallback; ordinary point only",
+    "identity": "actual accepted Frame proof map pointer, Program, driven and original source binding",
+    "boxes": "full old state and original source boxes preserved; no representative-point substitution",
+    "roles": "same-owner all original callbacks and numeric_actions; zero terms and unselected branches included; time/internal/foreign excluded",
+    "source_shape": "existing paid forcing_shaped_inputs admits validated exact_knots despite nonzero projection band; true unknown band remains refused",
+    "errors": "only unsupported_forcing_scope becomes None; step_budget and other Err propagate",
+    "work": "same existing timed-source request Work; all new operations prepaid; no new owner or cap"
+  },
+  "prior_evidence_not_r6_rerun": {
+    "public_oracle_and_controls": "root reports prior 2 point-query +4 role +1 settlement PASS on prior candidate; receipts remain distinct",
+    "source_error_public_negative": "unsupported_source_uncertainty early total gate only, not direct-helper qualification evidence"
+  },
+  "failures_retained": {
+    "policy": "all original receipts unchanged; this index does not delete or replace failures",
+    "examples": [
+      {
+        "directory": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-prefix-private-green",
+        "exists_at_preparation": true
+      },
+      {
+        "directory": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-prefix-focused-r3",
+        "exists_at_preparation": true
+      },
+      {
+        "directory": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-original-private-r1",
+        "exists_at_preparation": true
+      },
+      {
+        "directory": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-original-private-r2",
+        "exists_at_preparation": true
+      },
+      {
+        "directory": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-controller-joint-r1",
+        "exists_at_preparation": true
+      },
+      {
+        "directory": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-controller-joint-r2",
+        "exists_at_preparation": true
+      },
+      {
+        "directory": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-role-controls-red-r1",
+        "exists_at_preparation": true
+      },
+      {
+        "directory": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-role-controls-red-r2",
+        "exists_at_preparation": true
+      },
+      {
+        "directory": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-role-controls-red-r3",
+        "exists_at_preparation": true
+      },
+      {
+        "directory": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-point-lineage-internal-r2",
+        "exists_at_preparation": true
+      },
+      {
+        "directory": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-point-lineage-internal-r3",
+        "exists_at_preparation": true
+      },
+      {
+        "directory": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-original-point-lineage-r4",
+        "exists_at_preparation": true
+      },
+      {
+        "directory": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/037-point-lineage-diagnostic-original-r5",
+        "exists_at_preparation": true
+      }
+    ],
+    "diagnostic_caveat": "earlier stderr diagnostic broke runtime JSON protocol; diagnostic-only, not public-error-preservation evidence",
+    "fixture_caveat": "fixture syntax/origin/API failures remain failures; only actual later executions establish the corrected controls"
+  },
+  "independent_8point_analysis": {
+    "prepared": false,
+    "executed": false,
+    "reason": "optional script deferred; no additional scientific execution authorized by this documentation handoff"
+  },
+  "lane_scientific_commands": 0,
+  "receiving_status": "received and final same-source wave27 dual400/CI/install independently accepted;see final_delivery",
+  "received_common_original": {
+    "result": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/sixhour-20261020/three-original037-common-r2/RESULT.json",
+      "sha256": "05e5c4299edbaf1c02c350f907a1a5bc0c619b14228638863799afea6a3c9df1",
+      "availability": "local-only in ignored task runs"
+    },
+    "response_sha256": "83527a2a35627616509ecf513b33b68f39a85c1593fb3944a48a793b87fc28d2",
+    "checker": {
+      "status": "passed",
+      "note": "rectifier edge_checks=45 attack=9 decay=33 rect_p90=0.0000; P_FULL_WAVE_RECTIFICATION mismatch_count=0; P_RESET_ENVELOPE mismatch_count=0; P_PEAK_ATTACK mismatch_count=0; P_BOUNDED_DECAY mismatch_count=0; P_ENVELOPE_LAG_METRIC mismatch_count=0"
+    }
+  },
+  "received_common_kernel": "074f28fd901674ded933a092793144a292ee1d688e2793427ec52a6b83737bd3",
+  "received_common_evidence": "ordinary-prefix.json#common_three",
+  "historical_record_boundary": "既有源码、开发/私有内核、局部计数及失败均保留各自原身份；最终同源交付以final_delivery为准，局部计数不叠加。",
+  "final_delivery": {
+    "path": "experiments/backends/support/low-cost-closure/ordinary-common-three.json",
+    "sha256": "d123bd11014e5698905cda6bbcd9ba7cf0fbd705303fa56aef943be7b1b84500",
+    "production_revision": "5f0f13202e67e28f06bdf783208b402bba70e146",
+    "original_pass": 317,
+    "revised_pass": 320,
+    "remaining": 80,
+    "target400_complete": false
+  }
+}

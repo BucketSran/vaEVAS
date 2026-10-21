@@ -7,7 +7,7 @@ from .syntax import Assignment, Conditional, Event, Expr, Loop, Model, OPERATOR_
 
 
 def inline_functions(model: Model) -> Model:
-    """Substitute real input-only functions; never duplicate history call sites."""
+    """Substitute typed input-only functions; never duplicate history call sites."""
     if not model.functions:
         return model
     def fail(message, token, *, code="compile_error"):
@@ -28,7 +28,11 @@ def inline_functions(model: Model) -> Model:
                 args = item.args[:1] if item.op == 'checked' else item.args
                 pending.extend((a, False) for a in args)
                 continue
-            if item.op == 'checked':
+            if item.op == 'checked' or item.op == 'function_assign' and item.value == 'real':
+                # A real copy preserves the computational tree. Keep its
+                # typed AST node and ordinary lowering/audit visits, without
+                # counting that metadata as another expanded arithmetic node.
+                # Integer assignments still count their conversion operation.
                 depth, size = memo[id(item.args[0])]
             else:
                 depth = 1 + max((memo[id(a)][0] for a in item.args), default=0)
@@ -92,9 +96,14 @@ def inline_functions(model: Model) -> Model:
             if item.op in OPERATOR_NAMES:
                 fail('function arguments cannot contain history call sites', item.token)
             pending.extend(item.args)
-        local = dict(zip(function.inputs, args))
+        def assignment(value, kind, token):
+            return Expr('function_assign', kind, (value,), token, result_type=kind)
+        local = {n:assignment(value, function.variable_types[n], expr.token)
+                 for n,value in zip(function.inputs,args)}
+        if function.return_type == 'integer':
+            local[name] = Expr('number', 0., (), function.token, result_type='integer')
         names = function.variables | {name}
-        obligations.extend(args)
+        obligations.extend(local[n] for n in function.inputs)
         def statements(body, bindings, expansion_depth):
             for statement in body:
                 # Branch descent and calls share a budget: separately bounded
@@ -129,7 +138,9 @@ def inline_functions(model: Model) -> Model:
                     fail('pure analog function assignments require scalar targets', statement.token)
                 if statement.name not in names:
                     fail('function assignments must target its local variables or return value', statement.token)
-                bindings[statement.name] = unpack(expand(statement.rhs, bindings, names, (*stack, name), expansion_depth+1), obligations)
+                value = unpack(expand(statement.rhs, bindings, names, (*stack, name), expansion_depth+1), obligations)
+                kind = function.return_type if statement.name == name else function.variable_types[statement.name]
+                bindings[statement.name] = assignment(value, kind, statement.token)
                 bounded(bindings[statement.name])
                 obligations.append(bindings[statement.name])
             return bindings
@@ -137,16 +148,19 @@ def inline_functions(model: Model) -> Model:
         if name not in local:
             fail('function must assign its return value', function.token)
         # Retain every argument and RHS through instance binding, including
-        # discarded decisions and aliases. Only the real result is substituted
+        # discarded decisions and aliases. Only the typed result is substituted
         # into the caller's computation; closed index/operator contexts stay local.
         bounded(local[name])
-        return replace(checked(local[name], obligations, expr), result_type="real")
+        return replace(checked(local[name], obligations, expr), result_type=function.return_type)
 
     def body(statements):
-        from .syntax import Display
+        from .syntax import Display, While
         result = []
         for statement in statements:
-            if isinstance(statement, Loop):
+            if isinstance(statement, While):
+                result.append(replace(statement, condition=expand(statement.condition),
+                                      body=body(statement.body)))
+            elif isinstance(statement, Loop):
                 result.append(replace(statement, start=expand(statement.start), limit=expand(statement.limit),
                                       update=expand(statement.update), body=body(statement.body)))
             elif isinstance(statement, Event):
@@ -165,7 +179,7 @@ def inline_functions(model: Model) -> Model:
                 result.append(replace(statement, **updates))
         return tuple(result)
 
-    # Validate even unused declarations with symbolic real arguments, so bad
+    # Validate even unused declarations structurally, so bad
     # names, access/filter calls and recursive definitions cannot hide unused.
     for function in model.functions.values():
         dummy = Expr('call', function.name,
@@ -173,6 +187,7 @@ def inline_functions(model: Model) -> Model:
         expand(dummy)
     return replace(model,
                    parameters={n: expand(e) for n,e in model.parameters.items()},
+                   variable_initializers={n: expand(e) for n,e in model.variable_initializers.items()},
                    parameter_ranges={n: tuple(replace(r,
                        lower=expand(r.lower) if isinstance(r.lower,Expr) else r.lower,
                        upper=expand(r.upper) if isinstance(r.upper,Expr) else r.upper) for r in ranges)
@@ -272,7 +287,8 @@ def elaborate_loops(model: Model, parameter):
 
     def substitute_value(expr, indices, memo):
         if expr.op == 'parameter' and expr.value in indices:
-            return Expr('number', float(indices[expr.value]), (), expr.token)
+            # The static control is validated signed32 before it enters indices.
+            return Expr('number', float(indices[expr.value]), (), expr.token, result_type='integer')
         path = (*expr.expansion,*indices.items())
         if len(path) > MAX_SOURCE_NESTING:
             fail('expanded call-site identity depth budget exceeded', expr.token, code="resource_budget")
@@ -555,6 +571,25 @@ def elaborate_loops(model: Model, parameter):
                         # Reuse the same read-side structural/type/range gate.
                         expression(Expr('index', statement.name, (statement.index,), statement.token))
 
+    def constant_bits(name):
+        return parameter(name)
+
+    def fold_bits(expr, values):
+        # Initialization loop values are instance constants: fold typed signed32
+        # bit operations exactly (VAMS 2.4 4.2.9/4.2.11); nothing else is admitted.
+        from .integer_bits import evaluate as evaluate_bits, integer_type
+        if not all(integer_type(arg, model.variables, model.parameter_types, model.genvars)
+                   for arg in expr.args) or not all(
+                isinstance(value, Affine) and not value.terms and value.constant.is_integer()
+                for value in values):
+            raise CompileError('bitwise operands require typed instance-constant integers',
+                               code='unsupported_integer_bitwise', token=expr.token)
+        try:
+            return Affine(float(evaluate_bits(expr.op, *(int(value.constant) for value in values))), ())
+        except ValueError as error:
+            raise CompileError(str(error), code='unsupported_integer_bitwise', token=expr.token) from error
+    constant_bits.integer_bitwise = fold_bits
+
     def validate_initial_body(statements, active, in_loop=False):
         # Validate the unexpanded tree too: a zero-trip loop cannot erase a
         # dynamic initializer, index, illegal nested control or declaration.
@@ -589,7 +624,7 @@ def elaborate_loops(model: Model, parameter):
                     fail('initialization loop array assignment requires an explicit element index', statement.token,
                          code='unsupported_initial_event')
                 try:
-                    value = lower(substitute(statement.rhs, active), parameter, {}, model.source,
+                    value = lower(substitute(statement.rhs, active), constant_bits, {}, model.source,
                                   preserve_structure=True)
                     if not isinstance(value, Affine) or value.terms:
                         raise CompileError('initializer is not an instance constant')

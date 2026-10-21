@@ -16,6 +16,22 @@ spec.loader.exec_module(ci)
 
 
 class RoutingTests(unittest.TestCase):
+    def test_continuation_controls_only_select_maintenance(self):
+        paths = ('scripts/check_task_continuation.py',
+                 'scripts/task_continuation_policy.py',
+                 'scripts/task_continuation_execution.py',
+                 'scripts/tests/test_task_continuation.py',
+                 'scripts/tests/test_task_continuation_policy.py',
+                 'scripts/tests/test_task_continuation_execution.py',
+                 'scripts/tests/fixtures/continuation-wave21-313.json',
+                 'scripts/tests/test_task_continuation_checkpoints.py',
+                 'scripts/tests/test_task_continuation_review_execution.py',
+                 'scripts/tests/fixtures/continuation-wave26-zero-gain.json')
+        for path in paths:
+            with self.subTest(path=path):
+                self.assertEqual(ci.classify([path]), ci.flags('maintenance'))
+        self.assertTrue(ci.classify([*paths, 'evas/src/evas/compiler.py'])['regression'])
+
     def test_development_records_only_select_maintenance(self):
         for path in ('scripts/development_records.py', 'scripts/tests/test_development_records.py',
                      'scripts/tests/test_ci_selection.py'):

@@ -85,10 +85,11 @@ class EventOrContracts(unittest.TestCase):
                     group = next(e for e in events if e['kind']=='or')
                     self.assertEqual([leaf['trigger'] for leaf in group['fired_triggers']], [0,1])
 
-    def test_simultaneous_clock_reset_obeys_source_comparison_at_exact_root(self):
+    def test_simultaneous_clock_reset_obeys_source_comparison_after_exact_root(self):
         clock = 'cross(V(u,r)-0.5,1,0.001,0.001)'
         reset = 'cross(V(v,r)-0.5,1,0.001,0.001)'
-        for relation, expected in [('>=',1),('>',2)]:
+        # Both guards rise through 0.5; just after the root v>0.5 holds.
+        for relation, expected in [('>=',1),('>',1)]:
             for trigger in [clock+' or '+reset,reset+' or '+clock]:
                 text = model('@(initial_step) q=0; @('+trigger+') '
                              f'if(V(v,r){relation}0.5) q=1; else q=2; V(y,r)<+q;',

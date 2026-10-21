@@ -1,0 +1,183 @@
+{
+  "status": "已独审验收的材料修订检查点；317/400，仍差83，持续实现未结束",
+  "availability": "本文件和修订差异在仓库；完整输入定义、raw结果及本地执行证据为local-only",
+  "at_utc": "2026-10-19T05:56:40.449624+00:00",
+  "candidate": "wave22-continuation-ir31",
+  "production_revision": "ab92831773a76894e090c5622b541fa6e5ad94f3",
+  "source_count": 177,
+  "ir_schema": 31,
+  "package": "0.24.0",
+  "kernel_sha256": "69c46e155808cd37e288894504613dcd8bebd219c1006c4946073f132d627aac",
+  "accepted_runtime_and_CI": {
+    "path": "experiments/backends/support/low-cost-closure/continuation-wave22.json",
+    "sha256": "58f18f204bda8ef48cab8f4e62a4ac92d7fd1872ce9b8c3c6a2a9403b866a333"
+  },
+  "previous_material_checkpoint": {
+    "path": "experiments/backends/support/low-cost-closure/continuation-wave22-materials-r2.json",
+    "sha256": "b7f299fcc3307c58b386c539efa800df97503b96c16bfca4eb6556dca1281dc7"
+  },
+  "CI_reuse": "同177份运行源码/构建输入及同release核，复用CI39193253152/head6d3c8a93的2424唯一Python与15jobs、两平台安装重装负控；不覆盖primary或私有IR32改动。",
+  "original400": {
+    "PASS": 314,
+    "FAIL": 19,
+    "REJECTED": 67,
+    "TIMEOUT": 0,
+    "completed": 333,
+    "cleanup": 400,
+    "077": "FAIL不变"
+  },
+  "revised400": {
+    "PASS": 317,
+    "FAIL": 15,
+    "REJECTED": 68,
+    "TIMEOUT": 0,
+    "completed": 332,
+    "cleanup": 400,
+    "composition": "396份同wave22原执行＋既有修订012/107/075三份＋新正式执行077一份",
+    "only_delta_from316": [
+      "077 FAIL -> PASS"
+    ],
+    "old316_lost": [],
+    "identity": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave22-materials-r3/revised-full400/IDENTITY.json",
+      "sha256": "4ac38086884fe724ae1fb50528e8f967004ff72da264b5112896d8cc8727b21a"
+    },
+    "results": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave22-materials-r3/revised-full400/RESULTS.json",
+      "sha256": "86bbbeade06cf4400ed172b336629b06f205c5e08937e26b5798df6f063ed00c"
+    },
+    "immutable400map": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/material077-accepted-cases400.json",
+      "sha256": "f59a4990e7c3174418f374d465338e82fcf444153c7cdf82ce628265966cae44"
+    }
+  },
+  "077_basis": {
+    "problem": "原说明一处要求整个输出保持，JSON与公式要求实时输入加保持扰动；不能推出唯一原意。人类在审阅具体提案和校准后，明确选择后者。",
+    "human_choice": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/material077-human-semantic-choice.json",
+      "sha256": "39f8b644c731c71d3c07712abf56f79ef97477c02753a03135df91b9444c3648"
+    },
+    "material_changes": "只将扰动按原timer及八级序列保持，输出实时V(vin)+noise；说明澄清扰动保持，完整checker按每直接行减当前vin核五性质。原deck、参数、时长、精度与全部预算保持。",
+    "preserved_properties": [
+      "P_PERIODIC_UPDATE",
+      "P_SAMPLE_HOLD",
+      "P_ADDITIVE_OUTPUT",
+      "P_DETERMINISTIC_SEQUENCE",
+      "P_ZERO_MEAN_DITHER"
+    ],
+    "t0_and_boundaries": "t0先initial再首timer的-1级；其余精确十进制定时根的相邻binary64包围值允许旧/新完整级，不采用1ps模糊窗口。",
+    "observation": "原20ns、maxstep50ps；405直接保存行，无插值。default40个定时间隔/5个完整序列循环，override25个定时间隔/3个完整序列循环。",
+    "precision": {
+      "vabstol": 1e-12,
+      "reltol": 1e-10
+    },
+    "budgets": [
+      100000,
+      128,
+      8192,
+      1000000000,
+      120,
+      150
+    ],
+    "calibration_controls": 42,
+    "positive": 11,
+    "negative": 31,
+    "calibration": "期望在导入checker前由独立Fraction模型声明，真实registry及原normalization42/42；错误整输出hold/transition、漏输入、错幅值/相位/顺序/周期、NaN、重复或缺失行均保留拒绝。",
+    "historical_limit": "旧attempt1未保存当时checkerhash，不能据此声称旧两次运行逐字同源；本次只用当前冻结42控制和完整身份。",
+    "actual_formal_result": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave22-materials-r3/execution/077/RESULT.json",
+      "sha256": "494319e23cd3de846e20c4f003e4aa6dcce1362f5ad857145ca1d30fc9357bff"
+    },
+    "actual_formal_process": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave22-materials-r3/execution/077/PROCESS.json",
+      "sha256": "6b23a94a45133fd00532a5b804703a1724531d6f68676eba81ae6f8c1b68d68f"
+    },
+    "actual_postcheck": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave22-materials-r3/077-actual-postcheck.json",
+      "sha256": "d51488cdc5cf44b8c8b6d28ddf9cf813872b60cb8ef87be94e4eef4cd9501175"
+    },
+    "max_vin_error_V": 5.947799761388261e-15,
+    "max_dither_level_error_V": {
+      "default": 8.881784197001253e-18,
+      "override": 3.907985046680551e-17
+    },
+    "proposal": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/proposals/077-additive-hold/proposal-v1/MANIFEST.json",
+      "sha256": "be8417217e76add6eddd4470cd5ad2291b997a56676ef2c0af61562068abf85b"
+    },
+    "materials": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/materials-r3/MANIFEST.json",
+      "sha256": "b64c3a6b154056503c6f9b1fd29c84185b0fbe5d7199e748a2a35dfff702dd4c"
+    },
+    "registry_calibration": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/materials-r3/REGISTRY-CALIBRATION.json",
+      "sha256": "ffebc3d1ff787c28eed01aa4b388328a0e8840ff60c709415b1bf37008666f72"
+    },
+    "reviewable_material_patch": {
+      "path": "experiments/backends/support/low-cost-closure/revised077-material-r3.patch",
+      "sha256": "d8239ab3aedeef76fb64244d9e9849b3dc98194aff2014be99159adf656fda4b"
+    },
+    "patch_parts": [
+      {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/proposals/077-additive-hold/proposal-v1/instruction.patch",
+        "sha256": "55d347b9f36e95cdb4291fe7b23043e6e2d8a1e15f120f0261ae5ae291b36560"
+      },
+      {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/proposals/077-additive-hold/proposal-v1/gold.patch",
+        "sha256": "4b7207928202153a0adf2a6e02d1185869e9ae13394e7e9afc007f1785e97c38"
+      },
+      {
+        "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/proposals/077-additive-hold/proposal-v1/checker.patch",
+        "sha256": "e7f9521a54680e05301c49b10e49c14eea86eb09316e6cb44512cd142db38338"
+      }
+    ]
+  },
+  "checker_binding": {
+    "files": 427,
+    "changed": [
+      "checkers/v4/task_077.py"
+    ],
+    "unchanged_common_files": 426,
+    "adapter_changes": "另轨snapshot仅替换INDEX与期望CHECKER_IDENTITY两处数据hash；archived worker/campaign/Harness/normalization和120/150预算不变。",
+    "receipt": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/revised400/wave22-materials-r3/CHECKER-BINDING.json",
+      "sha256": "5d6d0fddade5ffaa6f38871041b27c1c02a575581344122bafe06d6916a60aed"
+    }
+  },
+  "independent_reviews": {
+    "spec": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/material077-full400-spec-review.json",
+      "sha256": "ea96ee6e8946fa2a0317294e87569ea42b40e737513d6488fbbfcead6628565a"
+    },
+    "standards": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/material077-full400-standards-review.json",
+      "sha256": "7cfdd5dfe16448a7e4faf8fbfd2e4dcd01d9ffab60ab038695d3101a81a8632c"
+    }
+  },
+  "continuation_checker": {
+    "exact_trusted_command_replay": {
+      "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/continuation-checker-material077-replay.json",
+      "sha256": "1f16945274db9a551f9dd49b05ecd406d49be4a5e43b2802d9d392776dda4291"
+    },
+    "decision": "block317/400；83项有可继续动作；重复Stop不豁免",
+    "native_Stop": "用户已信任精确定义，真实native触发仍未观察",
+    "native_Goal": "用户恢复后get_goal已核实active，未重建目标"
+  },
+  "remaining": 83,
+  "groups": {
+    "G1": 13,
+    "G2": 9,
+    "G3": 23,
+    "G4": 10,
+    "G5": 11,
+    "G6": 2,
+    "G7": 15
+  },
+  "groups_source": {
+    "path": "runs/evas-source-shape-20261017/overnight-integer-20261018/toward350/wave13-integration/receiving-night400/rootcause-plan-20261019/current83.json",
+    "sha256": "d75aa1ecdac9585ecbbfc5b2a24bf55122edf76e14f47a2344ee2cc9169396cd"
+  },
+  "target400_complete": false,
+  "primary_WIP": "371形状资格、346整数/历史组合、369 typed函数/Forcing及私有IR32正弦源均不混入本检查点。原346/371新189源pilot分别原Native100000与history8192形状门拒绝，未增加score。",
+  "authority": "同current/现有branch/PR208草稿/Issue214；不merge，不扩Spectre、外算力、r53、正式共同资格或公共release"
+}

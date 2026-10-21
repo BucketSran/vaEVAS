@@ -4,9 +4,11 @@ from typing import Mapping, Iterable
 
 from .ir import Program
 from .elaboration import inline_functions
+from .loop_bounds import bound_loops
 from .hierarchy import bind_hierarchy
 from .preprocessor import preprocess_sources
 from .instance_compiler import Compilation, InstanceCompiler
+from .settled_integer_reads import isolated_output_encoder
 from .syntax import (CompileError, Parser, contains_operator, Assignment as SyntaxAssignment,
                      Conditional as SyntaxConditional, ContributionStatement, BoundStep, Loop, Display, Event)
 
@@ -24,7 +26,7 @@ def parse_sources(sources: Mapping[str, str]):
     models = {}
     for path, tokens in preprocess_sources(sources):
         for parsed in Parser('', path, tokens=tokens).parse_all():
-            model = inline_functions(parsed)
+            model = bound_loops(inline_functions(parsed))
             if model.name in models:
                 raise CompileError(f"duplicate module {model.name!r}", code="duplicate_module",
                                    token=model.declaration_token)
@@ -90,10 +92,19 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance], *, ex
     if has_time:
         node_names.add('$abstime')
     names = ("0", *sorted(node_names - {"0"}))
-    compilation = Compilation(names, has_operators or has_conditions)
+    compilation = Compilation(names, has_operators or has_conditions,
+                              settled_integer_reads=isolated_output_encoder(bindings))
+    # Reuse the already-required whole-source operator-presence fact. This
+    # reference does not scan again or confer semantic/typing eligibility.
+    compilation.native_audit.debit("held_power2_operator_fact", 2)
+    compilation.has_waveform_operators = has_operators
+    # Borrow the complete bindings before compiling any instance. No semantic fact is cached.
+    compilation.native_audit.debit("held_power2_bindings_reference", 4)
+    compilation.held_power2_bindings = bindings
+    compilation.held_power2_source_models = models
     for instance, model, nets in bindings:
         try:
-            InstanceCompiler(instance, model, nets, compilation).compile()
+            InstanceCompiler(instance, model, nets, compilation, source_model=models[model.name]).compile()
         except CompileError as error:
             error.diagnostic.setdefault("instance", instance.name)
             raise
