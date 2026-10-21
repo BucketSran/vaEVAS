@@ -36,7 +36,7 @@ decisions that affect the requested outcome; inspect available facts yourself.
 | --- | --- |
 | Implement or fix EVAS behavior | [evas-develop](../evas-develop/SKILL.md); simulator semantics and independent behavior checks |
 | Select/run EVAS checks or reanalyze evidence | [evas-validate](../evas-validate/SKILL.md); preserve the requested operation and evidence identity |
-| Design/build benchmark tasks or grading | [benchmark contract](../../../benchmark/README.md); task requirements, reference solutions and checker calibration |
+| Review benchmark circuit families or design/build tasks and grading | [benchmark agent workflow](../../../benchmark/material/draftbench/docs/agent-workflow.md); execution steps and completion criteria, with the [benchmark contract](../../../benchmark/README.md) and owning references |
 | Review a change | [vaevas-review-pr](../vaevas-review-pr/SKILL.md); requirements, repository rules and supporting evidence |
 | Prepare a commit or PR | [vaevas-prepare-pr](../vaevas-prepare-pr/SKILL.md); reviewable scope, evidence and authorized publication |
 
