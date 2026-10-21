@@ -4,6 +4,7 @@ from typing import Mapping, Iterable
 
 from .ir import Program
 from .elaboration import inline_functions
+from .loop_bounds import bound_loops
 from .hierarchy import bind_hierarchy
 from .preprocessor import preprocess_sources
 from .instance_compiler import Compilation, InstanceCompiler
@@ -25,7 +26,7 @@ def parse_sources(sources: Mapping[str, str]):
     models = {}
     for path, tokens in preprocess_sources(sources):
         for parsed in Parser('', path, tokens=tokens).parse_all():
-            model = inline_functions(parsed)
+            model = bound_loops(inline_functions(parsed))
             if model.name in models:
                 raise CompileError(f"duplicate module {model.name!r}", code="duplicate_module",
                                    token=model.declaration_token)
