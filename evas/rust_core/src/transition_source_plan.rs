@@ -2921,7 +2921,11 @@ mod slew_exact_start_tests {
 
     fn slew(rise: f64) -> (HeldSlew, Cut) {
         let start = Cut::new(RootTime::point(0.).unwrap()).unwrap();
-        let cut = Cut::new(crate::exact_source::RootTime::raw(R::new(1.into(), 3.into()))).unwrap();
+        let cut = Cut::new(crate::exact_source::RootTime::raw(R::new(
+            1.into(),
+            3.into(),
+        )))
+        .unwrap();
         let history = HeldSlew::new(
             (0., I::ZERO),
             vec![(start, 0., I::ZERO), (cut.clone(), 1., I::point(1.))],
@@ -2952,9 +2956,15 @@ mod slew_exact_start_tests {
         let exact = (crate::exact_source::binary(t).unwrap() - R::new(1.into(), 3.into()))
             * crate::exact_source::binary(1e6).unwrap();
         let exact = crate::exact_source::enclosure(&exact).unwrap();
-        assert!(tight.lo <= exact.lo && exact.hi <= tight.hi, "{tight:?} {exact:?}");
+        assert!(
+            tight.lo <= exact.lo && exact.hi <= tight.hi,
+            "{tight:?} {exact:?}"
+        );
         assert!(window.lo <= tight.lo && tight.hi <= window.hi);
-        assert!(tight.hi - tight.lo < 1e-3 * (window.hi - window.lo), "{tight:?} {window:?}");
+        assert!(
+            tight.hi - tight.lo < 1e-3 * (window.hi - window.lo),
+            "{tight:?} {window:?}"
+        );
     }
 
     #[test]
@@ -2970,7 +2980,9 @@ mod slew_exact_start_tests {
         // A wrong epoch index keeps the window range.
         let after = cut.bounds.hi;
         assert_eq!(
-            history.point_range_with_offset(after, 0, offset(&cut)).unwrap(),
+            history
+                .point_range_with_offset(after, 0, offset(&cut))
+                .unwrap(),
             history.range(I::point(after)).unwrap()
         );
         // An offset excluding the window is rejected, never silently used.

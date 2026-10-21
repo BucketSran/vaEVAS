@@ -137,7 +137,8 @@ fn bilinear_guard_over_live_nodes_is_not_a_readout_output() {
     // the unread grounded node "top", but its predicate is the product of two
     // live circuit nodes and reads no held state or operator sample. The row
     // route must not own it, so the original refusal must stand.
-    let node = |n: usize| json!({"op":"affine","constant":0.,"terms":[{"node":n,"coefficient":1.}]});
+    let node =
+        |n: usize| json!({"op":"affine","constant":0.,"terms":[{"node":n,"coefficient":1.}]});
     let mut value = fixture();
     value["program"]["contributions"][3]["rhs"]["left"] =
         json!({"op":"multiply","left":node(1),"right":node(2)});

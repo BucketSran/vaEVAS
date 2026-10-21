@@ -102,7 +102,9 @@ fn has_leaf(e: &E) -> bool {
             then_value,
             else_value,
             ..
-        } => [left, right, then_value, else_value].iter().any(|e| has_leaf(e)),
+        } => [left, right, then_value, else_value]
+            .iter()
+            .any(|e| has_leaf(e)),
         _ => false,
     }
 }
@@ -121,7 +123,9 @@ fn live_node(e: &E) -> bool {
             then_value,
             else_value,
             ..
-        } => [left, right, then_value, else_value].iter().any(|e| live_node(e)),
+        } => [left, right, then_value, else_value]
+            .iter()
+            .any(|e| live_node(e)),
         _ => false,
     }
 }
@@ -209,7 +213,10 @@ fn stateless_owner(program: &Program, c: &Contribution) -> bool {
     !has_leaf(&c.rhs)
         && *instance == c.branch.instance
         && program.states.iter().all(|s| s.instance != *instance)
-        && program.events.iter().all(|e| e.origin.instance != *instance)
+        && program
+            .events
+            .iter()
+            .all(|e| e.origin.instance != *instance)
         && program
             .operators
             .iter()
@@ -743,8 +750,10 @@ mod tests {
     fn only_held_gain_or_stateless_algebraic_decisions_are_owned() {
         let state = json!({"op":"state","state":0});
         let select = |left: serde_json::Value| {
-            expr(json!({"op":"select","relation":"gt","left":left,"right":constant(0.5),
-                "then_value":constant(0.),"else_value":constant(1.),"origin":origin()}))
+            expr(
+                json!({"op":"select","relation":"gt","left":left,"right":constant(0.5),
+                "then_value":constant(0.),"else_value":constant(1.),"origin":origin()}),
+            )
         };
         let bilinear = select(json!({"op":"multiply","left":node(1),"right":node(2)}));
         let held_only = select(json!({"op":"multiply","left":state.clone(),"right":state.clone()}));

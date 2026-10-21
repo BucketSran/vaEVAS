@@ -183,7 +183,7 @@ pub(crate) fn classify(
     // circuit reads. An isolated observer instance keeps the observer
     // contract, including its non-passive zero-time and initial-step events.
     // Computed only when some event body actually uses sampled sqrt/ln.
-    let isolated=std::cell::OnceCell::new();
+    let isolated = std::cell::OnceCell::new();
     p.events.iter().enumerate().map(|(index,e)| {
         let body=if let Some(w)=work {
             let bytes=crate::event_floor::admission_bytes(&e.body,w)?;

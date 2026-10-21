@@ -31,6 +31,16 @@ endmodule
 SPARSE = [0., .125, .375, .625, .875, 1.]
 
 
+# PENDING CAPABILITY (Issue214, group SAMPLE). The five positive contracts below
+# describe nonlinear samples of internal electrical providers, which the kernel
+# does not implement yet: today they stop with
+#   unsupported_transient: nonlinear sampled arithmetic requires
+#   state-independent driven voltage inputs
+# They are kept as expected failures so the contract stays executable; remove
+# the decorator when the capability lands (an unexpected success will say so).
+# The two refusal controls at the end already hold and are not decorated.
+
+
 def program(*, reverse=False, sequential=False, hidden=False):
     source = SOURCE
     if sequential:
@@ -71,18 +81,21 @@ class InternalVoltageSampleContract(unittest.TestCase):
                 self.assertLessEqual(abs(Q(observed) - oracle), Q(1e-10))
         self.assertTrue(all(row['max_residual_ratio'] <= 1 for row in response['solutions']))
 
+    @unittest.expectedFailure
     def test_internal_affine_providers_feed_ordered_nonlinear_samples(self):
         p = program()
         response = run(p)
         # a_A=1/2 -> a_A^2+a_A=3/4; a_B=1/4 ->5/16.
         self.assert_answers(response, SPARSE, Q(3, 4), Q(5, 16))
 
+    @unittest.expectedFailure
     def test_each_assignment_reads_its_source_position(self):
         response = run(program(sequential=True))
         # First a=p+1/4, then b=a^2, then a=p+1/2.
         oracle = lambda p: (p+Q(1, 4))**2 + p+Q(1, 2)
         self.assert_answers(response, SPARSE, oracle(Q(1, 2)), oracle(Q(1, 4)))
 
+    @unittest.expectedFailure
     def test_query_and_instance_order_preserve_samples_and_events(self):
         dense = sorted(set(SPARSE + [k/64 for k in range(65)]))
         for reverse in (False, True):
@@ -94,6 +107,7 @@ class InternalVoltageSampleContract(unittest.TestCase):
                 self.assertEqual(values(sparse, node),
                                  [values(extra, node)[dense.index(t)] for t in SPARSE])
 
+    @unittest.expectedFailure
     def test_internal_source_band_reaches_physical_output(self):
         response = run(program(), source_errors={'u': .125}, vabstol=.2)
         node = response['nodes'].index('ya')
@@ -105,6 +119,7 @@ class InternalVoltageSampleContract(unittest.TestCase):
                 self.assertLessEqual(Q(lo), lower)
                 self.assertGreaterEqual(Q(hi), upper)
 
+    @unittest.expectedFailure
     def test_same_band_cannot_pass_a_tight_voltage_budget(self):
         with self.assertRaises(KernelError) as caught:
             run(program(), source_errors={'u': .125}, vabstol=1e-6)

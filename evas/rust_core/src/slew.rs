@@ -580,7 +580,11 @@ impl HeldSlew {
             .epochs
             .partition_point(|epoch| epoch.window.hi <= time)
             .checked_sub(1)?;
-        if self.epochs.get(index + 1).is_some_and(|next| next.window.lo <= time) {
+        if self
+            .epochs
+            .get(index + 1)
+            .is_some_and(|next| next.window.lo <= time)
+        {
             return None;
         }
         Some(index)

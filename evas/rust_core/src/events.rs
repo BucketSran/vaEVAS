@@ -2055,12 +2055,9 @@ impl EventModel {
             self.bound_circuit_program_at(states, operators, inputs)?
         };
         match scratch {
-            Some(scratch) => Circuit::new_with_scratch(
-                program,
-                &self.driven,
-                self.tolerances.clone(),
-                scratch,
-            ),
+            Some(scratch) => {
+                Circuit::new_with_scratch(program, &self.driven, self.tolerances.clone(), scratch)
+            }
             None => Circuit::new(program, &self.driven, self.tolerances.clone()),
         }
     }
@@ -2192,12 +2189,9 @@ impl EventModel {
             proofs,
         )?;
         match scratch {
-            Some(scratch) => Circuit::new_with_scratch(
-                program,
-                &self.driven,
-                self.tolerances.clone(),
-                scratch,
-            ),
+            Some(scratch) => {
+                Circuit::new_with_scratch(program, &self.driven, self.tolerances.clone(), scratch)
+            }
             None => Circuit::new(program, &self.driven, self.tolerances.clone()),
         }
     }

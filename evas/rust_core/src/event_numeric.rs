@@ -673,7 +673,8 @@ fn bounds_in(
                 // The whole argument enclosure must be strictly positive; a
                 // positive representative cannot certify a straddling box.
                 F::Ln => {
-                    if !(a.lo > 0.) {
+                    // NaN and non-positive lower bounds both fail here.
+                    if a.lo.partial_cmp(&0.) != Some(std::cmp::Ordering::Greater) {
                         return Err(Error::new(
                             "event_domain",
                             "event ln requires strictly positive input enclosure",

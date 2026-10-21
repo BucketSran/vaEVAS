@@ -1498,10 +1498,9 @@ fn post_root_scope(
         let mut candidates = if ranges.is_empty() {
             Vec::new()
         } else {
-            let candidates =
-                model
-                    .conditions
-                    .right_limit_candidates(&events, &ranges, !all_cross);
+            let candidates = model
+                .conditions
+                .right_limit_candidates(&events, &ranges, !all_cross);
             // A passive observer body reads at tau+ too, but its predicates
             // live in the passive (all-nodes-as-inputs) condition set. Give
             // them the same derivative certificate for a condition on another
@@ -1991,7 +1990,10 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
         && !model.typed_transition_targets.is_empty()
     {
         crate::history_calendar_typed_target::initialize(
-            &model, &trajectory, &initial, initial_bounds,
+            &model,
+            &trajectory,
+            &initial,
+            initial_bounds,
         )?
     } else if history_calendar {
         history_calendar::initialize(&model, &trajectory, &initial)?

@@ -328,7 +328,7 @@ fn prepare_impl(
             operators,
             observation_inputs,
             lineage,
-            scratch.as_deref_mut(),
+            scratch,
         )?
     };
     if let Some(previous) = previous {
