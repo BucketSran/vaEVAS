@@ -83,7 +83,7 @@ class OperatorRef:
 
 @dataclass(frozen=True)
 class EventMath:
-    function: Literal["sqrt", "abs", "min", "max", "floor"]
+    function: Literal["sqrt", "abs", "min", "max", "floor", "ln"]
     args: tuple["Expression", ...]
     origin: Origin
     op: str = field(default="event_math", init=False)

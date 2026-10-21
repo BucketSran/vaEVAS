@@ -1505,6 +1505,24 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
             "transient execution cannot also contain static samples",
         ));
     }
+    // Unread grounded outputs with nonlinear decisions are evaluated from the
+    // certified core rows; the core run sees V(y)<+0 and exposed leaves.
+    // Stateless and analytic-source requests keep their own owners.
+    if request
+        .transient
+        .as_ref()
+        .is_some_and(|t| t.analytic_sources.is_empty())
+        && !(request.program.states.is_empty()
+            && request.program.events.is_empty()
+            && request.program.operators.is_empty())
+    {
+        if let Some(plan) = crate::readout::Plan::split(&mut request.program, &request.driven)? {
+            let tolerances = request.tolerances.clone();
+            let mut response = run_inner(request)?;
+            plan.apply(&mut response, &tolerances)?;
+            return Ok(response);
+        }
+    }
     let mut transient = request.transient.unwrap();
     let analytic = !transient.analytic_sources.is_empty();
     let work = if analytic {

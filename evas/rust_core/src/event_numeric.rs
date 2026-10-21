@@ -26,7 +26,7 @@ pub(crate) fn integral(e: &E, p: &Program) -> bool {
         } => integral(then_value, p) && integral(else_value, p),
         E::EventMath { function, args, .. } => {
             matches!(function, F::Floor)
-                || !matches!(function, F::Sqrt) && args.iter().all(|e| integral(e, p))
+                || !matches!(function, F::Sqrt | F::Ln) && args.iter().all(|e| integral(e, p))
         }
         _ => false,
     }
@@ -416,6 +416,15 @@ fn bind_math(e: &E, p: &Program, owner: &str, nodes: &[f64], states: &[f64]) -> 
                     }
                     a.sqrt()
                 }
+                F::Ln => {
+                    if a.is_nan() || a <= 0. {
+                        return Err(Error::new(
+                            "event_domain",
+                            "event ln requires strictly positive input",
+                        ));
+                    }
+                    a.ln()
+                }
                 F::Floor => a.floor(),
                 F::Abs => a.abs(),
                 F::Min => a.min(value(&args[1], p, owner, nodes, states)?),
@@ -661,6 +670,18 @@ fn bounds_in(
                 }
                 F::Sqrt => crate::math_functions::sqrt(a)
                     .map_err(|e| Error::new("event_domain", e.message))?,
+                // The whole argument enclosure must be strictly positive; a
+                // positive representative cannot certify a straddling box.
+                F::Ln => {
+                    if !(a.lo > 0.) {
+                        return Err(Error::new(
+                            "event_domain",
+                            "event ln requires strictly positive input enclosure",
+                        ));
+                    }
+                    crate::math_functions::ln(a)
+                        .map_err(|e| Error::new("event_domain", e.message))?
+                }
                 F::Abs => I {
                     lo: if a.lo <= 0. && a.hi >= 0. {
                         0.
@@ -911,6 +932,48 @@ mod paid_bounds_visit_tests {
             work.spent() - before,
             4,
             "Select, two predicates, selected value only"
+        );
+    }
+}
+
+#[cfg(test)]
+mod sampled_math_domain_tests {
+    use super::*;
+    use serde_json::json;
+
+    fn math(function: &str) -> E {
+        serde_json::from_value(json!({"op":"event_math","function":function,
+            "args":[{"op":"affine","constant":0.,"terms":[{"node":1,"coefficient":1.}]}],
+            "origin":{"source":"m.va","line":1,"column":1,"instance":"M"}}))
+        .unwrap()
+    }
+
+    #[test]
+    fn ln_and_sqrt_enclose_positive_boxes() {
+        let x = I { lo: 2., hi: 4. };
+        let ln = bounds(&math("ln"), &[I::ZERO, x], &[]).unwrap();
+        assert!(ln.lo <= 2f64.ln() && 4f64.ln() <= ln.hi && ln.hi - ln.lo < 0.7);
+        let sqrt = bounds(&math("sqrt"), &[I::ZERO, x], &[]).unwrap();
+        assert!(sqrt.lo <= 2f64.sqrt() && sqrt.hi >= 2.);
+    }
+
+    #[test]
+    fn straddling_or_zero_boxes_are_domain_errors_despite_valid_nominal() {
+        // The representative 0.25 is valid; the enclosure is not.
+        let x = I {
+            lo: -0.25,
+            hi: 0.75,
+        };
+        for function in ["ln", "sqrt"] {
+            let error = bounds(&math(function), &[I::ZERO, x], &[]).unwrap_err();
+            assert_eq!(error.kind, "event_domain", "{function}");
+        }
+        let error = bounds(&math("ln"), &[I::ZERO, I { lo: 0., hi: 1. }], &[]).unwrap_err();
+        assert_eq!(error.kind, "event_domain");
+        // sqrt admits an exact zero endpoint; ln does not.
+        assert_eq!(
+            bounds(&math("sqrt"), &[I::ZERO, I { lo: 0., hi: 0. }], &[]).unwrap(),
+            I::ZERO
         );
     }
 }

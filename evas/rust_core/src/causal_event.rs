@@ -190,14 +190,16 @@ pub(crate) fn classify(
             return Ok(false);
         }
         // Runtime control and checked integer/array nodes keep their isolated
-        // observer contract, as does EventMath anywhere in the original body.
+        // observer contract, as does EventMath other than floor/sqrt/ln
+        // anywhere in the original body. sqrt/ln prove their domain over the
+        // complete sampled argument enclosure in event_numeric::bounds.
         // Scan predicates and unselected arms too: an unrelated sampled product
         // must not make observer mathematics legal in a physical event.
         fn control(v:&serde_json::Value,work:Option<&crate::transition_source_plan::Work>)->Result<bool,Error>{
             if let Some(w)=work {crate::event_floor::charge(w,1,"floor_source_qualification_scan")?;}
             match v {
                 serde_json::Value::Object(m)=>{
-                    if m.get("kind").and_then(|v|v.as_str()).is_some_and(|s|matches!(s,"loop"|"array_write")) || m.get("op").and_then(|v|v.as_str()).is_some_and(|s|matches!(s,"array_read"|"checked_integer"|"checked_index")||s=="event_math"&&m.get("function").and_then(|v|v.as_str())!=Some("floor")){return Ok(true)}
+                    if m.get("kind").and_then(|v|v.as_str()).is_some_and(|s|matches!(s,"loop"|"array_write")) || m.get("op").and_then(|v|v.as_str()).is_some_and(|s|matches!(s,"array_read"|"checked_integer"|"checked_index")||s=="event_math"&&!matches!(m.get("function").and_then(|v|v.as_str()),Some("floor"|"sqrt"|"ln"))){return Ok(true)}
                     for child in m.values(){if control(child,work)?{return Ok(true)}}
                 },
                 serde_json::Value::Array(a)=>{for child in a {if control(child,work)?{return Ok(true)}}},
