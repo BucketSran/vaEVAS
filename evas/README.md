@@ -319,10 +319,12 @@ PYTHONPATH=evas/src python3 -m unittest discover -s evas/tests -v
 cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 ```
 
-[CI 工作流](../.github/workflows/numerical-assurance.yml)按改动选择检查，具体规则见
-[CI 检查范围](../scripts/README.md#ci-按改动选择检查)。EVAS 实现变更仍运行完整 Python/Rust
-回归、Clippy、格式、静态校准、ngspice 共同子集、有界 fuzz 和两平台安装测试。
-普通说明文档只走快速检查，能力表与评测标准保留相关校准。缓存命中不会跳过选中的测试。
+[CI 工作流](../.github/workflows/numerical-assurance.yml)区分草稿迭代和完整交付，具体规则见
+[CI 阶段与检查范围](../scripts/README.md#ci-按改动选择检查)。本地先执行最小复现和受影响模块；
+草稿 CI 先检查格式、Clippy、Python 基本错误和生成清单，再执行已映射的相关回归。
+稳定候选执行完整 Python/Rust 回归、相关静态校准、ngspice 共同子集、有界 fuzz 和两平台安装。
+完整 Python 回归按模块分为四组，汇总核对所有测试恰好覆盖一次。CI 只复用完整身份匹配的成功证据；
+普通 Cargo 缓存仍只加速构建。普通说明文档走快速检查，能力表与评测标准保留最终校准要求。
 回归使用 Python 3.12、Rust stable，fuzz 使用 nightly。CI 不自动执行 Spectre 或原 31×2 矩阵，
 各次矩阵执行与正式资格边界仍以具名收据为准。
 

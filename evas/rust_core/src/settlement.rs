@@ -31,6 +31,36 @@ pub(crate) fn prepare(
     operator_bounds: &[I],
     previous: Option<&Circuit>,
 ) -> Result<Prepared, Error> {
+    let mut scratch = None;
+    prepare_with_scratch(
+        model,
+        events,
+        inputs,
+        before,
+        operators,
+        before_bounds,
+        operator_bounds,
+        previous,
+        &mut scratch,
+    )
+}
+
+/// `prepare` sharing one assembly scratch across a window's settlement
+/// trials. The scratch holds only candidate-independent structure (nodes,
+/// branch grouping, labels); all trial voltages, states, operator values and
+/// certificates are recomputed from this call's inputs.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn prepare_with_scratch(
+    model: &EventModel,
+    events: &[usize],
+    inputs: (&[f64], &[I]),
+    before: &[f64],
+    operators: &[f64],
+    before_bounds: &[I],
+    operator_bounds: &[I],
+    previous: Option<&Circuit>,
+    scratch: &mut Option<crate::assembly::AssemblyPlan>,
+) -> Result<Prepared, Error> {
     prepare_impl(
         model,
         (events, &[]),
@@ -46,6 +76,7 @@ pub(crate) fn prepare(
         None,
         None,
         None,
+        Some(scratch),
     )
 }
 
@@ -64,6 +95,7 @@ pub(crate) fn prepare_with_physical_proofs(
     source: Option<crate::events::SourcePredicateBinding<'_>>,
     lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
     physical: Option<&crate::dc_projection::HeldRampPhysicalContext<'_>>,
+    scratch: Option<&mut Option<crate::assembly::AssemblyPlan>>,
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
@@ -80,6 +112,7 @@ pub(crate) fn prepare_with_physical_proofs(
         source,
         lineage,
         physical,
+        scratch,
     )
 }
 
@@ -94,6 +127,35 @@ pub(crate) fn prepare_window(
     before_bounds: &[I],
     operator_bounds: &[I],
     previous: Option<&Circuit>,
+) -> Result<Prepared, Error> {
+    let mut scratch = None;
+    prepare_window_with_scratch(
+        model,
+        events_and_roots,
+        inputs,
+        observation_inputs,
+        before,
+        operators,
+        before_bounds,
+        operator_bounds,
+        previous,
+        &mut scratch,
+    )
+}
+
+/// `prepare_window` sharing one assembly scratch across a window's trials.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn prepare_window_with_scratch(
+    model: &EventModel,
+    events_and_roots: (&[usize], &[usize]),
+    inputs: (&[f64], &[I]),
+    observation_inputs: &[I],
+    before: &[f64],
+    operators: &[f64],
+    before_bounds: &[I],
+    operator_bounds: &[I],
+    previous: Option<&Circuit>,
+    scratch: &mut Option<crate::assembly::AssemblyPlan>,
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
@@ -110,6 +172,7 @@ pub(crate) fn prepare_window(
         None,
         None,
         None,
+        Some(scratch),
     )
 }
 
@@ -128,6 +191,7 @@ pub(crate) fn prepare_window_with_physical_proofs(
     source: Option<crate::events::SourcePredicateBinding<'_>>,
     lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
     physical: Option<&crate::dc_projection::HeldRampPhysicalContext<'_>>,
+    scratch: Option<&mut Option<crate::assembly::AssemblyPlan>>,
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
@@ -144,6 +208,7 @@ pub(crate) fn prepare_window_with_physical_proofs(
         source,
         lineage,
         physical,
+        scratch,
     )
 }
 
@@ -164,7 +229,10 @@ fn prepare_impl(
     source: Option<crate::events::SourcePredicateBinding<'_>>,
     lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
     physical: Option<&crate::dc_projection::HeldRampPhysicalContext<'_>>,
+    scratch: Option<&mut Option<crate::assembly::AssemblyPlan>>,
 ) -> Result<Prepared, Error> {
+    crate::diagnostics::counter("settlement_scratch_calls", 1);
+    let mut scratch = scratch;
     let (inputs, input_bounds) = inputs;
     let selection = model.conditions.select_with_proofs(
         events_and_roots.0,
@@ -214,8 +282,14 @@ fn prepare_impl(
         lineage,
         physical_proof.as_ref(),
     )?;
-    let mut joint = model.event_circuit_program_with_inputs_and_proofs(
-        &selected, &selection, before, operators, inputs, proofs,
+    let mut joint = model.event_circuit_with_inputs_proofs_and_scratch(
+        &selected,
+        &selection,
+        before,
+        operators,
+        inputs,
+        proofs,
+        scratch.as_deref_mut(),
     )?;
     if let Some(previous) = previous {
         joint.reuse_affine_factor_from(previous);
@@ -249,7 +323,13 @@ fn prepare_impl(
     let mut circuit = if let Some(proof) = &representative_proof {
         model.circuit_at_with_observation_proof(&states, operators, observation_inputs, proof)?
     } else {
-        model.circuit_at_with_lineage(&states, operators, observation_inputs, lineage)?
+        model.circuit_at_with_lineage_and_scratch(
+            &states,
+            operators,
+            observation_inputs,
+            lineage,
+            scratch.as_deref_mut(),
+        )?
     };
     if let Some(previous) = previous {
         circuit.reuse_affine_factor_from(previous);

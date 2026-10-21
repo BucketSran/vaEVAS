@@ -1,0 +1,8 @@
+Yideal_sw sw1 1 2 3 0 ron=500 roff=1e9 vth=0.9 steep=20
+V1 1 0 PULSE(0 1.8 1n 1n 1n 5n 12n)
+Vg 2 0 PULSE(0 1.8 0 1n 1n 5n 12n)
+Vs 3 0 0.5
+Rl 1 0 1e6
+.tran 0.5n 30n
+.print tran v(1) v(2) v(3)
+.end

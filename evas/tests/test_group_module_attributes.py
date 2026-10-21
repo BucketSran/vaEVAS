@@ -5,7 +5,7 @@ voltage equation, event state, or history ownership. Unsupported attribute
 values/names/positions remain explicit errors; this is not general attribute
 semantics or a hidden-state audit exemption.
 """
-GUARDS = ['LANG', 'COMPOSE', 'case:group-ATTR']
+GUARDS = ['LANG', 'COMPOSE']
 
 import os
 from pathlib import Path

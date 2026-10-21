@@ -689,7 +689,13 @@ fn prepare_root_window_selected_impl(
         })
         .transpose()?
         .flatten();
-    let settle = |values: &[f64], bounds: &[I]| {
+    // One assembly scratch per event window: every trial in the closure loop
+    // rebuilds the same circuit structure, so only the first build pays for
+    // validation and grouping. The scratch carries no candidate data. It only
+    // shares structure; each trial's inputs, states, operators and proofs are
+    // rebuilt from this call's values.
+    let mut assembly_scratch = None;
+    let mut settle = |values: &[f64], bounds: &[I]| {
         let evaluation_context = value_context.try_with_operators(bounds)?;
         let lineage = point_lineage::PointLineage::new(
             accepted,
@@ -718,6 +724,7 @@ fn prepare_root_window_selected_impl(
                     .map(|context| (context.as_ref(), trajectory)),
                 Some(&lineage),
                 physical_context.as_ref(),
+                Some(&mut assembly_scratch),
             )
         } else {
             crate::settlement::prepare_window_with_physical_proofs(
@@ -738,6 +745,7 @@ fn prepare_root_window_selected_impl(
                     .map(|context| (context.as_ref(), trajectory)),
                 Some(&lineage),
                 physical_context.as_ref(),
+                Some(&mut assembly_scratch),
             )
         }
     };

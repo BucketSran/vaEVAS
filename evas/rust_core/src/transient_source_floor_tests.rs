@@ -328,13 +328,14 @@ fn source_floor_joint_preview_uses_the_same_certified_bin_as_final_apply() {
         .select_with_proofs(&[1], &inputs, &[1], &bounds, Some(&context))
         .unwrap();
     let joint = m
-        .event_circuit_program_with_inputs_and_proofs(
+        .event_circuit_with_inputs_proofs_and_scratch(
             &m.program,
             &selection,
             &before,
             &[],
             &t.values(0.5),
             Some(&context),
+            None,
         )
         .unwrap();
     let solved = joint.solve(&t.values(0.5)).unwrap();

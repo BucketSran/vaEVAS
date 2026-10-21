@@ -6,6 +6,8 @@ from pathlib import Path
 import tempfile
 import unittest
 
+GUARDS = ["SLEW", "TIMED-OPERATOR"]
+
 from evas import KernelError
 from evas.scs import simulate_scs
 from test_affine import KERNEL

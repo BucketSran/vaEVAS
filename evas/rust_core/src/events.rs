@@ -2035,12 +2035,34 @@ impl EventModel {
         inputs: &[I],
         lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
     ) -> Result<Circuit, Error> {
+        self.circuit_at_with_lineage_and_scratch(states, operators, inputs, lineage, None)
+    }
+    /// `circuit_at_with_lineage` optionally sharing a same-window assembly
+    /// plan. The plan holds only structure the model fixes (nodes, branch
+    /// grouping, labels); every trial's state, operator and input values are
+    /// rebuilt here, so reuse cannot leak a previous trial's numbers.
+    pub(crate) fn circuit_at_with_lineage_and_scratch(
+        &self,
+        states: &[f64],
+        operators: &[f64],
+        inputs: &[I],
+        lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
+        scratch: Option<&mut Option<crate::assembly::AssemblyPlan>>,
+    ) -> Result<Circuit, Error> {
         let program = if let Some(lineage) = lineage {
             self.bound_circuit_program_at_with_lineage(states, operators, inputs, Some(lineage))?
         } else {
             self.bound_circuit_program_at(states, operators, inputs)?
         };
-        Circuit::new(program, &self.driven, self.tolerances.clone())
+        match scratch {
+            Some(scratch) => Circuit::new_with_scratch(
+                program,
+                &self.driven,
+                self.tolerances.clone(),
+                scratch,
+            ),
+            None => Circuit::new(program, &self.driven, self.tolerances.clone()),
+        }
     }
 
     fn bound_circuit_program_at(
@@ -2133,20 +2155,25 @@ impl EventModel {
         before: &[f64],
         operators: &[f64],
     ) -> Result<Circuit, Error> {
-        self.event_circuit_program(&self.program, selection, before, operators)
+        self.event_trial_program(&self.program, selection, before, operators)
+            .and_then(|program| Circuit::new(program, &self.driven, self.tolerances.clone()))
     }
 
+    /// `event_circuit`'s program only.
     #[cfg(test)]
-    pub(crate) fn event_circuit_program(
+    fn event_trial_program(
         &self,
         selected: &Program,
         selection: &Selection,
         before: &[f64],
         operators: &[f64],
-    ) -> Result<Circuit, Error> {
-        self.event_circuit_program_impl(selected, selection, before, operators, None, None)
+    ) -> Result<Program, Error> {
+        self.event_trial_program_impl(selected, selection, before, operators, None, None)
     }
-    pub(crate) fn event_circuit_program_with_inputs_and_proofs(
+    /// The joint trial circuit with driven input values and the physical proof
+    /// context, optionally sharing an assembly plan with its window peers.
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn event_circuit_with_inputs_proofs_and_scratch(
         &self,
         selected: &Program,
         selection: &Selection,
@@ -2154,17 +2181,27 @@ impl EventModel {
         operators: &[f64],
         inputs: &[f64],
         proofs: Option<&crate::event_value_proof::Context<'_>>,
+        scratch: Option<&mut Option<crate::assembly::AssemblyPlan>>,
     ) -> Result<Circuit, Error> {
-        self.event_circuit_program_impl(
+        let program = self.event_trial_program_impl(
             selected,
             selection,
             before,
             operators,
             Some(inputs),
             proofs,
-        )
+        )?;
+        match scratch {
+            Some(scratch) => Circuit::new_with_scratch(
+                program,
+                &self.driven,
+                self.tolerances.clone(),
+                scratch,
+            ),
+            None => Circuit::new(program, &self.driven, self.tolerances.clone()),
+        }
     }
-    fn event_circuit_program_impl(
+    fn event_trial_program_impl(
         &self,
         selected: &Program,
         selection: &Selection,
@@ -2172,7 +2209,7 @@ impl EventModel {
         operators: &[f64],
         inputs: Option<&[f64]>,
         proofs: Option<&crate::event_value_proof::Context<'_>>,
-    ) -> Result<Circuit, Error> {
+    ) -> Result<Program, Error> {
         if let Some(w) = proofs.and_then(|c| c.floor_work()) {
             let n = self.program.nodes.len()
                 + self.program.states.len()
@@ -2269,7 +2306,7 @@ impl EventModel {
         for (contribution, rhs) in program.contributions.iter_mut().zip(&rhs) {
             contribution.rhs = rhs.substitute(&updates)?.bind(&[], operators)?;
         }
-        Circuit::new(program, &self.driven, self.tolerances.clone())
+        Ok(program)
     }
 
     fn bind(&self, states: &[f64], operators: &[f64]) -> Result<Program, Error> {

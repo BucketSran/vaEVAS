@@ -17,6 +17,8 @@ STAGE_LEVEL = {
 SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 LINK = re.compile(r"!?\[[^\]\n]*\]\(\s*(<[^>]+>|[^\s)]+)(?:\s+[^)]*)?\)")
 INCLUDE = re.compile(r'^\s*(?:`include|ahdl_include|include)\s+"([^"]+)"', re.M)
+INSTRUCTION_TEMPLATE = (Path(__file__).resolve().parents[1]
+                        / "benchmark/material/draftbench/templates/INSTRUCTION.md")
 LEGACY_REGISTRIES = (
     "experiments/benchmark_v2/task-source-map.json",
     "experiments/benchmark_next/ota/calibration-plan.json",
@@ -100,7 +102,7 @@ def local_links(text, page, task, repo, *, public):
         if parsed.scheme or parsed.netloc or not parsed.path:
             continue
         value = unquote(parsed.path)
-        if value.startswith("/app/"):
+        if public and value.startswith("/app/"):
             target = starter / value[5:]
         elif public and page == task / "instruction.md":
             # Relative solver links are resolved from /app, not the author directory.
@@ -120,13 +122,15 @@ def local_links(text, page, task, repo, *, public):
 
 
 def check_instruction(task, text, artifacts):
+    require(not re.search(r"\b(?:BEGIN|END)\s+VABENCH EXECUTION FOOTER\b", text),
+            f"{task}/instruction.md: remove template authoring markers; copy only footer prose")
     visible = prose(text)
     headings = re.findall(r"^##\s+(.+?)\s*$", visible, flags=re.M)
     require(headings == ["Spec", "Deliverable"],
             f"{task}/instruction.md: use Spec then Deliverable as the two main sections")
     require(not re.search(r"[\u3400-\u9fff]", text),
             f"{task}/instruction.md: solver instructions must be English")
-    require(not re.search(r"(?m)^\s*<[^>]+>\s*$", visible)
+    require(not re.search(r"(?m)^\s*(?:[-*+]\s+)?<[^>]+>\s*$", visible)
             and not re.search(r"(?m)^#\s+<[^>]+>", visible),
             f"{task}/instruction.md: unresolved template placeholder")
     require(not re.search(r"(?m)^\s*module\s+\w+\s*(?:#\s*\(|\()", text),
@@ -139,6 +143,21 @@ def check_instruction(task, text, artifacts):
     for artifact in artifacts:
         require(artifact in named_paths,
                 f"{task}/instruction.md: Deliverable does not name {artifact}")
+    # The agreed footer describes one file. Keep multi-file/directory contracts separate.
+    if len(artifacts) == 1 and (task / "environment/starter" / artifacts[0][5:]).is_file():
+        match = re.search(
+            r"<!-- BEGIN VABENCH EXECUTION FOOTER -->\s*(.*?)\s*"
+            r"<!-- END VABENCH EXECUTION FOOTER -->",
+            INSTRUCTION_TEMPLATE.read_text(), flags=re.S,
+        )
+        require(match is not None and match[1].strip(),
+                f"{INSTRUCTION_TEMPLATE}: missing canonical execution footer")
+        expected = " ".join(match[1].split())
+        normalized = " ".join(visible.split())
+        opening = expected.split(".", 1)[0] + "."
+        require(normalized.endswith(expected) and normalized.count(opening) == 1,
+                f"{task}/instruction.md: end with the unchanged execution footer from "
+                f"{INSTRUCTION_TEMPLATE}; only whitespace changes are allowed")
 
 
 def check_artifacts(task, config):
@@ -187,6 +206,94 @@ def check_public_files(task, repo):
             require(target.is_file(), f"{item}: missing public include: {name}")
 
 
+def va_code(text):
+    # Preserve quoted include paths while removing comments, including inline ones.
+    return re.sub(r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*.*?\*/',
+                  lambda m: m[0] if m[0].startswith('"') else ' ', text, flags=re.S)
+
+
+def interface_only(text):
+    """Recognize simple electrical VA interfaces, not arbitrary Verilog-A syntax."""
+    code = va_code(text)
+    code = re.sub(r'`include\s+"(?:constants|disciplines)\.vams"', '', code)
+    module = re.compile(r'\bmodule\s+\w+\s*(?:\(([^;]*?)\))?\s*;(.*?)\bendmodule\b', re.S)
+    matches = list(module.finditer(code))
+    if not matches or module.sub('', code).strip():
+        return False
+    for match in matches:
+        header = re.sub(r'\b(?:input|output|inout|electrical|wire)\b|\[\s*\d+\s*:\s*\d+\s*\]',
+                        '', match[1] or '')
+        ports = {p.strip() for p in header.split(',') if p.strip()}
+        if any(not re.fullmatch(r'[A-Za-z_]\w*', p) for p in ports):
+            return False
+        for declaration in match[2].split(';'):
+            if not declaration.strip():
+                continue
+            decl = re.fullmatch(r'\s*(?:input|output|inout|electrical)\s+'
+                                r'(?:(?:electrical|wire)\s+)?'
+                                r'(?:\[\s*\d+\s*:\s*\d+\s*\]\s*)?(.+?)\s*', declaration, re.S)
+            if not decl or any(p.strip() not in ports for p in decl[1].split(',')):
+                return False
+    return True
+
+
+def check_starter(task, metadata, relative):
+    files = []
+    for name in relative:
+        path = task / 'environment/starter' / name
+        files.extend(path.rglob('*') if path.is_dir() else [path])
+    models = [p for p in files if p.is_file() and p.suffix in {'.va', '.vams'}]
+    if not models:
+        return
+    kind = metadata.get('starter_kind')
+    require(isinstance(kind, str) and kind in {'new-model', 'existing-model'}, f'{task}: invalid starter_kind')
+    action = metadata['engineering_action']
+    if action in {'spec-modeling', 'data-modeling'}:
+        require(kind == 'new-model', f'{task}: {action} requires new-model starter_kind')
+    if action == 'diagnosis-repair':
+        require(kind == 'existing-model', f'{task}: diagnosis-repair requires existing-model starter_kind')
+    if kind == 'new-model':
+        for model in models:
+            require(interface_only(model.read_text()),
+                    f'{model}: new-model starter must be interface-only; put parameter requirements in Spec')
+    else:
+        code = '\n'.join(re.sub(r'"(?:\\.|[^"\\])*"', '""', va_code(p.read_text())) for p in models)
+        behavioral = re.search(r'\banalog\b.*?(?:<\+|=|@\s*\()', code, re.S)
+        structural = re.search(r'\b(?!(?:module|function|input|output|inout|electrical|parameter|localparam)\b)'
+                               r'[A-Za-z_]\w*\s+(?:#\s*\([^;]*?\)\s*)?[A-Za-z_]\w*\s*\(', code)
+        require(re.search(r'\bmodule\b.*\bendmodule\b', code, re.S)
+                and (behavioral or structural),
+                f'{task}: existing-model requires full source, not an interface or empty analog block')
+
+
+def check_authoring(task, metadata, source, selected):
+    require(isinstance(metadata.get('circuit_route'), str)
+            and metadata['circuit_route'] in {'all-va', 'device-circuit'},
+            f'{task}: circuit_route must be all-va or device-circuit; a backend is not a route')
+    pending = metadata.get('pending')
+    require(isinstance(pending, list)
+            and all(isinstance(p, str) and p in {'basis', 'grading', 'runtime'} for p in pending)
+            and len(set(pending)) == len(pending),
+            f'{task}: pending must explicitly list unresolved basis, grading, runtime items, or []')
+    sections = {}
+    body = prose(source.read_text())
+    for english, chinese in (('Behavior basis', '行为依据'), ('Modeling choices', '建模选择'),
+                             ('Open items', '待定项')):
+        matches = list(re.finditer(rf'(?im)^##\s+(?:{english}|{chinese})\s*\n'
+                                   r'(.*?)(?=^##\s|\Z)', body, re.S))
+        require(len(matches) == 1 and matches[0][1].strip(),
+                f'{source}: provide one nonempty {english} / {chinese} section; pending is allowed')
+        sections[english] = matches[0][1]
+    if 'basis' not in pending:
+        require(LINK.search(sections['Behavior basis']),
+                f'{source}: documented basis needs a basis reference; otherwise keep basis pending')
+    if LEVELS.index(selected) >= LEVELS.index('implementation'):
+        require('basis' not in pending,
+                f'{task}: basis is pending; document sources and modeling choices before implementation')
+    if LEVELS.index(selected) >= LEVELS.index('calibration'):
+        require(not pending, f'{task}: {pending} still pending; retain the draft stage, do not invent values or evidence')
+
+
 def result_object(path):
     def unique(pairs):
         result = {}
@@ -232,7 +339,12 @@ def validate_package(task, repo, *, level=None, formal=False):
     check_instruction(task, instruction.read_text(), artifacts)
     local_links(instruction.read_text(), instruction, task, repo, public=True)
     local_links(source.read_text(), source, task, repo, public=False)
+    if (task / "README.md").exists():
+        review = checked_path(task, "README.md", kind="file")
+        local_links(review.read_text(), review, task, repo, public=False)
     check_public_files(task, repo)
+    check_starter(task, metadata, relative)
+    check_authoring(task, metadata, source, selected)
     if LEVELS.index(selected) >= LEVELS.index("implementation"):
         for name in ("environment/Dockerfile", "solution/solve.sh", "tests/test.sh", "tests/verify.py"):
             checked_path(task, name, kind="file")

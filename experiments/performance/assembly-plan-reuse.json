@@ -1,0 +1,494 @@
+{
+  "schema_version": 1,
+  "analysis": "complete-request-review-20261017",
+  "status": "complete",
+  "pr": 207,
+  "source": {
+    "base": "49f24f0b552c0ef83f73716068f06e7a266a4a11",
+    "head": "fa291448b48594df280bd2cc2e475cace11a4db3",
+    "baseline_sha256": "2811849ac510a1e29870cbbeaf62754e87301cd3f027af864336db61582f77da",
+    "candidate_sha256": "a4282a0bd2b903e0761cb62450ae82fa6eebda0c62e0edda841fe391e97e1c19",
+    "request_hashes": {
+      "cross-8193.json": "63d26b9c8dd79c9d7a0b19455fb8093123c3912257c9cbd6fba7107a3d81b596",
+      "pwl-8193.json": "b07c3f31b1f07f1bace4ba0669aa7385b9fe5111ab847b8083f65d2bafbbb44c",
+      "nonlinear_idt-8193.json": "80cb274fa22f13d16940886c07d0efac4d1cc9ff63f5c7ea78cc0850704d343f",
+      "pwl_idt-8193.json": "40dcde6e48f7fbd65f727dba8a545cc08edab42d55b18ef999fd61027ab877e4",
+      "timer-8193.json": "094ccab12847c3feff921498013348d4b51b8a0c15dfe9115fb3887045a24fb9",
+      "idt-8193.json": "7176419e86e505d4b452da347c3d0a13298b8325a64cbcc1f4c84e9e60f3346d"
+    }
+  },
+  "environment": {
+    "system": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+    "logical_cpus": "10",
+    "uptime_before": "19:41  up 3 days,  5:30, 5 users, load averages: 4.28 4.43 4.51",
+    "method": "Reuse maintained profile_requests.py; five alternating rounds, diagnostics false/true; no concurrent benchmark/build launched by this coordinator",
+    "timing_profile": "release; canonical complete JSON boundary with macOS /usr/bin/time -l"
+  },
+  "profile_script_sha256": "eb855df5b904127c2b0d78211ce2007e53393a19baa7c8ce4fb63e50eb4f349f",
+  "measurement": {
+    "repeats_per_side": 5,
+    "boundary": "Python JSON serialization + spawn /usr/bin/time -l + child read/decode/run/encode + Python JSON parse; excludes VA compilation, checker, raw file writes and diagnostic sidecar parse",
+    "official_timings": "diagnostics=false only",
+    "peak": "macOS /usr/bin/time -l kernel child max RSS, bytes; Python whole-profiler highwater is recorded in raw but not added to child RSS",
+    "order": "baseline,candidate for even repeats; reverse for odd, diagnostic modes also captured for equality/counters",
+    "contention": "shared10logicalCPU host; no concurrent benchmark/build launched by this coordinator; small source-identity capture overlapped the first205 control cases, no speed claim for short controls",
+    "uptime_after": "19:43  up 3 days,  5:32, 5 users, load averages: 3.05 4.00 4.33"
+  },
+  "counts": {
+    "cases": 6,
+    "executions": 120,
+    "success": 120,
+    "failures": 0,
+    "full_response_identical_cases": 6
+  },
+  "results": [
+    {
+      "case": "cross-8193",
+      "outputs": 8193,
+      "input_sha256": "63d26b9c8dd79c9d7a0b19455fb8093123c3912257c9cbd6fba7107a3d81b596",
+      "output_sha256": "c9cec5d14cb6ad41ca0b404acc7423a45617fc230bb362050b0e62c4d429072e",
+      "full_response_identical": true,
+      "roles": {
+        "baseline": {
+          "end_to_end_ms": {
+            "median": 88.80612504435703,
+            "min": 86.9305839878507,
+            "max": 100.4590829834342,
+            "samples": [
+              100.4590829834342,
+              87.76658301940188,
+              90.67137504462153,
+              86.9305839878507,
+              88.80612504435703
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 8667136,
+            "min": 8601600,
+            "max": 8749056,
+            "samples": [
+              8749056,
+              8617984,
+              8667136,
+              8699904,
+              8601600
+            ]
+          }
+        },
+        "candidate": {
+          "end_to_end_ms": {
+            "median": 86.52245800476521,
+            "min": 85.73749999050051,
+            "max": 99.27283402066678,
+            "samples": [
+              97.22825000062585,
+              86.52245800476521,
+              99.27283402066678,
+              85.73749999050051,
+              86.06687496649101
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 8814592,
+            "min": 8765440,
+            "max": 8863744,
+            "samples": [
+              8863744,
+              8814592,
+              8814592,
+              8847360,
+              8765440
+            ]
+          }
+        }
+      },
+      "median_time_reduction_fraction": 0.025715197442194082
+    },
+    {
+      "case": "idt-8193",
+      "outputs": 8193,
+      "input_sha256": "7176419e86e505d4b452da347c3d0a13298b8325a64cbcc1f4c84e9e60f3346d",
+      "output_sha256": "207d7554d7192e7350f61f901f4f6ed2734b8d287519253245f57bf742fcc39f",
+      "full_response_identical": true,
+      "roles": {
+        "baseline": {
+          "end_to_end_ms": {
+            "median": 150.77720896806568,
+            "min": 148.3793330262415,
+            "max": 157.11479197489098,
+            "samples": [
+              149.74841597722843,
+              154.9644159968011,
+              150.77720896806568,
+              148.3793330262415,
+              157.11479197489098
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 8486912,
+            "min": 8421376,
+            "max": 8749056,
+            "samples": [
+              8421376,
+              8716288,
+              8749056,
+              8486912,
+              8470528
+            ]
+          }
+        },
+        "candidate": {
+          "end_to_end_ms": {
+            "median": 141.1787910037674,
+            "min": 138.65450001321733,
+            "max": 143.64395901793614,
+            "samples": [
+              142.25645799888298,
+              143.64395901793614,
+              138.65450001321733,
+              139.48483299463987,
+              141.1787910037674
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 8519680,
+            "min": 8470528,
+            "max": 8552448,
+            "samples": [
+              8552448,
+              8519680,
+              8552448,
+              8519680,
+              8470528
+            ]
+          }
+        }
+      },
+      "median_time_reduction_fraction": 0.06365960764223466
+    },
+    {
+      "case": "nonlinear_idt-8193",
+      "outputs": 8193,
+      "input_sha256": "80cb274fa22f13d16940886c07d0efac4d1cc9ff63f5c7ea78cc0850704d343f",
+      "output_sha256": "1042d20b5f78bf59a5fa445e6f44a133dfc8d83971ab56eceb18daddeb420ea4",
+      "full_response_identical": true,
+      "roles": {
+        "baseline": {
+          "end_to_end_ms": {
+            "median": 532.5315829832107,
+            "min": 528.4479589900002,
+            "max": 547.3774579586461,
+            "samples": [
+              528.4479589900002,
+              532.5315829832107,
+              547.3774579586461,
+              535.2560830069706,
+              531.3059579930268
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 9306112,
+            "min": 9109504,
+            "max": 9322496,
+            "samples": [
+              9109504,
+              9306112,
+              9322496,
+              9322496,
+              9224192
+            ]
+          }
+        },
+        "candidate": {
+          "end_to_end_ms": {
+            "median": 525.3672499675304,
+            "min": 512.974499957636,
+            "max": 541.0887920297682,
+            "samples": [
+              532.0940840174444,
+              541.0887920297682,
+              523.5174159752205,
+              512.974499957636,
+              525.3672499675304
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 9338880,
+            "min": 9306112,
+            "max": 9404416,
+            "samples": [
+              9404416,
+              9404416,
+              9338880,
+              9322496,
+              9306112
+            ]
+          }
+        }
+      },
+      "median_time_reduction_fraction": 0.013453348579902324
+    },
+    {
+      "case": "pwl-8193",
+      "outputs": 8193,
+      "input_sha256": "b07c3f31b1f07f1bace4ba0669aa7385b9fe5111ab847b8083f65d2bafbbb44c",
+      "output_sha256": "e63b0f36681c7194a2a26f11f41b818baa6992f84e12c28ea07a1a27def95435",
+      "full_response_identical": true,
+      "roles": {
+        "baseline": {
+          "end_to_end_ms": {
+            "median": 47.59783303597942,
+            "min": 46.738082950469106,
+            "max": 47.937999945133924,
+            "samples": [
+              47.66049998579547,
+              47.937999945133924,
+              46.738082950469106,
+              47.59783303597942,
+              46.87487496994436
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 6651904,
+            "min": 6635520,
+            "max": 6684672,
+            "samples": [
+              6651904,
+              6668288,
+              6684672,
+              6635520,
+              6651904
+            ]
+          }
+        },
+        "candidate": {
+          "end_to_end_ms": {
+            "median": 47.989292012061924,
+            "min": 47.4938330007717,
+            "max": 49.81758299982175,
+            "samples": [
+              47.4938330007717,
+              48.026999982539564,
+              49.81758299982175,
+              47.50074999174103,
+              47.989292012061924
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 6619136,
+            "min": 6619136,
+            "max": 6651904,
+            "samples": [
+              6619136,
+              6651904,
+              6619136,
+              6619136,
+              6619136
+            ]
+          }
+        }
+      },
+      "median_time_reduction_fraction": -0.008224302475841716
+    },
+    {
+      "case": "pwl_idt-8193",
+      "outputs": 8193,
+      "input_sha256": "40dcde6e48f7fbd65f727dba8a545cc08edab42d55b18ef999fd61027ab877e4",
+      "output_sha256": "3fa2081f909df03594f98ce201a62d1608ff4e59bf2aef5f34fc79dd63f64a29",
+      "full_response_identical": true,
+      "roles": {
+        "baseline": {
+          "end_to_end_ms": {
+            "median": 206.47450000979006,
+            "min": 201.11691602505744,
+            "max": 209.4724160269834,
+            "samples": [
+              209.4724160269834,
+              208.32358300685883,
+              206.47450000979006,
+              201.11691602505744,
+              202.03870895784348
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 9338880,
+            "min": 9338880,
+            "max": 9338880,
+            "samples": [
+              9338880,
+              9338880,
+              9338880,
+              9338880,
+              9338880
+            ]
+          }
+        },
+        "candidate": {
+          "end_to_end_ms": {
+            "median": 195.63916698098183,
+            "min": 190.86904195137322,
+            "max": 202.65679201111197,
+            "samples": [
+              202.65679201111197,
+              191.72683299984783,
+              195.63916698098183,
+              190.86904195137322,
+              196.18333299877122
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 9453568,
+            "min": 9404416,
+            "max": 9469952,
+            "samples": [
+              9404416,
+              9469952,
+              9469952,
+              9453568,
+              9437184
+            ]
+          }
+        }
+      },
+      "median_time_reduction_fraction": 0.0524778266967324
+    },
+    {
+      "case": "timer-8193",
+      "outputs": 8193,
+      "input_sha256": "094ccab12847c3feff921498013348d4b51b8a0c15dfe9115fb3887045a24fb9",
+      "output_sha256": "59630058d19de858353672d051e98b8402199812cb5154a7669ddc5cefc4deee",
+      "full_response_identical": true,
+      "roles": {
+        "baseline": {
+          "end_to_end_ms": {
+            "median": 104.87224999815226,
+            "min": 103.75145799480379,
+            "max": 106.98166600195691,
+            "samples": [
+              105.58495798613876,
+              104.87224999815226,
+              104.43900001700968,
+              103.75145799480379,
+              106.98166600195691
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 8781824,
+            "min": 8765440,
+            "max": 8814592,
+            "samples": [
+              8814592,
+              8765440,
+              8781824,
+              8765440,
+              8781824
+            ]
+          }
+        },
+        "candidate": {
+          "end_to_end_ms": {
+            "median": 104.2231249739416,
+            "min": 99.27125001559034,
+            "max": 108.6125840083696,
+            "samples": [
+              104.2231249739416,
+              99.75720901275054,
+              108.6125840083696,
+              99.27125001559034,
+              106.2823329702951
+            ]
+          },
+          "peak_child_rss_bytes": {
+            "median": 8847360,
+            "min": 8798208,
+            "max": 8929280,
+            "samples": [
+              8847360,
+              8798208,
+              8929280,
+              8798208,
+              8896512
+            ]
+          }
+        }
+      },
+      "median_time_reduction_fraction": 0.006189673857689648
+    }
+  ],
+  "availability": {
+    "compact": "repository-contained",
+    "raw": "local-only",
+    "raw_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.claude/worktrees/agent-a96752124eacb4b69/runs/performance-p05-20261017/review-complete-request",
+    "receipt_sha256": "794ee9cb2e886f28a06b4829918eb3128afecba33bec1c0d7cd6a300eae8f232"
+  },
+  "limits": [
+    "fixedsyntheticrequests,notgeneralEVASorSpectrespeedclaim",
+    "OnlykernelchildRSS,notcombinedfrontend/childequaltimepeak",
+    "Allslowoutliersandpreviousrunsretained",
+    "Nochangeinmodels,budgets,operators,eventsoracceptancepaths"
+  ],
+  "independent_answers": {
+    "method": "Exact Fraction arithmetic; y=t, y=t^2/2, y=1/(1+t), piecewise exact triangle integral; integertimer/crosscounts at exact dyadic event times",
+    "checks": "exact answer contained in reported V(y) interval; nominal contained; interval radius within original absolute+relative budget; unchanged event history",
+    "results": [
+      {
+        "pr": 207,
+        "case": "cross-8193",
+        "points": 8193,
+        "exact_fraction_containment": true,
+        "original_budget": true,
+        "events_match": true,
+        "identical_full_response_executions": 20
+      },
+      {
+        "pr": 207,
+        "case": "idt-8193",
+        "points": 8193,
+        "exact_fraction_containment": true,
+        "original_budget": true,
+        "events_match": true,
+        "identical_full_response_executions": 20
+      },
+      {
+        "pr": 207,
+        "case": "nonlinear_idt-8193",
+        "points": 8193,
+        "exact_fraction_containment": true,
+        "original_budget": true,
+        "events_match": true,
+        "identical_full_response_executions": 20
+      },
+      {
+        "pr": 207,
+        "case": "pwl-8193",
+        "points": 8193,
+        "exact_fraction_containment": true,
+        "original_budget": true,
+        "events_match": true,
+        "identical_full_response_executions": 20
+      },
+      {
+        "pr": 207,
+        "case": "pwl_idt-8193",
+        "points": 8193,
+        "exact_fraction_containment": true,
+        "original_budget": true,
+        "events_match": true,
+        "identical_full_response_executions": 20
+      },
+      {
+        "pr": 207,
+        "case": "timer-8193",
+        "points": 8193,
+        "exact_fraction_containment": true,
+        "original_budget": true,
+        "events_match": true,
+        "identical_full_response_executions": 20
+      }
+    ],
+    "script_sha256": "2c1729a71f676bc4ffcdf6c46e3ad6eab23887b54992f231d4abb4397ac12d74",
+    "script_and_full_report_availability": "local-only primarycurrent/runs/pr-review-20261017/check_performance_answers.py andperformance-independent-answers.json",
+    "diagnostic_execution": "all cases androlesdiagnostics false/true, everyrecordcountverified",
+    "limitations": "NonewgeneralSpectreclaim; applies onlyfixedrequests"
+  }
+}

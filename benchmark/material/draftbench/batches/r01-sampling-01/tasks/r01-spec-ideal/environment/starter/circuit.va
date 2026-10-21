@@ -1,0 +1,8 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module track_hold(vin, track, rst, vout);
+    input vin, track, rst;
+    output vout;
+    electrical vin, track, rst, vout;
+    // Implement the public Spec, including its parameter declarations.
+endmodule

@@ -4,7 +4,19 @@ Implement a voltage-domain track-and-hold model for a sampling front end. It mus
 
 ## Spec
 
-Use the interface and parameters declared in `/app/circuit.va`. All voltages are relative to ground. Let `x = V(vout)` and `u = (V(vin) - vmid) / vscale`:
+Use the interface declared in `/app/circuit.va`. Implement the following real-valued configurable parameters. All voltages are relative to ground.
+
+| Parameter | Meaning | Default | Valid range |
+| --- | --- | --- | --- |
+| `vth` | Control threshold | 0.9 V | No additional range constraint |
+| `vinit` | Initial and reset target | 0.9 V | No additional range constraint |
+| `tau_acq` | Base acquisition time constant | 10 ns | Greater than 0 |
+| `vmid` | Input normalization midpoint | 0.9 V | No additional range constraint |
+| `vscale` | Input normalization scale | 0.9 V | Greater than 0 |
+| `acq_curvature` | Input dependence coefficient | 0.6 | At least 0 |
+| `tau_reset` | Reset time constant | 2 ns | Greater than 0 |
+
+Let `x = V(vout)` and `u = (V(vin) - vmid) / vscale`:
 
 ```text
 tau_eff = tau_acq * (1 + acq_curvature * u*u)
@@ -24,7 +36,7 @@ The maximum absolute output error against the specified continuous response must
 
 ### Constraints
 
-Change only `/app/circuit.va`. Preserve its declared interface and parameters. Do not drive the input or control ports.
+Change only `/app/circuit.va`. Preserve its declared interface and implement the parameter requirements above. Do not drive the input or control ports.
 
 ## Deliverable
 
@@ -33,3 +45,15 @@ Edit and submit `/app/circuit.va`. The public example is `/app/testbench/tb.scs`
 ```sh
 cd /app/testbench && spectre tb.scs -format psfascii -raw psf
 ```
+
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverable; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverable, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in the file named in the Deliverable section before beginning detailed exploration, and keep that file updated as you work.
+If your working time expires, the evaluator copies that file exactly as it exists at that moment and runs the verifier on it.
+If the file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
+
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverable and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

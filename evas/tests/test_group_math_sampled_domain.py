@@ -3,7 +3,7 @@
 The first Cross consumer addresses original074's mathematical admission gate.
 MATH170 still requires ln and held-delay qualification beyond this contract.
 """
-GUARDS = ['EVENT-CONDITIONS', 'COMPOSE', 'TRANSITION', 'SAMPLE']
+GUARDS = ['EVENT-CONDITIONS', 'COMPOSE', 'TRANSITION']
 from fractions import Fraction as F
 import os
 from pathlib import Path

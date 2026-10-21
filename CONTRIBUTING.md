@@ -169,7 +169,10 @@ Before publication, check new local references against files included in the com
 published dependency. Keep local-only evidence explicitly labelled and report local installation
 changes outside the repository separately. Finish independent work
 before any unresolved approval question. PR prose is a short problem/result/validation/limits
-briefing; link the canonical review and evidence rather than duplicating them.
+briefing; link the canonical review and evidence rather than duplicating them. Use
+the [PR drafting guidance](.agents/skills/vaevas-prepare-pr/SKILL.md#draft-the-pr-description)
+and [existing-record conventions](docs/agents/issue-tracker.md#maintain-the-existing-record).
+Templates are optional prompts; small changes can remain a few paragraphs.
 
 Use plain Chinese for human-facing review unless requested otherwise. Read it once without
 conversation history: the reader must understand what changed, what passed and what remains

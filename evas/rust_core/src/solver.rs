@@ -271,14 +271,35 @@ impl Circuit {
         tolerances: Tolerances,
     ) -> Result<Self, Error> {
         let _timing = crate::diagnostics::span("circuit.prepare");
+        let assembled = assemble(program, driven_names, tolerances)?;
+        Self::from_assembled(assembled)
+    }
 
-        let AssembledCircuit {
+    /// `Circuit::new` for trial rebuilds that share one assembly structure.
+    /// The scratch plan skips only validation, grouping and label work; every
+    /// numeric equation value is recomputed in the original contribution
+    /// order, so a reused build is bit-identical to `Circuit::new`.
+    pub(crate) fn new_with_scratch(
+        program: Program,
+        driven_names: &[String],
+        tolerances: Tolerances,
+        scratch: &mut Option<crate::assembly::AssemblyPlan>,
+    ) -> Result<Self, Error> {
+        let _timing = crate::diagnostics::span("circuit.prepare");
+        let assembled =
+            crate::assembly::assemble_with_plan(program, driven_names, tolerances, scratch)?;
+        Self::from_assembled(assembled)
+    }
+
+    fn from_assembled(
+        AssembledCircuit {
             nodes,
             equations,
             driven,
             unknown,
             tolerances,
-        } = assemble(program, driven_names, tolerances)?;
+        }: AssembledCircuit,
+    ) -> Result<Self, Error> {
         let affine_factor = equations
             .iter()
             .all(|eq| eq.nonlinear.is_empty())

@@ -26,16 +26,44 @@ class MaterialPathTests(unittest.TestCase):
             self.assertEqual(material_path(root, "experiments/plan.json"), root / "experiments/plan.json")
 
     def test_both_historical_task_namespaces_resolve_to_the_preserved_package(self):
-        tasks = task_directories(ROOT)
+        # These batches were moved from the old namespace. New draft packages,
+        # such as r01-spec-ideal, never had an identity in that namespace.
+        tasks = sorted([
+            *(p for p in (ROOT / "benchmark/material/historyref/tasks").iterdir() if p.is_dir()),
+            *(p for p in (ROOT / "benchmark/material/draftbench/batches/v2-01/tasks").iterdir() if p.is_dir()),
+            *(p for p in (ROOT / "benchmark/material/draftbench/batches/v3-01/tasks").iterdir() if p.is_dir()),
+            ROOT / "benchmark/material/draftbench/batches/r01-sampling-01/tasks/r01-spec-acquisition",
+        ])
         self.assertEqual(len(tasks), 98)
         self.assertEqual(sum("historyref" in p.parts for p in tasks), 41)
         self.assertEqual(len({p.name for p in tasks}), 98)
+        self.assertTrue(set(tasks).issubset(task_directories(ROOT)))
         for task in tasks:
             name = task.name
             relative = task.relative_to(ROOT)
             self.assertEqual(historical_name(relative), "benchmark/tasks/" + name)
             for prefix in ("benchmark/tasks/", "benchmark/material/draftbench/tasks/"):
                 self.assertEqual(material_path(ROOT, prefix + name + "/instruction.md"), task / "instruction.md")
+
+    def test_new_drafts_are_discovered_without_inventing_historical_identities(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            preserved = [
+                "benchmark/material/historyref/tasks/va01-legacy",
+                "benchmark/material/draftbench/batches/r01-sampling-01/tasks/r01-spec-acquisition",
+            ]
+            added = [
+                "benchmark/material/draftbench/batches/r01-sampling-01/tasks/r01-spec-ideal",
+                "benchmark/material/draftbench/batches/future-01/tasks/v3-new-sampler",
+            ]
+            for name in [*preserved, *added, "benchmark/tasks/r01-spec-ideal"]:
+                (root / name).mkdir(parents=True)
+            self.assertEqual(task_directories(root), sorted(root / name for name in [*preserved, *added]))
+            for name in added:
+                for suffix in ("", "/instruction.md"):
+                    with self.subTest(path=name + suffix):
+                        self.assertEqual(historical_name(name + suffix), name + suffix)
+                        self.assertEqual(material_path(root, name + suffix), root / (name + suffix))
 
     def test_historical_first_batch_documents_and_registries_have_one_location(self):
         self.assertEqual(material_path(ROOT, "benchmark/workbench/history/first-batch/README.md"),

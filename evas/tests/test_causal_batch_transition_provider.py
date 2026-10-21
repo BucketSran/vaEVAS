@@ -12,6 +12,8 @@ import unittest
 
 from evas import Instance, KernelError, compile_sources, transient
 
+GUARDS = ["TRANSITION", "TIMED-OPERATOR", "EVENT-ORDER"]
+
 KERNEL = Path(os.environ.get('EVAS_KERNEL',
     Path(__file__).resolve().parents[1] / 'rust_core/target/debug/evas-kernel'))
 SOURCE = '''`include "disciplines.vams"

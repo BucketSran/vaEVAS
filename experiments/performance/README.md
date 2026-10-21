@@ -47,6 +47,45 @@
 python3 -B -m unittest discover -s experiments/performance -p 'test_*.py' -v
 ```
 
+## #138 恢复轮分析（2026-10-17）
+
+issue #138 恢复探索的首轮只读分析：[热点重测与切片排序](analysis-20261017/2026-10-17-evas-acceleration-analysis.md)
+（main `e2c7aac7`：nonlinear_idt ≈ 220 ms 主导；trial 全量 clone、事件全量重建、非线性区间
+Jacobian 每步重算三处代码证据）、[外部加速调研](analysis-20261017/2026-10-17-external-acceleration-survey.md)
+（Spectre-X/PrimeSim/Xyce/KLU/batched BLAS 做法与仿射算术等数学方向）与
+[候选扩展提案](analysis-20261017/2026-10-17-issue138-extension-proposal-draft.md)（E1–E5）。
+实施切片以 PR 为准（P03 → #205、P05 → #207），报告只保留分析与依据。
+
+<a id="history-entry-sharing"></a>
+
+## 算子条目写时复制（存档，代码未合入）
+
+> **状态：存档，代码未合入 main。** 以下是 #138 P14 第二切片的测量结论；代码改动保留在分支
+> `codex/p14-history-sharing-slice2`（[PR #212](https://github.com/BucketSran/vaEVAS/pull/212)，草稿）。
+> 该切片没有可测的端到端收益，且会与未合并的 PR #208 在 `operators.rs` 的历史复制计费处冲突，
+> 所以等 PR #208 合入后，确有需要时再在其上重放。下文所说的 `Arc` 共享与
+> `history_entry_copy_on_write` 计数器只存在于该分支，当前 main 没有。
+
+
+P14 第二切片把 `Operators` 的 `entries` 改为逐条目 `Arc` 共享，trial 只在真正
+就地修改某条目时才深拷贝该条目（`Arc::make_mut`），并把构造后不可变的
+`changes_on_advance`、`direct`、`isolated_parameters` 改为共享切片。
+数值运算、认证、事件推进及历史验收保持原样。[本次收据](history-entry-sharing.json)
+记录配对结果；原始证据在本仓库忽略的 `runs/performance-p14-20261017/`。
+
+六例（pwl/idt/pwl_idt/nonlinear_idt/timer/cross，各 8193 观察点）交替五轮共 120 次配置
+（最终内核），另有同规模探索批保留在原始证据中。每例新旧内核及诊断开关的完整
+JSON 响应逐字节一致（含事件与误差区间）；三角波案例由检查器用精确有理数积分验收包含性。
+诊断计数确认求解与认证次数不变；新增 `history_entry_copy_on_write` 计数器报告实际发生的
+条目深拷贝（上述六例均为 0，即全部条目在 trial 间共享；带 idt 复位的路径由 Rust 回归覆盖）。
+
+端到端计时没有测到稳定差异：上一切片后每次 trial 的 `base.clone()` 只剩约
+0.05–0.09 ms（`history.clone` 全程约 1–2 ms，占端到端约 1%），消除这部分复制
+低于本机波动，按验收规则记为无可测差异，不宣称提速。主机同期有其他任务
+（负载 5–10），各例范围互相重叠、中位数方向不稳定，全部慢样本保留在收据中。
+当前 pwl_idt 剩余热点在 trial 内 `settlement::prepare` 重建整个 `Circuit`
+（`circuit.prepare` 每次 trial 约 1.1 ms），属于 P05（事件后重建）范围，不在本切片内。
+
 ## 固定矩阵复用与稀疏消元实测
 
 [紧凑收据](results.json)保存配对结果、阶段、次数、内存和执行身份。相同请求与容差在基线/候选 release 内核上各运行五次独立进程，交替顺序。诊断开关及两个内核的输出逐字节相同，并通过基准内的独立答案。
@@ -87,6 +126,26 @@ python3 -B experiments/performance/measure_build.py --output runs/performance/bu
 
 原始请求/stdout/日志/sidecar 保存在本地 ignored 归档。GitHub 保存摘要与重跑工具；哈希不代替可下载的原始材料。收据绑定固定 Git 源码、实际源码哈希与内核身份。
 
+## 非线性历史区间复用
+
+[PR #205](https://github.com/BucketSran/vaEVAS/pull/205) 将已接受非线性步的区间求值按步身份和窗口位级键复用。基线 `e2c7aac7`，行为候选 `f0d29720`，冻结 release 内核及请求身份见[紧凑收据](nonlinear-history-range-reuse.json)。这补充旧 kernel-only 微基准，不能把两种边界的耗时相减。
+
+使用维护中的 `profile_requests.py`，新旧各五轮，逐轮交换先后顺序。正式计时关闭诊断，另跑开启诊断的等量请求核对完整响应和路径计数。边界含 Python 序列化、进程启动、内核读入/解析/求解/编码和 Python 解析，不含 VA 编译、答案检查或归档写盘。macOS `time -l` 记录内核子进程峰值 RSS；表中为五轮最大值，未与 Python 全进程 highwater 相加。
+
+| 案例 | 基线完整请求 ms，中位〔范围〕 | 候选完整请求 ms，中位〔范围〕 | 子进程峰值 MiB，基线→候选 |
+| --- | ---: | ---: | ---: |
+| cross-129 | 8.66〔7.79–17.37〕 | 8.19〔8.14–15.68〕 | 4.20→4.36 |
+| idt-129 | 8.39〔8.13–9.61〕 | 8.58〔8.25–9.19〕 | 4.14→4.11 |
+| nonlinear_idt-129 | 18.47〔18.14–19.63〕 | 15.65〔15.28–16.39〕 | 4.80→4.83 |
+| nonlinear_idt-4097 | 265.18〔261.24–269.55〕 | 168.68〔167.39–174.87〕 | 6.75→7.75 |
+| nonlinear_idt-8193 | 538.91〔527.10–569.02〕 | 343.09〔341.14–348.89〕 | 8.92→11.09 |
+| pwl-129 | 7.02〔6.91–12.15〕 | 7.02〔6.95–8.46〕 | 3.50→3.50 |
+| timer-129 | 9.17〔9.04–9.19〕 | 8.89〔8.83–9.92〕 | 4.34→4.47 |
+
+7 例共 140 次执行，零失败；同例在两核、诊断开关及五轮之间的完整 JSON 逐字节一致。独立解析答案、原电压/事件预算及精确包围另行核验。4097/8193 点非线性请求的耗时范围不重叠，但峰值 RSS 分别增加约 1.0/2.2 MiB，属于缓存换时间的实测代价，不能称为内存优化。memo 未设容量上限，本次有限查询不能证明任意长仿真的内存上界。短请求不作提速承诺。
+
+原始响应、逐轮耗时、诊断及 `time -l` 日志为 local-only，保存在所属工作区 `runs/performance-p03-20261017/review-complete-request/`。收据保留全部样本和输入/输出/内核哈希。主机共享且有外部负载，未删除慢样本；结论不扩展到任意模型或相对 Spectre 的速度。两个 PR 均未合并；源码未改，原代码正确性及 Spectre 复用边界保持。
+
 ## 只拆 IR crate
 
 IR 是版本化数据与请求解码边界，不拥有数学误差、求解器或历史。新 `evas-ir` 只使用现有 serde/serde_json，`evas_kernel::ir` 转导出原类型，JSON16 和 `evas_kernel::{ir,solver,run,run_with_threads}` 入口保持兼容。
@@ -121,3 +180,23 @@ flowchart LR
 后续协议至少要定义运行身份、块序号、预期观察点、成功终止标记及失败/取消尾部。缺少终止标记的部分输出不能作为完整成功。当前 stdio MCP 只查询已生成 session，不提供运行中流式结果。
 
 填充排序/存储见 [#57](https://github.com/BucketSran/vaEVAS/issues/57)，历史查询与动态 guard 分段见 [#58](https://github.com/BucketSran/vaEVAS/issues/58)，长输出协议见 [#59](https://github.com/BucketSran/vaEVAS/issues/59)。当前不放宽容差、不复用旧 Jacobian、不开放事件修改 guard 后重定位。数学见[求解手册](../../evas/docs/math/solving.md)，用户查询见[诊断说明](../../evas/docs/reference/diagnostics.md)。
+
+
+## 事件窗口电路组装复用
+
+[PR #207](https://github.com/BucketSran/vaEVAS/pull/207) 在单个事件窗口复用电路结构，仍按原 contribution 顺序重算数值。基线 `49f24f0b`，行为候选 `fa291448`，冻结 release 内核及请求身份见[紧凑收据](assembly-plan-reuse.json)。
+
+使用维护中的 `profile_requests.py`，新旧各五轮，逐轮交换先后顺序。正式计时关闭诊断，另跑开启诊断的等量请求核对完整响应和路径计数。边界含 Python 序列化、进程启动、内核读入/解析/求解/编码和 Python 解析，不含 VA 编译、答案检查或归档写盘。macOS `time -l` 记录内核子进程峰值 RSS；表中为五轮最大值，未与 Python 全进程 highwater 相加。
+
+| 案例 | 基线完整请求 ms，中位〔范围〕 | 候选完整请求 ms，中位〔范围〕 | 子进程峰值 MiB，基线→候选 |
+| --- | ---: | ---: | ---: |
+| cross-8193 | 88.81〔86.93–100.46〕 | 86.52〔85.74–99.27〕 | 8.34→8.45 |
+| idt-8193 | 150.78〔148.38–157.11〕 | 141.18〔138.65–143.64〕 | 8.34→8.16 |
+| nonlinear_idt-8193 | 532.53〔528.45–547.38〕 | 525.37〔512.97–541.09〕 | 8.89→8.97 |
+| pwl-8193 | 47.60〔46.74–47.94〕 | 47.99〔47.49–49.82〕 | 6.38→6.34 |
+| pwl_idt-8193 | 206.47〔201.12–209.47〕 | 195.64〔190.87–202.66〕 | 8.91→9.03 |
+| timer-8193 | 104.87〔103.75–106.98〕 | 104.22〔99.27–108.61〕 | 8.41→8.52 |
+
+6 例共 120 次执行，零失败；同例在两核、诊断开关及五轮之间的完整 JSON 逐字节一致。独立解析答案、原电压/事件预算及精确包围另行核验。idt/pwl_idt 的收益仅限本表的固定合成负载，其余小差异不作稳定提速结论；旧 nonlinear 噪声样本仍保留。RSS 差异小于约 0.2 MiB，不推断通用内存改善。
+
+原始响应、逐轮耗时、诊断及 `time -l` 日志为 local-only，保存在所属工作区 `runs/performance-p05-20261017/review-complete-request/`。收据保留全部样本和输入/输出/内核哈希。主机共享且有外部负载，未删除慢样本；结论不扩展到任意模型或相对 Spectre 的速度。两个 PR 均未合并；源码未改，原代码正确性及 Spectre 复用边界保持。
