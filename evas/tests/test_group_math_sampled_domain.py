@@ -26,21 +26,24 @@ def clock(stop):
     return points
 
 
-def run(body, times, *, timer=False, stop=1, u=None, errors=None, gain=1):
+def run(body, times, *, timer=False, stop=1, u=None, errors=None, gain=1, direct=False, vabstol=1e-10):
+    # direct=True drives y from q itself instead of a transition: the fixed
+    # timer plus algebraic consumer is the shape that accepts uncertain sources.
     trigger = 'timer(0.25,0.5,1e-12)' if timer else 'cross(V(clk)-0.5,+1,1e-12,1e-12)'
+    consumer = 'q' if direct else 'transition(q,0,0.0625,0.0625)'
     source = '''`include "disciplines.vams"
 module sampled_math(u,v,clk,y);input u,v,clk;output y;electrical u,v,clk,y;
 real q,s,x;integer n;
 analog begin
 @(initial_step)begin q=0;s=0;x=0;n=0;end
 @('''+trigger+''')begin '''+body+''' end
-V(y)<+'''+str(gain)+'''*transition(q,0,0.0625,0.0625);
+V(y)<+'''+str(gain)+'''*'''+consumer+''';
 end endmodule'''
     p = compile_sources({'sampled-math-domain.va': source}, [Instance(
         'M', 'sampled_math', dict(u='u', v='v', clk='clk', y='y'))])
     return transient(p, dict(u=u or [[0, 1], [stop, 1]],
                             v=[[0, 4], [stop, 4]], clk=clock(stop)), times,
-                     stop=stop, max_step=.125, vabstol=1e-10, reltol=0,
+                     stop=stop, max_step=.125, vabstol=vabstol, reltol=0,
                      source_errors=errors, kernel=KERNEL)
 
 
@@ -83,10 +86,24 @@ class GroupMathSampledDomain(unittest.TestCase):
 
     def test_nonpoint_input_domain_is_not_replaced_by_nominal_sample(self):
         # The nominal sample 0.25 is valid but its box [-0.25, 0.75] is not.
-        # Uncertain sources beside transition are refused earlier today; the
-        # interval domain rule itself is also covered by Rust unit tests.
-        with self.assertRaisesRegex(KernelError, 'event_domain.*nonnegative|unsupported_source_uncertainty'):
-            run('q=sqrt(V(u));', [0, 1], u=[[0, .25], [1, .25]], errors={'u': .5}, timer=True)
+        # Fixed timer with an algebraic consumer is the uncertain-source shape
+        # that reaches the sampled domain rule; the kernel must refuse it.
+        with self.assertRaisesRegex(KernelError, 'event_domain.*nonnegative'):
+            run('q=sqrt(V(u));', [0, 1], u=[[0, .25], [1, .25]], errors={'u': .5},
+                timer=True, direct=True, vabstol=1)
+        # Independent enclosure for a box inside the domain: the true input set
+        # is [1/4 - e, 1/4 + e] with e the binary64 value of 0.1.
+        result = run('q=sqrt(V(u));', [0, 1], u=[[0, .25], [1, .25]], errors={'u': .1},
+                     timer=True, direct=True, vabstol=1)
+        y = result['nodes'].index('y')
+        low, high = result['observation_evidence']['voltage_bounds_V'][-1][y]
+        self.assertLessEqual(F(low) ** 2, F(1, 4) - F(.1))
+        self.assertGreaterEqual(F(high) ** 2, F(1, 4) + F(.1))
+        self.assertLess(high - low, .25)
+        # The cross/transition shape has no time-shape bound for uncertain
+        # sources yet; it is refused by that specific gate, never by nominal.
+        with self.assertRaisesRegex(KernelError, 'unsupported_source_uncertainty'):
+            run('q=sqrt(V(u));', [0, 1], u=[[0, .25], [1, .25]], errors={'u': .5})
 
     def test_cross_ln_ratio_reaches_physical_transition(self):
         # ln(V(v)/V(u)) = ln(4) is held from the first edge at 1/4.
@@ -115,3 +132,34 @@ class GroupMathSampledDomain(unittest.TestCase):
         for body in ('q=exp(V(u));', 'q=cos(V(u));', 'q=tanh(V(u));'):
             with self.subTest(body=body), self.assertRaises((CompileError, KernelError)):
                 run(body, [0, 1])
+
+    def test_sampled_math_needs_a_sample_in_an_assignment_value(self):
+        from evas import CompileError
+        # A held value never sampled in this event, a predicate, and a node
+        # this module itself drives keep the original compile refusal.
+        for body in ('q=sqrt(s);', 'if(sqrt(V(u))>0.5) q=1;', 'q=ln(V(y)+1);'):
+            with self.subTest(body=body), self.assertRaisesRegex(CompileError, 'nonconstant mathematical'):
+                run(body, [0, 1])
+        # A state assigned from a sample earlier in the same event qualifies.
+        result = run('x=V(u)*V(u); q=sqrt(x);', [0, .25, .3125, .5, 1], u=[[0, .25], [1, .25]])
+        y = result['nodes'].index('y')
+        self.assertAlmostEqual(result['solutions'][-1]['voltages'][y], .25, places=12)
+
+    def test_uncertain_math_result_survives_transition_and_future_amplification(self):
+        # sqrt(1/4 +- 1e-4) keeps a ~1e-4 band; gain 1000 makes it ~0.1, far
+        # above the 1e-3 budget. The band must survive and be refused.
+        with self.assertRaisesRegex(KernelError, 'event_accuracy.*at y'):
+            run('q=sqrt(V(u));', [0, .5, 1], u=[[0, .25], [1, .25]], errors={'u': .0001},
+                gain=1000, timer=True, direct=True, vabstol=1e-3)
+        # Without amplification the same band fits and is reported, not erased.
+        result = run('q=sqrt(V(u));', [0, .5, 1], u=[[0, .25], [1, .25]], errors={'u': .0001},
+                     timer=True, direct=True, vabstol=1e-3)
+        y = result['nodes'].index('y')
+        low, high = result['observation_evidence']['voltage_bounds_V'][-1][y]
+        self.assertLessEqual(F(low) ** 2, F(1, 4) - F(.0001))
+        self.assertGreaterEqual(F(high) ** 2, F(1, 4) + F(.0001))
+        # The transition consumer has no uncertain-source time-shape bound yet:
+        # that exact gate refuses it before any nominal value could be used.
+        with self.assertRaisesRegex(KernelError, 'unsupported_source_uncertainty'):
+            run('q=sqrt(V(u));', [0, .5, 1],
+                u=[[0, .25], [1, .25]], errors={'u': .0001}, gain=1000)

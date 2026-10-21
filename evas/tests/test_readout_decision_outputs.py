@@ -95,6 +95,57 @@ V(y) <+ x;'''
         with self.assertRaises((CompileError, KernelError)):
             run(body, [0, 1])
 
+    def test_held_only_or_live_only_decisions_beside_held_state_keep_refusals(self):
+        # Neither shape couples a held gain with a live voltage, and the
+        # instance holds state, so the original diagnostics stand.
+        for body in ('x = g*g; if (x > 1) x = 1; V(y) <+ x;',
+                     'x = V(u)*V(u); if (x > 0.25) x = 0.25; V(y) <+ x + g;'):
+            with self.subTest(body=body), self.assertRaisesRegex(CompileError, 'must be affine'):
+                run(body, [0, 1])
+
+
+STATELESS = '''`include "disciplines.vams"
+module square_limit(a,b,y);input a,b;output y;electrical a,b,y;
+real x;
+analog begin
+x = V(a)*V(b);
+if (x > 0.25) x = 0.25;
+V(y) <+ x;
+end endmodule
+module toggler(clk,z);input clk;output z;electrical clk,z;
+real s;
+analog begin
+@(initial_step) s=0;
+@(cross(V(clk)-0.5,+1)) s=1-s;
+V(z) <+ transition(s,0,1e-3,1e-3);
+end endmodule'''
+
+
+class StatelessAlgebraicReadout(unittest.TestCase):
+    def run_pair(self, source, times):
+        program = compile_sources({'pair.va': source}, [
+            Instance('A', 'square_limit', dict(a='a', b='b', y='y')),
+            Instance('T', 'toggler', dict(clk='clk', z='z'))])
+        return transient(program, dict(a=RAMP, b=[[0, 1], [1, 1]], clk=CLK), times,
+                         stop=1, max_step=.125, vabstol=1e-10, reltol=0, kernel=KERNEL)
+
+    def test_stateless_instance_beside_held_state_reads_rows(self):
+        # y = min(0.25, 0.8*t); the clamp switches at t = 0.3125.
+        times = [0, .25, .3, .5, 1]
+        result = self.run_pair(STATELESS, times)
+        y = result['nodes'].index('y')
+        boxes = result['observation_evidence']['voltage_bounds_V']
+        for time, row, box in zip(times, result['solutions'], boxes):
+            want = min(.25, .8*time)
+            self.assertLessEqual(abs(row['voltages'][y] - want), 1e-12, time)
+            self.assertLessEqual(box[y][0], want + 1e-15, time)
+            self.assertLessEqual(want - 1e-15, box[y][1], time)
+
+    def test_stateless_instance_must_not_own_state(self):
+        source = STATELESS.replace('real x;\nanalog begin\nx', 'real x, w;\nanalog begin\n@(initial_step) w=0;\nx', 1)
+        with self.assertRaisesRegex(CompileError, 'predicates must be affine'):
+            self.run_pair(source, [0, 1])
+
 
 if __name__ == '__main__':
     unittest.main()

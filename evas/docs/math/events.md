@@ -1147,10 +1147,15 @@ IR24 候选允许事件赋值由本实例的保持状态和实际 driven 电压�
 结构扫描覆盖完整原事件体，包括条件和未走分支。
 
 物理采样标量还可调用 `sqrt` 与 `ln`（IR 增加 `event_math` 的 `ln` 函数名，未改 schema 版本）。
+只限非孤立观察实例的事件赋值值内、且不在判定谓词中；参数须作用于样本：
+读取实际 driven 电压，或读取本事件此前已由样本赋值的状态（例如 `s=s+x*x; q=sqrt(s/4)`）。
+参数读取任何贡献驱动的节点、只读未在本事件采样的保持值、或出现在 `if` 谓词、显示和孤立观察事件中时，
+仍报原诊断（前端 `nonconstant mathematical`，原始 IR 则由内核 `isolated observer` 拒绝）。
 定义域按完整参数包围判定：`sqrt` 要求下界不小于零，`ln` 要求下界严格大于零；
 名义样本合法而包围跨界时返回 `event_domain`，不按名义值放行。例如
 `td=td0+tau*ln(V(vdd)/d)` 在先把 d 夹到正下限后可求值。`exp`、`cos`、`tanh` 等其他函数在物理事件中仍拒绝。
-回归见 [采样定义域](../../tests/test_group_math_sampled_domain.py)。
+不确定源目前只在固定 timer 加代数消费者时进入该规则；`cross` 或 `transition` 消费者由
+`unsupported_source_uncertainty` 先行拒绝。回归见 [采样定义域](../../tests/test_group_math_sampled_domain.py)。
 
 有限实数除法也使用这条事件标量路径。例如先写`span=V(vdd,vss)`，按源码条件设置正下限，
 再计算`x=clip01((V(in)-V(vss))/span)`，后续递推必须读取本次更新后的span和x。

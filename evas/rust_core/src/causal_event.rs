@@ -179,6 +179,11 @@ pub(crate) fn classify(
         }
         Ok(false)
     }
+    // Physical sampled sqrt/ln belong to events of instances whose state the
+    // circuit reads. An isolated observer instance keeps the observer
+    // contract, including its non-passive zero-time and initial-step events.
+    // Computed only when some event body actually uses sampled sqrt/ln.
+    let isolated=std::cell::OnceCell::new();
     p.events.iter().enumerate().map(|(index,e)| {
         let body=if let Some(w)=work {
             let bytes=crate::event_floor::admission_bytes(&e.body,w)?;
@@ -190,24 +195,49 @@ pub(crate) fn classify(
             return Ok(false);
         }
         // Runtime control and checked integer/array nodes keep their isolated
-        // observer contract, as does EventMath other than floor/sqrt/ln
-        // anywhere in the original body. sqrt/ln prove their domain over the
-        // complete sampled argument enclosure in event_numeric::bounds.
-        // Scan predicates and unselected arms too: an unrelated sampled product
-        // must not make observer mathematics legal in a physical event.
-        fn control(v:&serde_json::Value,work:Option<&crate::transition_source_plan::Work>)->Result<bool,Error>{
+        // observer contract, as does EventMath other than floor anywhere in
+        // the original body. The one exception is sqrt/ln in a physical
+        // sampled position: an assignment value (outside any decision
+        // predicate) of an event whose instance is not an isolated observer.
+        // There they prove their domain over the complete sampled argument
+        // enclosure in event_numeric::bounds. Predicates, displays and indices
+        // keep the older contract. Scan predicates and unselected arms too:
+        // an unrelated sampled product must not make observer mathematics
+        // legal in a physical event.
+        fn control(v:&serde_json::Value,sampled:bool,used:&mut bool,work:Option<&crate::transition_source_plan::Work>)->Result<bool,Error>{
             if let Some(w)=work {crate::event_floor::charge(w,1,"floor_source_qualification_scan")?;}
             match v {
                 serde_json::Value::Object(m)=>{
-                    if m.get("kind").and_then(|v|v.as_str()).is_some_and(|s|matches!(s,"loop"|"array_write")) || m.get("op").and_then(|v|v.as_str()).is_some_and(|s|matches!(s,"array_read"|"checked_integer"|"checked_index")||s=="event_math"&&!matches!(m.get("function").and_then(|v|v.as_str()),Some("floor"|"sqrt"|"ln"))){return Ok(true)}
-                    for child in m.values(){if control(child,work)?{return Ok(true)}}
+                    let kind=m.get("kind").and_then(|v|v.as_str());
+                    let op=m.get("op").and_then(|v|v.as_str());
+                    if kind.is_some_and(|s|matches!(s,"loop"|"array_write")) || op.is_some_and(|s|matches!(s,"array_read"|"checked_integer"|"checked_index")) {return Ok(true)}
+                    if op==Some("event_math") {
+                        let function=m.get("function").and_then(|v|v.as_str());
+                        if !(function==Some("floor") || sampled&&matches!(function,Some("sqrt"|"ln"))) {return Ok(true)}
+                        *used |= function!=Some("floor");
+                    }
+                    for (key,child) in m {
+                        // Only an assignment value starts a sampled position;
+                        // expression operands inherit it except a decision's
+                        // predicate. Statements never inherit it.
+                        let inherit=match (kind,op) {
+                            (Some("assign"),_) => key=="rhs",
+                            (_,Some("select")) => sampled&&matches!(key.as_str(),"then_value"|"else_value"),
+                            (None,Some(_)) => sampled,
+                            _ => false,
+                        };
+                        if control(child,inherit,used,work)?{return Ok(true)}
+                    }
                 },
-                serde_json::Value::Array(a)=>{for child in a {if control(child,work)?{return Ok(true)}}},
+                serde_json::Value::Array(a)=>{for child in a {if control(child,sampled,used,work)?{return Ok(true)}}},
                 _=>{}
             }
             Ok(false)
         }
-        if control(&body,work)? {
+        // An isolated observer instance never has a physical sampled position.
+        let mut used=false;
+        if control(&body,false,&mut used,work)?
+            || used && isolated.get_or_init(|| crate::passive_events::isolated_instances(p)).contains(&e.origin.instance) {
             return Err(Error::new("unsupported_transient","observer mathematics and control nodes require an isolated observer event"));
         }
         for a in e.assignments() {
