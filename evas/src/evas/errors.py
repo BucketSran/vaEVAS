@@ -33,6 +33,7 @@ RULES = {
     'unsupported_vector': ('unsupported', 'binding', 'LANG', 'Use static scalar bit connections and instance-constant indices.'),
     'unsupported_initial_event': ('unsupported', 'parse', 'LANG', 'Use an unqualified initialization leaf and constant values or a real driven-input comparison.'),
     'unsupported_loop_bound': ('unsupported', 'parse', 'LANG', 'Use a while/runtime for loop in a timer, cross or final_step body whose trip count follows from integer state invariants.'),
+    'unsupported_system_function': ('unsupported', 'parse', 'LANG', 'Random-distribution and other unlisted system functions are not implemented.'),
     'unsupported_task_context': ('unsupported', 'parse', 'LANG', 'Call $bound_step in ordinary analog statements; event, initialization and function bodies are not supported.'),
     'unsupported_event_context': ('unsupported', 'binding', 'LANG', 'Declare monitored events unconditionally, at top level or inside static genvar loops.'),
     'unsupported_local_event': ('unsupported', 'lowering', 'LANG', 'Event expressions require direct input or persistent state expressions; ordinary analog local snapshots are not supported.'),
