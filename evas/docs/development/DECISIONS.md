@@ -133,7 +133,8 @@ C1–C5 的数学接口分别在[连续状态接口](../math/continuous.md#exten
 
 此前 cross 事件体在精确根 `te=tau` 处读取条件，并把它写成“观察约定，不是 LRM 要求”。
 [LRM 2.4 §5.10.3.1](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
-规定事件“shall occur after the threshold crossing”，Spectre 也在穿越后触发。
+规定事件“shall occur after the threshold crossing”。本决定的依据首先是 LRM；仓库里已有的实际 Spectre 记录与它一致，但覆盖有限：
+091 的原 deck 在 Spectre 上通过原 checker，且回调观察副本在 4.025012500027778 ns 记录 guard≈+2.25e-4 V、polarity=+1（[diagnosis-091-320.json](../../../experiments/backends/support/source-shape/diagnosis-091-320.json)，直接证据）；261–264、267 的原 deck 在 Spectre 上均通过原 checker，当时的判断是“根后读取能解释差异”，但那八例未插桩回调，侧别只是推断（[gap06.json](../../../experiments/backends/support/source-shape/gap06.json)）。其余题没有 Spectre 记录，本轮没有新增 Spectre 运行。
 上升穿越 0.5 后，事件体里的 `V(u)>0.5` 因此为真；旧约定得到假，使 Issue214 的
 14 个原件（091、107、157、164、168、185、260–264、267、325、351）得到错误波形。
 
