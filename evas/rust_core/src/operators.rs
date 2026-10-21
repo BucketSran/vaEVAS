@@ -1073,8 +1073,10 @@ pub(crate) struct Operators {
     pub(crate) source_context: Option<Arc<crate::transition_source_plan::ProofContext>>,
     forcing_context: Option<Arc<crate::transition_source_plan::ProofContext>>,
     shared_history: bool,
-    // Ordinary typed held targets in an existing history-root calendar. This
-    // carries copying/arithmetic fees, never a history-admission capability.
+    // Ordinary typed held targets in an existing history-root calendar. It is
+    // frame identity only: queries, advances and copies use the same accounting
+    // as the accepted independent typed path (typed Specs pay their own copies),
+    // never a history-admission or shared-history capability.
     typed_calendar: bool,
     history_targets: std::collections::BTreeMap<usize, history_target::TargetPlan>,
     history_predicates: Vec<history_target::TargetPlan>,
@@ -1509,7 +1511,6 @@ impl Operators {
                     .as_ref()
                     .filter(|c| {
                         self.shared_history
-                            || self.typed_calendar
                             || c.original_binding().1.analytic_work().is_some()
                     })
                     .map(|c| c.borrow_work())
@@ -1526,9 +1527,7 @@ impl Operators {
             .or_else(|| {
                 self.source_context
                     .as_ref()
-                    .filter(|c| {
-                        self.typed_calendar || c.original_binding().1.analytic_work().is_some()
-                    })
+                    .filter(|c| c.original_binding().1.analytic_work().is_some())
                     .map(|c| c.borrow_work())
             });
         if let Some(w) = copy_work {
@@ -1537,10 +1536,14 @@ impl Operators {
                 2,
                 (self.changes_on_advance.len()
                     + self.direct.len()
-                    + self.isolated_parameters.len() * 2
-                    + self.held_targets.len() * 8) as u64,
+                    + self.isolated_parameters.len() * 2) as u64,
             )?;
-            for entry in &self.entries {
+            for (index, entry) in self.entries.iter().enumerate() {
+                if self.held_targets.contains_key(&index) {
+                    // Typed held targets pay their AST, row and history copy
+                    // once through their own Spec below.
+                    continue;
+                }
                 let Runtime::Transition {
                     expression,
                     input,
@@ -2206,12 +2209,30 @@ impl Operators {
         for (index, operator) in program.operators.iter().enumerate() {
             // Do not admit an electrical/source-selected target or another
             // operator merely because a different target has an integer proof.
-            if !typed_targets.contains(&index)
-                && bare_real_transition_state(operator, program).is_none()
-            {
+            // Typed targets pay through their own Spec; every other target
+            // must be an ordinary held Transition of same-owner state and
+            // constants (no node, operator or source dependency).
+            if typed_targets.contains(&index) {
+                continue;
+            }
+            let held = match operator {
+                OperatorSpec::Transition { input, origin, .. } => {
+                    bare_real_transition_state(operator, program).is_some()
+                        || crate::continuous::integral_dependency_edges(
+                            input,
+                            program,
+                            &origin.instance,
+                        )
+                        .is_ok_and(|(nodes, _, operators)| {
+                            nodes.is_empty() && operators.is_empty()
+                        })
+                }
+                _ => false,
+            };
+            if !held {
                 return Err(Error::new(
                     "unsupported_held_integer_target",
-                    "typed history calendar requires typed integer or bare real Transition targets",
+                    "typed history calendar requires typed integer or held-state Transition targets",
                 ));
             }
             if let OperatorSpec::Transition { input, .. } = operator {
@@ -3995,7 +4016,7 @@ impl Operators {
         source_time_proofs: Option<&crate::exact_source::TimeProofs>,
     ) -> Result<(), Error> {
         let _timing = crate::diagnostics::span("history.advance");
-        let shared_work = if self.shared_history || self.typed_calendar {
+        let shared_work = if self.shared_history {
             let w = self
                 .source_context
                 .as_ref()
