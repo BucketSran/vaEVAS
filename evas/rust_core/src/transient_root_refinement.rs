@@ -17,6 +17,13 @@ impl Controller {
         let (inputs, slopes) = trajectory.range(event.bounds()).ok()?;
         let blocks = [model.triggers[event.event].event];
         let roots = [event.event];
+        let _post_root = crate::event_conditions::PostRootSides::install(
+            event
+                .post_root_side()
+                .map(|side| vec![(event.event, side)])
+                .unwrap_or_default(),
+            Vec::new(),
+        );
         let evaluation = self.accepted.operators.evaluation(event.time).ok()?;
         let prepared = crate::settlement::prepare_window(
             model,
@@ -78,6 +85,13 @@ impl Controller {
         let (inputs, slopes) = trajectory.range(event.bounds()).ok()?;
         let blocks = [model.triggers[event.event].event];
         let roots = [event.event];
+        let _post_root = crate::event_conditions::PostRootSides::install(
+            event
+                .post_root_side()
+                .map(|side| vec![(event.event, side)])
+                .unwrap_or_default(),
+            Vec::new(),
+        );
         let prepared = crate::settlement::prepare_window(
             model,
             (&blocks, &roots),

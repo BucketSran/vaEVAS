@@ -267,6 +267,24 @@ IR23 允许独立测量实例在普通 timer/cross 回调及正常 final_step �
 [三个实际 Spectre 控制](../../../experiments/backends/support/event-runtime-control/README.md)
 验证顺序数组、嵌套循环与整数商余；它们不代表原 CDS 整题已通过。
 
+<a id="bounded-event-loops"></a>
+
+### 带物理输出模块的有界 while 与运行期 for
+
+`while (c) s`（VAMS 2.4 过程循环）以及带贡献模块中不能走运行期循环的事件 for，
+只有在静态证明最大迭代次数 B≤64 时接受。`loop_bounds.py` 在解析后、按模块
+（不代入实例参数）计算 integer 标量的闭合区间不变式：默认/初值、初始化和全部事件写入
+迭代求不动点，必要时把仍在移动的端点放宽到 signed32，再逐个事件体检查映射回不变式；
+普通 analog 写入的变量视为未知。循环按抽象逐次展开，条件在某次必然为假时得到 B。
+例如 p∈[0,7]、`p=p+req`（req∈[0,7]）后 `while (p>=8) p=p-8;` 的 B=1。
+
+接受后改写为 B+1 个连续的 `if (c) s;`。这与原循环逐位等价：c 一旦为假，到下一个相同
+测试之间不执行任何语句，后续测试仍为假。最后一个分支已证明不可达，但保留供结构检查，
+内核仍按区间认证每次条件。real 条件、未知参数、未收敛不变式或超过 64 次时，
+while 返回 `unsupported_loop_bound`；for 保留原运行期循环路径及其诊断。
+普通 analog、初始化体和函数中的 while 同样拒绝。事件、初始化或函数体中的 `$bound_step`
+返回 `unsupported_task_context`，不再报语法错误。回归见 [test_while_loops.py](../../tests/test_while_loops.py)。
+
 
 ### IR31 本地候选的直接电压到整数转换
 

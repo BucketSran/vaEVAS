@@ -190,14 +190,16 @@ pub(crate) fn classify(
             return Ok(false);
         }
         // Runtime control and checked integer/array nodes keep their isolated
-        // observer contract, as does EventMath anywhere in the original body.
+        // observer contract, as does EventMath other than floor/sqrt/ln
+        // anywhere in the original body. sqrt/ln prove their domain over the
+        // complete sampled argument enclosure in event_numeric::bounds.
         // Scan predicates and unselected arms too: an unrelated sampled product
         // must not make observer mathematics legal in a physical event.
         fn control(v:&serde_json::Value,work:Option<&crate::transition_source_plan::Work>)->Result<bool,Error>{
             if let Some(w)=work {crate::event_floor::charge(w,1,"floor_source_qualification_scan")?;}
             match v {
                 serde_json::Value::Object(m)=>{
-                    if m.get("kind").and_then(|v|v.as_str()).is_some_and(|s|matches!(s,"loop"|"array_write")) || m.get("op").and_then(|v|v.as_str()).is_some_and(|s|matches!(s,"array_read"|"checked_integer"|"checked_index")||s=="event_math"&&m.get("function").and_then(|v|v.as_str())!=Some("floor")){return Ok(true)}
+                    if m.get("kind").and_then(|v|v.as_str()).is_some_and(|s|matches!(s,"loop"|"array_write")) || m.get("op").and_then(|v|v.as_str()).is_some_and(|s|matches!(s,"array_read"|"checked_integer"|"checked_index")||s=="event_math"&&!matches!(m.get("function").and_then(|v|v.as_str()),Some("floor"|"sqrt"|"ln"))){return Ok(true)}
                     for child in m.values(){if control(child,work)?{return Ok(true)}}
                 },
                 serde_json::Value::Array(a)=>{for child in a {if control(child,work)?{return Ok(true)}}},
@@ -235,6 +237,71 @@ pub(crate) fn input_nodes(model: &EventModel, inputs: &[I]) -> Vec<I> {
 
 type StateVoltageBounds = (Vec<I>, Vec<I>);
 
+/// Same-time value of an internal node forced, through acyclic independent
+/// grounded branches, only by driven inputs, states not assigned in this batch
+/// and positive-edge Transition outputs. Such a Transition is continuous at the
+/// event time, so its observed output does not depend on new batch targets.
+/// Anything else stays a joint voltage assignment (None).
+fn continuous_provider(
+    model: &EventModel,
+    node: usize,
+    nodes: &[I],
+    states: &[I],
+    operators: &[I],
+    assigned: &BTreeSet<usize>,
+) -> Result<Option<I>, Error> {
+    let p = &model.program;
+    let probe = E::Affine {
+        constant: 0.,
+        terms: vec![crate::ir::Term {
+            node,
+            coefficient: 1.,
+        }],
+    };
+    let Ok(expanded) = crate::causal_voltage::expand(&probe, p, &model.driven) else {
+        return Ok(None);
+    };
+    // `expand` returns only affine leaves, State, Operator and arithmetic or
+    // Select over them; every leaf, including zero weights and unselected
+    // arms, must satisfy the provider rule.
+    fn admitted(
+        e: &E,
+        p: &Program,
+        nodes: &[I],
+        operators: &[I],
+        assigned: &BTreeSet<usize>,
+    ) -> bool {
+        let go = |e: &E| admitted(e, p, nodes, operators, assigned);
+        match e {
+            E::Affine { terms, .. } => terms.iter().all(|t| nodes[t.node].finite()),
+            E::State { state } => !assigned.contains(state),
+            E::Operator { operator } => {
+                *operator < operators.len()
+                    && matches!(
+                        p.operators.get(*operator),
+                        Some(crate::ir::OperatorSpec::Transition { rise, fall, .. })
+                            if *rise > 0. && *fall > 0.
+                    )
+            }
+            E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
+                go(left) && go(right)
+            }
+            E::Select {
+                left,
+                right,
+                then_value,
+                else_value,
+                ..
+            } => go(left) && go(right) && go(then_value) && go(else_value),
+            _ => false,
+        }
+    }
+    if !admitted(&expanded, p, nodes, operators, assigned) {
+        return Ok(None);
+    }
+    crate::causal_voltage::bounds(&expanded, nodes, states, operators).map(Some)
+}
+
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn certificate(
     model: &EventModel,
@@ -256,7 +323,19 @@ pub(crate) fn certificate(
     {
         return Ok(None);
     }
-    let nodes = input_nodes(model, inputs);
+    let mut nodes = input_nodes(model, inputs);
+    let assigned: BTreeSet<usize> = selection
+        .actions
+        .iter()
+        .filter(|(event, _)| !model.passive_events[*event])
+        .flat_map(|(event, indices)| {
+            let assignments = model.program.events[*event].assignments();
+            indices
+                .iter()
+                .filter_map(move |&index| assignments.get(index).map(|a| a.state))
+                .collect::<Vec<_>>()
+        })
+        .collect();
     let mut after = before.to_vec();
     for (event, indices) in &selection.actions {
         if model.passive_events[*event] {
@@ -270,6 +349,17 @@ pub(crate) fn certificate(
                 &model.program,
                 &model.program.events[*event].origin.instance,
             )?;
+            if dependencies.operator_dependencies.is_empty() {
+                for &n in &dependencies.node_dependencies {
+                    if !nodes[n].finite() {
+                        if let Some(bounds) =
+                            continuous_provider(model, n, &nodes, before, operators, &assigned)?
+                        {
+                            nodes[n] = bounds;
+                        }
+                    }
+                }
+            }
             if !dependencies.operator_dependencies.is_empty()
                 || dependencies
                     .node_dependencies

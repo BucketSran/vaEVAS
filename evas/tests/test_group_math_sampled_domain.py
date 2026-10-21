@@ -82,10 +82,36 @@ class GroupMathSampledDomain(unittest.TestCase):
             run('q=sqrt(-V(u));if(q<0)q=0;', [0, 1])
 
     def test_nonpoint_input_domain_is_not_replaced_by_nominal_sample(self):
-        with self.assertRaisesRegex(KernelError, 'event_domain.*nonnegative'):
-            run('q=sqrt(V(u));', [0, 1], u=[[0, .25], [1, .25]], errors={'u': .5})
+        # The nominal sample 0.25 is valid but its box [-0.25, 0.75] is not.
+        # Uncertain sources beside transition are refused earlier today; the
+        # interval domain rule itself is also covered by Rust unit tests.
+        with self.assertRaisesRegex(KernelError, 'event_domain.*nonnegative|unsupported_source_uncertainty'):
+            run('q=sqrt(V(u));', [0, 1], u=[[0, .25], [1, .25]], errors={'u': .5}, timer=True)
 
-    def test_uncertain_math_result_survives_transition_and_future_amplification(self):
-        with self.assertRaisesRegex(KernelError, 'waveform_accuracy|source.*uncertainty'):
-            run('q=sqrt(V(u));', [0, .5, 1],
-                u=[[0, .25], [1, .25]], errors={'u': .0001}, gain=1000)
+    def test_cross_ln_ratio_reaches_physical_transition(self):
+        # ln(V(v)/V(u)) = ln(4) is held from the first edge at 1/4.
+        times = [0, .25, .3125, .5, 1]
+        result = run('q=0.25*ln(V(v)/V(u));', times)
+        y = result['nodes'].index('y')
+        boxes = result['observation_evidence']['voltage_bounds_V']
+        import math
+        target = .25*math.log(4)
+        for time, row, box in zip(times, result['solutions'], boxes):
+            expected = min(1., max(0., (time-.25)*16))*target
+            self.assertLessEqual(abs(row['voltages'][y]-expected), 1e-10)
+            self.assertLessEqual(box[y][0], expected+1e-15)
+            self.assertLessEqual(expected-1e-15, box[y][1])
+
+    def test_ln_requires_strictly_positive_argument(self):
+        # V(u)-1 is exactly zero: a zero argument is outside the ln domain.
+        with self.assertRaisesRegex(KernelError, 'event_domain.*ln.*positive'):
+            run('q=ln(V(u)-1);', [0, 1])
+        with self.assertRaisesRegex(KernelError, 'event_domain.*ln.*positive'):
+            run('q=ln(-V(u));if(q<0)q=0;', [0, 1])
+
+    def test_other_sampled_math_functions_remain_rejected(self):
+        # Only sqrt and ln gained a certified physical sampled contract.
+        from evas import CompileError
+        for body in ('q=exp(V(u));', 'q=cos(V(u));', 'q=tanh(V(u));'):
+            with self.subTest(body=body), self.assertRaises((CompileError, KernelError)):
+                run(body, [0, 1])

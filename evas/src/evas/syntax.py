@@ -42,7 +42,7 @@ DECISION_NAMES = frozenset(("<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary
 _KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
              "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or",
              "function", "endfunction", "for", "genvar", "from", "exclude", "inf",
-             "case", "endcase", "default", "casex", "casez"}
+             "case", "endcase", "default", "casex", "casez", "while"}
 _BUILTINS = OPERATOR_NAMES | {"V", "pow", "timer", "cross"}
 _RESERVED = _KEYWORDS | (_BUILTINS - {"tanh"})
 
@@ -165,6 +165,14 @@ class Loop:
     limit: Expr
     update: Expr
     body: tuple["Assignment | Conditional | ContributionStatement | Loop | Event", ...]
+    token: Token
+
+
+@dataclass(frozen=True)
+class While:
+    """Procedural ``while`` loop; loop_bounds.py replaces or rejects it after parsing."""
+    condition: Expr
+    body: tuple["Assignment | Conditional | Loop | While", ...]
     token: Token
 
 
@@ -445,6 +453,12 @@ class Parser:
             else:
                 left = Expr("parameter", token.text, (), token)
         else:
+            following = self.token
+            if (token.text == '$' and following.kind == 'name' and following.line == token.line
+                    and following.column == token.column + 1):
+                # e.g. $rdist_normal: no seeded/random system function is implemented.
+                self.fail(f"system function ${following.text} is not supported", token,
+                          code='unsupported_system_function')
             self.fail(f"unsupported expression {token.text!r}", token)
         precedence_table = {"||": 1, "&&": 2, "|": 3, "^": 4, "&": 5,
                             "==": 6, "!=": 6, "<": 7, "<=": 7, ">": 7, ">=": 7,
@@ -617,6 +631,14 @@ class Parser:
             update = self.expression()
             self.take(")")
             return (Loop(name, start, relation.text, limit, update, self.statements(True, analog), token),)
+        if (analog or conditional) and token.text == "while":
+            self.take("while")
+            self.take("(")
+            predicate = self.expression()
+            self.take(")")
+            if contains_operator(predicate):
+                self.fail("while conditions cannot contain waveform operators", token)
+            return (While(predicate, self.statements(True, analog), token),)
         if analog and token.text == "@":
             self.take("@")
             self.take("(")
@@ -647,6 +669,9 @@ class Parser:
             except ValueError as error:
                 self.fail(str(error), literal)
             return (Display(literal.text[1:-1], tuple(args), token),)
+        if not analog and token.text == '$bound_step':
+            self.fail('$bound_step inside an event, initialization or function body is not supported',
+                      token, code='unsupported_task_context')
         if analog and token.text == '$bound_step':
             self.take()
             self.take('(')

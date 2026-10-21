@@ -36,7 +36,9 @@ class IntegerLoops(unittest.TestCase):
         self.assertEqual([r['text'] for r in result['transient']['display_records']],['i=3 n=2'])
 
     def test_body_write_or_runtime_bound_is_explicitly_rejected(self):
+        # A runtime bound without a proven trip count stays rejected here;
+        # this one never terminates once n>0 (test_while_loops covers proofs).
         for body in ['for(i=0;i<2;i=i+1) i=i+1;',
-                     'for(i=0;i<n;i=i+1) n=n+1;']:
+                     'begin n=n+1; for(i=0;i<n;i=i+1) n=n+1; end']:
             with self.subTest(body=body),self.assertRaises(CompileError):
                 compile_sources({'integer-loop.va':model('@(timer(0.5)) '+body+' V(y,r)<+n;','integer n,i;')},[instance()])

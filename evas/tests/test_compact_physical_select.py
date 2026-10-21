@@ -37,15 +37,16 @@ class CompactPhysicalSelect(unittest.TestCase):
         return [row['voltages'][program.nodes.index('y')] for row in result['solutions']]
 
     def test_small_root_correlated_choice_keeps_legacy_conditional_certification(self):
-        # At the physical root u=1/2 the strict comparison is false. The
-        # ordinary Conditional path carries that root equality certificate;
-        # a raw numeric Select over the root box cannot guess its nominal arm.
+        # The event occurs just after the rising root u=1/2, where the strict
+        # comparison is true. The ordinary Conditional path carries that
+        # crossing-side certificate; a raw numeric Select over the root box
+        # cannot guess its nominal arm.
         p=self.compile('@(initial_step)q=0;@(cross(V(u,r)-0.5,+1))'
                        'q=(V(u,r)>0.5?1.0:0.0);V(y,r)<+q;')
         result=transient(p,{'u':[[0,0],[1,3]]},[0,.25,.5,1],
                          stop=1,max_step=.25,kernel=KERNEL,vabstol=1e-12,reltol=0)
         self.assertEqual([row['voltages'][p.nodes.index('y')] for row in result['solutions']],
-                         [0,0,0,0])
+                         [0,1,1,1])
 
     def test_small_clamped_ratio_keeps_legacy_exact_boundary_certification(self):
         # The original driven value is exactly the same binary64 number as the

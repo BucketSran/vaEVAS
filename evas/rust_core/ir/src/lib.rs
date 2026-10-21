@@ -164,6 +164,9 @@ pub enum EventMathFunction {
     Abs,
     Min,
     Max,
+    /// Natural logarithm; physical sampled events only. The kernel proves a
+    /// strictly positive argument enclosure before evaluation.
+    Ln,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]

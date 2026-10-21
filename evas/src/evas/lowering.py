@@ -291,6 +291,17 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
                          parameters, nodes, source, operators, preserve_structure,
                          decisions, validate_decision, decision_scope, indices,
                          memo=memo, node_declarations=node_declarations)
+    sampled_math = getattr(parameters, "sampled_math", None)
+    if (sampled_math is not None and event_math is None and operators is None
+            and expr.op in ("sqrt", "ln") and len(expr.args) == 1):
+        # Physical event bodies keep sqrt/ln as runtime EventMath. The kernel
+        # proves the domain over the complete argument enclosure; a constant
+        # argument keeps the existing compile-time folding and domain check.
+        argument = lower(expr.args[0], parameters, nodes, source, None, True,
+                         decisions, validate_decision, False, indices,
+                         node_declarations=node_declarations)
+        if not (isinstance(argument, Affine) and not argument.terms):
+            return sampled_math(expr, (argument,))
     if expr.op in ("cos", "exp", "ln", "sqrt", "tanh") and operators is None:
         argument = lower(expr.args[0], parameters, nodes, source,
                          preserve_structure=preserve_structure, memo=memo,

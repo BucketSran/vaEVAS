@@ -116,7 +116,8 @@ class SourceShapeContracts(unittest.TestCase):
 
     def test_equivalent_shape_keeps_internal_affine_root_sample_and_strict_tie(self):
         # B1: z=2u has its unique rising root at 1/2. An identical source
-        # description must preserve that root, z(tau)=1 and strict z>1=false.
+        # description must preserve that root, z(tau)=1, and the rising side
+        # u>0.5 just after it (LRM 2.4 5.10.3.1 cross right limit).
         program=compile_sources({'internal.va':model('''@(initial_step) begin q=0; sample=0; tie=0; end
             @(cross(V(z,r)-1,+1,1e-9,1e-9)) begin
               q=q+1; sample=V(z,r); tie=(V(u,r)>0.5)?1:0;
@@ -131,10 +132,10 @@ class SourceShapeContracts(unittest.TestCase):
             self.assertEqual(len(result['transient']['events']),1)
             self.assertEqual(event['time'],.5)
             self.assertEqual(dict(zip(result['transient']['state_names'],event['after'])),
-                             {'dut:q':1,'dut:sample':1,'dut:tie':0})
+                             {'dut:q':1,'dut:sample':1,'dut:tie':1})
             y=program.nodes.index('y')
             values=[row['voltages'][y] for row in result['solutions']]
-            self.assertEqual(values,[0,2,2]);observations.append(values)
+            self.assertEqual(values,[0,3,3]);observations.append(values)
         self.assertEqual(*observations)
 
     def test_shaped_pulse_internal_affine_guard_reaches_transition_history(self):

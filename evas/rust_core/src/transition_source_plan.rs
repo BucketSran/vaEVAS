@@ -1830,6 +1830,21 @@ impl Plan {
         }
         Ok(())
     }
+    /// Paid enclosure of exact_root - representative for one original cut.
+    pub(crate) fn exact_cut_offset(&self, index: usize) -> Result<Option<I>, Error> {
+        let cut = self
+            .cuts
+            .get(index)
+            .ok_or_else(|| invalid("source slew cut index outside its plan"))?;
+        cut.exact.local_bounds_with_work(
+            crate::exact_time::Clock {
+                start: cut.time,
+                period: 0.,
+                index: 0,
+            },
+            &self.spec.work,
+        )
+    }
     pub(crate) fn debit_boundary(&self) -> Result<(), Error> {
         self.spec.work.step()
     }
@@ -2895,5 +2910,72 @@ impl ProofContext {
         assert!(self.cuts.lock().unwrap().is_empty());
         assert!(self.factor_structural.get().is_none());
         serde_json::json!({"program":*self.program,"physical_config":self.trajectory.config,"knots":self.trajectory.knots,"solver_points":self.trajectory.solver_points,"driven":self.driven,"input_nodes":self.input_nodes,"proof_cache":0,"cuts_cache":0,"factor_structural_initialized":false})
+    }
+}
+
+#[cfg(test)]
+mod slew_exact_start_tests {
+    use super::*;
+    use crate::slew::HeldSlew;
+    use num_rational::BigRational as R;
+
+    fn slew(rise: f64) -> (HeldSlew, Cut) {
+        let start = Cut::new(RootTime::point(0.).unwrap()).unwrap();
+        let cut = Cut::new(crate::exact_source::RootTime::raw(R::new(1.into(), 3.into()))).unwrap();
+        let history = HeldSlew::new(
+            (0., I::ZERO),
+            vec![(start, 0., I::ZERO), (cut.clone(), 1., I::point(1.))],
+            rise,
+            -rise,
+            1.,
+        )
+        .unwrap();
+        (history, cut)
+    }
+    fn offset(cut: &Cut) -> I {
+        cut.exact
+            .local_bounds(crate::exact_time::Clock {
+                start: cut.time,
+                period: 0.,
+                index: 0,
+            })
+            .unwrap()
+    }
+
+    #[test]
+    fn exact_cut_offset_encloses_the_limiter_tighter_than_its_window() {
+        let (history, cut) = slew(1e6);
+        let t = cut.bounds.hi;
+        let window = history.range(I::point(t)).unwrap();
+        let tight = history.point_range_with_offset(t, 1, offset(&cut)).unwrap();
+        // Exact output 1e6*(t-1/3), enclosed outward from the rational.
+        let exact = (crate::exact_source::binary(t).unwrap() - R::new(1.into(), 3.into()))
+            * crate::exact_source::binary(1e6).unwrap();
+        let exact = crate::exact_source::enclosure(&exact).unwrap();
+        assert!(tight.lo <= exact.lo && exact.hi <= tight.hi, "{tight:?} {exact:?}");
+        assert!(window.lo <= tight.lo && tight.hi <= window.hi);
+        assert!(tight.hi - tight.lo < 1e-3 * (window.hi - window.lo), "{tight:?} {window:?}");
+    }
+
+    #[test]
+    fn ambiguous_points_and_inconsistent_offsets_do_not_tighten() {
+        let (history, cut) = slew(1e6);
+        // Inside the cut's own window both epochs may define the output.
+        let t = cut.bounds.lo;
+        assert_eq!(history.point_epoch(t), None);
+        assert_eq!(
+            history.point_range_with_offset(t, 1, offset(&cut)).unwrap(),
+            history.range(I::point(t)).unwrap()
+        );
+        // A wrong epoch index keeps the window range.
+        let after = cut.bounds.hi;
+        assert_eq!(
+            history.point_range_with_offset(after, 0, offset(&cut)).unwrap(),
+            history.range(I::point(after)).unwrap()
+        );
+        // An offset excluding the window is rejected, never silently used.
+        assert!(history
+            .point_range_with_offset(after + 1e-9, 1, I::point(-1e-7))
+            .is_err());
     }
 }
