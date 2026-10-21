@@ -427,7 +427,7 @@ impl Curve {
             if p.cmp(&lo, &time)?.is_gt() || p.cmp(&time, &hi)?.is_gt() {
                 return None;
             }
-            Some(RootTime(time))
+            Some(RootTime::raw(time))
         })();
         p.finish(result)
     }
@@ -493,7 +493,7 @@ impl Curve {
                 p.push(
                     &mut out,
                     Crossing {
-                        time: RootTime(time),
+                        time: RootTime::raw(time),
                         segment,
                         ends,
                         slope,
@@ -576,7 +576,7 @@ impl Curve {
             }
             p.sort(&mut out)?;
             p.pay(out.len() as u64)?;
-            Some(out.into_iter().map(RootTime).collect())
+            Some(out.into_iter().map(RootTime::raw).collect())
         })();
         p.finish(result)
     }
@@ -638,13 +638,13 @@ pub(crate) fn affine_root(a: R, b: R, bounds: I, w: &Work) -> Result<Option<Root
         if p.cmp(&lo, &root)?.is_gt() || p.cmp(&root, &hi)?.is_gt() {
             return None;
         }
-        Some(RootTime(root))
+        Some(RootTime::raw(root))
     })();
     p.finish(result)
 }
 
 pub(crate) fn root(value: R) -> RootTime {
-    RootTime(value)
+    RootTime::raw(value)
 }
 
 // A lexical range read borrows an already validated physical shaped curve and

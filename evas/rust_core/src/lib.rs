@@ -110,11 +110,17 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
                 let shaped = errors
                     .iter()
                     .all(|e| e.bound() == 0. || e.shape().is_some());
-                let transition_only = request
-                    .program
-                    .operators
-                    .iter()
-                    .all(|op| matches!(op, ir::OperatorSpec::Transition { .. }));
+                // A selected slew always takes the SourceSlew route, whose cuts
+                // use the physical curve like Transition plans. Admit it only
+                // when sources occur solely in predicates; source value leaves
+                // and other slew inputs keep this refusal.
+                let transition_only = request.program.operators.iter().all(|op| match op {
+                    ir::OperatorSpec::Transition { .. } => true,
+                    ir::OperatorSpec::Slew { input, .. } => {
+                        source_slew::predicate_only_sources(input)
+                    }
+                    _ => false,
+                });
                 let source_uncertainty_supported = source_math::candidate(&request.program)
                     || (request.program.operators.is_empty() && !derivative_event)
                     || (shaped && transition_only);
