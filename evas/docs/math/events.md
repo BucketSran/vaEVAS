@@ -5,8 +5,8 @@
 
 本页维护定位、顺序赋值和同刻关系。历史的复位、观察及未来传播见
 [共同生命周期](continuous.md#shared-lifecycle-closure)。
-数学根 tau、实际触发 te 与内部代表时刻 b 是不同对象；当前非点 cross 选择 te=tau。
-这是 EVAS 的观察约定，不能读成 LRM 要求所有事件体在真根处读取。
+数学根 tau、实际触发 te 与内部代表时刻 b 是不同对象；cross 事件体按[根后右极限](#cross-right-limit)
+`te=tau+` 读取：连续值取 tau 处包围，可认证符号的条件取根后一侧。
 
 <a id="bound-step"></a>
 
@@ -1593,13 +1593,36 @@ A 入口不改变该队列、单次发射、失败后禁止重放或原预算合
 
 [共同闭包](continuous.md#shared-lifecycle-closure)将复位后观察与未来历史分开，
 保留每次事件体的局部赋值顺序及整批提交。非点事件日志的可选 `observation_time_bounds`
-报告共同观测区间；`time` 是存储代表时刻，点事件省略区间字段。当前 cross 策略显式选择 te=tau，
-没有改成 Spectre 的晚触发条件取值；对照只证明所列样例的兼容差异。
+报告共同观测区间；`time` 是存储代表时刻，点事件省略区间字段。cross 条件按下节 `te=tau+` 选择。
 
 非点 cross 候选在数学根 tau 上认证赋值和条件，代表时刻 b 另作提交电压验收。
 完整根盒保留源/历史误差；若条件差值与实际触发的仿射 guard 有精确的同零集证明，
-则使用 guard(tau)=0 判定等号。未触发 OR 叶子、timer、区间系数或单纯舍入相等不能提供这项证明。
-因此 `u=3t, cross(u-1)` 内的 `u>1` 在根处为假；不能因为 b 的微小舍入延迟把该条件改判为真。
+则按下节的根后一侧判定；没有一侧证书时仍按 guard(tau)=0 判定等号。
+未触发 OR 叶子、timer、区间系数或单纯舍入相等不能提供这项证明。
+因此 `u=3t, cross(u-1,+1)` 内的 `u>1` 为真；代表时刻 b 的舍入不参与这项判断。
+
+<a id="cross-right-limit"></a>
+
+### cross 事件体的根后右极限
+
+[LRM 2.4 §5.10.3.1](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+规定事件“shall occur after the threshold crossing”，并位于时间/表达式容差盒内。
+EVAS 取该窗口的右极限 `te=tau+`：连续量在 tau 连续，仍使用原根盒包围；
+只有在 tau 恰为零的条件差值才需要根后一侧，且须有证书：
+
+- 触发叶子：源 PWL 段两端 guard 值严格异号时，`(tau, 段末]` 上 guard 符号为段末符号 s。
+  条件差值 d 与 guard 有精确同零集 `d=k*g` 时，d 在 tau+ 的符号为 `sign(k)*s`。
+- 其他无状态条件：全批均为 cross 且条件在根盒上被证明恰为 `[0,0]` 时，
+  用接受历史在 `[lo, next_up(hi)]` 上的导数包围；严格同号才取该符号。
+- 同一条件得到相互矛盾的一侧、导数跨零、平台恰在阈值、源幅度误差带、timer、
+  付费历史上下文或含 timer 的混合批次均不提供证书，保留原 `[0,0]` 判定或拒绝。
+
+例如 `u` 上升、`w` 同刻下降过 0.5 时，`cross(u-0.5) or cross(w-0.5)` 内
+`u>0.5` 为真、`w>0.5` 为假；`w` 恒为 0.5 时 `w>0.5` 仍为假、`w>=0.5` 为真。
+独立答案见 [test_cross_right_limit.py](../../tests/test_cross_right_limit.py)。
+入口为 `event_conditions.rs::PostRootSides`、`pwl.rs::Root::post_root_side` 与
+`transient.rs::post_root_scope`。这只约束事件体读取；普通贡献式的 Select 是 tau 处的连续时间表达式，
+仍按原 `g(tau)=0` 判定，避免代表时刻电压验收与事件体选择不一致。
 其余条件先在可行输入盒内证明选择；若有限误差盒无法决定选择，只有两臂行为完全相同时才可继续，规则见下文。其他情况拒绝，点时刻 timer 保持原观察语义。
 数学与非线性连续重启见[根盒采样](continuous.md#事件修改的联合积分与复位)。
 数学根观察约定不等于其他仿真器的回调时刻。
@@ -2057,8 +2080,8 @@ The common acceptance refactor has a [six-model, two-setting preservation compar
 main `fbf896bb` 与未合并候选 #108 的差别须保留，候选的物理阶段输出及有界微事件事务
 不因接口被采用而成为已合并支持或完整 Spectre 对齐。
 
-数学根 tau、实际触发 te、执行代表值 b 是三个不同对象。当前 cross 选择 te=tau；
-其他触发策略需显式决定。窗口须携带所证明的根/触发身份、方向、来源与误差，
+数学根 tau、实际触发 te、执行代表值 b 是三个不同对象。当前 cross 条件按
+[`te=tau+`](#cross-right-limit) 选择；其他触发策略需显式决定。窗口须携带所证明的根/触发身份、方向、来源与误差，
 不能仅凭时间盒重叠合并两个事件。每次赋值、条件、电压采样、复位和后续历史共用一次 te。
 若 b 晚于 te，必须分别包围 te 前的旧流与 te 后的新流，不能将 b 当作物理采样时刻。
 查询属于哪个物理阶段也须证明，无法证明先后时拒绝，不能用代表值选择前态/后态。

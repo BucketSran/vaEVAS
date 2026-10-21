@@ -535,6 +535,17 @@ impl GuardBounds {
         }
         Ok(true)
     }
+    /// Sign of k when expression `second` is exactly k times `first`.
+    pub(crate) fn zero_set_ratio_sign(&self, first: usize, second: usize) -> Option<i8> {
+        if !self.same_zero_set(first, second) {
+            return None;
+        }
+        let a = &self.coefficients[first];
+        let b = &self.coefficients[second];
+        let pivot = a.iter().position(|v| !v.zero())?;
+        let ratio = a[pivot].sign()? * b[pivot].sign()?;
+        (ratio != 0).then_some(ratio)
+    }
     pub(crate) fn same_zero_set(&self, first: usize, second: usize) -> bool {
         if self.symbolic[first].is_some() || self.symbolic[second].is_some() {
             return false;
