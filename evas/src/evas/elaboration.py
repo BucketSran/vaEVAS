@@ -154,10 +154,13 @@ def inline_functions(model: Model) -> Model:
         return replace(checked(local[name], obligations, expr), result_type=function.return_type)
 
     def body(statements):
-        from .syntax import Display
+        from .syntax import Display, While
         result = []
         for statement in statements:
-            if isinstance(statement, Loop):
+            if isinstance(statement, While):
+                result.append(replace(statement, condition=expand(statement.condition),
+                                      body=body(statement.body)))
+            elif isinstance(statement, Loop):
                 result.append(replace(statement, start=expand(statement.start), limit=expand(statement.limit),
                                       update=expand(statement.update), body=body(statement.body)))
             elif isinstance(statement, Event):
@@ -568,6 +571,25 @@ def elaborate_loops(model: Model, parameter):
                         # Reuse the same read-side structural/type/range gate.
                         expression(Expr('index', statement.name, (statement.index,), statement.token))
 
+    def constant_bits(name):
+        return parameter(name)
+
+    def fold_bits(expr, values):
+        # Initialization loop values are instance constants: fold typed signed32
+        # bit operations exactly (VAMS 2.4 4.2.9/4.2.11); nothing else is admitted.
+        from .integer_bits import evaluate as evaluate_bits, integer_type
+        if not all(integer_type(arg, model.variables, model.parameter_types, model.genvars)
+                   for arg in expr.args) or not all(
+                isinstance(value, Affine) and not value.terms and value.constant.is_integer()
+                for value in values):
+            raise CompileError('bitwise operands require typed instance-constant integers',
+                               code='unsupported_integer_bitwise', token=expr.token)
+        try:
+            return Affine(float(evaluate_bits(expr.op, *(int(value.constant) for value in values))), ())
+        except ValueError as error:
+            raise CompileError(str(error), code='unsupported_integer_bitwise', token=expr.token) from error
+    constant_bits.integer_bitwise = fold_bits
+
     def validate_initial_body(statements, active, in_loop=False):
         # Validate the unexpanded tree too: a zero-trip loop cannot erase a
         # dynamic initializer, index, illegal nested control or declaration.
@@ -602,7 +624,7 @@ def elaborate_loops(model: Model, parameter):
                     fail('initialization loop array assignment requires an explicit element index', statement.token,
                          code='unsupported_initial_event')
                 try:
-                    value = lower(substitute(statement.rhs, active), parameter, {}, model.source,
+                    value = lower(substitute(statement.rhs, active), constant_bits, {}, model.source,
                                   preserve_structure=True)
                     if not isinstance(value, Affine) or value.terms:
                         raise CompileError('initializer is not an instance constant')
