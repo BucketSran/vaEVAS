@@ -391,6 +391,15 @@ impl ScheduledEvent {
         Ok(true)
     }
 
+    /// Certified guard side just after this cross root (LRM 2.4 5.10.3.1).
+    /// Only strict sign-changing affine source roots carry this certificate.
+    pub(crate) fn post_root_side(&self) -> Option<i8> {
+        match &self.moment {
+            Moment::Cross(root) => root.post_root_side(),
+            _ => None,
+        }
+    }
+
     pub(crate) fn dynamic_direction(&self) -> Option<i8> {
         match self.moment {
             Moment::Dynamic { derivative, .. } | Moment::Anchored { derivative, .. } => {

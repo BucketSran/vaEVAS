@@ -16,6 +16,16 @@ pub(crate) struct Root {
 }
 
 impl Root {
+    /// Side of the guard just after a strict sign-changing root. The guard is
+    /// affine between its segment knots and both knot values are strictly
+    /// signed, so the end sign holds on (root, segment end]. Exact arrivals
+    /// (a zero end value) certify no side.
+    pub(crate) fn post_root_side(&self) -> Option<i8> {
+        match (self.ends[0].sign(), self.ends[1].sign()) {
+            (Some(a), Some(b)) if a != 0 && b == -a => Some(b),
+            _ => None,
+        }
+    }
     fn from_physical(crossing: crate::exact_source::Crossing) -> Option<Self> {
         Some(Self {
             bounds: crossing.time.bounds()?,

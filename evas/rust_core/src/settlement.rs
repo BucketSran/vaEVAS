@@ -52,7 +52,8 @@ pub(crate) fn prepare(
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn prepare_with_physical_proofs(
     model: &EventModel,
-    events: &[usize],
+    // Fired leaves carry the post-root side of point cross roots.
+    events_and_roots: (&[usize], &[usize]),
     inputs: (&[f64], &[I]),
     before: &[f64],
     operators: &[f64],
@@ -66,7 +67,7 @@ pub(crate) fn prepare_with_physical_proofs(
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
-        (events, &[]),
+        events_and_roots,
         inputs,
         inputs.1,
         before,
