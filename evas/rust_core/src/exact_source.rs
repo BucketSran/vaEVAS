@@ -1627,16 +1627,43 @@ impl RootTime {
         let Some((lo, hi)) = event_prefix_fees::endpoint_widths(discovery) else {
             return Ok(None);
         };
+        // A memoized paid enclosure of this immutable root is tight: the exact
+        // point, or two adjacent floats strictly around the value. For binary64
+        // endpoints it decides containment exactly, except when an endpoint
+        // falls inside it; only that overlap repeats the exact comparison.
+        if self.1 .0.get().is_some() {
+            event_prefix_fees::metadata(w, 16)?;
+            crate::diagnostics::counter("exact_root_enclosure_memo_hits", 1);
+            match *self.1 .0.get().unwrap() {
+                None => return Ok(None),
+                Some(tight) if discovery.lo <= tight.lo && tight.hi <= discovery.hi => {
+                    w.debit(2, 64)?;
+                    return Ok(Some(tight));
+                }
+                Some(tight) if tight.hi < discovery.lo || discovery.hi < tight.lo => {
+                    return Ok(None)
+                }
+                Some(_) => {}
+            }
+        }
         let b = event_prefix_fees::width(&self.0);
-        // Preserve the original containment reservation and refusal before
-        // constructing an enclosure. Exact binary64 roots reuse the existing
-        // paid dyadic proof; other rationals retain its generic fallback.
+        // First query (or an overlapping endpoint): preserve the original
+        // containment reservation and refusal before constructing an enclosure.
         w.debit(2, event_prefix_fees::contains(b, lo, hi))?;
         crate::diagnostics::counter("forcing_prefix_exact_refinements", 1);
         if !contains(discovery, &self.0) {
             return Ok(None);
         }
-        let Some(tight) = enclosure_with_work(&self.0, w)? else {
+        let tight = match self.1 .0.get() {
+            Some(tight) => *tight,
+            None => {
+                // Same paid enclosure as before; a failure installs nothing.
+                let tight = enclosure_with_work(&self.0, w)?;
+                let _ = self.1 .0.set(tight);
+                tight
+            }
+        };
+        let Some(tight) = tight else {
             return Ok(None);
         };
         w.debit(2, 64)?;
@@ -2068,6 +2095,65 @@ mod refine_reuse_tests {
             assert_eq!(root.refine(discovery), Some(I::point(1.5)));
         }
     }
+
+    #[test]
+    fn memoized_refinement_is_the_exact_refinement_without_repeated_containment() {
+        let third = 1f64 / 3.;
+        for (value, discoveries) in [
+            (
+                R::new(3.into(), 2.into()),
+                vec![
+                    I { lo: 1., hi: 2. },
+                    I { lo: 0., hi: 1. },
+                    I::point(1.5),
+                    I {
+                        lo: 1.5,
+                        hi: 1.5f64.next_up(),
+                    },
+                ],
+            ),
+            (
+                R::new(1.into(), 3.into()),
+                vec![
+                    I { lo: 0., hi: 1. },
+                    I { lo: 0.5, hi: 1. },
+                    // Endpoints inside the adjacent-float enclosure: the
+                    // exact value lies strictly between them, so both refuse.
+                    I {
+                        lo: third.next_up(),
+                        hi: 1.,
+                    },
+                    I { lo: 0., hi: third },
+                    I {
+                        lo: third,
+                        hi: third.next_up(),
+                    },
+                ],
+            ),
+        ] {
+            let root = RootTime::raw(value);
+            let first = Work::default();
+            // The first query keeps the original fee sequence and installs
+            // the enclosure; later queries read it.
+            let _ = root
+                .refine_with_work(I { lo: -4., hi: 4. }, &first)
+                .unwrap();
+            for discovery in discoveries {
+                let expected = root.refine(discovery);
+                let work = Work::default();
+                assert_eq!(root.refine_with_work(discovery, &work).unwrap(), expected);
+                let tight = root.bounds().unwrap();
+                let decided = (discovery.lo <= tight.lo && tight.hi <= discovery.hi)
+                    || tight.hi < discovery.lo
+                    || discovery.hi < tight.lo;
+                if decided {
+                    // metadata + memo lookup (+ the result box), no containment.
+                    let result = if expected.is_some() { 64 } else { 0 };
+                    assert_eq!(work.spent(), 64 + 16 + result, "{discovery:?}");
+                }
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -2237,14 +2323,16 @@ mod memo_clock_order_controls {
         let memo = Work::default();
         for &t in &queries {
             assert_eq!(
-                root.clock_delta_order_with_work(point(t), 0., &memo).unwrap(),
+                root.clock_delta_order_with_work(point(t), 0., &memo)
+                    .unwrap(),
                 root.clock_delta_order(point(t), 0.),
             );
         }
         let separated = [0.25, 0.5, 1e-300, 1.];
         let first = memo.spent();
         for &t in &separated {
-            root.clock_delta_order_with_work(point(t), 0., &memo).unwrap();
+            root.clock_delta_order_with_work(point(t), 0., &memo)
+                .unwrap();
         }
         let repeated = memo.spent() - first;
         // Lower bound of the uncached route: its reservation alone.
@@ -2264,7 +2352,8 @@ mod memo_clock_order_controls {
         // rational difference may decide equality.
         let root = RootTime::raw(R::new(3.into(), 2.into()));
         assert_eq!(
-            root.clock_delta_order_with_work(point(1.5), 0., &work).unwrap(),
+            root.clock_delta_order_with_work(point(1.5), 0., &work)
+                .unwrap(),
             Some(std::cmp::Ordering::Equal)
         );
         // A periodic clock or nonzero delta is not the binary64 start.
@@ -2278,7 +2367,8 @@ mod memo_clock_order_controls {
             Some(std::cmp::Ordering::Equal)
         );
         assert_eq!(
-            root.clock_delta_order_with_work(point(1.), 0.5, &work).unwrap(),
+            root.clock_delta_order_with_work(point(1.), 0.5, &work)
+                .unwrap(),
             Some(std::cmp::Ordering::Equal)
         );
         // An exhausted owner installs no memo and still refuses.

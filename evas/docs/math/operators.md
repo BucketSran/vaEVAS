@@ -495,6 +495,13 @@ real 别名仍是 real；只有无条件单写者、全部用途均为同实例�
 后者的两种实例顺序均须保持独立答案 `[1,1]`。该兼容回退会使原346继续生成旧表，
 已有原件 Native100000 拒绝仍保留；typed 与普通历史 calendar 的组合是下一独立修复。
 
+组合后的 typed history calendar 只是帧身份，不授予历史准入。typed 目标经自身 Spec 支付复制、求值与查询克隆；
+普通保持目标（裸 real 状态与只读同实例状态和常量的整数 Select）在同一共享 owner 上支付复制与推进，
+每次克隆只付一次。普通目标仅在历史实际安装新目标时重放精确目标证明；目标未变的推进不重算、不收费。
+同一查询的全部条目共用一次查询时间的精确转换；无隔离参数时直接借用已校验的值证明而不复制。
+控制见 [test_group_event_calendar.py](../../tests/test_group_event_calendar.py) 与
+[混合 calendar 计费测试](../../rust_core/src/history_calendar_typed_target_tests.rs)。
+
 实现为 [held_power2.py](../../src/evas/held_power2.py)、
 [integer_table_composition.py](../../src/evas/integer_table_composition.py)及实例编译器。
 [公开目标控制](../../tests/test_held_power2_targets.py)、

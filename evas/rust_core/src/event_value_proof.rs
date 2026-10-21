@@ -910,7 +910,14 @@ mod singleton_assignment_tests {
     fn certified_singleton_assignment_is_an_exact_value_but_a_box_is_not() {
         // Node 1 is an unsolved electrical node; its certified sample enters
         // only through the assignment's enclosure.
-        let nodes = [I::ZERO, I { lo: f64::NEG_INFINITY, hi: f64::INFINITY }, I::point(0.28)];
+        let nodes = [
+            I::ZERO,
+            I {
+                lo: f64::NEG_INFINITY,
+                hi: f64::INFINITY,
+            },
+            I::point(0.28),
+        ];
         let mut local = LocalState::new(&[I::ZERO]);
         local.assign(0, &node(1), &nodes, I::point(0.73));
         assert_eq!(local.exact[0], binary(0.73));
@@ -918,7 +925,15 @@ mod singleton_assignment_tests {
         assert_eq!(x, R::new(1.into(), (1u64 << 54).into()));
         // A nonsingleton enclosure still carries no exact provenance.
         let mut boxed = LocalState::new(&[I::ZERO]);
-        boxed.assign(0, &node(1), &nodes, I { lo: 0.73, hi: 0.73f64.next_up() });
+        boxed.assign(
+            0,
+            &node(1),
+            &nodes,
+            I {
+                lo: 0.73,
+                hi: 0.73f64.next_up(),
+            },
+        );
         assert_eq!(boxed.exact[0], None);
         assert_eq!(boxed.value(&residual(), &nodes), None);
     }

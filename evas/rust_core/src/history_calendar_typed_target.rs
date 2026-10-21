@@ -8,10 +8,12 @@ use crate::pwl::Trajectory;
 use crate::schedule::{history_epoch, independent_epoch, HistoryEpoch, ScheduledEvent};
 
 pub(crate) fn qualify(model: &EventModel) -> Result<(), Error> {
-    let refusal = || Error::new(
+    let refusal = || {
+        Error::new(
         "unsupported_held_integer_target",
         "typed held targets require the ordinary independent calendar or a pure held history calendar",
-    );
+    )
+    };
     if model.typed_transition_targets.is_empty()
         || !model.guard_operators.iter().any(|ops| !ops.is_empty())
         || model.forcing.is_some()
@@ -42,11 +44,12 @@ pub(crate) fn initialize(
 ) -> Result<(Operators, Vec<ScheduledEvent>), Error> {
     qualify(model)?;
     let context = model.source_context.as_ref().ok_or_else(|| {
-        Error::new("invalid_ir", "typed history calendar lost its original owner")
+        Error::new(
+            "invalid_ir",
+            "typed history calendar lost its original owner",
+        )
     })?;
-    crate::event_floor::check_provided_binding(
-        context, &model.program, trajectory, &model.driven,
-    )?;
+    crate::event_floor::check_provided_binding(context, &model.program, trajectory, &model.driven)?;
     // A missing bootstrap box means declaration state, just as on the ordinary
     // typed path. Existing bootstrap boxes are copied whole, never normalized
     // to their nominal state before the constructor audits every dependency.
@@ -56,14 +59,35 @@ pub(crate) fn initialize(
         None => states.iter().copied().map(I::point).collect(),
     };
     let pending = independent_epoch(model, trajectory, &bounds, None)?;
-    let until = pending.first().map_or(trajectory.config.stop, |event| event.time);
+    let until = pending
+        .first()
+        .map_or(trajectory.config.stop, |event| event.time);
     let operators = Operators::new_until_with_typed_calendar(
-        &model.program, trajectory, &model.driven, states, &bounds,
-        &model.typed_transition_targets, context.clone(), until, &model.tolerances,
+        &model.program,
+        trajectory,
+        &model.driven,
+        states,
+        &bounds,
+        &model.typed_transition_targets,
+        context.clone(),
+        until,
+        &model.tolerances,
     )?;
     let calendar = history_epoch(
-        model, trajectory, &operators,
-        HistoryEpoch { states: &bounds, after: None, until, consumed: &[], pending: &pending },
+        model,
+        trajectory,
+        &operators,
+        HistoryEpoch {
+            states: &bounds,
+            after: None,
+            until,
+            consumed: &[],
+            pending: &pending,
+        },
     )?;
     Ok((operators, calendar))
 }
+
+#[cfg(test)]
+#[path = "history_calendar_typed_target_tests.rs"]
+mod tests;
