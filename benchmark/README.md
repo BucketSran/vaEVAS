@@ -25,10 +25,10 @@ benchmark/
 | [material/draftbench/](material/draftbench/README.md) | 电路资产、选题讨论、设计批次与待审核题包 |
 | [material/historyref/](material/historyref/README.md) | 原始 benchmark、外部来源和历史建设源码 |
 
-2026-10-15，正式清单为空，状态为 `draft`。草稿区按[三批](material/draftbench/batches/README.md)保存两批 56 个实现和 1 个 R01 合同草稿，共 57 个题包。
+2026-10-19，正式清单为空，状态为 `draft`。草稿区按[三批](material/draftbench/batches/README.md)保存两批 56 个实现和 2 个 R01 待审题包，共 58 个题包。
 更早的 41 个题包保存为[历史材料](material/historyref/tasks/README.md)。这些资产均未获得本版完整题目审核认可。
 现有 56 题的功能覆盖见[草稿总览](material/draftbench/TASKS.md)，R01 的审核入口见
-[有限采集建模](material/draftbench/circuits/r01-sampling/module/basic/README.md#有限采集建模题合同审核)。
+[ideal 规格重建](material/draftbench/batches/r01-sampling-01/tasks/r01-spec-ideal/README.md)，有限采集合同继续保留在同批次。
 这次整理不改变这些题目的原行为要求、评分判据或历史实验结论。
 
 ## 一个题包包括什么
@@ -69,7 +69,7 @@ checker 由该题的规格与实验决定，正式题不能依赖仓库外层的
 ## 从草稿进入正式题集
 
 先在 `material/draftbench/batches/<batch-id>/tasks/` 按批次设计与审核，批次 README 保留进度与审核记录。
-代表题合同与验收方案确认后，完成实现与作者校准，
+先依据应用讨论初步行为要求，建立有依据的 gold，再完善验收与英文 instruction；数值和证据在早期允许待定。完成授权范围的作者校准后，
 再做最终人工题目 review。本版题包通过后移入 `tasks/<task-id>/`，在 `task.toml` 记录
 `metadata.review_status = "accepted"`，并在 `SOURCE.md` 保留对应的人工审核记录。
 同时把题目加入 `benchmark.toml`，原批次保留审核结论及正式题包链接，不另存有效副本。

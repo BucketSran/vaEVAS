@@ -1,0 +1,21 @@
+`include "constants.vams"
+`include "disciplines.vams"
+// A separate candidate resets memory on assertion rather than on release.
+module track_hold(vin, track, rst, vout);
+    input vin, track, rst;
+    output vout;
+    electrical vin, track, rst, vout;
+    parameter real vth = 0.9;
+    parameter real vinit = 0.9;
+    real memory;
+    analog begin
+        @(initial_step) memory = vinit;
+        @(cross(V(rst)-vth, +1)) memory = vinit;
+        @(cross(V(track)-vth, -1)) begin
+            if (V(rst) <= vth) memory = V(vin);
+        end
+        if (V(rst) > vth) V(vout) <+ vinit;
+        else if (V(track) > vth) V(vout) <+ V(vin);
+        else V(vout) <+ memory;
+    end
+endmodule

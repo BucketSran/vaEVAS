@@ -51,7 +51,12 @@ def historical_name(relative_path):
     if name.startswith(DRAFT_BATCHES + "/"):
         parts = name[len(DRAFT_BATCHES) + 1:].split("/", 2)
         if len(parts) == 3 and parts[1] == "tasks":
-            return "benchmark/tasks/" + parts[2]
+            historical = "benchmark/tasks/" + parts[2]
+            # Only invert a known relocation. Newly authored batches/tasks
+            # keep their current key; they had no old manifest identity.
+            if material_path(Path(), historical) == Path(name):
+                return historical
+        return name
     if name.startswith(HISTORY_TASKS + "/"):
         return "benchmark/tasks/" + name[len(HISTORY_TASKS) + 1:]
     for old, new in sorted(RELOCATIONS.items(), key=lambda pair: len(pair[1]), reverse=True):

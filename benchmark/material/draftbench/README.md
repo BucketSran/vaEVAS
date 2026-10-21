@@ -5,10 +5,10 @@
 main 中已有实现和作者记录仍需人工题目审核，不能因合入 main 自动成为正式题目。
 
 先看[56 个题包资产总览](TASKS.md)，按五类工程动作和电路功能组织审核。
-实际题包按[批次](batches/README.md)存放：v2-01 37 题、v3-01 19 题、r01-sampling-01 1 个合同草稿，共 57 个。
+实际题包按[批次](batches/README.md)存放：v2-01 37 题、v3-01 19 题、r01-sampling-01 2 个合同草稿，共 58 个。
 更早的 41 个题包及原始首批清单归入[historyref](../historyref/tasks/README.md)，不计入当前草稿。
 旧 R01 的其余格式草稿仍在此前恢复快照中，已确认方向与实际电路留在 [R01](circuits/r01-sampling/README.md)。
-当前有限采集题仅到合同审核阶段，不进行模型实验。
+建设范式与 lint 已固化，[ideal 题包](batches/r01-sampling-01/tasks/r01-spec-ideal/README.md)已有设计与实现；当前题面按新流程重审，时序与验收尺度待定，作者运行校准仍有 EVAS 缺口，尚未开展模型解题实验。有限采集合同继续保留。本阶段优先完成 R01 的实际题目设计与全 VA 首轮实测，真实电路结合题先完成 instruction 与 gold。完整范围见[本阶段安排](DISCUSSION.md#r01-本阶段安排)。
 
 <!-- task-summary:begin -->
 
