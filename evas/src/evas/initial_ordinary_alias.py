@@ -6,7 +6,7 @@ local environment. Initial statements, State slots and event consumers stay inta
 """
 from .errors import CompileError
 from .syntax import (Assignment, Conditional, ContributionStatement, Display,
-                     BoundStep, Loop, Event, OPERATOR_NAMES)
+                     BoundStep, Loop, Event, OPERATOR_ARITIES, OPERATOR_NAMES)
 
 
 def admit(compiler, name, persistent, analog_writers, source):
@@ -67,8 +67,10 @@ def admit(compiler, name, persistent, analog_writers, source):
                     (ref == '0' or source.directions.get(ref) in ('input', 'inout')
                      and compiler.node_ids.get(ref) not in foreign))
         else:
-            safe = (expr.op not in OPERATOR_NAMES and
-                    expr.op not in ('time', 'index', 'array', 'call'))
+            # $abstime and memoryless math keep the plain-local value contract;
+            # history operators still need their own call-site/state proofs.
+            safe = (expr.op not in OPERATOR_ARITIES and
+                    expr.op not in ('index', 'array', 'call'))
         # Visit every arm/operand even when an earlier one is unsafe or zero.
         for index, child in enumerate(expr.args):
             child_safe, child_dependent = expression(
