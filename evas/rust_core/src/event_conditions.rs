@@ -1061,6 +1061,33 @@ impl Conditions {
             .collect()
     }
 
+    /// Right-limit candidates of the passive observer conditions. A passive
+    /// event body also reads at tau+ (LRM 2.4 5.10.3.1), so a predicate on a
+    /// driven node of another instance earns the same derivative certificate
+    /// as an active one. The filters match `right_limit_candidates`.
+    pub(crate) fn passive_right_limit_candidates(
+        &self,
+        events: &[usize],
+        input_only: bool,
+    ) -> Vec<(usize, &Expression, &str)> {
+        let Some(bounds) = self.bounds.as_ref() else {
+            return Vec::new();
+        };
+        self.predicates
+            .iter()
+            .enumerate()
+            .filter(|(i, p)| {
+                events.contains(&p.event)
+                    && self.active_events.get(p.event).copied().unwrap_or(false)
+                    && !p.numeric
+                    && p.dependencies.state_dependencies.is_empty()
+                    && p.dependencies.operator_dependencies.is_empty()
+                    && (!input_only || (!bounds.symbolic(*i) && bounds.operator_free(*i)))
+            })
+            .map(|(i, p)| (i, &p.expression, p.origin.instance.as_str()))
+            .collect()
+    }
+
     /// Dependence of a row or expression on the inputs and histories that
     /// move over the right window (without a window every read moves). An
     /// ordinary row composes the dependence of the states it reads, so an

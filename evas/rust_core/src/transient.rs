@@ -1492,18 +1492,37 @@ fn post_root_scope(
                 Err(error) => return Err(error),
             },
         };
-        let candidates = if ranges.is_empty() {
+        // Predicate indices are shared by both condition sets (built from the
+        // same program); each set only lists its own active events.
+        let mut passive = Vec::new();
+        let mut candidates = if ranges.is_empty() {
             Vec::new()
         } else {
-            model
-                .conditions
-                .right_limit_candidates(&events, &ranges, !all_cross)
+            let candidates =
+                model
+                    .conditions
+                    .right_limit_candidates(&events, &ranges, !all_cross);
+            // A passive observer body reads at tau+ too, but its predicates
+            // live in the passive (all-nodes-as-inputs) condition set. Give
+            // them the same derivative certificate for a condition on another
+            // instance's node, e.g. `V(y)>0.5` while the trigger crosses
+            // `V(u)-0.5` and `y` is driven by `u`.
+            passive = model
+                .passive_conditions
+                .passive_right_limit_candidates(&events, !all_cross);
+            candidates
         };
+        candidates.extend(passive.iter().copied());
         if !candidates.is_empty() {
-            match crate::guard_trajectory::GuardTrajectory::new(
+            // A passive condition that reads another instance's driven node
+            // needs the non-direct node map, not a refusal. Active candidates
+            // keep their original direct-projection admission.
+            let expressions: Vec<_> = passive.iter().map(|(_, e, o)| (*e, *o)).collect();
+            match crate::guard_trajectory::GuardTrajectory::new_with_conditions(
                 model,
                 trajectory,
                 &accepted.operators,
+                &expressions,
             ) {
                 Ok(guards) => {
                     for (predicate, expression, owner) in candidates {
