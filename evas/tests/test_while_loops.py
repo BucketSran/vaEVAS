@@ -102,6 +102,11 @@ class RelatedFrontendGaps(unittest.TestCase):
         self.assertEqual(code('@(timer(0.1,0.1)) begin p = p + 1; $bound_step(0.01); end V(y) <+ p;'),
                          'unsupported_task_context')
 
+    def test_random_system_function_has_explicit_diagnostic(self):
+        self.assertEqual(code('@(timer(0.1,0.1)) p = $rdist_normal(p, 0, 1); V(y) <+ p;'),
+                         'unsupported_system_function')
+        self.assertEqual(code('V(y) <+ $ x;', 'real x;'), 'syntax_error')
+
     def test_initialization_loop_folds_typed_constant_bits(self):
         body = ('@(initial_step) for (i = 0; i < 4; i = i + 1) b[i] = (s >> i) & 1; '
                 'V(y) <+ b[0] + 2*b[1] + 4*b[2] + 8*b[3];')

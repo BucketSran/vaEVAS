@@ -453,6 +453,12 @@ class Parser:
             else:
                 left = Expr("parameter", token.text, (), token)
         else:
+            following = self.token
+            if (token.text == '$' and following.kind == 'name' and following.line == token.line
+                    and following.column == token.column + 1):
+                # e.g. $rdist_normal: no seeded/random system function is implemented.
+                self.fail(f"system function ${following.text} is not supported", token,
+                          code='unsupported_system_function')
             self.fail(f"unsupported expression {token.text!r}", token)
         precedence_table = {"||": 1, "&&": 2, "|": 3, "^": 4, "&": 5,
                             "==": 6, "!=": 6, "<": 7, "<=": 7, ">": 7, ">=": 7,
