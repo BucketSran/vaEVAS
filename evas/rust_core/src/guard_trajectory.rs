@@ -154,6 +154,30 @@ impl<'a> GuardTrajectory<'a> {
         operators: Option<&'a Operators>,
         states: Option<&'a [I]>,
     ) -> Result<Self, Error> {
+        Self::build(model, trajectory, operators, states, &[])
+    }
+
+    /// Build with extra conditions that are evaluated but never read as a
+    /// trigger guard: a passive observer condition may read a driven node of
+    /// another instance (`V(y)>0.5` triggered by `cross(V(u)-0.5)`). Such a
+    /// read is exactly what the non-direct node map is defined for, so it
+    /// disables the direct projection instead of refusing.
+    pub(crate) fn new_with_conditions(
+        model: &'a EventModel,
+        trajectory: &'a Trajectory,
+        operators: &'a Operators,
+        conditions: &[(&Expression, &str)],
+    ) -> Result<Self, Error> {
+        Self::build(model, trajectory, Some(operators), None, conditions)
+    }
+
+    fn build(
+        model: &'a EventModel,
+        trajectory: &'a Trajectory,
+        operators: Option<&'a Operators>,
+        states: Option<&'a [I]>,
+        conditions: &[(&Expression, &str)],
+    ) -> Result<Self, Error> {
         // Validate structural dependencies even if algebraic projection cancels
         // their coefficients. A history-free calendar pass has no operators.
         if let Some(operators) = operators {
@@ -182,6 +206,14 @@ impl<'a> GuardTrajectory<'a> {
                 let owner = &p.events[leaf.event].origin.instance;
                 let (nodes, _) = dependencies(guard, p, owner)?;
                 direct &= nodes.is_subset(&allowed);
+            }
+        }
+        for (expression, owner) in conditions {
+            let (read, _) = dependencies(expression, p, owner)?;
+            for node in read {
+                if !allowed.contains(&node) {
+                    direct = false;
+                }
             }
         }
         let (nodes, direct_nodes) = if direct {
