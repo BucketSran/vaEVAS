@@ -13,6 +13,7 @@ include tests/fixtures/implicit-event-restart/program.json
 include rust_core/fuzz/seeds/static.va
 recursive-include tests/fixtures/rational-transition-rollback *.json *.va
 include tests/fixtures/held-integer29-target-retry.json
+include tests/fixtures/typed-calendar-mixed-held.json
 include tests/fixtures/factor-topology19-nonbinary-time.json
 include tests/fixtures/forcing-owned-clock.json
 include tests/fixtures/ordinary114_current_mux.va
