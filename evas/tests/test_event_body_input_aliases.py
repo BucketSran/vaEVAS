@@ -79,14 +79,23 @@ class EventBodyInputAliases(unittest.TestCase):
         self.assertEqual(self.values(self.run_samples(p)), [0,1,1])
 
     def test_non_dominating_and_cross_callback_definitions_reject(self):
+        # A conditional ordinary write before the callback is held state; see
+        # test_conditional_prefix_is_held_state below.
         cases = [('','a=(V(u,r)>0)?1:0;'),
-                 ('if(V(u,r)>0)a=1;',''),
                  ('a=V(u,r); @(timer(0.125))a=V(u,r);',''),
                  ('a=b;b=a;','')]
         for before,after in cases:
             with self.subTest(before=before,after=after), self.assertRaises(CompileError):
                 self.compile('@(initial_step)q=0; '+before+' @(timer(0.5))q=a; '+after+' V(y,r)<+q;',
                              'real a,b,q;')
+
+    def test_conditional_prefix_is_held_state(self):
+        # u=t leaves zero at t=0 without a crossing; the held a reads 1 at 0.5.
+        p = self.compile('@(initial_step)q=0; if(V(u,r)>0)a=1; @(timer(0.5))q=a; V(y,r)<+q;',
+                         'real a,b,q;')
+        rows = self.run_samples(p, (0, .25, .75, 1))
+        node = rows['nodes'].index('y')
+        self.assertEqual([row['voltages'][node] for row in rows['solutions']], [0, 0, 1, 1])
 
     def test_original_array_and_zero_trip_writers_do_not_qualify_as_scalar_aliases(self):
         # Independent review EV377-ORIGINAL-SHAPE-1: scalarization must not

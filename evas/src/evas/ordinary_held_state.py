@@ -151,10 +151,24 @@ def plan(compiler):
     model = compiler.model
     owner = compiler.compilation.native_audit
 
-    def charge(kind, amount=1):
-        owner.debit('held_state_' + kind, amount)
+    # Programs without a held read keep their exact prior audit totals: the
+    # role scan is metered locally and debited only once a held read exists.
+    pending = {'held_state_dispatch': 2 + len(model.analog)}
 
-    charge('dispatch', 2 + len(model.analog))
+    def charge(kind, amount=1):
+        if pending is None:
+            owner.debit('held_state_' + kind, amount)
+        else:
+            pending['held_state_' + kind] = pending.get('held_state_' + kind, 0) + amount
+
+    def settle():
+        nonlocal pending
+        if pending is not None:
+            work, pending = pending, None
+            for kind, amount in work.items():
+                owner.debit(kind, amount)
+
+    charge.settle = settle
     if model.arrays or model.genvars:
         return None
     ordinary = list(model.analog)
@@ -211,6 +225,7 @@ def _plan(compiler, model, ordinary, writers, charge):
     flow(sequence, set())
     if not held:
         return None
+    charge.settle()
 
     # U: every top-level ordinary statement writing a held variable. Its other
     # targets join H; a renamed current value replaces them in ordinary code.
