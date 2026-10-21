@@ -17,6 +17,7 @@ from . import held_power2
 from .integer_invariants import SourceProofRequest
 from .forcing_components import source_forcing_tree, audit_original_reads, residual_checks, split_source_quadratic
 from .input_rational_scope import input_rational_tree
+from . import readout_scope
 from .compact_source_select import compact_source_assignment
 from .integer_prefix import factor_integer_prefix
 from .parameters import bind_parameters
@@ -49,6 +50,8 @@ class Compilation:
     indices: dict[str, int] = field(init=False)
     source_rational_origins: list[Origin] = field(default_factory=list)
     source_rational_nodes: set[int] = field(default_factory=lambda: {0})
+    # Deferred (origin, diagnostic) pairs; see readout_scope.check.
+    readout_pending: list = field(default_factory=list)
     settled_integer_reads: bool = False
     history_consumer_candidate: bool = False
     # References only: bind_hierarchy/parse_sources already own these objects.
@@ -188,12 +191,17 @@ class Compilation:
             check_ir(result,work=self.native_audit.ir_work,cache=self.native_audit.ir_cache)
         # A replacement Program must keep the SAME owner for expanded transport.
         object.__setattr__(result, "_native_audit", self.native_audit)
+        pending = list(self.readout_pending)
         if self.source_rational_origins:
             trees = [input_rational_tree(c.rhs, self.source_rational_nodes) for c in result.contributions]
             if (result.states or result.events or result.operators or result.step_bounds
                     or any(tree is None for tree in trees)):
-                origin = self.source_rational_origins[0]
-                raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: non-affine guards require a complete stateless input-only algebraic program")
+                # A stateful program may still own these decisions as unread
+                # readout outputs; otherwise the original diagnostic stands.
+                pending.extend((origin, "non-affine guards require a complete stateless input-only algebraic program")
+                               for origin in self.source_rational_origins)
+        if pending:
+            readout_scope.check(result, pending, self.native_audit)
         return result
 
 
@@ -891,6 +899,14 @@ class InstanceCompiler:
             typed.event_math = math_value
             kwargs["decisions"] = self.event_select
             kwargs.pop("validate_decision", None)
+        elif sampled_values:
+            # Physical sampled sqrt/ln; the kernel certifies each domain over
+            # the complete actual argument enclosure at the event.
+            def sampled_math(item, args):
+                origin = self.make_ir(Origin, item.token.source or self.model.source, item.token.line,
+                    item.token.column, self.instance.name, item.expansion)
+                return self.make_ir(EventMath, item.op, args, origin)
+            typed.sampled_math = sampled_math
         try:
             table = self.integer_expression_table(expr, resolve, nodes, args, kwargs)
             if table is not None:
@@ -935,7 +951,7 @@ class InstanceCompiler:
         if isinstance(expression, StateRef):
             return self.compilation.states[expression.state].kind == "integer"
         if isinstance(expression, EventMath):
-            return expression.function == "floor" or expression.function != "sqrt" and all(self.integral(arg) for arg in expression.args)
+            return expression.function == "floor" or expression.function in ("abs", "min", "max") and all(self.integral(arg) for arg in expression.args)
         if isinstance(expression, Select):
             return self.integral(expression.then_value) and self.integral(expression.else_value)
         if isinstance(expression, Power):
@@ -2251,8 +2267,16 @@ class InstanceCompiler:
                 self.request_input_rational(origin)
             elif self.source_forcing_candidate(value):
                 pass
-            else:
+            elif not self.readout_candidate(value, origin, "selected value must remain piecewise-affine or a supported rational expression"):
                 raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected value must remain piecewise-affine or a supported rational expression")
+
+    def readout_candidate(self, value, origin, message):
+        # Defer only a structural candidate; Compilation.program() requires the
+        # complete Program to keep this decision in unread grounded outputs.
+        if not readout_scope.readout_tree(value):
+            return False
+        self.compilation.readout_pending.append((origin, message))
+        return True
 
     def expression_select(self, expr, relation, left, right, then_value, else_value, *, register=True, raw=None):
         owner = self.compilation.native_audit
@@ -2283,7 +2307,7 @@ class InstanceCompiler:
                 self.request_input_rational(origin)
             elif self.source_forcing_candidate(result):
                 pass
-            else:
+            elif not self.readout_candidate(result, origin, "decision predicates and every arm must be affine or input-selected piecewise-affine"):
                 raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: decision predicates and every arm must be affine or input-selected piecewise-affine")
         predicate_nodes = self.expression_nodes(left) | self.expression_nodes(right)
         if not predicate_nodes.issubset(self.allowed_condition_nodes):
@@ -2370,7 +2394,7 @@ class InstanceCompiler:
                     self.request_input_rational(origin)
                 elif self.source_forcing_candidate(value):
                     pass
-                else:
+                elif not self.readout_candidate(value, origin, "selected value must remain piecewise-affine or a supported rational expression"):
                     raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected value must remain piecewise-affine or a supported rational expression")
         return value
 
@@ -2433,7 +2457,8 @@ class InstanceCompiler:
                         self.request_input_rational(origin)
                     else:
                         candidate = self.make_ir(Binary, "add", left, self.scale_ir(right, -1.0))
-                        if not self.source_forcing_candidate(candidate):
+                        if (not self.source_forcing_candidate(candidate)
+                                and not self.readout_candidate(candidate, origin, "ordinary analog if predicates must be affine or input-selected piecewise-affine; nonlinear products and powers are unsupported")):
                             raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates must be affine or input-selected piecewise-affine; nonlinear products and powers are unsupported")
                 relation = {"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation]
                 zero, one = self.make_ir(Affine, 0., ()), self.make_ir(Affine, 1., ())

@@ -45,6 +45,7 @@ mod operators;
 mod passive_events;
 mod portability;
 mod pwl;
+mod readout;
 mod reset_dependencies;
 mod schedule;
 mod settlement;
