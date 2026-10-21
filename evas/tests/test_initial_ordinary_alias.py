@@ -161,8 +161,8 @@ end endmodule
             sample(p,source_errors={'u':.01})
 
     def test_incomplete_write_old_read_and_two_mixed_roles_remain_rejected(self):
-        for body in ['if(V(u)>0)q=1;V(y)<+q;',
-                     'V(y)<+q;q=1;',
+        # A conditional held write is admitted by test_ordinary_held_state.py.
+        for body in ['V(y)<+q;q=1;',
                      'q=q+1;V(y)<+q;',
                      '@(timer(0.25))q=q+1;q=2;V(y)<+q;',
                      '@(timer(0.25))e=q;q=2;V(y)<+q;',
@@ -182,11 +182,22 @@ end endmodule
 
     def test_target_arrays_loops_and_time_are_not_added(self):
         cases=[('real q;integer i;','for(i=0;i<0;i=i+1)q=1;q=2;'),
-               ('real q,a[0:1];','q=1;'),
-               ('real q;','q=$abstime;')]
+               ('real q,a[0:1];','q=1;')]
         for decl,body in cases:
             with self.subTest(decl=decl,body=body),self.assertRaises(CompileError):
                 program('@(initial_step)q=7;'+body+'V(y)<+q;V(z)<+1;',decl)
+
+    def test_time_and_pure_math_follow_the_plain_local_contract(self):
+        # A total ordinary write after the callbacks owns every runtime read;
+        # $abstime and memoryless math have the same value as for a plain local.
+        p=program('@(initial_step)q=7;e=0.25*$abstime;q=e+0*sin(e);V(y)<+q;V(z)<+1;')
+        self.assertEqual([(s.name,s.initial) for s in p.states],[('q',7.)])
+        self.assertEqual(values(sample(p)),[0,.03125,.0625,.125,.25])
+        for rhs in ['transition($abstime,0,0.1,0.1)', 'V(y)+$abstime']:
+            with self.subTest(rhs=rhs),self.assertRaises(CompileError):
+                program('@(initial_step)q=7;q='+rhs+';V(y)<+q;V(z)<+1;')
+        with self.assertRaises(CompileError):
+            program('@(initial_step)q=7;q=$abstime;$bound_step(q);V(y)<+1;V(z)<+1;')
 
     def test_declaration_identity_and_instance_parameter_binding(self):
         text=HEAD+'parameter real seed=3;real q;analog begin @(initial_step)q=seed;q=2*V(u);V(y)<+q;V(z)<+1;end endmodule'
@@ -224,7 +235,7 @@ end endmodule
 
     def test_hidden_output_history_settings_and_missing_local_are_rejected(self):
         for rhs in ['0*V(y)', '(1>0)?V(u):0*V(y)',
-                    'transition(V(u),0,0.1,0.1)', 'e', '0*$abstime']:
+                    'transition(V(u),0,0.1,0.1)', 'e', '0*transition($abstime,0,0.1,0.1)']:
             with self.subTest(rhs=rhs),self.assertRaises(CompileError):
                 program('@(initial_step)q=7;q='+rhs+';V(y)<+q;V(z)<+1;')
         for tail in ['V(y)<+transition(1,0,q,q);', '$bound_step(q);V(y)<+1;']:
@@ -244,7 +255,8 @@ end endmodule
         self.assertFalse(p.states)
 
     def test_unsafe_guards_and_integer_conversion_keep_all_hidden_obligations(self):
-        for guard in ['V(y)>0', '$abstime>0']:
+        # $abstime follows the plain-local contract; an output guard does not.
+        for guard in ['V(y)>0', 'V(y)+$abstime>0']:
             with self.subTest(guard=guard),self.assertRaises(CompileError):
                 program('@(initial_step)q=7;if('+guard+')q=1;else q=2;q=3;V(y)<+q;V(z)<+1;')
         with self.assertRaises(CompileError):
