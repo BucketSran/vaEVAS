@@ -1,5 +1,7 @@
 //! Immutable proofs for piecewise-held targets selected by original PWL inputs.
 //! This module never advances or publishes accepted transition history.
+#[path = "transition_source_epoch_guard.rs"]
+mod epoch_guard;
 mod source_factor;
 use crate::events::AffineState;
 use crate::exact_source::RootTime;
@@ -31,6 +33,7 @@ struct Counters {
     work: AtomicU64,
     limits: [u64; 3],
 }
+
 impl Default for Work {
     fn default() -> Self {
         Self::limited([128, 8192, 1_000_000_000])
@@ -69,10 +72,10 @@ impl Work {
                 Err(current) => old = current,
             }
         }
-        if old
+        let exhausted = old
             .checked_add(amount)
-            .is_none_or(|v| v > self.0.limits[slot])
-        {
+            .is_none_or(|v| v > self.0.limits[slot]);
+        if exhausted {
             return Err(Error::new(
                 "step_budget",
                 format!("source transition proof budget exhausted: slot {slot}, used {old} + {amount} exceeds {}",self.0.limits[slot]),
@@ -650,33 +653,72 @@ impl ProofContext {
         expression: &Expression,
         owner: &str,
     ) -> Result<f64, Error> {
-        let Expression::Affine { terms, .. } = expression else {
+        if !matches!(expression, Expression::Affine { .. }) {
             return Err(unsupported("DC factor requires an original affine supply"));
-        };
-        for term in terms {
-            self.work.step()?;
-            if term.node != 0 {
-                self.work.debit(2, self.input_nodes.len() as u64)?;
-                let index = self
-                    .input_nodes
-                    .iter()
-                    .position(|&n| n == term.node)
-                    .ok_or_else(|| unsupported("DC factor requires original driven nodes"))?;
-                if self
-                    .trajectory
-                    .config
-                    .pwl_errors_v
-                    .as_ref()
-                    .and_then(|e| e.get(index))
-                    .is_some_and(|e| e.bound() > 0.)
+        }
+        self.exact_dc_expression(expression, owner)
+    }
+
+    /// Preserve a source-linear tree such as V(vdd) + (-1)*V(vss).
+    /// Prove its original physical expression before any scalar substitution.
+    pub(crate) fn exact_dc_expression(
+        &self,
+        expression: &Expression,
+        owner: &str,
+    ) -> Result<f64, Error> {
+        fn audit(e: &Expression, source: &ProofContext) -> Result<(), Error> {
+            source.work.step()?;
+            match e {
+                Expression::Affine { terms, .. } => {
+                    for term in terms {
+                        source.work.step()?;
+                        if term.node != 0 {
+                            source.work.debit(2, source.input_nodes.len() as u64)?;
+                            let index = source
+                                .input_nodes
+                                .iter()
+                                .position(|&n| n == term.node)
+                                .ok_or_else(|| {
+                                    unsupported("DC factor requires original driven nodes")
+                                })?;
+                            if source
+                                .trajectory
+                                .config
+                                .pwl_errors_v
+                                .as_ref()
+                                .and_then(|e| e.get(index))
+                                .is_some_and(|e| e.bound() > 0.)
+                            {
+                                return Err(Error::new(
+                                    "unsupported_source_uncertainty",
+                                    "DC factor requires zero source error bounds",
+                                ));
+                            }
+                        }
+                    }
+                }
+                Expression::Add { left, right } => {
+                    audit(left, source)?;
+                    audit(right, source)?;
+                }
+                Expression::Multiply { left, right }
+                    if matches!(left.as_ref(), Expression::Affine { constant, terms }
+                        if terms.is_empty() && constant.is_finite())
+                        || matches!(right.as_ref(), Expression::Affine { constant, terms }
+                        if terms.is_empty() && constant.is_finite()) =>
                 {
-                    return Err(Error::new(
-                        "unsupported_source_uncertainty",
-                        "DC factor requires zero source error bounds",
-                    ));
+                    audit(left, source)?;
+                    audit(right, source)?;
+                }
+                _ => {
+                    return Err(unsupported(
+                        "DC factor requires an original source-linear supply",
+                    ))
                 }
             }
+            Ok(())
         }
+        audit(expression, self)?;
         // Reuse the audited physical-DC producer; retain its conservative exact
         // reservation for every source, including zero-weight dependencies.
         let _ = self.slew_dc_leaves(expression, owner)?;
@@ -1361,6 +1403,7 @@ pub(crate) struct Plan {
     cuts: Arc<Vec<Cut>>,
     points: Vec<Target>,
     modes: Vec<Target>,
+    epoch_guard: Option<Arc<crate::exact_source::TimeProofs>>,
 }
 impl Plan {
     fn check_states(spec: &Spec, states: &[I]) -> Result<(), Error> {
@@ -1482,12 +1525,18 @@ impl Plan {
             cuts,
             points,
             modes,
+            epoch_guard: None,
         })
     }
     /// Reuse immutable source cuts when only target values changed. Unchanged
     /// relevant held operands require no proof work or new plan reservation.
     pub(crate) fn rebind(&self, states: &[I]) -> Result<Self, Error> {
         Self::check_states(&self.spec, states)?;
+        if self.epoch_guard.is_some() {
+            return Err(invalid(
+                "source epoch rebind requires explicit timestamp proofs",
+            ));
+        }
         if self
             .spec
             .dependencies
@@ -1511,6 +1560,9 @@ impl Plan {
     /// source trajectory. All structural state dependencies participate.
     pub(crate) fn same_context(&self, states: &[I]) -> Result<bool, Error> {
         Self::check_states(&self.spec, states)?;
+        if self.epoch_guard.is_some() {
+            return Ok(false);
+        }
         self.spec.work.step()?;
         if self
             .spec
@@ -1782,7 +1834,15 @@ impl Plan {
         self.spec.work.step()
     }
     pub(crate) fn same_proof(&self, other: &Self) -> bool {
-        Arc::ptr_eq(&self.spec, &other.spec)
+        // New epoch certificates compare only shared immutable exact keys here.
+        // Reuse across incoming maps is separately checked with paid arithmetic.
+        let same_epoch = match (&self.epoch_guard, &other.epoch_guard) {
+            (None, None) => true,
+            (Some(a), Some(b)) => Arc::ptr_eq(a, b),
+            _ => false,
+        };
+        same_epoch
+            && Arc::ptr_eq(&self.spec, &other.spec)
             && self.states == other.states
             && self.cuts == other.cuts
             && self.points.len() == other.points.len()
@@ -2449,6 +2509,39 @@ mod proof_cache_tests {
                 "condition_precision"
             );
         }
+    }
+
+    #[test]
+    fn source_none_and_optional_epoch_map_preserve_interval_held_mode_change() {
+        let spec = spec(
+            selected(held_selected("gt", 0.5), constant(0.)),
+            [1., 1.],
+            Work::default(),
+        );
+        let source =
+            crate::transition_source_state::Source::initialized(spec, &[I { lo: 0.1, hi: 0.2 }])
+                .unwrap()
+                .0;
+        let before = source.clone();
+        let high = [I { lo: 0.8, hi: 0.9 }];
+        let plain = source.prepare(0.25, I::point(0.25), &high, None).unwrap();
+        assert_eq!(plain.target.value, 1.);
+        assert!(plain.changed);
+        let empty = crate::exact_source::TimeProofs::new();
+        let optional = source
+            .prepare_with_epochs(0.25, I::point(0.25), &high, None, Some(&empty))
+            .unwrap();
+        assert_eq!(optional.target.value, 1.);
+        assert!(optional.changed);
+        assert_eq!(
+            source
+                .prepare(0.25, I::point(0.25), &[I { lo: 0.4, hi: 0.6 }], None)
+                .err()
+                .unwrap()
+                .kind,
+            "condition_precision"
+        );
+        assert!(source.same_epoch(&before));
     }
 
     #[test]

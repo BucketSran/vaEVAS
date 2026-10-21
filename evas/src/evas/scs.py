@@ -22,7 +22,7 @@ from .strobe import FIELDS as STROBE_FIELDS, expand as expand_strobe
 
 _LEX = re.compile(r'(?P<space>[ \t\r]+)|(?P<continuation>\\[ \t]*\n)|(?P<comment>//[^\n]*)'
                   r'|(?P<newline>\n)|(?P<string>"[^"\n]*")'
-                  r'|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)'
+                  r'|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?(?:Meg|[TGMkKmunpfa])?)'
                   r'|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol>[()\[\]=+\-])')
 
 
@@ -102,8 +102,11 @@ class _Statement:
             sign=-1 if self.take().text=='-' else 1
         token=self.take()
         if token.kind=='number':
-            suffix=token.text[-1]
-            value=float(token.text[:-1] if suffix in _SUFFIX else token.text)*_SUFFIX.get(suffix,1.)
+            if token.text.endswith('Meg'):
+                value=float(token.text[:-3])*1e6
+            else:
+                suffix=token.text[-1]
+                value=float(token.text[:-1] if suffix in _SUFFIX else token.text)*_SUFFIX.get(suffix,1.)
         elif token.text in self.constants:
             value=self.constants[token.text]
         else:
@@ -222,6 +225,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
     except (OSError,UnicodeError) as exc:
         _fail(str(exc),Token('', '',1,1,str(path)))
     constants, sources, devices, names = {},{},[],set()
+    sine_source_origins={}
     saved,tolerances,source_specs = [],{},[]
     seen_options,warning_reports=set(),[]
     behavioral_sources=[]
@@ -283,6 +287,11 @@ def load_scs(path: str | Path) -> ScsTestbench:
                 if len(nodes)!=2 or nodes[0]==nodes[1]:
                     s.fail('vsource requires two distinct scalar terminals',unsupported=True)
                 source_specs.append((nodes,settings,first))
+                if settings.get('type')=='sine':
+                    sine_source_origins[first.text]=dict(
+                        dialect='spectre-native',analysis='tran',settings=dict(settings),
+                        tokens=[dict(text=t.text,kind=t.kind,source=t.source,
+                                     line=t.line,column=t.column) for t in s.tokens])
             elif module=='isource':
                 zero_current_sources.append(_zero_current_source(first,nodes,settings,s))
             elif module in ('resistor','capacitor','inductor','r','c','l'):
@@ -383,6 +392,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
             source_fail('multiple voltage sources drive the same node')
         if settings.get('type')=='sine':
             analytic_sources[net]=analytic_source(settings,nodes,token.text,source_fail)
+            sine_source_origins[token.text]['parameter_origin']=analytic_sources[net]['parameter_origin']
             waveforms[net]=[]
             continue
         points,error,proof=voltage_points(settings,stop,source_fail)
@@ -490,6 +500,8 @@ def load_scs(path: str | Path) -> ScsTestbench:
                   model_sha256=model_sha256,
                   effective_tolerances=effective,output_grid='union of 0, k*maxstep below stop, stop, source corners within stop',
                   pulse_corner_rounding_seconds=rounding)
+    if sine_source_origins:
+        metadata['sine_source_origins']=sine_source_origins
     if zero_current_sources:
         metadata['zero_current_sources']=zero_current_sources
     if internal_source_nodes:

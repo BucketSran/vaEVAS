@@ -91,8 +91,11 @@ impl<'a> Paid<'a> {
         binary(v)
     }
     pub(crate) fn cmp(&mut self, a: &R, b: &R) -> Option<std::cmp::Ordering> {
-        self.pay(fees::cmp(fees::width(a).max(fees::width(b))))?;
-        Some(a.cmp(b))
+        if self.error.is_some() {
+            return None;
+        }
+        let result = super::rational_order_with_work(a, b, self.work);
+        self.accept(result)
     }
     pub(crate) fn op(&mut self, a: &R, b: &R, op: char) -> Option<R> {
         self.pay(2)?;
@@ -132,8 +135,11 @@ impl<'a> Paid<'a> {
         v.to_f64()
     }
     pub(crate) fn enclose(&mut self, v: &R) -> Option<I> {
-        self.pay(fees::enclosure(fees::width(v)))?;
-        enclosure(v)
+        if self.error.is_some() {
+            return None;
+        }
+        let result = super::enclosure_with_work(v, self.work);
+        self.accept(result)?
     }
     fn lookup(&mut self, nodes: &[usize], node: usize) -> Option<usize> {
         for (i, n) in nodes.iter().enumerate() {
@@ -476,9 +482,14 @@ impl Curve {
                     lo: p.enclose(&time)?.lo,
                     hi: p.enclose(b)?.hi.min(p.nearest(&stop_value)?),
                 };
-                p.accept(self.charge_forcing_read(w, window.lo, true))?;
-                p.accept(self.charge_forcing_read(w, window.hi, true))?;
-                let slope = self.range(window)?.1;
+                // Keep the complete original representative window. It may
+                // cross a nonbinary segment corner and need its outgoing slope.
+                // The existing staged reader pays actual exact endpoint/pair
+                // work on the same ledger instead of a whole-curve reservation.
+                let reader = p.accept(StagedRange::new(self, window, w))?;
+                let (reader, _) = p.accept(reader.endpoint(false))??;
+                let (reader, _) = p.accept(reader.endpoint(true))??;
+                let (_, slope) = p.accept(reader.finish())??;
                 p.push(
                     &mut out,
                     Crossing {
@@ -809,5 +820,404 @@ mod tests {
         });
         assert_eq!(result.err().unwrap().kind, "step_budget");
         assert!(report.counters.is_empty());
+    }
+}
+
+#[cfg(test)]
+mod crossing_staged_contract_tests {
+    use super::*;
+
+    fn fraction(n: i64, d: i64) -> R {
+        R::new(n.into(), d.into())
+    }
+    fn nonbinary_corner() -> Curve {
+        Curve(vec![
+            (fraction(0, 1), fraction(-1, 1)),
+            (fraction(1, 3), fraction(0, 1)),
+            (fraction(2, 3), fraction(2, 1)),
+            (fraction(1, 1), fraction(-1, 1)),
+        ])
+    }
+    fn assert_same(old: &[Crossing], new: &[Crossing]) {
+        assert_eq!(old.len(), new.len());
+        for (old, new) in old.iter().zip(new) {
+            assert_eq!(old.time, new.time);
+            assert_eq!(old.segment, new.segment);
+            assert_eq!(old.ends, new.ends);
+            assert_eq!(old.slope, new.slope);
+        }
+    }
+
+    #[test]
+    fn staged_crossing_nonbinary_corner_keeps_outgoing_slope_and_every_original_field() {
+        let curve = nonbinary_corner();
+        let old = curve.crossings(0, 1.).unwrap();
+        let work = Work::default();
+        let new = curve.crossings_history(0, 1., &work).unwrap().unwrap();
+        assert_same(&old, &new);
+        // The mathematical roots are1/3 and8/9. Around the first root,
+        // binary64's representative window crosses the true corner1/3.
+        // The original incoming slope3 and outgoing slope6 must both survive.
+        assert_eq!(new[0].time.rational(), &fraction(1, 3));
+        assert_eq!(new[1].time.rational(), &fraction(8, 9));
+        assert_eq!(new[0].slope, I { lo: 3., hi: 6. });
+        assert_eq!(new[1].slope, I::point(-9.));
+        assert_eq!(new[0].ends, [I::point(-1.), I::ZERO]);
+    }
+
+    #[test]
+    fn staged_crossing_direction_stop_clip_and_point_boundary_preserve_old_range() {
+        let curve = nonbinary_corner();
+        let lower = (1.0_f64 / 3.0).next_down();
+        let nearest = 1.0_f64 / 3.0;
+        let upper = nearest.next_up();
+        for stop in [lower, nearest, upper, 0.5, 1.] {
+            for direction in [-1, 0, 1] {
+                let old = curve.crossings(direction, stop).unwrap();
+                let new = curve
+                    .crossings_history(direction, stop, &Work::default())
+                    .unwrap()
+                    .unwrap();
+                assert_same(&old, &new);
+                assert!(new
+                    .iter()
+                    .all(|c| c.time.rational() <= &binary(stop).unwrap()));
+            }
+        }
+        assert!(curve
+            .crossings_history(1, nearest, &Work::default())
+            .unwrap()
+            .unwrap()
+            .is_empty());
+        let point = Curve(vec![
+            (fraction(0, 1), fraction(-1, 1)),
+            (fraction(1, 2), fraction(0, 1)),
+            (fraction(1, 1), fraction(2, 1)),
+        ]);
+        let old = point.crossings(1, 0.5).unwrap();
+        let new = point
+            .crossings_history(1, 0.5, &Work::default())
+            .unwrap()
+            .unwrap();
+        assert_same(&old, &new);
+        assert_eq!(new[0].time.rational(), &fraction(1, 2));
+        // At an exact point, the old range contract includes both sides.
+        assert_eq!(new[0].slope, I { lo: 2., hi: 4. });
+    }
+
+    #[test]
+    fn staged_crossing_actual_work_exhaustion_stays_on_same_owner_for_two_retries() {
+        let curve = nonbinary_corner();
+        let work = Work::limited([128, 8192, 20_000_000]);
+        let retry = work.clone();
+        let mut complete = 0;
+        loop {
+            match curve.crossings_history(0, 1., &work) {
+                Ok(Some(_)) => complete += 1,
+                Ok(None) => panic!("valid exact curve must not lose its certificate"),
+                Err(error) => {
+                    assert_eq!(error.kind, "step_budget");
+                    break;
+                }
+            }
+        }
+        assert!(complete > 0);
+        let mut spent = work.spent();
+        for _ in 0..2 {
+            assert_eq!(
+                curve.crossings_history(0, 1., &retry).err().unwrap().kind,
+                "step_budget"
+            );
+            assert!(work.same_owner(&retry));
+            assert!(work.spent() >= spent);
+            spent = work.spent();
+        }
+    }
+}
+
+#[cfg(test)]
+mod paid_fast_contract_tests {
+    use super::*;
+    use std::cmp::Ordering;
+
+    fn raw(n: i64, d: i64) -> R {
+        R::new_raw(n.into(), d.into())
+    }
+    #[test]
+    fn paid_fast_order_matches_pinned_sign_negative_denominator_and_zero_branches() {
+        for (a, b, expected, key) in [
+            (
+                raw(1, 3),
+                raw(2, 3),
+                Ordering::Less,
+                "exact_order_equal_denominator",
+            ),
+            (
+                raw(-1, 3),
+                raw(-2, 3),
+                Ordering::Greater,
+                "exact_order_equal_denominator",
+            ),
+            (
+                raw(1, -3),
+                raw(2, -3),
+                Ordering::Greater,
+                "exact_order_equal_denominator",
+            ),
+            (
+                raw(-1, -3),
+                raw(-2, -3),
+                Ordering::Less,
+                "exact_order_equal_denominator",
+            ),
+            (
+                raw(1, 3),
+                raw(1, 5),
+                Ordering::Greater,
+                "exact_order_equal_numerator",
+            ),
+            (
+                raw(-1, 3),
+                raw(-1, 5),
+                Ordering::Less,
+                "exact_order_equal_numerator",
+            ),
+            (
+                raw(1, -3),
+                raw(1, -5),
+                Ordering::Less,
+                "exact_order_equal_numerator",
+            ),
+            (
+                raw(-1, -3),
+                raw(-1, -5),
+                Ordering::Greater,
+                "exact_order_equal_numerator",
+            ),
+            (
+                raw(0, 3),
+                raw(0, -5),
+                Ordering::Equal,
+                "exact_order_equal_numerator",
+            ),
+            (
+                raw(0, 3),
+                raw(-1, 3),
+                Ordering::Greater,
+                "exact_order_equal_denominator",
+            ),
+        ] {
+            let w = Work::default();
+            let (result, report) = crate::diagnostics::capture(Default::default(), || {
+                super::super::rational_order_with_work(&a, &b, &w)
+            });
+            assert_eq!(result.unwrap(), expected);
+            assert_eq!(expected, a.cmp(&b));
+            assert_eq!(report.counters.get(key), Some(&1));
+            assert_eq!(report.counters.get("exact_order_generic_fallback"), None);
+            assert!(w.spent() > 0);
+        }
+    }
+    #[test]
+    fn paid_fast_order_adjacent_third_uses_paid_exact_cross() {
+        let a = raw(1, 3);
+        let b = binary(1. / 3.).unwrap();
+        let w = Work::default();
+        let (result, report) = crate::diagnostics::capture(Default::default(), || {
+            let mut p = Paid::new(&w);
+            let answer = p.cmp(&a, &b);
+            p.finish(answer)
+        });
+        assert_eq!(result.unwrap(), Some(Ordering::Greater));
+        assert_eq!(a.cmp(&b), Ordering::Greater);
+        assert_eq!(report.counters.get("exact_order_bounded_cross"), Some(&1));
+        assert_eq!(
+            report.counters.get("forcing_owned_cross_comparisons"),
+            Some(&1)
+        );
+        assert_eq!(report.counters.get("exact_order_generic_fallback"), None);
+    }
+    #[test]
+    fn paid_fast_enclose_retains_tight_subnormal_boxes_and_old_none() {
+        let tiny = f64::from_bits(1);
+        for value in [
+            raw(0, 1),
+            raw(-1, 4),
+            raw(1, 3),
+            raw(-1, 3),
+            binary(tiny).unwrap(),
+            binary(-tiny).unwrap(),
+            binary(f64::MAX).unwrap(),
+            binary(tiny).unwrap() / raw(2, 1),
+            R::from_integer(raw(1, 1).numer() << 2048usize),
+        ] {
+            let old = enclosure(&value);
+            let w = Work::default();
+            let mut p = Paid::new(&w);
+            let answer = p.enclose(&value);
+            assert_eq!(p.finish(answer).unwrap(), old);
+        }
+        let w = Work::default();
+        let (_, report) = crate::diagnostics::capture(Default::default(), || {
+            let mut p = Paid::new(&w);
+            let answer = p.enclose(&raw(-1, 4));
+            p.finish(answer)
+        });
+        assert_eq!(
+            report.counters.get("forcing_exact_dyadic_enclosure"),
+            Some(&1)
+        );
+    }
+    #[test]
+    fn paid_fast_order_and_enclose_share_actual_exhaustion_and_sticky_retries() {
+        for comparator in [false, true] {
+            let w = Work::limited([128, 8192, 2_000_000]);
+            let alias = w.clone();
+            let a = raw(1, 3);
+            let b = binary(1. / 3.).unwrap();
+            let mut successful = 0;
+            loop {
+                let mut p = Paid::new(&w);
+                let result = if comparator {
+                    p.cmp(&a, &b).map(|_| ())
+                } else {
+                    p.enclose(&a).map(|_| ())
+                };
+                match p.finish(result) {
+                    Ok(Some(())) => successful += 1,
+                    Err(e) => {
+                        assert_eq!(e.kind, "step_budget");
+                        break;
+                    }
+                    _ => panic!("finite fixture must produce a comparison/box"),
+                }
+            }
+            assert!(successful > 0);
+            let mut spent = w.spent();
+            for _ in 0..2 {
+                let mut p = Paid::new(&w);
+                let result = if comparator {
+                    p.cmp(&a, &b).map(|_| ())
+                } else {
+                    p.enclose(&a).map(|_| ())
+                };
+                assert_eq!(p.finish(result).unwrap_err().kind, "step_budget");
+                assert!(w.same_owner(&alias));
+                assert!(w.spent() >= spent);
+                spent = w.spent();
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+mod paid_cross_contract_tests {
+    use super::*;
+    use std::cmp::Ordering;
+    fn raw(n: i64, d: i64) -> R {
+        R::new_raw(n.into(), d.into())
+    }
+    #[test]
+    fn paid_cross_generic_signs_and_different_equal_representations_are_exact() {
+        for (a, b, expected) in [
+            (raw(1, 3), binary(1. / 3.).unwrap(), Ordering::Greater),
+            (raw(-1, 3), binary(-1. / 3.).unwrap(), Ordering::Less),
+            (raw(-1, 3), raw(2, 5), Ordering::Less),
+            (raw(1, 3), raw(-2, 5), Ordering::Greater),
+            (raw(2, 6), raw(3, 9), Ordering::Equal),
+            (raw(-2, 6), raw(-3, 9), Ordering::Equal),
+        ] {
+            let w = Work::default();
+            let (result, report) = crate::diagnostics::capture(Default::default(), || {
+                super::super::rational_order_with_work(&a, &b, &w)
+            });
+            assert_eq!(result.unwrap(), expected);
+            assert_eq!(expected, a.cmp(&b));
+            assert_eq!(report.counters.get("exact_order_bounded_cross"), Some(&1));
+            assert_eq!(report.counters.get("exact_order_generic_fallback"), None);
+        }
+    }
+    #[test]
+    fn paid_cross_original_width_cap_retains_full_generic_fallback() {
+        for (power, cross) in [(2047usize, true), (2048usize, false)] {
+            let m = raw(1, 1).numer() << power;
+            let n = &m + 2;
+            let a = R::new_raw(&m + 1, &m - 1);
+            let b = R::new_raw(&n + 1, &n - 1);
+            let w = Work::default();
+            let (result, report) = crate::diagnostics::capture(Default::default(), || {
+                super::super::rational_order_with_work(&a, &b, &w)
+            });
+            // (m+1)/(m-1) = 1+2/(m-1), strictly larger for smaller m.
+            assert_eq!(result.unwrap(), Ordering::Greater);
+            assert_eq!(a.cmp(&b), Ordering::Greater);
+            assert_eq!(
+                report
+                    .counters
+                    .get("exact_order_bounded_cross")
+                    .copied()
+                    .unwrap_or(0),
+                u64::from(cross)
+            );
+            assert_eq!(
+                report
+                    .counters
+                    .get("exact_order_generic_fallback")
+                    .copied()
+                    .unwrap_or(0),
+                u64::from(!cross)
+            );
+            if !cross {
+                assert!(w.spent() >= fees::cmp(fees::width(&a).max(fees::width(&b))));
+            }
+        }
+    }
+    #[test]
+    fn paid_cross_nonpositive_denominators_keep_pinned_old_boundary() {
+        for (a, b) in [
+            (raw(1, -3), raw(2, 5)),
+            (raw(-1, -3), raw(2, -5)),
+            (raw(1, 0), raw(2, 1)),
+            (raw(1, 0), raw(2, 0)),
+        ] {
+            let w = Work::default();
+            let (result, report) = crate::diagnostics::capture(Default::default(), || {
+                // new_raw zero denominators are not legal source rationals.
+                // Preserve even the pinned library's panic boundary privately.
+                Ok((
+                    std::panic::catch_unwind(|| super::super::rational_order_with_work(&a, &b, &w)),
+                    std::panic::catch_unwind(|| a.cmp(&b)),
+                ))
+            });
+            let (actual, old) = result.unwrap();
+            match (actual, old) {
+                (Ok(actual), Ok(old)) => assert_eq!(actual.unwrap(), old),
+                (Err(_), Err(_)) => (),
+                _ => panic!("nonpositive denominator boundary changed"),
+            }
+            assert_eq!(report.counters.get("exact_order_bounded_cross"), None);
+            assert_eq!(report.counters.get("forcing_owned_cross_comparisons"), None);
+        }
+    }
+    #[test]
+    fn paid_cross_reservation_failure_precedes_products_and_retries_stay_rejected() {
+        let a = raw(1, 3);
+        let b = binary(1. / 3.).unwrap();
+        let w = Work::limited([128, 8192, 300]);
+        let alias = w.clone();
+        let mut spent = 0;
+        for _ in 0..3 {
+            let (result, report) = crate::diagnostics::capture(Default::default(), || {
+                super::super::rational_order_with_work(&a, &b, &w)
+            });
+            assert_eq!(result.unwrap_err().kind, "step_budget");
+            assert_eq!(report.counters.get("forcing_owned_cross_comparisons"), None);
+            assert_eq!(report.counters.get("exact_order_bounded_cross"), None);
+            assert!(w.same_owner(&alias));
+            assert!(w.spent() >= spent);
+            spent = w.spent();
+        }
+        // Natural exhaustion through repeated successful real comparisons is
+        // independently retained in paid_fast_order_and_enclose_share_actual_exhaustion_and_sticky_retries.
     }
 }

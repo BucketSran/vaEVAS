@@ -1073,6 +1073,9 @@ pub(crate) struct Operators {
     pub(crate) source_context: Option<Arc<crate::transition_source_plan::ProofContext>>,
     forcing_context: Option<Arc<crate::transition_source_plan::ProofContext>>,
     shared_history: bool,
+    // Ordinary typed held targets in an existing history-root calendar. This
+    // carries copying/arithmetic fees, never a history-admission capability.
+    typed_calendar: bool,
     history_targets: std::collections::BTreeMap<usize, history_target::TargetPlan>,
     history_predicates: Vec<history_target::TargetPlan>,
     history_admission: Option<Arc<crate::history_admission::Admission>>,
@@ -1412,6 +1415,7 @@ impl Evaluation<'_> {
             self.exact_root.as_ref(),
             true,
             value_proofs,
+            proofs,
         )?;
         Ok(candidate)
     }
@@ -1504,7 +1508,9 @@ impl Operators {
                 self.source_context
                     .as_ref()
                     .filter(|c| {
-                        self.shared_history || c.original_binding().1.analytic_work().is_some()
+                        self.shared_history
+                            || self.typed_calendar
+                            || c.original_binding().1.analytic_work().is_some()
                     })
                     .map(|c| c.borrow_work())
             })
@@ -1520,7 +1526,9 @@ impl Operators {
             .or_else(|| {
                 self.source_context
                     .as_ref()
-                    .filter(|c| c.original_binding().1.analytic_work().is_some())
+                    .filter(|c| {
+                        self.typed_calendar || c.original_binding().1.analytic_work().is_some()
+                    })
                     .map(|c| c.borrow_work())
             });
         if let Some(w) = copy_work {
@@ -1529,7 +1537,8 @@ impl Operators {
                 2,
                 (self.changes_on_advance.len()
                     + self.direct.len()
-                    + self.isolated_parameters.len() * 2) as u64,
+                    + self.isolated_parameters.len() * 2
+                    + self.held_targets.len() * 8) as u64,
             )?;
             for entry in &self.entries {
                 let Runtime::Transition {
@@ -1974,6 +1983,7 @@ impl Operators {
             Some(bounds),
             None,
             false,
+            None,
         )
     }
 
@@ -2004,6 +2014,7 @@ impl Operators {
             Some(bounds),
             None,
             false,
+            None,
         )
     }
     #[allow(clippy::too_many_arguments)]
@@ -2136,6 +2147,7 @@ impl Operators {
     ) -> Result<Self, Error> {
         Self::new_until_with_seed_bounds(
             program, trajectory, driven, states, horizon, tolerances, shared, None, None, false,
+            None,
         )
     }
 
@@ -2173,7 +2185,45 @@ impl Operators {
             Some(bounds),
             Some(typed_targets),
             false,
+            None,
         )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_until_with_typed_calendar(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        bounds: &[I],
+        typed_targets: &BTreeSet<usize>,
+        context: Arc<crate::transition_source_plan::ProofContext>,
+        horizon: f64,
+        tolerances: &Tolerances,
+    ) -> Result<Self, Error> {
+        crate::event_floor::check_provided_binding(&context, program, trajectory, driven)?;
+        context.charge(8 + program.operators.len() * 8 + states.len() * 4)?;
+        for (index, operator) in program.operators.iter().enumerate() {
+            // Do not admit an electrical/source-selected target or another
+            // operator merely because a different target has an integer proof.
+            if !typed_targets.contains(&index)
+                && bare_real_transition_state(operator, program).is_none()
+            {
+                return Err(Error::new(
+                    "unsupported_held_integer_target",
+                    "typed history calendar requires typed integer or bare real Transition targets",
+                ));
+            }
+            if let OperatorSpec::Transition { input, .. } = operator {
+                crate::history_admission::charge_expression_copy(input, context.borrow_work())?;
+            }
+        }
+        let mut result = Self::new_until_with_held_points(
+            program, trajectory, driven, states, bounds, typed_targets, context, horizon,
+            tolerances,
+        )?;
+        result.typed_calendar = true;
+        Ok(result)
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -2229,6 +2279,44 @@ impl Operators {
                 Some(targets)
             },
             true,
+            None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_until_with_analytic_request(
+        token: &crate::analytic_request::Request,
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        bounds: Option<&[I]>,
+        targets: &BTreeSet<usize>,
+        horizon: f64,
+        tolerances: &Tolerances,
+    ) -> Result<Self, Error> {
+        if !token.fixed_timer_held_transitions() {
+            return Err(Error::new(
+                "unsupported_analytic_source_consumer",
+                "sampled operator entry requires its original joint role admission",
+            ));
+        }
+        crate::event_floor::check_provided_binding(token.context(), program, trajectory, driven)?;
+        Self::new_until_with_seed_bounds(
+            program,
+            trajectory,
+            driven,
+            states,
+            horizon,
+            tolerances,
+            Some(token.context().clone()),
+            bounds,
+            if targets.is_empty() {
+                None
+            } else {
+                Some(targets)
+            },
+            false,
+            Some(token),
         )
     }
     #[allow(clippy::too_many_arguments)]
@@ -2243,6 +2331,7 @@ impl Operators {
         initial_bounds: Option<&[I]>,
         typed_targets: Option<&BTreeSet<usize>>,
         shared_history: bool,
+        analytic_token: Option<&crate::analytic_request::Request>,
     ) -> Result<Self, Error> {
         let _timing = crate::diagnostics::span("history.prepare");
         if let Some(bounds) = initial_bounds {
@@ -2422,18 +2511,21 @@ impl Operators {
             context.borrow_work().debit(2, 1)?;
             context.borrow_work().clone()
         } else if let Some(w) = trajectory.analytic_work() {
-            // Analytic admission permits no operators. This local bookkeeping
-            // handle still borrows the original request ledger; it grants no
-            // shared_history semantics and must never construct a second Work.
+            // Analytic frames retain their original request ledger. Nonempty
+            // frames additionally require the complete sampled-role token;
+            // that token does not grant shared_history semantics.
             let context = source_context.as_ref().ok_or_else(|| {
                 Error::new("invalid_ir", "analytic operator frame lost original owner")
             })?;
+            let qualified = analytic_token.is_some_and(|token| {
+                token.fixed_timer_held_transitions() && Arc::ptr_eq(context, token.context())
+            });
             if context.original_binding().1.analytic_work().is_none()
-                || !program.operators.is_empty()
+                || (!program.operators.is_empty() && !qualified)
             {
                 return Err(Error::new(
                     "unsupported_analytic_source_consumer",
-                    "analytic operator frame requires its original empty capability",
+                    "analytic operator frame requires its original empty or sampled capability",
                 ));
             }
             w.debit(2, 1)?;
@@ -2921,6 +3013,7 @@ impl Operators {
             source_context,
             forcing_context: None,
             shared_history,
+            typed_calendar: false,
             history_targets,
             history_predicates: vec![],
             history_admission: None,
@@ -3851,7 +3944,17 @@ impl Operators {
         bounds: &[I],
         changed: &[usize],
     ) -> Result<(), Error> {
-        self.advance_with_exact(time, time_bounds, states, bounds, changed, None, true, None)
+        self.advance_with_exact(
+            time,
+            time_bounds,
+            states,
+            bounds,
+            changed,
+            None,
+            true,
+            None,
+            None,
+        )
     }
 
     /// Consume accepted histories to the settlement boundary without installing
@@ -3874,6 +3977,7 @@ impl Operators {
             exact_root,
             false,
             value_proofs,
+            None,
         )
     }
 
@@ -3888,9 +3992,10 @@ impl Operators {
         exact_root: Option<&crate::exact_source::RootTime>,
         install_source: bool,
         value_proofs: Option<&crate::event_value_proof::Proofs>,
+        source_time_proofs: Option<&crate::exact_source::TimeProofs>,
     ) -> Result<(), Error> {
         let _timing = crate::diagnostics::span("history.advance");
-        let shared_work = if self.shared_history {
+        let shared_work = if self.shared_history || self.typed_calendar {
             let w = self
                 .source_context
                 .as_ref()
@@ -3989,7 +4094,13 @@ impl Operators {
             ) = source
             {
                 if install_source {
-                    let next = source.prepare(time, time_bounds, bounds, exact_root)?;
+                    let next = source.prepare_with_epochs(
+                        time,
+                        time_bounds,
+                        bounds,
+                        exact_root,
+                        source_time_proofs,
+                    )?;
                     if next.steps.iter().filter(|step| step.changed).count() > 1
                         || next
                             .steps
@@ -4148,7 +4259,13 @@ impl Operators {
                             **current = prefix;
                             continue;
                         }
-                        let next = current.prepare(time, time_bounds, bounds, exact_root)?;
+                        let next = current.prepare_with_epochs(
+                            time,
+                            time_bounds,
+                            bounds,
+                            exact_root,
+                            source_time_proofs,
+                        )?;
                         if next.steps.is_empty() {
                             history.advance_at_with_exact(
                                 time,
@@ -4346,6 +4463,7 @@ impl Operators {
         w.debit(2, 0)?;
         w.debit(2, 6)?;
         if self.shared_history != other.shared_history
+            || self.typed_calendar != other.typed_calendar
             || self.horizon != other.horizon
             || self.history_predicates.len() != other.history_predicates.len()
             || self.history_targets.len() != other.history_targets.len()
@@ -4397,6 +4515,7 @@ impl Operators {
     #[cfg(test)]
     pub(crate) fn same_forcing_frame(&self, other: &Self) -> bool {
         self.shared_history == other.shared_history
+            && self.typed_calendar == other.typed_calendar
             && self.changes_on_advance == other.changes_on_advance
             && self.isolated_parameters == other.isolated_parameters
             && self.same_reset_history(other)

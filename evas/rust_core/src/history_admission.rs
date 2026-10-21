@@ -1,5 +1,6 @@
 //! Paid original-program qualification for acyclic ordinary history predicates.
 //! The token is local to one prepared request; no wire flag grants admission.
+use crate::interval::Interval as I;
 use crate::ir::{Error, Expression as E, OperatorSpec, Program};
 use crate::transition_source_plan::{ProofContext, Work};
 use std::collections::BTreeSet;
@@ -753,14 +754,119 @@ impl Admission {
         states: &[crate::interval::Interval],
         operators: &[crate::interval::Interval],
     ) -> Result<E, Error> {
-        resolve_expression(
-            &self.expanded[index],
+        // Expanded relations prove dependencies, but their value leaves may
+        // belong to another instance reached through a voltage interface.
+        // Keep the original electrical RHS; expand only predicates to select it.
+        let (program, _, driven) = self.context.original_binding();
+        resolve_original_expression(
+            &program.contributions[index].rhs,
+            program,
+            driven,
             nodes,
             states,
             operators,
             self.context.borrow_work(),
         )
     }
+}
+fn history_bounds(e: &E, nodes: &[I], states: &[I], ops: &[I], w: &Work) -> Result<I, Error> {
+    w.step()?;
+    let value = match e {
+        E::Affine { constant, terms } => {
+            let mut v = I::point(*constant);
+            for t in terms {
+                w.step()?;
+                v = v + I::point(t.coefficient)
+                    * nodes
+                        .get(t.node)
+                        .copied()
+                        .ok_or_else(|| Error::new("invalid_ir", "missing history node binding"))?
+            }
+            v
+        }
+        E::State { state } => states
+            .get(*state)
+            .copied()
+            .ok_or_else(|| Error::new("invalid_ir", "missing history state binding"))?,
+        E::Operator { operator } => ops
+            .get(*operator)
+            .copied()
+            .ok_or_else(|| Error::new("invalid_ir", "missing history operator binding"))?,
+        E::Add { left, right } => {
+            history_bounds(left, nodes, states, ops, w)?
+                + history_bounds(right, nodes, states, ops, w)?
+        }
+        E::Multiply { left, right } => {
+            history_bounds(left, nodes, states, ops, w)?
+                * history_bounds(right, nodes, states, ops, w)?
+        }
+        E::Divide { left, right } => {
+            let a = history_bounds(left, nodes, states, ops, w)?;
+            let b = history_bounds(right, nodes, states, ops, w)?;
+            if b.lo <= 0. && b.hi >= 0. {
+                return Err(unsupported("history division crosses zero"));
+            }
+            a / b
+        }
+        _ => return Err(unsupported("unresolved history predicate")),
+    };
+    if !value.finite() {
+        return Err(unsupported("nonfinite history predicate"));
+    }
+    Ok(value)
+}
+
+fn resolve_original_expression(
+    expression: &E,
+    program: &Program,
+    driven: &[String],
+    nodes: &[crate::interval::Interval],
+    states: &[crate::interval::Interval],
+    operators: &[crate::interval::Interval],
+    work: &Work,
+) -> Result<E, Error> {
+    work.step()?;
+    let recurse =
+        |e: &E| resolve_original_expression(e, program, driven, nodes, states, operators, work);
+    Ok(match expression {
+        E::Select {
+            relation,
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => {
+            let left = crate::causal_voltage::expand_paid(left, program, driven, work)?;
+            let right = crate::causal_voltage::expand_paid(right, program, driven, work)?;
+            let left = resolve_expression(&left, nodes, states, operators, work)?;
+            let right = resolve_expression(&right, nodes, states, operators, work)?;
+            let (yes, no) = crate::event_numeric::sign(
+                *relation,
+                history_bounds(&left, nodes, states, operators, work)?
+                    - history_bounds(&right, nodes, states, operators, work)?,
+            );
+            if !yes && !no {
+                return Err(Error::new(
+                    "condition_precision",
+                    "ordinary history predicate is uncertain",
+                ));
+            }
+            recurse(if yes { then_value } else { else_value })?
+        }
+        E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
+            work.debit(2, 2)?;
+            let left = Box::new(recurse(left)?);
+            let right = Box::new(recurse(right)?);
+            match expression {
+                E::Add { .. } => E::Add { left, right },
+                E::Multiply { .. } => E::Multiply { left, right },
+                E::Divide { .. } => E::Divide { left, right },
+                _ => unreachable!(),
+            }
+        }
+        _ => copy_expression(expression, work)?,
+    })
 }
 pub(crate) fn resolve_expression(
     expression: &E,
@@ -770,49 +876,6 @@ pub(crate) fn resolve_expression(
     work: &Work,
 ) -> Result<E, Error> {
     use crate::interval::Interval as I;
-    fn bounds(e: &E, nodes: &[I], states: &[I], ops: &[I], w: &Work) -> Result<I, Error> {
-        w.step()?;
-        let value = match e {
-            E::Affine { constant, terms } => {
-                let mut v = I::point(*constant);
-                for t in terms {
-                    w.step()?;
-                    v = v + I::point(t.coefficient)
-                        * nodes.get(t.node).copied().ok_or_else(|| {
-                            Error::new("invalid_ir", "missing history node binding")
-                        })?
-                }
-                v
-            }
-            E::State { state } => states
-                .get(*state)
-                .copied()
-                .ok_or_else(|| Error::new("invalid_ir", "missing history state binding"))?,
-            E::Operator { operator } => ops
-                .get(*operator)
-                .copied()
-                .ok_or_else(|| Error::new("invalid_ir", "missing history operator binding"))?,
-            E::Add { left, right } => {
-                bounds(left, nodes, states, ops, w)? + bounds(right, nodes, states, ops, w)?
-            }
-            E::Multiply { left, right } => {
-                bounds(left, nodes, states, ops, w)? * bounds(right, nodes, states, ops, w)?
-            }
-            E::Divide { left, right } => {
-                let a = bounds(left, nodes, states, ops, w)?;
-                let b = bounds(right, nodes, states, ops, w)?;
-                if b.lo <= 0. && b.hi >= 0. {
-                    return Err(unsupported("history division crosses zero"));
-                }
-                a / b
-            }
-            _ => return Err(unsupported("unresolved history predicate")),
-        };
-        if !value.finite() {
-            return Err(unsupported("nonfinite history predicate"));
-        }
-        Ok(value)
-    }
     fn resolve(e: &E, nodes: &[I], states: &[I], ops: &[I], w: &Work) -> Result<E, Error> {
         w.step()?;
         if matches!(e, E::Add { .. } | E::Multiply { .. } | E::Divide { .. }) {
@@ -831,7 +894,8 @@ pub(crate) fn resolve_expression(
                 let b = resolve(right, nodes, states, ops, w)?;
                 let (yes, no) = crate::event_numeric::sign(
                     *relation,
-                    bounds(&a, nodes, states, ops, w)? - bounds(&b, nodes, states, ops, w)?,
+                    history_bounds(&a, nodes, states, ops, w)?
+                        - history_bounds(&b, nodes, states, ops, w)?,
                 );
                 if !yes && !no {
                     return Err(Error::new(
@@ -1140,6 +1204,156 @@ mod shape_admission_tests {
             let bounds = [I::point(state), I::ZERO];
             let (_, row) = held_input(&e, &p, "M", &bounds, &Work::default()).unwrap();
             assert_eq!(row, [I::point(expected), I::ZERO, I::ZERO]);
+        }
+    }
+}
+
+#[cfg(test)]
+mod owner_contract_tests {
+    use super::*;
+    use crate::interval::Interval as I;
+    use crate::pwl::Trajectory;
+    use serde_json::json;
+
+    fn fixture() -> (Program, Trajectory, Vec<String>) {
+        let mut f = crate::history_consumer_fixture::fixture();
+        // The existing producer M owns state0. Its physical core voltage is
+        // q/8. The consumer C owns no producer state and reads that voltage.
+        f["program"]["contributions"][1]["rhs"] = json!({"op":"multiply",
+            "left":{"op":"state","state":0},
+            "right":{"op":"affine","constant":0.125,"terms":[]}});
+        let consumer = &mut f["program"]["contributions"][3];
+        consumer["origin"]["instance"] = json!("C");
+        consumer["branch"]["instance"] = json!("C");
+        let node = || {
+            json!({"op":"affine","constant":0.,
+            "terms":[{"node":3,"coefficient":1.}]})
+        };
+        consumer["rhs"] = json!({"op":"select","relation":"gt",
+            "left":node(),"right":{"op":"affine","constant":0.0625,"terms":[]},
+            "then_value":{"op":"add","left":node(),
+                "right":{"op":"affine","constant":0.5,"terms":[]}},
+            "else_value":{"op":"affine","constant":0.,"terms":[]},
+            "origin":consumer["origin"].clone()});
+        let p = serde_json::from_value(f["program"].clone()).unwrap();
+        let t =
+            Trajectory::new(serde_json::from_value(f["transient"].clone()).unwrap(), 1).unwrap();
+        (p, t, vec!["temp".into()])
+    }
+
+    fn boxes(p: &Program, q: I) -> (Vec<I>, Vec<I>, Vec<I>) {
+        let mut nodes = vec![I::ZERO; p.nodes.len()];
+        nodes[1] = I::point(0.5);
+        nodes[3] = q * I::point(0.125);
+        let mut states = vec![I::ZERO; p.states.len()];
+        states[0] = q;
+        (nodes, states, vec![I::ZERO; p.operators.len()])
+    }
+
+    #[test]
+    fn original_voltage_interface_survives_foreign_owner_resolution() {
+        let (p, t, driven) = fixture();
+        let context = ProofContext::new_held(&p, &t, &driven, 0).unwrap();
+        let admission = Admission::new(&p, &driven, context).unwrap();
+        for q in [1., 3.] {
+            let (nodes, states, operators) = boxes(&p, I::point(q));
+            let resolved = admission.resolve(3, &nodes, &states, &operators).unwrap();
+            let row = crate::events::affine(&resolved, &p, "C")
+                .expect("a consumer keeps its original voltage read, not M's raw state");
+            // Independent equation y = V(core) + 1/2; the producer state
+            // coefficient must remain zero in the consumer-owned affine row.
+            assert_eq!(row.nodes[3], 1.);
+            assert_eq!(row.constant, 0.5);
+            assert!(row.states.iter().all(|v| *v == 0.));
+        }
+    }
+
+    #[test]
+    fn foreign_raw_state_and_wrong_original_binding_remain_rejected() {
+        let (p, t, driven) = fixture();
+        assert_eq!(
+            crate::events::affine(&E::State { state: 0 }, &p, "C")
+                .err()
+                .unwrap()
+                .kind,
+            "invalid_ir"
+        );
+        let context = ProofContext::new_held(&p, &t, &driven, 0).unwrap();
+        let mut wrong_owner = p.clone();
+        wrong_owner.states[0].instance = "C".into();
+        assert_eq!(
+            Admission::new(&wrong_owner, &driven, context.clone())
+                .err()
+                .unwrap()
+                .kind,
+            "invalid_ir"
+        );
+        let mut later_epoch = t.clone();
+        later_epoch.config.stop = 2.;
+        assert_eq!(
+            crate::event_floor::check_provided_binding(&context, &p, &later_epoch, &driven)
+                .err()
+                .unwrap()
+                .kind,
+            "invalid_ir"
+        );
+    }
+
+    #[test]
+    fn failed_resolution_retries_in_same_admission_without_mutating_binding() {
+        let (p, t, driven) = fixture();
+        let original = serde_json::to_value(&p).unwrap();
+        let context = ProofContext::new_held(&p, &t, &driven, 0).unwrap();
+        let admission = Admission::new(&p, &driven, context.clone()).unwrap();
+        // The original guard q/8 > 1/16 cannot be selected for q in[0,1].
+        let (n, s, o) = boxes(&p, I { lo: 0., hi: 1. });
+        assert_eq!(
+            admission.resolve(3, &n, &s, &o).err().unwrap().kind,
+            "condition_precision"
+        );
+        let spent = context.borrow_work().spent();
+        let (n, s, o) = boxes(&p, I::point(3.));
+        let resolved = admission.resolve(3, &n, &s, &o).unwrap();
+        let row = crate::events::affine(&resolved, &p, "C").unwrap();
+        assert_eq!((row.nodes[3], row.constant), (1., 0.5));
+        assert!(context.borrow_work().spent() > spent);
+        assert_eq!(serde_json::to_value(&p).unwrap(), original);
+        assert_eq!(
+            serde_json::to_value(context.original_binding().0).unwrap(),
+            original
+        );
+    }
+
+    #[test]
+    fn actual_resolution_work_exhaustion_stays_sticky_for_two_retries() {
+        let (p, t, driven) = fixture();
+        let work = Work::limited([128, 8192, 200_000]);
+        let context =
+            ProofContext::event_request_with_work(&p, &t, &driven, 0, work.clone()).unwrap();
+        let admission = Admission::new(&p, &driven, context.clone()).unwrap();
+        let (n, s, o) = boxes(&p, I::point(3.));
+        // Spend by repeatedly executing the real resolver, never by a synthetic
+        // direct debit. A rejected traversal cannot create a fresh ledger.
+        loop {
+            match admission.resolve(3, &n, &s, &o) {
+                Ok(_) => (),
+                Err(e) => {
+                    assert_eq!(e.kind, "step_budget");
+                    break;
+                }
+            }
+        }
+        let mut spent = work.spent();
+        for _ in 0..2 {
+            assert_eq!(
+                admission.resolve(3, &n, &s, &o).err().unwrap().kind,
+                "step_budget"
+            );
+            assert!(work.same_owner(context.borrow_work()));
+            // Failed reservations may charge their attempted traversal. They
+            // must never refund prior work or turn the same ledger usable.
+            assert!(work.spent() >= spent);
+            spent = work.spent();
         }
     }
 }

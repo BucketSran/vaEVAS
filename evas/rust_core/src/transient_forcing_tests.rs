@@ -1297,7 +1297,21 @@ fn forcing_point_bundle_executes_one_actual_strict_body_and_preserves_bits() {
     assert_eq!(bounds, expected_bounds);
     assert_eq!(values, vec![0.3076171875]);
     assert!(bounds[0].lo <= values[0] && values[0] <= bounds[0].hi);
-    assert_eq!(report.counters.get("strict_curve_at_body"), Some(&1));
+    // A successful owned read and the legacy strict fallback are mutually
+    // exclusive. An unsuccessful optional proof is not a physical read.
+    assert_eq!(
+        report
+            .counters
+            .get("forcing_owned_point_success")
+            .copied()
+            .unwrap_or(0)
+            + report
+                .counters
+                .get("strict_curve_at_body")
+                .copied()
+                .unwrap_or(0),
+        1
+    );
 }
 
 #[test]
@@ -1322,7 +1336,21 @@ fn forcing_point_bundle_rebuilds_requests_and_stages_range_independently() {
         Ok(())
     });
     result.unwrap();
-    assert_eq!(report.counters.get("strict_curve_at_body"), Some(&3));
+    // A successful owned read and the legacy strict fallback are mutually
+    // exclusive. An unsuccessful optional proof is not a physical read.
+    assert_eq!(
+        report
+            .counters
+            .get("forcing_owned_point_success")
+            .copied()
+            .unwrap_or(0)
+            + report
+                .counters
+                .get("strict_curve_at_body")
+                .copied()
+                .unwrap_or(0),
+        3
+    );
     assert_eq!(
         report.counters.get("history_point_bundle_strict_reuse"),
         Some(&3)
@@ -1680,7 +1708,21 @@ fn forcing_point_bundle_wide_rational_keeps_first_strict_fee_and_enclosure() {
     let new = result.unwrap();
     let new_fee = graph.work_used() - before;
     assert_eq!(old, new);
-    assert_eq!(report.counters.get("strict_curve_at_body"), Some(&1));
+    // A successful owned read and the legacy strict fallback are mutually
+    // exclusive. An unsuccessful optional proof is not a physical read.
+    assert_eq!(
+        report
+            .counters
+            .get("forcing_owned_point_success")
+            .copied()
+            .unwrap_or(0)
+            + report
+                .counters
+                .get("strict_curve_at_body")
+                .copied()
+                .unwrap_or(0),
+        1
+    );
     assert!(new_fee > simple && new_fee < old_fee);
     let numerator: num_rational::BigRational = "315".parse().unwrap();
     let scale: num_rational::BigRational = "36893488147419103232".parse().unwrap();

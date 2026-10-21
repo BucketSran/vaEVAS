@@ -717,8 +717,15 @@ impl Trajectory {
             }
             if self.is_shaped(index) {
                 if let Some(curve) = self.exact_sources[index].as_ref() {
-                    curve.charge_forcing_read(work, time, false)?;
-                    if let Some((value, bounds)) = curve.at(time) {
+                    let point = if let Some(point) = curve.try_history_point(time, work)? {
+                        crate::diagnostics::counter("history_owned_point_success", 1);
+                        Some(point)
+                    } else {
+                        crate::diagnostics::counter("history_owned_strict_fallback", 1);
+                        curve.charge_forcing_read(work, time, false)?;
+                        curve.at(time)
+                    };
+                    if let Some((value, bounds)) = point {
                         if let Some(points) = points.as_deref_mut() {
                             if points.is_none() {
                                 work.debit(2, 0)?;
@@ -842,13 +849,17 @@ impl Trajectory {
                 let curve = self.exact_sources[k]
                     .as_ref()
                     .ok_or_else(|| unresolved("physical source curve missing"))?;
-                curve.charge_forcing_read(work, time, false)?;
-                values.push(
+                let point = if let Some(point) = curve.try_history_point(time, work)? {
+                    crate::diagnostics::counter("history_owned_point_success", 1);
+                    point
+                } else {
+                    crate::diagnostics::counter("history_owned_strict_fallback", 1);
+                    curve.charge_forcing_read(work, time, false)?;
                     curve
                         .at(time)
                         .ok_or_else(|| unresolved("physical source point has no certificate"))?
-                        .1,
-                );
+                };
+                values.push(point.1);
                 continue;
             }
             let (mut lo, mut hi) = (0, source.len());
@@ -2004,3 +2015,148 @@ impl Root {
 #[cfg(test)]
 #[path = "shaped_range_tests.rs"]
 mod shaped_range_tests;
+
+#[cfg(test)]
+mod history_owned_point_tests {
+    use super::*;
+    use crate::transition_source_plan::Work;
+    use num_rational::BigRational as R;
+    use serde_json::json;
+
+    fn shaped(value: f64, nonbinary: bool) -> Trajectory {
+        let knots = if nonbinary {
+            json!([
+                {"time_numerator":"0","time_denominator":"1","value_V":0.},
+                {"time_numerator":"1","time_denominator":"3","value_V":0.5},
+                {"time_numerator":"1","time_denominator":"1","value_V":1.}
+            ])
+        } else {
+            json!([
+                {"time_numerator":"0","time_denominator":"1","value_V":0.},
+                {"time_numerator":"1","time_denominator":"1","value_V":value}
+            ])
+        };
+        Trajectory::new(
+            serde_json::from_value(json!({
+                "pwl":[[[0.,0.],[1.,value]]],"output_times":[0.,1.],"stop":1.,"max_step":1.,
+                "pwl_errors_V":[{"voltage_error_bound_V":0.25,"exact_knots":knots}]
+            }))
+            .unwrap(),
+            1,
+        )
+        .unwrap()
+    }
+
+    fn compare_legacy_and_oracle(t: &Trajectory, time: f64, expected: R) {
+        // The old reader is retained solely as a differential compatibility
+        // control; the mathematical enclosure oracle is derived separately.
+        let old = t.exact_sources[0].as_ref().unwrap().at(time).unwrap();
+        let work = Work::default();
+        let (result, report) =
+            crate::diagnostics::capture(Default::default(), || t.history_point_bundle(time, &work));
+        let (values, bounds) = result.unwrap();
+        assert_eq!(values[0].to_bits(), old.0.to_bits());
+        assert_eq!(bounds[0], old.1);
+        assert!(crate::exact_source::binary(bounds[0].lo).unwrap() <= expected);
+        assert!(expected <= crate::exact_source::binary(bounds[0].hi).unwrap());
+        assert_eq!(
+            report
+                .counters
+                .get("forcing_owned_point_success")
+                .copied()
+                .unwrap_or(0)
+                + report
+                    .counters
+                    .get("strict_curve_at_body")
+                    .copied()
+                    .unwrap_or(0),
+            1
+        );
+        assert_eq!(
+            report.counters.get("history_point_bundle_strict_reuse"),
+            Some(&1)
+        );
+    }
+
+    #[test]
+    fn history_owned_nonbinary_knots_keep_old_boxes_and_independent_rational_value() {
+        let t = shaped(1., true);
+        for time in [0.1, 0.2, 0.5, 0.8] {
+            let x = crate::exact_source::binary(time).unwrap();
+            // Physical slope3/2 before1/3, then3/4 with intercept1/4.
+            let expected = if time < 1. / 3. {
+                x * R::new(3.into(), 2.into())
+            } else {
+                x * R::new(3.into(), 4.into()) + R::new(1.into(), 4.into())
+            };
+            compare_legacy_and_oracle(&t, time, expected);
+        }
+    }
+
+    #[test]
+    fn history_owned_subnormal_and_large_values_keep_original_enclosures() {
+        let time = f64::from_bits(1);
+        for value in [1., 1e300] {
+            let t = shaped(value, false);
+            let expected = crate::exact_source::binary(value).unwrap()
+                * crate::exact_source::binary(time).unwrap();
+            compare_legacy_and_oracle(&t, time, expected);
+        }
+    }
+
+    #[test]
+    fn history_owned_physical_shape_and_unshaped_source_error_keep_their_roles() {
+        let t = shaped(1., true);
+        // A positive metadata tube does not replace the explicitly certified
+        // physical knots with the nominal line or its entire uncertainty band.
+        let w = Work::default();
+        let value = t.history_value_bounds(0.2, &w).unwrap()[0];
+        let expected = crate::exact_source::binary(0.2).unwrap() * R::new(3.into(), 2.into());
+        assert!(crate::exact_source::binary(value.lo).unwrap() <= expected);
+        assert!(expected <= crate::exact_source::binary(value.hi).unwrap());
+        assert!(value.lo > 0.29 && value.hi < 0.31);
+        let unshaped = Trajectory::new(
+            serde_json::from_value(json!({
+                "pwl":[[[0.,0.],[1.,1.]]],"output_times":[0.,1.],"stop":1.,"max_step":1.,
+                "pwl_errors_V":[0.125]
+            }))
+            .unwrap(),
+            1,
+        )
+        .unwrap();
+        let b = unshaped.history_value_bounds(0.5, &w).unwrap()[0];
+        assert!(b.lo <= 0.375 && b.hi >= 0.625);
+    }
+
+    #[test]
+    fn history_owned_actual_reads_exhaust_same_work_and_both_retries_stay_rejected() {
+        let t = shaped(1., true);
+        let work = Work::limited([128, 8192, 20_000_000]);
+        let retry = work.clone();
+        assert!(work.same_owner(&retry));
+        let mut completed = 0;
+        loop {
+            match t.history_point_bundle(0.2, &work) {
+                Ok(_) => completed += 1,
+                Err(e) => {
+                    assert_eq!(e.kind, "step_budget");
+                    break;
+                }
+            }
+        }
+        assert!(
+            completed > 0,
+            "the actual physical reader must run before depletion"
+        );
+        let mut spent = work.spent();
+        for _ in 0..2 {
+            assert_eq!(
+                t.history_point_bundle(0.2, &retry).unwrap_err().kind,
+                "step_budget"
+            );
+            assert!(work.same_owner(&retry));
+            assert!(work.spent() >= spent);
+            spent = work.spent();
+        }
+    }
+}

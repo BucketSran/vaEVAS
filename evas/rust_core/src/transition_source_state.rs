@@ -123,12 +123,23 @@ impl Source {
         self.cursor = query.unwrap();
         Ok(())
     }
+    #[cfg(test)] // The old None-proof boundary remains a direct negative control.
     pub(crate) fn prepare(
         &self,
         time: f64,
         bounds: I,
         states: &[I],
         root: Option<&RootTime>,
+    ) -> Result<Prepared, Error> {
+        self.prepare_with_epochs(time, bounds, states, root, None)
+    }
+    pub(crate) fn prepare_with_epochs(
+        &self,
+        time: f64,
+        bounds: I,
+        states: &[I],
+        root: Option<&RootTime>,
+        epochs: Option<&crate::exact_source::TimeProofs>,
     ) -> Result<Prepared, Error> {
         if !time.is_finite()
             || !bounds.finite()
@@ -159,14 +170,14 @@ impl Source {
             .check_incoming(self.time, proof_window, effective_root)?;
         let mut cached = None;
         for plan in &self.certified {
-            if plan.same_context(states)? {
+            if plan.same_epoch_context(states, epochs)? {
                 cached = Some(plan.clone());
                 break;
             }
         }
         let next = match cached {
             Some(plan) => plan,
-            None => Arc::new(self.plan.rebind(states)?),
+            None => Arc::new(self.plan.rebind_with_epochs(states, epochs)?),
         };
         let mut certified = self.certified.clone();
         if !certified.iter().any(|plan| same_plan(plan, &next)) {

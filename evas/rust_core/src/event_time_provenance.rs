@@ -80,12 +80,10 @@ fn expression_with_points(
     identity: &BTreeSet<usize>,
     points: Option<&crate::event_value_proof::LocalState>,
 ) -> Option<RootTime> {
-    let point_offset = |expr| {
-        literal(expr).or_else(|| {
-            let exact = points?.value(expr, &[])?;
-            let bounds = crate::exact_source::enclosure(&exact)?;
-            (bounds.lo == bounds.hi).then_some(bounds.lo)
-        })
+    let exact_offset = |expr| {
+        literal(expr)
+            .and_then(crate::exact_source::binary)
+            .or_else(|| points?.value(expr, &[]))
     };
     match expr {
         Expression::IntegerPrimitive { .. } => None,
@@ -103,9 +101,18 @@ fn expression_with_points(
         }
         Expression::Add { left, right } => {
             let add = |time, offset| {
-                shifted(
-                    expression_with_points(time, states, root, identity, points)?,
-                    point_offset(offset)?,
+                let time = expression_with_points(time, states, root, identity, points)?;
+                let offset = exact_offset(offset)?;
+                // LocalState proves the complete scalar expression from point
+                // inputs. Its rational result need not be a binary64 point.
+                // Keep discovery and accepted-state bounds unchanged; neither
+                // a nominal value nor an inherited nonpoint state is proof.
+                let discovery = time.bounds()? + crate::exact_source::enclosure(&offset)?;
+                let sum = crate::exact_source::Budget(0).check(time.rational() + offset)?;
+                RootTime::affine(
+                    -sum,
+                    num_rational::BigRational::from_integer(1.into()),
+                    discovery,
                 )
             };
             add(left, right).or_else(|| add(right, left))
@@ -164,6 +171,72 @@ pub(crate) fn apply_charged(
         after_bounds,
     ))
 }
+/// Reuse the physical event's validated scalar context for ordinary time
+/// arithmetic. Paid Floor/history consumers retain their established route.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn apply_with_context_charged(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    selection: &Selection,
+    before: &TimeProofs,
+    root: Option<&RootTime>,
+    before_bounds: &[I],
+    after_bounds: &[I],
+    context: &crate::event_value_proof::Context<'_>,
+) -> Result<TimeProofs, crate::ir::Error> {
+    if crate::analytic_request::proof_owner(model).is_some() || context.floor_work().is_some() {
+        // Preserve the original owner and its Result, including exhausted
+        // retries. This bridge grants no new paid-history/Floor capability.
+        return apply_charged(
+            model,
+            trajectory,
+            selection,
+            before,
+            root,
+            before_bounds,
+            after_bounds,
+        );
+    }
+    let points =
+        crate::event_value_proof::LocalState::try_with_context(before_bounds, Some(context))?;
+    Ok(apply_using_points(
+        model,
+        trajectory,
+        selection,
+        before,
+        root,
+        before_bounds,
+        after_bounds,
+        Some(&points),
+    ))
+}
+
+/// Explicit original owner for the already qualified mixed held-ramp preview.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn apply_with_bound_source(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    selection: &Selection,
+    before: &TimeProofs,
+    root: &RootTime,
+    before_bounds: &[I],
+    after_bounds: &[I],
+    source: &crate::transition_source_plan::ProofContext,
+) -> Result<TimeProofs, crate::ir::Error> {
+    crate::event_floor::check_provided_binding(source, &model.program, trajectory, &model.driven)?;
+    history::apply_with_input_nodes(
+        model,
+        trajectory,
+        selection,
+        before,
+        Some(root),
+        before_bounds,
+        after_bounds,
+        source.borrow_work(),
+        Some(source.event_input_nodes()),
+    )
+}
+
 pub(crate) fn copy_history(
     source: &TimeProofs,
     w: &crate::transition_source_plan::Work,
@@ -186,6 +259,29 @@ pub(crate) fn apply(
     root: Option<&RootTime>,
     before_bounds: &[I],
     after_bounds: &[I],
+) -> TimeProofs {
+    apply_using_points(
+        model,
+        trajectory,
+        selection,
+        before,
+        root,
+        before_bounds,
+        after_bounds,
+        None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn apply_using_points(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    selection: &Selection,
+    before: &TimeProofs,
+    root: Option<&RootTime>,
+    before_bounds: &[I],
+    after_bounds: &[I],
+    initial_points: Option<&crate::event_value_proof::LocalState>,
 ) -> TimeProofs {
     let mut before: TimeProofs = before
         .iter()
@@ -223,7 +319,11 @@ pub(crate) fn apply(
     };
     for (event, indices) in &selection.actions {
         let mut local = before.clone();
-        let mut points = crate::event_value_proof::LocalState::new(before_bounds);
+        // Each callback starts from the accepted frame, never another
+        // callback's provisional assignments or the final after-state.
+        let mut points = initial_points
+            .cloned()
+            .unwrap_or_else(|| crate::event_value_proof::LocalState::new(before_bounds));
         let assignments = model.program.events[*event].assignments();
         for &index in indices {
             let assignment = &assignments[index];
@@ -238,8 +338,9 @@ pub(crate) fn apply(
                             .then(|| RootTime::point(literal(&assignment.rhs)?))
                             .flatten()
                     });
-            // Empty nodes keep voltage, time and history reads unknown. Only
-            // exact arithmetic over the original point held inputs qualifies.
+            // Empty fallback nodes keep unproved voltage/history reads
+            // unknown. Contextual nodes carry only the existing physical
+            // proof; every operand is still checked by LocalState.
             points.assign_proof(assignment.state, &assignment.rhs, &[]);
             local.remove(&assignment.state);
             result.remove(&assignment.state);
@@ -1244,6 +1345,339 @@ mod held_point_tests {
         }
     }
     #[test]
+    fn contextual_source_offsets_follow_same_callback_assignment_order() {
+        for sample_first in [true, false] {
+            let sample = assign(
+                1,
+                json!({"op":"affine","constant":0.,
+                "terms":[{"node":1,"coefficient":1.}]}),
+            );
+            let due = assign(0, add(s(0), s(1)));
+            let body = if sample_first {
+                json!([sample, due])
+            } else {
+                json!([due, sample])
+            };
+            let model = model(body, false);
+            let trajectory = trajectory(true);
+            let before = [I::point(0.5), I::point(0.125), I::ZERO, I::ZERO, I::ONE];
+            let mut after = before;
+            after[0] = I { lo: 0.5, hi: 0.75 };
+            after[1] = I::point(0.16);
+            let values = crate::event_value_proof::Proofs::new();
+            let root = RootTime::point(0.25).unwrap();
+            let context = crate::event_value_proof::Context::try_new(
+                &model,
+                &trajectory,
+                &[I::point(0.16)],
+                &values,
+                Some(&root),
+            )
+            .unwrap();
+            let selection = Selection {
+                actions: vec![(0, vec![0, 1])],
+                ..Default::default()
+            };
+            let result = apply_with_context_charged(
+                &model,
+                &trajectory,
+                &selection,
+                &TimeProofs::new(),
+                Some(&root),
+                &before,
+                &after,
+                &context,
+            )
+            .unwrap();
+            let expected = crate::exact_source::binary(0.5).unwrap()
+                + crate::exact_source::binary(if sample_first { 0.16 } else { 0.125 }).unwrap();
+            assert_eq!(result[&0].rational(), &expected);
+            // A contradictory accepted enclosure never inherits the witness.
+            after[0] = I::point(0.9);
+            assert!(!apply_with_context_charged(
+                &model,
+                &trajectory,
+                &selection,
+                &TimeProofs::new(),
+                Some(&root),
+                &before,
+                &after,
+                &context
+            )
+            .unwrap()
+            .contains_key(&0));
+        }
+    }
+
+    #[test]
+    fn contextual_unknown_zero_weight_and_nonpoint_operands_do_not_seed_time() {
+        for sample in [
+            json!({"op":"affine","constant":0.,"terms":[{"node":1,"coefficient":1.}]}),
+            json!({"op":"affine","constant":0.,"terms":[{"node":1,"coefficient":0.}]}),
+            s(2),
+        ] {
+            let model = model(
+                json!([assign(1, sample), assign(0, add(s(0), s(1)))]),
+                false,
+            );
+            let trajectory = trajectory(true);
+            let before = [
+                I::point(0.5),
+                I::ZERO,
+                I { lo: -1., hi: 1. },
+                I::ZERO,
+                I::ONE,
+            ];
+            let mut after = before;
+            after[0] = I { lo: 0., hi: 2. };
+            after[1] = I { lo: -1., hi: 1. };
+            let values = crate::event_value_proof::Proofs::new();
+            let context = crate::event_value_proof::Context::try_new(
+                &model,
+                &trajectory,
+                &[I { lo: -1., hi: 1. }],
+                &values,
+                None,
+            )
+            .unwrap();
+            let selection = Selection {
+                actions: vec![(0, vec![0, 1])],
+                ..Default::default()
+            };
+            assert!(!apply_with_context_charged(
+                &model,
+                &trajectory,
+                &selection,
+                &TimeProofs::new(),
+                None,
+                &before,
+                &after,
+                &context
+            )
+            .unwrap()
+            .contains_key(&0));
+        }
+    }
+
+    #[test]
+    fn contextual_bridge_delegates_original_analytic_role_without_new_time_proofs() {
+        use crate::ir::EventTrigger;
+        use crate::transition_source_plan::Work;
+        let source_read = json!({"op":"affine","constant":0.,
+            "terms":[{"node":1,"coefficient":1.}]});
+        let mut program = model(
+            json!([assign(1, source_read), assign(0, add(s(0), s(1)))]),
+            false,
+        )
+        .program;
+        program.events[0].trigger = EventTrigger::Timer {
+            start: 0.5,
+            period: 0.,
+            enabled: true,
+            time_tolerance: 1e-9,
+        };
+        let work = Work::default();
+        let config: TransientInputs = serde_json::from_value(json!({
+            "pwl":[[]],"output_times":[0.,1.],"stop":1.,"max_step":1.,
+            "analytic_sources":[{"kind":"sine","sinedc":0.16,"ampl":0.,
+                "freq":1.,"sinephase":0.,"source_name":"Vin",
+                "terminals":["u","0"],"polarity":1,"parameter_origin":"explicit-v1"}]
+        }))
+        .unwrap();
+        let trajectory = Trajectory::new_with_work(config, 1, Some(work.clone())).unwrap();
+        let driven = vec!["u".into()];
+        let request =
+            crate::analytic_request::Request::prepare(&program, &trajectory, &driven).unwrap();
+        let model = EventModel::new_with_context(
+            program,
+            driven,
+            Tolerances::default(),
+            Some(&trajectory),
+            Some(request.context().clone()),
+        )
+        .unwrap();
+        let model = request.activate(model, &trajectory).unwrap();
+        assert!(matches!(
+            crate::analytic_request::proof_owner(&model),
+            Some(crate::analytic_request::ProofOwner::Analytic(_))
+        ));
+        assert!(crate::event_value_proof::history::work(&model).is_none());
+        let values = crate::event_value_proof::Proofs::new();
+        let root = RootTime::point(0.5).unwrap();
+        let context = crate::event_value_proof::Context::try_new(
+            &model,
+            &trajectory,
+            &[I::point(0.16)],
+            &values,
+            Some(&root),
+        )
+        .unwrap();
+        let before = [I::point(0.5), I::point(0.125), I::ZERO, I::ZERO, I::ONE];
+        let mut after = before;
+        after[0] = I { lo: 0.5, hi: 0.75 };
+        after[1] = I::point(0.16);
+        let times = TimeProofs::from([(0, root.clone())]);
+        let selection = Selection {
+            actions: vec![(0, vec![0, 1])],
+            ..Default::default()
+        };
+        let legacy = apply_charged(
+            &model,
+            &trajectory,
+            &selection,
+            &times,
+            Some(&root),
+            &before,
+            &after,
+        )
+        .unwrap();
+        assert!(
+            !legacy.contains_key(&0),
+            "analytic admission does not grant this time role"
+        );
+        let spent = work.spent();
+        let actual = apply_with_context_charged(
+            &model,
+            &trajectory,
+            &selection,
+            &times,
+            Some(&root),
+            &before,
+            &after,
+            &context,
+        )
+        .unwrap();
+        assert_eq!(actual, legacy);
+        assert_eq!(
+            work.spent(),
+            spent,
+            "delegation must not enter a new proof/copy path"
+        );
+        assert!(work.same_owner(request.work()));
+    }
+
+    #[test]
+    fn contextual_bridge_propagates_original_history_work_exhaustion() {
+        use crate::transition_source_plan::{ProofContext, Work};
+        let fixture = crate::history_consumer_fixture::fixture();
+        let program: Program = serde_json::from_value(fixture["program"].clone()).unwrap();
+        let trajectory = Trajectory::new(
+            serde_json::from_value(fixture["transient"].clone()).unwrap(),
+            1,
+        )
+        .unwrap();
+        let driven = vec!["temp".into()];
+        let work = Work::limited([128, 8192, 1_000_000]);
+        let owner =
+            ProofContext::event_request_with_work(&program, &trajectory, &driven, 0, work.clone())
+                .unwrap();
+        let model = EventModel::new_with_context(
+            program,
+            driven,
+            Tolerances::default(),
+            Some(&trajectory),
+            Some(owner.clone()),
+        )
+        .unwrap();
+        assert!(work.same_owner(crate::event_value_proof::history::work(&model).unwrap()));
+        let values = crate::event_value_proof::Proofs::new();
+        // The bridge must delegate on the model's paid history role, even
+        // with an ordinary Context. No replacement ledger or optional failure.
+        let context = crate::event_value_proof::Context::new(
+            &model,
+            &trajectory,
+            &[I::point(0.5)],
+            &values,
+            None,
+        );
+        let bounds = [I::ZERO, I::point(0.25)];
+        let times = TimeProofs::from([(1, RootTime::point(0.25).unwrap())]);
+        loop {
+            match apply_with_context_charged(
+                &model,
+                &trajectory,
+                &Selection::default(),
+                &times,
+                None,
+                &bounds,
+                &bounds,
+                &context,
+            ) {
+                Ok(_) => (),
+                Err(error) => {
+                    assert_eq!(error.kind, "step_budget");
+                    break;
+                }
+            }
+        }
+        let mut spent = work.spent();
+        for _ in 0..2 {
+            assert_eq!(
+                apply_with_context_charged(
+                    &model,
+                    &trajectory,
+                    &Selection::default(),
+                    &times,
+                    None,
+                    &bounds,
+                    &bounds,
+                    &context
+                )
+                .unwrap_err()
+                .kind,
+                "step_budget"
+            );
+            assert!(work.same_owner(owner.borrow_work()));
+            assert!(work.spent() >= spent);
+            spent = work.spent();
+        }
+    }
+
+    #[test]
+    fn exact_nonbinary_scalar_offset_preserves_time_and_original_bounds() {
+        let selection = Selection {
+            actions: vec![(0, vec![0])],
+            ..Default::default()
+        };
+        let model = model(
+            json!([assign(
+                0,
+                add(s(0), json!({"op":"divide","left":c(0.5),"right":s(1)}))
+            )]),
+            false,
+        );
+        let trajectory = trajectory(true);
+        let before = [I::point(0.1), I::point(3.), I::ZERO, I::ZERO, I::ONE];
+        let exact = crate::exact_source::binary(0.1).unwrap()
+            + num_rational::BigRational::new(1.into(), 6.into());
+        let mut after = before;
+        after[0] = crate::exact_source::enclosure(&exact).unwrap();
+        assert_ne!(after[0].lo, after[0].hi);
+        let proof = apply(
+            &model,
+            &trajectory,
+            &selection,
+            &TimeProofs::new(),
+            None,
+            &before,
+            &after,
+        );
+        assert_eq!(proof[&0].rational(), &exact);
+        // Optional exact arithmetic cannot replace contradictory accepted bounds.
+        after[0] = I::point(0.9);
+        assert!(!apply(
+            &model,
+            &trajectory,
+            &selection,
+            &TimeProofs::new(),
+            None,
+            &before,
+            &after
+        )
+        .contains_key(&0));
+    }
+
+    #[test]
     fn nonpoint_and_hidden_unknown_offsets_never_become_time_certificates() {
         let selection = Selection {
             actions: vec![(0, vec![0])],
@@ -1255,18 +1689,14 @@ mod held_point_tests {
             json!({"op":"multiply","left":c(0.),"right":s(2)}),
             json!({"op":"divide","left":c(0.5),"right":s(1)}),
         ] {
-            let division = offset["op"] == "divide";
             let model = model(json!([assign(0, add(s(0), offset))]), false);
-            let mut before = [
+            let before = [
                 I::point(0.1),
                 I { lo: 0.1, hi: 0.2 },
                 I { lo: -1., hi: 1. },
                 I::ZERO,
                 I::ONE,
             ];
-            if division {
-                before[1] = I::point(3.);
-            }
             let after = [I { lo: 0., hi: 1. }; 5];
             assert!(!apply(
                 &model,
@@ -1322,14 +1752,26 @@ mod held_point_tests {
     }
     #[test]
     fn failed_held_point_candidate_retries_same_controller_with_future_history_and_error() {
+        held_offset_failure_retry(false);
+    }
+    #[test]
+    fn failed_nonbinary_offset_candidate_retries_same_controller_without_leaks() {
+        held_offset_failure_retry(true);
+    }
+    fn held_offset_failure_retry(nonbinary: bool) {
         use crate::transient::{event_acceptance, Controller, Frame};
-        let body = json!([assign(0,add(s(0),s(1))),{"kind":"if","relation":"gt",
+        let offset = if nonbinary {
+            json!({"op":"divide","left":c(0.5),"right":s(1)})
+        } else {
+            s(1)
+        };
+        let body = json!([assign(0,add(s(0),offset)),{"kind":"if","relation":"gt",
             "left":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},
             "right":c(0.),"then_body":[assign(3,s(2))],"else_body":[assign(3,c(0.))],"origin":origin()}]);
         let model = model(body, true);
         let good = trajectory(true);
         let bad = trajectory(false);
-        let mut states = vec![0.5, 0.1, 0.45 * 0.16, 0., 1.];
+        let mut states = vec![0.5, if nonbinary { 3. } else { 0.1 }, 0.45 * 0.16, 0., 1.];
         let mut bounds = states.iter().copied().map(I::point).collect::<Vec<_>>();
         bounds[2] = I::point(0.45) * I::point(0.16);
         assert!(bounds[2].lo < bounds[2].hi);

@@ -12,6 +12,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
+from evas import KernelError
 from evas.scs import simulate_scs
 
 
@@ -113,20 +114,27 @@ class AnalyticSourceContracts(unittest.TestCase):
 
     def test_unsupported_parameter_and_original_role_combinations(self):
         cases = [
-            (PASS, DECK.replace(' sinephase=0', ''), 'requires explicit'),
-            (PASS, DECK.replace('sinephase=0', 'phase=0'), 'requires explicit'),
+            (PASS, DECK.replace('sinephase=0', 'sinephase=90 phase=0'), 'separate source contract'),
+            (PASS, DECK.replace('sinephase=0', 'delay=0'), 'no delay or modulation'),
             (PASS, DECK.replace('freq=1', 'freq=0'), 'positive frequency'),
             (PASS, DECK.replace('freq=1', 'freq=100'), 'Taylor domain'),
             (HELD.replace('V(clk)-0.5', 'V(x)-0.5'), DECK, 'sine cross guards'),
             (HELD.replace('V(clk)-0.5', 'V(clk)-0.5+0*V(x)'), DECK, 'sine cross guards'),
             (HELD.replace('h=V(x);', 'if (0) h=sqrt(V(x)); else h=V(x);'), DECK, 'hidden arm'),
             (HELD.replace('h=0;', 'h=V(x);'), DECK, 'initialization'),
-            (HELD.replace('V(y)<+h;', 'V(y)<+transition(h,0,0.001);'), DECK, 'without operators'),
         ]
         for model, deck, message in cases:
             with self.subTest(message=message, model=model):
                 with self.assertRaisesRegex(Exception, message):
                     self.simulate(model, deck)
+
+        # A cross-triggered held state cannot borrow the fixed-Timer
+        # sampled-Transition profile; retain this role-specific rejection.
+        with self.assertRaises(KernelError) as caught:
+            self.simulate(HELD.replace('V(y)<+h;', 'V(y)<+transition(h,0,0.001);'), DECK)
+        self.assertEqual(caught.exception.detail['kind'], 'unsupported_analytic_source_consumer')
+        self.assertEqual(caught.exception.detail['message'],
+                         'sampled Transition profile requires independent fixed Timer leaves')
 
 
 if __name__ == '__main__':

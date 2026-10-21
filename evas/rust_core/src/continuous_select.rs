@@ -31,7 +31,19 @@ pub(crate) fn resolve_selection_with_lineage(
         resolve_selection(expr, program, driven, nodes, states)
     }
 }
-type SourceSign<'a> = dyn Fn(&Expression, &Expression, &str) -> Result<Option<i8>, Error> + 'a;
+pub(crate) type SourceSign<'a> =
+    dyn Fn(&Expression, &Expression, &str) -> Result<Option<i8>, Error> + 'a;
+
+pub(crate) fn resolve_selection_with_source_sign(
+    expr: &Expression,
+    program: &Program,
+    driven: &[String],
+    nodes: &[I],
+    states: &[I],
+    exact: &SourceSign<'_>,
+) -> Result<Expression, Error> {
+    resolve_with_source(expr, program, driven, nodes, states, Some(exact), None)
+}
 
 fn resolve_with_source(
     expr: &Expression,

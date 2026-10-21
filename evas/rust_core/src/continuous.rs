@@ -119,7 +119,8 @@ mod runtime;
 mod selection;
 pub(crate) use runtime::Continuous;
 pub(crate) use selection::{
-    resolve_selection, resolve_selection_with_lineage, validate as validate_selection,
+    resolve_selection, resolve_selection_with_lineage, resolve_selection_with_source_sign,
+    validate as validate_selection,
 };
 
 #[derive(Clone)]

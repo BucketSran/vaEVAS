@@ -106,16 +106,28 @@ def voltage_points(settings, stop, fail):
 
 
 def analytic_source(settings, nodes, name, fail):
-    """Preserve explicit input parameters; no waveform samples or defaults."""
+    """Bind the restricted native transient sine contract without sampling.
+
+    With no delay/modulation, native sinephase defaults to zero degrees. The
+    independent small-signal phase is retained by the adapter's metadata and
+    never enters the transient angle. AC analysis is outside this contract.
+    """
     if '0' not in nodes:
         fail('floating analytic source values require a separate topology certificate', unsupported=True)
-    allowed={'type','sinedc','ampl','freq','sinephase'}
-    if set(settings)!=allowed:
-        fail('sine source-value requires explicit sinedc/ampl/freq/sinephase and no other settings; vendor defaults are unresolved', unsupported=True)
-    if any(type(settings[k]) is not float or not math.isfinite(settings[k]) for k in allowed-{'type'}):
+    required={'type','sinedc','ampl','freq'}
+    allowed=required|{'sinephase','phase'}
+    if not required.issubset(settings) or set(settings)-allowed:
+        fail('sine source-value requires explicit sinedc/ampl/freq; only sinephase and small-signal phase are optional, with no delay or modulation', unsupported=True)
+    if any(type(value) is not float or not math.isfinite(value)
+           for key,value in settings.items() if key!='type'):
         fail('sine parameters must be finite scalar numbers')
     if settings['freq']<=0:
         fail('sine source-value currently supports positive frequency only', unsupported=True)
-    return dict(kind='sine',**{k:settings[k] for k in allowed-{'type'}},
+    sinephase=settings.get('sinephase',0.)
+    if 'phase' in settings and sinephase!=0.:
+        fail('combined small-signal phase and nonzero sinephase require a separate source contract', unsupported=True)
+    origin='explicit-v1' if 'sinephase' in settings else 'spectre-native-transient-zero-phase-v1'
+    return dict(kind='sine',sinedc=settings['sinedc'],ampl=settings['ampl'],
+                freq=settings['freq'],sinephase=sinephase,
                 source_name=name,terminals=list(nodes),polarity=1 if nodes[1]=='0' or '0' not in nodes else -1,
-                parameter_origin='explicit-v1')
+                parameter_origin=origin)

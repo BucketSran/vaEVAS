@@ -28,6 +28,67 @@ pub(super) struct TargetPlan {
 fn failure(message: &str) -> Error {
     Error::new("condition_precision", message)
 }
+
+// One resolve call only. Physical source ranges do not depend on target state,
+// parent histories or the expression being selected. The complete immutable
+// trajectory, exact window bits and this Work object bind this local result.
+struct PhysicalRangeFrame<'a> {
+    trajectory: &'a Trajectory,
+    work: &'a crate::transition_source_plan::Work,
+    window: [u64; 2],
+    result: std::cell::RefCell<Option<(Vec<I>, Vec<I>)>>,
+}
+impl<'a> PhysicalRangeFrame<'a> {
+    fn new(
+        trajectory: &'a Trajectory,
+        work: &'a crate::transition_source_plan::Work,
+        t: I,
+    ) -> Self {
+        Self {
+            trajectory,
+            work,
+            window: [t.lo.to_bits(), t.hi.to_bits()],
+            result: std::cell::RefCell::new(None),
+        }
+    }
+    fn read(
+        &self,
+        trajectory: &Trajectory,
+        work: &crate::transition_source_plan::Work,
+        t: I,
+    ) -> Result<(Vec<I>, Vec<I>), Error> {
+        work.debit(2, 0)?;
+        work.debit(2, 8)?;
+        if !std::ptr::eq(self.trajectory, trajectory)
+            || !std::ptr::eq(self.work, work)
+            || self.window != [t.lo.to_bits(), t.hi.to_bits()]
+        {
+            return Err(Error::new(
+                "invalid_ir",
+                "physical range frame binding mismatch",
+            ));
+        }
+        let mut stored = self.result.borrow_mut();
+        if stored.is_none() {
+            let result = trajectory.history_range(t, work)?;
+            *stored = Some(result);
+            crate::diagnostics::counter("history_resolve_physical_range_builds", 1);
+        } else {
+            crate::diagnostics::counter("history_resolve_physical_range_hits", 1);
+        }
+        let (values, derivatives) = stored.as_ref().expect("successful physical range");
+        // Both Vec headers and every two-word Interval copied below are paid
+        // before allocating or traversing either retained source box vector.
+        let copy_cost =
+            6 + (values.len().saturating_add(derivatives.len()) as u64).saturating_mul(2);
+        if let Err(error) = work.debit(2, copy_cost) {
+            *stored = None;
+            return Err(error);
+        }
+        let (values, derivatives) = stored.as_ref().expect("successful paid physical range");
+        Ok((values.clone(), derivatives.clone()))
+    }
+}
 fn constant(x: f64) -> Expression {
     Expression::Affine {
         constant: x,
@@ -716,9 +777,24 @@ impl TargetPlan {
         states: &[I],
         entries: &[Runtime],
     ) -> Result<(I, I), Error> {
+        self.range_with_frame(e, t, states, entries, None)
+    }
+    fn range_with_frame(
+        &self,
+        e: &Expression,
+        t: I,
+        states: &[I],
+        entries: &[Runtime],
+        frame: Option<&PhysicalRangeFrame<'_>>,
+    ) -> Result<(I, I), Error> {
+        self.work.debit(2, 0)?;
         self.work.step()?;
         let (inputs, slopes) = if self.metered {
-            self.trajectory.history_range(t, &self.work)?
+            if let Some(frame) = frame {
+                frame.read(&self.trajectory, &self.work, t)?
+            } else {
+                self.trajectory.history_range(t, &self.work)?
+            }
         } else {
             self.trajectory.range(t)?
         };
@@ -817,6 +893,17 @@ impl TargetPlan {
         states: &[I],
         entries: &[Runtime],
     ) -> Result<Expression, Error> {
+        let frame = PhysicalRangeFrame::new(&self.trajectory, &self.work, t);
+        self.resolve_with_frame(e, t, states, entries, self.metered.then_some(&frame))
+    }
+    fn resolve_with_frame(
+        &self,
+        e: &Expression,
+        t: I,
+        states: &[I],
+        entries: &[Runtime],
+        frame: Option<&PhysicalRangeFrame<'_>>,
+    ) -> Result<Expression, Error> {
         if self.metered {
             self.work.step()?;
             match e {
@@ -834,8 +921,8 @@ impl TargetPlan {
                 else_value,
                 ..
             } => {
-                let a = self.resolve(left, t, states, entries)?;
-                let b = self.resolve(right, t, states, entries)?;
+                let a = self.resolve_with_frame(left, t, states, entries, frame)?;
+                let b = self.resolve_with_frame(right, t, states, entries, frame)?;
                 let difference = Expression::Add {
                     left: Box::new(a),
                     right: Box::new(Expression::Multiply {
@@ -845,25 +932,27 @@ impl TargetPlan {
                 };
                 let (yes, no) = crate::event_numeric::sign(
                     *relation,
-                    self.range(&difference, t, states, entries)?.0,
+                    self.range_with_frame(&difference, t, states, entries, frame)?
+                        .0,
                 );
                 if !(yes || no) {
                     return Err(failure("history target mode has an unresolved predicate"));
                 }
-                return self.resolve(
+                return self.resolve_with_frame(
                     if yes { then_value } else { else_value },
                     t,
                     states,
                     entries,
+                    frame,
                 );
             }
             Expression::Add { left, right } => Expression::Add {
-                left: Box::new(self.resolve(left, t, states, entries)?),
-                right: Box::new(self.resolve(right, t, states, entries)?),
+                left: Box::new(self.resolve_with_frame(left, t, states, entries, frame)?),
+                right: Box::new(self.resolve_with_frame(right, t, states, entries, frame)?),
             },
             Expression::Multiply { left, right } => Expression::Multiply {
-                left: Box::new(self.resolve(left, t, states, entries)?),
-                right: Box::new(self.resolve(right, t, states, entries)?),
+                left: Box::new(self.resolve_with_frame(left, t, states, entries, frame)?),
+                right: Box::new(self.resolve_with_frame(right, t, states, entries, frame)?),
             },
             _ => e.clone(),
         })
@@ -1858,5 +1947,242 @@ mod predicate_bit_tests {
                 assert_eq!(values.len(), 128);
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod physical_range_frame_tests {
+    use super::*;
+    use crate::transition_source_plan::Work;
+    use serde_json::json;
+
+    fn trajectory() -> Trajectory {
+        // Physical knot (1/3, 1/2) differs from transport v=t by 1/6.
+        // The declared 1/4 covers it; strict physical range boxes stay exact.
+        Trajectory::new(
+            serde_json::from_value(json!({
+                "pwl":[[[0.,0.],[1.,1.]]],"output_times":[0.,1.],"stop":1.,"max_step":1.,
+                "pwl_errors_V":[{"voltage_error_bound_V":0.25,"exact_knots":[
+                    {"time_numerator":"0","time_denominator":"1","value_V":0.},
+                    {"time_numerator":"1","time_denominator":"3","value_V":0.5},
+                    {"time_numerator":"1","time_denominator":"1","value_V":1.}
+                ]}]
+            }))
+            .unwrap(),
+            1,
+        )
+        .unwrap()
+    }
+    fn plan() -> TargetPlan {
+        let program = Arc::new(
+            serde_json::from_value(json!({
+                "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u"],
+                "states":[{"instance":"dut","name":"s","kind":"real","initial":0.}],
+                "operators":[], "contributions":[]
+            }))
+            .unwrap(),
+        );
+        TargetPlan {
+            predicate_only: false,
+            metered: true,
+            predicate_states: BTreeSet::new(),
+            work: Work::default(),
+            expression: constant(1.),
+            program,
+            trajectory: Arc::new(trajectory()),
+            input_nodes: vec![1],
+            dependencies: BTreeSet::new(),
+            cuts: vec![],
+            selected: constant(1.),
+            time: 0.,
+            window: I { lo: 0., hi: 1. },
+            valid_until: 1.,
+            parameters: vec![],
+            parents: vec![],
+            exact_roots: vec![],
+            guards: vec![],
+        }
+    }
+    fn source() -> Expression {
+        Expression::Affine {
+            constant: 0.,
+            terms: vec![crate::ir::Term {
+                node: 1,
+                coefficient: 1.,
+            }],
+        }
+    }
+    fn count(report: &crate::diagnostics::Report, key: &str) -> u64 {
+        report.counters.get(key).copied().unwrap_or(0)
+    }
+    #[test]
+    fn physical_range_frame_nested_select_matches_uncached_and_reads_once() {
+        let p = plan();
+        let mut e = constant(7.);
+        for threshold in [0.28125, 0.25, 0.125] {
+            e=serde_json::from_value(json!({"op":"select","relation":"gt",
+                "left":source(),"right":constant(threshold),"then_value":e,"else_value":constant(-7.),
+                "origin":{"source":"frame.va","line":1,"column":1,"instance":"dut"}})).unwrap();
+        }
+        let t = I::point(0.3125);
+        let old = p.resolve_with_frame(&e, t, &[I::ONE], &[], None).unwrap();
+        let (new, report) =
+            crate::diagnostics::capture(Default::default(), || p.resolve(&e, t, &[I::ONE], &[]));
+        assert_eq!(new.unwrap(), old);
+        assert_eq!(old, constant(7.));
+        assert_eq!(count(&report, "history_resolve_physical_range_builds"), 1);
+        assert_eq!(count(&report, "history_resolve_physical_range_hits"), 2);
+    }
+    #[test]
+    fn physical_range_frame_binds_exact_time_trajectory_and_work() {
+        let source = trajectory();
+        let other = source.clone();
+        let work = Work::default();
+        let alias = work.clone();
+        let t = I::point(0.1);
+        let next = I::point(f64::from_bits(0.1f64.to_bits() + 1));
+        let frame = PhysicalRangeFrame::new(&source, &work, t);
+        assert_eq!(
+            frame.read(&source, &work, t).unwrap(),
+            source.history_range(t, &work).unwrap()
+        );
+        for error in [
+            frame.read(&source, &work, next).unwrap_err(),
+            frame.read(&other, &work, t).unwrap_err(),
+            frame.read(&source, &alias, t).unwrap_err(),
+        ] {
+            assert_eq!(error.kind, "invalid_ir");
+        }
+        // A new lexical frame accepts each new original binding and recomputes.
+        assert_eq!(
+            PhysicalRangeFrame::new(&source, &work, next)
+                .read(&source, &work, next)
+                .unwrap(),
+            source.history_range(next, &work).unwrap()
+        );
+        assert_eq!(
+            PhysicalRangeFrame::new(&other, &work, t)
+                .read(&other, &work, t)
+                .unwrap(),
+            other.history_range(t, &work).unwrap()
+        );
+    }
+    #[test]
+    fn physical_range_frame_keeps_state_parent_and_expression_evaluation_live() {
+        let mut p = plan();
+        let t = I::point(0.3125);
+        let frame = PhysicalRangeFrame::new(&p.trajectory, &p.work, t);
+        let state = Expression::State { state: 0 };
+        let first = p
+            .range_with_frame(&state, t, &[I::ONE], &[], Some(&frame))
+            .unwrap();
+        let second = p
+            .range_with_frame(&state, t, &[I::point(2.)], &[], Some(&frame))
+            .unwrap();
+        assert!(first.0.hi < second.0.lo);
+        drop(frame);
+        let mut program = serde_json::to_value(&*p.program).unwrap();
+        program["operators"] = json!([{"kind":"transition","input":{"op":"state","state":0},
+            "delay":0.,"rise":0.25,"fall":0.25,
+            "origin":{"source":"frame.va","line":1,"column":1,"instance":"dut"}}]);
+        p.program = Arc::new(serde_json::from_value(program).unwrap());
+        p.dependencies.insert(0);
+        let frame = PhysicalRangeFrame::new(&p.trajectory, &p.work, t);
+        let entry = |value| Runtime::Transition {
+            expression: constant(value),
+            program: p.program.clone(),
+            owner: "dut".into(),
+            source: None,
+            input: crate::events::affine(&constant(value), &p.program, "dut").unwrap(),
+            input_bounds: vec![I::point(value)],
+            history: Box::new(Transition::new(value, 0., 0.25, 0.25).unwrap()),
+        };
+        let parent = Expression::Operator { operator: 0 };
+        let a = p
+            .range_with_frame(&parent, t, &[I::ONE], &[entry(3.)], Some(&frame))
+            .unwrap();
+        let b = p
+            .range_with_frame(&parent, t, &[I::ONE], &[entry(4.)], Some(&frame))
+            .unwrap();
+        assert!(a.0.hi < b.0.lo);
+        // A zero outer coefficient must still audit its invalid inner divisor.
+        let invalid = Expression::Multiply {
+            left: Box::new(constant(0.)),
+            right: Box::new(Expression::Divide {
+                left: Box::new(constant(1.)),
+                right: Box::new(constant(0.)),
+            }),
+        };
+        assert_eq!(
+            p.range_with_frame(&invalid, t, &[I::ONE], &[], Some(&frame))
+                .unwrap_err()
+                .kind,
+            "unsupported_condition"
+        );
+        assert_eq!(
+            p.range_with_frame(&source(), t, &[I::ONE], &[entry(3.)], Some(&frame))
+                .unwrap(),
+            p.range(&source(), t, &[I::ONE], &[entry(3.)]).unwrap()
+        );
+    }
+    #[test]
+    fn physical_range_frame_failed_read_has_no_cached_result() {
+        let source = trajectory();
+        let work = Work::default();
+        let t = I { lo: 0.5, hi: 0.25 };
+        let frame = PhysicalRangeFrame::new(&source, &work, t);
+        let mut spent = work.spent();
+        for _ in 0..2 {
+            let expected = source.history_range(t, &work).unwrap_err();
+            let actual = frame.read(&source, &work, t).unwrap_err();
+            assert_eq!(actual.kind, expected.kind);
+            assert!(frame.result.borrow().is_none());
+            assert!(work.spent() > spent);
+            spent = work.spent();
+        }
+    }
+    #[test]
+    fn physical_range_frame_successful_hit_obeys_same_work_sticky_exhaustion() {
+        let source = trajectory();
+        let work = Work::limited([128, 8192, 20_000_000]);
+        let alias = work.clone();
+        let t = I::point(0.1);
+        let retained = PhysicalRangeFrame::new(&source, &work, t);
+        retained.read(&source, &work, t).unwrap();
+        loop {
+            // Real full source reads spend this ledger; no artificial direct debit.
+            let fresh = PhysicalRangeFrame::new(&source, &work, t);
+            if let Err(error) = fresh.read(&source, &work, t) {
+                assert_eq!(error.kind, "step_budget");
+                break;
+            }
+        }
+        let mut spent = work.spent();
+        for _ in 0..2 {
+            assert_eq!(
+                retained.read(&source, &work, t).unwrap_err().kind,
+                "step_budget"
+            );
+            assert!(work.same_owner(&alias));
+            assert!(work.spent() >= spent);
+            spent = work.spent();
+        }
+    }
+    #[test]
+    fn physical_range_frame_preserves_complete_unshaped_source_error_boxes() {
+        let source=Trajectory::new(serde_json::from_value(json!({
+            "pwl":[[[0.,0.],[1.,1.]],[[0.,2.],[1.,2.]]],"output_times":[0.,1.],"stop":1.,"max_step":1.,
+            "pwl_errors_V":[0.125,0.25]
+        })).unwrap(),2).unwrap();
+        let work = Work::default();
+        let t = I::point(0.5);
+        let frame = PhysicalRangeFrame::new(&source, &work, t);
+        let old = source.history_range(t, &work).unwrap();
+        assert_eq!(frame.read(&source, &work, t).unwrap(), old);
+        assert_eq!(frame.read(&source, &work, t).unwrap(), old);
+        assert_eq!(old.0.len(), 2);
+        assert_eq!(old.1.len(), 2);
+        assert!(old.0[0].lo <= 0.375 && old.0[0].hi >= 0.625);
+        assert!(old.0[1].lo <= 1.75 && old.0[1].hi >= 2.25);
     }
 }

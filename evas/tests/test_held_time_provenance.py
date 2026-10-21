@@ -50,13 +50,59 @@ class HeldTimeProvenance(unittest.TestCase):
         r=execute('due=$abstime+0.1;if(V(u,r)<0)due=V(u,r);')
         self.assertEqual(output(r),[int(F(t)>=exact)+int(F(t)>=F(.6))for t in around(exact)])
 
-    def test_unknown_or_dynamic_rewrite_drops_old_proof(self):
-        for action in ['due=$abstime+0.1;due=V(u,r)/3+0.1;',
-                       'due=$abstime+0.1;due=$abstime+0.1*V(u,r);']:
-            with self.subTest(action=action), self.assertRaises(KernelError) as caught:
-                execute(action)
-            self.assertEqual(caught.exception.detail['kind'],'event_resolution')
-            self.assertIn('physical event phase',caught.exception.detail['message'])
+    def test_exact_source_offset_rewrite_replaces_old_time_proof(self):
+        # Original source is u(t)=3*t and r is ground. The cross root is
+        # exactly tau=1/3; u(tau)=1, hence the offset is binary64(.1)*1.
+        exact = F(1, 3) + F(.1)
+        times = around(exact)
+        expected = [int(F(t) >= exact) + int(F(t) >= F(.6)) for t in times]
+        for previous in ['0.1', '0.2']:
+            action = 'due=$abstime+'+previous+';due=$abstime+0.1*V(u,r);'
+            with self.subTest(previous=previous):
+                plain = execute(action, times=times)
+                forced = execute(action, times=times, forced=True)
+                dense_times = sorted(set(times + [.1, .2, .4, .5, .7]))
+                dense = execute(action, times=dense_times)
+                self.assertEqual(output(plain), expected)
+                self.assertEqual(plain['solutions'], forced['solutions'])
+                self.assertEqual(plain['transient']['events'], forced['transient']['events'])
+                self.assertEqual(plain['transient']['events'], dense['transient']['events'])
+                y = plain['nodes'].index('y')
+                bounds = plain['observation_evidence']['voltage_bounds_V']
+                for time, row, want, boxes in zip(times, plain['solutions'], expected, bounds):
+                    self.assertEqual(row, dense['solutions'][dense['transient']['times'].index(time)])
+                    self.assertLessEqual(F(boxes[y][0]), F(want))
+                    self.assertLessEqual(F(want), F(boxes[y][1]))
+                # A stale .2 proof would schedule at tau+binary64(.2), so
+                # both the neighbour outputs and original timer root catch it.
+                events = plain['transient']['events']
+                self.assertEqual(len(events), 3)
+                timer = next(event for event in events if event['event'] == 1)
+                self.assertIn('observation_time_bounds', timer)
+                lo, hi = timer['observation_time_bounds']
+                self.assertLessEqual(F(lo), exact)
+                self.assertLessEqual(exact, F(hi))
+                self.assertLess(F(hi), F(1, 3)+F(.2))
+
+    def test_nonidentity_source_rewrite_drops_old_time_proof(self):
+        # The source curve is 3*t, not the full identity curve. Its numeric
+        # coincidence with time does not grant structural time provenance.
+        with self.assertRaises(KernelError) as caught:
+            execute('due=$abstime+0.1;due=V(u,r)/3+0.1;')
+        self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
+        self.assertIn('physical event phase', caught.exception.detail['message'])
+
+    def test_unknown_internal_rewrite_drops_old_time_proof(self):
+        # y is an unproved calculated voltage for the scalar Context. The old
+        # due proof must be removed even though its nominal output is zero.
+        with self.assertRaises(KernelError) as caught:
+            execute('due=$abstime+0.2;due=$abstime+0.1*V(y,r);')
+        self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
+        # With q=0, the rewritten nominal due is the current nonpoint cross
+        # boundary. The uncertified internal read drops the old tau+.2 proof;
+        # scheduling must reject this overlap before a later phase check.
+        self.assertEqual(caught.exception.detail['message'],
+                         'dynamic timer window overlaps the accepted boundary')
 
     def test_complete_identity_curve_qualifies_without_abstime_name(self):
         source=model('@(initial_step)begin due=100;q=0;end @(timer(0.3,0,1e-9))due=V(u,r)+0.1;@(timer(due,0,1e-9))q=q+1;@(timer(0.6,0,1e-9))q=q+1;V(y,r)<+q;','real due,q;')

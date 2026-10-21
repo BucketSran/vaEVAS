@@ -47,7 +47,7 @@ fn float_width(x: f64) -> u64 {
 }
 /// Denominators are positive, normalized original rationals or decoded binary
 /// pairs. No generic Ratio::cmp or normalization occurs in this comparison.
-fn cross(a: &R, b: &R, w: &Work) -> Result<Option<Ordering>, Error> {
+pub(super) fn cross(a: &R, b: &R, w: &Work) -> Result<Option<Ordering>, Error> {
     pay(w, 32)?;
     let bits = a
         .numer()
@@ -183,9 +183,44 @@ fn certify_guess(
     }
     Ok(Some((guess, I { lo, hi })))
 }
+// History has an existing strict-box/representative contract. Preserve the
+// optional reader's refusal boundary, then tighten only its nonpoint successes
+// using the exact interpolated value and the already-paid strict helpers.
+fn certify_history(value: &R, point_only: bool, w: &Work) -> Result<Option<(f64, I)>, Error> {
+    let Some(point) = certify(value, point_only, w)? else {
+        return Ok(None);
+    };
+    if point.1.lo == point.1.hi {
+        return Ok(Some(point));
+    }
+    let Some(bounds) = super::enclosure_with_work(value, w)? else {
+        return Ok(None);
+    };
+    let mut paid = super::history_paid::Paid::new(w);
+    let nearest = paid.nearest(value);
+    paid.finish(nearest.map(|nearest| (nearest, bounds)))
+}
 impl Curve {
     pub(crate) fn try_forcing_point(&self, time: f64, w: &Work) -> Result<Option<(f64, I)>, Error> {
+        self.try_point(time, w, false)
+    }
+    pub(crate) fn try_history_point(&self, time: f64, w: &Work) -> Result<Option<(f64, I)>, Error> {
+        self.try_point(time, w, true)
+    }
+    fn try_point(
+        &self,
+        time: f64,
+        w: &Work,
+        strict_history: bool,
+    ) -> Result<Option<(f64, I)>, Error> {
         pay(w, 32)?;
+        let certify_point = |value: &R, point_only: bool| {
+            if strict_history {
+                certify_history(value, point_only, w)
+            } else {
+                certify(value, point_only, w)
+            }
+        };
         if !time.is_finite() {
             return Ok(None);
         }
@@ -225,7 +260,7 @@ impl Curve {
             return Ok(None);
         };
         if order == Ordering::Equal {
-            let r = certify(b, true, w)?;
+            let r = certify_point(b, true)?;
             if r.is_some() {
                 crate::diagnostics::counter("forcing_owned_knot_success", 1);
                 crate::diagnostics::counter("forcing_owned_point_success", 1);
@@ -239,7 +274,7 @@ impl Curve {
         // Original source/shaped knot values are canonical binary() Ratios.
         // Ratio::eq itself delegates to recursive cmp; compare fields instead.
         if a.numer() == b.numer() && a.denom() == b.denom() {
-            let r = certify(a, true, w)?;
+            let r = certify_point(a, true)?;
             if r.is_some() {
                 crate::diagnostics::counter("forcing_owned_plateau_success", 1);
                 crate::diagnostics::counter("forcing_owned_point_success", 1);
@@ -282,7 +317,7 @@ impl Curve {
         let Some(value) = budget.check(a + change) else {
             return Ok(None);
         };
-        let r = certify(&value, false, w)?;
+        let r = certify_point(&value, false)?;
         if r.is_some() {
             crate::diagnostics::counter("forcing_owned_enclosure_success", 1);
             crate::diagnostics::counter("forcing_owned_point_success", 1);

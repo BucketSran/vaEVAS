@@ -501,6 +501,13 @@ fn bounds_in(
     states: &[I],
     proofs: Option<&crate::event_value_proof::LocalState>,
 ) -> Result<I, Error> {
+    // This interval visit is distinct from optional rational replay below.
+    // Keep old unowned/floor-only callers unchanged and borrow a paid caller's
+    // original sticky ledger before inspecting each actually reached node.
+    let work = proofs.and_then(|local| local.history_work());
+    if let Some(w) = work {
+        w.step()?;
+    }
     let v = match e {
         E::Forcing { .. } => {
             return Err(Error::new(
@@ -558,9 +565,16 @@ fn bounds_in(
             *last,
             origin,
         )?,
-        E::Affine { constant, terms } => terms.iter().fold(I::point(*constant), |sum, t| {
-            sum + I::point(t.coefficient) * nodes[t.node]
-        }),
+        E::Affine { constant, terms } => {
+            let mut sum = I::point(*constant);
+            for t in terms {
+                if let Some(w) = work {
+                    w.step()?;
+                }
+                sum = sum + I::point(t.coefficient) * nodes[t.node];
+            }
+            sum
+        }
         E::State { state } => states[*state],
         E::Add { left, right } => {
             bounds_in(left, nodes, states, proofs)? + bounds_in(right, nodes, states, proofs)?
@@ -803,4 +817,100 @@ pub(crate) fn nearest_box(v: I, origin: &crate::ir::Origin) -> Result<I, Error> 
         ));
     }
     Ok(I::point(a))
+}
+
+#[cfg(test)]
+mod paid_bounds_visit_tests {
+    use super::*;
+    use crate::event_value_proof::{history, LocalState};
+    use crate::transition_source_plan::Work;
+    use serde_json::json;
+
+    fn scalar(value: f64) -> serde_json::Value {
+        json!({"op":"affine","constant":value,"terms":[]})
+    }
+    fn sum() -> E {
+        serde_json::from_value(json!({"op":"add",
+            "left":{"op":"state","state":0},
+            "right":{"op":"affine","constant":0.,
+                "terms":[{"node":1,"coefficient":1.}]}}))
+        .unwrap()
+    }
+    fn local(work: &Work) -> LocalState {
+        history::points(&[I::point(3.)], work).unwrap()
+    }
+
+    #[test]
+    fn paid_interval_visits_charge_each_node_and_affine_term() {
+        let work = Work::default();
+        let local = local(&work);
+        assert!(work.same_owner(local.history_work().unwrap()));
+        let before = work.spent();
+        // Add, State, Affine and its single term are four distinct visits.
+        let value = bounds_with_proofs(&sum(), &[I::ZERO, I::point(2.)], &local).unwrap();
+        assert_eq!(value, I::point(5.));
+        assert_eq!(work.spent() - before, 4);
+        let plain = LocalState::new(&[I::point(3.)]);
+        let before = work.spent();
+        assert_eq!(
+            bounds_with_proofs(&sum(), &[I::ZERO, I::point(2.)], &plain).unwrap(),
+            I::point(5.)
+        );
+        assert_eq!(
+            work.spent(),
+            before,
+            "unowned ordinary evaluation keeps its old boundary"
+        );
+    }
+
+    #[test]
+    fn same_owner_term_exhaustion_stays_failed_for_two_retries() {
+        // Scaled budget control, not a claim of natural production-1e9 exhaustion.
+        let sizing = Work::default();
+        let _ = local(&sizing);
+        let setup = sizing.spent();
+        let work = Work::limited([128, 8192, setup + 3]);
+        let local = local(&work);
+        assert_eq!(work.spent(), setup);
+        assert!(work.same_owner(local.history_work().unwrap()));
+        for attempt in 0..3 {
+            let before = work.spent();
+            let error = bounds_with_proofs(&sum(), &[I::ZERO, I::point(2.)], &local).unwrap_err();
+            assert_eq!(error.kind, "step_budget");
+            assert!(work.spent() > before);
+            assert_eq!(local[0], I::point(3.));
+            if attempt == 0 {
+                assert_eq!(
+                    work.spent() - before,
+                    4,
+                    "failure occurs before the unpaid term arithmetic"
+                );
+            }
+        }
+        assert!(
+            history::points(&[I::point(3.)], &work).is_err(),
+            "recreating a local proof frame cannot reset the request owner"
+        );
+    }
+
+    #[test]
+    fn paid_select_charges_reached_branch_without_visiting_the_other_arm() {
+        let work = Work::default();
+        let local = local(&work);
+        let expression: E = serde_json::from_value(json!({"op":"select","relation":"gt",
+            "left":scalar(1.),"right":scalar(0.),"then_value":scalar(7.),
+            "else_value":{"op":"divide","left":scalar(1.),"right":scalar(0.)},
+            "origin":{"source":"paid-bounds.va","line":1,"column":1,"instance":"dut"}}))
+        .unwrap();
+        let before = work.spent();
+        assert_eq!(
+            bounds_with_proofs(&expression, &[], &local).unwrap(),
+            I::point(7.)
+        );
+        assert_eq!(
+            work.spent() - before,
+            4,
+            "Select, two predicates, selected value only"
+        );
+    }
 }

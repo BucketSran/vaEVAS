@@ -32,14 +32,17 @@ fn identity(
     model: &EventModel,
     trajectory: &Trajectory,
     w: &Work,
+    input_nodes: Option<&[usize]>,
 ) -> Result<BTreeSet<usize>, Error> {
     let mut out = BTreeSet::new();
-    let nodes = values::input_nodes(model).ok_or_else(|| {
-        Error::new(
-            "invalid_ir",
-            "missing qualified original time input mapping",
-        )
-    })?;
+    let nodes = input_nodes
+        .or_else(|| values::input_nodes(model))
+        .ok_or_else(|| {
+            Error::new(
+                "invalid_ir",
+                "missing qualified original time input mapping",
+            )
+        })?;
     for (index, &node) in nodes.iter().enumerate() {
         w.step()?;
         if trajectory.original_identity_history(index, w)? {
@@ -157,6 +160,30 @@ pub(super) fn apply(
     after_bounds: &[I],
     w: &Work,
 ) -> Result<TimeProofs, Error> {
+    apply_with_input_nodes(
+        model,
+        trajectory,
+        selection,
+        before,
+        root,
+        before_bounds,
+        after_bounds,
+        w,
+        None,
+    )
+}
+#[allow(clippy::too_many_arguments)]
+pub(super) fn apply_with_input_nodes(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    selection: &Selection,
+    before: &TimeProofs,
+    root: Option<&RootTime>,
+    before_bounds: &[I],
+    after_bounds: &[I],
+    w: &Work,
+    input_nodes: Option<&[usize]>,
+) -> Result<TimeProofs, Error> {
     w.debit(2, 0)?;
     let mut valid = TimeProofs::new();
     for (&state, time) in before {
@@ -172,7 +199,7 @@ pub(super) fn apply(
     // original history gate accepts only independent Cross/Timer leaves.
     let mut result = copy_map(&valid, w)?;
     let identity = if root.is_some() && !selection.actions.is_empty() {
-        identity(model, trajectory, w)?
+        identity(model, trajectory, w, input_nodes)?
     } else {
         BTreeSet::new()
     };

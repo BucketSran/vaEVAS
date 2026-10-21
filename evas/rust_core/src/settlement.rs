@@ -45,11 +45,12 @@ pub(crate) fn prepare(
         None,
         None,
         None,
+        None,
     )
 }
 
 #[allow(clippy::too_many_arguments)]
-pub(crate) fn prepare_with_proofs(
+pub(crate) fn prepare_with_physical_proofs(
     model: &EventModel,
     events: &[usize],
     inputs: (&[f64], &[I]),
@@ -61,6 +62,7 @@ pub(crate) fn prepare_with_proofs(
     proofs: &crate::event_value_proof::Context<'_>,
     source: Option<crate::events::SourcePredicateBinding<'_>>,
     lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
+    physical: Option<&crate::dc_projection::HeldRampPhysicalContext<'_>>,
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
@@ -76,6 +78,7 @@ pub(crate) fn prepare_with_proofs(
         Some(proofs),
         source,
         lineage,
+        physical,
     )
 }
 
@@ -105,11 +108,12 @@ pub(crate) fn prepare_window(
         None,
         None,
         None,
+        None,
     )
 }
 
 #[allow(clippy::too_many_arguments)]
-pub(crate) fn prepare_window_with_proofs(
+pub(crate) fn prepare_window_with_physical_proofs(
     model: &EventModel,
     events_and_roots: (&[usize], &[usize]),
     inputs: (&[f64], &[I]),
@@ -122,6 +126,7 @@ pub(crate) fn prepare_window_with_proofs(
     proofs: &crate::event_value_proof::Context<'_>,
     source: Option<crate::events::SourcePredicateBinding<'_>>,
     lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
+    physical: Option<&crate::dc_projection::HeldRampPhysicalContext<'_>>,
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
@@ -137,6 +142,7 @@ pub(crate) fn prepare_window_with_proofs(
         Some(proofs),
         source,
         lineage,
+        physical,
     )
 }
 
@@ -156,6 +162,7 @@ fn prepare_impl(
     proofs: Option<&crate::event_value_proof::Context<'_>>,
     source: Option<crate::events::SourcePredicateBinding<'_>>,
     lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
+    physical: Option<&crate::dc_projection::HeldRampPhysicalContext<'_>>,
 ) -> Result<Prepared, Error> {
     let (inputs, input_bounds) = inputs;
     let selection = model.conditions.select_with_proofs(
@@ -181,14 +188,30 @@ fn prepare_impl(
         let node = model.program.nodes.iter().position(|n| n == name).unwrap();
         predicate_nodes[node] = value;
     }
+    // Selection is already fixed from original before/input boxes. This
+    // preview only replays its actions and cannot choose a different callback.
+    let physical_preview = physical
+        .map(|context| context.prepare(&selection, input_bounds))
+        .transpose()?;
+    let physical_proof = physical
+        .zip(physical_preview.as_ref())
+        .map(|(context, preview)| context.proof(preview))
+        .transpose()?;
+    let representative_proof = physical
+        .zip(physical_preview.as_ref())
+        .map(|(context, preview)| context.representative_proof(preview))
+        .transpose()?;
     let predicate_states = model.apply_with_proofs(&selection, &predicate_nodes, before, proofs)?;
     let predicate_bounds: Vec<_> = predicate_states.iter().copied().map(I::point).collect();
-    let selected = model.selected_program_with_lineage(
-        &predicate_bounds,
+    let selected = model.selected_program_with_observation_proof(
+        physical_proof
+            .as_ref()
+            .map_or(predicate_bounds.as_slice(), |proof| proof.state_bounds()),
         input_bounds,
         events_and_roots.1,
         operator_bounds,
         lineage,
+        physical_proof.as_ref(),
     )?;
     let mut joint = model.event_circuit_program_with_inputs_and_proofs(
         &selected, &selection, before, operators, inputs, proofs,
@@ -198,12 +221,16 @@ fn prepare_impl(
     }
     let candidate = joint.solve(inputs)?;
     let states = model.apply_with_proofs(&selection, &candidate.voltages, before, proofs)?;
-    let replayed = model.selected_program_with_lineage(
-        &states.iter().copied().map(I::point).collect::<Vec<_>>(),
+    let nominal_replay: Vec<_> = states.iter().copied().map(I::point).collect();
+    let replayed = model.selected_program_with_observation_proof(
+        physical_proof
+            .as_ref()
+            .map_or(nominal_replay.as_slice(), |proof| proof.state_bounds()),
         input_bounds,
         events_and_roots.1,
         operator_bounds,
         lineage,
+        physical_proof.as_ref(),
     )?;
     if replayed
         .contributions
@@ -218,8 +245,11 @@ fn prepare_impl(
     }
     // Validate the original, unsubstituted voltage constraints with the replayed
     // state. Substitution roundoff must not replace the physical residual check.
-    let mut circuit =
-        model.circuit_at_with_lineage(&states, operators, observation_inputs, lineage)?;
+    let mut circuit = if let Some(proof) = &representative_proof {
+        model.circuit_at_with_observation_proof(&states, operators, observation_inputs, proof)?
+    } else {
+        model.circuit_at_with_lineage(&states, operators, observation_inputs, lineage)?
+    };
     if let Some(previous) = previous {
         circuit.reuse_affine_factor_from(previous);
     }
@@ -263,7 +293,7 @@ fn prepare_impl(
         }
     }
     let bounds = if check_voltages {
-        let (states, nodes) = model.certify_observation_at_roots_with_lineage(
+        let (states, nodes) = model.certify_observation_with_context(
             &selection,
             events_and_roots.1,
             input_bounds,
@@ -273,11 +303,12 @@ fn prepare_impl(
             &states,
             proofs,
             lineage,
+            physical_proof.as_ref(),
         )?;
         crate::observation::retain_bounds(&mut solution, nodes);
         states
     } else {
-        model.certify_event_states_with_lineage(
+        model.certify_event_states_with_observation_proof(
             &selection,
             events_and_roots.1,
             input_bounds,
@@ -287,8 +318,12 @@ fn prepare_impl(
             &states,
             proofs,
             lineage,
+            physical_proof.as_ref(),
         )?
     };
+    if let Some(proof) = &physical_proof {
+        proof.validate_states(&bounds)?;
+    }
     Ok(Prepared {
         states,
         bounds,

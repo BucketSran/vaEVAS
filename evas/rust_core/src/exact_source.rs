@@ -1436,22 +1436,66 @@ mod event_prefix_fees {
             .saturating_add(cmp(b.max(hi)))
             .saturating_add(64)
     }
-    pub(super) fn refine(b: u64, lo: u64, hi: u64) -> u64 {
-        contains(b, lo, hi)
-            .saturating_add(enclosure(b))
-            .saturating_add(64)
-    }
 }
 
-/// Reservation only, for callers retaining the old exact enclosure body.
-pub(crate) fn charge_enclosure_with_work(
-    value: &R,
+/// The first two branches of pinned num-rational 0.4.2 Ratio::cmp.
+/// Fund each BigInt pair scan before inspecting it. Unequal denominators and
+/// numerators can use the existing bounded BigInt cross-product proof. Its
+/// refusal retains the entire continued-fraction reservation and old body.
+pub(crate) fn rational_order_with_work(
+    a: &R,
+    b: &R,
     w: &crate::transition_source_plan::Work,
-) -> Result<(), crate::ir::Error> {
+) -> Result<std::cmp::Ordering, crate::ir::Error> {
     event_prefix_fees::metadata(w, 32)?;
-    let bits = event_prefix_fees::width(value);
-    w.debit(2, event_prefix_fees::enclosure(bits))
+    let bits = event_prefix_fees::width(a).max(event_prefix_fees::width(b));
+    // BigInt equality/order first checks sign/length, then at most one pair
+    // of limb reads/comparisons per limb. Sixteen units per pair also cover
+    // loop/header checks and the constant sign/zero tests in that branch.
+    let scan = event_prefix_fees::l(bits)
+        .saturating_mul(16)
+        .saturating_add(16);
+    w.debit(2, scan)?;
+    if a.denom() == b.denom() {
+        w.debit(2, scan)?;
+        let order = a.numer().cmp(b.numer());
+        crate::diagnostics::counter("exact_order_equal_denominator", 1);
+        return Ok(if a.denom().is_negative() {
+            order.reverse()
+        } else {
+            order
+        });
+    }
+    w.debit(2, scan)?;
+    if a.numer() == b.numer() {
+        if a.numer().is_zero() {
+            crate::diagnostics::counter("exact_order_equal_numerator", 1);
+            return Ok(std::cmp::Ordering::Equal);
+        }
+        w.debit(2, scan)?;
+        let order = a.denom().cmp(b.denom());
+        crate::diagnostics::counter("exact_order_equal_numerator", 1);
+        return Ok(if a.numer().is_negative() {
+            order
+        } else {
+            order.reverse()
+        });
+    }
+    // The optional reader proves this order by two paid exact BigInt products,
+    // without Ratio normalization or recursive division. Its original width
+    // cap is unchanged. Nonpositive denominators keep the pinned old boundary.
+    event_prefix_fees::metadata(w, 8)?;
+    if a.denom().is_positive() && b.denom().is_positive() {
+        if let Some(order) = forcing_point::cross(a, b, w)? {
+            crate::diagnostics::counter("exact_order_bounded_cross", 1);
+            return Ok(order);
+        }
+    }
+    w.debit(2, event_prefix_fees::cmp(bits))?;
+    crate::diagnostics::counter("exact_order_generic_fallback", 1);
+    Ok(a.cmp(b))
 }
+
 /// Result preserves old optional mathematical failure; Work errors are never discarded.
 pub(crate) fn enclosure_with_work(
     value: &R,
@@ -1489,11 +1533,47 @@ pub(crate) fn enclosure_with_work(
         crate::diagnostics::counter("forcing_exact_dyadic_enclosure", 1);
         return Ok(value.to_f64().filter(|v| v.is_finite()).map(I::point));
     }
-    // Failed shape recognition spends its work; the unchanged generic helper
-    // retains its full original reservation and mathematical refusal boundary.
-    charge_enclosure_with_work(value, w)?;
+    // Failed shape recognition spends its work. Execute the original generic
+    // enclosure with paid primitives so comparisons use the shared exact
+    // implementation rather than reserving a continued-fraction body that
+    // this path does not execute.
     crate::diagnostics::counter("forcing_prefix_enclosure_helpers", 1);
-    Ok(enclosure(value))
+    let mut paid = history_paid::Paid::new(w);
+    let result = (|| {
+        let nearest = paid.nearest(value)?;
+        if !nearest.is_finite() {
+            return None;
+        }
+        let represented = paid.binary(nearest)?;
+        let order = paid.cmp(&represented, value)?;
+        // Preserve the fixed allowance before nextafter/box/finite work.
+        paid.pay(64)?;
+        let bounds = I {
+            lo: if order.is_gt() {
+                nearest.next_down()
+            } else {
+                nearest
+            },
+            hi: if order.is_lt() {
+                nearest.next_up()
+            } else {
+                nearest
+            },
+        };
+        if !bounds.finite() {
+            return None;
+        }
+        let lo = paid.binary(bounds.lo)?;
+        if paid.cmp(&lo, value)?.is_gt() {
+            return None;
+        }
+        let hi = paid.binary(bounds.hi)?;
+        if paid.cmp(value, &hi)?.is_gt() {
+            return None;
+        }
+        Some(bounds)
+    })();
+    paid.finish(result)
 }
 impl RootTime {
     pub(crate) fn clone_with_work(
@@ -1529,9 +1609,22 @@ impl RootTime {
             return Ok(None);
         };
         let b = event_prefix_fees::width(&self.0);
-        w.debit(2, event_prefix_fees::refine(b, lo, hi))?;
+        // Preserve the original containment reservation and refusal before
+        // constructing an enclosure. Exact binary64 roots reuse the existing
+        // paid dyadic proof; other rationals retain its generic fallback.
+        w.debit(2, event_prefix_fees::contains(b, lo, hi))?;
         crate::diagnostics::counter("forcing_prefix_exact_refinements", 1);
-        Ok(self.refine(discovery))
+        if !contains(discovery, &self.0) {
+            return Ok(None);
+        }
+        let Some(tight) = enclosure_with_work(&self.0, w)? else {
+            return Ok(None);
+        };
+        w.debit(2, 64)?;
+        Ok(Some(I {
+            lo: discovery.lo.max(tight.lo),
+            hi: discovery.hi.min(tight.hi),
+        }))
     }
     pub(crate) fn from_clock_with_work(
         clock: crate::exact_time::Clock,
@@ -1819,6 +1912,254 @@ mod dyadic_enclosure_work_controls {
                 assert_eq!(report.counters.get("forcing_exact_dyadic_enclosure"), None);
                 assert!(work.spent() >= before);
             }
+        }
+    }
+}
+
+#[cfg(test)]
+mod refine_reuse_tests {
+    use super::*;
+    use crate::transition_source_plan::Work;
+
+    #[test]
+    fn paid_refinement_preserves_old_and_independent_tight_boxes() {
+        let power = |n: usize| R::from_integer(1.into()).numer().clone() << n;
+        for (value, discovery, expected) in [
+            (
+                R::new(3.into(), 2.into()),
+                I { lo: 1., hi: 2. },
+                I::point(1.5),
+            ),
+            (
+                R::new(1.into(), 3.into()),
+                I { lo: 0., hi: 1. },
+                I {
+                    lo: 1. / 3.,
+                    hi: (1f64 / 3.).next_up(),
+                },
+            ),
+            (
+                R::new(1.into(), power(1074)),
+                I {
+                    lo: 0.,
+                    hi: f64::from_bits(2),
+                },
+                I::point(f64::from_bits(1)),
+            ),
+            (
+                R::new(1.into(), power(1075)),
+                I {
+                    lo: 0.,
+                    hi: f64::from_bits(2),
+                },
+                I {
+                    lo: 0.,
+                    hi: f64::from_bits(1),
+                },
+            ),
+        ] {
+            let root = RootTime(value);
+            let work = Work::default();
+            let result = root.refine_with_work(discovery, &work).unwrap();
+            assert_eq!(result, Some(expected));
+            assert_eq!(result, root.refine(discovery));
+        }
+    }
+
+    #[test]
+    fn incompatible_discovery_pays_contains_without_running_enclosure() {
+        let root = RootTime(R::new(3.into(), 2.into()));
+        let discovery = I { lo: 0., hi: 1. };
+        let (lo, hi) = event_prefix_fees::endpoint_widths(discovery).unwrap();
+        let containment =
+            event_prefix_fees::contains(event_prefix_fees::width(root.rational()), lo, hi);
+        let work = Work::limited([128, 8192, 64 + containment]);
+        assert_eq!(root.refine_with_work(discovery, &work).unwrap(), None);
+        assert_eq!(root.refine(discovery), None);
+        assert_eq!(work.spent(), 64 + containment);
+        // Reversed finite and nonfinite discoveries also retain old refusal.
+        for discovery in [
+            I { lo: 2., hi: 1. },
+            I {
+                lo: f64::NEG_INFINITY,
+                hi: 2.,
+            },
+        ] {
+            let work = Work::default();
+            assert_eq!(
+                root.refine_with_work(discovery, &work).unwrap(),
+                root.refine(discovery)
+            );
+        }
+    }
+
+    #[test]
+    fn enclosure_reservation_failure_is_sticky_for_two_retries() {
+        let root = RootTime(R::new(3.into(), 2.into()));
+        let discovery = I { lo: 1., hi: 2. };
+        let (lo, hi) = event_prefix_fees::endpoint_widths(discovery).unwrap();
+        let containment =
+            event_prefix_fees::contains(event_prefix_fees::width(root.rational()), lo, hi);
+        // An independently scaled boundary: contains fits exactly, so only
+        // the subsequent real enclosure metadata reservation must exhaust.
+        let limit = 64 + containment;
+        let work = Work::limited([128, 8192, limit]);
+        assert_eq!(
+            root.refine_with_work(discovery, &work).unwrap_err().kind,
+            "step_budget"
+        );
+        assert_eq!(work.spent(), limit + 32);
+        for _ in 0..2 {
+            let spent = work.spent();
+            assert_eq!(
+                root.refine_with_work(discovery, &work).unwrap_err().kind,
+                "step_budget"
+            );
+            assert!(work.spent() >= spent);
+            assert_eq!(root.refine(discovery), Some(I::point(1.5)));
+        }
+    }
+}
+
+#[cfg(test)]
+mod generic_enclosure_paid_tests {
+    use super::*;
+    use crate::transition_source_plan::Work;
+
+    fn assert_bits(actual: Option<I>, expected: Option<I>) {
+        assert_eq!(
+            actual.map(|b| [b.lo.to_bits(), b.hi.to_bits()]),
+            expected.map(|b| [b.lo.to_bits(), b.hi.to_bits()])
+        );
+    }
+
+    #[test]
+    fn independent_signed_thirds_half_subnormal_and_extremes_keep_old_boxes() {
+        let power = |n: usize| R::from_integer(1.into()).numer().clone() << n;
+        let third = 1f64 / 3.;
+        let tiny = f64::from_bits(1);
+        let cases = [
+            (
+                R::new(1.into(), 3.into()),
+                I {
+                    lo: third,
+                    hi: third.next_up(),
+                },
+            ),
+            (
+                R::new((-1).into(), 3.into()),
+                I {
+                    lo: (-third).next_down(),
+                    hi: -third,
+                },
+            ),
+            (R::new(3.into(), 2.into()), I::point(1.5)),
+            (R::new(1.into(), power(1074)), I::point(tiny)),
+            (R::new(1.into(), power(1075)), I { lo: 0., hi: tiny }),
+            (
+                R::new((-1).into(), power(1075)),
+                I {
+                    lo: -tiny,
+                    hi: -0.0,
+                },
+            ),
+            (
+                R::from_integer(power(53) + 1u8),
+                I {
+                    lo: 9_007_199_254_740_992.,
+                    hi: 9_007_199_254_740_994.,
+                },
+            ),
+            (binary(f64::MAX).unwrap(), I::point(f64::MAX)),
+            (binary(-f64::MAX).unwrap(), I::point(-f64::MAX)),
+        ];
+        for (value, expected) in cases {
+            let work = Work::default();
+            let actual = enclosure_with_work(&value, &work).unwrap();
+            assert_bits(actual, Some(expected));
+            assert_bits(actual, enclosure(&value));
+            let bounds = actual.unwrap();
+            assert!(binary(bounds.lo).unwrap() <= value && value <= binary(bounds.hi).unwrap());
+        }
+    }
+
+    #[test]
+    fn rationals_on_both_sides_of_adjacent_midpoint_keep_one_ulp_box() {
+        let low = 1f64;
+        let high = low.next_up();
+        let a = binary(low).unwrap();
+        let b = binary(high).unwrap();
+        // Both sides of the midpoint have different rounded nearest values,
+        // but the same mathematically necessary adjacent enclosing endpoints.
+        for weight in [1, 2, 3] {
+            let value = (&a * R::from_integer((4 - weight).into())
+                + &b * R::from_integer(weight.into()))
+                / R::from_integer(4.into());
+            for (value, expected) in [
+                (value.clone(), I { lo: low, hi: high }),
+                (
+                    -value,
+                    I {
+                        lo: -high,
+                        hi: -low,
+                    },
+                ),
+            ] {
+                let actual = enclosure_with_work(&value, &Work::default()).unwrap();
+                assert_bits(actual, Some(expected));
+                assert_bits(actual, enclosure(&value));
+            }
+        }
+    }
+
+    #[test]
+    fn overflow_and_nonfinite_rational_conversion_preserve_old_none() {
+        let max = binary(f64::MAX).unwrap();
+        for value in [
+            &max * R::from_integer(2.into()),
+            -&max * R::from_integer(2.into()),
+            R::new_raw(1.into(), 0.into()),
+            R::new_raw((-1).into(), 0.into()),
+            R::new_raw(0.into(), 0.into()),
+        ] {
+            assert_eq!(enclosure(&value), None);
+            assert_eq!(enclosure_with_work(&value, &Work::default()).unwrap(), None);
+        }
+    }
+
+    #[test]
+    fn repeated_generic_reads_exhaust_original_owner_and_two_retries_stay_failed() {
+        // A scaled independent Work boundary, not the production 1e9 cap.
+        // Every debit below comes from an actual enclosure read; no manual
+        // drain or fresh Work is used to make the failure occur.
+        let work = Work::limited([128, 8192, 1_000_000]);
+        let value = R::new(1.into(), 3.into());
+        let expected = I {
+            lo: 1. / 3.,
+            hi: (1f64 / 3.).next_up(),
+        };
+        let mut succeeded = 0;
+        loop {
+            match enclosure_with_work(&value, &work) {
+                Ok(bounds) => {
+                    assert_bits(bounds, Some(expected));
+                    succeeded += 1;
+                    assert!(succeeded < 10_000);
+                }
+                Err(error) => {
+                    assert_eq!(error.kind, "step_budget");
+                    break;
+                }
+            }
+        }
+        assert!(succeeded > 0 && work.spent() > 1_000_000);
+        for _ in 0..2 {
+            let spent = work.spent();
+            // A fresh Paid wrapper must not restore its borrowed Work owner.
+            let mut paid = history_paid::Paid::new(&work);
+            let result = paid.enclose(&value);
+            assert_eq!(paid.finish(result).unwrap_err().kind, "step_budget");
+            assert!(work.spent() >= spent);
         }
     }
 }

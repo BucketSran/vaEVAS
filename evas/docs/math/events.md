@@ -948,6 +948,44 @@ real目标及callback赋值不获得此重排。公开正反例见
 公开顺序、阶段和未来误差负控见 [test_held_timer_provenance.py](../../tests/test_held_timer_provenance.py)。
 两个合同已在波8完整原件验收，194、098及026通过原checker；作者与独立审查收据见[紧凑证据](../../../experiments/backends/support/low-cost-closure/evidence.json)。
 
+#### 本地候选：普通 held timer 的有理偏移
+
+2026-10-21 的最小合同扩展上述普通路径：`LocalState` 从真实点输入证明的
+有理偏移无需再压成单个 binary64。例如 `due=$abstime+0.5/f`、`f=3`
+保留精确 `1/6`，下一事件为 `binary64(0.1)+1/6`，不能选择包围上端点作为物理时刻。
+`event_time_provenance::expression_with_points` 复用原标量证明，
+以 `RootTime::affine` 保存有理和，并继续用原后状态包围细化；原数值状态和误差不变。
+所有原操作数都须有证明，非点输入、隐藏 `0*unknown`、矛盾后状态包围仍不获证书。
+付费 history/forcing 路线仍走未扩展的 `event_history_time`，本合同不解除其偏移限制。
+
+完整普通消费者还需要事件发生位置的输入证明。`apply_with_context_charged`
+接收该次回调的 `event_value_proof::Context`，按源码顺序证明输入、限幅结果和下一期限。
+它使用已接受的前状态，不能从最终写回状态反推中间读值。并列回调各自从前状态开始；
+候选后状态盒只用于检查所得时间证明的包含关系。已有 analytic/history 付费 owner
+继续委托原路径，不借这个普通入口获得额外数学能力。
+
+[独立截止点测试](../../tests/test_deadline_origin_contract.py)按
+`t_k=binary64(0.1)+k/6` 和线性过渡公式检查相同及不同固定移位、多实例和查询不变性。
+[原 held timer 测试](../../tests/test_held_timer_provenance.py)保留赋值顺序和未来放大误差反控；
+Rust `held_point_tests` 检查同一 Controller 的失败重试，原 deadline/calendar 控制检查
+相同数值包围不代表共同根、相邻真实期限不能跳过。Python 的近邻 duration 波形比较
+受其电压容差限制，不单独证明一个 ULP 的期限差。此为未提交候选，无新 Spectre 或完整案例信用。
+
+#### 本地候选：历史谓词中的原电压接口
+
+当消费者读取另一个含 `Select` 的电压贡献时，展开树只用于证明依赖和选择谓词。
+`history_admission::Admission::resolve` 从原请求取贡献，递归解析选中分支，
+保留值树中的原电压接口。生产者 `V(port)=q/8`、消费者 `V(y)=V(port)+1/2`
+仍由两个实例各自的方程求解；不能将生产者的裸 `State(q)` 移进消费者的 owner。
+原 IR 的所有 owner、隐藏分支和原请求绑定检查先完成，新增遍历、展开与复制复用同一 Work。
+不确定谓词失败不改变原 Program；重试继续耗用原额度。
+
+[公开归属正反控](../../tests/test_history_owner_contract.py)采用不同初值和事件时间的两组实例，
+以 `q/8+1/2` 独立计算结果，并检查实例声明顺序、查询不变和非法裸跨实例 State。
+Rust `owner_contract_tests` 覆盖错误绑定、同 Admission 失败后重试及实际解析耗尽。
+普通仿射读出或直接 Transition 谓词未必触发这条路径，不能用它们通过来替代目标缺陷的红例。
+本合同不解决原390后续证明预算前沿，不增加完整390的通过数。
+
 ## PWL 与事件的执行契约
 
 这是限定实现范围，不是完整 Verilog-A 事件支持。语言依据见
@@ -2153,7 +2191,8 @@ integer 常量，先解释为32位无符号数，计数大于等于32时结果�
 `DEV:scs-input`、`CROSS`、`TIMER`、`EVENT-ORDER` 的新增证据尚未获得交付验收；
 原件400与成熟IR31状态不变。显式 `sinedc/ampl/freq/sinephase` 通过 typed descriptor 传输，
 保留原终端、source名称、极性与参数出处。正 finite freq 是本实现支持域；
-未确证的厂商默认、AC phase、Meg完整后缀仍拒绝，不能由局部通过推断 Spectre 对齐。
+早期候选拒绝厂商默认、AC phase 与 Meg 后缀；2026-10-21 本地入口扩展见下节，
+不能由局部通过推断完整 Spectre 对齐。
 
 物理定义为 `polarity*(sinedc+ampl*sin(2*pi*freq*t+pi*sinephase/180))`。
 时间和全部参数先作为区间组合 phase，再调用已有有限 Taylor sin 证书。
@@ -2176,3 +2215,61 @@ phase与导数移相超出已有有限域时拒绝，不使用PWL拟合或nomina
 公共1/6根采样与1/8 timer使用独立Fraction/Taylor答案；额外query、显式拒绝和原1e9自然耗尽
 的完整Frame两retry检查保留于原私有证据；共同候选还运行公开入口联合控制。
 完整Python由CI执行，局部结果不能替代交付CI，IR31原有完整400成绩不能移到IR32。
+
+### 本地候选：受限 native SCS 零相位入口
+
+`scs.py` 接受精确拼写 `Meg=10^6`，保持 `M=10^6` 与 `m=10^-3` 的区别；
+小数、指数与独立正负号沿同一有限数值检查。`MEG`、`meg`、非法相邻后缀仍不在
+本入口范围内；这种受限拒绝不是 Spectre 的语言裁定。
+
+接地、无 delay/阻尼/调制的 transient 正弦仍要求显式 `sinedc`、`ampl` 和正 `freq`。
+缺省 `sinephase` 取0度，使用 `spectre-native-transient-zero-phase-v1`，
+显式相位保留 `explicit-v1`。Rust 拒绝未知标记和“缺省零”标记携带非零相位。
+标记声明规范化合同，不认证输入来源。原 token、位置、参数引用和解析 settings
+保存在 `testbench.sine_source_origins`，续行也保留各 token 的原位置。
+
+有限 `phase` 是独立小信号参数，保留在元数据中，不进入上述瞬态正弦公式；
+本候选不增加 AC 分析。`phase` 与非零 `sinephase` 同时出现的组合缺对照，统一拒绝，
+不按任务或具体相位值特判。已有单独显式非零 `sinephase` 合同保持。
+数值执行继续复用 `analytic_source::range`，没有新增采样近似。
+
+语义依据复用 Issue214 的官方文档调查及既有 Spectre21.1 源列证据，归档入口为
+`runs/evas-source-shape-20261017/overnight-integer-20261018/remaining80-20261020/scs-semantics-20261020/report.md`。
+归档仅支持所检查的有限无延迟源形态，旧093频率与当前原件不同；源列对照也不等于364混频输出通过。
+[独立入口测试](../../tests/test_scs_native_source_contract.py)用SI固定数值、原token序列、
+四分之一周期解析值及电压包围验证新入口，并保留非法参数和来源反控。
+本轮无新 Spectre，未给074、093、364整项增加通过信用。
+
+### 本地候选：固定 timer 采样与 held Transition
+
+`analytic_sampled_consumer::Admission` 为固定 timer 的采样状态和 held Transition
+建立单独的原请求能力。事件体支持受限的顺序赋值、条件分支及标量加乘除，
+可以先更新极值，再计算差值与比值。除数必须由当前完整误差盒证明不含零；
+非点正弦采样保留原误差，不能用名义值建立有理证明。
+Transition 目标保持为同实例的受限 held 表达式，目标选择条件限已声明的 integer 状态。
+物理 DC 因子仍须通过整个原请求的供电证明。
+
+`Operators::new_until_with_analytic_request` 接收同一私有 token 和原 Work，
+核对完整 Program、provider、driven 顺序及上下文身份后创建历史。
+所有隐藏分支、零系数依赖和 Origin 都先审计；它不授予一般 History、解析源 cross、
+状态驱动 timer 或 EventMath 能力。内部 `$abstime` 的注入同时追加非解析 provider 槽，
+保持外部 PWL、解析源及误差数组的位置对应；错误的原槽数和端口仍拒绝。
+
+解析源的当前样本盒与历史保持样本盒分别守真，也可能无法决定严格极值比较。
+例如相邻采样点落在正弦谷底两侧时，原 binary64 周期的确切 Clock 与理想十进制周期
+可以给出不同的“相等”结论。该候选尚未建立一般的解析样本关联证书；差盒含零时继续拒绝，
+不按名义值、输出误差阈值或相同外包盒决定分支。历史样本证明只能随真实赋值更新，
+不能由额外查询写入物理状态。上述零相位入口语义不等于严格历史比较已经获得证明。
+
+共同付费路径沿用原请求 Work。`PreparedEvents::prepare` 按实际到达的批次、phase 和
+query 收取遍历费用，浅容器扩容在分配和移动前付费；Frame 与 calendar 的深复制仍各自预付。
+`RootTime::refine_with_work` 先检验原发现盒包含真实根，再复用已付费 enclosure 并取交集。
+通用 enclosure 使用原最近值转换、精确有理比较及相邻浮点端点，最后重新检验两端包含；
+数学上的未知结果与付费耗尽错误仍分别返回，不用新额度或较宽的盒换取通过。
+
+[采样合同](../../tests/test_original_source_consumers.py)以四分之一周期和线性边沿计算独立答案，
+检查顺序极值与比值、物理供电、输入顺序及非法隐藏依赖。
+`transient_analytic_tests` 的非空 Transition 控制检查真实误差传播，
+并在原请求额度耗尽后比较同一 Controller 的状态、历史、日历和输出。
+这些合同与原093完整 checker 分开记录；原074的物理 cross 与 sqrt 组合、
+原364的解析输入和 LO 历史乘积仍有独立的准入及证明缺口。

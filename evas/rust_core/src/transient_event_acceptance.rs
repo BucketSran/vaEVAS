@@ -168,23 +168,62 @@ impl PreparedEvents {
         calendar: &[ScheduledEvent],
         strategy: Strategy,
     ) -> Result<Self, Error> {
-        if let Some(token) = &model.analytic_request {
-            // Bound shallow phase/record vectors and the complete phase-output
-            // scan before any candidate allocation. Deep Frames/roots retain
-            // their own paid clone methods below. At most 64 causal microevents.
-            let outputs = trajectory.config.output_times.len() as u64;
-            let events = calendar.len() as u64;
-            let row =
-                (model.program.nodes.len() * 8 + model.program.states.len() * 16 + 512) as u64;
-            token.work().debit(
-                2,
-                outputs
-                    .saturating_mul(events.saturating_add(1))
-                    .saturating_mul(128)
-                    .saturating_add(events.saturating_mul(row))
-                    .saturating_add(16_384),
-            )?;
+        let work = model.analytic_request.as_ref().map(|token| token.work());
+        // Keep the original entry and per-visit costs. Charge only reached
+        // batches/phases, rather than the Cartesian product of all requested
+        // observations and all future calendar entries on every transaction.
+        let scan = || -> Result<(), Error> {
+            if let Some(w) = work {
+                w.debit(2, 128)?;
+            }
+            Ok(())
+        };
+        let batch_storage = |events: &[ScheduledEvent], first: usize| -> Result<(), Error> {
+            if let Some(w) = work {
+                let row =
+                    (model.program.nodes.len() * 8 + model.program.states.len() * 16 + 512) as u64;
+                let time = events[first].time;
+                for event in &events[first..] {
+                    scan()?;
+                    if event.time != time {
+                        break;
+                    }
+                    // Preserve the original per-leaf record/state storage
+                    // allowance before prepare_changed_batch allocates it.
+                    w.debit(2, row)?;
+                }
+            }
+            Ok(())
+        };
+        fn reserve_candidate<T>(
+            values: &mut Vec<T>,
+            additional: usize,
+            work: Option<&crate::transition_source_plan::Work>,
+        ) -> Result<(), Error> {
+            let required = values.len().saturating_add(additional);
+            if required > values.capacity() {
+                let capacity = required.max(values.capacity().saturating_mul(2)).max(4);
+                if let Some(w) = work {
+                    let words =
+                        std::mem::size_of::<T>().div_ceil(std::mem::size_of::<usize>()) as u64;
+                    // The new allocation and movement of existing shallow
+                    // entries are paid before either happens. Deep ownership
+                    // stays with candidate_clone/copy_calendar.
+                    w.debit(
+                        2,
+                        (capacity as u64)
+                            .saturating_add(values.len() as u64)
+                            .saturating_mul(words),
+                    )?;
+                }
+                values.reserve_exact(capacity - values.len());
+            }
+            Ok(())
         }
+        if let Some(w) = work {
+            w.debit(2, 16_384)?;
+        }
+        batch_storage(calendar, controller.event)?;
         // Close old-flow observation/reset before predicting changed flow.
         // All subsequent work owns a candidate; the accepted frame, event
         // cursor, records and old calendar remain intact on every error.
@@ -204,13 +243,13 @@ impl PreparedEvents {
             controller.accepted.charge_forcing_copy(g)?;
             next.charge_forcing_copy(g)?;
         }
-        let mut phases = vec![
-            (controller.accepted.candidate_clone()?, Vec::new()),
-            (
-                next.candidate_clone()?,
-                crate::schedule::copy_calendar(&calendar[controller.event..end], model)?,
-            ),
-        ];
+        let mut phases = Vec::new();
+        reserve_candidate(&mut phases, 2, work)?;
+        phases.push((controller.accepted.candidate_clone()?, Vec::new()));
+        phases.push((
+            next.candidate_clone()?,
+            crate::schedule::copy_calendar(&calendar[controller.event..end], model)?,
+        ));
         let mut microevents = 0;
         let mut static_cursor = end;
         loop {
@@ -220,12 +259,15 @@ impl PreparedEvents {
             // local history preserves the exact clock and physical seed.
             let mut forced = None;
             for &time in &trajectory.config.strobetimes {
+                scan()?;
                 if time <= controller.accepted.time || time > next.time {
                     continue;
                 }
                 let mut after_phases = true;
                 'phases: for (_, batch) in &phases[1..] {
+                    scan()?;
                     for event in batch {
+                        scan()?;
                         if !matches!(
                             event_order(model, trajectory, event, time)?,
                             Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
@@ -288,6 +330,7 @@ impl PreparedEvents {
                 records: Vec::new(),
                 outputs: Vec::new(),
             };
+            batch_storage(&future, 0)?;
             let batch = candidate.prepare_changed_batch(
                 model,
                 trajectory,
@@ -299,6 +342,7 @@ impl PreparedEvents {
             static_cursor += batch.end;
             next = batch.frame;
             future = batch.future;
+            reserve_candidate(&mut records, batch.records.len(), work)?;
             records.extend(batch.records);
             let phase = if let Some(g) = &model.forcing {
                 next.charge_forcing_copy(g)?;
@@ -306,6 +350,7 @@ impl PreparedEvents {
             } else {
                 next.candidate_clone()?
             };
+            reserve_candidate(&mut phases, 1, work)?;
             phases.push((phase, physical_batch));
             microevents += 1;
         }
@@ -313,13 +358,16 @@ impl PreparedEvents {
         // Cloned queries cannot alter the candidate's physical sequence.
         let mut outputs = Vec::new();
         for &time in &trajectory.config.output_times {
+            scan()?;
             if time <= controller.accepted.time || time >= next.time {
                 continue;
             }
             let mut phase = 0;
             for (index, (_, physical_batch)) in phases.iter().enumerate().skip(1) {
+                scan()?;
                 let mut occurred = true;
                 for event in physical_batch {
+                    scan()?;
                     occurred &= match event_order(model, trajectory, event, time)? {
                         Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal) => true,
                         Some(std::cmp::Ordering::Greater) => false,
@@ -338,6 +386,7 @@ impl PreparedEvents {
                 phase = index;
             }
             let seed = observation_seed(model, &phases, phase, time)?;
+            reserve_candidate(&mut outputs, 1, work)?;
             outputs.push(prepare_root_window(
                 model,
                 trajectory,
@@ -377,6 +426,23 @@ impl PreparedEvents {
             *calendar = future;
         }
     }
+}
+
+// Exercise the real full candidate without publishing it or consuming its calendar.
+// This test-only bridge keeps PreparedEvents and production entry points private.
+#[cfg(test)]
+pub(super) fn test_prepare_discard_changed_events(
+    controller: &Controller,
+    model: &EventModel,
+    trajectory: &Trajectory,
+    calendar: &[ScheduledEvent],
+    strategy: Strategy,
+    inspect: impl FnOnce(&Frame),
+) -> Result<(), Error> {
+    let candidate = PreparedEvents::prepare(controller, model, trajectory, calendar, strategy)?;
+    inspect(&candidate.frame);
+    drop(candidate);
+    Ok(())
 }
 
 impl Controller {
@@ -556,14 +622,44 @@ impl Controller {
             .map(|g| g.legacy_voltage_view(next.time, &next.solution.voltages, &next.circuit))
             .transpose()?;
         let legacy_voltages = projected.as_deref().unwrap_or(&next.solution.voltages);
-        let (_, nodes) = model.certify_observation(
-            &model.conditions.select(&[], &inputs)?,
-            &inputs,
-            &next.state_bounds,
-            &next.operators.bounds(next.time)?,
-            legacy_voltages,
-            &next.states,
-        )?;
+        let selection = model.conditions.select(&[], &inputs)?;
+        let operator_bounds = next.operators.bounds(next.time)?;
+        let observation_proof = model
+            .dc_projection
+            .as_ref()
+            .filter(|projection| projection.is_held_ramp())
+            .map(|projection| {
+                projection.observation_proof(
+                    &model.program,
+                    trajectory,
+                    &model.driven,
+                    next.time,
+                    &next.state_bounds,
+                    &next.time_proofs,
+                )
+            })
+            .transpose()?
+            .flatten();
+        let (_, nodes) = if let Some(proof) = &observation_proof {
+            model.certify_observation_with_held_ramp_proof(
+                &selection,
+                &inputs,
+                &next.state_bounds,
+                &operator_bounds,
+                legacy_voltages,
+                &next.states,
+                proof,
+            )?
+        } else {
+            model.certify_observation(
+                &selection,
+                &inputs,
+                &next.state_bounds,
+                &operator_bounds,
+                legacy_voltages,
+                &next.states,
+            )?
+        };
         crate::observation::retain_bounds(&mut next.solution, nodes);
         if let Some(graph) = &model.forcing {
             graph.project(next.time, trajectory, &mut next.solution, &mut next.circuit)?;
@@ -1508,3 +1604,7 @@ mod passive_seed_review {
         assert_eq!(phases[1].0.operators.values(0.75).unwrap(), before);
     }
 }
+
+#[cfg(test)]
+#[path = "transient_event_acceptance_paid_tests.rs"]
+mod paid_candidate_tests;

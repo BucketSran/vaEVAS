@@ -4,11 +4,14 @@ use crate::ir::{Error, EventTrigger, Expression as E, Program, Statement};
 use crate::pwl::Trajectory;
 use crate::transition_source_plan::{ProofContext, Work};
 use std::sync::Arc;
+#[path = "analytic_sampled_consumer.rs"]
+mod sampled;
 fn scope(s: &str) -> Error {
     Error::new("unsupported_analytic_source_consumer", s)
 }
 pub(crate) struct Request {
     context: Arc<ProofContext>,
+    sampled: Option<sampled::Admission>,
 }
 /// Payment and original physical input mapping only. None of these variants
 /// grants another variant's history, forcing, operator or native capability.
@@ -66,6 +69,9 @@ impl Request {
     pub(crate) fn work(&self) -> &Work {
         self.context.borrow_work()
     }
+    pub(crate) fn fixed_timer_held_transitions(&self) -> bool {
+        self.sampled.is_some()
+    }
     pub(crate) fn prepare(
         p: &Program,
         t: &Trajectory,
@@ -76,6 +82,19 @@ impl Request {
             .ok_or_else(|| scope("missing original analytic request owner"))?;
         crate::analytic_source::charge_config(p, w)?;
         crate::analytic_source::charge_config(driven, w)?;
+        if !p.operators.is_empty() {
+            // Bind the original complete request before joint role admission.
+            // The private token proves this bounded combination; sharing its
+            // ledger does not grant History or observer-math capabilities.
+            let bytes = crate::event_floor::encoded_size(p, w)?;
+            let context = ProofContext::event_request_with_work(p, t, driven, bytes, w.clone())?;
+            let sampled = sampled::Admission::qualify(p, &context)?;
+            w.debit(2, 5)?;
+            return Ok(Arc::new(Self {
+                context,
+                sampled: Some(sampled),
+            }));
+        }
         if !p.operators.is_empty() || !p.step_bounds.is_empty() {
             return Err(scope("analytic event source values require direct held outputs without operators or bound_step"));
         }
@@ -131,7 +150,10 @@ impl Request {
         let bytes = crate::event_floor::encoded_size(p, w)?;
         let context = ProofContext::event_request_with_work(p, t, driven, bytes, w.clone())?;
         w.debit(2, 4)?;
-        Ok(Arc::new(Self { context }))
+        Ok(Arc::new(Self {
+            context,
+            sampled: None,
+        }))
     }
     pub(crate) fn activate(
         self: &Arc<Self>,

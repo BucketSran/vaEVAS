@@ -24,6 +24,7 @@ mod expression;
 mod guard_trajectory;
 mod held_integer_target;
 mod history_admission;
+mod history_calendar_typed_target;
 #[cfg(test)]
 mod history_consumer_fixture;
 mod history_storage;
@@ -136,6 +137,9 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
         if let Some(transient) = &mut request.transient {
             if let Some(errors) = &mut transient.pwl_errors_v {
                 errors.push(ir::SourceError::Voltage(0.));
+            }
+            if !transient.analytic_sources.is_empty() {
+                transient.analytic_sources.push(None);
             }
             transient
                 .pwl

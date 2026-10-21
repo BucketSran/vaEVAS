@@ -4,6 +4,21 @@
 面向使用者的支持结论只在[四后端支持范围](../COMPARISON.md)维护，详细接受与拒绝条件由所链接的契约维护。
 收据只证明其固定执行版本；下表仅登记 ID 与证据，供追溯工具读取，不维护第二份支持状态或当前 main 通过率。
 
+[四路最小合同](../../../experiments/backends/support/low-cost-closure/minimum-contracts-four-lanes.json)
+补充 LANG、ANALOG、TIMER、TRANSITION、EVENT-ORDER、TIMED-OPERATOR、COMPOSE 和 DYNAMICS 的本地开发证据。
+受限 SCS 入口、原电压接口、有理截止点及 DC 保持斜坡分别以独立答案和拒绝控制验收；
+最终同源46项 Python、39项 Rust 和3类早期集成检查通过。原红例、错误夹具及已解决的审查问题保留。
+该收据固定最小切片时点，不授予后续执行身份的信用。
+
+[六原件后续收据](../../../experiments/backends/support/low-cost-closure/original-six.json)
+补充上述能力及 EVENT-CONDITIONS 的本地证据：受限解析源与内部时间槽位对齐、固定timer顺序采样消费者、
+真实根与执行代表时间的来源、有理计算和候选扫描的实际付费、同owner DC保持历元与分段guard。
+release `1132e1cac008` 对应完整Rust730通过/0失败/1原有忽略，单次完整Python2691通过、零失败/错误/跳过。
+全新原400为320/20/60，同源396＋4修订轨为323/16/61；两轨新增362、391且旧通过零回退。
+391完整原checker通过，079运行完成但原checker失败，074／093／364／390保持未支持边界。
+原337份、修订336份共同完成的完整响应逐字节相同；独立后验和全量结果分别留证。
+该未提交候选没有新增CI、安装、Spectre或共同Q资格；21份外部Python模块仅保存哈希，不声称完整离线重放。
+
 [原 CDS 三例验收](../../../experiments/backends/support/event-runtime-control/README.md#original-cds)
 补充 LIN、TIMER、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE、PERFORMANCE 的开发证据。
 三条原请求通过原 checker 与实际 Spectre 有限配对；重复工作优化和时间来源修复的执行身份、原失败与限制由收据固定。

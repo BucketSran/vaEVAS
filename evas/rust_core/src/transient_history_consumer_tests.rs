@@ -866,39 +866,119 @@ fn bookkeeping_r2_equivalent_branches_charge_created_rational_comparison() {
         "the actual merge must compare two branch-created large rationals"
     );
     assert!(limbs>=34,"the compared yes/no branch-produced normal 16*MIN_POSITIVE/3 rationals need 34 numerator/denominator limbs; original exact=None cannot price this equality");
-    // The normal-range large denominator also exercises real default-budget
-    // failure during the later full candidate. Do not raise the 1e9 allowance.
+    // Efficient exact comparisons may let any particular candidate succeed.
+    // Reprepare the same pending batch with its original default Work until real
+    // paid preparation exhausts it; never publish, refund, or inject a debit.
     let before = controller.accepted.clone();
     let records = serde_json::to_value(&controller.records).unwrap();
     let outputs = controller.outputs.clone();
     let cursor = controller.event;
-    let signature = |q: &Vec<ScheduledEvent>| {
+    let pending_time = calendar[cursor].time;
+    let probes = [
+        f64::from_bits(pending_time.to_bits() - 1),
+        pending_time,
+        f64::from_bits(pending_time.to_bits() + 1),
+    ];
+    let signature = |q: &[ScheduledEvent]| {
         q.iter()
-            .map(|e| (e.event, e.time, e.bounds()))
+            .map(|e| {
+                (
+                    e.analytic_test_snapshot(),
+                    probes.map(|time| e.physical_order_at(time)),
+                )
+            })
             .collect::<Vec<_>>()
     };
     let prior_calendar = signature(&calendar);
-    let (result, report) = crate::diagnostics::capture(Default::default(), || {
-        controller.accept_changed_events(&m, &t, &mut calendar, event_acceptance::Strategy::Static)
-    });
-    assert_eq!(result.unwrap_err().kind, "step_budget");
-    assert!(report
-        .stages
-        .get("history.advance")
-        .is_some_and(|s| s.calls > 0));
-    let work = m.source_context.as_ref().unwrap().borrow_work();
+    let source = m.source_context.as_ref().unwrap();
+    let work = source.borrow_work();
+    let assert_complete_frame = |actual: &Frame, expected: &Frame| {
+        assert_frame_unchanged(actual, expected);
+        assert_eq!(
+            actual.circuit.forcing_frame_snapshot(),
+            expected.circuit.forcing_frame_snapshot()
+        );
+        assert!(actual.operators.same_forcing_frame(&expected.operators));
+        assert!(std::sync::Arc::ptr_eq(
+            actual.operators.source_context.as_ref().unwrap(),
+            source
+        ));
+        assert!(work.same_owner(actual.operators.history_copy_work().unwrap()));
+    };
+    let assert_accepted = |actual: &Controller, q: &[ScheduledEvent]| {
+        assert_complete_frame(&actual.accepted, &before);
+        assert_eq!(actual.event, cursor);
+        assert_eq!(signature(q), prior_calendar);
+        assert_eq!(serde_json::to_value(&actual.records).unwrap(), records);
+        assert_eq!(actual.outputs.len(), outputs.len());
+        for (a, b) in actual.outputs.iter().zip(&outputs) {
+            assert_complete_frame(a, b);
+        }
+        assert!(work.same_owner(source.borrow_work()));
+    };
+    assert_accepted(&controller, &calendar);
+    // Independent exact oracle: 16*MIN_POSITIVE/3 = 2^-1018/3.
+    let three = num_rational::BigRational::from_integer(3.into());
+    let expected = num_rational::BigRational::new(1.into(), three.numer() << 1018usize);
+    let mut attempts = 0;
+    let mut successes = 0;
+    let mut history_advances = 0;
+    loop {
+        attempts += 1;
+        // A safety limit is only a failing guard, never an exhaustion oracle.
+        assert!(attempts <= 100_000, "real default Work did not exhaust");
+        let prior_used = work.spent();
+        let (result, report) = crate::diagnostics::capture(Default::default(), || {
+            event_acceptance::test_prepare_discard_changed_events(
+                &controller,
+                &m,
+                &t,
+                &calendar,
+                event_acceptance::Strategy::Static,
+                |candidate| {
+                    assert_eq!(candidate.states[2], 4.);
+                    assert_eq!(candidate.value_proofs.get(&1), Some(&expected));
+                    let bounds = candidate.state_bounds[1];
+                    assert!(bounds.lo < bounds.hi);
+                    assert!(bounds.lo <= candidate.states[1] && candidate.states[1] <= bounds.hi);
+                    assert!(num_rational::BigRational::from_float(bounds.lo).unwrap() <= expected);
+                    assert!(expected <= num_rational::BigRational::from_float(bounds.hi).unwrap());
+                    assert!(std::sync::Arc::ptr_eq(
+                        candidate.operators.source_context.as_ref().unwrap(),
+                        source
+                    ));
+                    assert!(work.same_owner(candidate.operators.history_copy_work().unwrap()));
+                },
+            )
+        });
+        history_advances += report.stages.get("history.advance").map_or(0, |s| s.calls);
+        assert!(
+            work.spent() > prior_used,
+            "full preparation must pay real work"
+        );
+        assert_accepted(&controller, &calendar);
+        match result {
+            Ok(()) => successes += 1,
+            Err(error) => {
+                assert_eq!(error.kind, "step_budget");
+                break;
+            }
+        }
+    }
+    assert!(
+        successes > 0,
+        "exercise and inspect an unpublished full candidate"
+    );
+    assert!(
+        history_advances > 0,
+        "real prepare sequence must advance history"
+    );
     let used = work.spent();
     assert!(used > 1_000_000_000);
-    println!("actual large-branch default exhaustion after history advance: used={used}");
+    println!("actual large-branch default exhaustion: attempts={attempts}, successes={successes}, history_advances={history_advances}, used={used}");
     for _ in 0..2 {
-        assert_frame_unchanged(&controller.accepted, &before);
-        assert_eq!(controller.event, cursor);
-        assert_eq!(signature(&calendar), prior_calendar);
-        assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
-        assert_eq!(controller.outputs.len(), outputs.len());
-        for (a, b) in controller.outputs.iter().zip(&outputs) {
-            assert_frame_unchanged(a, b)
-        }
+        // The normal entry must reject at its original source.charge(0), before
+        // cloning or running another helper; these retries must not spend work.
         let (result, report) = crate::diagnostics::capture(Default::default(), || {
             controller.accept_changed_events(
                 &m,
@@ -910,9 +990,8 @@ fn bookkeeping_r2_equivalent_branches_charge_created_rational_comparison() {
         assert_eq!(result.unwrap_err().kind, "step_budget");
         assert!(report.counters.is_empty() && report.stages.is_empty());
         assert_eq!(work.spent(), used);
+        assert_accepted(&controller, &calendar);
     }
-    assert_frame_unchanged(&controller.accepted, &before);
-    assert_eq!(signature(&calendar), prior_calendar);
 }
 
 #[test]

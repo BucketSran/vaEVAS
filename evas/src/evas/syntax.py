@@ -31,7 +31,7 @@ _TOKEN = re.compile(
     r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)|(?P<math>\$(?:floor|tanh)\b)|(?P<task>\$(?:bound_step|display|strobe)\b)"
     r'|(?P<directive>`[A-Za-z_][A-Za-z_0-9]*)|(?P<string>"[^"\n]*")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
-    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<<<|>>>|<<|>>|<=|>=|==|!=|&&|\|\||'\{|[\[\]:<>(){}+*/%;,=@#.?!&|^~\-])"
+    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<<<|>>>|<<|>>|<=|>=|==|!=|&&|\|\||\(\*|\*\)|'\{|[\[\]:<>(){}+*/%;,=@#.?!&|^~\-])"
 )
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
@@ -971,9 +971,28 @@ class Parser:
                 return ports, directions, nodes, node_ranges, port_ranges
             self.take(',')
 
+    def module_attributes(self):
+        # LRM 2.4 sections 2.9/2.9.1 permit attribute instances before a
+        # module. This subset accepts only the no-value annotation below.
+        # It never exempts the module from EVAS state/history audits.
+        # Consume original tokens: deleting source text would lose locations
+        # and the preprocessor's per-token default_transition setting.
+        while self.token.text == "(*":
+            self.take("(*")
+            attribute = self.token
+            if attribute.kind != "name" or attribute.text != "ignore_hidden_state":
+                self.fail("unsupported module attribute; only no-value ignore_hidden_state is supported",
+                          attribute, code="compile_error")
+            self.take()
+            if self.token.text == "=":
+                self.fail("module attribute values are unsupported; use no-value ignore_hidden_state",
+                          code="compile_error")
+            self.take("*)")
+
     def parse(self, *, eof=True) -> Model:
         while self.token.kind == "include":
             self.take()
+        self.module_attributes()
         module_token = self.take("module")
         self.function_names = set()
         name = self.name()

@@ -2,6 +2,7 @@
 GUARDS = ["TIMED-OPERATOR", "LANG"]
 from pathlib import Path
 import math
+from fractions import Fraction
 import unittest
 from evas import CompileError, Instance, KernelError, compile_sources, transient
 from test_affine import KERNEL
@@ -212,7 +213,7 @@ end endmodule"""
                       stop=2*T,max_step=T/64,vabstol=1e-10,reltol=0,kernel=KERNEL)
 
 class CapturedClockModes(unittest.TestCase):
-    def execute_clock(self, independent_mux=False, times=None, capture_extra=False, guard_case=None):
+    def execute_clock(self, independent_mux=False, times=None, capture_extra=False, guard_case=None, capture_rhs=None):
         source='''`include "disciplines.vams"
 module cell(ctrl,y);input ctrl;output y;electrical ctrl,y;
 real captured;analog begin
@@ -221,6 +222,8 @@ real captured;analog begin
 V(y)<+idt(($abstime-captured < 0.25 ? 1 : -1),0);
 end endmodule'''
         if capture_extra: source=source.replace('captured=$abstime;', 'captured=$abstime+0*V(ctrl);')
+        if capture_rhs is not None:
+            source=source.replace('captured=$abstime;', 'captured='+capture_rhs+';')
         if guard_case:
             source=source.replace('cross(V(ctrl)-0.5,+1,1e-12,1e-10)',guard_case)
         instances=[Instance('C'+str(k),'cell',{'ctrl':'ctrl','y':'y'+str(k)}) for k in range(4)]
@@ -253,9 +256,47 @@ end endmodule'''
         for row,want in zip(result['solutions'],[0,0,0,0,0,-1/6]):
             self.assertAlmostEqual(row['voltages'][index],want,delta=1e-8)
 
-    def test_capture_without_time_provenance_still_refuses_overlapping_roots(self):
-        with self.assertRaisesRegex(KernelError,'condition_precision'):
-            self.execute_clock(capture_extra=True)
+    def test_capture_with_exact_source_zero_offset_keeps_original_root_and_outputs(self):
+        # ctrl(t)=3*t, so its original cross root is tau=1/6 and
+        # ctrl(tau)=1/2. Both operands of 0*ctrl are certified; this is
+        # distinct from discarding an unknown zero-weight voltage read.
+        tau = Fraction(1, 6)
+        switch = tau + Fraction(1, 4)
+        times = [0, float(tau), .25, float(switch), .5, 1]
+        result = self.execute_clock(capture_extra=True, times=times)
+        direct = self.execute_clock(times=times)
+        dense_times = sorted(set(times + [i/64 for i in range(65)]))
+        dense = self.execute_clock(capture_extra=True, times=dense_times)
+        for k in range(4):
+            node = 'y'+str(k)
+            index = result['nodes'].index(node)
+            direct_index = direct['nodes'].index(node)
+            dense_index = dense['nodes'].index(node)
+            by_time = dict(zip(dense_times, dense['solutions']))
+            for time, row, reference in zip(times, result['solutions'], direct['solutions']):
+                t = Fraction(time)
+                expected = t if t <= switch else 2*switch-t
+                actual = row['voltages'][index]
+                self.assertLessEqual(abs(Fraction(actual)-expected), Fraction(1, 10**10),
+                                     (node, time, actual, expected))
+                self.assertEqual(actual, reference['voltages'][direct_index])
+                self.assertEqual(actual, by_time[time]['voltages'][dense_index])
+        events = result['transient']['events']
+        self.assertEqual(events, direct['transient']['events'])
+        self.assertEqual(events, dense['transient']['events'])
+        self.assertEqual(len(events), 4)
+        for event in events:
+            # A rounded nominal event time alone is not the exact 1/6 witness.
+            self.assertIn('observation_time_bounds', event)
+            lo, hi = event['observation_time_bounds']
+            self.assertLessEqual(Fraction(lo), tau)
+            self.assertLessEqual(tau, Fraction(hi))
+
+    def test_capture_with_unknown_internal_zero_weight_still_refuses(self):
+        # y is a calculated internal voltage, not a certified driven source
+        # node in the event Context. Multiplication by zero must audit it.
+        with self.assertRaisesRegex(KernelError, 'condition_precision'):
+            self.execute_clock(capture_rhs='$abstime+0*V(y)')
 
     def test_clock_capture_and_live_mux_are_invariant_to_output_queries(self):
         sparse=self.execute_clock(independent_mux=True)

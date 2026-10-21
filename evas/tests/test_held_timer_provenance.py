@@ -42,14 +42,21 @@ class HeldTimerProvenance(unittest.TestCase):
         self.assertEqual(output(run(before,times=(0,.15,.215,.245))),[0,1,1,0])
         self.assertEqual(output(run(after,times=(0,.15,.215,.245))),[0,1,0,0])
 
-    def test_nonpoint_division_offset_keeps_phase_rejection(self):
-        # .5/held3 is not an exactly representable binary64 offset. The point
-        # offset slice cannot manufacture a physical timestamp from its upper.
+    def test_exact_nonbinary_division_offset_preserves_physical_phase(self):
+        # Exact point held inputs prove .5/3=1/6 even though its enclosure
+        # is nonpoint. The query is still compared with the rational time,
+        # never with an arbitrary endpoint of that enclosure.
         program=clock('due=$abstime+0.5/f;',initial='q=0;half=0;due=0.1;f=3;',
                       declarations='integer q;real half,due,f;')
-        boundary=float(Fraction(.1)+Fraction(1,6))
-        with self.assertRaisesRegex(KernelError,'physical event phase'):
-            run(program,times=(0,boundary,.35))
+        exact = Fraction(.1)+Fraction(1,6)
+        boundary = float(exact)
+        times = (0, boundary, .35)
+        actual = output(run(program, times=times))
+        value = 1 if Fraction(boundary) <= exact else max(
+            Fraction(0), 1-(Fraction(boundary)-exact)/Fraction(.01))
+        self.assertLessEqual(abs(Fraction(actual[1])-value), Fraction(1e-12))
+        self.assertEqual(actual[0], 0)
+        self.assertEqual(actual[2], 0)
 
     def test_future_amplification_keeps_inherited_arithmetic_error(self):
         for gain in (1,10**12):

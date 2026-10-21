@@ -661,10 +661,11 @@ impl EventModel {
         };
         let mut admission =
             crate::event_control::admit(&program, provided.as_ref().map(|s| s.borrow_work()))?;
+        let held_ramp = crate::dc_projection::DcProjection::held_ramp_candidate(&program);
         // The mandatory structural phase supplies only an old-refusal shape.
         // Establish the original request owner here, before new role traversal,
         // source qualification, relation expansion or any candidate copy.
-        if admission.history_candidate() && provided.is_none() {
+        if (admission.history_candidate() || held_ramp) && provided.is_none() {
             if !request_entry {
                 return Err(Error::new(
                     "invalid_ir",
@@ -772,6 +773,28 @@ impl EventModel {
                 "forcing ordinary contribution predicates require a composed history admission",
             ));
         }
+        let dc_projection = if held_ramp {
+            if composed {
+                return Err(Error::new(
+                    "unsupported_forcing_scope",
+                    "DC held ramps require the original independent physical request",
+                ));
+            }
+            Some(crate::dc_projection::DcProjection::with_source(
+                &program,
+                source_context
+                    .as_ref()
+                    .ok_or_else(|| {
+                        Error::new(
+                            "invalid_ir",
+                            "DC held ramp requires its prepared source owner",
+                        )
+                    })?
+                    .clone(),
+            )?)
+        } else {
+            None
+        };
         let history_admission = if admission.history_candidate() {
             Some(crate::history_admission::Admission::new(
                 &program,
@@ -784,22 +807,27 @@ impl EventModel {
         } else {
             let legacy_selection = (|| {
                 for c in &program.contributions {
+                    let expression = dc_projection
+                        .as_ref()
+                        .map(|projection| projection.view(&c.rhs))
+                        .transpose()?
+                        .unwrap_or(&c.rhs);
                     crate::continuous::validate_selection(
-                        &c.rhs,
+                        expression,
                         &program,
                         &driven,
                         &c.origin.instance,
                     )
                     .or_else(|error| {
                         if error.kind == "unsupported_transient"
-                            && crate::analog::has_select(&c.rhs)
+                            && crate::analog::has_select(expression)
                         {
                             crate::continuous::validate_integral_input(
-                                &c.rhs,
+                                expression,
                                 &program,
                                 &c.origin.instance,
                             )?;
-                            crate::causal_voltage::history_selection(&c.rhs, &program, &driven)
+                            crate::causal_voltage::history_selection(expression, &program, &driven)
                         } else {
                             Err(error)
                         }
@@ -813,7 +841,14 @@ impl EventModel {
         let shaped = program
             .contributions
             .iter()
-            .map(|c| contribution_shape(&c.rhs, &program, &c.origin.instance))
+            .map(|c| {
+                let expression = dc_projection
+                    .as_ref()
+                    .map(|projection| projection.view(&c.rhs))
+                    .transpose()?
+                    .unwrap_or(&c.rhs);
+                contribution_shape(expression, &program, &c.origin.instance)
+            })
             .collect::<Result<Vec<_>, _>>()?;
         let dc_supply = shaped.iter().any(|(_, dc)| *dc);
         let rhs = shaped.into_iter().map(|(row, _)| row).collect::<Vec<_>>();
@@ -1097,7 +1132,7 @@ impl EventModel {
             passive_conditions,
             passive_events,
             program,
-            dc_projection: None,
+            dc_projection,
             floor_source,
             forcing: None,
             rhs,
@@ -1141,7 +1176,8 @@ impl EventModel {
         // products plus an internal history cross cannot use the legacy affine
         // network map; direct/implicit supported callers incur no DC proof.
         if let Some(t) = trajectory {
-            if model.guard_operators.iter().any(|ops| !ops.is_empty())
+            if model.dc_projection.is_none()
+                && model.guard_operators.iter().any(|ops| !ops.is_empty())
                 && model
                     .program
                     .operators
@@ -1231,13 +1267,61 @@ impl EventModel {
         proofs: Option<&crate::event_value_proof::Context<'_>>,
         lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
     ) -> Result<(Vec<I>, Vec<I>), Error> {
+        self.certify_observation_with_context(
+            selection, fired, inputs, before, operators, voltages, states, proofs, lineage, None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn certify_observation_with_held_ramp_proof(
+        &self,
+        selection: &Selection,
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+        voltages: &[f64],
+        states: &[f64],
+        observation: &crate::dc_projection::HeldRampObservationProof<'_>,
+    ) -> Result<(Vec<I>, Vec<I>), Error> {
+        self.certify_observation_with_context(
+            selection,
+            &[],
+            inputs,
+            before,
+            operators,
+            voltages,
+            states,
+            None,
+            None,
+            Some(observation),
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn certify_observation_with_context(
+        &self,
+        selection: &Selection,
+        fired: &[usize],
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+        voltages: &[f64],
+        states: &[f64],
+        proofs: Option<&crate::event_value_proof::Context<'_>>,
+        lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
+        observation: Option<&crate::dc_projection::HeldRampObservationProof<'_>>,
+    ) -> Result<(Vec<I>, Vec<I>), Error> {
         let _timing = crate::diagnostics::span("event.certificate");
-        let selected = self.selected_program_with_lineage(
-            &states.iter().copied().map(I::point).collect::<Vec<_>>(),
+        let nominal_bounds: Vec<_> = if observation.is_none() {
+            states.iter().copied().map(I::point).collect()
+        } else {
+            Vec::new()
+        };
+        let selected = self.selected_program_with_observation_proof(
+            observation.map_or(nominal_bounds.as_slice(), |proof| proof.state_bounds()),
             inputs,
             fired,
             operators,
             lineage,
+            observation,
         )?;
         if let Some(result) = crate::causal_event::certificate(
             self, selection, &selected, fired, inputs, before, operators, voltages, states, true,
@@ -1263,8 +1347,14 @@ impl EventModel {
             let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
             let result =
                 bounds.check_observation(self, inputs, before, operators, voltages, states)?;
-            let replay =
-                self.selected_program_with_lineage(&result.0, inputs, fired, operators, lineage)?;
+            let replay = self.selected_program_with_observation_proof(
+                &result.0,
+                inputs,
+                fired,
+                operators,
+                lineage,
+                observation,
+            )?;
             if replay
                 .contributions
                 .iter()
@@ -1296,8 +1386,14 @@ impl EventModel {
             .check_observation(self, inputs, before, operators, voltages, states)?;
         // Preserve the original operator-bearing path's enclosure replay.
         if !operators.is_empty() {
-            let replay =
-                self.selected_program_with_lineage(&result.0, inputs, fired, operators, lineage)?;
+            let replay = self.selected_program_with_observation_proof(
+                &result.0,
+                inputs,
+                fired,
+                operators,
+                lineage,
+                observation,
+            )?;
             if replay
                 .contributions
                 .iter()
@@ -1358,14 +1454,34 @@ impl EventModel {
         proofs: Option<&crate::event_value_proof::Context<'_>>,
         lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
     ) -> Result<Vec<I>, Error> {
+        self.certify_event_states_with_observation_proof(
+            selection, fired, inputs, before, operators, voltages, states, proofs, lineage, None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn certify_event_states_with_observation_proof(
+        &self,
+        selection: &Selection,
+        fired: &[usize],
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+        voltages: &[f64],
+        states: &[f64],
+        proofs: Option<&crate::event_value_proof::Context<'_>>,
+        lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
+        observation: Option<&crate::dc_projection::HeldRampObservationProof<'_>>,
+    ) -> Result<Vec<I>, Error> {
         let _timing = crate::diagnostics::span("event.state_certificate");
 
-        let selected = self.selected_program_with_lineage(
-            &states.iter().copied().map(I::point).collect::<Vec<_>>(),
+        let nominal: Vec<_> = states.iter().copied().map(I::point).collect();
+        let selected = self.selected_program_with_observation_proof(
+            observation.map_or(nominal.as_slice(), |proof| proof.state_bounds()),
             inputs,
             fired,
             operators,
             lineage,
+            observation,
         )?;
         if let Some(result) = crate::causal_event::certificate(
             self, selection, &selected, fired, inputs, before, operators, voltages, states, false,
@@ -1390,8 +1506,14 @@ impl EventModel {
         if resolved {
             let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
             let result = bounds.check_states(self, inputs, before, operators, voltages, states)?;
-            let replay =
-                self.selected_program_with_lineage(&result, inputs, fired, operators, lineage)?;
+            let replay = self.selected_program_with_observation_proof(
+                &result,
+                inputs,
+                fired,
+                operators,
+                lineage,
+                observation,
+            )?;
             if replay
                 .contributions
                 .iter()
@@ -1422,8 +1544,14 @@ impl EventModel {
             .1
             .check_states(self, inputs, before, operators, voltages, states)?;
         if !operators.is_empty() {
-            let replay =
-                self.selected_program_with_lineage(&result, inputs, fired, operators, lineage)?;
+            let replay = self.selected_program_with_observation_proof(
+                &result,
+                inputs,
+                fired,
+                operators,
+                lineage,
+                observation,
+            )?;
             if replay
                 .contributions
                 .iter()
@@ -1685,10 +1813,32 @@ impl EventModel {
         operators: &[I],
         lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
     ) -> Result<std::borrow::Cow<'_, Program>, Error> {
-        let history_work = self
+        self.selected_program_with_observation_proof(
+            states, inputs, fired, operators, lineage, None,
+        )
+    }
+    pub(crate) fn selected_program_with_observation_proof(
+        &self,
+        states: &[I],
+        inputs: &[I],
+        fired: &[usize],
+        operators: &[I],
+        lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
+        observation: Option<&crate::dc_projection::HeldRampObservationProof<'_>>,
+    ) -> Result<std::borrow::Cow<'_, Program>, Error> {
+        if let Some(proof) = observation {
+            proof.validate_states(states)?;
+        }
+        let ramp_projection = self
+            .dc_projection
+            .as_ref()
+            .filter(|projection| projection.is_held_ramp());
+        let selection_context = self
             .history_admission
             .as_ref()
-            .map(|token| token.context.borrow_work());
+            .map(|token| &token.context)
+            .or_else(|| ramp_projection.map(|projection| &projection.source));
+        let history_work = selection_context.map(|context| context.borrow_work());
         if let Some(w) = history_work {
             w.debit(2, self.program.nodes.len() as u64)?;
         }
@@ -1714,6 +1864,7 @@ impl EventModel {
         // the complete original RHS trees, the validated program is identical;
         // borrow it rather than cloning every unrelated event statement.
         if self.history_admission.is_none()
+            && ramp_projection.is_none()
             && self
                 .program
                 .contributions
@@ -1722,8 +1873,8 @@ impl EventModel {
         {
             return Ok(std::borrow::Cow::Borrowed(&self.program));
         }
-        let mut p = if let Some(token) = &self.history_admission {
-            let w = token.context.borrow_work();
+        let mut p = if let Some(context) = selection_context {
+            let w = context.borrow_work();
             let bytes = crate::event_floor::admission_bytes(&self.program, w)?;
             w.debit(2, bytes.len().saturating_mul(32) as u64)?;
             serde_json::from_slice::<Program>(&bytes)
@@ -1736,16 +1887,42 @@ impl EventModel {
                 c.rhs = token.resolve(index, &nodes, states, operators)?;
                 continue;
             }
-            let expression = self.resolve_root_selects(&c.rhs, fired)?;
-            c.rhs = crate::continuous::resolve_selection_with_lineage(
-                &expression,
-                &self.program,
-                &self.driven,
-                &nodes,
-                states,
-                lineage,
-            )
-            .or_else(|error| {
+            let original = ramp_projection
+                .map(|projection| projection.view(&c.rhs))
+                .transpose()?
+                .unwrap_or(&c.rhs);
+            let expression = self.resolve_root_selects(original, fired)?;
+            let resolved = if let Some(proof) = observation {
+                let exact = |left: &Expression, right: &Expression, owner: &str| {
+                    proof.sign(
+                        left,
+                        right,
+                        owner,
+                        &self.program,
+                        &self.driven,
+                        &nodes,
+                        states,
+                    )
+                };
+                crate::continuous::resolve_selection_with_source_sign(
+                    &expression,
+                    &self.program,
+                    &self.driven,
+                    &nodes,
+                    states,
+                    &exact,
+                )
+            } else {
+                crate::continuous::resolve_selection_with_lineage(
+                    &expression,
+                    &self.program,
+                    &self.driven,
+                    &nodes,
+                    states,
+                    lineage,
+                )
+            };
+            c.rhs = resolved.or_else(|error| {
                 if error.kind == "unsupported_transient" && !operators.is_empty() {
                     crate::causal_voltage::resolve(
                         &expression,
@@ -1882,13 +2059,42 @@ impl EventModel {
         inputs: &[I],
         lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
     ) -> Result<Program, Error> {
+        self.bound_circuit_program_at_with_observation_proof(
+            states, operators, inputs, lineage, None,
+        )
+    }
+    pub(crate) fn circuit_at_with_observation_proof(
+        &self,
+        states: &[f64],
+        operators: &[f64],
+        inputs: &[I],
+        proof: &crate::dc_projection::HeldRampObservationProof<'_>,
+    ) -> Result<Circuit, Error> {
+        let program = self.bound_circuit_program_at_with_observation_proof(
+            states,
+            operators,
+            inputs,
+            None,
+            Some(proof),
+        )?;
+        Circuit::new(program, &self.driven, self.tolerances.clone())
+    }
+    fn bound_circuit_program_at_with_observation_proof(
+        &self,
+        states: &[f64],
+        operators: &[f64],
+        inputs: &[I],
+        lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
+        observation: Option<&crate::dc_projection::HeldRampObservationProof<'_>>,
+    ) -> Result<Program, Error> {
         let bounds: Vec<_> = states.iter().copied().map(I::point).collect();
-        let selected = self.selected_program_with_lineage(
-            &bounds,
+        let selected = self.selected_program_with_observation_proof(
+            observation.map_or(bounds.as_slice(), |proof| proof.state_bounds()),
             inputs,
             &[],
             &operators.iter().copied().map(I::point).collect::<Vec<_>>(),
             lineage,
+            observation,
         )?;
         let rhs = selected
             .contributions

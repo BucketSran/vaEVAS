@@ -54,6 +54,9 @@ mod native_floor_combination_tests;
 mod ordinary_integer_prefix_tests;
 
 #[cfg(test)]
+#[path = "transient_dc_held_ramp_tests.rs"]
+mod dc_held_ramp_controller_tests;
+#[cfg(test)]
 #[path = "source_selected_slew_tests.rs"]
 mod source_selected_slew_tests;
 #[path = "event_time_provenance.rs"]
@@ -667,6 +670,24 @@ fn prepare_root_window_selected_impl(
         proof_root,
     )?
     .try_with_operators(&frozen.bounds)?;
+    let physical_context = model
+        .dc_projection
+        .as_ref()
+        .filter(|projection| projection.is_held_ramp())
+        .zip(exact_root)
+        .map(|(projection, root)| {
+            projection.physical_context(
+                model,
+                trajectory,
+                root,
+                time_bounds,
+                time,
+                old_bounds,
+                &accepted.time_proofs,
+            )
+        })
+        .transpose()?
+        .flatten();
     let settle = |values: &[f64], bounds: &[I]| {
         let evaluation_context = value_context.try_with_operators(bounds)?;
         let lineage = point_lineage::PointLineage::new(
@@ -679,7 +700,7 @@ fn prepare_root_window_selected_impl(
             events.is_empty() && fired_leaves.is_empty() && exact_root.is_none(),
         );
         if time_bounds.lo == time_bounds.hi {
-            crate::settlement::prepare_with_proofs(
+            crate::settlement::prepare_with_physical_proofs(
                 model,
                 events,
                 (&inputs, &input_bounds),
@@ -695,9 +716,10 @@ fn prepare_root_window_selected_impl(
                     .as_ref()
                     .map(|context| (context.as_ref(), trajectory)),
                 Some(&lineage),
+                physical_context.as_ref(),
             )
         } else {
-            crate::settlement::prepare_window_with_proofs(
+            crate::settlement::prepare_window_with_physical_proofs(
                 model,
                 (events, fired_leaves),
                 (&inputs, &input_bounds),
@@ -714,6 +736,7 @@ fn prepare_root_window_selected_impl(
                     .as_ref()
                     .map(|context| (context.as_ref(), trajectory)),
                 Some(&lineage),
+                physical_context.as_ref(),
             )
         }
     };
@@ -734,7 +757,7 @@ fn prepare_root_window_selected_impl(
     // maps until stable, rebuilding assignments from accepted state each time.
     // This is an observation closure, never a chain of provisional histories.
     for _ in 0..=model.program.operators.len() {
-        let observed_time_proofs = time_provenance::apply_charged(
+        let observed_time_proofs = time_provenance::apply_with_context_charged(
             model,
             trajectory,
             &physical_selection,
@@ -742,6 +765,7 @@ fn prepare_root_window_selected_impl(
             exact_root,
             old_bounds,
             &prepared.bounds,
+            &value_context,
         )?;
         let (mapped, values, bounds) = frozen.observed_after_with_time_proofs(
             time_bounds,
@@ -796,7 +820,7 @@ fn prepare_root_window_selected_impl(
         .filter(|&s| old_bounds[s] != prepared.bounds[s] || old_bounds[s].lo != old_bounds[s].hi)
         .collect();
 
-    let physical_time_proofs = time_provenance::apply_charged(
+    let physical_time_proofs = time_provenance::apply_with_context_charged(
         model,
         trajectory,
         &physical_selection,
@@ -804,6 +828,7 @@ fn prepare_root_window_selected_impl(
         exact_root,
         old_bounds,
         &prepared.bounds,
+        &value_context,
     )?;
     let mut operators = frozen.advanced_until_with_value_proofs(
         time_bounds,
@@ -845,7 +870,7 @@ fn prepare_root_window_selected_impl(
             "exact event value replay changed",
         ));
     }
-    let replay_time_proofs = time_provenance::apply_charged(
+    let replay_time_proofs = time_provenance::apply_with_context_charged(
         model,
         trajectory,
         &physical_selection,
@@ -853,6 +878,7 @@ fn prepare_root_window_selected_impl(
         exact_root,
         old_bounds,
         &replay.bounds,
+        &value_context,
     )?;
     let history_replay = frozen.advanced_until_with_value_proofs(
         time_bounds,
@@ -936,38 +962,99 @@ fn prepare_root_window_selected_impl(
     // Display replay must observe the identical root solution, even after
     // the published frame is rebuilt for its execution/query representative.
     let physical_voltages = prepared.solution.voltages.clone();
+    // Only the joint held-ramp representative needs its final selected epoch
+    // proof here. Other consumers retain the original deferred proof order.
+    let ramp_projection = model
+        .dc_projection
+        .as_ref()
+        .filter(|projection| projection.is_held_ramp());
+    let representative_time_proofs =
+        if time_bounds.lo != time_bounds.hi && ramp_projection.is_some() {
+            Some(time_provenance::apply_with_context_charged(
+                model,
+                trajectory,
+                &selection,
+                &accepted.time_proofs,
+                exact_root,
+                old_bounds,
+                &prepared.bounds,
+                &value_context,
+            )?)
+        } else {
+            None
+        };
     if time_bounds.lo != time_bounds.hi {
         // The physical event read is complete, including passive observers.
         // A committed/query frame observes b with its own driven inputs and
         // advanced operators. Never publish the root's nominal circuit as b.
         let values = operators.values(time)?;
         let bounds = operators.bounds(time)?;
-        let mut circuit = model.circuit_at(&prepared.states, &values, &observation_inputs)?;
+        let observation_proof = ramp_projection
+            .zip(representative_time_proofs.as_ref())
+            .map(|(projection, proofs)| {
+                projection.observation_proof(
+                    &model.program,
+                    trajectory,
+                    &model.driven,
+                    time,
+                    &prepared.bounds,
+                    proofs,
+                )
+            })
+            .transpose()?
+            .flatten();
+        let mut circuit = if let Some(proof) = &observation_proof {
+            model.circuit_at_with_observation_proof(
+                &prepared.states,
+                &values,
+                &observation_inputs,
+                proof,
+            )?
+        } else {
+            model.circuit_at(&prepared.states, &values, &observation_inputs)?
+        };
         circuit.reuse_affine_factor_from(&prepared.circuit);
         let mut solution = circuit.solve(&crate::event_value_proof::history::inputs(
             model, trajectory, time,
         )?)?;
-        let (_, nodes) = model.certify_observation(
-            &model.conditions.select(&[], &observation_inputs)?,
-            &observation_inputs,
-            &prepared.bounds,
-            &bounds,
-            &solution.voltages,
-            &prepared.states,
-        )?;
+        let observation_selection = model.conditions.select(&[], &observation_inputs)?;
+        let (_, nodes) = if let Some(proof) = &observation_proof {
+            model.certify_observation_with_held_ramp_proof(
+                &observation_selection,
+                &observation_inputs,
+                &prepared.bounds,
+                &bounds,
+                &solution.voltages,
+                &prepared.states,
+                proof,
+            )?
+        } else {
+            model.certify_observation(
+                &observation_selection,
+                &observation_inputs,
+                &prepared.bounds,
+                &bounds,
+                &solution.voltages,
+                &prepared.states,
+            )?
+        };
         crate::observation::retain_bounds(&mut solution, nodes);
         prepared.solution = solution;
         prepared.circuit = circuit;
     }
-    let time_proofs = time_provenance::apply_charged(
-        model,
-        trajectory,
-        &selection,
-        &accepted.time_proofs,
-        exact_root,
-        old_bounds,
-        &prepared.bounds,
-    )?;
+    let time_proofs = match representative_time_proofs {
+        Some(proofs) => proofs,
+        None => time_provenance::apply_with_context_charged(
+            model,
+            trajectory,
+            &selection,
+            &accepted.time_proofs,
+            exact_root,
+            old_bounds,
+            &prepared.bounds,
+            &value_context,
+        )?,
+    };
     let value_proofs = crate::event_value_proof::apply_charged(
         model,
         &selection,
@@ -1650,10 +1737,10 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
     if !model.typed_transition_targets.is_empty()
         && (history_calendar || relocalize || model.dynamic_guards.iter().any(|&v| v))
     {
-        return Err(Error::new(
-            "unsupported_held_integer_target",
-            "typed held targets require the ordinary independent calendar",
-        ));
+        // Keep the original independent-only refusal except for the separately
+        // audited held history calendar. Its constructor must retain actual
+        // cold boxes, typed owner and shared Work through every candidate.
+        crate::history_calendar_typed_target::qualify(&model)?;
     }
     // For no-bootstrap declarations these are the actual cold Frame bounds.
     // If prepare returned a certified box, borrow it without normalization.
@@ -1663,7 +1750,13 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
         } else {
             Vec::new()
         };
-    let (mut operators, mut crossings) = if history_calendar {
+    let (mut operators, mut crossings) = if history_calendar
+        && !model.typed_transition_targets.is_empty()
+    {
+        crate::history_calendar_typed_target::initialize(
+            &model, &trajectory, &initial, initial_bounds,
+        )?
+    } else if history_calendar {
         history_calendar::initialize(&model, &trajectory, &initial)?
     } else if relocalize {
         let bounds: Vec<_> = initial.iter().copied().map(I::point).collect();
@@ -1704,7 +1797,27 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
                 "forcing bootstrap provider bridge is not implemented",
             ));
         }
-        let operators = if let Some(token) = &model.history_admission {
+        let operators = if let Some(token) = model
+            .analytic_request
+            .as_ref()
+            .filter(|token| token.fixed_timer_held_transitions())
+        {
+            Operators::new_until_with_analytic_request(
+                token,
+                &model.program,
+                &trajectory,
+                &model.driven,
+                &initial,
+                if model.typed_transition_targets.is_empty() {
+                    initial_bounds
+                } else {
+                    Some(initial_bounds.unwrap_or(&declaration_bounds))
+                },
+                &model.typed_transition_targets,
+                prediction_end(&model, &trajectory, crossings.first()),
+                &model.tolerances,
+            )?
+        } else if let Some(token) = &model.history_admission {
             Operators::new_history_consumer(
                 token.clone(),
                 &initial,

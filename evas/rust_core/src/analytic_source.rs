@@ -71,7 +71,9 @@ pub(crate) fn validate_config(config: &TransientInputs, w: Option<&Work>) -> Res
                         || source_name.is_empty()
                         || terminals.iter().any(String::is_empty)
                         || terminals[0] == terminals[1]
-                        || *parameter_origin != "explicit-v1"
+                        || !(parameter_origin == "explicit-v1"
+                            || (parameter_origin == "spectre-native-transient-zero-phase-v1"
+                                && *sinephase == 0.))
                         || *polarity
                             != if terminals[1] == "0" || !terminals.contains(&"0".into()) {
                                 1
@@ -79,7 +81,7 @@ pub(crate) fn validate_config(config: &TransientInputs, w: Option<&Work>) -> Res
                                 -1
                             }
                     {
-                        return Err(invalid("invalid explicit sine descriptor"));
+                        return Err(invalid("invalid sine descriptor or parameter origin"));
                     }
                     if *freq <= 0. {
                         return Err(Error::new(
