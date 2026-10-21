@@ -568,6 +568,26 @@ impl GuardBounds {
         self.symbolic[expression].is_some()
     }
 
+    /// No operator column: the value depends only on inputs, states and constants.
+    pub(crate) fn operator_free(&self, expression: usize) -> bool {
+        self.symbolic[expression].is_none()
+            && self.operator_coefficients[expression]
+                .iter()
+                .all(|v| v.zero())
+    }
+
+    /// Input, state and operator coefficients of a nonsymbolic row.
+    pub(crate) fn columns(&self, expression: usize) -> Option<(&[I], &[I], &[I])> {
+        if self.symbolic[expression].is_some() {
+            return None;
+        }
+        Some((
+            &self.coefficients[expression][..self.driven_count],
+            &self.state_coefficients[expression],
+            &self.operator_coefficients[expression],
+        ))
+    }
+
     pub(crate) fn checked_value(
         &self,
         expression: usize,

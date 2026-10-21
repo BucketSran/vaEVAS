@@ -78,6 +78,104 @@ mod tests {
     }
 
     #[test]
+    fn post_root_reads_use_certified_sides_and_refuse_an_unsided_zero() {
+        let origin = serde_json::json!({"source":"right.va","line":1,"column":1,"instance":"dut"});
+        let u = serde_json::json!({"op":"affine","constant":0.0,"terms":[{"node":1,"coefficient":1.0}]});
+        let zero = serde_json::json!({"op":"affine","constant":0.0,"terms":[]});
+        let assign = |v: f64| serde_json::json!([{"kind":"assign","state":0,"rhs":{"op":"affine","constant":v,"terms":[]}}]);
+        let program: Program = serde_json::from_value(serde_json::json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u"],"contributions":[],
+            "states":[{"instance":"dut","name":"q","kind":"real","initial":0.0}],
+            "events":[{"origin":origin,"trigger":{"kind":"cross","guard":u,"direction":0,
+                "time_tolerance":0.001,"expression_tolerance":0.001},
+                "body":[{"kind":"if","relation":"gt","left":u,"right":zero,
+                    "then_body":assign(1.0),"else_body":assign(2.0),"origin":origin}]}]
+        }))
+        .unwrap();
+        let mut conditions = Conditions::new(&program).unwrap();
+        conditions.prepare(&program, &["u".to_string()]).unwrap();
+        let select = |sides: Vec<(usize, i8)>, events: Vec<usize>| {
+            let _scope = PostRootSides::install(sides, Vec::new(), events, None);
+            conditions
+                .select_at_roots(&[0], &[I::ZERO], &[0], &[I::ZERO])
+                .map(|selection| selection.decisions)
+        };
+        // A timer-fired body observes g(t)=0 at its own time.
+        assert_eq!(select(vec![], vec![]).unwrap(), vec![(0, false)]);
+        // A tau+ body reads the certified side; 0 is a proven plateau.
+        assert_eq!(select(vec![(0, 1)], vec![0]).unwrap(), vec![(0, true)]);
+        assert_eq!(select(vec![(0, -1)], vec![0]).unwrap(), vec![(0, false)]);
+        assert_eq!(select(vec![(0, 0)], vec![0]).unwrap(), vec![(0, false)]);
+        // Without one consistent side the exact zero proves nothing at tau+.
+        for sides in [vec![], vec![(0, 1), (0, -1)]] {
+            assert_eq!(select(sides, vec![0]).unwrap_err().kind, "event_condition");
+        }
+        // The scope is restored after each batch.
+        assert_eq!(post_root_side(0), None);
+        assert!(!post_root_event(0));
+    }
+
+    #[test]
+    fn right_window_proves_a_floor_plateau_but_not_a_straddled_bin() {
+        // cross(u) body: q = floor(k*w); if (q < 1) p = 1; else p = 2.
+        // At tau, u = w = 0.5; k*w is 1.5 (inside a bin) or 1 (on its edge).
+        let origin = serde_json::json!({"source":"window.va","line":1,"column":1,"instance":"dut"});
+        let node = |n: usize, k: f64| serde_json::json!({"op":"affine","constant":0.0,"terms":[{"node":n,"coefficient":k}]});
+        let constant = |v: f64| serde_json::json!({"op":"affine","constant":v,"terms":[]});
+        let assign = |state: usize, rhs: serde_json::Value| serde_json::json!({"kind":"assign","state":state,"rhs":rhs});
+        let program = |k: f64| -> Program {
+            serde_json::from_value(serde_json::json!({
+                "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","w"],"contributions":[],
+                "states":[{"instance":"dut","name":"q","kind":"real","initial":0.0},
+                          {"instance":"dut","name":"p","kind":"real","initial":0.0}],
+                "events":[{"origin":origin,"trigger":{"kind":"cross","guard":node(1, 1.0),"direction":1,
+                    "time_tolerance":0.001,"expression_tolerance":0.001},
+                    "body":[assign(0, serde_json::json!({"op":"event_math","function":"floor",
+                                "args":[node(2, k)],"origin":origin})),
+                            {"kind":"if","relation":"lt","left":{"op":"state","state":0},"right":constant(1.0),
+                             "then_body":[assign(1, constant(1.0))],"else_body":[assign(1, constant(2.0))],
+                             "origin":origin}]}]
+            }))
+            .unwrap()
+        };
+        let select = |k: f64, window: Option<I>| {
+            let program = program(k);
+            let mut conditions = Conditions::new_with_numeric(&program, &[true]).unwrap();
+            conditions
+                .prepare(&program, &["u".to_string(), "w".to_string()])
+                .unwrap();
+            let window = window.map(|w| RightWindow {
+                inputs: vec![w, w],
+                operators: Vec::new(),
+            });
+            let _scope = PostRootSides::install(vec![(0, 1)], Vec::new(), vec![0], window);
+            conditions
+                .select_at_roots(&[0], &[I::point(0.5); 2], &[0], &[I::ZERO; 2])
+                .map(|selection| selection.decisions)
+        };
+        let after = I {
+            lo: 0.5,
+            hi: 0.5 + 1e-7,
+        };
+        let around = I {
+            lo: 0.5 - 1e-7,
+            hi: 0.5 + 1e-7,
+        };
+        // floor(3w) = 1 over either window: q<1 is false just after tau.
+        assert_eq!(select(3.0, Some(after)).unwrap(), vec![(0, false)]);
+        assert_eq!(select(3.0, Some(around)).unwrap(), vec![(0, false)]);
+        // Without a window the moving input proves nothing about q at tau+.
+        assert_eq!(select(3.0, None).unwrap_err().kind, "event_condition");
+        // floor(2w) stays 1 on a window above its edge; a window meeting bin 0
+        // cannot decide q<1 and is refused rather than read from tau.
+        assert_eq!(select(2.0, Some(after)).unwrap(), vec![(0, false)]);
+        assert_eq!(
+            select(2.0, Some(around)).unwrap_err().kind,
+            "event_condition"
+        );
+    }
+
+    #[test]
     fn empty_and_inactive_selections_preserve_results_but_reject_unknown_indices() {
         let origin = serde_json::json!({"source":"empty.va","line":1,"column":1,"instance":"M"});
         let program:Program=serde_json::from_value(serde_json::json!({
@@ -145,20 +243,39 @@ struct Predicate {
 }
 
 // LRM 2.4 section 5.10.3.1: a cross event occurs after the threshold crossing,
-// inside the time/expression tolerance box. EVAS observes the right limit
-// tau+ of a certified transverse root. Continuous values keep their root
-// enclosure there. A predicate with the same exact zero set as a fired guard
-// g, d = k*g, has sign k*s where s is the certified crossing side. Another
-// state-independent predicate proved exactly zero at tau takes the sign of its
-// certified time derivative on (tau, tau+e]. Without these certificates the
-// earlier g(tau)=0 observation is kept.
+// inside the time/expression tolerance box. A body fired only by cross leaves
+// observes the right limit tau+ of its certified roots. Continuous values keep
+// their root enclosure there. A predicate with the same exact zero set as a
+// fired guard g, d = k*g, has sign k*s where s is the certified side of g just
+// after tau (0: proven plateau). Another state-independent predicate proved
+// exactly zero at tau takes the sign of its certified time derivative on
+// (tau, tau+e]. Otherwise the selected path is replayed with enclosures over
+// the right window W = [lo, next_up(hi)], which contains (tau, tau+e] for every
+// root tau in the batch window: a comparison holding for the whole window
+// enclosure of d holds just after tau, and d in [0,0] is a proven plateau.
+// A time-varying difference that is exactly zero at tau without one of these
+// certificates cannot be decided by g(tau)=0; it is refused unless both
+// branches are proved equivalent. A body fired by a timer leaf in the same
+// batch executes at that exact time, where the fired guards certify g(t)=0.
 #[derive(Default)]
 struct PostRoot {
-    // (calendar leaf, crossing side)
+    // (calendar leaf, certified guard sign just after its root; 0: plateau)
     sides: Vec<(usize, i8)>,
-    // (predicate, strict derivative sign on the post-root interval)
+    // (predicate, certified derivative sign on the post-root interval; 0: plateau)
     slopes: Vec<(usize, i8)>,
+    // Event bodies fired only by cross leaves in this batch; they read at tau+.
+    events: Vec<usize>,
+    window: Option<RightWindow>,
 }
+
+/// Enclosures over the right window of one batch: driven inputs, and the
+/// accepted operator histories (None: an operator column has no certificate).
+#[derive(Clone)]
+pub(crate) struct RightWindow {
+    pub(crate) inputs: Vec<I>,
+    pub(crate) operators: Vec<Option<I>>,
+}
+
 thread_local! {
     static POST_ROOT: std::cell::RefCell<PostRoot> =
         std::cell::RefCell::new(PostRoot::default());
@@ -168,8 +285,20 @@ thread_local! {
 /// scope restores the enclosing value, so nothing survives its batch.
 pub(crate) struct PostRootSides(PostRoot);
 impl PostRootSides {
-    pub(crate) fn install(sides: Vec<(usize, i8)>, slopes: Vec<(usize, i8)>) -> Self {
-        Self(POST_ROOT.with(|cell| cell.replace(PostRoot { sides, slopes })))
+    pub(crate) fn install(
+        sides: Vec<(usize, i8)>,
+        slopes: Vec<(usize, i8)>,
+        events: Vec<usize>,
+        window: Option<RightWindow>,
+    ) -> Self {
+        Self(POST_ROOT.with(|cell| {
+            cell.replace(PostRoot {
+                sides,
+                slopes,
+                events,
+                window,
+            })
+        }))
     }
 }
 impl Drop for PostRootSides {
@@ -185,7 +314,7 @@ fn unique(entries: &[(usize, i8)], key: usize) -> Option<i8> {
     found.all(|s| s == first).then_some(first)
 }
 
-/// Certified crossing side of a fired leaf just after its root, if any.
+/// Certified guard side of a fired leaf just after its root, if any.
 pub(crate) fn post_root_side(leaf: usize) -> Option<i8> {
     POST_ROOT.with(|cell| unique(&cell.borrow().sides, leaf))
 }
@@ -194,17 +323,213 @@ fn post_root_slope(predicate: usize) -> Option<i8> {
     POST_ROOT.with(|cell| unique(&cell.borrow().slopes, predicate))
 }
 
+/// Whether this event body reads at the right limit of its cross roots.
+fn post_root_event(event: usize) -> bool {
+    POST_ROOT.with(|cell| cell.borrow().events.contains(&event))
+}
+
+fn post_root_window() -> Option<RightWindow> {
+    POST_ROOT.with(|cell| cell.borrow().window.clone())
+}
+
+/// Right-window reads of one body walk. A numeric read of an unsolved node
+/// is unbounded, so it never yields a window certificate.
+struct WindowReads {
+    inputs: Vec<I>,
+    operators: Vec<Option<I>>,
+    nodes: Vec<I>,
+}
+
+/// First-order dependence of a value on the reads that move over the right
+/// window: sparse (column, coefficient) pairs, driven inputs first and then
+/// operator histories. Empty: the value is the same at te as at tau.
+type Moving = Vec<(usize, I)>;
+
+fn add_moving(moving: &mut Moving, column: usize, coefficient: I) {
+    match moving.iter_mut().find(|(k, _)| *k == column) {
+        Some((_, sum)) => *sum = *sum + coefficient,
+        None => moving.push((column, coefficient)),
+    }
+}
+
+/// Facts of the selected path that later reads depend on.
+#[derive(Clone)]
+struct PathFacts {
+    // Dependence of each state on moving reads; None: unknown. A state not
+    // written in this body keeps its accepted value: empty.
+    moving: Vec<Option<Moving>>,
+    // State enclosures over the right window on this path; None: unknown.
+    window: Vec<Option<I>>,
+}
+
+/// Values of one row's read columns; an unknown value is admitted only under
+/// an exactly zero coefficient, where it cannot contribute.
+fn window_columns(columns: &[I], values: &[Option<I>]) -> Option<Vec<I>> {
+    columns
+        .iter()
+        .enumerate()
+        .map(|(k, c)| match values.get(k).copied().flatten() {
+            Some(v) => Some(v),
+            None if c.zero() => Some(I::ZERO),
+            None => None,
+        })
+        .collect()
+}
+
+fn expression_size(e: &Expression) -> usize {
+    match e {
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => 1 + expression_size(left) + expression_size(right),
+        Expression::Power { base, .. } => 1 + expression_size(base),
+        Expression::IntegerRound { value, .. } | Expression::CheckedInteger { value, .. } => {
+            1 + expression_size(value)
+        }
+        Expression::CheckedIndex { index, .. } | Expression::ArrayRead { index, .. } => {
+            1 + expression_size(index)
+        }
+        Expression::EventMath { args, .. } => 1 + args.iter().map(expression_size).sum::<usize>(),
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => {
+            1 + expression_size(left)
+                + expression_size(right)
+                + expression_size(then_value)
+                + expression_size(else_value)
+        }
+        Expression::Affine { terms, .. } => 1 + terms.len(),
+        _ => 1,
+    }
+}
+
+/// Interval value of a numeric event expression over the right window. As
+/// for the root read, a floor or a real-to-integer conversion must stay in
+/// one bin and a selection must be decided over the whole enclosure.
+fn window_bounds(e: &Expression, nodes: &[I], states: &[I]) -> Result<I, Error> {
+    fn resolve(e: &Expression, nodes: &[I], states: &[I]) -> Result<Expression, Error> {
+        let r = |e: &Expression| resolve(e, nodes, states).map(Box::new);
+        Ok(match e {
+            Expression::IntegerRound { value, origin } => Expression::Affine {
+                constant: crate::event_numeric::nearest_box(
+                    crate::event_numeric::bounds(&resolve(value, nodes, states)?, nodes, states)?,
+                    origin,
+                )?
+                .lo,
+                terms: vec![],
+            },
+            Expression::Add { left, right } => Expression::Add {
+                left: r(left)?,
+                right: r(right)?,
+            },
+            Expression::Multiply { left, right } => Expression::Multiply {
+                left: r(left)?,
+                right: r(right)?,
+            },
+            Expression::Divide { left, right } => Expression::Divide {
+                left: r(left)?,
+                right: r(right)?,
+            },
+            Expression::Power { base, exponent } => Expression::Power {
+                base: r(base)?,
+                exponent: *exponent,
+            },
+            Expression::CheckedInteger { value, origin } => Expression::CheckedInteger {
+                value: r(value)?,
+                origin: origin.clone(),
+            },
+            Expression::CheckedIndex {
+                index,
+                first,
+                last,
+                origin,
+            } => Expression::CheckedIndex {
+                index: r(index)?,
+                first: *first,
+                last: *last,
+                origin: origin.clone(),
+            },
+            Expression::ArrayRead {
+                states: slots,
+                index,
+                first,
+                last,
+                origin,
+            } => Expression::ArrayRead {
+                states: slots.clone(),
+                index: r(index)?,
+                first: *first,
+                last: *last,
+                origin: origin.clone(),
+            },
+            Expression::EventMath {
+                function,
+                args,
+                origin,
+            } => Expression::EventMath {
+                function: *function,
+                args: args
+                    .iter()
+                    .map(|a| resolve(a, nodes, states))
+                    .collect::<Result<_, _>>()?,
+                origin: origin.clone(),
+            },
+            Expression::Select {
+                relation,
+                left,
+                right,
+                then_value,
+                else_value,
+                origin,
+            } => Expression::Select {
+                relation: *relation,
+                left: r(left)?,
+                right: r(right)?,
+                then_value: r(then_value)?,
+                else_value: r(else_value)?,
+                origin: origin.clone(),
+            },
+            _ => e.clone(),
+        })
+    }
+    crate::event_numeric::bounds(&resolve(e, nodes, states)?, nodes, states)
+}
+
 fn side_value(side: i8) -> I {
     match side {
-        1 => I { lo: f64::MIN_POSITIVE, hi: f64::MAX },
-        -1 => I { lo: -f64::MAX, hi: -f64::MIN_POSITIVE },
+        1 => I {
+            lo: f64::MIN_POSITIVE,
+            hi: f64::MAX,
+        },
+        -1 => I {
+            lo: -f64::MAX,
+            hi: -f64::MIN_POSITIVE,
+        },
         _ => I::ZERO,
     }
 }
 
-/// Sign-only enclosure of d = k*g just after the root; [0,0] without a side.
-fn post_root_value(leaf: usize, ratio: i8) -> I {
-    side_value(post_root_side(leaf).map_or(0, |side| side * ratio))
+/// Root observation of a predicate with the same exact zero set as a fired guard.
+#[derive(Clone, Copy, PartialEq)]
+enum RootRead {
+    /// Certified value: k*s just after tau, or g(t)=0 for a timer-fired body.
+    Value(I),
+    /// d(tau)=0 is proved, but its side just after tau is not certified.
+    Unsided,
+}
+
+/// Root facts shared by one event body walk.
+#[derive(Clone, Copy)]
+struct RootFacts<'a> {
+    at_root: &'a [bool],
+    certified: &'a [bool],
+    // The body reads at the right limit tau+ of its cross roots.
+    post: bool,
+    // Right-window reads of a tau+ body, if the batch installed them.
+    window: Option<&'a WindowReads>,
 }
 
 pub(crate) struct Conditions {
@@ -706,23 +1031,205 @@ impl Conditions {
     }
 
     /// State-independent ordinary predicates of the given event bodies, with
-    /// their owner instance, for post-root derivative certificates.
+    /// their owner instance, for post-root derivative certificates. A predicate
+    /// whose enclosure over the whole batch window excludes zero never needs
+    /// one. `input_only` omits operator columns, whose same-time history a
+    /// timer in the batch may change before tau+.
     pub(crate) fn right_limit_candidates(
         &self,
         events: &[usize],
+        window: &[I],
+        input_only: bool,
     ) -> Vec<(usize, &Expression, &str)> {
+        let Some(bounds) = self.bounds.as_ref() else {
+            return Vec::new();
+        };
+        let values = bounds.values_with_operators(window, &[]);
         self.predicates
             .iter()
             .enumerate()
-            .filter(|(_, p)| {
+            .filter(|(i, p)| {
                 events.contains(&p.event)
                     && self.active_events.get(p.event).copied().unwrap_or(false)
                     && !p.numeric
                     && p.dependencies.state_dependencies.is_empty()
                     && p.dependencies.operator_dependencies.is_empty()
+                    && values.get(*i).is_none_or(|v| !(v.lo > 0.0 || v.hi < 0.0))
+                    && (!input_only || (!bounds.symbolic(*i) && bounds.operator_free(*i)))
             })
             .map(|(i, p)| (i, &p.expression, p.origin.instance.as_str()))
             .collect()
+    }
+
+    /// Dependence of a row or expression on the inputs and histories that
+    /// move over the right window (without a window every read moves). An
+    /// ordinary row composes the dependence of the states it reads, so an
+    /// exact cancellation such as `s=x; d=x-s` is proved. A nonlinear or
+    /// symbolic value is constant only if every read is constant or its whole
+    /// window enclosure `value` is a point. With no dependence, every read on
+    /// this path is the same at te as at tau, so the root value, including an
+    /// exact tie, is unchanged at tau+. None: unknown.
+    fn dependence(
+        &self,
+        row: usize,
+        numeric: bool,
+        dependencies: &AffineState,
+        moving: &[Option<Moving>],
+        window: Option<&WindowReads>,
+        value: Option<I>,
+    ) -> Option<Moving> {
+        if value.is_some_and(|v| v.lo == v.hi) {
+            return Some(Moving::new());
+        }
+        let driven = self.driven_nodes.len();
+        let input = |k: usize| window.is_none_or(|w| w.inputs.get(k).is_none_or(|v| v.lo != v.hi));
+        let operator = |k: usize| {
+            window.is_none_or(|w| {
+                w.operators
+                    .get(k)
+                    .copied()
+                    .flatten()
+                    .is_none_or(|v| v.lo != v.hi)
+            })
+        };
+        let columns = self
+            .bounds
+            .as_ref()
+            .filter(|_| !numeric)
+            .and_then(|bounds| bounds.columns(row));
+        match columns {
+            Some((inputs, states, operators)) => {
+                let mut out = Moving::new();
+                for (k, &c) in inputs.iter().enumerate() {
+                    if !c.zero() && input(k) {
+                        add_moving(&mut out, k, c);
+                    }
+                }
+                for (k, &c) in operators.iter().enumerate() {
+                    if !c.zero() && operator(k) {
+                        add_moving(&mut out, driven + k, c);
+                    }
+                }
+                for (state, &c) in states.iter().enumerate() {
+                    if !c.zero() {
+                        for &(k, d) in moving.get(state)?.as_ref()? {
+                            add_moving(&mut out, k, c * d);
+                        }
+                    }
+                }
+                out.retain(|(_, c)| !c.zero());
+                Some(out)
+            }
+            // Numeric and symbolic reads use their structural dependencies;
+            // an unsolved internal node always moves.
+            None => {
+                let reads = dependencies.node_dependencies.iter().any(|&node| {
+                    node != 0
+                        && self
+                            .driven_nodes
+                            .iter()
+                            .position(|&n| n == node)
+                            .is_none_or(input)
+                }) || dependencies
+                    .operator_dependencies
+                    .iter()
+                    .any(|&k| operator(k))
+                    || dependencies.state_dependencies.iter().any(|&state| {
+                        moving
+                            .get(state)
+                            .is_none_or(|m| m.as_ref().is_none_or(|m| !m.is_empty()))
+                    });
+                (!reads).then(Moving::new)
+            }
+        }
+    }
+
+    /// Operator columns read by the ordinary rows of these event bodies; only
+    /// these histories need a right-window enclosure.
+    pub(crate) fn window_operators(&self, events: &[usize]) -> Vec<usize> {
+        let Some(bounds) = self.bounds.as_ref() else {
+            return Vec::new();
+        };
+        let predicates = self
+            .predicates
+            .iter()
+            .enumerate()
+            .filter(|(_, p)| events.contains(&p.event) && !p.numeric)
+            .map(|(row, _)| row);
+        let assignments = events
+            .iter()
+            .filter_map(|&event| self.assignments.get(event))
+            .flatten()
+            .filter(|a| a.row != usize::MAX && !a.numeric)
+            .map(|a| a.row);
+        let mut operators = std::collections::BTreeSet::new();
+        for row in predicates.chain(assignments) {
+            if let Some((_, _, columns)) = bounds.columns(row) {
+                operators.extend(
+                    columns
+                        .iter()
+                        .enumerate()
+                        .filter(|(_, c)| !c.zero())
+                        .map(|(k, _)| k),
+                );
+            }
+        }
+        operators.into_iter().collect()
+    }
+
+    /// Enclosure over the right window of an ordinary row or a numeric
+    /// expression, replayed on the selected path. None when a read has no
+    /// window certificate (an unknown state or history, a symbolic row, a
+    /// straddled bin or selection, a domain or finiteness failure).
+    fn window_value(
+        &self,
+        row: usize,
+        numeric: Option<(&Expression, &AffineState)>,
+        window: &WindowReads,
+        states: &[Option<I>],
+    ) -> Option<I> {
+        let value = match numeric {
+            Some((expression, dependencies)) => {
+                if !dependencies.operator_dependencies.is_empty()
+                    || dependencies
+                        .state_dependencies
+                        .iter()
+                        .any(|&state| states.get(state).copied().flatten().is_none())
+                {
+                    return None;
+                }
+                let states: Vec<_> = states.iter().map(|v| v.unwrap_or(I::ZERO)).collect();
+                window_bounds(expression, &window.nodes, &states).ok()?
+            }
+            None => {
+                let bounds = self.bounds.as_ref()?;
+                let (_, state_columns, operator_columns) = bounds.columns(row)?;
+                let states = window_columns(state_columns, states)?;
+                let operators = window_columns(operator_columns, &window.operators)?;
+                bounds.value_with_parameters(row, &window.inputs, &states, &operators)
+            }
+        };
+        value.finite().then_some(value)
+    }
+
+    /// Fund a right-window read from the paid ledger of this walk, if any.
+    fn charge_window(
+        &self,
+        states: &crate::event_value_proof::LocalState,
+        numeric: Option<&Expression>,
+    ) -> Result<(), Error> {
+        let size = numeric.map_or(self.node_count, expression_size);
+        let amount = size
+            .saturating_add(self.state_count)
+            .saturating_add(self.driven_nodes.len())
+            .saturating_add(1);
+        if let Some(w) = states.history_work() {
+            w.debit(2, amount as u64)
+        } else if let Some(w) = states.floor_work() {
+            crate::event_floor::charge(w, amount, "floor_source_window")
+        } else {
+            Ok(())
+        }
     }
 
     pub(crate) fn select(&self, events: &[usize], inputs: &[I]) -> Result<Selection, Error> {
@@ -764,25 +1271,46 @@ impl Conditions {
             .as_ref()
             .map(|b| b.values_with_operators(inputs, operators))
             .unwrap_or_default();
+        // at_root: a fired guard with the same exact zero set proves d(tau)=0.
+        // certified: that root read also decides the body's observation.
         let mut at_root = vec![false; self.predicates.len()];
-        let mut root_values: Vec<Option<I>> = vec![None; self.predicates.len()];
+        let mut certified = vec![false; self.predicates.len()];
+        let mut root_reads: Vec<Option<RootRead>> = vec![None; self.predicates.len()];
         let mut conflicting = vec![false; self.predicates.len()];
         for &leaf in fired_leaves {
             if let Some(predicates) = self.root_predicates.get(leaf) {
                 for &(predicate, ratio) in predicates {
-                    let value = post_root_value(leaf, ratio);
-                    match root_values[predicate] {
-                        Some(old) if old != value => conflicting[predicate] = true,
-                        _ => root_values[predicate] = Some(value),
-                    }
+                    let read = if post_root_event(self.predicates[predicate].event) {
+                        post_root_side(leaf).map_or(RootRead::Unsided, |side| {
+                            RootRead::Value(side_value(side * ratio))
+                        })
+                    } else {
+                        RootRead::Value(I::ZERO)
+                    };
+                    root_reads[predicate] = match (root_reads[predicate], read) {
+                        (None | Some(RootRead::Unsided), read) => Some(read),
+                        (old, RootRead::Unsided) => old,
+                        (Some(old), read) => {
+                            conflicting[predicate] |= old != read;
+                            Some(old)
+                        }
+                    };
                 }
             }
         }
-        for (predicate, value) in root_values.into_iter().enumerate() {
+        for (predicate, read) in root_reads.into_iter().enumerate() {
             // Inconsistent same-root sides are not a proof; keep the root box.
-            if let Some(value) = value.filter(|_| !conflicting[predicate]) {
-                values[predicate] = value;
-                at_root[predicate] = true;
+            match read.filter(|_| !conflicting[predicate]) {
+                Some(RootRead::Value(value)) => {
+                    values[predicate] = value;
+                    at_root[predicate] = true;
+                    certified[predicate] = true;
+                }
+                Some(RootRead::Unsided) => {
+                    values[predicate] = I::ZERO;
+                    at_root[predicate] = true;
+                }
+                None => {}
             }
         }
         #[allow(clippy::too_many_arguments)] // Keep the recursive event-selection context explicit.
@@ -800,7 +1328,8 @@ impl Conditions {
             operators: &[I],
             states: &mut crate::event_value_proof::LocalState,
             written: &mut [bool],
-            at_root: &[bool],
+            path: &mut PathFacts,
+            root: RootFacts<'_>,
             proof_attempts: &mut usize,
             loop_iterations: &mut usize,
         ) -> Result<(), Error> {
@@ -865,7 +1394,8 @@ impl Conditions {
                             operators,
                             states,
                             written,
-                            at_root,
+                            path,
+                            root,
                             proof_attempts,
                             loop_iterations,
                         )?;
@@ -891,7 +1421,8 @@ impl Conditions {
                             operators,
                             states,
                             written,
-                            at_root,
+                            path,
+                            root,
                             proof_attempts,
                             loop_iterations,
                         )?;
@@ -909,6 +1440,40 @@ impl Conditions {
                                     .checked_value(*predicate, inputs, states, operators)?
                             };
                             let (yes, no) = crate::event_numeric::sign(p.relation, value);
+                            // Same tau+ rule as an ordinary condition; loop bounds
+                            // have no derivative certificate, only a window one.
+                            let unsided = root.post
+                                && value.zero()
+                                && context
+                                    .dependence(
+                                        *predicate,
+                                        p.numeric,
+                                        &p.dependencies,
+                                        &path.moving,
+                                        root.window,
+                                        None,
+                                    )
+                                    .is_none_or(|m| !m.is_empty());
+                            let (yes, no) = match root.window.filter(|_| unsided) {
+                                Some(window) => {
+                                    context.charge_window(
+                                        states,
+                                        p.numeric.then_some(&p.expression),
+                                    )?;
+                                    context
+                                        .window_value(
+                                            *predicate,
+                                            p.numeric.then_some((&p.expression, &p.dependencies)),
+                                            window,
+                                            &path.window,
+                                        )
+                                        .map_or((false, false), |v| {
+                                            crate::event_numeric::sign(p.relation, v)
+                                        })
+                                }
+                                None if unsided => (false, false),
+                                None => (yes, no),
+                            };
                             if !value.finite() || !(yes || no) {
                                 return Err(Error::new(
                                     "event_condition",
@@ -946,7 +1511,8 @@ impl Conditions {
                                 operators,
                                 states,
                                 written,
-                                at_root,
+                                path,
+                                root,
                                 proof_attempts,
                                 loop_iterations,
                             )?;
@@ -964,7 +1530,8 @@ impl Conditions {
                                 operators,
                                 states,
                                 written,
-                                at_root,
+                                path,
+                                root,
                                 proof_attempts,
                                 loop_iterations,
                             )?;
@@ -993,32 +1560,68 @@ impl Conditions {
                             }
                             states.try_assign(a.state, &a.expression, &numeric_nodes, value)?;
                             written[a.state] = true;
+                            // Replay the same write over the right window. A value
+                            // read from a moving voltage or history at te varies
+                            // with te, although its enclosure is taken at tau.
+                            let window_value = match root.window {
+                                Some(window) => {
+                                    context.charge_window(
+                                        states,
+                                        a.numeric.then_some(&a.expression),
+                                    )?;
+                                    context.window_value(
+                                        a.row,
+                                        a.numeric.then_some((&a.expression, &a.dependencies)),
+                                        window,
+                                        &path.window,
+                                    )
+                                }
+                                None => None,
+                            };
+                            path.moving[a.state] = context.dependence(
+                                a.row,
+                                a.numeric,
+                                &a.dependencies,
+                                &path.moving,
+                                root.window,
+                                window_value,
+                            );
+                            path.window[a.state] = window_value;
+                        } else if let Some(a) = assignments.get(*index) {
+                            // An untracked write is never read by a condition.
+                            path.moving[a.state] = None;
+                            path.window[a.state] = None;
                         }
                     }
                     Step::Display(index) => ordered.push(SelectedStep::Display(*index)),
                     Step::If { predicate, yes, no } => {
                         let p = &predicates[*predicate];
-                        let value = if p.numeric {
-                            crate::event_numeric::bounds_with_proofs(
-                                &p.expression,
-                                &numeric_nodes,
-                                states,
-                            )?
-                        } else if p.dependencies.state_dependencies.is_empty()
-                            && !bounds.unwrap().symbolic(*predicate)
+                        // A root read is certified only when this read uses it.
+                        let (value, certified) = if p.numeric {
+                            (
+                                crate::event_numeric::bounds_with_proofs(
+                                    &p.expression,
+                                    &numeric_nodes,
+                                    states,
+                                )?,
+                                false,
+                            )
+                        } else if (p.dependencies.state_dependencies.is_empty()
+                            && !bounds.unwrap().symbolic(*predicate))
+                            || (root.at_root[*predicate]
+                                && p.dependencies
+                                    .state_dependencies
+                                    .iter()
+                                    .all(|&state| !written[state]))
                         {
-                            values[*predicate]
-                        } else if at_root[*predicate]
-                            && p.dependencies
-                                .state_dependencies
-                                .iter()
-                                .all(|&state| !written[state])
-                        {
-                            values[*predicate]
+                            (values[*predicate], root.certified[*predicate])
                         } else {
-                            bounds
-                                .unwrap()
-                                .checked_value(*predicate, inputs, states, operators)?
+                            (
+                                bounds
+                                    .unwrap()
+                                    .checked_value(*predicate, inputs, states, operators)?,
+                                false,
+                            )
                         };
                         let value = if value.sign().is_none() {
                             let exact = states.try_value(&p.expression, &numeric_nodes)?;
@@ -1041,24 +1644,64 @@ impl Conditions {
                         } else {
                             value
                         };
-                        // Right limit of a state-independent value proved zero at tau.
-                        let value = if value.zero()
-                            && !at_root[*predicate]
-                            && !p.numeric
-                            && p.dependencies.state_dependencies.is_empty()
-                        {
-                            post_root_slope(*predicate).map_or(value, side_value)
+                        // At tau+ an exact zero decides nothing by itself: use the
+                        // derivative side of a state-independent value, or a
+                        // time-invariant tie. Otherwise only an enclosure over the
+                        // right window on this path can decide the comparison.
+                        let mut unsided = false;
+                        let value = if root.post && value.zero() && !certified {
+                            let slope = (!p.numeric
+                                && p.dependencies.state_dependencies.is_empty())
+                            .then(|| post_root_slope(*predicate))
+                            .flatten();
+                            match slope {
+                                Some(side) => side_value(side),
+                                None => {
+                                    unsided = context
+                                        .dependence(
+                                            *predicate,
+                                            p.numeric,
+                                            &p.dependencies,
+                                            &path.moving,
+                                            root.window,
+                                            None,
+                                        )
+                                        .is_none_or(|m| !m.is_empty());
+                                    value
+                                }
+                            }
                         } else {
                             value
                         };
+                        let window_value = match root.window.filter(|_| unsided) {
+                            Some(window) => {
+                                context
+                                    .charge_window(states, p.numeric.then_some(&p.expression))?;
+                                context.window_value(
+                                    *predicate,
+                                    p.numeric.then_some((&p.expression, &p.dependencies)),
+                                    window,
+                                    &path.window,
+                                )
+                            }
+                            None => None,
+                        };
                         let (yes_proved, no_proved) = match p.relation {
+                            _ if unsided => window_value.map_or((false, false), |v| {
+                                crate::diagnostics::counter("post_root_window_reads", 1);
+                                crate::event_numeric::sign(p.relation, v)
+                            }),
                             Relation::Lt => (value.hi < 0.0, value.lo >= 0.0),
                             Relation::Le => (value.hi <= 0.0, value.lo > 0.0),
                             Relation::Gt => (value.lo > 0.0, value.hi <= 0.0),
                             Relation::Ge => (value.lo >= 0.0, value.hi < 0.0),
                         };
                         if !value.finite() || !(yes_proved || no_proved) {
-                            let original = Error::new("event_condition", format!("cannot certify {:?} condition at {}: difference in [{:e}, {:e}]", p.relation, p.origin.label(), value.lo, value.hi));
+                            let original = if unsided {
+                                Error::new("event_condition", format!("cannot certify {:?} condition at {} just after its crossing root: the difference is exactly zero at tau and has no one-sided or right-window certificate", p.relation, p.origin.label()))
+                            } else {
+                                Error::new("event_condition", format!("cannot certify {:?} condition at {}: difference in [{:e}, {:e}]", p.relation, p.origin.label(), value.lo, value.hi))
+                            };
                             if !value.finite() || *proof_attempts > MAX_BRANCH_PROOF_ATTEMPTS - 2 {
                                 return Err(original);
                             }
@@ -1076,6 +1719,8 @@ impl Conditions {
                             let mut ns = states.try_clone()?;
                             let mut yw = written.to_vec();
                             let mut nw = written.to_vec();
+                            let mut yv = path.clone();
+                            let mut nv = path.clone();
                             let yr = walk(
                                 yes,
                                 values,
@@ -1090,7 +1735,8 @@ impl Conditions {
                                 operators,
                                 &mut ys,
                                 &mut yw,
-                                at_root,
+                                &mut yv,
+                                root,
                                 proof_attempts,
                                 loop_iterations,
                             );
@@ -1108,7 +1754,8 @@ impl Conditions {
                                 operators,
                                 &mut ns,
                                 &mut nw,
-                                at_root,
+                                &mut nv,
+                                root,
                                 proof_attempts,
                                 loop_iterations,
                             );
@@ -1147,12 +1794,18 @@ impl Conditions {
                                 || !no_display
                                 || !same_bounds
                                 || yw != nw
+                                || yv.moving != nv.moving
                             {
                                 return Err(original);
                             }
                             ys.prepay_comparison(&ns)?;
                             states.merge(ys, &ns);
                             written.copy_from_slice(&yw);
+                            // The actual tau+ path is one of the two arms.
+                            for (state, (a, b)) in yv.window.iter().zip(&nv.window).enumerate() {
+                                path.window[state] = a.zip(*b).map(|(a, b)| a.hull(b));
+                            }
+                            path.moving = yv.moving;
                             actions.extend(ya);
                             ordered.extend(yo);
                             // The chosen writes are identical. Keep the reads from
@@ -1178,7 +1831,8 @@ impl Conditions {
                             operators,
                             states,
                             written,
-                            at_root,
+                            path,
+                            root,
                             proof_attempts,
                             loop_iterations,
                         )?;
@@ -1189,6 +1843,27 @@ impl Conditions {
         }
         let mut result = Selection::default();
         let mut proof_attempts = 0;
+        // Right-window reads of this batch, shared by its tau+ bodies.
+        let window = post_root_window()
+            .filter(|w| w.inputs.len() == self.driven_nodes.len())
+            .map(|w| {
+                let mut nodes = vec![
+                    I {
+                        lo: f64::NEG_INFINITY,
+                        hi: f64::INFINITY
+                    };
+                    self.node_count
+                ];
+                nodes[0] = I::ZERO;
+                for (&node, &value) in self.driven_nodes.iter().zip(&w.inputs) {
+                    nodes[node] = value;
+                }
+                WindowReads {
+                    inputs: w.inputs,
+                    operators: w.operators,
+                    nodes,
+                }
+            });
         for &event in events {
             if !self.active_events[event] {
                 continue;
@@ -1205,6 +1880,17 @@ impl Conditions {
             let mut states =
                 crate::event_value_proof::LocalState::try_with_context(before_bounds, proofs)?;
             let mut written = vec![false; self.state_count];
+            let post = post_root_event(event);
+            let window = window.as_ref().filter(|_| post);
+            // No other event changes the accepted states before this body.
+            let mut path = PathFacts {
+                moving: vec![Some(Moving::new()); self.state_count],
+                window: if window.is_some() && before_bounds.len() == self.state_count {
+                    before_bounds.iter().copied().map(Some).collect()
+                } else {
+                    vec![None; self.state_count]
+                },
+            };
             walk(
                 &self.bodies[event],
                 &values,
@@ -1219,7 +1905,13 @@ impl Conditions {
                 operators,
                 &mut states,
                 &mut written,
-                &at_root,
+                &mut path,
+                RootFacts {
+                    at_root: &at_root,
+                    certified: &certified,
+                    post,
+                    window,
+                },
                 &mut proof_attempts,
                 &mut loop_iterations,
             )?;

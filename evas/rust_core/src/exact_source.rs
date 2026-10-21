@@ -43,6 +43,20 @@ pub(crate) struct Crossing {
     pub segment: [I; 2],
     pub ends: [I; 2],
     pub slope: I,
+    /// Exact arrival only: sign of the next affine piece end (0: plateau),
+    /// which certifies the guard side just after the arrival. None at stop.
+    pub after: Option<i8>,
+}
+
+/// Exact sign of a rational value.
+fn rational_sign(value: &R) -> i8 {
+    if value.is_zero() {
+        0
+    } else if value.is_positive() {
+        1
+    } else {
+        -1
+    }
 }
 
 pub(crate) fn enclosure(value: &R) -> Option<I> {
@@ -638,7 +652,7 @@ impl Curve {
         let stop = binary(stop)?;
         let mut budget = Budget(0);
         let mut out = Vec::new();
-        for pair in self.0.windows(2) {
+        for (index, pair) in self.0.windows(2).enumerate() {
             let (a, x) = &pair[0];
             let (b, y) = &pair[1];
             if x.is_zero() {
@@ -670,10 +684,17 @@ impl Curve {
             if time <= R::zero() || time > stop {
                 continue;
             }
+            // The next piece is affine from this exact zero to its end value.
+            let after = if !y.is_zero() || time == stop {
+                None
+            } else {
+                self.0.get(index + 2).map(|(_, z)| rational_sign(z))
+            };
             out.push(Crossing {
                 time: RootTime::raw(time.clone()),
                 segment: [enclosure(a)?, enclosure(b)?],
                 ends: [enclosure(x)?, enclosure(y)?],
+                after,
                 // An upper representative at a nonbinary corner can lie in
                 // the outgoing segment. Bound every slope up to the latest
                 // representative accepted by Root, including that segment.
@@ -1037,8 +1058,29 @@ mod tests {
         assert_eq!(all.len(), 2);
         assert_eq!(all[0].time.0, R::new(1.into(), 3.into()));
         assert_eq!(all[1].time.0, R::from_integer(1.into()));
+        // The first arrival enters a plateau; nothing follows the one at stop.
+        assert_eq!((all[0].after, all[1].after), (Some(0), None));
         assert_eq!(curve.crossings(1, 1.).unwrap().len(), 1);
         assert_eq!(curve.crossings(-1, 1.).unwrap().len(), 1);
+    }
+
+    #[test]
+    fn exact_arrival_records_the_side_of_its_next_piece() {
+        let after = |points: &[[f64; 2]], stop: f64| {
+            Curve::source(points)
+                .unwrap()
+                .crossings(0, stop)
+                .unwrap()
+                .iter()
+                .map(|crossing| crossing.after)
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(after(&[[0., -1.], [1., 0.], [2., 1.]], 2.), vec![Some(1)]);
+        assert_eq!(after(&[[0., -1.], [1., 0.], [2., -1.]], 2.), vec![Some(-1)]);
+        assert_eq!(after(&[[0., -1.], [1., 0.], [2., 0.]], 2.), vec![Some(0)]);
+        // At stop there is no right limit; a strict root keeps its own ends.
+        assert_eq!(after(&[[0., -1.], [1., 0.], [2., 1.]], 1.), vec![None]);
+        assert_eq!(after(&[[0., -1.], [2., 1.]], 2.), vec![None]);
     }
 
     #[test]

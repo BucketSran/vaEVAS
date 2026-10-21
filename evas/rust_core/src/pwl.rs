@@ -13,16 +13,21 @@ pub(crate) struct Root {
     segment: [f64; 2],
     ends: [I; 2],
     source_time: Option<crate::exact_source::RootTime>,
+    // Exact arrival only: certified guard sign on the following affine
+    // segment (0 = proven plateau). None at stop or without such a segment.
+    after: Option<i8>,
 }
 
 impl Root {
-    /// Side of the guard just after a strict sign-changing root. The guard is
-    /// affine between its segment knots and both knot values are strictly
-    /// signed, so the end sign holds on (root, segment end]. Exact arrivals
-    /// (a zero end value) certify no side.
+    /// Certified sign of the guard just after this root; 0 is a proven
+    /// plateau. A strict sign-changing root keeps its segment end sign on
+    /// (root, segment end], since the guard is affine between knots with
+    /// strictly signed end values. An exact arrival uses the next affine
+    /// segment instead. No side exists for an arrival at stop.
     pub(crate) fn post_root_side(&self) -> Option<i8> {
         match (self.ends[0].sign(), self.ends[1].sign()) {
             (Some(a), Some(b)) if a != 0 && b == -a => Some(b),
+            (Some(a), Some(0)) if a != 0 => self.after,
             _ => None,
         }
     }
@@ -33,6 +38,7 @@ impl Root {
             segment: [crossing.segment[0].lo, crossing.segment[1].hi],
             ends: crossing.ends,
             source_time: Some(crossing.time),
+            after: crossing.after,
         })
     }
     pub(crate) fn with_source_time_history(
@@ -65,6 +71,7 @@ impl Root {
             segment: [crossing.segment[0].lo, crossing.segment[1].hi],
             ends: crossing.ends,
             source_time: Some(crossing.time),
+            after: crossing.after,
         }))
     }
     pub(crate) fn with_source_time(mut self, curve: Option<&crate::exact_source::Curve>) -> Self {
@@ -1522,6 +1529,7 @@ impl Trajectory {
                         segment,
                         ends: [a, b],
                         source_time: None,
+                        after: None,
                     },
                     b.sign().unwrap(),
                 ))
@@ -1529,6 +1537,8 @@ impl Trajectory {
                 // Arrival owns an exact zero, including plateau entry and stop.
                 // Staying at or departing from zero matches neither branch;
                 // only a later nonzero-to-zero arrival can fire again.
+                // The guard is affine on the next knot segment, so its end
+                // sign certifies the side just after the arrival (0: plateau).
                 Some((
                     Root {
                         bounds: I::point(segment[1]),
@@ -1536,6 +1546,7 @@ impl Trajectory {
                         segment,
                         ends: [a, b],
                         source_time: None,
+                        after: values.get(index + 2).and_then(|next| next.sign()),
                     },
                     -a.sign().unwrap(),
                 ))
@@ -1804,6 +1815,7 @@ mod tests {
             segment: [0.0, 2.0],
             ends: [I { lo: -1.1, hi: -0.9 }, I { lo: 0.9, hi: 1.1 }],
             source_time: None,
+            after: None,
         };
         let proved = root.clone().with_source_time(Some(&curve));
         assert_eq!(proved.bounds, I::ONE);
@@ -1833,7 +1845,38 @@ mod tests {
             segment: [0.0, 19.0],
             ends: [a, b],
             source_time: None,
+            after: None,
         }
+    }
+
+    #[test]
+    fn exact_arrival_side_comes_from_the_next_affine_segment() {
+        let trajectory = Trajectory::new(
+            serde_json::from_value(serde_json::json!({
+                "pwl":[[[0.,0.],[1.,1.]]],"output_times":[0.,1.],"stop":1.,"max_step":1.
+            }))
+            .unwrap(),
+            1,
+        )
+        .unwrap();
+        let sides = |knots: &[f64], values: &[f64]| {
+            let values: Vec<_> = values.iter().copied().map(I::point).collect();
+            trajectory
+                .roots(knots, &values, 0)
+                .unwrap()
+                .iter()
+                .map(Root::post_root_side)
+                .collect::<Vec<_>>()
+        };
+        let knots = [0., 0.5, 1.];
+        // Continue, turn back and plateau after an exact arrival at 0.5.
+        assert_eq!(sides(&knots, &[-0.5, 0., 0.5]), vec![Some(1)]);
+        assert_eq!(sides(&knots, &[-0.5, 0., -0.5]), vec![Some(-1)]);
+        assert_eq!(sides(&knots, &[-0.5, 0., 0.]), vec![Some(0)]);
+        // A strict root keeps its segment end sign.
+        assert_eq!(sides(&knots, &[-0.5, 0.25, 0.5]), vec![Some(1)]);
+        // An arrival at stop has no observable right limit.
+        assert_eq!(sides(&[0., 1.], &[-0.5, 0.]), vec![None]);
     }
 
     #[test]
@@ -1844,6 +1887,7 @@ mod tests {
             segment: [0.0, 4.0],
             ends: [I::point(-1e308), I::point(1e308)],
             source_time: None,
+            after: None,
         };
         root.refine_representable();
         assert_eq!(root.bounds, I::point(2.0));
@@ -1875,6 +1919,7 @@ mod tests {
             segment: [0.0, 1.0],
             ends: [I::point(-tiny), I::point(2.0 * tiny)],
             source_time: None,
+            after: None,
         };
         subnormal.refine_representable();
         assert_ne!(subnormal.bounds.lo, subnormal.bounds.hi);
@@ -1904,6 +1949,7 @@ mod exact_mixed_order_tests {
             segment: [t0, t1],
             ends: [I::point(a), I::point(b)],
             source_time: None,
+            after: None,
         }
     }
     proptest! {
@@ -1944,6 +1990,7 @@ impl Root {
             segment: self.segment,
             ends: self.ends,
             source_time,
+            after: self.after,
         })
     }
     pub(crate) fn rational_time_with_work(
