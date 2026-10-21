@@ -406,7 +406,10 @@ impl HeldEpoch {
         })
     }
     fn range(&self, time: I) -> Result<I, Error> {
-        let delta = bounded(time - self.window)?;
+        self.range_elapsed(bounded(time - self.window)?)
+    }
+    /// `delta` encloses the signed time since the exact epoch start.
+    fn range_elapsed(&self, delta: I) -> Result<I, Error> {
         let elapsed = I {
             lo: delta.lo.max(0.),
             hi: delta.hi.max(0.),
@@ -565,6 +568,46 @@ impl HeldSlew {
         self.breakpoints
             .get(self.breakpoints.partition_point(|time| *time <= after))
             .copied()
+    }
+    /// The unique epoch whose cut window lies at or before `time` while the
+    /// next cut window lies strictly after it. Only this epoch defines the
+    /// output at that point.
+    pub(crate) fn point_epoch(&self, time: f64) -> Option<usize> {
+        if !time.is_finite() || time <= 0. || time > self.stop {
+            return None;
+        }
+        let index = self
+            .epochs
+            .partition_point(|epoch| epoch.window.hi <= time)
+            .checked_sub(1)?;
+        if self.epochs.get(index + 1).is_some_and(|next| next.window.lo <= time) {
+            return None;
+        }
+        Some(index)
+    }
+    /// Point output with the epoch start located by `offset`, an enclosure of
+    /// exact_start - start. The elapsed time is (time - start) - offset, which
+    /// retains the exact cut position instead of the cut's binary64 window.
+    /// Both this and the window range enclose the output; return their meet.
+    pub(crate) fn point_range_with_offset(
+        &self,
+        time: f64,
+        index: usize,
+        offset: I,
+    ) -> Result<I, Error> {
+        let window = self.range(I::point(time))?;
+        if self.point_epoch(time) != Some(index) || !offset.finite() {
+            return Ok(window);
+        }
+        let epoch = &self.epochs[index];
+        let delta = bounded((I::point(time) - I::point(epoch.start)) - offset)?;
+        let exact = epoch.range_elapsed(delta)?;
+        let lo = window.lo.max(exact.lo);
+        let hi = window.hi.min(exact.hi);
+        if lo > hi {
+            return Err(unresolved("held slew exact-start range is inconsistent"));
+        }
+        Ok(I { lo, hi })
     }
     pub(crate) fn same_history(&self, other: &Self) -> bool {
         Arc::ptr_eq(&self.epochs, &other.epochs)

@@ -19,8 +19,24 @@ pub(crate) struct Budget(pub(crate) usize);
 
 /// An immutable time proved from original affine source arithmetic. Construction
 /// is bounded and must agree with the interval discovery that found the root.
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub(crate) struct RootTime(R);
+#[derive(Clone, PartialEq, Eq)]
+pub(crate) struct RootTime(R, TightCache);
+
+/// Memo of one paid outward binary64 enclosure of the immutable rational.
+/// It is not part of the value: equality, ordering and Debug ignore it.
+#[derive(Clone, Default)]
+pub(crate) struct TightCache(std::sync::OnceLock<Option<I>>);
+impl PartialEq for TightCache {
+    fn eq(&self, _: &Self) -> bool {
+        true
+    }
+}
+impl Eq for TightCache {}
+impl std::fmt::Debug for RootTime {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("RootTime").field(&self.0).finish()
+    }
+}
 
 pub(crate) struct Crossing {
     pub time: RootTime,
@@ -70,6 +86,9 @@ fn contains(bounds: I, value: &R) -> bool {
 pub(crate) type TimeProofs = std::collections::BTreeMap<usize, RootTime>;
 
 impl RootTime {
+    pub(crate) fn raw(value: R) -> Self {
+        Self(value, TightCache::default())
+    }
     pub(crate) fn copy_items(&self) -> usize {
         4 + ((self.0.numer().bits() + self.0.denom().bits()) as usize).div_ceil(8)
     }
@@ -78,7 +97,7 @@ impl RootTime {
         &self.0
     }
     pub(crate) fn point(time: f64) -> Option<Self> {
-        Some(Self(binary(time)?))
+        Some(Self::raw(binary(time)?))
     }
     /// A bounded real witness, including cells without a binary64 interior.
     /// Callers must separately prove the complete root partition.
@@ -89,7 +108,7 @@ impl RootTime {
         let mut budget = Budget(0);
         let sum = budget.check(&left.0 + &right.0)?;
         let middle = budget.check(sum / R::from_integer(2.into()))?;
-        (left.0 < middle && middle < right.0).then_some(Self(middle))
+        (left.0 < middle && middle < right.0).then_some(Self::raw(middle))
     }
     /// Original fixed-clock arithmetic; the proof must fit discovery unchanged.
     pub(crate) fn from_clock(clock: crate::exact_time::Clock, discovery: I) -> Option<Self> {
@@ -99,12 +118,12 @@ impl RootTime {
         let mut budget = Budget(0);
         let offset = budget.check(binary(clock.period)? * R::from_integer(clock.index.into()))?;
         let time = budget.check(binary(clock.start)? + offset)?;
-        contains(discovery, &time).then_some(Self(time))
+        contains(discovery, &time).then_some(Self::raw(time))
     }
 
     pub(crate) fn shifted_fixed(&self, delta: f64, discovery: I) -> Option<Self> {
         let time = Budget(0).check(&self.0 + binary(delta)?)?;
-        contains(discovery, &time).then_some(Self(time))
+        contains(discovery, &time).then_some(Self::raw(time))
     }
 
     pub(crate) fn affine(value: R, slope: R, bounds: I) -> Option<Self> {
@@ -112,7 +131,7 @@ impl RootTime {
             return None;
         }
         let root = Budget(0).check(-value / slope)?;
-        contains(bounds, &root).then_some(Self(root))
+        contains(bounds, &root).then_some(Self::raw(root))
     }
 
     fn from_affine(segment: [f64; 2], ends: [R; 2], bounds: I) -> Option<Self> {
@@ -128,7 +147,7 @@ impl RootTime {
         let numerator = budget.check(a * duration)?;
         let shift = budget.check(numerator / change)?;
         let time = budget.check(&start - shift)?;
-        (start < time && time <= end && contains(bounds, &time)).then_some(Self(time))
+        (start < time && time <= end && contains(bounds, &time)).then_some(Self::raw(time))
     }
 
     pub(crate) fn point_ends(segment: [f64; 2], ends: [I; 2], bounds: I) -> Option<Self> {
@@ -146,7 +165,7 @@ impl RootTime {
         let mut budget = Budget(0);
         let offset = budget.check(binary(clock.period)? * R::from_integer(clock.index.into()))?;
         let absolute = budget.check(binary(clock.start)? + offset)?;
-        Some(Self(budget.check(&self.0 + absolute)?))
+        Some(Self::raw(budget.check(&self.0 + absolute)?))
     }
 
     pub(crate) fn refine(&self, discovery: I) -> Option<I> {
@@ -652,7 +671,7 @@ impl Curve {
                 continue;
             }
             out.push(Crossing {
-                time: RootTime(time.clone()),
+                time: RootTime::raw(time.clone()),
                 segment: [enclosure(a)?, enclosure(b)?],
                 ends: [enclosure(x)?, enclosure(y)?],
                 // An upper representative at a nonbinary corner can lie in
@@ -697,7 +716,7 @@ impl Curve {
             if a >= b {
                 return None;
             }
-            out.extend([RootTime(a.clone()), RootTime(b.clone())]);
+            out.extend([RootTime::raw(a.clone()), RootTime::raw(b.clone())]);
             if x.is_zero() || y.is_zero() || x.is_positive() == y.is_positive() {
                 continue;
             }
@@ -710,7 +729,7 @@ impl Curve {
                 return None;
             }
             enclosure(&root)?;
-            out.push(RootTime(root));
+            out.push(RootTime::raw(root));
         }
         out.sort_by(RootTime::order);
         out.dedup_by(|a, b| a.order(b) == std::cmp::Ordering::Equal);
@@ -1061,7 +1080,7 @@ mod tests {
         assert!(super::binary(window.lo).unwrap() < exact);
         assert!(super::binary(window.hi).unwrap() > exact);
         assert_eq!(curve.sign_at_root(root), Some(0));
-        let representative = super::RootTime(super::binary(window.hi).unwrap());
+        let representative = super::RootTime::raw(super::binary(window.hi).unwrap());
         assert_eq!(curve.sign_at_root(&representative), Some(1));
     }
 
@@ -1758,6 +1777,22 @@ impl RootTime {
     ) -> Result<Option<I>, crate::ir::Error> {
         enclosure_with_work(&self.0, w)
     }
+    /// The same paid outward enclosure as `bounds_with_work`, computed at most
+    /// once per immutable root. Later reads pay only the lookup. A failed or
+    /// exhausted computation installs nothing.
+    pub(crate) fn memo_bounds_with_work(
+        &self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<I>, crate::ir::Error> {
+        event_prefix_fees::metadata(w, 16)?;
+        if let Some(bounds) = self.1 .0.get() {
+            crate::diagnostics::counter("exact_root_enclosure_memo_hits", 1);
+            return Ok(*bounds);
+        }
+        let bounds = enclosure_with_work(&self.0, w)?;
+        let _ = self.1 .0.set(bounds);
+        Ok(bounds)
+    }
     fn difference_clock_reservation(
         &self,
         clock: crate::exact_time::Clock,
@@ -1795,6 +1830,20 @@ impl RootTime {
         delta: f64,
         w: &crate::transition_source_plan::Work,
     ) -> Result<Option<std::cmp::Ordering>, crate::ir::Error> {
+        // A degenerate clock with zero delta is the exact binary64 point
+        // `clock.start`. An outward enclosure strictly on one side of it
+        // proves the sign of root - start; the memo avoids repeating the
+        // rational difference at every query of the same pending root.
+        if delta == 0. && (clock.index == 0 || clock.period == 0.) && clock.start.is_finite() {
+            if let Some(bounds) = self.memo_bounds_with_work(w)? {
+                if bounds.hi < clock.start {
+                    return Ok(Some(std::cmp::Ordering::Less));
+                }
+                if bounds.lo > clock.start {
+                    return Ok(Some(std::cmp::Ordering::Greater));
+                }
+            }
+        }
         let Some(difference) = self.difference_clock_reservation(clock, w)? else {
             return Ok(None);
         };
@@ -1958,7 +2007,7 @@ mod refine_reuse_tests {
                 },
             ),
         ] {
-            let root = RootTime(value);
+            let root = RootTime::raw(value);
             let work = Work::default();
             let result = root.refine_with_work(discovery, &work).unwrap();
             assert_eq!(result, Some(expected));
@@ -1968,7 +2017,7 @@ mod refine_reuse_tests {
 
     #[test]
     fn incompatible_discovery_pays_contains_without_running_enclosure() {
-        let root = RootTime(R::new(3.into(), 2.into()));
+        let root = RootTime::raw(R::new(3.into(), 2.into()));
         let discovery = I { lo: 0., hi: 1. };
         let (lo, hi) = event_prefix_fees::endpoint_widths(discovery).unwrap();
         let containment =
@@ -1995,7 +2044,7 @@ mod refine_reuse_tests {
 
     #[test]
     fn enclosure_reservation_failure_is_sticky_for_two_retries() {
-        let root = RootTime(R::new(3.into(), 2.into()));
+        let root = RootTime::raw(R::new(3.into(), 2.into()));
         let discovery = I { lo: 1., hi: 2. };
         let (lo, hi) = event_prefix_fees::endpoint_widths(discovery).unwrap();
         let containment =
@@ -2161,5 +2210,87 @@ mod generic_enclosure_paid_tests {
             assert_eq!(paid.finish(result).unwrap_err().kind, "step_budget");
             assert!(work.spent() >= spent);
         }
+    }
+}
+
+#[cfg(test)]
+mod memo_clock_order_controls {
+    use super::*;
+    use crate::exact_time::Clock;
+    use crate::transition_source_plan::Work;
+
+    fn point(start: f64) -> Clock {
+        Clock {
+            start,
+            period: 0.,
+            index: 0,
+        }
+    }
+
+    #[test]
+    fn repeated_point_queries_reuse_one_paid_enclosure_with_exact_answers() {
+        // 1/3 is not dyadic: the uncached route pays a rational difference
+        // and comparison for every query of the same pending root.
+        let root = RootTime::raw(R::new(1.into(), 3.into()));
+        let near = root.bounds().unwrap();
+        let queries = [0.25, 0.5, near.lo, near.hi, 1e-300, 1.];
+        let memo = Work::default();
+        for &t in &queries {
+            assert_eq!(
+                root.clock_delta_order_with_work(point(t), 0., &memo).unwrap(),
+                root.clock_delta_order(point(t), 0.),
+            );
+        }
+        let separated = [0.25, 0.5, 1e-300, 1.];
+        let first = memo.spent();
+        for &t in &separated {
+            root.clock_delta_order_with_work(point(t), 0., &memo).unwrap();
+        }
+        let repeated = memo.spent() - first;
+        // Lower bound of the uncached route: its reservation alone.
+        let fresh = Work::default();
+        for &t in &separated {
+            RootTime::raw(R::new(1.into(), 3.into()))
+                .difference_clock_reservation(point(t), &fresh)
+                .unwrap();
+        }
+        assert!(repeated < fresh.spent(), "{repeated} vs {}", fresh.spent());
+    }
+
+    #[test]
+    fn coincident_or_nonpoint_clocks_keep_the_exact_rational_route() {
+        let work = Work::default();
+        // The enclosure of an exact binary point touches the query: only the
+        // rational difference may decide equality.
+        let root = RootTime::raw(R::new(3.into(), 2.into()));
+        assert_eq!(
+            root.clock_delta_order_with_work(point(1.5), 0., &work).unwrap(),
+            Some(std::cmp::Ordering::Equal)
+        );
+        // A periodic clock or nonzero delta is not the binary64 start.
+        let clock = Clock {
+            start: 0.5,
+            period: 0.5,
+            index: 2,
+        };
+        assert_eq!(
+            root.clock_delta_order_with_work(clock, 0., &work).unwrap(),
+            Some(std::cmp::Ordering::Equal)
+        );
+        assert_eq!(
+            root.clock_delta_order_with_work(point(1.), 0.5, &work).unwrap(),
+            Some(std::cmp::Ordering::Equal)
+        );
+        // An exhausted owner installs no memo and still refuses.
+        let empty = Work::limited([128, 8192, 0]);
+        let fresh = RootTime::raw(R::new(1.into(), 3.into()));
+        assert_eq!(
+            fresh
+                .clock_delta_order_with_work(point(0.5), 0., &empty)
+                .unwrap_err()
+                .kind,
+            "step_budget"
+        );
+        assert!(fresh.1 .0.get().is_none());
     }
 }

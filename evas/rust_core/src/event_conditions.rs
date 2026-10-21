@@ -144,12 +144,76 @@ struct Predicate {
     numeric: bool,
 }
 
+// LRM 2.4 section 5.10.3.1: a cross event occurs after the threshold crossing,
+// inside the time/expression tolerance box. EVAS observes the right limit
+// tau+ of a certified transverse root. Continuous values keep their root
+// enclosure there. A predicate with the same exact zero set as a fired guard
+// g, d = k*g, has sign k*s where s is the certified crossing side. Another
+// state-independent predicate proved exactly zero at tau takes the sign of its
+// certified time derivative on (tau, tau+e]. Without these certificates the
+// earlier g(tau)=0 observation is kept.
+#[derive(Default)]
+struct PostRoot {
+    // (calendar leaf, crossing side)
+    sides: Vec<(usize, i8)>,
+    // (predicate, strict derivative sign on the post-root interval)
+    slopes: Vec<(usize, i8)>,
+}
+thread_local! {
+    static POST_ROOT: std::cell::RefCell<PostRoot> =
+        std::cell::RefCell::new(PostRoot::default());
+}
+
+/// Scope the certified post-root facts of one calendar batch. Dropping the
+/// scope restores the enclosing value, so nothing survives its batch.
+pub(crate) struct PostRootSides(PostRoot);
+impl PostRootSides {
+    pub(crate) fn install(sides: Vec<(usize, i8)>, slopes: Vec<(usize, i8)>) -> Self {
+        Self(POST_ROOT.with(|cell| cell.replace(PostRoot { sides, slopes })))
+    }
+}
+impl Drop for PostRootSides {
+    fn drop(&mut self) {
+        let previous = std::mem::take(&mut self.0);
+        POST_ROOT.with(|cell| *cell.borrow_mut() = previous);
+    }
+}
+
+fn unique(entries: &[(usize, i8)], key: usize) -> Option<i8> {
+    let mut found = entries.iter().filter(|(k, _)| *k == key).map(|(_, s)| *s);
+    let first = found.next()?;
+    found.all(|s| s == first).then_some(first)
+}
+
+/// Certified crossing side of a fired leaf just after its root, if any.
+pub(crate) fn post_root_side(leaf: usize) -> Option<i8> {
+    POST_ROOT.with(|cell| unique(&cell.borrow().sides, leaf))
+}
+
+fn post_root_slope(predicate: usize) -> Option<i8> {
+    POST_ROOT.with(|cell| unique(&cell.borrow().slopes, predicate))
+}
+
+fn side_value(side: i8) -> I {
+    match side {
+        1 => I { lo: f64::MIN_POSITIVE, hi: f64::MAX },
+        -1 => I { lo: -f64::MAX, hi: -f64::MIN_POSITIVE },
+        _ => I::ZERO,
+    }
+}
+
+/// Sign-only enclosure of d = k*g just after the root; [0,0] without a side.
+fn post_root_value(leaf: usize, ratio: i8) -> I {
+    side_value(post_root_side(leaf).map_or(0, |side| side * ratio))
+}
+
 pub(crate) struct Conditions {
     bodies: Vec<Vec<Step>>,
     predicates: Vec<Predicate>,
     bounds: Option<GuardBounds>,
     // Exact zero-set certificates, indexed by calendar leaf, not event body.
-    root_predicates: Vec<Vec<usize>>,
+    // Each entry keeps the sign of k in predicate difference = k * guard.
+    root_predicates: Vec<Vec<(usize, i8)>>,
     assignments: Vec<Vec<AssignmentBounds>>,
     action_identity: Vec<Vec<ActionIdentity>>,
     stateful_events: Vec<bool>,
@@ -625,7 +689,9 @@ impl Conditions {
                         }
                         .map(|bounds| {
                             (0..self.predicates.len())
-                                .filter(|&i| bounds.same_zero_set(0, i + 1))
+                                .filter_map(|i| {
+                                    bounds.zero_set_ratio_sign(0, i + 1).map(|k| (i, k))
+                                })
                                 .collect()
                         })
                         .unwrap_or_default()
@@ -637,6 +703,26 @@ impl Conditions {
             }
         }
         Ok(())
+    }
+
+    /// State-independent ordinary predicates of the given event bodies, with
+    /// their owner instance, for post-root derivative certificates.
+    pub(crate) fn right_limit_candidates(
+        &self,
+        events: &[usize],
+    ) -> Vec<(usize, &Expression, &str)> {
+        self.predicates
+            .iter()
+            .enumerate()
+            .filter(|(_, p)| {
+                events.contains(&p.event)
+                    && self.active_events.get(p.event).copied().unwrap_or(false)
+                    && !p.numeric
+                    && p.dependencies.state_dependencies.is_empty()
+                    && p.dependencies.operator_dependencies.is_empty()
+            })
+            .map(|(i, p)| (i, &p.expression, p.origin.instance.as_str()))
+            .collect()
     }
 
     pub(crate) fn select(&self, events: &[usize], inputs: &[I]) -> Result<Selection, Error> {
@@ -679,12 +765,24 @@ impl Conditions {
             .map(|b| b.values_with_operators(inputs, operators))
             .unwrap_or_default();
         let mut at_root = vec![false; self.predicates.len()];
+        let mut root_values: Vec<Option<I>> = vec![None; self.predicates.len()];
+        let mut conflicting = vec![false; self.predicates.len()];
         for &leaf in fired_leaves {
             if let Some(predicates) = self.root_predicates.get(leaf) {
-                for &predicate in predicates {
-                    values[predicate] = I::ZERO;
-                    at_root[predicate] = true;
+                for &(predicate, ratio) in predicates {
+                    let value = post_root_value(leaf, ratio);
+                    match root_values[predicate] {
+                        Some(old) if old != value => conflicting[predicate] = true,
+                        _ => root_values[predicate] = Some(value),
+                    }
                 }
+            }
+        }
+        for (predicate, value) in root_values.into_iter().enumerate() {
+            // Inconsistent same-root sides are not a proof; keep the root box.
+            if let Some(value) = value.filter(|_| !conflicting[predicate]) {
+                values[predicate] = value;
+                at_root[predicate] = true;
             }
         }
         #[allow(clippy::too_many_arguments)] // Keep the recursive event-selection context explicit.
@@ -916,7 +1014,7 @@ impl Conditions {
                                 .iter()
                                 .all(|&state| !written[state])
                         {
-                            I::ZERO
+                            values[*predicate]
                         } else {
                             bounds
                                 .unwrap()
@@ -940,6 +1038,16 @@ impl Conditions {
                             proved
                                 .filter(|v| value.lo <= v.lo && v.hi <= value.hi)
                                 .unwrap_or(value)
+                        } else {
+                            value
+                        };
+                        // Right limit of a state-independent value proved zero at tau.
+                        let value = if value.zero()
+                            && !at_root[*predicate]
+                            && !p.numeric
+                            && p.dependencies.state_dependencies.is_empty()
+                        {
+                            post_root_slope(*predicate).map_or(value, side_value)
                         } else {
                             value
                         };

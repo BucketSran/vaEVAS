@@ -89,8 +89,6 @@ class OrdinaryIntegerCurrentAlias(unittest.TestCase):
                 'selector = 1 + 0 * selector;'),
             'read_before_current_write': ORIGINAL.replace(assignment,
                 'vout_val = selector; ' + assignment),
-            'partial_current_write': ORIGINAL.replace(assignment,
-                'if (V(vsel) > vth) selector = 1;'),
             'second_current_write': ORIGINAL.replace('if (selector == 1)',
                 'selector = 1; if (selector == 1)'),
             'state_dependency': ORIGINAL.replace(assignment,
@@ -107,6 +105,17 @@ class OrdinaryIntegerCurrentAlias(unittest.TestCase):
         for name, text in cases.items():
             with self.subTest(name=name), self.assertRaises(CompileError):
                 build(text)
+
+    def test_partial_current_write_is_held_state(self):
+        # A conditional ordinary write keeps the previous value (LRM 2.4 5.3);
+        # see test_ordinary_held_state.py. Rising .45 sets, falling 1.55 clears.
+        p = build(ORIGINAL.replace('selector = (V(vsel) > vth) ? 1 : 0;',
+                                   'if (V(vsel) > vth) selector = 1;'))
+        times = [k/4 for k in range(9)]
+        response = self.response(p, times)
+        node = response['nodes'].index('vout')
+        self.assertEqual([row['voltages'][node] for row in response['solutions']],
+                         [.25, .25, .75, .75, .75, .75, .75, .25, .25])
 
     def test_input_port_driven_by_another_instance_is_not_a_current_source(self):
         driver = ('`include "disciplines.vams"\nmodule driver(y); output y; electrical y; '

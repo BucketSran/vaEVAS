@@ -197,7 +197,12 @@ class StatelessExpressionContracts(unittest.TestCase):
             with self.subTest(expr=expr),self.assertRaises(CompileError):compile_expr(expr)
         p=compile_expr('alias',declarations='real alias;')
         self.assertEqual(values(transient(p,{n:[[0,0],[1,0]] for n in INPUTS},[0,1],stop=1,max_step=1,kernel=KERNEL)),[0,0])
-        with self.assertRaises(CompileError):compile_expr('alias','if(V(a)>0) alias=1;','real alias;')
+        # A conditional write keeps the declaration zero until it is taken,
+        # then holds (LRM 2.4 5.3); see test_ordinary_held_state.py.
+        p=compile_expr('alias','if(V(a)>0.5) alias=1;','real alias;')
+        drive={n:[[0,0],[1,0]] for n in INPUTS}|{'a':[[0,0],[.25,1],[.5,0],[1,0]]}
+        self.assertEqual(values(transient(p,drive,[0,.1,.25,.75,1],stop=1,max_step=1,kernel=KERNEL)),[0,0,1,1,1])
+        with self.assertRaises(CompileError):compile_expr('alias','if(V(a)>0.5) alias=alias+1;','real alias;')
 
     def test_local_aliases_functions_and_loop_arrays_keep_decision_structure(self):
         result=solve(compile_expr('alias*V(b)','alias=V(a)>0;','real alias;'),list(INPUTS),[[-1,2,0,0],[1,2,0,0]],kernel=KERNEL)

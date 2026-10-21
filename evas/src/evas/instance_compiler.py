@@ -307,6 +307,11 @@ class InstanceCompiler:
 
     def compile(self):
         self.cache = bind_parameters(self.model, self.instance.parameters, self.instance.name)
+        from .ordinary_held_state import plan as ordinary_held_state
+        held_model = ordinary_held_state(self)
+        if held_model is not None:
+            # Original-source prefix routes do not see the rewritten roles.
+            self.model, self.event_body_source_model = held_model, None
         self.closed_initial_math = {}
         self.initial_math_source_model = self.model
         # Inspect source writers before scalarization unrolls even zero-trip
