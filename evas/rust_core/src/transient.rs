@@ -1331,6 +1331,76 @@ fn prepare_batch_until(
     Ok((next, records))
 }
 
+/// Budget, resource and IR failures are not certificate gaps.
+fn certificate_gap(error: &Error) -> bool {
+    !matches!(
+        error.kind,
+        "step_budget"
+            | "resource_budget"
+            | "event_budget"
+            | "event_loop_budget"
+            | "forcing_entry_budget"
+            | "invalid_ir"
+            | "invalid_inputs"
+    )
+}
+
+/// Input and accepted-history enclosures over W = [lo, next_up(hi)] for the
+/// batch root window [lo, hi]. W contains (tau, tau+e] for every root tau in
+/// [lo, hi], so a tau+ body can replay its selected path over W. There is no
+/// window when no body reads at tau+ or a root may lie at stop. Histories are
+/// read only when `operators` is given (an unpaid all-cross batch: a same-time
+/// timer may change a history before tau+) and only for read columns.
+pub(super) fn right_window(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    operators: Option<&Operators>,
+    scheduled: &[ScheduledEvent],
+    events: &[usize],
+) -> Result<Option<crate::event_conditions::RightWindow>, Error> {
+    if events.is_empty() || scheduled.is_empty() {
+        return Ok(None);
+    }
+    let mut root = I {
+        lo: f64::INFINITY,
+        hi: f64::NEG_INFINITY,
+    };
+    for event in scheduled {
+        root = root.hull(event_bounds(model, event)?);
+    }
+    if !(root.finite() && root.hi < trajectory.config.stop) {
+        return Ok(None);
+    }
+    let window = I {
+        lo: root.lo,
+        hi: root.hi.next_up(),
+    };
+    if let Some(work) = calendar_proof_work(model) {
+        // One range scan over every source knot; no history query is made.
+        let knots: usize = trajectory.config.pwl.iter().map(Vec::len).sum();
+        work.debit(2, (knots + model.driven.len() + 16) as u64)?;
+    }
+    let inputs = match crate::event_value_proof::history::input_range(model, trajectory, window) {
+        Ok((inputs, _)) => inputs,
+        Err(error) if certificate_gap(&error) => return Ok(None),
+        Err(error) => return Err(error),
+    };
+    let mut values = vec![None; model.program.operators.len()];
+    if let Some(operators) = operators.filter(|_| calendar_proof_work(model).is_none()) {
+        for index in model.conditions.window_operators(events) {
+            match operators.range(index, window) {
+                Ok((value, _)) => values[index] = Some(value),
+                Err(error) if certificate_gap(&error) => {}
+                Err(error) => return Err(error),
+            }
+        }
+    }
+    Ok(Some(crate::event_conditions::RightWindow {
+        inputs,
+        operators: values,
+    }))
+}
+
 /// Right-limit observation facts for one calendar batch (LRM 2.4 5.10.3.1:
 /// a cross event occurs after the crossing). A body fired only by cross
 /// leaves reads at tau+; a body fired by a timer leaf keeps that exact time.
@@ -1338,9 +1408,10 @@ fn prepare_batch_until(
 /// their next affine piece. Derivative signs come from the accepted pre-event
 /// histories on [lo, next_up(hi)], which covers (tau, tau+e] for every root
 /// tau in the batch window. A same-time timer may change an operator history
-/// before tau+, so a mixed batch uses input-only derivatives. Paid calendar
-/// contexts install sides without history derivatives. A missing fact is
-/// refused by the conditions; only certificate gaps are tolerated here.
+/// before tau+, so a mixed batch uses input-only derivatives and windows.
+/// Paid calendar contexts install sides and input windows without history
+/// queries. A missing fact is refused by the conditions; only certificate
+/// gaps are tolerated here.
 fn post_root_scope(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -1375,11 +1446,20 @@ fn post_root_scope(
         .filter(|e| cross(e.event))
         .filter_map(|e| e.post_root_side().map(|side| (e.event, side)))
         .collect();
+    let all_cross = scheduled.iter().all(|e| cross(e.event));
+    let window = right_window(
+        model,
+        trajectory,
+        all_cross.then_some(&accepted.operators),
+        scheduled,
+        &events,
+    )?;
     if paid.is_some() {
         return Ok(crate::event_conditions::PostRootSides::install(
             sides,
             Vec::new(),
             events,
+            window,
         ));
     }
     let lo = scheduled
@@ -1392,33 +1472,24 @@ fn post_root_scope(
         .fold(f64::NEG_INFINITY, f64::max)
         .next_up()
         .min(trajectory.config.stop);
-    // Budget, resource and IR failures are not certificate gaps.
-    let gap = |error: &Error| {
-        !matches!(
-            error.kind,
-            "step_budget"
-                | "resource_budget"
-                | "event_budget"
-                | "event_loop_budget"
-                | "forcing_entry_budget"
-                | "invalid_ir"
-                | "invalid_inputs"
-        )
-    };
+    let gap = certificate_gap;
     let mut slopes = Vec::new();
     if lo < hi && !events.is_empty() {
-        let window = match trajectory.range(I { lo, hi }) {
-            Ok((window, _)) => window,
-            Err(error) if gap(&error) => Vec::new(),
-            Err(error) => return Err(error),
+        // The right window, when it exists, already holds these input ranges.
+        let ranges = match window.as_ref() {
+            Some(right) => right.inputs.clone(),
+            None => match trajectory.range(I { lo, hi }) {
+                Ok((ranges, _)) => ranges,
+                Err(error) if gap(&error) => Vec::new(),
+                Err(error) => return Err(error),
+            },
         };
-        let all_cross = scheduled.iter().all(|e| cross(e.event));
-        let candidates = if window.is_empty() {
+        let candidates = if ranges.is_empty() {
             Vec::new()
         } else {
             model
                 .conditions
-                .right_limit_candidates(&events, &window, !all_cross)
+                .right_limit_candidates(&events, &ranges, !all_cross)
         };
         if !candidates.is_empty() {
             match crate::guard_trajectory::GuardTrajectory::new(
@@ -1446,7 +1517,7 @@ fn post_root_scope(
         }
     }
     Ok(crate::event_conditions::PostRootSides::install(
-        sides, slopes, events,
+        sides, slopes, events, window,
     ))
 }
 

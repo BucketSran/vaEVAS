@@ -140,5 +140,79 @@ class CrossRightLimit(unittest.TestCase):
         self.assertEqual(run('if (0.5-V(u,r)<=0) q=2; else q=3;', trigger=cross, u=DOWN), [3])
 
 
+def sampled(body, *, w, trigger='cross(V(u,r)-0.5,1)', u=UP):
+    """Body reads p after one rising crossing of u at tau=0.5 with input w."""
+    text = f'@(initial_step) begin q=0; p=0; end @({trigger}) begin {body} end V(y,r)<+p;'
+    return [e['dut:p'] for e in events(text, u, w)]
+
+
+class CrossRightWindow(unittest.TestCase):
+    """Exact zeros decided on the right window W=[lo, next_up(hi)] of the root.
+
+    W contains (tau, tau+e] for the root tau. A difference that stays exactly
+    zero there (a plateau) is read as zero at tau+; a difference whose window
+    enclosure still meets both branches is refused, never guessed.
+    """
+
+    def test_floor_inside_one_bin_is_a_plateau(self):
+        # w=0.5 at tau and moving; 3*w stays in (1,2), so floor(3*w)=1 just after tau.
+        floor = 'q=floor(3*V(w,r)); '
+        self.assertEqual(sampled(floor + 'if (q<1) p=2; else p=3;', w=UP), [3])
+        self.assertEqual(sampled(floor + 'if (q>=1) p=2; else p=3;', w=UP), [2])
+        self.assertEqual(sampled(floor + 'if (q>1) p=2; else p=3;', w=DOWN), [3])
+        self.assertEqual(sampled(floor + 'if (q<=1) p=2; else p=3;', w=DOWN), [2])
+
+    def test_floor_argument_on_an_integer_needs_its_bin_after_tau(self):
+        # 2*w is exactly 1 at tau. A falling w enters floor bin 0 just after
+        # tau, where q<1 holds, but the root value is 1: refuse rather than guess.
+        floor = 'q=floor(2*V(w,r)); '
+        with self.assertRaisesRegex(KernelError, 'event_condition'):
+            sampled(floor + 'if (q<1) p=2; else p=3;', w=DOWN)
+        # A rising w stays in bin 1 over the whole window: q<1 is false.
+        self.assertEqual(sampled(floor + 'if (q<1) p=2; else p=3;', w=UP), [3])
+
+    def test_latched_input_cancels_exactly(self):
+        # q=V(w) at te, so V(w)-q is identically zero although w moves.
+        self.assertEqual(sampled('q=V(w,r); if (V(w,r)-q>0) p=2; else p=3;', w=UP), [3])
+        self.assertEqual(sampled('q=V(w,r); if (V(w,r)-q>=0) p=2; else p=3;', w=UP), [2])
+        # u rises and w falls: u-q>0 just after tau, but the window enclosure
+        # [0, 2e] only proves u-q>=0. The strict comparison is refused.
+        with self.assertRaisesRegex(KernelError, 'event_condition'):
+            sampled('q=V(w,r); if (V(u,r)-q>0) p=2; else p=3;', w=DOWN)
+        self.assertEqual(sampled('q=V(w,r); if (V(u,r)-q>=0) p=2; else p=3;', w=DOWN), [2])
+
+    def test_constant_inputs_keep_an_exact_root_tie(self):
+        # u rises through 0.5 twice. With w flat at 0.7, the second edge
+        # recomputes the latched (0.7-0.3) exactly; rounded intervals would
+        # straddle zero, but every read is constant over the window.
+        twice = [[0, 0], [.25, 1], [.5, 0], [.75, 1], [1, 0]]
+        flat = [[0, .7], [1, .7]]
+        body = 'if (V(w,r)-0.3-q<0) p=p+2; else p=p+3; q=V(w,r)-0.3;'
+        self.assertEqual(sampled(body, w=flat, u=twice), [3, 6])
+        # Moving w changes 0.7-0.3 between the edges; no tie arises.
+        ramp = [[0, .7], [1, .8]]
+        self.assertEqual(sampled(body, w=ramp, u=twice), [3, 6])
+
+    def test_settled_history_is_a_plateau_but_a_moving_one_is_not(self):
+        def history(body, timer, edge):
+            text = (f'@(initial_step) begin q=0; p=0; end @(timer({timer})) q={edge[0]}; '
+                    f'@(cross(V(u,r)-0.5,1)) begin {body} end '
+                    f'V(y,r)<+transition(q,0,{edge[1]},{edge[1]}); V(w,r)<+p;')
+            text = model(text, 'real q, p;', ports='u,y,w,r', directions='input u; output y,w; inout r;')
+            program = compile_sources({'right.va': text}, [instance(connections=dict(u='u', y='y', w='w', r='0'))])
+            result = transient(program, {'u': UP}, [0, .25, .75, 1], stop=1, max_step=2, kernel=KERNEL)
+            names = result['transient']['state_names']
+            return [dict(zip(names, e['after']))['dut:p'] for e in result['transient']['events']]
+        # transition(q) reached 0.5 long before tau and stays there.
+        settled = (0.5, '1n')
+        self.assertEqual(history('if (V(y,r)>0.5) p=2; else p=3;', 0.1, settled), [0, 3])
+        self.assertEqual(history('if (V(y,r)>=0.5) p=2; else p=3;', 0.1, settled), [0, 2])
+        # A slow transition passes exactly 0.5 at tau and keeps rising.
+        moving = (1, 0.5)
+        with self.assertRaisesRegex(KernelError, 'event_condition'):
+            history('if (V(y,r)>0.5) p=2; else p=3;', 0.25, moving)
+        self.assertEqual(history('if (V(y,r)>=0.5) p=2; else p=3;', 0.25, moving), [0, 2])
+
+
 if __name__ == '__main__':
     unittest.main()
