@@ -6,15 +6,5 @@ module track_hold(vin, track, rst, vout);
     output vout;
     electrical vin, track, rst, vout;
 
-    parameter real vth = 0.9;
-    parameter real vinit = 0.9;
-    parameter real tau_acq = 10n from (0:inf);
-    parameter real vmid = 0.9;
-    parameter real vscale = 0.9 from (0:inf);
-    parameter real acq_curvature = 0.6 from [0:inf);
-    parameter real tau_reset = 2n from (0:inf);
-
-    analog begin
-        // TODO: implement the specified behavior.
-    end
+    // TODO: implement the specified behavior.
 endmodule
