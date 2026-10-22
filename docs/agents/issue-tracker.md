@@ -42,6 +42,44 @@ Experiment reports keep the question, setup, source identity, execution owner,
 results, limits and supported next action together. PRs and issues link those
 reports and retain only the conclusions needed for review or the next decision.
 
+## Stage and area labels
+
+Every open issue carries one `stage:*` label and at least one `area:*` label.
+A project board groups issues by these labels; GitHub's open/closed state and
+close reason record the outcome, so a closed issue needs no stage label.
+
+| Label | Meaning |
+| --- | --- |
+| `stage:idea` | Recorded; not yet discussed |
+| `stage:design` | Goal, approach or acceptance under discussion |
+| `stage:planned` | Agreed to do; waiting for an owner or a slot |
+| `stage:active` | In progress on a branch, workspace or PR |
+| `stage:paused` | Stopped; the body states the reason and the resume condition |
+| `area:evas`, `area:benchmark`, `area:project` | Owning line; `project` covers workflow, documentation, repository and site |
+
+For EVAS issues linked to the [unified feature list](../../evas/docs/COMPARISON.md#engineering-status),
+the stage label is a coarse board view. Status, priority, dependencies and acceptance
+stay in that list; when the two disagree, correct the label.
+
+The user authorized every session to create `stage:idea` issues and to change
+`stage:*` and `area:*` labels without asking (2026-10-22). Closing an issue, changing
+another record's scope, merging and publishing still follow
+[scope and authorization](../../CONTRIBUTING.md#scope-and-authorization).
+
+<a id="record-a-new-idea"></a>
+
+### Record a new idea
+
+1. Search open and closed issues for the same outcome. When one exists, add the idea
+   there as a comment and stop.
+2. Otherwise write the [idea template](../../.github/ISSUE_TEMPLATE/idea.md) sections
+   into a body file and create the issue:
+   `gh issue create --title "<stable outcome>" --label stage:idea --label area:<line> --body-file <file>`.
+   Use a title prefix such as `feat(evas):` and name the outcome, as for any issue.
+3. Move the stage label when the decision changes: `idea` → `design` → `planned` →
+   `active`. Set `paused` together with a dated note of the reason. The delivering PR
+   links the issue, with `Closes #N` only when it delivers the whole outcome.
+
 ## Shared planning skills
 
 `to-spec` and `to-tickets` use this tracker when publication is covered by the
@@ -52,10 +90,9 @@ Publish approved tickets by independently verifiable behavior, with real blockin
 dependencies. Prefer existing native dependency support; otherwise link blockers
 in the issue body. Reuse the existing parent rather than duplicating its scope.
 
-Triage automation and its label vocabulary are not configured. Under this project
-adaptation, spec/ticket work can proceed without triage labels; omit the shared
-skills' default `ready-for-agent` label unless the user has selected a label policy.
-Configure labels when adopting triage, rather than creating them for ordinary work.
+Triage uses the [stage and area labels](#stage-and-area-labels). Published tickets
+take `stage:planned` and an area label; the shared skills' default `ready-for-agent`
+label is not part of this vocabulary.
 
 **PRs as a request surface: no.** PRs remain review and delivery records; this flag
 only excludes them from automatic feature-request triage.
