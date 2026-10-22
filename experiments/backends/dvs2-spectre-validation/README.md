@@ -33,6 +33,7 @@ Spectre 21.1.0.509.isr12 在两档各达到 **31/31**，共 62 条配置、1,333
 | 大绝对时间的 transition 历史误差为何不能只检查残差？ | <a id="pr13-transition-061"></a>[0.6.1 精度修复](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr13-transition-061)、[0.6.0 对照](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr13-transition-060) |
 | 双向自换向的差异来自 cross，还是积分重启？ | [拆分诊断](#cross-restart-diagnostic)：已知轨迹、固定时刻换向、原始反馈模型 |
 | 定向振荡器示例能否满足共同判据？ | [示例对照](#triangle-example)：同一 VA、新执行、解析答案 |
+| 半速三角波在 stop 处到达时，EVAS 与 Spectre 的计数为何不同？ | [D7 终点证据](#d7-triangle-endpoint)：2026-10-06/07 记录，t=3 计数差异仍未决 |
 
 上述 EVAS 版本是各次实验的被测身份，当前能力见[能力表](../../../evas/docs/CAPABILITIES.md)。
 
@@ -343,6 +344,37 @@ Spectre 检查 706 个保存点；这些误差不是整个连续时间区间的�
 Spectre 版本取自运行日志，原版本命令的空输出仍保留；分析对 OR 事件日志的适配修正也保留。
 内核与前述拆分诊断相同，仍为未提交候选。本次完成可运行模型修复，
 不关闭原双向模型的 [Issue #70](https://github.com/BucketSran/vaEVAS/issues/70)，也不改变原 31 条件矩阵。
+
+<a id="d7-triangle-endpoint"></a>
+
+## D7 半速三角波终点（2026-10-06/07 证据）
+
+2026-10-22 从分支 `codex/overnight-d7`（PR #79 的候选，head `e981ebd9`）迁入下表六个文件。
+它们记录于 2026-10-06/07，被测内核是 EVAS 0.13.0 时期的候选
+（基线 `1006c3d5`，候选 `ffc602cb`，合入已审 main 后为 `4320df70`、`fdefe476`），不是当前 main。
+文件正文按原样保留，只有两处改动：两份 `.md` 文件开头加了一段迁入说明；
+`triangle-endpoint-results.json` 中 11 个 `output` 字段原为本机绝对路径，
+现改为原工作区内的相对路径 `runs/d7/...`。原始字节可从该分支的同名文件取得。
+
+模型是 va07-triangle-repair 参考解的半速变体：z'=0.5·sign，阈值 ±0.5 V，
+独立答案的两次到达在 t=1 s 和 t=3 s，stop=3 s 恰好落在第二次到达。
+
+- EVAS 侧的根问题已在 main 修复，但修复方法与记录中的不同。当时的问题是：首个根的二分窗口宽度进入后续历史，
+  使 stop 处无法判断符号而拒绝。main 的修复是提交 `42fbdbc7` 的 `exact_point_in_bracket`：
+  在已证明有唯一根的变号区间内试探二进制网格点，找到精确零点后给出点根证书。
+  记录中的常导数斜率收缩算法没有合入 main。
+  main 的回归 [test_directed_triangle_endpoint.py](../../../evas/tests/test_directed_triangle_endpoint.py)
+  使用原 601 个查询点，检查 z 的解析值、两次事件和 stop 处的 count=2。
+- t=3 处 EVAS 的 count=2 与 Spectre 21.1 的 count=1 不一致。这个差异仍是
+  [#96](https://github.com/BucketSran/vaEVAS/issues/96) AL-2 的开放决定。这些记录不构成兼容例外，也不表示已经对齐。
+
+| 文件 | 内容 |
+| --- | --- |
+| [triangle-endpoint-diagnosis.md](triangle-endpoint-diagnosis.md)、[triangle-endpoint-results.json](triangle-endpoint-results.json) | 原 stop 端点拒绝的诊断和候选执行账本 |
+| [d7-alignment-followup.md](d7-alignment-followup.md)、[d7-alignment-followup-results.json](d7-alignment-followup-results.json) | 2026-10-06 的六项 Spectre 单变量诊断 |
+| [d7-current-integration-results.json](d7-current-integration-results.json) | 候选合入已审 main 后的四项本地 EVAS 复查 |
+| [d7-accepted-event-diagnosis-results.json](d7-accepted-event-diagnosis-results.json) | 2026-10-07 的稀疏观察与接受事件打印诊断 |
+
 ## timer 缺省参数对照
 
 <a id="timer-defaults"></a>
