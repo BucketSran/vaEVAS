@@ -217,7 +217,7 @@ API 为 `evas.scs.load_scs(path)`（检查测试台并返回 manifest 和模型�
 | 数字 | 有限十进制、科学计数和单字母 SI 后缀 `T G M k K m u n p f a`；可引用先前 `parameters` 语句的常量 |
 | `vsource` | 一端接地；`dc`；从零开始、时间严格递增的 `wave=[time value ...]`；显式 `rise/width/fall/period/val0/val1` 的线性 pulse，`delay` 缺省为 0 |
 | `bsource` 电压式 | 一端接地；`v=V(node)`，可加减一个有限常量或先前 `parameters` 常量；偏移可用一层括号包住，例如 `v=V(vin)+(-0.04)` |
-| 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、转换为浮点数后仍小于 stop 的 `k*maxstep`、一次 stop，以及 `[0, stop]` 内全部源折点的并集；可另给 [strobe 五项控制](docs/reference/strobe.md)，不改变常规观察网格 |
+| 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、转换为浮点数后仍小于 stop 的 `k*h`（`h` 为 maxstep 与模型中正的无条件常数 [`$bound_step`](docs/math/events.md#bound-step) 的最小值）、一次 stop，以及 `[0, stop]` 内全部源折点的并集；可另给 [strobe 五项控制](docs/reference/strobe.md)，不改变常规观察网格 |
 | 保存策略 | 显式 `tran strobeoutput=all/strobeonly` 选择常规与强制行的并集，或强制行加终止行；周期窗口外保留常规行，详见 [strobe 保存合同](docs/reference/strobe.md#显式保存策略) |
 | 精度 | `options reltol=... vabstol=...`，映射到现有 EVAS 设置；未指定项使用 EVAS 默认值，不采用 Spectre 默认值 |
 | 电流容差兼容 | `options iabstol=...` 接受有限、非负标量，但发出 warning；EVAS 没有电流未知量，该值不参与求解 |

@@ -195,12 +195,54 @@ def _zero_current_source(token, nodes, settings, statement):
                 proof=dict(kind='exact_zero_dc_literal',dc_literal=original,current_A='0'))
 
 
+OUTPUT_GRID=('union of 0, k*h below stop with h=min(maxstep, positive unconditional constant $bound_step), '
+             'stop, source corners within stop')
+
+
 @dataclass
 class ScsTestbench:
     sources: dict[str,str]
     manifest: dict
     save: list[str]
     metadata: dict
+    tran_token: Token | None = None
+
+
+def _regular_times(stop,step):
+    # A mathematical interior point can round to stop. It denotes the same
+    # binary64 observation, so retain the explicit endpoint exactly once.
+    count=int(Q(stop)//Q(step))
+    if count+2>POINT_BUDGET:
+        return None
+    return [t for i in range(count+1) if (t:=float(i*Q(step)))<stop]+[stop]
+
+
+def _saved_output_times(times,stop,strobe,save_policy,forced):
+    if not forced:
+        return times
+    regular=times
+    if save_policy=='strobeonly':
+        start,end=strobe.get('skipstart',0.),strobe.get('skipstop',stop)
+        regular=[t for t in times if t<start or t>end] if 'strobeperiod' in strobe else []
+    # Spectre retains the terminal observation even when it is not a
+    # forced point; outside the periodic window ordinary rows remain.
+    return sorted(set(regular).union(forced,[stop]))
+
+
+def _bound_step(program,step):
+    """Grid spacing implied by unconditional constant $bound_step requests.
+
+    LRM 2.4 makes $bound_step the model's own maximum time step. Only a
+    positive constant with a constant nonzero activation has a fixed grid; a
+    dynamic or zero request still limits the kernel step but adds no rows."""
+    from .ir import Affine
+    h=step
+    for bound in program.step_bounds:
+        value,active=bound.value,bound.active
+        if (isinstance(value,Affine) and isinstance(active,Affine) and not value.terms
+                and not active.terms and active.constant!=0 and value.constant>0):
+            h=min(h,value.constant)
+    return h
 
 
 class ScsIgnoredOptionWarning(UserWarning):
@@ -232,7 +274,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
     zero_current_sources=[]
     preset=None
     save_policy=None
-    transient_spec=None
+    transient_spec,tran_token=None,None
     for tokens in _statements(text,str(path)):
         s=_Statement(tokens,constants)
         first=s.take()
@@ -331,7 +373,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
                     save_policy=settings.pop('strobeoutput')
                     if save_policy not in ('all','strobeonly'):
                         s.fail('strobeoutput must be all or strobeonly',unsupported=True)
-                transient_spec=settings
+                transient_spec,tran_token=settings,first
         else:
             s.fail(f'unsupported netlist statement {first.text!r}',unsupported=True)
 
@@ -356,12 +398,9 @@ def load_scs(path: str | Path) -> ScsTestbench:
         forced=expand_strobe(stop,**strobe) if strobe else []
     except ValueError as exc:
         fail(str(exc))
-    count=int(Q(stop)//Q(step))
-    if count+2>POINT_BUDGET:
+    times=_regular_times(stop,step)
+    if times is None:
         fail('output point budget (100000) exceeded; increase maxstep')
-    # A mathematical interior point can round to stop. It denotes the same
-    # binary64 observation, so retain the explicit endpoint exactly once.
-    times=[t for i in range(count+1) if (t:=float(i*Q(step)))<stop]+[stop]
     if any(a>=b for a,b in zip(times,times[1:])):
         fail('output times collapse at binary64 resolution')
     waveforms,rounding,source_errors,pulse_proofs,source_shapes={},{},{},{},{}
@@ -417,14 +456,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
         if (save_policy=='strobeonly' and 'strobeperiod' in strobe
                 and not expand_strobe(stop,**{k:v for k,v in strobe.items() if k!='strobetimes'})):
             fail('strobeonly with an empty periodic schedule is not yet supported',unsupported=True)
-        if forced:
-            regular=times
-            if save_policy=='strobeonly':
-                start,end=strobe.get('skipstart',0.),strobe.get('skipstop',stop)
-                regular=[t for t in times if t<start or t>end] if 'strobeperiod' in strobe else []
-            # Spectre retains the terminal observation even when it is not a
-            # forced point; outside the periodic window ordinary rows remain.
-            saved_times=sorted(set(regular).union(forced,[stop]))
+        saved_times=_saved_output_times(times,stop,strobe,save_policy,forced)
         if len(saved_times)>POINT_BUDGET:
             fail('saved output point budget (100000) exceeded')
     models=parse_sources(sources)
@@ -498,7 +530,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
         manifest['transient']['source_shapes']=source_shapes
     metadata=dict(input_format='spectre-voltage-subset',path=str(path),sha256=hashlib.sha256(text.encode()).hexdigest(),
                   model_sha256=model_sha256,
-                  effective_tolerances=effective,output_grid='union of 0, k*maxstep below stop, stop, source corners within stop',
+                  effective_tolerances=effective,output_grid=OUTPUT_GRID,
                   pulse_corner_rounding_seconds=rounding)
     if sine_source_origins:
         metadata['sine_source_origins']=sine_source_origins
@@ -517,23 +549,47 @@ def load_scs(path: str | Path) -> ScsTestbench:
     if strobe:
         metadata['strobe_controls']=strobe
         metadata['forced_times']=forced
-    return ScsTestbench(sources,manifest,saved,metadata)
+    return ScsTestbench(sources,manifest,saved,metadata,tran_token)
+
+
+def _grid_fail(bench,message):
+    token=bench.tran_token or Token('', '',1,1,bench.metadata['path'])
+    _fail(message,token)
 
 
 def simulate_scs(path: str | Path, *, kernel=None, timeout=DEFAULT_TIMEOUT):
     bench=load_scs(path)
     program=compile_sources(bench.sources,[Instance(**i) for i in bench.manifest['instances']],
                             external_nodes=bench.manifest['transient']['sources'])
-    result=transient(program,kernel=kernel,timeout=timeout,
-                     **bench.manifest['transient'],**bench.manifest['tolerances'])
+    config=dict(bench.manifest['transient'])
+    stop,step=config['stop'],config['max_step']
+    times=config['output_times']
+    bound=_bound_step(program,step)
+    if bound<step:
+        regular=_regular_times(stop,bound)
+        if regular is None:
+            _grid_fail(bench,'output point budget (100000) exceeded by the $bound_step output grid')
+        times=sorted(set(times).union(regular))
+        if len(times)>POINT_BUDGET:
+            _grid_fail(bench,'output point budget (100000) exceeded by the $bound_step output grid')
+    result=transient(program,kernel=kernel,timeout=timeout,**dict(config,output_times=times),
+                     **bench.manifest['tolerances'])
+    metadata=dict(bench.metadata)
+    if bound<step:
+        metadata['bound_step_output_spacing_s']=bound
+    saved_times=times
+    if 'strobeoutput' in metadata:
+        strobe=metadata.get('strobe_controls',{})
+        saved_times=_saved_output_times(times,stop,strobe,metadata['strobeoutput'],metadata.get('forced_times',[]))
+        if len(saved_times)>POINT_BUDGET:
+            _grid_fail(bench,'saved output point budget (100000) exceeded')
+        metadata['saved_output_times']=saved_times
     saved=[n for n in bench.save if n!='time' or n in result['nodes']] or [
         n for n in result['nodes'] if n not in bench.metadata.get('internal_source_nodes',())]
     indices=[result['nodes'].index(n) for n in saved]
-    ordinary=bench.manifest['transient']['output_times']
-    times=bench.metadata.get('saved_output_times',ordinary)
-    rows=dict(zip(ordinary,(row['voltages'] for row in result['solutions'])))
-    if 'strobeoutput' in bench.metadata and result.get('strobe_evidence'):
+    rows=dict(zip(times,(row['voltages'] for row in result['solutions'])))
+    if 'strobeoutput' in metadata and result.get('strobe_evidence'):
         receipt=result['strobe_evidence']
         rows.update(zip(receipt['times'],receipt['voltages_V']))
-    return dict(result,testbench=bench.metadata,saved=dict(nodes=saved,times=times,
-                values=[[rows[t][i] for i in indices] for t in times]))
+    return dict(result,testbench=metadata,saved=dict(nodes=saved,times=saved_times,
+                values=[[rows[t][i] for i in indices] for t in saved_times]))
