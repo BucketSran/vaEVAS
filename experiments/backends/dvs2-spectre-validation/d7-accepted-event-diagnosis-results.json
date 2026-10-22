@@ -1,0 +1,795 @@
+{
+  "schema": "d7-local-diagnostic-summary-v1",
+  "scope": "PR79 exact event discrepancy; new runs diagnostic only, no acceptance change",
+  "executed_evas_head": "fdefe47688f4006c0e3b34ef359eddb338671460",
+  "tracked_state_before_local_preparation": "",
+  "build_identity_sha256": "92780dfdd5d4394452542c9b34a67823996aaba778cf604b91cd007f89ee5b0a",
+  "kernel_sha256": "f8300fb60f9d62cebaa19c70e7a9010600bfcbfd432a5d18348354bdb449d045",
+  "build_log_sha256": "2bc683fb4e4f4f21ee9ee39e2b8ecce2efe20d3b1be57bda5316aa519ab3d30a",
+  "evassource_manifest": "Complete versioned source hashes in local identity.json; retrievable local fixedGit snapshot, not newly published support",
+  "spectre_version": "sub-version  21.1.0.509.isr12",
+  "new_executions": {
+    "evas_primary6": 6,
+    "evas_sparse1": 1,
+    "spectre_primary6": 6,
+    "spectre_sparse1": 1,
+    "spectre_sparse_observer1": 1,
+    "spectre_version_queries": 3,
+    "spectre_retries": 0
+  },
+  "primary6_verdicts": [
+    {
+      "case": "original-stop",
+      "status": "FAIL",
+      "required_rows": 622,
+      "literal_exact_rows": 50,
+      "missing_exact3": true,
+      "exact1": {
+        "status": "FAIL",
+        "actual_count": 0.0,
+        "expected_count": 1,
+        "z": 0.4999999999999998,
+        "u": 1.0
+      },
+      "effective_settings": {
+        "vabstol": 1e-14,
+        "iabstol": 1e-18,
+        "reltol": 1e-12,
+        "stop": 3.0,
+        "step": 0.005,
+        "maxstep": 0.005,
+        "method": "traponly"
+      }
+    },
+    {
+      "case": "original-interior",
+      "status": "FAIL",
+      "required_rows": 628,
+      "literal_exact_rows": 55,
+      "missing_exact3": true,
+      "exact1": {
+        "status": "FAIL",
+        "actual_count": 0.0,
+        "expected_count": 1,
+        "z": 0.4999999999999998,
+        "u": 1.0
+      },
+      "effective_settings": {
+        "vabstol": 1e-14,
+        "iabstol": 1e-18,
+        "reltol": 1e-12,
+        "stop": 3.0,
+        "step": 0.005,
+        "maxstep": 0.005,
+        "method": "traponly"
+      }
+    },
+    {
+      "case": "idt-stop",
+      "status": "INCONCLUSIVE",
+      "required_rows": 610,
+      "literal_exact_rows": 36,
+      "missing_exact3": true,
+      "exact1": null,
+      "effective_settings": {
+        "vabstol": 1e-14,
+        "iabstol": 1e-18,
+        "reltol": 1e-12,
+        "stop": 3.0,
+        "step": 0.005,
+        "maxstep": 0.005,
+        "method": "traponly"
+      }
+    },
+    {
+      "case": "idt-interior",
+      "status": "INCONCLUSIVE",
+      "required_rows": 616,
+      "literal_exact_rows": 41,
+      "missing_exact3": true,
+      "exact1": null,
+      "effective_settings": {
+        "vabstol": 1e-14,
+        "iabstol": 1e-18,
+        "reltol": 1e-12,
+        "stop": 3.0,
+        "step": 0.005,
+        "maxstep": 0.005,
+        "method": "traponly"
+      }
+    },
+    {
+      "case": "affine-stop",
+      "status": "INCONCLUSIVE",
+      "required_rows": 610,
+      "literal_exact_rows": 39,
+      "missing_exact3": true,
+      "exact1": null,
+      "effective_settings": {
+        "vabstol": 1e-14,
+        "iabstol": 1e-18,
+        "reltol": 1e-12,
+        "stop": 3.0,
+        "step": 0.005,
+        "maxstep": 0.005,
+        "method": "traponly"
+      }
+    },
+    {
+      "case": "affine-interior",
+      "status": "INCONCLUSIVE",
+      "required_rows": 616,
+      "literal_exact_rows": 44,
+      "missing_exact3": true,
+      "exact1": null,
+      "effective_settings": {
+        "vabstol": 1e-14,
+        "iabstol": 1e-18,
+        "reltol": 1e-12,
+        "stop": 3.0,
+        "step": 0.005,
+        "maxstep": 0.005,
+        "method": "traponly"
+      }
+    }
+  ],
+  "sparse1_verdict": {
+    "status": "FAIL",
+    "exact_event_rows": {
+      "1.0": {
+        "status": "PASS",
+        "actual_count": 1.0,
+        "expected_count": 1,
+        "z": 0.5000000000000001,
+        "u": 1.0
+      },
+      "3.0": {
+        "status": "FAIL",
+        "actual_count": 1.0,
+        "expected_count": 2,
+        "z": -0.4999999994756893,
+        "u": 1.0
+      }
+    },
+    "missing_exact_requested_times": [],
+    "count_differences_all_requested_rows": [
+      {
+        "time": 3.0,
+        "expected": 2,
+        "actual": 1.0
+      }
+    ],
+    "voltage_failures": [],
+    "exported_jump_brackets_not_callback_times": [
+      {
+        "before": 0.9960751308868607,
+        "after": 1.0,
+        "old_count": 0.0,
+        "new_count": 1.0
+      },
+      {
+        "before": 3.0,
+        "after": 3.000000001098621,
+        "old_count": 1.0,
+        "new_count": 2.0
+      }
+    ],
+    "scope": "All exact requested observations. No event-window omissions or discrete interpolation. Raw adjacent rows remain timing evidence; missing rows not replaced."
+  },
+  "observer_verdict": {
+    "status": "FAIL",
+    "exact_event_rows": {
+      "1.0": {
+        "status": "PASS",
+        "actual_count": 1.0,
+        "expected_count": 1,
+        "z": 0.5000000000000001,
+        "u": 1.0
+      },
+      "3.0": {
+        "status": "FAIL",
+        "actual_count": 1.0,
+        "expected_count": 2,
+        "z": -0.4999999994756893,
+        "u": 1.0
+      }
+    },
+    "missing_exact_requested_times": [],
+    "count_differences_all_requested_rows": [
+      {
+        "time": 3.0,
+        "expected": 2,
+        "actual": 1.0
+      }
+    ],
+    "voltage_failures": [],
+    "exported_jump_brackets_not_callback_times": [
+      {
+        "before": 0.9960751308868607,
+        "after": 1.0,
+        "old_count": 0.0,
+        "new_count": 1.0
+      },
+      {
+        "before": 3.0,
+        "after": 3.000000001098621,
+        "old_count": 1.0,
+        "new_count": 2.0
+      }
+    ],
+    "scope": "All exact requested observations. No event-window omissions or discrete interpolation. Raw adjacent rows remain timing evidence; missing rows not replaced."
+  },
+  "entire_trajectory_comparison": {
+    "primary_rows": 663,
+    "observer_rows": 663,
+    "entire_time_vectors_exactly_equal": true,
+    "entire_signal_sets_equal": true,
+    "entire_count_trajectory_exactly_equal": true,
+    "max_voltage_errors_v": {
+      "u": 0.0,
+      "z": 0.0
+    },
+    "entire_numeric_rows_exactly_equal": true,
+    "entire_psfascii_VALUE_section_byte_equal": true,
+    "no_time_alignment_or_interpolation_used": true,
+    "status": "EXPORTED_TRAJECTORY_IDENTICAL",
+    "unexported_process_equivalence_proven": false
+  },
+  "primary_psf_sha256": "d4f29f65b8632b06a2f7eece04fa573e81a1efc395d28c16bd663cc895b78d6f",
+  "observer_psf_sha256": "d9db42bbd85b0dde8be3f8d03071c6e1825b73195e2b717684aa794c0d2ea8cd",
+  "shared_psf_value_section_sha256": "52be2242d3c8d659d1a019a9ad3167615e1aa025d4276448989588187de152eb",
+  "pointwise_record_sha256": "63c836cf6bfb405d0148cb8f4d33f8806951f68a98c4c660562f718cdcc31385",
+  "accepted_cross_from_single_log": [
+    {
+      "literal_time": "1",
+      "n": 1,
+      "z": 0.5000000000000001,
+      "u": 1.0,
+      "origin": "spectre.log",
+      "line": 146
+    },
+    {
+      "literal_time": "3.0000000010986212",
+      "n": 2,
+      "z": -0.500000000025,
+      "u": 1.0,
+      "origin": "spectre.log",
+      "line": 163
+    }
+  ],
+  "accepted_exact_root_from_single_log": [
+    {
+      "literal_time": "1",
+      "n": 1,
+      "z": 0.5000000000000001,
+      "u": 1.0,
+      "origin": "spectre.log",
+      "line": 147
+    },
+    {
+      "literal_time": "3",
+      "n": 1,
+      "z": -0.49999999947568935,
+      "u": 1.0,
+      "origin": "spectre.log",
+      "line": 160
+    }
+  ],
+  "trace_counts_by_log": {
+    "stdout.log": {
+      "TRIAL": 4,
+      "CROSS": 2,
+      "ACCEPT": 26,
+      "FINAL": 1
+    },
+    "spectre.log": {
+      "TRIAL": 4,
+      "CROSS": 2,
+      "ACCEPT": 26,
+      "FINAL": 1
+    }
+  },
+  "trace_record_sha256": "06b012de5e04c985214fab2e7654b00f30a9fbfa70932c7e3f8ff106049077b9",
+  "time_representation_identity_sha256": "8f8903f4162857563bed2dc8a9157fd1078bfacf80a702389ca14fb99a7a4987",
+  "checker_sha256": "1a6205f4542d5653f969f4ce9d3b29c0c0d89f35891a0ad6730e763fff01465c",
+  "analyzer_sha256": "6c652c3d7a9b0c76d3a135df824ba08c302c40f919e0ec03e0ad2796d76be481",
+  "analyzer_corrections": "Local analysis-v1/v2 are preserved. The final analysis corrects the %.17g interval for elided zeros and the accidentally commented append; engine raw files are unchanged.",
+  "external_budgets": {
+    "voltage_abs_v_per_backend": 1e-06,
+    "paired_voltage_abs_v": 2e-06,
+    "count_error": 0,
+    "exact_time_substitution": false
+  },
+  "original_stop3_exact_fail_preserved": true,
+  "acceptance_exception_applied": false,
+  "unexported_process_equivalence_proven": false,
+  "contract_or_kernel_changed": false,
+  "interpretation": "In the observer model, accepted state at t=3 has n=1 and the second accepted CROSS is later than 3. This excludes an already accepted t=3 handler hidden solely by an old PSF count in that model. Byte-identical complete exported trajectories strongly support the same mechanism in the primary model, with the explicit limitation that unexported processes are not proven equivalent.",
+  "remaining_unknown": "The Spectre internal integration history or restart mechanism causing the trajectory offset is not uniquely established.",
+  "user_decision_required_if_changing_acceptance": "Specific agreement is required to revise PR79 acceptance or accept the documented compatibility limit. The approximately 1.1 ns delay is never automatically an exact-count PASS.",
+  "availability": {
+    "summary": "repository-contained",
+    "raw": "local-only",
+    "project_worktree": "overnight-d7",
+    "local_run_root": "runs/d7-discriminating-20261007",
+    "not_public_raw_reproducibility": true
+  },
+  "command_template": [
+    "${SPECTRE_BIN}",
+    "-64",
+    "tb.scs",
+    "+log",
+    "spectre.log",
+    "-format",
+    "psfascii",
+    "-raw",
+    "psf",
+    "+lqtimeout",
+    "30",
+    "+mt=1"
+  ],
+  "command_template_is_not_exact_actual_argv": true,
+  "actual_argv_available_in_local_started_results_and_transport_receipts": true,
+  "primary6": {
+    "manifest_sha256": "e1280daab88267641926aa508ec7ba7adacf66828bd00b238f481b525e554ced",
+    "runner_sha256": "9482ce410ff5c1ebd69994c82a7f150bb8769d4fbc352557defc52e175ea6cf8",
+    "tool_identity_sha256": "516e97528b53500a3ff031c0dfcbb1a874e5c1e709daee1d8529f52e40ed87c4",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "setup_sha256": [
+      "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    ],
+    "version_log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81",
+    "raw_inventory_sha256": "9f50e04c9cace26cba0c5384b0693c4e50c1af36cbd2ab19c033e884a6e65b24",
+    "raw_files_verified": 141,
+    "owned_audit_sha256": "9715604c691eb14aa92a5209d046aea6e4d936a2e897a4c6a740651f1848b101",
+    "owned_audit_status": "PASS",
+    "cases": [
+      {
+        "case": "original-stop",
+        "input_sha256": {
+          "dut.va": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+          "tb.scs": "b00c2d22dcd33d7e9eab0a55a0766d11a05d289d58fb94997fc0b732205fb548",
+          "sim.json": "3b2a967f98c8b1841e05785d3d3be26532a33ab373c826a32977dcdd7b83702e",
+          "contract.json": "811edf46f24952c18c17f54a112f9b16e0d019a7b02e8558efb41cca60bbf54e"
+        },
+        "result_sha256": "ec90551996862f7e6f25c41d376a6053b15241e574fec57f49109d103fe65a8f",
+        "started_sha256": "3e631209cb9f0e915a89fc464e21ba66e16173ee1d2a924b6fc16e4778fee4db",
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 16.033311050385237,
+        "allocation": "root-approved-d7-primary6-20261007",
+        "resources_requested": {
+          "cpu": 0,
+          "timeout_seconds": 90,
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        },
+        "spectre_requested": {
+          "reltol": 1e-12,
+          "vabstol": 1e-14,
+          "iabstol": 1e-18,
+          "step": 0.005,
+          "maxstep": 0.005,
+          "method": "traponly",
+          "stop": 3.0,
+          "strobeoutput": "all"
+        },
+        "observation_times_count": 622,
+        "independent_roots_s": [
+          1.0,
+          3.0
+        ],
+        "exact3_known_fail_preserved": true
+      },
+      {
+        "case": "original-interior",
+        "input_sha256": {
+          "dut.va": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+          "tb.scs": "598eec117ae52fd1d498342dcda7e7d18baeb05f293363e5c70a9def3a5a5039",
+          "sim.json": "0416cfe0f9e9a5b2049d988d66ae6c9a2158e1a012fa115fa1343365b331d97f",
+          "contract.json": "19ed38164c7106ca30e443f8dc9c1707eca35713a46f6e5d198b0a1f743afd0f"
+        },
+        "result_sha256": "4cc99e06a1872884c6c09b0fb271cc185be42e61aa6ceb595f62ce8509e6867f",
+        "started_sha256": "88aae14d1d87fe018c475e5aea10b870cc90c496c4930804ce5ed8df779dec5e",
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 15.46118077635765,
+        "allocation": "root-approved-d7-primary6-20261007",
+        "resources_requested": {
+          "cpu": 0,
+          "timeout_seconds": 90,
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        },
+        "spectre_requested": {
+          "reltol": 1e-12,
+          "vabstol": 1e-14,
+          "iabstol": 1e-18,
+          "step": 0.005,
+          "maxstep": 0.005,
+          "method": "traponly",
+          "stop": 3.0000001,
+          "strobeoutput": "all"
+        },
+        "observation_times_count": 628,
+        "independent_roots_s": [
+          1.0,
+          3.0
+        ],
+        "exact3_known_fail_preserved": true
+      },
+      {
+        "case": "idt-stop",
+        "input_sha256": {
+          "dut.va": "a0561e7489abfde2eeb769124d87d2cdc71cf946473962b9ec96ceaf2ccb6b81",
+          "tb.scs": "75b4b5337fd7657ab3f42626e00db623f9f949896e2a18a0f572fe9665a307d7",
+          "sim.json": "02387d9c70b13589e4b72b491e7d7828be485de7006a025c8ae9ccb63d77820f",
+          "contract.json": "4954f7256ae08b672d8e61a5efd47a569f3ed16df1a94497336575d7a5d01449"
+        },
+        "result_sha256": "698a4440d2b2973d2fe69f8e564166cfb38823d4b8b0169a2f6b6ef5582df7e4",
+        "started_sha256": "3c4d935da86176d463e3aa264c0ba3380668a211f3e2d90da991d045caee9911",
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.087225625291467,
+        "allocation": "root-approved-d7-primary6-20261007",
+        "resources_requested": {
+          "cpu": 0,
+          "timeout_seconds": 90,
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        },
+        "spectre_requested": {
+          "reltol": 1e-12,
+          "vabstol": 1e-14,
+          "iabstol": 1e-18,
+          "step": 0.005,
+          "maxstep": 0.005,
+          "method": "traponly",
+          "stop": 3.0,
+          "strobeoutput": "all"
+        },
+        "observation_times_count": 610,
+        "independent_roots_s": [
+          3.0
+        ],
+        "exact3_known_fail_preserved": true
+      },
+      {
+        "case": "idt-interior",
+        "input_sha256": {
+          "dut.va": "a0561e7489abfde2eeb769124d87d2cdc71cf946473962b9ec96ceaf2ccb6b81",
+          "tb.scs": "9c4a92b349bf5160d6b8e29c153c934c110356d32e5279c7f0c18255c0d36df7",
+          "sim.json": "c4828bfeb0704db2fadd5c060ef8ec685a36ec936bd12334da922f3f9020a4d3",
+          "contract.json": "dc66f3c8ce2fb65d2d5f7b7b2e04b94921d722d0713341d64e74fa9b1b982526"
+        },
+        "result_sha256": "ab7c0e24ebb67af7c80bca89ba7d6689205118b8f542fe1bb65ca9ad50eaa813",
+        "started_sha256": "ad259a75b8343a16e0abe4465dc968428300d608cff1009d8120f6cbb8070aff",
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.16124463826418,
+        "allocation": "root-approved-d7-primary6-20261007",
+        "resources_requested": {
+          "cpu": 0,
+          "timeout_seconds": 90,
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        },
+        "spectre_requested": {
+          "reltol": 1e-12,
+          "vabstol": 1e-14,
+          "iabstol": 1e-18,
+          "step": 0.005,
+          "maxstep": 0.005,
+          "method": "traponly",
+          "stop": 3.0000001,
+          "strobeoutput": "all"
+        },
+        "observation_times_count": 616,
+        "independent_roots_s": [
+          3.0
+        ],
+        "exact3_known_fail_preserved": true
+      },
+      {
+        "case": "affine-stop",
+        "input_sha256": {
+          "dut.va": "574af40f0c139d3e00e06ed60c8619a53066e388190c106b15599fd0a1e20a55",
+          "tb.scs": "886f249a4c9dd962e899e3d664083dc05d9cddef110858e2c1e79acf9e86c5fb",
+          "sim.json": "07425702cb8d9073b26df5452d01093cc0c7791268b243f333c2e93d42747c1c",
+          "contract.json": "4e6b1e2d240265cb87831e980b801b8b57c0f5a08c48d373dbd3591288f9ce00"
+        },
+        "result_sha256": "2002605e28f8a7e39d4069dc0d1c37e3ee2c16ad9b2298946fd76476dcd09754",
+        "started_sha256": "e01f3ed9ace4fba7729ee04204cd3ba60cb0d931d0aa28dbfa6f7b321a2eec88",
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.26147703640163,
+        "allocation": "root-approved-d7-primary6-20261007",
+        "resources_requested": {
+          "cpu": 0,
+          "timeout_seconds": 90,
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        },
+        "spectre_requested": {
+          "reltol": 1e-12,
+          "vabstol": 1e-14,
+          "iabstol": 1e-18,
+          "step": 0.005,
+          "maxstep": 0.005,
+          "method": "traponly",
+          "stop": 3.0,
+          "strobeoutput": "all"
+        },
+        "observation_times_count": 610,
+        "independent_roots_s": [
+          3.0
+        ],
+        "exact3_known_fail_preserved": true
+      },
+      {
+        "case": "affine-interior",
+        "input_sha256": {
+          "dut.va": "574af40f0c139d3e00e06ed60c8619a53066e388190c106b15599fd0a1e20a55",
+          "tb.scs": "1c00fc8eec9c02feb12258b5ccb4ee9a74cbe66fae5447a42d3735772c39c20b",
+          "sim.json": "1154e8f495567c70e03ffe666cf84f9e0000ec9cd91d47656b9de4bd99fcabf7",
+          "contract.json": "d25d9f0fffa4c7588f64d499b7d55877cfe677bac17adfa06a60c016b1cb194b"
+        },
+        "result_sha256": "4b2d29de7d7987d46a5f901f4f0a3e27c2f46d0de8fc5d8a8af8d93875300ea6",
+        "started_sha256": "415a4edb0a6f54ba411e670b8bf7ec557da85ac1d2662a05ab6317dc9f415f20",
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.136693457141519,
+        "allocation": "root-approved-d7-primary6-20261007",
+        "resources_requested": {
+          "cpu": 0,
+          "timeout_seconds": 90,
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        },
+        "spectre_requested": {
+          "reltol": 1e-12,
+          "vabstol": 1e-14,
+          "iabstol": 1e-18,
+          "step": 0.005,
+          "maxstep": 0.005,
+          "method": "traponly",
+          "stop": 3.0000001,
+          "strobeoutput": "all"
+        },
+        "observation_times_count": 616,
+        "independent_roots_s": [
+          3.0
+        ],
+        "exact3_known_fail_preserved": true
+      }
+    ]
+  },
+  "sparse1": {
+    "manifest_sha256": "cf8a6966d14fabf70b0a7cdc472fff278ce94713283c4ebc00e2bf37a43f4641",
+    "runner_sha256": "c99376be12074d135374ce016bc9bb1a9f8a1a05b1a3f608d69eaeb346215ef5",
+    "tool_identity_sha256": "f6ce95d220aa9725ab7f36fff510d73e0084184a5be5231ba24227369415ff18",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "setup_sha256": [
+      "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    ],
+    "version_log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81",
+    "raw_inventory_sha256": "39967f9524c222a2ecd9b1064d5c61e6bea5e314313cfcb77f1563a072ca5339",
+    "raw_files_verified": 36,
+    "owned_audit_sha256": "9715604c691eb14aa92a5209d046aea6e4d936a2e897a4c6a740651f1848b101",
+    "owned_audit_status": "PASS",
+    "cases": [
+      {
+        "case": "original-interior-sparse",
+        "input_sha256": {
+          "dut.va": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+          "tb.scs": "0f507603768245c9556ce4b3ada5d77cee2dd9a02e74296defefefa97294337b",
+          "sim.json": "ec28703e3427173aacb03814b8838094741229981cd0f6c376afd470cf7bd101",
+          "contract.json": "0a9c2616129abab8bad9d37064a2ff777fd718b2271cf53a1dde1620a9dc9031"
+        },
+        "result_sha256": "1bc5c74e19c9c7a46dbd69270063f83a96b3afaa9ce3891e914d478a35cc14a2",
+        "started_sha256": "64f058c79c1202ca9ccf5a5d404dd25b5f36f7254167b462a18e997d385ea191",
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 14.932207373902202,
+        "allocation": "root-approved-d7-sparse1-20261007",
+        "resources_requested": {
+          "cpu": 0,
+          "timeout_seconds": 90,
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        },
+        "spectre_requested": {
+          "reltol": 1e-12,
+          "vabstol": 1e-14,
+          "iabstol": 1e-18,
+          "step": 0.005,
+          "maxstep": 0.005,
+          "method": "traponly",
+          "stop": 3.0000001,
+          "strobeoutput": "all"
+        },
+        "observation_times_count": 4,
+        "independent_roots_s": [
+          1.0,
+          3.0
+        ],
+        "exact3_known_fail_preserved": true
+      }
+    ]
+  },
+  "sparse_observer1": {
+    "manifest_sha256": "d02ba10408eba983e1fc307c086d552dd98bac07497441e3fa7e6fdd28b6d235",
+    "runner_sha256": "461e1f7682313492c1ae59e85c5d58706fcbbf27dc60c14ba1f28772d9cd62c4",
+    "tool_identity_sha256": "3a5fdd4da45364c785605faf60446e3d4482685e727c611302cd0d29dee7969c",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "setup_sha256": [
+      "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    ],
+    "version_log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81",
+    "raw_inventory_sha256": "3f11c44245e905440405c0fe646f36349e43b65223eedf327c22cf64fe509044",
+    "raw_files_verified": 36,
+    "owned_audit_sha256": "9715604c691eb14aa92a5209d046aea6e4d936a2e897a4c6a740651f1848b101",
+    "owned_audit_status": "PASS",
+    "cases": [
+      {
+        "case": "original-interior-sparse-observer",
+        "input_sha256": {
+          "dut.va": "a6bb39acb11a08a4892b7162f44866bfa6c4fb4f64a6c62361f2a3d648d71d1b",
+          "tb.scs": "0f507603768245c9556ce4b3ada5d77cee2dd9a02e74296defefefa97294337b",
+          "sim.json": "ec28703e3427173aacb03814b8838094741229981cd0f6c376afd470cf7bd101",
+          "contract.json": "0318a739701a0012d49508ba8875292c06907a1a32ce4cd9284b200652290e17"
+        },
+        "result_sha256": "64be3daf6e4450e1ac7280eb2f3f6bbadc6281efbd619f69c4fb0ec374ee0f09",
+        "started_sha256": "7e19ce78ab6173541cc80f9c23cb1774f1b81efeaed282411c26ead6866fbac7",
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 14.827955106273293,
+        "allocation": "root-approved-d7-sparse-observer1-20261007",
+        "resources_requested": {
+          "cpu": 0,
+          "timeout_seconds": 90,
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        },
+        "spectre_requested": {
+          "reltol": 1e-12,
+          "vabstol": 1e-14,
+          "iabstol": 1e-18,
+          "step": 0.005,
+          "maxstep": 0.005,
+          "method": "traponly",
+          "stop": 3.0000001,
+          "strobeoutput": "all"
+        },
+        "observation_times_count": 4,
+        "independent_roots_s": [
+          1.0,
+          3.0
+        ],
+        "exact3_known_fail_preserved": true
+      }
+    ]
+  },
+  "raw_archive_sha256": {
+    "primary6": "40e2bc00cb5a65e7a6f367b48015c34b4d923eb6085a047fca54b84f8b2186ef",
+    "sparse1": "da1401d5ce67f3f6fd43067f6a6e339734dfba382d77c68e4e702781a27cf979",
+    "sparse_observer1": "fba14832c1862125c3d771df187d1d0bf141cd2d2fdc0f3d52583595aaf4da56"
+  },
+  "lane_cleanup_and_release_complete": true,
+  "tracked_state_capture": {
+    "argv": [
+      "git",
+      "status",
+      "--porcelain",
+      "--untracked-files=no"
+    ],
+    "captured_utc": "2026-10-06T18:52:13.400723+00:00",
+    "meaning": "Observed empty porcelain output: no tracked changes at local preparation identity capture. Untracked/ignored files are excluded; this is not a separately sampled dirty snapshot for every later simulator invocation.",
+    "source": "local identity.json and prepare_local.py; original capture field remains unchanged",
+    "preparation_script_sha256": "a63cd98cda8d4d19fa2bc54ad53993a8026759a26d51d90fe067196aeddd5041"
+  },
+  "resource_field_semantics": {
+    "resources_requested.cpu": "Logical CPU index selected by min(os.sched_getaffinity(0)); 0 is CPU index zero, not a request for zero CPUs.",
+    "effective_affinity_argv": [
+      "taskset",
+      "-c",
+      "0"
+    ],
+    "affinity_cpu_count": 1,
+    "threads": "Requested Spectre +mt=1; threads=1 is separate from the logical CPU index.",
+    "verification": "All eight original STARTED cpu fields and RESULT argv begin taskset -c 0; original receipts unchanged."
+  },
+  "accepted_final_from_single_log": [
+    {
+      "literal_time": "3.0000000999999998",
+      "n": 2,
+      "z": -0.4999999516729318,
+      "u": 1.0,
+      "origin": "spectre.log",
+      "line": 176
+    }
+  ]
+}
