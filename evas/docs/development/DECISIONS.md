@@ -133,7 +133,8 @@ C1–C5 的数学接口分别在[连续状态接口](../math/continuous.md#exten
 
 此前 cross 事件体在精确根 `te=tau` 处读取条件，并把它写成“观察约定，不是 LRM 要求”。
 [LRM 2.4 §5.10.3.1](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
-规定事件“shall occur after the threshold crossing”，Spectre 也在穿越后触发。
+规定事件“shall occur after the threshold crossing”。本决定的依据首先是 LRM；仓库里已有的实际 Spectre 记录与它一致，但覆盖有限：
+091 的原 deck 在 Spectre 上通过原 checker，且回调观察副本在 4.025012500027778 ns 记录 guard≈+2.25e-4 V、polarity=+1（[diagnosis-091-320.json](../../../experiments/backends/support/source-shape/diagnosis-091-320.json)，直接证据）；261–264、267 的原 deck 在 Spectre 上均通过原 checker，当时的判断是“根后读取能解释差异”，但那八例未插桩回调，侧别只是推断（[gap06.json](../../../experiments/backends/support/source-shape/gap06.json)）。其余题没有 Spectre 记录，本轮没有新增 Spectre 运行。
 上升穿越 0.5 后，事件体里的 `V(u)>0.5` 因此为真；旧约定得到假，使 Issue214 的
 14 个原件（091、107、157、164、168、185、260–264、267、325、351）得到错误波形。
 
@@ -161,3 +162,29 @@ C1–C5 的数学接口分别在[连续状态接口](../math/continuous.md#exten
 作为一次迁移发布。`Ln` 是同一未发布候选内的加性变体：旧内核遇到未知标签返回 `invalid_ir`
 而不是误读，新内核继续接受不含它的 IR。因此不再单独分配版本；若发布后才增加
 同类变体，则按 ADR-001 的规则分配新版本并拒绝旧可执行 IR。
+
+<a id="adr-005"></a>
+
+## ADR-005：不按常数 `$bound_step` 增加 SCS 保存行（评估后未采用）
+
+状态：未采用（2026-10-22；两位独立审查意见相反，其中一位给出可复现的回归）。
+
+动机：fixed400 的 079 有 `maxstep=20n`、`$bound_step(0.5n)`，当前引擎只保存 0、20n、34n 三行，原 checker 因欠采样判失败；
+旧 EVAS 0.8.7 写 78 行。曾实现“保存 `k*h`，`h=min(maxstep, 字面无条件常数 $bound_step)`”（提交 6a961074，已撤回）。
+
+为什么撤回：
+- 零收益：全 400 重放新增通过只有来自另一项改动的 186；079 仍未通过。
+- 回归 [运行，主会话复现]：079 加 `strobetimes=[1n 3n] strobeoutput=strobeonly`，旧前端完成（保存 1n、3n、34n），加行后被内核拒绝 `condition_precision`，
+  因为 `strobeonly` 下 bound 行不保存，却仍让内核对它们认证。
+- 079 本身从“值正确但欠采样、checker 判失败”变成“被拒绝”，拒绝信息只有 `:43:5`，没有提 `$bound_step`、行时刻或补救办法；deck 层面无退路（改 maxstep 或 strobeonly 都救不了）。
+- 拒绝不是“保存行与阈值穿越重合”：二分实验显示被拒时刻既不在输入阈值上也不是 PWL 折点，079 没有 PWL 输入；同样的行在旧前端（maxstep 取 7.5n，或无 `$bound_step` 时 maxstep 取 0.25n）也被拒，同一时刻若同时是源折点则可认证，
+  整组 68 行整体偏移 0.13n/0.25n/0.37n/0.4995n 全部接受。所以这是**内核原有的过度拒绝**，应先查它。
+- 只识别字面无条件常数：`if (参数>0) $bound_step(h)`、`$bound_step(en?h:h2)`、`case` 写法不加行，同一模型因写法不同得到不同行集，而 checker 结论随行集变化。
+- 其余：`load_scs` 的 `metadata.output_grid` 与 manifest 的 `output_times` 不一致；“saved output point budget”在内核运行之后才检查；k·h 网格是约定而非 LRM 推论（LRM 2.4 §9.17.2，p.240，只给步长上限）。
+
+未采用的第二部分：`transition()` 拐点行（事件时刻加 delay、rise、fall）。拐点要等事件已知才能确定，前端只能两遍运行；fixed400 实测使 012、077 原 checker 通过，
+但内核总耗时约翻倍（通过集合合计 843 s → 1522–1618 s，-j 3），342、345、381 在 120 s 内超时；只取 `0`、stop 的探测运行使 350 返回 `event_resolution`（完整网格通过），
+说明内核的接受依赖查询时刻。
+
+正确的路线（另立任务）：（1）先查内核对这些查询时刻的 `condition_precision` 过度拒绝；（2）由内核在提交事件时把拐点与 `$bound_step` 步点插入输出序列，
+并处理隐式 DAE、无状态、strobe 与按行号引用的可移植性记录；（3）保证 `strobeonly` 下不要求认证未保存的行。证据脚本与测量在 `runs/i214b/`（本机，git 忽略）。

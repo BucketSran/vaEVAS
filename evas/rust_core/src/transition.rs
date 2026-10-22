@@ -19,6 +19,23 @@ impl Deadline {
             && self.exact_time().is_some()
             && other.exact_time().is_some()
     }
+    /// Exact real order of two deadlines whose exact times are both proven
+    /// inside their enclosures. Overlapping enclosures alone prove nothing.
+    pub(crate) fn proven_order(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.exact_time()?.order(&other.exact_time()?))
+    }
+    pub(crate) fn continuous_end(&self) -> bool {
+        self.continuous_end
+    }
+    #[cfg(test)]
+    pub(crate) fn unproven_for_tests(bounds: I) -> Self {
+        Self {
+            continuous_end: true,
+            bounds,
+            sum: None,
+            exact: None,
+        }
+    }
     pub(crate) fn serial_representatives(&self, other: &Self) -> bool {
         let strictly_after = |later: &Self, earlier: f64| {
             later

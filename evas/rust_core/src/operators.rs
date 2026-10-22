@@ -495,6 +495,42 @@ enum Runtime {
     SlewCascade(crate::slew_cascade::Cascade),
 }
 
+/// Structural whitelist for a transition target that reads held event state
+/// and constants only. Such a target can change only inside an event body, so
+/// its edges never read a node, an operator output or another history.
+/// Every other expression form is treated as dependent.
+fn reads_held_state_only(expr: &Expression) -> bool {
+    match expr {
+        Expression::State { .. } => true,
+        Expression::Affine { terms, .. } => terms.is_empty(),
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
+            reads_held_state_only(left) && reads_held_state_only(right)
+        }
+        Expression::Power { base, .. } => reads_held_state_only(base),
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => [left, right, then_value, else_value]
+            .into_iter()
+            .all(|e| reads_held_state_only(e)),
+        _ => false,
+    }
+}
+
+/// A transition whose deadlines cannot read, or be read by, another operator:
+/// no continuous source plan and a held-state-only target expression.
+fn independent_transition(entry: &Runtime) -> bool {
+    matches!(
+        entry,
+        Runtime::Transition { source: None, expression, .. } if reads_held_state_only(expression)
+    )
+}
+
 pub(crate) fn bare_real_transition_state(spec: &OperatorSpec, program: &Program) -> Option<usize> {
     let OperatorSpec::Transition {
         input: Expression::State { state },
@@ -3908,20 +3944,29 @@ impl Operators {
                 }
             }
         }
+        // Each deadline keeps its owner index for the independence rule below.
         let deadlines: Vec<_> = self
             .entries
             .iter()
-            .flat_map(|entry| match entry {
-                Runtime::DirectDerivative(_) => Vec::new(),
-                Runtime::Continuous(_) => Vec::new(),
-                Runtime::Idt { .. } => Vec::new(),
-                Runtime::IdtMod(_) => Vec::new(),
-                Runtime::Math(_, _) => Vec::new(),
-                Runtime::AbsDelay(_) => Vec::new(),
-                Runtime::LaplaceNd(_) => Vec::new(),
-                Runtime::TransitionFilter { .. } | Runtime::TransitionIntegral { .. } => Vec::new(),
-                Runtime::Transition { history, .. } => history.deadlines(after),
-                Runtime::Slew(_) | Runtime::SourceSlew(_) | Runtime::SlewCascade(_) => Vec::new(),
+            .enumerate()
+            .flat_map(|(owner, entry)| {
+                let deadlines = match entry {
+                    Runtime::DirectDerivative(_) => Vec::new(),
+                    Runtime::Continuous(_) => Vec::new(),
+                    Runtime::Idt { .. } => Vec::new(),
+                    Runtime::IdtMod(_) => Vec::new(),
+                    Runtime::Math(_, _) => Vec::new(),
+                    Runtime::AbsDelay(_) => Vec::new(),
+                    Runtime::LaplaceNd(_) => Vec::new(),
+                    Runtime::TransitionFilter { .. } | Runtime::TransitionIntegral { .. } => {
+                        Vec::new()
+                    }
+                    Runtime::Transition { history, .. } => history.deadlines(after),
+                    Runtime::Slew(_) | Runtime::SourceSlew(_) | Runtime::SlewCascade(_) => {
+                        Vec::new()
+                    }
+                };
+                deadlines.into_iter().map(move |deadline| (owner, deadline))
             })
             .collect();
         for entry in &self.entries {
@@ -3931,7 +3976,7 @@ impl Operators {
                     .filter(|cut| cut.time >= after)
                 {
                     let point = cut.bounds;
-                    for deadline in &deadlines {
+                    for (_, deadline) in &deadlines {
                         if deadline.overlaps(point)
                             && !deadline.coincides_root(&cut.exact)
                             && !deadline.ordered_with_point(point)
@@ -3943,7 +3988,7 @@ impl Operators {
                 }
             }
         }
-        for (index, deadline) in deadlines.iter().enumerate() {
+        for (index, (owner, deadline)) in deadlines.iter().enumerate() {
             if let Some(event) = next_event {
                 let accounted = (event.lo == event.hi && event == deadline.bounds)
                     || deadline.strictly_ordered_with(event);
@@ -3964,11 +4009,16 @@ impl Operators {
                     }
                 }
             }
-            for other in &deadlines[index + 1..] {
+            for (other_owner, other) in &deadlines[index + 1..] {
                 if deadline.overlaps(other.bounds)
                     && !deadline.coincides(other)
                     && !deadline.serial_representatives(other)
                     && !deadline.independent_end_checkpoints(other)
+                    && !self.independent_proven_order(
+                        (*owner, deadline),
+                        (*other_owner, other),
+                        next_event,
+                    )
                 {
                     return Err(Error::new(
                         "event_resolution",
@@ -3978,6 +4028,35 @@ impl Operators {
             }
         }
         Ok(())
+    }
+
+    /// Two deadlines of different independent transitions may share one
+    /// representative step when their exact real times are proven distinct,
+    /// the earlier one is a continuous edge end and no user event can lie in
+    /// the joint enclosure. Neither edge reads the other, and an edge end
+    /// starts no trajectory piece that could induce a new event before the
+    /// later deadline, so the real order cannot change a target or a state.
+    /// An earlier pending activation keeps the old refusal: its new ramp may
+    /// induce an event inside the window that the calendar does not yet know.
+    fn independent_proven_order(
+        &self,
+        (owner, deadline): (usize, &crate::transition::Deadline),
+        (other_owner, other): (usize, &crate::transition::Deadline),
+        next_event: Option<I>,
+    ) -> bool {
+        let hull = I {
+            lo: deadline.bounds.lo.min(other.bounds.lo),
+            hi: deadline.bounds.hi.max(other.bounds.hi),
+        };
+        owner != other_owner
+            && independent_transition(&self.entries[owner])
+            && independent_transition(&self.entries[other_owner])
+            && next_event.is_none_or(|event| !overlaps(event, hull))
+            && match deadline.proven_order(other) {
+                Some(std::cmp::Ordering::Less) => deadline.continuous_end(),
+                Some(std::cmp::Ordering::Greater) => other.continuous_end(),
+                _ => false,
+            }
     }
 
     #[cfg(test)]
@@ -5631,6 +5710,148 @@ mod deferred_deadline_proof_controls {
             }
         }
         assert_eq!(w.spent(), 2);
+    }
+}
+
+#[cfg(test)]
+mod independent_proven_order_controls {
+    use super::*;
+    use std::cmp::Ordering;
+    // y ends at 0.25+0.1+0.7 and z starts at 0.25+0.8. The exact sums differ
+    // by less than one ULP at 1.05: no binary64 time separates the two real
+    // deadlines, and the exact rationals prove that y ends first.
+    fn pair() -> Operators {
+        pair_with(0.7, 0.8)
+    }
+    // y ends at 0.25+0.1+0.2, z starts at 0.25+0.3: here the exact start is
+    // the earlier deadline, by about 2.8e-17.
+    fn start_first() -> Operators {
+        pair_with(0.2, 0.3)
+    }
+    fn pair_with(rise: f64, delay: f64) -> Operators {
+        let origin = |column: u32| serde_json::json!({"source":"pair.va","line":1,"column":column,"instance":"dut"});
+        let p:Program=serde_json::from_value(serde_json::json!({
+          "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","y","z"],
+          "states":[{"instance":"dut","name":"q","kind":"real","initial":0},
+                    {"instance":"dut","name":"p","kind":"real","initial":0}],
+          "operators":[
+            {"kind":"transition","input":{"op":"state","state":0},"delay":0.1,"rise":rise,"fall":rise,"origin":origin(1)},
+            {"kind":"transition","input":{"op":"state","state":1},"delay":delay,"rise":0.05,"fall":0.05,"origin":origin(2)}],
+          "contributions":[
+            {"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},"positive":1,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin(3)},
+            {"branch":{"instance":"dut","local_positive":"z","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"operator","operator":1},"origin":origin(4)}]})).unwrap();
+        let t = Trajectory::new(
+            crate::ir::TransientInputs {
+                analytic_sources: vec![],
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![],
+                output_times: vec![0., 1.5],
+                stop: 1.5,
+                max_step: 0.125,
+            },
+            0,
+        )
+        .unwrap();
+        let mut o = Operators::new(&p, &t, &[], &[0., 0.]).unwrap();
+        o.advance(0.25, I::point(0.25), &[1., 1.], &[I::ONE, I::ONE], &[0, 1])
+            .unwrap();
+        // Consume y's start so that its edge end becomes a pending deadline.
+        let Runtime::Transition { history, .. } = &o.entries[0] else {
+            unreachable!()
+        };
+        let start = history.deadlines(0.25).remove(0).bounds;
+        o.advance(start.hi, start, &[1., 1.], &[I::ONE, I::ONE], &[])
+            .unwrap();
+        o
+    }
+    fn deadlines(o: &Operators) -> (crate::transition::Deadline, crate::transition::Deadline) {
+        let get = |index: usize| {
+            let Runtime::Transition { history, .. } = &o.entries[index] else {
+                unreachable!()
+            };
+            history.deadlines(0.5)
+        };
+        let end = get(0).pop().unwrap();
+        let start = get(1).into_iter().next().unwrap();
+        (end, start)
+    }
+    fn refuse(o: &Operators, event: Option<I>) {
+        let error = o
+            .check_deadline_order_deferred(0.5, event, || Ok(None))
+            .unwrap_err();
+        assert_eq!(error.kind, "event_resolution");
+        assert!(error.message.contains("ordering of operator deadlines"));
+    }
+    #[test]
+    fn independent_end_and_start_with_proven_order_share_one_representative() {
+        let o = pair();
+        let (end, start) = deadlines(&o);
+        // Every older rule refuses this pair; only the new proof admits it.
+        assert!(end.overlaps(start.bounds));
+        assert!(!end.coincides(&start));
+        assert!(!end.serial_representatives(&start));
+        assert!(!end.independent_end_checkpoints(&start));
+        assert_eq!(end.proven_order(&start), Some(Ordering::Less));
+        o.check_deadline_order_deferred(0.5, None, || Ok(None))
+            .unwrap();
+        o.check_deadline_order_deferred(0.5, Some(I { lo: 1.2, hi: 1.3 }), || Ok(None))
+            .unwrap();
+    }
+    #[test]
+    fn an_earlier_pending_activation_keeps_the_refusal() {
+        let o = start_first();
+        let (end, start) = deadlines(&o);
+        assert!(end.overlaps(start.bounds) && !end.serial_representatives(&start));
+        assert_eq!(start.proven_order(&end), Some(Ordering::Less));
+        assert!(!o.independent_proven_order((0, &end), (1, &start), None));
+        refuse(&o, None);
+    }
+    #[test]
+    fn event_inside_the_joint_enclosure_keeps_the_refusal() {
+        let o = pair();
+        let (end, start) = deadlines(&o);
+        let hi = end.bounds.hi.max(start.bounds.hi);
+        // Each deadline alone is strictly before this point event, so only
+        // the joint-window rule refuses it.
+        assert!(end.strictly_ordered_with(I::point(hi)));
+        assert!(start.strictly_ordered_with(I::point(hi)));
+        refuse(&o, Some(I::point(hi)));
+    }
+    #[test]
+    fn a_target_that_reads_another_output_or_node_is_dependent() {
+        for expression in [
+            Expression::Operator { operator: 0 },
+            Expression::Affine {
+                constant: 0.,
+                terms: vec![crate::ir::Term {
+                    node: 1,
+                    coefficient: 1.,
+                }],
+            },
+            Expression::Add {
+                left: Box::new(Expression::State { state: 1 }),
+                right: Box::new(Expression::Operator { operator: 0 }),
+            },
+        ] {
+            let mut o = pair();
+            let Runtime::Transition { expression: e, .. } = &mut o.entries[1] else {
+                unreachable!()
+            };
+            *e = expression;
+            refuse(&o, None);
+        }
+    }
+    #[test]
+    fn same_owner_equal_or_unproven_times_are_not_admitted() {
+        let o = pair();
+        let (end, start) = deadlines(&o);
+        assert!(o.independent_proven_order((0, &end), (1, &start), None));
+        assert!(!o.independent_proven_order((0, &end), (0, &start), None));
+        assert!(!o.independent_proven_order((0, &end), (1, &end), None));
+        let unproven = crate::transition::Deadline::unproven_for_tests(end.bounds);
+        assert_eq!(unproven.proven_order(&start), None);
+        assert!(!o.independent_proven_order((0, &unproven), (1, &start), None));
     }
 }
 
