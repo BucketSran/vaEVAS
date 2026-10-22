@@ -1,0 +1,14 @@
+`include "disciplines.vams"
+module independent_near(y0,y1);
+output y0,y1; electrical y0,y1;
+real a,b;
+analog begin
+ @(initial_step) begin a=0;b=0;end
+ @(timer(1n,10n,5f)) a=1.1;
+ @(timer(1.0005n,10n,5f)) b=1.1;
+ @(timer(2n,10n,5f)) a=0;
+ @(timer(2.0005n,10n,5f)) b=0;
+ V(y0)<+transition(a,0,20p,20p);
+ V(y1)<+transition(b,0,20p,20p);
+end
+endmodule
