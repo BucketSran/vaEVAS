@@ -60,11 +60,12 @@ Jacobian 每步重算三处代码证据）、[外部加速调研](analysis-20261
 
 ## 算子条目写时复制（存档，代码未合入）
 
-> **状态：存档，代码未合入 main。** 以下是 #138 P14 第二切片的测量结论；代码改动保留在分支
-> `codex/p14-history-sharing-slice2`（[PR #212](https://github.com/BucketSran/vaEVAS/pull/212)，草稿）。
-> 该切片没有可测的端到端收益，且会与未合并的 PR #208 在 `operators.rs` 的历史复制计费处冲突，
-> 所以等 PR #208 合入后，确有需要时再在其上重放。下文所说的 `Arc` 共享与
-> `history_entry_copy_on_write` 计数器只存在于该分支，当前 main 没有。
+> **状态：存档，代码未合入 main。** 以下是 #138 P14 第二切片的测量结论，由
+> [PR #218](https://github.com/BucketSran/vaEVAS/pull/218) 存档；代码改动保留在分支
+> `codex/p14-history-sharing-slice2`，[PR #212](https://github.com/BucketSran/vaEVAS/pull/212)
+> 已于 2026-10-22 关闭、未合并。该切片没有可测的端到端收益。存档时它会与当时未合并的 PR #208
+> 在 `operators.rs` 的历史复制计费处冲突；PR #208 已于 2026-10-21 合入 main，确有需要时须在当前
+> main 上重放。下文所说的 `Arc` 共享与 `history_entry_copy_on_write` 计数器只存在于该分支，当前 main 没有。
 
 
 P14 第二切片把 `Operators` 的 `entries` 改为逐条目 `Arc` 共享，trial 只在真正
@@ -144,7 +145,7 @@ python3 -B experiments/performance/measure_build.py --output runs/performance/bu
 
 7 例共 140 次执行，零失败；同例在两核、诊断开关及五轮之间的完整 JSON 逐字节一致。独立解析答案、原电压/事件预算及精确包围另行核验。4097/8193 点非线性请求的耗时范围不重叠，但峰值 RSS 分别增加约 1.0/2.2 MiB，属于缓存换时间的实测代价，不能称为内存优化。memo 未设容量上限，本次有限查询不能证明任意长仿真的内存上界。短请求不作提速承诺。
 
-原始响应、逐轮耗时、诊断及 `time -l` 日志为 local-only，保存在所属工作区 `runs/performance-p03-20261017/review-complete-request/`。收据保留全部样本和输入/输出/内核哈希。主机共享且有外部负载，未删除慢样本；结论不扩展到任意模型或相对 Spectre 的速度。两个 PR 均未合并；源码未改，原代码正确性及 Spectre 复用边界保持。
+原始响应、逐轮耗时、诊断及 `time -l` 日志为 local-only，保存在所属工作区 `runs/performance-p03-20261017/review-complete-request/`。收据保留全部样本和输入/输出/内核哈希。主机共享且有外部负载，未删除慢样本；结论不扩展到任意模型或相对 Spectre 的速度。测量时两个 PR 均未合并，源码未改，原代码正确性及 Spectre 复用边界保持；[#205](https://github.com/BucketSran/vaEVAS/pull/205) 与 [#207](https://github.com/BucketSran/vaEVAS/pull/207) 已于 2026-10-17 合入 main。
 
 ## 只拆 IR crate
 
@@ -199,4 +200,4 @@ flowchart LR
 
 6 例共 120 次执行，零失败；同例在两核、诊断开关及五轮之间的完整 JSON 逐字节一致。独立解析答案、原电压/事件预算及精确包围另行核验。idt/pwl_idt 的收益仅限本表的固定合成负载，其余小差异不作稳定提速结论；旧 nonlinear 噪声样本仍保留。RSS 差异小于约 0.2 MiB，不推断通用内存改善。
 
-原始响应、逐轮耗时、诊断及 `time -l` 日志为 local-only，保存在所属工作区 `runs/performance-p05-20261017/review-complete-request/`。收据保留全部样本和输入/输出/内核哈希。主机共享且有外部负载，未删除慢样本；结论不扩展到任意模型或相对 Spectre 的速度。两个 PR 均未合并；源码未改，原代码正确性及 Spectre 复用边界保持。
+原始响应、逐轮耗时、诊断及 `time -l` 日志为 local-only，保存在所属工作区 `runs/performance-p05-20261017/review-complete-request/`。收据保留全部样本和输入/输出/内核哈希。主机共享且有外部负载，未删除慢样本；结论不扩展到任意模型或相对 Spectre 的速度。测量时两个 PR 均未合并，源码未改，原代码正确性及 Spectre 复用边界保持；[#205](https://github.com/BucketSran/vaEVAS/pull/205) 与 [#207](https://github.com/BucketSran/vaEVAS/pull/207) 已于 2026-10-17 合入 main。

@@ -37,7 +37,7 @@ benchmark 以实际 Verilog-A 使用场景组织工程任务，检查交付物�
 建设内容包括题目、运行环境、参考解和验收材料，采用 Harbor 任务格式。
 
 当前按五类工程动作和电路功能组织设计，入口为 [Benchmark 工作区](benchmark/material/draftbench/README.md)。
-两批 56 个既有题包和 1 个 R01 有限采集合同草稿放在[三个草稿批次](benchmark/material/draftbench/batches/README.md)，
+两批 56 个既有题包和 2 个 R01 待审题包（ideal 规格重建与有限采集合同），共 58 个，放在[三个草稿批次](benchmark/material/draftbench/batches/README.md)，
 本版完整题目审核尚未完成。[正式清单](benchmark/tasks/benchmark.toml)当前为空，
 每题完成审核与必要作者校准后再录取。题包格式、批次管理和历史材料分工见[benchmark 入口](benchmark/README.md)。
 
