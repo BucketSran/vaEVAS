@@ -32,11 +32,24 @@ EVAS 的价值需要由电压域工程行为证明：在正确时刻采样，保
 每类都检查初始化、事件前后读值、历史延续、多个实例和误差控制，再扩展反馈及更复杂组合。
 支持结论仍只维护在总表中。晶体管、电流与电荷方程不属于当前范围；性能优化排在行为与精度之后。
 
-当前开发版本为 **EVAS 0.19.0 / IR23**，尚未发布到公共索引或打 tag。变化、验收范围和历史执行身份见[版本记录](docs/UPDATE.md)。
-IR23 增加隔离观察事件中的有界运行期循环、整数检查和数组读写；物理事件与历史输入的准入边界保留。
+此接入工作副本固定使用 **EVAS 0.21.0 / IR28** 的 `c8dc2a7b` 源码依赖，尚未发布到公共索引或打 tag。版本与本地接入证据见[XSPICE 实验入口](../experiments/backends/xspice-entry/README.md)；旧版本历史见[版本记录](docs/UPDATE.md)。
+IR28 增加事件整数表达式，保留原生 tanh 等 IR25至27能力；版本升级不代表支持表新增通过。
 范围与失败规则见[事件循环](docs/reference/frontend-admission.md#runtime-event-loops)和[事件数学](docs/math/events.md#event-math)；版本升级不代表支持表新增通过。
 
 <a id="model-handoff"></a>
+
+## 将 VA 接入 ngspice 网表
+
+新增受限的 [XSPICE 编译入口](docs/reference/xspice.md)：
+
+```sh
+PYTHONPATH=evas/src python3 -m evas xspice compile model.va -o generated
+PYTHONPATH=evas/src python3 -m evas xspice build generated --sdk /path/to/sdk.json
+```
+
+编译使用当前包的前端与 IR，构建需要匹配的 ngspice47 SDK。生成模型可以与网表里的器件、负载和反馈联立仿真，电路求解由 ngspice 完成。
+本地范围包括 rising cross、纯固定 timer 源、标量条件、事件保持 transition、显式输出参考及连续 tanh；具体准入、加载方式和待补对照见接口说明。
+这项编译出口不扩展下方独立 Rust 求解器的器件范围或Q资格。
 
 ## 与电路仿真配合
 
@@ -473,10 +486,10 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 
 ### IR 版本与迁移
 
-Program 和成功 Response 的 `schema_version` 均为 **23**，Python 适配器与 Rust 内核同步检查。
+Program 和成功 Response 的 `schema_version` 均为 **28**，Python 适配器与 Rust 内核同步检查。
 旧版本或未知整数版本先于载荷解码返回 `unsupported_ir_version`；版本缺失/错误类型及当前格式错误返回
-`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–22 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
-前端与内核须配套使用。IR23 新增有界事件循环和紧凑数组读写；IR22 引入 `event_math`，仅扩展完整 IR 证明隔离的观察事件；
+`invalid_request`。Rust 库构造入口也检查版本。旧 IR 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
+前端与内核须配套使用。IR28新增 typed Subtract 与运行期 Remainder，IR27新增 typed Add；IR25新增原生 tanh。IR23 新增有界事件循环和紧凑数组读写；IR22 引入 `event_math`，仅扩展完整 IR 证明隔离的观察事件；
 物理联立、初始化和固定 start=0 timer 的数学边界保持。IR21 保留 `step_bounds`，新增变量分母的 `divide` 表达式、顺序初始化和事件输出记录。
 `step_bounds` 保存每次 `$bound_step` 的值、激活条件和源码身份。
 IR19 引入的纯数学函数格式继续保留；不能只给旧 JSON 改版本号。

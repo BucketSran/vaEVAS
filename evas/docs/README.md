@@ -22,6 +22,7 @@
 | --- | --- |
 | 安装 Python 包和 Rust 内核 | [安装](reference/install.md) |
 | 核对正在运行的包与内核 | [身份查询](reference/identity.md) |
+| 把 VA 接入 ngspice 网表 | [XSPICE 编译入口](reference/xspice.md) |
 | 检查 VA 源码能否编译 | [编译准入](reference/frontend-admission.md) |
 | 指定实际求解时刻 | [strobe 控制](reference/strobe.md) |
 | 保存 JSON、CSV 与运行状态 | [结果导出](reference/results.md) |

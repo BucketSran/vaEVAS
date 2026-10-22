@@ -122,3 +122,13 @@ v4 已有固定版本的 400 家族首阻塞探测，分类及推进顺序见[�
 <!-- ci:progress:end -->
 
 原请求、独立控制和共同 Q 结论的更新条件见[每项修复与比较的验收](../validation/paper/COVERAGE.md#每项修复与每行比较一起验收)。
+
+## XSPICE 编译出口
+
+新增独立的 [EVAS→XSPICE 入口](reference/xspice.md)，将受限电压事件模型编译为 ngspice47 模型，与负载和反馈联立求解。首批固定 cross/timer/transition 组合、拒步回退与实例隔离的范围及执行身份见[入口证据](../../experiments/backends/xspice-entry/README.md)。这是另一条执行路径，不改变上方四后端固定Q表，也不把 ngspice+OpenVAF-R 的历史结果改写为此入口的结果。
+
+[P0同源专项](../../experiments/backends/xspice-entry/p0-evidence.json)在同一IR28安装包上复用输入别名，补齐动态阈值、事件采样、输出RC与近零守卫的六例验收6/6。判据和各批分母分别保留；有限微例结果不证明完整原件或一般电流支路支持，尚未发布。
+
+本地后端版本2固定接入 EVAS `c8dc2a7b`、IR28，增加 r53 单路及四路采样、条件计数、纯 timer 时钟、差分参考输出、连续 tanh 和时钟采样链路。其[独立本地证据](../../experiments/backends/xspice-entry/r53-evidence.json)包含回退、实例隔离及导数负控；115与068修复后，固定七例 Spectre 对照7/7通过，原配对超差、收敛失败及重试记录保留；不提升为完整兼容或固定Q资格。
+
+[P1标准整理版时钟](../../experiments/backends/xspice-entry/p1-evidence.json)另建15/15同源ngspice/Spectre对照，覆盖零timer最终种子、1800ns默认32路、2400ns/42路、独立批次及长日程。所有后端使用同一标准整理文件，原始来源和两项适配差异保留；原件原样未验。该分母与P0六例、r53七例、旧十配置分别计账，未发布。

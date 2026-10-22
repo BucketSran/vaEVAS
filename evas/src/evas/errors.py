@@ -8,6 +8,9 @@ import argparse
 
 # code -> category, owning stage, capability, actionable scope
 RULES = {
+    'xspice_unsupported': ('unsupported', 'xspice', None, 'Use the documented XSPICE voltage-event subset.'),
+    'xspice_toolchain': ('infrastructure', 'xspice', None, 'Provide an SDK matching the selected ngspice binary and ABI.'),
+    'xspice_build': ('infrastructure', 'xspice', None, 'Inspect the retained build/probe logs.'),
     'duplicate_module': ('invalid_input', 'parse', 'LANG', 'Provide each module definition once.'),
     'connection_mismatch': ('invalid_input', 'binding', 'LANG', 'Match every top-level port key; child connections must use declared electrical nets.'),
     'undeclared_node': ('invalid_input', 'lowering', 'LANG', 'Declare the electrical nodes used by voltage access.'),
@@ -26,6 +29,7 @@ RULES = {
     'unsupported_timer_dependency': ('unsupported', 'lowering', 'TIMER', 'Use constant or held-state timer start/period/enable and constant time_tol.'),
     'parameter_type': ('unsupported', 'binding', 'LANG', 'Use an exact signed 32-bit integer parameter value.'),
     'unsupported_integer_arithmetic': ('unsupported', 'binding', 'LANG', 'Use explicit real operands if real arithmetic is intended; typed integer division/overflow are not supported.'),
+    'unsupported_integer_bitwise': ('unsupported', 'binding', 'LANG', 'Use typed signed32 operands with small proven domains and instance-constant shift counts; arithmetic and index checks must remain provable.'),
     'parameter_range': ('invalid_input', 'binding', 'LANG', 'Check the effective instance value and from/exclude constraints.'),
     'vector_declaration': ('invalid_input', 'binding', 'LANG', 'Use matching one-dimensional electrical and port ranges.'),
     'unsupported_vector': ('unsupported', 'binding', 'LANG', 'Use static scalar bit connections and instance-constant indices.'),

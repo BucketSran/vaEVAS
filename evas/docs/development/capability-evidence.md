@@ -127,6 +127,12 @@ EVAS 回调缺证与严格配置认证拒绝，不改原验收成绩或扩大能
 TIMER、CROSS、EVENT-ORDER、TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE、QUALIFICATION。
 它分别记录数值、行为和取证结果；支持结论仍只在支持总表维护，开发用例不计为独立留出集。
 
+[XSPICE 编译出口](../../../experiments/backends/xspice-entry/README.md)补充 LANG、CROSS、TIMER、TRANSITION、EVENT-ORDER 与 COMPOSE 的独立后端开发证据。使用实际包前端和 ngspice47 网表求解；限定有序事件、固定 timer 及事件保持 transition。公开准入与构建边界由 [reference/xspice.md](../reference/xspice.md)维护，原生检查源码在 [validation/xspice](../../validation/xspice/README.md)，不授予 Rust 路径或固定Q表新的资格。
+
+[r53 有限扩展](../../../experiments/backends/xspice-entry/r53-evidence.json)在固定 `c8dc2a7b`、IR28 上补充 LANG、NONLINEAR、TIMER、CROSS 与 COMPOSE 的本地证据。包括标量条件计数、纯 timer 四相时钟、显式差分参考、四路同步采样、连续 tanh 及链式导数。新电路的 ngspice 检查与旧五电路的参考配对分别记账；115跨零双容差与068默认timer提前触发修复后，固定七例同源 Spectre 对照7/7通过。068原生参考使用精确等价电容方程，标量容差不变。原RC超差、收敛失败和重试保留，未提交、发布或合并。
+
+[P0输入别名专项](../../../experiments/backends/xspice-entry/p0-evidence.json)补充LANG、CROSS与COMPOSE：同源动态阈值、事件采样和下游RC，以及原近零守卫共六例6/6通过。复用已有实现，两份别名VA保持原探针身份；七种公共准入拒绝、同进程重试及泄漏负控另计。条件采样只覆盖true叶，Rust适用路径不含外部RC，不扩大为完整DFF/PFD、多cross或Q13支持。
+
 | 能力 ID | 契约或数学入口 | 验证与历史证据 |
 | --- | --- | --- |
 
@@ -222,3 +228,5 @@ EVAS 的全部 6,366 行计数符合名义时钟，四行严格差异仍保留�
 [有界运行期事件控制](../../../experiments/backends/support/event-runtime-control/README.md)补充 LANG、EVENT-CONDITIONS 和 EVENT-ORDER：三个实际 Spectre 控制按原 100 nV 门槛及精确整数答案验收；4096 迭代、signed32 中间检查、数组边界及晚失败回退见 test_event_runtime_loops.py。原 CDS 整题尚未完成，不新增 Q 成绩。
 
 保持目标中的嵌套 held `Select` 补充 TRANSITION 与 EVENT-CONDITIONS，见[原算式、结构负控与有限参考](../../../experiments/backends/support/held-transition-targets/README.md)。这里只验证保持量目标的分支展开，不表示完整 MUX 模型或历史谓词已经支持。
+
+[P1参数化时钟专项](../../../experiments/backends/xspice-entry/p1-evidence.json)补充LANG、TIMER、TRANSITION、EVENT-ORDER和COMPOSE的有限后端证据。已确认标准整理版及独立微例共15/15同源ngspice/Spectre配对；最终安装包21项主机检查、19项单元检查和31项校准通过。默认32路、42路参数变体、最终初态、独立批次、近邻分离、1000周期及stop边界分别覆盖。同源Rust公共电压/状态路径另有15例，不替代ngspice的游标与真实拒步义务。原始原件、一般共享状态、动态timer和64路满载仍未取得本专项资格，固定Q表不变；失败、重试及评分修复保留，未提交发布。
