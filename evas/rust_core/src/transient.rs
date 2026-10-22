@@ -463,6 +463,36 @@ fn prepare_root_window_impl(
     .map(|(frame, _, _)| frame)
 }
 
+/// Install an exact state proof's tight box. As for an exact input value, the
+/// representative must lie in its certified box: a nominal computed at the
+/// float representative time that falls outside the proof's box is replaced by
+/// the proof's nearest binary64 value. A nominal already inside is kept.
+fn install_state_proof(
+    states: &mut [f64],
+    bounds: &mut [I],
+    state: usize,
+    value: &num_rational::BigRational,
+    proved: I,
+    history_work: Option<&crate::transition_source_plan::Work>,
+) -> Result<(), Error> {
+    bounds[state] = proved;
+    let nominal = states[state];
+    if proved.lo <= nominal && nominal <= proved.hi {
+        return Ok(());
+    }
+    let nearest = if let Some(w) = history_work {
+        let mut p = crate::exact_source::history_paid::Paid::new(w);
+        let v = p.nearest(value);
+        p.finish(v)?
+    } else {
+        use num_traits::ToPrimitive;
+        value.to_f64()
+    };
+    if let Some(nearest) = nearest.filter(|n| proved.lo <= *n && *n <= proved.hi) {
+        states[state] = nearest;
+    }
+    Ok(())
+}
 fn prepare_root_window_selected_impl(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -580,7 +610,11 @@ fn prepare_root_window_selected_impl(
     // The exact root narrows sampling, while the complete discovery window
     // still belongs to every installed history and recorded event below.
     // In particular an OLD source cut may precede the root inside that window.
-    frozen.bounds = base.event_bounds_at_root(time, time_bounds, exact_root)?;
+    // A point window without a root has event bounds exactly `bounds(time)`,
+    // which the evaluation already holds; do not repeat that query.
+    if exact_root.is_some() || time_bounds.lo != time_bounds.hi {
+        frozen.bounds = base.event_bounds_at_root(time, time_bounds, exact_root)?;
+    }
     // This bundle belongs only to this candidate and complete EventMoment.
     // Every invocation, including a retry or a same-time state change, builds
     // its own physical point. It cannot enter accepted history or a cache.
@@ -810,7 +844,14 @@ fn prepare_root_window_selected_impl(
             crate::exact_source::enclosure(value)
         };
         if let Some(bounds) = bounds {
-            prepared.bounds[state] = bounds;
+            install_state_proof(
+                &mut prepared.states,
+                &mut prepared.bounds,
+                state,
+                value,
+                bounds,
+                history_work,
+            )?;
         }
     }
     let changed: Vec<_> = prepared
@@ -856,7 +897,14 @@ fn prepare_root_window_selected_impl(
             crate::exact_source::enclosure(value)
         };
         if let Some(bounds) = bounds {
-            replay.bounds[state] = bounds;
+            install_state_proof(
+                &mut replay.states,
+                &mut replay.bounds,
+                state,
+                value,
+                bounds,
+                history_work,
+            )?;
         }
     }
     let same_values = if let Some(w) = history_work {
@@ -2638,6 +2686,28 @@ fn run_stateless_transient(
 mod tests {
     use super::*;
     use crate::ir::{Program, Tolerances, TransientInputs};
+
+    #[test]
+    fn exact_state_proof_moves_only_an_outside_nominal_into_its_box() {
+        let third = num_rational::BigRational::new(1.into(), 3.into());
+        let proved = crate::exact_source::enclosure(&third).unwrap();
+        assert!(proved.lo < proved.hi);
+        let wide = I { lo: 0., hi: 1. };
+        for work in [None, Some(crate::transition_source_plan::Work::default())] {
+            // A representative from the float event time, outside the proof's
+            // box, becomes the proof's nearest binary64 value.
+            let (mut states, mut bounds) = (vec![0.5], vec![wide]);
+            install_state_proof(&mut states, &mut bounds, 0, &third, proved, work.as_ref())
+                .unwrap();
+            assert_eq!(bounds[0], proved);
+            assert_eq!(states[0], 1. / 3.);
+            // A representative already inside the box is kept bit for bit.
+            let (mut states, mut bounds) = (vec![proved.hi], vec![wide]);
+            install_state_proof(&mut states, &mut bounds, 0, &third, proved, work.as_ref())
+                .unwrap();
+            assert_eq!((states[0], bounds[0]), (proved.hi, proved));
+        }
+    }
 
     fn idt_fixture(
         clamp: bool,

@@ -11,6 +11,7 @@ from .elaboration import elaborate_loops
 from .syntax import Loop, Assignment, Conditional, ContributionStatement, Event, Display
 from .integer_constants import check_integer_model, check_integer_expression
 from .parameters import attach_constant_integer_arithmetic
+from .same_trigger_events import join_same_trigger_events
 
 
 def scalarize_nodes(model, parameters):
@@ -37,6 +38,7 @@ def scalarize_nodes(model, parameters):
         for branch in ("then_body", "else_body", "body"):
             pending.extend((s, nested) for s in getattr(item, branch, ()))
     model = elaborate_loops(model, parameter)
+    model = join_same_trigger_events(model)
     model = replace(model, analog=[s for s in model.analog if not isinstance(s,Event)],
                     events=[*model.events, *(s for s in model.analog if isinstance(s,Event))])
     event_writers = set()

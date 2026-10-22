@@ -1515,6 +1515,90 @@ pub(crate) fn rational_order_with_work(
     Ok(a.cmp(b))
 }
 
+/// Leading 64 bits of a nonzero magnitude given as its bit length and its u64
+/// digits (least significant first), normalized so bit 63 is set: the
+/// magnitude lies in `[top, top + inexact]·2^shift` with `inexact` 0 or 1.
+/// Reads at most the two highest limbs.
+fn leading_u64(
+    bits: u64,
+    mut digits: impl DoubleEndedIterator<Item = u64>,
+) -> Option<(u64, i64, bool)> {
+    let last = digits.next_back()?;
+    if bits <= 64 {
+        // Exactly one limb: shifting left is exact.
+        let zeros = last.leading_zeros();
+        return Some((last << zeros, -i64::from(zeros), false));
+    }
+    let next = digits.next_back()?;
+    let zeros = last.leading_zeros();
+    let top = if zeros == 0 {
+        last
+    } else {
+        (last << zeros) | (next >> (64 - zeros))
+    };
+    Some((top, (bits - 64) as i64, true))
+}
+
+/// `x·2^e` for a positive normal `x` when the result is normal, exactly.
+fn scale_normal(x: f64, e: i64) -> Option<f64> {
+    let bits = x.to_bits();
+    let biased = ((bits >> 52) & 0x7ff) as i64 + e;
+    (x.is_normal() && x > 0. && (1..=2046).contains(&biased))
+        .then(|| f64::from_bits((bits & !(0x7ff << 52)) | ((biased as u64) << 52)))
+}
+
+/// Tightest binary64 enclosure of a rational that is NOT a binary64 value,
+/// from the leading bits of its numerator and denominator. The magnitude lies
+/// in `[lo, hi]·2^e` (exact integer division with floor/ceil); when that
+/// bracket, rounded outward, spans exactly one float gap, the value is strictly
+/// inside the gap and its tightest enclosure is the gap. Otherwise, or outside
+/// the normal range, return `None` for the exact generic path. The caller must
+/// have excluded binary64 values (the dyadic fast path).
+fn leading_bits_enclosure(value: &R) -> Option<I> {
+    let (numer, denom) = (value.numer(), value.denom());
+    let (n, n_shift, n_inexact) = leading_u64(numer.bits(), numer.iter_u64_digits())?;
+    let (d, d_shift, d_inexact) = leading_u64(denom.bits(), denom.iter_u64_digits())?;
+    let (n_lo, d_lo) = (u128::from(n), u128::from(d));
+    let n_hi = n_lo + u128::from(n_inexact);
+    let d_hi = d_lo + u128::from(d_inexact);
+    // n in [2^63, 2^64], d in [2^63, 2^64]: both quotients lie in [2^62, 2^64].
+    let lo = (n_lo << 63) / d_hi;
+    let hi = ((n_hi << 63) + d_lo - 1) / d_lo;
+    let e = n_shift - d_shift - 63;
+    let down = |x: u128| {
+        let f = x as f64;
+        if f as u128 > x {
+            f.next_down()
+        } else {
+            f
+        }
+    };
+    let up = |x: u128| {
+        let f = x as f64;
+        if (f as u128) < x {
+            f.next_up()
+        } else {
+            f
+        }
+    };
+    let below = scale_normal(down(lo), e)?;
+    let above = scale_normal(up(hi), e)?;
+    if above != below.next_up() || !above.is_normal() {
+        return None;
+    }
+    Some(if value.numer().is_negative() {
+        I {
+            lo: -above,
+            hi: -below,
+        }
+    } else {
+        I {
+            lo: below,
+            hi: above,
+        }
+    })
+}
+
 /// Result preserves old optional mathematical failure; Work errors are never discarded.
 pub(crate) fn enclosure_with_work(
     value: &R,
@@ -1551,6 +1635,21 @@ pub(crate) fn enclosure_with_work(
         )?;
         crate::diagnostics::counter("forcing_exact_dyadic_enclosure", 1);
         return Ok(value.to_f64().filter(|v| v.is_finite()).map(I::point));
+    }
+    // Not a binary64 value. Its tightest enclosure is unique, so a rigorous
+    // leading-bits bracket inside one float gap decides it without full-width
+    // arithmetic. Reserve one ratio_to_f64-sized fee first; an undecided
+    // bracket falls through to the unchanged generic path below.
+    let q = bits.saturating_add(56);
+    w.debit(
+        2,
+        event_prefix_fees::div(q)
+            .saturating_add(event_prefix_fees::l(q).saturating_mul(64))
+            .saturating_add(64),
+    )?;
+    if let Some(tight) = leading_bits_enclosure(value) {
+        crate::diagnostics::counter("exact_leading_bits_enclosure", 1);
+        return Ok(Some(tight));
     }
     // Failed shape recognition spends its work. Execute the original generic
     // enclosure with paid primitives so comparisons use the shared exact
@@ -2295,6 +2394,98 @@ mod generic_enclosure_paid_tests {
             let result = paid.enclose(&value);
             assert_eq!(paid.finish(result).unwrap_err().kind, "step_budget");
             assert!(work.spent() >= spent);
+        }
+    }
+
+    fn rational(numer: &[u64], denom: &[u64], negative: bool) -> R {
+        let digits = |d: &[u64]| {
+            d.iter()
+                .rev()
+                .fold(R::from_integer(0.into()).numer().clone(), |acc, &x| {
+                    (acc << 64usize) + x
+                })
+        };
+        let n = digits(numer);
+        R::new(if negative { -n } else { n }, digits(denom))
+    }
+
+    /// The leading-bits bracket either equals the exact old enclosure bit for
+    /// bit or abstains; it never decides a binary64 value.
+    fn agrees(value: &R) -> bool {
+        let fast = leading_bits_enclosure(value);
+        let exact = enclosure(value);
+        let float = exact.is_some_and(|b| b.lo == b.hi);
+        if let Some(fast) = fast {
+            assert!(!float, "decided a binary64 value {value}");
+            assert_bits(Some(fast), exact);
+        }
+        // The paid entry point returns the old box whichever path decides.
+        assert_bits(enclosure_with_work(value, &Work::default()).unwrap(), exact);
+        fast.is_some()
+    }
+
+    #[test]
+    fn leading_bits_enclosure_equals_the_exact_box_or_abstains() {
+        let third = R::new(1.into(), 3.into());
+        let power = |n: usize| R::from_integer(1.into()).numer().clone() << n;
+        // Wide event-time style rationals, both signs, and the narrow cases.
+        let mut decided = 0;
+        for (numer, denom) in [
+            (vec![1], vec![3]),
+            (vec![7], vec![10]),
+            (vec![u64::MAX, 3], vec![5]),
+            (vec![12345, 6789, 1], vec![987654321, 2]),
+            (vec![1, 2, 3, 4, 5], vec![6, 7, 8, 9]),
+            (vec![u64::MAX; 6], vec![u64::MAX - 2; 5]),
+            (vec![3], vec![u64::MAX, u64::MAX, 1]),
+        ] {
+            for negative in [false, true] {
+                decided += usize::from(agrees(&rational(&numer, &denom, negative)));
+            }
+        }
+        assert!(decided >= 10, "fast path decided only {decided}");
+        // Within a few bits of a float (bracket may straddle), exact floats
+        // and dyadics wider than 53 bits, and range edges.
+        let eps = R::new(1.into(), power(80));
+        for value in [
+            binary(0.73).unwrap() + &eps,
+            binary(0.73).unwrap() - &eps,
+            binary(1.5).unwrap(),
+            R::from_integer(power(53) + 1u8),
+            binary(f64::MAX).unwrap() + &third,
+            binary(f64::MIN_POSITIVE).unwrap() * &third,
+            R::new(1.into(), power(1074)) * &third,
+        ] {
+            agrees(&value);
+        }
+        // Deterministic sweep of wide rationals: nearly all are decided.
+        let mut state = 0x9e37_79b9_7f4a_7c15u64;
+        let mut next = || {
+            state ^= state << 13;
+            state ^= state >> 7;
+            state ^= state << 17;
+            state
+        };
+        let (mut total, mut fast) = (0, 0);
+        for _ in 0..4000 {
+            let n: Vec<u64> = (0..1 + next() % 5).map(|_| next()).collect();
+            let d: Vec<u64> = (0..1 + next() % 5).map(|_| next() | 1).collect();
+            let negative = next() & 1 == 1;
+            total += 1;
+            fast += usize::from(agrees(&rational(&n, &d, negative)));
+        }
+        assert!(fast * 100 >= total * 95, "decided {fast} of {total}");
+    }
+
+    proptest::proptest! {
+        #[test]
+        fn leading_bits_enclosure_matches_exact_on_random_wide_rationals(
+            numer in proptest::collection::vec(proptest::prelude::any::<u64>(), 1..6),
+            denom in proptest::collection::vec(proptest::prelude::any::<u64>(), 1..6),
+            negative in proptest::prelude::any::<bool>(),
+        ) {
+            proptest::prop_assume!(denom.iter().any(|&d| d != 0) && numer.iter().any(|&n| n != 0));
+            agrees(&rational(&numer, &denom, negative));
         }
     }
 }
