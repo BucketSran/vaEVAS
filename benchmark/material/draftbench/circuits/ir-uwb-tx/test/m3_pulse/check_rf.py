@@ -68,6 +68,7 @@ Vpre (pre 0) vsource type=pwl wave={pre}
 Vrel (rel 0) vsource type=pwl wave={rel}
 Xseed (pwr pre rel vs) uwb_rf_ro_branch f_rf={F!r}
 Xideal (pwr pre rel vi) uwb_rf_ro_branch f_rf={F!r} t99_amp=0 t99_freq=0 df_start=0
+opts options reltol=1e-6 vabstol=1e-6
 tran tran stop=8n maxstep=1p
 save vs vi pwr pre rel
 """
@@ -143,6 +144,7 @@ global 0
 Xclk (clk) uwb_clock_source period={t_clk!r} delay=10p tr=2p
 Vg (gate 0) vsource type=pwl wave={gate}
 Xenv (gate clk env) uwb_envelope_lane
+opts options reltol=1e-6 vabstol=1e-6
 tran tran stop=8n maxstep=1p
 save env gate
 """

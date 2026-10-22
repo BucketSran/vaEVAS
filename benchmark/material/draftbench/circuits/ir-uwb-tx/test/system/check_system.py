@@ -49,6 +49,7 @@ Vpol (pol 0) vsource dc=0
 Xtx (bclk din rst ref cal pol outp outn done fail conflict nsup clk672) uwb_tx_seed
 {u.monitor_lines(dict(done=4, fail=5, conflict=6))}
 {u.monitor_lines(dict(clk672=100))}
+opts options reltol=1e-6 vabstol=1e-6
 tran tran stop={stop!r} maxstep=200p
 save outp outn
 """

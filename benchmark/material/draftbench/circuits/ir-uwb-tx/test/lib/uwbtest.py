@@ -18,7 +18,11 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 FAMILY = HERE.parent.parent
 REPO = Path(subprocess.check_output(['git', 'rev-parse', '--show-toplevel'], cwd=HERE, text=True).strip())
-KERNEL = REPO / 'evas/rust_core/target/release/evas-kernel'
+# Current EVAS: this checkout by default; UWB_EVAS_REPO points at another
+# checkout (for example an EVAS development worktree) whose evas/src and
+# release kernel are used instead.
+EVAS_REPO = Path(os.environ.get('UWB_EVAS_REPO', REPO))
+KERNEL = EVAS_REPO / 'evas/rust_core/target/release/evas-kernel'
 # Legacy EVAS 0.8.7 (the simulator vaBench r53 was certified on): an export of
 # legacy/EVAS commit 6cb6fa7a plus a Python with numpy. See the family README.
 LEGACY_SRC = Path(os.environ.get('UWB_LEGACY_SRC', '/tmp/legacy-run/src'))
@@ -42,11 +46,11 @@ def run_evas(tb: Path, out_dir: Path, timeout: float = 3600.0) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
     if BACKEND == 'legacy':
         return _run_legacy(tb, out_dir, timeout)
-    env = dict(os.environ, PYTHONPATH=str(REPO / 'evas/src'))
+    env = dict(os.environ, PYTHONPATH=str(EVAS_REPO / 'evas/src'))
     cmd = [sys.executable, '-m', 'evas', 'simulate', str(tb), '--kernel', str(KERNEL),
            '--timeout', str(timeout)]
     start = time.monotonic()
-    proc = subprocess.run(cmd, capture_output=True, text=True, env=env, cwd=REPO)
+    proc = subprocess.run(cmd, capture_output=True, text=True, env=env, cwd=EVAS_REPO)
     elapsed = time.monotonic() - start
     (out_dir / 'stderr.txt').write_text(proc.stderr)
     (out_dir / 'run.json').write_text(json.dumps(dict(cmd=cmd, returncode=proc.returncode,
@@ -55,8 +59,15 @@ def run_evas(tb: Path, out_dir: Path, timeout: float = 3600.0) -> dict:
         raise RuntimeError(f'EVAS failed ({proc.returncode}): {proc.stderr[-2000:]}')
     (out_dir / 'result.json').write_text(proc.stdout)
     res = json.loads(proc.stdout)
+    # same CSV layout as legacy EVAS's tran.csv: time column plus saved nodes
+    saved = res['saved']
+    tran = out_dir / 'tran.csv'
+    with tran.open('w') as f:
+        f.write(','.join(['time'] + saved['nodes']) + '\n')
+        for t, row in zip(saved['times'], saved['values']):
+            f.write(','.join(repr(float(x)) for x in [t] + list(row)) + '\n')
     return dict(backend='evas', records=[r['text'] for r in res['transient'].get('display_records', [])],
-                raw=res)
+                tran=tran)
 
 
 def _run_legacy(tb: Path, out_dir: Path, timeout: float) -> dict:
