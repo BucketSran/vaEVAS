@@ -196,7 +196,14 @@ impl<'a> GuardTrajectory<'a> {
             }
             (nodes, Some(allowed))
         } else {
-            (crate::affine_bounds::node_map(p, &model.driven)?, None)
+            (
+                crate::affine_bounds::node_map_with_dc(
+                    p,
+                    &model.driven,
+                    model.dc_projection.as_deref(),
+                )?,
+                None,
+            )
         };
         Ok(Self {
             model,
@@ -233,6 +240,16 @@ impl<'a> GuardTrajectory<'a> {
         bounds: I,
         local: bool,
     ) -> Option<crate::exact_source::RootTime> {
+        let (value, slope) = self.exact_affine_form(expression, bounds, local)?;
+        crate::exact_source::RootTime::affine(value, slope, bounds)
+    }
+
+    fn exact_affine_form(
+        &self,
+        expression: &Expression,
+        bounds: I,
+        local: bool,
+    ) -> Option<(num_rational::BigRational, num_rational::BigRational)> {
         if self.direct_nodes.is_some() {
             let owner = self
                 .model
@@ -279,14 +296,11 @@ impl<'a> GuardTrajectory<'a> {
         }
         let last = row.len() - 1;
         row[last] = row[last] + *coefficients.last()?;
-        if row[..state_start].iter().any(|c| !c.zero()) {
-            return None;
-        }
         let initial: Vec<_> = self.model.initial().into_iter().map(I::point).collect();
         let states = self.states.unwrap_or(&initial);
         let mut budget = Budget(0);
         let mut result = (R::zero(), R::zero());
-        for (i, c) in row.iter().enumerate().skip(state_start) {
+        for (i, c) in row.iter().enumerate() {
             if c.zero() {
                 continue;
             }
@@ -294,14 +308,21 @@ impl<'a> GuardTrajectory<'a> {
                 return None;
             }
             let coefficient = binary(c.lo)?;
-            let value = if i < op_start {
+            let value = if i < state_start {
+                self.trajectory
+                    .exact_sources
+                    .get(i)?
+                    .as_ref()?
+                    .affine_on(bounds)?
+            } else if i < op_start {
                 let state = states[i - state_start];
                 if state.lo != state.hi {
                     return None;
                 }
                 (binary(state.lo)?, R::zero())
             } else if i < last {
-                self.operators?.exact_affine_value(i - op_start, local)?
+                self.operators?
+                    .exact_affine_value(i - op_start, local, bounds)?
             } else {
                 (binary(1.)?, R::zero())
             };
@@ -310,7 +331,7 @@ impl<'a> GuardTrajectory<'a> {
             let term = budget.check(&coefficient * value.1)?;
             result.1 = budget.check(result.1 + term)?;
         }
-        crate::exact_source::RootTime::affine(result.0, result.1, bounds)
+        Some(result)
     }
 
     pub(crate) fn changed_by(
@@ -493,6 +514,9 @@ impl<'a> GuardTrajectory<'a> {
         } else {
             None
         };
+        let transition_guard = operator_deps
+            .iter()
+            .any(|&i| matches!(p.operators[i], crate::ir::OperatorSpec::Transition { .. }));
         for index in operator_deps {
             if let Some(values) = &event_values {
                 operator_values[index] = values[index];
@@ -523,27 +547,58 @@ impl<'a> GuardTrajectory<'a> {
                     .fold(I::ZERO, |sum, (&a, &b)| sum + a * b)
             })
             .collect();
-        evaluate(
+        let result = evaluate(
             expression,
             &node_values,
             &operator_values,
             states,
             &node_derivatives,
             &operator_derivatives,
-        )
+        )?;
+        if let Some(line) = transition_guard
+            .then(|| self.exact_affine_form(expression, time, false))
+            .flatten()
+        {
+            let exact = crate::exact_source::affine_range(line, time);
+            if let Some(exact) = exact {
+                let intersection = I {
+                    lo: result.0.lo.max(exact.lo),
+                    hi: result.0.hi.min(exact.hi),
+                };
+                if intersection.lo > intersection.hi {
+                    return Err(Error::new(
+                        "event_resolution",
+                        "exact affine guard contradicts retained interval bounds",
+                    ));
+                }
+                return Ok((intersection, result.1));
+            }
+        }
+        Ok(result)
     }
 }
 
 pub(crate) fn state_dependencies(expression: &Expression) -> BTreeSet<usize> {
     match expression {
         Expression::State { state } => BTreeSet::from([*state]),
-        Expression::Add { left, right } | Expression::Multiply { left, right } => {
-            state_dependencies(left)
-                .union(&state_dependencies(right))
-                .copied()
-                .collect()
-        }
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => state_dependencies(left)
+            .union(&state_dependencies(right))
+            .copied()
+            .collect(),
         Expression::Power { base, .. } => state_dependencies(base),
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => [left, right, then_value, else_value]
+            .into_iter()
+            .flat_map(|e| state_dependencies(e))
+            .collect(),
+        Expression::EventMath { args, .. } => args.iter().flat_map(state_dependencies).collect(),
         _ => BTreeSet::new(),
     }
 }

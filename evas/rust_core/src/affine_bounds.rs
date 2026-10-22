@@ -7,6 +7,13 @@ use std::collections::BTreeMap;
 /// Original affine circuit projected onto driven inputs, event states,
 /// operator outputs and one constant. Shared by affine/dynamic event timing.
 pub(crate) fn node_map(program: &Program, driven: &[String]) -> Result<Vec<Vec<I>>, Error> {
+    node_map_with_dc(program, driven, None)
+}
+pub(crate) fn node_map_with_dc(
+    program: &Program,
+    driven: &[String],
+    dc: Option<&crate::dc_projection::DcProjection>,
+) -> Result<Vec<Vec<I>>, Error> {
     let count = program.nodes.len();
     let parameters = program.states.len() + program.operators.len();
     let variables = count + parameters;
@@ -25,7 +32,13 @@ pub(crate) fn node_map(program: &Program, driven: &[String]) -> Result<Vec<Vec<I
     let width = driven.len() + parameters + 1;
     let mut groups = BTreeMap::new();
     for c in &program.contributions {
-        let rhs = affine(&c.rhs, program)?;
+        let rhs = affine(
+            match dc {
+                Some(dc) => dc.view(&c.rhs)?,
+                None => &c.rhs,
+            },
+            program,
+        )?;
         let row = groups.entry(&c.branch).or_insert_with(|| {
             let mut row = vec![I::ZERO; variables + 1];
             row[c.positive] = row[c.positive] + I::ONE;
@@ -74,7 +87,8 @@ pub(crate) fn affine(expr: &Expression, program: &Program) -> Result<Vec<I>, Err
     let n = program.nodes.len() + program.states.len() + program.operators.len();
     let mut result = vec![I::ZERO; n + 1];
     match expr {
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {

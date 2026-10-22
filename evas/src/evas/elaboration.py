@@ -173,6 +173,7 @@ def inline_functions(model: Model) -> Model:
         expand(dummy)
     return replace(model,
                    parameters={n: expand(e) for n,e in model.parameters.items()},
+                   variable_initializers={n: expand(e) for n,e in model.variable_initializers.items()},
                    parameter_ranges={n: tuple(replace(r,
                        lower=expand(r.lower) if isinstance(r.lower,Expr) else r.lower,
                        upper=expand(r.upper) if isinstance(r.upper,Expr) else r.upper) for r in ranges)

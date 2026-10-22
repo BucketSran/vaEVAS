@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 23;
+pub const SCHEMA_VERSION: u32 = 28;
 
 pub fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -100,6 +100,11 @@ pub enum Expression {
         last: i32,
         origin: Origin,
     },
+    IntegerPrimitive {
+        function: IntegerFunction,
+        args: Vec<IntegerOperand>,
+        origin: Origin,
+    },
     EventMath {
         function: EventMathFunction,
         args: Vec<Expression>,
@@ -144,10 +149,35 @@ pub enum Expression {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum EventMathFunction {
+    Floor,
     Sqrt,
     Abs,
     Min,
     Max,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum IntegerFunction {
+    Add,
+    Subtract,
+    Remainder,
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[serde(tag = "op", rename_all = "snake_case", deny_unknown_fields)]
+pub enum IntegerOperand {
+    IntegerLiteral {
+        value: i32,
+    },
+    IntegerState {
+        state: usize,
+    },
+    IntegerPrimitive {
+        function: IntegerFunction,
+        args: Vec<IntegerOperand>,
+        origin: Origin,
+    },
 }
 
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]
@@ -157,6 +187,7 @@ pub enum MathFunction {
     Exp,
     Ln,
     Sqrt,
+    Tanh,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -565,10 +596,52 @@ impl EventTrigger {
     }
 }
 
+/// A voltage band alone permits arbitrary time variation. An exact original
+/// curve additionally defines shape; the kernel verifies it lies in the band.
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(untagged)]
+pub enum SourceError {
+    Voltage(f64),
+    Shaped(ShapedSourceError),
+}
+
+impl SourceError {
+    pub fn bound(&self) -> f64 {
+        match self {
+            Self::Voltage(value) => *value,
+            Self::Shaped(shape) => shape.voltage_error_bound_v,
+        }
+    }
+
+    pub fn shape(&self) -> Option<&ShapedSourceError> {
+        match self {
+            Self::Voltage(_) => None,
+            Self::Shaped(shape) => Some(shape),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct ShapedSourceError {
+    #[serde(rename = "voltage_error_bound_V")]
+    pub voltage_error_bound_v: f64,
+    pub exact_knots: Vec<ExactSourceKnot>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct ExactSourceKnot {
+    pub time_numerator: String,
+    pub time_denominator: String,
+    #[serde(rename = "value_V")]
+    pub value_v: f64,
+}
+
 fn source_errors<'de, D: serde::Deserializer<'de>>(
     deserializer: D,
-) -> Result<Option<Vec<f64>>, D::Error> {
-    Vec::<f64>::deserialize(deserializer).map(Some)
+) -> Result<Option<Vec<SourceError>>, D::Error> {
+    Vec::<SourceError>::deserialize(deserializer).map(Some)
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -580,7 +653,7 @@ pub struct TransientInputs {
         deserialize_with = "source_errors",
         skip_serializing_if = "Option::is_none"
     )]
-    pub pwl_errors_v: Option<Vec<f64>>,
+    pub pwl_errors_v: Option<Vec<SourceError>>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub strobetimes: Vec<f64>,
     pub pwl: Vec<Vec<[f64; 2]>>,

@@ -64,10 +64,24 @@ class PassiveEvents(unittest.TestCase):
         with self.assertRaisesRegex(KernelError,'simultaneous event condition reads state written by another'):
             run(p)
 
-    def test_uncertain_voltage_condition_remains_rejected(self):
+    def test_condition_at_exact_cross_root_keeps_strict_comparison(self):
         p=program('if(V(y)>0.5) seen=1;',dut_rhs='V(u)')
+        # y=u=.5 at the physical root, independently of its rounded time.
+        result=run(p,points=[[0,.1],[1,.9]])
+        self.assertEqual(final(result),[1,0,100,0])
+        self.assertEqual(len(result['transient']['events']),2)
+        # A true input band at a fixed timer has no exact root identity.
+        p=compile_sources({'band.va': '''`include "disciplines.vams"
+module dut(u,y); input u; output y; electrical u,y;
+analog begin V(y)<+V(u); end endmodule
+module obs(y); input y; electrical y; real seen;
+analog begin @(initial_step) seen=0;
+@(timer(0.5,0,0.001)) if(V(y)>0.5) seen=1;
+end endmodule'''}, [Instance('D','dut',{'u':'u','y':'y'}),
+                    Instance('M','obs',{'y':'y'})])
         with self.assertRaisesRegex(KernelError,'event_condition'):
-            run(p,points=[[0,.1],[1,.9]])
+            transient(p,{'u':[[0,.5],[1,.5]]},[0,1],stop=1,max_step=1,
+                      source_errors={'u':1e-12},kernel=KERNEL)
 
     def test_nonrepresentable_root_retains_tau_sample_interval(self):
         p=program('seen=V(y);due=$abstime+0.25;',dut_rhs='q+V(u)',

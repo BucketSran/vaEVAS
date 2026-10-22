@@ -240,8 +240,8 @@ def load_scs(path: str | Path) -> ScsTestbench:
                 continue
             settings=s.settings()
             if module=='vsource':
-                if len(nodes)!=2 or (nodes[0]!='0' and nodes[1]!='0') or nodes[0]==nodes[1]:
-                    s.fail('vsource requires one ground terminal and one distinct driven node',unsupported=True)
+                if len(nodes)!=2 or nodes[0]==nodes[1]:
+                    s.fail('vsource requires two distinct scalar terminals',unsupported=True)
                 source_specs.append((nodes,settings,first))
             elif module in ('resistor','capacitor','inductor','isource','r','c','l'):
                 s.fail(f'{module} requires electrical network support (#68)',unsupported=True)
@@ -313,20 +313,41 @@ def load_scs(path: str | Path) -> ScsTestbench:
     times=[t for i in range(count+1) if (t:=float(i*Q(step)))<stop]+[stop]
     if any(a>=b for a,b in zip(times,times[1:])):
         fail('output times collapse at binary64 resolution')
-    waveforms,rounding,source_errors,pulse_proofs={},{},{},{}
+    waveforms,rounding,source_errors,pulse_proofs,source_shapes={},{},{},{},{}
+    occupied={'0',*saved,*[n for nodes,_,_ in source_specs for n in nodes],
+              *[n for _,nodes,_,_ in devices for n in nodes],
+              *[n for _,nodes,_,_ in behavioral_sources for n in nodes],
+              *[reference.text for _,_,reference,_ in behavioral_sources]}
+    internal_source_nodes=[]
     for nodes,settings,token in source_specs:
         def source_fail(message,*,unsupported=False):
             _fail(message,token,unsupported=unsupported)
+        floating='0' not in nodes
         net=nodes[0] if nodes[1]=='0' else nodes[1]
+        if floating:
+            # Preserve the source's differential equation in the coupled solve.
+            # The original waveform and its uncertainty drive a private input;
+            # no reference voltage is guessed or sampled in the adapter.
+            net='__evas_scs_voltage'
+            while net in occupied:
+                net+='_'
+            occupied.add(net)
+            internal_source_nodes.append(net)
+            reference=Token(net,'name',token.line,token.column,token.source)
+            behavioral_sources.append((token,nodes,reference,0.))
         if net in waveforms:
             source_fail('multiple voltage sources drive the same node')
         points,error,proof=voltage_points(settings,stop,source_fail)
-        waveforms[net]=[[t,v if nodes[1]=='0' else -v] for t,v in points]
+        waveforms[net]=[[t,v if floating or nodes[1]=='0' else -v] for t,v in points]
         rounding[token.text]=error
         if proof is not None:
+            shape = proof.pop('source_shape',None)
             pulse_proofs[token.text]=proof
             if proof['voltage_error_bound_V']>0:
                 source_errors[net]=proof['voltage_error_bound_V']
+                if shape is not None:
+                    sign = 1 if floating or nodes[1]=='0' else -1
+                    source_shapes[net]=[dict(knot,value_V=sign*knot['value_V']) for knot in shape]
     # Keep the physical PWL definition intact. Saving every source corner
     # prevents a later linear interpolation of the saved drive from skipping
     # a pulse or replacing a piecewise-linear segment by a different line.
@@ -382,9 +403,10 @@ def load_scs(path: str | Path) -> ScsTestbench:
                    'parameter real offset=0; analog begin V(p,n)<+V(u,g)+offset; end endmodule\n')
         for token,nodes,reference,offset in behavioral_sources:
             net=nodes[0] if nodes[1]=='0' else nodes[1]
-            if net in driven:
-                _fail('multiple voltage sources drive the same node',token)
-            driven.add(net)
+            if '0' in nodes:
+                if net in driven:
+                    _fail('multiple voltage sources drive the same node',token)
+                driven.add(net)
             if reference.text not in available:
                 _fail(f'bsource references unknown scalar node {reference.text!r}',reference)
             instances.append(dict(name=token.text,module=module_name,
@@ -402,10 +424,14 @@ def load_scs(path: str | Path) -> ScsTestbench:
                   transient=dict(sources=waveforms,output_times=times,stop=stop,max_step=step,**strobe))
     if source_errors:
         manifest['transient']['source_errors']=source_errors
+    if source_shapes:
+        manifest['transient']['source_shapes']=source_shapes
     metadata=dict(input_format='spectre-voltage-subset',path=str(path),sha256=hashlib.sha256(text.encode()).hexdigest(),
                   model_sha256=model_sha256,
                   effective_tolerances=effective,output_grid='union of 0, k*maxstep below stop, stop, source corners within stop',
                   pulse_corner_rounding_seconds=rounding)
+    if internal_source_nodes:
+        metadata['internal_source_nodes']=internal_source_nodes
     if pulse_proofs:
         metadata['pulse_corner_proofs']=pulse_proofs
     if save_policy is not None:
@@ -426,7 +452,8 @@ def simulate_scs(path: str | Path, *, kernel=None, timeout=DEFAULT_TIMEOUT):
                             external_nodes=bench.manifest['transient']['sources'])
     result=transient(program,kernel=kernel,timeout=timeout,
                      **bench.manifest['transient'],**bench.manifest['tolerances'])
-    saved=[n for n in bench.save if n!='time' or n in result['nodes']] or list(result['nodes'])
+    saved=[n for n in bench.save if n!='time' or n in result['nodes']] or [
+        n for n in result['nodes'] if n not in bench.metadata.get('internal_source_nodes',())]
     indices=[result['nodes'].index(n) for n in saved]
     ordinary=bench.manifest['transient']['output_times']
     times=bench.metadata.get('saved_output_times',ordinary)

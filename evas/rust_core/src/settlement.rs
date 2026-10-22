@@ -23,26 +23,23 @@ pub(crate) fn prepare(
     operator_bounds: &[I],
     previous: Option<&Circuit>,
 ) -> Result<Prepared, Error> {
-    let mut scratch = None;
-    prepare_with_scratch(
+    prepare_impl(
         model,
-        events,
+        (events, &[]),
         inputs,
+        inputs.1,
         before,
         operators,
         before_bounds,
         operator_bounds,
         previous,
-        &mut scratch,
+        true,
+        None,
     )
 }
 
-/// `prepare` sharing one assembly scratch across a window's settlement
-/// trials. The scratch holds only candidate-independent structure (nodes,
-/// branch grouping, labels); all trial voltages, states, operator values and
-/// certificates are recomputed from this call's inputs.
 #[allow(clippy::too_many_arguments)]
-pub(crate) fn prepare_with_scratch(
+pub(crate) fn prepare_with_proofs(
     model: &EventModel,
     events: &[usize],
     inputs: (&[f64], &[I]),
@@ -51,7 +48,7 @@ pub(crate) fn prepare_with_scratch(
     before_bounds: &[I],
     operator_bounds: &[I],
     previous: Option<&Circuit>,
-    scratch: &mut Option<crate::assembly::AssemblyPlan>,
+    proofs: &crate::event_value_proof::Context<'_>,
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
@@ -64,7 +61,7 @@ pub(crate) fn prepare_with_scratch(
         operator_bounds,
         previous,
         true,
-        scratch,
+        Some(proofs),
     )
 }
 
@@ -80,8 +77,7 @@ pub(crate) fn prepare_window(
     operator_bounds: &[I],
     previous: Option<&Circuit>,
 ) -> Result<Prepared, Error> {
-    let mut scratch = None;
-    prepare_window_with_scratch(
+    prepare_impl(
         model,
         events_and_roots,
         inputs,
@@ -91,13 +87,13 @@ pub(crate) fn prepare_window(
         before_bounds,
         operator_bounds,
         previous,
-        &mut scratch,
+        false,
+        None,
     )
 }
 
-/// `prepare_window` sharing one assembly scratch across a window's trials.
 #[allow(clippy::too_many_arguments)]
-pub(crate) fn prepare_window_with_scratch(
+pub(crate) fn prepare_window_with_proofs(
     model: &EventModel,
     events_and_roots: (&[usize], &[usize]),
     inputs: (&[f64], &[I]),
@@ -107,7 +103,7 @@ pub(crate) fn prepare_window_with_scratch(
     before_bounds: &[I],
     operator_bounds: &[I],
     previous: Option<&Circuit>,
-    scratch: &mut Option<crate::assembly::AssemblyPlan>,
+    proofs: &crate::event_value_proof::Context<'_>,
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
@@ -120,7 +116,7 @@ pub(crate) fn prepare_window_with_scratch(
         operator_bounds,
         previous,
         false,
-        scratch,
+        Some(proofs),
     )
 }
 
@@ -137,15 +133,15 @@ fn prepare_impl(
     operator_bounds: &[I],
     previous: Option<&Circuit>,
     check_voltages: bool,
-    scratch: &mut Option<crate::assembly::AssemblyPlan>,
+    proofs: Option<&crate::event_value_proof::Context<'_>>,
 ) -> Result<Prepared, Error> {
-    crate::diagnostics::counter("settlement_scratch_calls", 1);
     let (inputs, input_bounds) = inputs;
-    let selection = model.conditions.select_at_roots(
+    let selection = model.conditions.select_with_proofs(
         events_and_roots.0,
         input_bounds,
         events_and_roots.1,
         before_bounds,
+        proofs,
     )?;
     model.check_selection_writers(&selection)?;
     model.check_contribution_predicate_updates(&selection)?;
@@ -154,22 +150,34 @@ fn prepare_impl(
     // Constant/integer event updates can change mode predicates in this same
     // batch. Evaluate those updates first, retaining voltage-dependent updates
     // as affine unknowns in the actual joint solve.
-    let predicate_states =
-        model.apply(&selection, &vec![0.0; model.program.nodes.len()], before)?;
+    // Causal sampled actions read actual driven values even in this preview.
+    // Unknown electrical nodes remain placeholders; predicates depending on
+    // voltage-assigned states were rejected above and the joint solve owns them.
+    let mut predicate_nodes = vec![0.0; model.program.nodes.len()];
+    for (name, &value) in model.driven.iter().zip(inputs) {
+        let node = model.program.nodes.iter().position(|n| n == name).unwrap();
+        predicate_nodes[node] = value;
+    }
+    let predicate_states = model.apply(&selection, &predicate_nodes, before)?;
     let predicate_bounds: Vec<_> = predicate_states.iter().copied().map(I::point).collect();
-    let selected =
-        model.selected_program_at_roots(&predicate_bounds, input_bounds, events_and_roots.1)?;
+    let selected = model.selected_program_with_parameters(
+        &predicate_bounds,
+        input_bounds,
+        events_and_roots.1,
+        operator_bounds,
+    )?;
     let mut joint = model
-        .event_circuit_program_with_scratch(&selected, &selection, before, operators, scratch)?;
+        .event_circuit_program_with_inputs(&selected, &selection, before, operators, inputs)?;
     if let Some(previous) = previous {
         joint.reuse_affine_factor_from(previous);
     }
     let candidate = joint.solve(inputs)?;
     let states = model.apply(&selection, &candidate.voltages, before)?;
-    let replayed = model.selected_program_at_roots(
+    let replayed = model.selected_program_with_parameters(
         &states.iter().copied().map(I::point).collect::<Vec<_>>(),
         input_bounds,
         events_and_roots.1,
+        operator_bounds,
     )?;
     if replayed
         .contributions
@@ -184,19 +192,19 @@ fn prepare_impl(
     }
     // Validate the original, unsubstituted voltage constraints with the replayed
     // state. Substitution roundoff must not replace the physical residual check.
-    let mut circuit =
-        model.circuit_at_with_scratch(&states, operators, observation_inputs, scratch)?;
+    let mut circuit = model.circuit_at(&states, operators, observation_inputs)?;
     if let Some(previous) = previous {
         circuit.reuse_affine_factor_from(previous);
     }
     let mut solution = circuit.solve(inputs)?;
     // Replay the same input/root certificate. A small equation residual
     // cannot certify a branch chosen from rounded representative inputs.
-    if model.conditions.select_at_roots(
+    if model.conditions.select_with_proofs(
         events_and_roots.0,
         input_bounds,
         events_and_roots.1,
         before_bounds,
+        proofs,
     )? != selection
     {
         return Err(Error::new(
@@ -222,7 +230,7 @@ fn prepare_impl(
         }
     }
     let bounds = if check_voltages {
-        let (states, nodes) = model.certify_observation_at_roots(
+        let (states, nodes) = model.certify_observation_at_roots_with_proofs(
             &selection,
             events_and_roots.1,
             input_bounds,
@@ -230,11 +238,12 @@ fn prepare_impl(
             operator_bounds,
             &solution.voltages,
             &states,
+            proofs,
         )?;
         crate::observation::retain_bounds(&mut solution, nodes);
         states
     } else {
-        model.certify_event_states(
+        model.certify_event_states_with_proofs(
             &selection,
             events_and_roots.1,
             input_bounds,
@@ -242,6 +251,7 @@ fn prepare_impl(
             operator_bounds,
             &solution.voltages,
             &states,
+            proofs,
         )?
     };
     Ok(Prepared {

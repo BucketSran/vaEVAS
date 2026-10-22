@@ -371,6 +371,7 @@ mod tests {
             .circuit_with(&model.initial(), &operators.values(0.).unwrap())
             .unwrap();
         let accepted = Frame {
+            value_proofs: Default::default(),
             time_proofs: Default::default(),
             time: 0.,
             states: model.initial(),

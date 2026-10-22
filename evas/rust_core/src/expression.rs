@@ -1,11 +1,12 @@
 //! Validate polynomial IR and evaluate its value and exact chain-rule gradient.
 use crate::interval::{equal_products, sum_products_sign, Interval as I};
-use crate::ir::{Error, Expression, Relation};
+use crate::ir::{Error, Expression, Program, Relation};
 use std::collections::{BTreeSet, HashSet};
 
 pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
     match expr {
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. }
@@ -97,7 +98,9 @@ fn predicate_nodes(expr: &Expression, nodes: &mut BTreeSet<usize>) {
         Expression::CheckedIndex { index, .. }
         | Expression::CheckedInteger { value: index, .. } => predicate_nodes(index, nodes),
         Expression::ArrayRead { index, .. } => predicate_nodes(index, nodes),
-        Expression::State { .. } | Expression::Operator { .. } => {}
+        Expression::IntegerPrimitive { .. }
+        | Expression::State { .. }
+        | Expression::Operator { .. } => {}
     }
 }
 
@@ -130,7 +133,8 @@ fn predicate_degree(expr: &Expression) -> Option<u8> {
                 .max(predicate_degree(then_value)?)
                 .max(predicate_degree(else_value)?),
         ),
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. }
@@ -140,12 +144,72 @@ fn predicate_degree(expr: &Expression) -> Option<u8> {
     }
 }
 
-pub(crate) fn validate_select_predicates(
+// Complete original-tree audit, shared by stateless admission and Analog's
+// existing rational-value fallback. Zero terms and inactive arms retain inputs.
+pub(crate) fn input_rational_tree(
+    expr: &Expression,
+    inputs: &HashSet<usize>,
+) -> Option<(bool, bool)> {
+    match expr {
+        Expression::Affine { terms, .. } => terms
+            .iter()
+            .all(|term| inputs.contains(&term.node))
+            .then_some((false, terms.is_empty())),
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
+            let (a, ca) = input_rational_tree(left, inputs)?;
+            let (b, cb) = input_rational_tree(right, inputs)?;
+            let division = matches!(expr, Expression::Divide { .. });
+            if division && cb {
+                let value = evaluate(right, &[]).ok()?.value;
+                if !value.is_finite() || value == 0. {
+                    return None;
+                }
+            }
+            Some((division || a || b, ca && cb))
+        }
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => {
+            let mut rational = false;
+            for child in [left, right, then_value, else_value] {
+                rational |= input_rational_tree(child, inputs)?.0;
+            }
+            Some((rational, false))
+        }
+        // Powers and every state/history/observer expression retain their
+        // existing consumers' narrower contracts.
+        _ => None,
+    }
+}
+
+pub(crate) fn input_rational_program(program: &Program, inputs: &HashSet<usize>) -> bool {
+    if !program.states.is_empty()
+        || !program.events.is_empty()
+        || !program.operators.is_empty()
+        || !program.step_bounds.is_empty()
+    {
+        return false;
+    }
+    program
+        .contributions
+        .iter()
+        .all(|contribution| input_rational_tree(&contribution.rhs, inputs).is_some())
+}
+
+pub(crate) fn validate_source_select_predicates(
     expr: &Expression,
     allowed_nodes: &HashSet<usize>,
+    source_program: bool,
 ) -> Result<(), Error> {
     match expr {
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {
@@ -174,7 +238,11 @@ pub(crate) fn validate_select_predicates(
                     ),
                 ));
             }
-            if predicate_degree(left).is_none() || predicate_degree(right).is_none() {
+            if (predicate_degree(left).is_none() || predicate_degree(right).is_none())
+                && !(source_program
+                    && input_rational_tree(left, allowed_nodes).is_some()
+                    && input_rational_tree(right, allowed_nodes).is_some())
+            {
                 return Err(Error::new(
                     "unsupported_condition",
                     format!(
@@ -183,18 +251,20 @@ pub(crate) fn validate_select_predicates(
                     ),
                 ));
             }
-            validate_select_predicates(left, allowed_nodes)?;
-            validate_select_predicates(right, allowed_nodes)?;
-            validate_select_predicates(then_value, allowed_nodes)?;
-            validate_select_predicates(else_value, allowed_nodes)?;
+            validate_source_select_predicates(left, allowed_nodes, source_program)?;
+            validate_source_select_predicates(right, allowed_nodes, source_program)?;
+            validate_source_select_predicates(then_value, allowed_nodes, source_program)?;
+            validate_source_select_predicates(else_value, allowed_nodes, source_program)?;
         }
         Expression::Add { left, right }
         | Expression::Multiply { left, right }
         | Expression::Divide { left, right } => {
-            validate_select_predicates(left, allowed_nodes)?;
-            validate_select_predicates(right, allowed_nodes)?;
+            validate_source_select_predicates(left, allowed_nodes, source_program)?;
+            validate_source_select_predicates(right, allowed_nodes, source_program)?;
         }
-        Expression::Power { base, .. } => validate_select_predicates(base, allowed_nodes)?,
+        Expression::Power { base, .. } => {
+            validate_source_select_predicates(base, allowed_nodes, source_program)?
+        }
         Expression::Affine { .. } | Expression::State { .. } | Expression::Operator { .. } => {}
     }
     Ok(())
@@ -271,7 +341,8 @@ impl Accumulator {
         nodes: &[f64],
     ) -> Result<(), Error> {
         match expr {
-            Expression::ArrayRead { .. }
+            Expression::IntegerPrimitive { .. }
+            | Expression::ArrayRead { .. }
             | Expression::CheckedInteger { .. }
             | Expression::CheckedIndex { .. }
             | Expression::EventMath { .. }
@@ -463,9 +534,22 @@ fn affine_product_terms(
     }
 }
 
-fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
+// A source sign certificate cannot rescue an overflowing selected operation.
+fn finite_predicate_interval(value: I) -> Result<I, Error> {
+    if value.finite() {
+        Ok(value)
+    } else {
+        Err(Error::new(
+            "nonfinite_arithmetic",
+            "predicate expression interval is not finite",
+        ))
+    }
+}
+
+pub(crate) fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
     match expr {
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. }
@@ -475,17 +559,26 @@ fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
             "unbound state in static expression",
         )),
         Expression::Affine { constant, terms } => {
-            let mut value = I::point(*constant);
+            let mut value = finite_predicate_interval(I::point(*constant))?;
             for term in terms {
-                value = value + I::point(term.coefficient) * nodes[term.node];
+                let product =
+                    finite_predicate_interval(I::point(term.coefficient) * nodes[term.node])?;
+                value = finite_predicate_interval(value + product)?;
             }
             Ok(value)
         }
-        Expression::Add { left, right } => {
-            Ok(expression_interval(left, nodes)? + expression_interval(right, nodes)?)
-        }
+        Expression::Add { left, right } => finite_predicate_interval(
+            expression_interval(left, nodes)? + expression_interval(right, nodes)?,
+        ),
         Expression::Multiply { left, right } => {
-            Ok(expression_interval(left, nodes)? * expression_interval(right, nodes)?)
+            let product = expression_interval(left, nodes)? * expression_interval(right, nodes)?;
+            if !product.finite() {
+                return Err(Error::new(
+                    "nonfinite_arithmetic",
+                    "multiplication result interval is not finite",
+                ));
+            }
+            Ok(product)
         }
         Expression::Divide { left, right } => {
             let denominator = expression_interval(right, nodes)?;
@@ -495,7 +588,14 @@ fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
                     "division denominator interval contains zero",
                 ));
             }
-            Ok(expression_interval(left, nodes)? / denominator)
+            let quotient = expression_interval(left, nodes)? / denominator;
+            if !quotient.finite() {
+                return Err(Error::new(
+                    "nonfinite_arithmetic",
+                    "division result interval is not finite",
+                ));
+            }
+            Ok(quotient)
         }
         Expression::Power { base, exponent } => {
             let base = expression_interval(base, nodes)?;
@@ -531,6 +631,11 @@ fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
 }
 
 fn predicate_sign(left: &Expression, right: &Expression, nodes: &[f64]) -> Result<i8, Error> {
+    // The exact affine product-sum fast path must obey the same selected
+    // arithmetic finite gate as interval and original-source certificates.
+    let bounds: Vec<_> = nodes.iter().copied().map(I::point).collect();
+    let left_interval = expression_interval(left, &bounds)?;
+    let right_interval = expression_interval(right, &bounds)?;
     let mut terms = Vec::new();
     let affine = affine_product_terms(left, 1.0, nodes, &mut terms)?
         && affine_product_terms(right, -1.0, nodes, &mut terms)?;
@@ -540,8 +645,7 @@ fn predicate_sign(left: &Expression, right: &Expression, nodes: &[f64]) -> Resul
             return Ok(sign);
         }
     }
-    let bounds: Vec<_> = nodes.iter().copied().map(I::point).collect();
-    let interval = expression_interval(left, &bounds)? - expression_interval(right, &bounds)?;
+    let interval = left_interval - right_interval;
     if let Some(sign) = interval.sign() {
         return Ok(sign);
     }

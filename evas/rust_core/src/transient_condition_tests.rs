@@ -45,6 +45,7 @@ fn fixture(body: Value, history: bool, points: &[[f64; 2]]) -> (EventModel, Traj
         .circuit_with(&states, &operators.values(0.0).unwrap())
         .unwrap();
     let frame = Frame {
+        value_proofs: Default::default(),
         time_proofs: Default::default(),
         time: 0.0,
         state_bounds: states.iter().copied().map(I::point).collect(),
@@ -90,9 +91,14 @@ fn failed_condition_and_discard_preserve_nonzero_history_and_retry_path() {
     // Successful false-arm trial is discarded, then the next predicate fails.
     let (discarded, _) = prepare_batch(&model, &trajectory, &accepted, 0.625, &[0]).unwrap();
     assert_eq!(discarded.states, [5.0]);
+    // The exact binary PWL proves the original comparison. A genuine
+    // amplitude band retains the ambiguous branch and rollback obligation.
+    let mut uncertain_inputs = trajectory.config.clone();
+    uncertain_inputs.pwl_errors_v = Some(vec![crate::ir::SourceError::Voltage(1e-12)]);
+    let uncertain = Trajectory::new(uncertain_inputs, 1).unwrap();
     for _ in 0..2 {
         assert_eq!(
-            prepare_batch(&model, &trajectory, &accepted, 0.75, &[0])
+            prepare_batch(&model, &uncertain, &accepted, 0.75, &[0])
                 .err()
                 .unwrap()
                 .kind,

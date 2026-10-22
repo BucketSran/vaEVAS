@@ -7,6 +7,7 @@ from .elaboration import inline_functions
 from .hierarchy import bind_hierarchy
 from .preprocessor import preprocess_sources
 from .instance_compiler import Compilation, InstanceCompiler
+from .settled_integer_reads import isolated_output_encoder
 from .syntax import (CompileError, Parser, contains_operator, Assignment as SyntaxAssignment,
                      Conditional as SyntaxConditional, ContributionStatement, BoundStep, Loop, Display, Event)
 
@@ -90,10 +91,11 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance], *, ex
     if has_time:
         node_names.add('$abstime')
     names = ("0", *sorted(node_names - {"0"}))
-    compilation = Compilation(names, has_operators or has_conditions)
+    compilation = Compilation(names, has_operators or has_conditions,
+                              settled_integer_reads=isolated_output_encoder(bindings))
     for instance, model, nets in bindings:
         try:
-            InstanceCompiler(instance, model, nets, compilation).compile()
+            InstanceCompiler(instance, model, nets, compilation, source_model=models[model.name]).compile()
         except CompileError as error:
             error.diagnostic.setdefault("instance", instance.name)
             raise

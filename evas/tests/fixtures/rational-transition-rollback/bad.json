@@ -1,0 +1,286 @@
+{
+  "nodes": [
+    "0",
+    "u",
+    "y"
+  ],
+  "contributions": [
+    {
+      "branch": {
+        "instance": "dut",
+        "local_positive": "0",
+        "local_negative": "y",
+        "kind": "voltage"
+      },
+      "positive": 0,
+      "negative": 2,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": -1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "op": "add",
+          "left": {
+            "operator": 0,
+            "op": "operator"
+          },
+          "right": {
+            "operator": 1,
+            "op": "operator"
+          }
+        }
+      },
+      "origin": {
+        "source": "rollback-rational.va",
+        "line": 8,
+        "column": 1,
+        "instance": "dut",
+        "expansion": []
+      }
+    }
+  ],
+  "states": [
+    {
+      "instance": "dut",
+      "name": "a",
+      "kind": "real",
+      "initial": 0.0
+    },
+    {
+      "instance": "dut",
+      "name": "b",
+      "kind": "real",
+      "initial": 0.0
+    },
+    {
+      "instance": "dut",
+      "name": "due",
+      "kind": "real",
+      "initial": 2.0
+    }
+  ],
+  "events": [
+    {
+      "trigger": {
+        "start": 0.1,
+        "period": 0.0,
+        "time_tolerance": 1e-12,
+        "enabled": true,
+        "kind": "timer"
+      },
+      "body": [
+        {
+          "state": 0,
+          "rhs": {
+            "op": "multiply",
+            "left": {
+              "constant": 0.45,
+              "terms": [],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 1,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            }
+          },
+          "kind": "assign"
+        },
+        {
+          "state": 1,
+          "rhs": {
+            "op": "multiply",
+            "left": {
+              "constant": 2.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "right": {
+              "state": 0,
+              "op": "state"
+            }
+          },
+          "kind": "assign"
+        }
+      ],
+      "origin": {
+        "source": "rollback-rational.va",
+        "line": 5,
+        "column": 1,
+        "instance": "dut",
+        "expansion": []
+      }
+    },
+    {
+      "trigger": {
+        "start": 0.15,
+        "period": 0.0,
+        "time_tolerance": 1e-12,
+        "enabled": true,
+        "kind": "timer"
+      },
+      "body": [
+        {
+          "state": 0,
+          "rhs": {
+            "op": "multiply",
+            "left": {
+              "constant": 0.5,
+              "terms": [],
+              "op": "affine"
+            },
+            "right": {
+              "state": 0,
+              "op": "state"
+            }
+          },
+          "kind": "assign"
+        },
+        {
+          "state": 1,
+          "rhs": {
+            "op": "multiply",
+            "left": {
+              "constant": 2.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "right": {
+              "state": 0,
+              "op": "state"
+            }
+          },
+          "kind": "assign"
+        },
+        {
+          "state": 2,
+          "rhs": {
+            "constant": -1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "kind": "assign"
+        },
+        {
+          "format": "changed %g",
+          "args": [
+            {
+              "state": 0,
+              "op": "state"
+            }
+          ],
+          "origin": {
+            "source": "rollback-rational.va",
+            "line": 6,
+            "column": 42,
+            "instance": "dut",
+            "expansion": []
+          },
+          "kind": "display"
+        }
+      ],
+      "origin": {
+        "source": "rollback-rational.va",
+        "line": 6,
+        "column": 1,
+        "instance": "dut",
+        "expansion": []
+      }
+    },
+    {
+      "trigger": {
+        "start": {
+          "state": 2,
+          "op": "state"
+        },
+        "period": {
+          "constant": 1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "time_tolerance": 1e-12,
+        "enabled": {
+          "constant": 1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "kind": "held_timer"
+      },
+      "body": [
+        {
+          "state": 2,
+          "rhs": {
+            "op": "add",
+            "left": {
+              "state": 2,
+              "op": "state"
+            },
+            "right": {
+              "constant": 1.0,
+              "terms": [],
+              "op": "affine"
+            }
+          },
+          "kind": "assign"
+        }
+      ],
+      "origin": {
+        "source": "rollback-rational.va",
+        "line": 7,
+        "column": 1,
+        "instance": "dut",
+        "expansion": []
+      }
+    }
+  ],
+  "operators": [
+    {
+      "input": {
+        "state": 0,
+        "op": "state"
+      },
+      "delay": 0.0,
+      "rise": 0.2,
+      "fall": 0.2,
+      "origin": {
+        "source": "rollback-rational.va",
+        "line": 8,
+        "column": 7,
+        "instance": "dut",
+        "expansion": []
+      },
+      "kind": "transition"
+    },
+    {
+      "input": {
+        "state": 1,
+        "op": "state"
+      },
+      "delay": 0.0,
+      "rise": 0.2,
+      "fall": 0.2,
+      "origin": {
+        "source": "rollback-rational.va",
+        "line": 8,
+        "column": 31,
+        "instance": "dut",
+        "expansion": []
+      },
+      "kind": "transition"
+    }
+  ],
+  "schema_version": 28,
+  "step_bounds": []
+}

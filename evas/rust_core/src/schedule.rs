@@ -34,6 +34,69 @@ pub(crate) fn common_root(events: &[ScheduledEvent]) -> Option<crate::exact_sour
     Some(first)
 }
 
+/// This path needs an ordinary binary64 execution time before every later
+/// physical root. It does not construct a microevent sequence within one ulp.
+fn serial_transition_cluster(
+    events: &mut [ScheduledEvent],
+    model: &EventModel,
+) -> Result<bool, Error> {
+    if !events.iter().any(|e| {
+        model.guard_operators[e.event].iter().any(|&o| {
+            matches!(
+                model.program.operators[o],
+                crate::ir::OperatorSpec::Transition { .. }
+            )
+        })
+    }) || events.iter().any(|e| e.fixed_predecessor.is_some())
+    {
+        return Ok(false);
+    }
+    let Some(mut ordered) = events
+        .iter()
+        .map(|e| Some((e.exact_root()?, e.clone())))
+        .collect::<Option<Vec<_>>>()
+    else {
+        return Ok(false);
+    };
+    ordered.sort_by(|(a, e), (b, f)| a.order(b).then(e.event.cmp(&f.event)));
+    let mut start = 0;
+    while start < ordered.len() {
+        let mut end = start + 1;
+        while end < ordered.len()
+            && ordered[start].0.order(&ordered[end].0) == std::cmp::Ordering::Equal
+        {
+            end += 1;
+        }
+        let time = ordered[start..end]
+            .iter()
+            .map(|(_, e)| e.time)
+            .max_by(f64::total_cmp)
+            .unwrap();
+        if end < ordered.len()
+            && crate::exact_source::RootTime::point(time)
+                .is_none_or(|t| t.order(&ordered[end].0) != std::cmp::Ordering::Less)
+        {
+            return Ok(false);
+        }
+        for (_, event) in &mut ordered[start..end] {
+            if !event
+                .moment
+                .accepts(time, &model.triggers[event.event].trigger)
+            {
+                return Err(unresolved(
+                    "serial transition root representative exceeds original tolerance",
+                ));
+            }
+            event.time = time;
+        }
+        start = end;
+    }
+    for (destination, (_, event)) in events.iter_mut().zip(ordered) {
+        *destination = event;
+    }
+    Ok(true)
+}
+
 impl ScheduledEvent {
     pub(crate) fn record_ambiguous_query(&self, site: &str, query: f64) {
         let (kind, clock, exact) = match &self.moment {
@@ -846,6 +909,12 @@ fn add_timer(
                 .sign()
                 .ok_or_else(|| unresolved("cannot certify dynamic timer enable"))?
                 != 0;
+            // A nonpositive period has only its single start occurrence.
+            // A certified negative start is already past at every t >= 0;
+            // later state writes still rebuild this held timer's calendar.
+            if period.hi <= 0. && start.hi < 0. {
+                return Ok(());
+            }
             if start.lo < 0. || period.lo <= 0. && period.hi > 0. {
                 return Err(unresolved(
                     "cannot certify dynamic timer start or period regime",
@@ -1470,16 +1539,10 @@ fn schedule_with_history(
     });
     // A timer-only network needs no guard trajectory certification.
     let bounds = if model.guards.iter().any(Option::is_some) {
-        Some(if let Some(h) = &held {
-            GuardBounds::held(
-                &model.program,
-                &model.driven,
-                &model.dynamic_guards,
-                h.states,
-            )?
-        } else {
-            GuardBounds::new(&model.program, &model.driven, &model.dynamic_guards)?
-        })
+        Some(GuardBounds::for_model(
+            model,
+            held.as_ref().map(|h| h.states),
+        )?)
     } else {
         None
     };
@@ -1513,7 +1576,29 @@ fn schedule_with_history(
             // A state-independent guard is affine on the union of the knots
             // of its nonzero input coefficients. Unrelated knots must not
             // introduce artificial near-boundary root uncertainty.
-            let mut knots = trajectory.input_knots(&bounds.active_inputs(index));
+            let active_inputs = bounds.active_inputs(index);
+            let input_nodes = model
+                .driven
+                .iter()
+                .map(|name| {
+                    model
+                        .program
+                        .nodes
+                        .iter()
+                        .position(|node| node == name)
+                        .unwrap()
+                })
+                .collect::<Vec<_>>();
+            let projected_guard = bounds.exact_input_expression(index);
+            let physical = trajectory.shaped_roots(
+                guard,
+                projected_guard.as_ref(),
+                &input_nodes,
+                &active_inputs,
+                *direction,
+                held.as_ref().and_then(|h| h.after),
+            )?;
+            let mut knots = trajectory.input_knots(&active_inputs);
             if let Some(after) = held.as_ref().and_then(|h| h.after) {
                 knots.retain(|t| *t > after);
                 knots.insert(0, after);
@@ -1525,8 +1610,8 @@ fn schedule_with_history(
                 .iter()
                 .map(|&time| bounds.values(&trajectory.value_bounds(time))[index])
                 .collect();
-            let roots = trajectory
-                .roots(&knots, &values, *direction)
+            let roots = physical
+                .map_or_else(|| trajectory.roots(&knots, &values, *direction), Ok)
                 .map_err(|mut error| {
                     error
                         .message
@@ -1548,7 +1633,16 @@ fn schedule_with_history(
                             .unwrap()
                     })
                     .collect::<Vec<_>>();
-                trajectory.original_guard_curve(guard, &input_nodes)
+                trajectory
+                    .original_guard_curve(guard, &input_nodes)
+                    .or_else(|| {
+                        // GuardBounds supplies this projection only for exact
+                        // point coefficients over original input nodes. Keep
+                        // the same source-time certificate for ordinary PWL
+                        // roots as for shaped roots; root_in still checks that
+                        // it identifies the discovered physical root.
+                        trajectory.original_guard_curve(projected_guard.as_ref()?, &input_nodes)
+                    })
             };
             for root in roots {
                 let root = root.with_source_time(source_curve.as_ref());
@@ -1812,13 +1906,14 @@ fn schedule_with_history(
     if let Some(after) = held.as_ref().and_then(|h| h.after) {
         let retained = held.as_ref().unwrap().retained_fixed_prefix(after);
         if events.iter().any(|event| {
-            event.bounds().lo <= after
-                && !matches!(event.moment, Moment::Anchored {delta,..} if delta.lo > operators.and_then(Operators::local_epoch).map_or(f64::INFINITY,|(_,start)|start) && event.time>after)
-                && !(event.fixed_predecessor.is_some()
+            let proven_later = event.exact_root().zip(crate::exact_source::RootTime::point(after)).is_some_and(|(a,b)|event.time>after&&a.order(&b)==std::cmp::Ordering::Greater)
+                || matches!(event.moment, Moment::Anchored {delta,..} if delta.lo > operators.and_then(Operators::local_epoch).map_or(f64::INFINITY,|(_,start)|start) && event.time>after)
+                || (event.fixed_predecessor.is_some()
                     && retained
                         .binary_search_by(|time| time.total_cmp(&event.time))
                         .is_ok()
-                    && event.time > after)
+                    && event.time > after);
+            event.bounds().lo <= after && !proven_later
         }) {
             return Err(unresolved("future event window overlaps the accepted event boundary"));
         }
@@ -1842,6 +1937,12 @@ fn schedule_with_history(
                 .max(events[cluster_end].bounds().hi)
                 .max(events[cluster_end].time);
             cluster_end += 1;
+        }
+        if cluster_end > start + 1
+            && serial_transition_cluster(&mut events[start..cluster_end], model)?
+        {
+            start = cluster_end;
+            continue;
         }
         if cluster_end > start + 1
             && events[start..cluster_end].iter().all(|e| {

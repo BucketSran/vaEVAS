@@ -6,6 +6,10 @@ from .ir import EventMath, Origin, Affine, Binary, Expression, OperatorRef, Powe
 from .syntax import CompileError, Expr, OPERATOR_NAMES, DECISION_NAMES, contains_operator, contains_decision
 
 
+class UnsupportedConstantPower(CompileError):
+    """Private classification from the original pow rejection traversal."""
+
+
 def affine(constant, terms):
     return Affine(constant, tuple(Term(n, c) for n, c in sorted(terms.items()) if c != 0.0))
 
@@ -86,6 +90,10 @@ def lower_decision(op, values, select):
     return choose(values[0], truth, zero) if op == "&&" else choose(values[0], one, truth)
 
 
+class FiniteIntegerUnavailable(CompileError):
+    """The original route ran out of representation, not semantic validity."""
+
+
 def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Mapping[str, int],
           source: str, operators: Callable[[Expr], Expression] | None = None, preserve_structure: bool = False,
           decisions: Callable[..., Select] | None = None,
@@ -98,11 +106,23 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
     if validator is not None:
         parameters.integer_operation_depth = depth + 1
     try:
-        value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,
-                               decisions, validate_decision, decision_scope, indices,
-                               memo=memo, node_declarations=node_declarations)
+        try:
+            value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,
+                                   decisions, validate_decision, decision_scope, indices,
+                                   memo=memo, node_declarations=node_declarations)
+        except FiniteIntegerUnavailable:
+            native = getattr(parameters, "native_integer", None)
+            value = native(expr) if native is not None else None
+            if value is None:
+                raise
         if validator is not None:
-            checked = validator(expr, value, root=depth == 0 and getattr(parameters, "allow_integer_assignment_root", False))
+            try:
+                checked = validator(expr, value, root=depth == 0 and getattr(parameters, "allow_integer_assignment_root", False))
+            except FiniteIntegerUnavailable:
+                native = getattr(parameters, "native_integer", None)
+                checked = native(expr) if native is not None else None
+                if checked is None:
+                    raise
             if checked is not None:
                 value = checked
         return value
@@ -135,11 +155,29 @@ def _lower_checked(expr, parameters, nodes, source, operators, preserve_structur
 
 def _lower(expr, parameters, nodes, source, operators, preserve_structure,
            decisions, validate_decision, decision_scope, indices, memo, node_declarations):
-    def fail(message, *, code="compile_error"):
-        raise CompileError(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}",
+    def fail(message, *, code="compile_error", error=CompileError):
+        raise error(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}",
                            code=code, token=expr.token)
 
     event_math = getattr(parameters, "event_math", None)
+    sampled_values = getattr(parameters, "sampled_values", False)
+    finite_integer = getattr(parameters, "finite_integer_expression", None)
+    if finite_integer is not None:
+        result = finite_integer(expr, nodes,
+            (operators, preserve_structure, decisions, validate_decision, decision_scope, indices),
+            {"node_declarations": node_declarations})
+        if result is not None:
+            return result
+    if expr.op == 'floor':
+        if len(expr.args) != 1:
+            fail('floor requires one real argument', code='unsupported_floor')
+        argument = lower(expr.args[0], parameters, nodes, source, operators, True,
+                         decisions, validate_decision, decision_scope, indices,
+                         node_declarations=node_declarations)
+        finite_floor = getattr(parameters, 'finite_floor', None)
+        if finite_floor is None:
+            fail('floor requires a source-proven finite range', code='unsupported_floor')
+        return finite_floor(expr, argument)
     if event_math is not None and expr.op in ("sqrt", "abs", "min", "max"):
         args = tuple(lower(arg, parameters, nodes, source, None, True,
                            decisions, validate_decision, False, indices,
@@ -196,7 +234,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
                          parameters, nodes, source, operators, preserve_structure,
                          decisions, validate_decision, decision_scope, indices,
                          memo=memo, node_declarations=node_declarations)
-    if expr.op in ("cos", "exp", "ln", "sqrt") and operators is None:
+    if expr.op in ("cos", "exp", "ln", "sqrt", "tanh") and operators is None:
         argument = lower(expr.args[0], parameters, nodes, source,
                          preserve_structure=preserve_structure, memo=memo,
                          node_declarations=node_declarations)
@@ -204,7 +242,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
             fail("nonconstant mathematical functions require a waveform contribution")
         try:
             value = {"cos": math.cos, "exp": math.exp, "ln": math.log,
-                     "sqrt": math.sqrt}[expr.op](argument.constant)
+                     "sqrt": math.sqrt, "tanh": math.tanh}[expr.op](argument.constant)
         except (ValueError, OverflowError):
             fail("mathematical constant is outside the finite function domain")
         if not math.isfinite(value):
@@ -246,6 +284,12 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
                     node_declarations=node_declarations)
               for i, arg in enumerate(expr.args)]
     a = values[0]
+    from .integer_bits import OPS
+    if expr.op in OPS:
+        bitwise = getattr(parameters, "integer_bitwise", None)
+        if bitwise is None:
+            fail("bitwise expression requires typed integer binding", code="unsupported_integer_bitwise")
+        return bitwise(expr, values)
     if expr.op.startswith("unary"):
         result = scale(a, -1.0 if expr.op == "unary-" else 1.0)
     else:
@@ -277,10 +321,10 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
             if expr.op == "%":
                 fail("modulo requires integer typed operands and a supported constant divisor")
             if not isinstance(b, Affine) or b.terms:
-                if operators is None and event_math is None:
+                if operators is None and event_math is None and not sampled_values:
                     fail("variable division requires an ordinary analog expression")
                 return Binary("divide", a, b)
-            if b.constant == 0 and event_math is not None:
+            if b.constant == 0 and (event_math is not None or sampled_values):
                 return Binary("divide", a, b)
             if b.constant == 0:
                 fail("division requires a nonzero constant denominator")
@@ -294,9 +338,15 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
                     fail("nonfinite coefficient during constant folding")
                 result = Binary("multiply", Affine(reciprocal, ()), a) if preserve_structure else scale(a, reciprocal)
         elif expr.op == "power":
+            finite_power = getattr(parameters, "finite_power", None)
+            if finite_power is not None:
+                finite_result = finite_power(expr, a, b)
+                if finite_result is not None:
+                    return finite_result
             if (not isinstance(b, Affine) or b.terms or not b.constant.is_integer()
                     or not 1 <= b.constant <= 32):
-                fail("pow exponent must be an instance-constant integer in [1,32]")
+                fail("pow exponent must be an instance-constant integer in [1,32]",
+                     error=UnsupportedConstantPower)
             exponent = int(b.constant)
             if isinstance(a, Affine) and not a.terms:
                 try:

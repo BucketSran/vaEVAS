@@ -13,6 +13,15 @@ pub(crate) struct Root {
 }
 
 impl Root {
+    fn from_physical(crossing: crate::exact_source::Crossing) -> Option<Self> {
+        Some(Self {
+            bounds: crossing.time.bounds()?,
+            slope: crossing.slope,
+            segment: [crossing.segment[0].lo, crossing.segment[1].hi],
+            ends: crossing.ends,
+            source_time: Some(crossing.time),
+        })
+    }
     pub(crate) fn with_source_time(mut self, curve: Option<&crate::exact_source::Curve>) -> Self {
         if let Some(time) = curve.and_then(|c| c.root_in(self.segment, self.ends, self.bounds)) {
             if let Some(bounds) = time.bounds() {
@@ -201,6 +210,46 @@ pub(crate) struct Trajectory {
 }
 
 impl Trajectory {
+    /// Prepay all storage copied by Clone, including original rational limbs.
+    pub(crate) fn charge_source_copy(
+        &self,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<(), Error> {
+        let debit = |items: usize| -> Result<(), Error> {
+            work.debit(2, items as u64)?;
+            crate::diagnostics::counter("selected_ln_copy_items", items);
+            crate::diagnostics::counter("selected_ln_work_debit", items);
+            Ok(())
+        };
+        debit(
+            16 + self.knots.len()
+                + self.solver_points.len()
+                + self.source_errors.len()
+                + self.config.strobetimes.len()
+                + self.config.output_times.len(),
+        )?;
+        for points in &self.config.pwl {
+            debit(1 + 2 * points.len())?;
+        }
+        if let Some(errors) = &self.config.pwl_errors_v {
+            for error in errors {
+                debit(2)?;
+                if let Some(shape) = error.shape() {
+                    for knot in &shape.exact_knots {
+                        debit(3 + knot.time_numerator.len() + knot.time_denominator.len())?;
+                    }
+                }
+            }
+        }
+        for curve in &self.exact_sources {
+            debit(1)?;
+            if let Some(curve) = curve {
+                curve.charge_source_copy(work)?;
+            }
+        }
+        Ok(())
+    }
+
     // Root-demand slopes apply only to physical PWL inputs, not generated
     // sources whose enclosures may include an independent time-varying error.
     pub(crate) fn has_only_physical_inputs(&self) -> bool {
@@ -220,6 +269,15 @@ impl Trajectory {
         let mut values: Vec<_> = left.iter().zip(right).map(|(&a, b)| a.hull(b)).collect();
         let mut derivatives = Vec::new();
         for (k, source) in self.config.pwl.iter().enumerate() {
+            if self.is_shaped(k) {
+                let (physical_values, physical_slope) = self.exact_sources[k]
+                    .as_ref()
+                    .and_then(|curve| curve.range(time))
+                    .ok_or_else(|| unresolved("cannot bound original source shape"))?;
+                values[k] = physical_values;
+                derivatives.push(physical_slope);
+                continue;
+            }
             let mut slope = None;
             for pair in source.windows(2) {
                 if pair[0][0] < time.hi && pair[1][0] > time.lo
@@ -286,9 +344,11 @@ impl Trajectory {
         let source_errors = match &config.pwl_errors_v {
             Some(errors)
                 if errors.len() == config.pwl.len()
-                    && errors.iter().all(|e| e.is_finite() && *e >= 0.) =>
+                    && errors
+                        .iter()
+                        .all(|e| e.bound().is_finite() && e.bound() >= 0.) =>
             {
-                errors.clone()
+                errors.iter().map(|e| e.bound()).collect::<Vec<_>>()
             }
             Some(_) => return Err(Error::new(
                 "invalid_inputs",
@@ -300,14 +360,28 @@ impl Trajectory {
             .pwl
             .iter()
             .zip(&source_errors)
-            .map(|(p, error)| {
-                if *error == 0. {
-                    crate::exact_source::Curve::source(p)
+            .enumerate()
+            .map(|(index, (p, error))| {
+                if let Some(shape) = config
+                    .pwl_errors_v
+                    .as_ref()
+                    .and_then(|errors| errors[index].shape())
+                {
+                    crate::exact_source::Curve::shaped(shape, p, config.stop)
+                        .map(Some)
+                        .ok_or_else(|| {
+                            Error::new(
+                                "invalid_inputs",
+                                "invalid source shape or insufficient voltage error bound",
+                            )
+                        })
+                } else if *error == 0. {
+                    Ok(crate::exact_source::Curve::source(p))
                 } else {
-                    None
+                    Ok(None)
                 }
             })
-            .collect();
+            .collect::<Result<Vec<_>, Error>>()?;
         let mut solver_points = knots.clone();
         solver_points.extend(&config.strobetimes);
         solver_points.sort_by(f64::total_cmp);
@@ -320,6 +394,50 @@ impl Trajectory {
             knots,
             source_errors,
         })
+    }
+
+    fn is_shaped(&self, index: usize) -> bool {
+        index < self.original_source_count
+            && self
+                .config
+                .pwl_errors_v
+                .as_ref()
+                .and_then(|errors| errors.get(index))
+                .and_then(|error| error.shape())
+                .is_some()
+    }
+
+    /// Shape-aware guards must use their complete physical source partition.
+    /// Unknown/non-affine source expressions retain a conservative refusal.
+    pub(crate) fn shaped_roots(
+        &self,
+        guard: &crate::ir::Expression,
+        projected_guard: Option<&crate::ir::Expression>,
+        input_nodes: &[usize],
+        active: &[usize],
+        direction: i8,
+        after: Option<f64>,
+    ) -> Result<Option<Vec<Root>>, Error> {
+        if !active.iter().any(|&index| self.is_shaped(index)) {
+            return Ok(None);
+        }
+        let curve = self
+            .original_guard_curve(guard, input_nodes)
+            .or_else(|| self.original_guard_curve(projected_guard?, input_nodes))
+            .ok_or_else(|| unresolved("cannot certify guard on shaped original sources"))?;
+        let crossings = curve
+            .crossings(direction, self.config.stop)
+            .ok_or_else(|| unresolved("cannot enumerate physical source crossings"))?;
+        let mut roots = Vec::new();
+        for crossing in crossings {
+            let root = Root::from_physical(crossing)
+                .ok_or_else(|| unresolved("cannot enclose physical source crossing"))?;
+            if after.is_some_and(|time| root.bounds.hi <= time) {
+                continue;
+            }
+            roots.push(root);
+        }
+        Ok(Some(roots))
     }
 
     pub(crate) fn add_enclosed_source(
@@ -435,7 +553,15 @@ impl Trajectory {
         self.config
             .pwl
             .iter()
-            .map(|source| {
+            .enumerate()
+            .map(|(index, source)| {
+                if self.is_shaped(index) {
+                    if let Some((value, _)) =
+                        self.exact_sources[index].as_ref().and_then(|c| c.at(time))
+                    {
+                        return value;
+                    }
+                }
                 let index = source.partition_point(|p| p[0] < time);
                 if source[index][0] == time {
                     return source[index][1];
@@ -533,7 +659,15 @@ impl Trajectory {
             .pwl
             .iter()
             .zip(&self.source_errors)
-            .map(|(source, &error)| {
+            .enumerate()
+            .map(|(index, (source, &error))| {
+                if self.is_shaped(index) {
+                    if let Some((_, bounds)) =
+                        self.exact_sources[index].as_ref().and_then(|c| c.at(time))
+                    {
+                        return bounds;
+                    }
+                }
                 let index = source.partition_point(|p| p[0] < time);
                 if source[index][0] == time {
                     return I::point(source[index][1])

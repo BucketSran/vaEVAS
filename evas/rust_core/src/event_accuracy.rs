@@ -12,10 +12,46 @@ pub(crate) fn unresolved(message: &str) -> Error {
 pub(crate) struct GuardBounds {
     coefficients: Vec<Vec<I>>,
     state_coefficients: Vec<Vec<I>>,
+    operator_coefficients: Vec<Vec<I>>,
     driven_count: usize,
+    symbolic: Vec<Option<Expression>>,
+    input_nodes: Vec<usize>,
+    node_count: usize,
 }
 
 impl GuardBounds {
+    pub(crate) fn for_model(
+        model: &crate::events::EventModel,
+        states: Option<&[I]>,
+    ) -> Result<Self, Error> {
+        if model.dc_projection.is_none() {
+            return match states {
+                Some(states) => {
+                    Self::held(&model.program, &model.driven, &model.dynamic_guards, states)
+                }
+                None => Self::new(&model.program, &model.driven, &model.dynamic_guards),
+            };
+        }
+        let expressions = model
+            .triggers
+            .iter()
+            .enumerate()
+            .map(|(i, leaf)| match &leaf.trigger {
+                EventTrigger::Cross { guard, .. } if !model.dynamic_guards[i] => Some(guard),
+                _ => None,
+            })
+            .collect::<Vec<_>>();
+        Self::project_with_dc(
+            &model.program,
+            &model.driven,
+            &expressions,
+            states,
+            false,
+            false,
+            model.dc_projection.as_deref(),
+        )
+    }
+
     pub(crate) fn new(
         program: &Program,
         driven: &[String],
@@ -56,7 +92,7 @@ impl GuardBounds {
                 });
             }
         }
-        Self::project(program, driven, &expressions, Some(states), false)
+        Self::project(program, driven, &expressions, Some(states), false, false)
     }
 
     /// Project state-independent affine expressions onto the driven inputs.
@@ -65,7 +101,7 @@ impl GuardBounds {
         driven: &[String],
         expressions: &[Option<&Expression>],
     ) -> Result<Self, Error> {
-        Self::project(program, driven, expressions, None, false)
+        Self::project(program, driven, expressions, None, false, false)
     }
 
     /// Keep accepted/local held states as certified forcing columns.
@@ -74,7 +110,15 @@ impl GuardBounds {
         driven: &[String],
         expressions: &[Option<&Expression>],
     ) -> Result<Self, Error> {
-        Self::project(program, driven, expressions, None, true)
+        Self::project(program, driven, expressions, None, true, false)
+    }
+
+    pub(crate) fn stateful_parameters(
+        program: &Program,
+        driven: &[String],
+        expressions: &[Option<&Expression>],
+    ) -> Result<Self, Error> {
+        Self::project(program, driven, expressions, None, true, true)
     }
 
     fn project(
@@ -83,6 +127,27 @@ impl GuardBounds {
         expressions: &[Option<&Expression>],
         states: Option<&[I]>,
         keep_states: bool,
+        keep_operators: bool,
+    ) -> Result<Self, Error> {
+        Self::project_with_dc(
+            program,
+            driven,
+            expressions,
+            states,
+            keep_states,
+            keep_operators,
+            None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn project_with_dc(
+        program: &Program,
+        driven: &[String],
+        expressions: &[Option<&Expression>],
+        states: Option<&[I]>,
+        keep_states: bool,
+        keep_operators: bool,
+        dc: Option<&crate::dc_projection::DcProjection>,
     ) -> Result<Self, Error> {
         let count = program.nodes.len();
         let variables = count + program.states.len() + program.operators.len();
@@ -106,7 +171,53 @@ impl GuardBounds {
             .collect::<Result<Vec<_>, _>>()?
             .iter()
             .all(|row| (1..count).all(|node| row[node].zero() || driven_nodes.contains(&node)));
-        let nodes = if direct {
+        // A forced voltage alias can have a nonzero reference. Substitute only
+        // a proven acyclic, single-branch relation and then recheck affinity.
+        // Unrelated nonlinear outputs need not enter this guard projection.
+        let expanded = (!direct)
+            .then(|| {
+                expressions
+                    .iter()
+                    .map(|expression| {
+                        expression
+                            .map(|expression| {
+                                let expanded =
+                                    crate::causal_voltage::expand(expression, program, driven)?;
+                                let row = affine(&expanded, program)?;
+                                if (1..count)
+                                    .any(|node| !row[node].zero() && !driven_nodes.contains(&node))
+                                {
+                                    return Err(unresolved("unresolved forced guard voltage"));
+                                }
+                                Ok(expanded)
+                            })
+                            .transpose()
+                    })
+                    .collect::<Result<Vec<_>, Error>>()
+                    .ok()
+            })
+            .flatten();
+        let direct = direct || expanded.is_some();
+        let symbolic = if !direct
+            && keep_states
+            && keep_operators
+            && program
+                .contributions
+                .iter()
+                .any(|c| crate::analog::has_select(&c.rhs))
+        {
+            expressions
+                .iter()
+                .map(|e| {
+                    e.map(|e| crate::causal_voltage::expand(e, program, driven))
+                        .transpose()
+                })
+                .collect::<Result<Vec<_>, _>>()?
+        } else {
+            vec![None; expressions.len()]
+        };
+        let symbolic_mode = symbolic.iter().any(Option::is_some);
+        let nodes = if direct || symbolic_mode {
             let mut nodes = vec![vec![I::ZERO; width]; variables];
             for (column, &node) in driven_nodes.iter().enumerate() {
                 nodes[node][column] = I::ONE;
@@ -116,16 +227,21 @@ impl GuardBounds {
             }
             nodes
         } else {
-            crate::affine_bounds::node_map(program, driven)?
+            crate::affine_bounds::node_map_with_dc(program, driven, dc)?
         };
         validate_projection(&nodes, variables, width)?;
         let mut coefficients = expressions
             .iter()
-            .map(|expression| {
+            .enumerate()
+            .map(|(index, expression)| {
                 // Keep rows aligned with event indices; timer has no guard.
-                let Some(guard) = expression else {
+                let Some(guard) = expression.filter(|_| !symbolic_mode) else {
                     return Ok(vec![I::ZERO; width]);
                 };
+                let guard = expanded
+                    .as_ref()
+                    .and_then(|expressions| expressions[index].as_ref())
+                    .unwrap_or(guard);
                 let guard = affine(guard, program)?;
                 project_row(&guard, &nodes, width)
             })
@@ -151,19 +267,29 @@ impl GuardBounds {
         if coefficients.iter().flatten().any(|x| !x.finite()) {
             return Err(unresolved("nonfinite event trajectory bounds"));
         }
-        if coefficients.iter().any(|row| {
-            row[driven.len() + if keep_states { program.states.len() } else { 0 }..width - 1]
-                .iter()
-                .any(|x| !x.zero())
-        }) {
+        if !keep_operators
+            && coefficients.iter().any(|row| {
+                row[driven.len() + if keep_states { program.states.len() } else { 0 }..width - 1]
+                    .iter()
+                    .any(|x| !x.zero())
+            })
+        {
             return Err(unresolved(
                 "cannot certify cross guard independence from event state",
             ));
         }
+        let operator_coefficients = coefficients
+            .iter()
+            .map(|row| row[driven.len() + program.states.len()..width - 1].to_vec())
+            .collect();
         Ok(Self {
             coefficients,
+            operator_coefficients,
             state_coefficients,
             driven_count: driven.len(),
+            symbolic,
+            input_nodes: driven_nodes,
+            node_count: count,
         })
     }
 
@@ -203,6 +329,35 @@ impl GuardBounds {
             .collect()
     }
 
+    /// Reuse the certified circuit projection as an exact source expression.
+    /// A non-point coefficient or remaining state/operator column cannot be
+    /// rounded into the unique physical curve required for root provenance.
+    pub(crate) fn exact_input_expression(&self, expression: usize) -> Option<Expression> {
+        if self.symbolic[expression].is_some() {
+            return None;
+        }
+        let row = &self.coefficients[expression];
+        if row.iter().any(|v| v.lo != v.hi)
+            || row[self.driven_count..row.len() - 1]
+                .iter()
+                .any(|v| !v.zero())
+        {
+            return None;
+        }
+        Some(Expression::Affine {
+            constant: row.last()?.lo,
+            terms: row[..self.driven_count]
+                .iter()
+                .zip(&self.input_nodes)
+                .filter(|(v, _)| !v.zero())
+                .map(|(v, &node)| crate::ir::Term {
+                    node,
+                    coefficient: v.lo,
+                })
+                .collect(),
+        })
+    }
+
     pub(crate) fn values(&self, inputs: &[I]) -> Vec<I> {
         self.coefficients
             .iter()
@@ -225,7 +380,41 @@ impl GuardBounds {
             })
     }
 
+    fn operator_value(&self, expression: usize, operators: &[I]) -> I {
+        self.operator_coefficients[expression]
+            .iter()
+            .enumerate()
+            .filter(|(_, v)| !v.zero())
+            .fold(I::ZERO, |sum, (k, &coefficient)| {
+                sum + coefficient
+                    * operators.get(k).copied().unwrap_or(I {
+                        lo: f64::NEG_INFINITY,
+                        hi: f64::INFINITY,
+                    })
+            })
+    }
+    pub(crate) fn values_with_operators(&self, inputs: &[I], operators: &[I]) -> Vec<I> {
+        self.values(inputs)
+            .into_iter()
+            .enumerate()
+            .map(|(k, v)| v + self.operator_value(k, operators))
+            .collect()
+    }
+    pub(crate) fn value_with_parameters(
+        &self,
+        expression: usize,
+        inputs: &[I],
+        states: &[I],
+        operators: &[I],
+    ) -> I {
+        self.value_with_states(expression, inputs, states)
+            + self.operator_value(expression, operators)
+    }
+
     pub(crate) fn same_zero_set(&self, first: usize, second: usize) -> bool {
+        if self.symbolic[first].is_some() || self.symbolic[second].is_some() {
+            return false;
+        }
         let a = &self.coefficients[first];
         let b = &self.coefficients[second];
         if a.iter().chain(b).any(|v| v.lo != v.hi) {
@@ -238,6 +427,28 @@ impl GuardBounds {
             && a.iter()
                 .zip(b)
                 .all(|(x, y)| equal_products(x.lo, b[pivot].lo, y.lo, a[pivot].lo))
+    }
+
+    pub(crate) fn symbolic(&self, expression: usize) -> bool {
+        self.symbolic[expression].is_some()
+    }
+
+    pub(crate) fn checked_value(
+        &self,
+        expression: usize,
+        inputs: &[I],
+        states: &[I],
+        operators: &[I],
+    ) -> Result<I, Error> {
+        if let Some(e) = &self.symbolic[expression] {
+            let mut nodes = vec![I::ZERO; self.node_count];
+            for (&n, &v) in self.input_nodes.iter().zip(inputs) {
+                nodes[n] = v;
+            }
+            crate::causal_voltage::bounds(e, &nodes, states, operators)
+        } else {
+            Ok(self.value_with_parameters(expression, inputs, states, operators))
+        }
     }
 }
 

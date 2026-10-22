@@ -741,7 +741,7 @@ impl DenseStep {
 
 #[path = "nonlinear_root_window.rs"]
 mod root_window;
-use root_window::{HistoryStep, StepHistory};
+use root_window::HistoryStep;
 
 // Physical state immediately after the final event map, before propagation
 // from its uncertain time to the published representative.
@@ -765,25 +765,13 @@ pub(crate) struct NonlinearContinuous {
     accuracy_rows: Vec<Vec<I>>,
     tolerances: Tolerances,
     initial: Vec<I>,
-    steps: Arc<StepHistory>,
+    steps: Arc<Vec<HistoryStep>>,
     start: f64,
     event_dependent: bool,
     event_seed: Option<PhysicalEventSeed>,
 }
 
 impl NonlinearContinuous {
-    /// Like `Arc::make_mut`, but a copy-on-write clone starts with an empty
-    /// range memo: cached ranges are pure-function results that stay valid
-    /// when retained, yet copying them alongside every accepted step would
-    /// duplicate work proportional to the query history.
-    fn unique_steps(steps: &mut Arc<StepHistory>) -> &mut StepHistory {
-        if Arc::get_mut(steps).is_none() {
-            let cloned = steps.cloned_steps();
-            *steps = Arc::new(cloned);
-        }
-        Arc::get_mut(steps).expect("unique history arc")
-    }
-
     pub(super) fn local_from_seed(&self, horizon: f64) -> Result<Self, Error> {
         fn autonomous(p: &Polynomial, count: usize, sources: usize) -> bool {
             match p {
@@ -1193,7 +1181,7 @@ impl NonlinearContinuous {
             accuracy_rows,
             tolerances: tolerances.clone(),
             initial,
-            steps: Arc::new(StepHistory::default()),
+            steps: Arc::new(Vec::new()),
             start,
             event_dependent,
             event_seed: None,
@@ -1734,7 +1722,7 @@ impl NonlinearContinuous {
                     ));
                 }
             }
-            Self::unique_steps(&mut self.steps).extend(new_steps);
+            Arc::make_mut(&mut self.steps).extend(new_steps);
             self.modes = modes;
             return Ok(());
         }
@@ -1999,7 +1987,7 @@ impl NonlinearContinuous {
                     return Ok(false);
                 }
                 start = step.end;
-                Self::unique_steps(&mut self.steps).push(HistoryStep::taylor(step));
+                Arc::make_mut(&mut self.steps).push(HistoryStep::taylor(step));
                 crate::diagnostics::counter("nonlinear_certified_candidate_steps", 1);
                 crate::diagnostics::record(
                     "nonlinear_candidate",
@@ -2108,11 +2096,12 @@ impl NonlinearContinuous {
             .iter()
             .map(|&v| (time.lo == self.start).then_some(v))
             .collect();
-        for index in self.steps.partition_point(|s| s.end < time.lo)..self.steps.len() {
-            let step = &self.steps[index];
-            if step.start > time.hi {
-                break;
-            }
+        for step in self
+            .steps
+            .iter()
+            .skip(self.steps.partition_point(|s| s.end < time.lo))
+            .take_while(|s| s.start <= time.hi)
+        {
             let range = I {
                 lo: time.lo.max(step.start),
                 hi: time.hi.min(step.end),
@@ -2120,7 +2109,7 @@ impl NonlinearContinuous {
             if range.lo > range.hi {
                 continue;
             }
-            for (slot, value) in result.iter_mut().zip(self.steps.range(index, range)) {
+            for (slot, value) in result.iter_mut().zip(step.range(range)) {
                 *slot = Some(slot.map_or(value, |v| v.hull(value)));
             }
         }
@@ -2670,7 +2659,7 @@ mod tests {
             parameters: vec![],
             implicit: None,
             initial: vec![I::ONE],
-            steps: Arc::new(StepHistory::default()),
+            steps: Arc::new(vec![]),
             start: 0.0,
             event_dependent: false,
             event_seed: None,

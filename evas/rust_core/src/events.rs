@@ -140,7 +140,8 @@ pub(crate) fn affine(
         has_variables: false,
     };
     match expr {
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. } => {
@@ -295,6 +296,13 @@ pub(crate) fn contribution_affine(
     program: &Program,
     owner: &str,
 ) -> Result<AffineState, Error> {
+    contribution_shape(expr, program, owner).map(|(row, _)| row)
+}
+fn contribution_shape(
+    expr: &Expression,
+    program: &Program,
+    owner: &str,
+) -> Result<(AffineState, bool), Error> {
     match expr {
         Expression::Select {
             left,
@@ -303,9 +311,10 @@ pub(crate) fn contribution_affine(
             else_value,
             ..
         } => {
-            let mut result = contribution_affine(then_value, program, owner)?;
+            let (mut result, mut dc) = contribution_shape(then_value, program, owner)?;
             for child in [left, right, else_value] {
-                let other = contribution_affine(child, program, owner)?;
+                let (other, child_dc) = contribution_shape(child, program, owner)?;
+                dc |= child_dc;
                 result.node_dependencies.extend(other.node_dependencies);
                 result.state_dependencies.extend(other.state_dependencies);
                 result
@@ -313,13 +322,13 @@ pub(crate) fn contribution_affine(
                     .extend(other.operator_dependencies);
                 result.has_variables |= other.has_variables;
             }
-            Ok(result)
+            Ok((result, dc))
         }
         Expression::Add { left, right }
         | Expression::Multiply { left, right }
         | Expression::Divide { left, right } => {
-            let a = contribution_affine(left, program, owner)?;
-            let b = contribution_affine(right, program, owner)?;
+            let (a, ad) = contribution_shape(left, program, owner)?;
+            let (b, bd) = contribution_shape(right, program, owner)?;
             // Reuse affine validation on a representative arm, retaining every
             // structural dependency separately for feedback checks.
             let representative = representative(expr);
@@ -369,6 +378,23 @@ pub(crate) fn contribution_affine(
             } else {
                 affine(&representative, program, owner)?
             };
+            // Reuse these existing parsed rows: an already-zero factor is
+            // affine on the legacy path and must not acquire a DC admission tax.
+            let live = |v: &AffineState| {
+                v.constant != 0.
+                    || v.nodes
+                        .iter()
+                        .chain(&v.states)
+                        .chain(&v.operators)
+                        .any(|&c| c != 0.)
+            };
+            let dc = ad
+                || bd
+                || sampled_coefficient
+                    && transition_coefficient
+                    && live(&a)
+                    && live(&b)
+                    && (!a.node_dependencies.is_empty() || !b.node_dependencies.is_empty());
             result.has_variables |= a.has_variables || b.has_variables;
             result.node_dependencies.extend(a.node_dependencies);
             result.node_dependencies.extend(b.node_dependencies);
@@ -376,9 +402,9 @@ pub(crate) fn contribution_affine(
             result.state_dependencies.extend(b.state_dependencies);
             result.operator_dependencies.extend(a.operator_dependencies);
             result.operator_dependencies.extend(b.operator_dependencies);
-            Ok(result)
+            Ok((result, dc))
         }
-        _ => affine(expr, program, owner),
+        _ => affine(expr, program, owner).map(|row| (row, false)),
     }
 }
 
@@ -448,6 +474,7 @@ pub(crate) struct TriggerLeaf {
 
 pub(crate) struct EventModel {
     pub(crate) program: Program,
+    pub(crate) dc_projection: Option<std::sync::Arc<crate::dc_projection::DcProjection>>,
     rhs: Vec<AffineState>,
     pub(crate) guards: Vec<Option<AffineState>>,
     pub(crate) dynamic_guards: Vec<bool>,
@@ -457,6 +484,7 @@ pub(crate) struct EventModel {
     actions: Vec<Vec<(usize, AffineState)>>,
     pub(crate) action_expressions: Vec<Vec<Expression>>,
     pub(crate) numeric_actions: Vec<Vec<bool>>,
+    pub(crate) causal_numeric: Vec<bool>,
     pub(crate) conditions: Conditions,
     pub(crate) passive_conditions: Conditions,
     pub(crate) passive_events: Vec<bool>,
@@ -472,6 +500,14 @@ impl EventModel {
         program: Program,
         driven: Vec<String>,
         tolerances: Tolerances,
+    ) -> Result<Self, Error> {
+        Self::new_with_trajectory(program, driven, tolerances, None)
+    }
+    pub(crate) fn new_with_trajectory(
+        program: Program,
+        driven: Vec<String>,
+        tolerances: Tolerances,
+        trajectory: Option<&crate::pwl::Trajectory>,
     ) -> Result<Self, Error> {
         crate::event_control::validate(&program)?;
         let initial_values = program
@@ -503,13 +539,27 @@ impl EventModel {
             check_state(state.initial.constant()?, &state.kind)?;
         }
         for c in &program.contributions {
-            crate::continuous::validate_selection(&c.rhs, &program, &driven, &c.origin.instance)?;
+            crate::continuous::validate_selection(&c.rhs, &program, &driven, &c.origin.instance)
+                .or_else(|error| {
+                    if error.kind == "unsupported_transient" && crate::analog::has_select(&c.rhs) {
+                        crate::continuous::validate_integral_input(
+                            &c.rhs,
+                            &program,
+                            &c.origin.instance,
+                        )?;
+                        crate::causal_voltage::history_selection(&c.rhs, &program, &driven)
+                    } else {
+                        Err(error)
+                    }
+                })?;
         }
-        let rhs = program
+        let shaped = program
             .contributions
             .iter()
-            .map(|c| contribution_affine(&c.rhs, &program, &c.origin.instance))
+            .map(|c| contribution_shape(&c.rhs, &program, &c.origin.instance))
             .collect::<Result<Vec<_>, _>>()?;
+        let dc_supply = shaped.iter().any(|(_, dc)| *dc);
+        let rhs = shaped.into_iter().map(|(row, _)| row).collect::<Vec<_>>();
         let passive_events = crate::passive_events::classify(&program)?;
         let mut guards = Vec::new();
         let mut dynamic_guards = Vec::new();
@@ -598,6 +648,12 @@ impl EventModel {
         let mut actions = Vec::new();
         let mut action_expressions = Vec::new();
         let mut numeric_actions = Vec::new();
+        let causal_numeric = crate::causal_event::classify(&program, &passive_events, &driven)?;
+        let general_events: Vec<_> = passive_events
+            .iter()
+            .zip(&causal_numeric)
+            .map(|(a, b)| *a || *b)
+            .collect();
         for (index, event) in program.events.iter().enumerate() {
             if event.origin.instance.is_empty()
                 || event.origin.source.is_empty()
@@ -695,7 +751,7 @@ impl EventModel {
                     ));
                 }
                 let ordinary = affine(&assignment.rhs, &program, &event.origin.instance);
-                let is_numeric = passive_events[index] && ordinary.is_err();
+                let is_numeric = general_events[index] && ordinary.is_err();
                 let value = if is_numeric {
                     crate::event_numeric::dependencies(
                         &assignment.rhs,
@@ -714,7 +770,7 @@ impl EventModel {
                     ));
                 }
                 if state.kind == StateKind::Integer
-                    && passive_events[index]
+                    && general_events[index]
                     && !crate::event_numeric::integral(&assignment.rhs, &program)
                 {
                     return Err(Error::new(
@@ -723,7 +779,7 @@ impl EventModel {
                     ));
                 }
                 if state.kind == StateKind::Integer
-                    && !passive_events[index]
+                    && !general_events[index]
                     && (value.constant.fract() != 0.0
                         || value.nodes.iter().any(|v| *v != 0.0)
                         || value.states.iter().zip(&program.states).any(|(v, s)| {
@@ -741,9 +797,9 @@ impl EventModel {
             action_expressions.push(expressions);
             numeric_actions.push(numeric);
         }
-        let mut conditions = Conditions::new_with_numeric(&program, &passive_events)?;
+        let mut conditions = Conditions::new_with_numeric(&program, &general_events)?;
         conditions.restrict_events(&passive_events.iter().map(|p| !p).collect::<Vec<_>>());
-        let mut passive_conditions = Conditions::new_with_numeric(&program, &passive_events)?;
+        let mut passive_conditions = Conditions::new_with_numeric(&program, &general_events)?;
         passive_conditions.restrict_events(&passive_events);
         let (projected, node_inputs) =
             crate::event_accuracy::GuardBounds::passive_program(&program);
@@ -753,6 +809,7 @@ impl EventModel {
             passive_conditions,
             passive_events,
             program,
+            dc_projection: None,
             rhs,
             guards,
             dynamic_guards,
@@ -762,13 +819,37 @@ impl EventModel {
             actions,
             action_expressions,
             numeric_actions,
+            causal_numeric,
             driven,
             tolerances,
             certificate: RefCell::new(None),
             initial_values,
         };
         model.check_guard_dependencies()?;
-        model.conditions.prepare(&model.program, &model.driven)?;
+        // Reuse dependency metadata already audited above. Original Transition
+        // products plus an internal history cross cannot use the legacy affine
+        // network map; direct/implicit supported callers incur no DC proof.
+        if let Some(t) = trajectory {
+            if model.guard_operators.iter().any(|ops| !ops.is_empty())
+                && model
+                    .program
+                    .operators
+                    .iter()
+                    .all(|o| matches!(o, crate::ir::OperatorSpec::Transition { .. }))
+                && dc_supply
+            {
+                model.dc_projection = Some(crate::dc_projection::DcProjection::new(
+                    &model.program,
+                    t,
+                    &model.driven,
+                )?);
+            }
+        }
+        model.conditions.prepare_with_dc(
+            &model.program,
+            &model.driven,
+            model.dc_projection.as_deref(),
+        )?;
         Ok(model)
     }
 
@@ -782,7 +863,7 @@ impl EventModel {
         voltages: &[f64],
         states: &[f64],
     ) -> Result<(Vec<I>, Vec<I>), Error> {
-        self.certify_observation_at_roots(
+        self.certify_observation_at_roots_with_proofs(
             selection,
             &[],
             inputs,
@@ -790,10 +871,12 @@ impl EventModel {
             operators,
             voltages,
             states,
+            None,
         )
     }
 
     #[allow(clippy::too_many_arguments)] // Root, state and voltage certificates are distinct inputs.
+    #[cfg(test)]
     pub(crate) fn certify_observation_at_roots(
         &self,
         selection: &Selection,
@@ -804,12 +887,35 @@ impl EventModel {
         voltages: &[f64],
         states: &[f64],
     ) -> Result<(Vec<I>, Vec<I>), Error> {
+        self.certify_observation_at_roots_with_proofs(
+            selection, fired, inputs, before, operators, voltages, states, None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn certify_observation_at_roots_with_proofs(
+        &self,
+        selection: &Selection,
+        fired: &[usize],
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+        voltages: &[f64],
+        states: &[f64],
+        proofs: Option<&crate::event_value_proof::Context<'_>>,
+    ) -> Result<(Vec<I>, Vec<I>), Error> {
         let _timing = crate::diagnostics::span("event.certificate");
-        let selected = self.selected_program_at_roots(
+        let selected = self.selected_program_with_parameters(
             &states.iter().copied().map(I::point).collect::<Vec<_>>(),
             inputs,
             fired,
+            operators,
         )?;
+        if let Some(result) = crate::causal_event::certificate(
+            self, selection, &selected, fired, inputs, before, operators, voltages, states, true,
+            proofs,
+        )? {
+            return Ok(result);
+        }
         let resolved = selected
             .contributions
             .iter()
@@ -828,7 +934,8 @@ impl EventModel {
             let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
             let result =
                 bounds.check_observation(self, inputs, before, operators, voltages, states)?;
-            let replay = self.selected_program_at_roots(&result.0, inputs, fired)?;
+            let replay =
+                self.selected_program_with_parameters(&result.0, inputs, fired, operators)?;
             if replay
                 .contributions
                 .iter()
@@ -860,7 +967,8 @@ impl EventModel {
             .check_observation(self, inputs, before, operators, voltages, states)?;
         // Preserve the original operator-bearing path's enclosure replay.
         if !operators.is_empty() {
-            let replay = self.selected_program_at_roots(&result.0, inputs, fired)?;
+            let replay =
+                self.selected_program_with_parameters(&result.0, inputs, fired, operators)?;
             if replay
                 .contributions
                 .iter()
@@ -877,6 +985,7 @@ impl EventModel {
     }
 
     #[allow(clippy::too_many_arguments)] // Root, state and voltage certificates are distinct inputs.
+    #[cfg(test)]
     pub(crate) fn certify_event_states(
         &self,
         selection: &Selection,
@@ -887,13 +996,36 @@ impl EventModel {
         voltages: &[f64],
         states: &[f64],
     ) -> Result<Vec<I>, Error> {
+        self.certify_event_states_with_proofs(
+            selection, fired, inputs, before, operators, voltages, states, None,
+        )
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn certify_event_states_with_proofs(
+        &self,
+        selection: &Selection,
+        fired: &[usize],
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+        voltages: &[f64],
+        states: &[f64],
+        proofs: Option<&crate::event_value_proof::Context<'_>>,
+    ) -> Result<Vec<I>, Error> {
         let _timing = crate::diagnostics::span("event.state_certificate");
 
-        let selected = self.selected_program_at_roots(
+        let selected = self.selected_program_with_parameters(
             &states.iter().copied().map(I::point).collect::<Vec<_>>(),
             inputs,
             fired,
+            operators,
         )?;
+        if let Some(result) = crate::causal_event::certificate(
+            self, selection, &selected, fired, inputs, before, operators, voltages, states, false,
+            proofs,
+        )? {
+            return Ok(result.0);
+        }
         let resolved = selected
             .contributions
             .iter()
@@ -911,7 +1043,8 @@ impl EventModel {
         if resolved {
             let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
             let result = bounds.check_states(self, inputs, before, operators, voltages, states)?;
-            let replay = self.selected_program_at_roots(&result, inputs, fired)?;
+            let replay =
+                self.selected_program_with_parameters(&result, inputs, fired, operators)?;
             if replay
                 .contributions
                 .iter()
@@ -942,7 +1075,8 @@ impl EventModel {
             .1
             .check_states(self, inputs, before, operators, voltages, states)?;
         if !operators.is_empty() {
-            let replay = self.selected_program_at_roots(&result, inputs, fired)?;
+            let replay =
+                self.selected_program_with_parameters(&result, inputs, fired, operators)?;
             if replay
                 .contributions
                 .iter()
@@ -978,6 +1112,12 @@ impl EventModel {
                         .iter()
                         .any(|&state| writers[state].is_some_and(|w| w != event))
                         || reads_other_writer(index, event, writers)
+                }
+                Expression::IntegerPrimitive { args, .. } => {
+                    let mut refs = Vec::new();
+                    crate::integer_primitive::states(args, &mut refs);
+                    refs.iter()
+                        .any(|&state| writers[state].is_some_and(|w| w != event))
                 }
                 Expression::EventMath { args, .. } => {
                     args.iter().any(|e| reads_other_writer(e, event, writers))
@@ -1099,7 +1239,12 @@ impl EventModel {
         &self,
         selection: &Selection,
     ) -> Result<(), Error> {
-        fn predicates(e: &Expression, out: &mut BTreeSet<usize>) {
+        fn predicates(
+            e: &Expression,
+            program: &Program,
+            driven: &[String],
+            out: &mut BTreeSet<usize>,
+        ) -> Result<(), Error> {
             match e {
                 Expression::Select {
                     left,
@@ -1108,25 +1253,35 @@ impl EventModel {
                     else_value,
                     ..
                 } => {
-                    out.extend(crate::guard_trajectory::state_dependencies(left));
-                    out.extend(crate::guard_trajectory::state_dependencies(right));
-                    predicates(then_value, out);
-                    predicates(else_value, out);
+                    for e in [left, right] {
+                        let expanded = crate::causal_voltage::expand(e, program, driven)?;
+                        out.extend(crate::guard_trajectory::state_dependencies(&expanded));
+                    }
+                    for e in [left, right, then_value, else_value] {
+                        predicates(e, program, driven, out)?;
+                    }
                 }
                 Expression::Add { left, right }
                 | Expression::Multiply { left, right }
                 | Expression::Divide { left, right } => {
-                    predicates(left, out);
-                    predicates(right, out);
+                    predicates(left, program, driven, out)?;
+                    predicates(right, program, driven, out)?;
                 }
                 _ => {}
             }
+            Ok(())
         }
         let mut tested = BTreeSet::new();
         for c in &self.program.contributions {
-            predicates(&c.rhs, &mut tested);
+            predicates(&c.rhs, &self.program, &self.driven, &mut tested)?;
         }
         for (event, indices) in &selection.actions {
+            // Causal numeric actions are evaluated from actual driven inputs,
+            // not unknown same-time voltage nodes. Classification audited every
+            // original action and the existing writer checks retain isolation.
+            if self.causal_numeric[*event] {
+                continue;
+            }
             let mut voltage_dependent = vec![false; self.program.states.len()];
             for &index in indices {
                 let (state, rhs) = &self.actions[*event][index];
@@ -1155,6 +1310,16 @@ impl EventModel {
         inputs: &[I],
         fired: &[usize],
     ) -> Result<std::borrow::Cow<'_, Program>, Error> {
+        self.selected_program_with_parameters(states, inputs, fired, &[])
+    }
+
+    pub(crate) fn selected_program_with_parameters(
+        &self,
+        states: &[I],
+        inputs: &[I],
+        fired: &[usize],
+        operators: &[I],
+    ) -> Result<std::borrow::Cow<'_, Program>, Error> {
         let mut nodes = vec![I::ZERO; self.program.nodes.len()];
         for (name, &value) in self.driven.iter().zip(inputs) {
             let index = self
@@ -1178,13 +1343,28 @@ impl EventModel {
         }
         let mut p = self.program.clone();
         for c in &mut p.contributions {
+            let expression = self.resolve_root_selects(&c.rhs, fired)?;
             c.rhs = crate::continuous::resolve_selection(
-                &self.resolve_root_selects(&c.rhs, fired)?,
+                &expression,
                 &self.program,
                 &self.driven,
                 &nodes,
                 states,
-            )?;
+            )
+            .or_else(|error| {
+                if error.kind == "unsupported_transient" && !operators.is_empty() {
+                    crate::causal_voltage::resolve(
+                        &expression,
+                        &self.program,
+                        &self.driven,
+                        &nodes,
+                        states,
+                        operators,
+                    )
+                } else {
+                    Err(error)
+                }
+            })?;
         }
         Ok(std::borrow::Cow::Owned(p))
     }
@@ -1221,10 +1401,14 @@ impl EventModel {
                     else {
                         return false;
                     };
-                    crate::event_accuracy::GuardBounds::expressions(
+                    crate::event_accuracy::GuardBounds::project_with_dc(
                         &self.program,
                         &self.driven,
                         &[Some(guard), Some(&difference)],
+                        None,
+                        false,
+                        false,
+                        self.dc_projection.as_deref(),
                     )
                     .is_ok_and(|b| b.same_zero_set(0, 1))
                 });
@@ -1278,25 +1462,6 @@ impl EventModel {
         )
     }
 
-    /// `circuit_at` for same-window settlement trials: the scratch plan holds
-    /// only structure (nodes, branch grouping, labels) that this model fixes,
-    /// never candidate state, operator or input values, so reuse cannot leak a
-    /// previous trial's numbers into a later one.
-    pub(crate) fn circuit_at_with_scratch(
-        &self,
-        states: &[f64],
-        operators: &[f64],
-        inputs: &[I],
-        scratch: &mut Option<crate::assembly::AssemblyPlan>,
-    ) -> Result<Circuit, Error> {
-        Circuit::new_with_scratch(
-            self.bound_circuit_program_at(states, operators, inputs)?,
-            &self.driven,
-            self.tolerances.clone(),
-            scratch,
-        )
-    }
-
     fn bound_circuit_program_at(
         &self,
         states: &[f64],
@@ -1304,7 +1469,12 @@ impl EventModel {
         inputs: &[I],
     ) -> Result<Program, Error> {
         let bounds: Vec<_> = states.iter().copied().map(I::point).collect();
-        let selected = self.selected_program_at_roots(&bounds, inputs, &[])?;
+        let selected = self.selected_program_with_parameters(
+            &bounds,
+            inputs,
+            &[],
+            &operators.iter().copied().map(I::point).collect::<Vec<_>>(),
+        )?;
         let rhs = selected
             .contributions
             .iter()
@@ -1342,17 +1512,37 @@ impl EventModel {
         before: &[f64],
         operators: &[f64],
     ) -> Result<Circuit, Error> {
-        self.event_trial_program(&self.program, selection, before, operators)
-            .and_then(|program| Circuit::new(program, &self.driven, self.tolerances.clone()))
+        self.event_circuit_program(&self.program, selection, before, operators)
     }
 
-    fn event_trial_program(
+    #[cfg(test)]
+    pub(crate) fn event_circuit_program(
         &self,
         selected: &Program,
         selection: &Selection,
         before: &[f64],
         operators: &[f64],
-    ) -> Result<Program, Error> {
+    ) -> Result<Circuit, Error> {
+        self.event_circuit_program_impl(selected, selection, before, operators, None)
+    }
+    pub(crate) fn event_circuit_program_with_inputs(
+        &self,
+        selected: &Program,
+        selection: &Selection,
+        before: &[f64],
+        operators: &[f64],
+        inputs: &[f64],
+    ) -> Result<Circuit, Error> {
+        self.event_circuit_program_impl(selected, selection, before, operators, Some(inputs))
+    }
+    fn event_circuit_program_impl(
+        &self,
+        selected: &Program,
+        selection: &Selection,
+        before: &[f64],
+        operators: &[f64],
+        inputs: Option<&[f64]>,
+    ) -> Result<Circuit, Error> {
         let initial: Vec<_> = before
             .iter()
             .map(|&value| AffineState {
@@ -1371,7 +1561,31 @@ impl EventModel {
             let mut local = initial.clone();
             for &index in indices {
                 let (state, rhs) = &self.actions[*event][index];
-                local[*state] = rhs.substitute(&local)?;
+                local[*state] = if self.causal_numeric[*event] {
+                    let inputs = inputs.ok_or_else(|| {
+                        Error::new("invalid_inputs", "sampled event needs driven input values")
+                    })?;
+                    let mut nodes = vec![0.; self.program.nodes.len()];
+                    for (name, &value) in self.driven.iter().zip(inputs) {
+                        nodes[self.program.nodes.iter().position(|n| n == name).unwrap()] = value;
+                    }
+                    let values = local
+                        .iter()
+                        .map(|v| v.value(&nodes, &[]))
+                        .collect::<Result<Vec<_>, _>>()?;
+                    let value = crate::event_numeric::value(
+                        &self.action_expressions[*event][index],
+                        &self.program,
+                        &self.program.events[*event].origin.instance,
+                        &nodes,
+                        &values,
+                    )?;
+                    let mut fixed = initial[*state].clone();
+                    fixed.constant = value;
+                    fixed
+                } else {
+                    rhs.substitute(&local)?
+                };
                 if self.program.states[*state].kind == StateKind::Integer {
                     // Integer updates were checked to use integral state-only
                     // arithmetic. Catch overflow before a floating linear solve.
@@ -1405,22 +1619,7 @@ impl EventModel {
         for (contribution, rhs) in program.contributions.iter_mut().zip(&rhs) {
             contribution.rhs = rhs.substitute(&updates)?.bind(&[], operators)?;
         }
-        Ok(program)
-    }
-
-    /// `event_circuit_program` for same-window settlement trials; see
-    /// [`EventModel::circuit_at_with_scratch`]. The affine state updates are
-    /// rebuilt from `before` and this trial's operator values on every call.
-    pub(crate) fn event_circuit_program_with_scratch(
-        &self,
-        selected: &Program,
-        selection: &Selection,
-        before: &[f64],
-        operators: &[f64],
-        scratch: &mut Option<crate::assembly::AssemblyPlan>,
-    ) -> Result<Circuit, Error> {
-        let program = self.event_trial_program(selected, selection, before, operators)?;
-        Circuit::new_with_scratch(program, &self.driven, self.tolerances.clone(), scratch)
+        Circuit::new(program, &self.driven, self.tolerances.clone())
     }
 
     fn bind(&self, states: &[f64], operators: &[f64]) -> Result<Program, Error> {
@@ -1595,7 +1794,20 @@ impl EventModel {
                 self.guard_operators.push(BTreeSet::new());
             }
         }
-        self.conditions.check_dependencies(&affected)?;
+        let condition_affected: Vec<_> = event_affected
+            .iter()
+            .enumerate()
+            .map(|(node, &stateful)| {
+                stateful
+                    || operator_influence[node].iter().any(|&op| {
+                        !matches!(
+                            self.program.operators[op],
+                            crate::ir::OperatorSpec::Transition { .. }
+                        )
+                    })
+            })
+            .collect();
+        self.conditions.check_dependencies(&condition_affected)?;
         crate::reset_dependencies::check(
             &self.program,
             &self.rhs,

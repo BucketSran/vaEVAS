@@ -118,7 +118,8 @@ fn interval_evaluate(expr: &Expression, values: &[I]) -> Result<IntervalValue, E
     let count = values.len();
     let mut gradient = vec![I::ZERO; count];
     let value = match expr {
-        Expression::ArrayRead { .. }
+        Expression::IntegerPrimitive { .. }
+        | Expression::ArrayRead { .. }
         | Expression::CheckedInteger { .. }
         | Expression::CheckedIndex { .. }
         | Expression::EventMath { .. }
@@ -198,35 +199,14 @@ impl Circuit {
         tolerances: Tolerances,
     ) -> Result<Self, Error> {
         let _timing = crate::diagnostics::span("circuit.prepare");
-        let assembled = assemble(program, driven_names, tolerances)?;
-        Ok(Self::from_assembled(assembled))
-    }
 
-    /// `Circuit::new` for trial rebuilds that share one assembly structure.
-    /// The scratch plan skips only validation, grouping and label work; every
-    /// numeric equation value is recomputed in the original contribution
-    /// order, so a reused build is bit-identical to `Circuit::new`.
-    pub(crate) fn new_with_scratch(
-        program: Program,
-        driven_names: &[String],
-        tolerances: Tolerances,
-        scratch: &mut Option<crate::assembly::AssemblyPlan>,
-    ) -> Result<Self, Error> {
-        let _timing = crate::diagnostics::span("circuit.prepare");
-        let assembled =
-            crate::assembly::assemble_with_plan(program, driven_names, tolerances, scratch)?;
-        Ok(Self::from_assembled(assembled))
-    }
-
-    fn from_assembled(
-        AssembledCircuit {
+        let AssembledCircuit {
             nodes,
             equations,
             driven,
             unknown,
             tolerances,
-        }: AssembledCircuit,
-    ) -> Self {
+        } = assemble(program, driven_names, tolerances)?;
         let affine_factor = equations
             .iter()
             .all(|eq| eq.nonlinear.is_empty())
@@ -260,7 +240,7 @@ impl Circuit {
         } else {
             Vec::new()
         };
-        Self {
+        Ok(Self {
             nodes,
             equations,
             driven,
@@ -270,7 +250,7 @@ impl Circuit {
             unknown_columns,
             driven_coefficients,
             dense_residuals,
-        }
+        })
     }
 
     fn waveform_jacobian_rows(&self, solution: &Solution) -> Result<Vec<linear::Row>, Error> {
@@ -393,6 +373,16 @@ impl Circuit {
         solution: &Solution,
         input_bounds: &[I],
     ) -> Result<(), Error> {
+        self.waveform_bounds(solution, input_bounds).map(|_| ())
+    }
+
+    /// Return the enclosure already established by the original-relation proof.
+    /// This exposes its certificate without a second solve or weaker acceptance.
+    pub(crate) fn waveform_bounds(
+        &self,
+        solution: &Solution,
+        input_bounds: &[I],
+    ) -> Result<Vec<I>, Error> {
         let _timing = crate::diagnostics::span("voltage.waveform_certificate");
 
         if input_bounds.len() != self.driven.len() {
@@ -450,7 +440,7 @@ impl Circuit {
             }
         }
         if self.unknown.is_empty() {
-            return Ok(());
+            return Ok(point_values);
         }
         let n = self.unknown.len();
         if self.equations.len() != n {
@@ -495,7 +485,11 @@ impl Circuit {
                 solution.voltages[node],
                 box_values[node],
             ) {
-                return Ok(());
+                // Mean value theorem: each true root differs from the center
+                // by -F(center,U)/F'(X,U). Preserve that image, not only success.
+                point_values[node] =
+                    I::point(solution.voltages[node]) - residuals[0] / jacobian[0][0];
+                return Ok(point_values);
             }
             Some(jacobian)
         } else {
@@ -598,7 +592,10 @@ impl Circuit {
                 ));
             }
         }
-        Ok(())
+        for (j, &node) in self.unknown.iter().enumerate() {
+            point_values[node] = krawczyk[j];
+        }
+        Ok(point_values)
     }
 
     /// A stateless operating point. No previous solution or physical history is

@@ -40,7 +40,8 @@ fn observation_seed(
     model: &EventModel,
     phases: &[(Frame, Vec<ScheduledEvent>)],
     phase: usize,
-) -> Frame {
+    time: f64,
+) -> Result<Frame, Error> {
     let mut seed = phases[phase].0.clone();
     let mut physical = phase;
     while physical > 0 && passive_batch(model, &phases[physical].1) {
@@ -49,7 +50,8 @@ fn observation_seed(
     if physical != phase {
         seed.operators = phases[physical].0.operators.clone();
     }
-    seed
+    seed.operators.rebase_source_observation(time)?;
+    Ok(seed)
 }
 
 // Held roots already have their final certificates. History roots need the
@@ -167,7 +169,7 @@ impl PreparedEvents {
             });
             if let Some(time) = forced {
                 if time != next.time {
-                    let seed = observation_seed(model, &phases, phases.len() - 1);
+                    let seed = observation_seed(model, &phases, phases.len() - 1, time)?;
                     next = prepare_root_window(
                         model,
                         trajectory,
@@ -244,7 +246,7 @@ impl PreparedEvents {
                 }
                 phase = index;
             }
-            let seed = observation_seed(model, &phases, phase);
+            let seed = observation_seed(model, &phases, phase, time)?;
             outputs.push(prepare_root_window(
                 model,
                 trajectory,
@@ -507,6 +509,7 @@ mod tests {
                 .unwrap();
             let controller = Controller {
                 accepted: Frame {
+                    value_proofs: Default::default(),
                     time_proofs: Default::default(),
                     time: 0.,
                     solution: circuit.solve(&[0.]).unwrap(),
@@ -641,6 +644,7 @@ mod tests {
             .unwrap();
         let mut controller = Controller {
             accepted: Frame {
+                value_proofs: Default::default(),
                 time_proofs: Default::default(),
                 time: 0.,
                 solution: circuit.solve(&[0.]).unwrap(),
@@ -766,6 +770,7 @@ mod tests {
             (
                 Controller {
                     accepted: Frame {
+                        value_proofs: Default::default(),
                         time_proofs: Default::default(),
                         time: 0.,
                         solution: circuit.solve(&[0.3]).unwrap(),
@@ -1263,6 +1268,7 @@ mod passive_seed_review {
                 operators,
                 state_bounds: states.iter().copied().map(I::point).collect(),
                 states,
+                value_proofs: Default::default(),
                 time_proofs: Default::default(),
             }
         };
@@ -1297,7 +1303,7 @@ mod passive_seed_review {
         ];
         assert_eq!(phases[1].0.operators.values(0.75).unwrap()[0], 1.);
         for (phase, count) in [(1, 1.), (2, 2.)] {
-            let seed = observation_seed(&model, &phases, phase);
+            let seed = observation_seed(&model, &phases, phase, 0.75).unwrap();
             assert_eq!(seed.states[1], count);
             assert_eq!(seed.operators.values(0.75).unwrap()[0], 0.75);
             let query = prepare_root_window(
@@ -1333,11 +1339,12 @@ mod passive_seed_review {
             assert_eq!(future.solution.voltages[1], 1.);
             assert_eq!(future.states[1], count);
         }
-        let seed = observation_seed(&model, &phases, 4);
+        let seed = observation_seed(&model, &phases, 4, 1.875).unwrap();
         assert_eq!(seed.states, vec![0., 3.]);
         assert_eq!(seed.operators.values(1.875).unwrap()[0], 0.875);
         assert_eq!(
-            observation_seed(&model, &phases, 3)
+            observation_seed(&model, &phases, 3, 1.875)
+                .unwrap()
                 .operators
                 .values(1.875)
                 .unwrap()[0],
@@ -1346,7 +1353,8 @@ mod passive_seed_review {
         let mut mixed = phases.clone();
         mixed[4].1.push(calendar[2].clone());
         assert_eq!(
-            observation_seed(&model, &mixed, 4)
+            observation_seed(&model, &mixed, 4, 1.875)
+                .unwrap()
                 .operators
                 .values(1.875)
                 .unwrap(),

@@ -933,7 +933,7 @@ fn build_segment(
             .collect(),
         tolerances: tolerances.clone(),
         initial,
-        steps: Arc::new(StepHistory::default()),
+        steps: Arc::new(Vec::new()),
         start,
         event_dependent: false,
         event_seed: None,
@@ -1130,7 +1130,7 @@ mod tests {
         // Start a controller with the same accepted IC, force one invalid
         // candidate, then repair the request and retry in that same controller.
         let mut controller = flow.clone();
-        controller.steps = Arc::new(super::StepHistory::default());
+        controller.steps = Arc::new(vec![]);
         program.step_bounds[0].value = Expression::Affine {
             constant: -1.,
             terms: vec![],
