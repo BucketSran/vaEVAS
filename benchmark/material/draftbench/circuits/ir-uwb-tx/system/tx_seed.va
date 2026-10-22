@@ -1,0 +1,71 @@
+`include "constants.vams"
+`include "disciplines.vams"
+// Spectre compiles each ahdl_include file on its own, so the submodules are
+// included here; a testbench includes only this file.
+`include "../module/serial_to_symbol6.va"
+`include "../module/dppm_fsk_encoder8.va"
+`include "../module/ro_frequency_cal.va"
+`include "../module/master_ro16.va"
+`include "../module/pulse_generator.va"
+`include "../module/ro_scheduler8.va"
+`include "../module/rf_ro_branch.va"
+`include "../module/envelope_lane.va"
+`include "../module/tx_output.va"
+
+// 8DPPM + 8FSK, 4.032 Gb/s seed transmitter (SPEC.md section 3).
+// bits (bclk, din) -> serial-to-symbol -> encoder -> pulse generator ->
+// scheduler -> 8 RF branch oscillators -> 2 envelope lanes -> combiner/PA.
+// The 16-phase master RO is calibrated against ref by the counter
+// calibration; the PG transmits only from the first full frame after done
+// (en = done, sampled at frame edges). The CDC between bclk and the RO is
+// still open (SPEC.md section 7): bclk must be frequency-locked to the
+// calibrated RO, for example both derived from the same crystal.
+// clk672 copies the master-RO ph[0] (frame clock) for observation.
+module uwb_tx_seed(bclk, din, rst, ref, cal_start, pol, outp, outn, done, fail, conflict, nsup, clk672);
+    input bclk, din, rst, ref, cal_start, pol;
+    output outp, outn, done, fail, conflict, nsup, clk672;
+    electrical bclk, din, rst, ref, cal_start, pol, outp, outn, done, fail, conflict, nsup, clk672;
+
+    parameter integer n_pre = 2 from [1:15];
+    parameter integer n_win = 192 from [1:inf);
+    parameter integer code_init = 512 from [0:1023];
+    parameter real g_pa = 1.0;
+    parameter real vcm = 0.5;
+    parameter real f0 = 4.5e9, f1 = 4.928571428571429e9, f2 = 5.357142857142857e9, f3 = 5.785714285714286e9;
+    parameter real f4 = 6.214285714285714e9, f5 = 6.642857142857143e9, f6 = 7.071428571428571e9, f7 = 7.5e9;
+
+    electrical [5:0] sym;
+    electrical [2:0] pos, inc, fcode, sel_a, sel_b;
+    electrical [7:0] req, pwr, pre, rel, st, vro;
+    electrical [9:0] code;
+    electrical [15:0] ph;
+    electrical sym_valid, enc_valid, busy, pre_a, rf_a, pol_a, pre_b, rf_b, pol_b, overrun;
+    electrical gate_a, gate_b, env_a, env_b;
+
+    uwb_serial_to_symbol6 Xs2p (bclk, din, rst, sym, sym_valid);
+    uwb_dppm_fsk_encoder8 Xenc (sym, sym_valid, rst, pos, inc, fcode, req, enc_valid);
+    uwb_ro_frequency_cal #(.n_win(n_win), .code_init(code_init))
+        Xcal (ref, ph[0], cal_start, rst, code, done, fail, busy);
+    uwb_master_ro16 Xro (code, ph);
+    uwb_pulse_generator #(.n_pre(n_pre))
+        Xpg (ph, pos, fcode, pol, enc_valid, done, rst,
+             pre_a, rf_a, sel_a, pol_a, pre_b, rf_b, sel_b, pol_b, overrun);
+    uwb_ro_scheduler8 #(.n_pre(n_pre))
+        Xsch (pre_a, rf_a, sel_a, pre_b, rf_b, sel_b, rst, pwr, pre, rel, gate_a, gate_b, conflict, nsup, st);
+    uwb_rf_ro_branch #(.f_rf(f0)) Xbr0 (pwr[0], pre[0], rel[0], vro[0]);
+    uwb_rf_ro_branch #(.f_rf(f1)) Xbr1 (pwr[1], pre[1], rel[1], vro[1]);
+    uwb_rf_ro_branch #(.f_rf(f2)) Xbr2 (pwr[2], pre[2], rel[2], vro[2]);
+    uwb_rf_ro_branch #(.f_rf(f3)) Xbr3 (pwr[3], pre[3], rel[3], vro[3]);
+    uwb_rf_ro_branch #(.f_rf(f4)) Xbr4 (pwr[4], pre[4], rel[4], vro[4]);
+    uwb_rf_ro_branch #(.f_rf(f5)) Xbr5 (pwr[5], pre[5], rel[5], vro[5]);
+    uwb_rf_ro_branch #(.f_rf(f6)) Xbr6 (pwr[6], pre[6], rel[6], vro[6]);
+    uwb_rf_ro_branch #(.f_rf(f7)) Xbr7 (pwr[7], pre[7], rel[7], vro[7]);
+    uwb_envelope_lane Xenva (gate_a, ph[0], env_a);
+    uwb_envelope_lane Xenvb (gate_b, ph[0], env_b);
+    uwb_tx_output #(.g_pa(g_pa), .vcm(vcm))
+        Xout (vro, env_a, env_b, gate_a, gate_b, sel_a, sel_b, pol_a, pol_b, outp, outn);
+
+    analog begin
+        V(clk672) <+ V(ph[0]);
+    end
+endmodule

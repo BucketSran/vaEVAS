@@ -1,0 +1,73 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// 8DPPM + 8FSK symbol encoder for the seed chain (SPEC.md 4.3).
+// The word is taken on the falling edge of sym_valid. sym[5:3] is the
+// Gray-coded DPPM increment and sym[2:0] the Gray-coded FSK index. The
+// absolute position follows P[n] = (P[n-1] + D[n]) mod 8 with P[-1] = 0.
+// req is a one-hot frequency request only; it is not a supply, precharge or
+// RF enable. Data outputs change t_enc after the word is taken; enc_valid
+// rises t_ev after it and stays high for t_pw, so every accepted word,
+// including a repeat of the previous one, gives a new rising edge.
+module uwb_dppm_fsk_encoder8(sym, sym_valid, rst, pos, inc, fcode, req, enc_valid);
+    input [5:0] sym;
+    input sym_valid, rst;
+    output [2:0] pos, inc, fcode;
+    output [7:0] req;
+    output enc_valid;
+    electrical [5:0] sym;
+    electrical sym_valid, rst, enc_valid;
+    electrical [2:0] pos, inc, fcode;
+    electrical [7:0] req;
+
+    parameter real vdd = 1.0;
+    parameter real vth = 0.5;
+    parameter real tr = 2p from (0:inf);
+    parameter real t_enc = 10p from (0:inf);   // word to data outputs
+    parameter real t_ev = 30p from (0:inf);    // word to enc_valid rising edge
+    parameter real t_pw = 400p from (0:inf);   // enc_valid high time
+
+    integer g5, g4, g3, g2, g1, g0;   // sampled Gray bits
+    integer d, f, p;                  // state after the last word
+    integer d_out, f_out, p_out, has_word, ev;
+    real t_data, t_ev_on, t_ev_off;
+    genvar i;
+
+    analog begin
+        @(initial_step) begin
+            d = 0; f = 0; p = 0; d_out = 0; f_out = 0; p_out = 0; has_word = 0; ev = 0;
+            t_data = 1.0; t_ev_on = 1.0; t_ev_off = 1.0;
+        end
+        @(cross(V(rst) - vth, +1)) begin
+            d = 0; f = 0; p = 0; d_out = 0; f_out = 0; p_out = 0; has_word = 0; ev = 0;
+            t_data = 1.0; t_ev_on = 1.0; t_ev_off = 1.0;
+        end
+        @(cross(V(sym_valid) - vth, -1)) begin
+            if (V(rst) < vth) begin
+                g5 = V(sym[5]) > vth; g4 = V(sym[4]) > vth; g3 = V(sym[3]) > vth;
+                g2 = V(sym[2]) > vth; g1 = V(sym[1]) > vth; g0 = V(sym[0]) > vth;
+                // Gray to binary: b2 = g2, b1 = g2^g1, b0 = g2^g1^g0
+                d = 4 * g5 + 2 * (g5 ^ g4) + (g5 ^ g4 ^ g3);
+                f = 4 * g2 + 2 * (g2 ^ g1) + (g2 ^ g1 ^ g0);
+                p = (p + d) % 8;
+                t_data = $abstime + t_enc;
+                t_ev_on = $abstime + t_ev;
+                t_ev_off = $abstime + t_ev + t_pw;
+            end
+        end
+        @(timer(t_data)) begin
+            p_out = p; d_out = d; f_out = f; has_word = 1;
+        end
+        @(timer(t_ev_on)) ev = 1;
+        @(timer(t_ev_off)) ev = 0;
+
+        for (i = 0; i < 3; i = i + 1) begin
+            V(pos[i]) <+ transition(((p_out >> i) & 1) * vdd, 0, tr);
+            V(inc[i]) <+ transition(((d_out >> i) & 1) * vdd, 0, tr);
+            V(fcode[i]) <+ transition(((f_out >> i) & 1) * vdd, 0, tr);
+        end
+        for (i = 0; i < 8; i = i + 1)
+            V(req[i]) <+ transition((has_word && f_out == i) * vdd, 0, tr);
+        V(enc_valid) <+ transition(ev * vdd, 0, tr);
+    end
+endmodule
