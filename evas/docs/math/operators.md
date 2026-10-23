@@ -905,14 +905,15 @@ LRM 2.4 §4.5.4 的 `ramp_generator` 每次求值先执行 `reset = 0`，`@(time
 普通求值读到的是清零后的别名，事件写入的状态槽没有普通读者，原降级因此得到常数 0 的 reset，从不复位。
 电平 reset 无法表示零长度的 assert；[idt_pulse_reset.py](../../src/evas/idt_pulse_reset.py) 只用已认证的 IR 改写：
 
-- 新增隐藏 integer 奇偶状态 `p`（初值 0，名为 `<assert>@idt_pulse<k>`）。每个置位事件体先恢复普通赋值的值
-  （源码中它先于事件执行），体末若 assert 非零则 `p = 1 - p`。
+- 新增隐藏 integer 奇偶状态 `p`（初值 0，名为 `<assert>@idt_pulse<k>`）。置位事件体末若 assert 非零则 `p = 1 - p`。
+  事件体若可能在某条路径上不写 assert，先恢复普通赋值的值（源码中它先于事件执行）。
 - `idt(x, c, assert) = A + (B - c)`，其中 `A = idt(x, c, p)`、`B = idt(x, c, 1 - p)`。任一时刻 A、B 恰有一个被电平
   reset 保持为 c，另一个从上次翻转（或 t=0）释放，所以结果为 c 加上从最近一次脉冲起的积分。B 被保持时
   `B - c` 精确为 0；两份历史各自沿用上文的前缀差、事件时间包围和电压验收。
 
 事件时刻本身报告事件后的值 c（`transient` 输出事件后值，与电平 reset 一致）。同一时刻两个置位事件块都写 `p`，
-仍按既有同刻写者规则拒绝（`event_conflict`）。
+仍按既有同刻写者规则拒绝（`event_conflict`）。需要恢复的事件块总会写 assert 的状态槽；同一时刻另一块也写该 assert 时，
+即使原块这次没有走到写入路径，也报 `event_conflict`。这是保守拒绝，main 在这种情况下可能给出正确值。
 
 准入范围：assert 是裸 integer 变量；恰有一条无条件顶层普通赋值，其值为实例常数；置位事件为 cross、timer 或其 OR，
 源码位置在该赋值之后、idt 调用之前。普通值为非零常数时 assert 在其余时刻非零，输出始终为 c，沿用原降级。
@@ -923,9 +924,9 @@ LRM 2.4 §4.5.4 的 `ramp_generator` 每次求值先执行 `reset = 0`，`@(time
 assert 表达式（如 `2*reset`）、final_step 置位、多条或条件普通赋值、跨文件或宏展开导致源码顺序无法比较。
 普通赋值先于事件的 real assert 仍由 `unsupported_local_event` 拒绝。
 
-独立回归 [test_idt_pulse_reset.py](../../tests/test_idt_pulse_reset.py) 以有理数积分的锯齿闭式解覆盖 timer、cross、OR、
-条件写入、非零 IC 与驱动输入、两个调用点、多实例和反馈积分（连续网络路径）；对照覆盖区间保持、`$abstime` 偏移、
-两种不构成复位的源码顺序及同刻冲突。Spectre 对照尚未运行；旧 EVAS 0.8.7 忽略 assert 参数，不能作对照。
+独立回归 [test_idt_pulse_reset.py](../../tests/test_idt_pulse_reset.py) 以有理数积分的锯齿闭式解覆盖 timer、cross、
+OR 的两个分支、负 assert、条件写入、非零 IC 与驱动输入、两个调用点、多实例和反馈积分（连续网络路径）；对照覆盖区间保持、
+`$abstime` 偏移、两种不构成复位的源码顺序、同刻冲突及上述保守拒绝。Spectre 对照尚未运行；旧 EVAS 0.8.7 忽略 assert 参数，不能作对照。
 
 ## laplace_nd
 

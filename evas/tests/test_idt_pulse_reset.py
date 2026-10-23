@@ -130,10 +130,26 @@ class PulseAssertResets(unittest.TestCase):
         expected = sawtooth(times, [1 * US, 2 * US, 3 * US], [[0, 1], [4 * US, 1]])
         self.assertClose(values(result), expected, CROSS_TOL, times)
 
-    def test_or_trigger_pulse_restarts_once_per_instant(self):
+    def test_or_trigger_pulses_from_each_leaf(self):
+        # u rises through 2 at the segment midpoints 2 us (with the timer
+        # leaf) and 2.5 us (cross leaf alone). The OR body runs once per
+        # instant; two toggles in one evaluation would cancel the restart.
+        points = [[0, 0], [1.9 * US, 0], [2.1 * US, 4], [2.3 * US, 0],
+                  [2.4 * US, 0], [2.6 * US, 4], [2.8 * US, 0], [4 * US, 0]]
         body = """
           reset = 0;
           @(timer(1.0e-6, 1.0e-6) or cross(V(u,r) - 2, +1)) reset = 1;
+          V(y,r) <+ idt(1.0e6, 0.0, reset);
+        """
+        result, _ = run(body, points=points, times=self.TIMES)
+        expected = sawtooth(self.TIMES, [1 * US, 2 * US, 2.5 * US, 3 * US], [[0, 1], [4 * US, 1]])
+        self.assertClose(values(result), expected, CROSS_TOL, self.TIMES)
+
+    def test_negative_assert_value_also_restarts(self):
+        # Any nonzero assert restarts, not only a positive one.
+        body = """
+          reset = 0;
+          @(timer(1.0e-6, 1.0e-6)) reset = -1;
           V(y,r) <+ idt(1.0e6, 0.0, reset);
         """
         result, points = run(body, times=self.TIMES)
@@ -289,6 +305,21 @@ class PulseAssertBoundaries(unittest.TestCase):
           @(timer(1.0e-6, 1.0e-6)) reset = 1;
           @(timer(2.0e-6, 2.0e-6)) reset = 1;
           V(y,r) <+ idt(1.0e6, 0.0, reset);
+        """
+        with self.assertRaisesRegex(KernelError, 'event_conflict'):
+            run(body, times=self.TIMES)
+
+    def test_conditional_pulse_beside_a_simultaneous_writer_is_refused(self):
+        # Known conservative limit: a pulsing block that may leave the assert
+        # unwritten first restores the ordinary value, so it always writes the
+        # assert slot. A second block writing the same assert at the same
+        # instant (here placed after the call, so main's ramp was right) then
+        # becomes the existing same-time writer conflict, not a wrong value.
+        body = """
+          reset = 0;
+          @(timer(1.0e-6, 1.0e-6)) if (V(u,r) > 5) reset = 1;
+          V(y,r) <+ idt(1.0e6, 0.0, reset);
+          @(timer(1.0e-6, 1.0e-6)) reset = 1;
         """
         with self.assertRaisesRegex(KernelError, 'event_conflict'):
             run(body, times=self.TIMES)

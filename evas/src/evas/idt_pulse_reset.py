@@ -13,8 +13,9 @@ A level reset cannot express a zero-length assert. The admitted slice is lowered
 with existing certified IR only:
 
 * a hidden integer parity ``p`` (initial 0) is toggled at the end of each
-  pulsing event body when the assert value at the call site is nonzero; the
-  body first restores the ordinary value, which the source executes before it;
+  pulsing event body when the assert value at the call site is nonzero; a body
+  that may leave the assert unwritten first restores the ordinary value, which
+  the source executes before it;
 * ``idt(x, c, assert) = A + (B - c)`` with ``A = idt(x, c, p)`` and
   ``B = idt(x, c, 1 - p)``.
 
@@ -45,6 +46,8 @@ class Plan:
     slot: int
     events: tuple[int, ...]
     ordinary: float
+    # Events whose body may leave the assert unwritten on some path.
+    restore: frozenset[int] = frozenset()
 
 
 def _fail(compiler, expr, message):
@@ -83,6 +86,14 @@ def _writers(statements, name, guards=(), top=True):
 
 def _writes(statements, name):
     return next(_writers(statements, name), None) is not None
+
+
+def _total(statements, name):
+    """True when every path through the body assigns the scalar name."""
+    return any(isinstance(item, SyntaxAssignment) and item.name == name and item.index is None
+               or isinstance(item, SyntaxConditional) and _total(item.then_body, name)
+               and _total(item.else_body, name)
+               for item in statements)
 
 
 def plan(compiler, expr, resolve):
@@ -144,7 +155,10 @@ def plan(compiler, expr, resolve):
     if (model.variables[direct] != 'integer' or direct not in compiler.state_ids
             or direct not in compiler.ordinary_alias_variables):
         _fail(compiler, expr, f"{direct!r} set by an event must be an integer cleared by an ordinary assignment")
-    if not _before(single.token, call):
+    order = _before(single.token, call)
+    if order is None:
+        _fail(compiler, expr, f"{direct!r} ordinary assignment and idt call order is not provable")
+    if not order:
         _fail(compiler, expr, f"{direct!r} must be assigned before the idt call")
     for _, event in pulsing:
         if not _before(single.token, event.token) or not _before(event.token, call):
@@ -156,7 +170,8 @@ def plan(compiler, expr, resolve):
         _fail(compiler, expr, f"{direct!r} ordinary value must be an instance constant when an event sets it")
     if ordinary.constant != 0:
         return None  # Nonzero at every other instant: the output is IC throughout.
-    return Plan(compiler.state_ids[direct], tuple(index for index, _ in pulsing), ordinary.constant)
+    restore = frozenset(index for index, event in pulsing if not _total(event.body, direct))
+    return Plan(compiler.state_ids[direct], tuple(index for index, _ in pulsing), ordinary.constant, restore)
 
 
 def emit(compiler, plan, expr, value, ic, origin):
@@ -173,9 +188,11 @@ def emit(compiler, plan, expr, value, ic, origin):
     first = len(compilation.events) - len(compiler.model.events)
     for index in plan.events:
         token = compiler.model.events[index].token
-        event = compilation.events[first + index]
-        if (event.origin.line, event.origin.column, event.origin.instance) != (token.line, token.column, compiler.instance.name):
-            raise CompileError("idt assert pulse lost its event identity", code='unsupported_idt_pulse_reset',
+        event = compilation.events[first + index] if first >= 0 else None
+        if event is None or (event.origin.line, event.origin.column, event.origin.instance) != (
+                token.line, token.column, compiler.instance.name):
+            raise CompileError(f"{compiler.model.source}:{token.line}:{token.column}: idt assert pulse lost its "
+                               "event identity", code='unsupported_idt_pulse_reset',
                                token=token, instance=compiler.instance.name)
     slot = compilation.states[plan.slot]
     parity = len(compilation.states)
@@ -188,12 +205,17 @@ def emit(compiler, plan, expr, value, ic, origin):
     # Integer assert != 0, written with the IR's ordered relations.
     toggle = make(Conditional, 'ge', assert_value, zero,
                   (make(Conditional, 'le', assert_value, zero, (), flip, origin),), flip, origin)
-    restored = getattr(compiler, 'idt_pulse_restored', set())
-    compiler.idt_pulse_restored = restored
+    # A body that may leave the assert unwritten first restores the ordinary
+    # value. That makes it an unconditional writer of the assert slot, so a
+    # simultaneous block writing the same assert becomes an event_conflict.
+    # A body that always writes the assert needs no restore.
+    restored = getattr(compiler, 'idt_pulse_restored', None)
+    if restored is None:
+        restored = compiler.idt_pulse_restored = set()
     for index in plan.events:
         event = compilation.events[first + index]
         body = (*event.body, toggle)
-        if (first + index, plan.slot) not in restored:
+        if index in plan.restore and (first + index, plan.slot) not in restored:
             restored.add((first + index, plan.slot))
             body = (make(Assignment, plan.slot, make(Affine, plan.ordinary, ())), *body)
         compilation.events[first + index] = replace(event, body=body)
