@@ -1,0 +1,119 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Pulse generator of the IR-UWB TX seed chain (reference solution).
+// Same model as circuits/ir-uwb-tx/module/pulse_generator.va, renamed.
+// Timing comes from the 16 master-RO taps: a rising ph[0] edge starts a
+// frame, and tap j rises j*delta later. The PG keeps the absolute index a of
+// the latest tap edge (16 per frame). A descriptor (P, F, pol) is latched on
+// the rising edge of enc_valid. At the start of frame k, if en was high at
+// that ph[0] edge, the pending descriptor is scheduled into frame k+1:
+//   pulse start s = 16(k+1) + P, end e = s + n_width, precharge p = s - n_pre
+// (all tap indices). Consecutive symbols alternate between lane a and lane b;
+// a lane raises pre_x at tap p, lowers pre_x and raises rf_x at tap s, and
+// lowers rf_x at tap e. sel_x/pol_x change when the symbol is scheduled,
+// before pre_x rises; consumers latch them on the rising pre_x (or rf_x when
+// n_pre = 0). A descriptor overwritten before it is scheduled raises an
+// overrun pulse. T_launch_lead = 0, so release coincides with rf_x.
+module pulse_generator(ph, pos, fcode, pol, enc_valid, en, rst,
+                       pre_a, rf_a, sel_a, pol_a, pre_b, rf_b, sel_b, pol_b, overrun);
+    input [15:0] ph;
+    input [2:0] pos, fcode;
+    input pol, enc_valid, en, rst;
+    output pre_a, rf_a, pol_a, pre_b, rf_b, pol_b, overrun;
+    output [2:0] sel_a, sel_b;
+    electrical [15:0] ph;
+    electrical [2:0] pos, fcode, sel_a, sel_b;
+    electrical pol, enc_valid, en, rst, pre_a, rf_a, pol_a, pre_b, rf_b, pol_b, overrun;
+
+    parameter integer n_width = 9 from [1:16];
+    parameter integer n_pre = 2 from [0:15];
+    parameter real t_ovr = 200p from (0:inf);
+    parameter real vdd = 1.0;
+    parameter real vth = 0.5;
+    parameter real tr = 2p from (0:inf);
+
+    integer fc, a, lane;                 // frame count, absolute tap index, next lane
+    integer pend, pend_p, pend_f, pend_pol;
+    integer act_a, s_a, e_a, p_a, f_a, q_a, pre_a_q, rf_a_q;
+    integer act_b, s_b, e_b, p_b, f_b, q_b, pre_b_q, rf_b_q;
+    integer ovr;
+    real t_ovr_off;
+    genvar i;
+
+    analog begin
+        @(initial_step) begin
+            fc = 0; a = 0; lane = 0; pend = 0; pend_p = 0; pend_f = 0; pend_pol = 0;
+            act_a = 0; s_a = 0; e_a = 0; p_a = 0; f_a = 0; q_a = 0; pre_a_q = 0; rf_a_q = 0;
+            act_b = 0; s_b = 0; e_b = 0; p_b = 0; f_b = 0; q_b = 0; pre_b_q = 0; rf_b_q = 0;
+            ovr = 0; t_ovr_off = 1.0;
+        end
+        @(cross(V(rst) - vth, +1)) begin
+            lane = 0; pend = 0;
+            act_a = 0; pre_a_q = 0; rf_a_q = 0; act_b = 0; pre_b_q = 0; rf_b_q = 0;
+        end
+        @(cross(V(enc_valid) - vth, +1)) begin
+            if (V(rst) < vth) begin
+                if (pend) begin
+                    ovr = 1; t_ovr_off = $abstime + t_ovr;
+                end
+                pend = 1;
+                pend_p = 4 * (V(pos[2]) > vth) + 2 * (V(pos[1]) > vth) + (V(pos[0]) > vth);
+                pend_f = 4 * (V(fcode[2]) > vth) + 2 * (V(fcode[1]) > vth) + (V(fcode[0]) > vth);
+                pend_pol = V(pol) > vth;
+            end
+        end
+        @(timer(t_ovr_off)) ovr = 0;
+
+        // tap 0: new frame; finish due lane events, then schedule the next frame
+        @(cross(V(ph[0]) - vth, +1)) begin
+            fc = fc + 1;
+            a = 16 * fc;
+            if (act_a && a == p_a) pre_a_q = 1;
+            if (act_a && a == s_a) begin pre_a_q = 0; rf_a_q = 1; end
+            if (act_a && a == e_a) begin rf_a_q = 0; act_a = 0; end
+            if (act_b && a == p_b) pre_b_q = 1;
+            if (act_b && a == s_b) begin pre_b_q = 0; rf_b_q = 1; end
+            if (act_b && a == e_b) begin rf_b_q = 0; act_b = 0; end
+            if (V(rst) < vth && V(en) > vth && pend) begin
+                pend = 0;
+                if (lane == 0) begin
+                    act_a = 1; s_a = a + 16 + pend_p; e_a = s_a + n_width; p_a = s_a - n_pre;
+                    f_a = pend_f; q_a = pend_pol;
+                    if (n_pre == 0) pre_a_q = 0;
+                end else begin
+                    act_b = 1; s_b = a + 16 + pend_p; e_b = s_b + n_width; p_b = s_b - n_pre;
+                    f_b = pend_f; q_b = pend_pol;
+                    if (n_pre == 0) pre_b_q = 0;
+                end
+                lane = 1 - lane;
+            end
+        end
+        // taps 1..15: advance the absolute index
+        @(cross(V(ph[1]) - vth, +1) or cross(V(ph[2]) - vth, +1) or cross(V(ph[3]) - vth, +1)
+          or cross(V(ph[4]) - vth, +1) or cross(V(ph[5]) - vth, +1) or cross(V(ph[6]) - vth, +1)
+          or cross(V(ph[7]) - vth, +1) or cross(V(ph[8]) - vth, +1) or cross(V(ph[9]) - vth, +1)
+          or cross(V(ph[10]) - vth, +1) or cross(V(ph[11]) - vth, +1) or cross(V(ph[12]) - vth, +1)
+          or cross(V(ph[13]) - vth, +1) or cross(V(ph[14]) - vth, +1) or cross(V(ph[15]) - vth, +1)) begin
+            a = a + 1;
+            if (act_a && a == p_a) pre_a_q = 1;
+            if (act_a && a == s_a) begin pre_a_q = 0; rf_a_q = 1; end
+            if (act_a && a == e_a) begin rf_a_q = 0; act_a = 0; end
+            if (act_b && a == p_b) pre_b_q = 1;
+            if (act_b && a == s_b) begin pre_b_q = 0; rf_b_q = 1; end
+            if (act_b && a == e_b) begin rf_b_q = 0; act_b = 0; end
+        end
+
+        V(pre_a) <+ transition(pre_a_q * vdd, 0, tr);
+        V(rf_a) <+ transition(rf_a_q * vdd, 0, tr);
+        V(pol_a) <+ transition(q_a * vdd, 0, tr);
+        V(pre_b) <+ transition(pre_b_q * vdd, 0, tr);
+        V(rf_b) <+ transition(rf_b_q * vdd, 0, tr);
+        V(pol_b) <+ transition(q_b * vdd, 0, tr);
+        for (i = 0; i < 3; i = i + 1) begin
+            V(sel_a[i]) <+ transition(((f_a >> i) & 1) * vdd, 0, tr);
+            V(sel_b[i]) <+ transition(((f_b >> i) & 1) * vdd, 0, tr);
+        end
+        V(overrun) <+ transition(ovr * vdd, 0, tr);
+    end
+endmodule

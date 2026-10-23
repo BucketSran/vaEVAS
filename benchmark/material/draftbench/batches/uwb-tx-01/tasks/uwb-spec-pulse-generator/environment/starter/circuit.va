@@ -1,0 +1,16 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module pulse_generator(ph, pos, fcode, pol, enc_valid, en, rst,
+                       pre_a, rf_a, sel_a, pol_a, pre_b, rf_b, sel_b, pol_b, overrun);
+    input [15:0] ph;
+    input [2:0] pos, fcode;
+    input pol, enc_valid, en, rst;
+    output pre_a, rf_a, pol_a, pre_b, rf_b, pol_b, overrun;
+    output [2:0] sel_a, sel_b;
+    electrical [15:0] ph;
+    electrical [2:0] pos, fcode, sel_a, sel_b;
+    electrical pol, enc_valid, en, rst, pre_a, rf_a, pol_a, pre_b, rf_b, pol_b, overrun;
+
+    // TODO: parameters and behavior from the Spec.
+endmodule

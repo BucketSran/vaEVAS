@@ -1,0 +1,137 @@
+{
+ "task": "uwb-spec-dppm-fsk-encoder",
+ "date": "2026-10-23",
+ "backend": {
+  "name": "legacy EVAS 0.8.7, interim; declared backend evas pending",
+  "source": "legacy/EVAS commit 6cb6fa7a7dac70fc0d4120126d8cf74258e6637b, local build runs/legacy-evas-0.8.7",
+  "selection": "UWB_BACKEND=legacy",
+  "maxstep_s": 1e-11,
+  "crossing_time_tolerance_s": 2e-12
+ },
+ "command": "UWB_BACKEND=legacy python3 tests/calibration/mutants.py --output <dir>",
+ "cases": [
+  "debruijn",
+  "dense",
+  "params_two_instances",
+  "reset_phases",
+  "reset_repeat"
+ ],
+ "summary": {
+  "correct_accepted": 2,
+  "correct_total": 2,
+  "wrong_rejected": 9,
+  "wrong_total": 9,
+  "wall_s_total": 2495,
+  "wall_s_note": "measured while other simulations shared the machine"
+ },
+ "samples": [
+  {
+   "sample": "reference",
+   "expected": 1,
+   "score": 1,
+   "ok": true,
+   "first_failure": null,
+   "candidate_sha256": "0d3978a0fb7909bd333ab22ff18660de6c4621921ec936a3e5ca9958ab64dd3c"
+  },
+  {
+   "sample": "alternative",
+   "expected": 1,
+   "score": 1,
+   "ok": true,
+   "first_failure": null,
+   "candidate_sha256": "3f8cd53a377d2d92dad2d025a8db9419ac2c557a611996c5d61e0f7a7d25acc4"
+  },
+  {
+   "sample": "no_gray_decode",
+   "violates": "S2 Gray decode",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "first_failure": "debruijn/a: pos[0] edges (rule S2/S3 timing)",
+   "candidate_sha256": "d83bd2a6ad2776c3897822892f8a17559bb47f11d2d1e0453ba286dd318d71cb"
+  },
+  {
+   "sample": "absolute_position",
+   "violates": "S2 position recursion",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "first_failure": "debruijn/a: pos[0] edges (rule S2/S3 timing)",
+   "candidate_sha256": "aa753e15aad38e9ac37fdc78180f60ef45161c1855a1ffe4f5635e16e503c2f0"
+  },
+  {
+   "sample": "capture_on_rising_edge",
+   "violates": "S1 capture edge",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "first_failure": "debruijn/a: pos[0] edges (rule S2/S3 timing)",
+   "candidate_sha256": "abf5ac7724ebe1291d869b398dc678acb27633ea534189a28aa55c9ebd0db564"
+  },
+  {
+   "sample": "reset_keeps_position",
+   "violates": "S5 reset restarts P",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "first_failure": "reset_repeat/a: pos[0] edges (rule S2/S3 timing)",
+   "candidate_sha256": "d8c1670f6135f797338fa45c5700b3e70477dd6adcfa12e260930ea2339558e0"
+  },
+  {
+   "sample": "reset_does_not_cancel",
+   "violates": "S5 reset cancels pending updates",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "first_failure": "reset_repeat/a: enc_valid edges: one pulse per accepted word (S4)",
+   "candidate_sha256": "464daf25f206840063806077258fe011d496357de5c18838d16f839ca1916044"
+  },
+  {
+   "sample": "one_hot_before_first_word",
+   "violates": "S2 no request before a word",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "first_failure": "debruijn/a: req[0] edges (rule S2/S3 timing)",
+   "candidate_sha256": "1c34f07b202f61b500fa717f139d9a1ce1458bf5c73abab1054d6f732052c4df"
+  },
+  {
+   "sample": "fixed_pulse_width",
+   "violates": "S4 enc_valid width parameter",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "first_failure": "params_two_instances/a: enc_valid edges: one pulse per accepted word (S4)",
+   "candidate_sha256": "643135f8e7af10c599c316148f45550d8e6e819c9dbc177dbb13c9d0e6dcfe82"
+  },
+  {
+   "sample": "data_without_delay",
+   "violates": "S3 data delay t_enc",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "first_failure": "debruijn/a: pos[0] edges (rule S2/S3 timing)",
+   "candidate_sha256": "d50e97d6769ebef418db9e590f3476353bfca02014bb8178cd99a75662f2da33"
+  },
+  {
+   "sample": "no_strobe_for_repeat",
+   "violates": "S4 strobe for every word, including repeats",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "first_failure": "debruijn/a: enc_valid edges: one pulse per accepted word (S4)",
+   "candidate_sha256": "7114ea9ee679399ac65edd8d9d33cc48e416cfa4db62fab292cc2bd349cca89b"
+  }
+ ],
+ "package_file_sha256": {
+  "environment/starter/testbench/contract.py": "6809314474e734fc4f2dddd8af3fa421ad1029443ebf006172335b57df4628e0",
+  "environment/starter/testbench/check.py": "69566d5abbaca399feedc197754ee23326a6337806c0c270e3b45278aaf50096",
+  "environment/starter/testbench/uwbtask.py": "76d7f7eebab0e465bc701a8b91ee9a2440858e38be2533941704da227dbd717e",
+  "tests/final_cases.py": "1265485cef386e9ab1535ac1ec14d9c7dc2b77f55b067c796b518f7bbc1471a8",
+  "tests/verify.py": "cc9c948d14498b637f7784790e7119136420a6a8267356911b8c7898f37b4aab",
+  "solution/circuit.va": "0d3978a0fb7909bd333ab22ff18660de6c4621921ec936a3e5ca9958ab64dd3c",
+  "tests/calibration/mutants.py": "f55d20eb55e45a2b3297ad0448c7df672b18aaeefae48b4313f2c0f6daa0bd4b",
+  "tests/calibration/alternative.va": "3f8cd53a377d2d92dad2d025a8db9419ac2c557a611996c5d61e0f7a7d25acc4"
+ },
+ "raw_run": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-dppm-fsk-encoder/calibration (git-ignored)"
+}

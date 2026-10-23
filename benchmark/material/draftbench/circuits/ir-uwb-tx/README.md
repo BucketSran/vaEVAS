@@ -61,7 +61,7 @@ python3 mutants.py                   # 错误版本校准，约 1.5 分钟
 仿真器由 `UWB_BACKEND` 选择：`legacy`（默认，旧 EVAS 0.8.7）或 `evas`（当前 main，目前大多失败，见 #229）。
 旧 EVAS 是 vaBench r53 认证时用的版本：从 `legacy/EVAS` 的提交 `6cb6fa7a` 用 `git archive` 导出，
 编译其 Rust 内核并准备装有 numpy 的 Python，再用 `UWB_LEGACY_SRC`、`UWB_LEGACY_PY` 指过去
-（默认 `/tmp/legacy-run/src` 和 `/tmp/legacy-run/venv/bin/python`）。
+（默认指向本机 git 忽略的 `runs/legacy-evas-0.8.7/`，重建步骤见那里的 README；2026-10-23 机器重启清空了原来的 `/tmp/legacy-run`）。
 
 ## 出题方向（下一步，尚未建设）
 

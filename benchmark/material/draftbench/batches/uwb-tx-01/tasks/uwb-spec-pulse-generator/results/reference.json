@@ -1,0 +1,113 @@
+{
+ "task": "uwb-spec-pulse-generator",
+ "date": "2026-10-23",
+ "backend": {
+  "name": "legacy EVAS 0.8.7, interim; declared backend evas pending",
+  "source": "legacy/EVAS commit 6cb6fa7a7dac70fc0d4120126d8cf74258e6637b, local build runs/legacy-evas-0.8.7",
+  "identity": {
+   "build_revision": null,
+   "cli_version": "0.8.7",
+   "engine": "evas-rust",
+   "package_name": "evas-sim",
+   "package_version": "0.8.7",
+   "rust_core_abi_version": 20260718,
+   "rust_core_loadable": true,
+   "rust_core_present": true,
+   "rust_core_version": "0.2.4",
+   "schema_version": 1
+  },
+  "selection": "UWB_BACKEND=legacy",
+  "maxstep_s": 1e-11,
+  "crossing_time_tolerance_s": 2e-12
+ },
+ "candidate": "solution/circuit.va",
+ "candidate_sha256": "0bf2fe271ad0c473559d6c9ae88ca01e840fc11a920d8b4b839b43d4e36f3d22",
+ "status": "executed",
+ "score": 1,
+ "checks": 126,
+ "passed": 126,
+ "verifier_wall_s": 22.1,
+ "cases": [
+  {
+   "case": "positions",
+   "set": "public",
+   "instances": [
+    "a"
+   ],
+   "checks": 14,
+   "passed": 14,
+   "worst_crossing_error_ps": 0.5,
+   "simulator_elapsed_s": 3.0
+  },
+  {
+   "case": "late_enable",
+   "set": "public",
+   "instances": [
+    "a"
+   ],
+   "checks": 14,
+   "passed": 14,
+   "worst_crossing_error_ps": 0.5,
+   "simulator_elapsed_s": 1.1
+  },
+  {
+   "case": "pre15_pre0",
+   "set": "final",
+   "instances": [
+    "a",
+    "b"
+   ],
+   "checks": 28,
+   "passed": 28,
+   "worst_crossing_error_ps": 0.5,
+   "simulator_elapsed_s": 1.3
+  },
+  {
+   "case": "params_two_instances",
+   "set": "final",
+   "instances": [
+    "a",
+    "b"
+   ],
+   "checks": 28,
+   "passed": 28,
+   "worst_crossing_error_ps": 1.029,
+   "simulator_elapsed_s": 2.1
+  },
+  {
+   "case": "random_code340",
+   "set": "final",
+   "instances": [
+    "a"
+   ],
+   "checks": 14,
+   "passed": 14,
+   "worst_crossing_error_ps": 0.5,
+   "simulator_elapsed_s": 1.5
+  },
+  {
+   "case": "reset_activity",
+   "set": "final",
+   "instances": [
+    "a",
+    "b"
+   ],
+   "checks": 28,
+   "passed": 28,
+   "worst_crossing_error_ps": 0.5,
+   "simulator_elapsed_s": 1.5
+  }
+ ],
+ "package_file_sha256": {
+  "environment/starter/testbench/contract.py": "de66737cf80af6615bc995cb68052c5ff1791a1eb6a1e7df7cc76cbb47e936cf",
+  "environment/starter/testbench/check.py": "1c5887b61e068db48d2b9c82b9ce46123ba5499117f895590b38099b384c0871",
+  "environment/starter/testbench/uwbtask.py": "76d7f7eebab0e465bc701a8b91ee9a2440858e38be2533941704da227dbd717e",
+  "environment/starter/testbench/master_ro16.va": "390a9df80a84bd16fdad7b49ede7d3d5b3e90de8b24abcd981c548210e963267",
+  "environment/starter/testbench/edge_monitor.va": "9051690bdeb0d41adf08087cf3ed04d679559c3e003427280385ab4f35c50a2b",
+  "tests/final_cases.py": "2f4b5fa87db9d98d7e44effd0530ae648e1c7db7128dd40ada4707752c8a4079",
+  "tests/verify.py": "cc9c948d14498b637f7784790e7119136420a6a8267356911b8c7898f37b4aab",
+  "tests/calibration/mutants.py": "78d0d10e02419501f1d768169e07bf079b6bff0e5f1d3c8febb144b4ee911593",
+  "instruction.md": "32fa618b390e8da66cf55ac6724189ad9d562514e8e09c3df0c8e790f5987ddc"
+ },
+ "raw_run": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-pulse-generator/calibration/reference"
+}

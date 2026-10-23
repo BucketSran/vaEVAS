@@ -1,0 +1,60 @@
+{
+ "task": "uwb-spec-dppm-fsk-encoder",
+ "date": "2026-10-23",
+ "backend": {
+  "name": "legacy EVAS 0.8.7, interim; declared backend evas pending",
+  "source": "legacy/EVAS commit 6cb6fa7a7dac70fc0d4120126d8cf74258e6637b, local build runs/legacy-evas-0.8.7",
+  "selection": "UWB_BACKEND=legacy",
+  "maxstep_s": 1e-11,
+  "crossing_time_tolerance_s": 2e-12
+ },
+ "entry": "tests/verify.py",
+ "candidate": "solution/circuit.va",
+ "candidate_sha256": "0d3978a0fb7909bd333ab22ff18660de6c4621921ec936a3e5ca9958ab64dd3c",
+ "status": "executed",
+ "score": 1,
+ "checks": 114,
+ "passed": 114,
+ "cases": [
+  {
+   "case": "debruijn/a",
+   "checks": 19,
+   "passed": 19
+  },
+  {
+   "case": "reset_repeat/a",
+   "checks": 19,
+   "passed": 19
+  },
+  {
+   "case": "params_two_instances/a",
+   "checks": 19,
+   "passed": 19
+  },
+  {
+   "case": "params_two_instances/b",
+   "checks": 19,
+   "passed": 19
+  },
+  {
+   "case": "reset_phases/a",
+   "checks": 19,
+   "passed": 19
+  },
+  {
+   "case": "dense/a",
+   "checks": 19,
+   "passed": 19
+  }
+ ],
+ "package_file_sha256": {
+  "environment/starter/testbench/contract.py": "6809314474e734fc4f2dddd8af3fa421ad1029443ebf006172335b57df4628e0",
+  "environment/starter/testbench/check.py": "69566d5abbaca399feedc197754ee23326a6337806c0c270e3b45278aaf50096",
+  "environment/starter/testbench/uwbtask.py": "76d7f7eebab0e465bc701a8b91ee9a2440858e38be2533941704da227dbd717e",
+  "tests/final_cases.py": "1265485cef386e9ab1535ac1ec14d9c7dc2b77f55b067c796b518f7bbc1471a8",
+  "tests/verify.py": "cc9c948d14498b637f7784790e7119136420a6a8267356911b8c7898f37b4aab",
+  "solution/circuit.va": "0d3978a0fb7909bd333ab22ff18660de6c4621921ec936a3e5ca9958ab64dd3c"
+ },
+ "raw_run": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-dppm-fsk-encoder/calibration/reference (git-ignored)",
+ "note": "per-case simulator times were not recorded by this kit version; the whole calibration took 2495 s wall with the machine shared by other runs (load average 100-300)"
+}

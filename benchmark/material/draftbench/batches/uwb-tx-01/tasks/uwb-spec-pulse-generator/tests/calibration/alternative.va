@@ -1,0 +1,96 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Calibration sample: a second correct implementation with a different
+// internal organization. Each lane keeps the number of tap edges seen since
+// it was scheduled (-1 when idle) and derives pre/rf from that count; the
+// descriptor is one packed integer (P + 8F + 64 pol); the lane choice is a
+// flag. The checker must accept it.
+module pulse_generator(ph, pos, fcode, pol, enc_valid, en, rst,
+                       pre_a, rf_a, sel_a, pol_a, pre_b, rf_b, sel_b, pol_b, overrun);
+    input [15:0] ph;
+    input [2:0] pos, fcode;
+    input pol, enc_valid, en, rst;
+    output pre_a, rf_a, pol_a, pre_b, rf_b, pol_b, overrun;
+    output [2:0] sel_a, sel_b;
+    electrical [15:0] ph;
+    electrical [2:0] pos, fcode, sel_a, sel_b;
+    electrical pol, enc_valid, en, rst, pre_a, rf_a, pol_a, pre_b, rf_b, pol_b, overrun;
+
+    parameter integer n_width = 9 from [1:9];
+    parameter integer n_pre = 2 from [0:15];
+    parameter real t_ovr = 200p from (0:inf);
+    parameter real vdd = 1.0 from (0:inf);
+    parameter real vth = 0.5;
+    parameter real tr = 2p from (0:inf);
+
+    integer word, have;          // pending descriptor and its presence
+    integer use_b;               // 1: the next scheduled descriptor goes to lane b
+    integer ca, cb;              // tap edges since the lane was scheduled, -1 = idle
+    integer wa, wb;              // descriptor held by each lane
+    integer sa, sb;              // start edge of each lane, counted from its scheduling edge
+    integer flag;
+    real t_off;
+    genvar i;
+
+    analog begin
+        @(initial_step) begin
+            word = 0; have = 0; use_b = 0; ca = -1; cb = -1; wa = 0; wb = 0; sa = 16; sb = 16;
+            flag = 0; t_off = 1.0;
+        end
+        @(cross(V(rst) - vth, +1)) begin
+            have = 0; use_b = 0; ca = -1; cb = -1;
+        end
+        @(cross(V(enc_valid) - vth, +1)) begin
+            if (V(rst) <= vth) begin
+                if (have) begin
+                    flag = 1; t_off = $abstime + t_ovr;
+                end
+                word = (V(pos[0]) > vth) + 2 * (V(pos[1]) > vth) + 4 * (V(pos[2]) > vth)
+                       + 8 * (V(fcode[0]) > vth) + 16 * (V(fcode[1]) > vth) + 32 * (V(fcode[2]) > vth)
+                       + 64 * (V(pol) > vth);
+                have = 1;
+            end
+        end
+        @(timer(t_off)) flag = 0;
+
+        @(cross(V(ph[1]) - vth, +1) or cross(V(ph[2]) - vth, +1) or cross(V(ph[3]) - vth, +1)
+          or cross(V(ph[4]) - vth, +1) or cross(V(ph[5]) - vth, +1) or cross(V(ph[6]) - vth, +1)
+          or cross(V(ph[7]) - vth, +1) or cross(V(ph[8]) - vth, +1) or cross(V(ph[9]) - vth, +1)
+          or cross(V(ph[10]) - vth, +1) or cross(V(ph[11]) - vth, +1) or cross(V(ph[12]) - vth, +1)
+          or cross(V(ph[13]) - vth, +1) or cross(V(ph[14]) - vth, +1) or cross(V(ph[15]) - vth, +1)) begin
+            if (ca >= 0) ca = ca + 1;
+            if (cb >= 0) cb = cb + 1;
+            if (ca >= sa + n_width) ca = -1;
+            if (cb >= sb + n_width) cb = -1;
+        end
+        // a frame edge counts like any tap edge, then may take the pending word
+        @(cross(V(ph[0]) - vth, +1)) begin
+            if (ca >= 0) ca = ca + 1;
+            if (cb >= 0) cb = cb + 1;
+            if (ca >= sa + n_width) ca = -1;
+            if (cb >= sb + n_width) cb = -1;
+            if (have && V(en) > vth && V(rst) <= vth) begin
+                have = 0;
+                if (use_b) begin
+                    wb = word; sb = 16 + word % 8; cb = 0;
+                end else begin
+                    wa = word; sa = 16 + word % 8; ca = 0;
+                end
+                use_b = 1 - use_b;
+            end
+        end
+
+        V(pre_a) <+ transition((ca >= 0 && ca >= sa - n_pre && ca < sa) * vdd, 0, tr);
+        V(rf_a) <+ transition((ca >= sa && ca < sa + n_width) * vdd, 0, tr);
+        V(pre_b) <+ transition((cb >= 0 && cb >= sb - n_pre && cb < sb) * vdd, 0, tr);
+        V(rf_b) <+ transition((cb >= sb && cb < sb + n_width) * vdd, 0, tr);
+        V(pol_a) <+ transition((wa / 64) * vdd, 0, tr);
+        V(pol_b) <+ transition((wb / 64) * vdd, 0, tr);
+        for (i = 0; i < 3; i = i + 1) begin
+            V(sel_a[i]) <+ transition(((wa / 8) / (1 << i)) % 2 * vdd, 0, tr);
+            V(sel_b[i]) <+ transition(((wb / 8) / (1 << i)) % 2 * vdd, 0, tr);
+        end
+        V(overrun) <+ transition(flag * vdd, 0, tr);
+    end
+endmodule

@@ -1,0 +1,10 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module rf_ro_branch(pwr, pre, rel, vro);
+    input pwr, pre, rel;
+    output vro;
+    electrical pwr, pre, rel, vro;
+
+    // TODO: parameters and behavior from the Spec.
+endmodule

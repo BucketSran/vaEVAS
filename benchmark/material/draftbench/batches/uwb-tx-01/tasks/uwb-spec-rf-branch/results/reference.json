@@ -1,0 +1,95 @@
+{
+ "task": "uwb-spec-rf-branch",
+ "date": "2026-10-23",
+ "backend": "legacy EVAS 0.8.7, interim; declared backend evas pending",
+ "backend_identity": {
+  "build_revision": null,
+  "cli_version": "0.8.7",
+  "engine": "evas-rust",
+  "package_name": "evas-sim",
+  "package_version": "0.8.7",
+  "rust_core_abi_version": 20260718,
+  "rust_core_loadable": true,
+  "rust_core_present": true,
+  "rust_core_version": "0.2.4",
+  "schema_version": 1
+ },
+ "entry": "UWB_BACKEND=legacy python3 tests/verify.py --candidate solution/circuit.va",
+ "candidate": "solution/circuit.va",
+ "candidate_sha256": "e018572e98f2c1c1a19e811d3c3b0cc68b0b732a32a0f274034987916fdd34a6",
+ "contract_sha256": "0abba676ab3d079626a9df5237542eef823882b37aadd174df3a7f3e38425a1d",
+ "final_cases_sha256": "fcdbb2b5eabce3ca2b3a479368d79534ade32e40698c32bfa0a4e0c553dc8fa9",
+ "limits": {
+  "vro_abs_v": 0.005,
+  "edge_exclusion_s": 3e-12,
+  "zero_crossing_s": 2e-13,
+  "maxstep_s": 1e-12
+ },
+ "status": "executed",
+ "score": 1,
+ "checks": 72,
+ "passed": 72,
+ "worst_vro_error_mv": 2.01e-08,
+ "worst_zero_crossing_error_ps": 0.018,
+ "verifier_wall_s": 7.85,
+ "cases": [
+  {
+   "case": "cold_starts",
+   "kind": "public",
+   "instances": [
+    "ideal",
+    "seed"
+   ],
+   "checks": 12,
+   "passed": 12,
+   "simulator_elapsed_s": 0.8
+  },
+  {
+   "case": "carriers_params",
+   "kind": "final",
+   "instances": [
+    "aonly",
+    "fstep",
+    "hi",
+    "lo"
+   ],
+   "checks": 24,
+   "passed": 24,
+   "simulator_elapsed_s": 0.5
+  },
+  {
+   "case": "long_hold",
+   "kind": "final",
+   "instances": [
+    "fast",
+    "seed"
+   ],
+   "checks": 8,
+   "passed": 8,
+   "simulator_elapsed_s": 0.5
+  },
+  {
+   "case": "stop_paths",
+   "kind": "final",
+   "instances": [
+    "seed",
+    "step"
+   ],
+   "checks": 12,
+   "passed": 12,
+   "simulator_elapsed_s": 0.7
+  },
+  {
+   "case": "restarts",
+   "kind": "final",
+   "instances": [
+    "mid",
+    "seed"
+   ],
+   "checks": 16,
+   "passed": 16,
+   "simulator_elapsed_s": 0.6
+  }
+ ],
+ "raw": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-rf-branch/calibration/reference/"
+}

@@ -1,0 +1,10 @@
+{
+ "task": "uwb-spec-rf-branch",
+ "backend": "evas",
+ "backend_status": "pending: current EVAS cannot yet run the reference solution (issue 229); author runs used EVAS 0.8.7",
+ "vro_abs_tolerance_v": 5e-3,
+ "edge_exclusion_s": 3e-12,
+ "zero_crossing_tolerance_s": 2e-13,
+ "maxstep_s": 1e-12,
+ "timeout_s_per_case": 1800
+}

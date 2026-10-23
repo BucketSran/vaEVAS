@@ -1,0 +1,267 @@
+{
+ "task": "uwb-spec-pulse-generator",
+ "date": "2026-10-23",
+ "backend": {
+  "name": "legacy EVAS 0.8.7, interim; declared backend evas pending",
+  "source": "legacy/EVAS commit 6cb6fa7a7dac70fc0d4120126d8cf74258e6637b, local build runs/legacy-evas-0.8.7",
+  "identity": {
+   "build_revision": null,
+   "cli_version": "0.8.7",
+   "engine": "evas-rust",
+   "package_name": "evas-sim",
+   "package_version": "0.8.7",
+   "rust_core_abi_version": 20260718,
+   "rust_core_loadable": true,
+   "rust_core_present": true,
+   "rust_core_version": "0.2.4",
+   "schema_version": 1
+  },
+  "selection": "UWB_BACKEND=legacy",
+  "maxstep_s": 1e-11,
+  "crossing_time_tolerance_s": 2e-12
+ },
+ "command": "UWB_BACKEND=legacy python3 -B tests/calibration/mutants.py",
+ "cases": [
+  "positions",
+  "late_enable",
+  "pre15_pre0",
+  "params_two_instances",
+  "random_code340",
+  "reset_activity"
+ ],
+ "summary": {
+  "correct_accepted": 2,
+  "correct_total": 2,
+  "wrong_rejected": 12,
+  "wrong_total": 12,
+  "total_wall_s": 278.7
+ },
+ "samples": [
+  {
+   "sample": "reference",
+   "expected": 1,
+   "score": 1,
+   "ok": true,
+   "wall_s": 22.1,
+   "candidate_sha256": "0bf2fe271ad0c473559d6c9ae88ca01e840fc11a920d8b4b839b43d4e36f3d22",
+   "failed_cases": [],
+   "first_failure": null
+  },
+  {
+   "sample": "alternative",
+   "expected": 1,
+   "score": 1,
+   "ok": true,
+   "wall_s": 17.9,
+   "candidate_sha256": "7891a07f1ac9ff1ea468f00ff415c0cf541bdf3ad76aed62ea7b0bc632c4f614",
+   "failed_cases": [],
+   "first_failure": null
+  },
+  {
+   "sample": "no_frame_delay",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 19.6,
+   "candidate_sha256": "4b9fd03979c3bf928f60a8623c0ab91c819c1061c643f3c91be40145707857c1",
+   "failed_cases": [
+    "late_enable/a",
+    "params_two_instances/a",
+    "params_two_instances/b",
+    "positions/a",
+    "pre15_pre0/a",
+    "pre15_pre0/b",
+    "random_code340/a",
+    "reset_activity/a",
+    "reset_activity/b"
+   ],
+   "first_failure": "positions/a: pre_a edges: precharge from tap edge s - n_pre to s on the scheduled lane (S4, S5, S7)",
+   "violates": "S5 window starts at tap edge 16 + P (next frame)"
+  },
+  {
+   "sample": "width_ignores_parameter",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 13.5,
+   "candidate_sha256": "690f6842318410a2ef35586eb33a91a7eac69548002cb12648a11b413863eb13",
+   "failed_cases": [
+    "params_two_instances/a",
+    "params_two_instances/b",
+    "reset_activity/b"
+   ],
+   "first_failure": "params_two_instances/a: rf_a edges: RF window from tap edge s to s + n_width on the scheduled lane (S4, S5, S7)",
+   "violates": "S5 window length n_width"
+  },
+  {
+   "sample": "precharge_ignores_parameter",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 23.8,
+   "candidate_sha256": "70af2c9dc582c5db0a0e82cac9636cc6702be82f1371c526f6ffa167f2fdedbf",
+   "failed_cases": [
+    "params_two_instances/a",
+    "params_two_instances/b",
+    "pre15_pre0/a",
+    "reset_activity/b"
+   ],
+   "first_failure": "pre15_pre0/a: pre_a edges: precharge from tap edge s - n_pre to s on the scheduled lane (S4, S5, S7)",
+   "violates": "S5 precharge length n_pre"
+  },
+  {
+   "sample": "lane_per_latch",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 28.0,
+   "candidate_sha256": "6174d11569b8b0aaabd6a9b15e8f1ecbc6477b4eab19209c6f99792bd206d966",
+   "failed_cases": [
+    "late_enable/a",
+    "params_two_instances/a",
+    "params_two_instances/b",
+    "positions/a",
+    "pre15_pre0/a",
+    "pre15_pre0/b",
+    "random_code340/a",
+    "reset_activity/a",
+    "reset_activity/b"
+   ],
+   "first_failure": "positions/a: pre_a edges: precharge from tap edge s - n_pre to s on the scheduled lane (S4, S5, S7)",
+   "violates": "S4 overwritten descriptors take no lane"
+  },
+  {
+   "sample": "lane_by_frame_parity",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 37.8,
+   "candidate_sha256": "63dcb20fb82e56d6e97989fb4c57e4ddcdf3bcc564a7ce43fd2004f88918a49e",
+   "failed_cases": [
+    "late_enable/a",
+    "params_two_instances/a",
+    "params_two_instances/b",
+    "positions/a",
+    "pre15_pre0/a",
+    "pre15_pre0/b",
+    "random_code340/a",
+    "reset_activity/a",
+    "reset_activity/b"
+   ],
+   "first_failure": "positions/a: pre_a edges: precharge from tap edge s - n_pre to s on the scheduled lane (S4, S5, S7)",
+   "violates": "S4 lanes alternate over scheduled descriptors"
+  },
+  {
+   "sample": "no_overrun",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 27.1,
+   "candidate_sha256": "cfcdf470370012274b687262f674397dfbef98b5555b38b6f3a747b9f8e207e3",
+   "failed_cases": [
+    "late_enable/a",
+    "params_two_instances/a",
+    "params_two_instances/b",
+    "random_code340/a",
+    "reset_activity/a",
+    "reset_activity/b"
+   ],
+   "first_failure": "late_enable/a: overrun edges: one pulse per overwritten pending descriptor (S3, S7)",
+   "violates": "S3 overrun pulse"
+  },
+  {
+   "sample": "en_blocks_latch",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 20.2,
+   "candidate_sha256": "896881bc62fe15494abb00229c6eabf50487933be95c46a66db18d0e455fb41f",
+   "failed_cases": [
+    "late_enable/a",
+    "random_code340/a"
+   ],
+   "first_failure": "late_enable/a: pre_a edges: precharge from tap edge s - n_pre to s on the scheduled lane (S4, S5, S7)",
+   "violates": "S4 en low keeps latching into the pending register"
+  },
+  {
+   "sample": "en_low_cancels_windows",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 15.5,
+   "candidate_sha256": "835dcbe695f33671b0440e09bec57d9439e34a540a052f5f8210a89a3145db13",
+   "failed_cases": [
+    "random_code340/a"
+   ],
+   "first_failure": "random_code340/a: rf_a edges: RF window from tap edge s to s + n_width on the scheduled lane (S4, S5, S7)",
+   "violates": "S4 en acts only at frame edges"
+  },
+  {
+   "sample": "descriptor_read_at_frame_edge",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 14.2,
+   "candidate_sha256": "8088f1646c5037bc68ed6b68d4ffd69483f9c2f1118952e6f19ee36b33b93ea2",
+   "failed_cases": [
+    "random_code340/a"
+   ],
+   "first_failure": "random_code340/a: sel_a[0] edges: frequency select set when the lane is scheduled (S6)",
+   "violates": "S3 descriptor read at the enc_valid edge"
+  },
+  {
+   "sample": "reset_keeps_pending",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 13.1,
+   "candidate_sha256": "7b7506b4dafca249f5b01181998789509f9b6e9d1fb5faabb97e693db478e577",
+   "failed_cases": [
+    "reset_activity/a",
+    "reset_activity/b"
+   ],
+   "first_failure": "reset_activity/a: pre_a edges: precharge from tap edge s - n_pre to s on the scheduled lane (S4, S5, S7)",
+   "violates": "S7 reset discards the pending descriptor"
+  },
+  {
+   "sample": "reset_keeps_lane",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 13.0,
+   "candidate_sha256": "add6985d73dbd7a762f8ce8a0b7884381499fb9884ef4960ef656b1586fe32a0",
+   "failed_cases": [
+    "reset_activity/a",
+    "reset_activity/b"
+   ],
+   "first_failure": "reset_activity/a: pre_a edges: precharge from tap edge s - n_pre to s on the scheduled lane (S4, S5, S7)",
+   "violates": "S7 first descriptor after reset on lane a"
+  },
+  {
+   "sample": "reset_keeps_windows",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 12.9,
+   "candidate_sha256": "6f731cbda7f2ce20a6ffb6765115ae484af1384862509676ec05e397f9b1f163",
+   "failed_cases": [
+    "reset_activity/a",
+    "reset_activity/b"
+   ],
+   "first_failure": "reset_activity/a: pre_a edges: precharge from tap edge s - n_pre to s on the scheduled lane (S4, S5, S7)",
+   "violates": "S7 reset clears both lanes"
+  }
+ ],
+ "package_file_sha256": {
+  "environment/starter/testbench/contract.py": "de66737cf80af6615bc995cb68052c5ff1791a1eb6a1e7df7cc76cbb47e936cf",
+  "environment/starter/testbench/check.py": "1c5887b61e068db48d2b9c82b9ce46123ba5499117f895590b38099b384c0871",
+  "environment/starter/testbench/uwbtask.py": "76d7f7eebab0e465bc701a8b91ee9a2440858e38be2533941704da227dbd717e",
+  "environment/starter/testbench/master_ro16.va": "390a9df80a84bd16fdad7b49ede7d3d5b3e90de8b24abcd981c548210e963267",
+  "environment/starter/testbench/edge_monitor.va": "9051690bdeb0d41adf08087cf3ed04d679559c3e003427280385ab4f35c50a2b",
+  "tests/final_cases.py": "2f4b5fa87db9d98d7e44effd0530ae648e1c7db7128dd40ada4707752c8a4079",
+  "tests/verify.py": "cc9c948d14498b637f7784790e7119136420a6a8267356911b8c7898f37b4aab",
+  "tests/calibration/mutants.py": "78d0d10e02419501f1d768169e07bf079b6bff0e5f1d3c8febb144b4ee911593",
+  "instruction.md": "32fa618b390e8da66cf55ac6724189ad9d562514e8e09c3df0c8e790f5987ddc"
+ },
+ "raw_run": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-pulse-generator/calibration"
+}

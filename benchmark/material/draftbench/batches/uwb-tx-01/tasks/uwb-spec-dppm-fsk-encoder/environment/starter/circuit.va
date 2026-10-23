@@ -1,0 +1,16 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module dppm_fsk_encoder8(sym, sym_valid, rst, pos, inc, fcode, req, enc_valid);
+    input [5:0] sym;
+    input sym_valid, rst;
+    output [2:0] pos, inc, fcode;
+    output [7:0] req;
+    output enc_valid;
+    electrical [5:0] sym;
+    electrical sym_valid, rst, enc_valid;
+    electrical [2:0] pos, inc, fcode;
+    electrical [7:0] req;
+
+    // TODO: parameters and behavior from the Spec.
+endmodule

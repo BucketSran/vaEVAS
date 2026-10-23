@@ -1,0 +1,292 @@
+{
+ "task": "uwb-spec-rf-branch",
+ "date": "2026-10-23",
+ "backend": "legacy EVAS 0.8.7, interim; declared backend evas pending",
+ "backend_identity": {
+  "build_revision": null,
+  "cli_version": "0.8.7",
+  "engine": "evas-rust",
+  "package_name": "evas-sim",
+  "package_version": "0.8.7",
+  "rust_core_abi_version": 20260718,
+  "rust_core_loadable": true,
+  "rust_core_present": true,
+  "rust_core_version": "0.2.4",
+  "schema_version": 1
+ },
+ "entry": "UWB_BACKEND=legacy python3 tests/calibration/mutants.py",
+ "contract_sha256": "0abba676ab3d079626a9df5237542eef823882b37aadd174df3a7f3e38425a1d",
+ "final_cases_sha256": "fcdbb2b5eabce3ca2b3a479368d79534ade32e40698c32bfa0a4e0c553dc8fa9",
+ "cases": {
+  "public": [
+   "cold_starts"
+  ],
+  "final": [
+   "carriers_params",
+   "long_hold",
+   "stop_paths",
+   "restarts"
+  ]
+ },
+ "summary": {
+  "correct_samples": 2,
+  "correct_accepted": 2,
+  "wrong_samples": 11,
+  "wrong_rejected": 11,
+  "wrong_caught_by_public": 6,
+  "total_wall_s": 121.0
+ },
+ "samples": [
+  {
+   "sample": "reference",
+   "expected": 1,
+   "score": 1,
+   "ok": true,
+   "wall_s": 7.85,
+   "candidate_sha256": "e018572e98f2c1c1a19e811d3c3b0cc68b0b732a32a0f274034987916fdd34a6",
+   "checks": 72,
+   "first_failure": null
+  },
+  {
+   "sample": "alternative",
+   "expected": 1,
+   "score": 1,
+   "ok": true,
+   "wall_s": 7.75,
+   "candidate_sha256": "fe0ac3999b20803ab6a9357f6f640dc41031d6e46c8790182a0ffac10c2b90d8",
+   "checks": 72,
+   "first_failure": null
+  },
+  {
+   "sample": "amp_tau_is_t99",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 10.55,
+   "candidate_sha256": "624ffa44c3fd1ba2b69f56637a5734461af3858ff4fc9a8e573ab417a3c88a06",
+   "violates": "S2 amplitude time constant t99/ln 100",
+   "failed_checks": 9,
+   "caught_by_public": true,
+   "failed_case_instances": [
+    "carriers_params/aonly",
+    "carriers_params/hi",
+    "carriers_params/lo",
+    "cold_starts/seed",
+    "long_hold/fast",
+    "long_hold/seed",
+    "restarts/mid",
+    "restarts/seed",
+    "stop_paths/seed"
+   ],
+   "first_failure": "cold_starts/seed: vro follows S2 in each of 2 releases (S2, S3)"
+  },
+  {
+   "sample": "freq_settles_with_t99_amp",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 8.11,
+   "candidate_sha256": "e446acce6e9d862f5416249236ecb5c93dee6cfa334cb858aae9d22875e9c270",
+   "violates": "S2 frequency settles with t99_freq",
+   "failed_checks": 19,
+   "caught_by_public": false,
+   "failed_case_instances": [
+    "carriers_params/aonly",
+    "carriers_params/fstep",
+    "carriers_params/lo",
+    "long_hold/fast",
+    "restarts/mid",
+    "stop_paths/step"
+   ],
+   "first_failure": "carriers_params/lo: vro follows S2 in each of 2 releases (S2, S3)"
+  },
+  {
+   "sample": "phase_not_integrated",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 7.71,
+   "candidate_sha256": "d974a1fe612d72f71167bc77dc640c04b6716ab10c77121bdc5e050af882388a",
+   "violates": "S2 phase is the integral of the frequency",
+   "failed_checks": 32,
+   "caught_by_public": true,
+   "failed_case_instances": [
+    "carriers_params/fstep",
+    "carriers_params/hi",
+    "carriers_params/lo",
+    "cold_starts/seed",
+    "long_hold/fast",
+    "long_hold/seed",
+    "restarts/mid",
+    "restarts/seed",
+    "stop_paths/seed",
+    "stop_paths/step"
+   ],
+   "first_failure": "cold_starts/seed: vro follows S2 in each of 2 releases (S2, S3)"
+  },
+  {
+   "sample": "phi0_dropped_while_settling",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 8.55,
+   "candidate_sha256": "da3b6fb16732e6a76af0fce29caa9023413c9bf7f324f73f2aa82d2ff1be6c47",
+   "violates": "S2 phase starts at phi0",
+   "failed_checks": 14,
+   "caught_by_public": false,
+   "failed_case_instances": [
+    "carriers_params/fstep",
+    "carriers_params/hi",
+    "restarts/mid",
+    "stop_paths/step"
+   ],
+   "first_failure": "carriers_params/hi: vro follows S2 in each of 2 releases (S2, S3)"
+  },
+  {
+   "sample": "a_ro_ignored",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 33.63,
+   "candidate_sha256": "ea8d2d695387f04e53dc99e1cd96c3b5776acd946955b3a662a0f0ed84f218db",
+   "violates": "S2 amplitude a_ro",
+   "failed_checks": 1,
+   "caught_by_public": false,
+   "failed_case_instances": [
+    "carriers_params/hi"
+   ],
+   "first_failure": "carriers_params/hi: vro follows S2 in each of 2 releases (S2, S3)"
+  },
+  {
+   "sample": "global_phase",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 6.08,
+   "candidate_sha256": "a0dcd76a7e27c072ce6da7031e81055b6b511cbc1f5bd25410b986a87742a08e",
+   "violates": "S3 phase local to the release",
+   "failed_checks": 37,
+   "caught_by_public": true,
+   "failed_case_instances": [
+    "carriers_params/fstep",
+    "carriers_params/hi",
+    "carriers_params/lo",
+    "cold_starts/seed",
+    "long_hold/fast",
+    "long_hold/seed",
+    "restarts/mid",
+    "restarts/seed",
+    "stop_paths/seed",
+    "stop_paths/step"
+   ],
+   "first_failure": "cold_starts/seed: vro follows S2 in each of 2 releases (S2, S3)"
+  },
+  {
+   "sample": "no_cold_restart",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 7.19,
+   "candidate_sha256": "d0e7be36ecb664fc5235c4225b835d246d372add585f75dcfb377cb38f9ae551",
+   "violates": "S3 every release restarts at phi0",
+   "failed_checks": 28,
+   "caught_by_public": true,
+   "failed_case_instances": [
+    "carriers_params/aonly",
+    "carriers_params/fstep",
+    "carriers_params/hi",
+    "carriers_params/lo",
+    "cold_starts/seed",
+    "restarts/mid",
+    "restarts/seed",
+    "stop_paths/seed",
+    "stop_paths/step"
+   ],
+   "first_failure": "cold_starts/seed: vro follows S2 in each of 2 releases (S2, S3)"
+  },
+  {
+   "sample": "oscillates_in_precharge",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 4.6,
+   "candidate_sha256": "f0788c3004305996567915b2a63740ac8ed8353a52ebc819d305f5c2ca40ccfd",
+   "violates": "S1 no oscillation before the release",
+   "failed_checks": 57,
+   "caught_by_public": true,
+   "failed_case_instances": [
+    "carriers_params/aonly",
+    "carriers_params/fstep",
+    "carriers_params/hi",
+    "carriers_params/lo",
+    "cold_starts/ideal",
+    "cold_starts/seed",
+    "long_hold/fast",
+    "long_hold/seed",
+    "restarts/mid",
+    "restarts/seed",
+    "stop_paths/seed",
+    "stop_paths/step"
+   ],
+   "first_failure": "cold_starts/seed: vro = 0 while off, precharging or stopped (S1, S4)"
+  },
+  {
+   "sample": "release_ignores_pwr",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 5.86,
+   "candidate_sha256": "4152b4b4be64e8468618ffcdb8fbeb34944e1f563213d26482f3913fec90677f",
+   "violates": "S1 release only while pwr is high",
+   "failed_checks": 2,
+   "caught_by_public": false,
+   "failed_case_instances": [
+    "stop_paths/seed",
+    "stop_paths/step"
+   ],
+   "first_failure": "stop_paths/seed: vro = 0 while off, precharging or stopped (S1, S4)"
+  },
+  {
+   "sample": "rel_fall_does_not_stop",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 6.84,
+   "candidate_sha256": "e2f4238276f7e746cda5e7fd4759a2318ad61dffe87f1ab128d2ee34aac883b4",
+   "violates": "S4 rel falling stops the branch",
+   "failed_checks": 10,
+   "caught_by_public": true,
+   "failed_case_instances": [
+    "carriers_params/aonly",
+    "carriers_params/fstep",
+    "carriers_params/hi",
+    "carriers_params/lo",
+    "cold_starts/ideal",
+    "cold_starts/seed",
+    "long_hold/fast",
+    "long_hold/seed",
+    "restarts/mid",
+    "restarts/seed"
+   ],
+   "first_failure": "cold_starts/seed: vro = 0 while off, precharging or stopped (S1, S4)"
+  },
+  {
+   "sample": "pwr_fall_does_not_stop",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "wall_s": 6.26,
+   "candidate_sha256": "746063fc1480cacc76400d808f2364e88611da8f0fa13f4436379ec61b52237f",
+   "violates": "S4 pwr falling stops the branch",
+   "failed_checks": 2,
+   "caught_by_public": false,
+   "failed_case_instances": [
+    "stop_paths/seed",
+    "stop_paths/step"
+   ],
+   "first_failure": "stop_paths/seed: vro = 0 while off, precharging or stopped (S1, S4)"
+  }
+ ],
+ "note": "alternative.va is closed-form; an idt()-based correct variant was not usable because legacy 0.8.7 integrates idt() in only one of two instances of a module (see SOURCE.md, open items)",
+ "raw": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-rf-branch/calibration/"
+}

@@ -1,0 +1,63 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Calibration sample: a second correct implementation with a different
+// internal organization (one packed word, bitwise Gray decode, a single
+// event queue). The checker must accept it.
+module dppm_fsk_encoder8(sym, sym_valid, rst, pos, inc, fcode, req, enc_valid);
+    input [5:0] sym;
+    input sym_valid, rst;
+    output [2:0] pos, inc, fcode;
+    output [7:0] req;
+    output enc_valid;
+    electrical [5:0] sym;
+    electrical sym_valid, rst, enc_valid;
+    electrical [2:0] pos, inc, fcode;
+    electrical [7:0] req;
+
+    parameter real vdd = 1.0 from (0:inf);
+    parameter real vth = 0.5;
+    parameter real tr = 2p from (0:inf);
+    parameter real t_enc = 10p from (0:inf);
+    parameter real t_ev = 30p from (0:inf);
+    parameter real t_pw = 400p from (0:inf);
+
+    integer w, g, acc, shown, next_shown, ev;
+    real t_a, t_b, t_c;
+    genvar i;
+
+    analog begin
+        @(initial_step) begin
+            acc = 0; shown = 0; next_shown = 0; ev = 0; t_a = 1; t_b = 1; t_c = 1;
+        end
+        @(cross(V(rst) - vth, +1)) begin
+            acc = 0; shown = 0; ev = 0; t_a = 1; t_b = 1; t_c = 1;
+        end
+        @(cross(V(sym_valid) - vth, -1)) begin
+            if (V(rst) <= vth) begin
+                w = 32 * (V(sym[5]) > vth) + 16 * (V(sym[4]) > vth) + 8 * (V(sym[3]) > vth)
+                    + 4 * (V(sym[2]) > vth) + 2 * (V(sym[1]) > vth) + (V(sym[0]) > vth);
+                g = w / 8;
+                g = g ^ (g / 2) ^ (g / 4);         // increment D
+                acc = (acc + g) % 8;
+                // packed display word: bit 9 = valid word, bits 8:6 P, 5:3 D, 2:0 F
+                w = w % 8;
+                w = w ^ (w / 2) ^ (w / 4);         // frequency F
+                next_shown = 512 + 64 * acc + 8 * g + w;
+                t_a = $abstime + t_enc; t_b = $abstime + t_ev; t_c = $abstime + t_ev + t_pw;
+            end
+        end
+        @(timer(t_a)) shown = next_shown;
+        @(timer(t_b)) ev = 1;
+        @(timer(t_c)) ev = 0;
+
+        for (i = 0; i < 3; i = i + 1) begin
+            V(pos[i]) <+ transition(((shown / 64) / (1 << i)) % 2 * vdd, 0, tr);
+            V(inc[i]) <+ transition(((shown / 8) / (1 << i)) % 2 * vdd, 0, tr);
+            V(fcode[i]) <+ transition((shown / (1 << i)) % 2 * vdd, 0, tr);
+        end
+        for (i = 0; i < 8; i = i + 1)
+            V(req[i]) <+ transition(((shown >= 512) && (shown % 8 == i)) * vdd, 0, tr);
+        V(enc_valid) <+ transition(ev * vdd, 0, tr);
+    end
+endmodule

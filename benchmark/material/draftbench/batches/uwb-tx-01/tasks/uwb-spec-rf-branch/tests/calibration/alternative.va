@@ -1,0 +1,52 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Calibration sample: a second correct implementation with a different
+// internal organization. Separate crossing events set a "dead" flag (no
+// oscillation) instead of an enable; the precharge input is not read at all;
+// the settling factors use 0.01^(u/t99) instead of a time constant; the
+// phase is written as w0*u + w0*df*tau_f*(1 - settle_f) and the output as a
+// sine of the angle shifted by pi/2; there is no $bound_step (the bench
+// limits the step). The checker must accept it.
+module rf_ro_branch(pwr, pre, rel, vro);
+    input pwr, pre, rel;
+    output vro;
+    electrical pwr, pre, rel, vro;
+
+    parameter real f_rf = 6e9 from (0:inf);
+    parameter real a_ro = 1.0 from [0:inf);
+    parameter real t99_amp = 200p from [0:inf);
+    parameter real t99_freq = 200p from [0:inf);
+    parameter real df_start = 0.01;
+    parameter real phi0 = 0;
+    parameter real vth = 0.5;
+
+    integer dead;
+    real w0, t_rel, u, settle_a, settle_f, amp;
+
+    analog begin
+        @(initial_step) begin
+            dead = 1; t_rel = 0;
+            w0 = 2 * `M_PI * f_rf;
+        end
+        @(cross(V(pwr) - vth, -1)) dead = 1;
+        @(cross(V(rel) - vth, -1)) dead = 1;
+        @(cross(V(rel) - vth, +1)) begin
+            if (V(pwr) > vth) begin
+                dead = 0; t_rel = $abstime;
+            end
+        end
+
+        u = $abstime - t_rel;
+        settle_a = 0;
+        if (t99_amp > 0)
+            settle_a = pow(0.01, u / t99_amp);
+        settle_f = 0;
+        if (t99_freq > 0)
+            settle_f = pow(0.01, u / t99_freq);
+        amp = 0;
+        if (!dead)
+            amp = a_ro * (1 - settle_a);
+        V(vro) <+ amp * sin(w0 * u + w0 * df_start * t99_freq / ln(100) * (1 - settle_f) + phi0 + `M_PI / 2);
+    end
+endmodule

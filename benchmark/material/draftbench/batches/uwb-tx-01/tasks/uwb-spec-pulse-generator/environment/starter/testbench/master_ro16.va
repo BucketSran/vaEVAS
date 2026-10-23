@@ -1,0 +1,65 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Fixed public model, not part of the deliverable: 672 MHz master ring
+// oscillator with 16 phase taps (circuits/ir-uwb-tx SPEC.md 4.4).
+// Frequency f = f0 + code * fstep. Modeled as an 8-stage differential ring:
+// tap k rises k*delta after ph[0], delta = 1/(16 f), 50 % duty. One internal
+// counter m advances every delta; tap k is high while (m - k) mod 16 < 8, so
+// ph[0] rises when m wraps to 0. A code change is applied t_code after the
+// code bits move (so a multi-bit change is read once, after it settles) and
+// keeps the phase: the part of the current tap interval already elapsed is
+// kept and the rest runs at the new frequency. The phase is never reset.
+// The code is also read at t = t_code, so a code that is not yet valid when
+// initial_step runs does not leave the RO at the wrong frequency.
+module master_ro16(code, ph);
+    input [9:0] code;
+    output [15:0] ph;
+    electrical [9:0] code;
+    electrical [15:0] ph;
+
+    parameter real f0 = 600e6 from (0:inf);
+    parameter real fstep = 0.25e6 from [0:inf);
+    parameter real phase0 = 0 from [0:1);        // initial phase, fraction of a period
+    parameter real vdd = 1.0;
+    parameter real vth = 0.5;
+    parameter real tr = 2p from (0:inf);
+    parameter real t_code = 5p from (0:inf);     // code read delay after a code edge
+
+    integer m, c;
+    real f, t_last, t_next, t_read, r;
+    genvar i;
+
+    analog begin
+        @(initial_step) begin
+            c = 1 * (V(code[0]) > vth) + 2 * (V(code[1]) > vth) + 4 * (V(code[2]) > vth) + 8 * (V(code[3]) > vth) + 16 * (V(code[4]) > vth) + 32 * (V(code[5]) > vth) + 64 * (V(code[6]) > vth) + 128 * (V(code[7]) > vth) + 256 * (V(code[8]) > vth) + 512 * (V(code[9]) > vth);
+            f = f0 + fstep * c;
+            m = floor(16 * phase0);
+            r = 16 * phase0 - m;                 // part of the current interval elapsed
+            t_last = -r / (16 * f);
+            t_next = (1 - r) / (16 * f);
+            t_read = t_code;        // read the code once more after start-up
+        end
+        @(cross(V(code[0]) - vth, 0) or cross(V(code[1]) - vth, 0) or cross(V(code[2]) - vth, 0)
+          or cross(V(code[3]) - vth, 0) or cross(V(code[4]) - vth, 0) or cross(V(code[5]) - vth, 0)
+          or cross(V(code[6]) - vth, 0) or cross(V(code[7]) - vth, 0) or cross(V(code[8]) - vth, 0)
+          or cross(V(code[9]) - vth, 0))
+            t_read = $abstime + t_code;
+        @(timer(t_read)) begin
+            c = 1 * (V(code[0]) > vth) + 2 * (V(code[1]) > vth) + 4 * (V(code[2]) > vth) + 8 * (V(code[3]) > vth) + 16 * (V(code[4]) > vth) + 32 * (V(code[5]) > vth) + 64 * (V(code[6]) > vth) + 128 * (V(code[7]) > vth) + 256 * (V(code[8]) > vth) + 512 * (V(code[9]) > vth);
+            // keep the elapsed share of the current tap interval
+            r = ($abstime - t_last) / (t_next - t_last);
+            f = f0 + fstep * c;
+            t_last = $abstime - r / (16 * f);
+            t_next = $abstime + (1 - r) / (16 * f);
+        end
+        @(timer(t_next)) begin
+            m = (m + 1) % 16;
+            t_last = t_next;
+            t_next = t_next + 1 / (16 * f);
+        end
+
+        for (i = 0; i < 16; i = i + 1)
+            V(ph[i]) <+ transition(((m - i + 16) % 16 < 8) * vdd, 0, tr);
+    end
+endmodule

@@ -25,8 +25,8 @@ EVAS_REPO = Path(os.environ.get('UWB_EVAS_REPO', REPO))
 KERNEL = EVAS_REPO / 'evas/rust_core/target/release/evas-kernel'
 # Legacy EVAS 0.8.7 (the simulator vaBench r53 was certified on): an export of
 # legacy/EVAS commit 6cb6fa7a plus a Python with numpy. See the family README.
-LEGACY_SRC = Path(os.environ.get('UWB_LEGACY_SRC', '/tmp/legacy-run/src'))
-LEGACY_PY = os.environ.get('UWB_LEGACY_PY', '/tmp/legacy-run/venv/bin/python')
+LEGACY_SRC = Path(os.environ.get('UWB_LEGACY_SRC', '/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/legacy-evas-0.8.7/src'))
+LEGACY_PY = os.environ.get('UWB_LEGACY_PY', '/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/legacy-evas-0.8.7/venv/bin/python')
 BACKEND = os.environ.get('UWB_BACKEND', 'legacy')   # 'legacy' or 'evas'
 
 # System constants (SPEC.md section 2)
