@@ -165,6 +165,38 @@ class PulseAssertResets(unittest.TestCase):
                                           sawtooth(self.TIMES, resets, points, gain=2e6, ic=0.5))]
         self.assertClose(values(result), expected, 3 * TIMER_TOL, self.TIMES)
 
+    def test_zero_input_keeps_ic_exactly_through_pulses(self):
+        # Zero input gives exactly IC at every time, including extreme
+        # magnitudes: combining the two restarted histories must count IC once.
+        for ic in [1e300, -1e300, 0.1]:
+            with self.subTest(ic=ic):
+                body = f"""
+                  reset = 0;
+                  @(timer(1.0e-6, 1.0e-6)) reset = 1;
+                  V(y,r) <+ idt(0, {ic}, reset);
+                """
+                result, _ = run(body, times=self.TIMES)
+                self.assertEqual(values(result), [ic] * len(self.TIMES))
+
+    def test_instances_keep_their_own_pulse_schedules(self):
+        # Each bound instance owns its parity state and event toggles.
+        source = model("""
+          reset = 0;
+          @(timer(period, period)) reset = 1;
+          V(y,r) <+ idt(1.0e6, 0.0, reset);
+        """, 'integer reset; parameter real period = 1.0e-6;')
+        program = compile_sources({'pulse.va': source}, [
+            instance('fast', connections=dict(u='u', y='y1', r='0'), parameters={'period': 0.5e-6}),
+            instance('slow', connections=dict(u='u', y='y2', r='0'))])
+        points = [[0, 1], [4 * US, 1]]
+        # 1.5 us = 3 * 0.5 us is not an exact binary64 schedule instant.
+        times = [t for t in self.TIMES if t != 1.5 * US]
+        result = transient(program, {'u': points}, times, stop=4 * US, max_step=4 * US, kernel=KERNEL)
+        fast = sawtooth(times, [k * .5 * US for k in range(1, 8)], points)
+        slow = sawtooth(times, [1 * US, 2 * US, 3 * US], points)
+        self.assertClose(values(result, 'y1'), fast, TIMER_TOL, times)
+        self.assertClose(values(result, 'y2'), slow, TIMER_TOL, times)
+
     def test_feedback_integrand_restarts_from_ic(self):
         # y' = 1e6 (1 - y), restarted at 0 every microsecond:
         # y(t) = 1 - exp(-1e6 (t - r(t))). This integral is solved by the
