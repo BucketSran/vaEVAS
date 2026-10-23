@@ -19,7 +19,7 @@
 | RF 支路 RO | [module/rf_ro_branch.va](module/rf_ro_branch.va) | [m3_pulse/check_rf.py](test/m3_pulse/check_rf.py)：与公式误差 1.5e-11 V，冷启动可重复，首周期 +1% 频差 | 通过 |
 | 包络通道 | [module/envelope_lane.va](module/envelope_lane.va) | 同上：与 RK4 数值解误差 1.1e-11，150 ps 后尾部 < 1e-6 | 通过 |
 | 8 支路调度器 | [module/ro_scheduler8.va](module/ro_scheduler8.va) | [m4_chain](test/m4_chain/check_chain.py)：保持条件、空闲 HOLD 窗口、抢占空闲 HOLD、两条通道上的丢弃、长空闲后冷启动、两路供电上限 | 通过 |
-| 合路 / PA / 差分输出 | [module/tx_output.va](module/tx_output.va) | 同上：outp−outn 与独立重建误差 ≤ 5e-5 V | 通过 |
+| 合路 / PA / 差分输出 | [module/tx_output.va](module/tx_output.va) | 同上：outp−outn 与独立重建的最大误差 5.2e-5 V（随机 200 符号场景） | 通过 |
 | 系统顶层 | [system/tx_seed.va](system/tx_seed.va) | [system](test/system/check_system.py)：先校准（44.5 µs 时 done），再从 RF 波形解出符号：40/40 正确 | 通过 |
 
 整链 4097 个符号（分 8 段）全部通过：每个 PG 窗口、每个支路的供电/预充电/释放边沿、门控和冲突都与独立重放一致。
