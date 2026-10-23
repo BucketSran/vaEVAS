@@ -16,7 +16,7 @@ See the [support matrix](../COMPARISON.md) for delivery status. Independent cont
 | --- | --- | --- | --- |
 | [transition](#transition) | [transition.rs](../../rust_core/src/transition.rs) | [边沿与队列](../../tests/test_transition.py)、[历史精度](../../tests/test_transition_accuracy.py) | 事件目标安装与[共同观察](continuous.md#lifecycle-observation-review-fixes) |
 | [absdelay](#absdelay) | [absdelay.rs](../../rust_core/src/absdelay.rs) | [延迟查询](../../tests/test_absdelay.py)、[精度](../../tests/test_absdelay_accuracy.py) | 分支候选支持内部仿射电压投影；非点事件观察明确拒绝 |
-| [idt](#idt) | [idt.rs](../../rust_core/src/idt.rs) | [积分与复位](../../tests/test_idt.py)、[精度](../../tests/test_idt_accuracy.py) | [积分反馈](continuous.md#电压关系与积分反馈)、[联合复位](continuous.md#事件修改的联合积分与复位) |
+| [idt](#idt) | [idt.rs](../../rust_core/src/idt.rs)；脉冲 assert 由 [idt_pulse_reset.py](../../src/evas/idt_pulse_reset.py) 改写 | [积分与复位](../../tests/test_idt.py)、[精度](../../tests/test_idt_accuracy.py)、[脉冲 assert](../../tests/test_idt_pulse_reset.py) | [积分反馈](continuous.md#电压关系与积分反馈)、[联合复位](continuous.md#事件修改的联合积分与复位) |
 | [laplace_nd](#laplace_nd) | [laplace.rs](../../rust_core/src/laplace.rs) | [一阶低通](../../tests/test_laplace.py) | [完整状态空间](continuous.md#高阶滤波的完整状态空间)、[混合网络](continuous.md#多项式积分与滤波的混合网络) |
 | [laplace_np](#laplace_np) | [编译转换](../../src/evas/instance_compiler.py)，复用 laplace_nd | [实极点与独立答案](../../tests/test_laplace_np.py) | 本批验证直接连续 PWL；不扩大联合依赖范围 |
 | [idtmod / sin](#idtmod-与-sin) | [idtmod.rs](../../rust_core/src/idtmod.rs)；sin 在 [operators.rs](../../rust_core/src/operators.rs) | [相位与函数](../../tests/test_phase.py) | 受限 sin 可供[动态 guard](continuous.md#非线性-guard-的根证明)使用；idtmod 的非点事件观察明确拒绝 |
@@ -803,7 +803,7 @@ G=2^30、d1=.1、d2=.2、x=t/3 的冻结 1e-10 和 1e-6 预算均拒绝，后者
 `idt(direct_affine_input, constant_ic)` 与受限的
 `idt(direct_affine_input, constant_ic, state_reset)`：输入为直接驱动、连续 PWL 的仿射组合，
 初值为显式有限实例常量，仿真起点为 0。reset 必须是同实例状态和常数的仿射表达式，
-且每次事件后能用状态区间证明为零或非零。若输入单位为 U，积分和初值单位为 U·s；
+且每次事件后能用状态区间证明为零或非零。只在事件时刻非零的 assert 见[脉冲 assert](#idt-pulse-assert)。若输入单位为 U，积分和初值单位为 U·s；
 电压贡献中的比例系数由模型提供。参数绑定后每个展开实例的调用点有独立 operator 索引，
 多个调用点即使贡献同一支路也不共享初值或历史。
 
@@ -894,6 +894,38 @@ IR 的 idt 记录保存 `kind=idt,input,ic,origin` 及可空 `reset` 表达式�
 [D1 收据](../../../experiments/archive/pr14-pr15-validation/results/idt-reset-review.json)及
 [复位合并验证](../../../experiments/archive/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)。
 这些结果绑定原检查点，不证明精确事件时刻或连续时间全轨迹精度。
+
+<a id="idt-pulse-assert"></a>
+
+### 事件时刻的脉冲 assert
+
+LRM 2.4 §4.5.4 的 `ramp_generator` 每次求值先执行 `reset = 0`，`@(timer)` 或 `@(cross)` 再置 1，
+其后的 `idt(x, c, reset)` 只在事件时刻那次求值读到 1。LRM 规定 idt 返回“从 assert 最后一次非零的时刻起”的积分，
+所以积分在每个事件时刻从 c 重新开始，输出为锯齿（[#230](https://github.com/BucketSran/vaEVAS/issues/230)）。
+普通求值读到的是清零后的别名，事件写入的状态槽没有普通读者，原降级因此得到常数 0 的 reset，从不复位。
+电平 reset 无法表示零长度的 assert；[idt_pulse_reset.py](../../src/evas/idt_pulse_reset.py) 只用已认证的 IR 改写：
+
+- 新增隐藏 integer 奇偶状态 `p`（初值 0，名为 `<assert>@idt_pulse<k>`）。每个置位事件体先恢复普通赋值的值
+  （源码中它先于事件执行），体末若 assert 非零则 `p = 1 - p`。
+- `idt(x, c, assert) = A + (B - c)`，其中 `A = idt(x, c, p)`、`B = idt(x, c, 1 - p)`。任一时刻 A、B 恰有一个被电平
+  reset 保持为 c，另一个从上次翻转（或 t=0）释放，所以结果为 c 加上从最近一次脉冲起的积分。B 被保持时
+  `B - c` 精确为 0；两份历史各自沿用上文的前缀差、事件时间包围和电压验收。
+
+事件时刻本身报告事件后的值 c（`transient` 输出事件后值，与电平 reset 一致）。同一时刻两个置位事件块都写 `p`，
+仍按既有同刻写者规则拒绝（`event_conflict`）。
+
+准入范围：assert 是裸 integer 变量；恰有一条无条件顶层普通赋值，其值为实例常数；置位事件为 cross、timer 或其 OR，
+源码位置在该赋值之后、idt 调用之前。普通值为非零常数时 assert 在其余时刻非零，输出始终为 c，沿用原降级。
+只由事件写的状态（没有普通赋值）仍是电平 reset。事件在普通赋值之前（其写入被覆盖）或在 idt 调用之后时，
+调用点读不到事件值，不构成复位。
+
+事件时刻值可能不同于普通值、但不在上述范围内的写法返回 `unsupported_idt_pulse_reset`：经局部变量复制、
+assert 表达式（如 `2*reset`）、final_step 置位、多条或条件普通赋值、跨文件或宏展开导致源码顺序无法比较。
+普通赋值先于事件的 real assert 仍由 `unsupported_local_event` 拒绝。
+
+独立回归 [test_idt_pulse_reset.py](../../tests/test_idt_pulse_reset.py) 以有理数积分的锯齿闭式解覆盖 timer、cross、OR、
+条件写入、非零 IC 与驱动输入、两个调用点、多实例和反馈积分（连续网络路径）；对照覆盖区间保持、`$abstime` 偏移、
+两种不构成复位的源码顺序及同刻冲突。Spectre 对照尚未运行；旧 EVAS 0.8.7 忽略 assert 参数，不能作对照。
 
 ## laplace_nd
 
