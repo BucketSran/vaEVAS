@@ -1,0 +1,184 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Supply and start/stop scheduler for the 8 RF branch oscillators.
+// The seed allows two powered branches, so the scheduler owns
+// two supply slots; a branch is powered only while a slot holds it. Branch
+// states: 0 OFF, 1 PRECHARGE, 2 RELEASE_SETTLE (zero length while
+// T_launch_lead = 0, never entered), 3 ACTIVE, 4 TAIL, 5 HOLD.
+//
+// A lane request (rising pre_x) asks for branch k = sel_x:
+//   - k already powered (precharge, active, tail or hold): granted "warm";
+//   - else a free slot takes k into PRECHARGE (cold start);
+//   - else a slot in HOLD with no pending request is given to k;
+//   - else the symbol is dropped: no gate, conflict pulses for t_conf.
+// A granted rf_x rise releases a precharging branch (cold start) or keeps an
+// oscillating one running (phase continuous) and raises gate_x. When no lane
+// is active on the branch any more it enters TAIL for t_tail. After TAIL the
+// branch holds (keeps oscillating) while a request is pending; otherwise it
+// holds for max(0, t_hold - n_pre*delta0) waiting for a request and then turns
+// off, which keeps a branch only when the next start lies within t_hold of
+// the tail end. n_pre must match the PG and be at least 1, because every
+// cold start begins with a precharge.
+module uwb_ro_scheduler8(pre_a, rf_a, sel_a, pre_b, rf_b, sel_b, rst,
+                         pwr, pre, rel, gate_a, gate_b, conflict, nsup, st);
+    input pre_a, rf_a, pre_b, rf_b, rst;
+    input [2:0] sel_a, sel_b;
+    output [7:0] pwr, pre, rel, st;
+    output gate_a, gate_b, conflict, nsup;
+    electrical pre_a, rf_a, pre_b, rf_b, rst, gate_a, gate_b, conflict, nsup;
+    electrical [2:0] sel_a, sel_b;
+    electrical [7:0] pwr, pre, rel, st;
+
+    parameter integer n_pre = 2 from [1:15];        // must match the PG
+    parameter real delta0 = 93.00595238095238p from (0:inf);
+    parameter real t_tail = 150p from [0:inf);
+    parameter real t_hold = 200p from [0:inf);
+    parameter real t_conf = 200p from (0:inf);
+    parameter real vdd = 1.0;
+    parameter real vth = 0.5;
+    parameter real tr = 2p from (0:inf);
+
+    // slot s: branch s_br (-1 free), state s_st, granted-not-started s_pend,
+    // active lanes s_nact, deadline s_due (end of TAIL or of an idle HOLD)
+    integer s0_br, s0_st, s0_pend, s0_nact, s1_br, s1_st, s1_pend, s1_nact;
+    real s0_due, s1_due;
+    integer la_slot, lb_slot, ga, gb, k, conf;
+    real t_wake, t_conf_off, t_wait, eps;
+    genvar i;
+
+    analog begin
+        @(initial_step) begin
+            s0_br = -1; s0_st = 0; s0_pend = 0; s0_nact = 0; s0_due = 1.0;
+            s1_br = -1; s1_st = 0; s1_pend = 0; s1_nact = 0; s1_due = 1.0;
+            la_slot = -1; lb_slot = -1; ga = 0; gb = 0; k = 0;
+            conf = 0; t_conf_off = 1.0; t_wake = 1.0; eps = 1e-15;
+            t_wait = t_hold - n_pre * delta0;
+            if (t_wait < 0) t_wait = 0;
+        end
+        @(cross(V(rst) - vth, +1)) begin
+            s0_br = -1; s0_st = 0; s0_pend = 0; s0_nact = 0;
+            s1_br = -1; s1_st = 0; s1_pend = 0; s1_nact = 0;
+            la_slot = -1; lb_slot = -1; ga = 0; gb = 0;
+        end
+
+        // lane a asks for branch k = sel_a
+        @(cross(V(pre_a) - vth, +1)) begin
+            if (V(rst) < vth) begin
+                k = 4 * (V(sel_a[2]) > vth) + 2 * (V(sel_a[1]) > vth) + (V(sel_a[0]) > vth);
+                if (s0_st != 0 && s0_br == k) begin
+                    la_slot = 0; s0_pend = s0_pend + 1;             // warm: already powered
+                end else if (s1_st != 0 && s1_br == k) begin
+                    la_slot = 1; s1_pend = s1_pend + 1;
+                end else if (s0_st == 0) begin
+                    s0_br = k; s0_st = 1; s0_pend = 1; la_slot = 0;   // cold: precharge
+                end else if (s1_st == 0) begin
+                    s1_br = k; s1_st = 1; s1_pend = 1; la_slot = 1;
+                end else if (s0_st == 5 && s0_pend == 0) begin
+                    s0_br = k; s0_st = 1; s0_pend = 1; la_slot = 0;   // replace an idle hold
+                end else if (s1_st == 5 && s1_pend == 0) begin
+                    s1_br = k; s1_st = 1; s1_pend = 1; la_slot = 1;
+                end else begin
+                    la_slot = -1; conf = 1; t_conf_off = $abstime + t_conf;   // drop the symbol
+                end
+            end
+        end
+        // lane b asks for branch k = sel_b
+        @(cross(V(pre_b) - vth, +1)) begin
+            if (V(rst) < vth) begin
+                k = 4 * (V(sel_b[2]) > vth) + 2 * (V(sel_b[1]) > vth) + (V(sel_b[0]) > vth);
+                if (s0_st != 0 && s0_br == k) begin
+                    lb_slot = 0; s0_pend = s0_pend + 1;             // warm: already powered
+                end else if (s1_st != 0 && s1_br == k) begin
+                    lb_slot = 1; s1_pend = s1_pend + 1;
+                end else if (s0_st == 0) begin
+                    s0_br = k; s0_st = 1; s0_pend = 1; lb_slot = 0;   // cold: precharge
+                end else if (s1_st == 0) begin
+                    s1_br = k; s1_st = 1; s1_pend = 1; lb_slot = 1;
+                end else if (s0_st == 5 && s0_pend == 0) begin
+                    s0_br = k; s0_st = 1; s0_pend = 1; lb_slot = 0;   // replace an idle hold
+                end else if (s1_st == 5 && s1_pend == 0) begin
+                    s1_br = k; s1_st = 1; s1_pend = 1; lb_slot = 1;
+                end else begin
+                    lb_slot = -1; conf = 1; t_conf_off = $abstime + t_conf;   // drop the symbol
+                end
+            end
+        end
+        @(cross(V(rf_a) - vth, +1)) begin
+            if (V(rst) < vth && la_slot == 0) begin
+                s0_st = 3; s0_nact = s0_nact + 1; if (s0_pend > 0) s0_pend = s0_pend - 1; ga = 1;
+            end else if (V(rst) < vth && la_slot == 1) begin
+                s1_st = 3; s1_nact = s1_nact + 1; if (s1_pend > 0) s1_pend = s1_pend - 1; ga = 1;
+            end
+        end
+        @(cross(V(rf_a) - vth, -1)) begin
+            if (ga && la_slot == 0) begin
+                s0_nact = s0_nact - 1;
+                if (s0_nact <= 0) begin s0_nact = 0; s0_st = 4; s0_due = $abstime + t_tail; end
+            end else if (ga && la_slot == 1) begin
+                s1_nact = s1_nact - 1;
+                if (s1_nact <= 0) begin s1_nact = 0; s1_st = 4; s1_due = $abstime + t_tail; end
+            end
+            ga = 0; la_slot = -1;
+        end
+        @(cross(V(rf_b) - vth, +1)) begin
+            if (V(rst) < vth && lb_slot == 0) begin
+                s0_st = 3; s0_nact = s0_nact + 1; if (s0_pend > 0) s0_pend = s0_pend - 1; gb = 1;
+            end else if (V(rst) < vth && lb_slot == 1) begin
+                s1_st = 3; s1_nact = s1_nact + 1; if (s1_pend > 0) s1_pend = s1_pend - 1; gb = 1;
+            end
+        end
+        @(cross(V(rf_b) - vth, -1)) begin
+            if (gb && lb_slot == 0) begin
+                s0_nact = s0_nact - 1;
+                if (s0_nact <= 0) begin s0_nact = 0; s0_st = 4; s0_due = $abstime + t_tail; end
+            end else if (gb && lb_slot == 1) begin
+                s1_nact = s1_nact - 1;
+                if (s1_nact <= 0) begin s1_nact = 0; s1_st = 4; s1_due = $abstime + t_tail; end
+            end
+            gb = 0; lb_slot = -1;
+        end
+        // next deadline: a slot in TAIL, or in HOLD without a pending request
+        // (computed before and after the timer so a deadline set by a lane
+        // event above is seen in the same evaluation)
+        t_wake = 1.0;
+        if ((s0_st == 4 || (s0_st == 5 && s0_pend == 0)) && s0_due < t_wake) t_wake = s0_due;
+        if ((s1_st == 4 || (s1_st == 5 && s1_pend == 0)) && s1_due < t_wake) t_wake = s1_due;
+        @(timer(t_wake)) begin
+            if (s0_st == 4 && s0_due <= $abstime + eps) begin
+                s0_st = 5;                                  // tail done
+                if (s0_pend == 0) begin
+                    s0_due = $abstime + t_wait;             // idle hold, may end
+                    if (t_wait <= 0) begin s0_st = 0; s0_br = -1; end
+                end
+            end else if (s0_st == 5 && s0_pend == 0 && s0_due <= $abstime + eps) begin
+                s0_st = 0; s0_br = -1;
+            end
+            if (s1_st == 4 && s1_due <= $abstime + eps) begin
+                s1_st = 5;                                  // tail done
+                if (s1_pend == 0) begin
+                    s1_due = $abstime + t_wait;             // idle hold, may end
+                    if (t_wait <= 0) begin s1_st = 0; s1_br = -1; end
+                end
+            end else if (s1_st == 5 && s1_pend == 0 && s1_due <= $abstime + eps) begin
+                s1_st = 0; s1_br = -1;
+            end
+        end
+        @(timer(t_conf_off)) conf = 0;
+
+        t_wake = 1.0;
+        if ((s0_st == 4 || (s0_st == 5 && s0_pend == 0)) && s0_due < t_wake) t_wake = s0_due;
+        if ((s1_st == 4 || (s1_st == 5 && s1_pend == 0)) && s1_due < t_wake) t_wake = s1_due;
+
+        for (i = 0; i < 8; i = i + 1) begin
+            V(pwr[i]) <+ transition(((s0_st != 0 && s0_br == i) || (s1_st != 0 && s1_br == i)) * vdd, 0, tr);
+            V(pre[i]) <+ transition(((s0_st == 1 && s0_br == i) || (s1_st == 1 && s1_br == i)) * vdd, 0, tr);
+            V(rel[i]) <+ transition(((s0_st >= 2 && s0_br == i) || (s1_st >= 2 && s1_br == i)) * vdd, 0, tr);
+            V(st[i]) <+ transition(0.2 * ((s0_br == i) * s0_st + (s1_br == i) * s1_st), 0, tr);
+        end
+        V(gate_a) <+ transition(ga * vdd, 0, tr);
+        V(gate_b) <+ transition(gb * vdd, 0, tr);
+        V(conflict) <+ transition(conf * vdd, 0, tr);
+        V(nsup) <+ transition(1.0 * ((s0_st != 0) + (s1_st != 0)), 0, tr);
+    end
+endmodule

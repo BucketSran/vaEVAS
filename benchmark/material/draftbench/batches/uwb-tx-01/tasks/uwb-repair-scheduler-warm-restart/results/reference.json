@@ -1,0 +1,336 @@
+{
+ "task": "uwb-repair-scheduler-warm-restart",
+ "backend": "legacy EVAS 0.8.7, interim; declared backend evas pending",
+ "simulator_identity": {
+  "build_revision": null,
+  "cli_version": "0.8.7",
+  "engine": "evas-rust",
+  "package_name": "evas-sim",
+  "package_version": "0.8.7",
+  "rust_core_abi_version": 20260718,
+  "rust_core_loadable": true,
+  "rust_core_present": true,
+  "rust_core_version": "0.2.4",
+  "schema_version": 1
+ },
+ "legacy_install": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/legacy-evas-0.8.7",
+ "sample": "solution/modules (gold modules of circuits/ir-uwb-tx/module, comments only changed)",
+ "candidate_sha256": "594ff3150c6edeea38b60f0a37527543d1d40e5e6e4b4d72a25a3cd8c1497630",
+ "candidate_files": {
+  "dppm_fsk_encoder8.va": "b70e2bc51119241880a3cc7c1f49afd4a2d58c91ec940b58dd6f2c5671c44965",
+  "envelope_lane.va": "680326d8047602be07de0c3fcd0465507c6fcdbde0df3aa9ee43d993ce66dd96",
+  "master_ro16.va": "2822f542024c44588968b95042c0731c8415f520cc2276ee949e64ac4532a050",
+  "pulse_generator.va": "5c1af87843add8f092f15f6867045a03cb4365949198f1b7a800fb3675b15015",
+  "rf_ro_branch.va": "c4f3691760b4b1b44da111550d2ef4a5c22b8c3dbb40bea49509911ca0811730",
+  "ro_frequency_cal.va": "c823a16a0c473fddf77476d1e03d575694d48188e035c9070b7aa1f28e33eb28",
+  "ro_scheduler8.va": "53a6251709d4f94eaea7ba2ec6b5d4e1245d99c8f4e5f926b1ab009e3af179b0",
+  "serial_to_symbol6.va": "13a581b9e63d16e148c8e0968e2d3d13b62be257a3c3cc876a28971b1607bddb",
+  "tx_output.va": "b49ba906db62672d83eed53be7143246cd576c66043e1b6c5d8a4589f9504e2c"
+ },
+ "status": "executed",
+ "score": 1,
+ "cases": [
+  {
+   "name": "hold",
+   "set": "public",
+   "words": 16,
+   "bench": {
+    "n_pre": 2,
+    "t_tail": 1.5e-10,
+    "t_hold": 2e-10,
+    "clk_delay": 1e-11,
+    "dpc_db": [
+     0.0,
+     -1.0,
+     0.5,
+     -2.0,
+     1.5,
+     0.0,
+     -0.5,
+     1.0
+    ]
+   },
+   "stop_ns": 33.989,
+   "expected_paths": {
+    "warm": 3,
+    "warm_in_precharge": 0,
+    "warm_from_idle": 0,
+    "warm_slot1": 0,
+    "warm_lane_b": 1,
+    "cold": 17,
+    "preempt": 0,
+    "preempt_two_idle": 0,
+    "drops": 0,
+    "drop_lanes": 0
+   }
+  },
+  {
+   "name": "conflict",
+   "set": "public",
+   "words": 12,
+   "bench": {
+    "n_pre": 15,
+    "t_tail": 1.5e-10,
+    "t_hold": 2e-10,
+    "clk_delay": 1e-11
+   },
+   "stop_ns": 28.037,
+   "expected_paths": {
+    "warm": 3,
+    "warm_in_precharge": 0,
+    "warm_from_idle": 0,
+    "warm_slot1": 3,
+    "warm_lane_b": 2,
+    "cold": 11,
+    "preempt": 0,
+    "preempt_two_idle": 0,
+    "drops": 2,
+    "drop_lanes": 2
+   }
+  },
+  {
+   "name": "hold_idle",
+   "set": "final",
+   "words": 13,
+   "bench": {
+    "n_pre": 1,
+    "t_tail": 1.5e-10,
+    "t_hold": 2e-10,
+    "clk_delay": 1e-11
+   },
+   "stop_ns": 29.525,
+   "expected_paths": {
+    "warm": 3,
+    "warm_in_precharge": 0,
+    "warm_from_idle": 1,
+    "warm_slot1": 0,
+    "warm_lane_b": 2,
+    "cold": 14,
+    "preempt": 0,
+    "preempt_two_idle": 0,
+    "drops": 0,
+    "drop_lanes": 0
+   }
+  },
+  {
+   "name": "preempt",
+   "set": "final",
+   "words": 10,
+   "bench": {
+    "n_pre": 2,
+    "t_tail": 1.5e-10,
+    "t_hold": 2e-09,
+    "clk_delay": 1e-11
+   },
+   "stop_ns": 25.061,
+   "expected_paths": {
+    "warm": 3,
+    "warm_in_precharge": 0,
+    "warm_from_idle": 3,
+    "warm_slot1": 3,
+    "warm_lane_b": 2,
+    "cold": 11,
+    "preempt": 5,
+    "preempt_two_idle": 2,
+    "drops": 0,
+    "drop_lanes": 0
+   }
+  },
+  {
+   "name": "long_precharge",
+   "set": "final",
+   "words": 13,
+   "bench": {
+    "n_pre": 4,
+    "t_tail": 1.5e-10,
+    "t_hold": 2e-10,
+    "clk_delay": 1e-11
+   },
+   "stop_ns": 29.525,
+   "expected_paths": {
+    "warm": 3,
+    "warm_in_precharge": 0,
+    "warm_from_idle": 0,
+    "warm_slot1": 2,
+    "warm_lane_b": 1,
+    "cold": 14,
+    "preempt": 0,
+    "preempt_two_idle": 0,
+    "drops": 0,
+    "drop_lanes": 0
+   }
+  },
+  {
+   "name": "cold_cycle",
+   "set": "final",
+   "words": 48,
+   "bench": {
+    "n_pre": 2,
+    "t_tail": 1.5e-10,
+    "t_hold": 2e-10,
+    "clk_delay": 1e-11
+   },
+   "stop_ns": 81.608,
+   "expected_paths": {
+    "warm": 0,
+    "warm_in_precharge": 0,
+    "warm_from_idle": 0,
+    "warm_slot1": 0,
+    "warm_lane_b": 0,
+    "cold": 52,
+    "preempt": 0,
+    "preempt_two_idle": 0,
+    "drops": 0,
+    "drop_lanes": 0
+   }
+  },
+  {
+   "name": "random_a",
+   "set": "final",
+   "words": 80,
+   "bench": {
+    "n_pre": 2,
+    "t_tail": 1.5e-10,
+    "t_hold": 2e-10,
+    "clk_delay": 1e-11,
+    "dpc_db": [
+     -5.85,
+     -4.65,
+     -1.29,
+     2.21,
+     -4.34,
+     -4.65,
+     -3.22,
+     3.09
+    ]
+   },
+   "stop_ns": 129.227,
+   "expected_paths": {
+    "warm": 3,
+    "warm_in_precharge": 0,
+    "warm_from_idle": 0,
+    "warm_slot1": 0,
+    "warm_lane_b": 2,
+    "cold": 81,
+    "preempt": 0,
+    "preempt_two_idle": 0,
+    "drops": 0,
+    "drop_lanes": 0
+   }
+  },
+  {
+   "name": "random_b",
+   "set": "final",
+   "words": 80,
+   "bench": {
+    "n_pre": 3,
+    "t_tail": 1e-10,
+    "t_hold": 3e-10,
+    "clk_delay": 7e-10
+   },
+   "stop_ns": 129.917,
+   "expected_paths": {
+    "warm": 4,
+    "warm_in_precharge": 0,
+    "warm_from_idle": 0,
+    "warm_slot1": 0,
+    "warm_lane_b": 1,
+    "cold": 81,
+    "preempt": 0,
+    "preempt_two_idle": 0,
+    "drops": 0,
+    "drop_lanes": 0
+   }
+  },
+  {
+   "name": "busy",
+   "set": "final",
+   "words": 70,
+   "bench": {
+    "n_pre": 15,
+    "t_tail": 1.5e-10,
+    "t_hold": 2.5e-09,
+    "clk_delay": 1e-11
+   },
+   "stop_ns": 114.346,
+   "expected_paths": {
+    "warm": 20,
+    "warm_in_precharge": 3,
+    "warm_from_idle": 8,
+    "warm_slot1": 10,
+    "warm_lane_b": 9,
+    "cold": 50,
+    "preempt": 35,
+    "preempt_two_idle": 0,
+    "drops": 4,
+    "drop_lanes": 2
+   }
+  }
+ ],
+ "pass_counts": {
+  "hold": {
+   "checks": 36,
+   "passed": 36
+  },
+  "conflict": {
+   "checks": 36,
+   "passed": 36
+  },
+  "hold_idle": {
+   "checks": 36,
+   "passed": 36
+  },
+  "preempt": {
+   "checks": 36,
+   "passed": 36
+  },
+  "long_precharge": {
+   "checks": 36,
+   "passed": 36
+  },
+  "cold_cycle": {
+   "checks": 36,
+   "passed": 36
+  },
+  "random_a": {
+   "checks": 36,
+   "passed": 36
+  },
+  "random_b": {
+   "checks": 36,
+   "passed": 36
+  },
+  "busy": {
+   "checks": 36,
+   "passed": 36
+  }
+ },
+ "total_checks": 324,
+ "total_passed": 324,
+ "worst_crossing_error_ps": 0.5,
+ "crossing_tolerance_ps": 2.0,
+ "rf_reconstruction": {
+  "hold": "max 9.71e-07 mV at 20.9078 ns",
+  "conflict": "max 3.14e-06 mV at 16.5225 ns",
+  "hold_idle": "max 2.16e-07 mV at 19.9963 ns",
+  "preempt": "max 1.79e-07 mV at 12.9078 ns",
+  "long_precharge": "max 0.00111 mV at 16.6501 ns",
+  "cold_cycle": "max 0.0274 mV at 16.6501 ns",
+  "random_a": "max 0.0213 mV at 47.9001 ns",
+  "random_b": "max 4.56e-05 mV at 105.2212 ns",
+  "busy": "max 0.0399 mV at 16.6501 ns"
+ },
+ "wall_s": 59.3,
+ "wall_s_per_case": {
+  "hold": 2.87,
+  "conflict": 3.81,
+  "hold_idle": 6.14,
+  "preempt": 3.11,
+  "long_precharge": 3.49,
+  "cold_cycle": 6.78,
+  "random_a": 12.42,
+  "random_b": 9.94,
+  "busy": 8.41
+ },
+ "run_dir": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/uwb-tx-vabench-20261022/tasks/uwb-repair-scheduler-warm-restart/calibration-v2/reference"
+}

@@ -1,0 +1,74 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Pulse-envelope lane. A rising gate starts a full raised-
+// cosine envelope e_cmd(u) = (1 - cos(2*pi*u/t_w))/2 for 0 <= u <= t_w, with
+// t_w = n_width/16 of the latest measured period of clk (the master-RO
+// ph[0]). The output is e_cmd through a first-order response with 99 %
+// settling in t99_env, evaluated in closed form; after t_w, or after gate
+// falls, the response decays exponentially, which forms the controlled tail.
+module uwb_envelope_lane(gate, clk, env);
+    input gate, clk;
+    output env;
+    electrical gate, clk, env;
+
+    parameter integer n_width = 9 from [1:16];
+    parameter real t99_env = 50p from [0:inf);
+    parameter real t_clk_init = 1.488095238095238e-9 from (0:inf);  // period used before two clk edges
+    parameter real vth = 0.5;
+
+    // First-order response (time constant tau) to a raised cosine of length
+    // tw that started u ago; zero initial state.
+    analog function real env_resp;
+        input u, tw, tau;
+        real u, tw, tau, w, k, ue, y;
+        begin
+            w = 2 * `M_PI / tw;
+            ue = u;
+            if (ue > tw) ue = tw;
+            if (tau > 0) begin
+                k = 1 / (1 + w * w * tau * tau);
+                y = 0.5 * (1 - exp(-ue / tau))
+                    - 0.5 * k * (cos(w * ue) + w * tau * sin(w * ue) - exp(-ue / tau));
+                if (u > tw) y = y * exp(-(u - tw) / tau);
+            end else begin
+                y = 0;
+                if (u < tw) y = 0.5 * (1 - cos(w * u));
+            end
+            env_resp = y;
+        end
+    endfunction
+
+    integer active;
+    real tau, t_clk, t_last_clk, t_g, t_w, y_end, t_end;
+
+    analog begin
+        @(initial_step) begin
+            active = 0; tau = t99_env / ln(100);
+            t_clk = t_clk_init; t_last_clk = -1; t_g = 0; t_w = n_width * t_clk / 16;
+            y_end = 0; t_end = 0;
+        end
+        @(cross(V(clk) - vth, +1)) begin
+            if (t_last_clk >= 0)
+                t_clk = $abstime - t_last_clk;
+            t_last_clk = $abstime;
+        end
+        @(cross(V(gate) - vth, +1)) begin
+            active = 1; t_g = $abstime; t_w = n_width * t_clk / 16;
+        end
+        @(cross(V(gate) - vth, -1)) begin
+            if (active) begin
+                y_end = env_resp($abstime - t_g, t_w, tau);
+                t_end = $abstime;
+            end
+            active = 0;
+        end
+
+        if (active)
+            V(env) <+ env_resp($abstime - t_g, t_w, tau);
+        else if (tau > 0)
+            V(env) <+ y_end * exp(-($abstime - t_end) / tau);
+        else
+            V(env) <+ 0;
+    end
+endmodule

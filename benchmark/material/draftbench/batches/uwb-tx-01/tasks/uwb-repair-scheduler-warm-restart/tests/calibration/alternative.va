@@ -1,0 +1,171 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Alternative correct scheduler for calibration (not the reference). Same
+// interface and external behavior as the repaired module, organized
+// differently: there is no per-slot pending counter; a slot has a granted
+// pulse waiting when a lane points at it and that lane's gate is still low.
+// A request first picks a slot (warm: the slot already holding the branch,
+// whose state is left alone; cold: a free slot, then an idle hold), and the
+// state change for a cold start is applied once afterwards.
+module uwb_ro_scheduler8(pre_a, rf_a, sel_a, pre_b, rf_b, sel_b, rst,
+                         pwr, pre, rel, gate_a, gate_b, conflict, nsup, st);
+    input pre_a, rf_a, pre_b, rf_b, rst;
+    input [2:0] sel_a, sel_b;
+    output [7:0] pwr, pre, rel, st;
+    output gate_a, gate_b, conflict, nsup;
+    electrical pre_a, rf_a, pre_b, rf_b, rst, gate_a, gate_b, conflict, nsup;
+    electrical [2:0] sel_a, sel_b;
+    electrical [7:0] pwr, pre, rel, st;
+
+    parameter integer n_pre = 2 from [1:15];
+    parameter real delta0 = 93.00595238095238p from (0:inf);
+    parameter real t_tail = 150p from [0:inf);
+    parameter real t_hold = 200p from [0:inf);
+    parameter real t_conf = 200p from (0:inf);
+    parameter real vdd = 1.0;
+    parameter real vth = 0.5;
+    parameter real tr = 2p from (0:inf);
+
+    // slot s: branch b (-1 none), state q (0 off, 1 precharge, 3 active,
+    // 4 tail, 5 hold), active lane count n, deadline d
+    integer b0, q0, n0, b1, q1, n1;
+    real d0, d1;
+    integer la, lb, ga, gb, k, pick, w0, w1, conf;
+    real t_wake, t_conf_off, t_idle;
+    genvar i;
+
+    analog begin
+        @(initial_step) begin
+            b0 = -1; q0 = 0; n0 = 0; d0 = 1.0;
+            b1 = -1; q1 = 0; n1 = 0; d1 = 1.0;
+            la = -1; lb = -1; ga = 0; gb = 0; conf = 0; t_conf_off = 1.0;
+            t_idle = t_hold - n_pre * delta0;
+            if (t_idle < 0) t_idle = 0;
+        end
+        @(cross(V(rst) - vth, +1)) begin
+            b0 = -1; q0 = 0; n0 = 0; b1 = -1; q1 = 0; n1 = 0;
+            la = -1; lb = -1; ga = 0; gb = 0;
+        end
+
+        // waiting grants per slot, derived from the lane pointers
+        w0 = (la == 0 && !ga) || (lb == 0 && !gb);
+        w1 = (la == 1 && !ga) || (lb == 1 && !gb);
+
+        @(cross(V(pre_a) - vth, +1)) begin
+            if (V(rst) < vth) begin
+                k = 4 * (V(sel_a[2]) > vth) + 2 * (V(sel_a[1]) > vth) + (V(sel_a[0]) > vth);
+                pick = -1;
+                if (q0 != 0 && b0 == k) pick = 0;
+                else if (q1 != 0 && b1 == k) pick = 1;
+                if (pick >= 0) begin
+                    la = pick;                       // warm: branch keeps running
+                end else begin
+                    if (q0 == 0) pick = 0;
+                    else if (q1 == 0) pick = 1;
+                    else if (q0 == 5 && !w0) pick = 0;
+                    else if (q1 == 5 && !w1) pick = 1;
+                    la = pick;
+                    if (pick == 0) begin b0 = k; q0 = 1; n0 = 0; end
+                    else if (pick == 1) begin b1 = k; q1 = 1; n1 = 0; end
+                    else begin conf = 1; t_conf_off = $abstime + t_conf; end
+                end
+            end
+        end
+        @(cross(V(pre_b) - vth, +1)) begin
+            if (V(rst) < vth) begin
+                k = 4 * (V(sel_b[2]) > vth) + 2 * (V(sel_b[1]) > vth) + (V(sel_b[0]) > vth);
+                w0 = (la == 0 && !ga);
+                w1 = (la == 1 && !ga);
+                pick = -1;
+                if (q0 != 0 && b0 == k) pick = 0;
+                else if (q1 != 0 && b1 == k) pick = 1;
+                if (pick >= 0) begin
+                    lb = pick;
+                end else begin
+                    if (q0 == 0) pick = 0;
+                    else if (q1 == 0) pick = 1;
+                    else if (q0 == 5 && !w0) pick = 0;
+                    else if (q1 == 5 && !w1) pick = 1;
+                    lb = pick;
+                    if (pick == 0) begin b0 = k; q0 = 1; n0 = 0; end
+                    else if (pick == 1) begin b1 = k; q1 = 1; n1 = 0; end
+                    else begin conf = 1; t_conf_off = $abstime + t_conf; end
+                end
+            end
+        end
+
+        @(cross(V(rf_a) - vth, +1)) begin
+            if (V(rst) < vth && la >= 0) begin
+                ga = 1;
+                if (la == 0) begin q0 = 3; n0 = n0 + 1; end else begin q1 = 3; n1 = n1 + 1; end
+            end
+        end
+        @(cross(V(rf_a) - vth, -1)) begin
+            if (ga && la == 0) begin
+                n0 = n0 - 1;
+                if (n0 <= 0) begin n0 = 0; q0 = 4; d0 = $abstime + t_tail; end
+            end else if (ga && la == 1) begin
+                n1 = n1 - 1;
+                if (n1 <= 0) begin n1 = 0; q1 = 4; d1 = $abstime + t_tail; end
+            end
+            ga = 0; la = -1;
+        end
+        @(cross(V(rf_b) - vth, +1)) begin
+            if (V(rst) < vth && lb >= 0) begin
+                gb = 1;
+                if (lb == 0) begin q0 = 3; n0 = n0 + 1; end else begin q1 = 3; n1 = n1 + 1; end
+            end
+        end
+        @(cross(V(rf_b) - vth, -1)) begin
+            if (gb && lb == 0) begin
+                n0 = n0 - 1;
+                if (n0 <= 0) begin n0 = 0; q0 = 4; d0 = $abstime + t_tail; end
+            end else if (gb && lb == 1) begin
+                n1 = n1 - 1;
+                if (n1 <= 0) begin n1 = 0; q1 = 4; d1 = $abstime + t_tail; end
+            end
+            gb = 0; lb = -1;
+        end
+
+        w0 = (la == 0 && !ga) || (lb == 0 && !gb);
+        w1 = (la == 1 && !ga) || (lb == 1 && !gb);
+        t_wake = 1.0;
+        if ((q0 == 4 || (q0 == 5 && !w0)) && d0 < t_wake) t_wake = d0;
+        if ((q1 == 4 || (q1 == 5 && !w1)) && d1 < t_wake) t_wake = d1;
+        @(timer(t_wake)) begin
+            if (q0 == 4 && d0 <= $abstime + 1e-15) begin
+                q0 = 5;
+                d0 = $abstime + t_idle;
+                if (!w0 && t_idle <= 0) begin q0 = 0; b0 = -1; end
+            end else if (q0 == 5 && !w0 && d0 <= $abstime + 1e-15) begin
+                q0 = 0; b0 = -1;
+            end
+            if (q1 == 4 && d1 <= $abstime + 1e-15) begin
+                q1 = 5;
+                d1 = $abstime + t_idle;
+                if (!w1 && t_idle <= 0) begin q1 = 0; b1 = -1; end
+            end else if (q1 == 5 && !w1 && d1 <= $abstime + 1e-15) begin
+                q1 = 0; b1 = -1;
+            end
+        end
+        @(timer(t_conf_off)) conf = 0;
+
+        w0 = (la == 0 && !ga) || (lb == 0 && !gb);
+        w1 = (la == 1 && !ga) || (lb == 1 && !gb);
+        t_wake = 1.0;
+        if ((q0 == 4 || (q0 == 5 && !w0)) && d0 < t_wake) t_wake = d0;
+        if ((q1 == 4 || (q1 == 5 && !w1)) && d1 < t_wake) t_wake = d1;
+
+        for (i = 0; i < 8; i = i + 1) begin
+            V(pwr[i]) <+ transition(((q0 != 0 && b0 == i) || (q1 != 0 && b1 == i)) * vdd, 0, tr);
+            V(pre[i]) <+ transition(((q0 == 1 && b0 == i) || (q1 == 1 && b1 == i)) * vdd, 0, tr);
+            V(rel[i]) <+ transition(((q0 >= 2 && b0 == i) || (q1 >= 2 && b1 == i)) * vdd, 0, tr);
+            V(st[i]) <+ transition(0.2 * ((b0 == i) * q0 + (b1 == i) * q1), 0, tr);
+        end
+        V(gate_a) <+ transition(ga * vdd, 0, tr);
+        V(gate_b) <+ transition(gb * vdd, 0, tr);
+        V(conflict) <+ transition(conf * vdd, 0, tr);
+        V(nsup) <+ transition(1.0 * ((q0 != 0) + (q1 != 0)), 0, tr);
+    end
+endmodule

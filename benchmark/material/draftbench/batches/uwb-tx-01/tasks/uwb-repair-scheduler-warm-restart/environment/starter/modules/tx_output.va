@@ -1,0 +1,59 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Combiner, DPC gain, PA and differential output.
+// Each envelope lane x drives the branch selected by sel_x, latched with
+// pol_x on the rising edge of gate_x so a later reschedule of the lane
+// cannot redirect a decaying tail:
+//   v = g_pa * sum_x (-1)^pol_x * g_dpc[sel_x] * env_x * vro[sel_x]
+// outp = vcm + v/2, outn = vcm - v/2; the measured voltage is outp - outn.
+// The PA is linear in this milestone; compression and AM-PM come in M5.
+module uwb_tx_output(vro, env_a, env_b, gate_a, gate_b, sel_a, sel_b, pol_a, pol_b, outp, outn);
+    input [7:0] vro;
+    input env_a, env_b, gate_a, gate_b, pol_a, pol_b;
+    input [2:0] sel_a, sel_b;
+    output outp, outn;
+    electrical [7:0] vro;
+    electrical [2:0] sel_a, sel_b;
+    electrical env_a, env_b, gate_a, gate_b, pol_a, pol_b, outp, outn;
+
+    parameter real g_pa = 1.0;
+    parameter real vcm = 0.5;
+    parameter real dpc_db0 = 0, dpc_db1 = 0, dpc_db2 = 0, dpc_db3 = 0;
+    parameter real dpc_db4 = 0, dpc_db5 = 0, dpc_db6 = 0, dpc_db7 = 0;
+    parameter real vth = 0.5;
+
+    integer ka, kb, qa, qb;
+    real g0, g1, g2, g3, g4, g5, g6, g7, ga, gb, va, vb, v;
+
+    analog begin
+        @(initial_step) begin
+            ka = 0; kb = 0; qa = 0; qb = 0;
+            g0 = pow(10, dpc_db0 / 20); g1 = pow(10, dpc_db1 / 20);
+            g2 = pow(10, dpc_db2 / 20); g3 = pow(10, dpc_db3 / 20);
+            g4 = pow(10, dpc_db4 / 20); g5 = pow(10, dpc_db5 / 20);
+            g6 = pow(10, dpc_db6 / 20); g7 = pow(10, dpc_db7 / 20);
+            ga = g0; gb = g0;
+        end
+        @(cross(V(gate_a) - vth, +1)) begin
+            ka = 4 * (V(sel_a[2]) > vth) + 2 * (V(sel_a[1]) > vth) + (V(sel_a[0]) > vth);
+            qa = V(pol_a) > vth;
+            ga = (ka == 0) * g0 + (ka == 1) * g1 + (ka == 2) * g2 + (ka == 3) * g3
+                 + (ka == 4) * g4 + (ka == 5) * g5 + (ka == 6) * g6 + (ka == 7) * g7;
+        end
+        @(cross(V(gate_b) - vth, +1)) begin
+            kb = 4 * (V(sel_b[2]) > vth) + 2 * (V(sel_b[1]) > vth) + (V(sel_b[0]) > vth);
+            qb = V(pol_b) > vth;
+            gb = (kb == 0) * g0 + (kb == 1) * g1 + (kb == 2) * g2 + (kb == 3) * g3
+                 + (kb == 4) * g4 + (kb == 5) * g5 + (kb == 6) * g6 + (kb == 7) * g7;
+        end
+
+        va = (ka == 0) * V(vro[0]) + (ka == 1) * V(vro[1]) + (ka == 2) * V(vro[2]) + (ka == 3) * V(vro[3])
+             + (ka == 4) * V(vro[4]) + (ka == 5) * V(vro[5]) + (ka == 6) * V(vro[6]) + (ka == 7) * V(vro[7]);
+        vb = (kb == 0) * V(vro[0]) + (kb == 1) * V(vro[1]) + (kb == 2) * V(vro[2]) + (kb == 3) * V(vro[3])
+             + (kb == 4) * V(vro[4]) + (kb == 5) * V(vro[5]) + (kb == 6) * V(vro[6]) + (kb == 7) * V(vro[7]);
+        v = g_pa * ((1 - 2 * qa) * ga * V(env_a) * va + (1 - 2 * qb) * gb * V(env_b) * vb);
+        V(outp) <+ vcm + v / 2;
+        V(outn) <+ vcm - v / 2;
+    end
+endmodule

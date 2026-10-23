@@ -1,0 +1,9 @@
+{
+ "task": "uwb-repair-scheduler-warm-restart",
+ "backend": "evas",
+ "backend_status": "pending: current EVAS cannot yet run the transmit-chain modules (issue 229); author runs used EVAS 0.8.7",
+ "crossing_time_tolerance_s": 2e-12,
+ "rf_reconstruction_tolerance_v": 2e-3,
+ "maxstep_s": 1e-11,
+ "timeout_s_per_case": 1800
+}
