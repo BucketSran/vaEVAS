@@ -1,0 +1,30 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Test instrument, not part of the calibration block. Prints the logic levels
+// of the calibration outputs once, at t_probe, as one record:
+// "LEVEL <id> <word> <time>", word = code + 1024*done + 2048*fail + 4096*busy,
+// each bit 1 when its voltage is above vth. The checker uses it for the
+// levels before the first cal_start or reset, because an output that starts at
+// its level has no edge to record. One $strobe keeps the simulator memory low.
+module uwb_output_probe(code, done, fail, busy);
+    input [9:0] code;
+    input done, fail, busy;
+    electrical [9:0] code;
+    electrical done, fail, busy;
+    parameter integer id = 0;
+    parameter real vth = 0.5;
+    parameter real t_probe = 1n from (0:inf);
+
+    integer word;
+
+    analog begin
+        @(timer(t_probe)) begin
+            word = (V(code[0]) > vth) + 2 * (V(code[1]) > vth) + 4 * (V(code[2]) > vth) + 8 * (V(code[3]) > vth)
+                + 16 * (V(code[4]) > vth) + 32 * (V(code[5]) > vth) + 64 * (V(code[6]) > vth)
+                + 128 * (V(code[7]) > vth) + 256 * (V(code[8]) > vth) + 512 * (V(code[9]) > vth)
+                + 1024 * (V(done) > vth) + 2048 * (V(fail) > vth) + 4096 * (V(busy) > vth);
+            $strobe("LEVEL %d %d %.17g", id, word, $abstime);
+        end
+    end
+endmodule

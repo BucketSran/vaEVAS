@@ -1,0 +1,404 @@
+{
+ "task": "uwb-spec-ro-frequency-cal",
+ "backend": "legacy EVAS 0.8.7, interim; declared backend evas pending (issue 229)",
+ "backend_identity": {
+  "build_revision": null,
+  "cli_version": "0.8.7",
+  "engine": "evas-rust",
+  "package_name": "evas-sim",
+  "package_version": "0.8.7",
+  "rust_core_abi_version": 20260718,
+  "rust_core_loadable": true,
+  "rust_core_present": true,
+  "rust_core_version": "0.2.4",
+  "schema_version": 1
+ },
+ "maxstep_s": 1e-10,
+ "crossing_time_tolerance_s": 2e-11,
+ "date": "2026-10-23",
+ "cases": {
+  "public": [
+   "normal",
+   "ref_lost"
+  ],
+  "final": [
+   "default_first_window",
+   "ro_limits",
+   "recal",
+   "reset_restart",
+   "params_two_instances",
+   "ref_lost_before_start"
+  ]
+ },
+ "samples": [
+  {
+   "sample": "reference",
+   "violates": null,
+   "change": null,
+   "expected": 1,
+   "score": 1,
+   "ok": true,
+   "candidate_sha256": "9ca81477219d03b97703a0fcc63205b7464c02c7c196144c174f01985855c9d1",
+   "checks": 179,
+   "passed": 179,
+   "wall_s": 101.9,
+   "failing_cases": [],
+   "first_failure": null,
+   "errors": []
+  },
+  {
+   "sample": "alternative",
+   "violates": null,
+   "change": null,
+   "expected": 1,
+   "score": 1,
+   "ok": true,
+   "candidate_sha256": "a5376ff0d6798c341b299d366d997d1062ab4aef8f7fb9b8df202069a3e61bcc",
+   "checks": 179,
+   "passed": 179,
+   "wall_s": 102.0,
+   "failing_cases": [],
+   "first_failure": null,
+   "errors": []
+  },
+  {
+   "sample": "inverted_decision",
+   "violates": "S3 a count above the target clears the trial bit",
+   "change": [
+    "if (cnt <= target)",
+    "if (cnt >= target)"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "25da3eb041bcfba0a7681d374d4cfd68dc7224cfe5a64f4361d0f7b482d86a7f",
+   "checks": 179,
+   "passed": 97,
+   "wall_s": 128.7,
+   "failing_cases": [
+    "default_first_window",
+    "normal",
+    "params_two_instances",
+    "recal",
+    "ref_lost",
+    "reset_restart",
+    "ro_limits"
+   ],
+   "first_failure": "normal/a: code[0] edges (S2-S8)",
+   "errors": []
+  },
+  {
+   "sample": "equal_count_clears_bit",
+   "violates": "S3 a count equal to the target keeps the trial bit",
+   "change": [
+    "if (cnt <= target)",
+    "if (cnt < target)"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "9f697c28062fc9b1c26caadfef7ff0faffb263e627d0ce05ef66f6f68853ea83",
+   "checks": 179,
+   "passed": 152,
+   "wall_s": 105.3,
+   "failing_cases": [
+    "normal",
+    "params_two_instances",
+    "recal",
+    "reset_restart"
+   ],
+   "first_failure": "normal/a: code[0] edges (S2-S8)",
+   "errors": []
+  },
+  {
+   "sample": "window_one_period_short",
+   "violates": "S2 the window lasts n_win reference periods",
+   "change": [
+    "if (nref >= n_win) begin",
+    "if (nref >= n_win - 1) begin"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "1f02bab331fa6edf8b9469ac3a2bf56a86680e651d166ab710238eba21beb82a",
+   "checks": 179,
+   "passed": 82,
+   "wall_s": 107.6,
+   "failing_cases": [
+    "default_first_window",
+    "normal",
+    "params_two_instances",
+    "recal",
+    "ref_lost",
+    "reset_restart",
+    "ro_limits"
+   ],
+   "first_failure": "normal/a: code[0] edges (S2-S8)",
+   "errors": []
+  },
+  {
+   "sample": "settle_ignores_n_settle",
+   "violates": "S2 the window opens at the n_settle-th reference edge",
+   "change": [
+    "if (nref >= n_settle) begin",
+    "if (nref >= 1) begin"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "5628b98e533baaed8b1521e7dddf31a2fd27953ec605139ecbffeace564bc329",
+   "checks": 179,
+   "passed": 84,
+   "wall_s": 107.6,
+   "failing_cases": [
+    "default_first_window",
+    "normal",
+    "params_two_instances",
+    "recal",
+    "ref_lost",
+    "reset_restart",
+    "ro_limits"
+   ],
+   "first_failure": "normal/a: code[0] edges (S2-S8)",
+   "errors": []
+  },
+  {
+   "sample": "target_ignores_ratio",
+   "violates": "S3 target = n_win * ratio",
+   "change": [
+    "target = n_win * ratio;",
+    "target = n_win * 14;"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "5ab340ebe6e76f8b2c8d0c9102744e28840324939245cca1df9b4ac48f87f467",
+   "checks": 179,
+   "passed": 172,
+   "wall_s": 98.0,
+   "failing_cases": [
+    "params_two_instances"
+   ],
+   "first_failure": "params_two_instances/a: code[0] edges (S2-S8)",
+   "errors": []
+  },
+  {
+   "sample": "verify_ignores_tol",
+   "violates": "S4 done when |count - target| <= tol",
+   "change": [
+    "if (cnt - target <= tol && target - cnt <= tol)",
+    "if (cnt == target)"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "f996e8069cbb1340eb0ff1e1f6162746c0efd7f0b9ba28fa78c38e0d5d030f00",
+   "checks": 179,
+   "passed": 174,
+   "wall_s": 85.6,
+   "failing_cases": [
+    "params_two_instances",
+    "recal"
+   ],
+   "first_failure": "recal/a: done edges (S2-S8)",
+   "errors": []
+  },
+  {
+   "sample": "no_lost_watchdog",
+   "violates": "S6 lost-reference watchdog",
+   "change": [
+    "if (lost > n_lost) begin",
+    "if (0 && lost > n_lost) begin"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "97ea654ea10a856ff7cd613be90475e6e7a2d48ee69d417bfe8d8c0154314c61",
+   "checks": 179,
+   "passed": 167,
+   "wall_s": 125.8,
+   "failing_cases": [
+    "ref_lost",
+    "ref_lost_before_start"
+   ],
+   "first_failure": "ref_lost/a: code[6] edges (S2-S8)",
+   "errors": []
+  },
+  {
+   "sample": "lost_shows_trial_code",
+   "violates": "S6 a watchdog fail shows the last kept code, not the untested trial code",
+   "change": [
+    "                    trial = code_q;\n",
+    "                    code_q = trial;\n"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "d09d18adb1f533b9888cef6cb12e3804f46bb34315b0a931c3fdb1d9ea279790",
+   "checks": 179,
+   "passed": 173,
+   "wall_s": 75.7,
+   "failing_cases": [
+    "ref_lost",
+    "ref_lost_before_start"
+   ],
+   "first_failure": "ref_lost/a: code[6] edges (S2-S8)",
+   "errors": []
+  },
+  {
+   "sample": "watchdog_not_cleared_by_ref",
+   "violates": "S6 roclk edges are counted since the last reference edge",
+   "change": [
+    "            lost = 0;\n            if (phase == 1) begin",
+    "            if (phase == 1) begin"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "c6654f2da5c1cf516dc9d730f990c55519690dc601afbefa005875e2908e89e8",
+   "checks": 179,
+   "passed": 86,
+   "wall_s": 71.1,
+   "failing_cases": [
+    "default_first_window",
+    "normal",
+    "params_two_instances",
+    "recal",
+    "ref_lost",
+    "reset_restart",
+    "ro_limits"
+   ],
+   "first_failure": "normal/a: code[0] edges (S2-S8)",
+   "errors": []
+  },
+  {
+   "sample": "reset_keeps_code",
+   "violates": "S7 reset shows code_init",
+   "change": [
+    "phase = 0; verify = 0; code_q = code_init; trial = code_init;",
+    "phase = 0; verify = 0;"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "a63ef3fc29e44ab0375e17ebcf98e25e8fef88c199d2b9e646d565da70b2a0b8",
+   "checks": 179,
+   "passed": 167,
+   "wall_s": 76.5,
+   "failing_cases": [
+    "default_first_window",
+    "recal",
+    "reset_restart"
+   ],
+   "first_failure": "default_first_window/a: code[9] edges (S2-S8)",
+   "errors": []
+  },
+  {
+   "sample": "cal_start_during_reset",
+   "violates": "S7 cal_start is ignored while rst is high",
+   "change": [
+    "if (V(rst) < vth) begin",
+    "if (1) begin"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "65f477c2647aa901832c3ced4314d07f1bd4d7a3826c6f45c6f8109daf31362e",
+   "checks": 179,
+   "passed": 171,
+   "wall_s": 82.9,
+   "failing_cases": [
+    "reset_restart"
+   ],
+   "first_failure": "reset_restart/a: code[0] edges (S2-S8)",
+   "errors": []
+  },
+  {
+   "sample": "no_restart_while_busy",
+   "violates": "S5 a cal_start during a search restarts it",
+   "change": [
+    "if (V(rst) < vth) begin",
+    "if (V(rst) < vth && !busy_q) begin"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "1d5e7038d347f86f6fa9cc927c32445a5de3add38e623082941f7f8f5eecee3f",
+   "checks": 179,
+   "passed": 165,
+   "wall_s": 73.3,
+   "failing_cases": [
+    "reset_restart"
+   ],
+   "first_failure": "reset_restart/a: event order is unambiguous (S9)",
+   "errors": []
+  },
+  {
+   "sample": "done_kept_on_restart",
+   "violates": "S5 a new cal_start clears done",
+   "change": [
+    "busy_q = 1; done_q = 0; fail_q = 0; verify = 0;",
+    "busy_q = 1; fail_q = 0; verify = 0;"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "ab3bd5c50f52f35e9a46b80fa049b47e237da94db56a4c558549ad71bd874443",
+   "checks": 179,
+   "passed": 178,
+   "wall_s": 89.4,
+   "failing_cases": [
+    "recal"
+   ],
+   "first_failure": "recal/a: done edges (S2-S8)",
+   "errors": []
+  },
+  {
+   "sample": "fixed_output_delay",
+   "violates": "S8 outputs change t_cq after the deciding edge",
+   "change": [
+    "@(timer(t_out)) begin",
+    "@(timer(t_out - t_cq + 10p)) begin"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "2c0f2c2a7802bd09516811d0a9f8b6bfea5027e6791e6b4d105a2c3d3d295726",
+   "checks": 179,
+   "passed": 167,
+   "wall_s": 97.5,
+   "failing_cases": [
+    "params_two_instances"
+   ],
+   "first_failure": "params_two_instances/a: code[0] edges (S2-S8)",
+   "errors": []
+  },
+  {
+   "sample": "no_code_init_at_start",
+   "violates": "S7 code_init is shown before calibration",
+   "change": [
+    "out_code = code_init; out_done = 0;",
+    "out_code = 0; out_done = 0;"
+   ],
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "61755b10bdc7518b51192ea02e35b0f9fc7a11e7e4d740319ffd543a4fe2536e",
+   "checks": 179,
+   "passed": 138,
+   "wall_s": 75.1,
+   "failing_cases": [
+    "default_first_window",
+    "normal",
+    "params_two_instances",
+    "recal",
+    "ref_lost",
+    "ref_lost_before_start",
+    "reset_restart",
+    "ro_limits"
+   ],
+   "first_failure": "normal/a: event order is unambiguous (S9)",
+   "errors": []
+  }
+ ]
+}

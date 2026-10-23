@@ -1,0 +1,117 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// RO frequency calibration of the IR-UWB TX seed chain (reference solution).
+// Same model as circuits/ir-uwb-tx/module/ro_frequency_cal.va (SPEC.md 4.5),
+// renamed.
+// A rising cal_start begins a 10-bit successive-approximation search, MSB
+// first. For each trial code the block waits n_settle reference periods,
+// then counts rising roclk edges during n_win reference periods. A count
+// above the target n_win * ratio means the RO is too fast and the trial bit
+// is cleared. After bit 0 the final code is measured once more: done if
+// |count - target| <= tol, otherwise fail. The code is then frozen until the
+// next cal_start. done means frequency only, not phase alignment. More than
+// n_lost RO periods without a reference edge during calibration sets fail.
+// The code output changes t_cq after the reference edge that decides it.
+module ro_frequency_cal(ref, roclk, cal_start, rst, code, done, fail, busy);
+    input ref, roclk, cal_start, rst;
+    output [9:0] code;
+    output done, fail, busy;
+    electrical ref, roclk, cal_start, rst, done, fail, busy;
+    electrical [9:0] code;
+
+    parameter integer ratio = 14 from [1:inf);
+    parameter integer n_win = 192 from [1:inf);
+    parameter integer n_settle = 2 from [0:inf);
+    parameter integer tol = 1 from [0:inf);
+    parameter integer n_lost = 64 from [1:inf);
+    parameter integer code_init = 512 from [0:1023];
+    parameter real vdd = 1.0;
+    parameter real vth = 0.5;
+    parameter real tr = 2p from (0:inf);
+    parameter real t_cq = 10p from (0:inf);
+
+    integer phase;      // 0 idle, 1 settling before a window, 2 counting
+    integer verify;     // 1 while the final code is being measured
+    integer code_q, weight, trial, cnt, nref, lost, target;
+    integer done_q, fail_q, busy_q;
+    integer out_code, out_done, out_fail, out_busy;
+    real t_out;
+    genvar i;
+
+    analog begin
+        @(initial_step) begin
+            target = n_win * ratio;
+            phase = 0; verify = 0; code_q = code_init; weight = 0; trial = code_init;
+            cnt = 0; nref = 0; lost = 0; done_q = 0; fail_q = 0; busy_q = 0;
+            out_code = code_init; out_done = 0; out_fail = 0; out_busy = 0; t_out = 1.0;
+        end
+        @(cross(V(rst) - vth, +1)) begin
+            phase = 0; verify = 0; code_q = code_init; trial = code_init;
+            done_q = 0; fail_q = 0; busy_q = 0;
+            t_out = $abstime + t_cq;
+        end
+        @(cross(V(cal_start) - vth, +1)) begin
+            if (V(rst) < vth) begin
+                busy_q = 1; done_q = 0; fail_q = 0; verify = 0;
+                code_q = 0; weight = 512; trial = weight;
+                phase = 1; nref = 0; cnt = 0; lost = 0;
+                t_out = $abstime + t_cq;
+            end
+        end
+        @(cross(V(ref) - vth, +1)) begin
+            lost = 0;
+            if (phase == 1) begin
+                nref = nref + 1;
+                if (nref >= n_settle) begin
+                    phase = 2; nref = 0; cnt = 0;
+                end
+            end else if (phase == 2) begin
+                nref = nref + 1;
+                if (nref >= n_win) begin
+                    if (verify == 0) begin
+                        if (cnt <= target)
+                            code_q = trial;          // keep the trial bit
+                        weight = weight / 2;
+                        if (weight >= 1) begin
+                            trial = code_q + weight;
+                        end else begin
+                            trial = code_q;          // measure the final code
+                            verify = 1;
+                        end
+                        phase = 1; nref = 0;
+                    end else begin
+                        if (cnt - target <= tol && target - cnt <= tol)
+                            done_q = 1;
+                        else
+                            fail_q = 1;
+                        busy_q = 0; phase = 0; verify = 0;
+                    end
+                    t_out = $abstime + t_cq;
+                end
+            end
+        end
+        @(cross(V(roclk) - vth, +1)) begin
+            if (phase == 2)
+                cnt = cnt + 1;
+            if (busy_q) begin
+                lost = lost + 1;
+                if (lost > n_lost) begin
+                    fail_q = 1; busy_q = 0; phase = 0; verify = 0;
+                    trial = code_q;
+                    t_out = $abstime + t_cq;
+                end
+            end
+        end
+        @(timer(t_out)) begin
+            if (busy_q) out_code = trial; else out_code = code_q;
+            out_done = done_q; out_fail = fail_q; out_busy = busy_q;
+        end
+
+        for (i = 0; i < 10; i = i + 1)
+            V(code[i]) <+ transition(((out_code >> i) & 1) * vdd, 0, tr);
+        V(done) <+ transition(out_done * vdd, 0, tr);
+        V(fail) <+ transition(out_fail * vdd, 0, tr);
+        V(busy) <+ transition(out_busy * vdd, 0, tr);
+    end
+endmodule

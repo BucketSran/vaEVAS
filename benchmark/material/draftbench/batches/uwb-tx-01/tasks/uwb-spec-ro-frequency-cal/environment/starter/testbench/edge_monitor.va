@@ -1,0 +1,20 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Test instrument, not part of the transmitter. Prints one record per
+// threshold crossing of sig: "EDGE <id> <dir> <time>", dir = 1 rising,
+// 0 falling. Crossing times come from the simulator's event location.
+module uwb_edge_monitor(sig);
+    input sig;
+    electrical sig;
+    parameter integer id = 0;
+    parameter real vth = 0.5;
+    parameter real ttol = 1e-15 from (0:inf);
+
+    analog begin
+        @(cross(V(sig) - vth, +1, ttol))
+            $strobe("EDGE %d 1 %.17g", id, $abstime);
+        @(cross(V(sig) - vth, -1, ttol))
+            $strobe("EDGE %d 0 %.17g", id, $abstime);
+    end
+endmodule

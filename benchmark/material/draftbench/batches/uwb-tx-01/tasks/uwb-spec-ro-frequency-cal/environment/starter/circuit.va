@@ -1,0 +1,12 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module ro_frequency_cal(ref, roclk, cal_start, rst, code, done, fail, busy);
+    input ref, roclk, cal_start, rst;
+    output [9:0] code;
+    output done, fail, busy;
+    electrical ref, roclk, cal_start, rst, done, fail, busy;
+    electrical [9:0] code;
+
+    // TODO: parameters and behavior from the Spec.
+endmodule

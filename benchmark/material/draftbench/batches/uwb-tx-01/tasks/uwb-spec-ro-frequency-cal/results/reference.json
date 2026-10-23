@@ -1,0 +1,69 @@
+{
+ "task": "uwb-spec-ro-frequency-cal",
+ "backend": "legacy EVAS 0.8.7, interim; declared backend evas pending (issue 229)",
+ "backend_identity": {
+  "build_revision": null,
+  "cli_version": "0.8.7",
+  "engine": "evas-rust",
+  "package_name": "evas-sim",
+  "package_version": "0.8.7",
+  "rust_core_abi_version": 20260718,
+  "rust_core_loadable": true,
+  "rust_core_present": true,
+  "rust_core_version": "0.2.4",
+  "schema_version": 1
+ },
+ "maxstep_s": 1e-10,
+ "crossing_time_tolerance_s": 2e-11,
+ "date": "2026-10-23",
+ "cases": {
+  "normal": {
+   "checks": 16,
+   "passed": 16,
+   "wall_s": 9.6
+  },
+  "ref_lost": {
+   "checks": 16,
+   "passed": 16,
+   "wall_s": 9.9
+  },
+  "default_first_window": {
+   "checks": 16,
+   "passed": 16,
+   "wall_s": 19.1
+  },
+  "ro_limits": {
+   "checks": 32,
+   "passed": 32,
+   "wall_s": 13.0
+  },
+  "recal": {
+   "checks": 17,
+   "passed": 17,
+   "wall_s": 14.7
+  },
+  "reset_restart": {
+   "checks": 18,
+   "passed": 18,
+   "wall_s": 8.0
+  },
+  "params_two_instances": {
+   "checks": 32,
+   "passed": 32,
+   "wall_s": 22.0
+  },
+  "ref_lost_before_start": {
+   "checks": 32,
+   "passed": 32,
+   "wall_s": 5.3
+  }
+ },
+ "sample": "solution/circuit.va",
+ "score": 1,
+ "status": "executed",
+ "errors": [],
+ "candidate_sha256": "9ca81477219d03b97703a0fcc63205b7464c02c7c196144c174f01985855c9d1",
+ "checks": 179,
+ "passed": 179,
+ "wall_s": 101.9
+}

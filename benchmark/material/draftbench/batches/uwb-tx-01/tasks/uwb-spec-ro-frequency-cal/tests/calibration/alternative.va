@@ -1,0 +1,91 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Calibration sample: a second correct implementation with a different
+// internal organization. It numbers the reference edges of a calibration and
+// derives every window from that number, counts roclk edges with one running
+// counter and differences of marks, keeps the result as separate bit flags,
+// and delays the outputs with the transition() delay argument instead of a
+// timer. The checker must accept it.
+module ro_frequency_cal(ref, roclk, cal_start, rst, code, done, fail, busy);
+    input ref, roclk, cal_start, rst;
+    output [9:0] code;
+    output done, fail, busy;
+    electrical ref, roclk, cal_start, rst, done, fail, busy;
+    electrical [9:0] code;
+
+    parameter integer ratio = 14 from [1:inf);
+    parameter integer n_win = 192 from [1:inf);
+    parameter integer n_settle = 2 from [1:inf);
+    parameter integer tol = 1 from [0:inf);
+    parameter integer n_lost = 64 from [1:inf);
+    parameter integer code_init = 512 from [0:1023];
+    parameter real vdd = 1.0 from (0:inf);
+    parameter real vth = 0.5;
+    parameter real tr = 2p from (0:inf);
+    parameter real t_cq = 10p from (0:inf);
+
+    integer running, rst_hi, edge_no, ro_total, ro_open, ro_mark, step, kept, shown, err;
+    integer s_done, s_fail;
+
+    analog begin
+        @(initial_step) begin
+            running = 0; rst_hi = V(rst) > vth; edge_no = 0; ro_total = 0; ro_open = 0; ro_mark = 0;
+            step = 0; kept = 0; shown = code_init; s_done = 0; s_fail = 0;
+        end
+        @(cross(V(rst) - vth, 0)) begin
+            rst_hi = V(rst) > vth;
+            if (rst_hi) begin
+                running = 0; shown = code_init; s_done = 0; s_fail = 0;
+            end
+        end
+        @(cross(V(cal_start) - vth, +1)) begin
+            if (!rst_hi) begin
+                running = 1; s_done = 0; s_fail = 0; edge_no = 0; step = 0; kept = 0;
+                ro_mark = ro_total; shown = 512;
+            end
+        end
+        @(cross(V(ref) - vth, +1)) begin
+            ro_mark = ro_total;
+            if (running) begin
+                edge_no = edge_no + 1;
+                if (edge_no == step * (n_settle + n_win) + n_settle)
+                    ro_open = ro_total;                            // window opens
+                if (edge_no == (step + 1) * (n_settle + n_win)) begin   // window closes
+                    err = (ro_total - ro_open) - n_win * ratio;
+                    if (step < 10) begin
+                        if (err <= 0)
+                            kept = kept + (1 << (9 - step));
+                        step = step + 1;
+                        if (step < 10) shown = kept + (1 << (9 - step)); else shown = kept;
+                    end else begin
+                        running = 0; shown = kept;
+                        if (err <= tol && err >= -tol) s_done = 1; else s_fail = 1;
+                    end
+                end
+            end
+        end
+        @(cross(V(roclk) - vth, +1)) begin
+            if (running) begin
+                ro_total = ro_total + 1;
+                if (ro_total - ro_mark > n_lost) begin
+                    running = 0; s_fail = 1; shown = kept;
+                end
+            end
+        end
+
+        V(code[0]) <+ transition((shown % 2) * vdd, t_cq, tr);
+        V(code[1]) <+ transition(((shown / 2) % 2) * vdd, t_cq, tr);
+        V(code[2]) <+ transition(((shown / 4) % 2) * vdd, t_cq, tr);
+        V(code[3]) <+ transition(((shown / 8) % 2) * vdd, t_cq, tr);
+        V(code[4]) <+ transition(((shown / 16) % 2) * vdd, t_cq, tr);
+        V(code[5]) <+ transition(((shown / 32) % 2) * vdd, t_cq, tr);
+        V(code[6]) <+ transition(((shown / 64) % 2) * vdd, t_cq, tr);
+        V(code[7]) <+ transition(((shown / 128) % 2) * vdd, t_cq, tr);
+        V(code[8]) <+ transition(((shown / 256) % 2) * vdd, t_cq, tr);
+        V(code[9]) <+ transition(((shown / 512) % 2) * vdd, t_cq, tr);
+        V(done) <+ transition(s_done * vdd, t_cq, tr);
+        V(fail) <+ transition(s_fail * vdd, t_cq, tr);
+        V(busy) <+ transition(running * vdd, t_cq, tr);
+    end
+endmodule
