@@ -239,6 +239,51 @@ impl Resolver<'_> {
                 }
                 constant(f64::from(value))
             }
+            Expression::IntegerPrimitive {
+                function,
+                args,
+                origin,
+            } => {
+                // A source-typed integer tree over same-owner integer states, e.g. the bit
+                // `(code >> k) & 1` that a held transition target reads. Every state has an
+                // exact initial value; the tree is evaluated with the same checked signed32
+                // operations as at run time and reads no voltage.
+                crate::integer_primitive::validate(*function, args, origin, self.program, owner)?;
+                let mut used = Vec::new();
+                crate::integer_primitive::states(args, &mut used);
+                let mut values = BTreeMap::new();
+                for state in used {
+                    if values.contains_key(&state) {
+                        continue;
+                    }
+                    let value = self.state(state)?;
+                    if self.exact[state].is_some() {
+                        return Err(Error::new(
+                            "initialization_precision",
+                            "initial value with a rounding enclosure cannot be read by another initial value or voltage",
+                        ));
+                    }
+                    values.insert(
+                        state,
+                        crate::integer_primitive::point(I::point(value), origin)?,
+                    );
+                }
+                let mut visits = 0_usize;
+                let value = crate::integer_primitive::evaluate(
+                    *function,
+                    args,
+                    origin,
+                    &mut |state| Ok(values[&state]),
+                    &mut || {
+                        visits += 1;
+                        Ok(())
+                    },
+                )?;
+                for _ in 0..visits {
+                    self.charge()?;
+                }
+                constant(f64::from(value))
+            }
             Expression::Operator { operator } if !target => {
                 let spec = self
                     .program
