@@ -1,0 +1,208 @@
+{
+ "task": "uwb-spec-branch-scheduler",
+ "date": "2026-10-23",
+ "backend": "legacy EVAS 0.8.7, interim; declared backend evas pending",
+ "backend_detail": {
+  "source": "legacy/EVAS commit 6cb6fa7a7dac70fc0d4120126d8cf74258e6637b (v0.8.7)",
+  "install": "runs/legacy-evas-0.8.7",
+  "selected_by": "UWB_BACKEND=legacy",
+  "maxstep_s": 1e-11,
+  "crossing_time_tolerance_s": 2e-12
+ },
+ "candidate": "solution/circuit.va",
+ "candidate_sha256": "8b933da4e20271ffd45ba89904281e8e3619cfb1dba1d3ee1f4819bd0424f5d3",
+ "verifier": "tests/verify.py (public and final cases)",
+ "status": "executed",
+ "score": 1,
+ "checks": 264,
+ "passed": 264,
+ "verify_wall_s": 32.0,
+ "cases": [
+  {
+   "name": "hold",
+   "set": "public",
+   "symbols": 16,
+   "frames": 16,
+   "n_pre": 2,
+   "delta0_s": 9.300595238095238e-11,
+   "vin": 1.0,
+   "resets": 1,
+   "instances": {
+    "a": {}
+   },
+   "checks": 22,
+   "passed": 22,
+   "worst_timed_error_ps": 0.5,
+   "sim_wall_s": 1.7,
+   "paths": {
+    "a": "cold=13, warm_active=2, warm_tail=1, release=13, hand_over=1, tail_to_active=1, hold_to_active=1, hold_waiting=1, idle_hold_off=13"
+   }
+  },
+  {
+   "name": "conflict",
+   "set": "public",
+   "symbols": 12,
+   "frames": 12,
+   "n_pre": 15,
+   "delta0_s": 9.300595238095238e-11,
+   "vin": 1.0,
+   "resets": 0,
+   "instances": {
+    "a": {}
+   },
+   "checks": 22,
+   "passed": 22,
+   "worst_timed_error_ps": 0.5,
+   "sim_wall_s": 1.8,
+   "paths": {
+    "a": "cold=10, drop=2, release=10, tail_to_off=10"
+   }
+  },
+  {
+   "name": "reset_phases",
+   "set": "final",
+   "symbols": 20,
+   "frames": 25,
+   "n_pre": 3,
+   "delta0_s": 9.300595238095238e-11,
+   "vin": 1.0,
+   "resets": 7,
+   "instances": {
+    "a": {
+     "t_hold": 7e-10,
+     "t_tail": 2e-10
+    },
+    "b": {
+     "t_hold": 0.0,
+     "t_conf": 3e-10
+    }
+   },
+   "checks": 44,
+   "passed": 44,
+   "worst_timed_error_ps": 0.625,
+   "sim_wall_s": 3.0,
+   "paths": {
+    "a": "cold=16, warm_tail=1, warm_idle_hold=1, release=14, hold_to_active=2, hold_waiting=1, idle_hold_off=11, reset_off=5, reset_cancel=3, ignored_in_reset=2",
+    "b": "cold=17, warm_tail=1, release=15, hold_to_active=1, hold_waiting=1, tail_to_off=13, reset_off=4, reset_cancel=3, ignored_in_reset=2"
+   }
+  },
+  {
+   "name": "hold_idle",
+   "set": "final",
+   "symbols": 13,
+   "frames": 13,
+   "n_pre": 1,
+   "delta0_s": 9.300595238095238e-11,
+   "vin": 1.0,
+   "resets": 1,
+   "instances": {
+    "a": {},
+    "b": {
+     "t_tail": 1.2e-10,
+     "t_hold": 3.8e-10,
+     "vdd": 1.2,
+     "tr": 3e-12
+    }
+   },
+   "checks": 44,
+   "passed": 44,
+   "worst_timed_error_ps": 0.75,
+   "sim_wall_s": 2.7,
+   "paths": {
+    "a": "cold=10, warm_tail=2, warm_idle_hold=1, release=10, hold_to_active=3, hold_waiting=2, idle_hold_off=10",
+    "b": "cold=9, warm_tail=2, warm_idle_hold=2, release=9, hold_to_active=4, hold_waiting=2, idle_hold_off=9"
+   }
+  },
+  {
+   "name": "preempt",
+   "set": "final",
+   "symbols": 38,
+   "frames": 40,
+   "n_pre": 8,
+   "delta0_s": 9.300595238095238e-11,
+   "vin": 1.0,
+   "resets": 0,
+   "instances": {
+    "a": {
+     "t_hold": 2.5e-09
+    },
+    "b": {
+     "t_hold": 1.4e-09,
+     "t_tail": 4e-10,
+     "t_conf": 5e-10
+    }
+   },
+   "checks": 44,
+   "passed": 44,
+   "worst_timed_error_ps": 0.5,
+   "sim_wall_s": 5.8,
+   "paths": {
+    "a": "cold=10, warm_active=3, warm_tail=2, warm_idle_hold=6, take_over=17, release=27, hold_to_active=11, hold_waiting=5, idle_hold_off=10",
+    "b": "cold=32, warm_active=3, warm_tail=3, release=32, tail_to_active=1, hold_to_active=5, hold_waiting=5, idle_hold_off=32"
+   }
+  },
+  {
+   "name": "random_words",
+   "set": "final",
+   "symbols": 95,
+   "frames": 110,
+   "n_pre": 2,
+   "delta0_s": 9.300595238095238e-11,
+   "vin": 1.0,
+   "resets": 1,
+   "instances": {
+    "a": {},
+    "b": {
+     "t_tail": 3e-10,
+     "t_hold": 7.5e-10,
+     "t_conf": 3.5e-10,
+     "vdd": 1.3,
+     "tr": 3e-12
+    }
+   },
+   "checks": 44,
+   "passed": 44,
+   "worst_timed_error_ps": 0.75,
+   "sim_wall_s": 9.8,
+   "paths": {
+    "a": "cold=94, warm_tail=1, release=94, hold_to_active=1, hold_waiting=1, idle_hold_off=94",
+    "b": "cold=86, warm_tail=2, warm_idle_hold=7, release=86, tail_to_active=1, hold_to_active=8, hold_waiting=1, idle_hold_off=86"
+   }
+  },
+  {
+   "name": "random_dense",
+   "set": "final",
+   "symbols": 85,
+   "frames": 90,
+   "n_pre": 15,
+   "delta0_s": 6e-11,
+   "vin": 0.9,
+   "resets": 0,
+   "instances": {
+    "a": {
+     "t_tail": 3e-10,
+     "t_hold": 1.2e-09,
+     "t_conf": 7.9e-10,
+     "vth": 0.4
+    },
+    "b": {
+     "t_tail": 1e-10,
+     "t_hold": 0.0,
+     "t_conf": 1.5e-10,
+     "vth": 0.35,
+     "vdd": 0.8,
+     "tr": 1.5e-12
+    }
+   },
+   "checks": 44,
+   "passed": 44,
+   "worst_timed_error_ps": 0.5,
+   "sim_wall_s": 5.8,
+   "paths": {
+    "a": "cold=45, warm_precharge=4, warm_active=6, warm_tail=1, warm_idle_hold=2, take_over=14, drop=13, release=59, tail_to_active=4, hold_to_active=9, hold_waiting=7, idle_hold_off=45",
+    "b": "cold=71, warm_precharge=4, warm_active=7, drop=3, release=71, hold_to_active=11, hold_waiting=11, tail_to_off=71"
+   }
+  }
+ ],
+ "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/reference"
+}

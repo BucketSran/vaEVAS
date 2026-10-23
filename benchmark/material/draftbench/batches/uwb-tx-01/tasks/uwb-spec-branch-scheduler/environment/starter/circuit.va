@@ -1,0 +1,15 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module ro_scheduler8(pre_a, rf_a, sel_a, pre_b, rf_b, sel_b, rst,
+                     pwr, pre, rel, gate_a, gate_b, conflict, nsup, st);
+    input pre_a, rf_a, pre_b, rf_b, rst;
+    input [2:0] sel_a, sel_b;
+    output [7:0] pwr, pre, rel, st;
+    output gate_a, gate_b, conflict, nsup;
+    electrical pre_a, rf_a, pre_b, rf_b, rst, gate_a, gate_b, conflict, nsup;
+    electrical [2:0] sel_a, sel_b;
+    electrical [7:0] pwr, pre, rel, st;
+
+    // TODO: parameters and behavior from the Spec.
+endmodule

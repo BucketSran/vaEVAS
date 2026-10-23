@@ -1,0 +1,308 @@
+{
+ "task": "uwb-spec-branch-scheduler",
+ "date": "2026-10-23",
+ "backend": "legacy EVAS 0.8.7, interim; declared backend evas pending",
+ "backend_detail": {
+  "source": "legacy/EVAS commit 6cb6fa7a7dac70fc0d4120126d8cf74258e6637b (v0.8.7)",
+  "install": "runs/legacy-evas-0.8.7",
+  "selected_by": "UWB_BACKEND=legacy",
+  "maxstep_s": 1e-11,
+  "crossing_time_tolerance_s": 2e-12
+ },
+ "tool": "tests/calibration/mutants.py",
+ "cases": [
+  "hold",
+  "conflict",
+  "reset_phases",
+  "hold_idle",
+  "preempt",
+  "random_words",
+  "random_dense"
+ ],
+ "result": {
+  "correct_accepted": 2,
+  "correct_total": 2,
+  "wrong_rejected": 12,
+  "wrong_total": 12
+ },
+ "samples": [
+  {
+   "sample": "reference",
+   "source": "solution/circuit.va",
+   "violates": null,
+   "expected": 1,
+   "score": 1,
+   "ok": true,
+   "candidate_sha256": "8b933da4e20271ffd45ba89904281e8e3619cfb1dba1d3ee1f4819bd0424f5d3",
+   "verify_wall_s": 32.0,
+   "checks": 264,
+   "failed_checks": 0,
+   "failed_cases": [],
+   "first_failure": null,
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/reference"
+  },
+  {
+   "sample": "alternative",
+   "source": "tests/calibration/alternative.va",
+   "violates": null,
+   "expected": 1,
+   "score": 1,
+   "ok": true,
+   "candidate_sha256": "f91ad1e58656cbe62cec795dfa7403188f46b645af5c50d95ca72cd568df6d1f",
+   "verify_wall_s": 34.3,
+   "checks": 264,
+   "failed_checks": 0,
+   "failed_cases": [],
+   "first_failure": null,
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/alternative"
+  },
+  {
+   "sample": "steal_busy_slot",
+   "source": "tests/calibration/mutants.py MUTANTS",
+   "violates": "S3 (d) drop instead of powering a third branch",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "38c9f8a4bd4ad0ae5d296f83106305ff510adb2bc7758255c47827b523d4d076",
+   "verify_wall_s": 44.1,
+   "checks": 264,
+   "failed_checks": 34,
+   "failed_cases": [
+    "conflict",
+    "random_dense"
+   ],
+   "first_failure": "conflict/a: branch 0: pwr, pre, rel edges (S2-S5, S7)",
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/steal_busy_slot/out"
+  },
+  {
+   "sample": "warm_restarts_precharge",
+   "source": "tests/calibration/mutants.py MUTANTS",
+   "violates": "S3 (a) a warm grant keeps the branch state",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "7cedfdd185a05bf2618393b61a5ba3a7a11e62bc26ec857be0dd2a2acaac5b01",
+   "verify_wall_s": 53.5,
+   "checks": 264,
+   "failed_checks": 28,
+   "failed_cases": [
+    "hold",
+    "hold_idle",
+    "random_dense",
+    "random_words",
+    "reset_phases"
+   ],
+   "first_failure": "hold/a: branch 2: pwr, pre, rel edges (S2-S5, S7)",
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/warm_restarts_precharge/out"
+  },
+  {
+   "sample": "no_take_over",
+   "source": "tests/calibration/mutants.py MUTANTS",
+   "violates": "S3 (c) take over an idle HOLD",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "8aa5f632d3ece6bfae20d7ef59ad2834aaeff7399712c755dcbb66e3a4343c0a",
+   "verify_wall_s": 59.1,
+   "checks": 264,
+   "failed_checks": 38,
+   "failed_cases": [
+    "preempt",
+    "random_dense"
+   ],
+   "first_failure": "preempt/a: branch 0: pwr, pre, rel edges (S2-S5, S7)",
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/no_take_over/out"
+  },
+  {
+   "sample": "no_hold",
+   "source": "tests/calibration/mutants.py MUTANTS",
+   "violates": "S5 HOLD after TAIL",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "f693f6f6275d8eb6628891f271e3a2f208425cd5b353d1747117b5c40b7436eb",
+   "verify_wall_s": 51.4,
+   "checks": 264,
+   "failed_checks": 163,
+   "failed_cases": [
+    "hold",
+    "hold_idle",
+    "preempt",
+    "random_dense",
+    "random_words",
+    "reset_phases"
+   ],
+   "first_failure": "hold/a: branch 0: pwr, pre, rel edges (S2-S5, S7)",
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/no_hold/out"
+  },
+  {
+   "sample": "hold_ignores_tpre",
+   "source": "tests/calibration/mutants.py MUTANTS",
+   "violates": "S5 idle HOLD lasts max(0, t_hold - n_pre*delta0)",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "de6485d0723b5c1b6363c5f4a6cfc5058a0b4a5c3d9df55cd7654854143dda60",
+   "verify_wall_s": 37.1,
+   "checks": 264,
+   "failed_checks": 164,
+   "failed_cases": [
+    "conflict",
+    "hold",
+    "hold_idle",
+    "preempt",
+    "random_dense",
+    "random_words",
+    "reset_phases"
+   ],
+   "first_failure": "hold/a: branch 0: pwr, pre, rel edges (S2-S5, S7)",
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/hold_ignores_tpre/out"
+  },
+  {
+   "sample": "fixed_tail",
+   "source": "tests/calibration/mutants.py MUTANTS",
+   "violates": "S5 TAIL lasts t_tail",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "cfa5ec0e7367dfc0c847b1c49e9e4150c06d19f4cb530ad8250c3ae5931f39c7",
+   "verify_wall_s": 55.6,
+   "checks": 264,
+   "failed_checks": 106,
+   "failed_cases": [
+    "hold_idle",
+    "preempt",
+    "random_dense",
+    "random_words",
+    "reset_phases"
+   ],
+   "first_failure": "reset_phases/a: branch 1: pwr, pre, rel edges (S2-S5, S7)",
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/fixed_tail/out"
+  },
+  {
+   "sample": "fixed_conflict_width",
+   "source": "tests/calibration/mutants.py MUTANTS",
+   "violates": "S6 conflict pulse width t_conf",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "5365fbfa44c3615e7e3730d36676a9c0334ab9ffc770e0a762f7e652ec6168d4",
+   "verify_wall_s": 32.8,
+   "checks": 264,
+   "failed_checks": 2,
+   "failed_cases": [
+    "random_dense"
+   ],
+   "first_failure": "random_dense/a: conflict: t_conf pulse at each dropped request (S3, S6)",
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/fixed_conflict_width/out"
+  },
+  {
+   "sample": "drop_without_conflict",
+   "source": "tests/calibration/mutants.py MUTANTS",
+   "violates": "S6 conflict pulse at a dropped request",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "a51ee451a10557cb6ab63f83686e733d1ae4e990ab868ceab8ab6813ccc2bfc4",
+   "verify_wall_s": 30.2,
+   "checks": 264,
+   "failed_checks": 3,
+   "failed_cases": [
+    "conflict",
+    "random_dense"
+   ],
+   "first_failure": "conflict/a: conflict: t_conf pulse at each dropped request (S3, S6)",
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/drop_without_conflict/out"
+  },
+  {
+   "sample": "reset_keeps_branches",
+   "source": "tests/calibration/mutants.py MUTANTS",
+   "violates": "S7 reset turns every branch off",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "b4add371dea0df5ea8f690a56f6fa2345f07be9696e7c998e53dcb772766562c",
+   "verify_wall_s": 28.1,
+   "checks": 264,
+   "failed_checks": 36,
+   "failed_cases": [
+    "reset_phases"
+   ],
+   "first_failure": "reset_phases/a: branch 0: pwr, pre, rel edges (S2-S5, S7)",
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/reset_keeps_branches/out"
+  },
+  {
+   "sample": "requests_during_reset",
+   "source": "tests/calibration/mutants.py MUTANTS",
+   "violates": "S7 requests are ignored while rst is high",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "a2e5c547ad9029edf0a875522d66abde25d59ec1e95acfb149b675634581878a",
+   "verify_wall_s": 36.6,
+   "checks": 264,
+   "failed_checks": 14,
+   "failed_cases": [
+    "reset_phases"
+   ],
+   "first_failure": "reset_phases/a: branch 0: pwr, pre, rel edges (S2-S5, S7)",
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/requests_during_reset/out"
+  },
+  {
+   "sample": "nsup_scaled_by_vdd",
+   "source": "tests/calibration/mutants.py MUTANTS",
+   "violates": "S2 nsup is 1 V per powered branch",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "216a8c5a389e2a440d6cc63d191508e74de4977ec9b392fda6f1fa38c920cd02",
+   "verify_wall_s": 45.9,
+   "checks": 264,
+   "failed_checks": 3,
+   "failed_cases": [
+    "hold_idle",
+    "random_dense",
+    "random_words"
+   ],
+   "first_failure": "hold_idle/b: nsup = 1 V per powered branch (S2)",
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/nsup_scaled_by_vdd/out"
+  },
+  {
+   "sample": "rel_during_precharge",
+   "source": "tests/calibration/mutants.py MUTANTS",
+   "violates": "S2 rel is low in PRECHARGE (release at the window start)",
+   "expected": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "dbf68493cc93b89800b2f15ebf762ea23bc2e1c02fe2eb19c02548e645f4f793",
+   "verify_wall_s": 44.0,
+   "checks": 264,
+   "failed_checks": 96,
+   "failed_cases": [
+    "conflict",
+    "hold",
+    "hold_idle",
+    "preempt",
+    "random_dense",
+    "random_words",
+    "reset_phases"
+   ],
+   "first_failure": "hold/a: branch 0: pwr, pre, rel edges (S2-S5, S7)",
+   "errors": [],
+   "raw_output": "runs/uwb-tx-vabench-20261022/tasks/uwb-spec-branch-scheduler/calibration/rel_during_precharge/out"
+  }
+ ]
+}
