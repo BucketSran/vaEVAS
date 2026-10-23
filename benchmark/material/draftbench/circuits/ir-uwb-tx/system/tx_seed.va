@@ -21,6 +21,10 @@
 // still open (SPEC.md section 7): bclk must be frequency-locked to the
 // calibrated RO, for example both derived from the same crystal.
 // clk672 copies the master-RO ph[0] (frame clock) for observation.
+// M5 parameters (SPEC.md 4.10) are passed to the modules and are all off by
+// default: launch lead n_lead, PG timing errors, branch non-idealities,
+// master-RO tap skew, branch isolation and the export records. Branch k uses
+// seed seed_br + 7 k, so device residuals differ between branches.
 module uwb_tx_seed(bclk, din, rst, ref, cal_start, pol, outp, outn, done, fail, conflict, nsup, clk672);
     input bclk, din, rst, ref, cal_start, pol;
     output outp, outn, done, fail, conflict, nsup, clk672;
@@ -33,6 +37,17 @@ module uwb_tx_seed(bclk, din, rst, ref, cal_start, pol, outp, outn, done, fail, 
     parameter real vcm = 0.5;
     parameter real f0 = 4.5e9, f1 = 4.928571428571429e9, f2 = 5.357142857142857e9, f3 = 5.785714285714286e9;
     parameter real f4 = 6.214285714285714e9, f5 = 6.642857142857143e9, f6 = 7.071428571428571e9, f7 = 7.5e9;
+    parameter integer n_lead = 0 from [0:15];
+    parameter real sigma_jit = 0, sigma_pos = 0, sigma_wid = 0, t_lat = 0;
+    parameter integer seed_pg = 11;
+    parameter real f_off = 0, sigma_f_res = 0, sigma_g_res_db = 0, sigma_f_act = 0;
+    parameter integer phi_random = 0;
+    parameter real sigma_pn_1ns = 0, t_pn_grid = 50p;
+    parameter integer seed_br = 101;
+    parameter real sigma_tap = 0, tap_lat = 0;
+    parameter integer seed_ro = 21;
+    parameter real iso_db = 200;
+    parameter integer export = 0 from [0:1];
 
     electrical [5:0] sym;
     electrical [2:0] pos, inc, fcode, sel_a, sel_b;
@@ -43,26 +58,43 @@ module uwb_tx_seed(bclk, din, rst, ref, cal_start, pol, outp, outn, done, fail, 
     electrical gate_a, gate_b, env_a, env_b;
 
     uwb_serial_to_symbol6 Xs2p (bclk, din, rst, sym, sym_valid);
-    uwb_dppm_fsk_encoder8 Xenc (sym, sym_valid, rst, pos, inc, fcode, req, enc_valid);
-    uwb_ro_frequency_cal #(.n_win(n_win), .code_init(code_init))
+    uwb_dppm_fsk_encoder8 #(.export(export)) Xenc (sym, sym_valid, rst, pos, inc, fcode, req, enc_valid);
+    uwb_ro_frequency_cal #(.n_win(n_win), .code_init(code_init), .export(export))
         Xcal (ref, ph[0], cal_start, rst, code, done, fail, busy);
-    uwb_master_ro16 Xro (code, ph);
-    uwb_pulse_generator #(.n_pre(n_pre))
+    uwb_master_ro16 #(.sigma_tap(sigma_tap), .tap_lat(tap_lat), .seed(seed_ro), .export(export)) Xro (code, ph);
+    uwb_pulse_generator #(.n_pre(n_pre), .n_lead(n_lead), .sigma_jit(sigma_jit), .sigma_pos(sigma_pos),
+                          .sigma_wid(sigma_wid), .t_lat(t_lat), .seed(seed_pg), .export(export))
         Xpg (ph, pos, fcode, pol, enc_valid, done, rst,
              pre_a, rf_a, sel_a, pol_a, pre_b, rf_b, sel_b, pol_b, overrun);
-    uwb_ro_scheduler8 #(.n_pre(n_pre))
+    uwb_ro_scheduler8 #(.n_pre(n_pre), .export(export))
         Xsch (pre_a, rf_a, sel_a, pre_b, rf_b, sel_b, rst, pwr, pre, rel, gate_a, gate_b, conflict, nsup, st);
-    uwb_rf_ro_branch #(.f_rf(f0)) Xbr0 (pwr[0], pre[0], rel[0], vro[0]);
-    uwb_rf_ro_branch #(.f_rf(f1)) Xbr1 (pwr[1], pre[1], rel[1], vro[1]);
-    uwb_rf_ro_branch #(.f_rf(f2)) Xbr2 (pwr[2], pre[2], rel[2], vro[2]);
-    uwb_rf_ro_branch #(.f_rf(f3)) Xbr3 (pwr[3], pre[3], rel[3], vro[3]);
-    uwb_rf_ro_branch #(.f_rf(f4)) Xbr4 (pwr[4], pre[4], rel[4], vro[4]);
-    uwb_rf_ro_branch #(.f_rf(f5)) Xbr5 (pwr[5], pre[5], rel[5], vro[5]);
-    uwb_rf_ro_branch #(.f_rf(f6)) Xbr6 (pwr[6], pre[6], rel[6], vro[6]);
-    uwb_rf_ro_branch #(.f_rf(f7)) Xbr7 (pwr[7], pre[7], rel[7], vro[7]);
+    uwb_rf_ro_branch #(.f_rf(f0), .f_off(f_off), .sigma_f_res(sigma_f_res), .sigma_g_res_db(sigma_g_res_db),
+        .sigma_f_act(sigma_f_act), .phi_random(phi_random), .sigma_pn_1ns(sigma_pn_1ns), .t_pn_grid(t_pn_grid),
+        .seed(seed_br + 0), .id(0), .export(export)) Xbr0 (pwr[0], pre[0], rel[0], vro[0]);
+    uwb_rf_ro_branch #(.f_rf(f1), .f_off(f_off), .sigma_f_res(sigma_f_res), .sigma_g_res_db(sigma_g_res_db),
+        .sigma_f_act(sigma_f_act), .phi_random(phi_random), .sigma_pn_1ns(sigma_pn_1ns), .t_pn_grid(t_pn_grid),
+        .seed(seed_br + 7), .id(1), .export(export)) Xbr1 (pwr[1], pre[1], rel[1], vro[1]);
+    uwb_rf_ro_branch #(.f_rf(f2), .f_off(f_off), .sigma_f_res(sigma_f_res), .sigma_g_res_db(sigma_g_res_db),
+        .sigma_f_act(sigma_f_act), .phi_random(phi_random), .sigma_pn_1ns(sigma_pn_1ns), .t_pn_grid(t_pn_grid),
+        .seed(seed_br + 14), .id(2), .export(export)) Xbr2 (pwr[2], pre[2], rel[2], vro[2]);
+    uwb_rf_ro_branch #(.f_rf(f3), .f_off(f_off), .sigma_f_res(sigma_f_res), .sigma_g_res_db(sigma_g_res_db),
+        .sigma_f_act(sigma_f_act), .phi_random(phi_random), .sigma_pn_1ns(sigma_pn_1ns), .t_pn_grid(t_pn_grid),
+        .seed(seed_br + 21), .id(3), .export(export)) Xbr3 (pwr[3], pre[3], rel[3], vro[3]);
+    uwb_rf_ro_branch #(.f_rf(f4), .f_off(f_off), .sigma_f_res(sigma_f_res), .sigma_g_res_db(sigma_g_res_db),
+        .sigma_f_act(sigma_f_act), .phi_random(phi_random), .sigma_pn_1ns(sigma_pn_1ns), .t_pn_grid(t_pn_grid),
+        .seed(seed_br + 28), .id(4), .export(export)) Xbr4 (pwr[4], pre[4], rel[4], vro[4]);
+    uwb_rf_ro_branch #(.f_rf(f5), .f_off(f_off), .sigma_f_res(sigma_f_res), .sigma_g_res_db(sigma_g_res_db),
+        .sigma_f_act(sigma_f_act), .phi_random(phi_random), .sigma_pn_1ns(sigma_pn_1ns), .t_pn_grid(t_pn_grid),
+        .seed(seed_br + 35), .id(5), .export(export)) Xbr5 (pwr[5], pre[5], rel[5], vro[5]);
+    uwb_rf_ro_branch #(.f_rf(f6), .f_off(f_off), .sigma_f_res(sigma_f_res), .sigma_g_res_db(sigma_g_res_db),
+        .sigma_f_act(sigma_f_act), .phi_random(phi_random), .sigma_pn_1ns(sigma_pn_1ns), .t_pn_grid(t_pn_grid),
+        .seed(seed_br + 42), .id(6), .export(export)) Xbr6 (pwr[6], pre[6], rel[6], vro[6]);
+    uwb_rf_ro_branch #(.f_rf(f7), .f_off(f_off), .sigma_f_res(sigma_f_res), .sigma_g_res_db(sigma_g_res_db),
+        .sigma_f_act(sigma_f_act), .phi_random(phi_random), .sigma_pn_1ns(sigma_pn_1ns), .t_pn_grid(t_pn_grid),
+        .seed(seed_br + 49), .id(7), .export(export)) Xbr7 (pwr[7], pre[7], rel[7], vro[7]);
     uwb_envelope_lane Xenva (gate_a, ph[0], env_a);
     uwb_envelope_lane Xenvb (gate_b, ph[0], env_b);
-    uwb_tx_output #(.g_pa(g_pa), .vcm(vcm))
+    uwb_tx_output #(.g_pa(g_pa), .vcm(vcm), .iso_db(iso_db))
         Xout (vro, env_a, env_b, gate_a, gate_b, sel_a, sel_b, pol_a, pol_b, outp, outn);
 
     analog begin

@@ -1,16 +1,34 @@
 `include "constants.vams"
 `include "disciplines.vams"
 
-// One RF branch ring oscillator of the 8-carrier bank (SPEC.md 4.8).
+// One RF branch ring oscillator of the 8-carrier bank (SPEC.md 4.8, 4.10).
 // pwr low: off, output 0. pwr high with pre high and rel low: precharge,
-// nodes preset, no oscillation, output 0. A rising rel releases the loop:
-// amplitude and frequency settle with first-order responses (99 % after
-// t99_amp and t99_freq), the start frequency is f_rf * (1 + df_start), and
-// the phase is the integral of the instantaneous frequency in the branch's
-// local time u since release, starting at the preset phase phi0:
-//   phi(u) = phi0 + 2*pi*f_rf*(u + df_start*tau_f*(1 - exp(-u/tau_f)))
+// nodes preset, no oscillation, output 0. A rising rel while pwr is high
+// releases the loop (a cold start, one "activation"). Amplitude and
+// frequency settle with first-order responses (99 % after t99_amp and
+// t99_freq); the start frequency is f_act * (1 + df_start). The phase is the
+// integral of the instantaneous frequency in the branch's local time u since
+// release, starting at the activation phase phi_act:
+//   phi(u) = phi_act + 2*pi*f_act*(u + df_start*tau_f*(1 - exp(-u/tau_f))) + phi_pn
 // While rel stays high (active, tail, hold) the phase continues; it is never
-// reset at a symbol boundary. pwr falling stops the oscillation at once.
+// reset at a symbol boundary. rel or pwr falling stops the oscillation.
+//
+// Non-ideal terms (SPEC.md 4.10; all zero by default, giving the M4 model):
+//   f_dev = f_rf + f_off + f_res     f_off: common static offset (parameter);
+//                                    f_res: fixed residual of this device,
+//                                    normal(0, sigma_f_res), drawn once
+//   a_dev = a_ro * 10^(g_res/20)     g_res: fixed gain residual, normal(0, sigma_g_res_db)
+//   f_act = f_dev + df_act           df_act: normal(0, sigma_f_act), drawn at each
+//                                    activation and kept while the branch oscillates
+//   phi_act = phi0, or uniform(0, 2 pi) per activation when phi_random = 1
+//   phi_pn: phase diffusion on a fixed time grid k*t_pn_grid; over each grid
+//           interval the phase changes linearly by normal(0, sigma_pn_1ns *
+//           sqrt(t_pn_grid / 1 ns)); it starts at 0 at release and its first
+//           increment begins at the first grid point after release.
+// Each instance uses its own seed (seed + 1000 for activations, seed + 2000
+// for phase noise). With export = 1 the branch reports
+//   ACT <t_rel> <id> <n> <f_act> <a_dev> <phi_act> <f_dev> <g_res_db> at each activation and
+//   PN <t_k> <id> <n> <phi_pn(t_k)> <increment over the next interval> at each grid point.
 module uwb_rf_ro_branch(pwr, pre, rel, vro);
     input pwr, pre, rel;
     output vro;
@@ -22,37 +40,81 @@ module uwb_rf_ro_branch(pwr, pre, rel, vro);
     parameter real t99_freq = 200p from [0:inf);
     parameter real df_start = 0.01;
     parameter real phi0 = 0;                     // preset phase at release, rad
+    parameter real f_off = 0;                    // common static frequency offset, Hz
+    parameter real sigma_f_res = 0 from [0:inf); // fixed per-device frequency residual, Hz
+    parameter real sigma_g_res_db = 0 from [0:inf); // fixed per-device gain residual, dB
+    parameter real sigma_f_act = 0 from [0:inf); // per-activation frequency offset, Hz
+    parameter integer phi_random = 0 from [0:1]; // 1: uniform random phase at each activation
+    parameter real sigma_pn_1ns = 0 from [0:inf);   // phase diffusion accumulated over 1 ns, rad
+    parameter real t_pn_grid = 50p from (0:inf);
+    parameter integer seed = 101;
+    parameter integer id = 0;                    // branch index in export records
+    parameter integer export = 0 from [0:1];
     parameter real pts_per_cycle = 20 from [4:inf);
     parameter real vth = 0.5;
 
-    integer osc;
+    integer osc, n_act, seed_d, seed_a, seed_p;
     real t_rel, u, tau_a, tau_f, amp, phase;
+    real f_res, g_res_db, f_dev, a_dev, df_act, f_act, phi_act;
+    real pn_base, pn_slope, t_pn_k, t_pn_next, sig_pn_step;
 
     analog begin
         @(initial_step) begin
-            osc = 0; t_rel = 0;
+            osc = 0; t_rel = 0; n_act = 0;
+            seed_d = seed; seed_a = seed + 1000; seed_p = seed + 2000;
             tau_a = t99_amp / ln(100);
             tau_f = t99_freq / ln(100);
+            f_res = 0; g_res_db = 0;
+            if (sigma_f_res > 0) f_res = $rdist_normal(seed_d, 0, sigma_f_res);
+            if (sigma_g_res_db > 0) g_res_db = $rdist_normal(seed_d, 0, sigma_g_res_db);
+            f_dev = f_rf + f_off + f_res;
+            a_dev = a_ro * pow(10, g_res_db / 20);
+            df_act = 0; f_act = f_dev; phi_act = phi0;
+            pn_base = 0; pn_slope = 0; t_pn_k = 0; t_pn_next = 1.0;
+            sig_pn_step = sigma_pn_1ns * sqrt(t_pn_grid / 1n);
         end
         @(cross(V(rel) - vth, +1)) begin
             if (V(pwr) > vth) begin
-                osc = 1; t_rel = $abstime;
+                osc = 1; t_rel = $abstime; n_act = n_act + 1;
+                df_act = 0;
+                if (sigma_f_act > 0) df_act = $rdist_normal(seed_a, 0, sigma_f_act);
+                phi_act = phi0;
+                if (phi_random) phi_act = $rdist_uniform(seed_a, 0, 2 * `M_PI);
+                f_act = f_dev + df_act;
+                pn_base = 0; pn_slope = 0; t_pn_k = t_rel;
+                if (sigma_pn_1ns > 0) t_pn_next = (floor(t_rel / t_pn_grid + 1e-6) + 1) * t_pn_grid;
+                if (export)
+                    $strobe("ACT %.17g %d %d %.17g %.17g %.17g %.17g %.17g", t_rel, id, n_act,
+                            f_act, a_dev, phi_act, f_dev, g_res_db);
             end
         end
-        @(cross(V(rel) - vth, -1) or cross(V(pwr) - vth, -1))
+        @(cross(V(rel) - vth, -1) or cross(V(pwr) - vth, -1)) begin
             osc = 0;
+            t_pn_next = 1.0;
+        end
+        @(timer(t_pn_next)) begin
+            if (osc) begin
+                pn_base = pn_base + pn_slope * ($abstime - t_pn_k);
+                pn_slope = $rdist_normal(seed_p, 0, sig_pn_step) / t_pn_grid;
+                t_pn_k = $abstime;
+                t_pn_next = $abstime + t_pn_grid;
+                if (export)
+                    $strobe("PN %.17g %d %d %.17g %.17g", t_pn_k, id, n_act, pn_base, pn_slope * t_pn_grid);
+            end
+        end
 
         u = $abstime - t_rel;
         if (osc) begin
             if (tau_a > 0)
-                amp = a_ro * (1 - exp(-u / tau_a));
+                amp = a_dev * (1 - exp(-u / tau_a));
             else
-                amp = a_ro;
+                amp = a_dev;
             if (tau_f > 0)
-                phase = phi0 + 2 * `M_PI * f_rf * (u + df_start * tau_f * (1 - exp(-u / tau_f)));
+                phase = phi_act + 2 * `M_PI * f_act * (u + df_start * tau_f * (1 - exp(-u / tau_f)));
             else
-                phase = phi0 + 2 * `M_PI * f_rf * u;
-            $bound_step(1 / (pts_per_cycle * f_rf));
+                phase = phi_act + 2 * `M_PI * f_act * u;
+            phase = phase + pn_base + pn_slope * ($abstime - t_pn_k);
+            $bound_step(1 / (pts_per_cycle * f_act));
         end else begin
             amp = 0;
             phase = 0;

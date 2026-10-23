@@ -1,0 +1,11 @@
+{
+ "_comment": "Placeholders for the original spec 7.4 energy terms. Keep null until transistor extraction gives values; the export script then reports times and counts only. Units: W per branch for p_state_w, J for energies, s for the calibration period.",
+ "p_state_w": {"OFF": 0.0, "PRECHARGE": null, "RELEASE_SETTLE": null, "ACTIVE": null, "TAIL": null, "HOLD": null},
+ "e_start_extra_j": null,
+ "p_logic_w": null,
+ "e_pulse_switch_j": null,
+ "p_pa_active_w": null,
+ "p_pa_idle_w": null,
+ "e_calibration_j": null,
+ "calibration_period_s": null
+}

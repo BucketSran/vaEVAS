@@ -9,7 +9,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 CHECKS = ['m1_data/check_m1.py', 'm2_clock/check_m2.py', 'm3_pulse/check_pg.py', 'm3_pulse/check_rf.py',
-          'm4_chain/check_chain.py', 'system/check_system.py']
+          'm4_chain/check_chain.py', 'm5/check_m5.py', 'system/check_system.py']
 
 
 def main():

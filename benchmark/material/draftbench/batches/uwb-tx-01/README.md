@@ -17,7 +17,7 @@
 | [uwb-repair-scheduler-warm-restart](tasks/uwb-repair-scheduler-warm-restart/instruction.md) | 诊断与修复 · 多模块系统 | 难 | 种子链 + 调度器故障 | 1 / 1；起始工程与 10/10 错误修复 0 分 |
 | [uwb-test-pulse-decoder](tasks/uwb-test-pulse-decoder/instruction.md) | 电路测试与表征 · 在线仪表 | 难 | 为本题新写的 VA 仪表 | 1 / 1；13/13 |
 
-8 题都在 implementation 阶段通过静态检查，`pending = ["runtime"]`。每题的错误版本、违反的条款和首个失败项在各自 `results/calibration.json`。
+8 题都在 implementation 阶段通过静态检查，`pending = ["runtime"]`。题目的参考解取自 M4 版本的模块（提交 `dab981c3`）；之后系统资产加入了 M5 参数，参数默认关闭时行为不变，题目没有随之改动。每题的错误版本、违反的条款和首个失败项在各自 `results/calibration.json`。
 难度是出题时的预期，以后按模型实测调整。8 题共用同一电路，同源关系按 `source_group = "uwb-tx-seed"` 登记，统计时不能当成相互独立的能力证据。
 
 ## 共同约定

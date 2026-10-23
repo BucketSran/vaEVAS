@@ -11,6 +11,12 @@
 // kept and the rest runs at the new frequency. The phase is never reset.
 // The code is also read at t = t_code, so a code that is not yet valid when
 // initial_step runs does not leave the RO at the wrong frequency.
+// Static tap skew (SPEC.md 4.10, off by default): each tap k gets a fixed
+// delay sk_k, normal(0, sigma_tap) clipped at clip_n sigma, drawn once per
+// device; every tap is also delayed by a common lat_eff = max(tap_lat,
+// clip_n sigma_tap) so the skews stay causal. A delayed tap change is issued
+// by its own timer. With export = 1 the skews are reported once, at the
+// first tap step, as TAP <t> <lat_eff> <sk_0> ... <sk_15>.
 module uwb_master_ro16(code, ph);
     input [9:0] code;
     output [15:0] ph;
@@ -24,10 +30,16 @@ module uwb_master_ro16(code, ph);
     parameter real vth = 0.5;
     parameter real tr = 2p from (0:inf);
     parameter real t_code = 5p from (0:inf);     // code read delay after a code edge
+    parameter real sigma_tap = 0 from [0:inf);   // static per-tap skew, s
+    parameter real tap_lat = 0 from [0:inf);     // common tap latency, s
+    parameter real clip_n = 4 from (0:inf);
+    parameter integer seed = 21;
+    parameter integer export = 0 from [0:1];
 
-    integer m, c;
-    real f, t_last, t_next, t_read, r;
-    genvar i;
+    integer m, c, seed_s, reported, skewed;
+    real f, t_last, t_next, t_read, r, lat_eff, x;
+    integer l0, n0, l1, n1, l2, n2, l3, n3, l4, n4, l5, n5, l6, n6, l7, n7, l8, n8, l9, n9, l10, n10, l11, n11, l12, n12, l13, n13, l14, n14, l15, n15;
+    real sk0, tt0, sk1, tt1, sk2, tt2, sk3, tt3, sk4, tt4, sk5, tt5, sk6, tt6, sk7, tt7, sk8, tt8, sk9, tt9, sk10, tt10, sk11, tt11, sk12, tt12, sk13, tt13, sk14, tt14, sk15, tt15;
 
     analog begin
         @(initial_step) begin
@@ -38,6 +50,42 @@ module uwb_master_ro16(code, ph);
             t_last = -r / (16 * f);
             t_next = (1 - r) / (16 * f);
             t_read = t_code;        // read the code once more after start-up
+            seed_s = seed; reported = 0;
+            lat_eff = clip_n * sigma_tap;
+            if (tap_lat > lat_eff) lat_eff = tap_lat;
+            skewed = (lat_eff > 0);
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk0 = sigma_tap * x; tt0 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk1 = sigma_tap * x; tt1 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk2 = sigma_tap * x; tt2 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk3 = sigma_tap * x; tt3 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk4 = sigma_tap * x; tt4 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk5 = sigma_tap * x; tt5 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk6 = sigma_tap * x; tt6 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk7 = sigma_tap * x; tt7 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk8 = sigma_tap * x; tt8 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk9 = sigma_tap * x; tt9 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk10 = sigma_tap * x; tt10 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk11 = sigma_tap * x; tt11 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk12 = sigma_tap * x; tt12 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk13 = sigma_tap * x; tt13 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk14 = sigma_tap * x; tt14 = 1.0;
+            x = 0; if (sigma_tap > 0) x = $rdist_normal(seed_s, 0, 1.0); if (x > clip_n) x = clip_n; if (x < -clip_n) x = -clip_n; sk15 = sigma_tap * x; tt15 = 1.0;
+            l0 = ((m - 0 + 16) % 16 < 8); n0 = l0;
+            l1 = ((m - 1 + 16) % 16 < 8); n1 = l1;
+            l2 = ((m - 2 + 16) % 16 < 8); n2 = l2;
+            l3 = ((m - 3 + 16) % 16 < 8); n3 = l3;
+            l4 = ((m - 4 + 16) % 16 < 8); n4 = l4;
+            l5 = ((m - 5 + 16) % 16 < 8); n5 = l5;
+            l6 = ((m - 6 + 16) % 16 < 8); n6 = l6;
+            l7 = ((m - 7 + 16) % 16 < 8); n7 = l7;
+            l8 = ((m - 8 + 16) % 16 < 8); n8 = l8;
+            l9 = ((m - 9 + 16) % 16 < 8); n9 = l9;
+            l10 = ((m - 10 + 16) % 16 < 8); n10 = l10;
+            l11 = ((m - 11 + 16) % 16 < 8); n11 = l11;
+            l12 = ((m - 12 + 16) % 16 < 8); n12 = l12;
+            l13 = ((m - 13 + 16) % 16 < 8); n13 = l13;
+            l14 = ((m - 14 + 16) % 16 < 8); n14 = l14;
+            l15 = ((m - 15 + 16) % 16 < 8); n15 = l15;
         end
         @(cross(V(code[0]) - vth, 0) or cross(V(code[1]) - vth, 0) or cross(V(code[2]) - vth, 0)
           or cross(V(code[3]) - vth, 0) or cross(V(code[4]) - vth, 0) or cross(V(code[5]) - vth, 0)
@@ -53,12 +101,81 @@ module uwb_master_ro16(code, ph);
             t_next = $abstime + (1 - r) / (16 * f);
         end
         @(timer(t_next)) begin
+            if (export && !reported) begin
+                $strobe("TAP %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g", $abstime, lat_eff, sk0, sk1, sk2, sk3, sk4, sk5, sk6, sk7, sk8, sk9, sk10, sk11, sk12, sk13, sk14, sk15);
+                reported = 1;
+            end
             m = (m + 1) % 16;
             t_last = t_next;
             t_next = t_next + 1 / (16 * f);
+            if (skewed) begin
+                n0 = ((m - 0 + 16) % 16 < 8); if (n0 != l0) tt0 = $abstime + lat_eff + sk0;
+                n1 = ((m - 1 + 16) % 16 < 8); if (n1 != l1) tt1 = $abstime + lat_eff + sk1;
+                n2 = ((m - 2 + 16) % 16 < 8); if (n2 != l2) tt2 = $abstime + lat_eff + sk2;
+                n3 = ((m - 3 + 16) % 16 < 8); if (n3 != l3) tt3 = $abstime + lat_eff + sk3;
+                n4 = ((m - 4 + 16) % 16 < 8); if (n4 != l4) tt4 = $abstime + lat_eff + sk4;
+                n5 = ((m - 5 + 16) % 16 < 8); if (n5 != l5) tt5 = $abstime + lat_eff + sk5;
+                n6 = ((m - 6 + 16) % 16 < 8); if (n6 != l6) tt6 = $abstime + lat_eff + sk6;
+                n7 = ((m - 7 + 16) % 16 < 8); if (n7 != l7) tt7 = $abstime + lat_eff + sk7;
+                n8 = ((m - 8 + 16) % 16 < 8); if (n8 != l8) tt8 = $abstime + lat_eff + sk8;
+                n9 = ((m - 9 + 16) % 16 < 8); if (n9 != l9) tt9 = $abstime + lat_eff + sk9;
+                n10 = ((m - 10 + 16) % 16 < 8); if (n10 != l10) tt10 = $abstime + lat_eff + sk10;
+                n11 = ((m - 11 + 16) % 16 < 8); if (n11 != l11) tt11 = $abstime + lat_eff + sk11;
+                n12 = ((m - 12 + 16) % 16 < 8); if (n12 != l12) tt12 = $abstime + lat_eff + sk12;
+                n13 = ((m - 13 + 16) % 16 < 8); if (n13 != l13) tt13 = $abstime + lat_eff + sk13;
+                n14 = ((m - 14 + 16) % 16 < 8); if (n14 != l14) tt14 = $abstime + lat_eff + sk14;
+                n15 = ((m - 15 + 16) % 16 < 8); if (n15 != l15) tt15 = $abstime + lat_eff + sk15;
+            end else begin
+                l0 = ((m - 0 + 16) % 16 < 8);
+                l1 = ((m - 1 + 16) % 16 < 8);
+                l2 = ((m - 2 + 16) % 16 < 8);
+                l3 = ((m - 3 + 16) % 16 < 8);
+                l4 = ((m - 4 + 16) % 16 < 8);
+                l5 = ((m - 5 + 16) % 16 < 8);
+                l6 = ((m - 6 + 16) % 16 < 8);
+                l7 = ((m - 7 + 16) % 16 < 8);
+                l8 = ((m - 8 + 16) % 16 < 8);
+                l9 = ((m - 9 + 16) % 16 < 8);
+                l10 = ((m - 10 + 16) % 16 < 8);
+                l11 = ((m - 11 + 16) % 16 < 8);
+                l12 = ((m - 12 + 16) % 16 < 8);
+                l13 = ((m - 13 + 16) % 16 < 8);
+                l14 = ((m - 14 + 16) % 16 < 8);
+                l15 = ((m - 15 + 16) % 16 < 8);
+            end
         end
+        @(timer(tt0)) l0 = n0;
+        @(timer(tt1)) l1 = n1;
+        @(timer(tt2)) l2 = n2;
+        @(timer(tt3)) l3 = n3;
+        @(timer(tt4)) l4 = n4;
+        @(timer(tt5)) l5 = n5;
+        @(timer(tt6)) l6 = n6;
+        @(timer(tt7)) l7 = n7;
+        @(timer(tt8)) l8 = n8;
+        @(timer(tt9)) l9 = n9;
+        @(timer(tt10)) l10 = n10;
+        @(timer(tt11)) l11 = n11;
+        @(timer(tt12)) l12 = n12;
+        @(timer(tt13)) l13 = n13;
+        @(timer(tt14)) l14 = n14;
+        @(timer(tt15)) l15 = n15;
 
-        for (i = 0; i < 16; i = i + 1)
-            V(ph[i]) <+ transition(((m - i + 16) % 16 < 8) * vdd, 0, tr);
+        V(ph[0]) <+ transition(l0 * vdd, 0, tr);
+        V(ph[1]) <+ transition(l1 * vdd, 0, tr);
+        V(ph[2]) <+ transition(l2 * vdd, 0, tr);
+        V(ph[3]) <+ transition(l3 * vdd, 0, tr);
+        V(ph[4]) <+ transition(l4 * vdd, 0, tr);
+        V(ph[5]) <+ transition(l5 * vdd, 0, tr);
+        V(ph[6]) <+ transition(l6 * vdd, 0, tr);
+        V(ph[7]) <+ transition(l7 * vdd, 0, tr);
+        V(ph[8]) <+ transition(l8 * vdd, 0, tr);
+        V(ph[9]) <+ transition(l9 * vdd, 0, tr);
+        V(ph[10]) <+ transition(l10 * vdd, 0, tr);
+        V(ph[11]) <+ transition(l11 * vdd, 0, tr);
+        V(ph[12]) <+ transition(l12 * vdd, 0, tr);
+        V(ph[13]) <+ transition(l13 * vdd, 0, tr);
+        V(ph[14]) <+ transition(l14 * vdd, 0, tr);
+        V(ph[15]) <+ transition(l15 * vdd, 0, tr);
     end
 endmodule

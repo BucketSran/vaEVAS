@@ -5,10 +5,11 @@ uwb_tx_seed (system/tx_seed.va) calibrates its RO against a 48 MHz reference
 nodes except the exported frame clock clk672 for the first frame reference: it decodes the transmitted
 symbols from outp - outn like a simple receiver and compares them with the
 sent symbols.
-  - pulses: |outp - outn| above 50 mV, grouped; the start is the pulse centre
-    minus half the window (the symmetric raised-cosine envelope);
+  - pulses: |outp - outn| above 0.2 V, grouped (gaps under 180 ps bridged);
   - DPPM: D[n] = round(dt/delta) - 16 mod 8 between consecutive pulse starts
-    (P[-1] = 0 relative to the frame edge for the first pulse);
+    (P[-1] = 0 relative to the frame edge for the first pulse); the pulse start
+    is the energy centroid minus half the window (the threshold midpoint used
+    first was off by up to 37 ps on cold-start pulses);
   - FSK: zero crossings in the middle half of each pulse -> nearest carrier;
   - symbol = Gray(D) Gray(F).
 
@@ -75,33 +76,20 @@ def main():
     t = [float(r['time']) for r in rows]
     v = [float(r['outp']) - float(r['outn']) for r in rows]
     rep.check('no RF output before the data', max(abs(x) for ti, x in zip(t, v) if ti < T_DATA) < 1e-9)
-    # group samples above threshold into pulses
-    pulses, cur = [], None
-    for ti, x in zip(t, v):
-        if abs(x) > 0.05:
-            if cur and ti - cur[1] < 100e-12:
-                cur[1] = ti
-            else:
-                cur = [ti, ti]
-                pulses.append(cur)
-    t_w = 9 * u.DELTA0
-    starts = [(a + b) / 2 - t_w / 2 for a, b in pulses]
-    rep.check('one pulse per sent symbol', len(pulses) >= N_SYM, f'{len(pulses)} pulses for {N_SYM} symbols')
-    ph0 = [x for x in edges.times(100, 1) if x > 1e-9]
-    frame0 = max(x for x in ph0 if x < starts[0] - 1e-12)
-    decoded, p_prev, s_prev = [], 0, None
-    for n, ((a, b), s0) in enumerate(zip(pulses, starts)):
-        if s_prev is None:
-            p = round((s0 - frame0) / u.DELTA0) % 16
-            d = (p - p_prev) % 8
-        else:
-            d = (round((s0 - s_prev) / u.DELTA0) - 16) % 8
-        s_prev = s0
-        mid = [(ti, x) for ti, x in zip(t, v) if a + 0.25 * (b - a) < ti < a + 0.75 * (b - a)]
-        zc = [t1 + (t2 - t1) * x1 / (x1 - x2) for (t1, x1), (t2, x2) in zip(mid, mid[1:]) if x1 * x2 < 0]
-        f_est = (len(zc) - 1) / 2 / (zc[-1] - zc[0])
-        f = min(range(8), key=lambda k: abs(u.CARRIERS[k] - f_est))
-        decoded.append((u.gray(d) << 3) | u.gray(f))
+    # decode like a receiver: the shared decoder of m5/check_m5.py (pulse
+    # groups above 0.2 V, start = energy centroid - 9 delta/2, DPPM from pulse
+    # spacing, FSK from zero crossings around the centre)
+    sys.path[:0] = [str(Path(__file__).resolve().parent.parent / 'm5'),
+                    str(Path(__file__).resolve().parent.parent / 'm4_chain')]
+    import check_m5
+
+    class FrameEdges:
+        def times(self, ident, direction=None):
+            return [x for x in edges.times(100, 1) if x > 1e-9]
+
+    wave = dict(time=t, outp=[float(r['outp']) for r in rows], outn=[float(r['outn']) for r in rows])
+    decoded = check_m5.decode(dict(wave=wave, edges=FrameEdges(), recs={}))
+    rep.check('one pulse per sent symbol', len(decoded) >= N_SYM, f'{len(decoded)} pulses for {N_SYM} symbols')
     got = decoded[:N_SYM]
     bad = [n for n in range(N_SYM) if got[n] != symbols[n]]
     rep.check('decoded symbols equal the sent symbols (DPPM by pulse spacing, FSK by zero crossings)',

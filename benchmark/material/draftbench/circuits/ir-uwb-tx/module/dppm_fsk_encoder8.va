@@ -8,7 +8,8 @@
 // req is a one-hot frequency request only; it is not a supply, precharge or
 // RF enable. Data outputs change t_enc after the word is taken; enc_valid
 // rises t_ev after it and stays high for t_pw, so every accepted word,
-// including a repeat of the previous one, gives a new rising edge.
+// including a repeat of the previous one, gives a new rising edge. With
+// export = 1 each word is reported as SYM <t> <n> <raw Gray word> <D> <P> <F> 0.
 module uwb_dppm_fsk_encoder8(sym, sym_valid, rst, pos, inc, fcode, req, enc_valid);
     input [5:0] sym;
     input sym_valid, rst;
@@ -26,16 +27,17 @@ module uwb_dppm_fsk_encoder8(sym, sym_valid, rst, pos, inc, fcode, req, enc_vali
     parameter real t_enc = 10p from (0:inf);   // word to data outputs
     parameter real t_ev = 30p from (0:inf);    // word to enc_valid rising edge
     parameter real t_pw = 400p from (0:inf);   // enc_valid high time
+    parameter integer export = 0 from [0:1];   // 1: report each word as a SYM record
 
     integer g5, g4, g3, g2, g1, g0;   // sampled Gray bits
     integer d, f, p;                  // state after the last word
-    integer d_out, f_out, p_out, has_word, ev;
+    integer d_out, f_out, p_out, has_word, ev, nword;
     real t_data, t_ev_on, t_ev_off;
     genvar i;
 
     analog begin
         @(initial_step) begin
-            d = 0; f = 0; p = 0; d_out = 0; f_out = 0; p_out = 0; has_word = 0; ev = 0;
+            d = 0; f = 0; p = 0; d_out = 0; f_out = 0; p_out = 0; has_word = 0; ev = 0; nword = 0;
             t_data = 1.0; t_ev_on = 1.0; t_ev_off = 1.0;
         end
         @(cross(V(rst) - vth, +1)) begin
@@ -50,6 +52,10 @@ module uwb_dppm_fsk_encoder8(sym, sym_valid, rst, pos, inc, fcode, req, enc_vali
                 d = 4 * g5 + 2 * (g5 ^ g4) + (g5 ^ g4 ^ g3);
                 f = 4 * g2 + 2 * (g2 ^ g1) + (g2 ^ g1 ^ g0);
                 p = (p + d) % 8;
+                nword = nword + 1;
+                if (export)
+                    $strobe("SYM %.17g %d %d %d %d %d %d", $abstime, nword,
+                            32 * g5 + 16 * g4 + 8 * g3 + 4 * g2 + 2 * g1 + g0, d, p, f, 0);
                 t_data = $abstime + t_enc;
                 t_ev_on = $abstime + t_ev;
                 t_ev_off = $abstime + t_ev + t_pw;

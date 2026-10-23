@@ -11,6 +11,8 @@
 // next cal_start. done means frequency only, not phase alignment. More than
 // n_lost RO periods without a reference edge during calibration sets fail.
 // The code output changes t_cq after the reference edge that decides it.
+// With export = 1 the outcome is reported as CAL <t> <done> <code> <count>
+// (count -1 for a lost reference).
 module uwb_ro_frequency_cal(ref, roclk, cal_start, rst, code, done, fail, busy);
     input ref, roclk, cal_start, rst;
     output [9:0] code;
@@ -28,6 +30,7 @@ module uwb_ro_frequency_cal(ref, roclk, cal_start, rst, code, done, fail, busy);
     parameter real vth = 0.5;
     parameter real tr = 2p from (0:inf);
     parameter real t_cq = 10p from (0:inf);
+    parameter integer export = 0 from [0:1];   // 1: report the outcome as a CAL record
 
     integer phase;      // 0 idle, 1 settling before a window, 2 counting
     integer verify;     // 1 while the final code is being measured
@@ -84,6 +87,7 @@ module uwb_ro_frequency_cal(ref, roclk, cal_start, rst, code, done, fail, busy);
                         else
                             fail_q = 1;
                         busy_q = 0; phase = 0; verify = 0;
+                        if (export) $strobe("CAL %.17g %d %d %d", $abstime, done_q, code_q, cnt);
                     end
                     t_out = $abstime + t_cq;
                 end
@@ -97,6 +101,7 @@ module uwb_ro_frequency_cal(ref, roclk, cal_start, rst, code, done, fail, busy);
                 if (lost > n_lost) begin
                     fail_q = 1; busy_q = 0; phase = 0; verify = 0;
                     trial = code_q;
+                    if (export) $strobe("CAL %.17g %d %d %d", $abstime, 0, code_q, -1);
                     t_out = $abstime + t_cq;
                 end
             end

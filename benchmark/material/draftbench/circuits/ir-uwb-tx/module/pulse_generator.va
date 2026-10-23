@@ -1,19 +1,33 @@
 `include "constants.vams"
 `include "disciplines.vams"
 
-// Pulse generator for the 8DPPM+8FSK seed (SPEC.md 4.6).
+// Clip a draw already divided by its clip width to [-1, 1].
+`define UWB_CLIP(x) (((x) > 1.0) ? 1.0 : (((x) < -1.0) ? -1.0 : (x)))
+
+// Pulse generator for the 8DPPM+8FSK seed (SPEC.md 4.6, 4.10).
 // Timing comes from the 16 master-RO taps: a rising ph[0] edge starts a
 // frame, and tap j rises j*delta later. The PG keeps the absolute index a of
 // the latest tap edge (16 per frame). A descriptor (P, F, pol) is latched on
 // the rising edge of enc_valid. At the start of frame k, if en was high at
-// that ph[0] edge, the pending descriptor is scheduled into frame k+1:
-//   pulse start s = 16(k+1) + P, end e = s + n_width, precharge p = s - n_pre
-// (all tap indices). Consecutive symbols alternate between lane a and lane b;
-// a lane raises pre_x at tap p, lowers pre_x and raises rf_x at tap s, and
-// lowers rf_x at tap e. sel_x/pol_x change when the symbol is scheduled,
-// before pre_x rises; consumers latch them on the rising pre_x (or rf_x when
-// n_pre = 0). A descriptor overwritten before it is scheduled raises an
-// overrun pulse. T_launch_lead = 0, so release coincides with rf_x.
+// that ph[0] edge, the pending descriptor is scheduled into frame k+1
+// (all tap indices):
+//   pulse start s = 16(k+1) + P, end e = s + n_width,
+//   release r = s - n_lead, precharge start p = r - n_pre.
+// Consecutive symbols alternate between lane a and lane b; a lane raises
+// pre_x at tap p, lowers it at tap r (the release command), raises rf_x at
+// tap s and lowers rf_x at tap e. With n_lead = 0 (the M4 seed) release and
+// the RF window start coincide. sel_x/pol_x change when the symbol is
+// scheduled, before pre_x rises. A descriptor overwritten before it is
+// scheduled raises an overrun pulse.
+//
+// Timing errors (SPEC.md 4.10, all off by default): per scheduled symbol the
+// PG draws a symbol jitter j (all edges of the symbol), a position error ep
+// (RF window edges) and a width error ew (RF window end), each normal with
+// the given sigma and clipped at clip_n sigma. With any error or t_lat > 0,
+// every lane edge is issued t_lat_eff later than its tap, where t_lat_eff =
+// max(t_lat, clip_n (sigma_jit + sigma_pos + sigma_wid)) keeps negative
+// draws causal; the common latency shifts every symbol equally. With
+// export = 1 each scheduled symbol is reported as a PGS record.
 module uwb_pulse_generator(ph, pos, fcode, pol, enc_valid, en, rst,
                            pre_a, rf_a, sel_a, pol_a, pre_b, rf_b, sel_b, pol_b, overrun);
     input [15:0] ph;
@@ -25,31 +39,48 @@ module uwb_pulse_generator(ph, pos, fcode, pol, enc_valid, en, rst,
     electrical [2:0] pos, fcode, sel_a, sel_b;
     electrical pol, enc_valid, en, rst, pre_a, rf_a, pol_a, pre_b, rf_b, pol_b, overrun;
 
-    parameter integer n_width = 9 from [1:16];
+    parameter integer n_width = 9 from [1:9];
     parameter integer n_pre = 2 from [0:15];
+    parameter integer n_lead = 0 from [0:15];       // release ahead of the RF window, taps; n_pre + n_lead <= 15
     parameter real t_ovr = 200p from (0:inf);
+    parameter real sigma_jit = 0 from [0:inf);      // symbol jitter, s
+    parameter real sigma_pos = 0 from [0:inf);      // extra position error, s
+    parameter real sigma_wid = 0 from [0:inf);      // extra width error, s
+    parameter real clip_n = 4 from (0:inf);
+    parameter real t_lat = 0 from [0:inf);          // common output latency, s
+    parameter integer seed = 11;
+    parameter integer export = 0 from [0:1];
     parameter real vdd = 1.0;
     parameter real vth = 0.5;
     parameter real tr = 2p from (0:inf);
 
-    integer fc, a, lane;                 // frame count, absolute tap index, next lane
+    integer fc, a, lane, nsym, seed_t, direct;     // frame count, absolute tap index, next lane
     integer pend, pend_p, pend_f, pend_pol;
-    integer act_a, s_a, e_a, p_a, f_a, q_a, pre_a_q, rf_a_q;
-    integer act_b, s_b, e_b, p_b, f_b, q_b, pre_b_q, rf_b_q;
+    integer act_a, s_a, e_a, r_a, p_a, f_a, q_a, pre_a_q, rf_a_q;
+    integer act_b, s_b, e_b, r_b, p_b, f_b, q_b, pre_b_q, rf_b_q;
     integer ovr;
-    real t_ovr_off;
+    real t_ovr_off, t_lat_eff, j_a, ep_a, ew_a, j_b, ep_b, ew_b;
+    real t_a_pon, t_a_poff, t_a_ron, t_a_roff, t_b_pon, t_b_poff, t_b_ron, t_b_roff;
     genvar i;
 
     analog begin
         @(initial_step) begin
-            fc = 0; a = 0; lane = 0; pend = 0; pend_p = 0; pend_f = 0; pend_pol = 0;
-            act_a = 0; s_a = 0; e_a = 0; p_a = 0; f_a = 0; q_a = 0; pre_a_q = 0; rf_a_q = 0;
-            act_b = 0; s_b = 0; e_b = 0; p_b = 0; f_b = 0; q_b = 0; pre_b_q = 0; rf_b_q = 0;
+            fc = 0; a = 0; lane = 0; pend = 0; pend_p = 0; pend_f = 0; pend_pol = 0; nsym = 0; seed_t = seed;
+            act_a = 0; s_a = 0; e_a = 0; r_a = 0; p_a = 0; f_a = 0; q_a = 0; pre_a_q = 0; rf_a_q = 0;
+            act_b = 0; s_b = 0; e_b = 0; r_b = 0; p_b = 0; f_b = 0; q_b = 0; pre_b_q = 0; rf_b_q = 0;
             ovr = 0; t_ovr_off = 1.0;
+            j_a = 0; ep_a = 0; ew_a = 0; j_b = 0; ep_b = 0; ew_b = 0;
+            t_lat_eff = clip_n * (sigma_jit + sigma_pos + sigma_wid);
+            if (t_lat > t_lat_eff) t_lat_eff = t_lat;
+            direct = (t_lat_eff == 0);
+            t_a_pon = 1.0; t_a_poff = 1.0; t_a_ron = 1.0; t_a_roff = 1.0;
+            t_b_pon = 1.0; t_b_poff = 1.0; t_b_ron = 1.0; t_b_roff = 1.0;
         end
         @(cross(V(rst) - vth, +1)) begin
             lane = 0; pend = 0;
             act_a = 0; pre_a_q = 0; rf_a_q = 0; act_b = 0; pre_b_q = 0; rf_b_q = 0;
+            t_a_pon = 1.0; t_a_poff = 1.0; t_a_ron = 1.0; t_a_roff = 1.0;
+            t_b_pon = 1.0; t_b_poff = 1.0; t_b_ron = 1.0; t_b_roff = 1.0;
         end
         @(cross(V(enc_valid) - vth, +1)) begin
             if (V(rst) < vth) begin
@@ -68,22 +99,34 @@ module uwb_pulse_generator(ph, pos, fcode, pol, enc_valid, en, rst,
         @(cross(V(ph[0]) - vth, +1)) begin
             fc = fc + 1;
             a = 16 * fc;
-            if (act_a && a == p_a) pre_a_q = 1;
-            if (act_a && a == s_a) begin pre_a_q = 0; rf_a_q = 1; end
-            if (act_a && a == e_a) begin rf_a_q = 0; act_a = 0; end
-            if (act_b && a == p_b) pre_b_q = 1;
-            if (act_b && a == s_b) begin pre_b_q = 0; rf_b_q = 1; end
-            if (act_b && a == e_b) begin rf_b_q = 0; act_b = 0; end
+            if (act_a && n_pre > 0 && a == p_a) begin if (direct) pre_a_q = 1; else t_a_pon = $abstime + t_lat_eff + j_a; end
+            if (act_a && n_pre > 0 && a == r_a) begin if (direct) pre_a_q = 0; else t_a_poff = $abstime + t_lat_eff + j_a; end
+            if (act_a && a == s_a) begin if (direct) rf_a_q = 1; else t_a_ron = $abstime + t_lat_eff + j_a + ep_a; end
+            if (act_a && a == e_a) begin if (direct) rf_a_q = 0; else t_a_roff = $abstime + t_lat_eff + j_a + ep_a + ew_a; act_a = 0; end
+            if (act_b && n_pre > 0 && a == p_b) begin if (direct) pre_b_q = 1; else t_b_pon = $abstime + t_lat_eff + j_b; end
+            if (act_b && n_pre > 0 && a == r_b) begin if (direct) pre_b_q = 0; else t_b_poff = $abstime + t_lat_eff + j_b; end
+            if (act_b && a == s_b) begin if (direct) rf_b_q = 1; else t_b_ron = $abstime + t_lat_eff + j_b + ep_b; end
+            if (act_b && a == e_b) begin if (direct) rf_b_q = 0; else t_b_roff = $abstime + t_lat_eff + j_b + ep_b + ew_b; act_b = 0; end
             if (V(rst) < vth && V(en) > vth && pend) begin
                 pend = 0;
                 if (lane == 0) begin
-                    act_a = 1; s_a = a + 16 + pend_p; e_a = s_a + n_width; p_a = s_a - n_pre;
+                    act_a = 1; s_a = a + 16 + pend_p; e_a = s_a + n_width; r_a = s_a - n_lead; p_a = r_a - n_pre;
                     f_a = pend_f; q_a = pend_pol;
-                    if (n_pre == 0) pre_a_q = 0;
+                    j_a = 0; ep_a = 0; ew_a = 0;
+                    if (sigma_jit > 0) j_a = clip_n * sigma_jit * `UWB_CLIP($rdist_normal(seed_t, 0, 1.0) / clip_n);
+                    if (sigma_pos > 0) ep_a = clip_n * sigma_pos * `UWB_CLIP($rdist_normal(seed_t, 0, 1.0) / clip_n);
+                    if (sigma_wid > 0) ew_a = clip_n * sigma_wid * `UWB_CLIP($rdist_normal(seed_t, 0, 1.0) / clip_n);
+                    nsym = nsym + 1;
+                    if (export) $strobe("PGS %.17g %d %d %d %d %d %d %d %d %.17g %.17g %.17g %.17g", $abstime, nsym, 0, pend_p, pend_f, pend_pol, s_a - a, e_a - a, p_a - a, j_a, ep_a, ew_a, t_lat_eff);
                 end else begin
-                    act_b = 1; s_b = a + 16 + pend_p; e_b = s_b + n_width; p_b = s_b - n_pre;
+                    act_b = 1; s_b = a + 16 + pend_p; e_b = s_b + n_width; r_b = s_b - n_lead; p_b = r_b - n_pre;
                     f_b = pend_f; q_b = pend_pol;
-                    if (n_pre == 0) pre_b_q = 0;
+                    j_b = 0; ep_b = 0; ew_b = 0;
+                    if (sigma_jit > 0) j_b = clip_n * sigma_jit * `UWB_CLIP($rdist_normal(seed_t, 0, 1.0) / clip_n);
+                    if (sigma_pos > 0) ep_b = clip_n * sigma_pos * `UWB_CLIP($rdist_normal(seed_t, 0, 1.0) / clip_n);
+                    if (sigma_wid > 0) ew_b = clip_n * sigma_wid * `UWB_CLIP($rdist_normal(seed_t, 0, 1.0) / clip_n);
+                    nsym = nsym + 1;
+                    if (export) $strobe("PGS %.17g %d %d %d %d %d %d %d %d %.17g %.17g %.17g %.17g", $abstime, nsym, 1, pend_p, pend_f, pend_pol, s_b - a, e_b - a, p_b - a, j_b, ep_b, ew_b, t_lat_eff);
                 end
                 lane = 1 - lane;
             end
@@ -95,13 +138,24 @@ module uwb_pulse_generator(ph, pos, fcode, pol, enc_valid, en, rst,
           or cross(V(ph[10]) - vth, +1) or cross(V(ph[11]) - vth, +1) or cross(V(ph[12]) - vth, +1)
           or cross(V(ph[13]) - vth, +1) or cross(V(ph[14]) - vth, +1) or cross(V(ph[15]) - vth, +1)) begin
             a = a + 1;
-            if (act_a && a == p_a) pre_a_q = 1;
-            if (act_a && a == s_a) begin pre_a_q = 0; rf_a_q = 1; end
-            if (act_a && a == e_a) begin rf_a_q = 0; act_a = 0; end
-            if (act_b && a == p_b) pre_b_q = 1;
-            if (act_b && a == s_b) begin pre_b_q = 0; rf_b_q = 1; end
-            if (act_b && a == e_b) begin rf_b_q = 0; act_b = 0; end
+            if (act_a && n_pre > 0 && a == p_a) begin if (direct) pre_a_q = 1; else t_a_pon = $abstime + t_lat_eff + j_a; end
+            if (act_a && n_pre > 0 && a == r_a) begin if (direct) pre_a_q = 0; else t_a_poff = $abstime + t_lat_eff + j_a; end
+            if (act_a && a == s_a) begin if (direct) rf_a_q = 1; else t_a_ron = $abstime + t_lat_eff + j_a + ep_a; end
+            if (act_a && a == e_a) begin if (direct) rf_a_q = 0; else t_a_roff = $abstime + t_lat_eff + j_a + ep_a + ew_a; act_a = 0; end
+            if (act_b && n_pre > 0 && a == p_b) begin if (direct) pre_b_q = 1; else t_b_pon = $abstime + t_lat_eff + j_b; end
+            if (act_b && n_pre > 0 && a == r_b) begin if (direct) pre_b_q = 0; else t_b_poff = $abstime + t_lat_eff + j_b; end
+            if (act_b && a == s_b) begin if (direct) rf_b_q = 1; else t_b_ron = $abstime + t_lat_eff + j_b + ep_b; end
+            if (act_b && a == e_b) begin if (direct) rf_b_q = 0; else t_b_roff = $abstime + t_lat_eff + j_b + ep_b + ew_b; act_b = 0; end
         end
+        // delayed lane edges (timing errors or t_lat > 0)
+        @(timer(t_a_pon)) pre_a_q = 1;
+        @(timer(t_a_poff)) pre_a_q = 0;
+        @(timer(t_a_ron)) rf_a_q = 1;
+        @(timer(t_a_roff)) rf_a_q = 0;
+        @(timer(t_b_pon)) pre_b_q = 1;
+        @(timer(t_b_poff)) pre_b_q = 0;
+        @(timer(t_b_ron)) rf_b_q = 1;
+        @(timer(t_b_roff)) rf_b_q = 0;
 
         V(pre_a) <+ transition(pre_a_q * vdd, 0, tr);
         V(rf_a) <+ transition(rf_a_q * vdd, 0, tr);

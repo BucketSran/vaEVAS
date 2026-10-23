@@ -38,7 +38,9 @@ import chain_tb as C  # noqa: E402
 import uwbtest as u  # noqa: E402
 
 EDGE = 2e-12
-TOL = 1e-12
+# legacy EVAS locates a crossing within about tr/4 = 0.5 ps; a scheduler edge is
+# compared with a time derived from another located crossing, so allow 2 ps
+TOL = 2e-12
 DELTA0 = u.DELTA0
 T_TAIL, T_HOLD, T_CONF = 150e-12, 200e-12, 200e-12
 I = C.IDS
