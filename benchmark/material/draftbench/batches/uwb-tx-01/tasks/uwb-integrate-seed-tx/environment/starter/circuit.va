@@ -1,0 +1,11 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module uwb_tx_seed(bclk, din, rst, ref, cal_start, pol, outp, outn, done, fail, conflict, nsup, clk672);
+    input bclk, din, rst, ref, cal_start, pol;
+    output outp, outn, done, fail, conflict, nsup, clk672;
+    electrical bclk, din, rst, ref, cal_start, pol, outp, outn, done, fail, conflict, nsup, clk672;
+
+    // TODO: include the library modules from /app/modules, declare the
+    // parameters from the Spec, and connect the transmitter.
+endmodule

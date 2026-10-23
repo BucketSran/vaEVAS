@@ -1,0 +1,62 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// One RF branch ring oscillator of the 8-carrier bank (SPEC.md 4.8).
+// pwr low: off, output 0. pwr high with pre high and rel low: precharge,
+// nodes preset, no oscillation, output 0. A rising rel releases the loop:
+// amplitude and frequency settle with first-order responses (99 % after
+// t99_amp and t99_freq), the start frequency is f_rf * (1 + df_start), and
+// the phase is the integral of the instantaneous frequency in the branch's
+// local time u since release, starting at the preset phase phi0:
+//   phi(u) = phi0 + 2*pi*f_rf*(u + df_start*tau_f*(1 - exp(-u/tau_f)))
+// While rel stays high (active, tail, hold) the phase continues; it is never
+// reset at a symbol boundary. pwr falling stops the oscillation at once.
+module uwb_rf_ro_branch(pwr, pre, rel, vro);
+    input pwr, pre, rel;
+    output vro;
+    electrical pwr, pre, rel, vro;
+
+    parameter real f_rf = 6e9 from (0:inf);
+    parameter real a_ro = 1.0 from [0:inf);
+    parameter real t99_amp = 200p from [0:inf);
+    parameter real t99_freq = 200p from [0:inf);
+    parameter real df_start = 0.01;
+    parameter real phi0 = 0;                     // preset phase at release, rad
+    parameter real pts_per_cycle = 20 from [4:inf);
+    parameter real vth = 0.5;
+
+    integer osc;
+    real t_rel, u, tau_a, tau_f, amp, phase;
+
+    analog begin
+        @(initial_step) begin
+            osc = 0; t_rel = 0;
+            tau_a = t99_amp / ln(100);
+            tau_f = t99_freq / ln(100);
+        end
+        @(cross(V(rel) - vth, +1)) begin
+            if (V(pwr) > vth) begin
+                osc = 1; t_rel = $abstime;
+            end
+        end
+        @(cross(V(rel) - vth, -1) or cross(V(pwr) - vth, -1))
+            osc = 0;
+
+        u = $abstime - t_rel;
+        if (osc) begin
+            if (tau_a > 0)
+                amp = a_ro * (1 - exp(-u / tau_a));
+            else
+                amp = a_ro;
+            if (tau_f > 0)
+                phase = phi0 + 2 * `M_PI * f_rf * (u + df_start * tau_f * (1 - exp(-u / tau_f)));
+            else
+                phase = phi0 + 2 * `M_PI * f_rf * u;
+            $bound_step(1 / (pts_per_cycle * f_rf));
+        end else begin
+            amp = 0;
+            phase = 0;
+        end
+        V(vro) <+ amp * cos(phase);
+    end
+endmodule

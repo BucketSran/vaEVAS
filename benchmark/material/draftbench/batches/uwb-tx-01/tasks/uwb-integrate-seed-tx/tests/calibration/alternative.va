@@ -1,0 +1,93 @@
+`include "constants.vams"
+`include "disciplines.vams"
+`include "modules/master_ro16.va"
+`include "modules/ro_frequency_cal.va"
+`include "modules/rf_ro_branch.va"
+`include "modules/envelope_lane.va"
+`include "modules/tx_output.va"
+`include "modules/ro_scheduler8.va"
+`include "modules/pulse_generator.va"
+`include "modules/dppm_fsk_encoder8.va"
+`include "modules/serial_to_symbol6.va"
+
+// Alternative organization of the seed transmitter (author calibration
+// sample): the RF back end (eight branch oscillators, two envelope lanes and
+// the output stage) is a separate module, the carriers are passed down
+// through it, instances are listed from the clock side to the data side, and
+// the scheduler takes n_pre through a local copy.
+module seed_rf_backend(pwr, pre, rel, gate_a, gate_b, sel_a, sel_b, pol_a, pol_b, fclk, outp, outn);
+    input [7:0] pwr, pre, rel;
+    input [2:0] sel_a, sel_b;
+    input gate_a, gate_b, pol_a, pol_b, fclk;
+    output outp, outn;
+    electrical [7:0] pwr, pre, rel;
+    electrical [2:0] sel_a, sel_b;
+    electrical gate_a, gate_b, pol_a, pol_b, fclk, outp, outn;
+
+    parameter real g_pa = 1.0;
+    parameter real vcm = 0.5;
+    parameter real f0 = 4.5e9, f1 = 4.9e9, f2 = 5.3e9, f3 = 5.7e9;
+    parameter real f4 = 6.2e9, f5 = 6.6e9, f6 = 7.0e9, f7 = 7.5e9;
+
+    electrical [7:0] vro;
+    electrical lane_env_a, lane_env_b;
+
+    uwb_rf_ro_branch #(.f_rf(f7)) Xosc7 (pwr[7], pre[7], rel[7], vro[7]);
+    uwb_rf_ro_branch #(.f_rf(f6)) Xosc6 (pwr[6], pre[6], rel[6], vro[6]);
+    uwb_rf_ro_branch #(.f_rf(f5)) Xosc5 (pwr[5], pre[5], rel[5], vro[5]);
+    uwb_rf_ro_branch #(.f_rf(f4)) Xosc4 (pwr[4], pre[4], rel[4], vro[4]);
+    uwb_rf_ro_branch #(.f_rf(f3)) Xosc3 (pwr[3], pre[3], rel[3], vro[3]);
+    uwb_rf_ro_branch #(.f_rf(f2)) Xosc2 (pwr[2], pre[2], rel[2], vro[2]);
+    uwb_rf_ro_branch #(.f_rf(f1)) Xosc1 (pwr[1], pre[1], rel[1], vro[1]);
+    uwb_rf_ro_branch #(.f_rf(f0)) Xosc0 (pwr[0], pre[0], rel[0], vro[0]);
+    uwb_envelope_lane XlaneB (gate_b, fclk, lane_env_b);
+    uwb_envelope_lane XlaneA (gate_a, fclk, lane_env_a);
+    uwb_tx_output #(.vcm(vcm), .g_pa(g_pa))
+        Xpa (vro, lane_env_a, lane_env_b, gate_a, gate_b, sel_a, sel_b, pol_a, pol_b, outp, outn);
+endmodule
+
+module uwb_tx_seed(bclk, din, rst, ref, cal_start, pol, outp, outn, done, fail, conflict, nsup, clk672);
+    input bclk, din, rst, ref, cal_start, pol;
+    output outp, outn, done, fail, conflict, nsup, clk672;
+    electrical bclk, din, rst, ref, cal_start, pol, outp, outn, done, fail, conflict, nsup, clk672;
+
+    parameter integer n_pre = 2 from [1:15];
+    parameter integer n_win = 192 from [1:inf);
+    parameter integer code_init = 512 from [0:1023];
+    parameter real g_pa = 1.0;
+    parameter real vcm = 0.5;
+    parameter real f0 = 4.5e9, f1 = 4.928571428571429e9, f2 = 5.357142857142857e9, f3 = 5.785714285714286e9;
+    parameter real f4 = 6.214285714285714e9, f5 = 6.642857142857143e9, f6 = 7.071428571428571e9, f7 = 7.5e9;
+    localparam integer n_pre_sched = n_pre;
+
+    // clock side
+    electrical [15:0] ph;
+    electrical [9:0] code;
+    electrical cal_busy;
+    // data side
+    electrical [5:0] sym;
+    electrical [2:0] pos, inc, fcode;
+    electrical [7:0] req;
+    electrical word_ready, word_strobe;
+    // pulse lanes and branch control
+    electrical [2:0] sel_a, sel_b;
+    electrical [7:0] pwr, pre, rel, st;
+    electrical lane_pre_a, lane_rf_a, pol_a, lane_pre_b, lane_rf_b, pol_b, pg_overrun, gate_a, gate_b;
+
+    uwb_master_ro16 Xmaster (code, ph);
+    uwb_ro_frequency_cal #(.code_init(code_init), .n_win(n_win))
+        Xfcal (ref, ph[0], cal_start, rst, code, done, fail, cal_busy);
+    seed_rf_backend #(.g_pa(g_pa), .vcm(vcm), .f0(f0), .f1(f1), .f2(f2), .f3(f3),
+                      .f4(f4), .f5(f5), .f6(f6), .f7(f7))
+        Xback (pwr, pre, rel, gate_a, gate_b, sel_a, sel_b, pol_a, pol_b, ph[0], outp, outn);
+    uwb_ro_scheduler8 #(.n_pre(n_pre_sched))
+        Xsched (lane_pre_a, lane_rf_a, sel_a, lane_pre_b, lane_rf_b, sel_b, rst,
+                pwr, pre, rel, gate_a, gate_b, conflict, nsup, st);
+    uwb_pulse_generator #(.n_pre(n_pre))
+        Xpulse (ph, pos, fcode, pol, word_strobe, done, rst,
+                lane_pre_a, lane_rf_a, sel_a, pol_a, lane_pre_b, lane_rf_b, sel_b, pol_b, pg_overrun);
+    uwb_dppm_fsk_encoder8 Xcode (sym, word_ready, rst, pos, inc, fcode, req, word_strobe);
+    uwb_serial_to_symbol6 Xdeser (bclk, din, rst, sym, word_ready);
+
+    analog V(clk672) <+ V(ph[0]);
+endmodule

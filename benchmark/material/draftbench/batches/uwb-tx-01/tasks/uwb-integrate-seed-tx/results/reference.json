@@ -1,0 +1,101 @@
+{
+ "backend": "legacy EVAS 0.8.7, interim; declared backend evas pending",
+ "date": "2026-10-23",
+ "command": "UWB_BACKEND=legacy python3 -B tests/verify.py --candidate solution/circuit.va --output <dir>",
+ "candidate": "solution/circuit.va (gold system/tx_seed.va with the include path modules/)",
+ "candidate_sha256": "c354b768da0a4a12849dd119e761e7cd4aa043a5753cb18531707974260595b9",
+ "score": 1,
+ "status": "executed",
+ "errors": [],
+ "checks_total": 120,
+ "checks_passed": 120,
+ "cases": [
+  {
+   "name": "decode",
+   "checks": 20,
+   "passed": 20,
+   "wall_s": 46.6
+  },
+  {
+   "name": "early_conflict",
+   "checks": 20,
+   "passed": 20,
+   "wall_s": 29.4
+  },
+  {
+   "name": "params_hold",
+   "checks": 20,
+   "passed": 20,
+   "wall_s": 50.9
+  },
+  {
+   "name": "params_permuted",
+   "checks": 20,
+   "passed": 20,
+   "wall_s": 31.8
+  },
+  {
+   "name": "ref_lost",
+   "checks": 20,
+   "passed": 20,
+   "wall_s": 24.9
+  },
+  {
+   "name": "reset",
+   "checks": 20,
+   "passed": 20,
+   "wall_s": 31.5
+  }
+ ],
+ "wall_s_simulation_total": 215.1,
+ "measured_margins": {
+  "clk672 frequency follows": [
+   "decode: worst 0.0000 MHz; first wrong (ns, code, MHz) []",
+   "early_conflict: worst 0.0000 MHz; first wrong (ns, code, MHz) []",
+   "params_hold: worst 0.0000 MHz; first wrong (ns, code, MHz) []",
+   "params_permuted: worst 0.0000 MHz; first wrong (ns, code, MHz) []",
+   "ref_lost: worst 0.0000 MHz; first wrong (ns, code, MHz) []",
+   "reset: worst 0.0000 MHz; first wrong (ns, code, MHz) []"
+  ],
+  "pulse start": [
+   "decode: worst 0.78 ps over 48",
+   "early_conflict: worst 0.74 ps over 20",
+   "params_hold: worst 0.82 ps over 40",
+   "params_permuted: worst 0.82 ps over 60",
+   "ref_lost: worst 0.00 ps over 0",
+   "reset: worst 0.74 ps over 10"
+  ],
+  "carrier frequency": [
+   "decode: worst 0.0007",
+   "early_conflict: worst 0.0006",
+   "params_hold: worst 0.0008",
+   "params_permuted: worst 0.0009",
+   "ref_lost: worst 0.0000",
+   "reset: worst 0.0006"
+  ],
+  "correlation": [
+   "decode: min 1.000",
+   "early_conflict: min 1.000",
+   "params_hold: min 1.000",
+   "params_permuted: min 1.000",
+   "ref_lost: min 0.000",
+   "reset: min 1.000"
+  ],
+  "pulse peak": [
+   "decode: 0.964 to 0.997",
+   "early_conflict: 0.964 to 0.996",
+   "params_hold: 0.955 to 0.997",
+   "params_permuted: 0.948 to 0.996",
+   "ref_lost: 0.000 to 0.000",
+   "reset: 0.967 to 0.996"
+  ]
+ },
+ "checker_sha256": {
+  "environment/starter/testbench/contract.py": "1af478701a1be50e317bab925c3d509575e088e5b3b06305dfb7aa676a8bc4ea",
+  "environment/starter/testbench/check.py": "f5717d86a07255d94e4074995a3f8cd65f2ed6a192461e1f4978b4bd8b469453",
+  "environment/starter/testbench/bit_source.va": "24d1ebcb077e89dfdc2dd887bb4d1ac1e4c4f6e568e4b8dd89b7f9392a06721a",
+  "environment/starter/testbench/uwbtask.py": "76d7f7eebab0e465bc701a8b91ee9a2440858e38be2533941704da227dbd717e",
+  "tests/final_cases.py": "15c02d3d45c50966f8b27358ee9ccd341de86863dc34a19704f34542a08571bb",
+  "tests/verify.py": "cc9c948d14498b637f7784790e7119136420a6a8267356911b8c7898f37b4aab"
+ }
+}

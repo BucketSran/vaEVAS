@@ -1,0 +1,202 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Test stimulus, not part of the transmitter: serial data source with a bit
+// clock derived from the transmitter's frame clock clk (an ideal x6
+// multiplier; this is the CDC test condition, not a CDC design).
+// From the first rising clk crossing at or after t_start, each clk frame of
+// length T (the last measured clk period) carries six bit-clock pulses: bclk
+// rises (j + 0.25) T/6 and falls (j + 0.75) T/6 after the clk crossing,
+// j = 0..5. The first bit is presented at that clk crossing; each later bit
+// replaces the previous one at a falling bclk edge, so every bit is stable
+// for T/12 on both sides of its sampling edge. The bits are the symbols
+// s0..s(n_sym-1), most significant bit first, followed by n_tail zero bits;
+// then bclk stops. Symbol n therefore occupies data frame n.
+module uwb_bit_source(clk, bclk, din);
+    input clk;
+    output bclk, din;
+    electrical clk, bclk, din;
+
+    parameter real vdd = 1.0;
+    parameter real vth = 0.5;
+    parameter real tr = 2p from (0:inf);
+    parameter real t_start = 0 from [0:inf);
+    parameter integer n_sym = 0 from [0:64];
+    parameter integer n_tail = 3 from [0:5];
+    parameter integer s0 = 0 from [0:63];
+    parameter integer s1 = 0 from [0:63];
+    parameter integer s2 = 0 from [0:63];
+    parameter integer s3 = 0 from [0:63];
+    parameter integer s4 = 0 from [0:63];
+    parameter integer s5 = 0 from [0:63];
+    parameter integer s6 = 0 from [0:63];
+    parameter integer s7 = 0 from [0:63];
+    parameter integer s8 = 0 from [0:63];
+    parameter integer s9 = 0 from [0:63];
+    parameter integer s10 = 0 from [0:63];
+    parameter integer s11 = 0 from [0:63];
+    parameter integer s12 = 0 from [0:63];
+    parameter integer s13 = 0 from [0:63];
+    parameter integer s14 = 0 from [0:63];
+    parameter integer s15 = 0 from [0:63];
+    parameter integer s16 = 0 from [0:63];
+    parameter integer s17 = 0 from [0:63];
+    parameter integer s18 = 0 from [0:63];
+    parameter integer s19 = 0 from [0:63];
+    parameter integer s20 = 0 from [0:63];
+    parameter integer s21 = 0 from [0:63];
+    parameter integer s22 = 0 from [0:63];
+    parameter integer s23 = 0 from [0:63];
+    parameter integer s24 = 0 from [0:63];
+    parameter integer s25 = 0 from [0:63];
+    parameter integer s26 = 0 from [0:63];
+    parameter integer s27 = 0 from [0:63];
+    parameter integer s28 = 0 from [0:63];
+    parameter integer s29 = 0 from [0:63];
+    parameter integer s30 = 0 from [0:63];
+    parameter integer s31 = 0 from [0:63];
+    parameter integer s32 = 0 from [0:63];
+    parameter integer s33 = 0 from [0:63];
+    parameter integer s34 = 0 from [0:63];
+    parameter integer s35 = 0 from [0:63];
+    parameter integer s36 = 0 from [0:63];
+    parameter integer s37 = 0 from [0:63];
+    parameter integer s38 = 0 from [0:63];
+    parameter integer s39 = 0 from [0:63];
+    parameter integer s40 = 0 from [0:63];
+    parameter integer s41 = 0 from [0:63];
+    parameter integer s42 = 0 from [0:63];
+    parameter integer s43 = 0 from [0:63];
+    parameter integer s44 = 0 from [0:63];
+    parameter integer s45 = 0 from [0:63];
+    parameter integer s46 = 0 from [0:63];
+    parameter integer s47 = 0 from [0:63];
+    parameter integer s48 = 0 from [0:63];
+    parameter integer s49 = 0 from [0:63];
+    parameter integer s50 = 0 from [0:63];
+    parameter integer s51 = 0 from [0:63];
+    parameter integer s52 = 0 from [0:63];
+    parameter integer s53 = 0 from [0:63];
+    parameter integer s54 = 0 from [0:63];
+    parameter integer s55 = 0 from [0:63];
+    parameter integer s56 = 0 from [0:63];
+    parameter integer s57 = 0 from [0:63];
+    parameter integer s58 = 0 from [0:63];
+    parameter integer s59 = 0 from [0:63];
+    parameter integer s60 = 0 from [0:63];
+    parameter integer s61 = 0 from [0:63];
+    parameter integer s62 = 0 from [0:63];
+    parameter integer s63 = 0 from [0:63];
+
+    integer started, idx, n_bits, j, level, bit_out, n, w, b;
+    real t_prev, t_frame, t6, t_next;
+
+    analog begin
+        @(initial_step) begin
+            started = 0; idx = 0; n_bits = 6 * n_sym + n_tail; j = 0; level = 0; bit_out = 0;
+            t_prev = -1; t_frame = 0; t6 = 0; t_next = 1.0; w = 0; n = 0; b = 0;
+        end
+        @(cross(V(clk) - vth, +1)) begin
+            if (t_prev >= 0 && idx < n_bits) begin
+                if (!started && $abstime >= t_start) begin
+                    started = 1;
+                    // first bit of the first symbol
+                    n = 0; w = 0;
+                    if (n_sym > 0) w = s0;
+                    bit_out = (w >> 5) & 1;
+                end
+                if (started) begin
+                    t_frame = $abstime; t6 = ($abstime - t_prev) / 6; j = 0;
+                    t_next = t_frame + 0.25 * t6;
+                end
+            end
+            t_prev = $abstime;
+        end
+        @(timer(t_next)) begin
+            if (level == 0) begin
+                level = 1;
+                t_next = t_frame + (j + 0.75) * t6;
+            end else begin
+                level = 0;
+                idx = idx + 1;
+                n = idx / 6;
+                b = 5 - (idx - 6 * n);
+                w = 0;
+                if (n < n_sym) begin
+                    if (n == 0) w = s0;
+                    else if (n == 1) w = s1;
+                    else if (n == 2) w = s2;
+                    else if (n == 3) w = s3;
+                    else if (n == 4) w = s4;
+                    else if (n == 5) w = s5;
+                    else if (n == 6) w = s6;
+                    else if (n == 7) w = s7;
+                    else if (n == 8) w = s8;
+                    else if (n == 9) w = s9;
+                    else if (n == 10) w = s10;
+                    else if (n == 11) w = s11;
+                    else if (n == 12) w = s12;
+                    else if (n == 13) w = s13;
+                    else if (n == 14) w = s14;
+                    else if (n == 15) w = s15;
+                    else if (n == 16) w = s16;
+                    else if (n == 17) w = s17;
+                    else if (n == 18) w = s18;
+                    else if (n == 19) w = s19;
+                    else if (n == 20) w = s20;
+                    else if (n == 21) w = s21;
+                    else if (n == 22) w = s22;
+                    else if (n == 23) w = s23;
+                    else if (n == 24) w = s24;
+                    else if (n == 25) w = s25;
+                    else if (n == 26) w = s26;
+                    else if (n == 27) w = s27;
+                    else if (n == 28) w = s28;
+                    else if (n == 29) w = s29;
+                    else if (n == 30) w = s30;
+                    else if (n == 31) w = s31;
+                    else if (n == 32) w = s32;
+                    else if (n == 33) w = s33;
+                    else if (n == 34) w = s34;
+                    else if (n == 35) w = s35;
+                    else if (n == 36) w = s36;
+                    else if (n == 37) w = s37;
+                    else if (n == 38) w = s38;
+                    else if (n == 39) w = s39;
+                    else if (n == 40) w = s40;
+                    else if (n == 41) w = s41;
+                    else if (n == 42) w = s42;
+                    else if (n == 43) w = s43;
+                    else if (n == 44) w = s44;
+                    else if (n == 45) w = s45;
+                    else if (n == 46) w = s46;
+                    else if (n == 47) w = s47;
+                    else if (n == 48) w = s48;
+                    else if (n == 49) w = s49;
+                    else if (n == 50) w = s50;
+                    else if (n == 51) w = s51;
+                    else if (n == 52) w = s52;
+                    else if (n == 53) w = s53;
+                    else if (n == 54) w = s54;
+                    else if (n == 55) w = s55;
+                    else if (n == 56) w = s56;
+                    else if (n == 57) w = s57;
+                    else if (n == 58) w = s58;
+                    else if (n == 59) w = s59;
+                    else if (n == 60) w = s60;
+                    else if (n == 61) w = s61;
+                    else if (n == 62) w = s62;
+                    else if (n == 63) w = s63;
+                end
+                bit_out = (w >> b) & 1;
+                if (j < 5 && idx < n_bits) begin
+                    j = j + 1;
+                    t_next = t_frame + (j + 0.25) * t6;
+                end else
+                    t_next = 1.0;
+            end
+        end
+        V(bclk) <+ transition(level * vdd, 0, tr);
+        V(din) <+ transition(bit_out * vdd, 0, tr);
+    end
+endmodule

@@ -1,0 +1,297 @@
+{
+ "backend": "legacy EVAS 0.8.7, interim; declared backend evas pending",
+ "date": "2026-10-23",
+ "command": "UWB_BACKEND=legacy python3 -B tests/calibration/mutants.py --output <dir>",
+ "verifier": "tests/verify.py (public cases + final cases, fresh copy of the module library)",
+ "cases": [
+  "decode",
+  "early_conflict",
+  "params_hold",
+  "params_permuted",
+  "ref_lost",
+  "reset"
+ ],
+ "checker_sha256": {
+  "environment/starter/testbench/contract.py": "1af478701a1be50e317bab925c3d509575e088e5b3b06305dfb7aa676a8bc4ea",
+  "environment/starter/testbench/check.py": "f5717d86a07255d94e4074995a3f8cd65f2ed6a192461e1f4978b4bd8b469453",
+  "environment/starter/testbench/bit_source.va": "24d1ebcb077e89dfdc2dd887bb4d1ac1e4c4f6e568e4b8dd89b7f9392a06721a",
+  "environment/starter/testbench/uwbtask.py": "76d7f7eebab0e465bc701a8b91ee9a2440858e38be2533941704da227dbd717e",
+  "tests/final_cases.py": "15c02d3d45c50966f8b27358ee9ccd341de86863dc34a19704f34542a08571bb",
+  "tests/verify.py": "cc9c948d14498b637f7784790e7119136420a6a8267356911b8c7898f37b4aab"
+ },
+ "samples": [
+  {
+   "sample": "reference",
+   "expected_score": 1,
+   "score": 1,
+   "ok": true,
+   "candidate_sha256": "c354b768da0a4a12849dd119e761e7cd4aa043a5753cb18531707974260595b9",
+   "wall_s": 217.6,
+   "passed_checks": {
+    "decode": [
+     20,
+     20
+    ],
+    "early_conflict": [
+     20,
+     20
+    ],
+    "params_hold": [
+     20,
+     20
+    ],
+    "params_permuted": [
+     20,
+     20
+    ],
+    "ref_lost": [
+     20,
+     20
+    ],
+    "reset": [
+     20,
+     20
+    ]
+   }
+  },
+  {
+   "sample": "alternative",
+   "expected_score": 1,
+   "score": 1,
+   "ok": true,
+   "candidate_sha256": "f5e95e01fbe6b02df08575f3dfd8981ee01e1ed53820a444963c8ae50f5be88d",
+   "wall_s": 202.8,
+   "passed_checks": {
+    "decode": [
+     20,
+     20
+    ],
+    "early_conflict": [
+     20,
+     20
+    ],
+    "params_hold": [
+     20,
+     20
+    ],
+    "params_permuted": [
+     20,
+     20
+    ],
+    "ref_lost": [
+     20,
+     20
+    ],
+    "reset": [
+     20,
+     20
+    ]
+   }
+  },
+  {
+   "sample": "pg_enable_tied_high",
+   "expected_score": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "229b7e451f94582de25f09554fd8bd660142038d8c9de7b552ce1d527f982af4",
+   "wall_s": 215.5,
+   "violates": "S2/S4 the PG enable is done; no RF before calibration ends",
+   "failed_cases": [
+    "early_conflict",
+    "ref_lost",
+    "reset"
+   ],
+   "failed_checks": 25,
+   "first_failure": "early_conflict: one RF pulse per transmitted word, none for dropped words (S4, S5)"
+  },
+  {
+   "sample": "envelope_clocked_by_bclk",
+   "expected_score": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "7ee5b0a5682de73a3a8c8ab0c6df88d8c5163088fcdc65e33463da71d254f9cc",
+   "wall_s": 209.8,
+   "violates": "S2/S4 the envelope lanes run on the frame clock ph[0] (window 9/16 of the RO period)",
+   "failed_cases": [
+    "decode",
+    "early_conflict",
+    "params_hold",
+    "params_permuted",
+    "reset"
+   ],
+   "failed_checks": 22,
+   "first_failure": "decode: pulse start (energy centroid - Tw/2 - 10.9 ps) at frame edge + P x T/16 + 2 ps (S4)"
+  },
+  {
+   "sample": "lane_gates_swapped",
+   "expected_score": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "1d1d4b1398608648dd044abadf610c815da48c6446337269978231eaa0934e0e",
+   "wall_s": 189.1,
+   "violates": "S2 lane a/b of the scheduler drive lane a/b of the envelope and output stage",
+   "failed_cases": [
+    "decode",
+    "early_conflict",
+    "params_hold",
+    "params_permuted",
+    "reset"
+   ],
+   "failed_checks": 30,
+   "first_failure": "decode: one RF pulse per transmitted word, none for dropped words (S4, S5)"
+  },
+  {
+   "sample": "scheduler_without_n_pre",
+   "expected_score": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "0a35480e5bf4e7f272a9d2bb1497048f9d20ac2f7d41704a2b06de21ab63dec1",
+   "wall_s": 219.8,
+   "violates": "S2/S5 n_pre reaches the scheduler (hold window)",
+   "failed_cases": [
+    "early_conflict",
+    "params_hold",
+    "params_permuted"
+   ],
+   "failed_checks": 7,
+   "first_failure": "early_conflict: nsup crossings of 0.5 V follow the supply rules (S5)"
+  },
+  {
+   "sample": "carriers_swapped",
+   "expected_score": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "7028242be308c7c7b9eff85a787bdf39854e444ff90f838b81418366a4d142d0",
+   "wall_s": 203.7,
+   "violates": "S2/S4 branch k runs at f_k",
+   "failed_cases": [
+    "decode",
+    "early_conflict",
+    "params_hold",
+    "params_permuted",
+    "reset"
+   ],
+   "failed_checks": 15,
+   "first_failure": "decode: decoded words equal the sent ones: P from the clk672 frame, D from pulse spacing, F from zero crossings (S4)"
+  },
+  {
+   "sample": "pol_not_connected",
+   "expected_score": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "8641d9c7f9ee439c16a2d682b4659d95c3b3373fd4d44d5e5b10ad2b9d9691fd",
+   "wall_s": 212.9,
+   "violates": "S2/S4 pol is the PG polarity input",
+   "failed_cases": [
+    "early_conflict",
+    "params_permuted"
+   ],
+   "failed_checks": 2,
+   "first_failure": "early_conflict: polarity and carrier phase: correlation with (-1)^pol x expected carrier (S4)"
+  },
+  {
+   "sample": "conflict_from_overrun",
+   "expected_score": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "918c5e7b5f85e7fb8324f422532da591931f4b3f1b5c9e00496e7f67e0d9ae75",
+   "wall_s": 223.3,
+   "violates": "S2/S5 conflict comes from the scheduler",
+   "failed_cases": [
+    "early_conflict"
+   ],
+   "failed_checks": 1,
+   "first_failure": "early_conflict: conflict pulses at the 3 dropped requests (S5)"
+  },
+  {
+   "sample": "g_pa_not_passed",
+   "expected_score": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "f24060cd56d0e08c746913f6db5403b690707233c19add00396927466bcd3613",
+   "wall_s": 237.9,
+   "violates": "S1/S4 pulse amplitude scales with g_pa",
+   "failed_cases": [
+    "params_hold",
+    "params_permuted"
+   ],
+   "failed_checks": 2,
+   "first_failure": "params_hold: pulse peak |outp - outn| scales with g_pa (S4)"
+  },
+  {
+   "sample": "done_fail_swapped",
+   "expected_score": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "13a263e7df1aedcbba6c95e358e8786ae8f8e1628f95a1253fe9a4df728cde03",
+   "wall_s": 302.0,
+   "violates": "S2/S3 done and fail pins come from the matching calibration outputs",
+   "failed_cases": [
+    "decode",
+    "early_conflict",
+    "params_hold",
+    "params_permuted",
+    "ref_lost",
+    "reset"
+   ],
+   "failed_checks": 54,
+   "first_failure": "decode: done edges: search outcome done, cleared by rst (S3)"
+  },
+  {
+   "sample": "clk672_from_tap8",
+   "expected_score": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "16bb704e1b4113e1b5362fbe047394bc56debec5e2ff7d7a28759a2e02be291e",
+   "wall_s": 356.6,
+   "violates": "S2/S3 clk672 copies ph[0]",
+   "failed_cases": [
+    "decode",
+    "early_conflict",
+    "params_hold",
+    "params_permuted",
+    "ref_lost",
+    "reset"
+   ],
+   "failed_checks": 45,
+   "first_failure": "decode: clk672 frequency follows every code of the replayed search, the final code and reset (S3)"
+  },
+  {
+   "sample": "code_init_not_passed",
+   "expected_score": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "c00bbc45db367777a4ec49fa2ef0f82e13919b4c17cae249786e5560634f482b",
+   "wall_s": 264.9,
+   "violates": "S1/S3 clk672 runs at code_init before calibration",
+   "failed_cases": [
+    "params_hold",
+    "params_permuted",
+    "ref_lost",
+    "reset"
+   ],
+   "failed_checks": 6,
+   "first_failure": "params_hold: clk672 before cal_start runs at 600 MHz + 0.25 MHz x code_init (S3)"
+  },
+  {
+   "sample": "n_win_not_passed",
+   "expected_score": 0,
+   "score": 0,
+   "ok": true,
+   "candidate_sha256": "13320be352d0fb8ebdb28bac9f51c95ec08f7205ebfb1fc61242f8cff7690d6a",
+   "wall_s": 294.6,
+   "violates": "S1/S3 the search counts over n_win reference periods",
+   "failed_cases": [
+    "decode",
+    "early_conflict",
+    "params_hold",
+    "params_permuted",
+    "ref_lost",
+    "reset"
+   ],
+   "failed_checks": 28,
+   "first_failure": "decode: clk672 frequency follows every code of the replayed search, the final code and reset (S3)"
+  }
+ ],
+ "all_ok": true
+}
