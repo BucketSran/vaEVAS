@@ -1,0 +1,40 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Test stimulus, not part of the transmitter: ideal square clock. The k-th
+// rising edge starts at delay + k*period (computed from k, so no drift); the
+// output crosses vdd/2 tr/2 after each scheduled edge. No edge starts at or
+// after t_stop (the clock then stays low), which models a lost reference.
+module uwb_clock_source(clk);
+    output clk;
+    electrical clk;
+    parameter real vdd = 1.0;
+    parameter real period = 1n from (0:inf);
+    parameter real duty = 0.5 from (0:1);
+    parameter real delay = 0 from [0:inf);
+    parameter real tr = 2p from (0:inf);
+    parameter real t_stop = 1.0 from (0:inf);
+
+    integer k, level;
+    real t_next;
+
+    analog begin
+        @(initial_step) begin
+            k = 0; level = 0; t_next = delay;
+        end
+        @(timer(t_next)) begin
+            if (t_next >= t_stop) begin
+                level = 0;
+                t_next = 2.0;
+            end else if (level == 0) begin
+                level = 1;
+                t_next = delay + k * period + duty * period;
+            end else begin
+                level = 0;
+                k = k + 1;
+                t_next = delay + k * period;
+            end
+        end
+        V(clk) <+ transition(level * vdd, 0, tr);
+    end
+endmodule

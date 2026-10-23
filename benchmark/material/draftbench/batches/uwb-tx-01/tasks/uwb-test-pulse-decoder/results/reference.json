@@ -1,0 +1,170 @@
+{
+ "task": "uwb-test-pulse-decoder",
+ "date": "2026-10-23",
+ "backend": {
+  "name": "legacy EVAS 0.8.7, interim; declared backend evas pending",
+  "source": "legacy/EVAS commit 6cb6fa7a7dac70fc0d4120126d8cf74258e6637b, local build runs/legacy-evas-0.8.7",
+  "identity": {
+   "build_revision": null,
+   "cli_version": "0.8.7",
+   "engine": "evas-rust",
+   "package_name": "evas-sim",
+   "package_version": "0.8.7",
+   "rust_core_abi_version": 20260718,
+   "rust_core_loadable": true,
+   "rust_core_present": true,
+   "rust_core_version": "0.2.4",
+   "schema_version": 1
+  },
+  "selection": "UWB_BACKEND=legacy",
+  "maxstep_s": 1e-11,
+  "strobe_time_tolerance_s": 3e-12,
+  "resolution": {
+   "v_det_band_v": 0.001,
+   "err_position_band_s": 2e-12,
+   "err_frequency_band": 0.002,
+   "window_edge_band_s": 1e-12,
+   "gap_guard_s": 1e-11
+  }
+ },
+ "candidate": "solution/circuit.va",
+ "candidate_sha256": "eb173658770d1dcccf1c7ae56cef32b3dc35b19c0e3fa3c52e971727b1c37708",
+ "status": "executed",
+ "score": 1,
+ "checks": 35,
+ "passed": 35,
+ "verifier_wall_s": 58.0,
+ "cases": [
+  {
+   "case": "chain288",
+   "set": "public",
+   "instances": [
+    "a"
+   ],
+   "pulses": {
+    "a": 120
+   },
+   "malformed": {
+    "a": 0
+   },
+   "boundary_either": {
+    "a": 0
+   },
+   "checks": 5,
+   "passed": 5,
+   "worst_strobe_error_ps": 0.066,
+   "simulator_wall_s": 17.3
+  },
+  {
+   "case": "chain100_pol",
+   "set": "final",
+   "instances": [
+    "a"
+   ],
+   "pulses": {
+    "a": 90
+   },
+   "malformed": {
+    "a": 11
+   },
+   "boundary_either": {
+    "a": 0
+   },
+   "checks": 5,
+   "passed": 5,
+   "worst_strobe_error_ps": 0.0,
+   "simulator_wall_s": 18.4
+  },
+  {
+   "case": "chain288_two",
+   "set": "final",
+   "instances": [
+    "a",
+    "b"
+   ],
+   "pulses": {
+    "a": 70,
+    "b": 70
+   },
+   "malformed": {
+    "a": 16,
+    "b": 0
+   },
+   "boundary_either": {
+    "a": 0,
+    "b": 0
+   },
+   "checks": 10,
+   "passed": 10,
+   "worst_strobe_error_ps": 0.063,
+   "simulator_wall_s": 15.4
+  },
+  {
+   "case": "synth_grid",
+   "set": "final",
+   "instances": [
+    "a"
+   ],
+   "pulses": {
+    "a": 23
+   },
+   "malformed": {
+    "a": 9
+   },
+   "boundary_either": {
+    "a": 0
+   },
+   "checks": 5,
+   "passed": 5,
+   "worst_strobe_error_ps": 0.0,
+   "simulator_wall_s": 2.3
+  },
+  {
+   "case": "synth_params",
+   "set": "final",
+   "instances": [
+    "a",
+    "b"
+   ],
+   "pulses": {
+    "a": 13,
+    "b": 13
+   },
+   "malformed": {
+    "a": 4,
+    "b": 4
+   },
+   "boundary_either": {
+    "a": 0,
+    "b": 0
+   },
+   "checks": 10,
+   "passed": 10,
+   "worst_strobe_error_ps": 0.0,
+   "simulator_wall_s": 2.5
+  }
+ ],
+ "package_file_sha256": {
+  "instruction.md": "9d6087086ea7e25d6c16d58d0d521b5495b699e095beb157bbae973a4507c0a5",
+  "environment/starter/testbench/contract.py": "8ee62c79a9bcbae11076a2033d654a538459718481a86c65c3a71216637ae1e4",
+  "environment/starter/testbench/check.py": "a52ffc5b71ac3609d22895eb32a8aff07dfae8faed2f2633219ff2cfb28c506b",
+  "environment/starter/testbench/uwbtask.py": "76d7f7eebab0e465bc701a8b91ee9a2440858e38be2533941704da227dbd717e",
+  "environment/starter/testbench/edge_monitor.va": "9051690bdeb0d41adf08087cf3ed04d679559c3e003427280385ab4f35c50a2b",
+  "environment/starter/testbench/clock_source.va": "e9c1aee66dac40aa0a19ad13fc99f1106d489216b60f4dd0f2a8875514d16a09",
+  "tests/final_cases.py": "1b653bc6ea1a032ebfd7e088f2af379c618d294d58005190bf2b9091b077fb70",
+  "tests/synth.py": "8b5606362bcfbe1225d42d062e8bad809e07275d1f7437830c88f05dd29fd988",
+  "tests/benches/test_burst.va": "e40c04a0b504a583e49320d21e79556c46d1b0b4e43308555724c0491ee77c86",
+  "tests/verify.py": "ca2f1388797148be035f639e709a29ae900aa131baf31eca3f7429f393bde1dd",
+  "tests/calibration/mutants.py": "0031f28538e5a56c308cafce20b7bd85ca4115a43ba303337c41136208ca5639",
+  "tests/calibration/alternative.va": "5cf65de5d59d99f08874ddc352549c479b794a5d92d754d9cca64601cca8895f",
+  "environment/starter/testbench/chain/dppm_fsk_encoder8.va": "694265b61cdef7aba17d4a226530a7755b622a022f5f8cab1a563519e831f067",
+  "environment/starter/testbench/chain/envelope_lane.va": "cb661eaed59b44952b238620373356555adbbff5a60cc5158c5864e096e710ac",
+  "environment/starter/testbench/chain/master_ro16.va": "70aeecf65933151d315ff911203cfd24487573aad1ddbc9f0386d03940e68b61",
+  "environment/starter/testbench/chain/pulse_generator.va": "22572fac64f0865c8d5b1319ca66dbb99e1eba5230ceeed3c82e8ebf8e9d9b7d",
+  "environment/starter/testbench/chain/rf_ro_branch.va": "821e7594a58549df799cab2ea4da3ad7f738fa004fd86ccc2e0a2a6b471d8aa7",
+  "environment/starter/testbench/chain/ro_scheduler8.va": "ad9feaad6acf33f18fca6458345f3d3e46c9b1a6e9b7a57262f1266c1ca784df",
+  "environment/starter/testbench/chain/serial_to_symbol6.va": "cf23092891e2edbea1af3a60133ef2441fa41f37e13f3d6b5ab6d85fa45c2852",
+  "environment/starter/testbench/chain/tx_output.va": "1a61150e4db9607aab70b79bc814b08c250c7db7efbe61392fc15b700f86cc85"
+ },
+ "raw_run": "runs/uwb-tx-vabench-20261022/tasks/uwb-test-pulse-decoder/calibration/reference"
+}

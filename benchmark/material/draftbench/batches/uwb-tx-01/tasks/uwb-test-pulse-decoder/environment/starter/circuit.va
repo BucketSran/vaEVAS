@@ -1,0 +1,12 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module pulse_decoder(vp, vn, clk, rst, sym, sym_valid, err);
+    input vp, vn, clk, rst;
+    output [5:0] sym;
+    output sym_valid, err;
+    electrical vp, vn, clk, rst, sym_valid, err;
+    electrical [5:0] sym;
+
+    // TODO: parameters and behavior from the Spec.
+endmodule

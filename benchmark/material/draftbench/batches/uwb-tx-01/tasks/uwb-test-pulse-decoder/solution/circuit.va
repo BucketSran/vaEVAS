@@ -1,0 +1,189 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// On-line pulse decoder for the IR-UWB seed transmitter: a measurement
+// instrument that turns the differential RF output back into 6-bit symbols
+// and flags malformed pulses. Written for the task uwb-test-pulse-decoder from
+// the receiver rules of circuits/ir-uwb-tx/test/system/check_system.py.
+//
+// v = V(vp) - V(vn). Intervals with |v| > v_det are exceedances; gaps shorter
+// than t_gap join them into one pulse. The pulse centre tc is the midpoint of
+// its first rise and last fall through v_det; its start is ts = tc -
+// n_width*delta/2 with delta = clk period/16. The frame is the latest clk
+// rising edge at or before ts + delta/2 and P = round((ts - frame)/delta).
+// Zero crossings of v in tc +- n_width*delta/4 give f = (N - 1)/(2*span); F is
+// the nearest channel 4.5 GHz + k*3/7 GHz. D = (P - P_prev) mod 8 and
+// P_prev = P mod 8 after every pulse; sym = Gray(D)*8 + Gray(F). err marks an
+// off-grid start, P > 7 or an off-channel carrier. The outputs change t_lat
+// after the last fall through v_det, with a strobe t_pw long.
+module pulse_decoder(vp, vn, clk, rst, sym, sym_valid, err);
+    input vp, vn, clk, rst;
+    output [5:0] sym;
+    output sym_valid, err;
+    electrical vp, vn, clk, rst, sym_valid, err;
+    electrical [5:0] sym;
+
+    parameter real v_det = 0.05 from [0.02:0.5];
+    parameter real t_gap = 100p from [20p:300p];
+    parameter integer n_width = 9 from [4:12];
+    parameter real tol_pos = 0.25 from [0.05:0.45];
+    parameter real tol_f = 0.03 from [0.005:0.1];
+    parameter real t_lat = 200p from [20p:600p];      // at least t_gap
+    parameter real t_pw = 200p from [50p:500p];
+    parameter real vdd = 1.0 from [0.5:1.8];
+    parameter real vth = 0.5 from [0.2:1.6];
+    parameter real tr = 2p from [1p:10p];
+
+    integer open, hiv, p, p_prev, d, fi, bad, nw;
+    integer sym_next, err_next, sym_out, err_out, sv;
+    real v, t_first, t_last, t_close, t_out, t_off;
+    real ck, t_clk, delta, tc, ts, frame, e, lo, hi, zf, zl, fest;
+    // the 32 latest zero crossings of v, oldest first (a shift register:
+    // EVAS 0.8.7 has no dynamic array indexing)
+    real z0, z1, z2, z3, z4, z5, z6, z7, z8, z9, z10, z11, z12, z13, z14, z15;
+    real z16, z17, z18, z19, z20, z21, z22, z23, z24, z25, z26, z27, z28, z29, z30, z31;
+    genvar i;
+
+    analog begin
+        v = V(vp) - V(vn);
+
+        @(initial_step) begin
+            open = 0; hiv = 0; p_prev = 0; sym_out = 0; err_out = 0; sv = 0;
+            sym_next = 0; err_next = 0;
+            t_first = 0; t_last = 0; t_close = 1; t_out = 1; t_off = 1;
+            ck = -1; t_clk = 1.488095238095238e-9;
+            z0 = -1; z1 = -1; z2 = -1; z3 = -1; z4 = -1; z5 = -1; z6 = -1; z7 = -1;
+            z8 = -1; z9 = -1; z10 = -1; z11 = -1; z12 = -1; z13 = -1; z14 = -1; z15 = -1;
+            z16 = -1; z17 = -1; z18 = -1; z19 = -1; z20 = -1; z21 = -1; z22 = -1; z23 = -1;
+            z24 = -1; z25 = -1; z26 = -1; z27 = -1; z28 = -1; z29 = -1; z30 = -1; z31 = -1;
+        end
+
+        // clk: latest rising edge and the period
+        @(cross(V(clk) - vth, +1)) begin
+            if (ck > 0) t_clk = $abstime - ck;
+            ck = $abstime;
+        end
+
+        // reset: drop the pulse in progress and any pending strobe, P_prev = 0
+        @(cross(V(rst) - vth, +1)) begin
+            open = 0; hiv = 0; p_prev = 0; sym_out = 0; err_out = 0; sv = 0;
+            t_close = 1; t_out = 1; t_off = 1;
+        end
+
+        // every zero crossing of v
+        @(cross(v, 0)) begin
+            z0 = z1; z1 = z2; z2 = z3; z3 = z4;
+            z4 = z5; z5 = z6; z6 = z7; z7 = z8;
+            z8 = z9; z9 = z10; z10 = z11; z11 = z12;
+            z12 = z13; z13 = z14; z14 = z15; z15 = z16;
+            z16 = z17; z17 = z18; z18 = z19; z19 = z20;
+            z20 = z21; z21 = z22; z22 = z23; z23 = z24;
+            z24 = z25; z25 = z26; z26 = z27; z27 = z28;
+            z28 = z29; z29 = z30; z30 = z31;
+            z31 = $abstime;
+        end
+
+        // |v| rises through v_det: a new pulse, or the same one after a short gap
+        @(cross(v - v_det, +1) or cross(v + v_det, -1)) begin
+            if (V(rst) <= vth) begin
+                if (!(open && $abstime - t_last < t_gap)) begin
+                    open = 1; t_first = $abstime;
+                end
+                hiv = 1;
+                t_close = 1;
+            end
+        end
+
+        // |v| falls through v_det: candidate last exceedance
+        @(cross(v - v_det, -1) or cross(v + v_det, +1)) begin
+            if (open && hiv) begin
+                hiv = 0; t_last = $abstime; t_close = $abstime + t_gap;
+            end
+        end
+
+        // no exceedance for t_gap: the pulse is complete, measure it
+        @(timer(t_close)) begin
+            if (open && !hiv) begin
+                open = 0;
+                delta = t_clk / 16;
+                tc = (t_first + t_last) / 2;
+                ts = tc - n_width * delta / 2;
+                frame = ck + floor((ts + delta / 2 - ck) / t_clk) * t_clk;
+                p = floor((ts - frame) / delta + 0.5);
+                if (p < 0) p = 0;
+                if (p > 15) p = 15;
+                e = ts - frame - p * delta;
+                bad = (abs(e) > tol_pos * delta) || (p > 7);
+                // zero crossings inside the frequency window
+                lo = tc - n_width * delta / 4;
+                hi = tc + n_width * delta / 4;
+                nw = 0; zf = 0; zl = 0;
+                if (z0 >= lo && z0 <= hi) begin nw = nw + 1; zl = z0; if (nw == 1) zf = z0; end
+                if (z1 >= lo && z1 <= hi) begin nw = nw + 1; zl = z1; if (nw == 1) zf = z1; end
+                if (z2 >= lo && z2 <= hi) begin nw = nw + 1; zl = z2; if (nw == 1) zf = z2; end
+                if (z3 >= lo && z3 <= hi) begin nw = nw + 1; zl = z3; if (nw == 1) zf = z3; end
+                if (z4 >= lo && z4 <= hi) begin nw = nw + 1; zl = z4; if (nw == 1) zf = z4; end
+                if (z5 >= lo && z5 <= hi) begin nw = nw + 1; zl = z5; if (nw == 1) zf = z5; end
+                if (z6 >= lo && z6 <= hi) begin nw = nw + 1; zl = z6; if (nw == 1) zf = z6; end
+                if (z7 >= lo && z7 <= hi) begin nw = nw + 1; zl = z7; if (nw == 1) zf = z7; end
+                if (z8 >= lo && z8 <= hi) begin nw = nw + 1; zl = z8; if (nw == 1) zf = z8; end
+                if (z9 >= lo && z9 <= hi) begin nw = nw + 1; zl = z9; if (nw == 1) zf = z9; end
+                if (z10 >= lo && z10 <= hi) begin nw = nw + 1; zl = z10; if (nw == 1) zf = z10; end
+                if (z11 >= lo && z11 <= hi) begin nw = nw + 1; zl = z11; if (nw == 1) zf = z11; end
+                if (z12 >= lo && z12 <= hi) begin nw = nw + 1; zl = z12; if (nw == 1) zf = z12; end
+                if (z13 >= lo && z13 <= hi) begin nw = nw + 1; zl = z13; if (nw == 1) zf = z13; end
+                if (z14 >= lo && z14 <= hi) begin nw = nw + 1; zl = z14; if (nw == 1) zf = z14; end
+                if (z15 >= lo && z15 <= hi) begin nw = nw + 1; zl = z15; if (nw == 1) zf = z15; end
+                if (z16 >= lo && z16 <= hi) begin nw = nw + 1; zl = z16; if (nw == 1) zf = z16; end
+                if (z17 >= lo && z17 <= hi) begin nw = nw + 1; zl = z17; if (nw == 1) zf = z17; end
+                if (z18 >= lo && z18 <= hi) begin nw = nw + 1; zl = z18; if (nw == 1) zf = z18; end
+                if (z19 >= lo && z19 <= hi) begin nw = nw + 1; zl = z19; if (nw == 1) zf = z19; end
+                if (z20 >= lo && z20 <= hi) begin nw = nw + 1; zl = z20; if (nw == 1) zf = z20; end
+                if (z21 >= lo && z21 <= hi) begin nw = nw + 1; zl = z21; if (nw == 1) zf = z21; end
+                if (z22 >= lo && z22 <= hi) begin nw = nw + 1; zl = z22; if (nw == 1) zf = z22; end
+                if (z23 >= lo && z23 <= hi) begin nw = nw + 1; zl = z23; if (nw == 1) zf = z23; end
+                if (z24 >= lo && z24 <= hi) begin nw = nw + 1; zl = z24; if (nw == 1) zf = z24; end
+                if (z25 >= lo && z25 <= hi) begin nw = nw + 1; zl = z25; if (nw == 1) zf = z25; end
+                if (z26 >= lo && z26 <= hi) begin nw = nw + 1; zl = z26; if (nw == 1) zf = z26; end
+                if (z27 >= lo && z27 <= hi) begin nw = nw + 1; zl = z27; if (nw == 1) zf = z27; end
+                if (z28 >= lo && z28 <= hi) begin nw = nw + 1; zl = z28; if (nw == 1) zf = z28; end
+                if (z29 >= lo && z29 <= hi) begin nw = nw + 1; zl = z29; if (nw == 1) zf = z29; end
+                if (z30 >= lo && z30 <= hi) begin nw = nw + 1; zl = z30; if (nw == 1) zf = z30; end
+                if (z31 >= lo && z31 <= hi) begin nw = nw + 1; zl = z31; if (nw == 1) zf = z31; end
+                if (nw >= 2 && zl > zf) begin
+                    fest = (nw - 1) / (2 * (zl - zf));
+                    fi = floor((fest - 4.5e9) / (3e9 / 7) + 0.5);
+                    if (fi < 0) fi = 0;
+                    if (fi > 7) fi = 7;
+                    if (abs(fest / (4.5e9 + fi * 3e9 / 7) - 1) > tol_f) bad = 1;
+                end else begin
+                    fi = 0; bad = 1;
+                end
+                d = ((p - p_prev) % 8 + 8) % 8;
+                p_prev = p % 8;
+                sym_next = 8 * (d ^ (d >> 1)) + (fi ^ (fi >> 1));
+                err_next = bad;
+                t_out = t_last + t_lat;
+                if (t_out <= $abstime) begin
+                    sym_out = sym_next; err_out = err_next; sv = 1;
+                    t_off = $abstime + t_pw; t_out = 1;
+                end
+                t_close = 1;
+            end
+        end
+
+        // outputs t_lat after the last exceedance, strobe high for t_pw
+        @(timer(t_out)) begin
+            sym_out = sym_next; err_out = err_next; sv = 1;
+            t_off = $abstime + t_pw; t_out = 1;
+        end
+        @(timer(t_off)) begin
+            sv = 0; t_off = 1;
+        end
+
+        for (i = 0; i < 6; i = i + 1)
+            V(sym[i]) <+ transition(((sym_out >> i) & 1) * vdd, 0, tr);
+        V(err) <+ transition(err_out * vdd, 0, tr);
+        V(sym_valid) <+ transition(sv * vdd, 0, tr);
+    end
+endmodule

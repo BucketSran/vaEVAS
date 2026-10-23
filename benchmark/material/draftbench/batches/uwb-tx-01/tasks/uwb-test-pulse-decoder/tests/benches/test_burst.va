@@ -1,0 +1,55 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Test source, not part of the transmitter: adds one raised-cosine RF burst
+// to the input voltage, vout = vin + v(t). Chained instances put several
+// bursts on one node; the checker computes the same v(t) in closed form.
+//   u = t - t0, x = u - width/2, burst only for 0 < u < width
+//   v = amp * (1 - cos(2*pi*u/width))/2 * cos(phi)
+//   phi = phase + 2*pi*f_core*x                       for |x| <= w_core
+//   phi = phase + 2*pi*(f_core*w_core + f_edge*(|x| - w_core))*sign(x)  otherwise
+// f_edge = 0 means f_edge = f_core (one carrier). A negative amp inverts the burst.
+module uwb_test_burst(vin, vout);
+    input vin;
+    output vout;
+    electrical vin, vout;
+
+    parameter real t0 = 1n from [0:inf);
+    parameter real width = 837p from (0:inf);
+    parameter real amp = 1.0;
+    parameter real f_core = 6e9 from (0:inf);
+    parameter real f_edge = 0 from [0:inf);
+    parameter real w_core = 0 from [0:inf);
+    parameter real phase = 0;
+    parameter real pts_per_cycle = 40 from [8:inf);
+
+    integer mark;
+    real u, x, ax, fe, cyc, v;
+
+    analog begin
+        @(initial_step) begin
+            mark = 0;
+            if (f_edge > 0) fe = f_edge; else fe = f_core;
+        end
+        @(timer(t0)) mark = 1;
+        @(timer(t0 + width)) mark = 2;
+
+        u = $abstime - t0;
+        v = 0;
+        if (u > 0 && u < width) begin
+            x = u - width / 2;
+            ax = abs(x);
+            if (ax <= w_core)
+                cyc = f_core * ax;
+            else
+                cyc = f_core * w_core + fe * (ax - w_core);
+            if (x < 0) cyc = -cyc;
+            v = amp * 0.5 * (1 - cos(2 * `M_PI * u / width)) * cos(phase + 2 * `M_PI * cyc);
+            if (fe > f_core)
+                $bound_step(1 / (pts_per_cycle * fe));
+            else
+                $bound_step(1 / (pts_per_cycle * f_core));
+        end
+        V(vout) <+ V(vin) + v;
+    end
+endmodule

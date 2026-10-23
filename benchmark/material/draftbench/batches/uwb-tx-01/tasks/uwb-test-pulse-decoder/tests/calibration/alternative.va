@@ -1,0 +1,214 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Calibration sample: a second correct implementation of the pulse decoder
+// with a different internal organization. Exceedances come from crossings of
+// v*v through v_det^2; zero crossings go to a 32-entry ring buffer; a pulse is
+// measured lazily, either when the next pulse starts or at its strobe time;
+// the frame is chosen among the three latest clk edges; F is the nearest
+// channel by search; outputs are one packed word. The checker must accept it.
+module pulse_decoder(vp, vn, clk, rst, sym, sym_valid, err);
+    input vp, vn, clk, rst;
+    output [5:0] sym;
+    output sym_valid, err;
+    electrical vp, vn, clk, rst, sym_valid, err;
+    electrical [5:0] sym;
+
+    parameter real v_det = 0.05 from [0.02:0.5];
+    parameter real t_gap = 100p from [20p:300p];
+    parameter integer n_width = 9 from [4:12];
+    parameter real tol_pos = 0.25 from [0.05:0.45];
+    parameter real tol_f = 0.03 from [0.005:0.1];
+    parameter real t_lat = 200p from [20p:600p];
+    parameter real t_pw = 200p from [50p:500p];
+    parameter real vdd = 1.0 from [0.5:1.8];
+    parameter real vth = 0.5 from [0.2:1.6];
+    parameter real tr = 2p from [1p:10p];
+
+    integer busy, inside, wr, meas_req, emit_req, word, ready, shown, strobe, k, cnt, pos, prev, inc, fq;
+    real v, tf, tl, t_dec, t_emit, t_low, e0, e1, e2, per, dl, cen, st, fr, lo, hi, za, zb, fm, best, ferr, off;
+    real r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31;
+    genvar i;
+
+    analog begin
+        v = V(vp) - V(vn);
+
+        @(initial_step) begin
+            busy = 0; inside = 0; wr = 0; meas_req = 0; emit_req = 0; word = 0; ready = 0;
+            shown = 0; strobe = 0; prev = 0;
+            tf = 0; tl = 0; t_dec = 1; t_emit = 1; t_low = 1;
+            e0 = -1; e1 = -1; e2 = -1; per = 1.488095238095238e-9;
+            r0 = -1; r1 = -1; r2 = -1; r3 = -1; r4 = -1; r5 = -1; r6 = -1; r7 = -1;
+            r8 = -1; r9 = -1; r10 = -1; r11 = -1; r12 = -1; r13 = -1; r14 = -1; r15 = -1;
+            r16 = -1; r17 = -1; r18 = -1; r19 = -1; r20 = -1; r21 = -1; r22 = -1; r23 = -1;
+            r24 = -1; r25 = -1; r26 = -1; r27 = -1; r28 = -1; r29 = -1; r30 = -1; r31 = -1;
+        end
+
+        @(cross(V(clk) - vth, +1)) begin
+            e0 = e1; e1 = e2; e2 = $abstime;
+            if (e1 > 0) per = e2 - e1;
+        end
+
+        @(cross(V(rst) - vth, +1)) begin
+            busy = 0; inside = 0; ready = 0; shown = 0; strobe = 0; prev = 0;
+            t_dec = 1; t_emit = 1; t_low = 1;
+        end
+
+        @(cross(v, 0)) begin
+            case (wr)
+                    0: r0 = $abstime;
+                    1: r1 = $abstime;
+                    2: r2 = $abstime;
+                    3: r3 = $abstime;
+                    4: r4 = $abstime;
+                    5: r5 = $abstime;
+                    6: r6 = $abstime;
+                    7: r7 = $abstime;
+                    8: r8 = $abstime;
+                    9: r9 = $abstime;
+                    10: r10 = $abstime;
+                    11: r11 = $abstime;
+                    12: r12 = $abstime;
+                    13: r13 = $abstime;
+                    14: r14 = $abstime;
+                    15: r15 = $abstime;
+                    16: r16 = $abstime;
+                    17: r17 = $abstime;
+                    18: r18 = $abstime;
+                    19: r19 = $abstime;
+                    20: r20 = $abstime;
+                    21: r21 = $abstime;
+                    22: r22 = $abstime;
+                    23: r23 = $abstime;
+                    24: r24 = $abstime;
+                    25: r25 = $abstime;
+                    26: r26 = $abstime;
+                    27: r27 = $abstime;
+                    28: r28 = $abstime;
+                    29: r29 = $abstime;
+                    30: r30 = $abstime;
+                    31: r31 = $abstime;
+            endcase
+            wr = (wr + 1) % 32;
+        end
+
+        // v*v rises through v_det^2
+        @(cross(v * v - v_det * v_det, +1)) begin
+            if (V(rst) <= vth) begin
+                if (busy && $abstime - tl >= t_gap) meas_req = 1;   // the previous pulse is over
+                else if (!busy) begin
+                    busy = 1; tf = $abstime;
+                end
+                inside = 1; t_dec = 1;
+            end
+        end
+
+        @(cross(v * v - v_det * v_det, -1)) begin
+            if (busy && inside) begin
+                inside = 0; tl = $abstime; t_dec = $abstime + t_lat;
+            end
+        end
+
+        @(timer(t_dec)) begin
+            if (busy && !inside) begin
+                meas_req = 1; emit_req = 1;
+            end
+            t_dec = 1;
+        end
+
+        if (meas_req) begin
+            meas_req = 0;
+            dl = per / 16;
+            cen = 0.5 * (tf + tl);
+            st = cen - 0.5 * n_width * dl;
+            if (e2 <= st + 0.5 * dl) fr = e2;
+            else if (e1 <= st + 0.5 * dl) fr = e1;
+            else fr = e0;
+            pos = floor((st - fr) / dl + 0.5);
+            if (pos < 0) pos = 0;
+            if (pos > 15) pos = 15;
+            off = st - fr - pos * dl;
+            lo = cen - 0.25 * n_width * dl;
+            hi = cen + 0.25 * n_width * dl;
+            cnt = 0; za = 0; zb = 0;
+            // the ring is unordered: earliest and latest crossing in the window
+            if (r0 >= lo && r0 <= hi) begin if (cnt == 0 || r0 < za) za = r0; if (cnt == 0 || r0 > zb) zb = r0; cnt = cnt + 1; end
+            if (r1 >= lo && r1 <= hi) begin if (cnt == 0 || r1 < za) za = r1; if (cnt == 0 || r1 > zb) zb = r1; cnt = cnt + 1; end
+            if (r2 >= lo && r2 <= hi) begin if (cnt == 0 || r2 < za) za = r2; if (cnt == 0 || r2 > zb) zb = r2; cnt = cnt + 1; end
+            if (r3 >= lo && r3 <= hi) begin if (cnt == 0 || r3 < za) za = r3; if (cnt == 0 || r3 > zb) zb = r3; cnt = cnt + 1; end
+            if (r4 >= lo && r4 <= hi) begin if (cnt == 0 || r4 < za) za = r4; if (cnt == 0 || r4 > zb) zb = r4; cnt = cnt + 1; end
+            if (r5 >= lo && r5 <= hi) begin if (cnt == 0 || r5 < za) za = r5; if (cnt == 0 || r5 > zb) zb = r5; cnt = cnt + 1; end
+            if (r6 >= lo && r6 <= hi) begin if (cnt == 0 || r6 < za) za = r6; if (cnt == 0 || r6 > zb) zb = r6; cnt = cnt + 1; end
+            if (r7 >= lo && r7 <= hi) begin if (cnt == 0 || r7 < za) za = r7; if (cnt == 0 || r7 > zb) zb = r7; cnt = cnt + 1; end
+            if (r8 >= lo && r8 <= hi) begin if (cnt == 0 || r8 < za) za = r8; if (cnt == 0 || r8 > zb) zb = r8; cnt = cnt + 1; end
+            if (r9 >= lo && r9 <= hi) begin if (cnt == 0 || r9 < za) za = r9; if (cnt == 0 || r9 > zb) zb = r9; cnt = cnt + 1; end
+            if (r10 >= lo && r10 <= hi) begin if (cnt == 0 || r10 < za) za = r10; if (cnt == 0 || r10 > zb) zb = r10; cnt = cnt + 1; end
+            if (r11 >= lo && r11 <= hi) begin if (cnt == 0 || r11 < za) za = r11; if (cnt == 0 || r11 > zb) zb = r11; cnt = cnt + 1; end
+            if (r12 >= lo && r12 <= hi) begin if (cnt == 0 || r12 < za) za = r12; if (cnt == 0 || r12 > zb) zb = r12; cnt = cnt + 1; end
+            if (r13 >= lo && r13 <= hi) begin if (cnt == 0 || r13 < za) za = r13; if (cnt == 0 || r13 > zb) zb = r13; cnt = cnt + 1; end
+            if (r14 >= lo && r14 <= hi) begin if (cnt == 0 || r14 < za) za = r14; if (cnt == 0 || r14 > zb) zb = r14; cnt = cnt + 1; end
+            if (r15 >= lo && r15 <= hi) begin if (cnt == 0 || r15 < za) za = r15; if (cnt == 0 || r15 > zb) zb = r15; cnt = cnt + 1; end
+            if (r16 >= lo && r16 <= hi) begin if (cnt == 0 || r16 < za) za = r16; if (cnt == 0 || r16 > zb) zb = r16; cnt = cnt + 1; end
+            if (r17 >= lo && r17 <= hi) begin if (cnt == 0 || r17 < za) za = r17; if (cnt == 0 || r17 > zb) zb = r17; cnt = cnt + 1; end
+            if (r18 >= lo && r18 <= hi) begin if (cnt == 0 || r18 < za) za = r18; if (cnt == 0 || r18 > zb) zb = r18; cnt = cnt + 1; end
+            if (r19 >= lo && r19 <= hi) begin if (cnt == 0 || r19 < za) za = r19; if (cnt == 0 || r19 > zb) zb = r19; cnt = cnt + 1; end
+            if (r20 >= lo && r20 <= hi) begin if (cnt == 0 || r20 < za) za = r20; if (cnt == 0 || r20 > zb) zb = r20; cnt = cnt + 1; end
+            if (r21 >= lo && r21 <= hi) begin if (cnt == 0 || r21 < za) za = r21; if (cnt == 0 || r21 > zb) zb = r21; cnt = cnt + 1; end
+            if (r22 >= lo && r22 <= hi) begin if (cnt == 0 || r22 < za) za = r22; if (cnt == 0 || r22 > zb) zb = r22; cnt = cnt + 1; end
+            if (r23 >= lo && r23 <= hi) begin if (cnt == 0 || r23 < za) za = r23; if (cnt == 0 || r23 > zb) zb = r23; cnt = cnt + 1; end
+            if (r24 >= lo && r24 <= hi) begin if (cnt == 0 || r24 < za) za = r24; if (cnt == 0 || r24 > zb) zb = r24; cnt = cnt + 1; end
+            if (r25 >= lo && r25 <= hi) begin if (cnt == 0 || r25 < za) za = r25; if (cnt == 0 || r25 > zb) zb = r25; cnt = cnt + 1; end
+            if (r26 >= lo && r26 <= hi) begin if (cnt == 0 || r26 < za) za = r26; if (cnt == 0 || r26 > zb) zb = r26; cnt = cnt + 1; end
+            if (r27 >= lo && r27 <= hi) begin if (cnt == 0 || r27 < za) za = r27; if (cnt == 0 || r27 > zb) zb = r27; cnt = cnt + 1; end
+            if (r28 >= lo && r28 <= hi) begin if (cnt == 0 || r28 < za) za = r28; if (cnt == 0 || r28 > zb) zb = r28; cnt = cnt + 1; end
+            if (r29 >= lo && r29 <= hi) begin if (cnt == 0 || r29 < za) za = r29; if (cnt == 0 || r29 > zb) zb = r29; cnt = cnt + 1; end
+            if (r30 >= lo && r30 <= hi) begin if (cnt == 0 || r30 < za) za = r30; if (cnt == 0 || r30 > zb) zb = r30; cnt = cnt + 1; end
+            if (r31 >= lo && r31 <= hi) begin if (cnt == 0 || r31 < za) za = r31; if (cnt == 0 || r31 > zb) zb = r31; cnt = cnt + 1; end
+            ferr = 1;
+            fq = 0;
+            if (cnt >= 2 && zb > za) begin
+                fm = (cnt - 1) / (2 * (zb - za));
+                best = 1e30;
+                for (k = 0; k < 8; k = k + 1) begin
+                    if (abs(fm - (4.5e9 + k * 3e9 / 7)) < best) begin
+                        best = abs(fm - (4.5e9 + k * 3e9 / 7));
+                        fq = k;
+                    end
+                end
+                ferr = abs(fm / (4.5e9 + fq * 3e9 / 7) - 1) > tol_f;
+            end
+            inc = (pos + 8 - prev) % 8;
+            prev = pos % 8;
+            // packed result: bit 6 err, bits 5:3 Gray(D), bits 2:0 Gray(F)
+            word = 64 * (ferr || pos >= 8 || abs(off) > tol_pos * dl)
+                   + 8 * (inc ^ (inc / 2)) + (fq ^ (fq / 2));
+            ready = 1;
+            t_emit = tl + t_lat;
+            if (busy && inside) begin
+                // measured because a new pulse started: it begins here
+                tf = $abstime;
+            end else
+                busy = 0;
+        end
+
+        @(timer(t_emit)) begin
+            emit_req = 1; t_emit = 1;
+        end
+
+        if (emit_req) begin
+            emit_req = 0; t_emit = 1;
+            if (ready) begin
+                shown = word; strobe = 1; ready = 0; t_low = $abstime + t_pw;
+            end
+        end
+
+        @(timer(t_low)) begin
+            strobe = 0; t_low = 1;
+        end
+
+        for (i = 0; i < 6; i = i + 1)
+            V(sym[i]) <+ transition(((shown >> i) & 1) * vdd, 0, tr);
+        V(err) <+ transition(((shown >> 6) & 1) * vdd, 0, tr);
+        V(sym_valid) <+ transition(strobe * vdd, 0, tr);
+    end
+endmodule
