@@ -1,11 +1,11 @@
 {
   "status": "implemented_and_scoped_acceptance_passed",
-  "availability": "local-only raw evidence; reusable source and validation assets in uncommitted candidate",
+  "availability": "local-only raw evidence; source and validation assets are on the restoration branch and are not a published release",
   "published": false,
   "base": "358760415f545a9b9e10e1a3dc7ab3ba5c56fac9",
   "branch": "codex/evas-xspice-entry",
-  "workspace": "/Users/bucketsran/.codex/worktrees/evas-xspice-entry/current",
-  "local_run_root": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/xspice-entry-20261018",
+  "workspace": "omitted; historical workspace is outside this repository",
+  "local_run_root": "local-only runs/xspice-entry-20261018",
   "scope": "Public EVAS API/CLI compiles a restricted voltage-event VA model through the actual frontend to an ngspice47 XSPICE code model; ngspice solves netlist devices and feedback",
   "entrypoints": [
     "evas-rebuild xspice compile",
@@ -24,12 +24,12 @@
   "tools": {
     "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
     "python": "3.14.6",
-    "ngspice": "/opt/homebrew/Cellar/ngspice/47/bin/ngspice",
+    "ngspice": "ngspice-47",
     "ngspice_sha256": "5845b18cd68781daf9c7bd5bbce6b1b3e212eafe58f98861199dca2cba8e2511",
     "ngspice_version": "47",
     "sdk": "sdk-local.json",
     "sdk_receipt": "demo/generated/native/build.json",
-    "compiler": "/usr/bin/cc",
+    "compiler": "cc",
     "compiler_sha256": "a961f78075d8e7621ef4f5d764c64ef8a41bf66c0a98ab5cb6ca39b85ce31c93",
     "spectre_version": "21.1.0.509.isr12",
     "spectre_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f"
