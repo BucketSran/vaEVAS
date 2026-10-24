@@ -1,6 +1,7 @@
 # EVAS 独立验证集
 
 EVAS全部资料见[统一入口](../README.md#evas-entry)；本目录维护独立模型、答案、判据与检查器。
+按 Verilog-A 能力归类的节点、比较表和审稿表见 [能力目录](../capabilities/README.md)。冻结收据仍在 `experiments/backends/`。
 
 这里用最小 Verilog-A 模型、明确刺激和独立数学答案检查仿真器。
 它关注“语言关系有没有被正确求解”，例如贡献相加、事件定位、采样历史和积分反馈。

@@ -3,6 +3,7 @@
 EVAS全部资料见[统一入口](../evas/README.md#evas-entry)；本目录维护执行、分析工具与结果证据。
 
 四后端固定条件实测与后续分项证据见 [support](backends/support/README.md)；支持结论只维护在 [EVAS 总表](../evas/docs/COMPARISON.md)。
+能力节点上的当前分类见 [能力目录](../evas/capabilities/README.md)。本目录继续保存执行工具和冻结收据，不按能力改名。
 各份收据绑定自己的源码与后端版本，不能合称为当前 main 的一次完整重跑。
 
 这里提供 vaEVAS 的执行工具、精简结果、收据与历史材料入口。
