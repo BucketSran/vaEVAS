@@ -46,7 +46,7 @@ def build(root):
             (work/'tb.scs').write_text(netlist(c,profile))
     shutil.copyfile(Path(__file__).with_name('remote.py'),root/'remote.py')
     provenance={}
-    dependencies=[ROOT/'experiments/archive/dvs2-starter-pilot'/name for name in ['suite.py','analyze.py']]
+    dependencies=[ROOT/'experiments/backends/evidence/legacy_waveforms.py']
     dependencies += scientific_sources(ROOT)
     dependencies += list(Path(__file__).parent.glob('*.py'))
     dependencies += [Path(__file__).with_name('PROTOCOL.md')]

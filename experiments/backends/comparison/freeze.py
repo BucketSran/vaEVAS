@@ -33,6 +33,7 @@ def checker_identity():
         ('experiments/backends/dvs2-spectre-validation', 'experiments/archive/dvs2-history-validation',
          'experiments/archive/dvs2-starter-pilot') for p in sorted((ROOT / directory).glob('*.py'))]
     paths += scientific_sources(ROOT)
+    paths.append(ROOT/'experiments/backends/evidence/legacy_waveforms.py')
     return identity({str(p.relative_to(ROOT)): sha(p) for p in paths})
 
 

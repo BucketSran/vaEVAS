@@ -4,39 +4,23 @@ import importlib.util
 import hashlib
 import math
 from pathlib import Path
-import sys
 
 ROOT = Path(__file__).resolve().parents[3]
-READER_DIR = ROOT/'experiments/archive/dvs2-starter-pilot'
-READER_DEPENDENCIES = (READER_DIR/'analyze.py', READER_DIR/'suite.py')
+READER_FILES = ('experiments/backends/evidence/legacy_waveforms.py',)
+READER_DEPENDENCIES = tuple(ROOT/name for name in READER_FILES)
+_spec = importlib.util.spec_from_file_location('paper_legacy_waveforms', READER_DEPENDENCIES[0])
+_reader = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_reader)
+number = _reader.number
 
 
 def read_native(path, backend):
-    """Reuse existing format parsers. Format does not establish sample provenance.
-
-    The coordinator must supply origins from actual backend export semantics.
-    """
+    """Read the original float projection; provenance comes from export evidence."""
     aliases = {'openvaf_r_ngspice':'openvaf_ngspice','gnucap_modelgen':'gnucap',
                'spectre':'spectre','evas':'evas'}
     if backend not in aliases:
         raise ValueError('unknown backend')
-    # Load the legacy parser with its exact local suite, without polluting global
-    # imports used by other experiment modules.
-    old_suite = sys.modules.get('suite')
-    spec = importlib.util.spec_from_file_location('suite',READER_DIR/'suite.py')
-    suite = importlib.util.module_from_spec(spec)
-    try:
-        sys.modules['suite'] = suite
-        spec.loader.exec_module(suite)
-        spec = importlib.util.spec_from_file_location('paper_native_reader',READER_DIR/'analyze.py')
-        reader = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(reader)
-        return reader.read_waveform(path,aliases[backend])
-    finally:
-        if old_suite is None:
-            sys.modules.pop('suite',None)
-        else:
-            sys.modules['suite'] = old_suite
+    return _reader.read_waveform(path, aliases[backend])
 
 
 def bounded(value):

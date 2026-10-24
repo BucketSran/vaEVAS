@@ -167,7 +167,7 @@ def report(base,step_evidence=None):
                  ROOT/'experiments/backends/support/precision_report.py',ROOT/'experiments/backends/paper/observations.py',
                  ROOT/'experiments/backends/support/precision_run.py',ROOT/'experiments/backends/paper/runner.py',
                  ROOT/'experiments/backends/paper/settings_readback.py',
-                 ROOT/'experiments/archive/dvs2-starter-pilot/analyze.py',ROOT/'experiments/archive/dvs2-starter-pilot/suite.py']},
+                 ROOT/'experiments/backends/evidence/legacy_waveforms.py']},
             'claim':'finite development-informed conditions, not held-out paper suite; original v1 scores unchanged'}
     for family in ('sample_hold','first_order'):
         for backend in BACKENDS:

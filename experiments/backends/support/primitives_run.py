@@ -88,7 +88,7 @@ def freeze(output):
     for directory,patterns in [('evas',('*.py','*.rs','Cargo.toml','Cargo.lock')),
                                ('experiments/backends/paper',('*.py',)),
                                ('experiments/backends/support',('*.py',)),
-                               ('experiments/archive/dvs2-starter-pilot',('analyze.py','suite.py')),
+                               ('experiments/backends/evidence',('legacy_waveforms.py',)),
                                ('evas/validation/paper',('precision-v2.json',))]:
         for pattern in patterns:
             sources.update(p for p in (ROOT/directory).rglob(pattern)

@@ -380,18 +380,10 @@ def effective_settings(work, backend):
         log=(work/'simulate.log').read_text()
         if re.search(r'^\s*\^\s*\?\s*',log,re.M):
             raise ValueError('Gnucap deck parse error; settings are not qualified')
-        # The historical SPICE number parser is reused without modifying its
-        # frozen identity. Ambiguous repeated values no longer use last-wins.
-        from observations import READER_DIR
-        old=sys.modules.get('suite')
-        try:
-            sys.modules['suite']=module(READER_DIR/'suite.py','paper_setting_suite')
-            reader=module(READER_DIR/'analyze.py','paper_setting_number')
-            scoped=gnucap_readback(log,reader.number)
-            actual=dict(scoped['actual'])
-        finally:
-            if old is None: sys.modules.pop('suite',None)
-            else: sys.modules['suite']=old
+        # Retain the original SPICE number semantics via the shared reader.
+        from observations import number
+        scoped=gnucap_readback(log,number)
+        actual=dict(scoped['actual'])
         names=('reltol','vabstol','iabstol')
         actual['stop']='unknown; waveform extent is not setting readback'
         actual['maxstep']='unknown; requested deck is not setting readback'

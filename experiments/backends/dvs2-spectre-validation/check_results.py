@@ -17,8 +17,8 @@ from dvs2.checker import (lowpass, lowpass_slope, histories, nominal_history,
                           reference, quality, integrator_check, check,
                           Event, check_history, event_contract, analyze_v1)
 # Legacy waveform projection remains an adapter dependency until reader migration.
-sys.path.insert(0, str(ROOT/'experiments/archive/dvs2-starter-pilot'))
-from analyze import read_waveform
+sys.path.insert(0, str(ROOT/'experiments/backends/evidence'))
+from legacy_waveforms import read_waveform
 
 
 def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()

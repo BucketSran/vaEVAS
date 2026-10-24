@@ -223,7 +223,7 @@ def build(old, supplement, diagnostic):
             'diagnostics': diagnostics,
             'analysis_dependencies': {str(p.relative_to(ROOT)): sha(p) for p in
                 [Path(__file__), ROOT / 'experiments/backends/paper/observations.py',
-                 ROOT / 'experiments/archive/dvs2-starter-pilot/analyze.py',
+                 ROOT / 'experiments/backends/evidence/legacy_waveforms.py',
                  ROOT / 'experiments/backends/support/precision_v2_report.py',
                  ROOT / 'experiments/backends/support/precision_run.py',
                  ROOT / 'evas/validation/paper/precision_binding.py']},
