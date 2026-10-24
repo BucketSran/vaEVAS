@@ -364,7 +364,8 @@ consumers, and uncertain numerical source leaves remain outside this slice.
 例如 q 初始为0，固定 `timer(0,0,0.001)` 将 q 赋为1，
 `transition(q,0.125,0.5,0.5)` 从 t=0 起即为1；延迟不产生一条额外初始边沿。
 
-构造前只处理精确固定零时刻 timer，回调各执行一次。所有分支的读值必须仅依赖 held 状态和直接驱动输入，
+构造前处理有精确零时刻证书的固定 timer，以及由保持状态给出 start、period 或 enable 的 timer。
+回调各执行一次，OR 的多个零叶共用一个回调体。所有分支的读值必须仅依赖 held 状态和直接驱动输入，
 顺序赋值、共享旧状态、writer 与整数检查仍保留。默认要求最终完整状态向量有限且逐项得到 point 证书；
 后面的有界冷种子合同另行限定可保留非 point 盒的裸 real 目标。
 一个 point 证书表示精确区间只包含提交值；不能把带舍入区间的状态当作精确种子。
@@ -373,15 +374,23 @@ OR 的多个零叶共用一个回调体；正时刻邻居由原事件事务处�
 
 这条路径限定于闭合的 source-free 仿射状态 transition 及其直接一阶 filter、直接 integral 消费者。
 父 transition 与 filter 使用同一最终 DC 种子，`idt` 保留自身 ic。
-改变种子且混有其他历史、mutable held 日程或历史守卫时返回 `unsupported_initial_history`。
+旁边只依赖常量或直接驱动源、无 reset 的独立积分器保留自身的 IC。
+保持状态 timer 的零时刻回调完成后，重新认证 start、period 和 enable，保留已消费零事件之外的未来日程。
+改变其他 timer 的未来 start、周期或 enable 不能丢失其日程；新产生的零时刻事件仍须认证或明确拒绝。
+历史守卫及未准入的耦合历史继续返回 `unsupported_initial_history`，不能凭名义值重建其他历史。
 若全分支有序仿射传递证明 transition 种子不变，则完整保留原事件事务，
 兼容独立积分、滤波、数学历史和仅流向无关状态的内部电压读值；证明不会跳过实际事件检查。
-这里没有扩展 IR、source-target 或同刻日程闭包。实现入口是
+这里没有扩展 IR、source-target 或一般同刻日程闭包。实现入口是
 `transient_initialization::prepare`、`settlement_bounds::Bounds::held_inputs` 和
 `initial_state_invariance::unchanged`，最终历史仍由 `Operators::new_until` 构造。
 公开编译/内核的独立行为锚点见 `test_transition_initialization.py`，
 同对象失败重试见 `transient_initialization` 的 Rust 测试；这些是开发证据，不能单独代替 Spectre 对齐资格。
 [实际有限配对](../../../experiments/backends/support/README.md#initial-transition-seed)覆盖开、关及直接滤波三个初态反例；不扩展一般历史反馈支持。
+
+保持状态 timer、未来日程与独立积分回归见
+[test_variable_zero_timer_transition.py](../../tests/test_variable_zero_timer_transition.py)和
+[test_initial_seed_invariance.py](../../tests/test_initial_seed_invariance.py)。
+这些开发回归不扩大旧 Spectre 配对的资格范围。
 
 ### 混合实数与整数冷目标的本地候选
 

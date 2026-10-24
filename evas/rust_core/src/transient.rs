@@ -1959,7 +1959,11 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
     if model.floor_source.is_some() {
         crate::diagnostics::counter("floor_source_before_initialization", 1);
     }
-    let prepared = initialization::prepare(&model, &trajectory)?;
+    let mut prepared = initialization::prepare(&model, &trajectory)?;
+    // Transfer the certified consumed calendar instead of cloning its exact
+    // roots or reconstructing it from the post-event starts/enables.
+    let cold_future = prepared.as_mut().and_then(|p| p.future.take());
+    let held_bootstrap = cold_future.is_some();
     let initial = prepared
         .as_ref()
         .map_or_else(|| model.initial(), |p| p.states.clone());
@@ -1999,7 +2003,10 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
         history_calendar::initialize(&model, &trajectory, &initial)?
     } else if relocalize {
         let bounds: Vec<_> = initial.iter().copied().map(I::point).collect();
-        let crossings = schedule_held(&model, &trajectory, &bounds)?;
+        let crossings = match cold_future {
+            Some(future) => future,
+            None => schedule_held(&model, &trajectory, &bounds)?,
+        };
         let operators = Operators::new_until_with_source_context(
             &model.program,
             &trajectory,
@@ -2131,11 +2138,15 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
             &model.driven,
         )?)?;
     }
-    let initial_cursor = prepared
-        .as_ref()
-        .map(|p| p.cursor(&crossings))
-        .transpose()?
-        .unwrap_or(0);
+    let initial_cursor = if held_bootstrap {
+        0
+    } else {
+        prepared
+            .as_ref()
+            .map(|p| p.cursor(&crossings))
+            .transpose()?
+            .unwrap_or(0)
+    };
     let initial_bounds = initial_bounds.map_or_else(
         || initial.iter().copied().map(I::point).collect(),
         |bounds| bounds.to_vec(),

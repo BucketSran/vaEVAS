@@ -7,9 +7,12 @@ use std::collections::BTreeSet;
 
 type Row = Option<Vec<I>>;
 
-struct Budget(usize);
+struct Budget(usize, Option<crate::transition_source_plan::Work>);
 impl Budget {
     fn take(&mut self, n: usize) -> Option<()> {
+        if let Some(work) = &self.1 {
+            work.debit(2, n as u64).ok()?;
+        }
         match self.0.checked_sub(n) {
             Some(left) => {
                 self.0 = left;
@@ -123,8 +126,8 @@ fn batch(p: &Program, blocks: &[usize], before: &[Row], budget: &mut Budget) -> 
 
 #[cfg(test)]
 fn unchanged(p: &Program, stages: &[Vec<usize>], required: &BTreeSet<usize>) -> bool {
-    prove(p, stages, required, false, &mut Budget(2_000_000)).unwrap_or(false)
-        || prove(p, stages, required, true, &mut Budget(2_000_000)).unwrap_or(false)
+    prove(p, stages, required, false, &mut Budget(2_000_000, None)).unwrap_or(false)
+        || prove(p, stages, required, true, &mut Budget(2_000_000, None)).unwrap_or(false)
 }
 
 fn prove(
@@ -177,8 +180,33 @@ pub(crate) fn unchanged_with_inputs(
     required: &BTreeSet<usize>,
     trajectory: &crate::pwl::Trajectory,
 ) -> bool {
+    unchanged_with_inputs_using(model, stages, required, trajectory, None)
+}
+
+/// The same bounded proof, charged before every existing row/copy operation.
+/// A failed request reservation stays exhausted across both attempts and retries.
+pub(crate) fn unchanged_with_inputs_charged(
+    model: &crate::events::EventModel,
+    stages: &[Vec<usize>],
+    required: &BTreeSet<usize>,
+    trajectory: &crate::pwl::Trajectory,
+    work: &crate::transition_source_plan::Work,
+) -> Result<bool, crate::ir::Error> {
+    work.debit(2, 0)?;
+    let result = unchanged_with_inputs_using(model, stages, required, trajectory, Some(work));
+    work.debit(2, 0)?;
+    Ok(result)
+}
+
+fn unchanged_with_inputs_using(
+    model: &crate::events::EventModel,
+    stages: &[Vec<usize>],
+    required: &BTreeSet<usize>,
+    trajectory: &crate::pwl::Trajectory,
+    work: Option<&crate::transition_source_plan::Work>,
+) -> bool {
     let p = &model.program;
-    let Some(mut budget) = legacy_remaining(p, stages, required, 2_000_000) else {
+    let Some(mut budget) = legacy_remaining_using(p, stages, required, 2_000_000, work) else {
         return true;
     };
     let mut prove = || -> Option<bool> {
@@ -246,16 +274,35 @@ pub(crate) fn unchanged_with_inputs(
     prove().unwrap_or(false)
 }
 
+#[cfg(test)]
 fn legacy_remaining(
     p: &Program,
     stages: &[Vec<usize>],
     required: &BTreeSet<usize>,
     limit: usize,
 ) -> Option<Budget> {
-    if prove(p, stages, required, false, &mut Budget(limit)).unwrap_or(false) {
+    legacy_remaining_using(p, stages, required, limit, None)
+}
+
+fn legacy_remaining_using(
+    p: &Program,
+    stages: &[Vec<usize>],
+    required: &BTreeSet<usize>,
+    limit: usize,
+    work: Option<&crate::transition_source_plan::Work>,
+) -> Option<Budget> {
+    if prove(
+        p,
+        stages,
+        required,
+        false,
+        &mut Budget(limit, work.cloned()),
+    )
+    .unwrap_or(false)
+    {
         return None;
     }
-    let mut concrete = Budget(limit);
+    let mut concrete = Budget(limit, work.cloned());
     if prove(p, stages, required, true, &mut concrete).unwrap_or(false) {
         return None;
     }
@@ -641,7 +688,7 @@ mod tests {
             required,
             &[I::ZERO, input],
             states,
-            &mut Budget(2_000_000),
+            &mut Budget(2_000_000, None),
         )
     }
     #[test]
@@ -740,7 +787,7 @@ mod tests {
     }
     #[test]
     fn budget_exhaustion_is_sticky_and_cannot_fund_input_replay() {
-        let mut b = Budget(3);
+        let mut b = Budget(3, None);
         assert!(b.take(4).is_none());
         assert_eq!(b.0, 0);
         assert!(b.take(1).is_none());
@@ -755,7 +802,7 @@ mod tests {
             &required(),
             &nodes,
             &states,
-            &mut Budget(200)
+            &mut Budget(200, None)
         ));
         assert!(!prove_at_inputs(
             &p,
@@ -809,9 +856,9 @@ mod tests {
         for rhs in [state(0), c(1.)] {
             let p = program(vec![vec![assign(0, rhs)]]);
             for limit in 0..150 {
-                let old = prove(&p, &[vec![0]], &required(), false, &mut Budget(limit))
+                let old = prove(&p, &[vec![0]], &required(), false, &mut Budget(limit, None))
                     .unwrap_or(false)
-                    || prove(&p, &[vec![0]], &required(), true, &mut Budget(limit))
+                    || prove(&p, &[vec![0]], &required(), true, &mut Budget(limit, None))
                         .unwrap_or(false);
                 // No input fallback: exact compatibility over every boundary.
                 assert_eq!(
@@ -826,7 +873,7 @@ mod tests {
         let p = program(vec![vec![assign(0, c(1.))]]);
         let nodes = [I::ZERO, I::ONE];
         let states = [I::ONE, I::ZERO];
-        let mut budget = Budget(21); // 20 frame units, then stage; no block insertion.
+        let mut budget = Budget(21, None); // 20 frame units, then stage; no block insertion.
         assert!(!prove_at_inputs(
             &p,
             &[vec![0; 10000]],
@@ -836,7 +883,7 @@ mod tests {
             &mut budget
         ));
         assert_eq!(budget.0, 0);
-        let mut budget = Budget(100);
+        let mut budget = Budget(100, None);
         let many = program(vec![vec![assign(1, state(0)); 10000]]);
         assert!(!prove_at_inputs(
             &many,
