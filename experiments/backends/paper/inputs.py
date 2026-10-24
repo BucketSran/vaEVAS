@@ -5,13 +5,21 @@ Historical comparison plans and contracts are not imported or modified.
 from __future__ import annotations
 import argparse
 import hashlib
+import importlib.util
 import json
 import math
 from pathlib import Path
-import re
 
 ROOT = Path(__file__).resolve().parents[3]
 BACKENDS = ('spectre', 'evas', 'openvaf_r_ngspice', 'gnucap_modelgen')
+
+_CASE_INPUTS_PATH = ROOT / 'evas/validation/paper/case_inputs.py'
+_spec = importlib.util.spec_from_file_location('paper_case_inputs', _CASE_INPUTS_PATH)
+_case_inputs = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_case_inputs)
+# Preserve the existing adapter API; scientific inputs belong to validation.
+binding = _case_inputs.binding
+requested_times = _case_inputs.requested_times
 
 
 def identity(value):
@@ -26,34 +34,6 @@ def save(path, value):
     with path.open('x') as f:
         json.dump(value, f, indent=2, ensure_ascii=False, allow_nan=False)
         f.write('\n')
-
-
-def binding(card):
-    """Select the last declared module, preserving the card's actual hierarchy."""
-    modules = re.findall(r'\bmodule\s+(\w+)\s*\(([^)]*)\)\s*;', card['source'])
-    if not modules:
-        raise ValueError('no explicit module ports')
-    module, ports = modules[-1]
-    ports = [p.strip() for p in ports.split(',')]
-    if set(ports) != set(card['observables']):
-        raise ValueError('top module ports differ from observables')
-    return {'top_module': module, 'instance': 'dut', 'ports': ports,
-            'parameters': card['parameters'], 'hierarchy': 'preserve exact VA source',
-            'source_legality': 'pending actual source and backend qualification'}
-
-
-def requested_times(card, contract, T):
-    """Requested output times, never a certificate of accepted-step accuracy."""
-    stop = card['stop_T'] * T
-    count = math.ceil(stop / contract['sample_gap_s'])
-    times = {i * stop / count for i in range(count + 1)}
-    for window in card['observation_windows']:
-        start, end = window['start_T'] * T, window['end_T'] * T
-        count = math.ceil((end-start) / window['max_gap_s'])
-        times.update(start + i*(end-start)/count for i in range(count+1))
-        times.add(window['center_T'] * T)
-    times.update(a['t_T'] * T for a in card['anchors'])
-    return sorted(times)
 
 
 def breakpoint_requests(card, T):
@@ -171,8 +151,8 @@ def freeze(cards_path, output, *, stage_timeout_s=90, license_timeout_s=30):
                     'reltol':1e-5,'vabstol_V':1e-7,'iabstol_A':1e-12,
                     'output_request':'native records plus prescribed exact centers; requested grid does not qualify interpolation',
                     'integration_method':'traponly/trap for SPICE; unsupported by EVAS'}
-        physical = {**card, 'stimulus':{n:{'points_s_V':[[t*data['units']['T_s'],v] for t,v in s['points_T_V']]}
-                                         for n,s in card['stimulus'].items()}}
+        physical = {**card, 'stimulus': {n: {'points_s_V': points} for n, points in
+                                         _case_inputs.stimulus(card, data['units']['T_s']).items()}}
         times = requested_times(card,data['shared_contract'],data['units']['T_s'])
         breakpoints=breakpoint_requests(card,data['units']['T_s'])
         settings.update(spice_maxstep_s=2e-10,
@@ -204,7 +184,7 @@ def freeze(cards_path, output, *, stage_timeout_s=90, license_timeout_s=30):
             plan.append({'backend':backend,'condition':card['id'],'work':str(work.relative_to(output)),
                          'deck':filename,'source_sha256':sha(work/'dut.va'),
                          'condition_identity':identity(card),'status':'not_run'})
-    source_paths = [Path(__file__), Path(__file__).with_name('observations.py'),
+    source_paths = [Path(__file__), _CASE_INPUTS_PATH, Path(__file__).with_name('observations.py'),
                     Path(__file__).with_name('runner.py'), Path(__file__).with_name('process.py'),
                     Path(__file__).with_name('settings_readback.py'),
                     Path(__file__).with_name('OBSERVATION_METHODS.md'),

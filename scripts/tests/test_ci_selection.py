@@ -97,7 +97,8 @@ class RoutingTests(unittest.TestCase):
         for path in ('evas/validation/strobe/cases.json',
                      'evas/validation/paper/dut/hold.va',
                      'experiments/backends/event-alignment/vco-controls/original--tight/dut.va',
-                     'evas/validation/paper/core-v1.json', 'experiments/backends/paper/inputs.py',
+                     'evas/validation/paper/core-v1.json', 'evas/validation/paper/case_inputs.py',
+                     'experiments/backends/paper/inputs.py',
                      'experiments/backends/dvs2-spectre-validation/check_results.py'):
             with self.subTest(path=path):
                 self.assertEqual(ci.classify([path]),

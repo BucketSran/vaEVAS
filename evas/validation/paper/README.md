@@ -33,6 +33,15 @@ SH-X-RAMP 与 EC04 的旧窗口冲突另用 [root-window-v3](precision-root-v3.j
 卡的结果状态目前全为 T。源码模板先于本批新结果固定，A1 冻结实际文件、deck、工具和设置身份。
 A0 不是论文结果冻结，也不证明这些源已在任何后端执行。
 
+[case_inputs.py](case_inputs.py)是这些卡的只读源码和输入构造入口，供开发回归与实验适配器共用。
+`case_source(case_id)`读取原源码；`binding(card)`保持顶层模块和端口顺序；
+`stimulus(card, T)`转换刺激单位；`requested_times(card, contract, T)`构造实验请求网格。
+每次读取与构造返回独立数据，不导入EVAS求解器或后端工具。
+HC01、输入初始化及VCO开发回归从这里读取源码，但继续保留各自的刺激、查询、独立答案和内部检查。
+[实验适配器](../../../experiments/backends/paper/inputs.py)保留原接口，负责deck、冻结和执行身份；
+新的输入冻结同时保存此共享构造器的源码身份。
+[旧VCO fixture](../../tests/fixtures/input_clamp_vco.va)仍供历史收据引用，保持原字节，不再作为当前开发回归的模型维护源。
+
 ## 采样保持与一阶滤波的 v2 精度扫描
 
 [precision-v2.json](precision-v2.json)用哈希引用原八条件，另定义 Q1～Q3 外部目标、五个运行配置和固定观察计划。

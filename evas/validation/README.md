@@ -1,5 +1,7 @@
 # EVAS 独立验证集
 
+EVAS全部资料见[统一入口](../README.md#evas-entry)；本目录维护独立模型、答案、判据与检查器。
+
 这里用最小 Verilog-A 模型、明确刺激和独立数学答案检查仿真器。
 它关注“语言关系有没有被正确求解”，例如贡献相加、事件定位、采样历史和积分反馈。
 [Benchmark 任务](../../benchmark/README.md)评估设计任务的完成质量，两类结果分别计数。
@@ -29,6 +31,45 @@
 
 固定时钟、保持时钟与窗口内新根的组合见[有序事件源契约](ordered_event_sources/README.md)。
 [物理采样相位检查](ordered_event_sources/candidate-phase/README.md)分别验证实际返回状态、直接输出和规定拒绝。
+
+<a id="case-consolidation"></a>
+
+## 共享资产审计与归并方案
+
+2026-10-24审计以main `b2e407fe`为主基线，IR33仅单列已提交 `55ebf19e` 的相关增量。
+#233可靠性评价候选另按 `b590110c` 补审协议与执行依赖，未读取留出样本内容。
+本轮是源码、引用和文件身份审计，没有运行测试或仿真，也没有证明任何整条测试可以删除。
+下面登记归并方案，实施状态仍由对应任务维护。
+
+### 当前模型可以共用，检查义务继续保留
+
+- [shared-counter测试](../tests/test_shared_counter.py)的HC01、[初始化测试](../tests/test_input_initialization.py)的原source，分别与[core模型卡](paper/core-v1.json)的EV-HC-01、EV-HC-02相同。可按case ID读取同一source，保留原参数、t=0、实例、状态和事件记录断言。
+- [input-clamp测试](../tests/test_input_clamp.py)读取的VCO源码与core CO-VCO-01相同。当前模型可以统一；手写面积参考、IR派生参考和旧执行快照的身份分别保留。
+- [paper回归](../tests/test_paper_scenarios.py)、[sample-edge-filter回归](../tests/test_sample_edge_filter.py)已经读取validation中的模型或合同。它们的稀疏/稠密查询和内部检查，与后端实际观测资格分别验收。
+- [普通integer前缀](../tests/test_ordinary_integer_event_prefix.py)已有VA与编译JSON的一致性检查，Rust使用同一请求做私有Controller检查；[shaped-range生成器](../tests/helpers/generate_shaped_range_oracle.py)已为Rust生成独立Fraction答案。JSON与参考向量应作为带版本的派生产物管理，而非手工重写的第二份模型。
+
+### 以下相同或相似内容不能直接删重
+
+- [一阶滤波开发参考](../tests/test_laplace.py)检查原始b0/d0/d1的除法、增益与误差放大；[旧点值参考](paper/precision_checker.py)和[新有向区间参考](paper/precision_reference.py)使用不同的数值合同。只能在保留这些差异和独立校准后提取共用部分。
+- [event-statistics](event_statistics/README.md)的相同VA分别用于fit-stop、fit-interior和Python控制，停止边界、final_step及步长要求不同；[EC05精度判据](paper/transition_integral_precision.py)也比原support probe增加了实际callback历史与边界义务。
+- live-transition的五份当前模型与实验design/recipe副本相同，但实验副本、retained-vco oracle及baseline-tests绑定旧执行身份，不能删除或回写。[实验索引](../../experiments/README.md)继续定位这些保留材料。
+- smoke-admission的三个manifest虽然相同，却按所在目录解析到不同VA。它们是原始拒绝与successor准入控制，完整输入并不相同；准入通过也不代表运行正确。
+- checker的手算锚点、故意错误的波形和证据，是判据自身的校准；Rust的完整Frame/History/Work/owner及失败重试检查、后端的原生来源与保存完整性检查，均不能被公共输出误差检查替代。
+
+### 按五批归并，各批单独验收
+
+1. **当前source与纯绑定。** [共享构造器](paper/case_inputs.py)统一HC01、初始化、VCO的当前源码来源，以及paper的绑定、刺激转换和请求网格；[使用说明](paper/README.md)区分开发回归与实验适配器。原source、参数、初态、数值位模式、观察和独立断言保留。旧VCO fixture继续绑定历史收据，不回写旧执行。
+2. **DVS科学定义与后端读取。** [静态回归](../tests/run_static_regression.py)目前经Spectre专题读取archive中的科学条件和判据；将其当前维护定义归到 `validation/dvs2/`，后端工具留experiments。paper等读取链转用[现有共享证据工具](../../experiments/backends/evidence/README.md)，保留token、重复时点、归档完整性和旧分析身份。
+3. **生成器与Rust夹具。** 给生成器提供默认只读check、显式write及source/recipe/compiler/oracle身份校验。纯数学定义归validation对应专题，原生成器可保留薄命令入口，Rust数据先保留现有路径。main与IR33分别验收，全部私有预算、全帧回退和重试控制保留。
+4. **纯参考与判据。** 按滤波、transition、采样历史逐组提取，显式区分原系数、点值/区间、逐次RN、实际callback及reset；先做独立数学和错误对照，再复验原公共请求，不批量替换所有oracle。
+5. **实验引用与执行复用。** 实验只引用case与合同，runs保存每次冻结执行；固定比较清单、COVERAGE和结果表引用选定收据。完整输入、合同、版本、观察及检查义务均相同，才评估复用一次执行。#233新执行的依赖收据还须覆盖共享harness及其读取的精度合同，旧FREEZE保留。性能、留出集与原工程checker继续分别计数，留出样本与第二参考不并入日常开发回归。
+
+迁移后的依赖方向是测试和实验执行器读取validation，Rust读取由共享源生成的版本化夹具。
+科学定义不反向导入后端执行或生产求解器；共享模块不导出TestCase类。
+旧源码、checker、执行和判定保持原身份，新分析另立记录。
+
+完整逐项关系、重复模型文本、IR33固定源及各批验收要求保存在本地任务
+`runs/asset-overview-20261024/validation-map/`。这些是静态审计材料，不是新的运行成绩。
 
 ## 验证集包含什么
 

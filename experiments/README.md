@@ -1,5 +1,7 @@
 # 实验与结果
 
+EVAS全部资料见[统一入口](../evas/README.md#evas-entry)；本目录维护执行、分析工具与结果证据。
+
 四后端固定条件实测与后续分项证据见 [support](backends/support/README.md)；支持结论只维护在 [EVAS 总表](../evas/docs/COMPARISON.md)。
 各份收据绑定自己的源码与后端版本，不能合称为当前 main 的一次完整重跑。
 

@@ -3,43 +3,31 @@
 Anchor checks and query invariance do not grant paper observation qualification
 or establish Spectre compatibility. The separate backend comparison retains both.
 Run from a full repository checkout: the cards own the independent answers,
-and the paper input builder supplies the same top-module binding as backend runs.
+and the shared input builder supplies the same top-module binding as backend runs.
 """
 
 GUARDS = ["COMPOSE", "CROSS", "TIMER", "TRANSITION", "DYNAMICS"]
 
-import importlib.util
-import json
-from pathlib import Path
 import unittest
 
 from evas import Instance, compile_sources, transient
 from test_affine import KERNEL
+from paper_case_inputs import binding, load_core, stimulus
 
 
-ROOT = Path(__file__).resolve().parents[2]
-CARDS = json.loads((ROOT / "evas/validation/paper/core-v1.json").read_text())
-SPEC = importlib.util.spec_from_file_location(
-    "paper_scenario_inputs", ROOT / "experiments/backends/paper/inputs.py")
-INPUTS = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(INPUTS)
+CARDS = load_core()
 T = CARDS["units"]["T_s"]
 
 
 class PaperScenarios(unittest.TestCase):
     def check_card(self, card):
         budgets = CARDS["shared_contract"]["acceptance_budgets"]
-        binding = INPUTS.binding(card)
+        bind = binding(card)
         program = compile_sources({"dut.va": card["source"]}, [Instance(
-            "dut", binding["top_module"],
-            {port: port for port in binding["ports"]}, card["parameters"])])
+            "dut", bind["top_module"],
+            {port: port for port in bind["ports"]}, card["parameters"])])
         stop = card["stop_T"] * T
-        sources = {
-            port: ([[0, source["value_V"]], [stop, source["value_V"]]]
-                   if source["kind"] == "dc" else
-                   [[t * T, v] for t, v in source["points_T_V"]])
-            for port, source in card["stimulus"].items()
-        }
+        sources = stimulus(card, T)
         anchors = {anchor["t_T"] * T for anchor in card["anchors"]}
         sparse = sorted({0.0, stop, *anchors})
         extra = {w[key] * T for w in card["observation_windows"]

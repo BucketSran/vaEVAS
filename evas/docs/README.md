@@ -1,20 +1,14 @@
 # EVAS 文档
 
-先看 [四后端支持范围](COMPARISON.md)，判断模型是否在支持范围内。
-需要安装或运行时，从 [EVAS 使用说明](../README.md)开始。
+[EVAS统一入口](../README.md#evas-entry)汇总实现、验证、诊断、比较与交付。本页只组织技术说明。
 
 ## 按问题阅读
 
 | 你想知道什么 | 阅读入口 |
 | --- | --- |
-| 能做什么，与 Spectre 对齐到什么程度？ | [四后端支持范围](COMPARISON.md) |
-| 表中“通过”依据什么，精度怎样判定？ | [四后端评测标准](COMPARISON-METHODOLOGY.md) |
-| 新测试是否覆盖旧测试，还缺什么？ | [累计测试清单](../validation/paper/COVERAGE.md) |
-| 当前版本包含哪些改动？ | [版本记录](UPDATE.md) |
-| 现在完成了什么，还缺什么，下一步做什么？ | [功能进度总览](COMPARISON.md#progress-board)，原GAP依赖和验收见下方详细条目 |
 | 如何安装、设置观测或读取结果？ | 下方[接口参考](#接口参考) |
 | 电压、积分和事件怎样计算？ | [数学原理](math/README.md) |
-| 某项结论依据哪次实际实验？ | [证据索引](development/capability-evidence.md) |
+| 为什么选择当前架构与语义？ | [架构决定](development/DECISIONS.md) |
 | 如何修改 EVAS、选择测试？ | [开发流程](development/PROCESS.md) |
 
 ## 接口参考

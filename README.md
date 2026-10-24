@@ -130,9 +130,7 @@ EVAS 算法与评分规则仍在本仓库维护；模拟电路课程和上一阶
 | 目录 | 内容 |
 | --- | --- |
 | [benchmark/](benchmark/README.md) | Harbor 格式的任务、参考解、评分程序与运行环境入口 |
-| [evas/](evas/README.md) | 仿真器源码、示例与开发测试 |
-| [evas/docs/](evas/docs/README.md) | 数学原理、设计与支持边界 |
-| [evas/validation/](evas/validation/README.md) | 独立测试模型、契约与检查器 |
+| [EVAS统一入口](evas/README.md#evas-entry) | 仿真器实现与使用、原理、模型测试与判据、结果诊断、后端比较及交付 |
 | [experiments/](experiments/README.md) | 实验协议、执行收据与整理结果 |
 
 开发与文档维护方法见[贡献指南](CONTRIBUTING.md)。
