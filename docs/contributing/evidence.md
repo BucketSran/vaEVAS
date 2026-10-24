@@ -51,6 +51,14 @@ A checker move changes the identity of future analyses, not the identity or verd
 Git preserves tracked history, not ignored raw data: retain and verify needed raw archives separately.
 Do not rewrite frozen snapshots, overwrite old verdicts or turn local-only data into a public-data claim.
 
+A new ignored tree that may exceed 1 GB, a full source snapshot, or a release build under internal
+`runs/` needs the user's permission before it is written. Prefer `/Volumes/T7/vaEVAS/current/runs`
+when that disk is mounted, and leave a symlink at the original path when an existing command still
+uses it. If T7 is not mounted, ask the user to connect it and wait; do not fill the internal disk
+as a fallback. A conclusion already recorded in an issue, PR or `experiments/` receipt does not
+need another local source tree. The Cursor check `scripts/check_large_run_output.py` asks before
+recursive copies, archives and `cargo` builds aimed at an internal `runs/` directory.
+
 ## Execution receipts
 
 Use the owning experiment's existing manifest/result format; no duplicate record is required.
