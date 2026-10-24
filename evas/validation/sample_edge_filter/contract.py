@@ -19,14 +19,27 @@ CLOCK.append([8.5,0])
 RESET = [[0,0],[2.125,0],[2.375,1],[4.125,1],[4.375,0],[8.5,0]]
 
 
-def frac(x):
-    return F(str(x))
+def frac(x, policy='decimal_intent'):
+    """Decimal-intent keeps the written token. Exact binary64 keeps the float value."""
+    if isinstance(x, F):
+        return x
+    if policy == 'decimal_intent':
+        return F(str(x))
+    if policy == 'exact_binary64':
+        if isinstance(x, float):
+            if not math.isfinite(x):
+                raise ValueError('non-finite exact binary64 value')
+            return F(x)
+        if isinstance(x, bool) or not isinstance(x, int):
+            raise TypeError('exact binary64 value must be int or float')
+        return F(x)
+    raise ValueError('unknown numeric policy')
 
 
-def pwl(points, t):
-    t=frac(t)
+def pwl(points, t, policy='decimal_intent'):
+    t=frac(t, policy)
     for (a,u),(b,v) in zip(points,points[1:]):
-        a,b,u,v=map(frac,(a,b,u,v))
+        a,b,u,v=(frac(x, policy) for x in (a,b,u,v))
         if a<=t<=b:
             return u+(v-u)*(t-a)/(b-a)
     raise ValueError('outside input history')
