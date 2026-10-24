@@ -104,6 +104,43 @@ class XspiceCompilation(unittest.TestCase):
                 self.assertEqual(meta["backend_version"], 2)
                 self.assertTrue(json.loads(files["ir.json"])["contributions"])
 
+    def test_alias_sources_keep_one_constant_division(self):
+        # validate_aliases.py already scores these three sources. The threshold
+        # binding is one real division by the constant 2; real subtraction of
+        # two bindings stays outside the slice.
+        alias = ROOT / "examples/xspice/aliases"
+        for name in (
+            "affine_input_aliases.va",
+            "selected_body_alias.va",
+            "direct_input_expressions.va",
+        ):
+            with self.subTest(source=name):
+                meta, _ = self.compile((alias / name).read_text())
+                self.assertEqual(meta["backend_version"], 2)
+        _, files = self.compile((alias / "affine_input_aliases.va").read_text())
+        generated = files["cfunc.mod"]
+        self.assertEqual(generated.count("ad_div("), 3)
+        self.assertIn("locals[2] = ad_div(ad_add(locals[0], locals[1]), ad_const(2.0));", generated)
+        _, plain = self.compile()
+        self.assertNotIn("ad_div(", plain["cfunc.mod"])
+        subtracted = """
+`include "disciplines.vams"
+module alias_box(a, b, y);
+input a, b; output y;
+electrical a, b, y;
+real vh, vl, q;
+analog begin
+  @(initial_step) q = 0;
+  vh = V(a); vl = V(b);
+  @(cross(V(a) - 0.5, +1)) q = vh - vl;
+  V(y) <+ transition(q, 0, 1n, 1n);
+end
+endmodule
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(CompileError, "subtract"):
+                compile_model({"alias_box.va": subtracted}, Path(directory) / "model")
+
     def test_reference_connection_retains_the_original_va_port_order(self):
         source = (ROOT / "examples/xspice/r53/multiphase_clock_generator_4ph.va").read_text()
         meta, files = self.compile(source)

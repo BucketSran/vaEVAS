@@ -39,6 +39,22 @@ class Emitter:
         self.ir, self.inputs = ir, inputs
         self.transition_slots = {index: slot for slot, index in enumerate(
             i for i, op in enumerate(ir["operators"]) if op["kind"] == "transition")}
+        self.bind_values = {}
+        self.bind_order = []
+        self.ready_bindings = set()
+        self.needs_div = False
+        self.local_code = ""
+        self.nlocal = 0
+        for procedure in ir.get("procedures") or []:
+            for statement in procedure["body"]:
+                action = statement["action"]
+                if action["kind"] != "real_bind":
+                    continue
+                index = action["binding"]
+                if index in self.bind_values:
+                    raise Unsupported("duplicate real binding")
+                self.bind_values[index] = action["value"]
+                self.bind_order.append(index)
 
     def expr(self, expr):
         op = expr["op"]
@@ -93,11 +109,17 @@ class Emitter:
         if op == "real_binary":
             # One source operation, rounded before its parent. Same Dual
             # helpers as the legacy add/multiply forms; do not reassociate.
-            functions = {"add": "ad_add", "multiply": "ad_mul"}
-            function = functions.get(expr.get("operation"))
+            # Division is the constant-denominator threshold used by the
+            # admitted alias guards. Subtraction stays rejected.
+            operation = expr.get("operation")
+            if operation == "divide":
+                self.needs_div = True
+                function = "ad_div"
+            else:
+                function = {"add": "ad_add", "multiply": "ad_mul"}.get(operation)
             if function is None:
                 raise Unsupported(
-                    "real operation outside this slice: " + str(expr.get("operation"))
+                    "real operation outside this slice: " + str(operation)
                 )
             return (
                 function
@@ -107,6 +129,11 @@ class Emitter:
                 + self.expr(expr["right"])
                 + ")"
             )
+        if op == "real_local":
+            index = expr["binding"]
+            if index not in self.ready_bindings:
+                raise Unsupported("real binding is used before it is defined")
+            return "locals[" + str(index) + "]"
         if op == "real_boundary":
             # store/sample/snapshot/argument/return name the rounding point.
             # The generated value is the inner expression.
@@ -129,10 +156,104 @@ class Emitter:
                 + self.expr(expr["right"]) + ", "
                 + str(relations[expr["relation"]]) + ")")
 
-    def affine_guard(self, expr):
+    def _walk(self, node, visit):
+        if isinstance(node, dict):
+            visit(node)
+            for value in node.values():
+                self._walk(value, visit)
+        elif isinstance(node, (list, tuple)):
+            for value in node:
+                self._walk(value, visit)
+
+    def _require_binding(self, index):
+        bindings = self.ir.get("real_bindings") or []
+        if not isinstance(index, int) or not 0 <= index < len(bindings):
+            raise Unsupported("invalid real binding")
+        if index not in self.bind_values:
+            raise Unsupported("real binding is not defined in this procedure")
+        if bindings[index].get("lifetime") != "occurrence":
+            raise Unsupported("only occurrence-lifetime input bindings are supported")
+        return index
+
+    def prepare_locals(self, initial_events, events):
+        """Evaluate occurrence bindings once per call, in procedure order.
+
+        Only bindings reachable from a guard, event body, contribution, or
+        operator are emitted. Unreferenced event-argument bindings stay out
+        of the generated model.
+        """
+        roots = [self.ir.get("contributions"), self.ir.get("operators")]
+        for event in [*initial_events, *events]:
+            roots.append(event["body"])
+            if event["trigger"]["kind"] == "cross":
+                roots.append(event["trigger"]["guard"])
+        seen = set()
+
+        def visit(node):
+            if node.get("op") != "real_local":
+                return
+            index = self._require_binding(node["binding"])
+            if index in seen:
+                return
+            seen.add(index)
+            self._walk(self.bind_values[index], visit)
+
+        for root in roots:
+            self._walk(root, visit)
+        self.ready_bindings = set()
+        lines = []
+        for index in self.bind_order:
+            if index not in seen:
+                continue
+            lines.append(
+                "locals[" + str(index) + "] = " + self.expr(self.bind_values[index]) + ";"
+            )
+            self.ready_bindings.add(index)
+        if seen - self.ready_bindings:
+            raise Unsupported("real binding is used before it is defined")
+        self.local_code = "\n".join(lines)
+        self.nlocal = max(seen) + 1 if seen else 0
+
+    def pure_constant(self, expr, stack):
+        op = expr["op"]
+        if op == "real_boundary":
+            return self.pure_constant(expr["value"], stack)
+        if op == "affine":
+            total = float(expr["constant"])
+            for term in expr["terms"]:
+                if term["coefficient"] == 0:
+                    continue
+                if self.ir["nodes"][term["node"]] != "0":
+                    return None
+            if not math.isfinite(total):
+                return None
+            return total
+        if op == "real_local":
+            index = self._require_binding(expr["binding"])
+            if index in stack:
+                return None
+            stack.add(index)
+            try:
+                return self.pure_constant(self.bind_values[index], stack)
+            finally:
+                stack.remove(index)
+        return None
+
+    def affine_guard(self, expr, stack=None):
         """Admission only. Runtime expression retains IR operation ordering."""
+        if stack is None:
+            stack = set()
         if expr["op"] == "real_boundary":
-            return self.affine_guard(expr["value"])
+            return self.affine_guard(expr["value"], stack)
+        if expr["op"] == "real_local":
+            index = self._require_binding(expr["binding"])
+            if index in stack:
+                raise Unsupported("cyclic input binding")
+            stack.add(index)
+            try:
+                return self.affine_guard(self.bind_values[index], stack)
+            finally:
+                stack.remove(index)
         if expr["op"] == "affine":
             for term in expr["terms"]:
                 if self.ir["nodes"][term["node"]] not in ["0", *self.inputs]:
@@ -142,16 +263,31 @@ class Emitter:
                 and term["coefficient"] != 0
                 for term in expr["terms"]
             )
-        if expr["op"] == "add":
-            a = self.affine_guard(expr["left"])
-            b = self.affine_guard(expr["right"])
-            return a or b
-        if expr["op"] == "multiply":
-            a = self.affine_guard(expr["left"])
-            b = self.affine_guard(expr["right"])
-            if a and b:
+        if expr["op"] == "add" or (
+            expr["op"] == "real_binary" and expr.get("operation") == "add"
+        ):
+            left = self.affine_guard(expr["left"], stack)
+            right = self.affine_guard(expr["right"], stack)
+            return left or right
+        if expr["op"] in ("multiply", "real_binary") and (
+            expr["op"] == "multiply" or expr.get("operation") == "multiply"
+        ):
+            left = self.affine_guard(expr["left"], stack)
+            right = self.affine_guard(expr["right"], stack)
+            if left and right:
                 raise Unsupported("nonlinear cross guard is outside this slice")
-            return a or b
+            return left or right
+        if expr["op"] == "real_binary" and expr.get("operation") == "divide":
+            # A constant denominator keeps the guard affine. Input-dependent
+            # or zero divisors are a different operation and stay outside.
+            denominator = self.pure_constant(expr["right"], stack)
+            if (
+                denominator is None
+                or not math.isfinite(denominator)
+                or denominator == 0.0
+            ):
+                raise Unsupported("nonlinear cross guard is outside this slice")
+            return self.affine_guard(expr["left"], stack)
         raise Unsupported("cross guard must be affine in input voltages")
 
 
@@ -295,6 +431,7 @@ def compile_model(
     trigger = events[cross_index]["trigger"] if crosses else None
     ttol, vtol = 1e-12, 1e-9
     emitter = Emitter(ir, inputs)
+    emitter.prepare_locals(initial_events, events)
     if trigger:
         if trigger["direction"] != 1:
             raise Unsupported("only rising cross is supported")
@@ -313,6 +450,8 @@ def compile_model(
             return all(ir["nodes"][t["node"]] == "0" for t in expr["terms"])
         if expr["op"] == "select":
             return all(held_only(expr[k]) for k in ("left", "right", "then_value", "else_value"))
+        if expr["op"] == "real_binary" and expr.get("operation") not in ("add", "multiply"):
+            return False
         return (
             expr["op"] in ("add", "multiply", "real_binary")
             and held_only(expr["left"])
@@ -529,6 +668,14 @@ def compile_model(
             f'fprintf(d->trace,",input{i}");' for i in range(len(inputs))) + "\n" + "\n".join(
             f'fprintf(d->trace,",output{i}' + "".join(f",partial{i}_{j}" for j in range(len(inputs))) + '");'
             for i in range(len(outputs))),
+        "AD_HELPERS": (
+            "static Dual ad_div(Dual a,Dual b) { Dual r;int j;"
+            "if(!isfinite(a.v)||!isfinite(b.v)||b.v==0.0)fail(\"real division is not finite\");"
+            "r.v=a.v/b.v;for(j=0;j<NI;++j)r.d[j]=(a.d[j]*b.v-a.v*b.d[j])/(b.v*b.v);return r; }\n"
+            if emitter.needs_div else ""
+        ),
+        "LOCAL_DECL": ("Dual locals[" + str(emitter.nlocal) + "];" if emitter.nlocal else ""),
+        "LOCALS": emitter.local_code,
         "TRACE_OUTPUTS": "\n".join(
             f'fprintf(d->trace,",%.17g",inputs[{i}].v);' for i in range(len(inputs))) + "\n" + "\n".join(
             f'fprintf(d->trace,",%.17g",y{i}.v);' + "".join(
