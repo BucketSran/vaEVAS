@@ -174,19 +174,36 @@ def initial_budget(path):
         end += 1
     if depth:
         raise ValueError('unsupported Budget implementation; review this check')
-    declaration = source[begin:impl].strip()
-    support = ''
-    if re.fullmatch(r'struct\s+Budget\s*\(\s*usize\s*\)\s*;', declaration):
+    primitive = source[begin:end]
+    declaration = re.sub(r'\s+', '', source[begin:source.index(';', begin)+1])
+    support, shared_probe = '', ''
+    if declaration == 'structBudget(usize);':
         constructor = 'Budget(3)'
-    elif re.fullmatch(r'struct\s+Budget\s*\(\s*usize\s*,\s*'
-                      r'Option<crate::transition_source_plan::Work>\s*\)\s*;', declaration):
+    elif declaration == 'structBudget(usize,Option<crate::transition_source_plan::Work>);':
         constructor = 'Budget(3,None)'
-        # This probe tests the production local remainder with no external Work.
-        # An uninhabited type satisfies the optional dependency without inventing
-        # debit behavior. Real Work accounting is covered by the kernel tests.
-        support = ('mod transition_source_plan {pub enum Work {} '
-                   'impl Work {pub fn debit(&self,_slot:usize,_n:u64)->Result<(),()> '
-                   '{match *self {}}}}\n')
+        # Compile the real shared counter and debit implementation too. Only
+        # serialization attributes on its diagnostic type are unnecessary here.
+        work = (path.parent/'transition_source_plan.rs').read_text()
+        work_begin = work.index('#[derive(Clone)]\npub(crate) struct Work(')
+        work_end = work.index('\nfn constant(', work_begin)
+        error = (path.parent.parent/'ir/src/lib.rs').read_text()
+        error_begin = error.index('pub struct Error {')
+        error_end = error.index('\n#[derive(', error.index('impl Error {', error_begin))
+        error = re.sub(r'^\s*#\[serde\([^\n]*\)\]\n', '',
+                       error[error_begin:error_end], flags=re.MULTILINE)
+        support = ('#[derive(Debug)]\n'+error+'\nmod transition_source_plan {\n'
+                   'use super::Error;\nuse std::sync::{Arc, atomic::{AtomicU64, Ordering}};\n'
+                   +work[work_begin:work_end]+'\n}\n')
+        shared_probe = '''
+let work=transition_source_plan::Work::limited([0,0,3]);
+let mut first=Budget(20,Some(work.clone()));
+let mut second=Budget(20,Some(work.clone()));
+assert!(first.take(2).is_some()); assert_eq!(work.spent(),2);
+assert!(second.take(2).is_none()); assert_eq!(work.spent(),4);
+assert!(first.take(1).is_none()); assert_eq!(work.spent(),5);
+let mut retry=Budget(20,Some(work.clone()));
+assert!(retry.take(0).is_none()); assert_eq!(work.spent(),5);
+'''
     else:
         raise ValueError('unsupported Budget fields; review this check')
     rustc = shutil.which('rustc')
@@ -195,8 +212,9 @@ def initial_budget(path):
     with tempfile.TemporaryDirectory(prefix='evas-proof-budget-') as temporary:
         directory = Path(temporary)
         code, binary = directory/'budget.rs', directory/'budget-check'
-        code.write_text(support+source[begin:end]+'\nfn main(){let mut b='+constructor+';'
-                        'assert!(b.take(4).is_none());assert!(b.take(1).is_none());}\n')
+        code.write_text(support+primitive+'\nfn main(){let mut b='+constructor+';'
+                        'assert!(b.take(4).is_none());assert!(b.take(1).is_none());'
+                        +shared_probe+'}\n')
         build = subprocess.run([rustc, '--edition=2021', str(code), '-o', str(binary)],
                                capture_output=True, text=True, timeout=30)
         if build.returncode:
@@ -205,7 +223,7 @@ def initial_budget(path):
         if execution.returncode:
             raise AssertionError('exhausted production Budget recovered on retry: '+execution.stderr)
     return dict(allocation_owners=owners, exhausted_retry='refused',
-                primitive_external_work='absent; no external debit behavior is simulated',
+                shared_owner_retry='refused without refund' if shared_probe else 'not applicable',
                 scope='single allocation owner and sticky primitive; aggregate caller work still needs review')
 
 
@@ -231,6 +249,10 @@ def run(root, *, python_root=None, kernel=None, checks=None, absent_is_inapplica
                  [python_root/'evas/integer_invariants.py', python_root/'evas/event_index_domains.py']
                  if check == 'integer-budget' else
                  [root/'evas/rust_core/src/initial_state_invariance.rs'])
+        if (check == 'initial-budget' and paths[0].is_file()
+                and 'crate::transition_source_plan::Work' in paths[0].read_text()):
+            paths.extend([root/'evas/rust_core/src/transition_source_plan.rs',
+                          root/'evas/rust_core/ir/src/lib.rs'])
         absent = [str(p) for p in paths if not p.is_file()]
         if absent:
             rows.append(dict(check=check, status='blocked' if checks is not None and not absent_is_inapplicable else 'not-applicable',
