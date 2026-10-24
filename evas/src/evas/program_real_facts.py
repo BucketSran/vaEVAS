@@ -54,7 +54,16 @@ class ProgramRealFacts:
         return fact[1][2:] if values_only and len(fact[1]) == 4 else fact[1]
 
     def query(self, value, mode='closed', *, state_sources=None, generation=0, allowed_nodes=frozenset()):
-        if mode != 'closed' or not isinstance(value, Affine) or value.terms:
+        # Bare finite scalars are already closed; do not treat them like held
+        # program-real trees that opt into the aggregate audit.
+        if mode == 'closed' and isinstance(value, (int, float)):
+            number = float(value)
+            return ClosedProgramValue(True, number if math.isfinite(number) else None)
+        # continuous/dc probes used by ordinary waveform admission must not opt a
+        # large legal timer deck (va03-zoom) into the held-target aggregate.
+        # Closed qualification and leaf/range enumeration still activate.
+        if mode not in ('continuous', 'dc') and (
+                mode != 'closed' or not isinstance(value, Affine) or value.terms):
             owner = getattr(self.work, '__self__', None)
             if owner is not None and hasattr(owner, 'activate') and not owner.active:
                 # Qualification/role proofs own aggregate work even when a

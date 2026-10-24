@@ -796,10 +796,16 @@ def elaborate_loops(model: Model, parameter):
                                       then_body=body(statement.then_body,indices,depth+1,runtime=runtime,in_runtime_loop=in_runtime_loop),
                                       else_body=body(statement.else_body,indices,depth+1,runtime=runtime,in_runtime_loop=in_runtime_loop), token=origin(statement.token,indices)))
             elif isinstance(statement, Event):
-                # Event is a control wrapper, not a leaf. Charge only the body
-                # statements so initial+analog expansions that share one 4096
-                # leaf budget still admit 2048+2048 when the procedure view
-                # retains an initial_step Event around the same body.
+                # Pure initial_step wrappers are not leaves: initial+analog share
+                # one 4096 budget and must still admit 2048+2048. Monitored
+                # timer/cross/final_step Events keep the historical leaf charge
+                # so expansion overflow still reports statement budget before
+                # later compile work can hit the aggregate audit.
+                monitored = any(t.kind in ("timer", "cross", "final_step") for t in statement.triggers)
+                if monitored:
+                    count += 1
+                    if count > budget:
+                        fail('elaborated statement budget (4096) exceeded', statement.token, code="resource_budget")
                 event_bodies.append((statement.body, indices))
                 result.append(replace(statement, token=origin(statement.token,indices),
                     body=body(statement.body,indices,depth+1,runtime=all(t.kind in ("timer", "cross", "final_step") for t in statement.triggers),

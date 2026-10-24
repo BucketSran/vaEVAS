@@ -310,6 +310,13 @@ class InstanceCompiler:
         return self.program_facts.query(expression)
 
     def program_real_constant(self, expression):
+        # Declaration/initial seeds are often already bare floats (integer n=0)
+        # or closed Affines. Querying a non-Affine scalar used to activate the
+        # held-target aggregate audit and then refuse large legal timer decks.
+        if isinstance(expression, (int, float)):
+            return float(expression) if math.isfinite(expression) else None
+        if isinstance(expression, Affine) and not expression.terms:
+            return expression.constant if math.isfinite(expression.constant) else None
         fact = self.program_real_closed(expression)
         return fact.value if fact.finite else None
 
@@ -2263,8 +2270,14 @@ class InstanceCompiler:
             return fact.value if fact.closed and fact.finite else None
 
         def setting(arg):
-            value = self.lower_event(arg, self.event_parameter, {}, program_real=True)
+            # Fixed cross/timer settings are instance constants; ordinary Affine
+            # lowering is enough. Avoid program_real trees that activate the
+            # held-target aggregate on legal static calendar decks (va03-zoom).
+            value = self.lower_event(arg, self.event_parameter, {})
             number = constant_value(value)
+            if number is None:
+                value = self.lower_event(arg, self.event_parameter, {}, program_real=True)
+                number = constant_value(value)
             if number is None:
                 raise CompileError(f"{leaf.kind} settings must be instance constants")
             return value, number
@@ -2301,11 +2314,22 @@ class InstanceCompiler:
             tolerance_value, time_tol = (None, 1e-12) if tolerance_arg is None else setting(tolerance_arg)
             if time_tol < 0:
                 raise CompileError("timer requires nonnegative start and time_tol")
-            values = [self.lower_event(arg, self.symbol, {}, preserve_structure=True, program_real=True) if arg is not None else self.make_ir(Affine, 0., ())
-                      for arg in (start_arg, period_arg, enable_arg)]
-            if enable_arg is None:
-                values[2] = self.make_ir(Affine, 1., ())
-            constants = [constant_value(value) for value in values]
+
+            def timer_arg(arg, *, default=None):
+                if arg is None:
+                    value = default if default is not None else self.make_ir(Affine, 0., ())
+                    return value, constant_value(value)
+                value = self.lower_event(arg, self.symbol, {}, preserve_structure=True)
+                number = constant_value(value)
+                if number is not None:
+                    return value, number
+                value = self.lower_event(arg, self.symbol, {}, preserve_structure=True, program_real=True)
+                return value, constant_value(value)
+
+            pairs = [timer_arg(start_arg), timer_arg(period_arg),
+                     timer_arg(enable_arg, default=self.make_ir(Affine, 1., ()))]
+            values = [pair[0] for pair in pairs]
+            constants = [pair[1] for pair in pairs]
             if all(value is not None for value in constants):
                 start, period, enabled = constants
                 if start < 0:
@@ -2317,6 +2341,11 @@ class InstanceCompiler:
             else:
                 if time_tol == 0:
                     raise CompileError("zero time_tol requires fixed timer parameters")
+                # Held timers keep executable program-real argument trees.
+                values = [self.lower_event(arg, self.symbol, {}, preserve_structure=True, program_real=True) if arg is not None else value
+                          for arg, value in ((start_arg, values[0]), (period_arg, values[1]), (enable_arg, values[2]))]
+                if enable_arg is None:
+                    values[2] = self.make_ir(Affine, 1., ())
                 result = self.make_ir(HeldTimerTrigger, values[0], values[1], time_tol, values[2])
                 if tolerance_arg is not None:
                     retain(((tolerance_arg, tolerance_value),))
