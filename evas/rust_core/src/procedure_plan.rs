@@ -1143,7 +1143,7 @@ impl Plan {
             w,
         )?;
         let mut step = max_step;
-        for pair in values.chunks_exact(2) {
+        for pair in values.as_chunks::<2>().0 {
             w.step()?;
             let active = pair[1].bound()?;
             if active.zero() {
