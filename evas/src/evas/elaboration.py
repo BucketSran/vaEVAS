@@ -322,6 +322,11 @@ def elaborate_loops(model: Model, parameter):
     if model.procedure:
         # Expand the one complete source sequence, then derive compatibility
         # views. Do not try to recover lexical order by sorting source tokens.
+        # model.initial shares objects with initial_step event bodies; validate
+        # that view first so a zero-trip expansion cannot erase illegal
+        # initializers (voltage reads, missing indices, non-constants).
+        if model.initial:
+            elaborate_loops(replace(model, analog=[], events=[], procedure=()), parameter)
         full = elaborate_loops(replace(model, analog=list(model.procedure),
                                        initial=[], events=[], procedure=()), parameter)
         procedure = tuple(full.analog)

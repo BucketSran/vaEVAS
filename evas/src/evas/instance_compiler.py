@@ -359,8 +359,12 @@ class InstanceCompiler:
         self.deferred_seed_names = seed_storage(self.model, self.compilation.native_audit)
         held_model = ordinary_held_state(self)
         if held_model is not None:
-            # Original-source prefix routes do not see the rewritten roles.
-            self.model, self.event_body_source_model = held_model, None
+            # Keep original source identity for admit/scratch/prefix; execute
+            # the rewritten held model. Clearing the source made those proofs
+            # fall through onto rewritten roles.
+            if self.event_body_source_model is None:
+                self.event_body_source_model = self.model
+            self.model = held_model
         self.closed_initial_math = {}
         self.initial_math_source_model = self.model
         # Inspect source writers before scalarization unrolls even zero-trip
@@ -504,9 +508,6 @@ class InstanceCompiler:
                 owner.debit("integer_prefix_native_ordinary_scope", 2)
                 # The original prefix certificate owns this integer storage;
                 # execution now writes it at the retained source statement.
-                ordinary_scratch.add(name)
-                continue
-            if self.procedure_builder is not None and self.model.variables[name] == "real":
                 ordinary_scratch.add(name)
                 continue
             if name in persistent and self.model.variables[name] == "real" and name not in event_writers:

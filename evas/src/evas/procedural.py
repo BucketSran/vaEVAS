@@ -417,7 +417,14 @@ class ProcedureBuilder:
             raise CompileError("compiled source steps are missing from the retained procedure",
                                instance=c.instance.name)
         for name, state in c.state_ids.items():
-            seed = c.declaration_initials.get(name, Affine(0., ()))
+            # Ordinary total aliases keep initialize_states seeds (315e4830).
+            # Other slots keep declaration defaults; initial_step runs as a gate.
+            if name in getattr(c, 'ordinary_alias_variables', ()) and name in c.initials:
+                seed = c.initials[name]
+                while isinstance(seed, RealBoundary):
+                    seed = seed.value
+            else:
+                seed = c.declaration_initials.get(name, Affine(0., ()))
             if isinstance(seed, Affine) and not seed.terms:
                 seed = seed.constant
             c.compilation.states[state] = replace(c.compilation.states[state], initial=seed)
