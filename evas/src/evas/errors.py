@@ -37,6 +37,7 @@ RULES = {
     'unsupported_task_context': ('unsupported', 'parse', 'LANG', 'Call $bound_step in ordinary analog statements; event, initialization and function bodies are not supported.'),
     'unsupported_event_context': ('unsupported', 'binding', 'LANG', 'Declare monitored events unconditionally, at top level or inside static genvar loops.'),
     'unsupported_local_event': ('unsupported', 'lowering', 'LANG', 'Event expressions require direct input or persistent state expressions; ordinary analog local snapshots are not supported.'),
+    'unsupported_idt_pulse_reset': ('unsupported', 'lowering', 'DYNAMICS', 'Use a bare integer assert cleared by one unconditional top-level constant assignment and set in cross/timer events placed between that assignment and the idt call.'),
     'unsupported_event_state_dependency': ('unsupported', 'lowering', 'LANG', 'Use state-independent event predicates and instance-constant direction/tolerance settings; held timer start/period/enable remain supported.'),
     'scs_input': ('invalid_input', 'netlist', 'LANG', 'Check the netlist statement and its constant values.'),
     'unsupported_scs': ('unsupported', 'netlist', 'LANG', 'Use the documented voltage-testbench subset.'),
