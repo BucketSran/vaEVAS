@@ -18,10 +18,14 @@ fn fixture(good: bool) -> (EventModel, Trajectory, Controller, Vec<ScheduledEven
     // Do not add an initial gate or procedure to this archived input.
     assert!(program.procedures.is_empty());
     assert!(program.real_bindings.is_empty());
-    assert!(program.events.iter().all(|event| event.procedure_id.is_none()
-        && event.expanded_statement_ordinal.is_none()));
-    assert!(program.states.iter().all(|state|
-        serde_json::to_value(&state.initial).unwrap().is_number()));
+    assert!(program
+        .events
+        .iter()
+        .all(|event| event.procedure_id.is_none() && event.expanded_statement_ordinal.is_none()));
+    assert!(program
+        .states
+        .iter()
+        .all(|state| serde_json::to_value(&state.initial).unwrap().is_number()));
     program.schema_version = crate::ir::SCHEMA_VERSION;
     let model = EventModel::new(
         program,

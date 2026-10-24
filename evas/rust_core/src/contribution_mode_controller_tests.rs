@@ -16,7 +16,9 @@ fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
     trajectory
         .bind_procedure_work(crate::real_expression::work(&model))
         .unwrap();
-    let initial = initialization::prepare(&model, &trajectory).unwrap().unwrap();
+    let initial = initialization::prepare(&model, &trajectory)
+        .unwrap()
+        .unwrap();
     let states = initial.states.clone();
     let operators = Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
     let circuit = model.circuit_with(&states, &[]).unwrap();
@@ -134,5 +136,4 @@ fn captured_integer_mode_two_discarded_candidates_then_legal_retry() {
         serde_json::to_value(&clean.records).unwrap()
     );
     assert_eq!(controller.event, clean.event);
-
 }

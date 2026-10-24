@@ -807,10 +807,14 @@ pub(crate) mod tests {
         // Do not add an initial gate or procedure to this archived input.
         assert!(q.program.procedures.is_empty());
         assert!(q.program.real_bindings.is_empty());
-        assert!(q.program.events.iter().all(|event| event.procedure_id.is_none()
-            && event.expanded_statement_ordinal.is_none()));
-        assert!(q.program.states.iter().all(|state|
-            serde_json::to_value(&state.initial).unwrap().is_number()));
+        assert!(q.program.events.iter().all(
+            |event| event.procedure_id.is_none() && event.expanded_statement_ordinal.is_none()
+        ));
+        assert!(q
+            .program
+            .states
+            .iter()
+            .all(|state| serde_json::to_value(&state.initial).unwrap().is_number()));
         assert!(q.transient.as_ref().unwrap().analytic_sources.is_empty());
         q.program.schema_version = SCHEMA_VERSION;
         let (result, report) =

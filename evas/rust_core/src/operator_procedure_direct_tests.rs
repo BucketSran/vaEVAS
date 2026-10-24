@@ -72,9 +72,10 @@ fn procedure_direct_laplace_mixed_histories_keep_original_route() {
     });
     assert!(!procedure_direct_laplace(&p, &t, &driven).unwrap());
     let (mut p, t, driven) = fixture();
-    p.states.push(serde_json::from_str(
-        r#"{"instance":"dut","name":"held","kind":"real","initial":0.0}"#,
-    ).unwrap());
+    p.states.push(
+        serde_json::from_str(r#"{"instance":"dut","name":"held","kind":"real","initial":0.0}"#)
+            .unwrap(),
+    );
     assert!(!procedure_direct_laplace(&p, &t, &driven).unwrap());
 }
 

@@ -112,8 +112,12 @@ pub(super) fn pending_before_display(
     }
     for op in &model.program.operators {
         w.step()?;
-        if !matches!(op, crate::ir::OperatorSpec::Idt { reset: None, .. }
-            | crate::ir::OperatorSpec::Math { .. } | crate::ir::OperatorSpec::Sin { .. }) {
+        if !matches!(
+            op,
+            crate::ir::OperatorSpec::Idt { reset: None, .. }
+                | crate::ir::OperatorSpec::Math { .. }
+                | crate::ir::OperatorSpec::Sin { .. }
+        ) {
             return Ok(None);
         }
     }

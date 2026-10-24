@@ -2,7 +2,8 @@
 //! This token grants no continuous target, history read or observer mathematics.
 use super::scope;
 use crate::ir::{
-    Error, EventTrigger, Expression as E, OperatorSpec, Origin, Program, RealOperation, StateKind, Statement,
+    Error, EventTrigger, Expression as E, OperatorSpec, Origin, Program, RealOperation, StateKind,
+    Statement,
 };
 use crate::transition_source_plan::{ProofContext, Work};
 use std::sync::Arc;
@@ -173,17 +174,29 @@ fn held(e: &E, owner: &str, p: &Program, w: &Work) -> Result<bool, Error> {
             state(*index, owner, p, w)?;
             Ok(true)
         }
-        E::RealBoundary { value, origin: site, .. } => {
+        E::RealBoundary {
+            value,
+            origin: site,
+            ..
+        } => {
             origin(site, owner, w)?;
             held(value, owner, p, w)
         }
-        E::RealBinary { operation, left, right, origin: site } => {
+        E::RealBinary {
+            operation,
+            left,
+            right,
+            origin: site,
+        } => {
             origin(site, owner, w)?;
-            let a=held(left,owner,p,w)?;
-            let b=held(right,owner,p,w)?;
+            let a = held(left, owner, p, w)?;
+            let b = held(right, owner, p, w)?;
             if *operation == RealOperation::Multiply && a && b
-                || *operation == RealOperation::Divide && b {
-                return Err(scope("sampled Transition target leaves require affine held state"));
+                || *operation == RealOperation::Divide && b
+            {
+                return Err(scope(
+                    "sampled Transition target leaves require affine held state",
+                ));
             }
             Ok(a || b)
         }
@@ -282,7 +295,10 @@ impl Admission {
         }
         for event in &p.events {
             origin(&event.origin, &event.origin.instance, w)?;
-            if !matches!(event.trigger, EventTrigger::Timer { .. } | EventTrigger::InitialStep { .. }) {
+            if !matches!(
+                event.trigger,
+                EventTrigger::Timer { .. } | EventTrigger::InitialStep { .. }
+            ) {
                 return Err(scope(
                     "sampled Transition profile requires independent fixed Timer leaves and constant initialization",
                 ));
@@ -291,11 +307,15 @@ impl Admission {
             if matches!(event.trigger, EventTrigger::InitialStep { .. }) {
                 for item in &event.body {
                     w.step()?;
-                    let Statement::Assign(a)=item else {
-                        return Err(scope("sampled analytic initialization requires constant direct assignments"));
+                    let Statement::Assign(a) = item else {
+                        return Err(scope(
+                            "sampled analytic initialization requires constant direct assignments",
+                        ));
                     };
-                    if held(&a.rhs,&event.origin.instance,p,w)? {
-                        return Err(scope("sampled analytic initialization excludes state-dependent assignments"));
+                    if held(&a.rhs, &event.origin.instance, p, w)? {
+                        return Err(scope(
+                            "sampled analytic initialization excludes state-dependent assignments",
+                        ));
                     }
                 }
             }
@@ -328,28 +348,29 @@ mod tests {
     use super::*;
     #[test]
     fn rn_wrappers_preserve_all_original_role_obligations() {
-        let wire:serde_json::Value=serde_json::from_str(include_str!("../tests/analytic_lifecycle_request.json")).unwrap();
-        let p:Program=serde_json::from_value(wire["program"].clone()).unwrap();
-        let rhs=wire["program"]["events"][0]["body"][0]["rhs"].clone();
-        let e:E=serde_json::from_value(rhs.clone()).unwrap();
-        let w=Work::default();
-        scalar(&e,"XD",&p,&[2],&w).unwrap();
-        assert!(scalar(&e,"XD",&p,&[],&w).is_err());
-        for nested in [false,true] {
-            let mut bad=rhs.clone();
-            let at=if nested {&mut bad["value"]} else {&mut bad};
-            at["origin"]["instance"]=serde_json::json!("foreign");
-            let bad:E=serde_json::from_value(bad).unwrap();
-            assert!(scalar(&bad,"XD",&p,&[2],&w).is_err());
+        let wire: serde_json::Value =
+            serde_json::from_str(include_str!("../tests/analytic_lifecycle_request.json")).unwrap();
+        let p: Program = serde_json::from_value(wire["program"].clone()).unwrap();
+        let rhs = wire["program"]["events"][0]["body"][0]["rhs"].clone();
+        let e: E = serde_json::from_value(rhs.clone()).unwrap();
+        let w = Work::default();
+        scalar(&e, "XD", &p, &[2], &w).unwrap();
+        assert!(scalar(&e, "XD", &p, &[], &w).is_err());
+        for nested in [false, true] {
+            let mut bad = rhs.clone();
+            let at = if nested { &mut bad["value"] } else { &mut bad };
+            at["origin"]["instance"] = serde_json::json!("foreign");
+            let bad: E = serde_json::from_value(bad).unwrap();
+            assert!(scalar(&bad, "XD", &p, &[2], &w).is_err());
         }
-        let mut hidden=rhs.clone();
+        let mut hidden = rhs.clone();
         // Even a zero coefficient retains its original dependency/ref audit.
-        hidden["value"]["value"]["terms"][1]["coefficient"]=serde_json::json!(0.);
-        hidden["value"]["value"]["terms"][1]["node"]=serde_json::json!(35);
-        let hidden:E=serde_json::from_value(hidden).unwrap();
-        assert!(scalar(&hidden,"XD",&p,&[2],&w).is_err());
-        let binary=serde_json::json!({"op":"real_binary","operation":"multiply","left":{"op":"affine","constant":0.,"terms":[]},"right":{"op":"state","state":p.states.len()},"origin":wire["program"]["events"][0]["origin"]});
-        let binary:E=serde_json::from_value(binary).unwrap();
-        assert!(scalar(&binary,"XD",&p,&[2],&w).is_err());
+        hidden["value"]["value"]["terms"][1]["coefficient"] = serde_json::json!(0.);
+        hidden["value"]["value"]["terms"][1]["node"] = serde_json::json!(35);
+        let hidden: E = serde_json::from_value(hidden).unwrap();
+        assert!(scalar(&hidden, "XD", &p, &[2], &w).is_err());
+        let binary = serde_json::json!({"op":"real_binary","operation":"multiply","left":{"op":"affine","constant":0.,"terms":[]},"right":{"op":"state","state":p.states.len()},"origin":wire["program"]["events"][0]["origin"]});
+        let binary: E = serde_json::from_value(binary).unwrap();
+        assert!(scalar(&binary, "XD", &p, &[2], &w).is_err());
     }
 }

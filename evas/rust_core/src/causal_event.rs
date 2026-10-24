@@ -13,7 +13,7 @@ pub(crate) fn classify(
     driven: &[String],
     admission: &crate::event_control::Admission<'_>,
     work: Option<&crate::transition_source_plan::Work>,
-    source_bindings:Option<&crate::procedure::DependencySources<'_>>,
+    source_bindings: Option<&crate::procedure::DependencySources<'_>>,
 ) -> Result<Vec<bool>, Error> {
     let driven: BTreeSet<_> = p
         .nodes
@@ -77,7 +77,12 @@ pub(crate) fn classify(
             E::RealBoundary { value, .. } if sources.is_some() => {
                 input_operand(value, driven, work, sources, active)?
             }
-            E::RealBinary { operation, left, right, .. } if sources.is_some() => {
+            E::RealBinary {
+                operation,
+                left,
+                right,
+                ..
+            } if sources.is_some() => {
                 use crate::ir::RealOperation as R;
                 use crate::real_rounding::{point, Op};
                 let a = input_operand(left, driven, work, sources, active)?;
@@ -87,7 +92,11 @@ pub(crate) fn classify(
                         let degree = match operation {
                             R::Add | R::Subtract => Some(ad.max(bd)),
                             R::Multiply if ad + bd <= 1 => Some(ad + bd),
-                            R::Divide if bd == 0 && bv.is_some_and(|v| v.is_finite() && v != 0.) => Some(ad),
+                            R::Divide
+                                if bd == 0 && bv.is_some_and(|v| v.is_finite() && v != 0.) =>
+                            {
+                                Some(ad)
+                            }
                             _ => None,
                         };
                         let op = match operation {
@@ -105,18 +114,25 @@ pub(crate) fn classify(
                 }
             }
             E::RealLocal { binding } if sources.is_some() => {
-                let w = work.ok_or_else(|| Error::new("invalid_ir", "floor source ledger absent"))?;
+                let w =
+                    work.ok_or_else(|| Error::new("invalid_ir", "floor source ledger absent"))?;
                 // Prepay lookup, BTree path comparison/insertion/removal and
                 // storage before touching the set. No fresh Work or allowance.
                 let height = (active.len().saturating_add(1)).ilog2() as usize + 2;
-                crate::event_floor::charge(w, height.saturating_mul(64).saturating_add(64), "floor_source_binding_path")?;
+                crate::event_floor::charge(
+                    w,
+                    height.saturating_mul(64).saturating_add(64),
+                    "floor_source_binding_path",
+                )?;
                 if !active.insert(*binding) {
                     return Ok(None);
                 }
                 let result = (|| {
                     crate::event_floor::charge(w, 2, "floor_source_binding_definition")?;
-                    match sources.ok_or_else(|| Error::new("invalid_ir", "floor source index absent"))?
-                        .single_binding_value(*binding)? {
+                    match sources
+                        .ok_or_else(|| Error::new("invalid_ir", "floor source index absent"))?
+                        .single_binding_value(*binding)?
+                    {
                         Some(value) => input_operand(value, driven, work, sources, active),
                         None => Ok(None),
                     }
@@ -159,7 +175,9 @@ pub(crate) fn classify(
                     let expr: E = serde_json::from_value(v.clone())
                         .map_err(|e| Error::new("invalid_ir", e.to_string()))?;
                     if let E::IntegerRound { value, .. } = expr {
-                        if input_operand(&value, driven, work, sources, &mut BTreeSet::new())?.is_none() {
+                        if input_operand(&value, driven, work, sources, &mut BTreeSet::new())?
+                            .is_none()
+                        {
                             return Err(Error::new(
                                 "unsupported_integer_conversion",
                                 "integer conversion requires actual driven inputs",
@@ -186,7 +204,10 @@ pub(crate) fn classify(
                         ..
                     } = expr
                     {
-                        if args.len() != 1 || input_operand(&args[0], driven, work, sources, &mut BTreeSet::new())?.is_none() {
+                        if args.len() != 1
+                            || input_operand(&args[0], driven, work, sources, &mut BTreeSet::new())?
+                                .is_none()
+                        {
                             return Err(Error::new(
                                 "unsupported_floor",
                                 "native event floor requires actual driven affine inputs",
@@ -411,13 +432,30 @@ pub(crate) fn certificate(
     check_voltages: bool,
     proofs: Option<&crate::event_value_proof::Context<'_>>,
 ) -> Result<Option<StateVoltageBounds>, Error> {
-    if let Some(plan)=&selection.plan{
-        if !plan.has_observation()&&!check_voltages{
-            let nodes=input_nodes(model,inputs);
-            return Ok(Some((plan.state_bounds(&nodes,before,proofs,crate::real_expression::work(model))?,Vec::new())));
+    if let Some(plan) = &selection.plan {
+        if !plan.has_observation() && !check_voltages {
+            let nodes = input_nodes(model, inputs);
+            return Ok(Some((
+                plan.state_bounds(&nodes, before, proofs, crate::real_expression::work(model))?,
+                Vec::new(),
+            )));
         }
-        let (bounds,nodes)=plan.certificate(&model.program,&model.driven,model.tolerances.clone(),inputs,before,operators,voltages,states,proofs,crate::real_expression::work(model))?;
-        return Ok(Some((bounds,if check_voltages{nodes}else{Vec::new()})));
+        let (bounds, nodes) = plan.certificate(
+            &model.program,
+            &model.driven,
+            model.tolerances.clone(),
+            inputs,
+            before,
+            operators,
+            voltages,
+            states,
+            proofs,
+            crate::real_expression::work(model),
+        )?;
+        return Ok(Some((
+            bounds,
+            if check_voltages { nodes } else { Vec::new() },
+        )));
     }
     if !selection
         .actions
@@ -440,12 +478,16 @@ pub(crate) fn certificate(
         })
         .collect();
     let mut after = before.to_vec();
-    let mut frames=crate::procedure_frames::Frames::new(selection,proofs.and_then(|p|p.execution_work()))?;
+    let mut frames =
+        crate::procedure_frames::Frames::new(selection, proofs.and_then(|p| p.execution_work()))?;
     for (event, indices) in &selection.actions {
         if model.passive_events[*event] {
             continue;
         }
-        let mut local = match frames.take(*event){Some(v)=>v,None=>crate::event_value_proof::LocalState::try_with_context(before, proofs)?};
+        let mut local = match frames.take(*event) {
+            Some(v) => v,
+            None => crate::event_value_proof::LocalState::try_with_context(before, proofs)?,
+        };
         for &index in indices {
             let expression = &model.action_expressions[*event][index];
             let dependencies = crate::event_numeric::dependencies(
@@ -480,7 +522,7 @@ pub(crate) fn certificate(
             local.try_assign(state, expression, &nodes, value)?;
             after[state] = local[state];
         }
-        frames.put(*event,local);
+        frames.put(*event, local);
     }
     // State transfer was certified from the original expression trees above.
     // Project the voltage equations with those new state boxes as forcing;

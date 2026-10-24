@@ -35,7 +35,10 @@ fn procedure_direct_laplace(
         return Ok(false);
     }
     let work = trajectory.procedure_work().ok_or_else(|| {
-        Error::new("invalid_ir", "procedure histories lost their execution owner")
+        Error::new(
+            "invalid_ir",
+            "procedure histories lost their execution owner",
+        )
     })?;
     work.debit(2, (program.operators.len() + 1) as u64)?;
     for operator in &program.operators {
@@ -45,7 +48,8 @@ fn procedure_direct_laplace(
             numerator,
             denominator,
             ..
-        } = operator else {
+        } = operator
+        else {
             return Ok(false);
         };
         // The direct builder owns this first-order shape. Higher-order or
@@ -59,13 +63,20 @@ fn procedure_direct_laplace(
             let Some(node) = program.nodes.get(term.node) else {
                 return Ok(false);
             };
-            if term.node == 0 { continue; }
+            if term.node == 0 {
+                continue;
+            }
             let mut found = false;
             for name in driven {
                 work.debit(2, (node.len() + name.len() + 1) as u64)?;
-                if node == name { found = true; break; }
+                if node == name {
+                    found = true;
+                    break;
+                }
             }
-            if !found { return Ok(false); }
+            if !found {
+                return Ok(false);
+            }
         }
     }
     Ok(true)
@@ -465,13 +476,28 @@ impl From<crate::ir::MathFunction> for Function {
     }
 }
 impl Function {
-    pub(crate) fn internal(self)->crate::ir::EventMathFunction{
+    pub(crate) fn internal(self) -> crate::ir::EventMathFunction {
         use crate::ir::EventMathFunction as F;
-        match self{Self::Sin=>F::InternalSin,Self::Cos=>F::InternalCos,Self::Exp=>F::InternalExp,Self::Ln=>F::InternalLn,Self::Sqrt=>F::InternalSqrt,Self::Tanh=>F::InternalTanh}
+        match self {
+            Self::Sin => F::InternalSin,
+            Self::Cos => F::InternalCos,
+            Self::Exp => F::InternalExp,
+            Self::Ln => F::InternalLn,
+            Self::Sqrt => F::InternalSqrt,
+            Self::Tanh => F::InternalTanh,
+        }
     }
-    pub(crate) fn from_internal(function:crate::ir::EventMathFunction)->Option<Self>{
+    pub(crate) fn from_internal(function: crate::ir::EventMathFunction) -> Option<Self> {
         use crate::ir::EventMathFunction as F;
-        Some(match function{F::InternalSin=>Self::Sin,F::InternalCos=>Self::Cos,F::InternalExp=>Self::Exp,F::InternalLn=>Self::Ln,F::InternalSqrt=>Self::Sqrt,F::InternalTanh=>Self::Tanh,_=>return None})
+        Some(match function {
+            F::InternalSin => Self::Sin,
+            F::InternalCos => Self::Cos,
+            F::InternalExp => Self::Exp,
+            F::InternalLn => Self::Ln,
+            F::InternalSqrt => Self::Sqrt,
+            F::InternalTanh => Self::Tanh,
+            _ => return None,
+        })
     }
     pub(crate) fn value(self, x: f64) -> f64 {
         match self {
@@ -896,7 +922,7 @@ pub(crate) fn sin_bounds(input: I) -> Result<I, Error> {
 #[derive(Clone)]
 pub(crate) struct ResetExpression {
     expression: Expression,
-    captured:Option<I>,
+    captured: Option<I>,
 }
 
 #[derive(Default)]
@@ -989,11 +1015,16 @@ impl ResetTerms {
 
 impl ResetExpression {
     pub(crate) fn new(expression: Expression) -> Self {
-        Self { expression,captured:None }
+        Self {
+            expression,
+            captured: None,
+        }
     }
 
     pub(crate) fn active(&self, states: &[I]) -> Result<bool, Error> {
-        if let Some(value)=self.captured{return reset_active(value);}
+        if let Some(value) = self.captured {
+            return reset_active(value);
+        }
         let terms = reset_terms(&self.expression)?;
         let bound = match reset_exact_sign(&terms, states)? {
             Some(sign) => sign,
@@ -1111,7 +1142,11 @@ fn reset_exact_sign(terms: &ResetTerms, states: &[I]) -> Result<Option<I>, Error
 
 fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
     let value = match expr {
-        Expression::RealCall { .. } | Expression::UnsupportedSystemCall { .. } | Expression::RealBinary { .. } | Expression::RealBoundary { .. } | Expression::RealLocal { .. } => return crate::event_numeric::bounds(expr,&[],states),
+        Expression::RealCall { .. }
+        | Expression::UnsupportedSystemCall { .. }
+        | Expression::RealBinary { .. }
+        | Expression::RealBoundary { .. }
+        | Expression::RealLocal { .. } => return crate::event_numeric::bounds(expr, &[], states),
         Expression::Forcing { .. } => {
             return Err(Error::new(
                 "unsupported_forcing_scope",
@@ -1244,9 +1279,15 @@ impl Evaluation<'_> {
         parameters: &[I],
         proofs: Option<&crate::exact_source::TimeProofs>,
     ) -> Result<(Operators, Vec<f64>, Vec<I>), Error> {
-        self.observed_after_with_callsite_resets(time_bounds,parameters,proofs,None)
+        self.observed_after_with_callsite_resets(time_bounds, parameters, proofs, None)
     }
-    pub(crate) fn observed_after_with_callsite_resets(&self,time_bounds:I,parameters:&[I],proofs:Option<&crate::exact_source::TimeProofs>,captures:Option<(&[Option<I>],&crate::transition_source_plan::Work)>)->Result<(Operators,Vec<f64>,Vec<I>),Error>{
+    pub(crate) fn observed_after_with_callsite_resets(
+        &self,
+        time_bounds: I,
+        parameters: &[I],
+        proofs: Option<&crate::exact_source::TimeProofs>,
+        captures: Option<(&[Option<I>], &crate::transition_source_plan::Work)>,
+    ) -> Result<(Operators, Vec<f64>, Vec<I>), Error> {
         let physical_proofs = proofs
             .map(|proofs| {
                 for (&state, proof) in proofs {
@@ -1271,7 +1312,9 @@ impl Evaluation<'_> {
         let parameters = physical_parameters(parameters, &self.base.isolated_parameters, I::point);
         let parameters = parameters.as_ref();
         let mut observed = self.base.candidate_clone()?;
-        if let Some((captures,w))=captures{observed.set_callsite_resets(captures,w)?;}
+        if let Some((captures, w)) = captures {
+            observed.set_callsite_resets(captures, w)?;
+        }
         if let Some(continuous) = &self.base.continuous {
             let captured = captures
                 .map(|(v, w)| {
@@ -1455,10 +1498,31 @@ impl Evaluation<'_> {
         proofs: Option<&crate::exact_source::TimeProofs>,
         value_proofs: Option<&crate::event_value_proof::Proofs>,
     ) -> Result<Operators, Error> {
-        self.advanced_until_with_callsite_resets(time_bounds,states,bounds,changed,horizon,proven,proofs,value_proofs,None)
+        self.advanced_until_with_callsite_resets(
+            time_bounds,
+            states,
+            bounds,
+            changed,
+            horizon,
+            proven,
+            proofs,
+            value_proofs,
+            None,
+        )
     }
     #[allow(clippy::too_many_arguments)]
-    pub(crate) fn advanced_until_with_callsite_resets(&self,time_bounds:I,states:&[f64],bounds:&[I],changed:&[usize],horizon:f64,proven:Option<&Operators>,proofs:Option<&crate::exact_source::TimeProofs>,value_proofs:Option<&crate::event_value_proof::Proofs>,captures:Option<(&[Option<I>],&crate::transition_source_plan::Work)>)->Result<Operators,Error>{
+    pub(crate) fn advanced_until_with_callsite_resets(
+        &self,
+        time_bounds: I,
+        states: &[f64],
+        bounds: &[I],
+        changed: &[usize],
+        horizon: f64,
+        proven: Option<&Operators>,
+        proofs: Option<&crate::exact_source::TimeProofs>,
+        value_proofs: Option<&crate::event_value_proof::Proofs>,
+        captures: Option<(&[Option<I>], &crate::transition_source_plan::Work)>,
+    ) -> Result<Operators, Error> {
         let _timing = crate::diagnostics::span("history.advance_candidate");
         let physical_proofs = proofs
             .map(|proofs| {
@@ -1501,7 +1565,9 @@ impl Evaluation<'_> {
 
         let copying = crate::diagnostics::span("history.clone");
         let mut candidate = self.base.candidate_clone()?;
-        if let Some((captures,w))=captures{candidate.set_callsite_resets(captures,w)?;}
+        if let Some((captures, w)) = captures {
+            candidate.set_callsite_resets(captures, w)?;
+        }
         drop(copying);
         if let Some(proven) = proven {
             if candidate.entries.len() != proven.entries.len() {
@@ -1577,12 +1643,31 @@ impl Evaluation<'_> {
 }
 
 impl Operators {
-    fn set_callsite_resets(&mut self,captures:&[Option<I>],w:&crate::transition_source_plan::Work)->Result<(),Error>{
-        w.debit(2,(self.entries.len()*24+32) as u64)?;
-        if captures.len()!=self.entries.len(){return Err(Error::new("invalid_ir","reset call-site count mismatch"));}
-        for (entry,value) in self.entries.iter_mut().zip(captures){w.step()?;if let (Runtime::Idt{history,reset:Some(reset)},Some(value))=(entry,value){
-            w.debit(2,history.reset_probe_cost())?;reset_active(*value)?;reset.captured=Some(*value);
-        }}Ok(())
+    fn set_callsite_resets(
+        &mut self,
+        captures: &[Option<I>],
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<(), Error> {
+        w.debit(2, (self.entries.len() * 24 + 32) as u64)?;
+        if captures.len() != self.entries.len() {
+            return Err(Error::new("invalid_ir", "reset call-site count mismatch"));
+        }
+        for (entry, value) in self.entries.iter_mut().zip(captures) {
+            w.step()?;
+            if let (
+                Runtime::Idt {
+                    history,
+                    reset: Some(reset),
+                },
+                Some(value),
+            ) = (entry, value)
+            {
+                w.debit(2, history.reset_probe_cost())?;
+                reset_active(*value)?;
+                reset.captured = Some(*value);
+            }
+        }
+        Ok(())
     }
     pub(crate) fn install_callsite_resets(
         &mut self,
@@ -2095,7 +2180,10 @@ impl Operators {
                 }
                 Runtime::SourceSlew(history) => history.range(transition_window)?,
                 _ if point.is_some() => point.as_ref().unwrap()[index],
-                Runtime::ProcedureMath => I{lo:f64::NEG_INFINITY,hi:f64::INFINITY},
+                Runtime::ProcedureMath => I {
+                    lo: f64::NEG_INFINITY,
+                    hi: f64::INFINITY,
+                },
                 Runtime::DirectDerivative(history) => history.range(window)?,
                 Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                 Runtime::Idt { history, .. } => history.value_range(window)?,
@@ -2132,7 +2220,7 @@ impl Operators {
                     ))
                 }
             };
-            if !bound.finite() && !matches!(entry,Runtime::ProcedureMath) {
+            if !bound.finite() && !matches!(entry, Runtime::ProcedureMath) {
                 return Err(Error::new(
                     "waveform_accuracy",
                     "nonfinite event observation range",
@@ -2603,8 +2691,15 @@ impl Operators {
                 || origin.line == 0
                 || origin.column == 0
                 || !origin.valid_expansion()
-                || !(program.contributions.iter().any(|c| c.origin.instance == origin.instance)
-                    || matches!(spec,OperatorSpec::Math{..}|OperatorSpec::Sin{..}) && program.procedures.iter().any(|p|p.instance==origin.instance))
+                || !(program
+                    .contributions
+                    .iter()
+                    .any(|c| c.origin.instance == origin.instance)
+                    || matches!(spec, OperatorSpec::Math { .. } | OperatorSpec::Sin { .. })
+                        && program
+                            .procedures
+                            .iter()
+                            .any(|p| p.instance == origin.instance))
                 || !identities.insert((
                     origin.instance.clone(),
                     origin.source.clone(),
@@ -2666,14 +2761,18 @@ impl Operators {
             };
             if !program.procedures.is_empty()
                 && matches!(spec, OperatorSpec::Math { .. } | OperatorSpec::Sin { .. })
-                && (crate::procedure::closed_math_input(input,trajectory.procedure_work().ok_or_else(||Error::new("invalid_ir","procedure math has no execution owner"))?)?
-                    || crate::procedure::requires_source_frame(
-                        input,
-                        program,
-                        trajectory.procedure_work().ok_or_else(|| {
-                            Error::new("invalid_ir", "procedure math has no execution owner")
-                        })?,
-                    )?)
+                && (crate::procedure::closed_math_input(
+                    input,
+                    trajectory.procedure_work().ok_or_else(|| {
+                        Error::new("invalid_ir", "procedure math has no execution owner")
+                    })?,
+                )? || crate::procedure::requires_source_frame(
+                    input,
+                    program,
+                    trajectory.procedure_work().ok_or_else(|| {
+                        Error::new("invalid_ir", "procedure math has no execution owner")
+                    })?,
+                )?)
             {
                 // All source refs/owners were audited by the original Plan.
                 // No legacy integral admission may execute a call-local input.
@@ -2893,17 +2992,18 @@ impl Operators {
                         _ => unreachable!(),
                     };
                     if !program.procedures.is_empty()
-                        && (crate::procedure::closed_math_input(input,trajectory.procedure_work().ok_or_else(||Error::new("invalid_ir","procedure math has no execution owner"))?)?
-                            || crate::procedure::requires_source_frame(
-                                input,
-                                program,
-                                trajectory.procedure_work().ok_or_else(|| {
-                                    Error::new(
-                                        "invalid_ir",
-                                        "procedure math has no execution owner",
-                                    )
-                                })?,
-                            )?)
+                        && (crate::procedure::closed_math_input(
+                            input,
+                            trajectory.procedure_work().ok_or_else(|| {
+                                Error::new("invalid_ir", "procedure math has no execution owner")
+                            })?,
+                        )? || crate::procedure::requires_source_frame(
+                            input,
+                            program,
+                            trajectory.procedure_work().ok_or_else(|| {
+                                Error::new("invalid_ir", "procedure math has no execution owner")
+                            })?,
+                        )?)
                     {
                         entries.push(Runtime::ProcedureMath);
                         continue;
@@ -3493,8 +3593,8 @@ impl Operators {
         // A certified continuous epoch is evaluated at the physical root,
         // which need not belong to the display-time image.
         let mut bounds = self.bounds(time)?;
-        if let (Some(root),Some(w)) = (exact_root,self.root_evaluation_work()) {
-            w.debit(2,bounds.len() as u64)?;
+        if let (Some(root), Some(w)) = (exact_root, self.root_evaluation_work()) {
+            w.debit(2, bounds.len() as u64)?;
             for (index, bound) in bounds.iter_mut().enumerate() {
                 if matches!(self.entries.get(index), Some(Runtime::Continuous(_))) {
                     if let Some((_, physical)) =
@@ -3732,7 +3832,7 @@ impl Operators {
                     Runtime::SourceSlew(history) => history.value(time)?,
                     Runtime::SlewCascade(history) => history.value(time)?,
                 };
-                if !value.is_finite() && !matches!(entry,Runtime::ProcedureMath) {
+                if !value.is_finite() && !matches!(entry, Runtime::ProcedureMath) {
                     return Err(Error::new("numerical_failure", "nonfinite operator value"));
                 }
                 values.push(value);
@@ -5045,7 +5145,13 @@ impl Operators {
         }
         let mut permitted_changes = Vec::with_capacity(self.entries.len());
         for ((entry, &before), &after) in self.entries.iter().zip(previous).zip(current) {
-            if matches!(entry,Runtime::ProcedureMath){if !before.is_nan()||!after.is_nan(){return false;}permitted_changes.push(false);continue;}
+            if matches!(entry, Runtime::ProcedureMath) {
+                if !before.is_nan() || !after.is_nan() {
+                    return false;
+                }
+                permitted_changes.push(false);
+                continue;
+            }
             let permitted = match entry {
                 Runtime::Continuous(_) => self
                     .continuous

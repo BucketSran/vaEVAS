@@ -10,7 +10,14 @@ fn request() -> crate::ir::Request {
 fn scan(p: &Program, driven: &[String], work: &Work) -> Result<Vec<bool>, Error> {
     let admission = crate::event_control::admit(p, Some(work))?;
     let sources = crate::procedure::dependency_sources(p, work)?;
-    classify(p, &vec![false; p.events.len()], driven, &admission, Some(work), Some(&sources))
+    classify(
+        p,
+        &vec![false; p.events.len()],
+        driven,
+        &admission,
+        Some(work),
+        Some(&sources),
+    )
 }
 
 #[test]
@@ -32,7 +39,9 @@ fn procedure_source_qualification_borrows_the_original_ledger() {
 #[test]
 fn source_rn_nodes_do_not_enter_legacy_nonprocedure_events() {
     let mut r = request();
-    for event in &mut r.program.events { event.procedure_id = None; }
+    for event in &mut r.program.events {
+        event.procedure_id = None;
+    }
     let error = scan(&r.program, &r.driven, &Work::default()).unwrap_err();
     assert_eq!(error.kind, "unsupported_floor");
 }
@@ -46,15 +55,30 @@ fn repeated_original_source_scans_naturally_exhaust_one_billion_and_stay_exhaust
     loop {
         match scan(&r.program, &r.driven, &work) {
             Ok(_) => accepted += 1,
-            Err(error) => { assert_eq!(error.kind, "step_budget"); break; }
+            Err(error) => {
+                assert_eq!(error.kind, "step_budget");
+                break;
+            }
         }
-        assert!(accepted < 1_000_000, "original request stopped consuming Work");
+        assert!(
+            accepted < 1_000_000,
+            "original request stopped consuming Work"
+        );
     }
     assert!(accepted > 0);
     assert!(work.spent() > 1_000_000_000);
     for _ in 0..2 {
-        assert_eq!(scan(&r.program, &r.driven, &retry).unwrap_err().kind, "step_budget");
+        assert_eq!(
+            scan(&r.program, &r.driven, &retry).unwrap_err().kind,
+            "step_budget"
+        );
     }
-    assert!(scan(&r.program, &r.driven, &Work::default()).unwrap().iter().any(|v| *v));
-    eprintln!("FLOOR_RN_SHARED_WORK accepted={accepted} spent={} sticky_retries=2 fresh_owner=pass", work.spent());
+    assert!(scan(&r.program, &r.driven, &Work::default())
+        .unwrap()
+        .iter()
+        .any(|v| *v));
+    eprintln!(
+        "FLOOR_RN_SHARED_WORK accepted={accepted} spent={} sticky_retries=2 fresh_owner=pass",
+        work.spent()
+    );
 }

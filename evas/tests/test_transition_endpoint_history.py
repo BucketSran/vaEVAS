@@ -117,4 +117,3 @@ class TransitionEndpointHistory(unittest.TestCase):
                                                           (2e-10,2e-10,2e-14),strict=True):
                                 self.assertAlmostEqual(row['voltages'][result['nodes'].index(node)],
                                                        wanted,delta=budget,msg=(node,t))
-

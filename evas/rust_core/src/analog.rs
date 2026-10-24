@@ -48,8 +48,13 @@ impl Analog {
     pub(crate) fn fresh_source_trial(&self) -> Result<Self, Error> {
         self.charge_procedure_copy(1)?;
         if let Some(work) = &self.procedure_work {
-            work.debit(2,16)?;
-            return Self::new_with_procedure_work(self.program.clone(),self.driven.clone(),self.tolerances.clone(),work.clone());
+            work.debit(2, 16)?;
+            return Self::new_with_procedure_work(
+                self.program.clone(),
+                self.driven.clone(),
+                self.tolerances.clone(),
+                work.clone(),
+            );
         }
         Self::new(
             self.program.clone(),
@@ -90,7 +95,12 @@ impl Analog {
 
     /// The early physical-math consumer retains one execution owner through
     /// its private algebraic reduction and all later source queries.
-    pub(crate) fn new_with_procedure_work(program: Program, driven: Vec<String>, tolerances: Tolerances, work: crate::transition_source_plan::Work) -> Result<Self, Error> {
+    pub(crate) fn new_with_procedure_work(
+        program: Program,
+        driven: Vec<String>,
+        tolerances: Tolerances,
+        work: crate::transition_source_plan::Work,
+    ) -> Result<Self, Error> {
         work.debit(2, 16)?;
         let bytes = crate::event_floor::encoded_size(&program, &work)?;
         // Circuit::new below borrows one complete owned validation copy.
@@ -100,12 +110,23 @@ impl Analog {
         Ok(analog)
     }
     #[cfg(test)]
-    pub(crate) fn prepared_uses_procedure_owner(&self, work: &crate::transition_source_plan::Work) -> bool {
-        self.procedure_work.as_ref().is_some_and(|w| w.same_owner(work)) &&
-        self.prepared.as_ref().and_then(|p|p.model.as_ref()).is_some_and(|model|crate::real_expression::work(model).same_owner(work))
+    pub(crate) fn prepared_uses_procedure_owner(
+        &self,
+        work: &crate::transition_source_plan::Work,
+    ) -> bool {
+        self.procedure_work
+            .as_ref()
+            .is_some_and(|w| w.same_owner(work))
+            && self
+                .prepared
+                .as_ref()
+                .and_then(|p| p.model.as_ref())
+                .is_some_and(|model| crate::real_expression::work(model).same_owner(work))
     }
     pub(crate) fn charge_procedure_query(&self, values: usize) -> Result<(), Error> {
-        if let Some(work) = &self.procedure_work { work.debit(2,(values as u64).saturating_mul(64).saturating_add(32))?; }
+        if let Some(work) = &self.procedure_work {
+            work.debit(2, (values as u64).saturating_mul(64).saturating_add(32))?;
+        }
         Ok(())
     }
     fn charge_procedure_copy(&self, copies: u64) -> Result<(), Error> {
@@ -124,7 +145,12 @@ impl Analog {
         exact_sources: &[Option<crate::exact_source::Curve>],
     ) -> Result<Solution, Error> {
         self.charge_procedure_copy(2)?;
-        self.charge_procedure_query(self.program.nodes.len().saturating_add(self.input_nodes.len()))?;
+        self.charge_procedure_query(
+            self.program
+                .nodes
+                .len()
+                .saturating_add(self.input_nodes.len()),
+        )?;
         let mut nodes = vec![I::ZERO; self.program.nodes.len()];
         for (&node, &bounds) in self.input_nodes.iter().zip(input_bounds) {
             nodes[node] = bounds;
@@ -154,28 +180,32 @@ impl Analog {
             // the ordinary-condition contract. A fully source-driven rational
             // tree can reuse the same original-expression certificate after
             // its input predicates resolve; no nominal input is substituted.
-            let (model, circuit) =
-                match if let Some(work) = &self.procedure_work {
-                    work.debit(2, 16)?;
-                    EventModel::new_with_procedure_work(frozen.clone(), self.driven.clone(), self.tolerances.clone(), work.clone())
-                } else {
-                    EventModel::new(frozen.clone(), self.driven.clone(), self.tolerances.clone())
-                } {
-                    Ok(model) => {
-                        let circuit = model.circuit(&[])?;
-                        (Some(model), circuit)
-                    }
-                    Err(error)
-                        if error.kind == "unsupported_transient"
-                            && (!self.has_select || self.source_rational) =>
-                    {
-                        (
-                            None,
-                            Circuit::new(frozen, &self.driven, self.tolerances.clone())?,
-                        )
-                    }
-                    Err(error) => return Err(error),
-                };
+            let (model, circuit) = match if let Some(work) = &self.procedure_work {
+                work.debit(2, 16)?;
+                EventModel::new_with_procedure_work(
+                    frozen.clone(),
+                    self.driven.clone(),
+                    self.tolerances.clone(),
+                    work.clone(),
+                )
+            } else {
+                EventModel::new(frozen.clone(), self.driven.clone(), self.tolerances.clone())
+            } {
+                Ok(model) => {
+                    let circuit = model.circuit(&[])?;
+                    (Some(model), circuit)
+                }
+                Err(error)
+                    if error.kind == "unsupported_transient"
+                        && (!self.has_select || self.source_rational) =>
+                {
+                    (
+                        None,
+                        Circuit::new(frozen, &self.driven, self.tolerances.clone())?,
+                    )
+                }
+                Err(error) => return Err(error),
+            };
             self.prepared = Some(Prepared {
                 expressions,
                 model,

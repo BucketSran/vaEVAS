@@ -24,9 +24,9 @@ pub struct Circuit {
     pub(crate) forcing_phase: Option<(usize, f64)>,
     forcing_bounds: Vec<(usize, [f64; 2])>,
     forcing_offsets: Vec<(usize, f64)>,
-    procedure_parameters:Vec<(f64,I)>,
-    procedure_view:Option<std::sync::Arc<crate::procedure::CircuitView>>,
-    procedure_occurrence:Option<std::sync::Arc<crate::procedure::CircuitView>>,
+    procedure_parameters: Vec<(f64, I)>,
+    procedure_view: Option<std::sync::Arc<crate::procedure::CircuitView>>,
+    procedure_occurrence: Option<std::sync::Arc<crate::procedure::CircuitView>>,
     equations: Vec<Equation>,
     driven: Vec<usize>,
     unknown: Vec<usize>,
@@ -48,14 +48,41 @@ struct DenseResidual {
 }
 
 impl Circuit {
-    pub(crate) fn retain_procedure_occurrence(&mut self,source:&Self){self.procedure_occurrence=source.procedure_view.as_ref().filter(|v|!v.plan.actions.is_empty()).cloned();}
-    pub(crate) fn procedure_view(&self)->Option<&std::sync::Arc<crate::procedure::CircuitView>>{self.procedure_view.as_ref()}
-    pub(crate) fn procedure_occurrence(&self)->Option<&std::sync::Arc<crate::procedure::CircuitView>>{self.procedure_occurrence.as_ref()}
-    pub(crate) fn set_procedure_view(&mut self,view:std::sync::Arc<crate::procedure::CircuitView>){self.procedure_view=Some(view);}
-    pub(crate) fn set_procedure_parameters(&mut self,values:Vec<f64>){self.procedure_parameters=values.into_iter().map(|v|(v,I::point(v))).collect();}
-    pub(crate) fn set_procedure_parameter_bounds(&mut self,bounds:&[I])->Result<(),Error>{
-        if bounds.len()!=self.procedure_parameters.len(){return Err(Error::new("invalid_ir","procedure parameter bounds mismatch"));}
-        for ((_,slot),&value) in self.procedure_parameters.iter_mut().zip(bounds){*slot=value;}Ok(())
+    pub(crate) fn retain_procedure_occurrence(&mut self, source: &Self) {
+        self.procedure_occurrence = source
+            .procedure_view
+            .as_ref()
+            .filter(|v| !v.plan.actions.is_empty())
+            .cloned();
+    }
+    pub(crate) fn procedure_view(&self) -> Option<&std::sync::Arc<crate::procedure::CircuitView>> {
+        self.procedure_view.as_ref()
+    }
+    pub(crate) fn procedure_occurrence(
+        &self,
+    ) -> Option<&std::sync::Arc<crate::procedure::CircuitView>> {
+        self.procedure_occurrence.as_ref()
+    }
+    pub(crate) fn set_procedure_view(
+        &mut self,
+        view: std::sync::Arc<crate::procedure::CircuitView>,
+    ) {
+        self.procedure_view = Some(view);
+    }
+    pub(crate) fn set_procedure_parameters(&mut self, values: Vec<f64>) {
+        self.procedure_parameters = values.into_iter().map(|v| (v, I::point(v))).collect();
+    }
+    pub(crate) fn set_procedure_parameter_bounds(&mut self, bounds: &[I]) -> Result<(), Error> {
+        if bounds.len() != self.procedure_parameters.len() {
+            return Err(Error::new(
+                "invalid_ir",
+                "procedure parameter bounds mismatch",
+            ));
+        }
+        for ((_, slot), &value) in self.procedure_parameters.iter_mut().zip(bounds) {
+            *slot = value;
+        }
+        Ok(())
     }
 
     /// Prepay actual candidate storage. The cached factorization is an Arc.
@@ -192,26 +219,71 @@ pub(crate) fn interval_expression(expr: &Expression, values: &[I]) -> Result<I, 
     )
 }
 
-fn interval_evaluate(expr: &Expression, values: &[I], work:Option<&crate::transition_source_plan::Work>) -> Result<IntervalValue, Error> {
+fn interval_evaluate(
+    expr: &Expression,
+    values: &[I],
+    work: Option<&crate::transition_source_plan::Work>,
+) -> Result<IntervalValue, Error> {
     let count = values.len();
-    if let Some(w)=work{w.debit(2,(count.saturating_mul(16)+32) as u64)?;}
+    if let Some(w) = work {
+        w.debit(2, (count.saturating_mul(16) + 32) as u64)?;
+    }
     let mut gradient = vec![I::ZERO; count];
     let value = match expr {
-        Expression::EventMath{function,args,..} if crate::operators::Function::from_internal(*function).is_some()=>{
-            if let Some(w)=work{w.debit(2,4096)?;}
-            let function=crate::operators::Function::from_internal(*function).unwrap();
-            let input=interval_evaluate(&args[0],values,work)?;
-            let value=function.bounds(input.value)?;
-            let derivative=function.derivative(input.value).unwrap_or(I{lo:f64::NEG_INFINITY,hi:f64::INFINITY});
-            for (g,d) in gradient.iter_mut().zip(input.gradient){*g=derivative*d;}
+        Expression::EventMath { function, args, .. }
+            if crate::operators::Function::from_internal(*function).is_some() =>
+        {
+            if let Some(w) = work {
+                w.debit(2, 4096)?;
+            }
+            let function = crate::operators::Function::from_internal(*function).unwrap();
+            let input = interval_evaluate(&args[0], values, work)?;
+            let value = function.bounds(input.value)?;
+            let derivative = function.derivative(input.value).unwrap_or(I {
+                lo: f64::NEG_INFINITY,
+                hi: f64::INFINITY,
+            });
+            for (g, d) in gradient.iter_mut().zip(input.gradient) {
+                *g = derivative * d;
+            }
             value
-        },
-        Expression::RealBoundary{value,..}=>{let v=interval_evaluate(value,values,work)?;let image=crate::real_expression::interval(v.value,work)?;if image.lo.to_bits()!=image.hi.to_bits(){gradient.fill(I{lo:f64::NEG_INFINITY,hi:f64::INFINITY});}image},
-        Expression::RealBinary{operation,left,right,..}=>{let a=interval_evaluate(left,values,work)?;let b=interval_evaluate(right,values,work)?;
-            let image=crate::real_expression::binary_interval(*operation,a.value,b.value,work)?;
-            if image.lo.to_bits()!=image.hi.to_bits(){gradient.fill(I{lo:f64::NEG_INFINITY,hi:f64::INFINITY});}image},
-        Expression::RealCall{..}|Expression::UnsupportedSystemCall{..}=>return Err(Error::new("invalid_ir","unexecuted procedure call requires its owning source frame")),
-        Expression::RealLocal{..}=>return Err(Error::new("invalid_ir","unbound real local")),
+        }
+        Expression::RealBoundary { value, .. } => {
+            let v = interval_evaluate(value, values, work)?;
+            let image = crate::real_expression::interval(v.value, work)?;
+            if image.lo.to_bits() != image.hi.to_bits() {
+                gradient.fill(I {
+                    lo: f64::NEG_INFINITY,
+                    hi: f64::INFINITY,
+                });
+            }
+            image
+        }
+        Expression::RealBinary {
+            operation,
+            left,
+            right,
+            ..
+        } => {
+            let a = interval_evaluate(left, values, work)?;
+            let b = interval_evaluate(right, values, work)?;
+            let image =
+                crate::real_expression::binary_interval(*operation, a.value, b.value, work)?;
+            if image.lo.to_bits() != image.hi.to_bits() {
+                gradient.fill(I {
+                    lo: f64::NEG_INFINITY,
+                    hi: f64::INFINITY,
+                });
+            }
+            image
+        }
+        Expression::RealCall { .. } | Expression::UnsupportedSystemCall { .. } => {
+            return Err(Error::new(
+                "invalid_ir",
+                "unexecuted procedure call requires its owning source frame",
+            ))
+        }
+        Expression::RealLocal { .. } => return Err(Error::new("invalid_ir", "unbound real local")),
         Expression::Forcing { .. } => {
             return Err(Error::new(
                 "unsupported_forcing_scope",
@@ -241,8 +313,8 @@ fn interval_evaluate(expr: &Expression, values: &[I], work:Option<&crate::transi
             value
         }
         Expression::Add { left, right } => {
-            let left = interval_evaluate(left, values,work)?;
-            let right = interval_evaluate(right, values,work)?;
+            let left = interval_evaluate(left, values, work)?;
+            let right = interval_evaluate(right, values, work)?;
             for (g, term) in gradient.iter_mut().zip(left.gradient) {
                 *g = *g + term;
             }
@@ -252,16 +324,16 @@ fn interval_evaluate(expr: &Expression, values: &[I], work:Option<&crate::transi
             left.value + right.value
         }
         Expression::Multiply { left, right } => {
-            let left = interval_evaluate(left, values,work)?;
-            let right = interval_evaluate(right, values,work)?;
+            let left = interval_evaluate(left, values, work)?;
+            let right = interval_evaluate(right, values, work)?;
             for ((g, dl), dr) in gradient.iter_mut().zip(left.gradient).zip(right.gradient) {
                 *g = dl * right.value + left.value * dr;
             }
             left.value * right.value
         }
         Expression::Divide { left, right } => {
-            let left = interval_evaluate(left, values,work)?;
-            let right = interval_evaluate(right, values,work)?;
+            let left = interval_evaluate(left, values, work)?;
+            let right = interval_evaluate(right, values, work)?;
             if right.value.lo <= 0. && right.value.hi >= 0. {
                 return Err(Error::new(
                     "waveform_accuracy",
@@ -274,7 +346,7 @@ fn interval_evaluate(expr: &Expression, values: &[I], work:Option<&crate::transi
             left.value / right.value
         }
         Expression::Power { base, exponent } => {
-            let base = interval_evaluate(base, values,work)?;
+            let base = interval_evaluate(base, values, work)?;
             let derivative =
                 I::point(f64::from(*exponent)) * interval_power(base.value, exponent - 1);
             for (g, db) in gradient.iter_mut().zip(base.gradient) {
@@ -366,7 +438,9 @@ impl Circuit {
             forcing_phase: None,
             forcing_bounds: Vec::new(),
             forcing_offsets: Vec::new(),
-            procedure_parameters:Vec::new(),procedure_view:None,procedure_occurrence:None,
+            procedure_parameters: Vec::new(),
+            procedure_view: None,
+            procedure_occurrence: None,
             nodes,
             equations,
             driven,
@@ -424,7 +498,13 @@ impl Circuit {
                 let mut residual = values[eq.positive] - values[eq.negative];
                 for expr in &eq.original_rhs {
                     residual = residual
-                        - interval_evaluate(expr, values,self.procedure_view.as_ref().map(|v|&v.plan.work)).map(|v|v.value).map_err(|mut error| {
+                        - interval_evaluate(
+                            expr,
+                            values,
+                            self.procedure_view.as_ref().map(|v| &v.plan.work),
+                        )
+                        .map(|v| v.value)
+                        .map_err(|mut error| {
                             error
                                 .message
                                 .push_str(&format!(" at {}", eq.origins.join(", ")));
@@ -448,16 +528,20 @@ impl Circuit {
                     row[column] = row[column] - I::ONE;
                 }
                 for expr in &eq.original_rhs {
-                    for (node, derivative) in interval_evaluate(expr, values, self.procedure_view.as_ref().map(|v|&v.plan.work))
-                        .map_err(|mut error| {
-                            error
-                                .message
-                                .push_str(&format!(" at {}", eq.origins.join(", ")));
-                            error
-                        })?
-                        .gradient
-                        .into_iter()
-                        .enumerate()
+                    for (node, derivative) in interval_evaluate(
+                        expr,
+                        values,
+                        self.procedure_view.as_ref().map(|v| &v.plan.work),
+                    )
+                    .map_err(|mut error| {
+                        error
+                            .message
+                            .push_str(&format!(" at {}", eq.origins.join(", ")));
+                        error
+                    })?
+                    .gradient
+                    .into_iter()
+                    .enumerate()
                     {
                         if let Some(column) = self.unknown_columns[node] {
                             row[column] = row[column] - derivative;
@@ -509,86 +593,180 @@ impl Circuit {
         solution: &Solution,
         input_bounds: &[I],
     ) -> Result<Vec<I>, Error> {
-        if let Some(view)=&self.procedure_view {view.plan.work.debit(2,0)?;}
+        if let Some(view) = &self.procedure_view {
+            view.plan.work.debit(2, 0)?;
+        }
         let expanded;
-        let solution=if let Some(view)=&self.procedure_view{if solution.voltages.len()==view.node_count{expanded=Solution{voltages:view.expand(&solution.voltages)?,..solution.clone()}; &expanded}else{solution}}else{solution};
-        let mut bounds=self.waveform_bounds_complete(solution,input_bounds)?;
-        if let Some(view)=&self.procedure_view{bounds.truncate(view.node_count);}
+        let solution = if let Some(view) = &self.procedure_view {
+            if solution.voltages.len() == view.node_count {
+                expanded = Solution {
+                    voltages: view.expand(&solution.voltages)?,
+                    ..solution.clone()
+                };
+                &expanded
+            } else {
+                solution
+            }
+        } else {
+            solution
+        };
+        let mut bounds = self.waveform_bounds_complete(solution, input_bounds)?;
+        if let Some(view) = &self.procedure_view {
+            bounds.truncate(view.node_count);
+        }
         Ok(bounds)
     }
-    fn reserve_waveform_retry(&self, inputs:usize, n:usize, work:&crate::transition_source_plan::Work)->Result<(),Error>{
+    fn reserve_waveform_retry(
+        &self,
+        inputs: usize,
+        n: usize,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<(), Error> {
         // The unchanged interval evaluator prepays every interval gradient.
         // Count rectangular rows as well as unknown columns: redundant voltage
         // constraints still allocate rows and participate in LU elimination.
         // Factorization::new unconditionally chooses Dense below 32 columns.
         // Its bound excludes BTree updates that cannot occur in that branch;
         // larger systems retain the conservative sparse-tree reservation.
-        let n=n as u64;
-        let m=self.equations.len() as u64;
-        let n2=n.saturating_mul(n);
-        let n3=n2.saturating_mul(n);
-        let mn=m.saturating_mul(n);
-        let mn2=mn.saturating_mul(n);
-        let arithmetic=if n<32 {
-            n3.saturating_mul(512).saturating_add(n2.saturating_mul(512))
+        let n = n as u64;
+        let m = self.equations.len() as u64;
+        let n2 = n.saturating_mul(n);
+        let n3 = n2.saturating_mul(n);
+        let mn = m.saturating_mul(n);
+        let mn2 = mn.saturating_mul(n);
+        let arithmetic = if n < 32 {
+            n3.saturating_mul(512)
+                .saturating_add(n2.saturating_mul(512))
                 .saturating_add(mn2.saturating_mul(32))
-        }else{
+        } else {
             n3.saturating_add(mn2).saturating_mul(4096)
         };
-        let storage=n2.saturating_add(mn).saturating_add(m)
-            .saturating_add(self.nodes.len() as u64).saturating_add(inputs as u64)
-            .saturating_add(1).saturating_mul(256);
-        work.debit(2,arithmetic.saturating_add(storage))?;
+        let storage = n2
+            .saturating_add(mn)
+            .saturating_add(m)
+            .saturating_add(self.nodes.len() as u64)
+            .saturating_add(inputs as u64)
+            .saturating_add(1)
+            .saturating_mul(256);
+        work.debit(2, arithmetic.saturating_add(storage))?;
         // Existing failure messages can name a complete voltage node. Reserve
         // actual string bytes before the repeated proof can construct one.
         for name in &self.nodes {
-            work.debit(2,(name.len() as u64).saturating_mul(4).saturating_add(32))?;
+            work.debit(2, (name.len() as u64).saturating_mul(4).saturating_add(32))?;
         }
-        fn shape(e:&Expression,w:&crate::transition_source_plan::Work)->Result<(u64,u64),Error>{
+        fn shape(
+            e: &Expression,
+            w: &crate::transition_source_plan::Work,
+        ) -> Result<(u64, u64), Error> {
             w.step()?;
-            let combine=|a:(u64,u64),b:(u64,u64)|(a.0.saturating_add(b.0).saturating_add(1),a.1.saturating_add(b.1));
+            let combine = |a: (u64, u64), b: (u64, u64)| {
+                (
+                    a.0.saturating_add(b.0).saturating_add(1),
+                    a.1.saturating_add(b.1),
+                )
+            };
             match e {
-                Expression::Affine{terms,..}=>Ok((1,terms.len() as u64)),
-                Expression::Add{left,right}|Expression::Multiply{left,right}|Expression::Divide{left,right}|Expression::RealBinary{left,right,..}=>Ok(combine(shape(left,w)?,shape(right,w)?)),
-                Expression::Power{base,exponent}=>{let (a,b)=shape(base,w)?;Ok((a.saturating_add(u64::from(*exponent)).saturating_add(1),b))},
-                Expression::RealBoundary{value,..}=>{let (a,b)=shape(value,w)?;Ok((a.saturating_add(1),b))},
-                Expression::EventMath{function,args,..} if crate::operators::Function::from_internal(*function).is_some()&&args.len()==1=>{let (a,b)=shape(&args[0],w)?;Ok((a.saturating_add(1),b))},
-                _=>Err(Error::new("waveform_accuracy","original waveform retry requires already bound mathematical expressions")),
+                Expression::Affine { terms, .. } => Ok((1, terms.len() as u64)),
+                Expression::Add { left, right }
+                | Expression::Multiply { left, right }
+                | Expression::Divide { left, right }
+                | Expression::RealBinary { left, right, .. } => {
+                    Ok(combine(shape(left, w)?, shape(right, w)?))
+                }
+                Expression::Power { base, exponent } => {
+                    let (a, b) = shape(base, w)?;
+                    Ok((a.saturating_add(u64::from(*exponent)).saturating_add(1), b))
+                }
+                Expression::RealBoundary { value, .. } => {
+                    let (a, b) = shape(value, w)?;
+                    Ok((a.saturating_add(1), b))
+                }
+                Expression::EventMath { function, args, .. }
+                    if crate::operators::Function::from_internal(*function).is_some()
+                        && args.len() == 1 =>
+                {
+                    let (a, b) = shape(&args[0], w)?;
+                    Ok((a.saturating_add(1), b))
+                }
+                _ => Err(Error::new(
+                    "waveform_accuracy",
+                    "original waveform retry requires already bound mathematical expressions",
+                )),
             }
         }
         for equation in &self.equations {
             work.step()?;
             // Native affine residual/Jacobian traversals do not enter the paid
             // interval visitor. Pay their actual stored terms before retrying.
-            work.debit(2,(equation.rhs_terms.len() as u64).saturating_mul(32)
-                .saturating_add((equation.original_rhs.len() as u64).saturating_mul(32))
-                .saturating_add(64))?;
+            work.debit(
+                2,
+                (equation.rhs_terms.len() as u64)
+                    .saturating_mul(32)
+                    .saturating_add((equation.original_rhs.len() as u64).saturating_mul(32))
+                    .saturating_add(64),
+            )?;
             // At most two nominal AD visits: residual and Jacobian. Each
             // sparse gradient has no more than min(refs,node_count) entries.
             for expression in &equation.nonlinear {
-                let (ops,refs)=shape(expression,work)?;
-                let width=refs.min(self.nodes.len() as u64).saturating_add(1);
-                work.debit(2,ops.saturating_add(refs).saturating_mul(width).saturating_mul(128).saturating_add(64))?;
+                let (ops, refs) = shape(expression, work)?;
+                let width = refs.min(self.nodes.len() as u64).saturating_add(1);
+                work.debit(
+                    2,
+                    ops.saturating_add(refs)
+                        .saturating_mul(width)
+                        .saturating_mul(128)
+                        .saturating_add(64),
+                )?;
             }
-            for origin in &equation.origins {work.debit(2,(origin.len() as u64).saturating_mul(4).saturating_add(32))?;}
+            for origin in &equation.origins {
+                work.debit(
+                    2,
+                    (origin.len() as u64).saturating_mul(4).saturating_add(32),
+                )?;
+            }
         }
         Ok(())
     }
-    fn waveform_bounds_complete(&self,solution:&Solution,input_bounds:&[I])->Result<Vec<I>,Error>{
-        self.waveform_bounds_attempt(solution,input_bounds,true)
+    fn waveform_bounds_complete(
+        &self,
+        solution: &Solution,
+        input_bounds: &[I],
+    ) -> Result<Vec<I>, Error> {
+        self.waveform_bounds_attempt(solution, input_bounds, true)
     }
-    fn waveform_bounds_attempt(&self,solution:&Solution,input_bounds:&[I],contract:bool)->Result<Vec<I>,Error>{
-        if let Some(view)=&self.procedure_view {view.plan.work.debit(2,0)?;}
-        if let Some(view)=&self.procedure_view {
-            if let Some(bounds)=view.plan.cell_bounds(input_bounds,&solution.voltages,self.nodes.len())? {return Ok(bounds);}
+    fn waveform_bounds_attempt(
+        &self,
+        solution: &Solution,
+        input_bounds: &[I],
+        contract: bool,
+    ) -> Result<Vec<I>, Error> {
+        if let Some(view) = &self.procedure_view {
+            view.plan.work.debit(2, 0)?;
+        }
+        if let Some(view) = &self.procedure_view {
+            if let Some(bounds) =
+                view.plan
+                    .cell_bounds(input_bounds, &solution.voltages, self.nodes.len())?
+            {
+                return Ok(bounds);
+            }
         }
 
         let _timing = crate::diagnostics::span("voltage.waveform_certificate");
 
         let extended;
-        let input_bounds=if !self.procedure_parameters.is_empty()&&input_bounds.len()+self.procedure_parameters.len()==self.driven.len(){
-            extended=input_bounds.iter().copied().chain(self.procedure_parameters.iter().map(|(_,b)|*b)).collect::<Vec<_>>();extended.as_slice()
-        }else{input_bounds};
+        let input_bounds = if !self.procedure_parameters.is_empty()
+            && input_bounds.len() + self.procedure_parameters.len() == self.driven.len()
+        {
+            extended = input_bounds
+                .iter()
+                .copied()
+                .chain(self.procedure_parameters.iter().map(|(_, b)| *b))
+                .collect::<Vec<_>>();
+            extended.as_slice()
+        } else {
+            input_bounds
+        };
         if input_bounds.len() != self.driven.len() {
             return Err(Error::new(
                 "invalid_inputs",
@@ -646,10 +824,20 @@ impl Circuit {
         // Exact residuals in a point-input affine system establish an exact
         // representable root; the already successful factorization proves
         // uniqueness. This does not require a floating box wider than one ULP.
-        if contract && self.procedure_view.is_some()
-            && input_bounds.iter().all(|b|b.lo.to_bits()==b.hi.to_bits())
-            && residuals.iter().all(|r|r.lo==0.&&r.hi==0.)
-            && self.affine_factor.as_ref().and_then(|f|f.get()).is_some_and(Result::is_ok){return Ok(point_values);}
+        if contract
+            && self.procedure_view.is_some()
+            && input_bounds
+                .iter()
+                .all(|b| b.lo.to_bits() == b.hi.to_bits())
+            && residuals.iter().all(|r| r.lo == 0. && r.hi == 0.)
+            && self
+                .affine_factor
+                .as_ref()
+                .and_then(|f| f.get())
+                .is_some_and(Result::is_ok)
+        {
+            return Ok(point_values);
+        }
         if self.unknown.is_empty() {
             return Ok(point_values);
         }
@@ -686,27 +874,62 @@ impl Circuit {
         // grounded equations with their full value images, retaining every
         // possible root in the original voltage-budget box. A singleton fixed
         // box plus exact residual zero proves existence and uniqueness there.
-        if let Some(view)=self.procedure_view.as_ref().filter(|_|contract){
-            loop{
-                view.plan.work.debit(2,((self.nodes.len()+self.equations.len()+1)*64) as u64)?;
-                let mut changed=false;
-                for eq in &self.equations{
-                    let (node,sign)=if eq.negative==0{(eq.positive,1.)}else if eq.positive==0{(eq.negative,-1.)}else{continue};
-                    if self.unknown_columns[node].is_none(){continue;}
-                    let mut image=I::ZERO;
-                    for rhs in &eq.original_rhs{image=image+interval_evaluate(rhs,&box_values,Some(&view.plan.work))?.value;}
-                    image=I::point(sign)*image;
-                    let old=box_values[node];let next=I{lo:old.lo.max(image.lo),hi:old.hi.min(image.hi)};
-                    if next.lo>next.hi{return Err(Error::new("waveform_accuracy","rounded equation images have no common physical root"));}
-                    changed|=next.lo.to_bits()!=old.lo.to_bits()||next.hi.to_bits()!=old.hi.to_bits();box_values[node]=next;
+        if let Some(view) = self.procedure_view.as_ref().filter(|_| contract) {
+            loop {
+                view.plan.work.debit(
+                    2,
+                    ((self.nodes.len() + self.equations.len() + 1) * 64) as u64,
+                )?;
+                let mut changed = false;
+                for eq in &self.equations {
+                    let (node, sign) = if eq.negative == 0 {
+                        (eq.positive, 1.)
+                    } else if eq.positive == 0 {
+                        (eq.negative, -1.)
+                    } else {
+                        continue;
+                    };
+                    if self.unknown_columns[node].is_none() {
+                        continue;
+                    }
+                    let mut image = I::ZERO;
+                    for rhs in &eq.original_rhs {
+                        image = image
+                            + interval_evaluate(rhs, &box_values, Some(&view.plan.work))?.value;
+                    }
+                    image = I::point(sign) * image;
+                    let old = box_values[node];
+                    let next = I {
+                        lo: old.lo.max(image.lo),
+                        hi: old.hi.min(image.hi),
+                    };
+                    if next.lo > next.hi {
+                        return Err(Error::new(
+                            "waveform_accuracy",
+                            "rounded equation images have no common physical root",
+                        ));
+                    }
+                    changed |= next.lo.to_bits() != old.lo.to_bits()
+                        || next.hi.to_bits() != old.hi.to_bits();
+                    box_values[node] = next;
                 }
-                if self.unknown.iter().all(|&node|box_values[node].lo.to_bits()==box_values[node].hi.to_bits()){
-                    let exact=self.interval_residuals(&box_values)?;
-                    if exact.iter().all(|r|r.lo==0.&&r.hi==0.){return Ok(box_values);}
+                if self
+                    .unknown
+                    .iter()
+                    .all(|&node| box_values[node].lo.to_bits() == box_values[node].hi.to_bits())
+                {
+                    let exact = self.interval_residuals(&box_values)?;
+                    if exact.iter().all(|r| r.lo == 0. && r.hi == 0.) {
+                        return Ok(box_values);
+                    }
                 }
-                if !changed{break;}
+                if !changed {
+                    break;
+                }
             }
-            for (j,&node) in self.unknown.iter().enumerate(){deltas[j]=box_values[node]-I::point(solution.voltages[node]);}
+            for (j, &node) in self.unknown.iter().enumerate() {
+                deltas[j] = box_values[node] - I::point(solution.voltages[node]);
+            }
         }
         // A scalar monotonicity proof avoids constructing an inverse-like
         // matrix. A missed proof falls back to the unchanged Krawczyk path.
@@ -716,12 +939,14 @@ impl Circuit {
         let scalar_jacobian = if n == 1 {
             let jacobian = self.interval_jacobian(&box_values)?;
             let node = self.unknown[0];
-            if contract && scalar_root_box(
-                residuals[0],
-                jacobian[0][0],
-                solution.voltages[node],
-                box_values[node],
-            ) {
+            if contract
+                && scalar_root_box(
+                    residuals[0],
+                    jacobian[0][0],
+                    solution.voltages[node],
+                    box_values[node],
+                )
+            {
                 // Mean value theorem: each true root differs from the center
                 // by -F(center,U)/F'(X,U). Preserve that image, not only success.
                 point_values[node] =
@@ -806,12 +1031,12 @@ impl Circuit {
             let budget_box = box_values[node];
             if !(image.lo > budget_box.lo && image.hi < budget_box.hi) {
                 if contract {
-                    if let Some(view)=&self.procedure_view {
+                    if let Some(view) = &self.procedure_view {
                         // A fresh complete certificate on the original inner
                         // voltage-budget box, never an intersection of K and X.
                         // The first attempt and its fees remain consumed.
-                        self.reserve_waveform_retry(input_bounds.len(),n,&view.plan.work)?;
-                        return self.waveform_bounds_attempt(solution,input_bounds,false);
+                        self.reserve_waveform_retry(input_bounds.len(), n, &view.plan.work)?;
+                        return self.waveform_bounds_attempt(solution, input_bounds, false);
                     }
                 }
                 return Err(Error::new(
@@ -858,33 +1083,84 @@ impl Circuit {
         inputs: &[f64],
         initial_voltages: Option<&[f64]>,
     ) -> Result<Solution, Error> {
-        let initial_expanded=initial_voltages.map(|v|match &self.procedure_view{Some(view) if v.len()==view.node_count=>view.expand(v),_=>Ok(v.to_vec())}).transpose()?;
+        let initial_expanded = initial_voltages
+            .map(|v| match &self.procedure_view {
+                Some(view) if v.len() == view.node_count => view.expand(v),
+                _ => Ok(v.to_vec()),
+            })
+            .transpose()?;
         // Propose an affine root without RN only inside the cell verifier.
         // Acceptance still requires a distinct exact rational neighborhood on
         // which every executed RN node is constant and the frozen physical
         // affine system has one root. Ordinary captures with already-certified
         // RN nodes do not enter this path.
-        let certified=if let Some(view)=&self.procedure_view {
-            if let Some(program)=&view.physical_program {
-                view.plan.work.debit(2,((inputs.len()+self.procedure_parameters.len())*24+64) as u64)?;
-                let complete=inputs.iter().copied().chain(self.procedure_parameters.iter().map(|(v,_)|*v)).collect::<Vec<_>>();
-                view.plan.try_cell(program,&self.driven,&complete,inputs.len(),view.node_count,&view.ids)?
-            }else{None}
-        }else{None};
-        let mut solution=if let Some(values)=certified {
-            Solution{voltages:values,certified_voltage_bounds:None,max_residual_v:0.,max_residual_ratio:0.,max_scaled_residual_ratio:None,max_voltage_correction_v:None,max_voltage_correction_ratio:None}
-        }else{self.solve_complete(inputs,initial_expanded.as_deref())?};
-        if let Some(view)=&self.procedure_view{solution.voltages.truncate(view.node_count);if let Some(bounds)=solution.certified_voltage_bounds.as_mut(){bounds.truncate(view.node_count);}}
+        let certified = if let Some(view) = &self.procedure_view {
+            if let Some(program) = &view.physical_program {
+                view.plan.work.debit(
+                    2,
+                    ((inputs.len() + self.procedure_parameters.len()) * 24 + 64) as u64,
+                )?;
+                let complete = inputs
+                    .iter()
+                    .copied()
+                    .chain(self.procedure_parameters.iter().map(|(v, _)| *v))
+                    .collect::<Vec<_>>();
+                view.plan.try_cell(
+                    program,
+                    &self.driven,
+                    &complete,
+                    inputs.len(),
+                    view.node_count,
+                    &view.ids,
+                )?
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+        let mut solution = if let Some(values) = certified {
+            Solution {
+                voltages: values,
+                certified_voltage_bounds: None,
+                max_residual_v: 0.,
+                max_residual_ratio: 0.,
+                max_scaled_residual_ratio: None,
+                max_voltage_correction_v: None,
+                max_voltage_correction_ratio: None,
+            }
+        } else {
+            self.solve_complete(inputs, initial_expanded.as_deref())?
+        };
+        if let Some(view) = &self.procedure_view {
+            solution.voltages.truncate(view.node_count);
+            if let Some(bounds) = solution.certified_voltage_bounds.as_mut() {
+                bounds.truncate(view.node_count);
+            }
+        }
         Ok(solution)
     }
-    fn solve_complete(&self,inputs:&[f64],initial_voltages:Option<&[f64]>)->Result<Solution,Error>{
+    fn solve_complete(
+        &self,
+        inputs: &[f64],
+        initial_voltages: Option<&[f64]>,
+    ) -> Result<Solution, Error> {
         let _timing = crate::diagnostics::span("circuit.solve");
         crate::diagnostics::counter("circuit_solve_calls", 1);
 
         let extended;
-        let inputs=if !self.procedure_parameters.is_empty()&&inputs.len()+self.procedure_parameters.len()==self.driven.len(){
-            extended=inputs.iter().copied().chain(self.procedure_parameters.iter().map(|(v,_)|*v)).collect::<Vec<_>>();extended.as_slice()
-        }else{inputs};
+        let inputs = if !self.procedure_parameters.is_empty()
+            && inputs.len() + self.procedure_parameters.len() == self.driven.len()
+        {
+            extended = inputs
+                .iter()
+                .copied()
+                .chain(self.procedure_parameters.iter().map(|(v, _)| *v))
+                .collect::<Vec<_>>();
+            extended.as_slice()
+        } else {
+            inputs
+        };
         if inputs.len() != self.driven.len() || inputs.iter().any(|x| !x.is_finite()) {
             return Err(Error::new(
                 "invalid_inputs",
@@ -1646,10 +1922,10 @@ mod forcing_offset_cache_tests {
 #[cfg(test)]
 mod strict_budget_retry_tests {
     use super::*;
-    use crate::{events::EventModel,transition_source_plan::Work};
+    use crate::{events::EventModel, transition_source_plan::Work};
     use serde_json::json;
     fn program() -> Program {
-        let o=json!({"source":"strict-budget.va","line":1,"column":1,"instance":"dut"});
+        let o = json!({"source":"strict-budget.va","line":1,"column":1,"instance":"dut"});
         serde_json::from_value(json!({"schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","y","z"],
             "contributions":[
                 {"branch":{"instance":"dut","local_positive":"a","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,
@@ -1660,57 +1936,128 @@ mod strict_budget_retry_tests {
                 {"expanded_statement_ordinal":0,"action":{"kind":"contribution_capture","contribution":0}},
                 {"expanded_statement_ordinal":1,"action":{"kind":"contribution_capture","contribution":1}}]}]})).unwrap()
     }
-    fn circuit(w:&Work,domain:I)->Circuit {
-        let model=EventModel::new_with_procedure_work(program(),vec!["u".into()],Tolerances{absolute:1e-10,relative:0.},w.clone()).unwrap();
-        model.circuit_at(&[],&[],&[domain]).unwrap()
+    fn circuit(w: &Work, domain: I) -> Circuit {
+        let model = EventModel::new_with_procedure_work(
+            program(),
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-10,
+                relative: 0.,
+            },
+            w.clone(),
+        )
+        .unwrap();
+        model.circuit_at(&[], &[], &[domain]).unwrap()
     }
     #[test]
     fn strict_retry_complete_original_box_contains_independent_physical_root() {
-        let w=Work::default();let c=circuit(&w,I::point(0.2));let s=c.solve(&[0.2]).unwrap();let b=c.waveform_bounds(&s,&[I::point(0.2)]).unwrap();
-        let q=num_rational::BigRational::from_float(0.2).unwrap();let root=q*num_rational::BigRational::from_integer(3.into());
-        assert!(num_rational::BigRational::from_float(b[2].lo).unwrap()<=root&&root<=num_rational::BigRational::from_float(b[2].hi).unwrap());
-        assert!(b[3].lo<=2.&&2.<=b[3].hi);
-        for node in [2,3]{assert!((b[node]-I::point(s.voltages[node])).magnitude()<=1e-10);}
+        let w = Work::default();
+        let c = circuit(&w, I::point(0.2));
+        let s = c.solve(&[0.2]).unwrap();
+        let b = c.waveform_bounds(&s, &[I::point(0.2)]).unwrap();
+        let q = num_rational::BigRational::from_float(0.2).unwrap();
+        let root = q * num_rational::BigRational::from_integer(3.into());
+        assert!(
+            num_rational::BigRational::from_float(b[2].lo).unwrap() <= root
+                && root <= num_rational::BigRational::from_float(b[2].hi).unwrap()
+        );
+        assert!(b[3].lo <= 2. && 2. <= b[3].hi);
+        for node in [2, 3] {
+            assert!((b[node] - I::point(s.voltages[node])).magnitude() <= 1e-10);
+        }
     }
     #[test]
     fn strict_retry_preserves_complete_true_input_domain() {
-        let w=Work::default();let domain=I{lo:0.19,hi:0.21};let c=circuit(&w,domain);let s=c.solve(&[0.2]).unwrap();
-        assert_eq!(c.waveform_bounds(&s,&[domain]).unwrap_err().kind,"waveform_accuracy");
+        let w = Work::default();
+        let domain = I { lo: 0.19, hi: 0.21 };
+        let c = circuit(&w, domain);
+        let s = c.solve(&[0.2]).unwrap();
+        assert_eq!(
+            c.waveform_bounds(&s, &[domain]).unwrap_err().kind,
+            "waveform_accuracy"
+        );
     }
     #[test]
     fn overdetermined_rows_remain_outside_retry_and_keep_natural_budget() {
-        fn overdetermined(w:&Work)->Circuit {
-            let mut value=serde_json::to_value(program()).unwrap();
-            let mut row=value["contributions"][0].clone();
+        fn overdetermined(w: &Work) -> Circuit {
+            let mut value = serde_json::to_value(program()).unwrap();
+            let mut row = value["contributions"][0].clone();
             // A redundant triangle relation is legal; a second local branch
             // aliasing the same connected endpoint pair is intentionally not.
-            row["branch"]["local_negative"]=json!("b");
-            row["negative"]=json!(3);
-            row["rhs"]["constant"]=json!(-2.0);
+            row["branch"]["local_negative"] = json!("b");
+            row["negative"] = json!(3);
+            row["rhs"]["constant"] = json!(-2.0);
             value["contributions"].as_array_mut().unwrap().push(row);
             value["procedures"][0]["body"].as_array_mut().unwrap().push(json!({
                 "expanded_statement_ordinal":2,"action":{"kind":"contribution_capture","contribution":2}}));
-            let p:Program=serde_json::from_value(value).unwrap();
-            let model=EventModel::new_with_procedure_work(p,vec!["u".into()],Tolerances{absolute:1e-10,relative:0.},w.clone()).unwrap();
-            model.circuit_at(&[],&[],&[I::point(0.2)]).unwrap()
+            let p: Program = serde_json::from_value(value).unwrap();
+            let model = EventModel::new_with_procedure_work(
+                p,
+                vec!["u".into()],
+                Tolerances {
+                    absolute: 1e-10,
+                    relative: 0.,
+                },
+                w.clone(),
+            )
+            .unwrap();
+            model.circuit_at(&[], &[], &[I::point(0.2)]).unwrap()
         }
-        let probe=Work::default();let c=overdetermined(&probe);let solution=c.solve(&[0.2]).unwrap();
-        assert!(c.equations.len()>c.unknown.len());
-        let prefix=probe.spent();
-        let error=c.waveform_bounds(&solution,&[I::point(0.2)]).unwrap_err();
-        assert_eq!(error.kind,"waveform_accuracy");assert!(error.message.contains("requires a square system"));
-        let total=probe.spent();assert!(total>prefix);
-        let w=Work::limited([128,8192,total-1]);let c=overdetermined(&w);let solution=c.solve(&[0.2]).unwrap();
-        assert_eq!(w.spent(),prefix);
-        assert_eq!(c.waveform_bounds(&solution,&[I::point(0.2)]).unwrap_err().kind,"step_budget");
-        let failed=w.spent();
-        for _ in 0..2{assert_eq!(c.waveform_bounds(&solution,&[I::point(0.2)]).unwrap_err().kind,"step_budget");assert_eq!(w.spent(),failed);}
+        let probe = Work::default();
+        let c = overdetermined(&probe);
+        let solution = c.solve(&[0.2]).unwrap();
+        assert!(c.equations.len() > c.unknown.len());
+        let prefix = probe.spent();
+        let error = c.waveform_bounds(&solution, &[I::point(0.2)]).unwrap_err();
+        assert_eq!(error.kind, "waveform_accuracy");
+        assert!(error.message.contains("requires a square system"));
+        let total = probe.spent();
+        assert!(total > prefix);
+        let w = Work::limited([128, 8192, total - 1]);
+        let c = overdetermined(&w);
+        let solution = c.solve(&[0.2]).unwrap();
+        assert_eq!(w.spent(), prefix);
+        assert_eq!(
+            c.waveform_bounds(&solution, &[I::point(0.2)])
+                .unwrap_err()
+                .kind,
+            "step_budget"
+        );
+        let failed = w.spent();
+        for _ in 0..2 {
+            assert_eq!(
+                c.waveform_bounds(&solution, &[I::point(0.2)])
+                    .unwrap_err()
+                    .kind,
+                "step_budget"
+            );
+            assert_eq!(w.spent(), failed);
+        }
     }
     #[test]
     fn strict_retry_original_owner_natural_exhaustion_and_sticky_queries() {
-        let probe=Work::default();let c=circuit(&probe,I::point(0.2));let s=c.solve(&[0.2]).unwrap();let prefix=probe.spent();c.waveform_bounds(&s,&[I::point(0.2)]).unwrap();let total=probe.spent();assert!(total>prefix);
-        let w=Work::limited([128,8192,total-1]);let c=circuit(&w,I::point(0.2));let s=c.solve(&[0.2]).unwrap();assert_eq!(w.spent(),prefix);
-        assert_eq!(c.waveform_bounds(&s,&[I::point(0.2)]).unwrap_err().kind,"step_budget");let failed=w.spent();
-        for _ in 0..2{assert_eq!(c.waveform_bounds(&s,&[I::point(0.2)]).unwrap_err().kind,"step_budget");assert_eq!(w.spent(),failed);}
+        let probe = Work::default();
+        let c = circuit(&probe, I::point(0.2));
+        let s = c.solve(&[0.2]).unwrap();
+        let prefix = probe.spent();
+        c.waveform_bounds(&s, &[I::point(0.2)]).unwrap();
+        let total = probe.spent();
+        assert!(total > prefix);
+        let w = Work::limited([128, 8192, total - 1]);
+        let c = circuit(&w, I::point(0.2));
+        let s = c.solve(&[0.2]).unwrap();
+        assert_eq!(w.spent(), prefix);
+        assert_eq!(
+            c.waveform_bounds(&s, &[I::point(0.2)]).unwrap_err().kind,
+            "step_budget"
+        );
+        let failed = w.spent();
+        for _ in 0..2 {
+            assert_eq!(
+                c.waveform_bounds(&s, &[I::point(0.2)]).unwrap_err().kind,
+                "step_budget"
+            );
+            assert_eq!(w.spent(), failed);
+        }
     }
 }

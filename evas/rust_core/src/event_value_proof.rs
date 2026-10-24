@@ -10,30 +10,66 @@ pub(crate) mod history;
 
 pub(crate) type Proofs = std::collections::BTreeMap<usize, R>;
 
-pub(crate) fn binary_state_identity(value:&R,point:f64,w:&crate::transition_source_plan::Work)->Result<bool,crate::ir::Error>{
-    w.debit(2,0)?;w.debit(2,8)?;
-    if !point.is_finite()||!value.denom().is_positive(){return Ok(false);}
-    if point==0.{return Ok(value.is_zero()&&value.denom().bits()==1);}
-    if value.is_zero()||value.numer().is_negative()!=point.is_sign_negative(){return Ok(false);}
-    let raw=point.to_bits();let exponent=((raw>>52)&2047)as i64;
-    let mantissa=(raw&((1u64<<52)-1))|if exponent==0{0}else{1u64<<52};
-    let zeros=mantissa.trailing_zeros();let significant=mantissa>>zeros;
-    let power=if exponent==0{-1074}else{exponent-1023-52}+i64::from(zeros);
-    let numerator_shift=power.max(0)as u64;let denominator_shift=(-power).max(0)as u64;
-    let bits=u64::from(64-significant.leading_zeros());
-    let numerator=value.numer().magnitude();let denominator=value.denom().magnitude();
-    w.debit(2,numerator.bits().div_ceil(64)+denominator.bits().div_ceil(64)+bits+16)?;
-    if numerator.bits()!=bits+numerator_shift||denominator.bits()!=denominator_shift+1||numerator.trailing_zeros()!=Some(numerator_shift)||denominator.trailing_zeros()!=Some(denominator_shift){return Ok(false);}
-    for bit in 0..bits{if numerator.bit(numerator_shift+bit)!=((significant>>bit)&1!=0){return Ok(false);}}
+pub(crate) fn binary_state_identity(
+    value: &R,
+    point: f64,
+    w: &crate::transition_source_plan::Work,
+) -> Result<bool, crate::ir::Error> {
+    w.debit(2, 0)?;
+    w.debit(2, 8)?;
+    if !point.is_finite() || !value.denom().is_positive() {
+        return Ok(false);
+    }
+    if point == 0. {
+        return Ok(value.is_zero() && value.denom().bits() == 1);
+    }
+    if value.is_zero() || value.numer().is_negative() != point.is_sign_negative() {
+        return Ok(false);
+    }
+    let raw = point.to_bits();
+    let exponent = ((raw >> 52) & 2047) as i64;
+    let mantissa = (raw & ((1u64 << 52) - 1)) | if exponent == 0 { 0 } else { 1u64 << 52 };
+    let zeros = mantissa.trailing_zeros();
+    let significant = mantissa >> zeros;
+    let power = if exponent == 0 {
+        -1074
+    } else {
+        exponent - 1023 - 52
+    } + i64::from(zeros);
+    let numerator_shift = power.max(0) as u64;
+    let denominator_shift = (-power).max(0) as u64;
+    let bits = u64::from(64 - significant.leading_zeros());
+    let numerator = value.numer().magnitude();
+    let denominator = value.denom().magnitude();
+    w.debit(
+        2,
+        numerator.bits().div_ceil(64) + denominator.bits().div_ceil(64) + bits + 16,
+    )?;
+    if numerator.bits() != bits + numerator_shift
+        || denominator.bits() != denominator_shift + 1
+        || numerator.trailing_zeros() != Some(numerator_shift)
+        || denominator.trailing_zeros() != Some(denominator_shift)
+    {
+        return Ok(false);
+    }
+    for bit in 0..bits {
+        if numerator.bit(numerator_shift + bit) != ((significant >> bit) & 1 != 0) {
+            return Ok(false);
+        }
+    }
     Ok(true)
 }
 
 #[derive(Clone)]
-pub(crate) struct NominalFrame{pub states:Vec<f64>,pub operators:Vec<f64>,pub inputs:Vec<f64>}
+pub(crate) struct NominalFrame {
+    pub states: Vec<f64>,
+    pub operators: Vec<f64>,
+    pub inputs: Vec<f64>,
+}
 pub(crate) struct Context<'a> {
     states: &'a Proofs,
     rooted_occurrence: bool,
-    nominal_frame:Option<std::sync::Arc<NominalFrame>>,
+    nominal_frame: Option<std::sync::Arc<NominalFrame>>,
     nodes: Vec<Option<R>>,
     operators: Vec<I>,
     floor_work: Option<crate::transition_source_plan::Work>,
@@ -42,21 +78,66 @@ pub(crate) struct Context<'a> {
     source_domains: Option<std::sync::Arc<crate::source_domain::Sources>>,
 }
 impl<'a> Context<'a> {
-    pub(crate) fn candidate_frame(proofs:&'a Proofs,node_count:usize,states:&[f64],operators:&[f64],work:&crate::transition_source_plan::Work)->Result<Self,crate::ir::Error>{
-        work.debit(2,((node_count+states.len()+operators.len())*64+64) as u64)?;
-        Ok(Self{states:proofs,rooted_occurrence:false,nominal_frame:Some(std::sync::Arc::new(NominalFrame{states:states.to_vec(),operators:operators.to_vec(),inputs:Vec::new()})),nodes:vec![None;node_count],operators:operators.iter().copied().map(I::point).collect(),floor_work:None,history_work:Some(work.clone()),floor_bounds:None,source_domains:None})
+    pub(crate) fn candidate_frame(
+        proofs: &'a Proofs,
+        node_count: usize,
+        states: &[f64],
+        operators: &[f64],
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Self, crate::ir::Error> {
+        work.debit(
+            2,
+            ((node_count + states.len() + operators.len()) * 64 + 64) as u64,
+        )?;
+        Ok(Self {
+            states: proofs,
+            rooted_occurrence: false,
+            nominal_frame: Some(std::sync::Arc::new(NominalFrame {
+                states: states.to_vec(),
+                operators: operators.to_vec(),
+                inputs: Vec::new(),
+            })),
+            nodes: vec![None; node_count],
+            operators: operators.iter().copied().map(I::point).collect(),
+            floor_work: None,
+            history_work: Some(work.clone()),
+            floor_bounds: None,
+            source_domains: None,
+        })
     }
 
     // Identity, not equality: two different accepted Frames can contain two
     // distinct exact rationals inside the same outward-rounded interval.
-    pub(crate) fn rooted_occurrence(&self)->bool{self.rooted_occurrence}
-    pub(crate) fn nominal_frame(&self)->Option<&NominalFrame>{self.nominal_frame.as_deref()}
-    pub(crate) fn set_candidate_frame(&mut self,states:&[f64],operators:&[f64],inputs:&[f64],ordered:bool)->Result<(),crate::ir::Error>{
-        if let Some(w)=self.execution_work(){w.debit(2,((states.len()+operators.len()+inputs.len())*8+32) as u64)?;}
-        self.nominal_frame=Some(std::sync::Arc::new(NominalFrame{states:states.to_vec(),operators:operators.to_vec(),inputs:inputs.to_vec()}));
-        self.rooted_occurrence=ordered;Ok(())
+    pub(crate) fn rooted_occurrence(&self) -> bool {
+        self.rooted_occurrence
     }
-    pub(crate) fn execution_work(&self)->Option<&crate::transition_source_plan::Work>{self.history_work.as_ref().or(self.floor_work.as_ref())}
+    pub(crate) fn nominal_frame(&self) -> Option<&NominalFrame> {
+        self.nominal_frame.as_deref()
+    }
+    pub(crate) fn set_candidate_frame(
+        &mut self,
+        states: &[f64],
+        operators: &[f64],
+        inputs: &[f64],
+        ordered: bool,
+    ) -> Result<(), crate::ir::Error> {
+        if let Some(w) = self.execution_work() {
+            w.debit(
+                2,
+                ((states.len() + operators.len() + inputs.len()) * 8 + 32) as u64,
+            )?;
+        }
+        self.nominal_frame = Some(std::sync::Arc::new(NominalFrame {
+            states: states.to_vec(),
+            operators: operators.to_vec(),
+            inputs: inputs.to_vec(),
+        }));
+        self.rooted_occurrence = ordered;
+        Ok(())
+    }
+    pub(crate) fn execution_work(&self) -> Option<&crate::transition_source_plan::Work> {
+        self.history_work.as_ref().or(self.floor_work.as_ref())
+    }
     pub(crate) fn proof_identity(&self) -> *const Proofs {
         self.states as *const Proofs
     }
@@ -66,69 +147,134 @@ impl<'a> Context<'a> {
     }
 
     pub(crate) fn try_new(
-        model:&crate::events::EventModel, trajectory:&crate::pwl::Trajectory,
-        inputs:&[I], states:&'a Proofs, root:Option<&crate::exact_source::RootTime>,
-    )->Result<Self,crate::ir::Error>{
-        let mut result=Self::try_new_base(model,trajectory,inputs,states,root)?;
+        model: &crate::events::EventModel,
+        trajectory: &crate::pwl::Trajectory,
+        inputs: &[I],
+        states: &'a Proofs,
+        root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<Self, crate::ir::Error> {
+        let mut result = Self::try_new_base(model, trajectory, inputs, states, root)?;
 
-        if let Some(root)=root{
-            let w=crate::real_expression::work(model);
-            w.debit(2,(model.program.nodes.len()*16+64) as u64)?;
-            let mut bands=vec![None;model.program.nodes.len()];let mut any=false;
-            for (k,name) in model.driven.iter().enumerate(){
-                w.step()?;let band=trajectory.sample_domain_at_root(k,root,w)?;
-                let band=match band {Some(band)=>Some(band),None=>match &model.analytic_request {
-                    Some(request)=>request.sample_domain(k,&model.program,trajectory,root,w)?,None=>None,
-                }};
-                let Some(band)=band else{continue;};
-                let Some(bounds)=inputs.get(k) else{continue;};if !band.contained(*bounds,w)?{continue;}
-                let mut index=None;
-                for (n,node) in model.program.nodes.iter().enumerate(){w.debit(2,(node.len()+name.len()+1) as u64)?;if node==name{index=Some(n);break;}}
-                let node=index.ok_or_else(||crate::ir::Error::new("invalid_ir","source domain input node absent"))?;
-                result.nodes[node]=None;bands[node]=Some(band);any=true;
-            }
-            if any{result.source_domains=Some(crate::source_domain::Sources::new(bands,w)?);}
-        }
-        if root.is_some() && !model.program.procedures.is_empty() && model.forcing.is_none() && model.dc_projection.is_none() {
-            let owner=result.execution_work().unwrap_or_else(||crate::real_expression::work(model));
-            owner.debit(2,16)?;let owner=owner.clone();let w=&owner;
-            if model.independent_physical.get().is_none() {
-                w.debit(2,(model.driven.len()*8+32) as u64)?;
-                let mut driven=Vec::with_capacity(model.driven.len());
-                for name in &model.driven {
-                    let mut found=None;
-                    for (index,node) in model.program.nodes.iter().enumerate(){
-                        w.debit(2,(name.len()+node.len()+1) as u64)?;
-                        if node==name {found=Some(index);break;}
-                    }
-                    driven.push(found.ok_or_else(||crate::ir::Error::new("invalid_ir","physical projection source absent"))?);
+        if let Some(root) = root {
+            let w = crate::real_expression::work(model);
+            w.debit(2, (model.program.nodes.len() * 16 + 64) as u64)?;
+            let mut bands = vec![None; model.program.nodes.len()];
+            let mut any = false;
+            for (k, name) in model.driven.iter().enumerate() {
+                w.step()?;
+                let band = trajectory.sample_domain_at_root(k, root, w)?;
+                let band = match band {
+                    Some(band) => Some(band),
+                    None => match &model.analytic_request {
+                        Some(request) => {
+                            request.sample_domain(k, &model.program, trajectory, root, w)?
+                        }
+                        None => None,
+                    },
+                };
+                let Some(band) = band else {
+                    continue;
+                };
+                let Some(bounds) = inputs.get(k) else {
+                    continue;
+                };
+                if !band.contained(*bounds, w)? {
+                    continue;
                 }
-                let projection=crate::procedure_affine::project(&model.program,&driven,w)?;
-                let projection=projection.map(|p|{w.debit(2,96)?;Ok::<_,crate::ir::Error>(std::sync::Arc::new(p))}).transpose()?;
-                let _=model.independent_physical.set(projection);
+                let mut index = None;
+                for (n, node) in model.program.nodes.iter().enumerate() {
+                    w.debit(2, (node.len() + name.len() + 1) as u64)?;
+                    if node == name {
+                        index = Some(n);
+                        break;
+                    }
+                }
+                let node = index.ok_or_else(|| {
+                    crate::ir::Error::new("invalid_ir", "source domain input node absent")
+                })?;
+                result.nodes[node] = None;
+                bands[node] = Some(band);
+                any = true;
             }
-            if let Some(projection)=model.independent_physical.get().and_then(Option::as_ref) {
-                w.debit(2,16)?;
-                if !projection.owner.same_owner(w){return Err(crate::ir::Error::new("invalid_ir","physical projection belongs to another request"));}
-                for (node,row) in projection.rows.iter().enumerate() {
+            if any {
+                result.source_domains = Some(crate::source_domain::Sources::new(bands, w)?);
+            }
+        }
+        if root.is_some()
+            && !model.program.procedures.is_empty()
+            && model.forcing.is_none()
+            && model.dc_projection.is_none()
+        {
+            let owner = result
+                .execution_work()
+                .unwrap_or_else(|| crate::real_expression::work(model));
+            owner.debit(2, 16)?;
+            let owner = owner.clone();
+            let w = &owner;
+            if model.independent_physical.get().is_none() {
+                w.debit(2, (model.driven.len() * 8 + 32) as u64)?;
+                let mut driven = Vec::with_capacity(model.driven.len());
+                for name in &model.driven {
+                    let mut found = None;
+                    for (index, node) in model.program.nodes.iter().enumerate() {
+                        w.debit(2, (name.len() + node.len() + 1) as u64)?;
+                        if node == name {
+                            found = Some(index);
+                            break;
+                        }
+                    }
+                    driven.push(found.ok_or_else(|| {
+                        crate::ir::Error::new("invalid_ir", "physical projection source absent")
+                    })?);
+                }
+                let projection = crate::procedure_affine::project(&model.program, &driven, w)?;
+                let projection = projection
+                    .map(|p| {
+                        w.debit(2, 96)?;
+                        Ok::<_, crate::ir::Error>(std::sync::Arc::new(p))
+                    })
+                    .transpose()?;
+                let _ = model.independent_physical.set(projection);
+            }
+            if let Some(projection) = model.independent_physical.get().and_then(Option::as_ref) {
+                w.debit(2, 16)?;
+                if !projection.owner.same_owner(w) {
+                    return Err(crate::ir::Error::new(
+                        "invalid_ir",
+                        "physical projection belongs to another request",
+                    ));
+                }
+                for (node, row) in projection.rows.iter().enumerate() {
                     w.step()?;
-                    if result.nodes[node].is_some(){continue;}
-                    let mut independent=true;
-                    for value in &row[projection.opaque_start..row.len()-1]{w.step()?;if !value.is_zero(){independent=false;break;}}
-                    if !independent {continue;}
-                    let mut paid=crate::exact_source::history_paid::Paid::new(w);
-                    let value=(||{
-                        let mut sum=paid.copy(row.last()?)?;
-                        for (&input,coefficient) in projection.driven.iter().zip(row) {
+                    if result.nodes[node].is_some() {
+                        continue;
+                    }
+                    let mut independent = true;
+                    for value in &row[projection.opaque_start..row.len() - 1] {
+                        w.step()?;
+                        if !value.is_zero() {
+                            independent = false;
+                            break;
+                        }
+                    }
+                    if !independent {
+                        continue;
+                    }
+                    let mut paid = crate::exact_source::history_paid::Paid::new(w);
+                    let value = (|| {
+                        let mut sum = paid.copy(row.last()?)?;
+                        for (&input, coefficient) in projection.driven.iter().zip(row) {
                             paid.pay(1)?;
-                            if coefficient.is_zero(){continue;}
-                            let value=result.nodes.get(input)?.as_ref()?;
-                            let product=paid.op(coefficient,value,'*')?;
-                            sum=paid.op(&sum,&product,'+')?;
+                            if coefficient.is_zero() {
+                                continue;
+                            }
+                            let value = result.nodes.get(input)?.as_ref()?;
+                            let product = paid.op(coefficient, value, '*')?;
+                            sum = paid.op(&sum, &product, '+')?;
                         }
                         Some(sum)
                     })();
-                    result.nodes[node]=paid.finish(value)?;
+                    result.nodes[node] = paid.finish(value)?;
                 }
             }
         }
@@ -206,10 +352,13 @@ impl<'a> Context<'a> {
             }
             result.floor_bounds = Some(b);
         }
-        if !model.program.procedures.is_empty() && result.history_work.is_none() && result.floor_work.is_none(){
-            let w=crate::real_expression::work(model);
-            w.debit(2,model.source_copy_items as u64)?;
-            result.history_work=Some(w.clone());
+        if !model.program.procedures.is_empty()
+            && result.history_work.is_none()
+            && result.floor_work.is_none()
+        {
+            let w = crate::real_expression::work(model);
+            w.debit(2, model.source_copy_items as u64)?;
+            result.history_work = Some(w.clone());
         }
         Ok(result)
     }
@@ -235,21 +384,23 @@ impl<'a> Context<'a> {
                 "floor_source_copy",
             )?;
         }
-        if let Some(bands)=&self.source_domains{bands.share_cost()?;}
+        if let Some(bands) = &self.source_domains {
+            bands.share_cost()?;
+        }
         Ok(self.with_operators(operators))
     }
 
     pub(crate) fn with_operators(&self, operators: &[I]) -> Self {
         Self {
             states: self.states,
-            rooted_occurrence:self.rooted_occurrence,
-            nominal_frame:self.nominal_frame.clone(),
+            rooted_occurrence: self.rooted_occurrence,
+            nominal_frame: self.nominal_frame.clone(),
             nodes: self.nodes.clone(),
             operators: operators.to_vec(),
             floor_work: self.floor_work.clone(),
             history_work: self.history_work.clone(),
             floor_bounds: self.floor_bounds.clone(),
-            source_domains:self.source_domains.clone(),
+            source_domains: self.source_domains.clone(),
         }
     }
     pub(crate) fn operators(&self) -> &[I] {
@@ -297,14 +448,14 @@ impl<'a> Context<'a> {
         }
         Self {
             states,
-            rooted_occurrence:false,
-            nominal_frame:None,
+            rooted_occurrence: false,
+            nominal_frame: None,
             nodes,
             operators: Vec::new(),
             floor_work: None,
             history_work: None,
             floor_bounds: None,
-            source_domains:None,
+            source_domains: None,
         }
     }
 }
@@ -363,12 +514,14 @@ impl LocalState {
             floor_work: None,
             history_work: None,
             floor_bounds: None,
-            source_domains:None,
+            source_domains: None,
         }))
     }
 
     fn prepay_copy(&self) -> Result<(), crate::ir::Error> {
-        if let Some(bands)=&self.source_domains{bands.share_cost()?;}
+        if let Some(bands) = &self.source_domains {
+            bands.share_cost()?;
+        }
         if self.history_work.is_some() {
             return history::charge_local_copy(self);
         }
@@ -397,40 +550,102 @@ impl LocalState {
     }
     /// Reuse only this input frame's paid state proof. Bounds alone do not
     /// imply identity: mutable legacy frames can retain their previous bounds.
-    pub(crate) fn try_point_state(&self,state:usize,point:f64,bound:I,w:&crate::transition_source_plan::Work)->Result<Option<R>,crate::ir::Error>{
-        w.debit(2,0)?;w.debit(2,8)?;
-        if !self.history_work.as_ref().is_some_and(|owner|owner.same_owner(w)) || !point.is_finite(){return Ok(None);}
-        let same=|b:I|b.lo.to_bits()==point.to_bits()&&b.hi.to_bits()==point.to_bits();
-        if !same(bound)||!self.bounds.get(state).is_some_and(|b|same(*b)){return Ok(None);}
-        let Some(value)=self.exact.get(state).and_then(Option::as_ref)else{return Ok(None);};
-        if !binary_state_identity(value,point,w)?{return Ok(None);}
-        let mut paid=crate::exact_source::history_paid::Paid::new(w);let copy=paid.copy(value);paid.finish(copy)
+    pub(crate) fn try_point_state(
+        &self,
+        state: usize,
+        point: f64,
+        bound: I,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<R>, crate::ir::Error> {
+        w.debit(2, 0)?;
+        w.debit(2, 8)?;
+        if !self
+            .history_work
+            .as_ref()
+            .is_some_and(|owner| owner.same_owner(w))
+            || !point.is_finite()
+        {
+            return Ok(None);
+        }
+        let same = |b: I| b.lo.to_bits() == point.to_bits() && b.hi.to_bits() == point.to_bits();
+        if !same(bound) || !self.bounds.get(state).is_some_and(|b| same(*b)) {
+            return Ok(None);
+        }
+        let Some(value) = self.exact.get(state).and_then(Option::as_ref) else {
+            return Ok(None);
+        };
+        if !binary_state_identity(value, point, w)? {
+            return Ok(None);
+        }
+        let mut paid = crate::exact_source::history_paid::Paid::new(w);
+        let copy = paid.copy(value);
+        paid.finish(copy)
     }
 
     /// A solver's private hypothesis domain. It is never installed in the
     /// accepted Context or promoted into exact node proofs. Only a separate
     /// complete RN-cell verifier can certify the resulting physical root.
     pub(crate) fn try_candidate_domains(
-        &self, bands: Vec<Option<std::sync::Arc<crate::source_domain::Domain>>>,
+        &self,
+        bands: Vec<Option<std::sync::Arc<crate::source_domain::Domain>>>,
         w: &crate::transition_source_plan::Work,
     ) -> Result<Self, crate::ir::Error> {
-        for owner in [&self.floor_work,&self.history_work].into_iter().flatten() {
-            if !owner.same_owner(w) {return Err(crate::ir::Error::new("invalid_ir","candidate cell belongs to another request"));}
+        for owner in [&self.floor_work, &self.history_work].into_iter().flatten() {
+            if !owner.same_owner(w) {
+                return Err(crate::ir::Error::new(
+                    "invalid_ir",
+                    "candidate cell belongs to another request",
+                ));
+            }
         }
-        w.debit(2,((self.bounds.len()+self.exact.len()+bands.len())*32+128) as u64)?;
-        let mut exact=Vec::with_capacity(self.exact.len());
+        w.debit(
+            2,
+            ((self.bounds.len() + self.exact.len() + bands.len()) * 32 + 128) as u64,
+        )?;
+        let mut exact = Vec::with_capacity(self.exact.len());
         for value in &self.exact {
             w.step()?;
-            let mut paid=crate::exact_source::history_paid::Paid::new(w);
-            let copy=match value {Some(r)=>{let copy=paid.copy(r);Some(paid.finish(copy)?.ok_or_else(||crate::ir::Error::new("waveform_accuracy","candidate state proof exceeds rational limit"))?)},None=>None};
+            let mut paid = crate::exact_source::history_paid::Paid::new(w);
+            let copy = match value {
+                Some(r) => {
+                    let copy = paid.copy(r);
+                    Some(paid.finish(copy)?.ok_or_else(|| {
+                        crate::ir::Error::new(
+                            "waveform_accuracy",
+                            "candidate state proof exceeds rational limit",
+                        )
+                    })?)
+                }
+                None => None,
+            };
             exact.push(copy);
         }
-        let count=bands.len();
-        Ok(Self{bounds:self.bounds.clone(),exact,nodes:Some(vec![None;count]),floor_work:Some(w.clone()),history_work:Some(w.clone()),floor_bounds:None,source_domains:Some(crate::source_domain::Sources::new(bands,w)?)})
+        let count = bands.len();
+        Ok(Self {
+            bounds: self.bounds.clone(),
+            exact,
+            nodes: Some(vec![None; count]),
+            floor_work: Some(w.clone()),
+            history_work: Some(w.clone()),
+            floor_bounds: None,
+            source_domains: Some(crate::source_domain::Sources::new(bands, w)?),
+        })
     }
-    pub(crate) fn source_domain(&self,constant:f64,terms:&[crate::ir::Term],bounds:&[I],w:&crate::transition_source_plan::Work)->Result<Option<std::sync::Arc<crate::source_domain::Domain>>,crate::ir::Error>{
-
-        crate::source_domain::Sources::affine(self.source_domains.as_deref(),constant,terms,self.nodes.as_deref().unwrap_or(&[]),bounds,w)
+    pub(crate) fn source_domain(
+        &self,
+        constant: f64,
+        terms: &[crate::ir::Term],
+        bounds: &[I],
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<std::sync::Arc<crate::source_domain::Domain>>, crate::ir::Error> {
+        crate::source_domain::Sources::affine(
+            self.source_domains.as_deref(),
+            constant,
+            terms,
+            self.nodes.as_deref().unwrap_or(&[]),
+            bounds,
+            w,
+        )
     }
     pub(crate) fn try_value(&self, e: &E, nodes: &[I]) -> Result<Option<R>, crate::ir::Error> {
         if let Some(w) = self.history_work.as_ref() {
@@ -485,8 +700,11 @@ impl LocalState {
         context: Option<&Context<'_>>,
     ) -> Result<Self, crate::ir::Error> {
         if context.is_some_and(|c| c.history_work.is_some()) {
-            let mut local=history::local_new(bounds,context.unwrap())?;
-            if let Some(bands)=&context.unwrap().source_domains{bands.share_cost()?;local.source_domains=Some(bands.clone());}
+            let mut local = history::local_new(bounds, context.unwrap())?;
+            if let Some(bands) = &context.unwrap().source_domains {
+                bands.share_cost()?;
+                local.source_domains = Some(bands.clone());
+            }
             return Ok(local);
         }
         if let Some(w) = context.and_then(|c| c.floor_work.as_ref()) {
@@ -513,8 +731,11 @@ impl LocalState {
             )?;
             crate::event_floor::charge(w, 1024 * c.states.len(), "floor_source_exact_enclosure")?;
         }
-        let mut local=Self::with_context(bounds,context);
-        if let Some(bands)=context.and_then(|c|c.source_domains.as_ref()){bands.share_cost()?;local.source_domains=Some(bands.clone());}
+        let mut local = Self::with_context(bounds, context);
+        if let Some(bands) = context.and_then(|c| c.source_domains.as_ref()) {
+            bands.share_cost()?;
+            local.source_domains = Some(bands.clone());
+        }
         Ok(local)
     }
 
@@ -526,7 +747,7 @@ impl LocalState {
             floor_work: None,
             history_work: None,
             floor_bounds: None,
-            source_domains:None,
+            source_domains: None,
         }
     }
     pub(crate) fn with_context(bounds: &[I], context: Option<&Context<'_>>) -> Self {
@@ -706,24 +927,67 @@ fn evaluate<W: FnMut() -> Option<()>>(
         return None;
     }
     match e {
-        E::RealBoundary{value,..}=>{
-            let value=evaluate(value,nodes,states,node_proofs,budget,depth+1,count,work)?;
-            let rounded=crate::real_rounding::round_ratio(&value,false,&mut |n|{
-                for _ in 0..n {work().ok_or(())?;} Ok::<_,()>(())
-            }).ok()?;
+        E::RealBoundary { value, .. } => {
+            let value = evaluate(
+                value,
+                nodes,
+                states,
+                node_proofs,
+                budget,
+                depth + 1,
+                count,
+                work,
+            )?;
+            let rounded = crate::real_rounding::round_ratio(&value, false, &mut |n| {
+                for _ in 0..n {
+                    work().ok_or(())?;
+                }
+                Ok::<_, ()>(())
+            })
+            .ok()?;
             budget.check(binary(rounded)?)
-        },
-        E::RealBinary{operation,left,right,..}=>{
-            let a=evaluate(left,nodes,states,node_proofs,budget,depth+1,count,work)?;
-            let b=evaluate(right,nodes,states,node_proofs,budget,depth+1,count,work)?;
-            let mut round=|value:&R|crate::real_rounding::round_ratio(value,false,&mut |n|{
-                for _ in 0..n {work().ok_or(())?;} Ok::<_,()>(())
-            }).ok();
-            let a=round(&a)?;let b=round(&b)?;
+        }
+        E::RealBinary {
+            operation,
+            left,
+            right,
+            ..
+        } => {
+            let a = evaluate(
+                left,
+                nodes,
+                states,
+                node_proofs,
+                budget,
+                depth + 1,
+                count,
+                work,
+            )?;
+            let b = evaluate(
+                right,
+                nodes,
+                states,
+                node_proofs,
+                budget,
+                depth + 1,
+                count,
+                work,
+            )?;
+            let mut round = |value: &R| {
+                crate::real_rounding::round_ratio(value, false, &mut |n| {
+                    for _ in 0..n {
+                        work().ok_or(())?;
+                    }
+                    Ok::<_, ()>(())
+                })
+                .ok()
+            };
+            let a = round(&a)?;
+            let b = round(&b)?;
             work()?;
-            let result=crate::real_expression::point(*operation,a,b).ok()?;
+            let result = crate::real_expression::point(*operation, a, b).ok()?;
             budget.check(binary(result)?)
-        },
+        }
         E::Affine { constant, terms } => {
             if terms.len() > 512 {
                 return None;
@@ -905,9 +1169,12 @@ pub(crate) fn apply_charged(
         .enumerate()
         .filter_map(|(s, v)| Some((s, v.clone()?)))
         .collect::<Proofs>();
-    let mut frames=crate::procedure_frames::Frames::new(selection,Some(w))?;
+    let mut frames = crate::procedure_frames::Frames::new(selection, Some(w))?;
     for (event, indices) in &selection.actions {
-        let mut local = match frames.take(*event){Some(v)=>v,None=>initial.try_clone()?};
+        let mut local = match frames.take(*event) {
+            Some(v) => v,
+            None => initial.try_clone()?,
+        };
         let body = &model.program.events[*event].body;
         let size = crate::event_floor::encoded_size(body, w)?;
         crate::event_floor::charge(w, size, "floor_source_copy")?;
@@ -927,7 +1194,7 @@ pub(crate) fn apply_charged(
                 result.insert(a.state, value);
             }
         }
-        frames.put(*event,local);
+        frames.put(*event, local);
     }
     crate::event_floor::charge(w, result.len() * 8, "floor_source_copy")?;
     let mut checked = Proofs::new();
@@ -961,9 +1228,10 @@ pub(crate) fn apply(
         .enumerate()
         .filter_map(|(s, v)| Some((s, v.clone()?)))
         .collect::<Proofs>();
-    let mut frames=crate::procedure_frames::Frames::new(selection,None).expect("unmetered frame construction");
+    let mut frames = crate::procedure_frames::Frames::new(selection, None)
+        .expect("unmetered frame construction");
     for (event, indices) in &selection.actions {
-        let mut local = frames.take(*event).unwrap_or_else(||initial.clone());
+        let mut local = frames.take(*event).unwrap_or_else(|| initial.clone());
         let assignments = model.program.events[*event].assignments();
         for &index in indices {
             let a = &assignments[index];
@@ -974,7 +1242,7 @@ pub(crate) fn apply(
                 result.insert(a.state, value);
             }
         }
-        frames.put(*event,local);
+        frames.put(*event, local);
     }
     result.retain(|s, value| {
         after
@@ -1028,7 +1296,7 @@ mod native_floor_tests {
             floor_work: None,
             history_work: None,
             floor_bounds: None,
-            source_domains:None,
+            source_domains: None,
         };
         let node = E::Affine {
             constant: 0.,
@@ -1125,58 +1393,190 @@ mod singleton_assignment_tests {
 }
 
 #[cfg(test)]
-mod point_state_reuse_tests{
+mod point_state_reuse_tests {
     use super::*;
     use crate::transition_source_plan::Work;
-    fn local(point:f64,w:&Work)->LocalState{
-        let proofs=Proofs::new();let context=Context::candidate_frame(&proofs,0,&[point],&[],w).unwrap();
-        LocalState::try_with_context(&[I::point(point)],Some(&context)).unwrap()
+    fn local(point: f64, w: &Work) -> LocalState {
+        let proofs = Proofs::new();
+        let context = Context::candidate_frame(&proofs, 0, &[point], &[], w).unwrap();
+        LocalState::try_with_context(&[I::point(point)], Some(&context)).unwrap()
     }
     #[test]
-    fn point_state_reuse_exact_bits_include_subnormals_signs_and_reject_rounded_neighbours(){
-        let w=Work::default();
-        for point in [0.,-0.,f64::from_bits(1),-f64::from_bits(1),f64::MIN_POSITIVE,0.1,-0.1,1.,-1.,2f64.powi(53),f64::MAX]{
-            let value=binary(point).unwrap();assert!(binary_state_identity(&value,point,&w).unwrap());
-            assert_eq!(local(point,&w).try_point_state(0,point,I::point(point),&w).unwrap(),Some(value));
+    fn point_state_reuse_exact_bits_include_subnormals_signs_and_reject_rounded_neighbours() {
+        let w = Work::default();
+        for point in [
+            0.,
+            -0.,
+            f64::from_bits(1),
+            -f64::from_bits(1),
+            f64::MIN_POSITIVE,
+            0.1,
+            -0.1,
+            1.,
+            -1.,
+            2f64.powi(53),
+            f64::MAX,
+        ] {
+            let value = binary(point).unwrap();
+            assert!(binary_state_identity(&value, point, &w).unwrap());
+            assert_eq!(
+                local(point, &w)
+                    .try_point_state(0, point, I::point(point), &w)
+                    .unwrap(),
+                Some(value)
+            );
         }
-        assert!(!binary_state_identity(&R::new(1.into(),10.into()),0.1,&w).unwrap());
-        let close=R::from_integer(1.into())+R::new(1.into(),(1u64<<60).into());assert!(!binary_state_identity(&close,1.,&w).unwrap());
-        assert!(!binary_state_identity(&binary(-1.).unwrap(),1.,&w).unwrap());
+        assert!(!binary_state_identity(&R::new(1.into(), 10.into()), 0.1, &w).unwrap());
+        let close = R::from_integer(1.into()) + R::new(1.into(), (1u64 << 60).into());
+        assert!(!binary_state_identity(&close, 1., &w).unwrap());
+        assert!(!binary_state_identity(&binary(-1.).unwrap(), 1., &w).unwrap());
     }
     #[test]
-    fn point_state_reuse_is_bound_to_current_frame_native_bits_and_original_owner(){
-        let w=Work::default();let first=local(0.1,&w);let mut next=local(0.2,&w);
-        assert_eq!(first.try_point_state(0,0.1,I::point(0.1),&w).unwrap(),binary(0.1));
-        assert_eq!(next.try_point_state(0,0.2,I::point(0.2),&w).unwrap(),binary(0.2));
-        assert!(first.try_point_state(0,0.2,I::point(0.2),&w).unwrap().is_none());
+    fn point_state_reuse_is_bound_to_current_frame_native_bits_and_original_owner() {
+        let w = Work::default();
+        let first = local(0.1, &w);
+        let mut next = local(0.2, &w);
+        assert_eq!(
+            first.try_point_state(0, 0.1, I::point(0.1), &w).unwrap(),
+            binary(0.1)
+        );
+        assert_eq!(
+            next.try_point_state(0, 0.2, I::point(0.2), &w).unwrap(),
+            binary(0.2)
+        );
+        assert!(first
+            .try_point_state(0, 0.2, I::point(0.2), &w)
+            .unwrap()
+            .is_none());
         // Model the legacy sequential mutator whose exact assignment can change
         // without replacing its incoming bounds. A rounded match is insufficient.
-        next.exact[0]=Some(R::new(1.into(),5.into()));assert!(next.try_point_state(0,0.2,I::point(0.2),&w).unwrap().is_none());
-        let foreign=Work::default();let other=local(0.1,&foreign);let before=foreign.spent();
-        assert!(other.try_point_state(0,0.1,I::point(0.1),&w).unwrap().is_none());assert_eq!(foreign.spent(),before);
-        assert_eq!(other.try_point_state(0,0.1,I::point(0.1),&foreign).unwrap(),binary(0.1));
-        let same_numeric_distinct_context=local(0.1,&w);assert_eq!(same_numeric_distinct_context.try_point_state(0,0.1,I::point(0.1),&w).unwrap(),binary(0.1));
-        let mut uncertain=local(1.,&w);let band=I{lo:1f64.next_down(),hi:1f64.next_up()};uncertain.bounds[0]=band;
-        assert!(uncertain.try_point_state(0,1.,band,&w).unwrap().is_none());assert!(first.try_point_state(0,0.1,I{lo:0.09,hi:0.11},&w).unwrap().is_none());
-        assert!(local(-0.,&w).try_point_state(0,0.,I::point(0.),&w).unwrap().is_none());
-        assert!(local(0.,&w).try_point_state(0,0.,I{lo:-0.,hi:0.},&w).unwrap().is_none());
+        next.exact[0] = Some(R::new(1.into(), 5.into()));
+        assert!(next
+            .try_point_state(0, 0.2, I::point(0.2), &w)
+            .unwrap()
+            .is_none());
+        let foreign = Work::default();
+        let other = local(0.1, &foreign);
+        let before = foreign.spent();
+        assert!(other
+            .try_point_state(0, 0.1, I::point(0.1), &w)
+            .unwrap()
+            .is_none());
+        assert_eq!(foreign.spent(), before);
+        assert_eq!(
+            other
+                .try_point_state(0, 0.1, I::point(0.1), &foreign)
+                .unwrap(),
+            binary(0.1)
+        );
+        let same_numeric_distinct_context = local(0.1, &w);
+        assert_eq!(
+            same_numeric_distinct_context
+                .try_point_state(0, 0.1, I::point(0.1), &w)
+                .unwrap(),
+            binary(0.1)
+        );
+        let mut uncertain = local(1., &w);
+        let band = I {
+            lo: 1f64.next_down(),
+            hi: 1f64.next_up(),
+        };
+        uncertain.bounds[0] = band;
+        assert!(uncertain
+            .try_point_state(0, 1., band, &w)
+            .unwrap()
+            .is_none());
+        assert!(first
+            .try_point_state(0, 0.1, I { lo: 0.09, hi: 0.11 }, &w)
+            .unwrap()
+            .is_none());
+        assert!(local(-0., &w)
+            .try_point_state(0, 0., I::point(0.), &w)
+            .unwrap()
+            .is_none());
+        assert!(local(0., &w)
+            .try_point_state(0, 0., I { lo: -0., hi: 0. }, &w)
+            .unwrap()
+            .is_none());
     }
     #[test]
-    fn point_state_reuse_natural_helper_exhaustion_keeps_current_frame_and_sticky_spent(){
-        let w=Work::limited([128,8192,50_000]);let local=local(0.1,&w);let value=local.exact[0].clone();let mut exhausted=false;
-        for _ in 0..10_000{match local.try_point_state(0,0.1,I::point(0.1),&w){Ok(Some(_))=>{},Err(error)=>{assert_eq!(error.kind,"step_budget");exhausted=true;break;},Ok(None)=>panic!("point proof disappeared")}}
-        assert!(exhausted);assert!(w.spent()>50_000);let spent=w.spent();let shared=w.clone();assert!(w.same_owner(&shared));
-        for _ in 0..2{assert_eq!(local.try_point_state(0,0.1,I::point(0.1),&shared).unwrap_err().kind,"step_budget");assert_eq!(shared.spent(),spent);assert_eq!(local.exact[0],value);assert_eq!(local.bounds,[I::point(0.1)]);}
+    fn point_state_reuse_natural_helper_exhaustion_keeps_current_frame_and_sticky_spent() {
+        let w = Work::limited([128, 8192, 50_000]);
+        let local = local(0.1, &w);
+        let value = local.exact[0].clone();
+        let mut exhausted = false;
+        for _ in 0..10_000 {
+            match local.try_point_state(0, 0.1, I::point(0.1), &w) {
+                Ok(Some(_)) => {}
+                Err(error) => {
+                    assert_eq!(error.kind, "step_budget");
+                    exhausted = true;
+                    break;
+                }
+                Ok(None) => panic!("point proof disappeared"),
+            }
+        }
+        assert!(exhausted);
+        assert!(w.spent() > 50_000);
+        let spent = w.spent();
+        let shared = w.clone();
+        assert!(w.same_owner(&shared));
+        for _ in 0..2 {
+            assert_eq!(
+                local
+                    .try_point_state(0, 0.1, I::point(0.1), &shared)
+                    .unwrap_err()
+                    .kind,
+                "step_budget"
+            );
+            assert_eq!(shared.spent(), spent);
+            assert_eq!(local.exact[0], value);
+            assert_eq!(local.bounds, [I::point(0.1)]);
+        }
     }
     #[test]
-    fn point_state_reuse_two_actual_evaluations_and_stale_local_fallback_keep_samples(){
-        use crate::procedure_operations::{Operation,Domain};
-        let w=Work::default();let first=local(0.1,&w);let next=local(0.2,&w);let operation=Operation::State(0);
-        let evaluate=|point,local:&LocalState|{let states=[Some(point)];let bounds=[I::point(point)];let domain=Domain{nodes:&[],node_bounds:&[],states:&states,state_bounds:&bounds,operators:&[],operator_bounds:&[],local};operation.evaluate(&[],&domain,&w).unwrap()};
-        let a=evaluate(0.1,&first);let b=evaluate(0.2,&next);let stale=evaluate(0.2,&first);
-        assert_eq!(**a.mathematical.as_ref().unwrap(),binary(0.1).unwrap());assert_eq!(**b.mathematical.as_ref().unwrap(),binary(0.2).unwrap());assert_eq!(**stale.mathematical.as_ref().unwrap(),binary(0.2).unwrap());
-        assert!(!std::sync::Arc::ptr_eq(a.mathematical.as_ref().unwrap(),b.mathematical.as_ref().unwrap()));
-        let second_context=local(0.1,&w);let same=evaluate(0.1,&second_context);assert!(!std::sync::Arc::ptr_eq(a.mathematical.as_ref().unwrap(),same.mathematical.as_ref().unwrap()));
-        for point in [0.,-0.]{let current=local(point,&w);let value=evaluate(point,&current);assert_eq!(value.point().unwrap().to_bits(),point.to_bits());assert_eq!(value.bound().unwrap().lo.to_bits(),point.to_bits());assert_eq!(value.bound().unwrap().hi.to_bits(),point.to_bits());}
+    fn point_state_reuse_two_actual_evaluations_and_stale_local_fallback_keep_samples() {
+        use crate::procedure_operations::{Domain, Operation};
+        let w = Work::default();
+        let first = local(0.1, &w);
+        let next = local(0.2, &w);
+        let operation = Operation::State(0);
+        let evaluate = |point, local: &LocalState| {
+            let states = [Some(point)];
+            let bounds = [I::point(point)];
+            let domain = Domain {
+                nodes: &[],
+                node_bounds: &[],
+                states: &states,
+                state_bounds: &bounds,
+                operators: &[],
+                operator_bounds: &[],
+                local,
+            };
+            operation.evaluate(&[], &domain, &w).unwrap()
+        };
+        let a = evaluate(0.1, &first);
+        let b = evaluate(0.2, &next);
+        let stale = evaluate(0.2, &first);
+        assert_eq!(**a.mathematical.as_ref().unwrap(), binary(0.1).unwrap());
+        assert_eq!(**b.mathematical.as_ref().unwrap(), binary(0.2).unwrap());
+        assert_eq!(**stale.mathematical.as_ref().unwrap(), binary(0.2).unwrap());
+        assert!(!std::sync::Arc::ptr_eq(
+            a.mathematical.as_ref().unwrap(),
+            b.mathematical.as_ref().unwrap()
+        ));
+        let second_context = local(0.1, &w);
+        let same = evaluate(0.1, &second_context);
+        assert!(!std::sync::Arc::ptr_eq(
+            a.mathematical.as_ref().unwrap(),
+            same.mathematical.as_ref().unwrap()
+        ));
+        for point in [0., -0.] {
+            let current = local(point, &w);
+            let value = evaluate(point, &current);
+            assert_eq!(value.point().unwrap().to_bits(), point.to_bits());
+            assert_eq!(value.bound().unwrap().lo.to_bits(), point.to_bits());
+            assert_eq!(value.bound().unwrap().hi.to_bits(), point.to_bits());
+        }
     }
 }

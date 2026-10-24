@@ -43,19 +43,23 @@ impl Domain {
     /// Complete caller-proved rational bounds, never an exact-value assertion.
     /// The caller prepays construction/copies; owned validates order and binds
     /// comparison/Arc storage to this same original request owner.
-    pub(crate) fn rational_bounds(lo:R,hi:R,w:&Work)->Result<Option<Arc<Self>>,Error>{
-        Self::owned(lo,hi,w)
+    pub(crate) fn rational_bounds(lo: R, hi: R, w: &Work) -> Result<Option<Arc<Self>>, Error> {
+        Self::owned(lo, hi, w)
     }
     /// Enclosure of one mathematical value, not genuine source uncertainty.
     /// Bounds need not coincide: this grants no exact-value proof. Sampling
     /// must certify one RN cell or explicitly fail at the bounded precision.
-    pub(crate) fn rational_point_bounds(lo: R, hi: R, w: &Work) -> Result<Option<Arc<Self>>, Error> {
+    pub(crate) fn rational_point_bounds(
+        lo: R,
+        hi: R,
+        w: &Work,
+    ) -> Result<Option<Arc<Self>>, Error> {
         Self::owned_with_point(lo, hi, true, w)
     }
-    fn owned_with_point(
-        lo: R, hi: R, point: bool, w: &Work,
-    ) -> Result<Option<Arc<Self>>, Error> {
-        let Some(mut value) = Self::owned(lo, hi, w)? else { return Ok(None) };
+    fn owned_with_point(lo: R, hi: R, point: bool, w: &Work) -> Result<Option<Arc<Self>>, Error> {
+        let Some(mut value) = Self::owned(lo, hi, w)? else {
+            return Ok(None);
+        };
         Arc::get_mut(&mut value).unwrap().intrinsic_point |= point;
         Ok(Some(value))
     }
@@ -114,7 +118,9 @@ impl Domain {
             ))
         })();
         match p.finish(pair)? {
-            Some((lo, hi)) => Self::owned_with_point(lo, hi, self.intrinsic_point && other.intrinsic_point, w),
+            Some((lo, hi)) => {
+                Self::owned_with_point(lo, hi, self.intrinsic_point && other.intrinsic_point, w)
+            }
             None => Ok(None),
         }
     }

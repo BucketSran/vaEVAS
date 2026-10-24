@@ -4,10 +4,10 @@ use crate::ir::{Error, EventTrigger, Expression as E, Program, Statement};
 use crate::pwl::Trajectory;
 use crate::transition_source_plan::{ProofContext, Work};
 use std::sync::Arc;
-#[path = "analytic_sampled_consumer.rs"]
-mod sampled;
 #[path = "analytic_sample_domain.rs"]
 mod sample_domain;
+#[path = "analytic_sampled_consumer.rs"]
+mod sampled;
 fn scope(s: &str) -> Error {
     Error::new("unsupported_analytic_source_consumer", s)
 }
@@ -168,15 +168,32 @@ impl Request {
         }))
     }
     pub(crate) fn sample_domain(
-        &self, index:usize, p:&Program, trajectory:&Trajectory,
-        root:&crate::exact_source::RootTime, w:&Work,
-    )->Result<Option<std::sync::Arc<crate::source_domain::Domain>>,Error>{
-        if !self.work().same_owner(w){return Err(scope("analytic source domain belongs to another request"));}
-        let Some(&node)=self.context.event_input_nodes().get(index) else{return Ok(None)};
-        if !sample_domain::read_node(p,node,w)? {return Ok(None);}
-        let Some(Some(source))=trajectory.config.analytic_sources.get(index) else{return Ok(None)};
-        let error=trajectory.config.pwl_errors_v.as_ref().and_then(|errors|errors.get(index)).map_or(0.,crate::ir::SourceError::bound);
-        self.domains.at_root(index,source,error,root,w)
+        &self,
+        index: usize,
+        p: &Program,
+        trajectory: &Trajectory,
+        root: &crate::exact_source::RootTime,
+        w: &Work,
+    ) -> Result<Option<std::sync::Arc<crate::source_domain::Domain>>, Error> {
+        if !self.work().same_owner(w) {
+            return Err(scope("analytic source domain belongs to another request"));
+        }
+        let Some(&node) = self.context.event_input_nodes().get(index) else {
+            return Ok(None);
+        };
+        if !sample_domain::read_node(p, node, w)? {
+            return Ok(None);
+        }
+        let Some(Some(source)) = trajectory.config.analytic_sources.get(index) else {
+            return Ok(None);
+        };
+        let error = trajectory
+            .config
+            .pwl_errors_v
+            .as_ref()
+            .and_then(|errors| errors.get(index))
+            .map_or(0., crate::ir::SourceError::bound);
+        self.domains.at_root(index, source, error, root, w)
     }
     pub(crate) fn activate(
         self: &Arc<Self>,
@@ -248,21 +265,53 @@ fn scalar_shape(e: &E, w: &Work) -> Result<bool, Error> {
     w.step()?;
     Ok(match e {
         E::Affine { terms, .. } => {
-            let mut dynamic=false;
-            for term in terms {w.step()?;dynamic |= term.node!=0 && term.coefficient!=0.;}
+            let mut dynamic = false;
+            for term in terms {
+                w.step()?;
+                dynamic |= term.node != 0 && term.coefficient != 0.;
+            }
             dynamic
         }
         E::State { .. } => true,
-        E::RealBoundary { value, .. } => scalar_shape(value,w)?,
-        E::Add { left,right } | E::Multiply { left,right } | E::Divide { left,right }
-        | E::RealBinary { left,right,.. } => {
-            let a=scalar_shape(left,w)?;let b=scalar_shape(right,w)?;
-            let multiply=matches!(e,E::Multiply {..}|E::RealBinary {operation:crate::ir::RealOperation::Multiply,..});
-            let divide=matches!(e,E::Divide {..}|E::RealBinary {operation:crate::ir::RealOperation::Divide,..});
-            if b && (divide || multiply && a) {return Err(scope("analytic scalar source tree requires affine physical leaves"));}
-            a||b
+        E::RealBoundary { value, .. } => scalar_shape(value, w)?,
+        E::Add { left, right }
+        | E::Multiply { left, right }
+        | E::Divide { left, right }
+        | E::RealBinary { left, right, .. } => {
+            let a = scalar_shape(left, w)?;
+            let b = scalar_shape(right, w)?;
+            let multiply = matches!(
+                e,
+                E::Multiply { .. }
+                    | E::RealBinary {
+                        operation: crate::ir::RealOperation::Multiply,
+                        ..
+                    }
+            );
+            let divide = matches!(
+                e,
+                E::Divide { .. }
+                    | E::RealBinary {
+                        operation: crate::ir::RealOperation::Divide,
+                        ..
+                    }
+            );
+            if b && (divide || multiply && a) {
+                return Err(scope(
+                    "analytic scalar source tree requires affine physical leaves",
+                ));
+            }
+            a || b
         }
-        E::Power { .. } => return Err(scope("analytic scalar source tree requires the original affine arithmetic roles")),
-        _=>return Err(scope("analytic scalar source tree contains an unsupported role")),
+        E::Power { .. } => {
+            return Err(scope(
+                "analytic scalar source tree requires the original affine arithmetic roles",
+            ))
+        }
+        _ => {
+            return Err(scope(
+                "analytic scalar source tree contains an unsupported role",
+            ))
+        }
     })
 }

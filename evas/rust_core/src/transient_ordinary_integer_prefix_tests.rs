@@ -37,31 +37,37 @@ fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
     // Declaration seeds are zero in IR33. Execute the actual original
     // initial gate once through the same preparation used by public run,
     // before histories, retaining its explicit record and original Work.
-    assert!(m.initial().iter().all(|&v|v==0.));
-    trajectory.bind_procedure_work(crate::real_expression::work(&m)).unwrap();
-    let prepared=initialization::prepare(&m,&trajectory).unwrap().unwrap();
-    assert_eq!(prepared.records.len(),1);
-    let initial=&prepared.records[0];
-    assert_eq!(initial.kind,"initial_step");
-    assert_eq!(initial.time,0.);
-    assert!(initial.observation_time_bounds.is_none_or(|b|b==[0.,0.]));
+    assert!(m.initial().iter().all(|&v| v == 0.));
+    trajectory
+        .bind_procedure_work(crate::real_expression::work(&m))
+        .unwrap();
+    let prepared = initialization::prepare(&m, &trajectory).unwrap().unwrap();
+    assert_eq!(prepared.records.len(), 1);
+    let initial = &prepared.records[0];
+    assert_eq!(initial.kind, "initial_step");
+    assert_eq!(initial.time, 0.);
+    assert!(initial
+        .observation_time_bounds
+        .is_none_or(|b| b == [0., 0.]));
     assert!(initial.guard_value.is_none() && initial.fired_triggers.is_empty());
-    assert_eq!(initial.before,vec![0.;m.program.states.len()]);
-    assert_eq!(initial.after,prepared.states);
-    assert_eq!(prepared.states[slot(&m,"keep")],7.);
-    assert_eq!(prepared.states[slot(&m,"ratio")],1.);
-    let states=prepared.states.clone();
-    let bounds=prepared.bounds.clone();
+    assert_eq!(initial.before, vec![0.; m.program.states.len()]);
+    assert_eq!(initial.after, prepared.states);
+    assert_eq!(prepared.states[slot(&m, "keep")], 7.);
+    assert_eq!(prepared.states[slot(&m, "ratio")], 1.);
+    let states = prepared.states.clone();
+    let bounds = prepared.bounds.clone();
     let calendar = independent_schedule(&m, &trajectory).unwrap();
     assert_eq!(calendar.len(), 3);
-    let cursor=prepared.cursor(&calendar).unwrap();
-    assert_eq!(cursor,0,"initial gate must not consume the future timers");
+    let cursor = prepared.cursor(&calendar).unwrap();
+    assert_eq!(cursor, 0, "initial gate must not consume the future timers");
     let owner = m.source_context.as_ref().unwrap().clone();
     // IR33 executes the original RN Floor/store/clamp through procedures,
     // not the legacy mathematical Floor request. Both still share the same
     // original owner with the typed Transition transaction.
     assert!(m.floor_source.is_none());
-    assert!(owner.borrow_work().same_owner(m.mixed_cold_work.get().unwrap()));
+    assert!(owner
+        .borrow_work()
+        .same_owner(m.mixed_cold_work.get().unwrap()));
     let operators = Operators::new_until_with_held_points(
         &m.program,
         &trajectory,
@@ -99,8 +105,13 @@ fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
 fn same_owner(m: &EventModel, operators: &Operators) {
     let context = m.source_context.as_ref().unwrap();
     assert!(m.floor_source.is_none());
-    assert!(context.borrow_work().same_owner(m.mixed_cold_work.get().unwrap()));
-    assert!(Arc::ptr_eq(context,operators.source_context.as_ref().unwrap()));
+    assert!(context
+        .borrow_work()
+        .same_owner(m.mixed_cold_work.get().unwrap()));
+    assert!(Arc::ptr_eq(
+        context,
+        operators.source_context.as_ref().unwrap()
+    ));
     let held = operators.test_held_contexts();
     assert_eq!(held.len(), 1);
     for actual in held {
@@ -218,7 +229,10 @@ fn warm(m: &EventModel, t: &Trajectory, c: &mut Controller, calendar: &mut Vec<S
         .unwrap();
     expected(m, &c.accepted, 1., 1., 0.25);
     assert!(!c.records.is_empty());
-    assert_eq!(c.records.last().unwrap().display_records[0].text, "ratio=1 q=1 keep=7");
+    assert_eq!(
+        c.records.last().unwrap().display_records[0].text,
+        "ratio=1 q=1 keep=7"
+    );
     assert!(
         !c.outputs.is_empty(),
         "warm accepted output prefix must be real"
@@ -231,15 +245,23 @@ fn public_integer_prefix_two_late_failures_then_retry_preserves_complete_frame()
     // The first selected ratio store must reject signed32 overflow before the
     // following min-clamp can hide a negative value. Original source is intact;
     // only this negative control's physical input levels change.
-    for value in [-1e9,1e9] {
-        let mut wire:Value=serde_json::from_str(include_str!("../tests/fixtures/ordinary_integer_prefix_joint.request.json")).unwrap();
+    for value in [-1e9, 1e9] {
+        let mut wire: Value = serde_json::from_str(include_str!(
+            "../tests/fixtures/ordinary_integer_prefix_joint.request.json"
+        ))
+        .unwrap();
         for point in wire["transient"]["pwl"][0].as_array_mut().unwrap() {
-            point[1]=json!(value);
+            point[1] = json!(value);
         }
-        let request:Request=serde_json::from_value(wire).unwrap();
-        let ratio=request.program.states.iter().position(|s|s.name=="ratio").unwrap();
-        let error=crate::run(request).err().unwrap();
-        assert_eq!(error.kind,"integer_range");
+        let request: Request = serde_json::from_value(wire).unwrap();
+        let ratio = request
+            .program
+            .states
+            .iter()
+            .position(|s| s.name == "ratio")
+            .unwrap();
+        let error = crate::run(request).err().unwrap();
+        assert_eq!(error.kind, "integer_range");
         assert!(error.message.contains(&format!("state {ratio}")));
     }
     let (m, t, mut c, mut calendar) = fixture();

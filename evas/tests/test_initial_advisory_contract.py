@@ -1,21 +1,22 @@
 """Calibration binds advisory semantics before test-only record reindexing."""
+GUARDS = ['EVENT-ORDER', 'COMPOSE']
 import copy
 import unittest
 from initial_record_contract import check_initial_record_batch
 from initial_source_sequence_contract import check_initial_source_sequence
 from initial_union_contract import check_initial_union_batch
-from test_initial_source_sequence_contract import InitialSourceSequenceCalibration
-from test_initial_union_contract import InitialUnionCalibration
+import test_initial_source_sequence_contract as source_sequence_tests
+import test_initial_union_contract as union_tests
 
 
 class InitialAdvisoryCalibration(unittest.TestCase):
     def fixture(self,owner,source='output_times',version=2):
         if owner=='sequence':
-            wire,result,expected=InitialSourceSequenceCalibration().fixture()
+            wire,result,expected=source_sequence_tests.InitialSourceSequenceCalibration().fixture()
             check=lambda:check_initial_source_sequence(result,wire,[0,0],expected)
             code='timer_observation_boundary';bounds=[0,0];query=0
         elif owner=='union':
-            wire,result=InitialUnionCalibration().fixture()
+            wire,result=union_tests.InitialUnionCalibration().fixture()
             result['transient']['times']=[0,2,3]
             result['transient']['states']=[[7],[7],[7]]
             check=lambda:check_initial_union_batch(result,wire,[0],[7],1)

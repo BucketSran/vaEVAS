@@ -1,4 +1,5 @@
 """Floor's coefficient visits consume the original request allowance."""
+GUARDS = ['LANG']
 import unittest
 from unittest.mock import patch
 

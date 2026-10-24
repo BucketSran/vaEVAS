@@ -131,7 +131,16 @@ pub(crate) fn bind(
     states: &[f64],
 ) -> Result<Expression, Error> {
     Ok(match expr {
-        Expression::RealCall { .. } | Expression::UnsupportedSystemCall { .. } | Expression::RealBinary { .. } | Expression::RealBoundary { .. } | Expression::RealLocal { .. } => bind(&crate::real_expression::materialized(expr)?,program,owner,states)?,
+        Expression::RealCall { .. }
+        | Expression::UnsupportedSystemCall { .. }
+        | Expression::RealBinary { .. }
+        | Expression::RealBoundary { .. }
+        | Expression::RealLocal { .. } => bind(
+            &crate::real_expression::materialized(expr)?,
+            program,
+            owner,
+            states,
+        )?,
         Expression::Forcing { .. } => {
             return Err(Error::new(
                 "unsupported_forcing_scope",

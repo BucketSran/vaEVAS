@@ -4,6 +4,7 @@ The fixture is the unchanged original reset counterexample. The oracle is the
 IR33 source-owner invariant, with a truly legacy and a fully owned execution
 control. It does not reinterpret source primitive rounding.
 """
+GUARDS = ['LANG', 'EVENT-ORDER']
 import json
 import os
 from pathlib import Path

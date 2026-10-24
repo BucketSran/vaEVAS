@@ -183,14 +183,13 @@ impl Controller {
                     } => {
                         independent_changed[index] = false;
                         for expression in [start, period, enabled] {
-                            independent_changed[index] |=
-                                model.held_parameter_dependencies(expression,owner)?
-                                    .state_dependencies
-                                    .iter()
-                                    .any(|&state| {
-                                        self.accepted.state_bounds[state]
-                                            != next.state_bounds[state]
-                                    });
+                            independent_changed[index] |= model
+                                .held_parameter_dependencies(expression, owner)?
+                                .state_dependencies
+                                .iter()
+                                .any(|&state| {
+                                    self.accepted.state_bounds[state] != next.state_bounds[state]
+                                });
                         }
                     }
                     EventTrigger::Cross { guard, .. }
@@ -251,7 +250,8 @@ impl Controller {
             {
                 changed[index] = false;
                 for expression in [start, period, enabled] {
-                    changed[index] |= model.held_parameter_dependencies(expression,owner)?
+                    changed[index] |= model
+                        .held_parameter_dependencies(expression, owner)?
                         .state_dependencies
                         .iter()
                         .any(|&s| self.accepted.state_bounds[s] != next.state_bounds[s]);

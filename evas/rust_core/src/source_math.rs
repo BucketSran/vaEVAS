@@ -238,13 +238,20 @@ impl Prepared {
             for procedure in &program.procedures {
                 audit.charge(procedure.body.len().saturating_add(1))?;
                 for step in &procedure.body {
-                    if !matches!(step.action, crate::ir::ProcedureAction::Control(
-                        crate::ir::ProcedureControl::ContributionCapture { .. })) {
+                    if !matches!(
+                        step.action,
+                        crate::ir::ProcedureAction::Control(
+                            crate::ir::ProcedureControl::ContributionCapture { .. }
+                        )
+                    ) {
                         return Err(unsupported());
                     }
                 }
             }
-            let work = if let Some(work) = trajectory.procedure_work().or_else(|| trajectory.analytic_work()) {
+            let work = if let Some(work) = trajectory
+                .procedure_work()
+                .or_else(|| trajectory.analytic_work())
+            {
                 work.debit(2, 16)?;
                 work.clone()
             } else {
@@ -315,7 +322,7 @@ impl Prepared {
         }
         reduced.operators.clear();
         let analog = if !program.procedures.is_empty() {
-            let work=trajectory.procedure_work().expect("early procedure owner");
+            let work = trajectory.procedure_work().expect("early procedure owner");
             work.debit(2, 16)?;
             Analog::new_with_procedure_work(reduced, extended, tolerances.clone(), work.clone())?
         } else {
@@ -336,7 +343,12 @@ impl Prepared {
         time: f64,
         _exact: &[Option<crate::exact_source::Curve>],
     ) -> Result<Solution, Error> {
-        self.analog.charge_procedure_query(values.len().saturating_add(bounds.len()).saturating_add(self.original_nodes))?;
+        self.analog.charge_procedure_query(
+            values
+                .len()
+                .saturating_add(bounds.len())
+                .saturating_add(self.original_nodes),
+        )?;
         let extra = if let Some(selected) = &self.selected {
             selected.charge_extension_copies(values.len())?;
             let (value, bound) = selected.value(values, bounds, time)?;
@@ -482,9 +494,10 @@ mod tests {
 #[cfg(test)]
 mod procedure_owner_tests {
     use super::*;
-    fn fixture() -> (Program,Trajectory) {
-        let origin=serde_json::json!({"instance":"dut","source":"owner.va","line":1,"column":1});
-        let input=serde_json::json!({"op":"affine","constant":0.,"terms":[{"node":1,"coefficient":1.}]});
+    fn fixture() -> (Program, Trajectory) {
+        let origin = serde_json::json!({"instance":"dut","source":"owner.va","line":1,"column":1});
+        let input =
+            serde_json::json!({"op":"affine","constant":0.,"terms":[{"node":1,"coefficient":1.}]});
         let p=serde_json::from_value(serde_json::json!({"schema_version":crate::ir::SCHEMA_VERSION,
             "nodes":["0","u","y"],"states":[],"events":[],"real_bindings":[],"step_bounds":[],
             "operators":[{"kind":"math","function":"tanh","input":input,"origin":origin}],
@@ -492,34 +505,56 @@ mod procedure_owner_tests {
                 "rhs":{"op":"operator","operator":0}}],
             "procedures":[{"procedure_id":0,"instance":"dut","body":[{"expanded_statement_ordinal":0,"action":{"kind":"contribution_capture","contribution":0}}]}]})).unwrap();
         let config=serde_json::from_value(serde_json::json!({"pwl":[[[0.,0.1],[1.,0.1]]],"stop":1.,"max_step":0.1,"output_times":[0.,1.]})).unwrap();
-        (p,Trajectory::new(config,1).unwrap())
+        (p, Trajectory::new(config, 1).unwrap())
     }
     #[test]
     fn early_math_borrows_owner_without_mutating_the_parent_trajectory() {
-        let (p,mut t)=fixture();let w=crate::transition_source_plan::Work::default();
-        t.bind_procedure_work(&w).unwrap();let before=w.spent();
-        let mut prepared=Prepared::new(&p,&t,&["u".into()],&Tolerances::default()).unwrap();
-        assert!(w.spent()>before);
-        let before_query=w.spent();
-        prepared.solve(&[0.1],&[I::point(0.1)],0.5,&[]).unwrap();
-        assert!(w.spent()>before_query);
+        let (p, mut t) = fixture();
+        let w = crate::transition_source_plan::Work::default();
+        t.bind_procedure_work(&w).unwrap();
+        let before = w.spent();
+        let mut prepared = Prepared::new(&p, &t, &["u".into()], &Tolerances::default()).unwrap();
+        assert!(w.spent() > before);
+        let before_query = w.spent();
+        prepared.solve(&[0.1], &[I::point(0.1)], 0.5, &[]).unwrap();
+        assert!(w.spent() > before_query);
         assert!(prepared.analog.prepared_uses_procedure_owner(&w));
-        w.debit(2,1_000_000_000-w.spent()).unwrap();
-        assert_eq!(prepared.solve(&[0.1],&[I::point(0.1)],0.5,&[]).unwrap_err().kind,"step_budget");
-        let used=w.spent();
-        assert_eq!(prepared.solve(&[0.1],&[I::point(0.1)],0.5,&[]).unwrap_err().kind,"step_budget");
-        assert!(w.spent()>used);assert!(t.procedure_work().unwrap().same_owner(&w));
-        assert_eq!(t.values(0.5),vec![0.1]);
+        w.debit(2, 1_000_000_000 - w.spent()).unwrap();
+        assert_eq!(
+            prepared
+                .solve(&[0.1], &[I::point(0.1)], 0.5, &[])
+                .unwrap_err()
+                .kind,
+            "step_budget"
+        );
+        let used = w.spent();
+        assert_eq!(
+            prepared
+                .solve(&[0.1], &[I::point(0.1)], 0.5, &[])
+                .unwrap_err()
+                .kind,
+            "step_budget"
+        );
+        assert!(w.spent() > used);
+        assert!(t.procedure_work().unwrap().same_owner(&w));
+        assert_eq!(t.values(0.5), vec![0.1]);
     }
     #[test]
     fn exhausted_early_owner_stays_exhausted_across_real_preparation_retries() {
-        let (p,mut t)=fixture();let w=crate::transition_source_plan::Work::limited([128,8192,20]);
+        let (p, mut t) = fixture();
+        let w = crate::transition_source_plan::Work::limited([128, 8192, 20]);
         t.bind_procedure_work(&w).unwrap();
-        let first=Prepared::new(&p,&t,&["u".into()],&Tolerances::default()).err().unwrap();
-        assert_eq!(first.kind,"step_budget");let used=w.spent();
-        let retry=Prepared::new(&p,&t,&["u".into()],&Tolerances::default()).err().unwrap();
-        assert_eq!(retry.kind,"step_budget");assert!(w.spent()>used);
+        let first = Prepared::new(&p, &t, &["u".into()], &Tolerances::default())
+            .err()
+            .unwrap();
+        assert_eq!(first.kind, "step_budget");
+        let used = w.spent();
+        let retry = Prepared::new(&p, &t, &["u".into()], &Tolerances::default())
+            .err()
+            .unwrap();
+        assert_eq!(retry.kind, "step_budget");
+        assert!(w.spent() > used);
         assert!(t.procedure_work().unwrap().same_owner(&w));
-        assert_eq!(t.values(0.5),vec![0.1]);
+        assert_eq!(t.values(0.5), vec![0.1]);
     }
 }

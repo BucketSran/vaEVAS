@@ -1,4 +1,5 @@
 """Calibration: reject missing/forged initial records and source-order snapshots."""
+GUARDS = ['EVENT-ORDER', 'COMPOSE']
 import copy
 from dataclasses import dataclass
 import unittest

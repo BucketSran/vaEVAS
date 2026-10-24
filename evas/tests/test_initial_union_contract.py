@@ -1,4 +1,5 @@
 """Independent negative controls for explicit initial/cross OR leaf records."""
+GUARDS = ['CROSS', 'EVENT-ORDER', 'COMPOSE']
 import copy
 import unittest
 from initial_union_contract import check_initial_union_batch

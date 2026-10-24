@@ -1,5 +1,5 @@
 """Completed source audits may be leased only inside one statement/frame."""
-GUARDS = ['LANG', 'EVENT', 'COMPOSE']
+GUARDS = ['LANG', 'EVENT-ORDER', 'COMPOSE']
 from dataclasses import replace
 from types import SimpleNamespace
 import unittest

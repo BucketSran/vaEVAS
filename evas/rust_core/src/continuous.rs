@@ -346,7 +346,12 @@ impl LinearContinuous {
                         "joint idt reset must depend only on instance event state and constants",
                     ));
                 }
-                match context.reset_captures.get(operator).copied().flatten(){Some(value)=>crate::operators::reset_active(value)?,None=>crate::operators::ResetExpression::new(reset.clone()).active(&parameters)?}
+                match context.reset_captures.get(operator).copied().flatten() {
+                    Some(value) => crate::operators::reset_active(value)?,
+                    None => {
+                        crate::operators::ResetExpression::new(reset.clone()).active(&parameters)?
+                    }
+                }
             } else {
                 false
             };
@@ -440,19 +445,21 @@ impl LinearContinuous {
             start,
         )?;
         let initial = segments[0].initial[..state_count].to_vec();
-        let event_dependent = (!context.program.procedures.is_empty() && !context.program.step_bounds.is_empty()) || operators.iter().any(|op| {
-            let spec = &program.operators[op.operator];
-            matches!(spec, OperatorSpec::Idt { reset: Some(_), .. })
-                || continuous_operator_input(spec).is_some_and(|(input, origin)| {
-                    history_event_dependency(
-                        input,
-                        program,
-                        origin,
-                        &driven_nodes,
-                        &mut BTreeSet::new(),
-                    )
-                })
-        });
+        let event_dependent = (!context.program.procedures.is_empty()
+            && !context.program.step_bounds.is_empty())
+            || operators.iter().any(|op| {
+                let spec = &program.operators[op.operator];
+                matches!(spec, OperatorSpec::Idt { reset: Some(_), .. })
+                    || continuous_operator_input(spec).is_some_and(|(input, origin)| {
+                        history_event_dependency(
+                            input,
+                            program,
+                            origin,
+                            &driven_nodes,
+                            &mut BTreeSet::new(),
+                        )
+                    })
+            });
         let mut exact_states = vec![false; state_count];
         for op in &operators {
             if matches!(
@@ -2407,23 +2414,59 @@ mod tests {
 
     #[test]
     fn callsite_reset_release_preserves_accepted_history_and_failed_retry_owner() {
-        let input=Expression::Affine{constant:1.,terms:vec![crate::ir::Term{node:1,coefficient:-1.}]};
-        let mut program=program_with_idt(input,0.);
-        program.states.push(serde_json::from_value(serde_json::json!({"instance":"uut","name":"reset","kind":"integer","initial":0})).unwrap());
-        if let OperatorSpec::Idt{reset,..}=&mut program.operators[0]{*reset=Some(Expression::State{state:0});}
-        let accepted=Continuous::new(&program,&no_source_trajectory(1.),&[],&[0.]).unwrap().unwrap();
-        let original=accepted.bounds(0.75).unwrap();
-        let work=crate::transition_source_plan::Work::default();
-        let mapped=accepted.captured_resets(0.5,I::point(0.5),&[I::ONE],&[Some(I::ONE)],&work).unwrap();
-        let released=mapped.captured_resets(0.5,I::point(0.5),&[I::ONE],&[Some(I::ZERO)],&work).unwrap();
-        let value=released.values(0.75).unwrap()[0];
-        assert!((value-(1.-(-0.25_f64).exp())).abs()<1e-9);
-        assert_eq!(accepted.bounds(0.75).unwrap(),original);
-        let limited=crate::transition_source_plan::Work::limited([128,8192,1]);
-        assert_eq!(accepted.captured_resets(0.5,I::point(0.5),&[I::ONE],&[Some(I::ONE)],&limited).err().unwrap().kind,"step_budget");
-        let spent=limited.spent();let retry=limited.clone();assert!(limited.same_owner(&retry));
-        assert_eq!(accepted.captured_resets(0.5,I::point(0.5),&[I::ONE],&[Some(I::ONE)],&retry).err().unwrap().kind,"step_budget");
-        assert!(retry.spent()>spent);assert_eq!(accepted.bounds(0.75).unwrap(),original);
+        let input = Expression::Affine {
+            constant: 1.,
+            terms: vec![crate::ir::Term {
+                node: 1,
+                coefficient: -1.,
+            }],
+        };
+        let mut program = program_with_idt(input, 0.);
+        program.states.push(
+            serde_json::from_value(
+                serde_json::json!({"instance":"uut","name":"reset","kind":"integer","initial":0}),
+            )
+            .unwrap(),
+        );
+        if let OperatorSpec::Idt { reset, .. } = &mut program.operators[0] {
+            *reset = Some(Expression::State { state: 0 });
+        }
+        let accepted = Continuous::new(&program, &no_source_trajectory(1.), &[], &[0.])
+            .unwrap()
+            .unwrap();
+        let original = accepted.bounds(0.75).unwrap();
+        let work = crate::transition_source_plan::Work::default();
+        let mapped = accepted
+            .captured_resets(0.5, I::point(0.5), &[I::ONE], &[Some(I::ONE)], &work)
+            .unwrap();
+        let released = mapped
+            .captured_resets(0.5, I::point(0.5), &[I::ONE], &[Some(I::ZERO)], &work)
+            .unwrap();
+        let value = released.values(0.75).unwrap()[0];
+        assert!((value - (1. - (-0.25_f64).exp())).abs() < 1e-9);
+        assert_eq!(accepted.bounds(0.75).unwrap(), original);
+        let limited = crate::transition_source_plan::Work::limited([128, 8192, 1]);
+        assert_eq!(
+            accepted
+                .captured_resets(0.5, I::point(0.5), &[I::ONE], &[Some(I::ONE)], &limited)
+                .err()
+                .unwrap()
+                .kind,
+            "step_budget"
+        );
+        let spent = limited.spent();
+        let retry = limited.clone();
+        assert!(limited.same_owner(&retry));
+        assert_eq!(
+            accepted
+                .captured_resets(0.5, I::point(0.5), &[I::ONE], &[Some(I::ONE)], &retry)
+                .err()
+                .unwrap()
+                .kind,
+            "step_budget"
+        );
+        assert!(retry.spent() > spent);
+        assert_eq!(accepted.bounds(0.75).unwrap(), original);
     }
 
     #[test]

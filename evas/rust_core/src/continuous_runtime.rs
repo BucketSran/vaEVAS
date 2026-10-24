@@ -626,21 +626,44 @@ impl Continuous {
 
     /// Map each physical integral using the reset captured at its own source
     /// position. No shared parameter vector can represent these distinct values.
-    pub(crate) fn captured_resets(&self,time:f64,window:I,states:&[I],captures:&[Option<I>],w:&crate::transition_source_plan::Work)->Result<Self,Error>{
-        let context_with=|context:&Arc<Context>|->Result<Arc<Context>,Error>{
-            let bytes=context.driven.iter().map(|s|s.len()+32).sum::<usize>();
+    pub(crate) fn captured_resets(
+        &self,
+        time: f64,
+        window: I,
+        states: &[I],
+        captures: &[Option<I>],
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Self, Error> {
+        let context_with = |context: &Arc<Context>| -> Result<Arc<Context>, Error> {
+            let bytes = context.driven.iter().map(|s| s.len() + 32).sum::<usize>();
             context.trajectory.charge_source_copy(w)?;
-            let proof_bytes=context.time_proofs.values().map(|t|{let r=t.rational();(r.numer().bits()+r.denom().bits()).saturating_add(7)/8+128}).sum::<u64>();
-            w.debit(2,(bytes+captures.len()*32+256) as u64+proof_bytes)?;
-            let mut next=(**context).clone();next.reset_captures=Arc::new(captures.to_vec());Ok(Arc::new(next))
+            let proof_bytes = context
+                .time_proofs
+                .values()
+                .map(|t| {
+                    let r = t.rational();
+                    (r.numer().bits() + r.denom().bits()).saturating_add(7) / 8 + 128
+                })
+                .sum::<u64>();
+            w.debit(2, (bytes + captures.len() * 32 + 256) as u64 + proof_bytes)?;
+            let mut next = (**context).clone();
+            next.reset_captures = Arc::new(captures.to_vec());
+            Ok(Arc::new(next))
         };
-        match self{
-            Self::Linear(v)=>v.mapped_event_with_context(time,window,states,context_with(&v.context)?).map(|v|Self::Linear(Box::new(v))),
-            Self::Nonlinear(v)=>v.mapped_event_with_context(time,window,states,context_with(&v.context)?).map(|v|Self::Nonlinear(Box::new(v))),
-            Self::Anchored(v)=>{
-                w.debit(2,256)?;let mut next=(**v).clone();
-                let local=v.observation.unwrap_or(v.delta(window)?);
-                next.inner=v.inner.captured_resets(local.hi,local,states,captures,w)?;
+        match self {
+            Self::Linear(v) => v
+                .mapped_event_with_context(time, window, states, context_with(&v.context)?)
+                .map(|v| Self::Linear(Box::new(v))),
+            Self::Nonlinear(v) => v
+                .mapped_event_with_context(time, window, states, context_with(&v.context)?)
+                .map(|v| Self::Nonlinear(Box::new(v))),
+            Self::Anchored(v) => {
+                w.debit(2, 256)?;
+                let mut next = (**v).clone();
+                let local = v.observation.unwrap_or(v.delta(window)?);
+                next.inner = v
+                    .inner
+                    .captured_resets(local.hi, local, states, captures, w)?;
                 Ok(Self::Anchored(Box::new(next)))
             }
         }

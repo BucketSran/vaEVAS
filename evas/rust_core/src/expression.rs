@@ -5,13 +5,26 @@ use std::collections::{BTreeSet, HashSet};
 
 pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
     match expr {
-        Expression::EventMath{function,args,..} if crate::operators::Function::from_internal(*function).is_some()=>{
-            if args.len()!=1{return Err(Error::new("invalid_ir","internal elementary arity"));}validate(&args[0],count)?;
-        },
-        Expression::RealBinary{left,right,..} => {validate(left,count)?;validate(right,count)?;},
-        Expression::RealBoundary{value,..} => validate(value,count)?,
-        Expression::RealCall{..}|Expression::UnsupportedSystemCall{..}=>return Err(Error::new("invalid_ir","unexecuted procedure call requires its owning source frame")),
-        Expression::RealLocal{..} => return Err(Error::new("invalid_ir","unbound real local")),
+        Expression::EventMath { function, args, .. }
+            if crate::operators::Function::from_internal(*function).is_some() =>
+        {
+            if args.len() != 1 {
+                return Err(Error::new("invalid_ir", "internal elementary arity"));
+            }
+            validate(&args[0], count)?;
+        }
+        Expression::RealBinary { left, right, .. } => {
+            validate(left, count)?;
+            validate(right, count)?;
+        }
+        Expression::RealBoundary { value, .. } => validate(value, count)?,
+        Expression::RealCall { .. } | Expression::UnsupportedSystemCall { .. } => {
+            return Err(Error::new(
+                "invalid_ir",
+                "unexecuted procedure call requires its owning source frame",
+            ))
+        }
+        Expression::RealLocal { .. } => return Err(Error::new("invalid_ir", "unbound real local")),
         Expression::Forcing { .. } => {
             return Err(Error::new(
                 "unsupported_forcing_scope",
@@ -82,10 +95,13 @@ pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
 
 fn predicate_nodes(expr: &Expression, nodes: &mut BTreeSet<usize>) {
     match expr {
-        Expression::RealBinary{left,right,..} => {predicate_nodes(left,nodes);predicate_nodes(right,nodes);},
-        Expression::RealBoundary{value,..}=>predicate_nodes(value,nodes),
-        Expression::RealCall{..}|Expression::UnsupportedSystemCall{..}=>{},
-        Expression::RealLocal{..}=>{},
+        Expression::RealBinary { left, right, .. } => {
+            predicate_nodes(left, nodes);
+            predicate_nodes(right, nodes);
+        }
+        Expression::RealBoundary { value, .. } => predicate_nodes(value, nodes),
+        Expression::RealCall { .. } | Expression::UnsupportedSystemCall { .. } => {}
+        Expression::RealLocal { .. } => {}
         Expression::Forcing { value, .. } => predicate_nodes(value, nodes),
         Expression::EventMath { args, .. } => {
             for arg in args {
@@ -129,7 +145,11 @@ fn predicate_nodes(expr: &Expression, nodes: &mut BTreeSet<usize>) {
 /// in cancelled terms and in all select arms; do not use a sample's value here.
 fn predicate_degree(expr: &Expression) -> Option<u8> {
     match expr {
-        Expression::RealCall { .. } | Expression::UnsupportedSystemCall { .. } | Expression::RealBinary { .. } | Expression::RealBoundary { .. } | Expression::RealLocal { .. } => crate::real_expression::constant(expr).map(|_|0),
+        Expression::RealCall { .. }
+        | Expression::UnsupportedSystemCall { .. }
+        | Expression::RealBinary { .. }
+        | Expression::RealBoundary { .. }
+        | Expression::RealLocal { .. } => crate::real_expression::constant(expr).map(|_| 0),
         Expression::Forcing { .. } => None,
         Expression::Affine { terms, .. } => Some(u8::from(!terms.is_empty())),
         Expression::Add { left, right } => {
@@ -231,14 +251,28 @@ pub(crate) fn validate_source_select_predicates(
     source_program: bool,
 ) -> Result<(), Error> {
     match expr {
-        Expression::EventMath{function,args,..} if crate::operators::Function::from_internal(*function).is_some()=>{
-            if args.len()!=1{return Err(Error::new("invalid_ir","internal elementary arity"));}
-            validate_source_select_predicates(&args[0],allowed_nodes,source_program)?;
-        },
-        Expression::RealCall{..}|Expression::UnsupportedSystemCall{..}=>return Err(Error::new("invalid_ir","unexecuted procedure call requires its owning source frame")),
-        Expression::RealBinary{left,right,..} => {validate_source_select_predicates(left,allowed_nodes,source_program)?;validate_source_select_predicates(right,allowed_nodes,source_program)?;},
-        Expression::RealBoundary{value,..}=>validate_source_select_predicates(value,allowed_nodes,source_program)?,
-        Expression::RealLocal{..}=>return Err(Error::new("invalid_ir","unbound real local")),
+        Expression::EventMath { function, args, .. }
+            if crate::operators::Function::from_internal(*function).is_some() =>
+        {
+            if args.len() != 1 {
+                return Err(Error::new("invalid_ir", "internal elementary arity"));
+            }
+            validate_source_select_predicates(&args[0], allowed_nodes, source_program)?;
+        }
+        Expression::RealCall { .. } | Expression::UnsupportedSystemCall { .. } => {
+            return Err(Error::new(
+                "invalid_ir",
+                "unexecuted procedure call requires its owning source frame",
+            ))
+        }
+        Expression::RealBinary { left, right, .. } => {
+            validate_source_select_predicates(left, allowed_nodes, source_program)?;
+            validate_source_select_predicates(right, allowed_nodes, source_program)?;
+        }
+        Expression::RealBoundary { value, .. } => {
+            validate_source_select_predicates(value, allowed_nodes, source_program)?
+        }
+        Expression::RealLocal { .. } => return Err(Error::new("invalid_ir", "unbound real local")),
         Expression::Forcing { .. } => {
             return Err(Error::new(
                 "unsupported_forcing_scope",
@@ -379,32 +413,66 @@ impl Accumulator {
         nodes: &[f64],
     ) -> Result<(), Error> {
         match expr {
-            Expression::EventMath{function,args,..} if crate::operators::Function::from_internal(*function).is_some()=>{
-                let function=crate::operators::Function::from_internal(*function).unwrap();
-                let input=evaluate(&args[0],nodes)?;
-                self.value.add(factor*function.value(input.value));
-                let derivative=function.derivative(I::point(input.value)).ok().map(|b|b.lo+(b.hi-b.lo)*0.5).filter(|v|v.is_finite()).unwrap_or(0.);
-                for (node,g) in input.gradient{self.add_derivative(node,factor*derivative*g);}
-            },
-            Expression::RealCall{..}|Expression::UnsupportedSystemCall{..}=>return Err(Error::new("invalid_ir","unexecuted procedure call requires its owning source frame")),
-            Expression::RealBoundary{value,..}=>{
+            Expression::EventMath { function, args, .. }
+                if crate::operators::Function::from_internal(*function).is_some() =>
+            {
+                let function = crate::operators::Function::from_internal(*function).unwrap();
+                let input = evaluate(&args[0], nodes)?;
+                self.value.add(factor * function.value(input.value));
+                let derivative = function
+                    .derivative(I::point(input.value))
+                    .ok()
+                    .map(|b| b.lo + (b.hi - b.lo) * 0.5)
+                    .filter(|v| v.is_finite())
+                    .unwrap_or(0.);
+                for (node, g) in input.gradient {
+                    self.add_derivative(node, factor * derivative * g);
+                }
+            }
+            Expression::RealCall { .. } | Expression::UnsupportedSystemCall { .. } => {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "unexecuted procedure call requires its owning source frame",
+                ))
+            }
+            Expression::RealBoundary { value, .. } => {
                 // A program storage/argument/sample boundary materializes one
                 // binary64 value before surrounding physical algebra continues.
-                let captured=evaluate(value,nodes)?;
-                self.value.add(factor*captured.value);
+                let captured = evaluate(value, nodes)?;
+                self.value.add(factor * captured.value);
                 // Derivatives are Newton hints; interval certification retains
                 // the actual rounded image rather than using these as a proof.
-                for (node,g) in captured.gradient {self.add_derivative(node,factor*g);}
-            },
-            Expression::RealBinary{operation,left,right,..}=>{
-                let a=evaluate(left,nodes)?;let b=evaluate(right,nodes)?;
-                self.value.add(factor*crate::real_expression::point(*operation,a.value,b.value)?);
+                for (node, g) in captured.gradient {
+                    self.add_derivative(node, factor * g);
+                }
+            }
+            Expression::RealBinary {
+                operation,
+                left,
+                right,
+                ..
+            } => {
+                let a = evaluate(left, nodes)?;
+                let b = evaluate(right, nodes)?;
+                self.value
+                    .add(factor * crate::real_expression::point(*operation, a.value, b.value)?);
                 use crate::ir::RealOperation as R;
-                let (da,db)=match operation{R::Add=>(1.,1.),R::Subtract=>(1.,-1.),R::Multiply=>(b.value,a.value),R::Divide=>(1./b.value,-a.value/(b.value*b.value))};
-                for (n,g) in a.gradient {self.add_derivative(n,factor*da*g);}
-                for (n,g) in b.gradient {self.add_derivative(n,factor*db*g);}
-            },
-            Expression::RealLocal{..}=>return Err(Error::new("invalid_ir","unbound real local")),
+                let (da, db) = match operation {
+                    R::Add => (1., 1.),
+                    R::Subtract => (1., -1.),
+                    R::Multiply => (b.value, a.value),
+                    R::Divide => (1. / b.value, -a.value / (b.value * b.value)),
+                };
+                for (n, g) in a.gradient {
+                    self.add_derivative(n, factor * da * g);
+                }
+                for (n, g) in b.gradient {
+                    self.add_derivative(n, factor * db * g);
+                }
+            }
+            Expression::RealLocal { .. } => {
+                return Err(Error::new("invalid_ir", "unbound real local"))
+            }
             Expression::Forcing { .. } => {
                 return Err(Error::new(
                     "unsupported_forcing_scope",
@@ -619,11 +687,32 @@ fn finite_predicate_interval(value: I) -> Result<I, Error> {
 
 pub(crate) fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
     match expr {
-        Expression::EventMath{function,args,..} if crate::operators::Function::from_internal(*function).is_some()=>crate::operators::Function::from_internal(*function).unwrap().bounds(expression_interval(&args[0],nodes)?),
-        Expression::RealCall{..}|Expression::UnsupportedSystemCall{..}=>Err(Error::new("invalid_ir","unexecuted procedure call requires its owning source frame")),
-        Expression::RealBoundary{value,..}=>crate::real_expression::interval(expression_interval(value,nodes)?,None),
-        Expression::RealBinary{operation,left,right,..}=>crate::real_expression::binary_interval(*operation,expression_interval(left,nodes)?,expression_interval(right,nodes)?,None),
-        Expression::RealLocal{..}=>Err(Error::new("invalid_ir","unbound real local")),
+        Expression::EventMath { function, args, .. }
+            if crate::operators::Function::from_internal(*function).is_some() =>
+        {
+            crate::operators::Function::from_internal(*function)
+                .unwrap()
+                .bounds(expression_interval(&args[0], nodes)?)
+        }
+        Expression::RealCall { .. } | Expression::UnsupportedSystemCall { .. } => Err(Error::new(
+            "invalid_ir",
+            "unexecuted procedure call requires its owning source frame",
+        )),
+        Expression::RealBoundary { value, .. } => {
+            crate::real_expression::interval(expression_interval(value, nodes)?, None)
+        }
+        Expression::RealBinary {
+            operation,
+            left,
+            right,
+            ..
+        } => crate::real_expression::binary_interval(
+            *operation,
+            expression_interval(left, nodes)?,
+            expression_interval(right, nodes)?,
+            None,
+        ),
+        Expression::RealLocal { .. } => Err(Error::new("invalid_ir", "unbound real local")),
         Expression::Forcing { .. } => Err(Error::new(
             "unsupported_forcing_scope",
             "forcing marker requires its owning independent component dispatcher",

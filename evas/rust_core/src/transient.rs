@@ -66,7 +66,7 @@ mod source_selected_slew_tests;
 pub(crate) mod time_provenance;
 
 #[cfg(test)]
-#[path="procedure_cell_controller_tests.rs"]
+#[path = "procedure_cell_controller_tests.rs"]
 mod procedure_cell_controller_tests;
 
 #[derive(Clone)]
@@ -579,22 +579,39 @@ fn take_physical_action_view(
     passive: &[bool],
     legacy_work: Option<&crate::transition_source_plan::Work>,
 ) -> Result<Option<ProcedureActionGroups>, Error> {
-    let work = selection.plan.as_ref().map(|plan| &plan.work).or(legacy_work);
-    if let Some(work) = work { work.debit(2, 0)?; }
+    let work = selection
+        .plan
+        .as_ref()
+        .map(|plan| &plan.work)
+        .or(legacy_work);
+    if let Some(work) = work {
+        work.debit(2, 0)?;
+    }
     let mut has_passive = false;
     for (event, _) in &selection.actions {
-        if let Some(work) = work { work.step()?; }
+        if let Some(work) = work {
+            work.step()?;
+        }
         has_passive |= passive[*event];
     }
-    if !has_passive { return Ok(None); }
+    if !has_passive {
+        return Ok(None);
+    }
     if let Some(work) = work {
-        work.debit(2, (selection.actions.len() * std::mem::size_of::<(usize, Vec<usize>)>()) as u64)?;
+        work.debit(
+            2,
+            (selection.actions.len() * std::mem::size_of::<(usize, Vec<usize>)>()) as u64,
+        )?;
     }
     let mut filtered = Vec::with_capacity(selection.actions.len());
     for (event, indices) in &selection.actions {
-        if let Some(work) = work { work.step()?; }
+        if let Some(work) = work {
+            work.step()?;
+        }
         if !passive[*event] {
-            if let Some(work) = work { work.debit(2, (indices.len() * std::mem::size_of::<usize>()) as u64)?; }
+            if let Some(work) = work {
+                work.debit(2, (indices.len() * std::mem::size_of::<usize>()) as u64)?;
+            }
             filtered.push((*event, indices.clone()));
         }
     }
@@ -917,16 +934,14 @@ fn prepare_root_window_selected_phase(
         }
     };
     let mut prepared = settle(&frozen.values, &frozen.bounds, true)?;
-    let mut physical_selection = prepared.selection.take().ok_or_else(|| {
-        Error::new("invalid_ir", "settlement lost its activation selection")
-    })?;
+    let mut physical_selection = prepared
+        .selection
+        .take()
+        .ok_or_else(|| Error::new("invalid_ir", "settlement lost its activation selection"))?;
     // Keep the original selection intact for its later consumer. Only the
     // physical action view filters passive writers, exactly as before.
-    let unfiltered_actions = take_physical_action_view(
-        &mut physical_selection,
-        &model.passive_events,
-        proof_work,
-    )?;
+    let unfiltered_actions =
+        take_physical_action_view(&mut physical_selection, &model.passive_events, proof_work)?;
     let mut observation = (frozen.values.clone(), frozen.bounds.clone());
     let mut closed = false;
     // Reset dependencies are structurally acyclic. Propagate their instant
@@ -1232,33 +1247,52 @@ fn prepare_root_window_selected_phase(
         } else {
             let mut context = value_context.try_with_operators(&observation.1)?;
             context.set_candidate_frame(
-                &accepted.states, &observation.0, &inputs,
+                &accepted.states,
+                &observation.0,
+                &inputs,
                 value_context.rooted_occurrence(),
             )?;
             let nodes = if let Some(boxes) = &prepared.solution.certified_voltage_bounds {
-                crate::real_expression::work(model).debit(
-                    2, (boxes.len() * std::mem::size_of::<I>() + 32) as u64,
-                )?;
+                crate::real_expression::work(model)
+                    .debit(2, (boxes.len() * std::mem::size_of::<I>() + 32) as u64)?;
                 boxes.iter().map(|b| I { lo: b[0], hi: b[1] }).collect()
             } else {
                 // A source Plan is not a legacy affine assignment map. Reuse
                 // the physical candidate's original proof if it has not yet
                 // published node boxes; never substitute nominal point boxes.
-                let view = prepared.circuit.procedure_occurrence()
+                let view = prepared
+                    .circuit
+                    .procedure_occurrence()
                     .or_else(|| prepared.circuit.procedure_view())
-                    .ok_or_else(|| Error::new(
-                        "invalid_ir", "passive source has no physical occurrence certificate",
-                    ))?;
-                view.plan.certificate(
-                    &model.program, &model.driven, model.tolerances.clone(),
-                    &input_bounds, &view.plan.base[..], &observation.1,
-                    &prepared.solution.voltages, &prepared.states, Some(&context),
-                    crate::real_expression::work(model),
-                )?.1
+                    .ok_or_else(|| {
+                        Error::new(
+                            "invalid_ir",
+                            "passive source has no physical occurrence certificate",
+                        )
+                    })?;
+                view.plan
+                    .certificate(
+                        &model.program,
+                        &model.driven,
+                        model.tolerances.clone(),
+                        &input_bounds,
+                        &view.plan.base[..],
+                        &observation.1,
+                        &prepared.solution.voltages,
+                        &prepared.states,
+                        Some(&context),
+                        crate::real_expression::work(model),
+                    )?
+                    .1
             };
             let passive = passive_procedure::prepare(
-                model, events, &nodes, &prepared.solution.voltages,
-                &accepted.states, old_bounds, &context,
+                model,
+                events,
+                &nodes,
+                &prepared.solution.voltages,
+                &accepted.states,
+                old_bounds,
+                &context,
             )?;
             // A passive observer cannot change the physical closure that was
             // already certified, or weaken its state enclosure.
@@ -1268,7 +1302,8 @@ fn prepare_root_window_selected_phase(
                     || passive.bounds[state].hi > prepared.bounds[state].hi
                 {
                     return Err(Error::new(
-                        "event_consistency", "passive procedure changed physical candidate",
+                        "event_consistency",
+                        "passive procedure changed physical candidate",
                     ));
                 }
             }
@@ -4583,26 +4618,40 @@ mod activation_selection_tests {
     #[test]
     fn activation_selection_passive_view_preserves_complete_actions_and_sticky_failure() {
         let mut selection = crate::event_conditions::Selection {
-            actions: vec![(0,vec![3,5]),(1,vec![7]),(2,vec![11,13])],
+            actions: vec![(0, vec![3, 5]), (1, vec![7]), (2, vec![11, 13])],
             ..Default::default()
         };
         let original = selection.clone();
         let work = crate::transition_source_plan::Work::default();
         let start = work.spent();
-        let actions = take_physical_action_view(&mut selection, &[false,true,false],Some(&work)).unwrap().unwrap();
-        assert!(work.spent()>start);
-        assert_eq!(selection.actions,vec![(0,vec![3,5]),(2,vec![11,13])]);
-        assert_eq!(actions,original.actions);
-        selection.actions=actions;
-        assert!(selection==original);
-        let owner=crate::transition_source_plan::Work::limited([128,8192,1]);
+        let actions = take_physical_action_view(&mut selection, &[false, true, false], Some(&work))
+            .unwrap()
+            .unwrap();
+        assert!(work.spent() > start);
+        assert_eq!(selection.actions, vec![(0, vec![3, 5]), (2, vec![11, 13])]);
+        assert_eq!(actions, original.actions);
+        selection.actions = actions;
+        assert!(selection == original);
+        let owner = crate::transition_source_plan::Work::limited([128, 8192, 1]);
         // Natural traversal exceeds the same owner before replacing any action storage.
-        assert_eq!(take_physical_action_view(&mut selection,&[false,true,false],Some(&owner)).err().unwrap().kind,"step_budget");
-        let spent=owner.spent();
+        assert_eq!(
+            take_physical_action_view(&mut selection, &[false, true, false], Some(&owner))
+                .err()
+                .unwrap()
+                .kind,
+            "step_budget"
+        );
+        let spent = owner.spent();
         for _ in 0..2 {
-            assert_eq!(take_physical_action_view(&mut selection,&[false,true,false],Some(&owner)).err().unwrap().kind,"step_budget");
-            assert_eq!(owner.spent(),spent);
-            assert!(selection==original);
+            assert_eq!(
+                take_physical_action_view(&mut selection, &[false, true, false], Some(&owner))
+                    .err()
+                    .unwrap()
+                    .kind,
+                "step_budget"
+            );
+            assert_eq!(owner.spent(), spent);
+            assert!(selection == original);
         }
     }
 }

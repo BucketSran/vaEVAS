@@ -907,7 +907,12 @@ impl NonlinearContinuous {
             result.event_dependent = true;
             return Ok(result);
         }
-        let history_program=if !context.program.procedures.is_empty()&&!context.program.step_bounds.is_empty(){Some(selection::history_program(&context,&parameters)?)}else{None};
+        let history_program =
+            if !context.program.procedures.is_empty() && !context.program.step_bounds.is_empty() {
+                Some(selection::history_program(&context, &parameters)?)
+            } else {
+                None
+            };
         let program = history_program.as_ref().unwrap_or(context.program.as_ref());
         let driven = driven_node_indices(program, &context.driven)?;
         let mut sources = vec![None; program.nodes.len()];
@@ -916,7 +921,8 @@ impl NonlinearContinuous {
         }
         let mut operators = Vec::new();
         let mut state_count = 0;
-        let mut event_dependent = !context.program.procedures.is_empty() && !context.program.step_bounds.is_empty();
+        let mut event_dependent =
+            !context.program.procedures.is_empty() && !context.program.step_bounds.is_empty();
         for (i, spec) in program.operators.iter().enumerate() {
             if context.detached_timed && matches!(spec, OperatorSpec::Transition { .. }) {
                 continue;
@@ -2443,14 +2449,19 @@ impl NonlinearContinuous {
         context: Arc<Context>,
     ) -> Result<Self, Error> {
         let mut next = self.mapped_event_with_context(time, window, parameters, context)?;
-        if let Some(seed) = next.event_seed.as_ref().filter(|seed| seed.representative_pending) {
+        if let Some(seed) = next
+            .event_seed
+            .as_ref()
+            .filter(|seed| seed.representative_pending)
+        {
             let window = seed.window;
             if window.lo != window.hi {
                 let elapsed = I {
                     lo: 0.0,
                     hi: (I::point(next.start) - I::point(window.lo)).hi,
                 };
-                let (_, image) = next.event_picard_enclosure(&next.initial, window, &[], elapsed)?;
+                let (_, image) =
+                    next.event_picard_enclosure(&next.initial, window, &[], elapsed)?;
                 next.initial = image;
             }
             next.event_seed.as_mut().unwrap().representative_pending = false;
@@ -2699,7 +2710,10 @@ mod tests {
         let mut mapped = scalar(0.0);
         mapped.functions = vec![Polynomial::Linear(vec![I::ZERO, I::point(4.0)])];
         mapped.start = 0.05;
-        let window = I { lo: 0.05 - 1e-8, hi: 0.05 };
+        let window = I {
+            lo: 0.05 - 1e-8,
+            hi: 0.05,
+        };
         mapped.event_seed = Some(PhysicalEventSeed {
             window,
             state_after_map: mapped.initial.clone(),
@@ -2714,8 +2728,14 @@ mod tests {
         assert!(!accepted.event_seed.as_ref().unwrap().representative_pending);
         let repeated = accepted.restarted(window.hi, window, &[], 0.125).unwrap();
         assert!(accepted.same_history(&repeated));
-        assert_eq!(accepted.state_bounds(I::point(0.125)).unwrap(), repeated.state_bounds(I::point(0.125)).unwrap());
-        assert_eq!(accepted.event_seed.as_ref().unwrap().state_after_map, vec![I::ONE]);
+        assert_eq!(
+            accepted.state_bounds(I::point(0.125)).unwrap(),
+            repeated.state_bounds(I::point(0.125)).unwrap()
+        );
+        assert_eq!(
+            accepted.event_seed.as_ref().unwrap().state_after_map,
+            vec![I::ONE]
+        );
 
         let mut failed = mapped.clone();
         failed.functions = scalar(1.0).functions;

@@ -1,4 +1,5 @@
 """IR33 cold seeds preserve the ordinary timer calendar and unrelated history."""
+GUARDS = ['DYNAMICS', 'TRANSITION', 'TIMER', 'COMPOSE']
 import unittest
 from evas import KernelError
 from test_initial_seed_invariance import program, run

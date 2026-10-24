@@ -289,10 +289,12 @@ pub(crate) fn local_new(bounds: &[I], c: &Context<'_>) -> Result<LocalState, Err
     for (&state, v) in c.states {
         w.step()?;
         if let Some(b) = bounds.get(state) {
-            let exact_point = b.finite() && b.lo.to_bits() == b.hi.to_bits()
+            let exact_point = b.finite()
+                && b.lo.to_bits() == b.hi.to_bits()
                 && binary_state_identity(v, b.lo, w)?;
-            if exact_point || crate::exact_source::enclosure_with_work(v, w)?
-                .is_some_and(|i| b.lo <= i.lo && i.hi <= b.hi)
+            if exact_point
+                || crate::exact_source::enclosure_with_work(v, w)?
+                    .is_some_and(|i| b.lo <= i.lo && i.hi <= b.hi)
             {
                 let mut p = Paid::new(w);
                 let v = p.copy(v);
@@ -788,44 +790,79 @@ mod local_point_constructor_tests {
     use super::*;
     #[test]
     fn local_point_constructor_preserves_missing_stale_uncontained_and_nonpoint_proofs() {
-        let w=Work::default();
-        let mut proofs=Proofs::new();
+        let w = Work::default();
+        let mut proofs = Proofs::new();
         proofs.insert(0, binary(0.1).unwrap());
-        proofs.insert(1, R::new(1.into(),5.into()));
+        proofs.insert(1, R::new(1.into(), 5.into()));
         proofs.insert(2, binary(4.).unwrap());
-        proofs.insert(3, R::new(1.into(),3.into()));
+        proofs.insert(3, R::new(1.into(), 3.into()));
         proofs.insert(99, binary(9.).unwrap());
-        let bounds=[I::point(0.1),I::point(0.2),I::point(3.),I{lo:0.,hi:1.},I::point(-0.),I{lo:-0.,hi:0.},I{lo:1.,hi:2.}];
-        let context=Context::candidate_frame(&proofs,0,&[],&[],&w).unwrap();
-        let local=local_new(&bounds,&context).unwrap();
-        assert_eq!(local.exact[0],proofs.get(&0).cloned());
+        let bounds = [
+            I::point(0.1),
+            I::point(0.2),
+            I::point(3.),
+            I { lo: 0., hi: 1. },
+            I::point(-0.),
+            I { lo: -0., hi: 0. },
+            I { lo: 1., hi: 2. },
+        ];
+        let context = Context::candidate_frame(&proofs, 0, &[], &[], &w).unwrap();
+        let local = local_new(&bounds, &context).unwrap();
+        assert_eq!(local.exact[0], proofs.get(&0).cloned());
         // 1/5 rounds to 0.2, but is not its exact binary value; old fallback survives.
-        assert_eq!(local.exact[1],binary(0.2));
-        assert_eq!(local.exact[2],binary(3.));
-        assert_eq!(local.exact[3],proofs.get(&3).cloned());
-        assert_eq!(local.exact[4],binary(-0.));assert_eq!(local.exact[5],binary(-0.));
-        assert_eq!(local.exact[6],None);
-        for (actual,expected) in local.bounds.iter().zip(bounds){assert_eq!(actual.lo.to_bits(),expected.lo.to_bits());assert_eq!(actual.hi.to_bits(),expected.hi.to_bits());}
+        assert_eq!(local.exact[1], binary(0.2));
+        assert_eq!(local.exact[2], binary(3.));
+        assert_eq!(local.exact[3], proofs.get(&3).cloned());
+        assert_eq!(local.exact[4], binary(-0.));
+        assert_eq!(local.exact[5], binary(-0.));
+        assert_eq!(local.exact[6], None);
+        for (actual, expected) in local.bounds.iter().zip(bounds) {
+            assert_eq!(actual.lo.to_bits(), expected.lo.to_bits());
+            assert_eq!(actual.hi.to_bits(), expected.hi.to_bits());
+        }
         assert!(local.history_work.as_ref().unwrap().same_owner(&w));
     }
     #[test]
     fn local_point_constructor_uses_current_context_and_spends_only_its_owner() {
-        let w=Work::default();let foreign=Work::default();let untouched=foreign.spent();
-        for point in [0.,-0.,f64::from_bits(1),0.1,0.2,f64::MAX] {
-            let proofs=Proofs::from([(0,binary(point).unwrap())]);
-            let context=Context::candidate_frame(&proofs,0,&[],&[],&w).unwrap();
-            let local=local_new(&[I::point(point)],&context).unwrap();
-            assert_eq!(local.exact[0],binary(point));assert_eq!(local.bounds[0].lo.to_bits(),point.to_bits());
+        let w = Work::default();
+        let foreign = Work::default();
+        let untouched = foreign.spent();
+        for point in [0., -0., f64::from_bits(1), 0.1, 0.2, f64::MAX] {
+            let proofs = Proofs::from([(0, binary(point).unwrap())]);
+            let context = Context::candidate_frame(&proofs, 0, &[], &[], &w).unwrap();
+            let local = local_new(&[I::point(point)], &context).unwrap();
+            assert_eq!(local.exact[0], binary(point));
+            assert_eq!(local.bounds[0].lo.to_bits(), point.to_bits());
         }
-        assert_eq!(foreign.spent(),untouched);
+        assert_eq!(foreign.spent(), untouched);
     }
     #[test]
     fn local_point_constructor_natural_exhaustion_is_sticky_without_context_mutation() {
-        let w=Work::limited([128,8192,50_000]);let proofs=Proofs::from([(0,binary(0.1).unwrap())]);
-        let original=proofs.clone();let context=Context::candidate_frame(&proofs,0,&[],&[],&w).unwrap();
-        let mut exhausted=false;
-        for _ in 0..10_000 {match local_new(&[I::point(0.1)],&context){Ok(local)=>assert_eq!(local.exact[0],binary(0.1)),Err(error)=>{assert_eq!(error.kind,"step_budget");exhausted=true;break;}}}
-        assert!(exhausted);assert!(w.spent()>50_000);let spent=w.spent();
-        for _ in 0..2 {assert_eq!(local_new(&[I::point(0.1)],&context).err().unwrap().kind,"step_budget");assert_eq!(w.spent(),spent);assert_eq!(proofs,original);}
+        let w = Work::limited([128, 8192, 50_000]);
+        let proofs = Proofs::from([(0, binary(0.1).unwrap())]);
+        let original = proofs.clone();
+        let context = Context::candidate_frame(&proofs, 0, &[], &[], &w).unwrap();
+        let mut exhausted = false;
+        for _ in 0..10_000 {
+            match local_new(&[I::point(0.1)], &context) {
+                Ok(local) => assert_eq!(local.exact[0], binary(0.1)),
+                Err(error) => {
+                    assert_eq!(error.kind, "step_budget");
+                    exhausted = true;
+                    break;
+                }
+            }
+        }
+        assert!(exhausted);
+        assert!(w.spent() > 50_000);
+        let spent = w.spent();
+        for _ in 0..2 {
+            assert_eq!(
+                local_new(&[I::point(0.1)], &context).err().unwrap().kind,
+                "step_budget"
+            );
+            assert_eq!(w.spent(), spent);
+            assert_eq!(proofs, original);
+        }
     }
 }
