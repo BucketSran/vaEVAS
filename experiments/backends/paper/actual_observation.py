@@ -1,5 +1,6 @@
 """Bind actual EVAS response evidence to paper roles without creating missing proofs."""
 from __future__ import annotations
+import ast
 import argparse
 from fractions import Fraction as F
 import hashlib
@@ -51,9 +52,66 @@ def input_curve_bound(card,request):
     return max((b['bound_V'] for b in maxima.values()),default=0),{'inputs':maxima,'domain_s':[0,request['stop']],'reference_endpoint_semantics':'oracle.pwl endpoint hold; no actual-source extension'}
 
 
-WORKER_DEPENDENCIES=tuple('experiments/backends/paper/'+name+'.py' for name in
-                          ('runner','inputs','process','settings_readback','observations'))+(
-    'experiments/archive/dvs2-starter-pilot/analyze.py','experiments/archive/dvs2-starter-pilot/suite.py')
+PAPER_WORKERS = tuple('experiments/backends/paper/'+name+'.py' for name in
+                      ('runner','inputs','process','settings_readback','observations'))
+SHARED_READER_FILES = ('experiments/backends/evidence/legacy_waveforms.py',)
+LEGACY_READER_FILES = ('experiments/archive/dvs2-starter-pilot/analyze.py',
+                       'experiments/archive/dvs2-starter-pilot/suite.py')
+CASE_INPUTS_FILE = 'evas/validation/paper/case_inputs.py'
+WORKER_DEPENDENCIES = PAPER_WORKERS + SHARED_READER_FILES
+
+
+def _assignment(tree, name):
+    values = [node.value for node in tree.body if isinstance(node, ast.Assign)
+              and any(isinstance(target, ast.Name) and target.id == name for target in node.targets)]
+    if len(values) > 1:
+        raise ValueError('ambiguous audited worker dependency contract: ' + name)
+    return values[0] if values else None
+
+
+def _expression_matches(value, expression):
+    return value is not None and ast.dump(value) == ast.dump(ast.parse(expression, mode='eval').body)
+
+
+def worker_dependencies(repo):
+    """Select a known dependency contract from the explicit audited producer.
+
+    Source contracts, never the supplied manifest or missing-file fallback,
+    distinguish old producers from workers using the shared reader.
+    """
+    repo = Path(repo)
+    try:
+        observations = ast.parse((repo/'experiments/backends/paper/observations.py').read_text())
+        inputs = ast.parse((repo/'experiments/backends/paper/inputs.py').read_text())
+    except (OSError, SyntaxError) as exc:
+        raise ValueError('audited worker dependency contract unavailable') from exc
+    reader_files = _assignment(observations, 'READER_FILES')
+    if reader_files is not None:
+        if not (_expression_matches(reader_files, repr(SHARED_READER_FILES)) and
+                _expression_matches(_assignment(observations, 'READER_DEPENDENCIES'),
+                                    'tuple(ROOT/name for name in READER_FILES)')):
+            raise ValueError('unknown audited shared-reader dependency contract')
+        readers = SHARED_READER_FILES
+    else:
+        if not (_expression_matches(_assignment(observations, 'READER_DIR'),
+                                    "ROOT/'experiments/archive/dvs2-starter-pilot'") and
+                _expression_matches(_assignment(observations, 'READER_DEPENDENCIES'),
+                                    "(READER_DIR/'analyze.py', READER_DIR/'suite.py')")):
+            raise ValueError('unknown audited legacy-reader dependency contract')
+        readers = LEGACY_READER_FILES
+    constructor = _assignment(inputs, '_CASE_INPUTS_PATH')
+    if constructor is not None:
+        if not _expression_matches(constructor, 'ROOT/' + repr(CASE_INPUTS_FILE)):
+            raise ValueError('unknown audited case-input dependency contract')
+        constructors = (CASE_INPUTS_FILE,)
+    else:
+        if any(isinstance(n, ast.Constant) and isinstance(n.value, str)
+               and n.value.endswith('/case_inputs.py') for n in ast.walk(inputs)):
+            raise ValueError('unregistered audited case-input dependency contract')
+        constructors = ()
+    return PAPER_WORKERS + readers + constructors
+
+
 BUILD_METADATA=('evas/pyproject.toml','evas/rust_core/Cargo.toml','evas/rust_core/Cargo.lock',
                 'evas/rust_core/ir/Cargo.toml','evas/rust_core/ir/Cargo.lock',
                 'evas/rust_core/build.rs','evas/rust_core/ir/build.rs',
@@ -64,7 +122,7 @@ BUILD_METADATA=('evas/pyproject.toml','evas/rust_core/Cargo.toml','evas/rust_cor
 
 def production_dependency(name):
     """Production scopes are defined independently of supplied manifest entries."""
-    return (name in WORKER_DEPENDENCIES or name in BUILD_METADATA
+    return (name in (*WORKER_DEPENDENCIES, *LEGACY_READER_FILES, CASE_INPUTS_FILE) or name in BUILD_METADATA
             or name.startswith('evas/src/') and name.endswith('.py')
             or any(name.startswith(prefix) for prefix in ('evas/rust_core/src/','evas/rust_core/ir/src/')) and name.endswith('.rs'))
 
@@ -72,14 +130,15 @@ def production_dependency(name):
 def production_dependencies(repo):
     """Enumerate the complete current production closure from the fixed audit repo."""
     repo=Path(repo)
-    expected=set(WORKER_DEPENDENCIES)
+    workers=worker_dependencies(repo)
+    expected=set(workers)
     for directory,suffix in (('evas/src','.py'),('evas/rust_core/src','.rs'),('evas/rust_core/ir/src','.rs')):
         found={str(path.relative_to(repo)) for path in (repo/directory).rglob('*'+suffix) if path.is_file()}
         if not found:raise ValueError('audited production source directory missing: '+directory)
         expected.update(found)
     expected.update(name for name in BUILD_METADATA if (repo/name).is_file())
     mandatory=('evas/pyproject.toml','evas/rust_core/Cargo.toml','evas/rust_core/Cargo.lock','evas/rust_core/ir/Cargo.toml')
-    if any(not (repo/name).is_file() for name in (*WORKER_DEPENDENCIES,*mandatory)):
+    if any(not (repo/name).is_file() for name in (*workers,*mandatory)):
         raise ValueError('audited production dependency missing')
     return {name:sha(repo/name) for name in sorted(expected)}
 

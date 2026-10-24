@@ -61,9 +61,16 @@ CALIBRATION_PREFIXES = (
 )
 # These are consumed by development regressions, not only by backend checkers.
 REGRESSION_INPUTS = {
+    'evas/validation/paper/case_inputs.py',
     'experiments/backends/paper/inputs.py',
     'experiments/backends/dvs2-spectre-validation/run_suite.py',
     'experiments/backends/dvs2-spectre-validation/check_results.py',
+    'evas/validation/dvs2/__init__.py',
+    'evas/validation/dvs2/cases.py',
+    'evas/validation/dvs2/checker.py',
+    'evas/validation/dvs2/history.py',
+    'evas/validation/dvs2/legacy.py',
+    'evas/validation/dvs2/legacy_checks.py',
 }
 # Audited historical reports, not fixtures or executable inputs. Keep this an
 # exact path list: an unfamiliar JSON file still selects its regression consumers.

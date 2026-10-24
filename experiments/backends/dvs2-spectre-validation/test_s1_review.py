@@ -48,10 +48,19 @@ class S1Review(unittest.TestCase):
                 self.assertLess(result['analytic_max_error']['vout'], 2e-15)
 
     def test_fixture_does_not_use_production_oracle(self):
-        with patch('check_results.reference', side_effect=AssertionError('shared oracle')), \
-                patch('check_results.v1.pwl', side_effect=AssertionError('shared PWL')):
+        with patch('dvs2.checker.reference', side_effect=AssertionError('shared oracle')), \
+                patch('dvs2.checker.v1.pwl', side_effect=AssertionError('shared PWL')):
             for name in OUTPUT_KNOTS:
                 self.assertEqual(len(rational_rows(name)), 4001)
+
+    def test_independence_guard_rejects_checker_coupled_controls(self):
+        data = rational_rows('s1-default')
+        for dependency in ('reference', 'v1.pwl'):
+            with self.subTest(dependency=dependency):
+                with patch('dvs2.checker.' + dependency,
+                           side_effect=AssertionError('shared oracle')):
+                    with self.assertRaisesRegex(AssertionError, 'shared oracle'):
+                        s1_review.check(data, 's1-default')
 
     def test_freezing_either_input_is_rejected(self):
         for name, gains in [('s1-default', (1.5, -.5)), ('s1-override', (-.5, 2))]:

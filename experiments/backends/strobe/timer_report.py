@@ -72,10 +72,9 @@ def report(base):
     deps=['evas/validation/strobe/timer_composition.py','evas/validation/sample_edge_filter/contract.py',
           'evas/validation/paper/precision_checker.py','evas/validation/paper/precision-v1.json',
           'experiments/backends/support/precision_report.py','experiments/backends/paper/observations.py',
-          'experiments/backends/paper/inputs.py','experiments/archive/dvs2-starter-pilot/analyze.py',
-          'experiments/archive/dvs2-starter-pilot/suite.py']
+          'experiments/backends/paper/inputs.py','experiments/backends/evidence/legacy_waveforms.py']
     for rel in deps:
-        if sha(ROOT/rel)!=source[rel]:raise ValueError('analysis dependency drift: '+rel)
+        if sha(ROOT/rel)!=source.get(rel):raise ValueError('analysis dependency drift: '+rel)
     diagnostic=(base/'timer-diagnostic-inputs').is_dir()
     if diagnostic:verify_timer_diagnostic(base)
     for folder in ('inputs','composition-inputs',*(['timer-diagnostic-inputs'] if diagnostic else [])):

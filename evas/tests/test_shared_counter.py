@@ -4,21 +4,9 @@ import unittest
 from evas import CompileError, Instance, KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
 
-HC01 = """`include "disciplines.vams"
-`include "constants.vams"
-module paper_hc(in, out, count);
- inout in, out, count;
- electrical in, out, count;
- real q,n;
- analog begin
-  @(initial_step) begin q=0; n=0; end
-  @(cross(V(in)-0.65,+1,1e-9,2e-4)) begin q=1; n=n+1; end
-  @(cross(V(in)-0.35,-1,1e-9,2e-4)) begin q=0; n=n+1; end
-  V(out)<+0.1+0.8*q;
-  V(count)<+n;
- end
-endmodule
-"""
+from paper_case_inputs import case_source
+
+HC01 = case_source('EV-HC-01')
 
 
 class SharedCounter(unittest.TestCase):

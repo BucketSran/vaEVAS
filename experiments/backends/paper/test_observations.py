@@ -83,20 +83,27 @@ class ObservationContracts(unittest.TestCase):
         result=normalize_observation(CARD,'evas',rows,['accepted'],contract=CONTRACT)
         self.assertEqual(result['status'],'observation_invalid')
 
-    def test_reader_restores_suite_even_when_suite_execution_raises(self):
+    def test_reader_leaves_suite_unchanged_on_success_and_parse_failure(self):
         import sys
+        import tempfile
         from unittest.mock import patch
         from observations import read_native
         from pathlib import Path
-        previous=object()
-        def fail(module):
-            sys.modules['suite']=module
-            raise RuntimeError('fixture import failure')
-        with patch.dict(sys.modules,{'suite':previous}):
-            with patch('importlib.machinery.SourceFileLoader.exec_module',side_effect=fail):
-                with self.assertRaises(RuntimeError):
-                    read_native(Path('unused'),'evas')
-            self.assertIs(sys.modules['suite'],previous)
+        for previous in (None, object()):
+            with self.subTest(previous=previous is not None), tempfile.TemporaryDirectory() as temporary:
+                path = Path(temporary)/'waveform.csv'
+                path.write_text('time,u\n0,.25\n')
+                with patch.dict(sys.modules):
+                    if previous is None:
+                        sys.modules.pop('suite', None)
+                    else:
+                        sys.modules['suite'] = previous
+                    self.assertEqual(read_native(path, 'evas'), [{'time': 0.0, 'u': .25}])
+                    self.assertIs(sys.modules.get('suite'), previous)
+                    path.write_text('time,u,u\n0,.25,.5\n')
+                    with self.assertRaisesRegex(ValueError, 'duplicate CSV'):
+                        read_native(path, 'evas')
+                    self.assertIs(sys.modules.get('suite'), previous)
 
     def test_proved_boundary_serialization_offset_does_not_fail_exact_literal_gate(self):
         import tempfile,hashlib

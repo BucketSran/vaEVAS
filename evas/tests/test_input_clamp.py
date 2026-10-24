@@ -4,12 +4,12 @@ import math
 import copy
 import json
 import subprocess
-from pathlib import Path
+from paper_case_inputs import case_source
 import unittest
 from evas import CompileError, Instance, KernelError, compile_sources, transient
 from test_affine import KERNEL, model
 GUARDS = ['DYNAMICS','COMPOSE']
-SOURCE=Path(__file__).with_name('fixtures').joinpath('input_clamp_vco.va').read_text()
+SOURCE = case_source('CO-VCO-01')
 # Independent decimal piecewise oracle, not the lowering root calculation.
 POINTS=[(F(0),F('0.2')),(F('1.2'),F('0.2')),(F(2),F('0.4')),
         (F('3.2'),F(1)),(F('4.8'),F(1)),(F(6),F('0.4')),

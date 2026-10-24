@@ -38,8 +38,10 @@ Gnucap 额外请求 `trace alltime` 保存内部接受步。辅助源属于新 d
 在准备阶段均未知。`qualification_requirements.json` 保留这些待办。
 准备文件不是实际比较证据，实际执行须先由协调者批准冻结批次并绑定工具身份。
 
-`read_native(path, backend)` 复用已有 CSV、Spectre ASCII PSF 和 SPICE 文本
-读取器，完整保留时间与数值。格式解析不证明原生采样或准确性。
+`read_native(path, backend)`使用[共享格式读取器](../evidence/README.md)，
+保留CSV、Spectre ASCII PSF及SPICE文本的原行顺序、重复时点和旧binary64投影。
+新冻结绑定共享读取器，旧生产证据按显式`producer_repo`中的依赖声明审计。
+格式解析不证明原生采样或准确性，旧浮点投影也不代替保留十进制token的分析。
 `normalize_observation(card, backend, rows, origins, qualification, contract=...)`
 保存原行与逐行 `accepted`、`interpolated` 或 `unknown` 来源，并报告缺列、
 非有限值、重复时间、截断、实际全局/局部间隔和精确中心行。

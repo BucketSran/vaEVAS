@@ -43,6 +43,9 @@ class InputContracts(unittest.TestCase):
                     self.assertEqual(json.loads((work/'binding.json').read_text())['top_module'], 'paper_isolation')
                     self.assertIn('paper_isolation', (work/row['deck']).read_text())
             verify(out)
+            helper = 'evas/validation/paper/case_inputs.py'
+            self.assertEqual((out/'adapter_sources'/helper).read_bytes(), (ROOT/helper).read_bytes())
+            self.assertIn(helper, json.loads((out/'ADAPTER_IDENTITY.json').read_text()))
             (out/plan[0]['work']/'dut.va').write_text('changed')
             with self.assertRaisesRegex(ValueError, 'drift'):
                 verify(out)

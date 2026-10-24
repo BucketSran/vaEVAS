@@ -9,6 +9,26 @@ from runner import execute, effective_settings, verify, run
 
 
 class RunnerControls(unittest.TestCase):
+    def test_shared_scientific_source_change_invalidates_checker_identity(self):
+        import freeze as freezer
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            science = root/'evas/validation/dvs2'
+            science.mkdir(parents=True)
+            (science/'__init__.py').write_text('# synthetic science package\n')
+            source = science/'cases.py'
+            source.write_text('# original synthetic condition\n')
+            reader = root/'experiments/backends/evidence/legacy_waveforms.py'
+            reader.parent.mkdir(parents=True)
+            reader.write_text('# synthetic reader\n')
+            with patch.object(freezer, 'ROOT', root):
+                before = freezer.checker_identity()
+                source.write_text('# changed synthetic condition\n')
+                self.assertNotEqual(freezer.checker_identity(), before)
+                before = freezer.checker_identity()
+                reader.write_text('# changed synthetic reader\n')
+                self.assertNotEqual(freezer.checker_identity(), before)
+
     def test_input_drift_prevents_any_launch(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / 'frozen'
@@ -53,8 +73,10 @@ class RunnerControls(unittest.TestCase):
             inputs = root / 'inputs'
             freeze(inputs)
             kernel = root / 'kernel'
+            sys.path.insert(0, str(Path(__file__).resolve().parents[3]/'evas/src'))
+            from evas.ir import SCHEMA_VERSION
             reported = {'identity_version': 1, 'name': 'evas-kernel', 'version': '0.13.0',
-                        'ir_schema_version': 17, 'build_revision': 'frozen-build',
+                        'ir_schema_version': SCHEMA_VERSION, 'build_revision': 'frozen-build',
                         'request_protocol_version': None, 'platform': {'os': 'test', 'arch': 'test'}}
             kernel.write_text('#!' + sys.executable + '\nimport json\nprint(' + repr(json.dumps(reported)) + ')\n')
             kernel.chmod(0o755)

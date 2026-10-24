@@ -13,9 +13,9 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "experiments/backends/dvs2-spectre-validation"))
-from run_suite import T, PROFILES, conditions, v1
-from check_results import check
+sys.path.insert(0, str(ROOT / "evas/validation"))
+from dvs2 import T, PROFILES, conditions, v1, check
+from dvs2 import source_files as scientific_sources
 
 from evas import CompileError, Instance, compile_sources, solve
 from evas.frontend import parse_sources
@@ -86,9 +86,7 @@ def main():
     source_files = [p for base in (ROOT / "evas/src", ROOT / "evas/tests", ROOT / "evas/rust_core/src")
                     for p in base.rglob("*") if p.is_file() and "__pycache__" not in p.parts]
     source_files += [ROOT / "evas/rust_core" / n for n in ("Cargo.toml", "Cargo.lock")]
-    source_files += [ROOT / "experiments/backends/dvs2-spectre-validation" / n for n in ("run_suite.py", "check_results.py")]
-    source_files += [ROOT / "experiments/archive/dvs2-starter-pilot" / n for n in ("suite.py", "analyze.py")]
-    source_files += [ROOT / "experiments/archive/dvs2-history-validation" / n for n in ("history.py", "recheck.py")]
+    source_files += scientific_sources(ROOT)
     source_files += list((ROOT / "evas/validation/cases").rglob("*.va"))
     report = dict(scope="stateless polynomial operating points on two requested grids; NOT a transient simulator qualification",
         engine=result["engine"] if records else None, kernel_sha256=digest(args.kernel),

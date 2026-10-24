@@ -19,8 +19,7 @@ ROUNDS = ('baseline', 'minimize', 'lowering', 'settings', 'settings-readback', '
 ANALYSIS_DEPENDENCIES = (
     'experiments/backends/paper/observations.py',
     'experiments/backends/paper/settings_readback.py',
-    'experiments/archive/dvs2-starter-pilot/analyze.py',
-    'experiments/archive/dvs2-starter-pilot/suite.py',
+    'experiments/backends/evidence/legacy_waveforms.py',
 )
 
 

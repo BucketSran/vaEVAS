@@ -193,7 +193,7 @@ def report(base):
     # Reanalysis is allowed only with the same mathematical checker and readers.
     dependencies=('evas/validation/paper/precision_checker.py','experiments/backends/paper/inputs.py',
                   'experiments/backends/paper/observations.py','experiments/backends/paper/settings_readback.py',
-                  'experiments/archive/dvs2-starter-pilot/analyze.py','experiments/archive/dvs2-starter-pilot/suite.py')
+                  'experiments/backends/evidence/legacy_waveforms.py')
     source_identity=load(frozen/'SOURCE_IDENTITY.json')
     for rel in dependencies:
         if sha(ROOT/rel)!=source_identity.get(rel):raise ValueError('analysis dependency drift: '+rel)
