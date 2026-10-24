@@ -4219,6 +4219,11 @@ impl Operators {
             else {
                 unreachable!()
             };
+            // A parent may settle from an exact root before its loose binary
+            // end bound. Commit every child against the OLD ramp first, using
+            // that same root/window and original proof-work owner.
+            let reaches_deadline = reaches_deadline
+                || old.end_reached_at(time, time_bounds, exact_root, shared_work.as_ref())?;
             let (value, target_bounds, may_change, preview_bounds, preview_root) = if let Some(
                 source,
             ) = source
@@ -5272,6 +5277,115 @@ mod reset_operator_tests {
 mod exact_deadline_review_tests {
     use super::*;
     use crate::exact_source::RootTime;
+
+    #[test]
+    fn exact_endpoint_child_commit_retries_after_rejected_window_without_losing_old_ramp() {
+        let origin =
+            serde_json::json!({"source":"endpoint.va","line":1,"column":1,"instance":"dut"});
+        let integral_origin =
+            serde_json::json!({"source":"endpoint.va","line":2,"column":1,"instance":"dut"});
+        let filter_origin =
+            serde_json::json!({"source":"endpoint.va","line":3,"column":1,"instance":"dut"});
+        let program: Program = serde_json::from_value(serde_json::json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","y"],
+            "states":[{"instance":"dut","name":"q","kind":"real","initial":0.5}],
+            "operators":[
+                {"kind":"transition","input":{"op":"state","state":0},"delay":0,"rise":2.5e-7,"fall":2.5e-7,"origin":origin},
+                {"kind":"idt","input":{"op":"operator","operator":0},"ic":0,"origin":integral_origin},
+                {"kind":"laplace_nd","input":{"op":"operator","operator":0},"numerator":[1],"denominator":[1,2e-7],"origin":filter_origin}
+            ],"contributions":[{"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},"positive":1,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}],"events":[]
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                analytic_sources: vec![],
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![],
+                output_times: vec![0., 3e-6],
+                stop: 3e-6,
+                max_step: 3.125e-8,
+            },
+            0,
+        )
+        .unwrap();
+        let mut base = Operators::new(&program, &trajectory, &[], &[0.5]).unwrap();
+        let start = 2e-6;
+        base.advance_with_exact(
+            start,
+            I::point(start),
+            &[-0.5],
+            &[I::point(-0.5)],
+            &[0],
+            RootTime::point(start).as_ref(),
+            false,
+            None,
+            None,
+        )
+        .unwrap();
+        let retained = base.clone();
+        let tick = 2.25e-6;
+        let root = RootTime::point(tick).unwrap();
+        // This is the mechanism detector: exact ordering ends the parent even
+        // though its old enclosing upper deadline is after the representative.
+        assert!(base.transition(0).unwrap().next_breakpoint(start).unwrap() > tick);
+        assert!(base
+            .transition(0)
+            .unwrap()
+            .end_reached_at(tick, I::point(tick), Some(&root), None)
+            .unwrap());
+        for _ in 0..2 {
+            let bad = tick.next_up();
+            let error = base
+                .advance_with_exact(
+                    bad,
+                    I::point(bad),
+                    &[-0.5],
+                    &[I::point(-0.5)],
+                    &[],
+                    Some(&root),
+                    false,
+                    None,
+                    None,
+                )
+                .unwrap_err();
+            assert_eq!(error.kind, "event_resolution");
+            assert!(base.same_reset_history(&retained));
+        }
+        let discarded = base
+            .evaluation_at_root(tick, Some(&root), I::point(tick))
+            .unwrap()
+            .advanced(I::point(tick), &[-0.5], &[I::point(-0.5)], &[])
+            .unwrap();
+        assert!(base.same_reset_history(&retained));
+        let mut clean = retained.clone();
+        for candidate in [&mut base, &mut clean] {
+            candidate
+                .advance_with_exact(
+                    tick,
+                    I::point(tick),
+                    &[-0.5],
+                    &[I::point(-0.5)],
+                    &[],
+                    Some(&root),
+                    false,
+                    None,
+                    None,
+                )
+                .unwrap();
+        }
+        for time in [tick, 2.5e-6] {
+            let actual = base.values(time).unwrap();
+            let duration: f64 = 2.5e-7;
+            let tau: f64 = 2e-7;
+            let at_end = 0.5 - (duration - tau * (1. - (-duration / tau).exp())) / duration;
+            let filtered = -0.5 + (at_end + 0.5) * (-(time - start - duration) / tau).exp();
+            let area = 1e-6 - 0.5 * (time - start - duration);
+            assert!((actual[1] - area).abs() < 2e-14);
+            assert!((actual[2] - filtered).abs() < 1e-9);
+            assert_eq!(actual, clean.values(time).unwrap());
+            assert_eq!(actual, discarded.values(time).unwrap());
+        }
+    }
 
     #[test]
     fn evaluation_rejects_incompatible_exact_window_without_changing_history() {
