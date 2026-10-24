@@ -24,8 +24,10 @@ class GlmControls(unittest.TestCase):
                 inputs=root/'inputs'
                 freeze(inputs)
                 kernel=root/'fake-kernel'
+                sys.path.insert(0, str(ROOT/'evas/src'))
+                from evas.ir import SCHEMA_VERSION
                 reported={'identity_version':1,'name':'evas-kernel','version':'0.13.0',
-                          'ir_schema_version':17,'build_revision':None,'request_protocol_version':None,
+                          'ir_schema_version':SCHEMA_VERSION,'build_revision':None,'request_protocol_version':None,
                           'platform':{'os':'test','arch':'test'}}
                 kernel.write_text('#!'+sys.executable+'\nprint('+repr(json.dumps(reported))+')\n')
                 kernel.chmod(0o755)  # Identity query only; numerical worker remains mocked.
