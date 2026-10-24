@@ -29,6 +29,8 @@ fn arena<T>(result: Result<T, Fault<Error>>) -> Result<T, Error> {
         Fault::InvalidId => invalid("procedure value graph has an invalid dependency"),
     })
 }
+#[path = "procedure_control.rs"]
+mod control;
 #[path = "procedure_history.rs"]
 mod history;
 #[derive(Clone)]
@@ -36,6 +38,12 @@ pub(crate) struct Guard {
     pub relation: ir::Relation,
     pub left: Id,
     pub right: Id,
+    value: bool,
+}
+#[derive(Clone)]
+struct Selector {
+    index: Id,
+    value: f64,
 }
 #[derive(Clone)]
 pub(crate) struct OperatorView {
@@ -54,7 +62,9 @@ pub(crate) struct Plan {
     pub bounds: Vec<Vec<(Id, Id)>>,
     pub operators: Vec<Option<OperatorView>>,
     pub guards: Vec<Guard>,
+    selectors: Vec<Selector>,
     pub actions: Vec<(usize, Vec<usize>)>,
+    fired: Arc<Vec<usize>>,
     pub displays: Vec<(usize, String, Vec<Id>, ir::Origin)>,
     pub point_states: Vec<Option<f64>>,
     pub point_operators: Vec<Option<f64>>,
@@ -99,6 +109,7 @@ struct Builder<'a> {
     displays: Vec<(usize, String, Vec<Id>, ir::Origin)>,
     decisions: Vec<bool>,
     guards: Vec<Guard>,
+    selectors: Vec<Selector>,
 }
 impl Builder<'_> {
     fn add(&mut self, operation: O, operands: Vec<Id>) -> Result<Id, Error> {
@@ -320,6 +331,8 @@ impl Builder<'_> {
                     origin,
                 )?
                 .lo;
+                self.w.debit(2, 64)?;
+                self.selectors.push(Selector { index, value });
                 self.states
                     .get(states[(value - f64::from(*first)) as usize])
                     .copied()
@@ -441,27 +454,8 @@ impl Builder<'_> {
         self.effect(right)?;
         let a = &self.values[left];
         let b = &self.values[right];
-        let delta = a.bound()? - b.bound()?;
-        let (yes, no) = crate::event_numeric::sign(relation, delta);
-        let value = if yes {
-            true
-        } else if no {
-            false
-        } else if let Some((a, b)) = a.proof.as_ref().zip(b.proof.as_ref()) {
-            let mut paid = crate::exact_source::history_paid::Paid::new(self.w);
-            let order = paid.cmp(a, b);
-            let order = paid.finish(order)?.ok_or_else(|| {
-                Error::new(
-                    "event_condition",
-                    "procedure comparison exceeds its exact allowance",
-                )
-            })?;
-            match relation {
-                ir::Relation::Lt => order.is_lt(),
-                ir::Relation::Le => !order.is_gt(),
-                ir::Relation::Gt => order.is_gt(),
-                ir::Relation::Ge => !order.is_lt(),
-            }
+        let value = if let Some(value) = control::compare(relation, a, b, self.w)? {
+            value
         } else {
             self.w.debit(
                 2,
@@ -476,6 +470,7 @@ impl Builder<'_> {
             relation,
             left,
             right,
+            value,
         });
         self.decisions.push(value);
         Ok(value)
@@ -579,6 +574,8 @@ impl Builder<'_> {
                         origin,
                     )?
                     .lo;
+                    self.w.debit(2, 64)?;
+                    self.selectors.push(Selector { index: id, value });
                     let slot = (value - f64::from(*first)) as usize;
                     let rhs = self.resolve(rhs)?;
                     let rhs = self.checked_store(states[slot], rhs, Some(origin))?;
@@ -1293,6 +1290,7 @@ pub(crate) fn execute(
         displays: Vec::new(),
         decisions: Vec::new(),
         guards: Vec::new(),
+        selectors: Vec::new(),
     };
     for state in 0..p.states.len() {
         let id = builder.add(O::State(state), Vec::new())?;
@@ -1368,6 +1366,8 @@ pub(crate) fn execute(
     let branched = !builder.decisions.is_empty();
     w.debit(2, 128)?;
     let captured = Arc::new(std::mem::take(&mut builder.values));
+    w.debit(2, (std::mem::size_of_val(fired) + 64) as u64)?;
+    let fired = Arc::new(fired.to_vec());
     Ok(Plan {
         graph: Arc::new(builder.graph),
         foldable,
@@ -1379,7 +1379,9 @@ pub(crate) fn execute(
         bounds: builder.bounds,
         operators: builder.operators,
         guards: builder.guards,
+        selectors: builder.selectors,
         actions: builder.actions,
+        fired,
         displays: builder.displays,
         point_states: state_points,
         point_operators: operator_points,
@@ -1934,10 +1936,43 @@ impl Plan {
                 }
             }
         }
+        let provided =
+            if self.branched || !self.selectors.is_empty() || !layout.parameters.is_empty() {
+                crate::causal_event::fill_independent_pre_event_nodes(
+                    p,
+                    driven,
+                    &self.fired,
+                    &mut boxes,
+                    before_bounds,
+                    operator_bounds,
+                    w,
+                )?
+            } else {
+                false
+            };
+        let recertification = if provided {
+            context
+                .map(|c| c.try_with_operators(operator_bounds))
+                .transpose()?
+        } else {
+            None
+        };
+        let context = recertification.as_ref().or(context);
         let points = boxes
             .iter()
             .map(|b| (b.lo.to_bits() == b.hi.to_bits()).then_some(b.lo))
             .collect::<Vec<_>>();
+        if provided {
+            self.recertify_controls(
+                &exogenous,
+                &points,
+                &boxes,
+                before_bounds,
+                operator_bounds,
+                context,
+                w,
+            )?;
+        }
         let params = self.evaluate(
             false,
             &layout.parameters,

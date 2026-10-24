@@ -267,3 +267,124 @@ pub(crate) fn dependencies(
     row.mark_dependency_metadata();
     Ok(row)
 }
+
+/// Every possible state write in one activation, before selecting any arm.
+/// Ordinary statements participate along with fired event bodies.
+pub(crate) fn activation_writes(
+    p: &Program,
+    fired: &[usize],
+    w: &Work,
+) -> Result<BTreeSet<usize>, Error> {
+    w.debit(2, (p.states.len() * 64 + 64) as u64)?;
+    let mut out = BTreeSet::new();
+    fn statement(s: &S, out: &mut BTreeSet<usize>, w: &Work) -> Result<(), Error> {
+        w.step()?;
+        match s {
+            S::Assign(a) => {
+                w.debit(2, 64)?;
+                out.insert(a.state);
+            }
+            S::ArrayWrite { states, .. } => {
+                for &s in states {
+                    w.debit(2, 64)?;
+                    out.insert(s);
+                }
+            }
+            S::If {
+                then_body,
+                else_body,
+                ..
+            } => {
+                for s in then_body.iter().chain(else_body) {
+                    statement(s, out, w)?;
+                }
+            }
+            S::Loop {
+                initialize,
+                body,
+                update,
+                ..
+            } => {
+                for s in initialize.iter().chain(body).chain(update) {
+                    statement(s, out, w)?;
+                }
+            }
+            S::Display { .. } => {}
+        }
+        Ok(())
+    }
+    fn steps(
+        body: &[ProcedureStep],
+        p: &Program,
+        fired: &[usize],
+        out: &mut BTreeSet<usize>,
+        w: &Work,
+    ) -> Result<(), Error> {
+        for step in body {
+            w.step()?;
+            match &step.action {
+                A::Statement(s) => statement(s, out, w)?,
+                A::Control(C::EventGate { event }) => {
+                    w.debit(2, fired.len() as u64)?;
+                    if fired.contains(event) {
+                        for s in &p.events[*event].body {
+                            statement(s, out, w)?;
+                        }
+                    }
+                }
+                A::Control(C::ProcedureIf {
+                    then_body,
+                    else_body,
+                    ..
+                }) => {
+                    steps(then_body, p, fired, out, w)?;
+                    steps(else_body, p, fired, out, w)?;
+                }
+                A::Control(C::ProcedureLoop {
+                    initialize,
+                    body,
+                    update,
+                    ..
+                }) => {
+                    for part in [initialize, body, update] {
+                        steps(part, p, fired, out, w)?;
+                    }
+                }
+                _ => {}
+            }
+        }
+        Ok(())
+    }
+    for procedure in &p.procedures {
+        steps(&procedure.body, p, fired, &mut out, w)?;
+    }
+    Ok(out)
+}
+
+/// Raw contribution tables describe the active equations only when every row
+/// has exactly one unconditional capture. Conditional/loop captures need Plan.
+pub(crate) fn unconditional_contributions(p: &Program, w: &Work) -> Result<bool, Error> {
+    if p.procedures.is_empty() {
+        return Ok(true);
+    }
+    w.debit(2, (p.contributions.len() * 8 + 64) as u64)?;
+    let mut counts = vec![0usize; p.contributions.len()];
+    for procedure in &p.procedures {
+        for step in &procedure.body {
+            w.step()?;
+            if let A::Control(C::ContributionCapture { contribution }) = &step.action {
+                let n = counts
+                    .get_mut(*contribution)
+                    .ok_or_else(|| invalid("contribution capture outside original table"))?;
+                *n = n.saturating_add(1);
+            }
+        }
+    }
+    for n in counts {
+        w.step()?;
+        if n != 1 {
+            return Ok(false);
+        }
+    }
+    Ok(true)
+}

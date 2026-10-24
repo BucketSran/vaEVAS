@@ -8,6 +8,8 @@ use crate::transition_source_plan::{ProofContext, Work};
 use num_rational::BigRational as R;
 use num_traits::Zero;
 use std::sync::Arc;
+#[path = "history_source_affine.rs"]
+pub(crate) mod source_affine;
 fn unsupported() -> Error {
     Error::new("unsupported_history_input", "history input requires certified source/held arithmetic and monotone affine RN guard preimages")
 }

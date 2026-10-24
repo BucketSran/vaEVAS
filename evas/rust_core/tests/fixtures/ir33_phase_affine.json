@@ -1,0 +1,233 @@
+{
+  "program": {
+    "nodes": [
+      "0",
+      "u",
+      "y"
+    ],
+    "contributions": [
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "r",
+          "local_negative": "y",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 2,
+        "rhs": {
+          "op": "multiply",
+          "left": {
+            "constant": -1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "operator": 0,
+            "op": "operator"
+          }
+        },
+        "origin": {
+          "source": "ir33_phase_affine.va",
+          "line": 2,
+          "column": 134,
+          "instance": "dut",
+          "expansion": []
+        }
+      }
+    ],
+    "states": [],
+    "events": [],
+    "operators": [
+      {
+        "input": {
+          "binding": 0,
+          "op": "real_local"
+        },
+        "ic": 0.0,
+        "modulus": 64.0,
+        "offset": -32.0,
+        "origin": {
+          "source": "ir33_phase_affine.va",
+          "line": 2,
+          "column": 142,
+          "instance": "dut",
+          "expansion": []
+        },
+        "kind": "idt_mod"
+      }
+    ],
+    "schema_version": 33,
+    "step_bounds": [],
+    "procedures": [
+      {
+        "procedure_id": 0,
+        "instance": "dut",
+        "body": [
+          {
+            "expanded_statement_ordinal": 0,
+            "action": {
+              "binding": 0,
+              "value": {
+                "value": {
+                  "operation": "add",
+                  "left": {
+                    "constant": 4503599627370496.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "value": {
+                      "constant": 0.0,
+                      "terms": [
+                        {
+                          "node": 0,
+                          "coefficient": -1.0
+                        },
+                        {
+                          "node": 1,
+                          "coefficient": 1.0
+                        }
+                      ],
+                      "op": "affine"
+                    },
+                    "kind": "sample",
+                    "origin": {
+                      "source": "ir33_phase_affine.va",
+                      "line": 2,
+                      "column": 104,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_boundary"
+                  },
+                  "origin": {
+                    "source": "ir33_phase_affine.va",
+                    "line": 2,
+                    "column": 103,
+                    "instance": "dut",
+                    "expansion": []
+                  },
+                  "op": "real_binary"
+                },
+                "kind": "snapshot",
+                "origin": {
+                  "source": "ir33_phase_affine.va",
+                  "line": 2,
+                  "column": 85,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "origin": {
+                "source": "ir33_phase_affine.va",
+                "line": 2,
+                "column": 85,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "real_bind"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 1,
+            "action": {
+              "binding": 0,
+              "value": {
+                "value": {
+                  "operation": "subtract",
+                  "left": {
+                    "binding": 0,
+                    "op": "real_local"
+                  },
+                  "right": {
+                    "constant": 4503599627370496.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "origin": {
+                    "source": "ir33_phase_affine.va",
+                    "line": 2,
+                    "column": 115,
+                    "instance": "dut",
+                    "expansion": []
+                  },
+                  "op": "real_binary"
+                },
+                "kind": "snapshot",
+                "origin": {
+                  "source": "ir33_phase_affine.va",
+                  "line": 2,
+                  "column": 112,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "origin": {
+                "source": "ir33_phase_affine.va",
+                "line": 2,
+                "column": 112,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "real_bind"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 2,
+            "action": {
+              "contribution": 0,
+              "kind": "contribution_capture"
+            }
+          }
+        ]
+      }
+    ],
+    "real_bindings": [
+      {
+        "procedure_id": 0,
+        "name": "a",
+        "origin": {
+          "source": "ir33_phase_affine.va",
+          "line": 2,
+          "column": 1,
+          "instance": "dut",
+          "expansion": []
+        },
+        "lifetime": "occurrence"
+      }
+    ]
+  },
+  "driven": [
+    "u"
+  ],
+  "samples": [],
+  "transient": {
+    "pwl": [
+      [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    ],
+    "output_times": [
+      0,
+      0.25,
+      0.75,
+      1
+    ],
+    "stop": 1,
+    "max_step": 0.125
+  },
+  "tolerances": {
+    "absolute": 16,
+    "relative": 0
+  }
+}

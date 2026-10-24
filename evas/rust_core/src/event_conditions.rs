@@ -1352,6 +1352,28 @@ impl Conditions {
                 .copied()
                 .filter(|&event| self.active_events.get(event) == Some(&true))
                 .collect::<Vec<_>>();
+            // Supply only independently forced pre-event voltages. Positive
+            // Transition outputs are continuous at the event, while any state
+            // assigned by this batch is excluded from a provider proof.
+            if !fired.is_empty() {
+                for &node in &self.driven_nodes {
+                    w.debit(2, (program.nodes[node].len() + 32) as u64)?;
+                }
+                let driven = self
+                    .driven_nodes
+                    .iter()
+                    .map(|&n| program.nodes[n].clone())
+                    .collect::<Vec<_>>();
+                crate::causal_event::fill_independent_pre_event_nodes(
+                    program,
+                    &driven,
+                    &fired,
+                    &mut nodes,
+                    before_bounds,
+                    proofs.map(|p| p.operators()).unwrap_or(&[]),
+                    w,
+                )?;
+            }
             let plan =
                 crate::procedure::execute(program, &fired, &nodes, before_bounds, proofs, w)?;
             let mut selection = Selection {
@@ -2225,3 +2247,7 @@ fn validate_loop(
     }
     Ok(())
 }
+
+#[cfg(test)]
+#[path = "event_procedure_voltage_tests.rs"]
+mod procedure_voltage_tests;

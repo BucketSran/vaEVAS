@@ -29,8 +29,8 @@ mod source_dependencies;
 mod structure;
 pub(crate) use plan::{execute, CircuitView, Plan};
 pub(crate) use source_dependencies::{
-    dependencies as source_dependencies, sources as dependency_sources,
-    Sources as DependencySources,
+    activation_writes, dependencies as source_dependencies, sources as dependency_sources,
+    unconditional_contributions, Sources as DependencySources,
 };
 /// Validate every arm, including inactive gates and captures. Runtime loop
 /// iterations repeat the same source identity, never create new source owners.

@@ -366,7 +366,36 @@ fn continuous_provider(
     operators: &[I],
     assigned: &BTreeSet<usize>,
 ) -> Result<Option<I>, Error> {
-    let p = &model.program;
+    independent_voltage_bounds(
+        &model.program,
+        &model.driven,
+        node,
+        nodes,
+        states,
+        operators,
+        assigned,
+        None,
+    )
+}
+
+/// The same acyclic continuous provider, available before a procedure chooses
+/// a branch. Assigned-state loops remain unknown; no trial solution is used.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn independent_voltage_bounds(
+    p: &Program,
+    driven: &[String],
+    node: usize,
+    nodes: &[I],
+    states: &[I],
+    operators: &[I],
+    assigned: &BTreeSet<usize>,
+    work: Option<&crate::transition_source_plan::Work>,
+) -> Result<Option<I>, Error> {
+    if let Some(w) = work {
+        if !crate::procedure::unconditional_contributions(p, w)? {
+            return Ok(None);
+        }
+    }
     let probe = E::Affine {
         constant: 0.,
         terms: vec![crate::ir::Term {
@@ -374,9 +403,19 @@ fn continuous_provider(
             coefficient: 1.,
         }],
     };
-    let Ok(expanded) = crate::causal_voltage::expand(&probe, p, &model.driven) else {
-        return Ok(None);
+    let expanded = match work {
+        Some(w) => crate::causal_voltage::expand_paid(&probe, p, driven, w),
+        None => crate::causal_voltage::expand(&probe, p, driven),
     };
+    let expanded = match expanded {
+        Ok(value) => value,
+        Err(error) if error.kind == "unsupported_condition" => return Ok(None),
+        Err(error) => return Err(error),
+    };
+    if let Some(w) = work {
+        let bytes = crate::event_floor::encoded_size(&expanded, w)?;
+        w.debit(2, (bytes as u64).saturating_mul(8))?;
+    }
     // `expand` returns only affine leaves, State, Operator and arithmetic or
     // Select over them; every leaf, including zero weights and unselected
     // arms, must satisfy the provider rule.
@@ -416,6 +455,48 @@ fn continuous_provider(
         return Ok(None);
     }
     crate::causal_voltage::bounds(&expanded, nodes, states, operators).map(Some)
+}
+
+/// Rebuild the same pre-activation proof domains during selection and final
+/// parameter certification. Solved nominal voltages are never proof inputs.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn fill_independent_pre_event_nodes(
+    p: &Program,
+    driven: &[String],
+    fired: &[usize],
+    nodes: &mut [I],
+    before: &[I],
+    operators: &[I],
+    w: &crate::transition_source_plan::Work,
+) -> Result<bool, Error> {
+    if fired.is_empty() {
+        return Ok(false);
+    }
+    w.debit(
+        2,
+        ((p.states.len() + p.nodes.len() + driven.len()) * 64 + 64) as u64,
+    )?;
+    let assigned = crate::procedure::activation_writes(p, fired, w)?;
+    let mut provided = false;
+    for node in 1..nodes.len() {
+        w.step()?;
+        if !nodes[node].finite() {
+            if let Some(band) = independent_voltage_bounds(
+                p,
+                driven,
+                node,
+                nodes,
+                before,
+                operators,
+                &assigned,
+                Some(w),
+            )? {
+                nodes[node] = band;
+                provided = true;
+            }
+        }
+    }
+    Ok(provided)
 }
 
 #[allow(clippy::too_many_arguments)]

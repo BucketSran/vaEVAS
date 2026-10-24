@@ -159,6 +159,31 @@ fn procedure_direct_histories(
             }
             _ => return Ok(false),
         };
+        if (matches!(spec, OperatorSpec::IdtMod { .. })
+            || matches!(spec, OperatorSpec::Idt { reset: None, .. })
+                && crate::history_input::source_affine::direct_integral_candidate(input, work)?)
+            && crate::history_input::required_frame(input, work)?
+        {
+            if sources.is_none() {
+                sources = Some(crate::procedure::dependency_sources(program, work)?);
+            }
+            let row = crate::procedure::source_dependencies(
+                input,
+                program,
+                sources.as_ref().unwrap(),
+                work,
+            )?;
+            if !row.state_dependencies.is_empty() || !row.operator_dependencies.is_empty() {
+                return Ok(false);
+            }
+            for node in row.node_dependencies {
+                work.step()?;
+                if node != 0 && !direct_node(program, driven, node, work)? {
+                    return Ok(false);
+                }
+            }
+            continue;
+        }
         let Expression::Affine { terms, .. } = input else {
             return Ok(false);
         };
@@ -3036,7 +3061,9 @@ impl Operators {
             }
             if matches!(
                 spec,
-                OperatorSpec::Transition { .. } | OperatorSpec::Idt { .. }
+                OperatorSpec::Transition { .. }
+                    | OperatorSpec::Idt { .. }
+                    | OperatorSpec::IdtMod { .. }
             ) && !program.procedures.is_empty()
             {
                 if let Some(work) = procedure_work {
@@ -3077,11 +3104,26 @@ impl Operators {
             Continuous::new_until(program, trajectory, driven, states, horizon, tolerances)?
                 .map(Arc::new)
         };
-        let needs_source_plan = program.operators.iter().any(|spec| match spec {
+        let mut needs_source_plan = program.operators.iter().any(|spec| match spec {
             OperatorSpec::Transition { .. } => true,
             OperatorSpec::Slew { input, .. } => crate::source_slew::selected(input),
             _ => false,
         });
+        if let Some(w) = trajectory.procedure_work() {
+            for spec in &program.operators {
+                if let OperatorSpec::IdtMod { input, .. } = spec {
+                    needs_source_plan |= crate::history_input::required_frame(input, w)?;
+                }
+                if let OperatorSpec::Idt {
+                    input, reset: None, ..
+                } = spec
+                {
+                    needs_source_plan |=
+                        crate::history_input::source_affine::direct_integral_candidate(input, w)?
+                            && crate::history_input::required_frame(input, w)?;
+                }
+            }
+        }
         let source_context = if shared.is_some() {
             shared
         } else {
@@ -3176,8 +3218,38 @@ impl Operators {
                         });
                         continue;
                     }
-                    let (points, bounds) =
-                        direct_points(input, program, trajectory, driven, origin)?;
+                    let captured = if let Some(w) = trajectory.procedure_work() {
+                        if reset.is_none()
+                            && crate::history_input::source_affine::direct_integral_candidate(
+                                input, w,
+                            )?
+                            && crate::history_input::required_frame(input, w)?
+                        {
+                            w.debit(2, (states.len() * 16 + 64) as u64)?;
+                            let state_bounds = initial_bounds.map_or_else(
+                                || states.iter().copied().map(I::point).collect(),
+                                <[I]>::to_vec,
+                            );
+                            Some(crate::history_input::source_affine::prepare(
+                                index,
+                                source_context.as_ref().ok_or_else(|| {
+                                    Error::new(
+                                        "invalid_ir",
+                                        "source integral lost its original context",
+                                    )
+                                })?,
+                                &state_bounds,
+                            )?)
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    };
+                    let (points, bounds) = match captured {
+                        Some(prepared) => (prepared.points, prepared.bounds),
+                        None => direct_points(input, program, trajectory, driven, origin)?,
+                    };
                     let reset = reset
                         .as_ref()
                         .map(|expr| {
@@ -3210,6 +3282,48 @@ impl Operators {
                     offset,
                     origin,
                 } => {
+                    if let Some(w) = trajectory.procedure_work() {
+                        if crate::history_input::required_frame(input, w)? {
+                            w.debit(2, (states.len() * 16 + 64) as u64)?;
+                            let state_bounds = initial_bounds.map_or_else(
+                                || states.iter().copied().map(I::point).collect(),
+                                <[I]>::to_vec,
+                            );
+                            let context = source_context.as_ref().ok_or_else(|| {
+                                Error::new(
+                                    "invalid_ir",
+                                    "phase source input lost its original context",
+                                )
+                            })?;
+                            let prepared = crate::history_input::source_affine::prepare(
+                                index,
+                                context,
+                                &state_bounds,
+                            )?;
+                            let exact = match prepared.exact_constant {
+                                Some(value) => crate::exact_source::Curve::expression_history(
+                                    &crate::real_expression::literal(value),
+                                    context.event_input_nodes(),
+                                    &trajectory.exact_sources,
+                                    trajectory.config.stop,
+                                    &crate::exact_source::TimeProofs::new(),
+                                    w,
+                                )?,
+                                None => None,
+                            };
+                            entries.push(Runtime::IdtMod(
+                                IdtMod::enclosed(
+                                    prepared.points,
+                                    prepared.bounds,
+                                    *ic,
+                                    *modulus,
+                                    *offset,
+                                )?
+                                .with_exact_source(exact),
+                            ));
+                            continue;
+                        }
+                    }
                     let (points, bounds) =
                         direct_points(input, program, trajectory, driven, origin)?;
                     let driven_nodes: Vec<_> = driven
