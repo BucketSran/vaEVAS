@@ -105,7 +105,7 @@ def build(root):
         (work/'tb.scs').write_text('\n'.join(lines)+'\n')
     dependencies=[Path(__file__),*[Path(__file__).with_name(n+'.py') for n in
                     ['test_event_or_reference','cross_touch','timer_reference','remote','report']],
-                  ROOT/'experiments/archive/dvs2-starter-pilot/analyze.py',ROOT/'experiments/archive/dvs2-starter-pilot/suite.py']
+                  ROOT/'experiments/backends/evidence/legacy_waveforms.py']
     dump(root/'checker_identity.json',{str(p.relative_to(ROOT)):digest(p) for p in dependencies})
     dump(root/'INPUT_MANIFEST.json',{str(p.relative_to(root)):digest(p) for p in sorted(root.rglob('*')) if p.is_file()})
 

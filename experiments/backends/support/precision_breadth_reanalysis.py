@@ -134,7 +134,8 @@ def snapshot(primary, output):
              'experiments/backends/support')
     files = sorted(p for area in areas for p in (primary/area).rglob('*')
                    if p.is_file() and p.suffix in ('.py','.json') and '__pycache__' not in p.parts)
-    files += [primary/'experiments/archive/dvs2-starter-pilot'/name for name in ('analyze.py','suite.py')]
+    from actual_observation import worker_dependencies
+    files = sorted(set(files) | {primary/name for name in worker_dependencies(primary)})
     before = {str(p.relative_to(primary)):sha(p) for p in files}
     frozen = output/'frozen-repo'; frozen.mkdir()
     for p in files:

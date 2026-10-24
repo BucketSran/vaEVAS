@@ -11,6 +11,7 @@ SELECTED = ('v1-main', 'v2-main', 'v3-main', 'v4-c0', 'v5-main', 'v6-standard', 
 sys.path[:0] = [str(ROOT / 'experiments/backends/dvs2-spectre-validation'),
                str(ROOT / 'experiments/backends/dvs2-four-backend-validation')]
 from run_suite import conditions, PROFILES, T, netlist
+from dvs2 import source_files as scientific_sources
 from build_inputs import netlists
 
 
@@ -28,9 +29,12 @@ def runtime_identity():
 
 
 def checker_identity():
-    return identity({str(p.relative_to(ROOT)): sha(p) for directory in
+    paths = [p for directory in
         ('experiments/backends/dvs2-spectre-validation', 'experiments/archive/dvs2-history-validation',
-         'experiments/archive/dvs2-starter-pilot') for p in sorted((ROOT / directory).glob('*.py'))})
+         'experiments/archive/dvs2-starter-pilot') for p in sorted((ROOT / directory).glob('*.py'))]
+    paths += scientific_sources(ROOT)
+    paths.append(ROOT/'experiments/backends/evidence/legacy_waveforms.py')
+    return identity({str(p.relative_to(ROOT)): sha(p) for p in paths})
 
 
 def selected_cases():

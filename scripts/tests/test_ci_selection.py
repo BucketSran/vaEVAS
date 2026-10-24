@@ -187,6 +187,16 @@ class RoutingTests(unittest.TestCase):
                 self.assertEqual(ci.classify([path]), ci.flags(*ci.CHECKS))
 
 
+    def test_shared_dvs2_scientific_sources_keep_their_public_regression(self):
+        root = SCRIPT.parents[1]
+        sources = sorted((root/'evas/validation/dvs2').glob('*.py'))
+        self.assertTrue(sources)
+        for source in sources:
+            with self.subTest(source=source.name):
+                self.assertEqual(ci.classify([str(source.relative_to(root))]),
+                                 ci.flags('maintenance', 'calibration', 'provenance', 'regression'))
+
+
 class GitChangeTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
