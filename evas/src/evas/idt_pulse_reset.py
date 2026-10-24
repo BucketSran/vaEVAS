@@ -33,12 +33,14 @@ locals, expressions, final_step, several or conditional ordinary writers,
 macro or cross-file source order) are refused. Pure event states (no ordinary
 writer) keep the existing level-reset path.
 """
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, fields, replace
 
 from .errors import CompileError
-from .ir import Affine, Assignment, Binary, Conditional, Idt, OperatorRef, Origin, State, StateRef
+from .ir import Affine, Assignment, Binary, Conditional, Event, Idt, OperatorRef, Origin, State, StateRef
 from .lowering import lower
 from .syntax import Assignment as SyntaxAssignment, Conditional as SyntaxConditional, Loop
+
+_EVENT_COPY_COST = 1 + len(fields(Event))
 
 
 @dataclass(frozen=True)
@@ -62,50 +64,73 @@ def _before(first, second):
     return (first.line, first.column) < (second.line, second.column)
 
 
-def _reads(expr, names):
+def _reads(expr, names, work):
     if expr is None:
         return
+    work(expr, 'idt_pulse_read', 1 + len(expr.args))
     if expr.op == 'parameter':
+        work(expr, 'idt_pulse_name')
         names.add(expr.value)
     for arg in expr.args:
-        _reads(arg, names)
+        _reads(arg, names, work)
 
 
-def _writers(statements, name, guards=(), top=True):
+def _writers(statements, name, work, guards=(), top=True):
     """Yield (statement, enclosing guard expressions, top-level) for writes of name."""
     for item in statements:
+        work(item, 'idt_pulse_writer_visit')
         if isinstance(item, (SyntaxAssignment, Loop)) and item.name == name:
+            work(item, 'idt_pulse_writer_record', 4)
             yield item, guards, top
         if isinstance(item, SyntaxConditional):
+            work(item, 'idt_pulse_guard_copy', 1 + len(guards) + 2)
             inner = (*guards, item.left, item.right)
-            yield from _writers(item.then_body, name, inner, False)
-            yield from _writers(item.else_body, name, inner, False)
+            yield from _writers(item.then_body, name, work, inner, False)
+            yield from _writers(item.else_body, name, work, inner, False)
         elif isinstance(item, Loop):
-            yield from _writers(item.body, name, (*guards, item.start, item.limit, item.update), False)
+            work(item, 'idt_pulse_guard_copy', 1 + len(guards) + 3)
+            yield from _writers(item.body, name, work, (*guards, item.start, item.limit, item.update), False)
 
 
-def _writes(statements, name):
-    return next(_writers(statements, name), None) is not None
+def _writes(statements, name, work):
+    return next(_writers(statements, name, work), None) is not None
 
 
-def _total(statements, name):
+def _total(statements, name, work):
     """True when every path through the body assigns the scalar name."""
-    return any(isinstance(item, SyntaxAssignment) and item.name == name and item.index is None
-               or isinstance(item, SyntaxConditional) and _total(item.then_body, name)
-               and _total(item.else_body, name)
-               for item in statements)
+    for item in statements:
+        work(item, 'idt_pulse_total_visit')
+        if isinstance(item, SyntaxAssignment) and item.name == name and item.index is None:
+            return True
+        if (isinstance(item, SyntaxConditional) and _total(item.then_body, name, work)
+                and _total(item.else_body, name, work)):
+            return True
+    return False
 
 
 def plan(compiler, expr, resolve):
     """Return a Plan, None for the existing lowering, or raise a refusal."""
     model, call, argument = compiler.model, expr.token, expr.args[2]
-    events = list(enumerate(model.events))
+    if not model.events:
+        return None  # No event-instant value can differ; no source scan is needed.
+    # Protective scans which ultimately refuse or decline rewriting still use
+    # the same sticky request owner as emission and expanded transport.
+    work = compiler.compilation.native_audit.target_view(expr)
+    work(expr, 'idt_pulse_setup', 4)
 
     def event_writers(name):
-        return [(index, event) for index, event in events if _writes(event.body, name)]
+        result = []
+        work(expr, 'idt_pulse_writer_container')
+        for index, event in enumerate(model.events):
+            work(event, 'idt_pulse_event_visit')
+            if _writes(event.body, name, work):
+                work(event, 'idt_pulse_writer_record', 3)
+                result.append((index, event))
+        return result
 
     def ordinary_writers(name):
-        return list(_writers(model.analog, name))
+        work(expr, 'idt_pulse_writer_container')
+        return list(_writers(model.analog, name, work))
 
     def maybe_before_call(event):
         order = _before(event.token, call)
@@ -114,16 +139,19 @@ def plan(compiler, expr, resolve):
     # Every variable whose value can reach the assert through ordinary writes.
     direct = argument.value if argument.op == 'parameter' and argument.value in model.variables else None
     pending, seen = set(), set()
-    _reads(argument, pending)
+    _reads(argument, pending, work)
     while pending:
+        work(expr, 'idt_pulse_dependency', 3)
         name = pending.pop()
         if name in seen or name not in model.variables:
             continue
         seen.add(name)
         for statement, guards, _ in ordinary_writers(name):
+            work(statement, 'idt_pulse_dependency_copy', 5 + len(guards))
             for item in (*guards, getattr(statement, 'rhs', None), getattr(statement, 'start', None),
                          getattr(statement, 'limit', None), getattr(statement, 'update', None)):
-                _reads(item, pending)
+                _reads(item, pending, work)
+    work(expr, 'idt_pulse_dependency_copy', 1 + len(seen))
     for name in seen - {direct}:
         if ordinary_writers(name) and any(maybe_before_call(event) for _, event in event_writers(name)):
             _fail(compiler, expr, f"reads {name!r}, which an event sets before this call and an ordinary "
@@ -135,17 +163,22 @@ def plan(compiler, expr, resolve):
         return None  # Pure event state: the existing level reset owns it.
     single = writers[0][0] if len(writers) == 1 and writers[0][2] else None
     pulsing = []
+    work(expr, 'idt_pulse_writer_container')
     for index, event in event_writers(direct):
+        work(event, 'idt_pulse_order', 4)
         if single is None or single.index is not None:
             if maybe_before_call(event):
+                work(event, 'idt_pulse_writer_record', 3)
                 pulsing.append((index, event))
             continue
         written_first = _before(single.token, event.token)
         before_call = _before(event.token, call)
         written_after = _before(call, single.token)
         if None in (written_first, before_call, written_after):
+            work(event, 'idt_pulse_writer_record', 3)
             pulsing.append((index, event))
         elif before_call and (written_first or written_after):
+            work(event, 'idt_pulse_writer_record', 3)
             pulsing.append((index, event))
     if not pulsing:
         return None
@@ -161,8 +194,10 @@ def plan(compiler, expr, resolve):
     if not order:
         _fail(compiler, expr, f"{direct!r} must be assigned before the idt call")
     for _, event in pulsing:
+        work(event, 'idt_pulse_order', 2)
         if not _before(single.token, event.token) or not _before(event.token, call):
             _fail(compiler, expr, f"{direct!r} event and ordinary assignment order is not provable")
+        work(event, 'idt_pulse_trigger_visit', len(event.triggers))
         if any(trigger.kind not in ('cross', 'timer') for trigger in event.triggers):
             _fail(compiler, expr, f"{direct!r} set at final_step or another unsupported event instant")
     ordinary = lower(argument, resolve, {}, model.source, preserve_structure=True)
@@ -170,7 +205,8 @@ def plan(compiler, expr, resolve):
         _fail(compiler, expr, f"{direct!r} ordinary value must be an instance constant when an event sets it")
     if ordinary.constant != 0:
         return None  # Nonzero at every other instant: the output is IC throughout.
-    restore = frozenset(index for index, event in pulsing if not _total(event.body, direct))
+    work(expr, 'idt_pulse_plan_copy', 3 + 2 * len(pulsing))
+    restore = frozenset(index for index, event in pulsing if not _total(event.body, direct, work))
     return Plan(compiler.state_ids[direct], tuple(index for index, _ in pulsing), ordinary.constant, restore)
 
 
@@ -182,11 +218,14 @@ def emit(compiler, plan, expr, value, ic, origin):
     other operator call can occupy.
     """
     compilation, make = compiler.compilation, compiler.make_ir
+    work = compilation.native_audit.target_view(expr)
+    work(expr, 'idt_pulse_emit_setup', 16)
     argument = expr.args[2].token
     complement = make(Origin, argument.source or compiler.model.source, argument.line, argument.column,
                       compiler.instance.name, expr.args[2].expansion or origin.expansion)
     first = len(compilation.events) - len(compiler.model.events)
     for index in plan.events:
+        work(expr, 'idt_pulse_identity_visit')
         token = compiler.model.events[index].token
         event = compilation.events[first + index] if first >= 0 else None
         if event is None or (event.origin.line, event.origin.column, event.origin.instance) != (
@@ -211,13 +250,18 @@ def emit(compiler, plan, expr, value, ic, origin):
     # A body that always writes the assert needs no restore.
     restored = getattr(compiler, 'idt_pulse_restored', None)
     if restored is None:
+        work(expr, 'idt_pulse_restore_container')
         restored = compiler.idt_pulse_restored = set()
     for index in plan.events:
         event = compilation.events[first + index]
+        work(expr, 'idt_pulse_body_copy', 2 + len(event.body))
         body = (*event.body, toggle)
         if index in plan.restore and (first + index, plan.slot) not in restored:
+            work(expr, 'idt_pulse_restore_record', 3)
             restored.add((first + index, plan.slot))
+            work(expr, 'idt_pulse_body_copy', 2 + len(body))
             body = (make(Assignment, plan.slot, make(Affine, plan.ordinary, ())), *body)
+        work(expr, 'idt_pulse_event_copy', _EVENT_COPY_COST)
         compilation.events[first + index] = replace(event, body=body)
     held = len(compilation.operators)
     compilation.operators.append(make(Idt, value, ic, origin, make(StateRef, parity)))

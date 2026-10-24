@@ -352,5 +352,44 @@ class PulseAssertBoundaries(unittest.TestCase):
                 self.assertEqual(caught.exception.diagnostic['code'], 'unsupported_idt_pulse_reset')
 
 
+class PulseAssertBudget(unittest.TestCase):
+    """The protective source scan shares one sticky request allowance."""
+
+    @staticmethod
+    def source(events=True, copies=60, padding=1000):
+        # The event is after the calls, so this is the old never-reset route;
+        # even a scan which ultimately declines rewriting must pay its work.
+        return model('reset=0; ' + 'dummy=0; ' * padding + 'V(y,r)<+'
+                     + '+'.join(['idt(1,0,reset)'] * copies) + ';'
+                     + ('@(timer(1e-6)) reset=1;' if events else ''),
+                     'integer reset,dummy;')
+
+    def test_no_event_legacy_path_does_not_need_a_pulse_scan(self):
+        program = compile_sources({'budget.va': self.source(events=False)}, [instance()])
+        self.assertEqual(len(program.operators), 60)
+
+    def test_protective_scan_exhaustion_is_sticky_and_next_request_is_fresh(self):
+        from unittest.mock import patch
+        from evas import idt_pulse_reset
+        original = idt_pulse_reset.plan
+        last = []
+
+        def capture(*args):
+            last[:] = args
+            return original(*args)
+
+        with patch.object(idt_pulse_reset, 'plan', capture):
+            with self.assertRaises(CompileError) as caught:
+                compile_sources({'budget.va': self.source()}, [instance()])
+        self.assertEqual(caught.exception.diagnostic['code'], 'resource_budget')
+        # Retry the actual failed plan with its original compiler and owner.
+        with self.assertRaises(CompileError) as retry:
+            original(*last)
+        self.assertEqual(retry.exception.diagnostic['code'], 'resource_budget')
+        # A new public request in the same process gets an independent owner.
+        program = compile_sources({'budget.va': self.source(copies=1, padding=0)}, [instance()])
+        self.assertEqual(len(program.operators), 1)
+
+
 if __name__ == '__main__':
     unittest.main()

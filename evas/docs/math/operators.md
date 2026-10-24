@@ -924,9 +924,13 @@ LRM 2.4 §4.5.4 的 `ramp_generator` 每次求值先执行 `reset = 0`，`@(time
 assert 表达式（如 `2*reset`）、final_step 置位、多条或条件普通赋值、跨文件或宏展开导致源码顺序无法比较。
 普通赋值先于事件的 real assert 仍由 `unsupported_local_event` 拒绝。
 
+脉冲判定的源码遍历、依赖查找与事件体复制共用本次编译的 `native_audit` 额度，在执行工作前计费。
+最终沿用旧路径或拒绝的保护性扫描也收费；耗尽后返回 `resource_budget`，同一请求重试不重置额度。
+没有事件的模型直接沿用旧路径，不启动脉冲扫描。
+
 独立回归 [test_idt_pulse_reset.py](../../tests/test_idt_pulse_reset.py) 以有理数积分的锯齿闭式解覆盖 timer、cross、
 OR 的两个分支、负 assert、条件写入、非零 IC 与驱动输入、两个调用点、多实例和反馈积分（连续网络路径）；对照覆盖区间保持、
-`$abstime` 偏移、两种不构成复位的源码顺序、同刻冲突及上述保守拒绝。Spectre 对照尚未运行；旧 EVAS 0.8.7 忽略 assert 参数，不能作对照。
+`$abstime` 偏移、两种不构成复位的源码顺序、同刻冲突及上述保守拒绝。本候选与 Spectre 的同源配对验收尚未完成；旧 EVAS 0.8.7 忽略 assert 参数，不能作对照。
 
 ## laplace_nd
 
