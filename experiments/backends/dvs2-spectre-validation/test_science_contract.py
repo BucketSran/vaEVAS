@@ -10,6 +10,7 @@ import tempfile
 import unittest
 
 from run_suite import ROOT, T, PROFILES, conditions, netlist, build
+from dvs2 import source_files
 
 
 def identity(value):
@@ -17,6 +18,16 @@ def identity(value):
 
 
 class SharedScience(unittest.TestCase):
+    def test_source_identity_includes_new_scientific_modules(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            science = root/'evas/validation/dvs2'
+            science.mkdir(parents=True)
+            (science/'__init__.py').write_text('# synthetic package\n')
+            self.assertEqual(set(source_files(root)), {science/'__init__.py'})
+            (science/'next_reference.py').write_text('# independent reference\n')
+            self.assertIn(science/'next_reference.py', source_files(root))
+
     def test_original_conditions_profiles_and_decks_remain_fixed(self):
         # Captured from main b2e407fe before extraction. These are input
         # identities, not simulator-derived expected numerical answers.

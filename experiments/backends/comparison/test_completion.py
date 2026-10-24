@@ -103,6 +103,44 @@ class CompletionControls(unittest.TestCase):
             complete(parent_path,self.fresh_path,self.old,self.new,self.retained/'transient',checker_reanalysis=transient)
         with self.assertRaisesRegex(ValueError,'checker changed without'):
             complete(parent_path,self.fresh_path,self.old,self.new,self.retained/'unbridged')
+        # Current checker identities are outside the sealed PR87 bridge.
+        with self.assertRaisesRegex(ValueError, 'checker reanalysis provenance mismatch'):
+            complete(parent_path,self.fresh_path,self.old,self.new,
+                     self.retained/'current-checker',checker_reanalysis=bridge)
+        # Model fresh synthetic executions at the bridge's fixed new endpoint.
+        # The actual retained old receipts and proof source whitelist stay fixed.
+        provenance=load(self.new/'provenance.json')
+        provenance['checker_identity']=proof['new_checker_identity']
+        (self.new/'provenance.json').write_text(json.dumps(provenance))
+        manifest=load(self.new/'INPUT_MANIFEST.json')
+        manifest['provenance.json']={'sha256':sha(self.new/'provenance.json'),
+                                     'bytes':(self.new/'provenance.json').stat().st_size}
+        (self.new/'INPUT_MANIFEST.json').write_text(json.dumps(manifest))
+        manifest_sha=sha(self.new/'INPUT_MANIFEST.json')
+        for backend in ('evas','openvaf_ngspice','gnucap'):
+            started_path=self.work/(backend+'-STARTED.json')
+            started=load(started_path);started['input_manifest_sha256']=manifest_sha
+            started_path.write_text(json.dumps(started))
+            for row in self.fresh['records']:
+                if row['dataset']!='cmp8-base' or row['backend']!=backend:
+                    continue
+                receipt=load(ROOT/row['execution_receipt']['path'])
+                receipt.update(checker_identity=proof['new_checker_identity'],
+                               input_manifest_sha256=manifest_sha,
+                               started_sha256=sha(started_path),
+                               started={'path':str(started_path.relative_to(ROOT)),
+                                        'sha256':sha(started_path)})
+                receipt['run_id']=receipt['run_directory']+'-'+receipt['started_sha256']
+                row['measurement']['run_id']=receipt['run_id']
+                row['checker_identity']=proof['new_checker_identity']
+                self.rebind(row,receipt)
+        self.fresh_path.write_text(json.dumps(self.fresh))
+        for name in ('INPUT_MANIFEST.json','provenance.json'):
+            new_path=retained_path/name
+            new_path.write_bytes((self.new/name).read_bytes())
+            proof['inputs']['new_'+name]={'path':str(new_path.relative_to(ROOT)),
+                                         'sha256':sha(new_path)}
+        bridge.write_text(json.dumps(proof))
         result=complete(parent_path,self.fresh_path,self.old,self.new,self.retained/'bridged',checker_reanalysis=bridge)
         validate(result)
         originals={r['case']:r for r in load(parent_path)['records'] if r['dataset']=='cmp8-base' and r['backend']=='spectre'}
