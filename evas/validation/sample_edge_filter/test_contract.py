@@ -1,6 +1,7 @@
 import copy
 import math
 import unittest
+from fractions import Fraction as F
 from contract import CASES,INPUT,CLOCK,RESET,T,callbacks,initial,times,pwl,edge_value,filter_value,assess
 
 
@@ -17,6 +18,12 @@ def analytical_rows(case):
 
 
 class ContractCalibration(unittest.TestCase):
+    def test_polygon_keeps_decimal_intent_distinct_from_exact_binary64(self):
+        points=[[0,0.1],[1,0.1]]
+        self.assertEqual(pwl(points,0.5),F('0.1'))
+        self.assertEqual(pwl(points,0.5,'exact_binary64'),F(0.1))
+        self.assertGreater(F(0.1),F('0.1'))
+
     def test_closed_form_ramp_anchor(self):
         # First timer sample changes .25 to .75; ramp .5 us, tau .5 us.
         p=CASES[0]['instances'][0]
