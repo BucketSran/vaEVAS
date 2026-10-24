@@ -8,10 +8,11 @@ from dataclasses import replace
 from .errors import CompileError
 from .native_audit import Charge
 from .ir import (Affine, Assignment, AnalogProcedure, ContributionCapture, Event,
-                 EventGate, InitialStepTrigger, OrTrigger, Origin, ProcedureStep,
+                 EventGate, InitialStepTrigger, Origin, ProcedureStep,
                  ProcedureConditional, RealBind, RealBinding, RealBoundary, RealLocal, StateRef, StepBoundCapture)
-from .syntax import (Assignment as SourceAssignment, ContributionStatement,
-                     Event as SourceEvent, Conditional as SourceConditional, BoundStep)
+from .syntax import (Assignment as SourceAssignment, ContributionStatement, Display,
+                     Event as SourceEvent, Conditional as SourceConditional, BoundStep,
+                     Loop as SourceLoop)
 
 
 class ProcedureBuilder:
@@ -350,6 +351,9 @@ class ProcedureBuilder:
                     steps.append(step(action, number))
                 elif isinstance(source, SourceEvent):
                     gate = event_gate(source)
+                    if gate is None:
+                        # Pure initial_step body was installed in State.initial.
+                        continue
                     if self.event_arguments is not None:
                         c.compilation.native_audit.debit('procedure_argument_gate_lookup', 1, source)
                         for argument in self.event_arguments.get(gate.event, ()):
@@ -378,19 +382,34 @@ class ProcedureBuilder:
                                        instance=c.instance.name)
             return tuple(steps)
 
+        def has_display(statements):
+            for statement in statements:
+                if isinstance(statement, Display):
+                    return True
+                if isinstance(statement, SourceConditional) and (
+                        has_display(statement.then_body) or has_display(statement.else_body)):
+                    return True
+                if isinstance(statement, SourceLoop) and has_display(statement.body):
+                    return True
+            return False
+
         def event_gate(source):
                 choices = self.events.get(source.token, [])
                 initial = any(leaf.kind == "initial_step" for leaf in source.triggers)
                 if choices:
                     index = choices.pop(0)
-                    if initial:
-                        event = c.compilation.events[index]
-                        leaves = event.trigger.triggers if isinstance(event.trigger, OrTrigger) else (event.trigger,)
-                        trigger = c.make_ir(OrTrigger, (c.make_ir(InitialStepTrigger), *leaves))
-                        c.compilation.events[index] = replace(event, trigger=trigger)
+                    # Mixed initial_step|cross: monitored leaves were compiled
+                    # without initial_step. Initialization is State.initial
+                    # (INITIAL_STATIC_LOOP_CONTRACT / 3553bb2a); do not re-attach
+                    # an initial_step leaf that would emit a second t=0 record.
                 elif initial:
-                    # Initial source statements execute once in the procedure.
-                    # State.initial below contains declaration/default seeds.
+                    # Parser-installed constant initialization is owned by
+                    # model.initial / initialize_states. Emitting another
+                    # initial_step event duplicates the body in IR and in the
+                    # transient record. Display-only initial_step never enters
+                    # model.initial and still needs a runtime gate.
+                    if all(leaf.kind == "initial_step" for leaf in source.triggers) and not has_display(source.body):
+                        return None
                     c.runtime_event_checks = False
                     c.active_event_aliases = c.aliases_at(source.token, body=True)
                     # Initial replay is aggregate work, but it is not a new
@@ -417,12 +436,19 @@ class ProcedureBuilder:
             raise CompileError("compiled source steps are missing from the retained procedure",
                                instance=c.instance.name)
         for name, state in c.state_ids.items():
-            # Ordinary total aliases keep initialize_states seeds (315e4830).
-            # Other slots keep declaration defaults; initial_step runs as a gate.
-            if name in getattr(c, 'ordinary_alias_variables', ()) and name in c.initials:
+            # initialize_states owns parser-split initial_step bodies. Keep those
+            # seeds for every slot (static loops, mixed cross share, ordinary
+            # aliases). Declaration defaults remain only when no initial write ran.
+            if name in c.initials:
                 seed = c.initials[name]
                 while isinstance(seed, RealBoundary):
                     seed = seed.value
+                # SEED+i and other closed real trees must become scalars in
+                # State.initial; the kernel voltage resolver rejects operator
+                # initials that are not declaration constants or closed numbers.
+                closed = c.program_real_constant(seed)
+                if closed is not None:
+                    seed = closed
             else:
                 seed = c.declaration_initials.get(name, Affine(0., ()))
             if isinstance(seed, Affine) and not seed.terms:
