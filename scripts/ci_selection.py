@@ -23,8 +23,11 @@ CI_FILES = {'scripts/ci_selection.py', 'scripts/tests/test_ci_selection.py'}
 CHECKS = ('maintenance', 'calibration', 'provenance', 'regression',
           'differential', 'fuzz', 'package', 'benchmark')
 JOB_FLAGS = {
-    'static-checks': ('maintenance', 'calibration', 'provenance'),
+    'static-checks': ('maintenance', 'calibration'),
+    'provenance-paper': ('provenance',),
+    'provenance-support': ('provenance',),
     'regression': ('regression',),
+    'rust-regression': ('regression',),
     'properties-and-ngspice': ('differential',),
     'fuzz-smoke': ('fuzz',),
     'package': ('package',),

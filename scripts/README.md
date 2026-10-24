@@ -217,11 +217,10 @@ Decimal80 参考包络。各档的输入预算、回调检查、离散相位选�
 ### 将完整回归分组并复用相同输入的成功结果
 
 `run_regression.py` 按模块分组，保留同一模块的 fixture 与测试顺序。四个 CI worker 使用独立
-checkout 和构建目录。`regression-weights.json` 中的历史模块耗时只影响分配，不改变测试或阈值；
-新模块按测试数量分配默认权重。`shard_reserved_seconds` 只给已经承担额外工作的分组预留时间：
-第0组要编译并运行完整 Rust 测试，所以它的预留让最慢的 Python 模块优先去其他组。
+checkout 和构建目录，只划分 Python 开发回归。`regression-weights.json` 中的历史模块耗时只影响分配，不改变测试或阈值；
+新模块按测试数量分配默认权重。可选的 `shard_reserved_seconds` 给已经承担额外工作的分组预留时间；当前四片没有预留。
 汇总任务验证四份完整清单一致、实际执行与显式的夹具级跳过逐项对应计划，集合不重叠且没有遗漏；跳过不计为执行。
-Rust 全工作区测试由第0组执行；其他组只执行各自 Python 集合。新版本工具或输入自动使
+Rust 全工作区测试在单独的任务里与这四片同时跑。论文来源和后端支持检查也分成两个任务同时跑；两个 fuzz 目标各用一台机器。新版本工具或输入自动使
 [成功证据缓存](../docs/contributing/evidence.md#reuse-ci-regression-evidence)失效。
 
 ```sh
