@@ -9,6 +9,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT/'evas/validation'))
 from dvs2.cases import T, PROFILES, conditions, v1, pulse, reset, instance
+from dvs2 import source_files as scientific_sources
 
 
 def netlist(c, profile):
@@ -46,7 +47,7 @@ def build(root):
     shutil.copyfile(Path(__file__).with_name('remote.py'),root/'remote.py')
     provenance={}
     dependencies=[ROOT/'experiments/backends/evidence/legacy_waveforms.py']
-    dependencies += sorted((ROOT/'evas/validation/dvs2').glob('*.py'))
+    dependencies += scientific_sources(ROOT)
     dependencies += list(Path(__file__).parent.glob('*.py'))
     dependencies += [Path(__file__).with_name('PROTOCOL.md')]
     dependencies += [ROOT/'evas/validation'/name for name in ['CASE_CARDS.md','NEXT_CASE_CARDS.md','METHOD_QUALIFICATION.md']]

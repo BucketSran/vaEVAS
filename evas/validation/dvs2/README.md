@@ -11,6 +11,7 @@
 [Spectre适配器](../../../experiments/backends/dvs2-spectre-validation/README.md)保留deck、冻结、波形读取和执行职责；
 其原`conditions`、`reference`、`check`等入口转调本目录。
 新的输入冻结保存全部共享科学源码身份；旧归档、输入、判据和分析收据不回写。
+`source_files(repo)`统一枚举科学源码，静态回归、DVS冻结器与当前比较框架共同引用，新增模块也进入身份。
 旧波形读取器仍属实验适配器的依赖，后续读取器归并另行验收。
 
 可在仓库根目录运行独立校准，不启动模拟器：
