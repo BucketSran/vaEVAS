@@ -7,6 +7,29 @@ from timer_report import time_coverage, verify_timer_diagnostic
 
 
 class NativeTimeCoverage(unittest.TestCase):
+    def test_old_source_snapshot_without_shared_reader_is_explicit_dependency_drift(self):
+        import shutil
+        import timer_report as analyzer
+        shared = 'experiments/backends/evidence/legacy_waveforms.py'
+        paths = set(analyzer.run.source_files()) | {
+            analyzer.ROOT/'evas/validation/strobe/timer_composition.py',
+            analyzer.ROOT/'evas/validation/sample_edge_filter/contract.py',
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            source = {}
+            for path in paths:
+                relative = str(path.relative_to(analyzer.ROOT))
+                if relative == shared:
+                    continue
+                target = base/'repo'/relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(path, target)
+                source[relative] = analyzer.sha(target)
+            (base/'SOURCE_MANIFEST.json').write_text(json.dumps(source))
+            with self.assertRaisesRegex(ValueError, 'analysis dependency drift: ' + shared):
+                analyzer.report(base)
+
     def test_diagnostic_preserves_every_control_except_timer_tolerance(self):
         from composition_run import freeze
         with tempfile.TemporaryDirectory() as tmp:

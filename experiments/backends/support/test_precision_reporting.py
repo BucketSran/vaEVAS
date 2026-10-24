@@ -23,7 +23,7 @@ def finalized_abort_batch(base):
     cards=[{'id':f+'-case','family':f} for f in ('sample_hold','first_order')]
     put(frozen/'cards.json',{'cards':cards,'profiles':[{'id':'base'}],'budgets':BUDGETS})
     deps=('evas/validation/paper/precision_checker.py','experiments/backends/paper/inputs.py','experiments/backends/paper/observations.py','experiments/backends/paper/settings_readback.py',
-          'experiments/archive/dvs2-starter-pilot/analyze.py','experiments/archive/dvs2-starter-pilot/suite.py')
+          'experiments/backends/evidence/legacy_waveforms.py')
     put(frozen/'SOURCE_IDENTITY.json',{p:sha(ROOT/p) for p in deps})
     put(frozen/'MANIFEST.json',{p.name:sha(p) for p in frozen.iterdir()})
     put(base/'SOURCE_PROVENANCE.json',{'fixture':True})

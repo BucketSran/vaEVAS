@@ -168,7 +168,8 @@ class ActualEvidence(unittest.TestCase):
         self.assertTrue(producer_identity(sources,repo)['verified'])
         for name in ('evas/rust_core/src/analog.rs','evas/rust_core/src/settlement_bounds.rs',
                      'evas/rust_core/src/nonlinear_dynamics.rs','evas/src/evas/runtime.py',
-                     'evas/src/evas/protocol.py','experiments/backends/paper/runner.py'):
+                     'evas/src/evas/protocol.py','experiments/backends/paper/runner.py',
+                     'experiments/backends/evidence/legacy_waveforms.py'):
             missing=dict(sources);missing.pop(name)
             result=producer_identity(missing,repo)
             self.assertFalse(result['verified']);self.assertIn(name,result['missing_dependencies'])

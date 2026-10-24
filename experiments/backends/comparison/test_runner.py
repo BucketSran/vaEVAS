@@ -18,9 +18,15 @@ class RunnerControls(unittest.TestCase):
             (science/'__init__.py').write_text('# synthetic science package\n')
             source = science/'cases.py'
             source.write_text('# original synthetic condition\n')
+            reader = root/'experiments/backends/evidence/legacy_waveforms.py'
+            reader.parent.mkdir(parents=True)
+            reader.write_text('# synthetic reader\n')
             with patch.object(freezer, 'ROOT', root):
                 before = freezer.checker_identity()
                 source.write_text('# changed synthetic condition\n')
+                self.assertNotEqual(freezer.checker_identity(), before)
+                before = freezer.checker_identity()
+                reader.write_text('# changed synthetic reader\n')
                 self.assertNotEqual(freezer.checker_identity(), before)
 
     def test_input_drift_prevents_any_launch(self):
