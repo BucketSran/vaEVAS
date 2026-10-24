@@ -1,644 +1,780 @@
 {
- "nodes": [
-  "0",
-  "h",
-  "w",
-  "y",
-  "z"
- ],
- "contributions": [
-  {
-   "branch": {
-    "instance": "dut",
-    "local_positive": "h",
-    "local_negative": "r",
-    "kind": "voltage"
-   },
-   "positive": 1,
-   "negative": 0,
-   "rhs": {
-    "operator": 0,
-    "op": "operator"
-   },
-   "origin": {
-    "source": "calendar.va",
-    "line": 16,
-    "column": 9,
-    "instance": "dut",
-    "expansion": []
-   }
-  },
-  {
-   "branch": {
-    "instance": "dut",
-    "local_positive": "r",
-    "local_negative": "y",
-    "kind": "voltage"
-   },
-   "positive": 0,
-   "negative": 3,
-   "rhs": {
-    "op": "multiply",
-    "left": {
-     "constant": -1.0,
-     "terms": [],
-     "op": "affine"
-    },
-    "right": {
-     "operator": 1,
-     "op": "operator"
-    }
-   },
-   "origin": {
-    "source": "calendar.va",
-    "line": 17,
-    "column": 9,
-    "instance": "dut",
-    "expansion": []
-   }
-  },
-  {
-   "branch": {
-    "instance": "dut",
-    "local_positive": "r",
-    "local_negative": "z",
-    "kind": "voltage"
-   },
-   "positive": 0,
-   "negative": 4,
-   "rhs": {
-    "op": "multiply",
-    "left": {
-     "constant": -1.0,
-     "terms": [],
-     "op": "affine"
-    },
-    "right": {
-     "operator": 2,
-     "op": "operator"
-    }
-   },
-   "origin": {
-    "source": "calendar.va",
-    "line": 18,
-    "column": 9,
-    "instance": "dut",
-    "expansion": []
-   }
-  },
-  {
-   "branch": {
-    "instance": "dut",
-    "local_positive": "r",
-    "local_negative": "w",
-    "kind": "voltage"
-   },
-   "positive": 0,
-   "negative": 2,
-   "rhs": {
-    "op": "multiply",
-    "left": {
-     "constant": -1.0,
-     "terms": [],
-     "op": "affine"
-    },
-    "right": {
-     "operator": 3,
-     "op": "operator"
-    }
-   },
-   "origin": {
-    "source": "calendar.va",
-    "line": 19,
-    "column": 9,
-    "instance": "dut",
-    "expansion": []
-   }
-  }
- ],
- "states": [
-  {
-   "instance": "dut",
-   "name": "q",
-   "kind": "real",
-   "initial": 0.0
-  },
-  {
-   "instance": "dut",
-   "name": "n",
-   "kind": "integer",
-   "initial": 0.0
-  },
-  {
-   "instance": "dut",
-   "name": "m",
-   "kind": "integer",
-   "initial": 0.0
-  },
-  {
-   "instance": "dut",
-   "name": "k",
-   "kind": "integer",
-   "initial": 0.0
-  }
- ],
- "events": [
-  {
-   "trigger": {
-    "start": 1.0,
-    "period": 1.0,
-    "time_tolerance": 1e-12,
-    "enabled": true,
-    "kind": "timer"
-   },
-   "body": [
+  "contributions": [
     {
-     "state": 0,
-     "rhs": {
-      "op": "add",
-      "left": {
-       "constant": 1.0,
-       "terms": [],
-       "op": "affine"
-      },
-      "right": {
-       "op": "multiply",
-       "left": {
-        "constant": -1.0,
-        "terms": [],
-        "op": "affine"
-       },
-       "right": {
-        "state": 0,
-        "op": "state"
-       }
-      }
-     },
-     "kind": "assign"
-    }
-   ],
-   "origin": {
-    "source": "calendar.va",
-    "line": 10,
-    "column": 9,
-    "instance": "dut",
-    "expansion": []
-   }
-  },
-  {
-   "trigger": {
-    "triggers": [
-     {
-      "guard": {
-       "op": "add",
-       "left": {
-        "constant": 0.0,
-        "terms": [
-         {
-          "node": 0,
-          "coefficient": -1.0
-         },
-         {
-          "node": 1,
-          "coefficient": 1.0
-         }
-        ],
-        "op": "affine"
-       },
-       "right": {
-        "constant": -0.5,
-        "terms": [],
-        "op": "affine"
-       }
-      },
-      "direction": 1,
-      "time_tolerance": 1e-12,
-      "expression_tolerance": 1e-09,
-      "kind": "cross"
-     },
-     {
-      "guard": {
-       "op": "add",
-       "left": {
-        "constant": 0.0,
-        "terms": [
-         {
-          "node": 0,
-          "coefficient": -1.0
-         },
-         {
-          "node": 1,
-          "coefficient": 1.0
-         }
-        ],
-        "op": "affine"
-       },
-       "right": {
-        "constant": -0.5,
-        "terms": [],
-        "op": "affine"
-       }
-      },
-      "direction": -1,
-      "time_tolerance": 1e-12,
-      "expression_tolerance": 1e-09,
-      "kind": "cross"
-     }
-    ],
-    "kind": "or"
-   },
-   "body": [
-    {
-     "state": 1,
-     "rhs": {
-      "op": "add",
-      "left": {
-       "state": 1,
-       "op": "state"
-      },
-      "right": {
-       "constant": 1.0,
-       "terms": [],
-       "op": "affine"
-      }
-     },
-     "kind": "assign"
-    },
-    {
-     "state": 2,
-     "rhs": {
-      "op": "add",
-      "left": {
-       "state": 2,
-       "op": "state"
-      },
-      "right": {
-       "constant": 2.0,
-       "terms": [],
-       "op": "affine"
-      }
-     },
-     "kind": "assign"
-    },
-    {
-     "state": 3,
-     "rhs": {
-      "op": "add",
-      "left": {
-       "constant": 1.0,
-       "terms": [],
-       "op": "affine"
-      },
-      "right": {
-       "op": "multiply",
-       "left": {
-        "constant": -1.0,
-        "terms": [],
-        "op": "affine"
-       },
-       "right": {
-        "state": 3,
-        "op": "state"
-       }
-      }
-     },
-     "kind": "assign"
-    }
-   ],
-   "origin": {
-    "source": "calendar.va",
-    "line": 11,
-    "column": 9,
-    "instance": "dut",
-    "expansion": []
-   }
-  }
- ],
- "operators": [
-  {
-   "input": {
-    "state": 0,
-    "op": "state"
-   },
-   "delay": 0.0,
-   "rise": 0.25,
-   "fall": 0.25,
-   "origin": {
-    "source": "calendar.va",
-    "line": 16,
-    "column": 17,
-    "instance": "dut",
-    "expansion": []
-   },
-   "kind": "transition"
-  },
-  {
-   "input": {
-    "relation": "gt",
-    "left": {
-     "function": "bit_and",
-     "args": [
-      {
-       "state": 1,
-       "op": "integer_state"
-      },
-      {
-       "value": 1,
-       "op": "integer_literal"
-      }
-     ],
-     "origin": {
-      "source": "calendar.va",
-      "line": 17,
-      "column": 30,
-      "instance": "dut",
-      "expansion": []
-     },
-     "op": "integer_primitive"
-    },
-    "right": {
-     "constant": 0.0,
-     "terms": [],
-     "op": "affine"
-    },
-    "then_value": {
-     "constant": 1.0,
-     "terms": [],
-     "op": "affine"
-    },
-    "else_value": {
-     "relation": "lt",
-     "left": {
-      "function": "bit_and",
-      "args": [
-       {
-        "state": 1,
-        "op": "integer_state"
-       },
-       {
-        "value": 1,
-        "op": "integer_literal"
-       }
-      ],
-      "origin": {
-       "source": "calendar.va",
-       "line": 17,
-       "column": 30,
-       "instance": "dut",
-       "expansion": []
-      },
-      "op": "integer_primitive"
-     },
-     "right": {
-      "constant": 0.0,
-      "terms": [],
-      "op": "affine"
-     },
-     "then_value": {
-      "constant": 1.0,
-      "terms": [],
-      "op": "affine"
-     },
-     "else_value": {
-      "constant": 0.0,
-      "terms": [],
-      "op": "affine"
-     },
-     "origin": {
-      "source": "calendar.va",
-      "line": 17,
-      "column": 33,
-      "instance": "dut",
-      "expansion": []
-     },
-     "op": "select"
-    },
-    "origin": {
-     "source": "calendar.va",
-     "line": 17,
-     "column": 33,
-     "instance": "dut",
-     "expansion": []
-    },
-    "op": "select"
-   },
-   "delay": 0.0,
-   "rise": 0.125,
-   "fall": 0.125,
-   "origin": {
-    "source": "calendar.va",
-    "line": 17,
-    "column": 17,
-    "instance": "dut",
-    "expansion": []
-   },
-   "kind": "transition"
-  },
-  {
-   "input": {
-    "relation": "gt",
-    "left": {
-     "function": "bit_and",
-     "args": [
-      {
-       "function": "shift_right",
-       "args": [
-        {
-         "state": 2,
-         "op": "integer_state"
-        },
-        {
-         "value": 1,
-         "op": "integer_literal"
-        }
-       ],
-       "origin": {
-        "source": "calendar.va",
-        "line": 18,
-        "column": 31,
+      "branch": {
         "instance": "dut",
-        "expansion": []
-       },
-       "op": "integer_primitive"
+        "kind": "voltage",
+        "local_negative": "r",
+        "local_positive": "h"
       },
-      {
-       "value": 1,
-       "op": "integer_literal"
-      }
-     ],
-     "origin": {
-      "source": "calendar.va",
-      "line": 18,
-      "column": 35,
-      "instance": "dut",
-      "expansion": []
-     },
-     "op": "integer_primitive"
-    },
-    "right": {
-     "constant": 0.0,
-     "terms": [],
-     "op": "affine"
-    },
-    "then_value": {
-     "constant": 1.0,
-     "terms": [],
-     "op": "affine"
-    },
-    "else_value": {
-     "relation": "lt",
-     "left": {
-      "function": "bit_and",
-      "args": [
-       {
-        "function": "shift_right",
-        "args": [
-         {
-          "state": 2,
-          "op": "integer_state"
-         },
-         {
-          "value": 1,
-          "op": "integer_literal"
-         }
-        ],
-        "origin": {
-         "source": "calendar.va",
-         "line": 18,
-         "column": 31,
-         "instance": "dut",
-         "expansion": []
-        },
-        "op": "integer_primitive"
-       },
-       {
-        "value": 1,
-        "op": "integer_literal"
-       }
-      ],
+      "negative": 0,
       "origin": {
-       "source": "calendar.va",
-       "line": 18,
-       "column": 35,
-       "instance": "dut",
-       "expansion": []
+        "column": 9,
+        "expansion": [],
+        "instance": "dut",
+        "line": 16,
+        "source": "calendar.va"
       },
-      "op": "integer_primitive"
-     },
-     "right": {
-      "constant": 0.0,
-      "terms": [],
-      "op": "affine"
-     },
-     "then_value": {
-      "constant": 1.0,
-      "terms": [],
-      "op": "affine"
-     },
-     "else_value": {
-      "constant": 0.0,
-      "terms": [],
-      "op": "affine"
-     },
-     "origin": {
-      "source": "calendar.va",
-      "line": 18,
-      "column": 38,
+      "positive": 1,
+      "rhs": {
+        "op": "operator",
+        "operator": 0
+      }
+    },
+    {
+      "branch": {
+        "instance": "dut",
+        "kind": "voltage",
+        "local_negative": "y",
+        "local_positive": "r"
+      },
+      "negative": 3,
+      "origin": {
+        "column": 9,
+        "expansion": [],
+        "instance": "dut",
+        "line": 17,
+        "source": "calendar.va"
+      },
+      "positive": 0,
+      "rhs": {
+        "left": {
+          "constant": -1.0,
+          "op": "affine",
+          "terms": []
+        },
+        "op": "multiply",
+        "right": {
+          "op": "operator",
+          "operator": 1
+        }
+      }
+    },
+    {
+      "branch": {
+        "instance": "dut",
+        "kind": "voltage",
+        "local_negative": "z",
+        "local_positive": "r"
+      },
+      "negative": 4,
+      "origin": {
+        "column": 9,
+        "expansion": [],
+        "instance": "dut",
+        "line": 18,
+        "source": "calendar.va"
+      },
+      "positive": 0,
+      "rhs": {
+        "left": {
+          "constant": -1.0,
+          "op": "affine",
+          "terms": []
+        },
+        "op": "multiply",
+        "right": {
+          "op": "operator",
+          "operator": 2
+        }
+      }
+    },
+    {
+      "branch": {
+        "instance": "dut",
+        "kind": "voltage",
+        "local_negative": "w",
+        "local_positive": "r"
+      },
+      "negative": 2,
+      "origin": {
+        "column": 9,
+        "expansion": [],
+        "instance": "dut",
+        "line": 19,
+        "source": "calendar.va"
+      },
+      "positive": 0,
+      "rhs": {
+        "left": {
+          "constant": -1.0,
+          "op": "affine",
+          "terms": []
+        },
+        "op": "multiply",
+        "right": {
+          "op": "operator",
+          "operator": 3
+        }
+      }
+    }
+  ],
+  "events": [
+    {
+      "body": [
+        {
+          "kind": "assign",
+          "rhs": {
+            "kind": "store",
+            "op": "real_boundary",
+            "origin": {
+              "column": 23,
+              "expansion": [],
+              "instance": "dut",
+              "line": 10,
+              "source": "calendar.va"
+            },
+            "value": {
+              "left": {
+                "constant": 1.0,
+                "op": "affine",
+                "terms": []
+              },
+              "op": "real_binary",
+              "operation": "subtract",
+              "origin": {
+                "column": 26,
+                "expansion": [],
+                "instance": "dut",
+                "line": 10,
+                "source": "calendar.va"
+              },
+              "right": {
+                "op": "state",
+                "state": 0
+              }
+            }
+          },
+          "state": 0
+        }
+      ],
+      "expanded_statement_ordinal": 1,
+      "origin": {
+        "column": 9,
+        "expansion": [],
+        "instance": "dut",
+        "line": 10,
+        "source": "calendar.va"
+      },
+      "procedure_id": 0,
+      "trigger": {
+        "enabled": true,
+        "kind": "timer",
+        "period": 1.0,
+        "start": 1.0,
+        "time_tolerance": 1e-12
+      }
+    },
+    {
+      "body": [
+        {
+          "kind": "assign",
+          "rhs": {
+            "left": {
+              "op": "state",
+              "state": 1
+            },
+            "op": "add",
+            "right": {
+              "constant": 1.0,
+              "op": "affine",
+              "terms": []
+            }
+          },
+          "state": 1
+        },
+        {
+          "kind": "assign",
+          "rhs": {
+            "left": {
+              "op": "state",
+              "state": 2
+            },
+            "op": "add",
+            "right": {
+              "constant": 2.0,
+              "op": "affine",
+              "terms": []
+            }
+          },
+          "state": 2
+        },
+        {
+          "kind": "assign",
+          "rhs": {
+            "left": {
+              "constant": 1.0,
+              "op": "affine",
+              "terms": []
+            },
+            "op": "add",
+            "right": {
+              "left": {
+                "constant": -1.0,
+                "op": "affine",
+                "terms": []
+              },
+              "op": "multiply",
+              "right": {
+                "op": "state",
+                "state": 3
+              }
+            }
+          },
+          "state": 3
+        }
+      ],
+      "expanded_statement_ordinal": 2,
+      "origin": {
+        "column": 9,
+        "expansion": [],
+        "instance": "dut",
+        "line": 11,
+        "source": "calendar.va"
+      },
+      "procedure_id": 0,
+      "trigger": {
+        "kind": "or",
+        "triggers": [
+          {
+            "direction": 1,
+            "expression_tolerance": 1e-09,
+            "guard": {
+              "left": {
+                "constant": 0.0,
+                "op": "affine",
+                "terms": [
+                  {
+                    "coefficient": -1.0,
+                    "node": 0
+                  },
+                  {
+                    "coefficient": 1.0,
+                    "node": 1
+                  }
+                ]
+              },
+              "op": "add",
+              "right": {
+                "constant": -0.5,
+                "op": "affine",
+                "terms": []
+              }
+            },
+            "kind": "cross",
+            "time_tolerance": 1e-12
+          },
+          {
+            "direction": -1,
+            "expression_tolerance": 1e-09,
+            "guard": {
+              "left": {
+                "constant": 0.0,
+                "op": "affine",
+                "terms": [
+                  {
+                    "coefficient": -1.0,
+                    "node": 0
+                  },
+                  {
+                    "coefficient": 1.0,
+                    "node": 1
+                  }
+                ]
+              },
+              "op": "add",
+              "right": {
+                "constant": -0.5,
+                "op": "affine",
+                "terms": []
+              }
+            },
+            "kind": "cross",
+            "time_tolerance": 1e-12
+          }
+        ]
+      }
+    },
+    {
+      "body": [
+        {
+          "kind": "assign",
+          "rhs": {
+            "kind": "store",
+            "op": "real_boundary",
+            "origin": {
+              "column": 31,
+              "expansion": [],
+              "instance": "dut",
+              "line": 9,
+              "source": "calendar.va"
+            },
+            "value": {
+              "constant": 0.0,
+              "op": "affine",
+              "terms": []
+            }
+          },
+          "state": 0
+        },
+        {
+          "kind": "assign",
+          "rhs": {
+            "constant": 0.0,
+            "op": "affine",
+            "terms": []
+          },
+          "state": 1
+        },
+        {
+          "kind": "assign",
+          "rhs": {
+            "constant": 0.0,
+            "op": "affine",
+            "terms": []
+          },
+          "state": 2
+        },
+        {
+          "kind": "assign",
+          "rhs": {
+            "constant": 0.0,
+            "op": "affine",
+            "terms": []
+          },
+          "state": 3
+        }
+      ],
+      "expanded_statement_ordinal": 0,
+      "origin": {
+        "column": 9,
+        "expansion": [],
+        "instance": "dut",
+        "line": 9,
+        "source": "calendar.va"
+      },
+      "procedure_id": 0,
+      "trigger": {
+        "kind": "initial_step"
+      }
+    }
+  ],
+  "nodes": [
+    "0",
+    "h",
+    "w",
+    "y",
+    "z"
+  ],
+  "operators": [
+    {
+      "delay": 0.0,
+      "fall": 0.25,
+      "input": {
+        "op": "state",
+        "state": 0
+      },
+      "kind": "transition",
+      "origin": {
+        "column": 17,
+        "expansion": [],
+        "instance": "dut",
+        "line": 16,
+        "source": "calendar.va"
+      },
+      "rise": 0.25
+    },
+    {
+      "delay": 0.0,
+      "fall": 0.125,
+      "input": {
+        "else_value": {
+          "else_value": {
+            "constant": 0.0,
+            "op": "affine",
+            "terms": []
+          },
+          "left": {
+            "args": [
+              {
+                "op": "integer_state",
+                "state": 1
+              },
+              {
+                "op": "integer_literal",
+                "value": 1
+              }
+            ],
+            "function": "bit_and",
+            "op": "integer_primitive",
+            "origin": {
+              "column": 30,
+              "expansion": [],
+              "instance": "dut",
+              "line": 17,
+              "source": "calendar.va"
+            }
+          },
+          "op": "select",
+          "origin": {
+            "column": 33,
+            "expansion": [],
+            "instance": "dut",
+            "line": 17,
+            "source": "calendar.va"
+          },
+          "relation": "lt",
+          "right": {
+            "constant": 0.0,
+            "op": "affine",
+            "terms": []
+          },
+          "then_value": {
+            "constant": 1.0,
+            "op": "affine",
+            "terms": []
+          }
+        },
+        "left": {
+          "args": [
+            {
+              "op": "integer_state",
+              "state": 1
+            },
+            {
+              "op": "integer_literal",
+              "value": 1
+            }
+          ],
+          "function": "bit_and",
+          "op": "integer_primitive",
+          "origin": {
+            "column": 30,
+            "expansion": [],
+            "instance": "dut",
+            "line": 17,
+            "source": "calendar.va"
+          }
+        },
+        "op": "select",
+        "origin": {
+          "column": 33,
+          "expansion": [],
+          "instance": "dut",
+          "line": 17,
+          "source": "calendar.va"
+        },
+        "relation": "gt",
+        "right": {
+          "constant": 0.0,
+          "op": "affine",
+          "terms": []
+        },
+        "then_value": {
+          "constant": 1.0,
+          "op": "affine",
+          "terms": []
+        }
+      },
+      "kind": "transition",
+      "origin": {
+        "column": 17,
+        "expansion": [],
+        "instance": "dut",
+        "line": 17,
+        "source": "calendar.va"
+      },
+      "rise": 0.125
+    },
+    {
+      "delay": 0.0,
+      "fall": 0.125,
+      "input": {
+        "else_value": {
+          "else_value": {
+            "constant": 0.0,
+            "op": "affine",
+            "terms": []
+          },
+          "left": {
+            "args": [
+              {
+                "args": [
+                  {
+                    "op": "integer_state",
+                    "state": 2
+                  },
+                  {
+                    "op": "integer_literal",
+                    "value": 1
+                  }
+                ],
+                "function": "shift_right",
+                "op": "integer_primitive",
+                "origin": {
+                  "column": 31,
+                  "expansion": [],
+                  "instance": "dut",
+                  "line": 18,
+                  "source": "calendar.va"
+                }
+              },
+              {
+                "op": "integer_literal",
+                "value": 1
+              }
+            ],
+            "function": "bit_and",
+            "op": "integer_primitive",
+            "origin": {
+              "column": 35,
+              "expansion": [],
+              "instance": "dut",
+              "line": 18,
+              "source": "calendar.va"
+            }
+          },
+          "op": "select",
+          "origin": {
+            "column": 38,
+            "expansion": [],
+            "instance": "dut",
+            "line": 18,
+            "source": "calendar.va"
+          },
+          "relation": "lt",
+          "right": {
+            "constant": 0.0,
+            "op": "affine",
+            "terms": []
+          },
+          "then_value": {
+            "constant": 1.0,
+            "op": "affine",
+            "terms": []
+          }
+        },
+        "left": {
+          "args": [
+            {
+              "args": [
+                {
+                  "op": "integer_state",
+                  "state": 2
+                },
+                {
+                  "op": "integer_literal",
+                  "value": 1
+                }
+              ],
+              "function": "shift_right",
+              "op": "integer_primitive",
+              "origin": {
+                "column": 31,
+                "expansion": [],
+                "instance": "dut",
+                "line": 18,
+                "source": "calendar.va"
+              }
+            },
+            {
+              "op": "integer_literal",
+              "value": 1
+            }
+          ],
+          "function": "bit_and",
+          "op": "integer_primitive",
+          "origin": {
+            "column": 35,
+            "expansion": [],
+            "instance": "dut",
+            "line": 18,
+            "source": "calendar.va"
+          }
+        },
+        "op": "select",
+        "origin": {
+          "column": 38,
+          "expansion": [],
+          "instance": "dut",
+          "line": 18,
+          "source": "calendar.va"
+        },
+        "relation": "gt",
+        "right": {
+          "constant": 0.0,
+          "op": "affine",
+          "terms": []
+        },
+        "then_value": {
+          "constant": 1.0,
+          "op": "affine",
+          "terms": []
+        }
+      },
+      "kind": "transition",
+      "origin": {
+        "column": 17,
+        "expansion": [],
+        "instance": "dut",
+        "line": 18,
+        "source": "calendar.va"
+      },
+      "rise": 0.125
+    },
+    {
+      "delay": 0.0,
+      "fall": 0.125,
+      "input": {
+        "else_value": {
+          "else_value": {
+            "constant": 0.0,
+            "op": "affine",
+            "terms": []
+          },
+          "left": {
+            "op": "state",
+            "state": 3
+          },
+          "op": "select",
+          "origin": {
+            "column": 29,
+            "expansion": [],
+            "instance": "dut",
+            "line": 19,
+            "source": "calendar.va"
+          },
+          "relation": "lt",
+          "right": {
+            "constant": 0.0,
+            "op": "affine",
+            "terms": []
+          },
+          "then_value": {
+            "constant": 1.0,
+            "op": "affine",
+            "terms": []
+          }
+        },
+        "left": {
+          "op": "state",
+          "state": 3
+        },
+        "op": "select",
+        "origin": {
+          "column": 29,
+          "expansion": [],
+          "instance": "dut",
+          "line": 19,
+          "source": "calendar.va"
+        },
+        "relation": "gt",
+        "right": {
+          "constant": 0.0,
+          "op": "affine",
+          "terms": []
+        },
+        "then_value": {
+          "constant": 1.0,
+          "op": "affine",
+          "terms": []
+        }
+      },
+      "kind": "transition",
+      "origin": {
+        "column": 17,
+        "expansion": [],
+        "instance": "dut",
+        "line": 19,
+        "source": "calendar.va"
+      },
+      "rise": 0.125
+    }
+  ],
+  "procedures": [
+    {
+      "body": [
+        {
+          "action": {
+            "event": 2,
+            "kind": "event_gate"
+          },
+          "expanded_statement_ordinal": 0
+        },
+        {
+          "action": {
+            "event": 0,
+            "kind": "event_gate"
+          },
+          "expanded_statement_ordinal": 1
+        },
+        {
+          "action": {
+            "event": 1,
+            "kind": "event_gate"
+          },
+          "expanded_statement_ordinal": 2
+        },
+        {
+          "action": {
+            "contribution": 0,
+            "kind": "contribution_capture"
+          },
+          "expanded_statement_ordinal": 3
+        },
+        {
+          "action": {
+            "contribution": 1,
+            "kind": "contribution_capture"
+          },
+          "expanded_statement_ordinal": 4
+        },
+        {
+          "action": {
+            "contribution": 2,
+            "kind": "contribution_capture"
+          },
+          "expanded_statement_ordinal": 5
+        },
+        {
+          "action": {
+            "contribution": 3,
+            "kind": "contribution_capture"
+          },
+          "expanded_statement_ordinal": 6
+        }
+      ],
       "instance": "dut",
-      "expansion": []
-     },
-     "op": "select"
-    },
-    "origin": {
-     "source": "calendar.va",
-     "line": 18,
-     "column": 38,
-     "instance": "dut",
-     "expansion": []
-    },
-    "op": "select"
-   },
-   "delay": 0.0,
-   "rise": 0.125,
-   "fall": 0.125,
-   "origin": {
-    "source": "calendar.va",
-    "line": 18,
-    "column": 17,
-    "instance": "dut",
-    "expansion": []
-   },
-   "kind": "transition"
-  },
-  {
-   "input": {
-    "relation": "gt",
-    "left": {
-     "state": 3,
-     "op": "state"
-    },
-    "right": {
-     "constant": 0.0,
-     "terms": [],
-     "op": "affine"
-    },
-    "then_value": {
-     "constant": 1.0,
-     "terms": [],
-     "op": "affine"
-    },
-    "else_value": {
-     "relation": "lt",
-     "left": {
-      "state": 3,
-      "op": "state"
-     },
-     "right": {
-      "constant": 0.0,
-      "terms": [],
-      "op": "affine"
-     },
-     "then_value": {
-      "constant": 1.0,
-      "terms": [],
-      "op": "affine"
-     },
-     "else_value": {
-      "constant": 0.0,
-      "terms": [],
-      "op": "affine"
-     },
-     "origin": {
-      "source": "calendar.va",
-      "line": 19,
-      "column": 29,
+      "procedure_id": 0
+    }
+  ],
+  "real_bindings": [],
+  "schema_version": 33,
+  "states": [
+    {
+      "initial": 0.0,
       "instance": "dut",
-      "expansion": []
-     },
-     "op": "select"
+      "kind": "real",
+      "name": "q"
     },
-    "origin": {
-     "source": "calendar.va",
-     "line": 19,
-     "column": 29,
-     "instance": "dut",
-     "expansion": []
+    {
+      "initial": 0.0,
+      "instance": "dut",
+      "kind": "integer",
+      "name": "n"
     },
-    "op": "select"
-   },
-   "delay": 0.0,
-   "rise": 0.125,
-   "fall": 0.125,
-   "origin": {
-    "source": "calendar.va",
-    "line": 19,
-    "column": 17,
-    "instance": "dut",
-    "expansion": []
-   },
-   "kind": "transition"
-  }
- ],
- "schema_version": 32,
- "step_bounds": []
+    {
+      "initial": 0.0,
+      "instance": "dut",
+      "kind": "integer",
+      "name": "m"
+    },
+    {
+      "initial": 0.0,
+      "instance": "dut",
+      "kind": "integer",
+      "name": "k"
+    }
+  ],
+  "step_bounds": []
 }

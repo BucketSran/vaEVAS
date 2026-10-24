@@ -1,7 +1,7 @@
 """Independent event-body answers; no new formal matrix conditions.
 
-Predicates refer to the exact-real interpolation of submitted binary64 points
-at the chosen event time. Fraction supplies boundary controls, not EVAS output.
+Predicates read RN of each submitted-source sample. Fraction proves the full
+rounding cell independently of EVAS; continuous physical interpolation remains exact.
 """
 
 # Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
@@ -15,6 +15,7 @@ import unittest
 
 from evas import CompileError, KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
+from initial_record_contract import check_initial_record_batch
 
 
 def source(body, *, trigger='timer(0.5,0.5,0.001)', initial=0, kind='real', rhs='q', extra=''):
@@ -22,10 +23,12 @@ def source(body, *, trigger='timer(0.5,0.5,0.001)', initial=0, kind='real', rhs=
                  f'V(y,r)<+{rhs}; {extra}', f'{kind} q;' + ('electrical z;' if 'V(z' in body+extra else ''))
 
 
-def execute(text, *, points=None, times=None, step=2, instances=None, **tolerances):
+def execute(text, *, points=None, times=None, step=2, instances=None, initial_records=None, **tolerances):
     program = compile_sources({'conditions.va': text}, instances or [instance()])
-    return transient(program, {'u': points or [[0,0],[1,1]]}, times or [0,.5,1],
+    result = transient(program, {'u': points or [[0,0],[1,1]]}, times or [0,.5,1],
                      stop=1, max_step=step, kernel=KERNEL, **tolerances)
+    return (check_initial_record_batch(result, program, *initial_records)
+            if initial_records is not None else result)
 
 
 def states(result):
@@ -37,7 +40,7 @@ class ConditionalEvents(unittest.TestCase):
         for relation, expected in [('>=',[0,2,2]), ('>',[0,3,2]),
                                    ('<=',[0,2,3]), ('<',[0,3,3])]:
             with self.subTest(relation=relation):
-                r = execute(source(f'if (V(u,r) {relation} 0.5) q=2; else q=3;'))
+                r = execute(source(f'if (V(u,r) {relation} 0.5) q=2; else q=3;'), initial_records=([0], [0], 1))
                 self.assertEqual(states(r), expected)
                 self.assertEqual([e['time'] for e in r['transient']['events']], [.5,1])
 
@@ -70,48 +73,57 @@ class ConditionalEvents(unittest.TestCase):
     def test_cross_selects_at_actual_event_time(self):
         text = source('if (V(u,r)>=0.5) q=2; else q=3;',
                       trigger='cross(V(u,r)-0.5,1,0.001,0.001)')
-        self.assertEqual(states(execute(text)), [0,2,2])
-        # The exact root is 1/3, where u=1. LRM 2.4 5.10.3.1 places the event
-        # after the crossing; the matching-guard certificate proves u>1 just
-        # after tau. A rounded representative cannot flip the falling side.
+        self.assertEqual(states(execute(text, initial_records=([0], [0], 1))), [0,2,2])
+        # u(tau)=1 and RN(1+3*epsilon)=1 throughout a sufficiently
+        # small positive neighborhood. IR32 physical right-side sign does not
+        # survive this program sample boundary (ADR-006).
         text = source('if (V(u,r)>1) q=2; else q=3;',
                       trigger='cross(V(u,r)-1,1,0.001,0.001)')
-        result = execute(text, points=[[0,0],[1,3]])
-        self.assertEqual(result['transient']['events'][0]['after'], [2])
+        result = execute(text, points=[[0,0],[1,3]], initial_records=([0], [0], 1))
+        self.assertEqual([e['after'] for e in result['transient']['events'] if e['kind']=='cross'], [[3]])
         text = source('if (V(u,r)>1) q=2; else q=3;',
                       trigger='cross(V(u,r)-1,-1,0.001,0.001)')
-        result = execute(text, points=[[0,3],[1,0]])
-        self.assertEqual(result['transient']['events'][0]['after'], [3])
+        result = execute(text, points=[[0,3],[1,0]], initial_records=([0], [0], 1))
+        self.assertEqual([e['after'] for e in result['transient']['events'] if e['kind']=='cross'], [[3]])
 
     def test_rounded_equality_is_not_a_truth_certificate(self):
-        controls = [(.1,.9,'>',True), (.2,.7999999999999999,'>=',False)]
+        # Historical method identity retained; oracle migrates to ADR-006.
+        controls = [(.1,.9,'>',False), (.2,.7999999999999999,'>=',True)]
         for a,b,relation,truth in controls:
-            exact = (Q(a)+Q(b))/2-Q(.5)
-            self.assertEqual(exact>0 if relation=='>' else exact>=0, truth)
-            self.assertEqual(.5*a+.5*b, .5)
+            exact = (Q(a)+Q(b))/2
+            # All values in this exact singleton round to .5. The lower
+            # neighbor gap is half the upper gap at this binade boundary.
+            self.assertTrue(Q(.5)-Q(1,2**55) <= exact <= Q(.5)+Q(1,2**54))
+            self.assertEqual(float(exact),.5)
             text = source(f'if (V(u,r){relation}0.5) q=2; else q=3;')
             with self.subTest(a=a):
-                # Original source provenance now proves the exact sign even
-                # when the representative rounds to equality.
-                result=execute(text, points=[[0,a],[1,b]])
-                self.assertEqual(result['transient']['events'][0]['after'],[2 if truth else 3])
-                # An amplitude band has no unique physical source value.
-                # Keep the original refusal detector for that unknown input.
+                result=execute(text, points=[[0,a],[1,b]], initial_records=([0], [0], 1))
+                timers=[e for e in result['transient']['events'] if e['kind']=='timer']
+                self.assertEqual(timers[0]['after'],[2 if truth else 3])
+                self.assertEqual(states(result),[0,2 if truth else 3,2])
+                self.assertEqual([e['after'] for e in result['_checked_initial_records']],[[0]])
+                # The unchanged true source band crosses rounding cells.
                 with self.assertRaisesRegex(KernelError,'event_condition.*conditions.va'):
-                    execute(text, points=[[0,a],[1,b]],source_errors={'u':1e-12})
+                    execute(text, points=[[0,a],[1,b]],source_errors={'u':1e-12}, initial_records=([0], [0], 1))
 
     def test_input_enclosure_reaches_sampled_state_certificate(self):
         text = source('if (V(u,r)>0) q=V(u,r)-0.5; else q=0;', rhs='1e16*q')
-        # Exact output is 1e16*((Q(.1)+Q(.9))/2-Q(.5)), about .139 V.
-        # Numeric q and its equation residual are zero; exact q is nonzero.
-        with self.assertRaisesRegex(KernelError, 'event_accuracy'):
-            execute(text, points=[[0,.1],[1,.9]])
+        # Original periodic timer also fires at t=1, where the source is .9.
+        # At .5, sample RN((Q(.1)+Q(.9))/2)=.5, then subtraction is 0.
+        # At 1, q=RN(.9-.5); preserve this nonzero final observation.
+        expected=[0.,0.,1e16*(.9-.5)]
+        result=execute(text, points=[[0,.1],[1,.9]], initial_records=([0], [0], 1))
+        self.assertEqual(states(result),[0.,0.,.9-.5])
+        for row,want in zip(result['solutions'],expected):
+            self.assertAlmostEqual(row['voltages'][result['nodes'].index('y')],want,delta=max(1e-12,abs(want)*1e-10))
 
     def test_input_enclosure_reaches_amplified_voltage_certificate(self):
         text = source('if (V(u,r)>0) q=V(u,r); else q=0;',
                       initial=.5, rhs='1e8*(q-0.5)')
-        with self.assertRaisesRegex(KernelError,'event_accuracy.*y'):
-            execute(text, points=[[0,.1],[1,.9]])
+        result=execute(text, points=[[0,.1],[1,.9]], initial_records=([0], [.5], 1))
+        self.assertEqual(states(result),[.5,.5,.9])
+        for row,want in zip(result['solutions'],[0.,0.,1e8*(.9-.5)]):
+            self.assertAlmostEqual(row['voltages'][result['nodes'].index('y')],want,delta=max(1e-12,abs(want)*1e-10))
 
     def test_internal_state_independent_predicate(self):
         text = source('if (V(z,r)>=0.75) q=2; else q=3;', extra='V(z,r)<+2*V(u,r)-0.25;')
@@ -128,11 +140,61 @@ class ConditionalEvents(unittest.TestCase):
             with self.subTest(expression=expression):
                 self.assertEqual(states(execute(text)), [0, 2, 2])
 
-    def test_unselected_state_dependent_voltage_branches_still_reject(self):
+    def assert_source_state_event_box(self, text, expected):
+        # Native source execution keeps every t0/timer record. No legacy-event
+        # filtering or old unsupported diagnostic is used as a numeric oracle.
+        program = compile_sources({'conditions.va': text}, [instance()])
+        result = transient(program, {'u': [[0,0],[1,1]]}, [0,.5,1],
+                           stop=1, max_step=2, kernel=KERNEL)
+        # Validate the complete initial record without filtering the raw events.
+        check_initial_record_batch(result, program, [0], [0], 1)
+        self.assertEqual(result['transient']['times'], [0,.5,1])
+        self.assertEqual(result['transient']['state_names'], ['dut:q'])
+        self.assertEqual(states(result), expected)
+        events = result['transient']['events']
+        self.assertEqual(len(events), 3)
+        before = 0
+        declarations = program.to_dict()['events']
+        for event,time,after,kind in zip(events,[0,.5,1],expected,
+                ['initial_step','timer','timer']):
+            declaration = declarations[event['event']]
+            origin = declaration['origin']
+            self.assertEqual(declaration['trigger']['kind'], kind)
+            self.assertEqual((event['time'], event['kind']), (time, kind))
+            self.assertEqual(event['origin'],
+                f"{origin['source']}:{origin['line']}:{origin['column']} ({origin['instance']})")
+            self.assertEqual((event['before'], event['after']), ([before], [after]))
+            before = after
+        evidence = result['observation_evidence']
+        self.assertTrue(evidence['initial_settled'])
+        self.assertEqual(evidence['nodes'], result['nodes'])
+        self.assertEqual(len(result['solutions']), len(expected))
+        self.assertEqual(len(evidence['voltage_bounds_V']), len(expected))
+        for time,value,solution,box in zip([0,.5,1],expected,result['solutions'],
+                evidence['voltage_bounds_V']):
+            for name,want in [('0',0),('u',time),('y',value)]:
+                node = result['nodes'].index(name)
+                self.assertEqual(solution['voltages'][node], want)
+                self.assertLessEqual(Q.from_float(box[node][0]), want)
+                self.assertGreaterEqual(Q.from_float(box[node][1]), want)
+                controls = evidence['effective_controls']
+                tolerance = controls['absolute_V'] + controls['relative']*max(abs(x) for x in box[node])
+                self.assertLessEqual((box[node][1]-box[node][0])/2, tolerance)
+
+    def test_unselected_legal_voltage_branches_skip_numeric_execution(self):
         for expression in ['V(y,r)', '0*V(y,r)', 'V(y,y)', 'V(y,r)-V(y,r)', '1e-200*(1e-200*V(y,r))']:
             text = source(f'if (1>0) q=2; else if ({expression}>0) q=3;')
-            with self.subTest(expression=expression), self.assertRaisesRegex(KernelError,'unsupported_condition'):
+            with self.subTest(expression=expression):
+                self.assert_source_state_event_box(text, [0,2,2])
+
+    def test_selected_feedback_predicates_need_a_physical_enclosure(self):
+        for expression in ['V(y,r)', '0*V(y,r)', 'V(y,r)-V(y,r)', '1e-200*(1e-200*V(y,r))']:
+            text = source(f'if (1<0) q=2; else if ({expression}>0) q=3;')
+            with self.subTest(expression=expression), self.assertRaisesRegex(KernelError,'event_condition'):
                 execute(text)
+        # A same-node voltage difference is identically zero after its two
+        # node names have passed the original source checks.
+        self.assert_source_state_event_box(source('if (1<0) q=2; else if (V(y,y)>0) q=3;'), [0,0,0])
 
     def test_structural_internal_feedback_does_not_disappear(self):
         for rhs in ['q-q', '0*q', '1e-200*(1e-200*q)', 'V(y,r)-V(y,r)']:
@@ -163,18 +225,32 @@ class ConditionalEvents(unittest.TestCase):
 
     def test_unsupported_syntax_and_static_invalid_arm(self):
         for body in ['if (1>0) q=2; else missing=1;', 'if (1>0) q=2; else V(y,r)<+2;',
-                     'if (1>0) q=2; else q=idt(V(u,r),0);']:
+                     'if (1>0) q=2; else q=idt(V(u,r),0);',
+                     'if (1>0) q=2; else if (V(missing,missing)>0) q=3;',
+                     'if (1>0) q=2; else if (0*V(missing,r)>0) q=3;',
+                     'if (1>0) q=2; else q=missingfn(1.0);',
+                     'if (1>0) q=2; else q=1.0&1;']:
             with self.subTest(body=body), self.assertRaises(CompileError):
                 execute(source(body))
-        with self.assertRaisesRegex(KernelError,'unsupported_transient'):
-            execute(source('if (V(u,r)*V(u,r)>0.5) q=1;'))
+
+    def test_selected_nonlinear_input_condition_uses_source_value(self):
+        # At the two source timers u is exactly .5 and 1. Its binary64
+        # products are exactly .25 and 1; Fraction independently fixes truth.
+        truths = [Q.from_float(t)**2 > Q(1,2) for t in [.5,1]]
+        self.assert_source_state_event_box(source('if (V(u,r)*V(u,r)>0.5) q=1;'),
+                                          [0, *[int(truth) for truth in truths]])
+        self.assert_source_state_event_box(source('if (V(u,r)*V(u,r)>0.5) q=1;else q=2;'),
+                                          [0, *[1 if truth else 2 for truth in truths]])
+        with self.assertRaisesRegex(KernelError,'event_condition'):
+            execute(source('if (V(u,r)*V(u,r)>0.5) q=1;else q=2;'),
+                    points=[[0,2**-.5],[1,2**-.5]], source_errors={'u':1e-16})
 
     def test_initial_condition_uses_initial_input_and_preserves_missing_else(self):
         text = source('if (V(u,r)>0.5) q=1;', trigger='initial_step')
         for points, expected in [([[0,0],[1,1]], [0,0,0]),
                                  ([[0,1],[1,0]], [1,1,1])]:
             with self.subTest(points=points):
-                result = execute(text, points=points)
+                result = execute(text, points=points, initial_records=([0], [expected[0]], 2))
                 self.assertEqual(states(result), expected)
                 self.assertEqual(result['transient']['events'], [])
 
@@ -235,6 +311,7 @@ class ConditionalEvents(unittest.TestCase):
         run = subprocess.run([str(KERNEL)], input=json.dumps(payload), capture_output=True, text=True)
         self.assertEqual(run.returncode, 0, run.stderr)
         result = json.loads(run.stdout)
+        result = check_initial_record_batch(result, program, *([0], [0], 1))
         self.assertEqual(result['transient']['states'], [[0],[2]])
         self.assertEqual([event['after'] for event in result['transient']['events']], [[3],[2]])
 

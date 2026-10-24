@@ -37,7 +37,7 @@ def _referenced_nodes(model):
     return used
 
 
-def bind_hierarchy(models, instances, instance_type):
+def bind_hierarchy(models, instances, instance_type, *, native_audit=None, qualified_sources=None):
     bindings, identities = [], set()
 
     def visit(instance, ancestry=(), port_nets=None, token=None):
@@ -53,6 +53,12 @@ def bind_hierarchy(models, instances, instance_type):
             raise CompileError(f'{instance.name}: recursive module hierarchy is unsupported')
         model = models[instance.module]
         parameters = bind_parameters(model, instance.parameters, instance.name)
+        if model.deferred_system_calls:
+            from .unreachable_system_calls import qualify
+            model = qualify(model, parameters, instance.name, native_audit)
+            if qualified_sources is not None:
+                native_audit.debit("dead_call_qualified_source_insert", 2)
+                qualified_sources[instance.name] = model
         referenced = _referenced_nodes(model)
         model, groups = scalarize_nodes(model, parameters)
         if set(instance.connections) != set(model.ports):

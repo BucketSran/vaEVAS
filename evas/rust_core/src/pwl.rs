@@ -19,6 +19,12 @@ pub(crate) struct Root {
 }
 
 impl Root {
+    /// A zero certificate constructed from the original physical source curve,
+    /// not a rational extrapolation of already rounded endpoint samples.
+    pub(crate) fn has_source_zero(&self) -> bool {
+        self.source_time.is_some()
+    }
+
     /// Certified sign of the guard just after this root; 0 is a proven
     /// plateau. A strict sign-changing root keeps its segment end sign on
     /// (root, segment end], since the guard is affine between knots with
@@ -344,9 +350,97 @@ pub(crate) struct Trajectory {
     pub(crate) exact_sources: Vec<Option<crate::exact_source::Curve>>,
     original_source_count: usize,
     analytic_work: Option<crate::transition_source_plan::Work>,
+    procedure_work: Option<crate::transition_source_plan::Work>,
 }
 
 impl Trajectory {
+    pub(crate) fn bind_procedure_work(
+        &mut self,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<(), Error> {
+        if let Some(previous) = &self.procedure_work {
+            work.debit(2, 0)?;
+            return if previous.same_owner(work) {
+                Ok(())
+            } else {
+                Err(Error::new(
+                    "invalid_ir",
+                    "procedure request owner cannot be replaced",
+                ))
+            };
+        }
+        work.debit(2, 16)?;
+        self.procedure_work = Some(work.clone());
+        Ok(())
+    }
+    pub(crate) fn procedure_work(&self) -> Option<&crate::transition_source_plan::Work> {
+        self.procedure_work.as_ref()
+    }
+    /// Scalar amplitude error is a set, never a proof that the centre is true.
+    /// Use the supplied exact physical root without converting it to f64.
+    pub(crate) fn sample_domain_at_root(
+        &self,
+        index: usize,
+        root: &crate::exact_source::RootTime,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Option<std::sync::Arc<crate::source_domain::Domain>>, Error> {
+        use crate::exact_source::history_paid::Paid;
+        w.step()?;
+        if index >= self.original_source_count {
+            return Ok(None);
+        }
+        let Some(&error) = self.source_errors.get(index) else {
+            return Ok(None);
+        };
+        if error <= 0.
+            || self.is_shaped(index)
+            || self
+                .config
+                .analytic_sources
+                .get(index)
+                .is_some_and(Option::is_some)
+        {
+            return Ok(None);
+        }
+        let Some(points) = self.config.pwl.get(index) else {
+            return Ok(None);
+        };
+        w.debit(2, (points.len() * 2 + 16) as u64)?;
+        if points.len() < 2 || points.windows(2).any(|p| p[0][0] >= p[1][0]) {
+            return Ok(None);
+        }
+        let mut paid = Paid::new(w);
+        let centre = (|| {
+            let time = root.rational();
+            let first = paid.binary(points[0][0])?;
+            let last = paid.binary(points.last()?[0])?;
+            if paid.cmp(time, &first)?.is_lt() || paid.cmp(time, &last)?.is_gt() {
+                return None;
+            }
+            for pair in points.windows(2) {
+                paid.pay(1)?;
+                let a = paid.binary(pair[0][0])?;
+                let b = paid.binary(pair[1][0])?;
+                if paid.cmp(time, &a)?.is_lt() || paid.cmp(time, &b)?.is_gt() {
+                    continue;
+                }
+                let x = paid.binary(pair[0][1])?;
+                let y = paid.binary(pair[1][1])?;
+                let delta = paid.op(time, &a, '-')?;
+                let span = paid.op(&b, &a, '-')?;
+                let phase = paid.op(&delta, &span, '/')?;
+                let change = paid.op(&y, &x, '-')?;
+                let offset = paid.op(&change, &phase, '*')?;
+                return paid.op(&x, &offset, '+');
+            }
+            None
+        })();
+        match paid.finish(centre)? {
+            Some(centre) => crate::source_domain::Domain::band(&centre, error, w),
+            None => Ok(None),
+        }
+    }
+
     /// Prepay all storage copied by Clone, including original rational limbs.
     pub(crate) fn charge_source_copy(
         &self,
@@ -706,6 +800,99 @@ impl Trajectory {
         let values = self.history_values_impl(time, work, Some(&mut points))?;
         let bounds = self.history_value_bounds_impl(time, work, points.as_deref(), None)?;
         Ok((values, bounds))
+    }
+    pub(crate) fn procedure_point_bundle(
+        &self,
+        time: f64,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<(Vec<f64>, Vec<I>), Error> {
+        let (mut values, bounds) = self.history_point_bundle(time, work)?;
+        self.reconcile_point_values(time, &mut values, &bounds, work)?;
+        Ok((values, bounds))
+    }
+    /// Keep the numerical representative inside its original complete source
+    /// enclosure. Weighted interpolation is only a proposal: for example the
+    /// .4/.6 quarter point can drift one ULP above its exact singleton .45.
+    fn reconcile_point_values(
+        &self,
+        time: f64,
+        values: &mut [f64],
+        bounds: &[I],
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<(), Error> {
+        use crate::exact_source::history_paid::Paid;
+        w.debit(2, (values.len() as u64).saturating_mul(3).saturating_add(1))?;
+        if values.len() != bounds.len() {
+            return Err(Error::new(
+                "invalid_ir",
+                "source point and domain layouts differ",
+            ));
+        }
+        let mut root = None;
+        for (index, (value, bound)) in values.iter_mut().zip(bounds).enumerate() {
+            if !bound.finite() {
+                return Err(unresolved("source point has no finite original domain"));
+            }
+            if value.is_finite() && bound.lo <= *value && *value <= bound.hi {
+                continue;
+            }
+            if bound.lo.to_bits() == bound.hi.to_bits() {
+                *value = bound.lo;
+                continue;
+            }
+            if root.is_none() {
+                let mut paid = Paid::new(w);
+                let time = paid
+                    .binary(time)
+                    .map(crate::exact_source::history_paid::root);
+                root = paid.finish(time)?;
+            }
+            let Some(root) = &root else {
+                return Err(unresolved("source point has no exact query time"));
+            };
+            let exact = if let Some(curve) = self.exact_sources.get(index).and_then(Option::as_ref)
+            {
+                curve.at_root_history(root, w)?
+            } else if let Some(domain) = self.sample_domain_at_root(index, root, w)? {
+                if !domain.contained(*bound, w)? {
+                    return Err(unresolved(
+                        "source amplitude domain escapes its original enclosure",
+                    ));
+                }
+                let mut paid = Paid::new(w);
+                let centre = (|| {
+                    let sum = paid.op(&domain.lo, &domain.hi, '+')?;
+                    let two = paid.binary(2.)?;
+                    paid.op(&sum, &two, '/')
+                })();
+                paid.finish(centre)?
+            } else {
+                None
+            };
+            let Some(exact) = exact else {
+                return Err(unresolved(
+                    "source representative has no matching original domain proof",
+                ));
+            };
+            let Some(enclosure) = crate::exact_source::enclosure_with_work(&exact, w)? else {
+                return Err(unresolved("source representative cannot be enclosed"));
+            };
+            if enclosure.lo < bound.lo || enclosure.hi > bound.hi {
+                return Err(unresolved(
+                    "original source point escapes its complete enclosure",
+                ));
+            }
+            let mut paid = Paid::new(w);
+            let point = paid.nearest(&exact);
+            let point = paid.finish(point)?;
+            let Some(point) = point.filter(|v| bound.lo <= *v && *v <= bound.hi) else {
+                return Err(unresolved(
+                    "source point has no representable certified representative",
+                ));
+            };
+            *value = point;
+        }
+        Ok(())
     }
     /// Original physical PWL observation with the held-consumer request owner.
     /// This uses no forcing graph or replacement IR and retains source errors.
@@ -1108,6 +1295,7 @@ impl Trajectory {
             knots,
             source_errors,
             analytic_work,
+            procedure_work: None,
         })
     }
 
@@ -2079,6 +2267,77 @@ mod history_owned_point_tests {
     use crate::transition_source_plan::Work;
     use num_rational::BigRational as R;
     use serde_json::json;
+
+    #[test]
+    fn point_bundle_reconciles_interpolation_without_narrowing_source_domain() {
+        for error in [0., 0.01] {
+            let t = Trajectory::new(
+                serde_json::from_value(json!({
+                    "pwl":[[[0.,0.4],[1.,0.6]]], "pwl_errors_V":[error],
+                    "output_times":[0.,1.],"stop":1.,"max_step":1.
+                }))
+                .unwrap(),
+                1,
+            )
+            .unwrap();
+            let w = Work::default();
+            let original = t.history_value_bounds(0.25, &w).unwrap();
+            let (values, bounds) = t.procedure_point_bundle(0.25, &w).unwrap();
+            assert_eq!(bounds, original);
+            assert!(bounds[0].lo <= values[0] && values[0] <= bounds[0].hi);
+            if error == 0. {
+                // The exact binary endpoint interpolation at 1/4 is .45.
+                assert_eq!(values[0].to_bits(), 0.45_f64.to_bits());
+                assert_eq!(bounds[0], I::point(0.45));
+            } else {
+                assert!(bounds[0].lo < 0.45 && bounds[0].hi > 0.45);
+                assert!(t.exact_sources[0].is_none());
+                let root = crate::exact_source::history_paid::root(
+                    crate::exact_source::binary(0.25).unwrap(),
+                );
+                let domain = t.sample_domain_at_root(0, &root, &w).unwrap().unwrap();
+                assert!(domain.lo < domain.hi);
+                let mut bad_proposal = [100.];
+                t.reconcile_point_values(0.25, &mut bad_proposal, &bounds, &w)
+                    .unwrap();
+                assert!(bounds[0].lo <= bad_proposal[0] && bad_proposal[0] <= bounds[0].hi);
+                assert_eq!(t.history_value_bounds(0.25, &w).unwrap(), bounds);
+                assert!(t.exact_sources[0].is_none());
+            }
+        }
+    }
+
+    #[test]
+    fn point_reconciliation_uses_the_same_sticky_work_owner() {
+        let t = Trajectory::new(
+            serde_json::from_value(json!({
+                "pwl":[[[0.,0.4],[1.,0.6]]],
+                "output_times":[0.,1.],"stop":1.,"max_step":1.
+            }))
+            .unwrap(),
+            1,
+        )
+        .unwrap();
+        let work = Work::limited([128, 8192, 3]);
+        let mut values = [f64::from_bits(0.45_f64.to_bits() + 1)];
+        let bounds = [I::point(0.45)];
+        assert_eq!(
+            t.reconcile_point_values(0.25, &mut values, &bounds, &work)
+                .unwrap_err()
+                .kind,
+            "step_budget"
+        );
+        assert_eq!(values[0].to_bits(), 0.45_f64.to_bits() + 1);
+        let spent = work.spent();
+        assert_eq!(
+            t.reconcile_point_values(0.25, &mut values, &bounds, &work.clone())
+                .unwrap_err()
+                .kind,
+            "step_budget"
+        );
+        assert!(work.spent() >= spent);
+        assert_eq!(values[0].to_bits(), 0.45_f64.to_bits() + 1);
+    }
 
     fn shaped(value: f64, nonbinary: bool) -> Trajectory {
         let knots = if nonbinary {

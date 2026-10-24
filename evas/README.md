@@ -477,7 +477,7 @@ tests 通过的数目不折算为验证条件数；分组与运行方式见
 
 ## IR 与贡献契约
 
-当前实现使用 IR32（`schema_version` 为32，见[IR 版本与迁移](#ir-v8-migration)），保留模型步长请求 `step_bounds`、连续纯数学函数及 IR21 动态契约。
+本地 0.25.0 候选正在集成 IR33（`schema_version` 为33，见[IR 版本与迁移](#ir-v8-migration)）。IR33 保留程序 real 运算、绑定与过程顺序，合同见[ADR-006](docs/development/DECISIONS.md#adr-006)。运行时和完整交付验证尚未完成，最近正式验收仍为本页开头的0.24.1／IR32。模型步长请求 `step_bounds`、连续纯数学函数及原动态契约继续保留。
 IR23 新增 loop、array_read/array_write 和 checked_integer/checked_index；[执行合同](docs/reference/frontend-admission.md#runtime-event-loops)限定其范围。IR22 引入的 `event_math` 继续保留。每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
 `power` 含 `base` 和整数 `exponent`；半次幂编译为 `sqrt` 调用点。
@@ -520,11 +520,11 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 
 ### IR 版本与迁移
 
-当前 main（0.24.1）的 Program 和成功 Response 的 `schema_version` 均为 **32**，Python 适配器与 Rust 内核同步检查。
+本地 0.25.0／IR33 候选的 Program 和成功 Response 使用 `schema_version=33`。前端与内核须在完整候选中同步，不能混用当前仍在开发的快照。该版本号不表示已经完成验收；已审 main 和最近正式验收仍为0.24.1／IR32。
 旧版本或未知整数版本先于载荷解码返回 `unsupported_ir_version`；版本缺失/错误类型及当前格式错误返回
-`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–30 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
+`invalid_request`。Rust 库构造入口也检查版本。迁移到 IR33 时，旧 IR 1–32 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
 前端与内核须配套使用。IR24 的源误差项兼容原数值形式，另接受严格的物理曲线对象；
-JSON Program/Response 版本必须为 32；IR32新增显式typed analytic physical source值，合同见[事件手册](docs/math/events.md#ir32-private-candidate-explicit-analytic-source-values)；0.24.1／IR32已完成正式验收，见本页开头。IR31新增直接物理输入的事件整数转换，IR30新增受限source Forcing与独立held Transition。IR29新增受限右移、按位与及纯保持目标，旧载荷须从原VA重编译。IR27新增事件体 typed Add 与常量非零 Remainder。IR26新增实际驱动仿射输入的原生事件 `floor`，IR25及更旧载荷须重新编译。IR25新增原生 `tanh` 数学算子。IR24 扩展源误差描述，IR23 新增有界事件循环和紧凑数组读写；IR22 引入 `event_math`，仅扩展完整 IR 证明隔离的观察事件；
+与 IR33 配套的 JSON Program/Response 版本必须为33。以下保留旧版本的语义边界和验收身份。IR32新增显式typed analytic physical source值，合同见[事件手册](docs/math/events.md#ir32-private-candidate-explicit-analytic-source-values)；0.24.1／IR32已完成正式验收，见本页开头。IR31新增直接物理输入的事件整数转换，IR30新增受限source Forcing与独立held Transition。IR29新增受限右移、按位与及纯保持目标，旧载荷须从原VA重编译。IR27新增事件体 typed Add 与常量非零 Remainder。IR26新增实际驱动仿射输入的原生事件 `floor`，IR25及更旧载荷须重新编译。IR25新增原生 `tanh` 数学算子。IR24 扩展源误差描述，IR23 新增有界事件循环和紧凑数组读写；IR22 引入 `event_math`，仅扩展完整 IR 证明隔离的观察事件；
 物理联立、初始化和固定 start=0 timer 的数学边界保持。IR21 保留 `step_bounds`，新增变量分母的 `divide` 表达式、顺序初始化和事件输出记录。
 `step_bounds` 保存每次 `$bound_step` 的值、激活条件和源码身份。
 IR19 引入的纯数学函数格式继续保留；不能只给旧 JSON 改版本号。
@@ -533,7 +533,7 @@ IR21 将初始化扩展到 real/integer 的顺序赋值、默认零值及受限�
 初始化先于算子历史、守卫日程、首次电压求解和 t=0 事件；详见[初始化契约](docs/math/events.md#input-initialization)。
 IR1–25 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
 
-仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR32，
+仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，按所用前端的当前schema写入新IR，
 保留每项 manifest/source SHA256 及失败诊断；原 IR、历史波形和收据不改写：
 
 ```sh

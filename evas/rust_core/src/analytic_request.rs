@@ -6,12 +6,15 @@ use crate::transition_source_plan::{ProofContext, Work};
 use std::sync::Arc;
 #[path = "analytic_sampled_consumer.rs"]
 mod sampled;
+#[path = "analytic_sample_domain.rs"]
+mod sample_domain;
 fn scope(s: &str) -> Error {
     Error::new("unsupported_analytic_source_consumer", s)
 }
 pub(crate) struct Request {
     context: Arc<ProofContext>,
     sampled: Option<sampled::Admission>,
+    domains: sample_domain::Cache,
 }
 /// Payment and original physical input mapping only. None of these variants
 /// grants another variant's history, forcing, operator or native capability.
@@ -72,6 +75,10 @@ impl Request {
     pub(crate) fn fixed_timer_held_transitions(&self) -> bool {
         self.sampled.is_some()
     }
+    // Rational-domain memoization is private to the serial transient request.
+    // Arc retains shared proof ownership; Rust still prevents sending this
+    // RefCell-backed token to another thread.
+    #[allow(clippy::arc_with_non_send_sync)]
     pub(crate) fn prepare(
         p: &Program,
         t: &Trajectory,
@@ -89,10 +96,11 @@ impl Request {
             let bytes = crate::event_floor::encoded_size(p, w)?;
             let context = ProofContext::event_request_with_work(p, t, driven, bytes, w.clone())?;
             let sampled = sampled::Admission::qualify(p, &context)?;
-            w.debit(2, 5)?;
+            w.debit(2, (std::mem::size_of::<Self>() + 32) as u64)?;
             return Ok(Arc::new(Self {
                 context,
                 sampled: Some(sampled),
+                domains: Default::default(),
             }));
         }
         if !p.operators.is_empty() || !p.step_bounds.is_empty() {
@@ -132,7 +140,7 @@ impl Request {
                     raw(guard,p,&input_nodes,true,t,w)?;
                     crate::history_admission::affine_paid(guard,p,w)?;
                 }
-                EventTrigger::Timer{..}=>(),
+                EventTrigger::Timer{..}|EventTrigger::InitialStep {}=>(),
                 _=>return Err(scope("analytic source-value calendar currently accepts independent PWL cross or fixed timer leaves")),
             }
             for statement in &event.body {
@@ -141,7 +149,10 @@ impl Request {
                     Statement::Assign(assignment)=>{
                         let rhs=&assignment.rhs;
                         raw(rhs,p,&input_nodes,false,t,w)?;
-                        crate::history_admission::affine_paid(rhs,p,w)?;
+                        let dynamic = scalar_shape(rhs, w)?;
+                        if matches!(event.trigger, EventTrigger::InitialStep {}) && dynamic {
+                            return Err(scope("analytic initial event requires constant source assignments"));
+                        }
                     }
                     _=>return Err(scope("analytic source-value event body requires direct affine assignments; every hidden arm is audited")),
                 }
@@ -149,11 +160,23 @@ impl Request {
         }
         let bytes = crate::event_floor::encoded_size(p, w)?;
         let context = ProofContext::event_request_with_work(p, t, driven, bytes, w.clone())?;
-        w.debit(2, 4)?;
+        w.debit(2, (std::mem::size_of::<Self>() + 32) as u64)?;
         Ok(Arc::new(Self {
             context,
             sampled: None,
+            domains: Default::default(),
         }))
+    }
+    pub(crate) fn sample_domain(
+        &self, index:usize, p:&Program, trajectory:&Trajectory,
+        root:&crate::exact_source::RootTime, w:&Work,
+    )->Result<Option<std::sync::Arc<crate::source_domain::Domain>>,Error>{
+        if !self.work().same_owner(w){return Err(scope("analytic source domain belongs to another request"));}
+        let Some(&node)=self.context.event_input_nodes().get(index) else{return Ok(None)};
+        if !sample_domain::read_node(p,node,w)? {return Ok(None);}
+        let Some(Some(source))=trajectory.config.analytic_sources.get(index) else{return Ok(None)};
+        let error=trajectory.config.pwl_errors_v.as_ref().and_then(|errors|errors.get(index)).map_or(0.,crate::ir::SourceError::bound);
+        self.domains.at_root(index,source,error,root,w)
     }
     pub(crate) fn activate(
         self: &Arc<Self>,
@@ -206,12 +229,40 @@ fn raw(
                 if term.node==0{continue;}
                 let k=inputs.iter().position(|&n|n==term.node).ok_or_else(||scope("analytic source-value scope excludes internal voltage dependencies"))?;
                 if guard && t.config.analytic_sources[k].is_some(){return Err(scope("sine cross guards require an independent complete root certificate"));}
+                if guard && t.config.pwl_errors_v.as_ref().and_then(|errors|errors.get(k)).is_some_and(|error|error.bound()>0.) {return Err(scope("analytic source calendar requires independent zero-error PWL guard dependencies"));}
             }
         }
         E::State{state} if !guard=>{if *state>=p.states.len(){return Err(scope("unknown original state dependency"));}},
         E::Add{left,right}|E::Multiply{left,right}|E::Divide{left,right}=>{raw(left,p,inputs,guard,t,w)?;raw(right,p,inputs,guard,t,w)?;}
         E::Power{base,..}=>raw(base,p,inputs,guard,t,w)?,
+        E::RealBoundary { value, .. } if !guard => raw(value,p,inputs,false,t,w)?,
+        E::RealBinary { left, right, .. } if !guard => {raw(left,p,inputs,false,t,w)?;raw(right,p,inputs,false,t,w)?;}
         _=>return Err(scope("analytic source-value expression is outside direct affine scope; hidden arms remain unsupported")),
     }
     Ok(())
+}
+
+// A role audit only: the original rounded tree stays in the bound Program.
+// No row returned here is a mathematical certificate for a rounded operation.
+fn scalar_shape(e: &E, w: &Work) -> Result<bool, Error> {
+    w.step()?;
+    Ok(match e {
+        E::Affine { terms, .. } => {
+            let mut dynamic=false;
+            for term in terms {w.step()?;dynamic |= term.node!=0 && term.coefficient!=0.;}
+            dynamic
+        }
+        E::State { .. } => true,
+        E::RealBoundary { value, .. } => scalar_shape(value,w)?,
+        E::Add { left,right } | E::Multiply { left,right } | E::Divide { left,right }
+        | E::RealBinary { left,right,.. } => {
+            let a=scalar_shape(left,w)?;let b=scalar_shape(right,w)?;
+            let multiply=matches!(e,E::Multiply {..}|E::RealBinary {operation:crate::ir::RealOperation::Multiply,..});
+            let divide=matches!(e,E::Divide {..}|E::RealBinary {operation:crate::ir::RealOperation::Divide,..});
+            if b && (divide || multiply && a) {return Err(scope("analytic scalar source tree requires affine physical leaves"));}
+            a||b
+        }
+        E::Power { .. } => return Err(scope("analytic scalar source tree requires the original affine arithmetic roles")),
+        _=>return Err(scope("analytic scalar source tree contains an unsupported role")),
+    })
 }

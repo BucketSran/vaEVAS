@@ -174,13 +174,28 @@ def initial_budget(path):
         end += 1
     if depth:
         raise ValueError('unsupported Budget implementation; review this check')
+    declaration = source[begin:impl].strip()
+    support = ''
+    if re.fullmatch(r'struct\s+Budget\s*\(\s*usize\s*\)\s*;', declaration):
+        constructor = 'Budget(3)'
+    elif re.fullmatch(r'struct\s+Budget\s*\(\s*usize\s*,\s*'
+                      r'Option<crate::transition_source_plan::Work>\s*\)\s*;', declaration):
+        constructor = 'Budget(3,None)'
+        # This probe tests the production local remainder with no external Work.
+        # An uninhabited type satisfies the optional dependency without inventing
+        # debit behavior. Real Work accounting is covered by the kernel tests.
+        support = ('mod transition_source_plan {pub enum Work {} '
+                   'impl Work {pub fn debit(&self,_slot:usize,_n:u64)->Result<(),()> '
+                   '{match *self {}}}}\n')
+    else:
+        raise ValueError('unsupported Budget fields; review this check')
     rustc = shutil.which('rustc')
     if rustc is None:
         raise OSError('rustc is required for the selected budget primitive check')
     with tempfile.TemporaryDirectory(prefix='evas-proof-budget-') as temporary:
         directory = Path(temporary)
         code, binary = directory/'budget.rs', directory/'budget-check'
-        code.write_text(source[begin:end]+'\nfn main(){let mut b=Budget(3);'
+        code.write_text(support+source[begin:end]+'\nfn main(){let mut b='+constructor+';'
                         'assert!(b.take(4).is_none());assert!(b.take(1).is_none());}\n')
         build = subprocess.run([rustc, '--edition=2021', str(code), '-o', str(binary)],
                                capture_output=True, text=True, timeout=30)
@@ -190,6 +205,7 @@ def initial_budget(path):
         if execution.returncode:
             raise AssertionError('exhausted production Budget recovered on retry: '+execution.stderr)
     return dict(allocation_owners=owners, exhausted_retry='refused',
+                primitive_external_work='absent; no external debit behavior is simulated',
                 scope='single allocation owner and sticky primitive; aggregate caller work still needs review')
 
 

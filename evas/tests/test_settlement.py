@@ -7,6 +7,7 @@ from fractions import Fraction as Q
 import unittest
 from evas import KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
+from initial_record_contract import check_initial_record_batch
 from test_timer import run_timer
 
 
@@ -41,7 +42,7 @@ class SettlementContracts(unittest.TestCase):
             source=model(f'''@(initial_step) begin n=0; s=0; end
                 @(timer(0.5,0.5,0.001)) begin n=n+1; s={gain}*V(y,r)+n; end
                 V(y,r)<+s;''','integer n; real s;')
-            r=run_timer(source,stop=1,times=[0,0.5,1])
+            r=run_timer(source,stop=1,times=[0,0.5,1], initial_records=([0,0], [0,0], 1))
             for count,states in enumerate(r['transient']['states']):
                 self.assertEqual(states[0],count)
                 self.assertAlmostEqual(states[1],float(Q(count)/(1-Q(gain))),places=12)
@@ -56,7 +57,7 @@ class SettlementContracts(unittest.TestCase):
                             actions='n=n+1;'*count
                             source=model(f'''@(initial_step) n={initial};
                                 @({trigger}) begin {actions} end V(y,r)<+n;''',f'{kind} n;')
-                            r=run_timer(source,stop=1,times=[0,0.5,1])
+                            r=run_timer(source,stop=1,times=[0,0.5,1], initial_records=([0], [initial], 1))
                             self.assertEqual(r['transient']['states'],
                                              [[initial],[initial+count],[initial+count]])
                             self.assertEqual(len(r['transient']['events']),1)
@@ -87,7 +88,7 @@ class SettlementContracts(unittest.TestCase):
         for step in [1,0.07]:
             for times in [[0,1],[0,0.25,0.5,0.75,1]]:
                 with self.subTest(step=step,times=times):
-                    r=run_timer(source,stop=1,times=times,step=step)
+                    r=run_timer(source,stop=1,times=times,step=step, initial_records=([0,0], [0,0], 1))
                     self.assertEqual(r['transient']['states'],[[int(8*t),int(16*t)] for t in times])
                     self.assertEqual(len(r['transient']['events']),4)
                     self.assertEqual(r['solutions'][-1]['voltages'][r['nodes'].index('y')],16)
@@ -146,11 +147,14 @@ class SettlementContracts(unittest.TestCase):
             source=model(f'''@(initial_step) s=0;
                 @(timer(0.5,0,0.01)) begin s={unit!r}; s=s+{delta!r}; s=s-{unit!r}; end
                 V(y,r)<+1e16*s/{unit!r};''','real s;')
-            # Exact output is 1e16*2^-55 in every state unit. Binary64
-            # replay loses delta; the physical output must reject that error.
-            with self.assertRaises(KernelError) as caught:
-                run_timer(source,stop=1,times=[0,1])
-            self.assertEqual(caught.exception.detail['kind'],'event_accuracy')
+            # Each source assignment has its own RN boundary. The addition
+            # is below half an upward ulp, hence RN(unit+delta)=unit and
+            # the following subtraction is exactly zero at all three scales.
+            self.assertEqual(unit+delta,unit)
+            result=run_timer(source,stop=1,times=[0,1], initial_records=([0], [0], 1))
+            self.assertEqual(result['transient']['states'],[[0.],[0.]])
+            self.assertEqual([e['after'] for e in result['_checked_initial_records']],[[0.]])
+            self.assertEqual([row['voltages'][result['nodes'].index('y')] for row in result['solutions']],[0.,0.])
 
     def test_exact_scaled_states_are_accepted_in_their_own_units(self):
         for exponent in [-80,0,80]:

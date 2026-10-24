@@ -176,6 +176,12 @@ impl Prepared {
                 Some(&closed_operators),
             )?;
             let input_items = before - audit.remaining.unwrap();
+            // Closed math is procedure-lazy in IR33; a legacy DirectInput
+            // stage has no activation frame for it. Do not expose a global
+            // ProcedureMath placeholder as a native forcing value.
+            if !program.procedures.is_empty() && closed {
+                return Err(unsupported());
+            }
             // affine allocates/traverses dense coordinate vectors per input
             // AST node. Reserve their conservative actual inner-work bound in
             // the same request allowance before invoking this existing helper.
@@ -222,6 +228,35 @@ impl Prepared {
                 true,
             )?;
         }
+        // A legacy physical math stage can only own capture-only source
+        // procedures. Never bypass an unused store, call or selected effect.
+        // The complete original AST audit above precedes this execution owner.
+        let owned_trajectory;
+        let trajectory = if program.procedures.is_empty() {
+            trajectory
+        } else {
+            for procedure in &program.procedures {
+                audit.charge(procedure.body.len().saturating_add(1))?;
+                for step in &procedure.body {
+                    if !matches!(step.action, crate::ir::ProcedureAction::Control(
+                        crate::ir::ProcedureControl::ContributionCapture { .. })) {
+                        return Err(unsupported());
+                    }
+                }
+            }
+            let work = if let Some(work) = trajectory.procedure_work().or_else(|| trajectory.analytic_work()) {
+                work.debit(2, 16)?;
+                work.clone()
+            } else {
+                crate::transition_source_plan::Work::default()
+            };
+            crate::procedure::validate(program, &work)?;
+            trajectory.charge_source_copy(&work)?;
+            let mut prepared = trajectory.clone();
+            prepared.bind_procedure_work(&work)?;
+            owned_trajectory = prepared;
+            &owned_trajectory
+        };
         let operators = Operators::new_until(
             program,
             trajectory,
@@ -234,6 +269,10 @@ impl Prepared {
         // This admission allowance never replenishes Operators' proof counters.
         let scanned = 100_000 - audit.remaining.unwrap();
         audit.charge(scanned)?;
+        if let Some(work) = trajectory.procedure_work() {
+            let bytes = crate::event_floor::encoded_size(program, work)?;
+            work.debit(2, (bytes as u64).saturating_mul(8))?;
+        }
         let mut reduced = program.clone();
         let original_nodes = reduced.nodes.len();
         let mut extended = driven.to_vec();
@@ -275,7 +314,13 @@ impl Prepared {
             replace(&mut contribution.rhs, original_nodes, &mut audit)?;
         }
         reduced.operators.clear();
-        let analog = Analog::new(reduced, extended, tolerances.clone())?;
+        let analog = if !program.procedures.is_empty() {
+            let work=trajectory.procedure_work().expect("early procedure owner");
+            work.debit(2, 16)?;
+            Analog::new_with_procedure_work(reduced, extended, tolerances.clone(), work.clone())?
+        } else {
+            Analog::new(reduced, extended, tolerances.clone())?
+        };
         Ok(Self {
             operators: Some(operators),
             selected: None,
@@ -291,6 +336,7 @@ impl Prepared {
         time: f64,
         _exact: &[Option<crate::exact_source::Curve>],
     ) -> Result<Solution, Error> {
+        self.analog.charge_procedure_query(values.len().saturating_add(bounds.len()).saturating_add(self.original_nodes))?;
         let extra = if let Some(selected) = &self.selected {
             selected.charge_extension_copies(values.len())?;
             let (value, bound) = selected.value(values, bounds, time)?;
@@ -430,5 +476,50 @@ mod tests {
             clean.certified_voltage_bounds,
             retried.certified_voltage_bounds
         );
+    }
+}
+
+#[cfg(test)]
+mod procedure_owner_tests {
+    use super::*;
+    fn fixture() -> (Program,Trajectory) {
+        let origin=serde_json::json!({"instance":"dut","source":"owner.va","line":1,"column":1});
+        let input=serde_json::json!({"op":"affine","constant":0.,"terms":[{"node":1,"coefficient":1.}]});
+        let p=serde_json::from_value(serde_json::json!({"schema_version":crate::ir::SCHEMA_VERSION,
+            "nodes":["0","u","y"],"states":[],"events":[],"real_bindings":[],"step_bounds":[],
+            "operators":[{"kind":"math","function":"tanh","input":input,"origin":origin}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"0","local_negative":"y","kind":"voltage"},"positive":0,"negative":2,"origin":origin,
+                "rhs":{"op":"operator","operator":0}}],
+            "procedures":[{"procedure_id":0,"instance":"dut","body":[{"expanded_statement_ordinal":0,"action":{"kind":"contribution_capture","contribution":0}}]}]})).unwrap();
+        let config=serde_json::from_value(serde_json::json!({"pwl":[[[0.,0.1],[1.,0.1]]],"stop":1.,"max_step":0.1,"output_times":[0.,1.]})).unwrap();
+        (p,Trajectory::new(config,1).unwrap())
+    }
+    #[test]
+    fn early_math_borrows_owner_without_mutating_the_parent_trajectory() {
+        let (p,mut t)=fixture();let w=crate::transition_source_plan::Work::default();
+        t.bind_procedure_work(&w).unwrap();let before=w.spent();
+        let mut prepared=Prepared::new(&p,&t,&["u".into()],&Tolerances::default()).unwrap();
+        assert!(w.spent()>before);
+        let before_query=w.spent();
+        prepared.solve(&[0.1],&[I::point(0.1)],0.5,&[]).unwrap();
+        assert!(w.spent()>before_query);
+        assert!(prepared.analog.prepared_uses_procedure_owner(&w));
+        w.debit(2,1_000_000_000-w.spent()).unwrap();
+        assert_eq!(prepared.solve(&[0.1],&[I::point(0.1)],0.5,&[]).unwrap_err().kind,"step_budget");
+        let used=w.spent();
+        assert_eq!(prepared.solve(&[0.1],&[I::point(0.1)],0.5,&[]).unwrap_err().kind,"step_budget");
+        assert!(w.spent()>used);assert!(t.procedure_work().unwrap().same_owner(&w));
+        assert_eq!(t.values(0.5),vec![0.1]);
+    }
+    #[test]
+    fn exhausted_early_owner_stays_exhausted_across_real_preparation_retries() {
+        let (p,mut t)=fixture();let w=crate::transition_source_plan::Work::limited([128,8192,20]);
+        t.bind_procedure_work(&w).unwrap();
+        let first=Prepared::new(&p,&t,&["u".into()],&Tolerances::default()).err().unwrap();
+        assert_eq!(first.kind,"step_budget");let used=w.spent();
+        let retry=Prepared::new(&p,&t,&["u".into()],&Tolerances::default()).err().unwrap();
+        assert_eq!(retry.kind,"step_budget");assert!(w.spent()>used);
+        assert!(t.procedure_work().unwrap().same_owner(&w));
+        assert_eq!(t.values(0.5),vec![0.1]);
     }
 }

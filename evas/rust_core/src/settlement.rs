@@ -13,6 +13,8 @@ thread_local! {
 }
 
 pub(crate) struct Prepared {
+    // Owned output of this exact execution; consumers may move it, never reconstruct its activation.
+    pub(crate) selection: Option<crate::event_conditions::Selection>,
     pub(crate) states: Vec<f64>,
     pub(crate) bounds: Vec<I>,
     pub(crate) circuit: Circuit,
@@ -270,7 +272,7 @@ fn prepare_impl(
         .zip(physical_preview.as_ref())
         .map(|(context, preview)| context.representative_proof(preview))
         .transpose()?;
-    let predicate_states = model.apply_with_proofs(&selection, &predicate_nodes, before, proofs)?;
+    let predicate_states = if selection.plan.is_some(){before.to_vec()}else{model.apply_with_proofs(&selection, &predicate_nodes, before, proofs)?};
     let predicate_bounds: Vec<_> = predicate_states.iter().copied().map(I::point).collect();
     let selected = model.selected_program_with_observation_proof(
         physical_proof
@@ -307,7 +309,28 @@ fn prepare_impl(
         lineage,
         physical_proof.as_ref(),
     )?;
-    if replayed
+    // The procedure circuit already replaces each contribution with this
+    // activation's source-position capture. Its complete certificate below
+    // verifies that captured equation and the state update together. Legacy
+    // before/post expression selection is a different relation, and must not
+    // reselect a source capture from the final state.
+    if let Some(plan) = &selection.plan {
+        let work = crate::real_expression::work(model);
+        work.debit(2, (before.len() * 8 + 32) as u64)?;
+        let view = joint.procedure_view().ok_or_else(|| Error::new(
+            "event_consistency", "procedure contribution circuit lost its source activation"))?;
+        if !std::sync::Arc::ptr_eq(&view.plan.graph, &plan.graph)
+            || !std::sync::Arc::ptr_eq(&view.plan.base, &plan.base)
+            || !view.plan.work.same_owner(work)
+            || !plan.work.same_owner(work)
+            || view.node_count != model.program.nodes.len()
+            || view.before.len() != before.len()
+            || !view.before.iter().zip(before).all(|(a,b)|a.to_bits()==b.to_bits())
+        {
+            return Err(Error::new("event_consistency",
+                "procedure contribution circuit does not retain its original source activation"));
+        }
+    } else if replayed
         .contributions
         .iter()
         .zip(&selected.contributions)
@@ -320,7 +343,7 @@ fn prepare_impl(
     }
     // Validate the original, unsubstituted voltage constraints with the replayed
     // state. Substitution roundoff must not replace the physical residual check.
-    let mut circuit = if let Some(proof) = &representative_proof {
+    let mut circuit = if selection.plan.is_some(){joint}else if let Some(proof) = &representative_proof {
         model.circuit_at_with_observation_proof(&states, operators, observation_inputs, proof)?
     } else {
         model.circuit_at_with_lineage_and_scratch(
@@ -405,11 +428,58 @@ fn prepare_impl(
     if let Some(proof) = &physical_proof {
         proof.validate_states(&bounds)?;
     }
+    // A committed event plan must never be replayed at a later observation.
+    // The occurrence solution/certificates above retain its source snapshots;
+    // future evaluations execute the ordinary procedure with every gate off.
+    let same_clock_combinational=if selection.plan.is_some()&&model.program.states.is_empty()&&model.program.events.is_empty(){
+        crate::real_expression::work(model).debit(2,(model.program.operators.len()+1) as u64)?;
+        model.program.operators.iter().all(|operator|matches!(operator,crate::ir::OperatorSpec::Math{..}|crate::ir::OperatorSpec::Sin{..}))
+    }else{false};
+    // A stateless memoryless source pass already is the ordinary evaluation at
+    // this query clock. Replaying it without its exact source context would
+    // discard a certified sample/branch. Each later query builds a fresh Plan.
+    // Stateful/event/history paths still need their separate ordinary refresh.
+    if selection.plan.is_some()&&!same_clock_combinational{let mut ordinary=model.circuit_at(&states,operators,observation_inputs)?;ordinary.retain_procedure_occurrence(&circuit);circuit=ordinary;}
     Ok(Prepared {
         states,
         bounds,
         circuit,
         solution,
         assigned: model.assigned(&selection),
+        selection: Some(selection),
     })
+}
+
+#[cfg(test)]
+mod activation_selection_owner_tests {
+    use super::*;
+    #[test]
+    fn activation_selection_result_owns_only_this_context_and_occurrence_plan() {
+        let mut program:crate::ir::Program=serde_json::from_str(include_str!("testdata/real_call_activation.json")).unwrap();
+        for event in &mut program.events { event.body.clear(); }
+        program.real_bindings.clear();
+        program.operators.clear();
+        let model=EventModel::new(program,vec!["u".into()],crate::ir::Tolerances::default()).unwrap();
+        let work=crate::real_expression::work(&model);
+        let mut prior:Option<std::sync::Arc<crate::procedure::Plan>>=None;
+        for point in [0.1,0.1,0.2] {
+            let states=[point,0.,2.];
+            let bounds=states.map(I::point);
+            let proofs=crate::event_value_proof::Proofs::new();
+            let context=crate::event_value_proof::Context::candidate_frame(&proofs,model.program.nodes.len(),&states,&[],work).unwrap();
+            let mut prepared=prepare_with_physical_proofs(&model,(&[0],&[]),(&[1.],&[I::ONE]),&states,&[],&bounds,&[],None,&context,None,None,None,None).unwrap();
+            let selection=prepared.selection.take().unwrap();
+            assert!(prepared.selection.is_none());
+            let plan=selection.plan.as_ref().unwrap();
+            assert!(plan.work.same_owner(work));
+            let occurrence=prepared.circuit.procedure_occurrence().unwrap();
+            assert!(std::sync::Arc::ptr_eq(plan,&occurrence.plan));
+            assert_eq!(prepared.states[0].to_bits(),point.to_bits());
+            assert_eq!(prepared.solution.voltages[2].to_bits(),point.to_bits());
+            if let Some(previous)=&prior {
+                assert!(!std::sync::Arc::ptr_eq(previous,plan));
+            }
+            prior=selection.plan;
+        }
+    }
 }

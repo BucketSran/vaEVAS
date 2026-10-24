@@ -5,6 +5,7 @@ use super::*;
 
 fn enclose(e: &Expression, nodes: &[I], states: &[I]) -> Option<I> {
     let value = match e {
+        Expression::RealCall { .. } | Expression::UnsupportedSystemCall { .. } | Expression::RealBinary { .. } | Expression::RealBoundary { .. } | Expression::RealLocal { .. } => crate::event_numeric::bounds(e,nodes,states).ok()?,
         Expression::Forcing { .. } => return None,
         Expression::IntegerPrimitive { .. }
         | Expression::ArrayRead { .. }
@@ -59,6 +60,7 @@ fn enclose(e: &Expression, nodes: &[I], states: &[I]) -> Option<I> {
 
 pub(super) fn program(context: &Context, parameters: &[I]) -> Result<Program, Error> {
     let original = context.program.as_ref();
+    if !original.procedures.is_empty(){if let Some(w)=context.trajectory.procedure_work(){let bytes=crate::event_floor::encoded_size(original,w)?;w.debit(2,(bytes as u64).saturating_mul(8))?;}}
     let mut result = original.clone();
     if original.step_bounds.is_empty() {
         return Ok(result);
@@ -80,6 +82,17 @@ pub(super) fn program(context: &Context, parameters: &[I]) -> Result<Program, Er
     let mut nodes = vec![I::ZERO; original.nodes.len()];
     for (&n, &v) in driven.iter().zip(&inputs) {
         nodes[n] = v;
+    }
+    if !original.procedures.is_empty(){
+        if let Some(w)=context.trajectory.procedure_work(){
+            // This private history mesh may conservatively use the smallest
+            // source-captured value over its complete source horizon. The
+            // accepted controller still evaluates the actual occurrence frame.
+            let plan=crate::procedure::execute(original,&[],&nodes,parameters,None,w)?;
+            let images=plan.history_bound_images(&nodes,parameters,w)?;
+            for (bound,image) in result.step_bounds.iter_mut().zip(images){w.step()?;bound.active=Expression::Affine{constant:if image.is_some(){1.}else{0.},terms:Vec::new()};bound.value=Expression::Affine{constant:image.map_or(0.,|b|b.lo),terms:Vec::new()};}
+            return Ok(result);
+        }
     }
     let max_step = context.trajectory.config.max_step;
     for bound in &mut result.step_bounds {
@@ -161,6 +174,7 @@ mod tests {
             detached_timed: false,
             live_parameters: None,
             time_proofs: Default::default(),
+            reset_captures: Arc::new(Vec::new()),
         }
     }
     #[test]

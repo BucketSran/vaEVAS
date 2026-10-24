@@ -904,7 +904,8 @@ impl NonlinearContinuous {
             result.event_dependent = true;
             return Ok(result);
         }
-        let program = &context.program;
+        let history_program=if !context.program.procedures.is_empty()&&!context.program.step_bounds.is_empty(){Some(selection::history_program(&context,&parameters)?)}else{None};
+        let program = history_program.as_ref().unwrap_or(context.program.as_ref());
         let driven = driven_node_indices(program, &context.driven)?;
         let mut sources = vec![None; program.nodes.len()];
         for (i, &node) in driven.iter().enumerate() {
@@ -912,7 +913,7 @@ impl NonlinearContinuous {
         }
         let mut operators = Vec::new();
         let mut state_count = 0;
-        let mut event_dependent = false;
+        let mut event_dependent = !context.program.procedures.is_empty() && !context.program.step_bounds.is_empty();
         for (i, spec) in program.operators.iter().enumerate() {
             if context.detached_timed && matches!(spec, OperatorSpec::Transition { .. }) {
                 continue;
@@ -951,7 +952,7 @@ impl NonlinearContinuous {
                                 "nonlinear integral reset must depend on event state and constants"));
                         }
                         event_dependent = true;
-                        crate::operators::ResetExpression::new(reset.clone()).active(&parameters)?
+                        match context.reset_captures.get(i).copied().flatten(){Some(value)=>crate::operators::reset_active(value)?,None=>crate::operators::ResetExpression::new(reset.clone()).active(&parameters)?}
                     } else { false };
                     let state = state_count;
                     state_count += 1;
@@ -2438,7 +2439,7 @@ impl NonlinearContinuous {
         horizon: f64,
         context: Arc<Context>,
     ) -> Result<Self, Error> {
-        let same_proofs = self.context.time_proofs == context.time_proofs;
+        let same_proofs = self.context.time_proofs == context.time_proofs && self.context.reset_captures == context.reset_captures;
         let mut next = self.mapped_event_with_context(time, window, parameters, context)?;
         if same_proofs
             && (!self.event_dependent
@@ -2478,6 +2479,7 @@ impl NonlinearContinuous {
         context: Arc<Context>,
     ) -> Result<Self, Error> {
         if self.context.time_proofs == context.time_proofs
+            && self.context.reset_captures == context.reset_captures
             && (!self.event_dependent
                 || self
                     .context
@@ -2667,6 +2669,7 @@ mod tests {
                 detached_timed: false,
                 live_parameters: None,
                 time_proofs: Default::default(),
+                reset_captures: Arc::new(Vec::new()),
                 driven: vec![],
             }),
             parameters: vec![],

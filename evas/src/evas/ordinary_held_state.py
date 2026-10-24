@@ -47,6 +47,7 @@ PURE = frozenset(('number', 'parameter', 'unary+', 'unary-', '+', '-', '*', '/',
                   '&', '|', '^', 'unary~', '<<', '>>', '<', '<=', '>', '>=', '==', '!=',
                   '&&', '||', 'unary!', 'ternary', 'abs', 'min', 'max'))
 VOLTAGE = frozenset(('voltage', 'node'))
+PHYSICAL = VOLTAGE | frozenset(('time',))
 SUFFIX = '$held'
 
 
@@ -92,18 +93,72 @@ def _writes(body, out=None):
     return out
 
 
-def _all_reads(body, out=None):
+def _all_reads(body, out=None, *, reads=_reads, owner=None):
     out = set() if out is None else out
     for item in body:
         for expr in _statement_exprs(item):
-            _reads(expr, out)
+            if reads is _reads:
+                _reads(expr, out)
+            else:
+                names = reads(expr)
+                owner.debit('held_source_read_aggregate', 1+2*len(names), expr)
+                out.update(names)
         if isinstance(item, Event):
             for trigger in item.triggers:
                 for arg in trigger.arguments:
-                    _reads(arg, out)
+                    if reads is _reads:
+                        _reads(arg, out)
+                    else:
+                        names = reads(arg)
+                        owner.debit('held_source_read_aggregate', 1+2*len(names), arg)
+                        out.update(names)
         for field in ('then_body', 'else_body', 'body'):
-            _all_reads(getattr(item, field, ()), out)
+            _all_reads(getattr(item, field, ()), out, reads=reads, owner=owner)
     return out
+
+
+class _HeldQueries:
+    """Immutable syntax facts for this bound instance, never held values."""
+    def __init__(self, compiler):
+        from .source_queries import SourceStructure
+        owner = compiler.compilation.native_audit
+        owner.debit('held_source_context_lookup', 3)
+        contexts = getattr(compiler.compilation, 'source_structure_contexts', None)
+        if contexts is None:
+            owner.debit('source_structure_contexts_container')
+            contexts = {}
+            owner.debit('source_structure_contexts_retain')
+            compiler.compilation.source_structure_contexts = contexts
+        query = contexts.get(compiler.instance.name)
+        if query is None:
+            query = SourceStructure(owner)
+            owner.debit('source_structure_context_record', 3)
+            contexts[compiler.instance.name] = query
+        owner.debit('held_source_query_container', 3)
+        self.structure, self.owner, self.operations = query, owner, None
+
+    def reads(self, expr):
+        if expr is None:
+            return frozenset()
+        return self.structure.fact(expr)[1]
+
+    def ops(self, expr):
+        if self.operations is None:
+            from .source_queries import SourceQuery
+            def local(item):
+                self.owner.debit('held_source_op_shape', 3, item)
+                if type(item.args) is not tuple or type(item.op) is not str:
+                    raise TypeError('held syntax query requires immutable Expr children')
+                self.owner.debit('held_source_op_name', 2+len(item.op), item)
+                return frozenset((item.op,)), item.op != 'voltage'
+            def merge(item, value, children):
+                for child in children:
+                    self.owner.debit('held_source_op_union', 1+len(value)+len(child), item)
+                    value = value | child
+                return value
+            self.owner.debit('held_source_ops_retain')
+            self.operations = SourceQuery(self.owner, 'held_source_ops', local, merge)
+        return self.operations(expr)
 
 
 def _position(item):
@@ -177,13 +232,46 @@ def plan(compiler):
     writers = _writes(ordinary)
     if not writers:
         return None
+    queries = _HeldQueries(compiler) if model.functions else None
     try:
-        return _plan(compiler, model, ordinary, writers, charge)
+        return _plan(compiler, model, ordinary, writers, charge, queries)
     except _Unsupported:
+        if model.procedure and getattr(compiler, 'ordinary_held_proof_required', False):
+            # Retaining the process is not itself a dense-time certificate.
+            # A failed held proof must not admit tracking/running-max or a
+            # timer input with an uncertified exact-zero side merely because
+            # real assignments now have executable source-position captures.
+            pending_statements = list(ordinary)
+            while pending_statements:
+                item = pending_statements.pop()
+                charge('unproved_process_statement')
+                for expr in _statement_exprs(item):
+                    if queries is not None:
+                        if queries.ops(expr) & PHYSICAL:
+                            raise CompileError('ordinary held physical update lacks its dense-time certificate',
+                                               code='unsupported_local_event', token=item.token,
+                                               instance=compiler.instance.name)
+                        continue
+                    pending_exprs = [expr]
+                    while pending_exprs:
+                        current = pending_exprs.pop()
+                        charge('unproved_process_expression')
+                        if current.op in VOLTAGE or current.op == 'time':
+                            raise CompileError('ordinary held physical update lacks its dense-time certificate',
+                                               code='unsupported_local_event', token=item.token,
+                                               instance=compiler.instance.name)
+                        pending_exprs.extend(current.args)
+                for field in ('then_body', 'else_body', 'body'):
+                    pending_statements.extend(getattr(item, field, ()))
         return None
 
 
-def _plan(compiler, model, ordinary, writers, charge):
+def _plan(compiler, model, ordinary, writers, charge, queries=None):
+    read_names = queries.reads if queries is not None else _reads
+    op_names = queries.ops if queries is not None else _ops
+    def body_reads(body):
+        return _all_reads(body, reads=read_names, owner=queries.owner if queries is not None else None)
+
     events = list(model.events)
     runtime, initial_events = [], []
     for event in events:
@@ -206,17 +294,17 @@ def _plan(compiler, model, ordinary, writers, charge):
             if isinstance(item, Event):
                 for trigger in item.triggers:
                     for arg in trigger.arguments:
-                        held.update((_reads(arg) & writers) - must)
+                        held.update((read_names(arg) & writers) - must)
                 flow(item.body, must)
                 continue
             for expr in _statement_exprs(item):
-                held.update((_reads(expr) & writers) - must)
-            if isinstance(item, (ContributionStatement, BoundStep)):
-                held.update((_reads(item.rhs) & writers) - must)
+                held.update((read_names(expr) & writers) - must)
+            if queries is None and isinstance(item, (ContributionStatement, BoundStep)):
+                held.update((read_names(item.rhs) & writers) - must)
             if isinstance(item, Conditional):
                 must = flow(item.then_body, must) & flow(item.else_body, must)
             elif isinstance(item, Loop):
-                held.update((_all_reads(item.body) & writers) - must)
+                held.update((body_reads(item.body) & writers) - must)
             elif isinstance(item, Assignment) and item.index is None:
                 must.add(item.name)
         return must
@@ -226,6 +314,7 @@ def _plan(compiler, model, ordinary, writers, charge):
     if not held:
         return None
     charge.settle()
+    compiler.ordinary_held_proof_required = True
 
     # U: every top-level ordinary statement writing a held variable. Its other
     # targets join H; a renamed current value replaces them in ordinary code.
@@ -242,7 +331,7 @@ def _plan(compiler, model, ordinary, writers, charge):
     update = [ordinary[i] for i in indices]
     first, last = indices[0], indices[-1]
     for item in ordinary[first:last + 1]:
-        if item not in update and (_all_reads((item,)) & held):
+        if item not in update and (body_reads((item,)) & held):
             raise _Unsupported
     begin, end = _position(ordinary[first]), _position(ordinary[last])
     for item in (*model.initial, *(s for e in initial_events for s in e.body)):
@@ -295,13 +384,13 @@ def _plan(compiler, model, ordinary, writers, charge):
         for item in body:
             charge('admit')
             if isinstance(item, Assignment):
-                if item.index is not None or not _ops(item.rhs) <= PURE:
+                if item.index is not None or not op_names(item.rhs) <= PURE:
                     raise _Unsupported
-                admit_reads(_reads(item.rhs), must)
+                admit_reads(read_names(item.rhs), must)
                 must.add(item.name)
             elif isinstance(item, Conditional):
-                names = _reads(item.left) | _reads(item.right)
-                ops = _ops(item.left) | _ops(item.right)
+                names = read_names(item.left) | read_names(item.right)
+                ops = op_names(item.left) | op_names(item.right)
                 if ops & VOLTAGE:
                     if not ops <= PURE | VOLTAGE or not names <= parameters:
                         raise _Unsupported
@@ -351,7 +440,7 @@ def _plan(compiler, model, ordinary, writers, charge):
                 result.append(item)
         return result
 
-    update_inputs = set().union(*(_all_reads((item,)) for item in update)) - held
+    update_inputs = set().union(*(body_reads((item,)) for item in update)) - held
     token = update[0].token
     closing = [Assignment(name, Expr('parameter', name, (), token), token) for name in sorted(held)]
 
@@ -361,7 +450,7 @@ def _plan(compiler, model, ordinary, writers, charge):
     for event in runtime:
         for trigger in event.triggers:
             for arg in trigger.arguments:
-                trigger_reads |= _reads(arg) & held
+                trigger_reads |= read_names(arg) & held
     if trigger_reads:
         for index, (_, cls_guard, _) in enumerate(classes):
             relations = [(item.relation, sign) for item, cls, sign in atoms if cls == index]
@@ -381,16 +470,16 @@ def _plan(compiler, model, ordinary, writers, charge):
             continue
         kinds = {trigger.kind for trigger in event.triggers}
         if not kinds <= {'cross', 'timer'}:
-            if _writes(event.body) & (held | update_inputs) or _all_reads((event,)) & held:
+            if _writes(event.body) & (held | update_inputs) or body_reads((event,)) & held:
                 raise _Unsupported
             new_events.append(event)
             continue
-        touches = (_writes(event.body) & (held | update_inputs)) or (_all_reads((event,)) & held)
+        touches = (_writes(event.body) & (held | update_inputs)) or (body_reads((event,)) & held)
         shared = None
         for trigger in event.triggers:
             if trigger.kind != 'cross':
                 continue
-            if _reads(trigger.arguments[0]) - parameters:
+            if read_names(trigger.arguments[0]) - parameters:
                 continue
             try:
                 current = vector(lower(trigger.arguments[0], lookup, compiler.node_ids, model.source))
@@ -446,6 +535,20 @@ def _plan(compiler, model, ordinary, writers, charge):
                       for e in new_events]
     else:
         initial.extend(update)
+
+    if model.procedure:
+        # The retained process already executes U at its actual source
+        # position, before/after whichever original gate is selected. Do not
+        # replay the legacy callback-prefix/suffix copies or rename U into a
+        # late symbolic alias. Only its certified atom crossings need extra
+        # wakeup gates. Identity writes declare the original held slots and
+        # leave the selected process candidate unchanged.
+        wakeups = tuple(replace(event, body=tuple(closing))
+                        for event in new_events[len(events):])
+        compiler.ordinary_held_process_slots = frozenset(held)
+        charge('procedure_wakeups', len(wakeups) + sum(len(e.body) for e in wakeups))
+        return replace(model, events=[*events, *wakeups],
+                       procedure=(*model.procedure, *wakeups))
 
     mapping = {name: name + SUFFIX for name in held}
     if any(alias in model.variables or alias in model.parameters for alias in mapping.values()):

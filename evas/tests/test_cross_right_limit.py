@@ -10,6 +10,7 @@ varies with time must be refused instead of reusing g(tau)=0.
 
 # Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["CROSS", "EVENT-CONDITIONS"]
+from floor_rn_contract import floor_contract
 
 import unittest
 
@@ -23,13 +24,15 @@ KNOT_UP = [[0, 0], [.5, .5], [1, 1]]
 KNOT_DOWN = [[0, 1], [.5, .5], [1, 0]]
 
 
-def events(text, u=UP, w=None, **tolerances):
+def events(text, u=UP, w=None, *, return_program=False, **tolerances):
     ports, directions = ('u,w,y,r', 'input u,w; output y; inout r;') if w else ('u,y,r', 'input u; output y; inout r;')
     text = model(text, 'real q, p;', ports=ports, directions=directions)
     connections = dict(u='u', y='y', r='0', **({'w': 'w'} if w else {}))
     program = compile_sources({'right.va': text}, [instance(connections=connections)])
     sources = {'u': u, **({'w': w} if w else {})}
     result = transient(program, sources, [0, .25, .75, 1], stop=1, max_step=2, kernel=KERNEL, **tolerances)
+    if return_program:
+        return program, result
     names = result['transient']['state_names']
     return [dict(zip(names, e['after'])) for e in result['transient']['events']]
 
@@ -39,10 +42,36 @@ def run(body, *, trigger, u=UP, w=None, **tolerances):
     return [e['dut:q'] for e in events(text, u, w, **tolerances)]
 
 
+def check_rounded_rising_cross(result, program):
+    # The original UP source has exact tau=.5 and RN(u(tau))=.5.
+    from initial_record_contract import check_initial_record_batch
+    view = check_initial_record_batch(result, program, [0., 0.], [0., 0.], 1)
+    assert result['transient']['state_names'] == ['dut:q', 'dut:p']
+    assert result['transient']['times'] == [0., .25, .75, 1.]
+    assert result['transient']['states'] == [[0.,0.], [0.,0.], [3.,0.], [3.,0.]]
+    assert len(result['solutions']) == 4
+    records = view['transient']['events']
+    assert len(records) == 1
+    wire = program.to_dict()
+    expected = [(i, e) for i,e in enumerate(wire['events']) if e['trigger']['kind'] == 'cross']
+    assert len(expected) == 1
+    index, event = expected[0]
+    record = records[0]
+    origin = event['origin']
+    label = f"{origin['source']}:{origin['line']}:{origin['column']} ({origin['instance']})"
+    assert type(record['event']) is int and record['event'] == index
+    assert record['kind'] == 'cross' and record['origin'] == label
+    assert record['time'] == .5 and record.get('observation_time_bounds', [.5,.5]) == [.5,.5]
+    assert record['guard_value'] == 0.
+    assert not record.get('fired_triggers')
+    assert record['before'] == [0.,0.] and record['after'] == [3.,0.]
+
 class CrossRightLimit(unittest.TestCase):
     def test_fired_guard_predicate_sees_crossing_side(self):
-        # Rising u crosses 0.5 at tau=0.5; just after, u>0.5.
-        self.assertEqual(run('if (V(u,r)>0.5) q=2; else q=3;', trigger='cross(V(u,r)-0.5,0)'), [2])
+        # At the proved root tau=0.5, the sampled binary64 value is 0.5.
+        text = '@(initial_step) begin q=0; p=0; end @(cross(V(u,r)-0.5,0)) begin if (V(u,r)>0.5) q=2; else q=3; end V(y,r)<+q;'
+        program, result = events(text, return_program=True)
+        check_rounded_rising_cross(result, program)
         # Falling u: just after, u<0.5.
         self.assertEqual(run('if (V(u,r)>0.5) q=2; else q=3;', trigger='cross(V(u,r)-0.5,0)', u=DOWN), [3])
         self.assertEqual(run('if (V(u,r)<0.5) q=2; else q=3;', trigger='cross(V(u,r)-0.5,0)', u=DOWN), [2])
@@ -155,21 +184,22 @@ class CrossRightWindow(unittest.TestCase):
     """
 
     def test_floor_inside_one_bin_is_a_plateau(self):
-        # w=0.5 at tau and moving; 3*w stays in (1,2), so floor(3*w)=1 just after tau.
-        floor = 'q=floor(3*V(w,r)); '
-        self.assertEqual(sampled(floor + 'if (q<1) p=2; else p=3;', w=UP), [3])
-        self.assertEqual(sampled(floor + 'if (q>=1) p=2; else p=3;', w=UP), [2])
-        self.assertEqual(sampled(floor + 'if (q>1) p=2; else p=3;', w=DOWN), [3])
-        self.assertEqual(sampled(floor + 'if (q<=1) p=2; else p=3;', w=DOWN), [2])
+        with floor_contract(self, 'right'):
+            # w=0.5 at tau and moving; 3*w stays in (1,2), so floor(3*w)=1 just after tau.
+            floor = 'q=floor(3*V(w,r)); '
+            self.assertEqual(sampled(floor + 'if (q<1) p=2; else p=3;', w=UP), [0, 3])
+            self.assertEqual(sampled(floor + 'if (q>=1) p=2; else p=3;', w=UP), [0, 2])
+            self.assertEqual(sampled(floor + 'if (q>1) p=2; else p=3;', w=DOWN), [0, 3])
+            self.assertEqual(sampled(floor + 'if (q<=1) p=2; else p=3;', w=DOWN), [0, 2])
 
     def test_floor_argument_on_an_integer_needs_its_bin_after_tau(self):
-        # 2*w is exactly 1 at tau. A falling w enters floor bin 0 just after
-        # tau, where q<1 holds, but the root value is 1: refuse rather than guess.
-        floor = 'q=floor(2*V(w,r)); '
-        with self.assertRaisesRegex(KernelError, 'event_condition'):
-            sampled(floor + 'if (q<1) p=2; else p=3;', w=DOWN)
-        # A rising w stays in bin 1 over the whole window: q<1 is false.
-        self.assertEqual(sampled(floor + 'if (q<1) p=2; else p=3;', w=UP), [3])
+        with floor_contract(self, 'right'):
+            # The actual source root is tau=1/2 and w(tau)=1/2 in both
+            # exact ramps. Sample/RN(2*w)=1, then q is a held value. W used
+            # for isolation/direction does not reexecute this assignment at tau+.
+            floor = 'q=floor(2*V(w,r)); '
+            self.assertEqual(sampled(floor + 'if (q<1) p=2; else p=3;', w=DOWN), [0, 3])
+            self.assertEqual(sampled(floor + 'if (q<1) p=2; else p=3;', w=UP), [0, 3])
 
     def test_latched_input_cancels_exactly(self):
         # q=V(w) at te, so V(w)-q is identically zero although w moves.

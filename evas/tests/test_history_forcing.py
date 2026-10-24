@@ -13,7 +13,7 @@ from evas import Instance, compile_sources, transient
 
 
 KERNEL = Path(os.environ.get(
-    'EVAS_TEST_KERNEL', Path(__file__).resolve().parents[1] / 'rust_core/target/debug/evas-kernel'))
+    'EVAS_TEST_KERNEL', Path(__file__).resolve().parents[1] / 'rust_core/target/debug/evas-kernel')).resolve()
 SOURCE = '''`include "disciplines.vams"
 module mixer(u,lo,rst,y,metric);
 input u,lo,rst; output y,metric; electrical u,lo,rst,y,metric;
@@ -188,53 +188,58 @@ class HistoryForcingRed(unittest.TestCase):
         self.assertNotEqual(result.returncode,0,result.stdout)
         self.assertIn('nonfinite_arithmetic',result.stderr)
 
-    # Mandatory identified local reference gate, selected by this full method
-    # name. Portable discovery has no dependency on an archived Mac binary.
+    # Explicit two-gate migration. Portable discovery needs no archived binary.
+    def history_reference_identity(self):
+        from history_migration_contract import C8_SHA, sha
+        baseline = Path(os.environ['EVAS_TEST_BASELINE_KERNEL']).resolve()
+        self.assertEqual(os.environ['EVAS_TEST_BASELINE_SHA256'], C8_SHA)
+        self.assertEqual(sha(baseline), C8_SHA)
+        self.assertNotEqual(baseline.resolve(), KERNEL.resolve())
+        self.assertEqual(sha(KERNEL), os.environ['EVAS_TEST_CANDIDATE_SHA256'])
+        return baseline, os.environ['EVAS_TEST_CANDIDATE_ENGINE']
+
     def check_fixed_baseline_old_routes_have_identical_full_responses(self):
-        import copy, json, hashlib
-        baseline=os.environ.get('EVAS_TEST_BASELINE_KERNEL')
-        if not baseline:
-            self.fail('identified C8 baseline kernel is required for this explicit reference gate')
-        baseline=Path(baseline)
-        expected=os.environ['EVAS_TEST_BASELINE_SHA256']
-        self.assertEqual(expected,'9c8c9fdf469c7347f2b507ad231bd3a70e355d192b648fec6e6eecd25dfc6e98')
-        self.assertNotEqual(baseline.resolve(),KERNEL.resolve())
-        self.assertEqual(hashlib.sha256(baseline.read_bytes()).hexdigest(),expected)
-        old=SOURCE.replace('pol=(V(lo)>0.5)?1.0:-1.0;','pol=1.0;').replace('if(z>0.875) z=0.875;','').replace('if(z<0.125) z=0.125;','')
-        affine=compile_sources({'legacy.va':old},[Instance('one','mixer',dict(u='u',lo='lo',rst='rst',y='y',metric='metric'),{})])
-        alias=compile_sources({'alias.va':"""`include "disciplines.vams"
-module alias(u,y);input u;output y;electrical u,y;real selected,q;
-analog begin selected=(V(u)>0.5)?V(u):0;
-@(initial_step)q=selected;@(timer(0.25))q=selected;
-V(y)<+transition(q,0,0.125,0.125);end endmodule"""},
-            [Instance('one','alias',dict(u='u',y='y'),{})])
-        from test_selected_ln import SelectedLn
-        for name,p,drivers,pwl in [
-            ('affine-held',affine,['u','lo','rst'],[[[0,0],[1,.5]],[[0,0],[1,1]],[[0,0],[1,0]]]),
-            ('selected-body-alias377',alias,['u'],[[[0,.75],[1,.25]]]),
-            ('selected-ln135',SelectedLn().program(),['u'],[[[0,.7],[1,-.3]]])]:
-            with self.subTest(name=name):
-                value=json.loads(json.dumps(p.to_dict()))
-                self.assertNotIn('"op": "forcing"',json.dumps(value))
-                new,diag=self.raw(value,drivers=drivers,pwl=pwl,count=9)
-                value['schema_version']=28
-                before,prior=self.raw(value,drivers=drivers,pwl=pwl,count=9,kernel=baseline)
-                self.assertEqual(new.returncode,0,new.stderr);self.assertEqual(before.returncode,0,before.stderr)
-                current=json.loads(new.stdout);previous=json.loads(before.stdout)
-                # IR/package identity changes are the two intentional transport
-                # differences. Every physical/certificate/record field stays.
-                current_engine=current.pop('engine');previous_engine=previous.pop('engine')
-                self.assertEqual(current_engine.rsplit('-',1)[0],previous_engine.rsplit('-',1)[0])
-                self.assertTrue(current_engine.endswith('-0.24.1'))
-                self.assertTrue(previous_engine.endswith('-0.21.0'))
-                self.assertEqual(current.pop('schema_version'),32)
-                self.assertEqual(previous.pop('schema_version'),28)
-                self.assertEqual(current,previous)
-                self.assertFalse(any(k.startswith('forcing_') for k in diag['counters']))
-                for k,v in prior['counters'].items():
-                    if k.startswith('selected_ln_'):
-                        self.assertEqual(diag['counters'].get(k),v,(name,k))
-                print('full_old_route_differential',name,hashlib.sha256(json.dumps(current,sort_keys=True).encode()).hexdigest(),expected)
+        import copy
+        from history_migration_contract import C8_SHA, legacy_program, response_body, run_case, source_cases, strict_equal
+        baseline, engine = self.history_reference_identity()
+        evidence = Path(os.environ['EVAS_TEST_HISTORY_EVIDENCE_DIR']) / 'legacy'
+        try:
+            for case in source_cases():
+                with self.subTest(name=case['name']):
+                    old = legacy_program(case['name'])
+                    lifted = copy.deepcopy(old)
+                    # Audited C8 transport only. No native IR33 producer is used.
+                    lifted['schema_version'] = 33
+                    before, prior = run_case(baseline, old, case, evidence / case['name'] / 'c8', expected_sha=C8_SHA)
+                    current, diag = run_case(KERNEL, lifted, case, evidence / case['name'] / 'candidate',
+                        expected_sha=os.environ['EVAS_TEST_CANDIDATE_SHA256'])
+                    strict_equal(response_body(before, 28, 'evas-events-0.21.0'),
+                                 response_body(current, 33, engine))
+                    self.assertFalse(any(k.startswith('forcing_') for k in diag['counters']))
+                    strict_equal({k:v for k,v in prior['counters'].items() if k.startswith('selected_ln_')},
+                                 {k:v for k,v in diag['counters'].items() if k.startswith('selected_ln_')},
+                                 '/counters/selected_ln_*')
+        finally:
+            self.history_reference_identity()
+
+    def check_native_source_initialization_and_history_migration(self):
+        import json
+        from history_migration_contract import (audit_native_program, compare_native_response,
+            C8_SHA, legacy_program, run_case, source_cases)
+        baseline, engine = self.history_reference_identity()
+        evidence = Path(os.environ['EVAS_TEST_HISTORY_EVIDENCE_DIR']) / 'native'
+        try:
+            for case in source_cases():
+                with self.subTest(name=case['name']):
+                    old = legacy_program(case['name'])
+                    program = json.loads(json.dumps(compile_sources(case['sources'], [Instance(**i) for i in case['instances']]).to_dict()))
+                    audit_native_program(case['name'], old, program)
+                    before, _ = run_case(baseline, old, case, evidence / case['name'] / 'c8', expected_sha=C8_SHA)
+                    current, _ = run_case(KERNEL, program, case, evidence / case['name'] / 'candidate',
+                        expected_sha=os.environ['EVAS_TEST_CANDIDATE_SHA256'])
+                    compare_native_response(self, case['name'], before, current, program, engine)
+        finally:
+            self.history_reference_identity()
 
     def test_default_request_budget_exhausts_naturally_after_real_queries(self):
         # Public raw IR uses the real default 1e9 budget: no lowered cap or fake

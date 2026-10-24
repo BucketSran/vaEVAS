@@ -206,6 +206,7 @@ impl Continuous {
                 detached_timed: prepared.detached_timed,
                 live_parameters: prepared.live_parameters.clone(),
                 time_proofs: prepared.time_proofs.clone(),
+                reset_captures: prepared.reset_captures.clone(),
             });
             let frozen = selection::freeze_context(&context, &parameters, 0.)?;
             if program.operators.iter().any(|op|matches!(op,OperatorSpec::Idt{input,..}|OperatorSpec::LaplaceNd{input,..} if selection::has_variable_division(input)||nonlinear::contains_exp_operator(input,program))) || frozen.program.operators.iter().any(|op|matches!(op,OperatorSpec::Idt{input,..}|OperatorSpec::LaplaceNd{input,..} if affine_bounds::affine(input,&frozen.program).is_err())) {
@@ -220,6 +221,154 @@ impl Continuous {
         LinearContinuous::new(program, trajectory, driven, states)
             .map(|v| v.map(|v| Self::Linear(Box::new(v))))
     }
+    pub(crate) fn physical_root_work(&self) -> Option<&crate::transition_source_plan::Work> {
+        match self {
+            Self::Linear(v) => v.context.trajectory.procedure_work(),
+            _ => None,
+        }
+    }
+    pub(crate) fn event_at_physical_root(
+        &self,
+        time: f64,
+        bounds: I,
+        states: &[I],
+        horizon: f64,
+        propagate: bool,
+        root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<Self, Error> {
+        if root.is_none() {
+            return if propagate {
+                self.restarted(time, bounds, states, horizon)
+            } else {
+                self.mapped_event(time, bounds, states)
+            };
+        }
+        if let Self::Linear(v) = self {
+            if let Some(w) = v.context.trajectory.procedure_work() {
+                w.debit(2, 256)?;
+            }
+        }
+        match self {
+            Self::Linear(v) => v
+                .event_at_root(time, bounds, states, propagate, v.context.clone(), root)
+                .map(|v| Self::Linear(Box::new(v))),
+            _ if propagate => self.restarted(time, bounds, states, horizon),
+            _ => self.mapped_event(time, bounds, states),
+        }
+    }
+    pub(crate) fn sample_physical_root(
+        &self,
+        index: usize,
+        root: &crate::exact_source::RootTime,
+        window: I,
+    ) -> Result<Option<(f64, I)>, Error> {
+        let Self::Linear(v) = self else {
+            return Ok(None);
+        };
+        let Some(w) = v.context.trajectory.procedure_work() else {
+            return Ok(None);
+        };
+        if root.refine_with_work(window, w)?.is_none() {
+            return Ok(None);
+        }
+        v.sample_physical_root(index, root)
+    }
+    pub(crate) fn captured_resets_at_physical_root(
+        &self,
+        time: f64,
+        window: I,
+        states: &[I],
+        captures: &[Option<I>],
+        w: &crate::transition_source_plan::Work,
+        root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<Self, Error> {
+        if root.is_some() {
+            if let Self::Linear(v) = self {
+                if let Some(owner) = v.context.trajectory.procedure_work() {
+                    if !owner.same_owner(w) {
+                        return Err(Error::new(
+                            "invalid_ir",
+                            "continuous capture root owner differs",
+                        ));
+                    }
+                }
+                w.debit(
+                    2,
+                    (captures.len() + v.context.reset_captures.len() + 8) as u64,
+                )?;
+                if captures.iter().all(Option::is_none)
+                    && v.context.reset_captures.iter().all(Option::is_none)
+                {
+                    return self.event_at_physical_root(time, window, states, time, false, root);
+                }
+            }
+        }
+        self.captured_resets(time, window, states, captures, w)
+    }
+    pub(crate) fn mapped_event_with_proofs_at_physical_root(
+        &self,
+        time: f64,
+        window: I,
+        states: &[I],
+        proofs: &crate::exact_source::TimeProofs,
+        root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<Self, Error> {
+        if root.is_none() {
+            return self.mapped_event_with_time_proofs(time, window, states, proofs);
+        }
+        let irrelevant = if let Self::Linear(v) = self {
+            if v.context.time_proofs.is_empty() {
+                if proofs.is_empty() {
+                    true
+                } else if let Some(w) = v.context.trajectory.procedure_work() {
+                    root_epoch::no_time_selection(&v.context, w)?
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
+        } else {
+            false
+        };
+        if irrelevant {
+            return self.event_at_physical_root(time, window, states, time, false, root);
+        }
+        self.mapped_event_with_time_proofs(time, window, states, proofs)
+    }
+    pub(crate) fn restarted_with_proofs_at_physical_root(
+        &self,
+        time: f64,
+        window: I,
+        states: &[I],
+        horizon: f64,
+        proofs: &crate::exact_source::TimeProofs,
+        root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<Self, Error> {
+        if root.is_none() {
+            return self.restarted_with_time_proofs(time, window, states, horizon, proofs);
+        }
+        let irrelevant = if let Self::Linear(v) = self {
+            if v.context.time_proofs.is_empty() {
+                if proofs.is_empty() {
+                    true
+                } else if let Some(w) = v.context.trajectory.procedure_work() {
+                    root_epoch::no_time_selection(&v.context, w)?
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
+        } else {
+            false
+        };
+        if irrelevant {
+            return self.event_at_physical_root(time, window, states, horizon, true, root);
+        }
+        self.restarted_with_time_proofs(time, window, states, horizon, proofs)
+    }
+
     pub(crate) fn exact_affine_value(
         &self,
         op: usize,
@@ -354,6 +503,19 @@ impl Continuous {
             Self::Anchored(_) => None,
         }
     }
+    pub(crate) fn same_history_with_physical_roots(
+        &self,
+        other: &Self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<bool, Error> {
+        match (self, other) {
+            (Self::Linear(a), Self::Linear(b)) => {
+                Ok(root_epoch::Epoch::equal(&a.root_epoch, &b.root_epoch, w)?
+                    && a.same_history_without_root_epoch(b))
+            }
+            _ => Ok(self.same_history(other)),
+        }
+    }
     pub(crate) fn same_history(&self, other: &Self) -> bool {
         match (self, other) {
             (Self::Linear(a), Self::Linear(b)) => a.same_history(b),
@@ -459,6 +621,28 @@ impl Continuous {
                 "event_resolution",
                 "absolute time proofs cannot be rebound into a local causal epoch",
             )),
+        }
+    }
+
+    /// Map each physical integral using the reset captured at its own source
+    /// position. No shared parameter vector can represent these distinct values.
+    pub(crate) fn captured_resets(&self,time:f64,window:I,states:&[I],captures:&[Option<I>],w:&crate::transition_source_plan::Work)->Result<Self,Error>{
+        let context_with=|context:&Arc<Context>|->Result<Arc<Context>,Error>{
+            let bytes=context.driven.iter().map(|s|s.len()+32).sum::<usize>();
+            context.trajectory.charge_source_copy(w)?;
+            let proof_bytes=context.time_proofs.values().map(|t|{let r=t.rational();(r.numer().bits()+r.denom().bits()).saturating_add(7)/8+128}).sum::<u64>();
+            w.debit(2,(bytes+captures.len()*32+256) as u64+proof_bytes)?;
+            let mut next=(**context).clone();next.reset_captures=Arc::new(captures.to_vec());Ok(Arc::new(next))
+        };
+        match self{
+            Self::Linear(v)=>v.mapped_event_with_context(time,window,states,context_with(&v.context)?).map(|v|Self::Linear(Box::new(v))),
+            Self::Nonlinear(v)=>v.mapped_event_with_context(time,window,states,context_with(&v.context)?).map(|v|Self::Nonlinear(Box::new(v))),
+            Self::Anchored(v)=>{
+                w.debit(2,256)?;let mut next=(**v).clone();
+                let local=v.observation.unwrap_or(v.delta(window)?);
+                next.inner=v.inner.captured_resets(local.hi,local,states,captures,w)?;
+                Ok(Self::Anchored(Box::new(next)))
+            }
         }
     }
 

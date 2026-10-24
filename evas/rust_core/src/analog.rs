@@ -15,6 +15,7 @@ struct Prepared {
 }
 
 pub(crate) struct Analog {
+    procedure_work: Option<crate::transition_source_plan::Work>,
     program: Program,
     driven: Vec<String>,
     input_nodes: Vec<usize>,
@@ -45,6 +46,11 @@ impl Analog {
 
     /// A selected stateless math query never commits a failed solver cache.
     pub(crate) fn fresh_source_trial(&self) -> Result<Self, Error> {
+        self.charge_procedure_copy(1)?;
+        if let Some(work) = &self.procedure_work {
+            work.debit(2,16)?;
+            return Self::new_with_procedure_work(self.program.clone(),self.driven.clone(),self.tolerances.clone(),work.clone());
+        }
         Self::new(
             self.program.clone(),
             self.driven.clone(),
@@ -71,6 +77,7 @@ impl Analog {
             .iter()
             .all(|c| input_rational_tree(&c.rhs, &source_nodes).is_some());
         Ok(Self {
+            procedure_work: None,
             program,
             driven,
             input_nodes,
@@ -81,6 +88,33 @@ impl Analog {
         })
     }
 
+    /// The early physical-math consumer retains one execution owner through
+    /// its private algebraic reduction and all later source queries.
+    pub(crate) fn new_with_procedure_work(program: Program, driven: Vec<String>, tolerances: Tolerances, work: crate::transition_source_plan::Work) -> Result<Self, Error> {
+        work.debit(2, 16)?;
+        let bytes = crate::event_floor::encoded_size(&program, &work)?;
+        // Circuit::new below borrows one complete owned validation copy.
+        work.debit(2, (bytes as u64).saturating_mul(8))?;
+        let mut analog = Self::new(program, driven, tolerances)?;
+        analog.procedure_work = Some(work);
+        Ok(analog)
+    }
+    #[cfg(test)]
+    pub(crate) fn prepared_uses_procedure_owner(&self, work: &crate::transition_source_plan::Work) -> bool {
+        self.procedure_work.as_ref().is_some_and(|w| w.same_owner(work)) &&
+        self.prepared.as_ref().and_then(|p|p.model.as_ref()).is_some_and(|model|crate::real_expression::work(model).same_owner(work))
+    }
+    pub(crate) fn charge_procedure_query(&self, values: usize) -> Result<(), Error> {
+        if let Some(work) = &self.procedure_work { work.debit(2,(values as u64).saturating_mul(64).saturating_add(32))?; }
+        Ok(())
+    }
+    fn charge_procedure_copy(&self, copies: u64) -> Result<(), Error> {
+        if let Some(work) = &self.procedure_work {
+            let bytes = crate::event_floor::encoded_size(&self.program, work)?;
+            work.debit(2, (bytes as u64).saturating_mul(8).saturating_mul(copies))?;
+        }
+        Ok(())
+    }
     pub(crate) fn solve(
         &mut self,
         inputs: &[f64],
@@ -89,6 +123,8 @@ impl Analog {
         time: f64,
         exact_sources: &[Option<crate::exact_source::Curve>],
     ) -> Result<Solution, Error> {
+        self.charge_procedure_copy(2)?;
+        self.charge_procedure_query(self.program.nodes.len().saturating_add(self.input_nodes.len()))?;
         let mut nodes = vec![I::ZERO; self.program.nodes.len()];
         for (&node, &bounds) in self.input_nodes.iter().zip(input_bounds) {
             nodes[node] = bounds;
@@ -106,6 +142,7 @@ impl Analog {
             .as_ref()
             .is_some_and(|p| p.expressions == expressions)
         {
+            self.charge_procedure_copy(2)?;
             let mut frozen = self.program.clone();
             for (c, rhs) in frozen.contributions.iter_mut().zip(&expressions) {
                 c.rhs = rhs.clone();
@@ -118,8 +155,12 @@ impl Analog {
             // tree can reuse the same original-expression certificate after
             // its input predicates resolve; no nominal input is substituted.
             let (model, circuit) =
-                match EventModel::new(frozen.clone(), self.driven.clone(), self.tolerances.clone())
-                {
+                match if let Some(work) = &self.procedure_work {
+                    work.debit(2, 16)?;
+                    EventModel::new_with_procedure_work(frozen.clone(), self.driven.clone(), self.tolerances.clone(), work.clone())
+                } else {
+                    EventModel::new(frozen.clone(), self.driven.clone(), self.tolerances.clone())
+                } {
                     Ok(model) => {
                         let circuit = model.circuit(&[])?;
                         (Some(model), circuit)

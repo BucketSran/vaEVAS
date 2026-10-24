@@ -1631,6 +1631,7 @@ fn forcing_point_bundle_same_nominal_distinct_root_bounds_and_phase_rebuilds() {
                 &c.accepted,
                 EventMoment {
                     exact_root: root,
+                    occurrence_certified: false,
                     representative: time,
                     observation: window,
                     fired_roots: &[],
@@ -1664,6 +1665,7 @@ fn forcing_point_bundle_same_nominal_distinct_root_bounds_and_phase_rebuilds() {
             &c.accepted,
             EventMoment {
                 exact_root: Some(&a),
+                occurrence_certified: false,
                 representative: time,
                 observation: I::point(time),
                 fired_roots: &[],

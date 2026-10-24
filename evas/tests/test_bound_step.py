@@ -121,24 +121,61 @@ class BoundStepContracts(unittest.TestCase):
         # Independent Riccati solution y(t)=1/(1-t), so y(.5)=2.
         self.assertLessEqual(abs(result['solutions'][-1]['voltages'][result['nodes'].index('y')]-2),1e-8)
 
-    def test_held_uncertain_activation_matches_linear_and_nonlinear_paths(self):
+    def test_rounded_held_activation_matches_linear_and_nonlinear_paths(self):
         prefix="""@(initial_step) q=0;
             @(timer(0.5,0)) q=V(u,r);
             if(q>0.5) $bound_step(0.01);"""
+        times=[0,.5,1]
+        points=[[0,.1],[1,.9]]
+        # At exact t=.5 the binary64 endpoints give .5+2**-56.
+        # Sampling rounds this to exact .5, so the request is inactive.
+        # Move only the endpoint by one ulp to get .5+5*2**-56,
+        # which instead samples to nextafter(.5,+inf) and activates it.
+        active_points=[[0,.1],[1,math.nextafter(.9,math.inf)]]
+
+        def same_physics(actual,reference):
+            self.assertEqual(actual['nodes'],reference['nodes'])
+            self.assertEqual(len(actual['solutions']),len(reference['solutions']))
+            for row,base in zip(actual['solutions'],reference['solutions']):
+                self.assertEqual(len(row['voltages']),len(base['voltages']))
+                for value,expected in zip(row['voltages'],base['voltages']):
+                    self.assertAlmostEqual(value,expected,places=8)
+
         for flow,expected in [
                 ('1',lambda t:t),
                 ('1/(1+V(u,r)*V(u,r))',lambda t:(math.atan(.1+.8*t)-math.atan(.1))/.8)]:
             with self.subTest(flow=flow):
-                p=program(prefix+' V(y,r)<+idt('+flow+',0);','real q;')
-                r=run(p,[[0,.1],[1,.9]],times=[0,.5,1])
+                suffix=' V(y,r)<+idt('+flow+',0);'
+                p=program(prefix+suffix,'real q;')
+                r=run(p,points,times=times)
+                baseline=run(program(prefix.replace('if(q>0.5) $bound_step(0.01);','')
+                    +suffix,'real q;'),points,times=times)
                 y=r['nodes'].index('y')
-                for solution,t in zip(r['solutions'],[0,.5,1]):
+                for solution,t in zip(r['solutions'],times):
                     self.assertAlmostEqual(solution['voltages'][y],expected(t),places=8)
-                self.assertGreaterEqual(r['transient']['accepted_steps'],51)
+                self.assertEqual([row[0].hex() for row in r['transient']['states'][1:]],
+                    [.5.hex(),.5.hex()])
+                same_physics(r,baseline)
+                self.assertEqual(r['transient']['accepted_steps'],
+                    baseline['transient']['accepted_steps'])
+
+                active=run(p,active_points,times=times)
+                self.assertEqual([row[0].hex() for row in active['transient']['states'][1:]],
+                    [math.nextafter(.5,math.inf).hex()]*2)
+                self.assertGreaterEqual(active['transient']['accepted_steps'],51)
+                for solution,t in zip(active['solutions'],times):
+                    self.assertAlmostEqual(solution['voltages'][y],expected(t),places=8)
+
+                # The invalid value is not evaluated in the inactive source arm.
+                # Keep both flows: an unbound-frame refusal is still a failure.
                 negative=program(prefix.replace('$bound_step(0.01)','$bound_step(V(u,r)-1)')
-                    +' V(y,r)<+idt('+flow+',0);','real q;')
-                with self.assertRaisesRegex(KernelError,'invalid_bound_step'):
-                    run(negative,[[0,.1],[1,.9]])
+                    +suffix,'real q;')
+                inactive=run(negative,points,times=times)
+                self.assertEqual([row[0].hex() for row in inactive['transient']['states'][1:]],
+                    [.5.hex(),.5.hex()])
+                same_physics(inactive,baseline)
+                self.assertEqual(inactive['transient']['accepted_steps'],
+                    baseline['transient']['accepted_steps'])
 
     def test_sampled_clock_activation_preserves_physics_and_caps_inner_segments(self):
         p=program("""@(initial_step) q=-1;

@@ -396,8 +396,8 @@ enum SinInput {
     },
 }
 
-#[derive(Clone, Copy)]
-enum Function {
+#[derive(Clone, Copy, Debug)]
+pub(crate) enum Function {
     Sin,
     Cos,
     Exp,
@@ -417,7 +417,15 @@ impl From<crate::ir::MathFunction> for Function {
     }
 }
 impl Function {
-    fn value(self, x: f64) -> f64 {
+    pub(crate) fn internal(self)->crate::ir::EventMathFunction{
+        use crate::ir::EventMathFunction as F;
+        match self{Self::Sin=>F::InternalSin,Self::Cos=>F::InternalCos,Self::Exp=>F::InternalExp,Self::Ln=>F::InternalLn,Self::Sqrt=>F::InternalSqrt,Self::Tanh=>F::InternalTanh}
+    }
+    pub(crate) fn from_internal(function:crate::ir::EventMathFunction)->Option<Self>{
+        use crate::ir::EventMathFunction as F;
+        Some(match function{F::InternalSin=>Self::Sin,F::InternalCos=>Self::Cos,F::InternalExp=>Self::Exp,F::InternalLn=>Self::Ln,F::InternalSqrt=>Self::Sqrt,F::InternalTanh=>Self::Tanh,_=>return None})
+    }
+    pub(crate) fn value(self, x: f64) -> f64 {
         match self {
             Self::Sin => x.sin(),
             Self::Cos => x.cos(),
@@ -427,7 +435,7 @@ impl Function {
             Self::Tanh => x.tanh(),
         }
     }
-    fn bounds(self, x: I) -> Result<I, Error> {
+    pub(crate) fn bounds(self, x: I) -> Result<I, Error> {
         match self {
             Self::Sin => sin_bounds(x),
             Self::Cos => sin_bounds(x + constant_interval(FRAC_PI_2_BITS)),
@@ -437,7 +445,7 @@ impl Function {
             Self::Tanh => crate::math_functions::tanh(x),
         }
     }
-    fn derivative(self, x: I) -> Result<I, Error> {
+    pub(crate) fn derivative(self, x: I) -> Result<I, Error> {
         match self {
             Self::Sin => sin_bounds(x + constant_interval(FRAC_PI_2_BITS)),
             Self::Cos => Ok(-sin_bounds(x)?),
@@ -471,6 +479,9 @@ enum Runtime {
     },
     IdtMod(IdtMod),
     Math(Function, SinInput),
+    /// No global value exists for a source-position/call-local function.
+    /// The owning Plan supplies its selected Elementary graph node instead.
+    ProcedureMath,
     AbsDelay(AbsDelay),
     LaplaceNd(LaplaceNd),
     TransitionFilter {
@@ -837,6 +848,7 @@ pub(crate) fn sin_bounds(input: I) -> Result<I, Error> {
 #[derive(Clone)]
 pub(crate) struct ResetExpression {
     expression: Expression,
+    captured:Option<I>,
 }
 
 #[derive(Default)]
@@ -929,10 +941,11 @@ impl ResetTerms {
 
 impl ResetExpression {
     pub(crate) fn new(expression: Expression) -> Self {
-        Self { expression }
+        Self { expression,captured:None }
     }
 
     pub(crate) fn active(&self, states: &[I]) -> Result<bool, Error> {
+        if let Some(value)=self.captured{return reset_active(value);}
         let terms = reset_terms(&self.expression)?;
         let bound = match reset_exact_sign(&terms, states)? {
             Some(sign) => sign,
@@ -945,6 +958,13 @@ impl ResetExpression {
 fn reset_terms(expr: &Expression) -> Result<ResetTerms, Error> {
     let mut result = ResetTerms::default();
     match expr {
+        Expression::RealCall { .. }
+        | Expression::UnsupportedSystemCall { .. }
+        | Expression::RealBinary { .. }
+        | Expression::RealBoundary { .. }
+        | Expression::RealLocal { .. } => {
+            return reset_terms(&crate::real_expression::materialized(expr)?)
+        }
         Expression::Forcing { .. } => {
             return Err(Error::new(
                 "unsupported_forcing_scope",
@@ -1043,6 +1063,7 @@ fn reset_exact_sign(terms: &ResetTerms, states: &[I]) -> Result<Option<I>, Error
 
 fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
     let value = match expr {
+        Expression::RealCall { .. } | Expression::UnsupportedSystemCall { .. } | Expression::RealBinary { .. } | Expression::RealBoundary { .. } | Expression::RealLocal { .. } => return crate::event_numeric::bounds(expr,&[],states),
         Expression::Forcing { .. } => {
             return Err(Error::new(
                 "unsupported_forcing_scope",
@@ -1168,12 +1189,16 @@ impl Evaluation<'_> {
         self.observed_after_with_time_proofs(time_bounds, parameters, None)
     }
 
+    #[cfg(test)]
     pub(crate) fn observed_after_with_time_proofs(
         &self,
         time_bounds: I,
         parameters: &[I],
         proofs: Option<&crate::exact_source::TimeProofs>,
     ) -> Result<(Operators, Vec<f64>, Vec<I>), Error> {
+        self.observed_after_with_callsite_resets(time_bounds,parameters,proofs,None)
+    }
+    pub(crate) fn observed_after_with_callsite_resets(&self,time_bounds:I,parameters:&[I],proofs:Option<&crate::exact_source::TimeProofs>,captures:Option<(&[Option<I>],&crate::transition_source_plan::Work)>)->Result<(Operators,Vec<f64>,Vec<I>),Error>{
         let physical_proofs = proofs
             .map(|proofs| {
                 for (&state, proof) in proofs {
@@ -1198,15 +1223,37 @@ impl Evaluation<'_> {
         let parameters = physical_parameters(parameters, &self.base.isolated_parameters, I::point);
         let parameters = parameters.as_ref();
         let mut observed = self.base.candidate_clone()?;
+        if let Some((captures,w))=captures{observed.set_callsite_resets(captures,w)?;}
         if let Some(continuous) = &self.base.continuous {
+            let captured = captures
+                .map(|(v, w)| {
+                    continuous.captured_resets_at_physical_root(
+                        self.time,
+                        time_bounds,
+                        parameters,
+                        v,
+                        w,
+                        self.exact_root.as_ref(),
+                    )
+                })
+                .transpose()?;
+            let continuous = captured.as_ref().unwrap_or(continuous);
             observed.continuous = Some(Arc::new(match &physical_proofs {
-                Some(proofs) => continuous.mapped_event_with_time_proofs(
+                Some(proofs) => continuous.mapped_event_with_proofs_at_physical_root(
                     self.time,
                     time_bounds,
                     parameters,
                     proofs,
+                    self.exact_root.as_ref(),
                 )?,
-                None => continuous.mapped_event(self.time, time_bounds, parameters)?,
+                None => continuous.event_at_physical_root(
+                    self.time,
+                    time_bounds,
+                    parameters,
+                    self.base.horizon,
+                    false,
+                    self.exact_root.as_ref(),
+                )?,
             }));
         }
         for entry in &mut observed.entries {
@@ -1360,6 +1407,10 @@ impl Evaluation<'_> {
         proofs: Option<&crate::exact_source::TimeProofs>,
         value_proofs: Option<&crate::event_value_proof::Proofs>,
     ) -> Result<Operators, Error> {
+        self.advanced_until_with_callsite_resets(time_bounds,states,bounds,changed,horizon,proven,proofs,value_proofs,None)
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn advanced_until_with_callsite_resets(&self,time_bounds:I,states:&[f64],bounds:&[I],changed:&[usize],horizon:f64,proven:Option<&Operators>,proofs:Option<&crate::exact_source::TimeProofs>,value_proofs:Option<&crate::event_value_proof::Proofs>,captures:Option<(&[Option<I>],&crate::transition_source_plan::Work)>)->Result<Operators,Error>{
         let _timing = crate::diagnostics::span("history.advance_candidate");
         let physical_proofs = proofs
             .map(|proofs| {
@@ -1402,6 +1453,7 @@ impl Evaluation<'_> {
 
         let copying = crate::diagnostics::span("history.clone");
         let mut candidate = self.base.candidate_clone()?;
+        if let Some((captures,w))=captures{candidate.set_callsite_resets(captures,w)?;}
         drop(copying);
         if let Some(proven) = proven {
             if candidate.entries.len() != proven.entries.len() {
@@ -1429,17 +1481,35 @@ impl Evaluation<'_> {
         crate::diagnostics::counter("history_clone_calls", 1);
         crate::diagnostics::counter("history_clone_operator_slots", self.base.entries.len());
         candidate.horizon = horizon;
+        if let (Some(continuous), Some((v, w))) = (&candidate.continuous, captures) {
+            candidate.continuous = Some(Arc::new(continuous.captured_resets_at_physical_root(
+                self.time,
+                time_bounds,
+                bounds,
+                v,
+                w,
+                self.exact_root.as_ref(),
+            )?));
+        }
         if let Some(continuous) = &candidate.continuous {
             if proofs.is_some() || continuous.has_local_observation() {
                 candidate.continuous = Some(Arc::new(match proofs {
-                    Some(proofs) => continuous.restarted_with_time_proofs(
+                    Some(proofs) => continuous.restarted_with_proofs_at_physical_root(
                         self.time,
                         time_bounds,
                         bounds,
                         horizon,
                         proofs,
+                        self.exact_root.as_ref(),
                     )?,
-                    None => continuous.restarted(self.time, time_bounds, bounds, horizon)?,
+                    None => continuous.event_at_physical_root(
+                        self.time,
+                        time_bounds,
+                        bounds,
+                        horizon,
+                        true,
+                        self.exact_root.as_ref(),
+                    )?,
                 }));
             }
         }
@@ -1459,6 +1529,56 @@ impl Evaluation<'_> {
 }
 
 impl Operators {
+    fn set_callsite_resets(&mut self,captures:&[Option<I>],w:&crate::transition_source_plan::Work)->Result<(),Error>{
+        w.debit(2,(self.entries.len()*24+32) as u64)?;
+        if captures.len()!=self.entries.len(){return Err(Error::new("invalid_ir","reset call-site count mismatch"));}
+        for (entry,value) in self.entries.iter_mut().zip(captures){w.step()?;if let (Runtime::Idt{history,reset:Some(reset)},Some(value))=(entry,value){
+            w.debit(2,history.reset_probe_cost())?;reset_active(*value)?;reset.captured=Some(*value);
+        }}Ok(())
+    }
+    pub(crate) fn install_callsite_resets(
+        &mut self,
+        time: f64,
+        window: I,
+        states: &[I],
+        captures: &[Option<I>],
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<(), Error> {
+        self.install_callsite_resets_at_physical_root(time, window, states, captures, w, None)
+    }
+    pub(crate) fn install_callsite_resets_at_physical_root(
+        &mut self,
+        time: f64,
+        window: I,
+        states: &[I],
+        captures: &[Option<I>],
+        w: &crate::transition_source_plan::Work,
+        root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<(), Error> {
+        self.set_callsite_resets(captures, w)?;
+        if let Some(continuous) = &self.continuous {
+            self.continuous = Some(Arc::new(
+                continuous
+                    .captured_resets_at_physical_root(time, window, states, captures, w, root)?,
+            ));
+        }
+        for (entry, value) in self.entries.iter_mut().zip(captures) {
+            w.step()?;
+            if let (
+                Runtime::Idt {
+                    history,
+                    reset: Some(reset),
+                },
+                Some(_),
+            ) = (entry, value)
+            {
+                w.debit(2, history.reset_probe_cost())?;
+                history.advance_reset(time, window, reset.active(&[])?)?;
+            }
+        }
+        Ok(())
+    }
+
     pub(crate) fn bind_forcing_context(
         &mut self,
         c: Arc<crate::transition_source_plan::ProofContext>,
@@ -1927,6 +2047,7 @@ impl Operators {
                 }
                 Runtime::SourceSlew(history) => history.range(transition_window)?,
                 _ if point.is_some() => point.as_ref().unwrap()[index],
+                Runtime::ProcedureMath => I{lo:f64::NEG_INFINITY,hi:f64::INFINITY},
                 Runtime::DirectDerivative(history) => history.range(window)?,
                 Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                 Runtime::Idt { history, .. } => history.value_range(window)?,
@@ -1963,7 +2084,7 @@ impl Operators {
                     ))
                 }
             };
-            if !bound.finite() {
+            if !bound.finite() && !matches!(entry,Runtime::ProcedureMath) {
                 return Err(Error::new(
                     "waveform_accuracy",
                     "nonfinite event observation range",
@@ -2434,10 +2555,8 @@ impl Operators {
                 || origin.line == 0
                 || origin.column == 0
                 || !origin.valid_expansion()
-                || !program
-                    .contributions
-                    .iter()
-                    .any(|c| c.origin.instance == origin.instance)
+                || !(program.contributions.iter().any(|c| c.origin.instance == origin.instance)
+                    || matches!(spec,OperatorSpec::Math{..}|OperatorSpec::Sin{..}) && program.procedures.iter().any(|p|p.instance==origin.instance))
                 || !identities.insert((
                     origin.instance.clone(),
                     origin.source.clone(),
@@ -2497,6 +2616,21 @@ impl Operators {
                 | OperatorSpec::Slew { input, .. }
                 | OperatorSpec::IdtMod { input, .. } => input,
             };
+            if !program.procedures.is_empty()
+                && matches!(spec, OperatorSpec::Math { .. } | OperatorSpec::Sin { .. })
+                && (crate::procedure::closed_math_input(input,trajectory.procedure_work().ok_or_else(||Error::new("invalid_ir","procedure math has no execution owner"))?)?
+                    || crate::procedure::requires_source_frame(
+                        input,
+                        program,
+                        trajectory.procedure_work().ok_or_else(|| {
+                            Error::new("invalid_ir", "procedure math has no execution owner")
+                        })?,
+                    )?)
+            {
+                // All source refs/owners were audited by the original Plan.
+                // No legacy integral admission may execute a call-local input.
+                continue;
+            }
             if typed_targets.is_some_and(|ids| ids.contains(&spec_index)) {
                 crate::held_integer_target::dependencies(
                     input,
@@ -2705,6 +2839,22 @@ impl Operators {
                         OperatorSpec::Math { function, .. } => Function::from(*function),
                         _ => unreachable!(),
                     };
+                    if !program.procedures.is_empty()
+                        && (crate::procedure::closed_math_input(input,trajectory.procedure_work().ok_or_else(||Error::new("invalid_ir","procedure math has no execution owner"))?)?
+                            || crate::procedure::requires_source_frame(
+                                input,
+                                program,
+                                trajectory.procedure_work().ok_or_else(|| {
+                                    Error::new(
+                                        "invalid_ir",
+                                        "procedure math has no execution owner",
+                                    )
+                                })?,
+                            )?)
+                    {
+                        entries.push(Runtime::ProcedureMath);
+                        continue;
+                    }
                     let bound_input = affine(input, program, &origin.instance)?;
                     let sin_input = if let Some((operator, coefficient, constant)) =
                         bound_input.single_operator_form()
@@ -3060,7 +3210,8 @@ impl Operators {
                     changes_on_advance[*operator]
                 }
                 Runtime::Continuous(_) => continuous.as_ref().is_some_and(|c| c.changes_on_event()),
-                Runtime::DirectDerivative(_)
+                Runtime::ProcedureMath
+                | Runtime::DirectDerivative(_)
                 | Runtime::Idt { reset: None, .. }
                 | Runtime::IdtMod(_)
                 | Runtime::Math(_, SinInput::Direct(_))
@@ -3248,6 +3399,13 @@ impl Operators {
         self.evaluation_at_root(time, None, I::point(time))
     }
 
+    fn root_evaluation_work(&self) -> Option<&crate::transition_source_plan::Work> {
+        self.history_copy_work().or_else(|| {
+            self.continuous
+                .as_ref()
+                .and_then(|v| v.physical_root_work())
+        })
+    }
     pub(crate) fn evaluation_at_root(
         &self,
         time: f64,
@@ -3255,7 +3413,7 @@ impl Operators {
         window: I,
     ) -> Result<Evaluation<'_>, Error> {
         let refined = if let Some(root) = exact_root {
-            let value = if let Some(w) = self.history_copy_work() {
+            let value = if let Some(w) = self.root_evaluation_work() {
                 root.refine_with_work(window, w)?
             } else {
                 root.refine(window)
@@ -3270,7 +3428,7 @@ impl Operators {
             window
         };
         let owned = if let Some(root) = exact_root {
-            Some(if let Some(w) = self.history_copy_work() {
+            Some(if let Some(w) = self.root_evaluation_work() {
                 root.clone_with_work(w)?
             } else {
                 root.clone()
@@ -3278,12 +3436,28 @@ impl Operators {
         } else {
             None
         };
+        // Preserve legacy evaluation bounds for unrelated operator kinds.
+        // A certified continuous epoch is evaluated at the physical root,
+        // which need not belong to the display-time image.
+        let mut bounds = self.bounds(time)?;
+        if let (Some(root),Some(w)) = (exact_root,self.root_evaluation_work()) {
+            w.debit(2,bounds.len() as u64)?;
+            for (index, bound) in bounds.iter_mut().enumerate() {
+                if matches!(self.entries.get(index), Some(Runtime::Continuous(_))) {
+                    if let Some((_, physical)) =
+                        self.root_affine_sample_paid(index, root, refined)?
+                    {
+                        *bound = physical;
+                    }
+                }
+            }
+        }
         Ok(Evaluation {
             exact_root: owned,
             base: self,
             time,
             values: self.values_at_root(time, exact_root, refined, None)?,
-            bounds: self.bounds(time)?,
+            bounds,
         })
     }
 
@@ -3297,7 +3471,7 @@ impl Operators {
         let Some(root) = root else {
             return self.values_reusing(time, previous);
         };
-        if let Some(w) = self.history_copy_work() {
+        if let Some(w) = self.root_evaluation_work() {
             let valid = root.refine_with_work(window, w)?.is_some();
             if !valid {
                 return Err(Error::new(
@@ -3339,7 +3513,14 @@ impl Operators {
         root: &crate::exact_source::RootTime,
         window: I,
     ) -> Result<Option<(f64, I)>, Error> {
-        let Some(w) = self.history_copy_work() else {
+        if let Some(Runtime::Continuous(slot)) = self.entries.get(index) {
+            return self
+                .continuous
+                .as_ref()
+                .ok_or_else(|| Error::new("invalid_ir", "continuous root slot has no history"))?
+                .sample_physical_root(*slot, root, window);
+        }
+        let Some(w) = self.root_evaluation_work() else {
             return Ok(self.root_affine_sample(index, root, window));
         };
         let Some(window) = root.refine_with_work(window, w)? else {
@@ -3392,7 +3573,7 @@ impl Operators {
         root: Option<&crate::exact_source::RootTime>,
     ) -> Result<Vec<I>, Error> {
         let outside = if let Some(root) = root {
-            if let Some(w) = self.history_copy_work() {
+            if let Some(w) = self.root_evaluation_work() {
                 root.refine_with_work(window, w)?.is_none()
             } else {
                 root.refine(window).is_none()
@@ -3415,7 +3596,8 @@ impl Operators {
                 if let Some((_, exact)) =
                     self.root_affine_sample_paid(index, root, window)?
                         .filter(|(_, exact)| {
-                            bounds[index].lo <= exact.lo && exact.hi <= bounds[index].hi
+                            matches!(self.entries.get(index), Some(Runtime::Continuous(_)))
+                                || (bounds[index].lo <= exact.lo && exact.hi <= bounds[index].hi)
                         })
                 {
                     bounds[index] = exact;
@@ -3461,6 +3643,7 @@ impl Operators {
                     }
                 }
                 let value = match entry {
+                    Runtime::ProcedureMath => f64::NAN,
                     Runtime::DirectDerivative(history) => history.value(time)?,
                     Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                     Runtime::Idt { history, .. } => history.value(time)?,
@@ -3496,7 +3679,7 @@ impl Operators {
                     Runtime::SourceSlew(history) => history.value(time)?,
                     Runtime::SlewCascade(history) => history.value(time)?,
                 };
-                if !value.is_finite() {
+                if !value.is_finite() && !matches!(entry,Runtime::ProcedureMath) {
                     return Err(Error::new("numerical_failure", "nonfinite operator value"));
                 }
                 values.push(value);
@@ -3600,7 +3783,7 @@ impl Operators {
                 Runtime::Idt { history, .. } => history.next_breakpoint(after),
                 Runtime::IdtMod(history) => history.next_breakpoint(after),
                 Runtime::Math(_, SinInput::Direct(source)) => source.next_breakpoint(after),
-                Runtime::Math(_, SinInput::Operator { .. }) => None,
+                Runtime::ProcedureMath | Runtime::Math(_, SinInput::Operator { .. }) => None,
                 Runtime::AbsDelay(history) => history.next_breakpoint(after),
                 Runtime::LaplaceNd(history) => history.next_breakpoint(after),
                 Runtime::TransitionFilter { .. } | Runtime::TransitionIntegral { .. } => None,
@@ -3796,6 +3979,7 @@ impl Operators {
                     }
                 }
                 let bound = match entry {
+                    Runtime::ProcedureMath => I{lo:f64::NEG_INFINITY,hi:f64::INFINITY},
                     Runtime::DirectDerivative(history) => history.bounds(time)?,
                     Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                     Runtime::Idt { history, .. } => history.value_bounds(time)?,
@@ -3955,7 +4139,7 @@ impl Operators {
                     Runtime::Continuous(_) => Vec::new(),
                     Runtime::Idt { .. } => Vec::new(),
                     Runtime::IdtMod(_) => Vec::new(),
-                    Runtime::Math(_, _) => Vec::new(),
+                    Runtime::ProcedureMath | Runtime::Math(_, _) => Vec::new(),
                     Runtime::AbsDelay(_) => Vec::new(),
                     Runtime::LaplaceNd(_) => Vec::new(),
                     Runtime::TransitionFilter { .. } | Runtime::TransitionIntegral { .. } => {
@@ -4219,6 +4403,11 @@ impl Operators {
             else {
                 unreachable!()
             };
+            // A parent may settle from an exact root before its loose binary
+            // end bound. Commit every child against the OLD ramp first, using
+            // that same root/window and original proof-work owner.
+            let reaches_deadline = reaches_deadline
+                || old.end_reached_at(time, time_bounds, exact_root, shared_work.as_ref())?;
             let (value, target_bounds, may_change, preview_bounds, preview_root) = if let Some(
                 source,
             ) = source
@@ -4322,11 +4511,13 @@ impl Operators {
 
         if let Some(continuous) = &self.continuous {
             if !changed.is_empty() || continuous.needs_extension(self.horizon) {
-                self.continuous = Some(Arc::new(continuous.restarted(
+                self.continuous = Some(Arc::new(continuous.event_at_physical_root(
                     time,
                     time_bounds,
                     bounds,
                     self.horizon,
+                    true,
+                    exact_root,
                 )?));
             }
         }
@@ -4350,7 +4541,7 @@ impl Operators {
                     }
                 }
                 Runtime::IdtMod(_) => {}
-                Runtime::Math(_, _) => {}
+                Runtime::ProcedureMath | Runtime::Math(_, _) => {}
                 Runtime::AbsDelay(_) => {}
                 Runtime::LaplaceNd(_) => {}
                 Runtime::TransitionFilter { .. } | Runtime::TransitionIntegral { .. } => {}
@@ -4701,7 +4892,24 @@ impl Operators {
                     _ => false,
                 })
     }
+    pub(crate) fn same_reset_history_with_physical_roots(
+        &self,
+        other: &Self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<bool, Error> {
+        w.debit(2, 0)?;
+        let continuous = match (&self.continuous, &other.continuous) {
+            (Some(a), Some(b)) => a.same_history_with_physical_roots(b, w)?,
+            (None, None) => true,
+            _ => false,
+        };
+        Ok(self.same_reset_history_inner(other, Some(continuous)))
+    }
+    #[cfg(test)]
     pub(crate) fn same_reset_history(&self, other: &Self) -> bool {
+        self.same_reset_history_inner(other, None)
+    }
+    fn same_reset_history_inner(&self, other: &Self, continuous: Option<bool>) -> bool {
         if self.history_predicates.len() != other.history_predicates.len()
             || self
                 .history_predicates
@@ -4725,7 +4933,7 @@ impl Operators {
             return false;
         }
         match (&self.continuous, &other.continuous) {
-            (Some(a), Some(b)) if !a.same_history(b) => return false,
+            (Some(a), Some(b)) if !continuous.unwrap_or_else(|| a.same_history(b)) => return false,
             _ => {}
         }
         self.entries.len() == other.entries.len()
@@ -4759,12 +4967,32 @@ impl Operators {
                 })
     }
 
+    /// Unbound procedure slots have no scalar value. NaN is only their
+    /// transport sentinel; it is never a numeric observation or a proof.
+    pub(crate) fn same_values(&self, previous: &[f64], current: &[f64]) -> bool {
+        previous.len() == self.entries.len()
+            && current.len() == self.entries.len()
+            && self
+                .entries
+                .iter()
+                .zip(previous)
+                .zip(current)
+                .all(|((entry, a), b)| {
+                    if matches!(entry, Runtime::ProcedureMath) {
+                        a.is_nan() && b.is_nan()
+                    } else {
+                        a == b
+                    }
+                })
+    }
+
     pub(crate) fn permits_same_time_change(&self, previous: &[f64], current: &[f64]) -> bool {
         if previous.len() != self.entries.len() || current.len() != self.entries.len() {
             return false;
         }
         let mut permitted_changes = Vec::with_capacity(self.entries.len());
         for ((entry, &before), &after) in self.entries.iter().zip(previous).zip(current) {
+            if matches!(entry,Runtime::ProcedureMath){if !before.is_nan()||!after.is_nan(){return false;}permitted_changes.push(false);continue;}
             let permitted = match entry {
                 Runtime::Continuous(_) => self
                     .continuous
@@ -4791,7 +5019,7 @@ impl Operators {
     }
 }
 
-fn reset_active(value: I) -> Result<bool, Error> {
+pub(crate) fn reset_active(value: I) -> Result<bool, Error> {
     match value.sign() {
         Some(0) => Ok(false),
         Some(_) => Ok(true),
@@ -5272,6 +5500,115 @@ mod reset_operator_tests {
 mod exact_deadline_review_tests {
     use super::*;
     use crate::exact_source::RootTime;
+
+    #[test]
+    fn exact_endpoint_child_commit_retries_after_rejected_window_without_losing_old_ramp() {
+        let origin =
+            serde_json::json!({"source":"endpoint.va","line":1,"column":1,"instance":"dut"});
+        let integral_origin =
+            serde_json::json!({"source":"endpoint.va","line":2,"column":1,"instance":"dut"});
+        let filter_origin =
+            serde_json::json!({"source":"endpoint.va","line":3,"column":1,"instance":"dut"});
+        let program: Program = serde_json::from_value(serde_json::json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","y"],
+            "states":[{"instance":"dut","name":"q","kind":"real","initial":0.5}],
+            "operators":[
+                {"kind":"transition","input":{"op":"state","state":0},"delay":0,"rise":2.5e-7,"fall":2.5e-7,"origin":origin},
+                {"kind":"idt","input":{"op":"operator","operator":0},"ic":0,"origin":integral_origin},
+                {"kind":"laplace_nd","input":{"op":"operator","operator":0},"numerator":[1],"denominator":[1,2e-7],"origin":filter_origin}
+            ],"contributions":[{"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},"positive":1,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}],"events":[]
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                analytic_sources: vec![],
+                pwl_errors_v: None,
+                strobetimes: vec![],
+                pwl: vec![],
+                output_times: vec![0., 3e-6],
+                stop: 3e-6,
+                max_step: 3.125e-8,
+            },
+            0,
+        )
+        .unwrap();
+        let mut base = Operators::new(&program, &trajectory, &[], &[0.5]).unwrap();
+        let start = 2e-6;
+        base.advance_with_exact(
+            start,
+            I::point(start),
+            &[-0.5],
+            &[I::point(-0.5)],
+            &[0],
+            RootTime::point(start).as_ref(),
+            false,
+            None,
+            None,
+        )
+        .unwrap();
+        let retained = base.clone();
+        let tick = 2.25e-6;
+        let root = RootTime::point(tick).unwrap();
+        // This is the mechanism detector: exact ordering ends the parent even
+        // though its old enclosing upper deadline is after the representative.
+        assert!(base.transition(0).unwrap().next_breakpoint(start).unwrap() > tick);
+        assert!(base
+            .transition(0)
+            .unwrap()
+            .end_reached_at(tick, I::point(tick), Some(&root), None)
+            .unwrap());
+        for _ in 0..2 {
+            let bad = tick.next_up();
+            let error = base
+                .advance_with_exact(
+                    bad,
+                    I::point(bad),
+                    &[-0.5],
+                    &[I::point(-0.5)],
+                    &[],
+                    Some(&root),
+                    false,
+                    None,
+                    None,
+                )
+                .unwrap_err();
+            assert_eq!(error.kind, "event_resolution");
+            assert!(base.same_reset_history(&retained));
+        }
+        let discarded = base
+            .evaluation_at_root(tick, Some(&root), I::point(tick))
+            .unwrap()
+            .advanced(I::point(tick), &[-0.5], &[I::point(-0.5)], &[])
+            .unwrap();
+        assert!(base.same_reset_history(&retained));
+        let mut clean = retained.clone();
+        for candidate in [&mut base, &mut clean] {
+            candidate
+                .advance_with_exact(
+                    tick,
+                    I::point(tick),
+                    &[-0.5],
+                    &[I::point(-0.5)],
+                    &[],
+                    Some(&root),
+                    false,
+                    None,
+                    None,
+                )
+                .unwrap();
+        }
+        for time in [tick, 2.5e-6] {
+            let actual = base.values(time).unwrap();
+            let duration: f64 = 2.5e-7;
+            let tau: f64 = 2e-7;
+            let at_end = 0.5 - (duration - tau * (1. - (-duration / tau).exp())) / duration;
+            let filtered = -0.5 + (at_end + 0.5) * (-(time - start - duration) / tau).exp();
+            let area = 1e-6 - 0.5 * (time - start - duration);
+            assert!((actual[1] - area).abs() < 2e-14);
+            assert!((actual[2] - filtered).abs() < 1e-9);
+            assert_eq!(actual, clean.values(time).unwrap());
+            assert_eq!(actual, discarded.values(time).unwrap());
+        }
+    }
 
     #[test]
     fn evaluation_rejects_incompatible_exact_window_without_changing_history() {

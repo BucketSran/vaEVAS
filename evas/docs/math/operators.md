@@ -16,7 +16,7 @@ See the [support matrix](../COMPARISON.md) for delivery status. Independent cont
 | --- | --- | --- | --- |
 | [transition](#transition) | [transition.rs](../../rust_core/src/transition.rs) | [边沿与队列](../../tests/test_transition.py)、[历史精度](../../tests/test_transition_accuracy.py) | 事件目标安装与[共同观察](continuous.md#lifecycle-observation-review-fixes) |
 | [absdelay](#absdelay) | [absdelay.rs](../../rust_core/src/absdelay.rs) | [延迟查询](../../tests/test_absdelay.py)、[精度](../../tests/test_absdelay_accuracy.py) | 分支候选支持内部仿射电压投影；非点事件观察明确拒绝 |
-| [idt](#idt) | [idt.rs](../../rust_core/src/idt.rs) | [积分与复位](../../tests/test_idt.py)、[精度](../../tests/test_idt_accuracy.py) | [积分反馈](continuous.md#电压关系与积分反馈)、[联合复位](continuous.md#事件修改的联合积分与复位) |
+| [idt](#idt) | [idt.rs](../../rust_core/src/idt.rs)；脉冲 assert 由 [idt_pulse_reset.py](../../src/evas/idt_pulse_reset.py) 改写 | [积分与复位](../../tests/test_idt.py)、[精度](../../tests/test_idt_accuracy.py)、[脉冲 assert](../../tests/test_idt_pulse_reset.py) | [积分反馈](continuous.md#电压关系与积分反馈)、[联合复位](continuous.md#事件修改的联合积分与复位) |
 | [laplace_nd](#laplace_nd) | [laplace.rs](../../rust_core/src/laplace.rs) | [一阶低通](../../tests/test_laplace.py) | [完整状态空间](continuous.md#高阶滤波的完整状态空间)、[混合网络](continuous.md#多项式积分与滤波的混合网络) |
 | [laplace_np](#laplace_np) | [编译转换](../../src/evas/instance_compiler.py)，复用 laplace_nd | [实极点与独立答案](../../tests/test_laplace_np.py) | 本批验证直接连续 PWL；不扩大联合依赖范围 |
 | [idtmod / sin](#idtmod-与-sin) | [idtmod.rs](../../rust_core/src/idtmod.rs)；sin 在 [operators.rs](../../rust_core/src/operators.rs) | [相位与函数](../../tests/test_phase.py) | 受限 sin 可供[动态 guard](continuous.md#非线性-guard-的根证明)使用；idtmod 的非点事件观察明确拒绝 |
@@ -364,7 +364,8 @@ consumers, and uncertain numerical source leaves remain outside this slice.
 例如 q 初始为0，固定 `timer(0,0,0.001)` 将 q 赋为1，
 `transition(q,0.125,0.5,0.5)` 从 t=0 起即为1；延迟不产生一条额外初始边沿。
 
-构造前只处理精确固定零时刻 timer，回调各执行一次。所有分支的读值必须仅依赖 held 状态和直接驱动输入，
+构造前处理有精确零时刻证书的固定 timer；本地 #226 候选也处理由保持状态给出 start、period 或 enable 的 timer。
+回调各执行一次，OR 的多个零叶共用一个回调体。所有分支的读值必须仅依赖 held 状态和直接驱动输入，
 顺序赋值、共享旧状态、writer 与整数检查仍保留。默认要求最终完整状态向量有限且逐项得到 point 证书；
 后面的有界冷种子合同另行限定可保留非 point 盒的裸 real 目标。
 一个 point 证书表示精确区间只包含提交值；不能把带舍入区间的状态当作精确种子。
@@ -373,15 +374,21 @@ OR 的多个零叶共用一个回调体；正时刻邻居由原事件事务处�
 
 这条路径限定于闭合的 source-free 仿射状态 transition 及其直接一阶 filter、直接 integral 消费者。
 父 transition 与 filter 使用同一最终 DC 种子，`idt` 保留自身 ic。
-改变种子且混有其他历史、mutable held 日程或历史守卫时返回 `unsupported_initial_history`。
+本地 #226 候选允许旁边有只依赖常量或直接驱动源、无 reset 的独立积分器，保留该积分器自身的 IC。
+保持状态 timer 的零时刻回调完成后，重新认证 start、period 和 enable，再将已消费零事件之外的未来日程交给执行器。
+改变其他 timer 的未来 start、周期或 enable 不能丢失其日程；新产生的零时刻事件仍按既有日程规则认证或拒绝。
+历史守卫及未准入的耦合历史继续返回 `unsupported_initial_history`，不凭名义值重建其他历史。
 若全分支有序仿射传递证明 transition 种子不变，则完整保留原事件事务，
 兼容独立积分、滤波、数学历史和仅流向无关状态的内部电压读值；证明不会跳过实际事件检查。
-这里没有扩展 IR、source-target 或同刻日程闭包。实现入口是
+这里没有扩展 IR、source-target 或一般同刻日程闭包。实现入口是
 `transient_initialization::prepare`、`settlement_bounds::Bounds::held_inputs` 和
 `initial_state_invariance::unchanged`，最终历史仍由 `Operators::new_until` 构造。
 公开编译/内核的独立行为锚点见 `test_transition_initialization.py`，
 同对象失败重试见 `transient_initialization` 的 Rust 测试；这些是开发证据，不能单独代替 Spectre 对齐资格。
 [实际有限配对](../../../experiments/backends/support/README.md#initial-transition-seed)覆盖开、关及直接滤波三个初态反例；不扩展一般历史反馈支持。
+本地 #226 的保持状态 timer、未来日程及独立积分回归见
+[test_variable_zero_timer_transition.py](../../tests/test_variable_zero_timer_transition.py)。
+该候选的最终集成验证与同源 Spectre 配对仍待完成，不能沿用旧配对为新增范围授予资格。
 
 ### 混合实数与整数冷目标的本地候选
 
@@ -597,6 +604,14 @@ PR208的共用根窗证书进一步接收可严格排序的相异源切点与tim
 不能只恢复根、把窗口压成代表点，也不能另取一个更有利的窗口。原 CDS 验收仍由
 [#65](https://github.com/BucketSran/vaEVAS/issues/65) 跟踪，局部反例通过不等于整题通过。
 
+父 transition 与直接积分、滤波历史必须用同一个期限判据。本地 #227 候选通过
+`Transition::end_reached_at` 比较已接受事件根与边沿结束时间；有精确时间证明时使用该证明，
+否则保留原有包围检查。父历史移除旧斜坡前，子历史先累计该斜坡的面积或滤波响应。
+不能因子历史尚未达到宽包围上界而跳过累计，再让父历史按精确根结束斜坡。
+独立有理面积、80位闭式滤波及查询网格控制见
+[test_timer_at_transition_ramp_end.py](../../tests/test_timer_at_transition_ramp_end.py)。
+这些局部结果仍须在最终候选完成相关回归与原件配对。
+
 独立边沿可作为电压方程中的时变系数，例如 `V(y)<+V(h)*transition(q,0,tr,tr)`。
 这里每次读取当前的 `V(h)`，不是事件发生时的旧值。整个电压网络仍须联合仿射且唯一可解；
 原结构中的零系数依赖、未选分支和完整电压误差都参与检查。
@@ -803,7 +818,7 @@ G=2^30、d1=.1、d2=.2、x=t/3 的冻结 1e-10 和 1e-6 预算均拒绝，后者
 `idt(direct_affine_input, constant_ic)` 与受限的
 `idt(direct_affine_input, constant_ic, state_reset)`：输入为直接驱动、连续 PWL 的仿射组合，
 初值为显式有限实例常量，仿真起点为 0。reset 必须是同实例状态和常数的仿射表达式，
-且每次事件后能用状态区间证明为零或非零。若输入单位为 U，积分和初值单位为 U·s；
+且每次事件后能用状态区间证明为零或非零。只在事件时刻非零的 assert 见[脉冲 assert](#idt-pulse-assert)。若输入单位为 U，积分和初值单位为 U·s；
 电压贡献中的比例系数由模型提供。参数绑定后每个展开实例的调用点有独立 operator 索引，
 多个调用点即使贡献同一支路也不共享初值或历史。
 
@@ -894,6 +909,43 @@ IR 的 idt 记录保存 `kind=idt,input,ic,origin` 及可空 `reset` 表达式�
 [D1 收据](../../../experiments/archive/pr14-pr15-validation/results/idt-reset-review.json)及
 [复位合并验证](../../../experiments/archive/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)。
 这些结果绑定原检查点，不证明精确事件时刻或连续时间全轨迹精度。
+
+<a id="idt-pulse-assert"></a>
+
+### 事件时刻的脉冲 assert
+
+LRM 2.4 §4.5.4 的 `ramp_generator` 每次求值先执行 `reset = 0`，`@(timer)` 或 `@(cross)` 再置 1，
+其后的 `idt(x, c, reset)` 只在事件时刻那次求值读到 1。LRM 规定 idt 返回“从 assert 最后一次非零的时刻起”的积分，
+所以积分在每个事件时刻从 c 重新开始，输出为锯齿（[#230](https://github.com/BucketSran/vaEVAS/issues/230)）。
+普通求值读到的是清零后的别名，事件写入的状态槽没有普通读者，原降级因此得到常数 0 的 reset，从不复位。
+电平 reset 无法表示零长度的 assert；[idt_pulse_reset.py](../../src/evas/idt_pulse_reset.py) 只用已认证的 IR 改写：
+
+- 新增隐藏 integer 奇偶状态 `p`（初值 0，名为 `<assert>@idt_pulse<k>`）。置位事件体末若 assert 非零则 `p = 1 - p`。
+  事件体若可能在某条路径上不写 assert，先恢复普通赋值的值（源码中它先于事件执行）。
+- `idt(x, c, assert) = A + (B - c)`，其中 `A = idt(x, c, p)`、`B = idt(x, c, 1 - p)`。任一时刻 A、B 恰有一个被电平
+  reset 保持为 c，另一个从上次翻转（或 t=0）释放，所以结果为 c 加上从最近一次脉冲起的积分。B 被保持时
+  `B - c` 精确为 0；两份历史各自沿用上文的前缀差、事件时间包围和电压验收。
+
+事件时刻本身报告事件后的值 c（`transient` 输出事件后值，与电平 reset 一致）。同一时刻两个置位事件块都写 `p`，
+仍按既有同刻写者规则拒绝（`event_conflict`）。需要恢复的事件块总会写 assert 的状态槽；同一时刻另一块也写该 assert 时，
+即使原块这次没有走到写入路径，也报 `event_conflict`。这是保守拒绝，main 在这种情况下可能给出正确值。
+
+准入范围：assert 是裸 integer 变量；恰有一条无条件顶层普通赋值，其值为实例常数；置位事件为 cross、timer 或其 OR，
+源码位置在该赋值之后、idt 调用之前。普通值为非零常数时 assert 在其余时刻非零，输出始终为 c，沿用原降级。
+只由事件写的状态（没有普通赋值）仍是电平 reset。事件在普通赋值之前（其写入被覆盖）或在 idt 调用之后时，
+调用点读不到事件值，不构成复位。
+
+事件时刻值可能不同于普通值、但不在上述范围内的写法返回 `unsupported_idt_pulse_reset`：经局部变量复制、
+assert 表达式（如 `2*reset`）、final_step 置位、多条或条件普通赋值、跨文件或宏展开导致源码顺序无法比较。
+普通赋值先于事件的 real assert 仍由 `unsupported_local_event` 拒绝。
+
+脉冲判定的源码遍历、依赖查找与事件体复制共用本次编译的 `native_audit` 额度，在执行工作前计费。
+最终沿用旧路径或拒绝的保护性扫描也收费；耗尽后返回 `resource_budget`，同一请求重试不重置额度。
+没有事件的模型直接沿用旧路径，不启动脉冲扫描。
+
+独立回归 [test_idt_pulse_reset.py](../../tests/test_idt_pulse_reset.py) 以有理数积分的锯齿闭式解覆盖 timer、cross、
+OR 的两个分支、负 assert、条件写入、非零 IC 与驱动输入、两个调用点、多实例和反馈积分（连续网络路径）；对照覆盖区间保持、
+`$abstime` 偏移、两种不构成复位的源码顺序、同刻冲突及上述保守拒绝。本候选与 Spectre 的同源配对验收尚未完成；旧 EVAS 0.8.7 忽略 assert 参数，不能作对照。
 
 ## laplace_nd
 

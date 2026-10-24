@@ -74,7 +74,7 @@ def real_bounds(expression, state_bounds=None):
     return visit(expression)
 
 
-def floor_table(argument, origin, *, state_bounds=None):
+def floor_table(argument, origin, *, state_bounds=None, constant_value=None, factory=None):
     """Build a real-valued Select table without changing source integer typing."""
     def fail(message, code='unsupported_floor'):
         raise CompileError(message, code=code, token=origin, instance=origin.instance)
@@ -83,6 +83,16 @@ def floor_table(argument, origin, *, state_bounds=None):
         if not math.isfinite(argument.constant):
             fail('floor requires a finite argument')
         return Affine(float(math.floor(argument.constant)), ())
+
+    if constant_value is not None:
+        if not math.isfinite(constant_value):
+            fail('floor requires a finite argument')
+        make = factory if factory is not None else lambda cls, *args: cls(*args)
+        result = make(Affine, float(math.floor(constant_value)), ())
+        # A closed source-rounded operand still executes as written. Both
+        # arms return its independently established floor; the original tree
+        # remains a real guard operand, rather than an unrounded replacement.
+        return make(Select, 'lt', argument, result, result, result, origin)
 
     # This first slice admits exact binary scaling, including reciprocals of
     # powers of two. A previously rounded reciprocal must not move a floor cut.

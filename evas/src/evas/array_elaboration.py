@@ -12,7 +12,7 @@ from dataclasses import replace
 from .errors import CompileError
 from .ir import Affine
 from .lowering import lower
-from .syntax import Loop, Assignment, Conditional, Expr, Display
+from .syntax import Loop, Assignment, Conditional, Expr, Display, Event
 from .elaboration import unroll_loops
 
 ARRAY_BUDGET = 4096
@@ -52,7 +52,7 @@ def gate_dynamic_index(expr, model):
     visit(expr)
 
 
-def scalarize_arrays(model, parameter):
+def scalarize_arrays(model, parameter, *, native_audit=None):
     def fail(message, token, *, code="compile_error"):
         raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}', code=code, token=token)
 
@@ -129,7 +129,23 @@ def scalarize_arrays(model, parameter):
             return Expr('parameter', name, (), expr.token)
         if expr.op == 'parameter' and expr.value in ranges:
             fail('array value requires an explicit element index', expr.token)
-        return replace(expr, args=tuple(expression(a, dynamic) for a in expr.args))
+        if native_audit is None:
+            return replace(expr, args=tuple(expression(a, dynamic) for a in expr.args))
+        # Required child validation still runs in this exact array/dynamic
+        # context. Preserve immutable identity only when no rewrite occurred.
+        native_audit.debit('source_structure_array_edges', 1+len(expr.args), expr)
+        changed = None
+        for index, arg in enumerate(expr.args):
+            child = expression(arg, dynamic)
+            if child is not arg:
+                if changed is None:
+                    native_audit.debit('source_structure_array_children_copy', 1+len(expr.args), expr)
+                    changed = list(expr.args)
+                changed[index] = child
+        if changed is None:
+            return expr
+        native_audit.debit('source_structure_array_replace', 2+len(changed)+len(expr.__dataclass_fields__), expr)
+        return replace(expr, args=tuple(changed))
 
     def body(statements, dynamic=False):
         result = []
@@ -177,6 +193,14 @@ def scalarize_arrays(model, parameter):
         replace(leaf, arguments=tuple(expression(a, False) if a is not None else None
                                      for a in leaf.arguments)) for leaf in event.triggers))
         for event in model.events]
+    procedure = []
+    for statement in model.procedure:
+        if isinstance(statement, Event):
+            procedure.append(replace(statement, body=event_body(statement), triggers=tuple(
+                replace(leaf, arguments=tuple(expression(a, False) if a is not None else None
+                                             for a in leaf.arguments)) for leaf in statement.triggers)))
+        else:
+            procedure.extend(body((statement,)))
     scopes = dict(model.local_alias_scopes)
     # Syntax retains the exact preceding unconditional indexed assignments.
     # Bind each index in this instance, using the same type/bounds gate as the
@@ -191,5 +215,5 @@ def scalarize_arrays(model, parameter):
     # Element bounds stay on the model so the instance compiler can rebuild the
     # slot list for residual dynamic indices.
     return replace(model, variables=variables,
-                   analog=analog, initial=initial, events=events,
+                   analog=analog, initial=initial, events=events, procedure=tuple(procedure),
                    local_alias_scopes=scopes)

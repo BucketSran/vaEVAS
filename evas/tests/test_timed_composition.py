@@ -38,6 +38,40 @@ def exact(t, gain):
     return (tr, z, q), (F(n), F(c), q)
 
 
+def assert_initial_phase(case, program, result):
+    """Check both source-owned initialization records before the timed phase."""
+    names = [f'{state.instance}:{state.name}' for state in program.states]
+    case.assertCountEqual(names, [f'{name}:{state}' for name in ('a', 'b')
+                                 for state in ('n', 'c', 'q')])
+    case.assertEqual(result['transient']['state_names'], names)
+    catalog = [(index, event) for index, event in enumerate(program.events)
+               if event.trigger.kind == 'initial_step']
+    case.assertEqual(len(catalog), 2)
+    case.assertCountEqual([event.origin.instance for _, event in catalog], ['a', 'b'])
+    expected = []
+    for index, event in catalog:
+        origin = event.origin
+        case.assertEqual((origin.source, origin.line, origin.column, origin.expansion),
+                         ('composition.va', 3, 5, ()))
+        case.assertEqual(event.expanded_statement_ordinal, 0)
+        expected.append((index, f'composition.va:3:5 ({origin.instance})'))
+    events = result['transient']['events']
+    initial = events[:2]
+    case.assertEqual(len(initial), 2)
+    case.assertCountEqual([(event['event'], event['origin']) for event in initial], expected)
+    for event in initial:
+        case.assertIs(type(event['event']), int)
+        case.assertEqual(event['kind'], 'initial_step')
+        for field in ('guard_value', 'fired_triggers', 'observation_time_bounds'):
+            case.assertNotIn(field, event)
+        case.assertEqual(float(event['time']).hex(), 0.0.hex())
+        for side in ('before', 'after'):
+            case.assertEqual(len(event[side]), len(names))
+            case.assertEqual([float(value).hex() for value in event[side]],
+                             [0.0.hex()] * len(names))
+    case.assertTrue(all(event['kind'] != 'initial_step' for event in events[2:]))
+
+
 class TimedComposition(unittest.TestCase):
     def test_two_instances_orders_grids_and_steps_share_atomic_semantics(self):
         instances = [instance(name, connections=dict(u='u', y=f'{name}_y',
@@ -53,7 +87,8 @@ class TimedComposition(unittest.TestCase):
                         result = transient(program, {'u': [[0,0],[2,4],[4,-4],[8,-4]]},
                                            list(map(float,times)), stop=8, max_step=step,
                                            kernel=KERNEL, vabstol=1e-12, reltol=1e-10)
-                        self.assertEqual(len(result['transient']['events']), 18)
+                        assert_initial_phase(self, program, result)
+                        self.assertEqual(len(result['transient']['events'][2:]), 18)
                         for name, gain in [('a',1), ('b',2)]:
                             nodes = [result['nodes'].index(f'{name}_{p}') for p in ['y','z','h']]
                             states = [result['transient']['state_names'].index(f'{name}:{p}')

@@ -143,6 +143,7 @@ fn same_numeric_state_enclosure_with_a_different_real_time_proof_cannot_reuse_fl
         &controller.accepted,
         EventMoment {
             exact_root: None,
+            occurrence_certified: false,
             representative: 0.2,
             observation: I::point(0.2),
             fired_roots: &[],

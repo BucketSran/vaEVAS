@@ -17,6 +17,7 @@ import unittest
 from evas import CompileError, KernelError, compile_sources, transient
 from evas.ir import SCHEMA_VERSION
 from test_affine import KERNEL, instance, model
+from initial_record_contract import check_initial_record_batch
 
 
 def timer_source(arguments="2,5,0.001", initial=0):
@@ -24,11 +25,13 @@ def timer_source(arguments="2,5,0.001", initial=0):
       @(timer({arguments})) n=n+1; V(y,r)<+n;''', 'integer n;')
 
 
-def run_timer(source=None, *, stop=19, times=None, step=100, instances=None):
+def run_timer(source=None, *, stop=19, times=None, step=100, instances=None, initial_records=None):
     program = compile_sources({'timer.va': source or timer_source()}, instances or [instance()])
-    return transient(program, {'u': [[0, 0], [stop, stop]]},
+    result = transient(program, {'u': [[0, 0], [stop, stop]]},
                      times or [0, 1, 3, 8, 13, 18, stop],
                      stop=stop, max_step=step, kernel=KERNEL)
+    return (check_initial_record_batch(result, program, *initial_records)
+            if initial_records is not None else result)
 
 
 class TimerContracts(unittest.TestCase):
@@ -47,6 +50,7 @@ class TimerContracts(unittest.TestCase):
                 program=compile_sources({'timer.va':source},[instance()])
                 result=transient(program,{'u':[[0,0],[stop,19]]},[0,stop],
                                  stop=stop,max_step=stop,kernel=KERNEL)
+                result = check_initial_record_batch(result, program, *([0,0], [0,0], 1))
                 self.assertEqual([e['time'] for e in result['transient']['events']], [start,start])
                 self.assertEqual(result['transient']['states'][-1], [1,1])
 
@@ -58,7 +62,7 @@ class TimerContracts(unittest.TestCase):
             @(timer(15,0,0.01)) n=n+1;
             @(cross(V(u,r)-15,1,0.01,0.01)) m=m+1;
             V(y,r)<+1.0*n+m;''','integer n,m;')
-        result=run_timer(source,stop=22,times=[0,22])
+        result=run_timer(source,stop=22,times=[0,22], initial_records=([0,0], [0,0], 1))
         self.assertEqual([e['time'] for e in result['transient']['events']],[15.,15.])
 
     def test_one_ulp_neighbors_of_certified_root_remain_distinct(self):
@@ -67,14 +71,14 @@ class TimerContracts(unittest.TestCase):
               @(timer({start!r},0,0.1)) n=n+1;
               @(cross(V(u,r)-8,1,0.1,0.1)) m=m+1;
               V(y,r)<+1.0*n+m;''','integer n,m;')
-            result=run_timer(source,stop=19,times=[0,19])
+            result=run_timer(source,stop=19,times=[0,19], initial_records=([0,0], [0,0], 1))
             self.assertEqual([e['time'] for e in result['transient']['events']],sorted([8.,start]))
             self.assertEqual(result['transient']['states'][-1], [1,1])
 
     def test_periodic_independent_count_answers_and_typed_records(self):
         for arguments in ['2,5,0.001', '2,5', '2,5,']:
             with self.subTest(arguments=arguments):
-                result = run_timer(timer_source(arguments))
+                result = run_timer(timer_source(arguments), initial_records=([0], [0], 1))
                 self.assertEqual(result['schema_version'], SCHEMA_VERSION)
                 self.assertEqual(result['transient']['states'], [[n] for n in [0, 0, 1, 2, 3, 4, 4]])
                 self.assertEqual([e['time'] for e in result['transient']['events']], [2, 7, 12, 17])
@@ -87,22 +91,22 @@ class TimerContracts(unittest.TestCase):
     def test_absent_zero_and_negative_period_each_fire_once(self):
         for arguments in ['2', '2,', '2,,', '2,,0.001', '2,0,0.001', '2,-5,0.001']:
             with self.subTest(arguments=arguments):
-                result = run_timer(timer_source(arguments))
+                result = run_timer(timer_source(arguments), initial_records=([0], [0], 1))
                 self.assertEqual([e['time'] for e in result['transient']['events']], [2])
                 self.assertEqual(result['transient']['states'][-1], [1])
 
     def test_zero_initialization_and_stop_are_committed_before_observation(self):
         for times in [[0, 0.25, 0.5, 1], [0.25]]:
-            result = run_timer(timer_source('0,0.5,0.001', initial=7), stop=1, times=times)
+            result = run_timer(timer_source('0,0.5,0.001', initial=7), stop=1, times=times, initial_records=([0], [8], 1))
             self.assertEqual([e['time'] for e in result['transient']['events']], [0, 0.5, 1])
             expected = {0: 8, 0.25: 8, 0.5: 9, 1: 10}
             self.assertEqual(result['transient']['states'], [[expected[t]] for t in times])
-            self.assertEqual(result['transient']['events'][0]['before'], [7])
+            self.assertEqual(result['transient']['events'][0]['before'], [0])  # joint declaration-before, including initial_step
             self.assertEqual(result['transient']['events'][-1]['after'], [10])
 
     def test_stop_before_at_and_after_one_shot(self):
         for start, expected in [(0.5, 1), (1, 1), (1.5, 0)]:
-            result = run_timer(timer_source(f'{start},0,0.6'), stop=1, times=[0, 1])
+            result = run_timer(timer_source(f'{start},0,0.6'), stop=1, times=[0, 1], initial_records=([0], [0], 1))
             self.assertEqual(len(result['transient']['events']), expected)
             self.assertEqual(result['transient']['states'][-1], [expected])
 
@@ -117,7 +121,7 @@ class TimerContracts(unittest.TestCase):
                 expected = sum(k * Q(period) <= Q(stop) for k in range(1, 6))
                 for times in [[0, stop], [0]]:
                     with self.subTest(cycles=cycles, stop=stop, times=times):
-                        result = run_timer(source, stop=stop, times=times, step=period)
+                        result = run_timer(source, stop=stop, times=times, step=period, initial_records=([0], [0], 1))
                         events = result['transient']['events']
                         self.assertEqual(len(events), expected)
                         self.assertEqual(events[-1]['after'], [expected])
@@ -128,12 +132,12 @@ class TimerContracts(unittest.TestCase):
     def test_constant_enable_and_instance_parameter_binding(self):
         for enable, count in [(0, 0), (-2, 4), (0.5, 4)]:
             for tolerance in ['0.001', '']:
-                result = run_timer(timer_source(f'2,5,{tolerance},{enable}'))
+                result = run_timer(timer_source(f'2,5,{tolerance},{enable}'), initial_records=([0], [0], 1))
                 self.assertEqual(len(result['transient']['events']), count)
         source = model('''@(initial_step) n=0;
             @(timer(start,period,tol,enable)) n=n+1; V(y,r)<+n;''',
             'parameter real start=2; parameter real period=5; parameter real tol=0.001; parameter real enable=1; integer n;')
-        result = run_timer(source, instances=[instance(parameters={'start': 1, 'period': 6, 'enable': 0})])
+        result = run_timer(source, instances=[instance(parameters={'start': 1, 'period': 6, 'enable': 0})], initial_records=([0], [0], 1))
         self.assertEqual(result['transient']['events'], [])
 
     def test_event_calendar_does_not_depend_on_step_or_output_grid(self):
@@ -146,7 +150,7 @@ class TimerContracts(unittest.TestCase):
     def test_two_instances_have_private_timer_state(self):
         instances = [instance('a', connections=dict(u='u', y='ya', r='0')),
                      instance('b', connections=dict(u='u', y='yb', r='0'))]
-        result = run_timer(instances=instances)
+        result = run_timer(instances=instances, initial_records=([0,0], [0,0], 2))
         self.assertEqual(result['transient']['states'][-1], [4, 4])
         self.assertEqual(len(result['transient']['events']), 8)
         for k in range(4):
@@ -161,7 +165,7 @@ class TimerContracts(unittest.TestCase):
             source = model('''@(initial_step) begin n=0; held=-1; end
                 ''' + ''.join(order) + 'V(y,r)<+n; V(z,r)<+held;',
                 'electrical z; integer n; real held;')
-            result = run_timer(source, stop=1, times=[0, 0.5, 1])
+            result = run_timer(source, stop=1, times=[0, 0.5, 1], initial_records=([0,0], [0,-1], 1))
             self.assertEqual(result['transient']['states'], [[0, -1], [1, 1], [1, 1]])
             self.assertEqual({e['kind'] for e in result['transient']['events']}, {'cross', 'timer'})
             self.assertEqual([e['before'] for e in result['transient']['events']], [[0, -1]]*2)
@@ -172,7 +176,7 @@ class TimerContracts(unittest.TestCase):
           @(timer(0.5001,0,0.1)) held=V(y,r);
           @(cross(V(u,r)-0.5,1,0.1,0.1)) n=n+1;
           V(y,r)<+n; V(z,r)<+held;''', 'electrical z; integer n; real held;')
-        result = run_timer(source, stop=1, times=[0, 1])
+        result = run_timer(source, stop=1, times=[0, 1], initial_records=([0,0], [0,-1], 1))
         self.assertEqual([e['time'] for e in result['transient']['events']], [0.5, 0.5001])
         self.assertEqual(result['transient']['states'][-1], [1, 1])
 
@@ -192,7 +196,7 @@ class TimerContracts(unittest.TestCase):
         # checking an absolute tolerance would miss an early default event.
         for arguments in ['0.1,0.1,1e-12', '0.1,0.1']:
             with self.subTest(arguments=arguments):
-                result = run_timer(timer_source(arguments), stop=.95, times=[0, .95])
+                result = run_timer(timer_source(arguments), stop=.95, times=[0, .95], initial_records=([0], [0], 1))
                 events = result['transient']['events']
                 self.assertEqual(len(events), 9)
                 for k, event in enumerate(events):
@@ -213,7 +217,7 @@ class TimerContracts(unittest.TestCase):
         self.assertEqual(caught.exception.detail['kind'], 'event_budget')
 
     def test_finite_stop_does_not_require_representing_future_overflow(self):
-        result = run_timer(timer_source('1e308,1e308,1'), stop=1.5e308, times=[0, 1.5e308], step=1.5e308)
+        result = run_timer(timer_source('1e308,1e308,1'), stop=1.5e308, times=[0, 1.5e308], step=1.5e308, initial_records=([0], [0], 1))
         self.assertEqual([e['time'] for e in result['transient']['events']], [1e308])
 
     def test_overflowing_time_bound_cannot_silently_drop_a_finite_event(self):
@@ -239,7 +243,7 @@ class TimerContracts(unittest.TestCase):
             source = model('''@(initial_step) begin n=0; m=0; end
                 @(timer(0,0,0.001)) n=n+1;''' + statement + 'V(y,r)<+1.0*n+m;', 'integer n,m;')
             with self.subTest(statement=statement):
-                result = run_timer(source, stop=1, times=[0, 1])
+                result = run_timer(source, stop=1, times=[0, 1], initial_records=([0,0], [1,0], 1))
                 self.assertEqual(result['transient']['states'], [[1,0],[2,0]])
                 self.assertEqual([event['time'] for event in result['transient']['events']], [0,.5])
 

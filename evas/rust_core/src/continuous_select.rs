@@ -378,6 +378,7 @@ fn expressions(program: &Program) -> impl Iterator<Item = (&Expression, &str)> {
 pub(super) fn physical_needed(program: &Program) -> bool {
     physical_expressions(program).any(|(e, _)| crate::analog::has_select(e))
 }
+pub(super) fn history_program(context:&Context,parameters:&[I])->Result<Program,Error>{step_simplify::program(context,parameters)}
 pub(super) fn needed(program: &Program) -> bool {
     expressions(program).any(|(e, _)| crate::analog::has_select(e))
 }
@@ -478,6 +479,7 @@ pub(super) fn build(
             detached_timed: context.detached_timed,
             live_parameters: context.live_parameters.clone(),
             time_proofs: context.time_proofs.clone(),
+            reset_captures: context.reset_captures.clone(),
         });
         let mut branch =
             LinearContinuous::build(branch_context.clone(), parameters.clone(), begin, seed)?
@@ -708,6 +710,7 @@ pub(super) fn freeze_context(
         detached_timed: context.detached_timed,
         live_parameters: context.live_parameters.clone(),
         time_proofs: context.time_proofs.clone(),
+            reset_captures: context.reset_captures.clone(),
     }))
 }
 

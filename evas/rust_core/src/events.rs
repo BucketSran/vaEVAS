@@ -26,6 +26,10 @@ pub(crate) struct AffineState {
 }
 
 impl AffineState {
+    /// Source execution owns the numerical row. This marks only conservative
+    /// structural dependencies; its zero coefficients are never a solve row.
+    pub(crate) fn mark_dependency_metadata(&mut self){self.has_variables=!self.node_dependencies.is_empty()||!self.state_dependencies.is_empty()||!self.operator_dependencies.is_empty();}
+
     pub(crate) fn held_row(
         row: &[I],
         program: &Program,
@@ -197,6 +201,7 @@ pub(crate) fn affine(
         has_variables: false,
     };
     match expr {
+        Expression::RealCall { .. } | Expression::UnsupportedSystemCall { .. } | Expression::RealBinary { .. } | Expression::RealBoundary { .. } | Expression::RealLocal { .. } => return affine(&crate::real_expression::materialized(expr)?,program,owner),
         Expression::Forcing { .. } => {
             return Err(Error::new(
                 "unsupported_forcing_scope",
@@ -546,6 +551,7 @@ pub(crate) struct EventModel {
         std::sync::OnceLock<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
     pub(crate) source_context: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
     pub(crate) program: Program,
+    pub(crate) independent_physical: std::sync::OnceLock<Option<std::sync::Arc<crate::procedure_affine::Projection>>>,
     pub(crate) floor_source: Option<std::sync::Arc<crate::event_floor::Request>>,
     pub(crate) forcing: Option<std::sync::Arc<crate::forcing_graph::Graph>>,
     pub(crate) dc_projection: Option<std::sync::Arc<crate::dc_projection::DcProjection>>,
@@ -613,7 +619,11 @@ impl EventModel {
             provided,
             request_entry,
             None,
+            None,
         )
+    }
+    pub(crate) fn new_with_procedure_work(program:Program,driven:Vec<String>,tolerances:Tolerances,work:crate::transition_source_plan::Work)->Result<Self,Error>{
+        Self::build_with_execution(program,driven,tolerances,None,None,true,None,Some(work))
     }
     pub(crate) fn new_with_forcing(
         program: Program,
@@ -630,6 +640,7 @@ impl EventModel {
             None,
             false,
             Some(execution),
+            None,
         )
     }
     #[allow(clippy::too_many_arguments)]
@@ -641,6 +652,7 @@ impl EventModel {
         provided: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
         request_entry: bool,
         execution: Option<crate::forcing_graph::PreparedExecution>,
+        procedure_work: Option<crate::transition_source_plan::Work>,
     ) -> Result<Self, Error> {
         let composed = execution.is_some();
         let composed_history = execution
@@ -795,6 +807,9 @@ impl EventModel {
         } else {
             None
         };
+        let real_work=if program.procedures.is_empty(){None}else{Some(procedure_work.unwrap_or_else(||source_context.as_ref().map(|c|c.borrow_work().clone()).or_else(||trajectory.and_then(|t|t.procedure_work().cloned())).unwrap_or_default()))};
+        let prepared_procedures=real_work.as_ref().map(|w|crate::procedure::prepare(&program,w)).transpose()?;
+        let executes=prepared_procedures.as_ref().is_some_and(|p|p.requires_execution);
         let history_admission = if admission.history_candidate() {
             Some(crate::history_admission::Admission::new(
                 &program,
@@ -806,6 +821,7 @@ impl EventModel {
             )?)
         } else {
             let legacy_selection = (|| {
+                if executes{return Ok::<_,Error>(());}
                 for c in &program.contributions {
                     let expression = dc_projection
                         .as_ref()
@@ -838,6 +854,7 @@ impl EventModel {
             legacy_selection?;
             None
         };
+        let source_bindings=if executes{Some(crate::procedure::dependency_sources(&program,real_work.as_ref().expect("procedure owner"))?)}else{None};
         let shaped = program
             .contributions
             .iter()
@@ -847,7 +864,7 @@ impl EventModel {
                     .map(|projection| projection.view(&c.rhs))
                     .transpose()?
                     .unwrap_or(&c.rhs);
-                contribution_shape(expression, &program, &c.origin.instance)
+                if executes{crate::procedure::source_dependencies(expression,&program,source_bindings.as_ref().expect("source index"),real_work.as_ref().expect("procedure owner")).map(|row|(row,false))}else{contribution_shape(expression, &program, &c.origin.instance)}
             })
             .collect::<Result<Vec<_>, _>>()?;
         let dc_supply = shaped.iter().any(|(_, dc)| *dc);
@@ -881,7 +898,7 @@ impl EventModel {
                         for argument in args {
                             crate::display::validate_expression(argument, program, owner)?;
                             if !numeric
-                                && crate::event_numeric::contains_math(argument)
+                                && crate::event_numeric::contains_legacy_math(argument)
                                 && !crate::event_floor::display_operand(argument, work)?
                             {
                                 return Err(Error::new(
@@ -962,7 +979,8 @@ impl EventModel {
             &passive_events,
             &driven,
             &admission,
-            original_role_work,
+            original_role_work.or(real_work.as_ref()),
+            source_bindings.as_ref(),
         )?;
         let general_events: Vec<_> = passive_events
             .iter()
@@ -1029,7 +1047,7 @@ impl EventModel {
                             return Err(Error::new("invalid_ir", "invalid timer tolerance"));
                         }
                         for expression in [start, period, enabled] {
-                            let value = affine(expression, &program, &event.origin.instance)?;
+                            let value = if executes{crate::procedure::source_dependencies(expression,&program,source_bindings.as_ref().expect("source index"),real_work.as_ref().expect("procedure owner"))?}else{affine(expression, &program, &event.origin.instance)?};
                             if !value.node_dependencies.is_empty()
                                 || !value.operator_dependencies.is_empty()
                             {
@@ -1068,17 +1086,17 @@ impl EventModel {
                 let ordinary = affine(&assignment.rhs, &program, &event.origin.instance);
                 let is_numeric = general_events[index] && ordinary.is_err();
                 let value = if is_numeric {
-                    crate::event_numeric::dependencies(
+                    if executes{crate::procedure::source_dependencies(&assignment.rhs,&program,source_bindings.as_ref().expect("source bindings"),real_work.as_ref().expect("source owner"))?}else{crate::event_numeric::dependencies(
                         &assignment.rhs,
                         &program,
                         &event.origin.instance,
-                    )?
+                    )?}
                 } else {
                     ordinary?
                 };
                 expressions.push(assignment.rhs.clone());
                 numeric.push(is_numeric);
-                if !value.operator_dependencies.is_empty() {
+                if !(value.operator_dependencies.is_empty() || (event.procedure_id.is_some() && value.operator_dependencies.iter().all(|&i|matches!(program.operators.get(i),Some(crate::ir::OperatorSpec::Math{..}|crate::ir::OperatorSpec::Sin{..}))))) {
                     return Err(Error::new(
                         "unsupported_transient",
                         "operator calls are only allowed in contributions",
@@ -1113,19 +1131,22 @@ impl EventModel {
             numeric_actions.push(numeric);
         }
         let mut conditions = Conditions::new_with_numeric(&program, &general_events)?;
+        if let Some(p)=&prepared_procedures{conditions.install_procedures(p)?;}
         conditions.restrict_events(&passive_events.iter().map(|p| !p).collect::<Vec<_>>());
         let mut passive_conditions = Conditions::new_with_numeric(&program, &general_events)?;
+        if let Some(p)=&prepared_procedures{passive_conditions.install_procedures(p)?;}
         passive_conditions.restrict_events(&passive_events);
         let (projected, node_inputs) =
             crate::event_accuracy::GuardBounds::passive_program(&program);
         passive_conditions.prepare(&projected, &node_inputs)?;
         let typed_transition_targets = admission.targets;
         let mut model = Self {
+            independent_physical: std::sync::OnceLock::new(),
             analytic_request: None,
             history_admission,
             typed_transition_targets,
             source_copy_items: admission.copy_items,
-            mixed_cold_work: std::sync::OnceLock::new(),
+            mixed_cold_work: real_work.map_or_else(std::sync::OnceLock::new,std::sync::OnceLock::from),
             mixed_cold_context: std::sync::OnceLock::new(),
             source_context,
             conditions,
@@ -1576,39 +1597,45 @@ impl EventModel {
     }
 
     pub(crate) fn check_selection_writers(&self, selection: &Selection) -> Result<(), Error> {
-        fn reads_other_writer(expr: &Expression, event: usize, writers: &[Option<usize>]) -> bool {
+        fn reads_other_writer(expr: &Expression, event: usize, writers: &[Option<usize>],selection:&Selection) -> bool {
             match expr {
-                Expression::Forcing { value, .. } => reads_other_writer(value, event, writers),
+                Expression::RealBinary{left,right,..} => reads_other_writer(left,event,writers,selection)||reads_other_writer(right,event,writers,selection),
+                Expression::RealBoundary{value,..} => reads_other_writer(value,event,writers,selection),
+                Expression::RealCall{..}|Expression::UnsupportedSystemCall{..} => {
+                    let mut conflict=false;let _=crate::procedure::call_children(expr,&mut |e|{conflict|=reads_other_writer(e,event,writers,selection);Ok(())});conflict
+                },
+                Expression::RealLocal{..} => false,
+                Expression::Forcing { value, .. } => reads_other_writer(value, event, writers,selection),
                 Expression::CheckedIndex { index, .. }
                 | Expression::IntegerRound { value: index, .. }
                 | Expression::CheckedInteger { value: index, .. } => {
-                    reads_other_writer(index, event, writers)
+                    reads_other_writer(index, event, writers,selection)
                 }
                 Expression::ArrayRead { states, index, .. } => {
                     states
                         .iter()
-                        .any(|&state| writers[state].is_some_and(|w| w != event))
-                        || reads_other_writer(index, event, writers)
+                        .any(|&state| writers[state].is_some_and(|w| w != event && !crate::procedure_frames::ordered(selection,w,event)))
+                        || reads_other_writer(index, event, writers,selection)
                 }
                 Expression::IntegerPrimitive { args, .. } => {
                     let mut refs = Vec::new();
                     crate::integer_primitive::states(args, &mut refs);
                     refs.iter()
-                        .any(|&state| writers[state].is_some_and(|w| w != event))
+                        .any(|&state| writers[state].is_some_and(|w| w != event && !crate::procedure_frames::ordered(selection,w,event)))
                 }
                 Expression::EventMath { args, .. } => {
-                    args.iter().any(|e| reads_other_writer(e, event, writers))
+                    args.iter().any(|e| reads_other_writer(e, event, writers,selection))
                 }
                 Expression::State { state } => {
-                    writers[*state].is_some_and(|writer| writer != event)
+                    writers[*state].is_some_and(|writer| writer != event && !crate::procedure_frames::ordered(selection,writer,event))
                 }
                 Expression::Add { left, right }
                 | Expression::Multiply { left, right }
                 | Expression::Divide { left, right } => {
-                    reads_other_writer(left, event, writers)
-                        || reads_other_writer(right, event, writers)
+                    reads_other_writer(left, event, writers,selection)
+                        || reads_other_writer(right, event, writers,selection)
                 }
-                Expression::Power { base, .. } => reads_other_writer(base, event, writers),
+                Expression::Power { base, .. } => reads_other_writer(base, event, writers,selection),
                 Expression::Select {
                     left,
                     right,
@@ -1617,7 +1644,7 @@ impl EventModel {
                     ..
                 } => [left, right, then_value, else_value]
                     .iter()
-                    .any(|expr| reads_other_writer(expr, event, writers)),
+                    .any(|expr| reads_other_writer(expr, event, writers,selection)),
                 Expression::Affine { .. } | Expression::Operator { .. } => false,
             }
         }
@@ -1651,7 +1678,7 @@ impl EventModel {
         for (event, indices) in &selection.actions {
             for &index in indices {
                 let state = self.actions[*event][index].0;
-                if writers[state].is_some_and(|writer| writer != *event) {
+                if writers[state].is_some_and(|writer| writer != *event && !crate::procedure_frames::ordered(selection,writer,*event)) {
                     return Err(Error::new(
                         "event_conflict",
                         format!(
@@ -1673,7 +1700,7 @@ impl EventModel {
                 if rhs
                     .state_dependencies
                     .iter()
-                    .any(|&s| writers[s].is_some_and(|writer| writer != *event))
+                    .any(|&s| writers[s].is_some_and(|writer| writer != *event && !crate::procedure_frames::ordered(selection,writer,*event)))
                 {
                     return Err(Error::new("unsupported_cross", "simultaneous event blocks cannot read state written by another selected block"));
                 }
@@ -1686,7 +1713,7 @@ impl EventModel {
                 if let crate::event_conditions::SelectedStep::Display(index) = step {
                     if displays[*index]
                         .iter()
-                        .any(|expr| reads_other_writer(expr, *event, &writers))
+                        .any(|expr| reads_other_writer(expr, *event, &writers,selection))
                     {
                         return Err(Error::new("unsupported_cross", "simultaneous event blocks cannot read state written by another selected block"));
                     }
@@ -2020,6 +2047,22 @@ impl EventModel {
         })
     }
 
+    pub(crate) fn observation_selection(&self,inputs:&[I],states:&[f64],state_bounds:&[I],operators:&[f64],operator_bounds:&[I])->Result<Selection,Error>{
+        if self.program.procedures.is_empty(){return self.conditions.select_at_roots(&[],inputs,&[],state_bounds);}
+        let work=crate::real_expression::work(self);let proofs=crate::event_value_proof::Proofs::new();let context=crate::event_value_proof::Context::candidate_frame(&proofs,self.program.nodes.len(),states,operators,work)?.try_with_operators(operator_bounds)?;
+        self.conditions.select_with_proofs(&[],inputs,&[],state_bounds,Some(&context))
+    }
+    fn procedure_circuit_at(&self,states:&[f64],operators:&[f64],inputs:&[I])->Result<Circuit,Error>{
+        let work=crate::real_expression::work(self);work.debit(2,((self.program.nodes.len()+states.len())*24+64) as u64)?;
+        let proofs=crate::event_value_proof::Proofs::new();let context=crate::event_value_proof::Context::candidate_frame(&proofs,self.program.nodes.len(),states,operators,work)?;
+        let mut nodes=vec![I{lo:f64::NEG_INFINITY,hi:f64::INFINITY};self.program.nodes.len()];nodes[0]=I::ZERO;
+        for (name,&bound) in self.driven.iter().zip(inputs){if let Some(i)=self.program.nodes.iter().position(|n|n==name){nodes[i]=bound;}}
+        let before=states.iter().copied().map(I::point).collect::<Vec<_>>();
+        let plan=crate::procedure::execute(&self.program,&[],&nodes,&before,Some(&context),work)?;
+        work.debit(2,(std::mem::size_of_val(&plan)+2*std::mem::size_of::<usize>()) as u64)?;
+        let plan=std::sync::Arc::new(plan);
+        plan.circuit(&self.program,&self.driven,states,operators,self.tolerances.clone(),work)
+    }
     pub(crate) fn circuit_at(
         &self,
         states: &[f64],
@@ -2049,6 +2092,7 @@ impl EventModel {
         lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
         scratch: Option<&mut Option<crate::assembly::AssemblyPlan>>,
     ) -> Result<Circuit, Error> {
+        if !self.program.procedures.is_empty(){return self.procedure_circuit_at(states,operators,inputs);}
         let program = if let Some(lineage) = lineage {
             self.bound_circuit_program_at_with_lineage(states, operators, inputs, Some(lineage))?
         } else {
@@ -2089,6 +2133,7 @@ impl EventModel {
         inputs: &[I],
         proof: &crate::dc_projection::HeldRampObservationProof<'_>,
     ) -> Result<Circuit, Error> {
+        if !self.program.procedures.is_empty(){return self.procedure_circuit_at(states,operators,inputs);}
         let program = self.bound_circuit_program_at_with_observation_proof(
             states,
             operators,
@@ -2136,6 +2181,8 @@ impl EventModel {
             events: Vec::new(),
             operators: Vec::new(),
             step_bounds: selected.step_bounds.clone(),
+            procedures: Vec::new(),
+            real_bindings: Vec::new(),
         };
         for (contribution, rhs) in program.contributions.iter_mut().zip(&rhs) {
             contribution.rhs = rhs.bind(states, operators)?;
@@ -2180,6 +2227,7 @@ impl EventModel {
         proofs: Option<&crate::event_value_proof::Context<'_>>,
         scratch: Option<&mut Option<crate::assembly::AssemblyPlan>>,
     ) -> Result<Circuit, Error> {
+        if let Some(plan)=&selection.plan{return plan.circuit(&self.program,&self.driven,before,operators,self.tolerances.clone(),crate::real_expression::work(self));}
         let program = self.event_trial_program_impl(
             selected,
             selection,
@@ -2237,8 +2285,9 @@ impl EventModel {
             })
             .collect();
         let mut updates = initial.clone();
+        let mut frames=crate::procedure_frames::Frames::new(selection,Some(crate::real_expression::work(self)))?;
         for (event, indices) in &selection.actions {
-            let mut local = initial.clone();
+            let mut local = frames.take(*event).unwrap_or_else(||initial.clone());
             for &index in indices {
                 let (state, rhs) = &self.actions[*event][index];
                 local[*state] = if self.causal_numeric[*event] {
@@ -2274,6 +2323,7 @@ impl EventModel {
                 }
                 updates[*state] = local[*state].clone();
             }
+            frames.put(*event,local);
         }
         // Match the previous clone-and-clear result without first cloning the
         // immutable state/event/operator trees that the voltage solve discards.
@@ -2285,6 +2335,8 @@ impl EventModel {
             events: Vec::new(),
             operators: Vec::new(),
             step_bounds: selected.step_bounds.clone(),
+            procedures: Vec::new(),
+            real_bindings: Vec::new(),
         };
         let rhs = selected
             .contributions
@@ -2560,6 +2612,15 @@ impl EventModel {
         time: f64,
         proofs: Option<&crate::event_value_proof::Context<'_>>,
     ) -> Result<(Vec<f64>, Vec<crate::ir::DisplayRecord>), Error> {
+        if let Some(plan)=&selection.plan{
+            let w=crate::real_expression::work(self);let states=plan.numeric_states(&self.program,voltages,before,proofs,w)?;
+            let mut records=Vec::new();
+            for (event,format,args,origin) in &plan.displays{
+                w.debit(2,(args.len()*8+format.len()+64) as u64)?;
+                let values=plan.numeric_values(args,voltages,before,proofs,w)?;
+                records.push(crate::ir::DisplayRecord{time,event:*event,origin:origin.label(),text:crate::display::render(format,&values)?});
+            }return Ok((states,records));
+        }
         fn collect<'a>(body: &'a [crate::ir::Statement], out: &mut Vec<&'a crate::ir::Statement>) {
             for statement in body {
                 match statement {
@@ -2588,11 +2649,12 @@ impl EventModel {
         }
         let mut after = before.to_vec();
         let mut records = Vec::new();
+        let mut frames=crate::procedure_frames::Frames::new(selection,Some(crate::real_expression::work(self)))?;
         for (event, steps) in &selection.ordered_steps {
             let body = &self.program.events[*event];
             let mut displays = Vec::new();
             collect(&body.body, &mut displays);
-            let mut local = before.to_vec();
+            let mut local = frames.take(*event).unwrap_or_else(||before.to_vec());
             for step in steps {
                 match step {
                     crate::event_conditions::SelectedStep::Assign(index) => {
@@ -2642,6 +2704,7 @@ impl EventModel {
                     }
                 }
             }
+            frames.put(*event,local);
         }
         Ok((after, records))
     }
@@ -2663,9 +2726,11 @@ impl EventModel {
         before: &[f64],
         proofs: Option<&crate::event_value_proof::Context<'_>>,
     ) -> Result<Vec<f64>, Error> {
+        if let Some(plan)=&selection.plan{return plan.numeric_states(&self.program,voltages,before,proofs,crate::real_expression::work(self));}
         let mut after = before.to_vec();
+        let mut frames=crate::procedure_frames::Frames::new(selection,Some(crate::real_expression::work(self)))?;
         for (event, indices) in &selection.actions {
-            let mut local = before.to_vec();
+            let mut local = frames.take(*event).unwrap_or_else(||before.to_vec());
             for &index in indices {
                 let (state, expression) = &self.actions[*event][index];
                 local[*state] = if self.numeric_actions[*event][index] {
@@ -2683,10 +2748,21 @@ impl EventModel {
                 check_state(local[*state], &self.program.states[*state].kind)?;
                 after[*state] = local[*state];
             }
+            frames.put(*event,local);
         }
         Ok(after)
     }
 }
+
+impl EventModel{
+    pub(crate) fn held_parameter_dependencies(&self,e:&Expression,owner:&str)->Result<AffineState,Error>{
+        if self.program.procedures.is_empty(){return affine(e,&self.program,owner);}
+        let w=crate::real_expression::work(self);
+        let sources=crate::procedure::dependency_sources(&self.program,w)?;
+        crate::procedure::source_dependencies(e,&self.program,&sources,w)
+    }
+}
+
 
 #[cfg(test)]
 #[path = "events_certificate_cache_tests.rs"]

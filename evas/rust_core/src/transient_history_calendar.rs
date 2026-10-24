@@ -184,7 +184,7 @@ impl Controller {
                         independent_changed[index] = false;
                         for expression in [start, period, enabled] {
                             independent_changed[index] |=
-                                crate::events::affine(expression, &model.program, owner)?
+                                model.held_parameter_dependencies(expression,owner)?
                                     .state_dependencies
                                     .iter()
                                     .any(|&state| {
@@ -251,7 +251,7 @@ impl Controller {
             {
                 changed[index] = false;
                 for expression in [start, period, enabled] {
-                    changed[index] |= crate::events::affine(expression, &model.program, owner)?
+                    changed[index] |= model.held_parameter_dependencies(expression,owner)?
                         .state_dependencies
                         .iter()
                         .any(|&s| self.accepted.state_bounds[s] != next.state_bounds[s]);

@@ -11,16 +11,19 @@ import math
 from .errors import CompileError
 from .ir import Affine, Binary, Origin, Power, Select
 from .limits import MAX_IR_ITEMS, check_ir
-from .lowering import lower, lower_decision
-from .syntax import Loop, Assignment, Conditional, Display, OPERATOR_NAMES, DECISION_NAMES
+from .lowering import lower, lower_decision, _SourceAuditMemo
+from .syntax import Loop, Assignment, Conditional, Display, OPERATOR_NAMES, DECISION_NAMES, Expr, Token
 from .display import validate_format
 from .integer_bits import OPS as BIT_OPS
 from .compact_source_select import compact_source_assignment
+from .statement_audit_lease import StatementAuditLease, _MISSING
 
 PURE_MATH = frozenset(("sin", "cos", "exp", "ln", "sqrt"))
-VALUE_OPS = frozenset(("number", "parameter", "voltage", "time", "index", "checked",
+VALUE_OPS = frozenset(("number", "parameter", "voltage", "time", "index", "checked", "unsupported_system_call",
                        "+", "-", "*", "/", "%", "power", "floor", "unary+", "unary-")) | DECISION_NAMES | PURE_MATH | BIT_OPS
 UNKNOWN = object()
+_PURE_AUDIT_OPS = frozenset(('number', 'parameter', 'node', 'voltage', 'time',
+                           '+', '-', '*', '/', '%', 'unary+', 'unary-')) | DECISION_NAMES
 
 
 
@@ -123,26 +126,106 @@ def audit_event_body(compiler, statements, charge_native):
             implicit_powers[id(root)] = (root, value if isinstance(value, Select) else None)
         return implicit_powers[id(root)][1]
 
-    def needs_choices(root):
+    def needs_choices(root, *, paid=False):
+        if paid:
+            compiler.compilation.native_audit.activate(root)
+            charge_native.extra(root, 'source_audit_choice_scan_create', 2)
         pending, visited = [root], set()
         while pending:
+            if paid:
+                charge_native.extra(root, 'source_audit_choice_scan_pop', 2)
             item = pending.pop()
             if id(item) in visited:
                 continue
+            if paid:
+                charge_native.extra(item, 'source_audit_choice_scan_insert')
             visited.add(id(item))
             if (item.op in DECISION_NAMES or item.op in BIT_OPS or item.op in ("index", "floor") or
                     item.op in ("/", "%") and compiler.integer_type(item) or
                     item.op == "power" and finite_power_tree(item) is not None):
                 return True
+            if paid:
+                charge_native.extra(item, 'source_audit_choice_scan_edges', 1+len(item.args))
             pending.extend(item.args)
         return False
 
+    # Reuse only inside one original shape's fixed source/binding environment.
+    # No index/floor/function/operator callbacks or executable effects qualify.
+    # The source identity and every child/metadata field must be immutable.
+    reusable_source = None
+    current_lower_memos = None
+    def paid_observer(root):
+        compiler.compilation.native_audit.activate(root)
+        charge_native.extra(root, 'source_audit_observer_query', 1)
+        # Do not cache a verdict over mutable model containers. The new source
+        # use-site pays for every original statement the structural query reads.
+        return compiler.numeric_observer_candidate(
+            visit=lambda statement:charge_native.extra(statement, 'source_audit_observer_visit'))
+
+    def reusable(root):
+        nonlocal reusable_source
+        if reusable_source is None:
+            compiler.compilation.native_audit.activate(root)
+            charge_native.extra(root, 'source_audit_reuse_qualify_cache_create')
+            reusable_source = {}
+        charge_native.extra(root, 'source_audit_reuse_qualify_lookup')
+        cached = reusable_source.get(id(root))
+        if cached is not None:
+            assert cached[0] is root
+            return cached[1]
+        charge_native.extra(root, 'source_audit_reuse_qualify_fields', len(Expr.__dataclass_fields__)+len(Token.__dataclass_fields__))
+        def expansion(value):
+            if type(value) is not tuple:
+                return False
+            charge_native.extra(root, 'source_audit_reuse_expansion', len(value))
+            return all(type(pair) is tuple and len(pair) == 2 and type(pair[0]) is str
+                       and type(pair[1]) is int for pair in value)
+        valid = (type(root) is Expr and root.op in _PURE_AUDIT_OPS and type(root.args) is tuple
+                 and type(root.value) in (str, int, float, type(None))
+                 and type(root.token) is Token and root.source_call is None
+                 and type(root.result_type) in (str, type(None))
+                 and type(root.real_boundary_kind) in (str, type(None))
+                 and expansion(root.expansion) and expansion(root.token.expansion)
+                 and type(root.token.text) is str and type(root.token.kind) is str
+                 and type(root.token.source) is str and type(root.token.line) is int
+                 and type(root.token.column) is int
+                 and type(root.token.default_transition) in (float, int, type(None)))
+        if valid:
+            charge_native.extra(root, 'source_audit_reuse_qualify_edges', 1+len(root.args))
+            # Inspect all children, including unselected arms, before qualifying.
+            values = [reusable(child) for child in root.args]
+            valid = all(values)
+        charge_native.extra(root, 'source_audit_reuse_qualify_insert', 2)
+        reusable_source[id(root)] = (root, valid)
+        return valid
+
+    statement_lease = None
+
     def audit_lower(root, *, integer_assignment_root=False, static_integer_audit=False):
+        if statement_lease is not None:
+            charge_native.extra(root, 'statement_audit_role_key', 3)
+            flags = (integer_assignment_root, static_integer_audit)
+            cached = statement_lease.get(root, flags)
+            if cached is not _MISSING:
+                return cached
         options = dict(preserve_structure=True, node_declarations=True,
                        integer_assignment_root=integer_assignment_root,
                        static_integer_audit=static_integer_audit)
-        if needs_choices(root):
+        choices = needs_choices(root)
+        if choices:
             options.update(decisions=selection, indices=index_read)
+            if current_lower_memos is not None:
+                charge_native.extra(root, 'source_audit_lower_context_lookup', 4)
+                # A cache exists only after the paid fixed-structure query
+                # proved this is a physical source view.
+                context = (integer_assignment_root, static_integer_audit, False)
+                if context not in current_lower_memos:
+                    charge_native.extra(root, 'source_audit_lower_context_insert', 2)
+                    charge_native.extra(root, 'source_audit_lower_callbacks', 5)
+                    current_lower_memos[context] = _SourceAuditMemo(
+                        compiler.compilation.native_audit.ir_work,
+                        (None, selection, None, index_read))
+                options['memo'] = current_lower_memos[context]
         else:
             # One fixed binding, no registration/index/decision callbacks.
             # The existing memo contract keeps shared function obligations
@@ -150,9 +233,18 @@ def audit_event_body(compiler, statements, charge_native):
             options["memo"] = {}
         if compiler.numeric_observer_candidate():
             options.pop("memo", None)
-            return compiler.lower_event_value(root, compiler.symbol, compiler.node_ids, **options)
-        return compiler.lower_event(root, compiler.symbol, compiler.node_ids,
-                                    sampled_values=True, **options)
+            # Original-tree audit is not an execution occurrence. In particular,
+            # an expanded function below floor/choice arguments must not emit
+            # owned call slots or operators which the real source replay emits
+            # later. Keep the same symbolic event-value/type checks, but no
+            # execute_calls callback in this read-only view.
+            return compiler.lower_event(root, compiler.symbol, compiler.node_ids,
+                                        event_values=True, program_real=True, **options)
+        value = compiler.lower_event(root, compiler.symbol, compiler.node_ids,
+                                     sampled_values=True, **options)
+        if statement_lease is not None:
+            statement_lease.put(root, flags, value)
+        return value
 
     def resource_tree(root, memo=None):
         # Only split_selection/event_assignment consume this private tree.
@@ -171,6 +263,23 @@ def audit_event_body(compiler, statements, charge_native):
             # private resource-only surrogate. Original shape audits all args.
             value = (resource_tree(root.args[0], memo) if root.value == "real"
                      else audit_lower(root))
+        elif root.op == "unsupported_system_call":
+            # Qualification and shape() audit every original argument, including
+            # the seed lvalue. This private tree records only argument choices;
+            # it never supplies a numeric result, domain or execution proof.
+            # The real emitter retains UnsupportedSystemCall and its ordered RN
+            # arguments, so even zero sigma/unused returns remain failure effects.
+            charge_native.extra(root, "deferred_system_resource_signature", 5+len(root.args))
+            if root.value != "rdist_normal" or len(root.args) != 3:
+                fail("unsupported system function or argument count", root,
+                     "unsupported_system_function")
+            mean = resource_tree(root.args[1], memo)
+            sigma = resource_tree(root.args[2], memo)
+            # Same opaque choice carrier as pure unused mathematics below.
+            # Binary is deliberate: the bounded resource splitter visits both
+            # arguments, whereas it must not execute the deferred failure leaf.
+            value = compiler.make_ir(Binary, "add", mean,
+                compiler.make_ir(Binary, "add", sigma, compiler.make_ir(Affine, 2.0, ())))
         elif root.op == "index":
             value = index_read(root)
         elif root.op in BIT_OPS or root.op == "floor" or root.op in ("/", "%") and compiler.integer_type(root):
@@ -235,6 +344,24 @@ def audit_event_body(compiler, statements, charge_native):
         return value
 
     def shape(root, *, integer_assignment=False, parameter_dead=False):
+        nonlocal current_lower_memos
+        # New source use-site: never reuse lowered values across statements,
+        # events, loop domains, instance bindings or parameter live/dead roles.
+        current_lower_memos = None
+        arithmetic = ('+', '-', '*', '/', '%', 'unary+', 'unary-')
+        if integer_assignment and root.op in arithmetic:
+            # Amortize paid metadata/cache setup only for a source with at
+            # least four overlapping arithmetic prefixes. Short trees keep
+            # their original lower path; this changes no source admission.
+            prefix, count = root, 0
+            while prefix is not None and count < 5:
+                charge_native.extra(prefix, 'source_audit_reuse_candidate', 1+len(prefix.args))
+                count += 1
+                prefix = next((child for child in prefix.args if child.op in arithmetic), None)
+            if (count == 5 and not paid_observer(root)
+                    and needs_choices(root, paid=True) and reusable(root)):
+                charge_native.extra(root, 'source_audit_reuse_shape_context')
+                current_lower_memos = {}
         pending = [root]
         while pending:
             item = pending.pop()
@@ -273,7 +400,7 @@ def audit_event_body(compiler, statements, charge_native):
                 compiler._dynamic_index(item.args[0], item.token, "read", str(item.value))
             elif item.op in PURE_MATH and len(item.args) != 1:
                 fail("pure mathematical functions require one operand", item)
-            elif item.op == "checked":
+            elif item.op == "checked" and item.source_call is None:
                 # The primary value may be unused mathematics. Every retained
                 # function obligation keeps its original lowering boundary.
                 for obligation in item.args[1:]:
@@ -302,7 +429,9 @@ def audit_event_body(compiler, statements, charge_native):
         return {"<":a<b, "<=":a<=b, ">":a>b, ">=":a>=b}[statement.relation]
 
     def body(items, parameter_dead=False):
+        nonlocal statement_lease
         for statement in items:
+            statement_lease = None
             charge_native(statement, "event_statement")
             if isinstance(statement, Loop):
                 compiler.validate_runtime_loop(statement)
@@ -334,6 +463,8 @@ def audit_event_body(compiler, statements, charge_native):
                     if statement.name not in compiler.state_ids:
                         fail("assignment target must be an instance state", statement)
                     kind = compiler.model.variables[statement.name]
+                if kind == "integer" and statement.index is None:
+                    statement_lease = StatementAuditLease.create(compiler, statement, charge_native.extra)
                 shape(statement.rhs, integer_assignment=(kind == "integer"), parameter_dead=parameter_dead)
                 if needs_choices(statement.rhs):
                     budget_value = resource_tree(statement.rhs)

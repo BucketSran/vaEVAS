@@ -25,13 +25,23 @@ def sample(p,times=(0,.125,.25,.5,1),drive=None,**kw):
 def values(r,key='y'):
     return [row['voltages'][r['nodes'].index(key)] for row in r['solutions']]
 
+def check_initial_total_alias(result, program):
+    # Source: default q=0; initial q=7; ordinary q=2*sample(.5)=1.
+    from initial_record_contract import check_initial_record_batch
+    check_initial_record_batch(result, program, [0.], [1.], 1)
+    assert result['transient']['state_names'] == ['M:q']
+    assert result['transient']['times'] == [0., .125, .25, .5, 1.]
+    assert len(result['solutions']) == 5
+    assert result['transient']['states'] == [[1.]] * 5
+    assert values(result) == [1.] * 5
+    assert values(result, 'z') == [1.] * 5
+
 class InitialOrdinaryAlias(unittest.TestCase):
     def test_public_red_total_alias_preserves_seed_slot(self):
         p=program()
-        self.assertEqual([(s.name,s.initial) for s in p.states],[('q',7.)])
+        self.assertEqual([(s.name,s.initial) for s in p.states],[('q',0.)])
         r=sample(p)
-        self.assertEqual(values(r),[1]*5)
-        self.assertEqual(r['transient']['states'],[[7.]]*5)
+        check_initial_total_alias(r, p)
 
     def test_each_source_position_reads_its_current_alias(self):
         p=program('@(initial_step)q=7;q=V(u);V(y)<+q;q=q+1;V(z)<+q;')

@@ -11,7 +11,7 @@ and function inlining: array-read and function-origin indices stay rejected.
 GUARDS = ['LANG', 'COMPOSE', 'EVENT-ORDER']
 import unittest
 
-from evas import CompileError, Instance, KernelError, compile_sources, transient
+from evas import CompileError, Instance, compile_sources, transient
 from test_affine import KERNEL, instance, model
 
 
@@ -116,14 +116,25 @@ class ConcurrentWriters(unittest.TestCase):
         states, _ = final_states(p)
         self.assertEqual((states['dut:a[0]'], states['dut:a[1]']), (7., 9.))
 
-    def test_same_time_same_slot_is_event_conflict(self):
+    def test_same_time_same_slot_follows_source_order(self):
         p = compiled('integer a[0:1],b,c;',
                      ['@(initial_step) begin b=0; c=0; end',
                       '@(timer(0.25,0,1e-12)) a[b]=7;',
                       '@(timer(0.25,0,1e-12)) a[c]=9;'])
-        with self.assertRaises(KernelError) as caught:
-            final_states(p)
-        self.assertIn('event_conflict', str(caught.exception))
+        states, result = final_states(p)
+        self.assertEqual((states['dut:a[0]'], states['dut:a[1]']), (9., 0.))
+        self.assertEqual((states['dut:b'], states['dut:c']), (0., 0.))
+        self.assertEqual(result['transient']['states'],
+                         [[0., 0., 0., 0.], [9., 0., 0., 0.]])
+        records = result['transient']['events']
+        self.assertEqual([(e['kind'], e['time'], e['event']) for e in records],
+                         [('initial_step', 0., 2), ('timer', .25, 0), ('timer', .25, 1)])
+        self.assertEqual(records[0]['before'], [0., 0., 0., 0.])
+        self.assertEqual(records[0]['after'], [0., 0., 0., 0.])
+        # Event records contain the whole occurrence's before/after snapshots.
+        for record in records[1:]:
+            self.assertEqual(record['before'], [0., 0., 0., 0.])
+            self.assertEqual(record['after'], [9., 0., 0., 0.])
 
 
 class IndependentInstances(unittest.TestCase):

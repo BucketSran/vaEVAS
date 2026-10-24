@@ -1,0 +1,2 @@
+`include "disciplines.vams"
+module m(u,y,r); input u; output y; inout r; electrical u,y,r; real a,b;integer c;electrical e; analog begin @(initial_step)begin a=1;b=0;c=0;end @(timer(0,0,0.001))begin a=a;b=V(e,r);$display("b=%g",b);if(V(u,r)>0)c=2147483648.0;else c=1;c=0;end @(timer(0.5,0,0.001))b=b+1;V(e,r)<+2;V(y,r)<+transition(a,0.125,0.5,0.5); end endmodule

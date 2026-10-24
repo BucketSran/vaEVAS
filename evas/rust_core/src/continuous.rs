@@ -113,6 +113,8 @@ pub(crate) struct OperatorSlot {
 mod exact_affine;
 #[path = "continuous_history.rs"]
 mod history;
+#[path = "continuous_root_epoch.rs"]
+mod root_epoch;
 #[path = "continuous_runtime.rs"]
 mod runtime;
 #[path = "continuous_select.rs"]
@@ -141,6 +143,7 @@ pub(crate) struct LinearContinuous {
     exact_affine: Option<exact_affine::History>,
     exact_states: Vec<bool>,
     exact_seed: Option<Vec<Option<num_rational::BigRational>>>,
+    root_epoch: Option<Arc<root_epoch::Epoch>>,
 }
 
 #[derive(Clone)]
@@ -153,6 +156,7 @@ struct Context {
     detached_timed: bool,
     live_parameters: Option<Arc<BTreeSet<usize>>>,
     time_proofs: crate::exact_source::TimeProofs,
+    reset_captures: Arc<Vec<Option<I>>>,
 }
 
 impl Context {
@@ -165,6 +169,7 @@ impl Context {
             .map(Arc::new);
         Ok(Self {
             time_proofs: Default::default(),
+            reset_captures: Arc::new(Vec::new()),
             detached_timed: projected.is_some(),
             live_parameters,
             program: Arc::new(projected.unwrap_or_else(|| program.clone())),
@@ -203,6 +208,7 @@ fn local_context(context: &Arc<Context>, horizon: f64) -> Arc<Context> {
         detached_timed: context.detached_timed,
         live_parameters: context.live_parameters.clone(),
         time_proofs: context.time_proofs.clone(),
+        reset_captures: context.reset_captures.clone(),
     })
 }
 
@@ -340,7 +346,7 @@ impl LinearContinuous {
                         "joint idt reset must depend only on instance event state and constants",
                     ));
                 }
-                crate::operators::ResetExpression::new(reset.clone()).active(&parameters)?
+                match context.reset_captures.get(operator).copied().flatten(){Some(value)=>crate::operators::reset_active(value)?,None=>crate::operators::ResetExpression::new(reset.clone()).active(&parameters)?}
             } else {
                 false
             };
@@ -434,7 +440,7 @@ impl LinearContinuous {
             start,
         )?;
         let initial = segments[0].initial[..state_count].to_vec();
-        let event_dependent = operators.iter().any(|op| {
+        let event_dependent = (!context.program.procedures.is_empty() && !context.program.step_bounds.is_empty()) || operators.iter().any(|op| {
             let spec = &program.operators[op.operator];
             matches!(spec, OperatorSpec::Idt { reset: Some(_), .. })
                 || continuous_operator_input(spec).is_some_and(|(input, origin)| {
@@ -475,6 +481,7 @@ impl LinearContinuous {
             exact_affine,
             exact_states,
             exact_seed: None,
+            root_epoch: None,
         }))
     }
 
@@ -1799,6 +1806,8 @@ mod tests {
 
     fn program_with_idt(input: Expression, ic: f64) -> Program {
         Program {
+            procedures: vec![],
+            real_bindings: vec![],
             step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".to_string(), "y".to_string()],
@@ -1962,6 +1971,8 @@ mod tests {
     }
     fn ramp_filter_program(tau: f64) -> Program {
         Program {
+            procedures: vec![],
+            real_bindings: vec![],
             step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".to_string(), "u".to_string(), "y".to_string()],
@@ -2103,6 +2114,8 @@ mod tests {
     #[test]
     fn cancelled_internal_relay_enters_continuous_network_as_exact_zero() {
         let program = Program {
+            procedures: vec![],
+            real_bindings: vec![],
             step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".to_string(), "z".to_string(), "y".to_string()],
@@ -2139,6 +2152,8 @@ mod tests {
     #[test]
     fn cancelled_internal_relay_keeps_event_history_dependency() {
         let program = Program {
+            procedures: vec![],
+            real_bindings: vec![],
             step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".to_string(), "z".to_string(), "y".to_string()],
@@ -2192,6 +2207,8 @@ mod tests {
     #[test]
     fn selection_closes_through_voltage_relation_producers() {
         let program = Program {
+            procedures: vec![],
+            real_bindings: vec![],
             step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec![
@@ -2386,6 +2403,27 @@ mod tests {
 
         let t = 1.0_f64;
         assert_close(continuous.values(t).unwrap()[0], 1.0 - (-t).exp(), 1e-9);
+    }
+
+    #[test]
+    fn callsite_reset_release_preserves_accepted_history_and_failed_retry_owner() {
+        let input=Expression::Affine{constant:1.,terms:vec![crate::ir::Term{node:1,coefficient:-1.}]};
+        let mut program=program_with_idt(input,0.);
+        program.states.push(serde_json::from_value(serde_json::json!({"instance":"uut","name":"reset","kind":"integer","initial":0})).unwrap());
+        if let OperatorSpec::Idt{reset,..}=&mut program.operators[0]{*reset=Some(Expression::State{state:0});}
+        let accepted=Continuous::new(&program,&no_source_trajectory(1.),&[],&[0.]).unwrap().unwrap();
+        let original=accepted.bounds(0.75).unwrap();
+        let work=crate::transition_source_plan::Work::default();
+        let mapped=accepted.captured_resets(0.5,I::point(0.5),&[I::ONE],&[Some(I::ONE)],&work).unwrap();
+        let released=mapped.captured_resets(0.5,I::point(0.5),&[I::ONE],&[Some(I::ZERO)],&work).unwrap();
+        let value=released.values(0.75).unwrap()[0];
+        assert!((value-(1.-(-0.25_f64).exp())).abs()<1e-9);
+        assert_eq!(accepted.bounds(0.75).unwrap(),original);
+        let limited=crate::transition_source_plan::Work::limited([128,8192,1]);
+        assert_eq!(accepted.captured_resets(0.5,I::point(0.5),&[I::ONE],&[Some(I::ONE)],&limited).err().unwrap().kind,"step_budget");
+        let spent=limited.spent();let retry=limited.clone();assert!(limited.same_owner(&retry));
+        assert_eq!(accepted.captured_resets(0.5,I::point(0.5),&[I::ONE],&[Some(I::ONE)],&retry).err().unwrap().kind,"step_budget");
+        assert!(retry.spent()>spent);assert_eq!(accepted.bounds(0.75).unwrap(),original);
     }
 
     #[test]

@@ -1,0 +1,28 @@
+{
+  "scope": "Frozen C8 native schema28 programs for explicit legacy compatibility tests only; header lift is not a user IR migration API",
+  "compiler_manifest_sha256": "e9cf42606cfec4b828529067cd4f32074cfa422d25a85f50dbf2cd570a08fab7",
+  "source_inputs_sha256": "24d593cd9599fa5a83807d2df49c72f7de28a4182ef587946e3d3968cd5f6abd",
+  "cases": {
+    "affine-held": {
+      "program_sha256": "5325d7f5d931faff8dfa8c56260a33a27f01800478a6a4d6afd482342a8122b1",
+      "request_sha256": "99a3a9ba8096ad7ca1d996326489fae368d5db466f42dd69eb5a554d70270c57",
+      "sources_sha256": {
+        "legacy.va": "9976c1970c38d394f02967d0fe589892c0be10ef09d4f6d824569a3ff840b7f5"
+      }
+    },
+    "selected-body-alias377": {
+      "program_sha256": "4f25b6de74f8ffe2b6026bd488d3dd5a2910762455afedd28a074127b330272d",
+      "request_sha256": "b3d7f37deea9b0da3050a027c6dfd72b5a9c7345b8f486c01869e744ec5c9d32",
+      "sources_sha256": {
+        "alias.va": "e22016c4fda9841bd86055aa67c1f3e903cc5c3fa5ab7314155eccbb9e54ae43"
+      }
+    },
+    "selected-ln135": {
+      "program_sha256": "add3c355881d8f57f381f6b4b0712df5f772f70274b188da6893b9d2d14403e4",
+      "request_sha256": "89789eaceb044e5909d5ff7432d30fe60e58a6c0d2edef4b857305517183e95d",
+      "sources_sha256": {
+        "selected.va": "1a9cf9351b7c2feca78d201ed9a173f6e00b966ff3a8cf01168db773dcf75460"
+      }
+    }
+  }
+}

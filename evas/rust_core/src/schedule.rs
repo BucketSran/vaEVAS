@@ -22,6 +22,71 @@ pub(crate) struct ScheduledEvent {
     // Set only by exact fixed-clock ordering. Retaining this pending event
     // across an epoch must not discard the proof against its predecessor.
     fixed_predecessor: Option<f64>,
+    // Shared only by leaves copied from one certified isolation result.
+    occurrence: Option<Arc<()>>,
+}
+
+/// Split execution by physical roots, even when binary64 representatives collide.
+/// An unproved legacy simultaneous batch retains its previous conflict handling.
+pub(crate) fn batch_end(events: &[ScheduledEvent], start: usize, model: &EventModel) -> Result<usize, Error> {
+    let w=crate::real_expression::work(model);
+    w.step()?;let mut end = start + 1;
+    while end < events.len() && events[end].time == events[start].time {
+        if matches!(events[start].moment.exact_order_with_work(&events[end].moment,w)?, Some(std::cmp::Ordering::Less | std::cmp::Ordering::Greater)) { break; }
+        end += 1;
+    }
+    Ok(end)
+}
+
+pub(crate) fn common_occurrence(events: &[ScheduledEvent], model: &EventModel) -> Result<bool, Error> {
+    let Some(first) = events.first() else { return Ok(false); };
+    let w = crate::real_expression::work(model);
+    w.debit(2, events.len() as u64 + 8)?;
+    if events.len() == 1 { return Ok(true); }
+    if let Some(token) = &first.occurrence {
+        if events.iter().all(|e| e.occurrence.as_ref().is_some_and(|t| Arc::ptr_eq(t, token))) { return Ok(true); }
+    }
+    Ok(common_root_with_work(events,w)?.is_some())
+}
+
+// The cache is scoped to one calendar/history epoch. Keys include the original
+// guard owner, segment and full discovery settings. Reusing its root objects,
+// rather than comparing their boxes, is the nonrational occurrence certificate.
+struct SharedIsolation { leaf: usize, local: bool, segment: [f64;2], roots: Vec<(crate::dynamic_roots::CertifiedRoot, Arc<()>)> }
+fn same_isolation_guard(a:&Expression,b:&Expression,w:&crate::transition_source_plan::Work)->Result<bool,Error>{
+    w.step()?;
+    Ok(match (a,b){
+        (Expression::Power{base:a,exponent:x},Expression::Power{base:b,exponent:y})=>x==y&&same_isolation_guard(a,b,w)?,
+        (Expression::Add{left:a,right:b},Expression::Add{left:c,right:d})
+        |(Expression::Multiply{left:a,right:b},Expression::Multiply{left:c,right:d})
+        |(Expression::Divide{left:a,right:b},Expression::Divide{left:c,right:d})=>same_isolation_guard(a,c,w)?&&same_isolation_guard(b,d,w)?,
+        _=>crate::history_admission::same_expression(a,b,w)?,
+    })
+}
+fn shared_isolation(
+    cache: &mut Vec<SharedIsolation>, leaf: usize, local: bool, segment: [f64;2], model: &EventModel,
+    work: Option<&crate::transition_source_plan::Work>,
+    isolate: impl FnOnce() -> Result<Vec<crate::dynamic_roots::CertifiedRoot>, Error>,
+) -> Result<Vec<(crate::dynamic_roots::CertifiedRoot, Arc<()>)>, Error> {
+    for entry in cache.iter() {
+        if let Some(w) = work { w.step()?; }
+        if entry.local != local || entry.segment != segment { continue; }
+        let a = &model.triggers[entry.leaf]; let b = &model.triggers[leaf];
+        if let Some(w)=work{w.debit(2,(model.program.events[a.event].origin.instance.len()+model.program.events[b.event].origin.instance.len()+1) as u64)?;}
+        if model.program.events[a.event].origin.instance != model.program.events[b.event].origin.instance || model.program.events[a.event].procedure_id != model.program.events[b.event].procedure_id { continue; }
+        let same = match (&a.trigger, &b.trigger) {
+            (EventTrigger::Cross{guard:a,direction:ad,time_tolerance:at,expression_tolerance:ae}, EventTrigger::Cross{guard:b,direction:bd,time_tolerance:bt,expression_tolerance:be}) => {
+                ad == bd && at == bt && ae == be && if let Some(w) = work { same_isolation_guard(a,b,w)? } else { a == b }
+            }, _ => false,
+        };
+        if same { if let Some(w) = work { w.debit(2, (entry.roots.len()*64+32) as u64)?; } return Ok(entry.roots.clone()); }
+    }
+    let discovered = isolate()?;
+    if let Some(w) = work { w.debit(2, (discovered.len()*160+128) as u64)?; }
+    let roots = discovered.into_iter().map(|root| (root,Arc::new(()))).collect::<Vec<_>>();
+    let entry=SharedIsolation{leaf,local,segment,roots:roots.clone()};
+    if let Some(w)=work{crate::history_storage::push_vec(cache,entry,w)?;}else{cache.push(entry);}
+    Ok(roots)
 }
 
 /// Every calendar leaf must prove the same mathematical root independently.
@@ -30,6 +95,11 @@ pub(crate) fn copy_calendar(
     events: &[ScheduledEvent],
     model: &EventModel,
 ) -> Result<Vec<ScheduledEvent>, Error> {
+    // New occurrence handles add storage and Arc clone work to every copied
+    // entry, including the legacy calendar copy route.
+    let original=crate::real_expression::work(model);
+    original.debit(2,0)?;
+    original.debit(2,(events.len()*16+32) as u64)?;
     let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) else {
         return Ok(events.to_vec());
     };
@@ -128,6 +198,13 @@ fn serial_transition_cluster(
 }
 
 impl ScheduledEvent {
+    fn accepts_execution(&self, time: f64, model: &EventModel, work: Option<&crate::transition_source_plan::Work>) -> Result<bool, Error> {
+        if self.moment.accepts(time, &model.triggers[self.event].trigger) { return Ok(true); }
+        if !matches!(&self.moment, Moment::Cross(root) if root.has_source_zero()) || model.dynamic_guards[self.event] || model.relocalized_guards[self.event] || !model.guard_operators[self.event].is_empty() || time != self.bounds().hi { return Ok(false); }
+        // The physical root itself is exact. The outward display box does not
+        // replace its zero-error root certificate, and time is not advanced.
+        Ok(self.exact_root_with_work(work.unwrap_or_else(||crate::real_expression::work(model)))?.is_some())
+    }
     pub(crate) fn record_ambiguous_query(&self, site: &str, query: f64) {
         let (kind, clock, exact) = match &self.moment {
             Moment::HeldTimer { clock, exact, .. } => {
@@ -378,11 +455,9 @@ impl ScheduledEvent {
         if self.moment.exact_order(&prior.moment) != Some(std::cmp::Ordering::Greater) {
             return Ok(false);
         }
-        self.time = self.time.max(prior.time.next_up());
-        if !self
-            .moment
-            .accepts(self.time, &model.triggers[self.event].trigger)
-        {
+        // The original exact roots order the phases; never invent a later time.
+        self.time = self.time.max(prior.time);
+        if !self.accepts_execution(self.time,model,None)? {
             return Err(unresolved(
                 "retained exact event order exceeds original tolerances",
             ));
@@ -751,9 +826,13 @@ impl Moment {
 fn contract_zero_timer_group(
     events: &mut [ScheduledEvent],
     model: &EventModel,
+    work: Option<&crate::transition_source_plan::Work>,
 ) -> Result<Option<f64>, Error> {
     let mut time = None;
     for event in events.iter() {
+        if let Some(w) = work {
+            w.step()?;
+        }
         if matches!(
             model.triggers[event.event].trigger,
             EventTrigger::Timer {
@@ -773,6 +852,9 @@ fn contract_zero_timer_group(
     let Some(time) = time else { return Ok(None) };
     // Prove the whole group before changing its local certificates.
     for event in events.iter() {
+        if let Some(w) = work {
+            w.step()?;
+        }
         if let Moment::Timer {
             bounds,
             start,
@@ -785,13 +867,12 @@ fn contract_zero_timer_group(
                 period,
                 index,
             };
-            let exact =
-                if let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) {
-                    clock.bounds_with_work(w)?
-                } else {
-                    clock.bounds()
-                }
-                .ok_or_else(|| unresolved("fixed timer exact clock has no finite bounds"))?;
+            let exact = if let Some(w) = work {
+                clock.bounds_with_work(w)?
+            } else {
+                clock.bounds()
+            }
+            .ok_or_else(|| unresolved("fixed timer exact clock has no finite bounds"))?;
             if exact != I::point(time) || bounds.lo > time || bounds.hi < time {
                 return Err(unresolved(
                     "fixed timer cannot share the zero-tolerance point",
@@ -800,6 +881,9 @@ fn contract_zero_timer_group(
         }
     }
     for event in events.iter_mut() {
+        if let Some(w) = work {
+            w.step()?;
+        }
         if let Moment::Timer { bounds, .. } = &mut event.moment {
             *bounds = I::point(time);
         }
@@ -807,19 +891,31 @@ fn contract_zero_timer_group(
     Ok(Some(time))
 }
 
+#[cfg(test)]
 fn order_fixed_timers(
     events: &mut [ScheduledEvent],
     model: &EventModel,
     stop: f64,
     next_lower: Option<f64>,
 ) -> Result<(), Error> {
+    order_fixed_timers_with_work(events, model, stop, next_lower, None)
+}
+fn order_fixed_timers_with_work(
+    events: &mut [ScheduledEvent],
+    model: &EventModel,
+    stop: f64,
+    next_lower: Option<f64>,
+    work: Option<&crate::transition_source_plan::Work>,
+) -> Result<(), Error> {
+    let work = work.or_else(|| crate::analytic_request::proof_owner(model).map(|o| o.work()));
     let mut uncertified = false;
-    if let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) {
+    if let Some(w) = work {
         history_bookkeeping::sort(events, w, |a, b| {
-            let order = history_bookkeeping::order(a, b, model)?.unwrap_or_else(|| {
-                uncertified = true;
-                std::cmp::Ordering::Equal
-            });
+            let order =
+                history_bookkeeping::order_with_work(a, b, model, work)?.unwrap_or_else(|| {
+                    uncertified = true;
+                    std::cmp::Ordering::Equal
+                });
             Ok(order.then(a.event.cmp(&b.event)))
         })?;
     } else {
@@ -838,7 +934,7 @@ fn order_fixed_timers(
     let mut previous: Option<f64> = None;
     let mut groups = 0;
     while start < events.len() {
-        if let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) {
+        if let Some(w) = work {
             w.debit(2, 0)?;
             w.step()?;
         }
@@ -855,10 +951,10 @@ fn order_fixed_timers(
         groups += 1;
         let mut end = start + 1;
         while end < events.len() {
-            if let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) {
+            if let Some(w) = work {
                 w.step()?;
             }
-            match history_bookkeeping::order(&events[start], &events[end], model)? {
+            match history_bookkeeping::order_with_work(&events[start], &events[end], model, work)? {
                 Some(std::cmp::Ordering::Equal) => end += 1,
                 Some(_) => break,
                 None => return Err(unresolved("cannot certify exact fixed timer group")),
@@ -866,7 +962,7 @@ fn order_fixed_timers(
         }
         // All equal nominal times must share one representative, including
         // when their different arithmetic decompositions have different bounds.
-        let zero_time = contract_zero_timer_group(&mut events[start..end], model)?;
+        let zero_time = contract_zero_timer_group(&mut events[start..end], model, work)?;
         let mut time = zero_time.unwrap_or_else(|| {
             events[start..end]
                 .iter()
@@ -879,7 +975,7 @@ fn order_fixed_timers(
                     "prior event occupies a zero-tolerance timer time",
                 ));
             }
-            time = time.max(prior.next_up());
+            time = time.max(prior);
         }
         if !time.is_finite() {
             return Err(unresolved("ordered timer representative is not finite"));
@@ -893,13 +989,8 @@ fn order_fixed_timers(
             ));
         }
         for event in &mut events[start..end] {
-            if !event
-                .moment
-                .accepts(time, &model.triggers[event.event].trigger)
-            {
-                return Err(unresolved(
-                    "ordered timer representative exceeds its original time tolerance",
-                ));
+            if !event.accepts_execution(time, model, work)? {
+                return Err(unresolved("ordered timer representative exceeds its original time tolerance"));
             }
             event.time = time;
             if previous.is_some() {
@@ -923,8 +1014,10 @@ fn add_timer(
     after: Option<f64>,
     boundary: Option<&TimerBoundary<'_>>,
     time_proofs: Option<&crate::transient::time_provenance::TimeProofs>,
+    work: Option<&crate::transition_source_plan::Work>,
 ) -> Result<(), Error> {
-    let history_work = crate::analytic_request::proof_owner(model).map(|o| o.work());
+    let history_work =
+        work.or_else(|| crate::analytic_request::proof_owner(model).map(|o| o.work()));
     if let Some(w) = history_work {
         w.debit(2, 0)?;
         w.debit(2, 16)?;
@@ -955,6 +1048,20 @@ fn add_timer(
                 Error::new("unsupported_timer", "dynamic timer requires a held epoch")
             })?;
             let value = |expression: &crate::ir::Expression| -> Result<I, Error> {
+                if !model.program.procedures.is_empty(){
+                    let value=crate::procedure::held_parameter(expression,&model.program,states,crate::real_expression::work(model))?;
+                    if !value.finite(){return Err(unresolved("nonfinite source timer parameter bounds"));}return Ok(value);
+                }
+                if let Some(w) = history_work {
+                    let width = model
+                        .program
+                        .nodes
+                        .len()
+                        .saturating_add(model.program.states.len())
+                        .saturating_add(model.program.operators.len())
+                        .saturating_add(1);
+                    w.debit(2, model.source_copy_items.saturating_mul(width) as u64)?;
+                }
                 let row = crate::affine_bounds::affine(expression, &model.program)?;
                 let offset = model.program.nodes.len();
                 let result = states
@@ -1142,6 +1249,7 @@ fn add_timer(
         if zero_tolerance && bounds.lo != bounds.hi {
             return Err(unresolved("zero-tolerance timer time is not representable"));
         }
+        let mut physical_after = false;
         if held {
             if let Some(boundary) = boundary {
                 let clock = (start.lo == start.hi && period.lo == period.hi).then_some(Clock {
@@ -1149,20 +1257,29 @@ fn add_timer(
                     period: period.lo,
                     index,
                 });
-                if boundary.already_past_or_consumed(event, bounds, clock, exact.as_ref())? {
+                if boundary.already_past_or_consumed_with_work(
+                    event,
+                    bounds,
+                    clock,
+                    exact.as_ref(),
+                    history_work,
+                )? {
                     if period.hi <= 0. {
                         break;
                     }
                     continue;
                 }
-                if after.is_some_and(|time| bounds.lo <= time) {
+                let candidate = Moment::HeldTimer { bounds, index, clock,
+                    exact: exact.as_ref().map(|root|root.clone_with_work(history_work.unwrap_or_else(||crate::real_expression::work(model)))).transpose()? };
+                physical_after = boundary.proves_after(&candidate,model,history_work)?;
+                if !physical_after && after.is_some_and(|time| bounds.lo <= time) {
                     return Err(unresolved(
                         "future held timer cannot be ordered after the accepted representative",
                     ));
                 }
             }
         }
-        if let Some(after) = after {
+        if let Some(after) = after.filter(|_| !physical_after) {
             if bounds.hi <= after {
                 if period.hi <= 0. {
                     break;
@@ -1186,6 +1303,7 @@ fn add_timer(
         }
         let event = ScheduledEvent {
             fixed_predecessor: None,
+            occurrence: None,
             time,
             event,
             moment: if held {
@@ -1258,12 +1376,67 @@ pub(crate) fn schedule_held_with_time_proofs(
         trajectory,
         None,
         Some(HeldCalendar {
+            work: None,
             time_proofs,
             states,
             after: None,
             changed: &[],
             pending: &[],
             boundary: None,
+        }),
+        CalendarScope::All,
+    )
+}
+
+pub(crate) fn schedule_held_charged(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    states: &[I],
+    work: &crate::transition_source_plan::Work,
+) -> Result<Vec<ScheduledEvent>, Error> {
+    schedule_with_history(
+        model,
+        trajectory,
+        None,
+        Some(HeldCalendar {
+            work: Some(work),
+            time_proofs: None,
+            states,
+            after: None,
+            changed: &[],
+            pending: &[],
+            boundary: None,
+        }),
+        CalendarScope::All,
+    )
+}
+
+// Keep the original Work owner beside the old pending/consumed calendars so
+// rescheduling cannot reset the allowance or lose occurrence identity.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn reschedule_held_charged(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    states: &[I],
+    after: f64,
+    changed: &[bool],
+    pending: &[ScheduledEvent],
+    consumed: &[ScheduledEvent],
+    work: &crate::transition_source_plan::Work,
+) -> Result<Vec<ScheduledEvent>, Error> {
+    let boundary = TimerBoundary::new_with_work(model, after, consumed, Some(work))?;
+    schedule_with_history(
+        model,
+        trajectory,
+        None,
+        Some(HeldCalendar {
+            work: Some(work),
+            time_proofs: None,
+            states,
+            after: Some(after),
+            changed,
+            pending,
+            boundary: Some(&boundary),
         }),
         CalendarScope::All,
     )
@@ -1301,6 +1474,7 @@ pub(crate) fn reschedule_held_with_time_proofs(
         trajectory,
         None,
         Some(HeldCalendar {
+            work: None,
             time_proofs,
             states,
             after: Some(after),
@@ -1358,6 +1532,7 @@ pub(crate) fn independent_epoch_with_time_proofs(
         trajectory,
         None,
         Some(HeldCalendar {
+            work: None,
             time_proofs,
             states,
             after,
@@ -1409,6 +1584,7 @@ pub(crate) fn reschedule_independent_with_time_proofs(
         trajectory,
         None,
         Some(HeldCalendar {
+            work: None,
             time_proofs,
             states,
             after: Some(after),
@@ -1436,6 +1612,22 @@ pub(crate) fn history_epoch_with_time_proofs(
     epoch: HistoryEpoch<'_>,
     time_proofs: Option<&crate::transient::time_provenance::TimeProofs>,
 ) -> Result<Vec<ScheduledEvent>, Error> {
+    history_epoch_with_time_proofs_and_boundary(model,trajectory,operators,epoch,time_proofs,None)
+}
+
+pub(crate) fn history_epoch_with_time_proofs_and_boundary(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    operators: &Operators,
+    epoch: HistoryEpoch<'_>,
+    time_proofs: Option<&crate::transient::time_provenance::TimeProofs>,
+    batch: Option<&[ScheduledEvent]>,
+) -> Result<Vec<ScheduledEvent>, Error> {
+    let boundary=match (epoch.after,batch){
+        (Some(after),Some(batch))=>Some(TimerBoundary::new_with_work(model,after,batch,Some(crate::real_expression::work(model)))?),
+        (_,None)=>None,
+        (None,Some(_))=>return Err(unresolved("physical calendar boundary requires its accepted observation")),
+    };
     let changed: Vec<_> = model
         .guard_operators
         .iter()
@@ -1446,12 +1638,13 @@ pub(crate) fn history_epoch_with_time_proofs(
         trajectory,
         Some(operators),
         Some(HeldCalendar {
+            work: None,
             time_proofs,
             states: epoch.states,
             after: epoch.after,
             changed: &changed,
             pending: epoch.pending,
-            boundary: None,
+            boundary: boundary.as_ref(),
         }),
         CalendarScope::History {
             until: epoch.until,
@@ -1470,6 +1663,17 @@ struct TimerBoundary<'a> {
 
 impl<'a> TimerBoundary<'a> {
     fn new(model: &EventModel, after: f64, batch: &'a [ScheduledEvent]) -> Result<Self, Error> {
+        Self::new_with_work(model, after, batch, None)
+    }
+    fn new_with_work(
+        model: &EventModel,
+        after: f64,
+        batch: &'a [ScheduledEvent],
+        work: Option<&crate::transition_source_plan::Work>,
+    ) -> Result<Self, Error> {
+        if let Some(w) = work {
+            w.debit(2, 0)?;
+        }
         if !after.is_finite() || batch.is_empty() {
             return Err(unresolved(
                 "held timer rescheduling requires the current event batch",
@@ -1478,6 +1682,9 @@ impl<'a> TimerBoundary<'a> {
         let mut observation = I::point(after);
         let mut consumed = std::collections::BTreeMap::new();
         for event in batch {
+            if let Some(w) = work {
+                w.debit(2, (16 + usize::BITS) as u64)?;
+            }
             if event.time != after
                 || event.event >= model.triggers.len()
                 || !event.bounds().finite()
@@ -1500,13 +1707,28 @@ impl<'a> TimerBoundary<'a> {
             }
         }
         let first = &batch[0].moment;
-        let common_moment = batch
-            .iter()
-            .all(|event| {
-                first.exact_order(&event.moment) == Some(std::cmp::Ordering::Equal)
-                    || (first.bounds().lo == first.bounds().hi && first.bounds() == event.bounds())
-            })
-            .then_some(first);
+        let mut common = true;
+        // The first borrowed occurrence is identical to itself. Its root need
+        // not have a global rational form to establish that local identity.
+        // Other occurrences still require the original common-root proof.
+        for event in batch.iter().skip(1) {
+            let owner=work.unwrap_or_else(||crate::real_expression::work(model));owner.step()?;
+            // Shared isolation already certified these leaves as one physical
+            // occurrence in this immutable calendar epoch. Boxes are not keys.
+            if batch[0].occurrence.as_ref().zip(event.occurrence.as_ref()).is_some_and(|(a,b)|Arc::ptr_eq(a,b)){continue;}
+            let order = if let Some(w) = work {
+                first.exact_order_with_work(&event.moment, w)?
+            } else {
+                first.exact_order(&event.moment)
+            };
+            if order != Some(std::cmp::Ordering::Equal)
+                && !(first.bounds().lo == first.bounds().hi && first.bounds() == event.bounds())
+            {
+                common = false;
+                break;
+            }
+        }
+        let common_moment = common.then_some(first);
         Ok(Self {
             observation,
             consumed,
@@ -1514,6 +1736,19 @@ impl<'a> TimerBoundary<'a> {
         })
     }
 
+    fn proves_after(&self, moment: &Moment, model:&EventModel, work: Option<&crate::transition_source_plan::Work>) -> Result<bool, Error> {
+        let Some(prior) = self.common_moment else { return Ok(false); };
+        let owner=work.unwrap_or_else(||crate::real_expression::work(model));owner.step()?;
+        // Disjoint certified physical enclosures already prove strict order.
+        // Only overlapping boxes need the exact clock/root comparison; equal
+        // display values never establish equality or justify this fast path.
+        let current=moment.bounds();let previous=prior.bounds();
+        if current.lo>previous.hi{return Ok(true);}
+        if current.hi<previous.lo{return Ok(false);}
+        Ok(moment.exact_order_with_work(prior,work.unwrap_or_else(||crate::real_expression::work(model)))? == Some(std::cmp::Ordering::Greater))
+    }
+
+    #[cfg(test)]
     fn already_past_or_consumed(
         &self,
         leaf: usize,
@@ -1521,6 +1756,26 @@ impl<'a> TimerBoundary<'a> {
         clock: Option<Clock>,
         exact: Option<&crate::exact_source::RootTime>,
     ) -> Result<bool, Error> {
+        self.already_past_or_consumed_with_work(leaf, bounds, clock, exact, None)
+    }
+    fn already_past_or_consumed_with_work(
+        &self,
+        leaf: usize,
+        bounds: I,
+        clock: Option<Clock>,
+        exact: Option<&crate::exact_source::RootTime>,
+        work: Option<&crate::transition_source_plan::Work>,
+    ) -> Result<bool, Error> {
+        if let Some(w) = work {
+            w.debit(2, (16 + usize::BITS) as u64)?;
+        }
+        let compare = |a: &Moment, b: &Moment| {
+            if let Some(w) = work {
+                a.exact_order_with_work(b, w)
+            } else {
+                Ok(a.exact_order(b))
+            }
+        };
         if bounds.hi < self.observation.lo {
             return Ok(true);
         }
@@ -1531,11 +1786,14 @@ impl<'a> TimerBoundary<'a> {
             bounds,
             index: clock.map_or(0, |c| c.index),
             clock,
-            exact: exact.cloned(),
+            exact: match (exact, work) {
+                (Some(root), Some(w)) => Some(root.clone_with_work(w)?),
+                _ => exact.cloned(),
+            },
         };
         if let Some(old) = self.common_moment {
             if exact.is_some() {
-                match candidate.exact_order(old) {
+                match compare(&candidate, old)? {
                     Some(std::cmp::Ordering::Less) => return Ok(true),
                     Some(std::cmp::Ordering::Greater) => return Ok(false),
                     _ => {}
@@ -1544,12 +1802,15 @@ impl<'a> TimerBoundary<'a> {
         }
         if let (Some(clock), Some(old)) = (clock, self.common_moment) {
             let candidate = Moment::HeldTimer {
-                exact: exact.cloned(),
+                exact: match (exact, work) {
+                    (Some(root), Some(w)) => Some(root.clone_with_work(w)?),
+                    _ => exact.cloned(),
+                },
                 bounds,
                 index: clock.index,
                 clock: Some(clock),
             };
-            match candidate.exact_order(old) {
+            match compare(&candidate, old)? {
                 Some(std::cmp::Ordering::Less) => return Ok(true),
                 Some(std::cmp::Ordering::Greater) => return Ok(false),
                 _ => {}
@@ -1557,12 +1818,18 @@ impl<'a> TimerBoundary<'a> {
         }
         if let Some(old) = self.consumed.get(&leaf) {
             if exact.is_some()
-                && candidate.exact_order(&old.moment) == Some(std::cmp::Ordering::Equal)
+                && compare(&candidate, &old.moment)? == Some(std::cmp::Ordering::Equal)
             {
                 return Ok(true);
             }
             let same_clock = match (clock, old.clock()) {
-                (Some(new), Some(old)) => new.order(old) == Some(std::cmp::Ordering::Equal),
+                (Some(new), Some(old)) => {
+                    if let Some(w) = work {
+                        new.order_with_work(old, w)? == Some(std::cmp::Ordering::Equal)
+                    } else {
+                        new.order(old) == Some(std::cmp::Ordering::Equal)
+                    }
+                }
                 _ => bounds.lo == bounds.hi && bounds == old.bounds(),
             };
             if same_clock {
@@ -1581,6 +1848,7 @@ impl<'a> TimerBoundary<'a> {
 }
 
 struct HeldCalendar<'a> {
+    work: Option<&'a crate::transition_source_plan::Work>,
     time_proofs: Option<&'a crate::transient::time_provenance::TimeProofs>,
     states: &'a [I],
     after: Option<f64>,
@@ -1633,11 +1901,30 @@ fn schedule_with_history(
     held: Option<HeldCalendar<'_>>,
     scope: CalendarScope<'_>,
 ) -> Result<Vec<ScheduledEvent>, Error> {
-    let history_work = crate::analytic_request::proof_owner(model).map(|o| o.work());
+    let history_work = held
+        .as_ref()
+        .and_then(|h| h.work)
+        .or_else(|| crate::analytic_request::proof_owner(model).map(|o| o.work()));
     if let Some(w) = history_work {
         w.debit(2, 0)?;
     }
+    if held.as_ref().is_some_and(|h| h.work.is_some()) {
+        for leaf in &model.triggers {
+            history_work.unwrap().step()?;
+            if !matches!(
+                leaf.trigger,
+                EventTrigger::InitialStep { .. }
+                    | EventTrigger::Timer { .. }
+                    | EventTrigger::HeldTimer { .. }
+            ) {
+                return Err(unresolved(
+                    "cold timer proof requires a timer-only calendar",
+                ));
+            }
+        }
+    }
     let _timing = crate::diagnostics::span("event.calendar");
+    let mut shared_roots = Vec::new();
 
     let mut events = if let Some(w) = history_work {
         let mut events = Vec::new();
@@ -1645,7 +1932,11 @@ fn schedule_with_history(
             for event in held.pending {
                 w.step()?;
                 if !held.changed[event.event] {
-                    let copied = event.clone_history(w)?;
+                    let copied = if held.work.is_some() {
+                        event.clone_cold_timer(w)?
+                    } else {
+                        event.clone_history(w)?
+                    };
                     crate::history_storage::push_vec(&mut events, copied, w)?;
                 }
             }
@@ -1682,6 +1973,9 @@ fn schedule_with_history(
             )?)?;
         }
         for (index, leaf) in model.triggers.iter().enumerate() {
+            if let Some(w) = history_work {
+                w.step()?;
+            }
             if !scope.includes(model, index) || model.dynamic_guards[index] {
                 continue;
             }
@@ -1835,6 +2129,7 @@ fn schedule_with_history(
                 }
                 let event = ScheduledEvent {
                     fixed_predecessor: None,
+                    occurrence: None,
                     time: root.bounds.hi,
                     event: index,
                     moment: Moment::Cross(root),
@@ -1870,6 +2165,9 @@ fn schedule_with_history(
             crate::guard_trajectory::GuardTrajectory::new(model, trajectory, operators)?
         };
         for (index, leaf) in model.triggers.iter().enumerate() {
+            if let Some(w) = history_work {
+                w.step()?;
+            }
             if !scope.includes(model, index) || !model.dynamic_guards[index] {
                 continue;
             }
@@ -1915,7 +2213,7 @@ fn schedule_with_history(
                         (*incoming, *direction),
                     )?;
                 }
-                let roots = crate::dynamic_roots::isolate_history(
+                let roots = shared_isolation(&mut shared_roots,index,true,[start,end],model,Some(crate::real_expression::work(model)),|| crate::dynamic_roots::isolate_history(
                     start,
                     end,
                     &mut |t| Ok(guards.local_range_impl(guard, t, &origin.instance)?.0),
@@ -1923,8 +2221,8 @@ fn schedule_with_history(
                     *direction,
                     precision,
                     *expression_tolerance,
-                )?;
-                for root in roots {
+                ))?;
+                for (root, occurrence) in roots {
                     if events.len() >= EVENT_BUDGET {
                         return Err(Error::new(
                             "event_budget",
@@ -1979,6 +2277,7 @@ fn schedule_with_history(
                     }
                     events.push(ScheduledEvent {
                         fixed_predecessor: None,
+                        occurrence: Some(occurrence),
                         time,
                         event: index,
                         moment,
@@ -2015,7 +2314,8 @@ fn schedule_with_history(
                 }
             }
             for segment in knots.windows(2) {
-                let roots = if !matches!(scope, CalendarScope::All) {
+                let roots = shared_isolation(&mut shared_roots,index,false,[segment[0],segment[1]],model,Some(crate::real_expression::work(model)),|| {
+                Ok(if !matches!(scope, CalendarScope::All) {
                     crate::dynamic_roots::isolate_history(
                         segment[0],
                         segment[1],
@@ -2035,8 +2335,9 @@ fn schedule_with_history(
                         *time_tolerance,
                         *expression_tolerance,
                     )?
-                };
-                for root in roots {
+                })
+                })?;
+                for (root, occurrence) in roots {
                     if events.len() >= EVENT_BUDGET {
                         return Err(Error::new(
                             "event_budget",
@@ -2059,6 +2360,7 @@ fn schedule_with_history(
                     }
                     events.push(ScheduledEvent {
                         fixed_predecessor: None,
+                        occurrence: Some(occurrence),
                         time,
                         event: index,
                         moment,
@@ -2068,6 +2370,9 @@ fn schedule_with_history(
         }
     }
     for (index, leaf) in model.triggers.iter().enumerate() {
+        if let Some(w) = history_work {
+            w.step()?;
+        }
         if !scope.includes(model, index) {
             continue;
         }
@@ -2087,14 +2392,22 @@ fn schedule_with_history(
             held.as_ref().and_then(|h| h.after),
             held.as_ref().and_then(|h| h.boundary),
             held.as_ref().and_then(|h| h.time_proofs),
+            history_work,
         )?;
     }
     if let Some(after) = held.as_ref().and_then(|h| h.after) {
+        if let Some(w) = history_work {
+            w.debit(
+                2,
+                (held.as_ref().unwrap().pending.len() as u64).saturating_mul(16),
+            )?;
+        }
         let retained = held.as_ref().unwrap().retained_fixed_prefix(after);
         if let Some(w) = history_work {
             for event in &events {
                 w.step()?;
-                let proven_later = if event.time > after {
+                let physical_after = held.as_ref().and_then(|h|h.boundary).map(|b|b.proves_after(&event.moment,model,Some(w))).transpose()?.unwrap_or(false);
+                let proven_later = physical_after || if event.time > after {
                     let root = event.exact_root_with_work(w)?;
                     let mut paid = crate::exact_source::history_paid::Paid::new(w);
                     let point = paid
@@ -2121,17 +2434,16 @@ fn schedule_with_history(
                 }
             }
         } else {
-            if events.iter().any(|event| {
-            let proven_later = event.exact_root().zip(crate::exact_source::RootTime::point(after)).is_some_and(|(a,b)|event.time>after&&a.order(&b)==std::cmp::Ordering::Greater)
+            for event in &events {
+            let physical_after = held.as_ref().and_then(|h|h.boundary).map(|b|b.proves_after(&event.moment,model,None)).transpose()?.unwrap_or(false);
+            let proven_later = physical_after || event.exact_root().zip(crate::exact_source::RootTime::point(after)).is_some_and(|(a,b)|event.time>after&&a.order(&b)==std::cmp::Ordering::Greater)
                 || matches!(event.moment, Moment::Anchored {delta,..} if delta.lo > operators.and_then(Operators::local_epoch).map_or(f64::INFINITY,|(_,start)|start) && event.time>after)
                 || (event.fixed_predecessor.is_some()
                     && retained
                         .binary_search_by(|time| time.total_cmp(&event.time))
                         .is_ok()
                     && event.time > after);
-            event.bounds().lo <= after && !proven_later
-        }) {
-            return Err(unresolved("future event window overlaps the accepted event boundary"));
+            if event.bounds().lo <= after && !proven_later { return Err(unresolved("future event window overlaps the accepted event boundary")); }
         }
         }
     }
@@ -2178,24 +2490,38 @@ fn schedule_with_history(
             cluster_end += 1;
         }
         if cluster_end > start + 1
-            && serial_transition_cluster(&mut events[start..cluster_end], model)?
+            && if let Some(w) = history_work {
+                w.step()?;
+                false
+            } else {
+                serial_transition_cluster(&mut events[start..cluster_end], model)?
+            }
         {
             start = cluster_end;
             continue;
         }
         if cluster_end > start + 1
-            && history_bookkeeping::independent_kinds(&events[start..cluster_end], model)?
-            && history_bookkeeping::all_ordered(&events[start..cluster_end], model)?
+            && history_bookkeeping::independent_kinds_with_work(
+                &events[start..cluster_end],
+                model,
+                history_work,
+            )?
+            && history_bookkeeping::all_ordered_with_work(
+                &events[start..cluster_end],
+                model,
+                history_work,
+            )?
         {
             loop {
                 if let Some(w) = history_work {
                     w.step()?;
                 }
-                order_fixed_timers(
+                order_fixed_timers_with_work(
                     &mut events[start..cluster_end],
                     model,
                     trajectory.config.stop,
                     None,
+                    history_work,
                 )?;
                 // Strict representatives may extend beyond the original
                 // connected enclosures. Include the next physical event only
@@ -2239,7 +2565,12 @@ fn schedule_with_history(
                     let next = &events[index];
                     if !(next.moment.clock().is_some()
                         || matches!(next.moment, Moment::Cross(_) | Moment::Anchored { .. }))
-                        || history_bookkeeping::any_unordered(&events[start..index], next, model)?
+                        || history_bookkeeping::any_unordered_with_work(
+                            &events[start..index],
+                            next,
+                            model,
+                            history_work,
+                        )?
                     {
                         return Err(unresolved(
                             "cannot certify exact ordering of the next event while extending the connected cluster",
@@ -2364,6 +2695,7 @@ mod tests {
     fn event(start: f64, lo: f64, hi: f64) -> ScheduledEvent {
         ScheduledEvent {
             fixed_predecessor: None,
+            occurrence: None,
             time: hi,
             event: 0,
             moment: Moment::Timer {
@@ -2373,6 +2705,40 @@ mod tests {
                 index: 0,
             },
         }
+    }
+
+    #[test]
+    fn singleton_boundary_uses_occurrence_identity_but_different_roots_do_not_share_it() {
+        let model=model();let w=crate::transition_source_plan::Work::default();
+        let mut first=event(0.6,0.4,0.6);first.moment=Moment::Dynamic{history:None,exact:None,bounds:I{lo:0.4,hi:0.6},derivative:I::ONE,end:1.};
+        let singleton=[first.clone()];let boundary=TimerBoundary::new_with_work(&model,0.6,&singleton,Some(&w)).unwrap();
+        assert!(boundary.common_moment.is_some());
+        assert!(boundary.proves_after(&event(0.75,0.75,0.75).moment,&model,Some(&w)).unwrap());
+        let mut unproved=[first.clone(),first.clone()];
+        unproved[0].occurrence=Some(Arc::new(()));unproved[1].occurrence=Some(Arc::new(()));
+        assert!(TimerBoundary::new_with_work(&model,0.6,&unproved,Some(&w)).unwrap().common_moment.is_none());
+        unproved[1].occurrence=unproved[0].occurrence.clone();
+        assert!(TimerBoundary::new_with_work(&model,0.6,&unproved,Some(&w)).unwrap().common_moment.is_some());
+        let mut second=first.clone();
+        if let Moment::Dynamic{exact,..}=&mut first.moment{*exact=crate::exact_source::RootTime::point(0.45);}
+        if let Moment::Dynamic{exact,..}=&mut second.moment{*exact=crate::exact_source::RootTime::point(0.55);}
+        let pair=[first.clone(),second];let boundary=TimerBoundary::new_with_work(&model,0.6,&pair,Some(&w)).unwrap();
+        assert!(boundary.common_moment.is_none());
+        assert!(!boundary.proves_after(&event(0.75,0.75,0.75).moment,&model,Some(&w)).unwrap());
+        first.time=0.59;assert_eq!(TimerBoundary::new_with_work(&model,0.6,&[first],Some(&w)).err().unwrap().kind,"event_resolution");
+    }
+
+    #[test]
+    fn calendar_copy_keeps_normal_fee_and_checks_sticky_owner_before_cloning_handles() {
+        let model=model();let work=crate::transition_source_plan::Work::limited([128,8192,80]);
+        assert!(model.mixed_cold_work.set(work.clone()).is_ok());
+        let token=Arc::new(());let mut events=vec![event(1.,1.,1.),event(2.,2.,2.),event(3.,3.,3.)];events[0].occurrence=Some(token.clone());
+        let before=Arc::strong_count(&token);let copied=copy_calendar(&events,&model).unwrap();
+        assert_eq!(work.spent(),80);assert_eq!(copied.len(),3);assert_eq!(Arc::strong_count(&token),before+1);drop(copied);
+        assert_eq!(Arc::strong_count(&token),before);
+        assert_eq!(copy_calendar(&events,&model).err().unwrap().kind,"step_budget");
+        let exhausted=work.spent();assert_eq!(exhausted,160);assert_eq!(Arc::strong_count(&token),before);
+        for _ in 0..2{assert_eq!(copy_calendar(&events,&model).err().unwrap().kind,"step_budget");assert_eq!(work.spent(),exhausted);assert_eq!(Arc::strong_count(&token),before);}
     }
 
     #[test]
@@ -2396,14 +2762,101 @@ mod tests {
     }
 
     #[test]
-    fn unrepresentable_or_outside_representatives_fail_closed() {
+    fn shared_isolation_identity_is_not_box_or_representative_identity() {
+        let m=model();let mut first=event(1.,1.,1.5);
+        first.moment=Moment::Dynamic{history:None,exact:None,bounds:I{lo:1.,hi:1.5},derivative:I::ONE,end:2.};
+        first.occurrence=Some(Arc::new(()));let same=first.clone();
+        assert!(common_occurrence(&[first.clone(),same],&m).unwrap());
+        let mut different=first.clone();different.occurrence=Some(Arc::new(()));
+        assert!(!common_occurrence(&[first.clone(),different],&m).unwrap());
+        let mut missing=first.clone();missing.occurrence=None;
+        assert!(!common_occurrence(&[first,missing],&m).unwrap());
+    }
+
+    #[test]
+    fn isolation_tokens_stay_inside_owner_epoch_and_search_segment() {
+        let mut m=model();
+        m.triggers[0].trigger=EventTrigger::Cross{guard:Expression::Power{base:Box::new(Expression::State{state:0}),exponent:2},direction:1,time_tolerance:1e-10,expression_tolerance:1e-10};
+        let root=crate::dynamic_roots::CertifiedRoot{bounds:I{lo:1.,hi:1.5},derivative:I::ONE};
+        let mut cache=Vec::new();let w=crate::real_expression::work(&m);
+        let first=shared_isolation(&mut cache,0,false,[0.,2.],&m,Some(w),||Ok(vec![root])).unwrap();
+        let same=shared_isolation(&mut cache,0,false,[0.,2.],&m,Some(w),||panic!("shared guard rediscovered")).unwrap();
+        assert!(Arc::ptr_eq(&first[0].1,&same[0].1));
+        let segment=shared_isolation(&mut cache,0,false,[2.,3.],&m,Some(w),||Ok(vec![root])).unwrap();
+        assert!(!Arc::ptr_eq(&first[0].1,&segment[0].1));
+        let mut next_epoch=Vec::new();
+        let next=shared_isolation(&mut next_epoch,0,false,[0.,2.],&m,Some(w),||Ok(vec![root])).unwrap();
+        assert!(!Arc::ptr_eq(&first[0].1,&next[0].1));
+        // Owner changes must not borrow a previously discovered root certificate.
+        m.program.events[0].origin.instance="other_instance".into();
+        // A real calendar never changes its immutable owner context. A fresh
+        // calendar is mandatory for any state/history/instance epoch change.
+        let mut changed_epoch=Vec::new();let w=crate::real_expression::work(&m);
+        let changed=shared_isolation(&mut changed_epoch,0,false,[0.,2.],&m,Some(w),||Ok(vec![root])).unwrap();
+        assert!(!Arc::ptr_eq(&first[0].1,&changed[0].1));
+    }
+
+    #[test]
+    fn occurrence_consumers_use_simple_request_owner_and_sticky_failure() {
+        let m=model();let w=crate::transition_source_plan::Work::limited([128,8192,1]);
+        assert!(m.mixed_cold_work.set(w.clone()).is_ok());
+        let events=[event(1.,1.,1.)];
+        assert_eq!(common_occurrence(&events,&m).unwrap_err().kind,"step_budget");
+        let spent=w.spent();
+        assert_eq!(common_occurrence(&events,&m).unwrap_err().kind,"step_budget");
+        assert!(w.spent()>spent);
+        assert_eq!(batch_end(&events,0,&m).unwrap_err().kind,"step_budget");
+        assert_eq!(copy_calendar(&events,&m).err().unwrap().kind,"step_budget");
+    }
+
+    #[test]
+    fn occurrence_cache_charges_original_owner_and_failure_stays_exhausted() {
+        let m=model();let w=crate::real_expression::work(&m);
+        let alias=crate::real_expression::work(&m);assert!(w.same_owner(alias));
+        let root=crate::dynamic_roots::CertifiedRoot{bounds:I{lo:1.,hi:1.5},derivative:I::ONE};
+        let mut cache=Vec::new();let before=w.spent();
+        shared_isolation(&mut cache,0,false,[0.,2.],&m,Some(w),||Ok(vec![root])).unwrap();
+        assert!(w.spent()>before);
+        let small=crate::transition_source_plan::Work::limited([128,8192,1]);
+        for _ in 0..2 {
+            assert_eq!(shared_isolation(&mut cache,0,false,[2.,3.],&m,Some(&small),||Ok(vec![root])).err().unwrap().kind,"step_budget");
+            assert_eq!(cache.len(),1);
+        }
+    }
+
+    #[test]
+    fn physical_group_budget_counts_distinct_roots_inside_one_float_cell() {
+        use num_rational::BigRational as R;
+        let mut m=model();
+        let constant=|v|Box::new(Expression::Affine{constant:v,terms:vec![]});
+        m.triggers[0].trigger=EventTrigger::HeldTimer{start:constant(1.),period:constant(0.),time_tolerance:10.,enabled:constant(1.)};
+        let bounds=I{lo:1.,hi:1.0_f64.next_up()};
+        let events=|| (1..=66).map(|i| {
+            let value=R::from_integer(1.into())+R::new(i.into(),(1_u64<<60).into());
+            let mut e=event(1.,bounds.lo,bounds.hi);
+            e.moment=Moment::HeldTimer{exact:crate::exact_source::RootTime::affine(-value,R::from_integer(1.into()),bounds),bounds,index:i as usize,clock:None};e
+        }).collect::<Vec<_>>();
+        let mut allowed=events();allowed.pop();order_fixed_timers(&mut allowed,&m,2.,None).unwrap();
+        assert!(allowed.iter().all(|e|e.time==bounds.hi));
+        let mut too_many=events();assert_eq!(order_fixed_timers(&mut too_many,&m,2.,None).unwrap_err().kind,"event_budget");
+        let boundary=TimerBoundary::new(&m,allowed[0].time,&allowed[..1]).unwrap();
+        assert!(boundary.proves_after(&allowed[1].moment,&m,None).unwrap());
+        assert!(!boundary.proves_after(&allowed[0].moment,&m,None).unwrap());
+    }
+
+    #[test]
+    fn physical_phases_share_representatives_and_outside_still_fails_closed() {
         let m = model();
         let close = || vec![event(1., 1., 1.5), event(1.1, 1., 1.5)];
+        let mut shared=close();
+        order_fixed_timers(&mut shared,&m,1.5,None).unwrap();
+        assert_eq!(shared.iter().map(|e|e.time).collect::<Vec<_>>(),[1.5,1.5]);
+        assert_eq!(batch_end(&shared,0,&m).unwrap(),1);
         for (stop, next, message) in [
-            (1.5, None, "ordered timer representatives exceed stop"),
+            (1.4, None, "ordered timer representatives exceed stop"),
             (
                 2.,
-                Some(1.5_f64.next_up()),
+                Some(1.5),
                 "ordered timer representatives reach the next event boundary",
             ),
         ] {
@@ -2417,16 +2870,12 @@ mod tests {
             event(f64::MAX.next_down(), f64::MAX.next_down(), f64::MAX),
             event(f64::MAX, f64::MAX, f64::MAX),
         ];
-        // Allow the first representative. The second needs next_up(MAX), never infinity.
+        // Exact physical phases do not need an invented next_up(MAX).
         let mut wide = model();
-        if let EventTrigger::Timer { time_tolerance, .. } = &mut wide.triggers[0].trigger {
-            *time_tolerance = f64::MAX;
-        }
-        let error = order_fixed_timers(&mut overflow, &wide, f64::MAX, None)
-            .err()
-            .unwrap();
-        assert_eq!(error.kind, "event_resolution");
-        assert_eq!(error.message, "ordered timer representative is not finite");
+        if let EventTrigger::Timer { time_tolerance, .. } = &mut wide.triggers[0].trigger { *time_tolerance = f64::MAX; }
+        order_fixed_timers(&mut overflow,&wide,f64::MAX,None).unwrap();
+        assert!(overflow.iter().all(|e|e.time==f64::MAX));
+        assert_eq!(batch_end(&overflow,0,&wide).unwrap(),1);
         let mut invalid = vec![event(f64::NAN, 0., 1.), event(1., 1., 1.)];
         assert_eq!(
             order_fixed_timers(&mut invalid, &m, 2., None)
@@ -2512,6 +2961,7 @@ mod common_exact_root_tests {
             time: 0.4,
             event: 0,
             fixed_predecessor: None,
+            occurrence: None,
             moment: Moment::Dynamic {
                 history: None,
                 exact,
@@ -2553,6 +3003,7 @@ mod common_exact_root_tests {
             time: 0.4,
             event: 1,
             fixed_predecessor: None,
+            occurrence: None,
             moment: Moment::Timer {
                 bounds: window,
                 start: 0.1,
@@ -2625,6 +3076,7 @@ mod exact_deadline_review_tests {
             time: window.hi,
             event: 0,
             fixed_predecessor: None,
+            occurrence: None,
             moment: Moment::Anchored {
                 anchor,
                 delta: local.bounds().unwrap(),
@@ -2639,6 +3091,7 @@ mod exact_deadline_review_tests {
             time: window.hi,
             event: 1,
             fixed_predecessor: None,
+            occurrence: None,
             moment: Moment::Dynamic {
                 history: None,
                 exact: Some(expected.clone()),
@@ -2704,6 +3157,7 @@ mod held_review_tests {
             time: 0.4,
             event: 2,
             fixed_predecessor: None,
+            occurrence: None,
             moment: Moment::HeldTimer {
                 bounds,
                 index: 0,
@@ -2751,6 +3205,48 @@ mod held_review_tests {
 #[cfg(test)]
 mod held_calendar_review_tests {
     use super::*;
+
+    #[test]
+    fn cold_paid_clone_retains_held_identity_without_widening_history_admission() {
+        let event = ScheduledEvent {
+            time: 0.5,
+            event: 0,
+            fixed_predecessor: Some(0.25),
+            occurrence: None,
+            moment: Moment::HeldTimer {
+                bounds: I::point(0.5),
+                index: 0,
+                clock: Some(Clock {
+                    start: 0.5,
+                    period: 0.,
+                    index: 0,
+                }),
+                exact: crate::exact_source::RootTime::point(0.5),
+            },
+        };
+        let work = crate::transition_source_plan::Work::default();
+        assert!(event.clone_history(&work).is_err());
+        let spent = work.spent();
+        let copied = event.clone_cold_timer(&work).unwrap();
+        assert!(work.spent() > spent);
+        assert_eq!(copied.time, event.time);
+        assert_eq!(copied.fixed_predecessor, event.fixed_predecessor);
+        assert_eq!(
+            copied.moment.exact_order(&event.moment),
+            Some(std::cmp::Ordering::Equal)
+        );
+        let small = crate::transition_source_plan::Work::limited([128, 8192, 0]);
+        for _ in 0..2 {
+            let before = small.spent();
+            assert_eq!(
+                event.clone_cold_timer(&small).err().unwrap().kind,
+                "step_budget"
+            );
+            assert!(small.spent() > before);
+            assert_eq!(event.time, 0.5);
+            assert_eq!(event.clock().unwrap().start, 0.5);
+        }
+    }
     use crate::exact_source::RootTime;
     use crate::transient::time_provenance::{invalidate_timers, TimeProofs};
     use num_rational::BigRational as R;
@@ -2911,7 +3407,39 @@ impl ScheduledEvent {
             event: self.event,
             moment,
             fixed_predecessor: self.fixed_predecessor,
+            occurrence: self.occurrence.clone(),
         })
+    }
+    // Payment does not widen the History capability. Only the constructor's
+    // explicit timer-only route can retain an existing held timer occurrence.
+    fn clone_cold_timer(&self, w: &crate::transition_source_plan::Work) -> Result<Self, Error> {
+        if let Moment::HeldTimer {
+            bounds,
+            index,
+            clock,
+            exact,
+        } = &self.moment
+        {
+            w.debit(2, 16)?;
+            let exact = exact
+                .as_ref()
+                .map(|root| root.clone_with_work(w))
+                .transpose()?;
+            Ok(Self {
+                time: self.time,
+                event: self.event,
+                fixed_predecessor: self.fixed_predecessor,
+                occurrence: self.occurrence.clone(),
+                moment: Moment::HeldTimer {
+                    bounds: *bounds,
+                    index: *index,
+                    clock: *clock,
+                    exact,
+                },
+            })
+        } else {
+            self.clone_history(w)
+        }
     }
     fn exact_root_with_work(
         &self,
@@ -3188,6 +3716,7 @@ mod forcing_phase_accounting_tests {
             time: 0.6,
             event: 0,
             fixed_predecessor: None,
+            occurrence: None,
             moment: Moment::Dynamic {
                 history: None,
                 exact: None,

@@ -13,6 +13,9 @@ pub(crate) struct Selection {
     // Retain all predicate reads, including certified alternative arms.
     // An ambiguous equivalent choice records both possible directions.
     pub(crate) decisions: Vec<(usize, bool)>,
+    // Group identifiers exist only after one exact occurrence was proved.
+    pub(crate) procedure_groups: Vec<Option<usize>>,
+    pub(crate) plan: Option<std::sync::Arc<crate::procedure::Plan>>,
 }
 
 #[cfg(test)]
@@ -546,6 +549,10 @@ pub(crate) struct Conditions {
     node_count: usize,
     driven_nodes: Vec<usize>,
     active_events: Vec<bool>,
+    procedure_ids: Vec<Option<usize>>,
+    ordinals: Vec<Option<u64>>,
+    procedure_program:Option<std::sync::Arc<Program>>,
+    procedure_work:Option<crate::transition_source_plan::Work>,
 }
 
 const MAX_BRANCH_PROOF_ATTEMPTS: usize = 64;
@@ -740,6 +747,14 @@ impl Conditions {
             .iter()
             .enumerate()
             .map(|(event_index, event)| {
+                // Procedure events are executed by the single source-order
+                // Plan, including their predicates and assignment effects.
+                // Building a second legacy replay would lose call-local frames.
+                if event.procedure_id.is_some(){
+                    stateful_events.push(true);
+                    state_references.push(std::collections::BTreeSet::new());
+                    return Ok(Vec::new());
+                }
                 let start = predicates.len();
                 let body = compile(
                     &event.body,
@@ -754,7 +769,7 @@ impl Conditions {
                     predicate.event = event_index;
                 }
                 stateful_events.push(
-                    predicates[start..]
+                    event.procedure_id.is_some() || predicates[start..]
                         .iter()
                         .any(|p| !p.dependencies.state_dependencies.is_empty()),
                 );
@@ -772,7 +787,7 @@ impl Conditions {
             .iter()
             .enumerate()
             .map(|(index, event)| {
-                if !stateful_events[index] {
+                if event.procedure_id.is_some() || !stateful_events[index] {
                     return Ok(Vec::new());
                 }
                 let mut assignments = event
@@ -799,6 +814,7 @@ impl Conditions {
                     .collect::<Result<Vec<_>, Error>>()?;
                 // Only updates capable of reaching a predicate need replay bounds.
                 // Sampling an unrelated operator output still settles normally.
+                if event.procedure_id.is_some(){for a in &mut assignments{a.row=0;}return Ok(assignments);}
                 let mut references = state_references[index].clone();
                 loop {
                     let previous = references.len();
@@ -846,9 +862,16 @@ impl Conditions {
             node_count: program.nodes.len(),
             driven_nodes: Vec::new(),
             active_events: vec![true; program.events.len()],
+            procedure_ids: program.events.iter().map(|e|e.procedure_id).collect(),
+            ordinals: program.events.iter().map(|e|e.expanded_statement_ordinal).collect(),
+            procedure_program:None,procedure_work:None,
         })
     }
 
+    pub(crate) fn install_procedures(&mut self,prepared:&crate::procedure::Prepared)->Result<(),Error>{
+        prepared.work.debit(2,64)?;
+        self.procedure_program=Some(prepared.program.clone());self.procedure_work=Some(prepared.work.clone());Ok(())
+    }
     /// Preserve predicate/action IDs while selecting only the assigned stage.
     pub(crate) fn restrict_events(&mut self, active: &[bool]) {
         self.active_events = active.to_vec();
@@ -867,7 +890,7 @@ impl Conditions {
     }
 
     pub(crate) fn enabled(&self) -> bool {
-        !self.predicates.is_empty()
+        !self.predicates.is_empty() || self.procedure_ids.iter().any(Option::is_some)
     }
 
     /// Executed predicates and alternative proof predicates read state. Other blocks may
@@ -883,7 +906,7 @@ impl Conditions {
                 .dependencies
                 .state_dependencies
                 .iter()
-                .any(|&state| writers[state].is_some_and(|writer| writer != predicate.event))
+                .any(|&state| writers[state].is_some_and(|writer| writer != predicate.event && !crate::procedure_frames::ordered(selection,writer,predicate.event)))
             {
                 return Err(Error::new("unsupported_cross", format!(
                     "simultaneous event condition reads state written by another selected block at {}",
@@ -894,6 +917,10 @@ impl Conditions {
     }
 
     pub(crate) fn check_dependencies(&self, affected: &[bool]) -> Result<(), Error> {
+        // Source-position plans certify each executed condition before selecting
+        // its arm. They do not replay these assignments against old voltages.
+        if self.procedure_program.is_some(){return Ok(());}
+
         for predicate in self
             .predicates
             .iter()
@@ -1280,6 +1307,20 @@ impl Conditions {
         before_bounds: &[I],
         proofs: Option<&crate::event_value_proof::Context<'_>>,
     ) -> Result<Selection, Error> {
+        if let Some(program)=&self.procedure_program{
+            let w=self.procedure_work.as_ref().expect("procedure owner");
+            w.debit(2,(self.node_count+self.state_count+events.len()+32) as u64)?;
+            let mut nodes=vec![I{lo:f64::NEG_INFINITY,hi:f64::INFINITY};self.node_count];nodes[0]=I::ZERO;
+            for (&node,&value) in self.driven_nodes.iter().zip(inputs){nodes[node]=value;}
+            let fired=events.iter().copied().filter(|&event|self.active_events.get(event)==Some(&true)).collect::<Vec<_>>();
+            let plan=crate::procedure::execute(program,&fired,&nodes,before_bounds,proofs,w)?;
+            let mut selection=Selection{actions:plan.actions.clone(),plan:Some(std::sync::Arc::new(plan)),..Selection::default()};
+            if proofs.is_some_and(|p|p.rooted_occurrence()){
+                selection.procedure_groups=vec![None;self.procedure_ids.len()];
+                for &event in &fired{if let Some(proc)=self.procedure_ids[event]{selection.procedure_groups[event]=fired.iter().copied().find(|&e|self.procedure_ids[e]==Some(proc));}}
+            }
+            return Ok(selection);
+        }
         if events
             .iter()
             .any(|&event| event >= self.active_events.len())
@@ -1869,6 +1910,28 @@ impl Conditions {
             Ok(())
         }
         let mut result = Selection::default();
+        let mut event_order=events.to_vec();
+        let rooted=proofs.is_some_and(|p|p.rooted_occurrence());
+        if rooted {
+            if let Some(w)=proofs.and_then(|p|p.execution_work()){
+                w.debit(2,(self.procedure_ids.len()+events.len().saturating_mul(events.len())+16) as u64)?;
+            }
+            result.procedure_groups=vec![None;self.procedure_ids.len()];
+            for &event in events {
+                if let Some(proc)=self.procedure_ids[event]{
+                    let group=events.iter().copied().find(|&e|self.procedure_ids[e]==Some(proc)).unwrap();
+                    result.procedure_groups[event]=Some(group);
+                }
+            }
+            for (i,&event) in events.iter().enumerate(){
+                if let Some(proc)=self.procedure_ids[event]{
+                    let rank=events[..i].iter().filter(|&&e|self.procedure_ids[e]==Some(proc)).count();
+                    let mut members=events.iter().copied().filter(|&e|self.procedure_ids[e]==Some(proc)).collect::<Vec<_>>();
+                    members.sort_by_key(|&e|self.ordinals[e]);event_order[i]=members[rank];
+                }
+            }
+        }
+        let mut procedure_frames=std::collections::BTreeMap::new();
         let mut proof_attempts = 0;
         // Right-window reads of this batch, shared by its tau+ bodies.
         let window = post_root_window()
@@ -1891,7 +1954,7 @@ impl Conditions {
                     nodes,
                 }
             });
-        for &event in events {
+        for &event in &event_order {
             if !self.active_events[event] {
                 continue;
             }
@@ -1918,6 +1981,10 @@ impl Conditions {
                     vec![None; self.state_count]
                 },
             };
+            let group=result.procedure_groups.get(event).copied().flatten();
+            if let Some((prior,prior_written,prior_path))=group.and_then(|g|procedure_frames.remove(&g)){
+                states=prior;written=prior_written;path=prior_path;
+            }
             walk(
                 &self.bodies[event],
                 &values,
@@ -1942,6 +2009,7 @@ impl Conditions {
                 &mut proof_attempts,
                 &mut loop_iterations,
             )?;
+            if let Some(group)=group{procedure_frames.insert(group,(states,written,path));}
             result.actions.push((event, actions));
             result.ordered_steps.push((event, ordered));
         }
@@ -2074,6 +2142,8 @@ fn validate_loop(
     }
     let event = crate::ir::Event {
         trigger: EventTrigger::FinalStep {},
+        procedure_id: None,
+        expanded_statement_ordinal: None,
         body: body.to_vec(),
         origin: origin.clone(),
     };

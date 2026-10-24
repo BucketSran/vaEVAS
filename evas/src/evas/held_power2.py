@@ -50,7 +50,13 @@ def compatible_program(compiler, source):
         # original source model used by the mandatory original-source audits.
         if not reserve(owner, 'held_power2_program_original_model', 4, source):
             return False
-        model = models.get(binding[1].name)
+        qualified = getattr(compiler.compilation, 'held_power2_qualified_sources', None)
+        if qualified:
+            if not reserve(owner, 'held_power2_program_qualified_model', 4, source):
+                return False
+            model = qualified.get(binding[0].name, models.get(binding[1].name))
+        else:
+            model = models.get(binding[1].name)
         if model is None:
             return False
         # Prepay the added initial-root reference before reading its metadata.
@@ -150,9 +156,23 @@ def target_aliases(compiler, statements):
             # constructed merely for an unsupported multiply or operator root.
             if not reserve(owner, 'held_power2_alias_root', 16, statement):
                 return None
+            # Two unconditional source writes already disprove the existing
+            # unique-writer requirement. Reject that candidate before paying
+            # for a full read/transition-target scan of unrelated expressions.
+            if not reserve(owner, 'held_power2_alias_shallow_writer', 3, statement):
+                return None
+            writes[statement.name] = writes.get(statement.name, 0) + 1
             root = statement.rhs
             if type(root) is Expr and type(root.args) is tuple and root.op in _SOURCE_PLAN_OPS:
                 candidates[statement.name] = statement
+    if not candidates:
+        return candidates
+    if not reserve(owner, 'held_power2_alias_repeated_filter', 3 * len(candidates) + len(writes)):
+        return None
+    candidates = {name: statement for name, statement in candidates.items() if writes[name] == 1}
+    # The full qualification below counts all writes, including conditional
+    # and event writes; the shallow counts are only a decisive negative hint.
+    writes.clear()
     if not candidates:
         return candidates
     pending = [(statements, False), (compiler.model.initial, False), (compiler.model.events, False)]

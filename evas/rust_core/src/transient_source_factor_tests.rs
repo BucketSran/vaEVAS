@@ -67,6 +67,7 @@ fn factorized_source_slew_two_failed_same_controller_preparations_keep_history()
                     &controller.accepted,
                     EventMoment {
                         exact_root: Some(&root),
+                        occurrence_certified: false,
                         representative: 0.5,
                         observation: I::point(0.5),
                         fired_roots: &[],

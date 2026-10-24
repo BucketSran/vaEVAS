@@ -21,6 +21,16 @@ mod events;
 mod exact_source;
 mod exact_time;
 mod expression;
+mod real_rounding;
+mod real_expression;
+mod source_domain;
+mod math_refinement;
+mod source_uncertainty;
+mod procedure_frames;
+mod procedure;
+mod procedure_affine;
+mod procedure_values;
+mod procedure_operations;
 mod guard_trajectory;
 mod held_integer_target;
 mod history_admission;
@@ -91,23 +101,9 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
                 return Err(Error::new("invalid_inputs", "pwl_errors_V must match driven PWL sources and contain nonnegative finite voltage bounds"));
             }
             if errors.iter().any(|e| e.bound() > 0.) {
-                let derivative_event =
-                    request
-                        .program
-                        .events
-                        .iter()
-                        .try_fold(false, |found, event| {
-                            Ok::<_, Error>(
-                                found
-                                    || event.trigger.leaves()?.iter().any(|trigger| {
-                                        matches!(
-                                            trigger,
-                                            ir::EventTrigger::Cross { .. }
-                                                | ir::EventTrigger::HeldTimer { .. }
-                                        )
-                                    }),
-                            )
-                        })?;
+                let held_timer_event=request.program.events.iter().try_fold(false,|found,event|{
+                    Ok::<_,Error>(found || event.trigger.leaves()?.iter().any(|trigger|matches!(trigger,ir::EventTrigger::HeldTimer{..})))
+                })?;
                 let shaped = errors
                     .iter()
                     .all(|e| e.bound() == 0. || e.shape().is_some());
@@ -123,7 +119,10 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
                     _ => false,
                 });
                 let source_uncertainty_supported = source_math::candidate(&request.program)
-                    || (request.program.operators.is_empty() && !derivative_event)
+                    // No-operator cross candidates are provisional here. The
+                    // original request owner proves independent zero-error
+                    // guard dependencies before initialization can execute.
+                    || (request.program.operators.is_empty() && !held_timer_event)
                     || (shaped && transition_only);
                 if !source_uncertainty_supported {
                     return Err(Error::new("unsupported_source_uncertainty", "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"));
@@ -191,6 +190,23 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
             "at least one sample is required",
         ));
     }
+    let procedure_work=(!request.program.procedures.is_empty()).then(transition_source_plan::Work::default);
+    let captures_only=match &procedure_work{Some(w)=>procedure::captures_only(&request.program,w)?,None=>true};
+    if captures_only{if let Some(w)=&procedure_work{procedure::validate(&request.program,w)?;}}
+    if !captures_only{
+        let model=events::EventModel::new_with_procedure_work(request.program,request.driven,request.tolerances,procedure_work.expect("static original procedure owner"))?;
+        let mut solutions=Vec::new();
+        for (sample,inputs) in request.samples.iter().enumerate(){
+            let work=real_expression::work(&model);work.debit(2,((inputs.len()+model.program.nodes.len())*32+64) as u64)?;
+            let bounds=inputs.iter().copied().map(interval::Interval::point).collect::<Vec<_>>();
+            let circuit=model.circuit_at(&[],&[],&bounds)?;
+            let mut solution=circuit.solve(inputs).map_err(|mut error|{error.sample=Some(sample);error})?;
+            let selection=model.observation_selection(&bounds,&[],&[],&[],&[])?;
+            let (_,nodes)=model.certify_observation(&selection,&bounds,&[],&[],&solution.voltages,&[])?;
+            observation::retain_bounds(&mut solution,nodes);solutions.push(solution);
+        }
+        return Ok(Response{strobe_evidence:None,portability_advisories:None,observation_evidence:None,engine:concat!("evas-static-",env!("CARGO_PKG_VERSION")).into(),schema_version:SCHEMA_VERSION,nodes:model.program.nodes,solutions,transient:None});
+    }
     let circuit = Circuit::new(request.program, &request.driven, request.tolerances)?;
     let solutions = batch::solve(&circuit, &request.samples, static_threads)?;
     Ok(Response {
@@ -223,3 +239,5 @@ mod math_functions;
 mod analytic_source;
 
 mod analytic_request;
+
+mod procedure_cell;

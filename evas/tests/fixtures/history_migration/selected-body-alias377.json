@@ -1,0 +1,196 @@
+{
+  "nodes": [
+    "0",
+    "u",
+    "y"
+  ],
+  "contributions": [
+    {
+      "branch": {
+        "instance": "one",
+        "local_positive": "0",
+        "local_negative": "y",
+        "kind": "voltage"
+      },
+      "positive": 0,
+      "negative": 2,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": -1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "operator": 0,
+          "op": "operator"
+        }
+      },
+      "origin": {
+        "source": "alias.va",
+        "line": 5,
+        "column": 1,
+        "instance": "one",
+        "expansion": []
+      }
+    }
+  ],
+  "states": [
+    {
+      "instance": "one",
+      "name": "q",
+      "kind": "real",
+      "initial": {
+        "relation": "gt",
+        "left": {
+          "constant": 0.0,
+          "terms": [
+            {
+              "node": 0,
+              "coefficient": -1.0
+            },
+            {
+              "node": 1,
+              "coefficient": 1.0
+            }
+          ],
+          "op": "affine"
+        },
+        "right": {
+          "constant": 0.5,
+          "terms": [],
+          "op": "affine"
+        },
+        "then_value": {
+          "constant": 0.0,
+          "terms": [
+            {
+              "node": 0,
+              "coefficient": -1.0
+            },
+            {
+              "node": 1,
+              "coefficient": 1.0
+            }
+          ],
+          "op": "affine"
+        },
+        "else_value": {
+          "constant": 0.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "alias.va",
+          "line": 3,
+          "column": 33,
+          "instance": "one",
+          "expansion": []
+        },
+        "op": "select"
+      }
+    }
+  ],
+  "events": [
+    {
+      "trigger": {
+        "start": 0.25,
+        "period": 0.0,
+        "time_tolerance": 1e-12,
+        "enabled": true,
+        "kind": "timer"
+      },
+      "body": [
+        {
+          "relation": "gt",
+          "left": {
+            "constant": 0.0,
+            "terms": [
+              {
+                "node": 0,
+                "coefficient": -1.0
+              },
+              {
+                "node": 1,
+                "coefficient": 1.0
+              }
+            ],
+            "op": "affine"
+          },
+          "right": {
+            "constant": 0.5,
+            "terms": [],
+            "op": "affine"
+          },
+          "then_body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 0.0,
+                "terms": [
+                  {
+                    "node": 0,
+                    "coefficient": -1.0
+                  },
+                  {
+                    "node": 1,
+                    "coefficient": 1.0
+                  }
+                ],
+                "op": "affine"
+              },
+              "kind": "assign"
+            }
+          ],
+          "else_body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "alias.va",
+            "line": 3,
+            "column": 33,
+            "instance": "one",
+            "expansion": []
+          },
+          "kind": "if"
+        }
+      ],
+      "origin": {
+        "source": "alias.va",
+        "line": 4,
+        "column": 27,
+        "instance": "one",
+        "expansion": []
+      }
+    }
+  ],
+  "operators": [
+    {
+      "input": {
+        "state": 0,
+        "op": "state"
+      },
+      "delay": 0.0,
+      "rise": 0.125,
+      "fall": 0.125,
+      "origin": {
+        "source": "alias.va",
+        "line": 5,
+        "column": 7,
+        "instance": "one",
+        "expansion": []
+      },
+      "kind": "transition"
+    }
+  ],
+  "schema_version": 28,
+  "step_bounds": []
+}

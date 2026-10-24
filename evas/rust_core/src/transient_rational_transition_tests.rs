@@ -13,7 +13,15 @@ fn fixture(good: bool) -> (EventModel, Trajectory, Controller, Vec<ScheduledEven
     // optional analytic_sources to TransientInputs; this trajectory is PWL.
     // Keep the archived IR31 intact while constructing the current test input.
     assert_eq!(program.schema_version, 31);
-    assert_eq!(crate::ir::SCHEMA_VERSION, 32, "re-audit the fixture");
+    assert_eq!(crate::ir::SCHEMA_VERSION, 33, "re-audit the fixture");
+    // IR33 legacy transport: retain pre-executed numeric seeds.
+    // Do not add an initial gate or procedure to this archived input.
+    assert!(program.procedures.is_empty());
+    assert!(program.real_bindings.is_empty());
+    assert!(program.events.iter().all(|event| event.procedure_id.is_none()
+        && event.expanded_statement_ordinal.is_none()));
+    assert!(program.states.iter().all(|state|
+        serde_json::to_value(&state.initial).unwrap().is_number()));
     program.schema_version = crate::ir::SCHEMA_VERSION;
     let model = EventModel::new(
         program,
