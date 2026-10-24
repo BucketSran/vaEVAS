@@ -28,7 +28,7 @@ EDGES = (
     },
     {
         "case_family": "coefficient-first-order",
-        "contract": "evas/validation/paper/precision_reference.py",
+        "contract": "evas/validation/paper/coefficient_first_order.py",
         "experiment": None,
         "citation": "CoefficientFirstOrder",
     },

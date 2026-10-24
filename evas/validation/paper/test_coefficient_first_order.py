@@ -7,7 +7,7 @@ from decimal import Decimal, localcontext
 from fractions import Fraction
 import unittest
 
-from precision_reference import CoefficientFirstOrder
+from coefficient_first_order import CoefficientFirstOrder
 
 
 # y' + y = 2t, y(0) = 0 integrates to y(1) = 2/e.
