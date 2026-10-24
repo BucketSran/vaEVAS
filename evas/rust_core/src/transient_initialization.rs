@@ -136,10 +136,14 @@ pub(super) struct Prepared {
     pub(super) records: Vec<EventRecord>,
     pub(super) bounded_held_transition_seeds: bool,
     pub(super) source_context: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
+    pub(super) future: Option<Vec<ScheduledEvent>>,
     zero: BTreeSet<usize>,
 }
 impl Prepared {
     pub(super) fn cursor(&self, calendar: &[ScheduledEvent]) -> Result<usize, Error> {
+        if self.future.is_some() {
+            return Ok(0);
+        }
         let end = calendar.iter().take_while(|e| e.time == 0.).count();
         for event in &calendar[..end] {
             if event.bounds() != I::ZERO || event.clock().and_then(|c| c.bounds()) != Some(I::ZERO)
@@ -171,6 +175,353 @@ impl Prepared {
         }
         Ok(end)
     }
+}
+
+// A zero-time transaction runs before any operator history exists. Besides
+// the existing closed transition graph, an independent source integral can
+// therefore be constructed once from its own IC and the final held state.
+fn cold_work(model: &EventModel) -> &crate::transition_source_plan::Work {
+    if let Some(owner) = crate::analytic_request::proof_owner(model) {
+        return owner.work();
+    }
+    if let Some(request) = &model.floor_source {
+        return request.work();
+    }
+    if let Some(context) = &model.source_context {
+        return context.borrow_work();
+    }
+    model.mixed_cold_work.get_or_init(Default::default)
+}
+fn cold_charge(model: &EventModel, items: usize) -> Result<(), Error> {
+    cold_work(model).debit(2, items as u64)
+}
+fn cold_affine(
+    model: &EventModel,
+    expression: &Expression,
+    owner: &str,
+) -> Result<crate::events::AffineState, Error> {
+    // The full original-program size bounds this expression walk; each tree
+    // node can allocate a dense row over the original nodes/states/operators.
+    let width = model
+        .program
+        .nodes
+        .len()
+        .saturating_add(model.program.states.len())
+        .saturating_add(model.program.operators.len())
+        .saturating_add(1);
+    cold_charge(model, model.source_copy_items.saturating_mul(width))?;
+    crate::events::affine(expression, &model.program, owner)
+}
+fn cold_graph(model: &EventModel) -> Result<bool, Error> {
+    for (index, spec) in model.program.operators.iter().enumerate() {
+        cold_charge(model, 1)?;
+        if matches!(spec, OperatorSpec::Transition { .. }) {
+            continue;
+        }
+        if let OperatorSpec::Idt {
+            input,
+            ic,
+            reset: None,
+            origin,
+        } = spec
+        {
+            let row = cold_affine(model, input, &origin.instance)?;
+            cold_charge(
+                model,
+                row.node_dependencies
+                    .len()
+                    .saturating_mul(model.driven.len() + 1),
+            )?;
+            if ic.is_finite()
+                && row.state_dependencies.is_empty()
+                && row.operator_dependencies.is_empty()
+                && row.node_dependencies.iter().all(|&node| {
+                    node == 0
+                        || model
+                            .driven
+                            .iter()
+                            .any(|name| model.program.nodes[node] == *name)
+                })
+            {
+                continue;
+            }
+        }
+        // Reserve full contribution/dependency scans and dense node elimination
+        // only for an operator that actually needs the existing projection.
+        let width = model
+            .program
+            .nodes
+            .len()
+            .saturating_add(model.program.states.len())
+            .saturating_add(model.program.operators.len())
+            .saturating_add(1);
+        cold_charge(
+            model,
+            model
+                .source_copy_items
+                .saturating_add(width)
+                .saturating_mul(width)
+                .saturating_mul(width),
+        )?;
+        if crate::operators::transition_filter::projection(&model.program, &model.driven, index)
+            .is_none()
+        {
+            return Ok(false);
+        }
+    }
+    Ok(true)
+}
+
+// This is only a sufficient t=0 filter, not a calendar. In particular it does
+// not enumerate future ticks, compare clocks, or consume any occurrence.
+fn possible_zero_blocks(model: &EventModel, states: &[I]) -> Result<Vec<usize>, Error> {
+    let mut blocks = BTreeSet::new();
+    for leaf in &model.triggers {
+        cold_charge(model, 1)?;
+        let possible = match &leaf.trigger {
+            EventTrigger::Timer { start, enabled, .. } => *enabled && *start <= 0.,
+            EventTrigger::HeldTimer { start, enabled, .. } => {
+                let value = |expression: &Expression| -> Result<Option<I>, Error> {
+                    let width = model
+                        .program
+                        .nodes
+                        .len()
+                        .saturating_add(states.len())
+                        .saturating_add(model.program.operators.len())
+                        .saturating_add(1);
+                    cold_charge(model, model.source_copy_items.saturating_mul(width))?;
+                    let Ok(row) = crate::affine_bounds::affine(expression, &model.program) else {
+                        return Ok(None); // Unknown continues through the full paid proof.
+                    };
+                    let offset = model.program.nodes.len();
+                    let value = states
+                        .iter()
+                        .enumerate()
+                        .fold(*row.last().unwrap(), |sum, (index, &state)| {
+                            sum + row[offset + index] * state
+                        });
+                    Ok(value.finite().then_some(value))
+                };
+                !value(enabled)?.is_some_and(|v| v.zero())
+                    && !value(start)?.is_some_and(|v| v.lo > 0.)
+            }
+            _ => false,
+        };
+        if possible {
+            cold_charge(model, usize::BITS as usize)?;
+            blocks.insert(leaf.event);
+        }
+    }
+    Ok(blocks.into_iter().collect())
+}
+
+fn prepare_held_zero(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    seeds: &BTreeSet<usize>,
+    initial_ids: &[usize],
+    initial_blocks: &[usize],
+) -> Result<Option<Prepared>, Error> {
+    cold_charge(
+        model,
+        model
+            .source_copy_items
+            .saturating_add(model.program.states.len().saturating_mul(8))
+            .saturating_add(model.triggers.len().saturating_mul(8))
+            .saturating_add(seeds.len().saturating_mul(usize::BITS as usize)),
+    )?;
+    let before = model.initial();
+    let original_bounds: Vec<_> = before.iter().copied().map(I::point).collect();
+    for &block in initial_blocks {
+        let event = &model.program.events[block];
+        if model
+            .program
+            .contributions
+            .iter()
+            .any(|c| c.origin.instance == event.origin.instance)
+            && !constant_outputs(&event.body)
+        {
+            return Err(Error::new(
+                "unsupported_initial_event",
+                "initial display requires a passive measurement model",
+            ));
+        }
+        cold_charge(model, model.source_copy_items)?;
+        check_body(&event.body, model, &event.origin.instance)?;
+    }
+    let mut mixed = MixedCold {
+        original_points: (0..before.len()).collect(),
+        allowed: false,
+        qualified: None,
+    };
+    let (initial, initial_bounds, mut records) = prepare_stage(
+        model,
+        trajectory,
+        initial_blocks,
+        initial_ids,
+        &before,
+        &original_bounds,
+        &mut mixed,
+    )?;
+    // Use the certified initial stage, not declaration/default seeds: an
+    // initial callback can move a start to zero or enable a disabled timer.
+    let possible = possible_zero_blocks(model, &initial_bounds)?;
+    if possible.is_empty() {
+        return Ok(None);
+    }
+    cold_charge(
+        model,
+        seeds
+            .len()
+            .saturating_add(initial_blocks.len())
+            .saturating_add(possible.len())
+            .saturating_mul(usize::BITS as usize),
+    )?;
+    let mut protected = seeds.clone();
+    for leaf in &model.triggers {
+        cold_charge(model, 1)?;
+        if let EventTrigger::HeldTimer {
+            start,
+            period,
+            enabled,
+            ..
+        } = &leaf.trigger
+        {
+            let owner = &model.program.events[leaf.event].origin.instance;
+            for expression in [start, period, enabled] {
+                let row = cold_affine(model, expression, owner)?;
+                cold_charge(
+                    model,
+                    row.state_dependencies
+                        .len()
+                        .saturating_mul(usize::BITS as usize),
+                )?;
+                protected.extend(row.state_dependencies);
+            }
+        }
+    }
+    // Conservatively replay every body that might fire at zero. A successful
+    // proof preserves both cold seeds and future timer inputs, so the original
+    // transaction remains responsible for actual execution and validation.
+    if crate::settlement_bounds::unchanged_initial_states_charged(
+        model,
+        &[initial_blocks.to_vec(), possible],
+        &protected,
+        trajectory,
+        cold_work(model),
+    )? {
+        return Ok(None);
+    }
+    cold_charge(model, model.source_copy_items)?;
+    let calendar = crate::schedule::schedule_held_charged(
+        model,
+        trajectory,
+        &initial_bounds,
+        cold_work(model),
+    )?;
+    cold_charge(
+        model,
+        calendar.len().saturating_mul(2 + usize::BITS as usize),
+    )?;
+    let end = calendar.iter().take_while(|e| e.time == 0.).count();
+    if end == 0 {
+        return Ok(None);
+    }
+    for event in &calendar[..end] {
+        if event.bounds() != I::ZERO || event.clock().and_then(|c| c.bounds()) != Some(I::ZERO) {
+            return Err(unsupported(
+                "held transition bootstrap requires exact zero clocks",
+            ));
+        }
+    }
+    if calendar.get(end).is_some_and(|e| e.bounds().lo <= 0.) {
+        return Err(unsupported(
+            "transition bootstrap cannot separate the next event from zero",
+        ));
+    }
+    let zero: BTreeSet<_> = calendar[..end].iter().map(|e| e.event).collect();
+    let ids: Vec<_> = zero.iter().copied().collect();
+    let blocks: Vec<_> = ids
+        .iter()
+        .map(|&i| model.triggers[i].event)
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect();
+    if initial_blocks.iter().any(|block| blocks.contains(block)) {
+        return Err(unsupported(
+            "transition bootstrap cannot order an initial/timer OR body",
+        ));
+    }
+    for &block in &blocks {
+        let event = &model.program.events[block];
+        cold_charge(model, model.source_copy_items)?;
+        check_body(&event.body, model, &event.origin.instance)?;
+    }
+    let (states, bounds, timer_records) = prepare_stage(
+        model,
+        trajectory,
+        &blocks,
+        &ids,
+        &initial,
+        &initial_bounds,
+        &mut mixed,
+    )?;
+    let mut changed = vec![false; model.triggers.len()];
+    for (index, leaf) in model.triggers.iter().enumerate() {
+        if let EventTrigger::HeldTimer {
+            start,
+            period,
+            enabled,
+            ..
+        } = &leaf.trigger
+        {
+            let owner = &model.program.events[leaf.event].origin.instance;
+            for expression in [start, period, enabled] {
+                changed[index] |= cold_affine(model, expression, owner)?
+                    .state_dependencies
+                    .iter()
+                    .any(|&s| initial_bounds[s] != bounds[s]);
+            }
+        }
+    }
+    // TimerBoundary checks changed starts/enables against the consumed zero
+    // occurrences. A new same-time occurrence is never silently discarded.
+    cold_charge(
+        model,
+        model
+            .source_copy_items
+            .saturating_add(calendar.len().saturating_mul(16)),
+    )?;
+    let future = crate::schedule::reschedule_held_charged(
+        model,
+        trajectory,
+        &bounds,
+        0.,
+        &changed,
+        &calendar[end..],
+        &calendar[..end],
+        cold_work(model),
+    )?;
+    if seeds
+        .iter()
+        .all(|&s| states[s].to_bits() == before[s].to_bits() && bounds[s] == original_bounds[s])
+    {
+        return Ok(None);
+    }
+    if !cold_graph(model)? {
+        return Err(unsupported("changed initial transition seeds require a closed transition graph or independent source integrals"));
+    }
+    cold_charge(model, timer_records.len())?;
+    records.extend(timer_records);
+    Ok(Some(Prepared {
+        states,
+        bounds,
+        records,
+        bounded_held_transition_seeds: false,
+        source_context: model.source_context.clone(),
+        future: Some(future),
+        zero,
+    }))
 }
 
 pub(super) fn prepare(
@@ -313,6 +664,22 @@ pub(super) fn prepare(
             }
         }
     }
+    if !seeds.is_empty()
+        && model
+            .triggers
+            .iter()
+            .any(|t| matches!(t.trigger, EventTrigger::HeldTimer { .. }))
+        && model.triggers.iter().all(|t| {
+            matches!(
+                t.trigger,
+                EventTrigger::Timer { .. }
+                    | EventTrigger::HeldTimer { .. }
+                    | EventTrigger::InitialStep { .. }
+            )
+        })
+    {
+        return prepare_held_zero(model, trajectory, &seeds, &initial_ids, &initial_blocks);
+    }
     if seeds.is_disjoint(&assigned)
         || crate::settlement_bounds::unchanged_initial_states(
             model,
@@ -365,13 +732,8 @@ pub(super) fn prepare(
         check_body(&event.body, model, &event.origin.instance)?;
     }
     // No other live history can be discarded or rebuilt under this proof.
-    for (index, spec) in model.program.operators.iter().enumerate() {
-        if !matches!(spec, OperatorSpec::Transition { .. })
-            && crate::operators::transition_filter::projection(&model.program, &model.driven, index)
-                .is_none()
-        {
-            return Err(unsupported("changed initial transition seeds require a closed transition/filter/integral graph"));
-        }
+    if !cold_graph(model)? {
+        return Err(unsupported("changed initial transition seeds require a closed transition graph or independent source integrals"));
     }
     // Build candidates in language order; neither stage commits any history,
     // calendar consumption or record. Histories are constructed once from the
@@ -443,6 +805,7 @@ pub(super) fn prepare(
         records,
         bounded_held_transition_seeds,
         source_context,
+        future: None,
         zero,
     }))
 }
@@ -782,6 +1145,192 @@ mod tests {
             1,
         )
         .unwrap()
+    }
+    fn held_model() -> EventModel {
+        let mut program = model().program.clone();
+        program.events[0].trigger = serde_json::from_value(json!({
+            "kind":"held_timer", "start":{"op":"affine","constant":0,"terms":[]},
+            "period":{"op":"affine","constant":0,"terms":[]},
+            "enabled":{"op":"affine","constant":1,"terms":[]}, "time_tolerance":0.001
+        }))
+        .unwrap();
+        EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-8,
+                relative: 0.,
+            },
+        )
+        .unwrap()
+    }
+    #[test]
+    fn zero_candidate_probe_uses_post_initial_values_and_keeps_unknown_cases() {
+        let mut value = serde_json::to_value(&held_model().program).unwrap();
+        value["states"].as_array_mut().unwrap().extend([
+            json!({"instance":"dut","name":"s","kind":"real","initial":0.125}),
+            json!({"instance":"dut","name":"en","kind":"integer","initial":0}),
+        ]);
+        value["events"][0]["trigger"]["start"] = json!({"op":"state","state":1});
+        value["events"][0]["trigger"]["enabled"] = json!({"op":"state","state":2});
+        let model = EventModel::new(
+            serde_json::from_value(value).unwrap(),
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-8,
+                relative: 0.,
+            },
+        )
+        .unwrap();
+        let declared = [I::ZERO, I::point(0.125), I::ZERO];
+        assert!(possible_zero_blocks(&model, &declared).unwrap().is_empty());
+        let after_initial = [I::ZERO, I::ZERO, I::ONE];
+        assert_eq!(
+            possible_zero_blocks(&model, &after_initial).unwrap(),
+            vec![0]
+        );
+        let future = [I::ZERO, I::point(0.125), I::ONE];
+        assert!(possible_zero_blocks(&model, &future).unwrap().is_empty());
+        let unknown = [I::ZERO, I { lo: 0., hi: 0.125 }, I { lo: 0., hi: 1. }];
+        assert_eq!(possible_zero_blocks(&model, &unknown).unwrap(), vec![0]);
+    }
+    #[test]
+    fn held_cold_failure_and_retry_preserve_program_calendar_and_seed() {
+        let model = held_model();
+        let identity = serde_json::to_value(&model.program).unwrap();
+        let original = schedule_held(&model, &trajectory(0.), &[I::ZERO]).unwrap();
+        for _ in 0..2 {
+            // .2 + .1 has a nonpoint old-arithmetic certificate. A rejected
+            // cold candidate must not consume the sole zero occurrence.
+            assert_eq!(
+                prepare(&model, &trajectory(0.2)).err().unwrap().kind,
+                "unsupported_initial_history"
+            );
+            assert_eq!(model.initial(), vec![0.]);
+            assert_eq!(serde_json::to_value(&model.program).unwrap(), identity);
+        }
+        let retry = prepare(&model, &trajectory(0.)).unwrap().unwrap();
+        let clean = prepare(&held_model(), &trajectory(0.)).unwrap().unwrap();
+        assert_eq!(retry.states, vec![0.1]);
+        assert_eq!(retry.bounds, clean.bounds);
+        assert_eq!(retry.zero, clean.zero);
+        assert!(retry.future.as_ref().unwrap().is_empty());
+        assert_eq!(
+            serde_json::to_value(&retry.records).unwrap(),
+            serde_json::to_value(&clean.records).unwrap()
+        );
+        assert_eq!(original.len(), 1);
+        assert_eq!(original[0].time, 0.);
+        assert_eq!(retry.records.len(), 1);
+        let histories = Operators::new(
+            &model.program,
+            &trajectory(0.),
+            &model.driven,
+            &retry.states,
+        )
+        .unwrap();
+        for t in [0., 0.25, 1.] {
+            assert_eq!(histories.values(t).unwrap(), vec![0.1]);
+        }
+    }
+    #[test]
+    fn paid_initial_invariance_success_and_exhaustion_retain_original_owner() {
+        let mut model = held_model();
+        let trajectory = trajectory(0.);
+        let work = crate::transition_source_plan::Work::default();
+        let context = crate::transition_source_plan::ProofContext::event_request_with_work(
+            &model.program,
+            &trajectory,
+            &model.driven,
+            model.source_copy_items,
+            work.clone(),
+        )
+        .unwrap();
+        model.source_context = Some(context);
+        let fallback = crate::transition_source_plan::Work::default();
+        assert!(model.mixed_cold_work.set(fallback.clone()).is_ok());
+        let spent = work.spent();
+        assert!(crate::settlement_bounds::unchanged_initial_states_charged(
+            &model,
+            &[vec![], vec![]],
+            &BTreeSet::from([0]),
+            &trajectory,
+            cold_work(&model),
+        )
+        .unwrap());
+        assert!(work.spent() > spent); // The successful old proof path pays too.
+        let ready = prepare(&model, &trajectory).unwrap().unwrap();
+        assert_eq!(ready.states, vec![0.1]);
+        assert_eq!(fallback.spent(), 0);
+        assert!(work.debit(2, 1_000_000_001).is_err());
+        let identity = serde_json::to_value(&model.program).unwrap();
+        for _ in 0..2 {
+            let before = work.spent();
+            assert_eq!(
+                prepare(&model, &trajectory).err().unwrap().kind,
+                "step_budget"
+            );
+            assert!(work.spent() > before);
+            assert_eq!(fallback.spent(), 0);
+            assert!(cold_work(&model).same_owner(&work));
+            assert_eq!(serde_json::to_value(&model.program).unwrap(), identity);
+            assert_eq!(model.initial(), vec![0.]);
+        }
+    }
+    #[test]
+    fn one_shot_to_dense_periodic_exhausts_original_work_before_publishing_and_never_refunds() {
+        let make = || {
+            let mut value = serde_json::to_value(&held_model().program).unwrap();
+            value["states"].as_array_mut().unwrap().push(json!({
+                "instance":"dut","name":"p","kind":"real","initial":0
+            }));
+            value["events"][0]["trigger"]["period"] = json!({"op":"state","state":1});
+            value["events"][0]["body"] = json!([
+                {"kind":"assign","state":0,"rhs":{"op":"affine","constant":1,"terms":[]}},
+                {"kind":"assign","state":1,"rhs":{"op":"affine","constant":0.015625,"terms":[]}}
+            ]);
+            EventModel::new(
+                serde_json::from_value(value).unwrap(),
+                vec!["u".into()],
+                Tolerances {
+                    absolute: 1e-8,
+                    relative: 0.,
+                },
+            )
+            .unwrap()
+        };
+        let model = make();
+        let trajectory = trajectory(0.);
+        let ready = prepare(&model, &trajectory).unwrap().unwrap();
+        let future = ready.future.unwrap();
+        assert_eq!(future.len(), 64);
+        for (index, event) in future.iter().enumerate() {
+            assert_eq!(event.time, (index + 1) as f64 / 64.);
+        }
+        assert_eq!(ready.records.len(), 1);
+        assert_eq!(ready.states, vec![1., 0.015625]);
+        let model = make();
+        let work = crate::transition_source_plan::Work::limited([128, 8192, 5_000_000]);
+        assert!(model.mixed_cold_work.set(work.clone()).is_ok());
+        // The same request's small initial one-shot calendar is affordable.
+        let original =
+            crate::schedule::schedule_held_charged(&model, &trajectory, &[I::ZERO, I::ZERO], &work)
+                .unwrap();
+        assert_eq!(original.len(), 1);
+        let identity = serde_json::to_value(&model.program).unwrap();
+        for _ in 0..2 {
+            let spent = work.spent();
+            assert_eq!(
+                prepare(&model, &trajectory).err().unwrap().kind,
+                "step_budget"
+            );
+            assert!(work.spent() > spent);
+            assert!(cold_work(&model).same_owner(&work));
+            assert_eq!(model.initial(), vec![0., 0.]);
+            assert_eq!(serde_json::to_value(&model.program).unwrap(), identity);
+            assert_eq!(original.len(), 1);
+            assert_eq!(original[0].time, 0.);
+        }
     }
     #[test]
     fn rejected_nonbare_initial_certificate_retries_without_seed_or_record_mutation() {

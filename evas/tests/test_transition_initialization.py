@@ -92,10 +92,20 @@ class FinalInitialHistory(unittest.TestCase):
                                'V(y,r)<+transition(a,0,0.5,0.5);', [0, 1], 1,
                                declarations=declarations)
 
-    def test_changed_seed_rejects_unproved_other_histories_and_calendars(self):
-        for suffix in [
+    def test_final_seed_keeps_independent_integral_ic_and_future_timer(self):
+        # Initializing the transition at 1 must leave idt's own IC at .75;
+        # the unrelated timer at .5 is neither consumed nor duplicated.
+        result = run_transition(
+            '@(initial_step) begin a=0; b=0.5; end '
+            '@(timer(0,0,0.001)) a=1; '
+            '@(timer(b,0,0.001)) b=b+1; '
             'V(y,r)<+transition(a,0,0.5,0.5)+idt(1,0.75);',
-            '@(timer(b,0,0.001)) b=b+1; V(y,r)<+transition(a,0,0.5,0.5);',
+            [0, .25, 1], 1)
+        self.assertEqual(self.values(result), [1.75, 2., 2.75])
+        self.assertEqual([e['time'] for e in result['transient']['events']], [0., .5])
+
+    def test_changed_seed_rejects_unproved_history_calendar(self):
+        for suffix in [
             '@(cross(V(u,r)-V(e,r),1)) b=b+1; '
             'V(e,r)<+idt(1,0.75); V(y,r)<+transition(a,0,0.5,0.5);',
         ]:
