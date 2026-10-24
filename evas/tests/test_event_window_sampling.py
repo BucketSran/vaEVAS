@@ -67,11 +67,16 @@ class EventWindowSamplingContracts(unittest.TestCase):
             "if (V(u,r)>1.5) q=2; else q=3; V(y,r)<+idt(q,0);", "integer q;")
         result = run(program, {"u": [[0,0],[2,2]]}, [0,2], stop=2, vabstol=1e-4, reltol=0)
         assert_close(self, values(result)[-1], 6-2*math.sqrt(2), delta=1e-4)
-        ambiguous = compile_model(
+        # 1.414214 lies inside the discovered window but above tau. The same
+        # root contraction used by the linear closure proves q=3; it does not
+        # accept the representative that would have selected q=2.
+        near = compile_model(
             "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) "
             "if (V(u,r)>1.414214) q=2; else q=3; V(y,r)<+idt(q,0);", "integer q;")
-        with self.assertRaisesRegex(KernelError, "event_condition"):
-            run(ambiguous, {"u": [[0,0],[2,2]]}, [0,2], stop=2, vabstol=1e-4, reltol=0)
+        near = run(near, {"u": [[0,0],[2,2]]}, [0,2], stop=2, vabstol=1e-4, reltol=0)
+        assert_close(self, values(near)[-1], 6-2*math.sqrt(2), delta=1e-4)
+        cross = next(event for event in near['transient']['events'] if event['kind']=='cross')
+        self.assertEqual(cross['after'], [3])
 
     def test_loose_root_is_refined_before_accepting_amplified_sample(self):
         program = compile_model(

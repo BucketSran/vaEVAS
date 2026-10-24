@@ -48,6 +48,15 @@ fn post_root_probe(
     )
 }
 
+fn recoverable_input_root_failure(error: &Error) -> bool {
+    matches!(error.kind, "waveform_accuracy" | "event_accuracy")
+        || (error.kind == "event_condition"
+            && (error.message.contains("difference in")
+                || error
+                    .message
+                    .contains("not certified over its complete source-position enclosure")))
+}
+
 impl Controller {
     fn filter_root_budget(
         &self,
@@ -262,9 +271,14 @@ impl Controller {
         let failure = match self.preflight_root_consumer(model, trajectory, crossings) {
             Ok(_) if !proactive => return Ok(()),
             Ok(_) => None,
-            Err(error) if matches!(error.kind, "waveform_accuracy" | "event_accuracy") => {
-                Some(error)
-            }
+            // A comparison whose enclosure crosses zero only because the
+            // discovered input-root box is still wide can be decided by the
+            // same contraction used for a voltage-budget miss. That shows up
+            // either as an interval difference or as an IR33 source-position
+            // refusal. Exact tau+ ties keep their original refusal: narrowing
+            // must not invent a side. Tolerances and the 256-iteration budget
+            // stay unchanged.
+            Err(error) if recoverable_input_root_failure(&error) => Some(error),
             Err(error) => return Err(error),
         };
         let demand = if chain.is_none() {
@@ -325,13 +339,24 @@ impl Controller {
         let mut last_failure = failure;
         for attempt in 0..2 {
             let old_bounds = candidate[self.event].bounds();
-            let (refined, work) = candidate[self.event].refine_input_root(
+            let (refined, work) = match candidate[self.event].refine_input_root(
                 model,
                 trajectory,
                 &self.accepted.operators,
                 target,
                 remaining,
-            )?;
+            ) {
+                Ok(pair) => pair,
+                Err(error) => {
+                    if last_failure
+                        .as_ref()
+                        .is_some_and(|failure| failure.kind == "event_condition")
+                    {
+                        return Err(last_failure.take().unwrap());
+                    }
+                    return Err(error);
+                }
+            };
             remaining = remaining.saturating_sub(work.iterations);
             let changed = refined.bounds() != candidate[self.event].bounds();
             candidate[self.event] = refined;
@@ -374,9 +399,12 @@ impl Controller {
             }
             if target.is_none()
                 || remaining == 0
-                || last_failure
-                    .as_ref()
-                    .is_some_and(|e| !matches!(e.kind, "waveform_accuracy" | "event_accuracy"))
+                || last_failure.as_ref().is_some_and(|e| {
+                    !matches!(
+                        e.kind,
+                        "waveform_accuracy" | "event_accuracy" | "event_condition"
+                    )
+                })
             {
                 break;
             }
