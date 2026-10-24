@@ -11,10 +11,13 @@ from .errors import DiagnosticArgumentParser, diagnostic
 
 
 def main():
+    if sys.argv[1:2] == ['xspice']:
+        from .xspice.__main__ import main as xspice_main
+        return xspice_main(sys.argv[2:])
     if sys.argv[1:2] == ['version']:
         from .identity import main as identity_main
         return identity_main(sys.argv[2:])
-    parser = DiagnosticArgumentParser(description=__doc__)
+    parser = DiagnosticArgumentParser(description=__doc__, epilog="XSPICE compilation: evas-rebuild xspice --help")
     parser.add_argument("action", choices=["compile", "solve", "transient", "simulate", "lint"])
     parser.add_argument("manifest", type=Path)
     parser.add_argument("--kernel", type=Path, help="override the bundled evas-kernel with an explicit executable")

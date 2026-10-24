@@ -1,0 +1,184 @@
+{
+  "status": "local_implementation_and_same_source_spectre_7_of_7_passed",
+  "published": false,
+  "branch": "codex/evas-xspice-entry",
+  "branch_head": "358760415f545a9b9e10e1a3dc7ab3ba5c56fac9",
+  "dependency_commit": "c8dc2a7b688f7f21c8599db22c41f4b8aabd2026",
+  "ir_schema_version": 28,
+  "backend_version": 2,
+  "source_manifest": "evas/examples/xspice/r53/sources.json",
+  "local_run_root": "/Users/bucketsran/.codex/worktrees/evas-xspice-entry/current/runs/evas-ngspice-night-20261019",
+  "canonical_decisions": "/Users/bucketsran/.codex/worktrees/evas-xspice-entry/current/runs/evas-ngspice-planning-20261018/night-decisions.tsv",
+  "six_original_checker_revalidation": "r53-evas/results.json",
+  "development_checks": {
+    "N1_104": "n1-104-rc-clock/analysis.json",
+    "N1_210_N2": "n1-n2-samplers/analysis.json",
+    "N3": "n3-counter/analysis.json",
+    "N4": "n4-clock/analysis.json",
+    "N6": "n6-chain-complete/analysis.json",
+    "N5": "n5-tanh/analysis.json"
+  },
+  "checker_calibration": "checker-calibration-final/analysis.json",
+  "new_spectre_runs": 17,
+  "new_spectre_alignment": "7/7 fixed circuits pass after115/068 repairs; same VA, physical fixtures and scientific criteria; prior failures retained; limited local evidence",
+  "independent_review": {
+    "agent": "review_xspice_night",
+    "model": "gpt-6.1-sol",
+    "reasoning": "medium",
+    "findings": 1,
+    "fixed": 1,
+    "open": 0,
+    "fix_receipt": "review-probes/failure-cleanup/analysis.json",
+    "scope_limit": "reviewed accessible evidence; coordinator separately verified source authorization and available transcript",
+    "final_counts_rechecked": true
+  },
+  "failed_attempts": [
+    "n1-104-pilot/104-retry/analysis.json",
+    "n6-chain/failure.json",
+    "package-build.log",
+    "final-installed-events/analysis.json",
+    "spectre-20261019/batch01/spectre/068/result.json",
+    "spectre-20261019/batch02/spectre/068/result.json",
+    "spectre-20261019/analysis01/115.json",
+    "spectre-20261019/analysis01/124.json",
+    "spectre-20261019/analysis-final/115.json",
+    "fix-115-068-20261019/115-red/analysis.json",
+    "fix-115-068-20261019/timer-red-full/analysis.json",
+    "fix-115-068-20261019/068-cap-pair/068.json",
+    "fix-115-068-20261019/068-diagnose2",
+    "fix-115-068-20261019/068-matrix",
+    "fix-115-068-20261019/068-reference-norm",
+    "fix-115-068-20261019/068-aps",
+    "fix-115-068-20261019/068-diagnose-staging-failure.json",
+    "fix-115-068-20261019/installed-legacy.log",
+    "fix-115-068-20261019/calibration-directory-failure.txt"
+  ],
+  "not_covered": [
+    "full 1800ns original",
+    "11-channel array/file sampler",
+    "dynamic timer cancellation",
+    "cross-event shared state and precise simultaneous ordering",
+    "current/charge switching",
+    "Linux ngspice/XSPICE model execution",
+    "full400"
+  ],
+  "final_summary": "fix-115-068-20261019/summary.json",
+  "final_source_identity": "fix-115-068-20261019/source-manifest.json",
+  "final_native_contracts": {
+    "passed": 22,
+    "total": 22,
+    "positive_runs": 14,
+    "expected_negative_runs": 8,
+    "new_build_probes": 9
+  },
+  "unit_tests": {
+    "passed": 15,
+    "total": 15,
+    "evidence": "fix-115-068-20261019/final-unit.log"
+  },
+  "final_checks": {
+    "samplers": "fix-115-068-20261019/final-samplers/analysis.json",
+    "counter_clock": "fix-115-068-20261019/final-counter-clock/analysis.json",
+    "chain": "fix-115-068-20261019/final-chain/analysis.json",
+    "tanh": "fix-115-068-20261019/final-tanh/analysis.json",
+    "legacy": "fix-115-068-20261019/final-legacy/analysis.json",
+    "instances": "fix-115-068-20261019/final-instances/analysis.json",
+    "cross_tolerances": "fix-115-068-20261019/final-cross-complete/analysis.json",
+    "timer_deadlines": "fix-115-068-20261019/final-timer/analysis.json"
+  },
+  "spectre_prepared_inputs": [
+    "final-installed-events/104-normal/spectre-inputs/preparation.json",
+    "final-installed-events/210-normal/spectre-inputs/preparation.json",
+    "final-installed-events-retry/148-normal/spectre-inputs/preparation.json",
+    "final-installed-events-retry/115-normal/spectre-inputs/preparation.json",
+    "final-installed-events/068-normal/spectre-inputs/preparation.json",
+    "final-installed-chain/normal/spectre-inputs/preparation.json",
+    "final-installed-tanh/normal/spectre-inputs/preparation.json"
+  ],
+  "decision_audit": "decision-audit.json",
+  "availability": "local-only",
+  "source_snapshot": "fix-115-068-20261019/working-files.tar.gz",
+  "spectre_summary": "fix-115-068-20261019/summary.json",
+  "spectre_analysis": "fix-115-068-20261019/final-pair/analysis.json",
+  "spectre_calibration": {
+    "passed": 31,
+    "total": 31,
+    "evidence": "fix-115-068-20261019/final-native-calibration/analysis.json"
+  },
+  "spectre_failed_cases": [],
+  "spectre_review": {
+    "status": "independent_review_complete_no_open_findings",
+    "agent": "review_xspice_night",
+    "model": "gpt-6.1-sol",
+    "reasoning": "medium",
+    "summary": "fix-115-068-20261019/review-summary.txt",
+    "open": 0
+  },
+  "spectre_report": "fix-115-068-20261019/REPORT.md",
+  "prior_spectre_phase": {
+    "new_spectre_runs": 9,
+    "new_spectre_alignment": "5/7 pass;115 fixed-grid RC pair40.01uV exceeds20uV and068 loaded-reference native convergence fails; no full compatibility claim",
+    "spectre_summary": "spectre-20261019/summary.json",
+    "spectre_analysis": "spectre-20261019/analysis-closed/analysis.json",
+    "spectre_calibration": {
+      "passed": 31,
+      "total": 31,
+      "evidence": "spectre-20261019/calibration02/analysis.json"
+    },
+    "spectre_failed_cases": [
+      "115",
+      "068"
+    ],
+    "spectre_review": {
+      "status": "independent_review_complete_no_open_findings",
+      "details": "progress.json#spectre_review",
+      "initial_findings": 1,
+      "fixed": 1,
+      "open": 0
+    },
+    "spectre_report": "spectre-20261019/REPORT.md",
+    "final_summary": "final-summary.json",
+    "final_source_identity": "final-source-manifest.json",
+    "source_snapshot": {
+      "manifest": "final-source-manifest.json",
+      "patch": "final-tracked.patch",
+      "modified_and_untracked_files": "final-working-files.tar.gz"
+    },
+    "final_checks": {
+      "events": {
+        "104": "final-installed-events/analysis.json",
+        "210": "final-installed-events/analysis.json",
+        "148": "final-installed-events-retry/analysis.json",
+        "115": "final-installed-events-retry/analysis.json",
+        "068": "final-installed-events/analysis.json"
+      },
+      "chain": "final-installed-chain/analysis.json",
+      "tanh": "final-installed-tanh/analysis.json",
+      "legacy": "final-installed-legacy/analysis.json",
+      "default_instances": "final-installed-instances/analysis.json"
+    },
+    "unit_tests": {
+      "passed": 15,
+      "total": 15,
+      "evidence": "final-installed-unit.json"
+    }
+  },
+  "fix_115_068": {
+    "summary": "fix-115-068-20261019/summary.json",
+    "report": "fix-115-068-20261019/REPORT.md",
+    "source_and_criteria": "fix-115-068-20261019/source-and-criteria-identity.json",
+    "package_identity": "fix-115-068-20261019/final-package-identity.json",
+    "attempts": "fix-115-068-20261019/attempts.json",
+    "fix_spectre_attempts": 8,
+    "process_successes": 2,
+    "process_failures": 6,
+    "prior_spectre_preservation": "fix-115-068-20261019/prior-spectre-preservation.json"
+  },
+  "scope_summary": {
+    "document": "evas/docs/development/ngspice-compatibility-discussion.md#current-support-summary",
+    "plan": "evas/docs/development/ngspice-compatibility-discussion.md#next-round-priorities",
+    "static_probes": "scope-summary-20261019/static-admission.json",
+    "new_native_simulations": 0,
+    "status": "summary_and_plan_only"
+  }
+}
