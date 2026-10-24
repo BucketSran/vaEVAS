@@ -1890,6 +1890,12 @@ class InstanceCompiler:
         origin = self.make_ir(Origin, expr.token.source or self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
         index = len(self.compilation.operators)
         if expr.op == "idt":
+            if len(expr.args) == 3:
+                # An assert set only at event instants needs its own lowering (#230).
+                from . import idt_pulse_reset
+                pulse = idt_pulse_reset.plan(self, expr, resolve)
+                if pulse is not None:
+                    return idt_pulse_reset.emit(self, pulse, expr, value, settings[0].constant, origin)
             reset = lower(expr.args[2], resolve, {}, self.model.source, preserve_structure=True) if len(expr.args) == 3 else None
             self.compilation.operators.append(self.make_ir(Idt, value, settings[0].constant, origin, reset))
         elif expr.op == "ddt":
