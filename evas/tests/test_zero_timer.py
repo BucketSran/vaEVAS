@@ -13,13 +13,17 @@ import subprocess
 import unittest
 from evas import CompileError, KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
+from initial_source_sequence_contract import check_initial_source_sequence
 
 
-def run(body, stop=1., times=None, strobes=False, declarations='integer n;', instances=None):
+def run(body, stop=1., times=None, strobes=False, declarations='integer n;', instances=None,
+        initial_sequence=None):
     times = [0., stop] if times is None else times
     p = compile_sources({'zero.va': model(body, declarations)}, instances or [instance()])
-    return transient(p, {'u': [[0., 0.], [stop, stop]]}, times, stop=stop,
+    result = transient(p, {'u': [[0., 0.], [stop, stop]]}, times, stop=stop,
                      max_step=stop, strobetimes=times if strobes else [], kernel=KERNEL)
+    return (check_initial_source_sequence(result,p,[0],initial_sequence)
+            if initial_sequence is not None else result)
 
 
 class ZeroTimer(unittest.TestCase):
@@ -28,7 +32,8 @@ class ZeroTimer(unittest.TestCase):
         for times in [[0., 1.], [0., 0.125, 0.5, 1.], [0.25]]:
             for forced in [False, True]:
                 with self.subTest(times=times, forced=forced):
-                    r=run(body,times=times,strobes=forced)
+                    r=run(body,times=times,strobes=forced,initial_sequence=[
+                        (0,"initial_step",[0],[7]),(1,"timer",[7],[8])])
                     self.assertEqual([e['time'] for e in r['transient']['events']], [k/8 for k in range(9)])
                     self.assertEqual(r['transient']['states'], [[8+int(t*8)] for t in times])
                     self.assertEqual(r['transient']['events'][0]['before'], [7])

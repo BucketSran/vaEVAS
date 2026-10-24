@@ -26,6 +26,13 @@ See the [support matrix](../COMPARISON.md) for delivery status. Independent cont
 区分只读查询、同刻观察和未来历史。涉及事件的改动还需检查
 [settlement](events.md#同块顺序赋值与同刻联立求解)与[共同生命周期](continuous.md#shared-lifecycle-closure)。
 
+IR33 的局部过程不改变独立物理输入的滤波历史。当前候选仅在没有离散状态、
+全部算子都是单分子系数/二项分母的一阶 `laplace_nd`、输入仅为实际驱动的仿射源时，
+保留原直接解析路径；贡献中的当前局部捕获仍按每次 Plan 求值。
+内部节点、状态依赖、嵌套算子及其他联合关系继续走原准入，不因这项修复放行。
+[过程与直接滤波控制](../../rust_core/src/operator_procedure_direct_tests.rs)
+以及[公开滤波回归](../../tests/test_laplace.py)覆盖该有限组合。
+
 ## 公共执行方法
 
 下面固定当刻算子输出的推导适用于正边沿 transition 与直接输入的 absdelay/slew。

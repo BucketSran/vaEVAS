@@ -14,6 +14,7 @@ import unittest
 
 from evas import CompileError, Instance, KernelError, compile_sources, transient
 from test_affine import KERNEL
+from initial_record_contract import check_initial_record_batch
 from long_sequence_oracle import BUDGET, check_result, decimal, held, pwl_area, regular_answers
 
 
@@ -45,6 +46,7 @@ def scenario(periods, period=F(1,8), amplitude=F(2), divisions=2, reset=None):
     points = [[float(k*period), float(held(k, amplitude))] for k in range(periods+1)]
     result = transient(program, {'u': points}, times, stop=float(periods*period),
                        max_step=float(2*period), kernel=KERNEL, timeout=30)
+    result=check_initial_record_batch(result,program,[0,0,0],[0,0,0],1)
     return result, times, points
 
 

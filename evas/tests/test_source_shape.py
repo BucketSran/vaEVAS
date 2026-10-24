@@ -10,6 +10,7 @@ import unittest
 from evas import KernelError, compile_sources, transient
 from evas.scs import load_scs, simulate_scs
 from test_affine import KERNEL, instance, model
+from initial_record_contract import check_initial_record_batch
 
 
 class SourceShapeContracts(unittest.TestCase):
@@ -259,6 +260,7 @@ class SourceShapeContracts(unittest.TestCase):
         y=program.nodes.index('y')
         for row,expected in zip(result['solutions'],[0,.8,0,.8,0,0]):
             self.assertAlmostEqual(row['voltages'][y],expected,delta=1e-10)
+        result=check_initial_record_batch(result,program,[0,0],[.5,0],1)
         events=result['transient']['events']
         self.assertEqual([e['kind'] for e in events],['cross','timer','cross','timer'])
 

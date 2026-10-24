@@ -749,6 +749,9 @@ use root_window::{HistoryStep, StepHistory};
 struct PhysicalEventSeed {
     window: I,
     state_after_map: Vec<I>,
+    // Mapping may precede restart while procedure reset captures are installed.
+    // Only the candidate that completes this bridge may mark it finished.
+    representative_pending: bool,
 }
 
 #[derive(Clone)]
@@ -2439,24 +2442,18 @@ impl NonlinearContinuous {
         horizon: f64,
         context: Arc<Context>,
     ) -> Result<Self, Error> {
-        let same_proofs = self.context.time_proofs == context.time_proofs && self.context.reset_captures == context.reset_captures;
         let mut next = self.mapped_event_with_context(time, window, parameters, context)?;
-        if same_proofs
-            && (!self.event_dependent
-                || self
-                    .context
-                    .parameters_equal(&self.parameters, parameters)?)
-        {
-            next.propagate_until(horizon)?;
-            return Ok(next);
-        }
-        if window.lo != window.hi {
-            let elapsed = I {
-                lo: 0.0,
-                hi: (I::point(time) - I::point(window.lo)).hi,
-            };
-            let (_, image) = next.event_picard_enclosure(&next.initial, window, &[], elapsed)?;
-            next.initial = image;
+        if let Some(seed) = next.event_seed.as_ref().filter(|seed| seed.representative_pending) {
+            let window = seed.window;
+            if window.lo != window.hi {
+                let elapsed = I {
+                    lo: 0.0,
+                    hi: (I::point(next.start) - I::point(window.lo)).hi,
+                };
+                let (_, image) = next.event_picard_enclosure(&next.initial, window, &[], elapsed)?;
+                next.initial = image;
+            }
+            next.event_seed.as_mut().unwrap().representative_pending = false;
         }
         next.propagate_until(horizon)?;
         Ok(next)
@@ -2508,6 +2505,7 @@ impl NonlinearContinuous {
         next.event_seed = Some(PhysicalEventSeed {
             window,
             state_after_map: next.initial.clone(),
+            representative_pending: true,
         });
         Ok(next)
     }
@@ -2697,6 +2695,40 @@ mod tests {
     }
 
     #[test]
+    fn mapped_physical_seed_bridges_once_and_failed_restart_preserves_candidate() {
+        let mut mapped = scalar(0.0);
+        mapped.functions = vec![Polynomial::Linear(vec![I::ZERO, I::point(4.0)])];
+        mapped.start = 0.05;
+        let window = I { lo: 0.05 - 1e-8, hi: 0.05 };
+        mapped.event_seed = Some(PhysicalEventSeed {
+            window,
+            state_after_map: mapped.initial.clone(),
+            representative_pending: true,
+        });
+        let before = mapped.clone();
+        let accepted = mapped.restarted(window.hi, window, &[], 0.125).unwrap();
+        assert!(mapped.same_history(&before));
+        let at_start = accepted.state_bounds(I::point(window.hi)).unwrap()[0];
+        let answer = 1.0 + 4.0 * (window.hi - window.lo);
+        assert!(at_start.lo <= 1.0 && at_start.hi >= answer);
+        assert!(!accepted.event_seed.as_ref().unwrap().representative_pending);
+        let repeated = accepted.restarted(window.hi, window, &[], 0.125).unwrap();
+        assert!(accepted.same_history(&repeated));
+        assert_eq!(accepted.state_bounds(I::point(0.125)).unwrap(), repeated.state_bounds(I::point(0.125)).unwrap());
+        assert_eq!(accepted.event_seed.as_ref().unwrap().state_after_map, vec![I::ONE]);
+
+        let mut failed = mapped.clone();
+        failed.functions = scalar(1.0).functions;
+        failed.initial = vec![I::point(1e300)];
+        failed.event_seed.as_mut().unwrap().state_after_map = failed.initial.clone();
+        let failed_before = failed.clone();
+        assert!(failed.restarted(window.hi, window, &[], 0.125).is_err());
+        assert!(failed.same_history(&failed_before));
+        assert!(failed.event_seed.as_ref().unwrap().representative_pending);
+        assert!(mapped.same_history(&before));
+    }
+
+    #[test]
     fn forced_points_end_accepted_dense_steps() {
         let mut flow = scalar(-1.0);
         let context = Arc::get_mut(&mut flow.context).unwrap();
@@ -2728,6 +2760,7 @@ mod tests {
                 hi: 0.05,
             },
             state_after_map: vec![I::ONE],
+            representative_pending: false,
         });
         let before = accepted.clone();
         assert!(accepted.state_bounds(window).is_err());

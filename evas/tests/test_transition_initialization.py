@@ -100,7 +100,7 @@ class FinalInitialHistory(unittest.TestCase):
             '@(timer(0,0,0.001)) a=1; '
             '@(timer(b,0,0.001)) b=b+1; '
             'V(y,r)<+transition(a,0,0.5,0.5)+idt(1,0.75);',
-            [0, .25, 1], 1)
+            [0, .25, 1], 1, initial_batches=(dict(a=0,b=.5),[(1,"timer",dict(a=1))]))
         self.assertEqual(self.values(result), [1.75, 2., 2.75])
         self.assertEqual([e['time'] for e in result['transient']['events']], [0., .5])
 

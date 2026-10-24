@@ -9,6 +9,7 @@ from evas import CompileError, KernelError
 from evas import compile_sources
 from test_affine import KERNEL, instance, model
 from test_timer import run_timer
+from initial_source_sequence_contract import check_initial_source_sequence
 
 
 class DynamicTimer(unittest.TestCase):
@@ -18,8 +19,8 @@ class DynamicTimer(unittest.TestCase):
                 source=model('''@(initial_step) begin next=0.25; n=0; end
                   @(timer('''+arguments+''')) begin next=next+0.25; n=n+1; end
                   V(y,r)<+n;''', 'real next; integer n;')
-                a=run_timer(source,stop=1,times=[0,1],step=1)
-                b=run_timer(source,stop=1,times=[0,.25,.375,.5,.75,1],step=.0625)
+                a=run_timer(source,stop=1,times=[0,1],step=1,initial_records=([0,0],[.25,0],1))
+                b=run_timer(source,stop=1,times=[0,.25,.375,.5,.75,1],step=.0625,initial_records=([0,0],[.25,0],1))
                 self.assertEqual(a['transient']['events'], b['transient']['events'])
                 self.assertEqual([e['time'] for e in a['transient']['events']],[.25,.5,.75,1])
                 self.assertEqual(a['transient']['states'][-1],[1.25,4])
@@ -29,7 +30,7 @@ class DynamicTimer(unittest.TestCase):
           @(timer(0.25,0,1e-12)) next=0.5;
           @(timer(next,0,1e-12)) n=n+1;
           V(y,r)<+n;''', 'real next; integer n;')
-        r=run_timer(source,stop=1,times=[0,1])
+        r=run_timer(source,stop=1,times=[0,1],initial_records=([0, 0],[0.75, 0],1))
         self.assertEqual([e['time'] for e in r['transient']['events']],[.25,.5])
         self.assertEqual(r['transient']['states'][-1],[.5,1])
 
@@ -39,13 +40,15 @@ class DynamicTimer(unittest.TestCase):
           @(timer(0,period,1e-12)) n=n+1;
           V(y,r)<+n;''', 'real period; integer n;')
         r=run_timer(source,stop=1,times=[0,1])
+        r=check_initial_source_sequence(r,compile_sources({"timer.va":source},[instance()]),
+            [0,0],[(0,"initial_step",[0,0],[.5,0]),(2,"timer",[.5,0],[.5,1])])
         self.assertEqual([e['time'] for e in r['transient']['events']],[0,.125,.25,.5,.75,1])
         self.assertEqual(r['transient']['states'][-1],[.25,5])
         source=model('''@(initial_step) begin enable=0; n=0; end
           @(timer(0.375,0,1e-12)) enable=1;
           @(timer(0,0.25,1e-12,enable)) n=n+1;
           V(y,r)<+n;''', 'integer enable,n;')
-        r=run_timer(source,stop=1,times=[0,1])
+        r=run_timer(source,stop=1,times=[0,1],initial_records=([0, 0],[0, 0],1))
         self.assertEqual([e['time'] for e in r['transient']['events']],[.375,.5,.75,1])
         self.assertEqual(r['transient']['states'][-1],[1,3])
 
@@ -54,14 +57,14 @@ class DynamicTimer(unittest.TestCase):
             source=model('''@(initial_step) begin next=0.25; n=0; end
               @(timer(next,0,1e-12)) begin '''+assignment+''' n=n+1; end
               V(y,r)<+n;''', 'real next; integer n;')
-            r=run_timer(source,stop=1,times=[0,1])
+            r=run_timer(source,stop=1,times=[0,1],initial_records=([0, 0],[0.25, 0],1))
             self.assertEqual([e['time'] for e in r['transient']['events']],[.25])
 
     def test_dynamic_timer_or_exact_cross_executes_once(self):
         source=model('''@(initial_step) begin next=0.5; n=0; end
           @(timer(next,0,1e-12) or cross(V(u,r)-0.5,1,1e-12,1e-9)) n=n+1;
           V(y,r)<+n;''', 'real next; integer n;')
-        r=run_timer(source,stop=1,times=[0,1])
+        r=run_timer(source,stop=1,times=[0,1],initial_records=([0, 0],[0.5, 0],1))
         event,=r['transient']['events']
         self.assertEqual(event['time'],.5)
         self.assertEqual([leaf['kind'] for leaf in event['fired_triggers']],['timer','cross'])
@@ -94,7 +97,7 @@ class DynamicTimer(unittest.TestCase):
         source=model('''@(initial_step) next=0.25;
           @(timer(next,0,1e-12)) next=next+0.25;
           V(y,r)<+idt(V(u,r),0);''','real next;')
-        result=run_timer(source,stop=1,times=[0,.25,.5,.75,1])
+        result=run_timer(source,stop=1,times=[0,.25,.5,.75,1],initial_records=([0],[.25],1))
         self.assertEqual([e['time'] for e in result['transient']['events']],[.25,.5,.75,1])
         for t,row in zip([0,.25,.5,.75,1],result['solutions']):
             self.assertAlmostEqual(row['voltages'][result['nodes'].index('y')],.5*t*t,delta=1e-9)
@@ -136,6 +139,10 @@ class DynamicTimer(unittest.TestCase):
                 if history else ''), 'real b,p; integer n;' + (' electrical h;' if history else ''))
             times = [0,0.0625,0.125,0.25,0.5,0.75,1]
             result = run_timer(source, stop=1, times=times, step=0.125)
+            result = check_initial_source_sequence(result,
+                compile_sources({"timer.va":source},[instance()]),[0,0,0],
+                [(0,"initial_step",[0,0,0],[0,.5,0]),
+                 (1,"timer",[0,.5,0],[0,.25,1])])
             self.assertEqual([e['time'] for e in result['transient']['events']],
                              [0,0.25,0.5,0.75,1])
             self.assertEqual([s['voltages'][result['nodes'].index('y')]

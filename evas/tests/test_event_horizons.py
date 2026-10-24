@@ -8,6 +8,8 @@ import math
 import unittest
 
 from test_continuous_dynamics import compile_model, run, values, assert_close
+from initial_record_contract import check_initial_record_batch
+from initial_source_sequence_contract import check_initial_source_sequence
 
 
 class KnownEventHorizonContracts(unittest.TestCase):
@@ -19,6 +21,7 @@ class KnownEventHorizonContracts(unittest.TestCase):
             "V(y,r)<+idt(q*pow(V(y,r),2),1);", "integer q;")
         times = [0, .125, .25, .5, .75, 1, 2]
         result = run(program, times=times, stop=2, vabstol=1e-9, reltol=0)
+        result = check_initial_record_batch(result,program,[0],[1],1)
         for t, actual in zip(times, values(result)):
             expected = 1/(1-t) if t <= .5 else 1/t
             assert_close(self, actual, expected, delta=1e-9)
@@ -32,6 +35,7 @@ class KnownEventHorizonContracts(unittest.TestCase):
             "V(y,r)<+idt(q*pow(V(y,r),2),1);", "integer q;")
         times = [0, .25, .375, .5, .75, 1, 2]
         result = run(program, times=times, stop=2, vabstol=1e-9, reltol=0)
+        result = check_initial_record_batch(result,program,[0],[1],1)
         for t, actual in zip(times, values(result)):
             assert_close(self, actual, 1/(1-t) if t <= .5 else 1/t, delta=1e-9)
         self.assertEqual([e["time"] for e in result["transient"]["events"]], [.25, .5])
@@ -43,6 +47,8 @@ class KnownEventHorizonContracts(unittest.TestCase):
             "V(y,r)<+idt(q*pow(V(y,r),2),1);", "integer q;")
         times = [0, .25, .5, 1, 2]
         result = run(program, times=times, stop=2, vabstol=1e-9, reltol=0)
+        result = check_initial_source_sequence(result,program,[0],
+            [(0,"initial_step",[0],[1]),(1,"timer",[1],[-1])])
         for t, actual in zip(times, values(result)):
             assert_close(self, actual, 1/(1+t), delta=1e-9)
         self.assertEqual([e["time"] for e in result["transient"]["events"]], [0])
@@ -85,6 +91,7 @@ class KnownEventHorizonContracts(unittest.TestCase):
             "V(y,r)<+idt(q*pow(V(y,r),2),1);", "integer q;")
         times = [i/16 for i in range(33)]
         result = run(program, times=times, stop=2, vabstol=1e-9, reltol=0)
+        result = check_initial_record_batch(result,program,[0],[1],1)
         for t, actual in zip(times, values(result)):
             n = int(t/.25)
             elapsed = Fraction.from_float(t)-Fraction(n,4)
@@ -101,6 +108,7 @@ class KnownEventHorizonContracts(unittest.TestCase):
         times = [0, .25, .5, 1, 2]
         result = run(program, {"u": [[0, 0], [2, 2]]}, times, stop=2,
                      vabstol=1e-9, reltol=0)
+        result = check_initial_record_batch(result,program,[0],[1],1)
         for t, actual in zip(times, values(result)):
             t_exact = Fraction.from_float(t)
             expected = 1/(1-t_exact) if t < 1/3 else 1/(t_exact+Fraction(1,3))

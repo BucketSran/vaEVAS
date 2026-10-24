@@ -8,6 +8,7 @@ import unittest
 
 from evas import KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
+from initial_record_contract import check_initial_record_batch
 
 
 def run_guard(guard, *, extra="", points=None, times=None, step=4, direction=0):
@@ -19,8 +20,9 @@ def run_guard(guard, *, extra="", points=None, times=None, step=4, direction=0):
     """, "integer n;" + (" electrical z;" if extra else ""))
     program = compile_sources({"guard.va": source}, [instance()])
     points = points or [[0, 0], [2, 2]]
-    return transient(program, {"u": points}, times or [0, 2],
+    result = transient(program, {"u": points}, times or [0, 2],
                      stop=points[-1][0], max_step=step, kernel=KERNEL)
+    return check_initial_record_batch(result,program,[0],[0],1)
 
 
 class DynamicCrossContracts(unittest.TestCase):
@@ -81,6 +83,7 @@ class DynamicCrossContracts(unittest.TestCase):
             result = transient(program, {"u": [[0, 1], [3, 1]]}, times,
                                stop=3, max_step=.005, vabstol=1e-8,
                                reltol=0, kernel=KERNEL)
+            result = check_initial_record_batch(result,program,[0,0],[1,0],1)
             events = result["transient"]["events"]
             self.assertEqual([event["time"] for event in events], [1, 3])
             if baseline is not None:
@@ -130,6 +133,7 @@ class DynamicCrossContracts(unittest.TestCase):
         program = compile_sources({"guard-only.va": source}, [instance()])
         result = transient(program, {"u": [[0, 0], [2, 2]]}, [0, 2],
                            stop=2, max_step=2, kernel=KERNEL)
+        result = check_initial_record_batch(result,program,[0],[0],1)
         events = result['transient']['events']
         self.assertEqual(len(events), 1)
         self.assertAlmostEqual(events[0]['time'], 1, delta=1e-9)

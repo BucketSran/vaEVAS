@@ -16,16 +16,20 @@ import unittest
 
 from evas import Instance, CompileError, KernelError, compile_sources, solve, transient
 from test_affine import KERNEL, instance, model
+from initial_named_batches_contract import check_named_initial_batches
 
 
 def compile_transition(body, declarations='real a,b;'):
     return compile_sources({'transition.va': model(body, declarations)}, [instance()])
 
 
-def run_transition(body, times, stop, step=None, declarations='real a,b;'):
-    return transient(compile_transition(body, declarations),
+def run_transition(body, times, stop, step=None, declarations='real a,b;', initial_batches=None):
+    program=compile_transition(body,declarations)
+    result=transient(program,
                      {'u': [[0, 0], [stop, 0]]}, times,
                      stop=stop, max_step=stop if step is None else step, kernel=KERNEL)
+    return (check_named_initial_batches(result,program,*initial_batches)
+            if initial_batches is not None else result)
 
 
 class TransitionContracts(unittest.TestCase):

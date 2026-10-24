@@ -14,12 +14,13 @@ import unittest
 from evas import CompileError, compile_sources, transient
 from test_event_conditions import execute, source, states
 from test_affine import KERNEL, instance, model
+from initial_record_contract import check_initial_record_batch
 
 
 class EventOrContracts(unittest.TestCase):
     def test_distinct_roots_execute_body_twice(self):
         trigger = 'cross(V(u,r)-0.25,1,0.001,0.001) or cross(V(u,r)-0.75,1,0.001,0.001)'
-        result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.25,.5,.75,1])
+        result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.25,.5,.75,1], initial_records=([0],[0],1))
         self.assertEqual(states(result), [0,1,1,2,2])
         self.assertEqual([e['time'] for e in result['transient']['events']], [.25,.75])
 
@@ -28,7 +29,7 @@ class EventOrContracts(unittest.TestCase):
         b = 'cross(2*V(u,r)-1,1,0.001,0.001)'
         for trigger in [a+' or '+b, b+' or '+a, a+' or '+a]:
             with self.subTest(trigger=trigger):
-                result = execute(source('q=q+1;', kind='integer', trigger=trigger))
+                result = execute(source('q=q+1;', kind='integer', trigger=trigger), initial_records=([0],[0],1))
                 self.assertEqual(states(result), [0,1,1])
                 events = result['transient']['events']
                 self.assertEqual(len(events), 1)
@@ -39,7 +40,7 @@ class EventOrContracts(unittest.TestCase):
         a = 'cross(V(u,r)-0.5,1,0.01,0.01)'
         b = 'cross(V(u,r)-0.5009765625,1,0.01,0.01)'
         for trigger in [a+' or '+b, b+' or '+a]:
-            result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.5,.5009765625,1])
+            result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.5,.5009765625,1], initial_records=([0],[0],1))
             self.assertEqual(states(result), [0,1,2,2])
             self.assertEqual([e['time'] for e in result['transient']['events']], [.5,.5009765625])
 
@@ -54,7 +55,7 @@ class EventOrContracts(unittest.TestCase):
     def test_each_leaf_keeps_direction_and_its_own_tolerance(self):
         a = 'cross(V(u,r)-0.25,-1,0.001,0.001)'
         b = 'cross(V(u,r)-0.75,1,0.001,0.001)'
-        r = execute(source('q=q+1;', kind='integer', trigger=a+' or '+b))
+        r = execute(source('q=q+1;', kind='integer', trigger=a+' or '+b), initial_records=([0],[0],1))
         self.assertEqual(states(r), [0,0,1])
         self.assertEqual(r['transient']['events'][0]['fired_triggers'][0]['trigger'], 1)
         for fired in r['transient']['events'][0]['fired_triggers']:
@@ -75,7 +76,7 @@ class EventOrContracts(unittest.TestCase):
                     text = model("@(initial_step) begin a=0; b=0; c=0; end "
                                  + "".join(order) + " V(y,r)<+a+10.0*b+100.0*c;",
                                  "integer a,b,c;")
-                    result = execute(text, times=[0,.25,.5,.75,1])
+                    result = execute(text, times=[0,.25,.5,.75,1], initial_records=([0,0,0],[0,0,0],1))
                     y = result['nodes'].index('y')
                     self.assertEqual([row['voltages'][y] for row in result['solutions']],
                                      [0,0,111,111,111] if simultaneous else [0,1,11,111,111])
@@ -88,8 +89,9 @@ class EventOrContracts(unittest.TestCase):
     def test_simultaneous_clock_reset_obeys_source_comparison_after_exact_root(self):
         clock = 'cross(V(u,r)-0.5,1,0.001,0.001)'
         reset = 'cross(V(v,r)-0.5,1,0.001,0.001)'
-        # Both guards rise through 0.5; just after the root v>0.5 holds.
-        for relation, expected in [('>=',1),('>',1)]:
+        # Exact root t=.5 samples binary64 v=.5. RN preserves equality;
+        # the strict program comparison therefore takes the else branch.
+        for relation, expected in [('>=',1),('>',2)]:
             for trigger in [clock+' or '+reset,reset+' or '+clock]:
                 text = model('@(initial_step) q=0; @('+trigger+') '
                              f'if(V(v,r){relation}0.5) q=1; else q=2; V(y,r)<+q;',
@@ -97,6 +99,7 @@ class EventOrContracts(unittest.TestCase):
                 program = compile_sources({'reset.va':text},[instance(connections=dict(u='u',v='v',y='y',r='0'))])
                 result = transient(program,{'u':[[0,0],[1,1]],'v':[[0,0],[1,1]]},
                                    [0,.5,1],stop=1,max_step=1,kernel=KERNEL)
+                result=check_initial_record_batch(result,program,[0],[0],1)
                 self.assertEqual(states(result),[0,expected,expected])
                 self.assertEqual(len(result['transient']['events']),1)
                 self.assertEqual(len(result['transient']['events'][0]['fired_triggers']),2)
@@ -106,7 +109,7 @@ class EventOrContracts(unittest.TestCase):
         timer = 'timer(0.5,0,0.001)'
         for trigger in (timer+' or '+cross, cross+' or '+timer, timer+' or '+timer):
             with self.subTest(trigger=trigger):
-                result = execute(source('q=q+1;', kind='integer', trigger=trigger))
+                result = execute(source('q=q+1;', kind='integer', trigger=trigger), initial_records=([0],[0],1))
                 self.assertEqual(states(result), [0,1,1])
                 event, = result['transient']['events']
                 self.assertEqual(event['kind'], 'or')
@@ -120,12 +123,12 @@ class EventOrContracts(unittest.TestCase):
 
     def test_periodic_timer_union_keeps_distinct_roots_and_disabled_leaves(self):
         trigger = 'timer(0.25,0.25,0.001) or cross(V(u,r)-0.5,1,0.001,0.001)'
-        result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.25,.5,.75,1])
+        result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.25,.5,.75,1], initial_records=([0],[0],1))
         self.assertEqual(states(result), [0,1,2,3,4])
         self.assertEqual([e['time'] for e in result['transient']['events']], [.25,.5,.75,1])
         self.assertEqual(len(result['transient']['events'][1]['fired_triggers']), 2)
         trigger = 'timer(0.5,0,0.001,0) or cross(V(u,r)-0.75,1,0.001,0.001)'
-        result = execute(source('q=q+1;',kind='integer',trigger=trigger))
+        result = execute(source('q=q+1;',kind='integer',trigger=trigger), initial_records=([0],[0],1))
         self.assertEqual([e['time'] for e in result['transient']['events']], [.75])
         self.assertEqual(result['transient']['events'][0]['fired_triggers'][0]['trigger'], 1)
 
@@ -162,6 +165,7 @@ class EventOrContracts(unittest.TestCase):
         for w in [[[0,0],[4*unit,0]],extra]:
             result=transient(p,{'u':points,'w':w},[0,4*unit],
                              stop=4*unit,max_step=4*unit,kernel=KERNEL)
+            result=check_initial_record_batch(result,p,[0],[0],1)
             self.assertEqual(states(result),[0,4])
             events=result['transient']['events']
             self.assertEqual(len(events),4)

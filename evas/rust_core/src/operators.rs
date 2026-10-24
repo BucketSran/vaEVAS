@@ -23,6 +23,54 @@ pub(crate) mod transition_integral;
 #[path = "direct_derivative.rs"]
 pub(crate) mod direct_derivative;
 
+/// Direct physical Laplace inputs do not need a voltage-network projection.
+/// Procedure contribution locals remain owned by their current Plan, so an
+/// unrelated output capture must not be parsed as a legacy affine equation.
+fn procedure_direct_laplace(
+    program: &Program,
+    trajectory: &Trajectory,
+    driven: &[String],
+) -> Result<bool, Error> {
+    if program.procedures.is_empty() || program.operators.is_empty() || !program.states.is_empty() {
+        return Ok(false);
+    }
+    let work = trajectory.procedure_work().ok_or_else(|| {
+        Error::new("invalid_ir", "procedure histories lost their execution owner")
+    })?;
+    work.debit(2, (program.operators.len() + 1) as u64)?;
+    for operator in &program.operators {
+        work.step()?;
+        let OperatorSpec::LaplaceNd {
+            input: Expression::Affine { terms, .. },
+            numerator,
+            denominator,
+            ..
+        } = operator else {
+            return Ok(false);
+        };
+        // The direct builder owns this first-order shape. Higher-order or
+        // polynomial feedthrough filters retain their existing network route.
+        work.debit(2, 2)?;
+        if numerator.len() != 1 || denominator.len() != 2 {
+            return Ok(false);
+        }
+        for term in terms {
+            work.step()?;
+            let Some(node) = program.nodes.get(term.node) else {
+                return Ok(false);
+            };
+            if term.node == 0 { continue; }
+            let mut found = false;
+            for name in driven {
+                work.debit(2, (node.len() + name.len() + 1) as u64)?;
+                if node == name { found = true; break; }
+            }
+            if !found { return Ok(false); }
+        }
+    }
+    Ok(true)
+}
+
 type DirectPoints = (Vec<(f64, f64)>, Vec<I>);
 
 /// Materialize the accepted continuous input definition at its semantic knots.
@@ -2680,9 +2728,14 @@ impl Operators {
                 affine(input, program, &origin.instance)?;
             }
         }
-        let continuous =
+        let continuous = if procedure_direct_laplace(program, trajectory, driven)? {
+            // The existing direct builder below retains PWL enclosures,
+            // filter error and call-site history. No RN expression is erased.
+            None
+        } else {
             Continuous::new_until(program, trajectory, driven, states, horizon, tolerances)?
-                .map(Arc::new);
+                .map(Arc::new)
+        };
         let needs_source_plan = program.operators.iter().any(|spec| match spec {
             OperatorSpec::Transition { .. } => true,
             OperatorSpec::Slew { input, .. } => crate::source_slew::selected(input),
@@ -6215,3 +6268,7 @@ impl Operators {
         serde_json::json!({"entries":0,"held_targets":0,"history_targets":0,"history_predicates":0,"history_admission":false,"forcing_context":false,"continuous":false,"direct":0,"changes_on_advance":0,"isolated_parameters":0,"horizon":self.horizon,"source_context":self.source_context.as_ref().map(|c|Arc::as_ptr(c) as usize)})
     }
 }
+
+#[cfg(test)]
+#[path = "operator_procedure_direct_tests.rs"]
+mod operator_procedure_direct_tests;

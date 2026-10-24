@@ -412,18 +412,10 @@ fn prepare_held_zero(
     let original_bounds: Vec<_> = before.iter().copied().map(I::point).collect();
     for &block in initial_blocks {
         let event = &model.program.events[block];
-        if model
-            .program
-            .contributions
-            .iter()
-            .any(|c| c.origin.instance == event.origin.instance)
-            && !constant_outputs(&event.body)
-        {
-            return Err(Error::new(
-                "unsupported_initial_event",
-                "initial display requires a passive measurement model",
-            ));
-        }
+        // IR33 retains executable initialization assignments. Active-owner
+        // status says nothing about their cold-history dependencies. Audit the
+        // entire body below before replay, then retain the seed/calendar and
+        // closed-history certificates before accepting the candidate.
         cold_charge(model, model.source_copy_items)?;
         check_body(&event.body, model, &event.origin.instance)?;
     }
@@ -445,7 +437,7 @@ fn prepare_held_zero(
     // initial callback can move a start to zero or enable a disabled timer.
     let possible = possible_zero_blocks(model, &initial_bounds)?;
     if possible.is_empty() {
-        return Ok(None);
+        return Ok(deferred_initial(model, initial, initial_bounds, records));
     }
     cold_charge(
         model,
@@ -488,7 +480,7 @@ fn prepare_held_zero(
         trajectory,
         cold_work(model),
     )? {
-        return Ok(None);
+        return Ok(deferred_initial(model, initial, initial_bounds, records));
     }
     cold_charge(model, model.source_copy_items)?;
     let calendar = crate::schedule::schedule_held_charged(
@@ -503,7 +495,7 @@ fn prepare_held_zero(
     )?;
     let end = calendar.iter().take_while(|e| e.time == 0.).count();
     if end == 0 {
-        return Ok(None);
+        return Ok(deferred_initial(model, initial, initial_bounds, records));
     }
     for event in &calendar[..end] {
         if event.bounds() != I::ZERO || event.clock().and_then(|c| c.bounds()) != Some(I::ZERO) {
@@ -582,9 +574,11 @@ fn prepare_held_zero(
     )?;
     if seeds
         .iter()
-        .all(|&s| states[s].to_bits() == before[s].to_bits() && bounds[s] == original_bounds[s])
+        .all(|&s| states[s].to_bits() == initial[s].to_bits() && bounds[s] == initial_bounds[s])
     {
-        return Ok(None);
+        // Initial assignments have already supplied the cold seed. Leave the
+        // complete zero callback pending, including nonseed writes and checks.
+        return Ok(deferred_initial(model, initial, initial_bounds, records));
     }
     if !cold_graph(model)? {
         return Err(unsupported("changed initial transition seeds require a closed transition graph or independent source integrals"));
@@ -601,6 +595,30 @@ fn prepare_held_zero(
         future: Some(future),
         zero,
     }))
+}
+
+// Retain the certified initial gate while leaving all ordinary zero timers
+// pending. Returning None here would discard IR33 assignments and run them
+// only after histories had already been constructed from declaration seeds.
+fn deferred_initial(
+    model: &EventModel,
+    states: Vec<f64>,
+    bounds: Vec<I>,
+    records: Vec<EventRecord>,
+) -> Option<Prepared> {
+    if records.is_empty() {
+        return None; // No IR33 initial gate was executed. Preserve the legacy path.
+    }
+    Some(Prepared {
+        deferred_zero: true,
+        states,
+        bounds,
+        records,
+        bounded_held_transition_seeds: false,
+        source_context: model.source_context.clone(),
+        future: None,
+        zero: BTreeSet::new(),
+    })
 }
 
 pub(super) fn prepare(
@@ -659,6 +677,7 @@ pub(super) fn prepare(
             .iter()
             .any(|t| matches!(t.trigger, EventTrigger::HeldTimer { .. }))
         && !initial_blocks.is_empty()
+        && (model.program.operators.is_empty() || blocks.is_empty())
     {
         cold_charge(model, model.source_copy_items)?;
         let mut stage_blocks = initial_blocks.clone();
@@ -709,7 +728,7 @@ pub(super) fn prepare(
     // With no zero-timer writes the original disjoint-seed test is true for
     // every seed set. A source Floor request needs no bootstrap proof here;
     // its ordinary target construction and event validation still follow.
-    if model.floor_source.is_some() && assigned.is_empty() {
+    if model.floor_source.is_some() && assigned.is_empty() && initial_blocks.is_empty() {
         return Ok(None);
     }
     let mut seeds = BTreeSet::new();
@@ -814,8 +833,38 @@ pub(super) fn prepare(
     {
         return prepare_held_zero(model, trajectory, &seeds, &initial_ids, &initial_blocks);
     }
-    if seeds.is_disjoint(&assigned)
-        || crate::settlement_bounds::unchanged_initial_states(
+    if seeds.is_disjoint(&assigned) {
+        if initial_blocks.is_empty() {
+            return Ok(None);
+        }
+        for &block in &initial_blocks {
+            cold_charge(model, model.source_copy_items)?;
+            let event = &model.program.events[block];
+            check_body(&event.body, model, &event.origin.instance)?;
+        }
+        let before = model.initial();
+        let before_bounds = before.iter().copied().map(I::point).collect::<Vec<_>>();
+        let mut mixed = MixedCold {
+            original_points: BTreeSet::new(),
+            allowed: false,
+            qualified: None,
+        };
+        let (states, bounds, records) = prepare_stage(
+            model,
+            trajectory,
+            &initial_blocks,
+            &initial_ids,
+            &before,
+            &before_bounds,
+            &mut mixed,
+        )?;
+        return Ok(deferred_initial(model, states, bounds, records));
+    }
+    // The legacy proof compares with declaration seeds. IR33 initial gates
+    // can first change a seed and timer(0) can restore it; that is still a
+    // changed cold-seed transaction and must not fall back after construction.
+    if initial_blocks.is_empty()
+        && crate::settlement_bounds::unchanged_initial_states(
             model,
             &[initial_blocks.clone(), blocks.clone()],
             &seeds,
@@ -847,20 +896,9 @@ pub(super) fn prepare(
             "transition bootstrap cannot order an initial/timer OR body",
         ));
     }
-    if initial_blocks.iter().any(|&block| {
-        let owner = &model.program.events[block].origin.instance;
-        model
-            .program
-            .contributions
-            .iter()
-            .any(|c| &c.origin.instance == owner)
-            && !constant_outputs(&model.program.events[block].body)
-    }) {
-        return Err(Error::new(
-            "unsupported_initial_event",
-            "initial display requires a passive measurement model",
-        ));
-    }
+    // Initial assignments in an active instance use the same dependency
+    // certificate as zero timers. Physical internal/history reads remain
+    // excluded by check_body, and cold_graph preserves every live history.
     for &block in initial_blocks.iter().chain(&blocks) {
         let event = &model.program.events[block];
         check_body(&event.body, model, &event.origin.instance)?;
@@ -1248,6 +1286,52 @@ mod tests {
     use super::*;
     use crate::ir::{Program, Tolerances, TransientInputs};
     use serde_json::json;
+
+    #[test]
+    fn retained_held_initial_seed_retries_share_paid_owner_and_leave_program_unchanged() {
+        let request: Request = serde_json::from_str(include_str!(
+            "../tests/fixtures/initial_bootstrap_retry.request.json"
+        ))
+        .unwrap();
+        let config = request.transient.clone().unwrap();
+        let good = Trajectory::new(config.clone(), request.driven.len()).unwrap();
+        let mut bad_config = config;
+        bad_config.pwl[0] = vec![[0., 1.], [2., 1.]];
+        let bad = Trajectory::new(bad_config, request.driven.len()).unwrap();
+        let model = EventModel::new_with_trajectory(
+            request.program,
+            request.driven,
+            request.tolerances,
+            Some(&good),
+        )
+        .unwrap();
+        let original = serde_json::to_value(&model.program).unwrap();
+        let owner = cold_work(&model).clone();
+        assert!(owner.same_owner(crate::real_expression::work(&model)));
+        let mut spent = owner.spent();
+        for _ in 0..2 {
+            assert_eq!(prepare(&model, &bad).err().unwrap().kind, "integer_range");
+            assert!(owner.spent() > spent);
+            spent = owner.spent();
+            assert_eq!(serde_json::to_value(&model.program).unwrap(), original);
+            assert_eq!(model.initial(), vec![0., 0., 0.]);
+        }
+        let prepared = prepare(&model, &good).unwrap().unwrap();
+        assert!(prepared.deferred_zero);
+        assert_eq!(prepared.states, vec![0., -1., 0.]);
+        assert_eq!(prepared.records.len(), 1);
+        assert_eq!(prepared.records[0].kind, "initial_step");
+        assert!(owner.spent() > spent);
+        assert_eq!(serde_json::to_value(&model.program).unwrap(), original);
+        // Exhaust this same request owner. A rejected reservation cannot be
+        // reset by retrying preparation or choosing the deferred-zero path.
+        assert_eq!(owner.debit(2, u64::MAX).unwrap_err().kind, "step_budget");
+        for _ in 0..2 {
+            assert_eq!(prepare(&model, &good).err().unwrap().kind, "step_budget");
+            assert!(owner.same_owner(cold_work(&model)));
+            assert_eq!(serde_json::to_value(&model.program).unwrap(), original);
+        }
+    }
 
     fn model() -> EventModel {
         let origin = json!({"source":"init.va","line":1,"column":1,"instance":"dut"});
@@ -2207,3 +2291,7 @@ mod tests {
         .is_err());
     }
 }
+
+#[cfg(test)]
+#[path = "transient_initialization_deferred_budget_tests.rs"]
+mod deferred_budget_tests;

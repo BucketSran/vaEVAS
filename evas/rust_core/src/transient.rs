@@ -3042,14 +3042,28 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
                 let inputs = crate::event_value_proof::history::inputs(&model, &trajectory, time)?;
                 let input_bounds =
                     crate::event_value_proof::history::input_bounds(&model, &trajectory, time)?;
-                let mut selected_circuit = if model
-                    .program
-                    .contributions
-                    .iter()
-                    .any(|c| crate::analog::has_select(&c.rhs))
+                // A procedure Plan owns numeric source captures and selected
+                // control flow for one activation. Even when the compatibility
+                // contribution has no Select, new inputs need a current Plan.
+                // Preserve the legacy source-selection route when no procedure
+                // exists; only a verified affine factor may cross activations.
+                let mut selected_circuit = if !model.program.procedures.is_empty()
+                    || model
+                        .program
+                        .contributions
+                        .iter()
+                        .any(|c| crate::analog::has_select(&c.rhs))
                 {
-                    let mut circuit =
-                        model.circuit_at(&controller.accepted.states, &[], &input_bounds)?;
+                    let mut circuit = if model.program.procedures.is_empty() {
+                        model.circuit_at(&controller.accepted.states, &[], &input_bounds)?
+                    } else {
+                        ordinary_procedure_circuit(
+                            &model,
+                            &controller.accepted.states,
+                            &controller.accepted.state_bounds,
+                            &input_bounds,
+                        )?
+                    };
                     circuit.reuse_affine_factor_from(&controller.accepted.circuit);
                     Some(circuit)
                 } else {
@@ -3059,20 +3073,49 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
                     .as_mut()
                     .unwrap_or(&mut controller.accepted.circuit)
                     .solve(&inputs)?;
-                let (state_bounds, node_bounds) = model.certify_observation(
-                    &model.observation_selection(
+                let (state_bounds, node_bounds) = if !model.program.procedures.is_empty() {
+                    // Certify the exact activation used by solve, rather than
+                    // executing the ordinary source a second time through
+                    // observation_selection. Its complete before/input domains
+                    // stay explicit; ordinary values do not replace accepted
+                    // event memory or a retained event-occurrence certificate.
+                    let view = selected_circuit
+                        .as_ref()
+                        .and_then(|circuit| circuit.procedure_view())
+                        .ok_or_else(|| {
+                            Error::new(
+                                "invalid_ir",
+                                "ordinary procedure circuit lost its current activation",
+                            )
+                        })?;
+                    view.plan.certificate(
+                        &model.program,
+                        &model.driven,
+                        model.tolerances.clone(),
                         &input_bounds,
-                        &controller.accepted.states,
                         &controller.accepted.state_bounds,
                         &[],
+                        &solution.voltages,
+                        &controller.accepted.states,
+                        None,
+                        crate::real_expression::work(&model),
+                    )?
+                } else {
+                    model.certify_observation(
+                        &model.observation_selection(
+                            &input_bounds,
+                            &controller.accepted.states,
+                            &controller.accepted.state_bounds,
+                            &[],
+                            &[],
+                        )?,
+                        &input_bounds,
+                        &controller.accepted.state_bounds,
                         &[],
-                    )?,
-                    &input_bounds,
-                    &controller.accepted.state_bounds,
-                    &[],
-                    &solution.voltages,
-                    &controller.accepted.states,
-                )?;
+                        &solution.voltages,
+                        &controller.accepted.states,
+                    )?
+                };
                 crate::observation::retain_bounds(&mut solution, node_bounds);
                 controller.accepted.solution = solution;
                 controller.accepted.state_bounds = state_bounds;
@@ -4563,3 +4606,33 @@ mod activation_selection_tests {
         }
     }
 }
+
+fn ordinary_procedure_circuit(
+    model: &EventModel,
+    states: &[f64],
+    state_bounds: &[I],
+    inputs: &[I],
+) -> Result<Circuit, Error> {
+    // Select over the complete accepted state domain before capturing a
+    // current circuit. The resulting Plan owns both the certified decisions
+    // and numeric captures used by solve and observation certification.
+    let selection = model.observation_selection(inputs, states, state_bounds, &[], &[])?;
+    let plan = selection.plan.ok_or_else(|| {
+        Error::new(
+            "invalid_ir",
+            "ordinary procedure selection lost its current activation",
+        )
+    })?;
+    plan.circuit(
+        &model.program,
+        &model.driven,
+        states,
+        &[],
+        model.tolerances.clone(),
+        crate::real_expression::work(model),
+    )
+}
+
+#[cfg(test)]
+#[path = "execution_frame_tests.rs"]
+mod execution_frame_tests;

@@ -1,0 +1,199 @@
+{
+  "program": {
+    "nodes": [
+      "0",
+      "y"
+    ],
+    "contributions": [
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "y",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 1,
+        "rhs": {
+          "constant": -0.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "table-composition.va",
+          "line": 2,
+          "column": 98,
+          "instance": "dut",
+          "expansion": []
+        }
+      }
+    ],
+    "states": [
+      {
+        "instance": "dut",
+        "name": "n",
+        "kind": "integer",
+        "initial": 0.0
+      },
+      {
+        "name": "q",
+        "instance": "dut",
+        "kind": "real",
+        "initial": 0.0
+      }
+    ],
+    "events": [
+      {
+        "trigger": {
+          "start": 0.5,
+          "period": 0.0,
+          "time_tolerance": 1e-12,
+          "enabled": true,
+          "kind": "timer"
+        },
+        "body": [
+          {
+            "state": 0,
+            "rhs": {
+              "constant": 1.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "kind": "assign"
+          }
+        ],
+        "origin": {
+          "source": "table-composition.va",
+          "line": 2,
+          "column": 81,
+          "instance": "dut",
+          "expansion": []
+        },
+        "procedure_id": 0,
+        "expanded_statement_ordinal": 1
+      },
+      {
+        "trigger": {
+          "kind": "initial_step"
+        },
+        "body": [
+          {
+            "state": 0,
+            "rhs": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "kind": "assign"
+          }
+        ],
+        "origin": {
+          "source": "table-composition.va",
+          "line": 2,
+          "column": 62,
+          "instance": "dut",
+          "expansion": []
+        },
+        "procedure_id": 0,
+        "expanded_statement_ordinal": 0
+      },
+      {
+        "origin": {
+          "source": "guard.va",
+          "line": 1,
+          "column": 1,
+          "instance": "dut",
+          "expansion": []
+        },
+        "trigger": {
+          "kind": "timer",
+          "start": 0.5,
+          "period": 0.0,
+          "time_tolerance": 1e-12,
+          "enabled": true
+        },
+        "body": [
+          {
+            "kind": "assign",
+            "state": 1,
+            "rhs": {
+              "relation": "lt",
+              "left": {
+                "state": 0,
+                "op": "state"
+              },
+              "right": {
+                "constant": 2.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "then_value": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "else_value": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "origin": {
+                "source": "guard.va",
+                "line": 1,
+                "column": 1,
+                "instance": "dut",
+                "expansion": []
+              },
+              "op": "select"
+            }
+          }
+        ]
+      }
+    ],
+    "operators": [],
+    "schema_version": 33,
+    "step_bounds": [],
+    "procedures": [
+      {
+        "procedure_id": 0,
+        "instance": "dut",
+        "body": [
+          {
+            "expanded_statement_ordinal": 0,
+            "action": {
+              "event": 1,
+              "kind": "event_gate"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 1,
+            "action": {
+              "event": 0,
+              "kind": "event_gate"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 2,
+            "action": {
+              "contribution": 0,
+              "kind": "contribution_capture"
+            }
+          }
+        ]
+      }
+    ],
+    "real_bindings": []
+  },
+  "driven": [],
+  "samples": [],
+  "transient": {
+    "pwl": [],
+    "output_times": [
+      0,
+      0.5,
+      1
+    ],
+    "stop": 1,
+    "max_step": 0.25
+  }
+}

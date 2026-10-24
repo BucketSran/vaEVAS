@@ -28,6 +28,7 @@ import unittest
 
 from evas import Instance, compile_sources, transient
 from test_affine import KERNEL
+from initial_record_contract import check_initial_record_batch
 
 SOURCE = '''`include "disciplines.vams"
 module edge(y,f,z,n);
@@ -75,6 +76,8 @@ class UnrelatedTimerAtRampEnd(unittest.TestCase):
             "dut", "edge", {node: node for node in "yfzn"}, {"tick": tick})])
         result = transient(program, {}, TIMES, stop=TIMES[-1], max_step=3.125e-8,
                            vabstol=VOLTAGE_BUDGET, reltol=0, kernel=KERNEL)
+        # Declaration q/count start at zero; initial_step commits q0=.5.
+        result = check_initial_record_batch(result, program, [0,0], [.5,0], 1)
         events = result["transient"]["events"]
         self.assertEqual(len(events), 2)
         for event, nominal in zip(events, (START, tick), strict=True):

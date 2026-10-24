@@ -4,11 +4,13 @@ Callers supply source-derived declaration seeds, joint t0 result and initial
 count. Native output is never used to construct these expected values.
 """
 import copy
+from dataclasses import asdict
 import math
+from initial_advisory_contract import check_advisories_before_initial_removal
 
 
 def check_initial_record_batch(result, program, before, after, count):
-    wire = program.to_dict() if hasattr(program, 'to_dict') else program
+    wire = program if isinstance(program, dict) else asdict(program)
     events = result['transient']['events']
     declared = [state['initial'] for state in wire['states']]
     assert declared == before, ('declaration seeds', declared, before)
@@ -44,23 +46,7 @@ def check_initial_record_batch(result, program, before, after, count):
         assert record['before']==before and record['after']==after, ('joint t0 state',record,before,after)
     # Validate original indices before constructing the legacy runtime view.
     # Never silently drop an advisory pointing at an unexpected initial record.
-    for advice in result.get('portability_advisories',{}).get('records',[]):
-        index=advice['event_record'];assert type(index) is int and count<=index<len(events)
-        event=events[index];requested=wire['events'][event['event']]['trigger']
-        assert advice['event']==event['event'] and advice['origin']==event['origin']
-        kind=advice['code'].removesuffix('_observation_boundary')
-        assert kind in ('timer','cross')
-        leaves=requested.get('triggers',[requested]);trigger=advice['trigger']
-        assert type(trigger) is int and 0<=trigger<len(leaves)
-        assert leaves[trigger]['kind'] in (kind,'held_timer' if kind=='timer' else kind)
-        assert event['kind']==kind or any(f['trigger']==trigger and f['kind']==kind for f in event.get('fired_triggers',[]))
-        expected_bounds=event.get('observation_time_bounds',[event['time'],event['time']])
-        if event['kind']=='or':
-            expected_bounds=next(f for f in event['fired_triggers'] if f['trigger']==trigger)['time_bounds']
-        key='time_bounds_s' if result['portability_advisories']['schema_version']==2 else 'root_time_bounds_s'
-        assert advice[key]==expected_bounds
-        if advice.get('query_source','output_times')=='output_times':
-            assert result['transient']['times'][advice['query_index']]==advice['query_time_s']
+    check_advisories_before_initial_removal(result,wire,count)
     view=copy.deepcopy(result)
     view['_checked_initial_records']=copy.deepcopy(events[:count])
     view['transient']['events']=view['transient']['events'][count:]

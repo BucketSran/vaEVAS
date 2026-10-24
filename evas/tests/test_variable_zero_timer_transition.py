@@ -24,6 +24,7 @@ GUARDS = ["TIMER", "TRANSITION", "EVENT-ORDER", "DYNAMICS", "DEV:silent-error-re
 
 from fractions import Fraction as F
 import unittest
+from initial_named_batches_contract import check_named_initial_batches
 
 from evas import Instance, KernelError, compile_sources, transient
 from test_affine import KERNEL
@@ -94,7 +95,8 @@ class VariableStartZeroTimer(unittest.TestCase):
             'start=0; end', 'start=0.125; en=0; start=0; en=1; end')
         self.assert_seeded(events, INTEGRAL_W, program_source=text)
 
-    def closure(self, events, *, initial='s=0; en=1; n=0; b=0.5; p=0.5;'):
+    def closure(self, events, *, initial='s=0; en=1; n=0; b=0.5; p=0.5;',
+                initial_values=None, zero_steps=None):
         # Analytic references below use exact dyadic clocks and a unit-slope
         # source integral. They do not use EVAS event traces as their oracle.
         text = ('`include "disciplines.vams"\n'
@@ -112,20 +114,25 @@ class VariableStartZeroTimer(unittest.TestCase):
                           for row in result['solutions']] for node in 'yzw'}
         for t, w in zip(times, columns['w']):
             self.assertAlmostEqual(w, float(F(3, 4) + F(t)**2/2), delta=BUDGET)
+        if zero_steps is not None:
+            result=check_named_initial_batches(result,program,
+                initial_values or dict(s=0,en=1,n=0,b=.5,p=.5),zero_steps)
         return result, times, columns
 
     def test_enable_and_self_disable_consume_original_zero_once(self):
         for start in ('0', 's'):
             with self.subTest(start=start):
                 result, _, v = self.closure(
-                    f'@(timer({start},0.25,0.001,en)) begin n=n+1; en=0; end ')
+                    f'@(timer({start},0.25,0.001,en)) begin n=n+1; en=0; end ',
+                    zero_steps=[(1,'timer',dict(n=1,en=0))])
                 self.assertEqual(v['y'], [1.] * len(v['y']))
                 self.assertEqual(v['z'], [1.] * len(v['z']))
                 self.assertEqual([e['time'] for e in result['transient']['events']], [0.])
 
     def test_changed_start_replaces_future_and_keeps_initial_seed(self):
         result, times, v = self.closure(
-            '@(timer(s,0,0.001,en)) begin n=n+1; if(n==1) s=0.5; else en=0; end ')
+            '@(timer(s,0,0.001,en)) begin n=n+1; if(n==1) s=0.5; else en=0; end ',
+            zero_steps=[(1,'timer',dict(n=1,s=.5))])
         for t, y, z in zip(times, v['y'], v['z']):
             self.assertAlmostEqual(y, 1+min(1., max(0., 8*(t-.5))), delta=BUDGET)
             self.assertEqual(z, 1+int(t >= .5))
@@ -136,7 +143,8 @@ class VariableStartZeroTimer(unittest.TestCase):
         second = '@(timer(b,0,0.001)) n=2; '
         for events in (first+second, second+first):
             with self.subTest(events=events):
-                result, times, v = self.closure(events)
+                result, times, v = self.closure(events,
+                    zero_steps=[(1 if events==first+second else 2,"timer",dict(n=1,b=.75))])
                 for t, y, z in zip(times, v['y'], v['z']):
                     self.assertAlmostEqual(y, 1+min(1., max(0., 8*(t-.75))), delta=BUDGET)
                     self.assertEqual(z, 1+int(t >= .75))
@@ -144,7 +152,8 @@ class VariableStartZeroTimer(unittest.TestCase):
 
     def test_period_change_keeps_consumed_zero_and_subsequent_ticks(self):
         result, times, v = self.closure(
-            '@(timer(s,p,0.001)) begin n=n+1; p=0.25; end ')
+            '@(timer(s,p,0.001)) begin n=n+1; p=0.25; end ',
+            zero_steps=[(1,'timer',dict(n=1,p=.25))])
         for t, z in zip(times, v['z']):
             self.assertEqual(z, 1+int(F(t)//F(1, 4)))
         self.assertEqual([e['time'] for e in result['transient']['events']], [0., .25, .5, .75, 1.])
@@ -152,7 +161,9 @@ class VariableStartZeroTimer(unittest.TestCase):
     def test_one_shot_becomes_dense_periodic_without_losing_zero_or_future_ticks(self):
         result, times, v = self.closure(
             '@(timer(s,p,0.001)) begin n=n+1; p=0.015625; end ',
-            initial='s=0; en=1; n=0; b=0.5; p=0;')
+            initial='s=0; en=1; n=0; b=0.5; p=0;',
+            initial_values=dict(s=0,en=1,n=0,b=.5,p=0),
+            zero_steps=[(1,'timer',dict(n=1,p=.015625))])
         self.assertEqual([e['time'] for e in result['transient']['events']],
                          [i/64 for i in range(65)])
         for t, z in zip(times, v['z']):
@@ -166,14 +177,17 @@ class VariableStartZeroTimer(unittest.TestCase):
             with self.subTest(start=start):
                 result, _, v = self.closure(
                     '@(timer(s,0,0.001)) n=n; @('+future+') n=n; ',
-                    initial=f's={start}; en=1; n=0; b=0.5; p=0;')
+                    initial=f's={start}; en=1; n=0; b=0.5; p=0;',
+                    initial_values=dict(s=float(start),en=1,n=0,b=.5,p=0),
+                    zero_steps=[] if start=='0.125' else [(1,'timer',{})])
                 self.assertEqual(v['y'], [0.]*len(v['y']))
                 self.assertEqual(v['z'], [0.]*len(v['z']))
                 self.assertEqual([e['time'] for e in result['transient']['events']],
                                  [float(start),.25])
 
     def test_duplicate_or_zero_runs_body_once(self):
-        result, _, v = self.closure('@(timer(s,0,0.001) or timer(0,0,0)) n=n+1; ')
+        result, _, v = self.closure('@(timer(s,0,0.001) or timer(0,0,0)) n=n+1; ',
+            zero_steps=[(1,'or',dict(n=1),[0,1])])
         self.assertEqual(v['y'], [1.] * len(v['y']))
         self.assertEqual(v['z'], [1.] * len(v['z']))
         self.assertEqual(len(result['transient']['events']), 1)

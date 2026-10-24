@@ -8,15 +8,16 @@ import unittest
 
 from evas.runtime import KernelError
 from test_continuous_dynamics import compile_model, run, rows, values, assert_close
+from initial_record_contract import check_initial_record_batch
 
 
 class EventWindowSamplingContracts(unittest.TestCase):
     def test_matching_fired_guard_proves_equality_at_the_actual_root(self):
         from fractions import Fraction as Q
         root = (Q(.5)-Q(.2))/(Q(.8)-Q(.2))
-        # LRM 2.4 5.10.3.1: the event occurs after the rising crossing, so
-        # the matching guard proves u>0.5 just after tau (see cross-right-limit).
-        for relation, expected_state in [('>=', 2), ('<=', 3), ('>', 2), ('<', 3)]:
+        # The root samples exactly binary64 .5. RN preserves equality, so
+        # both non-strict tests hold and both strict tests are false.
+        for relation, expected_state in [('>=', 2), ('<=', 2), ('>', 3), ('<', 3)]:
             program = compile_model(
                 "@(initial_step) q=0; @(cross(V(u,r)-0.5,1,1e-9,1e-8)) "
                 f"if (V(u,r){relation}0.5) q=2; else q=3; V(y,r)<+idt(q*q,0);",
@@ -24,6 +25,7 @@ class EventWindowSamplingContracts(unittest.TestCase):
             with self.subTest(relation=relation):
                 result = run(program, {"u": [[0,.2],[1,.8]]}, [0,1], stop=1,
                              vabstol=1e-8, reltol=0)
+                result=check_initial_record_batch(result,program,[0],[0],1)
                 self.assertEqual(result['transient']['events'][0]['after'], [expected_state])
                 assert_close(self, values(result)[-1], float(expected_state**2*(1-root)), delta=1e-8)
 
@@ -37,6 +39,7 @@ class EventWindowSamplingContracts(unittest.TestCase):
             "integer q;", ports="u,c,y,r", directions="input u,c; output y; inout r;")
         result = run(program, {"u": [[0,.2],[1,.8]], "c": [[0,.25],[1,.25]]}, [0,1],
                      stop=1, vabstol=1e-8, reltol=0)
+        result=check_initial_record_batch(result,program,[0],[0],1)
         self.assertEqual(result['transient']['events'][0]['after'], [3])
         assert_close(self, values(result)[-1], float(9*(1-root)), delta=1e-8)
 
@@ -79,13 +82,17 @@ class EventWindowSamplingContracts(unittest.TestCase):
         result = run(program, {"u": [[0,0],[10,10]]}, [0,10], stop=10,
                      vabstol=2e7, reltol=1e-10)
         assert_close(self, values(result)[-1], 2e12*(10-math.sqrt(2)), delta=2e7)
+        result=check_initial_record_batch(result,program,[0],[0],1)
         lo, hi = result['transient']['events'][0]['observation_time_bounds']
         self.assertLessEqual(lo, math.sqrt(2))
         self.assertGreaterEqual(hi, math.sqrt(2))
         self.assertLess(hi-lo, 1e-12)
         # Input rounding fits this budget; the amplified integral does not.
-        with self.assertRaisesRegex(KernelError, "waveform_accuracy.*at y:"):
+        with self.assertRaises(KernelError) as caught:
             run(program, {"u": [[0,0],[10,10]]}, [0,10], stop=10, vabstol=1e-6, reltol=0)
+        self.assertEqual(caught.exception.detail["kind"],"waveform_accuracy")
+        self.assertEqual(caught.exception.diagnostic["category"],"numerical")
+        self.assertIn("nonlinear accumulated history accuracy",caught.exception.detail["message"])
 
     def test_integral_history_sample_uses_event_instant_not_post_event_flow(self):
         # z(t)=t; q=z(sqrt(2)); y'=q^2 after that event. Resampling

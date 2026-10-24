@@ -988,6 +988,11 @@ impl EventModel {
             .map(|(a, b)| *a || *b)
             .collect();
         for (index, event) in program.events.iter().enumerate() {
+            if program.procedures.is_empty()
+                && (event.procedure_id.is_some() || event.expanded_statement_ordinal.is_some())
+            {
+                return Err(Error::new("invalid_ir", "event metadata names an undeclared procedure"));
+            }
             if event.origin.instance.is_empty()
                 || event.origin.source.is_empty()
                 || event.origin.line == 0

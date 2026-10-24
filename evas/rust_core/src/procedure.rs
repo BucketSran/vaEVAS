@@ -61,7 +61,7 @@ pub(crate) fn validate(p:&Program,w:&Work)->Result<(),Error>{
         if procedure.instance.is_empty()||!ids.insert(procedure.procedure_id){return Err(invalid("duplicate or invalid procedure identity"));}
         visit(&procedure.body,p,procedure.procedure_id,&procedure.instance,&mut None,&mut events,&mut contributions,&mut bounds,w)?;
     }
-    for (i,e) in p.events.iter().enumerate(){w.step()?;if e.procedure_id.is_some()&&!events.contains(&i){return Err(invalid("event has no procedure gate owner"));}}
+    for (i,e) in p.events.iter().enumerate(){w.step()?;if (!p.procedures.is_empty()||e.procedure_id.is_some()||e.expanded_statement_ordinal.is_some())&&!events.contains(&i){return Err(invalid("event has no procedure gate owner"));}}
     for b in &p.real_bindings{w.step()?;w.debit(2,p.procedures.len() as u64)?;let owner=p.procedures.iter().find(|q|q.procedure_id==b.procedure_id).map(|q|q.instance.as_str()).ok_or_else(||invalid("real binding procedure absent"))?;structure::source(&b.origin,owner,w)?;if !ids.contains(&b.procedure_id){return Err(invalid("real binding has no procedure owner"));}}
     if !p.procedures.is_empty(){
         for index in 0..p.contributions.len(){w.step()?;if !contributions.contains(&index){return Err(invalid("contribution has no procedure capture owner"));}}
@@ -153,3 +153,6 @@ pub(crate) fn held_parameter(e:&E,p:&Program,states:&[crate::interval::Interval]
     let local=crate::event_value_proof::LocalState::try_with_context(states,Some(&context))?;
     crate::event_numeric::bounds_with_proofs(e,&nodes,&local)
 }
+
+#[cfg(test)]
+#[path="raw_event_owner_tests.rs"]mod raw_event_owner_tests;

@@ -1336,7 +1336,8 @@ class InstanceCompiler:
                         if fact is not None and fact[0] is expr else None)
         try:
             result = floor_table(argument, origin, state_bounds=state_bounds,
-                                 constant_value=self.program_real_constant(argument), factory=self.make_ir)
+                                 constant_value=self.program_real_constant(argument), factory=self.make_ir,
+                                 local_facts=self.program_facts.reads, work=self.compilation.native_audit.ir_work)
         except CompileError as error:
             if not native or error.diagnostic['code'] != 'unsupported_floor':
                 raise

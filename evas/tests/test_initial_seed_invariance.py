@@ -3,6 +3,7 @@ import os
 from fractions import Fraction as Q
 from pathlib import Path
 import unittest
+from initial_named_batches_contract import check_named_initial_batches
 
 from evas import CompileError, Instance, KernelError, compile_sources, transient
 
@@ -26,6 +27,7 @@ class InitialSeedInvariance(unittest.TestCase):
     def test_held_calendar_keeps_complete_zero_callback_once(self):
         p=program('@(initial_step)begin q=0;due=-1;count=0;end @(timer(0,1))begin if(V(u)>0)q=0;else q=0.5;count=count+1;end @(timer(due))q=1;V(y)<+transition(q,0,0.1,0.1)+count;')
         result,y=run(p)
+        result=check_named_initial_batches(result,p,dict(q=0,a=0,due=-1,count=0),[(1,'timer',dict(q=0,count=1))])
         self.assertEqual(y,[1,1,2])
         self.assertEqual(sum(event['time']==0 for event in result['transient']['events']),1)
     def test_unselected_initial_internal_arm_runs_after_source_changes(self):
@@ -74,6 +76,7 @@ class InitialSeedInvariance(unittest.TestCase):
     def test_changed_point_seed_preserves_future_held_calendar(self):
         p=program('@(initial_step)begin q=0;due=2;end @(timer(0))q=1;@(timer(due))q=0;V(y)<+transition(q,0,0.1,0.1);')
         result,y=run(p)
+        result=check_named_initial_batches(result,p,dict(q=0,a=0,due=2,count=0),[(1,'timer',dict(q=1))])
         # The t=0 callback supplies the initial transition level. The held
         # timer is due after stop=1.5, so it cannot change that level here.
         self.assertEqual(y,[1,1,1])
