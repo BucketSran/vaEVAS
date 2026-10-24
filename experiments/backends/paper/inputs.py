@@ -208,8 +208,7 @@ def freeze(cards_path, output, *, stage_timeout_s=90, license_timeout_s=30):
                     Path(__file__).with_name('runner.py'), Path(__file__).with_name('process.py'),
                     Path(__file__).with_name('settings_readback.py'),
                     Path(__file__).with_name('OBSERVATION_METHODS.md'),
-                    ROOT/'experiments/archive/dvs2-starter-pilot/analyze.py',
-                    ROOT/'experiments/archive/dvs2-starter-pilot/suite.py',
+                    ROOT/'experiments/backends/evidence/legacy_waveforms.py',
                     ROOT/'experiments/backends/dvs2-spectre-validation/report.py']
     source_identity = {}
     for path in source_paths:

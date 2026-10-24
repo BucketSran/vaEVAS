@@ -17,8 +17,8 @@ import sys
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / 'evas/src'))
 from evas import Instance, compile_sources, transient
-sys.path.insert(0, str(ROOT / 'experiments/archive/dvs2-starter-pilot'))
-from analyze import read_waveform
+sys.path.insert(0, str(ROOT / 'experiments/backends/evidence'))
+from legacy_waveforms import read_waveform
 from remote import digest, dump, execute
 
 STOP = 3e-6
@@ -151,8 +151,7 @@ def build(root):
     # Preserve all runner/checker dependencies before any backend execution.
     dependencies=[Path(__file__),Path(__file__).with_name('remote.py'),
                   Path(__file__).with_name('test_cross_reference.py'),
-                  ROOT/'experiments/archive/dvs2-starter-pilot/analyze.py',
-                  ROOT/'experiments/archive/dvs2-starter-pilot/suite.py']
+                  ROOT/'experiments/backends/evidence/legacy_waveforms.py']
     dump(root/'checker_identity.json',{str(p.relative_to(ROOT)):digest(p) for p in dependencies})
     dump(root/'INPUT_MANIFEST.json',{str(p.relative_to(root)):digest(p)
          for p in sorted(root.rglob('*')) if p.is_file()})

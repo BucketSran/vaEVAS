@@ -24,8 +24,8 @@ _report_spec = importlib.util.spec_from_file_location('cross_touch_report', Path
 _report = importlib.util.module_from_spec(_report_spec)
 _report_spec.loader.exec_module(_report)
 settings = _report.settings
-sys.path.insert(0, str(ROOT/'experiments/archive/dvs2-starter-pilot'))
-from analyze import read_waveform
+sys.path.insert(0, str(ROOT/'experiments/backends/evidence'))
+from legacy_waveforms import read_waveform
 
 ALLOWANCE = 1e-8
 STEPS = {'coarse': 100e-9, 'fine': 7e-9}
@@ -241,7 +241,7 @@ def build(root):
                 'save '+' '.join([*c['inputs'],*[prefix+m['id'] for m in monitors() for prefix in ['n_','t_','g_']]])]
         (work/'tb.scs').write_text('\n'.join(lines)+'\n')
     dependencies=[Path(__file__),Path(__file__).with_name('test_cross_touch.py'),Path(__file__).with_name('remote.py'),
-                  Path(__file__).with_name('report.py'),ROOT/'experiments/archive/dvs2-starter-pilot/analyze.py',ROOT/'experiments/archive/dvs2-starter-pilot/suite.py']
+                  Path(__file__).with_name('report.py'),ROOT/'experiments/backends/evidence/legacy_waveforms.py']
     dump(root/'checker_identity.json',{str(p.relative_to(ROOT)):digest(p) for p in dependencies})
     dump(root/'INPUT_MANIFEST.json',{str(p.relative_to(root)):digest(p) for p in sorted(root.rglob('*')) if p.is_file()})
 
