@@ -364,3 +364,12 @@ IR29位运算与纯保持目标、原树事件Floor、无状态源因子和字�
 本条只导航候选合同，不增加成熟支持、共同Q或400通过数；Spectre默认和一般history组合仍未支持。
 
 [普通integer当前值](../../../experiments/backends/support/low-cost-closure/ordinary-current-integer.json)补充LANG、EVENT-ORDER与COMPOSE；[普通单点保持来源](../../../experiments/backends/support/low-cost-closure/ordinary-point-lineage.json)补充EVENT-CONDITIONS、TRANSITION与COMPOSE。最终release核的037、114、234均完整通过原checker，完整盒、来源角色、Frame与共享预算控制保持。最终同源双轨原317、修订320及完整2641方法CI、双平台安装已独审，见[共同收据](../../../experiments/backends/support/low-cost-closure/ordinary-common-three.json)。这些结果不改变共同Q或新增Spectre资格。
+
+
+IR33 本地候选的[程序 real 与过程执行合同](../math/events.md#program-real-procedure-contract)补充
+LANG、EVENT-ORDER 与 COMPOSE 的开发边界。观察认证使用原 Plan 捕获；连续子问题按源码定义
+及包围控制条件审计依赖，并重映射私有贡献编号。相邻 VA/IR fixture 与
+[捕获正反控](../../rust_core/src/events_certificate_cache_tests.rs)、
+[依赖与共享预算回归](../../rust_core/src/continuous_readout.rs)固定相应故障检测。
+这些局部修复没有完成一般 source-position Transition/连续 RN 输入的历史适配；
+完整 IR33、原400与同源后端仍未验收，不改变上述发布版本的结果。

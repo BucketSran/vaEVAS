@@ -51,6 +51,33 @@ pub(crate) fn validate_integral_input(
 
 type DependencySets = (BTreeSet<usize>, BTreeSet<usize>, BTreeSet<usize>);
 
+/// Structural roots of an original source expression. An RN/local node is not
+/// a numerical affine expression until its occurrence frame executes. Follow
+/// all source definitions without evaluating any arm, using the request owner.
+pub(crate) fn source_dependency_edges(
+    expr: &Expression,
+    program: &Program,
+    owner: &str,
+    work: Option<&crate::transition_source_plan::Work>,
+) -> Result<DependencySets, Error> {
+    if program.procedures.is_empty() {
+        return integral_dependency_edges(expr, program, owner);
+    }
+    let work = work.ok_or_else(|| {
+        Error::new(
+            "invalid_ir",
+            "source dependency audit requires its request owner",
+        )
+    })?;
+    let sources = crate::procedure::dependency_sources(program, work)?;
+    let row = crate::procedure::source_dependencies(expr, program, &sources, work)?;
+    Ok((
+        row.node_dependencies,
+        row.state_dependencies,
+        row.operator_dependencies,
+    ))
+}
+
 pub(crate) fn integral_dependency_edges(
     expr: &Expression,
     program: &Program,
@@ -161,10 +188,11 @@ struct Context {
 
 impl Context {
     fn new(program: &Program, trajectory: &Trajectory, driven: &[String]) -> Result<Self, Error> {
-        let projected = readout::project(program, driven)?;
+        let work = trajectory.procedure_work();
+        let projected = readout::project(program, driven, work)?;
         let live_parameters = projected
             .as_ref()
-            .map(readout::live_parameters)
+            .map(|program| readout::live_parameters(program, work))
             .transpose()?
             .map(Arc::new);
         Ok(Self {

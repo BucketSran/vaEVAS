@@ -156,8 +156,12 @@ fn check_expression_inner(
         }
         return Ok(());
     }
-    let (nodes, _, operators) =
-        crate::continuous::integral_dependency_edges(e, &model.program, owner)?;
+    let (nodes, _, operators) = crate::continuous::source_dependency_edges(
+        e,
+        &model.program,
+        owner,
+        Some(crate::real_expression::work(model)),
+    )?;
     let driven: BTreeSet<_> = model
         .driven
         .iter()
@@ -795,10 +799,11 @@ pub(super) fn prepare(
                     // constructor still proves all piecewise-held leaves/cuts
                     // after the final zero-time state has been certified.
                     let (nodes, dependencies, operators) =
-                        crate::continuous::integral_dependency_edges(
+                        crate::continuous::source_dependency_edges(
                             input,
                             &model.program,
                             &origin.instance,
+                            Some(crate::real_expression::work(model)),
                         )?;
                     let driven: BTreeSet<_> = model
                         .driven

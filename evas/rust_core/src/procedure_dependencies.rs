@@ -29,28 +29,56 @@ fn add<'a>(binding: usize, value: &'a E, values: &mut [Vec<&'a E>], w: &Work) ->
         .push(value);
     Ok(())
 }
-fn steps<'a>(body: &'a [ProcedureStep], values: &mut [Vec<&'a E>], w: &Work) -> Result<(), Error> {
+fn steps<'a>(
+    body: &'a [ProcedureStep],
+    values: &mut [Vec<&'a E>],
+    guards: &mut Vec<&'a E>,
+    w: &Work,
+) -> Result<(), Error> {
     for step in body {
         w.step()?;
         match &step.action {
-            A::Control(C::RealBind { binding, value, .. }) => add(*binding, value, values, w)?,
+            A::Control(C::RealBind { binding, value, .. }) => {
+                add(*binding, value, values, w)?;
+                // A constant assigned in one arm still depends on its control
+                // predicate. Entries are only dependency roots, never values.
+                // Their presence also prevents single_binding_value from
+                // treating a conditional write as an unconditional definition.
+                for guard in guards.iter() {
+                    add(*binding, guard, values, w)?;
+                }
+            }
             A::Control(C::ProcedureIf {
+                left,
+                right,
                 then_body,
                 else_body,
                 ..
             }) => {
-                steps(then_body, values, w)?;
-                steps(else_body, values, w)?;
+                let depth = guards.len();
+                w.debit(2, 64)?;
+                guards.extend([left.as_ref(), right.as_ref()]);
+                steps(then_body, values, guards, w)?;
+                steps(else_body, values, guards, w)?;
+                guards.truncate(depth);
             }
             A::Control(C::ProcedureLoop {
                 initialize,
+                left,
+                right,
                 body,
                 update,
                 ..
             }) => {
-                for body in [initialize, body, update] {
-                    steps(body, values, w)?;
-                }
+                // Initialization runs before the loop test; body and update
+                // additionally depend on the current loop condition.
+                steps(initialize, values, guards, w)?;
+                let depth = guards.len();
+                w.debit(2, 64)?;
+                guards.extend([left.as_ref(), right.as_ref()]);
+                steps(body, values, guards, w)?;
+                steps(update, values, guards, w)?;
+                guards.truncate(depth);
             }
             _ => {}
         }
@@ -60,7 +88,7 @@ fn steps<'a>(body: &'a [ProcedureStep], values: &mut [Vec<&'a E>], w: &Work) -> 
 fn expression<'a>(e: &'a E, values: &mut [Vec<&'a E>], w: &Work) -> Result<(), Error> {
     w.step()?;
     if let E::RealCall { body, .. } = e {
-        steps(body, values, w)?;
+        steps(body, values, &mut Vec::new(), w)?;
     }
     calls::children(e, &mut |e| expression(e, values, w))
 }
@@ -112,7 +140,7 @@ pub(crate) fn sources<'a>(p: &'a Program, w: &Work) -> Result<Sources<'a>, Error
     w.debit(2, (p.real_bindings.len() * 32 + 64) as u64)?;
     let mut values = vec![Vec::new(); p.real_bindings.len()];
     for q in &p.procedures {
-        steps(&q.body, &mut values, w)?;
+        steps(&q.body, &mut values, &mut Vec::new(), w)?;
         calls::step_expressions(&q.body, &mut |e| expression(e, &mut values, w))?;
     }
     for event in &p.events {

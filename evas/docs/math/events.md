@@ -1455,6 +1455,10 @@ PWL 根另有精确零点证书：当端点 guard 和到候选时刻的两侧时
 IR33 使用 `real_binary`、`real_boundary`、`real_local` 和 `RealBind` 保留运算及绑定，
 由 `Program.procedures` 的 `ProcedureStep` 引用唯一事件体和贡献。
 `StepBoundCapture` 同样保留 `$bound_step` 的程序环境位置；其连续输入依赖仍按原步长合同求值与认证。
+有过程 `Plan` 的观察直接认证其源码位置图；不能先由旧 Select 消费者读取尚未绑定的
+`real_local`，也不能用过程末尾的同名变量替换较早的贡献捕获。
+[捕获回归](../../rust_core/src/events_certificate_cache_tests.rs)用先采样、贡献、后覆盖的程序
+检查正负输入、错误观察拒绝和拒绝后重试；原始 VA 与编译 IR 作为相邻 fixture 保留。
 Python 与 Rust 的声明分别在 [ir.py](../../src/evas/ir.py) 和 [IR crate](../../rust_core/ir/src/lib.rs)。
 这些声明和局部测试目前不构成完整执行证据；内核消费者、原 098、原 357、原 M4、回退及 Spectre 配对仍须验收。
 real 到 integer 的转换、十进制字面量解释和超越函数精度各自沿用原合同，本决定不把它们合为一种舍入规则。

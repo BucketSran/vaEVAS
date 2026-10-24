@@ -1,6 +1,35 @@
 use super::*;
 use serde_json::json;
 
+#[test]
+fn procedure_observation_uses_captured_value_and_rejects_forged_voltage() {
+    // Compiled from procedure_observation.va: the contribution sees c before
+    // its later overwrite. Reusing the final binding would incorrectly give 0.
+    let p: Program =
+        serde_json::from_str(include_str!("procedure_observation_request.json")).unwrap();
+    let model = EventModel::new(p, vec!["u".into()], Tolerances::default()).unwrap();
+    for (input, expected) in [(0.25, 1.), (-0.25, 0.), (0.25, 1.)] {
+        let inputs = [I::point(input)];
+        let selection = model
+            .observation_selection(&inputs, &[], &[], &[], &[])
+            .unwrap();
+        let good = [0., input, expected];
+        let certificate = || model.certify_observation(&selection, &inputs, &[], &[], &good, &[]);
+        let (_, bounds) = certificate().unwrap();
+        assert!(bounds[2].lo <= expected && expected <= bounds[2].hi);
+        let bad = [0., input, 1. - expected];
+        assert_eq!(
+            model
+                .certify_observation(&selection, &inputs, &[], &[], &bad, &[])
+                .unwrap_err()
+                .kind,
+            "waveform_accuracy"
+        );
+        // Rejected observations do not poison the captured source frame.
+        certificate().unwrap();
+    }
+}
+
 fn fixture(dynamic: bool, ordered: bool) -> EventModel {
     let origin = json!({"source":"cache.va","line":1,"column":1,"instance":"dut"});
     let rhs = if dynamic {

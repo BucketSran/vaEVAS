@@ -1,0 +1,2 @@
+`include "disciplines.vams"
+module m(u,y,r); input u; output y; inout r; electrical u,y,r; electrical z; analog begin V(y,r)<+transition(1,0,0.25); V(z,r)<+idt(V(u,r),0.25); $bound_step((1+V(z,r)*V(z,r))/16); end endmodule

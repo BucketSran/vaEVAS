@@ -1432,6 +1432,25 @@ impl EventModel {
         observation: Option<&crate::dc_projection::HeldRampObservationProof<'_>>,
     ) -> Result<(Vec<I>, Vec<I>), Error> {
         let _timing = crate::diagnostics::span("event.certificate");
+        // The occurrence Plan already owns every source-position predicate.
+        // Running legacy Select reduction first tries to read RealLocal values
+        // without that frame and can also substitute a later ordinary value.
+        if selection.plan.is_some() {
+            return crate::causal_event::certificate(
+                self,
+                selection,
+                &self.program,
+                fired,
+                inputs,
+                before,
+                operators,
+                voltages,
+                states,
+                true,
+                proofs,
+            )?
+            .ok_or_else(|| Error::new("invalid_ir", "procedure observation certificate missing"));
+        }
         let nominal_bounds: Vec<_> = if observation.is_none() {
             states.iter().copied().map(I::point).collect()
         } else {
