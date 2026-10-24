@@ -508,6 +508,9 @@ impl Graph {
         shared_history |=
             inspect_history_reads(&p.events, p, driven, &sources, &output_nodes, &work)?;
         inspect(&p.operators, &work, &output_nodes)?;
+        // IR33 keeps discarded and inactive source reads in procedure actions.
+        // They are part of the original independence audit, including zero refs.
+        inspect(&p.procedures, &work, &output_nodes)?;
         inspect(&p.step_bounds, &work, &legacy_unknowns)?;
         // Both branches must have finite original intermediate domains over
         // the actual finite physical source request before selection/copy.
@@ -933,6 +936,31 @@ impl Graph {
         actual: &Trajectory,
         solution: &mut Solution,
         circuit: &mut Circuit,
+        operator_bounds: &[I],
+    ) -> Result<(), Error> {
+        self.project_certificate(time, actual, solution, circuit, operator_bounds, true)
+    }
+    #[cfg(test)]
+    pub(crate) fn recheck_phase(
+        &self,
+        time: f64,
+        actual: &Trajectory,
+        solution: &mut Solution,
+        circuit: &mut Circuit,
+        operator_bounds: &[I],
+    ) -> Result<(), Error> {
+        // Test-only idempotence control: neither the certificate nor its proof
+        // domains changed. Production always installs a fresh residual box.
+        self.project_certificate(time, actual, solution, circuit, operator_bounds, false)
+    }
+    fn project_certificate(
+        &self,
+        time: f64,
+        actual: &Trajectory,
+        solution: &mut Solution,
+        circuit: &mut Circuit,
+        operator_bounds: &[I],
+        residual_certificate: bool,
     ) -> Result<(), Error> {
         // Compare the actual execution provider with the original request binding.
         // This scan/copy charge precedes traversal; reduced Program is never
@@ -1001,7 +1029,14 @@ impl Graph {
             "forcing_phase_bound_lookup",
             self.outputs.len().saturating_mul(self.outputs.len() + 1),
         )?;
-        circuit.install_forcing_phase(Arc::as_ptr(&self.context) as usize, time, solution, rows)
+        circuit.install_forcing_phase(
+            Arc::as_ptr(&self.context) as usize,
+            time,
+            solution,
+            rows,
+            operator_bounds,
+            residual_certificate,
+        )
     }
 }
 

@@ -150,7 +150,15 @@ fn fixture_from_original(
         )
         .unwrap();
     crate::observation::retain_bounds(&mut solution, boxes);
-    graph.project(0., &t, &mut solution, &mut circuit).unwrap();
+    graph
+        .project(
+            0.,
+            &t,
+            &mut solution,
+            &mut circuit,
+            &operators.bounds(0.).unwrap(),
+        )
+        .unwrap();
     let accepted = Frame {
         value_proofs: Default::default(),
         time_proofs: Default::default(),
@@ -767,11 +775,12 @@ fn forcing_polynomial_same_phase_is_idempotent_but_new_state_uses_fresh_circuit(
     let before = controller.accepted.clone();
     let graph = model.forcing.as_ref().unwrap();
     graph
-        .project(
+        .recheck_phase(
             0.,
             &t,
             &mut controller.accepted.solution,
             &mut controller.accepted.circuit,
+            &controller.accepted.operators.bounds(0.).unwrap(),
         )
         .unwrap();
     unchanged(&before, &controller.accepted);
@@ -791,7 +800,9 @@ fn forcing_polynomial_same_phase_is_idempotent_but_new_state_uses_fresh_circuit(
         )
         .unwrap();
     crate::observation::retain_bounds(&mut solution, boxes);
-    graph.project(0., &t, &mut solution, &mut circuit).unwrap();
+    graph
+        .project(0., &t, &mut solution, &mut circuit, &[I::ONE])
+        .unwrap();
     assert_eq!(solution.voltages[2], 1.0625);
     assert_eq!(solution.voltages[3], 1.);
     unchanged(&before, &controller.accepted);

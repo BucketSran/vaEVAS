@@ -741,9 +741,19 @@ impl Controller {
                 &next.states,
             )?
         };
-        crate::observation::retain_bounds(&mut next.solution, nodes);
+        if let Some(reduced) = projected.as_deref() {
+            crate::observation::retain_residual_bounds(&mut next.solution, nodes, reduced);
+        } else {
+            crate::observation::retain_bounds(&mut next.solution, nodes);
+        }
         if let Some(graph) = &model.forcing {
-            graph.project(next.time, trajectory, &mut next.solution, &mut next.circuit)?;
+            graph.project(
+                next.time,
+                trajectory,
+                &mut next.solution,
+                &mut next.circuit,
+                &operator_bounds,
+            )?;
         }
         // This certifies one batch; cluster closure and queries still precede publication.
         Ok((next, future))

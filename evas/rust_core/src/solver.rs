@@ -1350,7 +1350,11 @@ impl Circuit {
             )
         };
         if !time.is_finite()
-            || values.len() != self.nodes.len()
+            || values.len()
+                != self
+                    .procedure_view
+                    .as_ref()
+                    .map_or(self.nodes.len(), |view| view.node_count)
             || values.iter().any(|v| !v.is_finite())
         {
             return Err(invalid());
@@ -1408,6 +1412,8 @@ impl Circuit {
         time: f64,
         solution: &mut Solution,
         rows: Vec<ForcingRow>,
+        operator_bounds: &[I],
+        residual_certificate: bool,
     ) -> Result<(), Error> {
         let already_applied = match self.forcing_phase {
             Some(phase) if phase == (identity, time) => true,
@@ -1452,18 +1458,9 @@ impl Circuit {
             if !already_applied {
                 equation.rhs_constant += rhs;
                 solution.voltages[node] += value;
-                let prior = I {
-                    lo: boxes[node][0],
-                    hi: boxes[node][1],
-                };
-                let combined = prior + bound;
-                boxes[node] = [
-                    combined.lo.min(solution.voltages[node]),
-                    combined.hi.max(solution.voltages[node]),
-                ];
                 equation.original_rhs.push(original.clone());
             }
-            if already_applied {
+            if already_applied && !residual_certificate {
                 // Event closure can recertify the reduced row before projecting
                 // the same immutable physical phase again. Restore that phase's
                 // complete certified box, not the newly written residual box.
@@ -1473,6 +1470,23 @@ impl Circuit {
                     .find(|(n, _)| *n == node)
                     .map(|(_, b)| *b)
                     .ok_or_else(|| Error::new("invalid_ir", "missing forcing phase box"))?;
+            } else {
+                let combined = I {
+                    lo: boxes[node][0],
+                    hi: boxes[node][1],
+                } + bound;
+                boxes[node] = [
+                    combined.lo.min(solution.voltages[node]),
+                    combined.hi.max(solution.voltages[node]),
+                ];
+            }
+            if already_applied {
+                let slot = self
+                    .forcing_bounds
+                    .iter_mut()
+                    .find(|(n, _)| *n == node)
+                    .ok_or_else(|| Error::new("invalid_ir", "missing forcing phase box"))?;
+                slot.1 = boxes[node];
             } else {
                 self.forcing_bounds.push((node, boxes[node]));
                 self.forcing_offsets.push((node, value));
@@ -1488,12 +1502,26 @@ impl Circuit {
                     right: Box::new(right),
                 })
                 .unwrap();
-            let point_rhs = expression::evaluate(&original, &solution.voltages)?.value;
+            let expanded;
+            let points = if let Some(view) = &self.procedure_view {
+                expanded = view.expand(&solution.voltages)?;
+                expanded.as_slice()
+            } else {
+                solution.voltages.as_slice()
+            };
+            let point_rhs = expression::evaluate(&original, points)?.value;
             let lhs = solution.voltages[positive] - solution.voltages[negative];
             let limit = self.tolerances.absolute
                 + self.tolerances.relative * lhs.abs().max(point_rhs.abs());
             let residual = (lhs - point_rhs).abs();
-            let physical: Vec<_> = boxes.iter().map(|b| I { lo: b[0], hi: b[1] }).collect();
+            if let Some(view) = &self.procedure_view {
+                view.plan.work.debit(2, (boxes.len() * 16 + 64) as u64)?;
+            }
+            let public: Vec<_> = boxes.iter().map(|b| I { lo: b[0], hi: b[1] }).collect();
+            let physical = match &self.procedure_view {
+                Some(view) => view.expand_bounds(&public, points, operator_bounds)?,
+                None => public,
+            };
             let box_residual = (physical[positive] - physical[negative])
                 - interval_expression(&original, &physical)?;
             if !residual.is_finite()
@@ -1509,7 +1537,14 @@ impl Circuit {
             }
             equation.original_rhs = vec![original];
         }
-        let (residual, ratio) = self.check_affine_residuals(&solution.voltages)?;
+        let expanded;
+        let points = if let Some(view) = &self.procedure_view {
+            expanded = view.expand(&solution.voltages)?;
+            expanded.as_slice()
+        } else {
+            solution.voltages.as_slice()
+        };
+        let (residual, ratio) = self.check_affine_residuals(points)?;
         solution.max_residual_v = residual;
         solution.max_residual_ratio = ratio;
         self.forcing_phase = Some((identity, time));
@@ -1581,6 +1616,10 @@ impl Circuit {
         Ok((max_residual_v, max_residual_ratio))
     }
 }
+
+#[cfg(test)]
+#[path = "solver_private_phase_tests.rs"]
+mod private_phase_tests;
 
 #[cfg(test)]
 mod tests {

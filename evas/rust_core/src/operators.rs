@@ -84,6 +84,201 @@ fn procedure_direct_laplace(
 
 type DirectPoints = (Vec<(f64, f64)>, Vec<I>);
 
+/// Independent physical histories keep their existing direct builders. Source
+/// bindings in ordinary readout contributions do not create a coupled ODE.
+fn procedure_direct_histories(
+    program: &Program,
+    trajectory: &Trajectory,
+    driven: &[String],
+) -> Result<bool, Error> {
+    if program.procedures.is_empty() || program.operators.is_empty() {
+        return Ok(false);
+    }
+    let Some(work) = trajectory.procedure_work() else {
+        return Ok(false);
+    };
+    work.debit(2, (program.operators.len() + 64) as u64)?;
+    let mut physical = false;
+    let mut sources = None;
+    for (index, spec) in program.operators.iter().enumerate() {
+        work.step()?;
+        let input = match spec {
+            OperatorSpec::Idt {
+                input, reset: None, ..
+            }
+            | OperatorSpec::IdtMod { input, .. }
+            | OperatorSpec::AbsDelay { input, .. }
+            | OperatorSpec::Slew { input, .. } => {
+                physical = true;
+                input
+            }
+            OperatorSpec::LaplaceNd {
+                input,
+                numerator,
+                denominator,
+                ..
+            } if numerator.len() == 1 && denominator.len() == 2 => {
+                physical = true;
+                input
+            }
+            OperatorSpec::Math { input, origin, .. }
+            | OperatorSpec::Sin { input, origin }
+            | OperatorSpec::Transition { input, origin, .. } => {
+                if sources.is_none() {
+                    sources = Some(crate::procedure::dependency_sources(program, work)?);
+                }
+                let row = crate::procedure::source_dependencies(
+                    input,
+                    program,
+                    sources.as_ref().unwrap(),
+                    work,
+                )?;
+                if matches!(spec, OperatorSpec::Transition { .. })
+                    && !row.operator_dependencies.is_empty()
+                {
+                    return Ok(false);
+                }
+                for node in row.node_dependencies {
+                    work.step()?;
+                    if node != 0 && !direct_node(program, driven, node, work)? {
+                        return Ok(false);
+                    }
+                }
+                for operator in row.operator_dependencies {
+                    work.step()?;
+                    if operator >= index {
+                        return Ok(false);
+                    }
+                    let owner = &program.operators[operator].origin().instance;
+                    work.debit(2, (owner.len() + origin.instance.len() + 1) as u64)?;
+                    if owner != &origin.instance {
+                        return Ok(false);
+                    }
+                }
+                continue;
+            }
+            _ => return Ok(false),
+        };
+        let Expression::Affine { terms, .. } = input else {
+            return Ok(false);
+        };
+        for term in terms {
+            work.step()?;
+            if term.node != 0 && !direct_node(program, driven, term.node, work)? {
+                return Ok(false);
+            }
+        }
+    }
+    if physical {
+        let sources = match sources {
+            Some(sources) => sources,
+            None => crate::procedure::dependency_sources(program, work)?,
+        };
+        work.debit(2, (program.real_bindings.len() * 64 + 64) as u64)?;
+        let mut seen = BTreeSet::new();
+        for contribution in &program.contributions {
+            if !direct_history_readout(&contribution.rhs, program, &sources, work, &mut seen)? {
+                return Ok(false);
+            }
+        }
+    }
+    Ok(physical)
+}
+
+/// Preserve the joint-affine history boundary before bypassing Continuous.
+/// RN nodes keep their execution meaning; this is only a structural audit.
+fn direct_history_readout(
+    expr: &Expression,
+    program: &Program,
+    sources: &crate::procedure::DependencySources<'_>,
+    work: &crate::transition_source_plan::Work,
+    seen: &mut BTreeSet<usize>,
+) -> Result<bool, Error> {
+    work.step()?;
+    let dependencies = crate::procedure::source_dependencies(expr, program, sources, work)?;
+    if !dependencies
+        .operator_dependencies
+        .iter()
+        .any(|&i| !matches!(program.operators[i], OperatorSpec::Transition { .. }))
+    {
+        return Ok(true);
+    }
+    let constant = |row: &AffineState| {
+        row.node_dependencies.iter().all(|&n| n == 0)
+            && row.state_dependencies.is_empty()
+            && row.operator_dependencies.is_empty()
+    };
+    use crate::ir::RealOperation as R;
+    match expr {
+        Expression::RealLocal { binding } => {
+            if seen.insert(*binding) {
+                for value in sources.binding_definitions(*binding, work)? {
+                    if !direct_history_readout(value, program, sources, work, seen)? {
+                        return Ok(false);
+                    }
+                }
+            }
+            return Ok(true);
+        }
+        Expression::Multiply { left, right }
+        | Expression::RealBinary {
+            operation: R::Multiply,
+            left,
+            right,
+            ..
+        } => {
+            let a = crate::procedure::source_dependencies(left, program, sources, work)?;
+            let b = crate::procedure::source_dependencies(right, program, sources, work)?;
+            if !constant(&a) && !constant(&b) {
+                return Ok(false);
+            }
+        }
+        Expression::Divide { right, .. }
+        | Expression::RealBinary {
+            operation: R::Divide,
+            right,
+            ..
+        } => {
+            if !constant(&crate::procedure::source_dependencies(
+                right, program, sources, work,
+            )?) {
+                return Ok(false);
+            }
+        }
+        Expression::Add { .. }
+        | Expression::RealBinary {
+            operation: R::Add | R::Subtract,
+            ..
+        }
+        | Expression::RealBoundary { .. }
+        | Expression::Operator { .. } => {}
+        _ => return Ok(false),
+    }
+    let mut valid = true;
+    crate::procedure::call_children(expr, &mut |child| {
+        valid &= direct_history_readout(child, program, sources, work, seen)?;
+        Ok(())
+    })?;
+    Ok(valid)
+}
+fn direct_node(
+    program: &Program,
+    driven: &[String],
+    node: usize,
+    work: &crate::transition_source_plan::Work,
+) -> Result<bool, Error> {
+    let Some(name) = program.nodes.get(node) else {
+        return Ok(false);
+    };
+    for actual in driven {
+        work.debit(2, (name.len() + actual.len() + 1) as u64)?;
+        if name == actual {
+            return Ok(true);
+        }
+    }
+    Ok(false)
+}
+
 /// Materialize the accepted continuous input definition at its semantic knots.
 /// Dependency validation precedes all numerical binding, so zero coefficients
 /// and algebraic cancellation cannot turn an internal input into a direct one.
@@ -2872,7 +3067,9 @@ impl Operators {
                 affine(input, program, &origin.instance)?;
             }
         }
-        let continuous = if procedure_direct_laplace(program, trajectory, driven)? {
+        let continuous = if procedure_direct_laplace(program, trajectory, driven)?
+            || procedure_direct_histories(program, trajectory, driven)?
+        {
             // The existing direct builder below retains PWL enclosures,
             // filter error and call-site history. No RN expression is erased.
             None

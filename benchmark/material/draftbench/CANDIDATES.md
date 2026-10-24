@@ -58,6 +58,12 @@ IR33 组合修复前，[用户 floor 与系统 floor 合同](../../../evas/tests
 可能有非零积分，不能用两个 binary64 侧见证跳过；当前候选对此明确拒绝。
 这些材料适合追加调用点捕获、保持历元和积分面积判据，未授权建设正式任务或替换原checker。
 
+同任务 `repair-round04/` 保留私有过程坐标在 Forcing 投影时越界、解析源初始化误读空 PWL
+以及普通观察跳过源 RN 证明入口的原红例。新增
+[RN 观察控制](../../../evas/tests/test_source_rn_observation.py)使用有理插值中点两侧答案，
+并保留放大真实源误差管的拒绝控制。原750项开发失败按首个阻断点归类；
+崩溃消失但仍有断言或诊断错误的原用例继续记为未通过。
+
 相邻的[最小源码](../../../evas/rust_core/src/procedure_observation.va)先执行 `c=V(u)`，
 贡献 `c>0?1:0`，再覆盖 `c=0`。正确输出使用覆盖前的值；
 [内核正反控](../../../evas/rust_core/src/events_certificate_cache_tests.rs)还拒绝伪造电压，

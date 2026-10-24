@@ -7,6 +7,15 @@ pub(crate) struct Sources<'a> {
     values: Vec<Vec<&'a E>>,
 }
 impl Sources<'_> {
+    /// Borrow every original definition, including inactive and repeated writes.
+    pub(crate) fn binding_definitions(&self, binding: usize, w: &Work) -> Result<&[&E], Error> {
+        w.debit(2, 16)?;
+        self.values
+            .get(binding)
+            .map(Vec::as_slice)
+            .ok_or_else(|| invalid("binding dependency index out of range"))
+    }
+
     /// Borrow one source definition for an eligibility scan. Multiple writes
     /// are not a value proof and must stay on the conservative path.
     /// The caller prepays the lookup and its recursion-path storage.

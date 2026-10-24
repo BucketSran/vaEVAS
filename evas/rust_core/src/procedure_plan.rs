@@ -1401,6 +1401,63 @@ pub(crate) struct CircuitView {
     pub physical_program: Option<Arc<Program>>,
 }
 impl CircuitView {
+    /// A remaining RN cell whose electrical ancestry is entirely driven can
+    /// benefit from exact physical source membership at this observation.
+    pub(crate) fn unresolved_source_rounding(&self, sources: &[usize]) -> Result<bool, Error> {
+        if self.physical_program.is_none() {
+            return Ok(false);
+        }
+        let w = &self.plan.work;
+        w.debit(
+            2,
+            ((self.plan.count + sources.len() + self.ids.len()) * 32 + 128) as u64,
+        )?;
+        let mut pure = vec![false; self.plan.count];
+        let mut used = vec![false; self.plan.count];
+        let mut needed = vec![false; self.plan.count];
+        for &id in &self.ids {
+            w.step()?;
+            needed[id] = true;
+        }
+        for id in 0..self.plan.count {
+            w.step()?;
+            let node = self
+                .plan
+                .graph
+                .node(id)
+                .ok_or_else(|| invalid("missing source rounding operand"))?;
+            let (mut only_sources, mut source_used) = match &node.operation {
+                O::Operator(_) => (false, false),
+                O::Affine { terms, .. } => {
+                    let mut valid = true;
+                    let mut used = false;
+                    for term in terms.iter() {
+                        w.debit(2, (sources.len() + 1) as u64)?;
+                        valid &= term.node == 0 || sources.contains(&term.node);
+                        used |= term.node != 0;
+                    }
+                    (valid, used)
+                }
+                _ => (true, false),
+            };
+            for &child in &node.operands {
+                w.step()?;
+                only_sources &= pure[child];
+                source_used |= used[child];
+            }
+            pure[id] = only_sources;
+            used[id] = source_used;
+            if needed[id]
+                && !self.plan.source_certified[id]
+                && only_sources
+                && source_used
+                && matches!(node.operation, O::Real(..) | O::Boundary(..))
+            {
+                return Ok(true);
+            }
+        }
+        Ok(false)
+    }
     pub(crate) fn expand(&self, voltages: &[f64]) -> Result<Vec<f64>, Error> {
         let w = &self.plan.work;
         w.debit(2, ((self.node_count + self.plan.count) * 16 + 64) as u64)?;
@@ -1409,6 +1466,54 @@ impl CircuitView {
             self.plan
                 .numeric_values(&self.ids, &values, &self.before, None, w)?,
         );
+        Ok(values)
+    }
+    /// Extend this candidate's public certificate using the same activation
+    /// and the current history domains, which may have widened after restart.
+    pub(crate) fn expand_bounds(
+        &self,
+        public: &[I],
+        points: &[f64],
+        operator_bounds: &[I],
+    ) -> Result<Vec<I>, Error> {
+        let w = &self.plan.work;
+        w.debit(
+            2,
+            ((public.len() + self.before.len() + operator_bounds.len() + self.ids.len()) * 48 + 64)
+                as u64,
+        )?;
+        if public.len() != self.node_count || points.len() != self.node_count + self.ids.len() {
+            return Err(invalid("procedure private certificate dimensions mismatch"));
+        }
+        let nodes = points[..self.node_count]
+            .iter()
+            .copied()
+            .map(Some)
+            .collect::<Vec<_>>();
+        let states = self.before.iter().copied().map(Some).collect::<Vec<_>>();
+        let operators = self
+            .plan
+            .observation
+            .get()
+            .map(|values| values.iter().copied().map(Some).collect::<Vec<_>>())
+            .unwrap_or_else(|| self.plan.point_operators.clone());
+        let cells = self.plan.evaluate(
+            false,
+            &self.ids,
+            &nodes,
+            public,
+            &states,
+            &self.plan.base,
+            &operators,
+            operator_bounds,
+            None,
+            w,
+        )?;
+        let mut values = Vec::with_capacity(points.len());
+        values.extend_from_slice(public);
+        for (cell, &point) in cells.iter().zip(&points[self.node_count..]) {
+            values.push(cell.bound()?.hull(I::point(point)));
+        }
         Ok(values)
     }
 }

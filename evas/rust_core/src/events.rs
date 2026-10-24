@@ -2271,9 +2271,12 @@ impl EventModel {
             self.program.nodes.len()
         ];
         nodes[0] = I::ZERO;
+        work.debit(2, (self.driven.len() * 16 + 32) as u64)?;
+        let mut source_nodes = Vec::with_capacity(self.driven.len());
         for (name, &bound) in self.driven.iter().zip(inputs) {
             if let Some(i) = self.program.nodes.iter().position(|n| n == name) {
                 nodes[i] = bound;
+                source_nodes.push(i);
             }
         }
         let before = observation.map_or_else(
@@ -2303,29 +2306,36 @@ impl EventModel {
             )
         };
         match build(&context) {
-            Ok(circuit) => Ok(circuit),
-            Err(error) if error.kind == "event_condition" && observation.is_some() => {
-                // A complete interval proof suffices for most observations.
-                // Only an undecidable predicate or sampled value needs exact
-                // source membership at b. Neither pure candidate publishes
-                // state; both attempts spend the original, sticky Work owner.
-                let (trajectory, time, _, bounds) = observation.unwrap();
-                let root = crate::exact_source::RootTime::point(time).ok_or_else(|| {
-                    Error::new("invalid_ir", "invalid procedure observation time")
-                })?;
-                context = crate::event_value_proof::Context::try_new(
-                    self,
-                    trajectory,
-                    inputs,
-                    &proofs,
-                    Some(&root),
-                )?
-                .try_with_operators(bounds)?;
-                context.set_candidate_frame(states, operators, &[], false)?;
-                build(&context)
+            Ok(circuit) => {
+                let pending = observation.is_some()
+                    && match circuit.procedure_view() {
+                        Some(view) => view.unresolved_source_rounding(&source_nodes)?,
+                        None => false,
+                    };
+                if !pending {
+                    return Ok(circuit);
+                }
             }
-            Err(error) => Err(error),
+            Err(error) if error.kind == "event_condition" && observation.is_some() => {}
+            Err(error) => return Err(error),
         }
+        // A complete interval proof suffices for most observations.
+        // Only an undecidable predicate or sampled value needs exact
+        // source membership at b. Neither pure candidate publishes
+        // state; both attempts spend the original, sticky Work owner.
+        let (trajectory, time, _, bounds) = observation.unwrap();
+        let root = crate::exact_source::RootTime::point(time)
+            .ok_or_else(|| Error::new("invalid_ir", "invalid procedure observation time"))?;
+        context = crate::event_value_proof::Context::try_new(
+            self,
+            trajectory,
+            inputs,
+            &proofs,
+            Some(&root),
+        )?
+        .try_with_operators(bounds)?;
+        context.set_candidate_frame(states, operators, &[], false)?;
+        build(&context)
     }
 
     pub(crate) fn circuit_at(

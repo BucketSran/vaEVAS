@@ -377,5 +377,9 @@ TRANSITION、DYNAMICS、EVENT-ORDER 与 COMPOSE：捕获输入图、逐次 RN �
 和[原生事务控制](../../rust_core/src/transient_procedure_history_tests.rs)。
 C8 迁移明确核对实际控制器元数据，并以细 max_step 请求证明步长控制生效；
 两类[迁移合同](../../tests/history_migration_contract.py)与开发全量分母分别保留。
+后续本地修复为私有执行帧保留完整历史包围，统一源 RN 的普通观察证明入口，
+并保留原始独立物理历史的直接路径；合同与独立控制见
+[算子手册](../math/operators.md)及[精度链](../math/solving.md#精度链的已修复反例与边界)。
+这些修复不调整原模型、容差或默认 Work 额度，也不表示剩余开发回归已通过。
 一般 RN 反馈、非零源误差管及不可隔离多切点窗口仍未支持；
 完整 IR33、原400与同源后端仍未验收，不改变上述发布版本的结果。

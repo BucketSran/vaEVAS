@@ -5,16 +5,25 @@ use crate::ir::{
 };
 
 pub(crate) fn retain_bounds(solution: &mut Solution, bounds: Vec<Interval>) {
-    debug_assert_eq!(bounds.len(), solution.voltages.len());
-    solution.certified_voltage_bounds = Some(
-        bounds
-            .into_iter()
-            .zip(&solution.voltages)
-            // A certificate encloses the exact root; the returned approximation
-            // need not lie inside it. Its hull is still a valid conservative bound.
-            .map(|(bound, &value)| [bound.lo.min(value), bound.hi.max(value)])
-            .collect(),
-    );
+    let representatives = &solution.voltages;
+    solution.certified_voltage_bounds = Some(hull_bounds(bounds, representatives));
+}
+pub(crate) fn retain_residual_bounds(
+    solution: &mut Solution,
+    bounds: Vec<Interval>,
+    representatives: &[f64],
+) {
+    solution.certified_voltage_bounds = Some(hull_bounds(bounds, representatives));
+}
+fn hull_bounds(bounds: Vec<Interval>, representatives: &[f64]) -> Vec<[f64; 2]> {
+    debug_assert_eq!(bounds.len(), representatives.len());
+    bounds
+        .into_iter()
+        .zip(representatives)
+        // A certificate encloses the exact root; the returned approximation
+        // need not lie inside it. Its hull is still a valid conservative bound.
+        .map(|(bound, &value)| [bound.lo.min(value), bound.hi.max(value)])
+        .collect()
 }
 
 pub(crate) fn evidence(

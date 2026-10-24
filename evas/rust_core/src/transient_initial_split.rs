@@ -64,7 +64,7 @@ pub(super) fn prepare(
         model.driven.len().saturating_mul(3).saturating_add(8),
     )?;
     if trajectory
-        .value_bounds(0.)
+        .checked_value_bounds(0.)?
         .iter()
         .any(|b| !b.finite() || b.lo.to_bits() != b.hi.to_bits())
     {

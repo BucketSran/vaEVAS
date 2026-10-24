@@ -1344,6 +1344,7 @@ fn prepare_root_window_selected_phase(
         } else {
             None
         };
+    let mut representative_operator_bounds = None;
     if time_bounds.lo != time_bounds.hi && !defer_representative {
         // The physical event read is complete, including passive observers.
         // A committed/query frame observes b with its own driven inputs and
@@ -1424,6 +1425,7 @@ fn prepare_root_window_selected_phase(
         crate::observation::retain_bounds(&mut solution, nodes);
         prepared.solution = solution;
         prepared.circuit = circuit;
+        representative_operator_bounds = Some(bounds);
     }
     if let Some(occurrence) = passive_occurrence {
         // Future acceptance must certify every source effect and captured
@@ -1458,6 +1460,9 @@ fn prepare_root_window_selected_phase(
             trajectory,
             &mut prepared.solution,
             &mut prepared.circuit,
+            representative_operator_bounds
+                .as_deref()
+                .unwrap_or(&observation.1),
         )?;
     }
     // Refinement belongs to this observation, never future root predictions.
@@ -2707,6 +2712,7 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
             &trajectory,
             &mut accepted.solution,
             &mut accepted.circuit,
+            &accepted.operators.bounds(0.)?,
         )?;
     }
     if let Some(token) = &model.analytic_request {
@@ -3118,6 +3124,8 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
                             &controller.accepted.states,
                             &controller.accepted.state_bounds,
                             &input_bounds,
+                            &trajectory,
+                            time,
                         )?
                     };
                     circuit.reuse_affine_factor_from(&controller.accepted.circuit);
@@ -4682,25 +4690,13 @@ fn ordinary_procedure_circuit(
     states: &[f64],
     state_bounds: &[I],
     inputs: &[I],
+    trajectory: &Trajectory,
+    time: f64,
 ) -> Result<Circuit, Error> {
     // Select over the complete accepted state domain before capturing a
     // current circuit. The resulting Plan owns both the certified decisions
     // and numeric captures used by solve and observation certification.
-    let selection = model.observation_selection(inputs, states, state_bounds, &[], &[])?;
-    let plan = selection.plan.ok_or_else(|| {
-        Error::new(
-            "invalid_ir",
-            "ordinary procedure selection lost its current activation",
-        )
-    })?;
-    plan.circuit(
-        &model.program,
-        &model.driven,
-        states,
-        &[],
-        model.tolerances.clone(),
-        crate::real_expression::work(model),
-    )
+    model.circuit_at_procedure_observation(states, state_bounds, &[], &[], inputs, trajectory, time)
 }
 
 #[cfg(test)]

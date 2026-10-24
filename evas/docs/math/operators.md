@@ -26,10 +26,14 @@ See the [support matrix](../COMPARISON.md) for delivery status. Independent cont
 区分只读查询、同刻观察和未来历史。涉及事件的改动还需检查
 [settlement](events.md#同块顺序赋值与同刻联立求解)与[共同生命周期](continuous.md#shared-lifecycle-closure)。
 
-IR33 的局部过程不改变独立物理输入的滤波历史。当前候选仅在没有离散状态、
-全部算子都是单分子系数/二项分母的一阶 `laplace_nd`、输入仅为实际驱动的仿射源时，
-保留原直接解析路径；贡献中的当前局部捕获仍按每次 Plan 求值。
-内部节点、状态依赖、嵌套算子及其他联合关系继续走原准入，不因这项修复放行。
+IR33 的局部过程不改变独立物理输入的历史。当前候选为无复位 `idt`、`idtmod`、
+单分子系数/二项分母的一阶 `laplace_nd`、`absdelay` 和 `slew` 保留直接路径，
+要求各历史输入的原始表达式仅含 ground 与实际驱动的仿射源。
+独立保持 Transition 及按顺序消费早期算子的纯函数可以共存；依赖、所有者和准入检查仍执行。
+贡献中的局部捕获继续按每次 Plan 求值。内部节点、状态输入和带 RN 存储的历史输入
+继续走原联合准入，零系数引用也不能消去这些依赖。
+含 DDT 的程序保持原导数路径。包含非 Transition 历史的读出仅允许加减、常数缩放及
+常数分母，绑定的所有原始定义也须通过同一付费审计；状态乘历史和非线性包装交回原准入。
 [过程与直接滤波控制](../../rust_core/src/operator_procedure_direct_tests.rs)
 以及[公开滤波回归](../../tests/test_laplace.py)覆盖该有限组合。
 
@@ -291,6 +295,16 @@ residual, and the remaining affine relations before recording the phase identity
 and time. Initial, candidate, and observation paths must all pass this projection.
 A successful reduced solve alone is not an output certificate. No per-query
 recompilation or reconstruction of the complete original source context is allowed.
+
+IR33 的私有过程坐标仅供原方程认证使用，不扩展公共 Solution 节点。
+每个新阶段从原 Plan、阶段前状态盒及当前算子盒重新计算私有点和外包围，
+再检查原 RHS 与其余仿射关系。设历史盒为 U，强迫项为 C，则认证使用完整的
+`2U+C`，不能沿用上一阶段较窄的 U，也不能将私有量替换为零或名义点。
+最终历史包围扩大后必须重新投影，并保留扩大后的残差盒。
+原程序审计同时检查过程元数据中的未选分支和被丢弃的零系数读，防止隐藏输出反馈。
+[私有阶段回归](../../rust_core/src/solver_private_phase_tests.rs)覆盖包围扩大、
+原容差拒绝、弃候选后重试及同一 Work 耗尽。
+初始解析源查询使用实际 provider 的 checked bounds，不能按空 PWL 存储索引。
 
 ### Exact physical reads and one request budget
 

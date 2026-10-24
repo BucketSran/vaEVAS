@@ -61,9 +61,23 @@ fn uncertain_before_model() -> EventModel {
     )
     .unwrap()
 }
+fn source_trajectory(model: &EventModel) -> Trajectory {
+    let mut t = Trajectory::new(
+        serde_json::from_value(serde_json::json!({
+            "pwl":[[[0.,0.],[1.,0.]]],"stop":1.,"max_step":0.125,"output_times":[0.,1.]
+        }))
+        .unwrap(),
+        1,
+    )
+    .unwrap();
+    t.bind_procedure_work(crate::real_expression::work(model))
+        .unwrap();
+    t
+}
 #[test]
 fn ordinary_full_before_branch_must_not_use_nominal_state() {
     let model = uncertain_before_model();
+    let trajectory = source_trajectory(&model);
     let before = [1.];
     let bounds = [I {
         lo: f64::from_bits(1f64.to_bits() - 1),
@@ -72,7 +86,7 @@ fn ordinary_full_before_branch_must_not_use_nominal_state() {
     let old = model.observation_selection(&[I::ZERO], &before, &bounds, &[], &[]);
     assert!(old.is_err());
     assert_eq!(old.err().unwrap().kind, "event_condition");
-    let current = ordinary_procedure_circuit(&model, &before, &bounds, &[I::ZERO]);
+    let current = ordinary_procedure_circuit(&model, &before, &bounds, &[I::ZERO], &trajectory, 0.);
     assert!(
         current.is_err(),
         "current ordinary circuit silently accepted nominal q=1 for q>1 over a straddling interval"
@@ -83,11 +97,13 @@ fn ordinary_full_before_branch_must_not_use_nominal_state() {
 #[test]
 fn ordinary_full_before_qualification_is_paid_and_exhaustion_sticky() {
     let model = uncertain_before_model();
+    let trajectory = source_trajectory(&model);
     let work = crate::real_expression::work(&model);
     let initial_spent = work.spent();
     let states = [1.];
     let bounds = [I::point(1.)];
-    let circuit = ordinary_procedure_circuit(&model, &states, &bounds, &[I::ZERO]).unwrap();
+    let circuit =
+        ordinary_procedure_circuit(&model, &states, &bounds, &[I::ZERO], &trajectory, 0.).unwrap();
     let solution = circuit.solve(&[0.]).unwrap();
     assert_eq!(solution.voltages[2], 3.);
     assert!(work.spent() > initial_spent);
@@ -111,7 +127,8 @@ fn ordinary_full_before_qualification_is_paid_and_exhaustion_sticky() {
     work.debit(2, 1_000_000_000 - work.spent()).unwrap();
     let mut spent = work.spent();
     for _ in 0..2 {
-        let result = ordinary_procedure_circuit(&model, &states, &bounds, &[I::ZERO]);
+        let result =
+            ordinary_procedure_circuit(&model, &states, &bounds, &[I::ZERO], &trajectory, 0.);
         assert!(result.is_err());
         assert_eq!(result.err().unwrap().kind, "step_budget");
         assert!(work.spent() > spent);
@@ -120,5 +137,13 @@ fn ordinary_full_before_qualification_is_paid_and_exhaustion_sticky() {
         assert_eq!(solution.voltages[2], 3.);
     }
     let fresh = uncertain_before_model();
-    ordinary_procedure_circuit(&fresh, &states, &bounds, &[I::ZERO]).unwrap();
+    ordinary_procedure_circuit(
+        &fresh,
+        &states,
+        &bounds,
+        &[I::ZERO],
+        &source_trajectory(&fresh),
+        0.,
+    )
+    .unwrap();
 }
