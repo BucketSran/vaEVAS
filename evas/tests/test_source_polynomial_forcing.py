@@ -3,6 +3,7 @@ from pathlib import Path
 from fractions import Fraction
 import copy,json,unittest
 from evas import Instance, CompileError, KernelError, compile_sources, solve, transient
+from initial_record_contract import check_initial_record_batch
 ROOT=Path(__file__).resolve().parents[2]
 KERNEL=ROOT/'evas/rust_core/target/debug/evas-kernel'
 PREFIX='''`include "disciplines.vams"
@@ -124,6 +125,7 @@ class SourcePolynomialForcing(unittest.TestCase):
    self.assertLessEqual(abs(actual-float(want)),1e-10)
    self.assertLessEqual(Fraction.from_float(lo),want)
    self.assertGreaterEqual(Fraction.from_float(hi),want)
+  result=check_initial_record_batch(result,p,[0],[0],1)
   self.assertEqual([e['time'] for e in result['transient']['events']],[.5])
   return result,p
  def test_same_output_source_quadratic_plus_held_transition(self):

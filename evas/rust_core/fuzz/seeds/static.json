@@ -1,52 +1,68 @@
 {
+  "driven": [
+    "u"
+  ],
   "program": {
+    "contributions": [
+      {
+        "branch": {
+          "instance": "dut",
+          "kind": "voltage",
+          "local_negative": "y",
+          "local_positive": "r"
+        },
+        "negative": 2,
+        "origin": {
+          "column": 78,
+          "expansion": [],
+          "instance": "dut",
+          "line": 2,
+          "source": "static.va"
+        },
+        "positive": 0,
+        "rhs": {
+          "constant": -0.125,
+          "op": "affine",
+          "terms": [
+            {
+              "coefficient": 0.5,
+              "node": 0
+            },
+            {
+              "coefficient": -0.5,
+              "node": 1
+            }
+          ]
+        }
+      }
+    ],
+    "events": [],
     "nodes": [
       "0",
       "u",
       "y"
     ],
-    "contributions": [
+    "operators": [],
+    "procedures": [
       {
-        "branch": {
-          "instance": "dut",
-          "local_positive": "r",
-          "local_negative": "y",
-          "kind": "voltage"
-        },
-        "positive": 0,
-        "negative": 2,
-        "rhs": {
-          "constant": -0.125,
-          "terms": [
-            {
-              "node": 0,
-              "coefficient": 0.5
+        "body": [
+          {
+            "action": {
+              "contribution": 0,
+              "kind": "contribution_capture"
             },
-            {
-              "node": 1,
-              "coefficient": -0.5
-            }
-          ],
-          "op": "affine"
-        },
-        "origin": {
-          "source": "static.va",
-          "line": 2,
-          "column": 78,
-          "instance": "dut",
-          "expansion": []
-        }
+            "expanded_statement_ordinal": 0
+          }
+        ],
+        "instance": "dut",
+        "procedure_id": 0
       }
     ],
+    "real_bindings": [],
+    "schema_version": 33,
     "states": [],
-    "events": [],
-    "operators": [],
-    "schema_version": 32,
     "step_bounds": []
   },
-  "driven": [
-    "u"
-  ],
   "samples": [
     [
       0.25

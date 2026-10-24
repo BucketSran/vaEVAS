@@ -1,0 +1,261 @@
+{
+  "nodes": [
+    "0",
+    "a",
+    "b",
+    "y"
+  ],
+  "contributions": [
+    {
+      "branch": {
+        "instance": "dut",
+        "local_positive": "0",
+        "local_negative": "y",
+        "kind": "voltage"
+      },
+      "positive": 0,
+      "negative": 3,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": -1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "state": 0,
+          "op": "state"
+        }
+      },
+      "origin": {
+        "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-roadmap-20261024/ordered-events/models/distinct-roots-same-float.va",
+        "line": 2,
+        "column": 175,
+        "instance": "dut",
+        "expansion": []
+      }
+    }
+  ],
+  "states": [
+    {
+      "instance": "dut",
+      "name": "n",
+      "kind": "real",
+      "initial": 0.0
+    }
+  ],
+  "events": [
+    {
+      "trigger": {
+        "guard": {
+          "constant": 0.0,
+          "terms": [
+            {
+              "node": 0,
+              "coefficient": -1.0
+            },
+            {
+              "node": 2,
+              "coefficient": 1.0
+            }
+          ],
+          "op": "affine"
+        },
+        "direction": 1,
+        "time_tolerance": 1e-06,
+        "expression_tolerance": 1e-06,
+        "kind": "cross"
+      },
+      "body": [
+        {
+          "state": 0,
+          "rhs": {
+            "value": {
+              "operation": "multiply",
+              "left": {
+                "state": 0,
+                "op": "state"
+              },
+              "right": {
+                "constant": 3.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "origin": {
+                "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-roadmap-20261024/ordered-events/models/distinct-roots-same-float.va",
+                "line": 2,
+                "column": 136,
+                "instance": "dut",
+                "expansion": []
+              },
+              "op": "real_binary"
+            },
+            "kind": "store",
+            "origin": {
+              "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-roadmap-20261024/ordered-events/models/distinct-roots-same-float.va",
+              "line": 2,
+              "column": 133,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "real_boundary"
+          },
+          "kind": "assign"
+        }
+      ],
+      "origin": {
+        "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-roadmap-20261024/ordered-events/models/distinct-roots-same-float.va",
+        "line": 2,
+        "column": 105,
+        "instance": "dut",
+        "expansion": []
+      },
+      "procedure_id": 0,
+      "expanded_statement_ordinal": 1
+    },
+    {
+      "trigger": {
+        "guard": {
+          "constant": 0.0,
+          "terms": [
+            {
+              "node": 0,
+              "coefficient": -1.0
+            },
+            {
+              "node": 1,
+              "coefficient": 1.0
+            }
+          ],
+          "op": "affine"
+        },
+        "direction": 1,
+        "time_tolerance": 1e-06,
+        "expression_tolerance": 1e-06,
+        "kind": "cross"
+      },
+      "body": [
+        {
+          "state": 0,
+          "rhs": {
+            "value": {
+              "operation": "add",
+              "left": {
+                "state": 0,
+                "op": "state"
+              },
+              "right": {
+                "constant": 1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "origin": {
+                "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-roadmap-20261024/ordered-events/models/distinct-roots-same-float.va",
+                "line": 2,
+                "column": 171,
+                "instance": "dut",
+                "expansion": []
+              },
+              "op": "real_binary"
+            },
+            "kind": "store",
+            "origin": {
+              "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-roadmap-20261024/ordered-events/models/distinct-roots-same-float.va",
+              "line": 2,
+              "column": 168,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "real_boundary"
+          },
+          "kind": "assign"
+        }
+      ],
+      "origin": {
+        "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-roadmap-20261024/ordered-events/models/distinct-roots-same-float.va",
+        "line": 2,
+        "column": 140,
+        "instance": "dut",
+        "expansion": []
+      },
+      "procedure_id": 0,
+      "expanded_statement_ordinal": 2
+    },
+    {
+      "trigger": {
+        "kind": "initial_step"
+      },
+      "body": [
+        {
+          "state": 0,
+          "rhs": {
+            "value": {
+              "constant": 1.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "kind": "store",
+            "origin": {
+              "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-roadmap-20261024/ordered-events/models/distinct-roots-same-float.va",
+              "line": 2,
+              "column": 100,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "real_boundary"
+          },
+          "kind": "assign"
+        }
+      ],
+      "origin": {
+        "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-roadmap-20261024/ordered-events/models/distinct-roots-same-float.va",
+        "line": 2,
+        "column": 84,
+        "instance": "dut",
+        "expansion": []
+      },
+      "procedure_id": 0,
+      "expanded_statement_ordinal": 0
+    }
+  ],
+  "operators": [],
+  "schema_version": 33,
+  "step_bounds": [],
+  "procedures": [
+    {
+      "procedure_id": 0,
+      "instance": "dut",
+      "body": [
+        {
+          "expanded_statement_ordinal": 0,
+          "action": {
+            "event": 2,
+            "kind": "event_gate"
+          }
+        },
+        {
+          "expanded_statement_ordinal": 1,
+          "action": {
+            "event": 0,
+            "kind": "event_gate"
+          }
+        },
+        {
+          "expanded_statement_ordinal": 2,
+          "action": {
+            "event": 1,
+            "kind": "event_gate"
+          }
+        },
+        {
+          "expanded_statement_ordinal": 3,
+          "action": {
+            "contribution": 0,
+            "kind": "contribution_capture"
+          }
+        }
+      ]
+    }
+  ],
+  "real_bindings": []
+}

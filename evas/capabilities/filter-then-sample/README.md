@@ -6,6 +6,12 @@
 
 依赖的基本节点：`laplace-nd`、`sample-hold-timer`。组合通过不使这些节点自动合格。
 
+成绩沿用[原支持矩阵](../../docs/COMPARISON.md#支持矩阵)的固定模型和配置，
+只适用于各行的容差、停止时间及来源版本，不覆盖所有合法写法。
+结果来自不同历史版本，不代表当前 main 或 IR33 的一次全量验收。
+逐行范围见[验证覆盖](../../validation/paper/COVERAGE.md)，
+执行版本与收据见[来源和补充证据](../../docs/development/COMPARISON.md#table-evidence)。
+
 滤波→采样保持。Spectre：✓ Q3；ngspice + OpenVAF-R：编译失败；Gnucap + modelgen-verilog：采样历史错误；EVAS：✓ Q3。
 
 成绩来源：[evas/docs/COMPARISON.md#支持矩阵](../../../evas/docs/COMPARISON.md#支持矩阵)。

@@ -31,10 +31,29 @@ def _bind_input_aliases(compiler, writes, *, body_names=None):
             continue
         if compiler.model.variables[statement.name] != 'real' and body_names is None:
             continue
+        owner = compiler.compilation.native_audit
+        if compiler.model.functions:
+            owner.debit('initial_alias_structure_container', 2, statement.rhs)
         pending = [statement.rhs]
+        seen = {} if compiler.model.functions else None
         supported = True
+        has_call, memo_eligible = False, bool(compiler.model.functions)
         while pending:
+            if seen is not None:
+                owner.debit('initial_alias_structure_pop', 2, statement.rhs)
             expression = pending.pop()
+            if seen is not None:
+                owner.debit('initial_alias_structure_lookup', 2, expression)
+                if id(expression) in seen:
+                    continue
+                owner.debit('initial_alias_structure_insert', 2, expression)
+                seen[id(expression)] = expression
+                owner.debit('initial_alias_structure_kind', 3, expression)
+                owner.debit('initial_alias_memo_qualification', 3, expression)
+                has_call |= expression.source_call is not None
+                memo_eligible &= expression.op in ('number', 'parameter', 'node', 'voltage', '+', '-', '*', '/',
+                                                    'unary+', 'unary-', 'checked', 'function_assign')
+                memo_eligible &= expression.op != 'function_assign' or expression.value == 'real'
             if (expression.op in ('time', 'array', 'index', 'call')
                     or expression.op in OPERATOR_NAMES
                     or expression.op == 'parameter'
@@ -42,16 +61,28 @@ def _bind_input_aliases(compiler, writes, *, body_names=None):
                     and expression.value not in aliases):
                 supported = False
                 break
+            if seen is not None:
+                owner.debit('initial_alias_structure_edges', 1+len(expression.args), expression)
             pending.extend(expression.args)
         if not supported:
             continue
         try:
             resolve = compiler.typed_resolve(
                 lambda name: aliases[name] if name in aliases else compiler.parameter(name))
+            memo = None
+            if seen is not None and has_call and memo_eligible:
+                # This compatibility view has no call/operator registration.
+                # Its resolver closes over one fixed alias environment for this
+                # one statement. Actual source calls execute later, uncached.
+                from .lowering import _SourceAuditMemo
+                memo = _SourceAuditMemo(owner.ir_work,
+                    (None, compiler.initial_select, compiler.validate_initial_operand, None))
+                memo.bind(resolve, compiler.node_ids, (True, False, True))
+                resolve._source_audit_binding = memo.binding_token
             value = lower(statement.rhs, resolve, compiler.node_ids, compiler.model.source,
                           preserve_structure=True, decisions=compiler.initial_select,
                           validate_decision=compiler.validate_initial_operand,
-                          node_declarations=True)
+                          node_declarations=True, memo=memo)
             compiler.validate_initial_operand(statement.rhs, value)
             if compiler.model.variables[statement.name] == 'integer':
                 compiler.validate_integer_value(value, statement.token)

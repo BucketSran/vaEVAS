@@ -1742,7 +1742,24 @@ fn raw_pwl_roots_mixed_timer_held_epoch_failure_rolls_back_then_same_controller_
 #[test]
 fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_retries() {
     let (model, trajectory, mut controller, mut calendar) = raw_source_held_epoch_fixture_at(0.5);
+    // Exact physical ordering no longer treats the later source root as
+    // part of the first display-time batch. Commit only that legal prefix;
+    // the failure/retry checkpoint belongs immediately before event 2.
+    controller
+        .accept_relocalized(&model, &trajectory, &mut calendar)
+        .unwrap();
+    assert_eq!(
+        controller
+            .records
+            .iter()
+            .map(|r| r.event)
+            .collect::<Vec<_>>(),
+        [0, 1]
+    );
+    assert_eq!(calendar.first().unwrap().event, 2);
     let before = controller.accepted.clone();
+    let original_records = serde_json::to_value(&controller.records).unwrap();
+    let original_cursor = controller.event;
     let signature = |events: &[ScheduledEvent]| {
         events
             .iter()
@@ -1752,8 +1769,8 @@ fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_r
     let original_calendar = signature(&calendar);
     let original_outputs = controller.outputs.clone();
     let mut bad_program = model.program.clone();
-    // Fail during the second source root, after the first root and intervening
-    // timer have succeeded inside the candidate transaction. z=idt(1,0)
+    // Fail during the second source root, after the earlier physical prefix
+    // has committed. z=idt(1,0)
     // is the physical time, but its sampled history enclosure touches the
     // accepted boundary. A driven-input rational proof cannot erase that width.
     bad_program.events[2].body.push(
@@ -1772,8 +1789,11 @@ fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_r
             .contains("dynamic timer window overlaps the accepted boundary"));
         assert_raw_source_frame_same(&controller.accepted, &before);
         assert_eq!(signature(&calendar), original_calendar);
-        assert!(controller.records.is_empty());
-        assert_eq!(controller.event, 0);
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            original_records
+        );
+        assert_eq!(controller.event, original_cursor);
         assert_eq!(controller.outputs.len(), original_outputs.len());
         for (actual, expected) in controller.outputs.iter().zip(&original_outputs) {
             assert_raw_source_frame_same(actual, expected);
@@ -1781,6 +1801,11 @@ fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_r
     }
     let (clean_model, clean_trajectory, mut clean, mut clean_calendar) =
         raw_source_held_epoch_fixture_at(0.5);
+    clean
+        .accept_relocalized(&clean_model, &clean_trajectory, &mut clean_calendar)
+        .unwrap();
+    assert_raw_source_frame_same(&controller.accepted, &clean.accepted);
+    assert_eq!(signature(&calendar), signature(&clean_calendar));
     while !calendar.is_empty() {
         controller
             .accept_relocalized(&model, &trajectory, &mut calendar)
@@ -2272,7 +2297,19 @@ fn held29_program() -> Program {
     // optional analytic_sources to TransientInputs. The trajectory has none.
     // Keep the archived IR31 intact while constructing the current test input.
     assert_eq!(program.schema_version, 31);
-    assert_eq!(SCHEMA_VERSION, 32, "re-audit the fixture");
+    assert_eq!(SCHEMA_VERSION, 33, "re-audit the fixture");
+    // IR33 legacy transport: retain pre-executed numeric seeds.
+    // Do not add an initial gate or procedure to this archived input.
+    assert!(program.procedures.is_empty());
+    assert!(program.real_bindings.is_empty());
+    assert!(program
+        .events
+        .iter()
+        .all(|event| event.procedure_id.is_none() && event.expanded_statement_ordinal.is_none()));
+    assert!(program
+        .states
+        .iter()
+        .all(|state| serde_json::to_value(&state.initial).unwrap().is_number()));
     program.schema_version = SCHEMA_VERSION;
     program
 }

@@ -6,10 +6,27 @@ from .limits import MAX_EXPRESSION_DEPTH, MAX_IR_ITEMS, MAX_SOURCE_NESTING
 from .syntax import Assignment, Conditional, Event, Expr, Loop, Model, OPERATOR_NAMES
 
 
-def inline_functions(model: Model) -> Model:
+MEMORYLESS_MATH = frozenset(("sin", "cos", "exp", "ln", "sqrt", "tanh"))
+
+def function_math(expr, work=None):
+    """A memoryless operator originally inside one expanded function body."""
+    if work is not None:
+        work("function_math_provenance", 1+len(expr.expansion))
+    return (expr.op in MEMORYLESS_MATH and
+            any(kind == "function_call" for kind, _ in expr.expansion))
+
+
+def inline_functions(model: Model, *, native_audit=None) -> Model:
     """Substitute typed input-only functions; never duplicate history call sites."""
     if not model.functions:
         return model
+    from .source_queries import SourceQuery
+    if native_audit is None:
+        from .native_audit import NativeAudit
+        native_audit = NativeAudit()
+    argument_operator = SourceQuery(native_audit, 'source_argument_history',
+        lambda item: (item, False) if item.op in OPERATOR_NAMES else (None, True),
+        lambda item, local, children: next((child for child in children if child is not None), None))
     def fail(message, token, *, code="compile_error"):
         raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}', code=code, token=token)
 
@@ -42,6 +59,8 @@ def inline_functions(model: Model) -> Model:
             memo[id(item)] = depth, size
 
     def unpack(expr, obligations):
+        if expr.source_call is not None:
+            return expr
         if expr.op == 'checked':
             obligations.extend(expr.args[1:])
             value = expr.args[0]
@@ -58,7 +77,12 @@ def inline_functions(model: Model) -> Model:
                       expansion=origin.expansion)
         return result
 
-    def expand(expr, env=None, local_names=frozenset(), stack=(), depth=0):
+    # Original AST identity plus enclosing occurrence is stable across the
+    # compatibility and retained-procedure views. Keep originals alive; no
+    # structural expression hashing or nominal-value identity is involved.
+    call_sites = {}
+
+    def expand(expr, env=None, local_names=frozenset(), stack=(), depth=0, sites=()):
         if depth > MAX_EXPRESSION_DEPTH:
             fail('function expansion exceeds expression depth budget', expr.token, code="resource_budget")
         env = env or {}
@@ -70,9 +94,13 @@ def inline_functions(model: Model) -> Model:
             if stack and expr.value not in model.parameters:
                 fail('function may only read its locals, arguments and module parameters', expr.token)
             return expr
-        if stack and (expr.op in ('voltage', 'index') or expr.op in OPERATOR_NAMES):
+        if stack and (expr.op in ('voltage', 'index') or expr.op in OPERATOR_NAMES - MEMORYLESS_MATH):
             fail('pure analog functions cannot use voltage access or history operators', expr.token)
-        expanded = tuple(expand(a, env, local_names, stack, depth+1) for a in expr.args)
+        original = expr
+        if sites:
+            expr = replace(expr, expansion=(*expr.expansion,
+                *(("function_call", site) for site in sites)))
+        expanded = tuple(expand(a, env, local_names, stack, depth+1, sites) for a in expr.args)
         # Index evaluation and waveform arguments have their own closed
         # contexts. Their obligations must be checked at that entry point.
         if expr.op in ('node', 'index', 'array') or expr.op in OPERATOR_NAMES:
@@ -88,17 +116,24 @@ def inline_functions(model: Model) -> Model:
             fail('recursive or excessively nested analog function calls are unsupported', expr.token,
                  code='compile_error' if name in stack else 'resource_budget')
         function = model.functions[name]
+        key = (id(original), sites[-1] if sites else 0)
+        if key not in call_sites:
+            if len(call_sites) >= MAX_IR_ITEMS:
+                fail('function call occurrences exceed expression budget', expr.token, code='resource_budget')
+            call_sites[key] = (original, len(call_sites)+1)
+        call_path = (*sites, call_sites[key][1])
         if len(args) != len(function.inputs):
             fail(f'function {name!r} requires {len(function.inputs)} inputs', expr.token)
-        pending = list(args)
-        while pending:
-            item = pending.pop()
-            if item.op in OPERATOR_NAMES:
-                fail('function arguments cannot contain history call sites', item.token)
-            pending.extend(item.args)
-        def assignment(value, kind, token):
-            return Expr('function_assign', kind, (value,), token, result_type=kind)
-        local = {n:assignment(value, function.variable_types[n], expr.token)
+        native_audit.debit('source_argument_roots', 1+len(args), expr)
+        for argument in args:
+            offender = argument_operator(argument)
+            if offender is not None:
+                fail('function arguments cannot contain history call sites', offender.token)
+        def assignment(value, kind, token, role="store"):
+            return Expr('function_assign', kind, (value,), token, result_type=kind,
+                        real_boundary_kind=role if kind == 'real' else None,
+                        expansion=(*token.expansion, *(("function_call", site) for site in call_path)))
+        local = {n:assignment(value, function.variable_types[n], expr.token, "argument")
                  for n,value in zip(function.inputs,args)}
         if function.return_type == 'integer':
             local[name] = Expr('number', 0., (), function.token, result_type='integer')
@@ -116,7 +151,7 @@ def inline_functions(model: Model) -> Model:
                     # The immutable expression keeps VA's sequential semantics.
                     predicate = Expr(statement.relation, None,
                         (statement.left, statement.right), statement.token)
-                    predicate = unpack(expand(predicate, bindings, names, (*stack, name), expansion_depth+1), obligations)
+                    predicate = unpack(expand(predicate, bindings, names, (*stack, name), expansion_depth+1, call_path), obligations)
                     bounded(predicate)
                     obligations.append(predicate)
                     then_values = statements(statement.then_body, dict(bindings), expansion_depth+1)
@@ -138,9 +173,10 @@ def inline_functions(model: Model) -> Model:
                     fail('pure analog function assignments require scalar targets', statement.token)
                 if statement.name not in names:
                     fail('function assignments must target its local variables or return value', statement.token)
-                value = unpack(expand(statement.rhs, bindings, names, (*stack, name), expansion_depth+1), obligations)
+                value = unpack(expand(statement.rhs, bindings, names, (*stack, name), expansion_depth+1, call_path), obligations)
                 kind = function.return_type if statement.name == name else function.variable_types[statement.name]
-                bindings[statement.name] = assignment(value, kind, statement.token)
+                bindings[statement.name] = assignment(value, kind, statement.token,
+                    "return" if statement.name == name else "store")
                 bounded(bindings[statement.name])
                 obligations.append(bindings[statement.name])
             return bindings
@@ -151,12 +187,31 @@ def inline_functions(model: Model) -> Model:
         # discarded decisions and aliases. Only the typed result is substituted
         # into the caller's computation; closed index/operator contexts stay local.
         bounded(local[name])
-        return replace(checked(local[name], obligations, expr), result_type=function.return_type)
+        result = checked(local[name], obligations, expr)
+        if function.return_type == 'real':
+            # Actual arguments remain ordinary children so loop/array source
+            # substitutions transform them together with the checked view.
+            result = replace(result, args=(*result.args, *expanded),
+                source_call=(name, len(result.args), len(expanded)),
+                expansion=(*expr.expansion, *(("function_call", site) for site in call_path)))
+        return replace(result, result_type=function.return_type)
+
+    # Compatibility and retained-process views refer to the same source
+    # statements. This transform has no instance/argument environment: preserve
+    # that identity rather than rebuilding a second loop without its proof.
+    statement_views = {}
 
     def body(statements):
         from .syntax import Display, While
         result = []
         for statement in statements:
+            cached = statement_views.get(id(statement))
+            if cached is not None:
+                result.append(cached[1])
+                continue
+            if len(statement_views) >= MAX_IR_ITEMS:
+                fail('function source transformation exceeds statement budget',
+                     statement.token, code='resource_budget')
             if isinstance(statement, While):
                 result.append(replace(statement, condition=expand(statement.condition),
                                       body=body(statement.body)))
@@ -177,6 +232,12 @@ def inline_functions(model: Model) -> Model:
                 if getattr(statement, 'index', None) is not None:
                     updates['index'] = expand(statement.index)
                 result.append(replace(statement, **updates))
+            # Keep the original alive; no structural hashing, source-token
+            # aliasing, or proof reuse across distinct original statements.
+            if len(statement_views) >= MAX_IR_ITEMS:
+                fail('function source transformation exceeds statement budget',
+                     statement.token, code='resource_budget')
+            statement_views[id(statement)] = (statement, result[-1])
         return tuple(result)
 
     # Validate even unused declarations structurally, so bad
@@ -200,6 +261,7 @@ def inline_functions(model: Model) -> Model:
                                                            else {n:expand(e) for n,e in child.parameters.items()}))
                                   for child in model.children),
                    analog=list(body(model.analog)), initial=list(body(model.initial)),
+                   procedure=body(model.procedure),
                    events=[replace(event, body=body(event.body), triggers=tuple(
                        replace(leaf, arguments=tuple(expand(arg) if arg is not None else None
                                                    for arg in leaf.arguments)) for leaf in event.triggers))
@@ -256,6 +318,24 @@ def elaborate_loops(model: Model, parameter):
     from .ir import Affine
     from .lowering import lower
     from .syntax import Assignment, ContributionStatement, Display
+
+    if model.procedure:
+        # Expand the one complete source sequence, then derive compatibility
+        # views. Do not try to recover lexical order by sorting source tokens.
+        full = elaborate_loops(replace(model, analog=list(model.procedure),
+                                       initial=[], events=[], procedure=()), parameter)
+        procedure = tuple(full.analog)
+        analog, initial, events = [], [], []
+        for statement in procedure:
+            if isinstance(statement, Event):
+                if any(t.kind == 'initial_step' for t in statement.triggers):
+                    initial.extend(statement.body)
+                leaves = tuple(t for t in statement.triggers if t.kind != 'initial_step')
+                if leaves:
+                    events.append(replace(statement, triggers=leaves))
+            else:
+                analog.append(statement)
+        return replace(model, analog=analog, initial=initial, events=events, procedure=procedure)
 
     def has_loop(statements):
         return any(isinstance(statement, Loop) or isinstance(statement, Conditional)
@@ -531,6 +611,12 @@ def elaborate_loops(model: Model, parameter):
                         name = node_name(expr, active)
                         nodes.setdefault(name, len(nodes))
                         result = replace(expr, value=name, args=())
+                    elif expr.op == 'time':
+                        # This source-only predicate audit has the same special
+                        # time transport as the later instance lowering. Keep
+                        # the original expression, never an invented time value.
+                        nodes.setdefault('$abstime', len(nodes))
+                        result = expr
                     else:
                         result = replace(expr, args=tuple(scalar(arg, memo) for arg in expr.args))
                     memo[key] = (expr, result)

@@ -8,6 +8,7 @@ import argparse
 
 # code -> category, owning stage, capability, actionable scope
 RULES = {
+    'invalid_ir': ('invalid_input', 'binding', 'LANG', 'Recompile the original source and check IR node ownership and references.'),
     'duplicate_module': ('invalid_input', 'parse', 'LANG', 'Provide each module definition once.'),
     'connection_mismatch': ('invalid_input', 'binding', 'LANG', 'Match every top-level port key; child connections must use declared electrical nets.'),
     'undeclared_node': ('invalid_input', 'lowering', 'LANG', 'Declare the electrical nodes used by voltage access.'),

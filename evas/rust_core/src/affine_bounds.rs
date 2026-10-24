@@ -87,6 +87,13 @@ pub(crate) fn affine(expr: &Expression, program: &Program) -> Result<Vec<I>, Err
     let n = program.nodes.len() + program.states.len() + program.operators.len();
     let mut result = vec![I::ZERO; n + 1];
     match expr {
+        Expression::RealCall { .. }
+        | Expression::UnsupportedSystemCall { .. }
+        | Expression::RealBinary { .. }
+        | Expression::RealBoundary { .. }
+        | Expression::RealLocal { .. } => {
+            return affine(&crate::real_expression::materialized(expr)?, program)
+        }
         Expression::Forcing { .. } => {
             return Err(Error::new(
                 "unsupported_forcing_scope",

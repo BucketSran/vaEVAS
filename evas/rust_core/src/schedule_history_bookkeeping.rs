@@ -6,7 +6,15 @@ pub(super) fn order(
     b: &ScheduledEvent,
     model: &EventModel,
 ) -> Result<Option<std::cmp::Ordering>, Error> {
-    let Some(w) = crate::event_value_proof::history::work(model) else {
+    order_with_work(a, b, model, None)
+}
+pub(super) fn order_with_work(
+    a: &ScheduledEvent,
+    b: &ScheduledEvent,
+    model: &EventModel,
+    work: Option<&Work>,
+) -> Result<Option<std::cmp::Ordering>, Error> {
+    let Some(w) = work.or_else(|| crate::event_value_proof::history::work(model)) else {
         return Ok(certified_order(a, b, model));
     };
     w.debit(2, 0)?;
@@ -57,11 +65,12 @@ pub(super) fn coincides(a: &Moment, b: &Moment, same: bool, w: &Work) -> Result<
     }
 }
 pub(super) use crate::history_storage::sort;
-pub(super) fn independent_kinds(
+pub(super) fn independent_kinds_with_work(
     events: &[ScheduledEvent],
     model: &EventModel,
+    work: Option<&Work>,
 ) -> Result<bool, Error> {
-    let work = crate::event_value_proof::history::work(model);
+    let work = work.or_else(|| crate::event_value_proof::history::work(model));
     if let Some(w) = work {
         w.debit(2, 0)?;
     }
@@ -77,23 +86,28 @@ pub(super) fn independent_kinds(
     }
     Ok(true)
 }
-pub(super) fn all_ordered(events: &[ScheduledEvent], model: &EventModel) -> Result<bool, Error> {
+pub(super) fn all_ordered_with_work(
+    events: &[ScheduledEvent],
+    model: &EventModel,
+    work: Option<&Work>,
+) -> Result<bool, Error> {
     for a in events {
         for b in events {
-            if order(a, b, model)?.is_none() {
+            if order_with_work(a, b, model, work)?.is_none() {
                 return Ok(false);
             }
         }
     }
     Ok(true)
 }
-pub(super) fn any_unordered(
+pub(super) fn any_unordered_with_work(
     events: &[ScheduledEvent],
     next: &ScheduledEvent,
     model: &EventModel,
+    work: Option<&Work>,
 ) -> Result<bool, Error> {
     for event in events {
-        if order(event, next, model)?.is_none() {
+        if order_with_work(event, next, model, work)?.is_none() {
             return Ok(true);
         }
     }

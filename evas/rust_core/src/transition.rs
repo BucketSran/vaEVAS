@@ -724,6 +724,56 @@ impl Transition {
         self.advance_enclosed(time, self.input, self.input_bounds, false)
     }
 
+    /// Child histories and their parent must use the same physical end
+    /// predicate. The representative can still precede the loose upper end
+    /// bound when the accepted exact root already proves the edge is over.
+    pub(crate) fn end_reached_at(
+        &self,
+        time: f64,
+        window: I,
+        exact_root: Option<&crate::exact_source::RootTime>,
+        work: Option<&crate::transition_source_plan::Work>,
+    ) -> Result<bool, Error> {
+        if let Some(w) = work {
+            w.step()?;
+        }
+        if !time.is_finite() || !window.finite() || window.lo > window.hi || window.hi > time {
+            return Err(invalid("invalid transition event-time enclosure"));
+        }
+        if let Some(root) = exact_root {
+            let outside = if let Some(w) = work {
+                root.refine_with_work(window, w)?.is_none()
+            } else {
+                root.refine(window).is_none()
+            };
+            if outside {
+                return Err(invalid("exact transition root is outside event enclosure"));
+            }
+        }
+        Ok(if let Some(edge) = self.edge.as_ref() {
+            if let Some(root) = exact_root {
+                let end = if let Some(w) = work {
+                    edge.end.history_exact_time(w)?
+                } else {
+                    edge.end.exact_time()
+                };
+                if let Some(end) = end {
+                    if let Some(w) = work {
+                        end.order_with_work(root, w)? != std::cmp::Ordering::Greater
+                    } else {
+                        end.order(root) != std::cmp::Ordering::Greater
+                    }
+                } else {
+                    edge.end.bounds.hi <= time
+                }
+            } else {
+                edge.end.bounds.hi <= time
+            }
+        } else {
+            false
+        })
+    }
+
     pub(crate) fn history_advance_time(
         &mut self,
         time: f64,
@@ -1698,28 +1748,7 @@ impl Transition {
                 self.target(deadline, target, target_bounds, exact)?;
             }
         }
-        let end_reached = if let Some(edge) = self.edge.as_ref() {
-            if let Some(root) = exact_root {
-                let end = if let Some(w) = work {
-                    edge.end.history_exact_time(w)?
-                } else {
-                    edge.end.exact_time()
-                };
-                if let Some(end) = end {
-                    if let Some(w) = work {
-                        end.order_with_work(root, w)? != std::cmp::Ordering::Greater
-                    } else {
-                        end.order(root) != std::cmp::Ordering::Greater
-                    }
-                } else {
-                    edge.end.bounds.hi <= time
-                }
-            } else {
-                edge.end.bounds.hi <= time
-            }
-        } else {
-            false
-        };
+        let end_reached = self.end_reached_at(time, time_bounds, exact_root, work)?;
         if end_reached {
             if work.is_some() {
                 crate::diagnostics::counter("history_held_edge_settles", 1);

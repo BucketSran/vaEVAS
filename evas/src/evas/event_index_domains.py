@@ -20,6 +20,7 @@ from typing import Callable, Mapping
 
 from .syntax import Assignment, Conditional, Display, Loop
 from . import integer_bits, integer_arithmetic
+from .condition_domains import compact_condition, compact_domains
 
 SIGNED32_MIN, SIGNED32_MAX = -2147483648, 2147483647
 #: Conservative domain of a successfully stored integer state.
@@ -39,11 +40,12 @@ def hull(a, b):
 
 def clamp(interval):
     low, high = interval
-    return (max(low, SIGNED32_MIN), min(high, SIGNED32_MAX))
+    low, high = max(low, SIGNED32_MIN), min(high, SIGNED32_MAX)
+    return BOTTOM if low > high else (low, high)
 
 
 def within(interval, low, high):
-    return interval != BOTTOM and low <= interval[0] and interval[1] <= high
+    return interval[0] <= interval[1] and low <= interval[0] and interval[1] <= high
 
 
 @dataclass(frozen=True)
@@ -142,6 +144,11 @@ def evaluate(expr, env, parameters, arrays, on_read=None):
     if expr.op == 'checked':
         return evaluate(expr.args[0], env, parameters, arrays, on_read)
     args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]
+    # Visit every source operand above, including in unreachable branches.
+    # Empty flow domains absorb arithmetic, not its source audit obligations.
+    _charge(parameters, len(args))
+    if any(arg is not None and arg[0] > arg[1] for arg in args):
+        return BOTTOM
     if expr.op == 'floor':
         transfer = getattr(parameters, 'real_floor_bounds', None)
         return transfer(expr) if transfer is not None else None
@@ -191,7 +198,7 @@ def evaluate(expr, env, parameters, arrays, on_read=None):
     return None
 
 
-def refine(relation, left, right, env, parameters, arrays):
+def refine(relation, left, right, env, parameters, arrays, *, on_read=None):
     """Narrow integer states against exact integer constants.
 
     First version keeps only the fully proven rule: one bare integer state
@@ -199,6 +206,18 @@ def refine(relation, left, right, env, parameters, arrays):
     conditions keep their entry domains; both branches and strict boundaries
     are covered, and an impossible branch becomes BOTTOM.
     """
+    if compact_condition(relation, left, right):
+        _charge(parameters, 10)  # two forwarding callbacks and references
+        return compact_domains(relation, left, right, env,
+            refine=lambda op,a,b,current: refine(op,a,b,current,parameters,arrays,on_read=on_read),
+            hull=hull, work=lambda count: _charge(parameters,count),
+            plan_cache=getattr(getattr(parameters, 'integer_proof_counter', None), 'condition_plans', None))
+    if on_read is not None:
+        _charge(parameters, 4)
+        def read(expr):
+            on_read(expr, env)
+        evaluate(left, env, parameters, arrays, read)
+        evaluate(right, env, parameters, arrays, read)
     yes, no = _copy_env(env, parameters), _copy_env(env, parameters)
 
     def interval_of(expr):
@@ -220,7 +239,8 @@ def refine(relation, left, right, env, parameters, arrays):
             arms = (max(low, threshold + 1), high), (low, min(high, threshold))
         else:
             arms = (max(low, threshold), high), (low, min(high, threshold - 1))
-        yes[name], no[name] = arms
+        yes[name], no[name] = (BOTTOM if low > high else (low, high)
+                               for low, high in arms)
 
     swapped = {'<': '>', '<=': '>=', '>': '<', '>=': '<='}
     if left.op == 'parameter' and str(left.value) in env:
@@ -287,13 +307,13 @@ def flow(statements, env, *, arrays, parameters, on_use=None, on_state=None, inv
                         current[name] = TOP
                 execute(statement.body, _copy_env(current, parameters))
             elif isinstance(statement, Conditional):
-                def branch_reads(expr, env=current):
-                    if on_use is not None:
-                        on_use('read', expr, env)
-                evaluate(statement.left, current, parameters, arrays, branch_reads)
-                evaluate(statement.right, current, parameters, arrays, branch_reads)
+                reads = None
+                if on_use is not None:
+                    _charge(parameters, 4)
+                    def reads(expr, narrowed):
+                        on_use('read', expr, narrowed)
                 yes, no = refine(statement.relation, statement.left, statement.right,
-                                 current, parameters, arrays)
+                                 current, parameters, arrays,on_read=reads)
                 then_exit = execute(statement.then_body, yes)
                 else_exit = execute(statement.else_body, no)
                 joined = _copy_env(current, parameters)
@@ -403,33 +423,42 @@ def entry_domains(event_bodies, initial_bounds, *, arrays, parameters,
     return domains, widened
 
 
-def use_site_facts(event_bodies, entry, *, arrays, parameters, location_of, partitioned=None, reachable=None):
+def use_site_facts(event_bodies, entry, *, arrays, parameters, location_of, partitioned=None, reachable=None, on_state=None):
     """Walk every event body once and collect FlowFacts per dynamic use site.
 
     Keyed by `id()` of the residual index expression (writes: the statement's
     index expression). The returned pair list keeps the source nodes alive so
     ids stay valid while the compiler lowers the same tree.
     """
+    _charge(parameters, 2)
     facts = {}
     holder = []
 
     def index_states(expr):
+        _charge(parameters, 3)
         states = []
-
-        def visit(item):
+        pending = [expr]
+        while pending:
+            _charge(parameters)
+            item = pending.pop()
+            _charge(parameters, 2)
             if item.op == 'parameter' and str(item.value) in entry:
+                _charge(parameters)
                 states.append(str(item.value))
-            for arg in item.args:
-                visit(arg)
-
-        visit(expr)
+            _charge(parameters, 1 + len(item.args))
+            pending.extend(reversed(item.args))
+        _charge(parameters, 1 + len(states))
         return tuple(states)
 
     def record(access, key, site, states_expr, array, env, index):
+        _charge(parameters, 2)
         previous = facts.get(id(key))
         if previous is not None:
+            _charge(parameters, 1 + 3 * len(env))
             env = {name: hull(value, previous[1].entry[name]) for name, value in env.items()}
             index = hull(TOP if index is None else index, previous[1].index)
+        states = index_states(states_expr)
+        _charge(parameters, 6 + 2 * len(env))
         facts[id(key)] = (key, FlowFacts(
             entry=dict(env),
             exit=dict(env),
@@ -438,8 +467,8 @@ def use_site_facts(event_bodies, entry, *, arrays, parameters, location_of, part
                 array=array,
                 access=access,
                 location=location_of(site.token),
-                states=index_states(states_expr),
-                constant_inputs=not index_states(states_expr),
+                states=states,
+                constant_inputs=not states,
             )))
 
     def on_use(access, node, env, index=None):
@@ -453,20 +482,26 @@ def use_site_facts(event_bodies, entry, *, arrays, parameters, location_of, part
                    evaluate(node.args[0], env, parameters, arrays))
 
     for body in event_bodies:
-        flow(body, entry, arrays=arrays, parameters=parameters, on_use=on_use)
+        _charge(parameters)
+        flow(body, entry, arrays=arrays, parameters=parameters, on_use=on_use, on_state=on_state)
     if partitioned is not None:
         # The original-tree audit still checks unreachable syntax. Retain those
         # sites explicitly, using BOTTOM only after the closed invariant proves
         # that no path reaches the site, rather than borrowing a nearby proof.
         from dataclasses import replace
         original = facts
+        _charge(parameters)
         facts = {}
         paths, execute = partitioned
         for body in event_bodies:
+            _charge(parameters)
             execute(body, paths, on_use, reachable)
         for identity, (node, fact) in original.items():
+            _charge(parameters, 2)
             if identity not in facts:
+                _charge(parameters, 2)
                 facts[identity] = (node, replace(fact, index=BOTTOM))
+    _charge(parameters, 1 + 2 * len(facts))
     holder.extend(node for node, _ in facts.values())
     return facts, holder
 
@@ -481,21 +516,39 @@ def boolean_partitions(event_bodies, initial_bounds, *, arrays, parameters, stat
     are selected, so the finite key space has at most 64 entries.
     """
     def contains_loop(body):
-        return any(isinstance(item, Loop) or isinstance(item, Conditional) and
-                   (contains_loop(item.then_body) or contains_loop(item.else_body)) for item in body)
-    if any(contains_loop(body) for body in event_bodies):
-        return None
+        for item in body:
+            _charge(parameters)
+            if isinstance(item, Loop):
+                return True
+            if isinstance(item, Conditional) and (contains_loop(item.then_body) or contains_loop(item.else_body)):
+                return True
+        return False
+    for body in event_bodies:
+        _charge(parameters)
+        if contains_loop(body):
+            return None
+    _charge(parameters)
     writers = {}
     def collect(body):
         for item in body:
+            _charge(parameters)
             if isinstance(item, Conditional):
                 collect(item.then_body)
                 collect(item.else_body)
             elif isinstance(item, Assignment) and item.index is None:
-                writers.setdefault(item.name, []).append(item.rhs)
+                _charge(parameters, 2)
+                old = writers.get(item.name)
+                if old is None:
+                    _charge(parameters, 2)
+                    old = []
+                    writers[item.name] = old
+                _charge(parameters)
+                old.append(item.rhs)
     for body in event_bodies:
+        _charge(parameters)
         collect(body)
     def boolean_value(expr):
+        _charge(parameters)
         if expr.op in ('<','<=','>','>=','==','!=','&&','||','unary!'):
             return True
         if expr.op == 'ternary':
@@ -504,66 +557,110 @@ def boolean_partitions(event_bodies, initial_bounds, *, arrays, parameters, stat
             return boolean_value(expr.args[0])
         value = evaluate(expr, {}, parameters, arrays)
         return value is not None and within(value, 0, 1)
-    keys = tuple(name for name in states if name in writers
-                 and within(initial_bounds.get(name, TOP), 0, 1)
-                 and all(boolean_value(rhs) for rhs in writers[name]))[:6]
+    _charge(parameters)
+    selected = []
+    for name in states:
+        _charge(parameters, 2)
+        if name in writers and within(initial_bounds.get(name, TOP), 0, 1) and all(boolean_value(rhs) for rhs in writers[name]):
+            _charge(parameters)
+            selected.append(name)
+    _charge(parameters, 2 + min(len(selected), 6))
+    keys = tuple(selected[:6])
     if not keys:
         return None
 
     def split(env):
+        _charge(parameters, 2)
         result = [env]
         for name in keys:
-            result = [{**path, name: (value, value)} for path in result
-                      for value in (0,1) if path[name][0] <= value <= path[name][1]]
+            _charge(parameters)
+            outgoing = []
+            for path in result:
+                for value in (0, 1):
+                    _charge(parameters)
+                    if path[name][0] <= value <= path[name][1]:
+                        _charge(parameters, 2 + len(path))
+                        outgoing.append({**path, name: (value, value)})
+            result = outgoing
         return result
 
     def merge(paths):
+        _charge(parameters)
         result = {}
         for env in paths:
+            _charge(parameters, 3 + len(keys))
             key = tuple(env[name][0] for name in keys)
             old = result.get(key)
-            result[key] = env if old is None else {name: hull(old[name], env[name]) for name in old}
+            _charge(parameters)
+            if old is None:
+                result[key] = env
+            else:
+                _charge(parameters, 1 + 3 * len(old))
+                result[key] = {name: hull(old[name], env[name]) for name in old}
         return result
 
     def execute(body, paths, on_use=None, reachable=None):
         for item in body:
+            _charge(parameters)
             if paths and reachable is not None:
+                _charge(parameters)
                 reachable.add(id(item))
+            _charge(parameters)
             outgoing = []
             for env in paths:
+                _charge(parameters)
                 if isinstance(item, Conditional):
-                    # Preserve callbacks for predicate reads before splitting.
-                    def reads(expr):
-                        if on_use is not None:
-                            on_use('read', expr, env)
-                    evaluate(item.left, env, parameters, arrays, reads)
-                    evaluate(item.right, env, parameters, arrays, reads)
-                    yes, no = refine(item.relation, item.left, item.right, env, parameters, arrays)
+                    reads = None
+                    if on_use is not None:
+                        _charge(parameters, 4)
+                        def reads(expr, narrowed):
+                            on_use('read', expr, narrowed)
+                    yes, no = refine(item.relation, item.left, item.right, env, parameters, arrays,on_read=reads)
                     for branch, narrowed in ((item.then_body, yes), (item.else_body, no)):
-                        if all(low <= high for low, high in narrowed.values()):
-                            outgoing.extend(execute(branch, [narrowed], on_use, reachable))
+                        valid = True
+                        for low, high in narrowed.values():
+                            _charge(parameters)
+                            if low > high:
+                                valid = False
+                                break
+                        if valid:
+                            _charge(parameters, 2)
+                            new = execute(branch, [narrowed], on_use, reachable)
+                            _charge(parameters, 1 + len(new))
+                            outgoing.extend(new)
                 else:
-                    outgoing.extend(split(flow((item,), env, arrays=arrays, parameters=parameters,
-                                               on_use=on_use)))
-            paths = list(merge(outgoing).values())
+                    new = split(flow((item,), env, arrays=arrays, parameters=parameters, on_use=on_use))
+                    _charge(parameters, 1 + len(new))
+                    outgoing.extend(new)
+            merged = merge(outgoing)
+            _charge(parameters, 1 + len(merged))
+            paths = list(merged.values())
         return paths
 
+    _charge(parameters, 1 + len(states))
     initial = {name: initial_bounds.get(name, TOP) for name in states}
     invariant = merge(split(initial))
     for iteration in range(passes + 1):
+        _charge(parameters, 1 + len(invariant))
         outgoing = list(invariant.values())
         for body in event_bodies:
-            outgoing.extend(execute(body, list(invariant.values())))
+            _charge(parameters, 1 + len(invariant))
+            new = execute(body, list(invariant.values()))
+            _charge(parameters, 1 + len(new))
+            outgoing.extend(new)
         nxt = merge(outgoing)
+        _charge(parameters, 1 + len(nxt) * (len(states) + 1))
         if nxt == invariant:
+            _charge(parameters, 2 + len(invariant))
             return list(invariant.values()), execute
         if iteration == passes - 1:
             for key, env in nxt.items():
+                _charge(parameters, 2)
                 old = invariant.get(key)
                 if old is not None:
+                    _charge(parameters, 1 + 3 * len(env))
                     nxt[key] = {name: (SIGNED32_MIN if env[name][0] < old[name][0] else env[name][0],
                                        SIGNED32_MAX if env[name][1] > old[name][1] else env[name][1])
                                 for name in env}
         invariant = nxt
-    # Failed post-fixpoint: callers retain the unpartitioned conservative facts.
     return None

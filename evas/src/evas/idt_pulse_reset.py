@@ -10,7 +10,12 @@ integral restarts from c at every such instant.
 Ordinary evaluation reads the ordinary current alias (0) and the event value
 lives only in the event state slot, so the plain lowering loses the instants.
 A level reset cannot express a zero-length assert. The admitted slice is lowered
-with existing certified IR only:
+with existing certified IR only. IR33 keeps one original idt and reset slot;
+the retained procedure executes the ordinary clear and selected event gates,
+and the runtime captures reset at each call site before ordinary release.
+No event body or hidden parity state is added on that route.
+
+The legacy route without a retained procedure uses this rewrite:
 
 * a hidden integer parity ``p`` (initial 0) is toggled at the end of each
   pulsing event body when the assert value at the call site is nonzero; a body
@@ -113,6 +118,8 @@ def plan(compiler, expr, resolve):
     model, call, argument = compiler.model, expr.token, expr.args[2]
     if not model.events:
         return None  # No event-instant value can differ; no source scan is needed.
+    procedure = getattr(compiler, 'procedure_builder', None)
+    before = procedure.before if procedure is not None else _before
     # Protective scans which ultimately refuse or decline rewriting still use
     # the same sticky request owner as emission and expanded transport.
     work = compiler.compilation.native_audit.target_view(expr)
@@ -133,7 +140,7 @@ def plan(compiler, expr, resolve):
         return list(_writers(model.analog, name, work))
 
     def maybe_before_call(event):
-        order = _before(event.token, call)
+        order = before(event.token, call)
         return order is None or order
 
     # Every variable whose value can reach the assert through ordinary writes.
@@ -171,9 +178,9 @@ def plan(compiler, expr, resolve):
                 work(event, 'idt_pulse_writer_record', 3)
                 pulsing.append((index, event))
             continue
-        written_first = _before(single.token, event.token)
-        before_call = _before(event.token, call)
-        written_after = _before(call, single.token)
+        written_first = before(single.token, event.token)
+        before_call = before(event.token, call)
+        written_after = before(call, single.token)
         if None in (written_first, before_call, written_after):
             work(event, 'idt_pulse_writer_record', 3)
             pulsing.append((index, event))
@@ -188,19 +195,26 @@ def plan(compiler, expr, resolve):
     if (model.variables[direct] != 'integer' or direct not in compiler.state_ids
             or direct not in compiler.ordinary_alias_variables):
         _fail(compiler, expr, f"{direct!r} set by an event must be an integer cleared by an ordinary assignment")
-    order = _before(single.token, call)
+    order = before(single.token, call)
     if order is None:
         _fail(compiler, expr, f"{direct!r} ordinary assignment and idt call order is not provable")
     if not order:
         _fail(compiler, expr, f"{direct!r} must be assigned before the idt call")
     for _, event in pulsing:
         work(event, 'idt_pulse_order', 2)
-        if not _before(single.token, event.token) or not _before(event.token, call):
+        if not before(single.token, event.token) or not before(event.token, call):
             _fail(compiler, expr, f"{direct!r} event and ordinary assignment order is not provable")
         work(event, 'idt_pulse_trigger_visit', len(event.triggers))
         if any(trigger.kind not in ('cross', 'timer') for trigger in event.triggers):
             _fail(compiler, expr, f"{direct!r} set at final_step or another unsupported event instant")
     ordinary = lower(argument, resolve, {}, model.source, preserve_structure=True)
+    if procedure is not None and isinstance(ordinary, StateRef):
+        # The process captures the clear into candidate state. Reuse its
+        # lowered constant RHS without removing that executable assignment.
+        work(expr, 'idt_pulse_captured_clear', 4)
+        actions = procedure.actions.get(single.token, ())
+        if len(actions) == 1 and isinstance(actions[0], Assignment) and actions[0].state == ordinary.state:
+            ordinary = actions[0].rhs
     if not isinstance(ordinary, Affine) or ordinary.terms:
         _fail(compiler, expr, f"{direct!r} ordinary value must be an instance constant when an event sets it")
     if ordinary.constant != 0:
@@ -211,7 +225,7 @@ def plan(compiler, expr, resolve):
 
 
 def emit(compiler, plan, expr, value, ic, origin):
-    """Append the parity state, two level-reset idts and the event toggles.
+    """Use source-position reset capture for IR33; retain the legacy rewrite.
 
     Operator identity is the call site. A keeps the idt token; B, the
     complementary history, is identified by the assert argument token, which no
@@ -233,6 +247,14 @@ def emit(compiler, plan, expr, value, ic, origin):
             raise CompileError(f"{compiler.model.source}:{token.line}:{token.column}: idt assert pulse lost its "
                                "event identity", code='unsupported_idt_pulse_reset',
                                token=token, instance=compiler.instance.name)
+    if getattr(compiler, 'procedure_builder', None) is not None:
+        # The retained process executes ordinary clear, selected gates, and
+        # this call site in source order. Runtime captures the original assert
+        # here and releases it after the no-gate ordinary clear at this same
+        # physical time. Parity would lose two pulses by observing final state.
+        index = len(compilation.operators)
+        compilation.operators.append(make(Idt, value, ic, origin, make(StateRef, plan.slot)))
+        return make(OperatorRef, index)
     slot = compilation.states[plan.slot]
     parity = len(compilation.states)
     compilation.states.append(make(State, compiler.instance.name,

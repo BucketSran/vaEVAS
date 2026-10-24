@@ -18,6 +18,22 @@ MAX_IR_DEPTH = 96
 MAX_IR_ITEMS = 100_000
 
 
+def _program_validation_marker(value):
+    # This is a conservative index, not a semantic validation. It is computed
+    # during the existing complete shape walk, including forged new op tags.
+    # Owner-sensitive old references/origins must also reach the validator.
+    if type(value).__name__ in ("RealBinary", "RealBoundary", "RealLocal",
+            "RealBinding", "RealBind", "EventGate", "ContributionCapture", "StepBoundCapture",
+            "ProcedureConditional", "ProcedureLoop", "ProcedureStep",
+            "AnalogProcedure", "Origin", "StateRef", "IntegerState", "Assignment"):
+        return True
+    new_ops = ("real_binary", "real_boundary", "real_local", "real_call", "unsupported_system_call")
+    new_kinds = ("real_bind", "event_gate", "contribution_capture", "step_bound_capture", "procedure_if", "procedure_loop")
+    if isinstance(value, dict):
+        return value.get("op") in new_ops or value.get("kind") in new_kinds
+    return getattr(value, "op", None) in new_ops or getattr(value, "kind", None) in new_kinds
+
+
 def check_expression(expression, source):
     pending = [(expression, 1)]
     while pending:
@@ -104,10 +120,11 @@ def _check_ir_cached(value,origin=None,*,work,cache):
         if children is None:
             if ident in memo: continue
             if not is_dataclass(item) and not isinstance(item,(tuple,list,dict)):
-                memo[ident]=(0,1,True);continue
+                atom = type(item) in (str, int, float, bool, type(None))
+                memo[ident]=(0,1,atom,not atom or _program_validation_marker(item));continue
             work('ir_cache_lookup',1)
             cached=shared.get(ident)
-            if cached is not None:
+            if cached is not None and len(cached[1]) == 4 and len(cached) == 3:
                 assert cached[0] is item
                 memo[ident]=cached[1];continue
             if is_dataclass(item):
@@ -120,24 +137,35 @@ def _check_ir_cached(value,origin=None,*,work,cache):
                 children=tuple(getattr(item,f.name) for f in metadata)
             else:
                 work('ir_fields',len(item))
+                metadata=None
                 children=tuple(item.values()) if isinstance(item,dict) else item
             if ident in active: fail('cyclic IR exceeds the tree serialization limit','compile_error')
-            active.add(ident);pending.append((item,children));pending.extend((c,None) for c in reversed(children));continue
+            active.add(ident);pending.append((item,(children,metadata)));pending.extend((c,None) for c in reversed(children));continue
+        children,metadata=children
         work('ir_cache_guard',1)
         immutable=(isinstance(item,tuple) or is_dataclass(item) and item.__dataclass_params__.frozen)
+        needs_validation = _program_validation_marker(item)
+        frontier = []
         # Combine the new transitive guard with the existing size/depth scan.
         # No second walk or child copy is created.
         depth,size=1,1
-        for child in children:
-            child_depth,child_size,child_immutable=memo[id(child)]
+        for position, child in enumerate(children):
+            child_depth,child_size,child_immutable,child_validation=memo[id(child)]
             depth=max(depth,1+child_depth);size+=child_size
             immutable &= child_immutable
+            needs_validation |= child_validation
+            if child_validation:
+                # The original shape loop already reads this child and its
+                # immutable summary. Record only semantically relevant edges;
+                # validation need not reread unrelated fields/primitive leaves.
+                work('ir_validation_edge', 1)
+                frontier.append((metadata[position].name if metadata is not None else None, child))
         if depth>MAX_IR_DEPTH: fail('generated IR depth limit (96) exceeded')
         if size>MAX_IR_ITEMS: fail('expanded IR size limit (100000 values/containers) exceeded')
-        memo[ident]=(depth,size,immutable);active.remove(ident)
+        memo[ident]=(depth,size,immutable,needs_validation);active.remove(ident)
         if immutable:
             work('ir_cache_insert',2)
             work('ir_cache_keepalive',1)
-            shared[ident]=(item,memo[ident])
+            shared[ident]=(item,memo[ident],tuple(frontier))
     work('ir_cache_result',2)
     return memo[id(value)][:2]

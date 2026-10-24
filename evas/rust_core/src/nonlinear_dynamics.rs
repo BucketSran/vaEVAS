@@ -6,6 +6,9 @@
 use super::*;
 use crate::ir::Tolerances;
 
+#[path = "nonlinear_rounding.rs"]
+mod rounding;
+use rounding::RoundedField;
 const FIRST_EXPLICIT_ORDER: usize = 6;
 const ORDER: usize = 12;
 const MAX_ORDER: usize = 24;
@@ -227,8 +230,10 @@ impl<'a> GradientJets<'a> {
 
 pub(super) fn validate(expr: &Expression, program: &Program, owner: &str) -> Result<(), Error> {
     match expr {
+        Expression::RealBoundary { value, .. } => validate(value, program, owner),
         Expression::Add { left, right }
         | Expression::Multiply { left, right }
+        | Expression::RealBinary { left, right, .. }
         | Expression::Divide { left, right } => {
             validate(left, program, owner)?;
             validate(right, program, owner)
@@ -573,6 +578,7 @@ struct DenseStep {
     end: f64,
     coefficients: Vec<Jet>,
     remainder: Vec<I>,
+    rounding_defect: Option<Arc<Vec<I>>>,
     centered: Option<CenteredPolynomial>,
 }
 
@@ -672,7 +678,15 @@ impl DenseStep {
             .zip(&self.remainder)
             .enumerate()
             .map(|(i, (value, &r))| {
-                let ordinary = value + r * h13;
+                let ordinary = value
+                    + r * h13
+                    + self
+                        .rounding_defect
+                        .as_deref()
+                        .and_then(|v| v.get(i))
+                        .copied()
+                        .unwrap_or(I::ZERO)
+                        * h;
                 let Some(centered) = &centered else {
                     return ordinary;
                 };
@@ -706,7 +720,15 @@ impl DenseStep {
                         value.error = value.error + horner(derivative, h) * offset;
                     }
                     if tail {
-                        value.error = value.error + self.remainder[i] * power;
+                        value.error = value.error
+                            + self.remainder[i] * power
+                            + self
+                                .rounding_defect
+                                .as_deref()
+                                .and_then(|v| v.get(i))
+                                .copied()
+                                .unwrap_or(I::ZERO)
+                                * h;
                     }
                     value
                 })
@@ -749,13 +771,17 @@ use root_window::{HistoryStep, StepHistory};
 struct PhysicalEventSeed {
     window: I,
     state_after_map: Vec<I>,
+    // Mapping may precede restart while procedure reset captures are installed.
+    // Only the candidate that completes this bridge may mark it finished.
+    representative_pending: bool,
 }
 
 #[derive(Clone)]
 pub(crate) struct NonlinearContinuous {
     pub(super) context: Arc<Context>,
     parameters: Vec<I>,
-    functions: Vec<Polynomial>,
+    functions: Arc<Vec<Polynomial>>,
+    rounding_fields: Option<Arc<Vec<Option<Arc<RoundedField>>>>>,
     step_bounds: Vec<(Polynomial, Polynomial)>,
     math_outputs: Vec<(usize, Polynomial)>,
     modes: Vec<(f64, f64, Arc<Self>)>,
@@ -884,7 +910,7 @@ impl NonlinearContinuous {
         restart: Option<Vec<I>>,
         tolerances: &Tolerances,
     ) -> Result<Self, Error> {
-        if selection::needed(&context.program) {
+        if context.source_history.is_some() || selection::needed(&context.program) {
             let stop = context.trajectory.config.stop;
             let parts = selection::nonlinear_parts(&context, &parameters, start, stop)?;
             let probe = match parts.first() {
@@ -904,7 +930,13 @@ impl NonlinearContinuous {
             result.event_dependent = true;
             return Ok(result);
         }
-        let program = &context.program;
+        let history_program =
+            if !context.program.procedures.is_empty() && !context.program.step_bounds.is_empty() {
+                Some(selection::history_program(&context, &parameters)?)
+            } else {
+                None
+            };
+        let program = history_program.as_ref().unwrap_or(context.program.as_ref());
         let driven = driven_node_indices(program, &context.driven)?;
         let mut sources = vec![None; program.nodes.len()];
         for (i, &node) in driven.iter().enumerate() {
@@ -912,7 +944,8 @@ impl NonlinearContinuous {
         }
         let mut operators = Vec::new();
         let mut state_count = 0;
-        let mut event_dependent = false;
+        let mut event_dependent =
+            !context.program.procedures.is_empty() && !context.program.step_bounds.is_empty();
         for (i, spec) in program.operators.iter().enumerate() {
             if context.detached_timed && matches!(spec, OperatorSpec::Transition { .. }) {
                 continue;
@@ -951,7 +984,7 @@ impl NonlinearContinuous {
                                 "nonlinear integral reset must depend on event state and constants"));
                         }
                         event_dependent = true;
-                        crate::operators::ResetExpression::new(reset.clone()).active(&parameters)?
+                        match context.reset_captures.get(i).copied().flatten(){Some(value)=>crate::operators::reset_active(value)?,None=>crate::operators::ResetExpression::new(reset.clone()).active(&parameters)?}
                     } else { false };
                     let state = state_count;
                     state_count += 1;
@@ -1057,11 +1090,33 @@ impl NonlinearContinuous {
             accuracy_rows.extend(values.iter().cloned());
         }
         let mut functions = vec![Polynomial::Linear(vec![I::ZERO; system.width]); state_count];
+        let mut rounding_fields: Option<Vec<Option<Arc<RoundedField>>>> = None;
         for op in &operators {
             match &program.operators[op.operator] {
                 OperatorSpec::Idt { input, .. } if !op.held_reset => {
-                    functions[op.states[0]] =
-                        Polynomial::compile(input, program, &system, &mapping)?;
+                    if let Some(w) = context
+                        .trajectory
+                        .procedure_work()
+                        .filter(|_| !program.procedures.is_empty())
+                    {
+                        if crate::history_input::required_frame(input, w)? {
+                            let field =
+                                RoundedField::compile(input, program, &system, &mapping, w)?;
+                            functions[op.states[0]] = field.proxy(w)?;
+                            w.debit(2, 64)?;
+                            if rounding_fields.is_none() {
+                                w.debit(2, (state_count * 32 + 128) as u64)?;
+                                rounding_fields = Some(vec![None; state_count]);
+                            }
+                            rounding_fields.as_mut().unwrap()[op.states[0]] = Some(Arc::new(field));
+                        } else {
+                            functions[op.states[0]] =
+                                Polynomial::compile(input, program, &system, &mapping)?;
+                        }
+                    } else {
+                        functions[op.states[0]] =
+                            Polynomial::compile(input, program, &system, &mapping)?;
+                    }
                 }
                 OperatorSpec::LaplaceNd { input, .. } => {
                     let input = Polynomial::compile(input, program, &system, &mapping)?;
@@ -1084,6 +1139,12 @@ impl NonlinearContinuous {
                 }
                 _ => {}
             }
+        }
+        if rounding_fields.is_some()
+            && (context.trajectory.procedure_work().is_none()
+                || !functions.iter().all(|f| f.source_only(state_count)))
+        {
+            return Err(Error::new("unsupported_history_input","RN continuous forcing currently requires source-driven fields; rounded feedback needs a separate existence and propagation contract"));
         }
         let math_outputs = program
             .operators
@@ -1180,10 +1241,18 @@ impl NonlinearContinuous {
                 initial[op.states[0]] = I::point(*ic);
             }
         }
+        if rounding_fields.is_some() {
+            context
+                .trajectory
+                .procedure_work()
+                .expect("RN owner")
+                .debit(2, 64)?;
+        }
         Ok(Self {
             context,
             parameters,
-            functions,
+            functions: Arc::new(functions),
+            rounding_fields: rounding_fields.map(Arc::new),
             step_bounds,
             math_outputs,
             modes: vec![],
@@ -1200,6 +1269,47 @@ impl NonlinearContinuous {
         })
     }
 
+    fn rounding_defects(&self, variables: &[Jet]) -> Result<Option<Arc<Vec<I>>>, Error> {
+        let Some(fields) = &self.rounding_fields else {
+            return Ok(None);
+        };
+        let w =
+            self.context.trajectory.procedure_work().ok_or_else(|| {
+                Error::new("invalid_ir", "RN field lost original execution owner")
+            })?;
+        w.debit(2, (self.functions.len() * 32 + 128) as u64)?;
+        let mut result = vec![I::ZERO; self.functions.len()];
+        for (i, field) in fields.iter().enumerate() {
+            if let Some(field) = field {
+                result[i] = field.enclosure(variables, w)?.1;
+            }
+        }
+        Ok(Some(Arc::new(result)))
+    }
+    fn check_rounding_work(&self) -> Result<(), Error> {
+        if self.rounding_fields.is_some() {
+            self.context
+                .trajectory
+                .procedure_work()
+                .ok_or_else(|| Error::new("invalid_ir", "RN field lost original execution owner"))?
+                .debit(2, 0)?;
+        }
+        Ok(())
+    }
+    fn actual_derivatives(&self, variables: &[Jet], slopes: &[I]) -> Result<Vec<Jet>, Error> {
+        let mut values = self.derivative_jets(variables, slopes, 0).ok_or_else(|| {
+            Error::new(
+                "waveform_accuracy",
+                "continuous field has no finite velocity",
+            )
+        })?;
+        if let Some(defects) = self.rounding_defects(variables)? {
+            for (row, &defect) in values.iter_mut().zip(defects.iter()) {
+                row[0] = row[0] + defect;
+            }
+        }
+        Ok(values)
+    }
     fn derivative_jets(&self, variables: &[Jet], slopes: &[I], order: usize) -> Option<Vec<Jet>> {
         if let Some(velocity) = self.steps.first().and_then(|s| s.root_velocity()) {
             if self.steps.len() != 1 || order != 0 {
@@ -1412,11 +1522,18 @@ impl NonlinearContinuous {
             .map(|row| row[order + 1])
             .collect();
         let centered = self.centered_polynomial(state, source, slopes, &coefficients, centers);
+        let variables = tube
+            .iter()
+            .chain(&source_tube)
+            .map(|&v| vec![v])
+            .collect::<Vec<_>>();
+        let rounding_defect = self.rounding_defects(&variables).ok()?;
         let step = DenseStep {
             start,
             end,
             coefficients,
             remainder,
+            rounding_defect,
             centered,
         };
         let tail_power = (0..=order).fold(I::ONE, |v, _| v * duration);
@@ -1585,7 +1702,8 @@ impl NonlinearContinuous {
     ) -> Option<(Vec<I>, Vec<I>)> {
         let evaluate = |state: &[I]| {
             let variables: Vec<_> = state.iter().chain(source).map(|&v| vec![v]).collect();
-            self.derivative_jets(&variables, slopes, 0)
+            self.actual_derivatives(&variables, slopes)
+                .ok()
                 .map(|rows| rows.into_iter().map(|row| row[0]).collect::<Vec<_>>())
         };
         let mut derivative = evaluate(initial)?;
@@ -1659,9 +1777,20 @@ impl NonlinearContinuous {
         horizon: f64,
         remaining_work: &mut usize,
     ) -> Result<(), Error> {
+        let result = self.propagate_with_budget_inner(horizon, remaining_work);
+        self.check_rounding_work()?;
+        result
+    }
+    fn propagate_with_budget_inner(
+        &mut self,
+        horizon: f64,
+        remaining_work: &mut usize,
+    ) -> Result<(), Error> {
         // Implicit initialization rejects physical Selects. Remaining Selects
         // are mesh requests, evaluated below from the accepted DAE coordinates.
-        if self.implicit.is_none() && selection::needed(&self.context.program) {
+        if self.implicit.is_none()
+            && (self.context.source_history.is_some() || selection::needed(&self.context.program))
+        {
             let certified = self.certified_end();
             if horizon <= certified {
                 return Ok(());
@@ -1820,7 +1949,7 @@ impl NonlinearContinuous {
             let left = coordinates(trajectory.value_bounds(a));
             let right = coordinates(trajectory.value_bounds(b));
             let tube = coordinates(trajectory.range(I { lo: a, hi: b })?.0);
-            for f in &self.functions {
+            for f in self.functions.iter() {
                 f.certify_source_denominators(self.initial.len(), &left, &right, &tube)?;
             }
             let mut start = a;
@@ -2231,18 +2360,10 @@ impl NonlinearContinuous {
         let state = self.state_bounds(time)?;
         let (source, slopes) = self.context.trajectory.range(time)?;
         let variables: Vec<_> = state.iter().chain(&source).map(|&v| vec![v]).collect();
-        let velocities = self
-            .derivative_jets(&variables, &slopes, 0)
-            .ok_or_else(|| {
-                Error::new(
-                    "waveform_accuracy",
-                    "cannot certify mathematical output derivative",
-                )
-            })?;
+        let velocities = self.actual_derivatives(&variables, &slopes)?;
         let source_velocities = slopes.clone();
         let forcing: Vec<_> = self
-            .derivative_jets(&variables, &slopes, 0)
-            .ok_or_else(|| Error::new("waveform_accuracy", "cannot certify implicit derivative"))?
+            .actual_derivatives(&variables, &slopes)?
             .into_iter()
             .map(|row| row[0])
             .chain(slopes)
@@ -2304,10 +2425,13 @@ impl NonlinearContinuous {
                 "uncertain event window crosses unproved selected flow",
             )
         };
-        if !selection::physical_needed(&self.context.program) {
-            return self
-                .picard_enclosure(initial, &self.source_bounds(window), slopes, elapsed)
-                .ok_or_else(fail);
+        if self.context.source_history.is_none()
+            && !selection::physical_needed(&self.context.program)
+        {
+            let result =
+                self.picard_enclosure(initial, &self.source_bounds(window), slopes, elapsed);
+            self.check_rounding_work()?;
+            return result.ok_or_else(fail);
         }
         let parts =
             selection::nonlinear_parts(&self.context, &self.parameters, window.lo, window.hi)?;
@@ -2338,7 +2462,16 @@ impl NonlinearContinuous {
                         return Err(fail());
                     }
                 }
-                if fields.iter().any(|f| f.functions == next.functions) {
+                if fields
+                    .iter()
+                    .any(|f| match (&f.rounding_fields, &next.rounding_fields) {
+                        (None, None) => f.functions == next.functions,
+                        (Some(a), Some(b)) => {
+                            Arc::ptr_eq(a, b) && Arc::ptr_eq(&f.functions, &next.functions)
+                        }
+                        _ => false,
+                    })
+                {
                     continue;
                 }
                 fields.push(next);
@@ -2438,24 +2571,23 @@ impl NonlinearContinuous {
         horizon: f64,
         context: Arc<Context>,
     ) -> Result<Self, Error> {
-        let same_proofs = self.context.time_proofs == context.time_proofs;
         let mut next = self.mapped_event_with_context(time, window, parameters, context)?;
-        if same_proofs
-            && (!self.event_dependent
-                || self
-                    .context
-                    .parameters_equal(&self.parameters, parameters)?)
+        if let Some(seed) = next
+            .event_seed
+            .as_ref()
+            .filter(|seed| seed.representative_pending)
         {
-            next.propagate_until(horizon)?;
-            return Ok(next);
-        }
-        if window.lo != window.hi {
-            let elapsed = I {
-                lo: 0.0,
-                hi: (I::point(time) - I::point(window.lo)).hi,
-            };
-            let (_, image) = next.event_picard_enclosure(&next.initial, window, &[], elapsed)?;
-            next.initial = image;
+            let window = seed.window;
+            if window.lo != window.hi {
+                let elapsed = I {
+                    lo: 0.0,
+                    hi: (I::point(next.start) - I::point(window.lo)).hi,
+                };
+                let (_, image) =
+                    next.event_picard_enclosure(&next.initial, window, &[], elapsed)?;
+                next.initial = image;
+            }
+            next.event_seed.as_mut().unwrap().representative_pending = false;
         }
         next.propagate_until(horizon)?;
         Ok(next)
@@ -2478,6 +2610,7 @@ impl NonlinearContinuous {
         context: Arc<Context>,
     ) -> Result<Self, Error> {
         if self.context.time_proofs == context.time_proofs
+            && self.context.reset_captures == context.reset_captures
             && (!self.event_dependent
                 || self
                     .context
@@ -2506,6 +2639,7 @@ impl NonlinearContinuous {
         next.event_seed = Some(PhysicalEventSeed {
             window,
             state_after_map: next.initial.clone(),
+            representative_pending: true,
         });
         Ok(next)
     }
@@ -2518,7 +2652,9 @@ fn collect_structure(
     row: &mut [I],
 ) -> Result<(), Error> {
     match expr {
-        Expression::Add { left, right }
+        Expression::RealBoundary { value, .. } => collect_structure(value, program, owner, row),
+        Expression::RealBinary { left, right, .. }
+        | Expression::Add { left, right }
         | Expression::Multiply { left, right }
         | Expression::Divide { left, right } => {
             collect_structure(left, program, owner, row)?;
@@ -2581,6 +2717,45 @@ pub(super) fn contains_exp_operator(expr: &Expression, program: &Program) -> boo
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn rn_forcing_defect_survives_centered_intersection_and_accepted_offset() {
+        let epsilon = 2_f64.powi(-40);
+        let defect = I {
+            lo: -epsilon,
+            hi: epsilon,
+        };
+        let step = DenseStep {
+            start: 0.,
+            end: 0.5,
+            coefficients: vec![vec![I::ZERO, I::ZERO]],
+            remainder: vec![I::ZERO],
+            rounding_defect: Some(Arc::new(vec![defect])),
+            centered: Some(CenteredPolynomial {
+                coefficients: vec![vec![I::ZERO, I::ZERO]],
+                sensitivities: vec![vec![]],
+                offsets: vec![],
+            }),
+        };
+        let accepted = step.centered_range(I::point(0.5), true).unwrap();
+        let first = step.range(I::point(0.5))[0];
+        assert!(first.lo <= -epsilon / 2. && first.hi >= epsilon / 2.);
+        assert_eq!(step.range(I::point(0.5))[0], first);
+        let next = DenseStep {
+            start: 0.5,
+            end: 1.,
+            coefficients: vec![vec![accepted[0].range(), I::ZERO]],
+            remainder: vec![I::ZERO],
+            rounding_defect: step.rounding_defect.clone(),
+            centered: Some(CenteredPolynomial {
+                coefficients: vec![vec![I::ZERO, I::ZERO]],
+                sensitivities: vec![vec![vec![I::ONE, I::ZERO]]],
+                offsets: vec![accepted[0].error],
+            }),
+        };
+        let final_box = next.range(I::point(1.))[0];
+        assert!(final_box.lo <= -epsilon && final_box.hi >= epsilon);
+    }
 
     #[test]
     fn nonlinear_cold_root_uncertainty_and_failed_restart_preserve_history() {
@@ -2667,6 +2842,8 @@ mod tests {
                 detached_timed: false,
                 live_parameters: None,
                 time_proofs: Default::default(),
+                reset_captures: Arc::new(Vec::new()),
+                source_history: None,
                 driven: vec![],
             }),
             parameters: vec![],
@@ -2683,14 +2860,58 @@ mod tests {
             step_bounds: vec![],
             math_outputs: vec![],
             modes: vec![],
-            functions: vec![Polynomial::Multiply(
+            rounding_fields: None,
+            functions: Arc::new(vec![Polynomial::Multiply(
                 Box::new(Polynomial::Linear(vec![I::ZERO, I::point(quadratic_sign)])),
                 Box::new(Polynomial::Power(
                     Box::new(Polynomial::Linear(vec![I::ONE, I::ZERO])),
                     2,
                 )),
-            )],
+            )]),
         }
+    }
+
+    #[test]
+    fn mapped_physical_seed_bridges_once_and_failed_restart_preserves_candidate() {
+        let mut mapped = scalar(0.0);
+        mapped.functions = Arc::new(vec![Polynomial::Linear(vec![I::ZERO, I::point(4.0)])]);
+        mapped.start = 0.05;
+        let window = I {
+            lo: 0.05 - 1e-8,
+            hi: 0.05,
+        };
+        mapped.event_seed = Some(PhysicalEventSeed {
+            window,
+            state_after_map: mapped.initial.clone(),
+            representative_pending: true,
+        });
+        let before = mapped.clone();
+        let accepted = mapped.restarted(window.hi, window, &[], 0.125).unwrap();
+        assert!(mapped.same_history(&before));
+        let at_start = accepted.state_bounds(I::point(window.hi)).unwrap()[0];
+        let answer = 1.0 + 4.0 * (window.hi - window.lo);
+        assert!(at_start.lo <= 1.0 && at_start.hi >= answer);
+        assert!(!accepted.event_seed.as_ref().unwrap().representative_pending);
+        let repeated = accepted.restarted(window.hi, window, &[], 0.125).unwrap();
+        assert!(accepted.same_history(&repeated));
+        assert_eq!(
+            accepted.state_bounds(I::point(0.125)).unwrap(),
+            repeated.state_bounds(I::point(0.125)).unwrap()
+        );
+        assert_eq!(
+            accepted.event_seed.as_ref().unwrap().state_after_map,
+            vec![I::ONE]
+        );
+
+        let mut failed = mapped.clone();
+        failed.functions = scalar(1.0).functions;
+        failed.initial = vec![I::point(1e300)];
+        failed.event_seed.as_mut().unwrap().state_after_map = failed.initial.clone();
+        let failed_before = failed.clone();
+        assert!(failed.restarted(window.hi, window, &[], 0.125).is_err());
+        assert!(failed.same_history(&failed_before));
+        assert!(failed.event_seed.as_ref().unwrap().representative_pending);
+        assert!(mapped.same_history(&before));
     }
 
     #[test]
@@ -2725,6 +2946,7 @@ mod tests {
                 hi: 0.05,
             },
             state_after_map: vec![I::ONE],
+            representative_pending: false,
         });
         let before = accepted.clone();
         assert!(accepted.state_bounds(window).is_err());
@@ -2879,7 +3101,7 @@ mod tests {
     #[test]
     fn internal_step_resource_limit_is_explicit() {
         let mut candidate = scalar(-1.0);
-        candidate.functions[0] = Polynomial::Linear(vec![I::ZERO, I::ZERO]);
+        Arc::make_mut(&mut candidate.functions)[0] = Polynomial::Linear(vec![I::ZERO, I::ZERO]);
         Arc::get_mut(&mut candidate.context)
             .unwrap()
             .trajectory
@@ -3109,7 +3331,7 @@ mod tests {
         let mut flow = scalar(-1.0);
         // x'=u*x², x(0)=1 gives x=1/(1-u*t). The source box
         // remains uncertain even when the initial state is a point.
-        flow.functions[0] = Polynomial::Multiply(
+        Arc::make_mut(&mut flow.functions)[0] = Polynomial::Multiply(
             Box::new(Polynomial::Linear(vec![I::ZERO, I::ONE, I::ZERO])),
             Box::new(Polynomial::Power(
                 Box::new(Polynomial::Linear(vec![I::ONE, I::ZERO, I::ZERO])),

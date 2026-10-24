@@ -29,7 +29,7 @@ class TimerOrdering(unittest.TestCase):
         baseline = None
         for times, step in [([0, 7e-6], 7e-6),
                             ([0, 2.5e-6, 3.5e-6, 4.5e-6, 6e-6, 7e-6], 1.1e-7)]:
-            result = run_timer(clocks(), stop=7e-6, times=times, step=step)
+            result = run_timer(clocks(), stop=7e-6, times=times, step=step,initial_records=([0,0],[0,0],1))
             events = result['transient']['events']
             self.assertEqual([e['event'] for e in events], [i for _, i in expected])
             for event, (nominal, _) in zip(events, expected):
@@ -49,8 +49,8 @@ class TimerOrdering(unittest.TestCase):
         self.assertIn(first, source)
         self.assertIn(second, source)
         swapped = source.replace(first, 'SWAP').replace(second, first).replace('SWAP', second)
-        original = run_timer(source, stop=7e-6, times=[0, 7e-6])
-        reverse = run_timer(swapped, stop=7e-6, times=[0, 7e-6])
+        original = run_timer(source, stop=7e-6, times=[0, 7e-6],initial_records=([0,0],[0,0],1))
+        reverse = run_timer(swapped, stop=7e-6, times=[0, 7e-6],initial_records=([0,0],[0,0],1))
         self.assertEqual(original['transient']['states'], reverse['transient']['states'])
         self.assertEqual([(e['time'], e['event']) for e in original['transient']['events']],
                          [(e['time'], 1-e['event']) for e in reverse['transient']['events']])
@@ -62,7 +62,7 @@ class TimerOrdering(unittest.TestCase):
           @(timer(0.1,0.2,1e-6)) held=V(y,r);
           @(timer(0.1,0.1,1e-6)) n=n+1;
           V(y,r)<+n;''', 'integer n; real held;')
-        result = run_timer(source, stop=.35, times=[0, .35])
+        result = run_timer(source, stop=.35, times=[0, .35],initial_records=([0,0],[0,0],1))
         events = result['transient']['events']
         self.assertEqual(len(events), 5)
         self.assertEqual(events[-2]['time'], events[-1]['time'])
@@ -98,7 +98,7 @@ class TimerOrdering(unittest.TestCase):
           V(y,r)<+n+10.0*m;""", 'integer n,m;')
         baseline = None
         for times, step in [([0,.35],.35), ([0,.15,.25,.3,.35],.012)]:
-            result = run_timer(source, stop=.35, times=times, step=step)
+            result = run_timer(source, stop=.35, times=times, step=step,initial_records=([0,0],[0,0],1))
             events = result['transient']['events']
             self.assertEqual([e['event'] for e in events], [0,0,1,0])
             self.assertLess(events[-2]['time'], events[-1]['time'])
@@ -117,7 +117,7 @@ class TimerOrdering(unittest.TestCase):
           V(y,r)<+n+10.0*m;""", 'real q; integer n,m;')
         baseline = None
         for times, step in [([0,.35],.35), ([0,.15,.25,.3,.35],.012)]:
-            result = run_timer(source, stop=.35, times=times, step=step)
+            result = run_timer(source, stop=.35, times=times, step=step,initial_records=([0,0,0],[.1,0,0],1))
             events = result['transient']['events']
             self.assertEqual([e['event'] for e in events], [0,1,1,0,1])
             self.assertEqual(events[-2]['time'], events[-1]['time'])
@@ -130,7 +130,7 @@ class TimerOrdering(unittest.TestCase):
         source = clocks().replace('integer n,m;', 'integer n,m; electrical z;').replace(
             'V(y,r)<+n+10.0*m;', 'V(y,r)<+n+10.0*m; V(z,r)<+idt(n,0); '
             '@(cross(V(z,r)-1,1,1e-9,1e-8));')
-        result = run_timer(source, stop=7e-6, times=[0,7e-6])
+        result = run_timer(source, stop=7e-6, times=[0,7e-6],initial_records=([0,0],[0,0],1))
         self.assertEqual(result['transient']['states'][-1], [3,2])
         self.assertEqual([event['event'] for event in result['transient']['events']],
                          [0,1,0,0,1])

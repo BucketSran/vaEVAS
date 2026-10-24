@@ -7,6 +7,7 @@ import unittest
 
 from evas import KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
+from initial_record_contract import check_initial_record_batch
 
 
 
@@ -19,15 +20,18 @@ def clocks_with_history(threshold=100.0):
         V(y,r)<+n+10.0*m+100.0*h;''', 'integer n,m,h; electrical z;')
 
 
-def run_history(source, *, stop=7e-6, times=None, step=7e-6):
+def run_history(source, *, stop=7e-6, times=None, step=7e-6, initial_records=None):
     program = compile_sources({'history.va':source},[instance()])
-    return transient(program, {'u':[[0,0],[stop,stop]]},times or [0,stop],
+    result=transient(program, {'u':[[0,0],[stop,stop]]},times or [0,stop],
                      stop=stop,max_step=step,vabstol=1e-7,reltol=1e-8,kernel=KERNEL)
+    return (check_initial_record_batch(result,program,*initial_records)
+            if initial_records is not None else result)
 
 
 class TimerHistoryOrder(unittest.TestCase):
     def test_monitor_does_not_discard_certified_fixed_timer_order(self):
-        result = run_history(clocks_with_history(), stop=7e-6, times=[0,7e-6])
+        result = run_history(clocks_with_history(), stop=7e-6, times=[0,7e-6],
+                             initial_records=([0,0,0],[0,0,0],1))
         events = result['transient']['events']
         expected = sorted([(Q(2e-6)*(k+1), 0) for k in range(3)]
                           + [(Q(3e-6)*(k+1), 1) for k in range(2)])
@@ -54,7 +58,7 @@ class TimerHistoryOrder(unittest.TestCase):
         source = clocks_with_history().replace('integer n,m,h;', 'integer n,m,h,p;')
         source = source.replace('n=0; m=0; h=0;', 'n=0; m=0; h=0; p=0;')
         source = source.replace('V(y,r)<+', f'@(timer({third!r},0,1e-9)) p=p+1; V(y,r)<+')
-        result = run_history(source)
+        result = run_history(source,initial_records=([0,0,0,0],[0,0,0,0],1))
         self.assertEqual(result['transient']['states'][-1], [3,2,0,1])
         # The added timer is declared after the cross, hence event leaf 3.
         expected = sorted([(Q(2e-6)*k,0) for k in (1,2,3)]

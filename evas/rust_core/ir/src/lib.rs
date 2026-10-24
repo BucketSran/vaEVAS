@@ -1,7 +1,130 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 32;
+pub const SCHEMA_VERSION: u32 = 33;
+
+#[cfg(test)]
+mod real_procedure_transport_tests {
+    use super::*;
+    use serde_json::{json, Value};
+
+    fn request() -> Value {
+        let origin = json!({"source":"round.va","line":1,"column":1,"instance":"x"});
+        json!({
+            "program": {
+                "schema_version":33,"nodes":["0"],"contributions":[],
+                "events":[{"trigger":{"kind":"timer","start":0.5,"period":0.0,
+                    "time_tolerance":1e-12,"enabled":true},"body":[],
+                    "origin":origin,"procedure_id":0,"expanded_statement_ordinal":2}],
+                "real_bindings":[{"procedure_id":0,"name":"snap","origin":origin,"lifetime":"occurrence"}],
+                "procedures":[{"procedure_id":0,"instance":"x","body":[
+                    {"expanded_statement_ordinal":1,"action":{"kind":"real_bind","binding":0,"origin":origin,
+                        "value":{"op":"real_boundary","kind":"snapshot","origin":origin,
+                            "value":{"op":"real_binary","operation":"divide","origin":origin,
+                                "left":{"op":"affine","constant":3.0,"terms":[]},
+                                "right":{"op":"affine","constant":10.0,"terms":[]}}}}},
+                    {"expanded_statement_ordinal":2,"action":{"kind":"event_gate","event":0}},
+                    {"expanded_statement_ordinal":3,"action":{"kind":"display","format":"%g",
+                        "args":[{"op":"real_local","binding":0}],"origin":origin}}
+                ]}]
+            },"driven":[],"samples":[[]]
+        })
+    }
+
+    #[test]
+    fn procedure_transport_keeps_bind_before_gate_and_shared_body_reference() {
+        let input = request();
+        let decoded = parse_request(&input.to_string()).expect("IR33 procedure transport");
+        let encoded = serde_json::to_value(decoded).unwrap();
+        assert_eq!(
+            encoded["program"]["procedures"],
+            input["program"]["procedures"]
+        );
+        assert_eq!(
+            encoded["program"]["real_bindings"],
+            input["program"]["real_bindings"]
+        );
+        assert_eq!(encoded["program"]["events"][0]["procedure_id"], 0);
+    }
+
+    #[test]
+    fn old_ir_must_be_recompiled_before_new_real_semantics() {
+        assert_eq!(
+            check_schema_version(32).unwrap_err().kind,
+            "unsupported_ir_version"
+        );
+    }
+
+    #[test]
+    fn real_transport_rejects_an_unknown_operation() {
+        let mut input = request();
+        input["program"]["procedures"][0]["body"][0]["action"]["value"]["value"]["operation"] =
+            json!("fma");
+        let error = parse_request(&input.to_string()).unwrap_err();
+        assert_eq!(error.kind, "invalid_request");
+    }
+
+    #[test]
+    fn recursive_procedure_control_keeps_bind_and_gate_at_their_source_positions() {
+        for kind in ["procedure_if", "procedure_loop"] {
+            let mut input = request();
+            let body = input["program"]["procedures"][0]["body"].take();
+            let origin = json!({"source":"round.va","line":1,"column":1,"instance":"x"});
+            let mut action = json!({
+                "kind":kind,"relation":"gt","origin":origin,
+                "left":{"op":"affine","constant":1.0,"terms":[]},
+                "right":{"op":"affine","constant":0.0,"terms":[]}
+            });
+            if kind == "procedure_if" {
+                action["then_body"] = body;
+                action["else_body"] = json!([]);
+            } else {
+                action["initialize"] = json!([]);
+                action["body"] = body;
+                action["update"] = json!([]);
+            }
+            input["program"]["procedures"][0]["body"] =
+                json!([{"expanded_statement_ordinal":0,"action":action}]);
+            let decoded =
+                parse_request(&input.to_string()).expect("nested IR33 procedure transport");
+            let encoded = serde_json::to_value(decoded).unwrap();
+            assert_eq!(
+                encoded["program"]["procedures"],
+                input["program"]["procedures"]
+            );
+            assert_eq!(
+                encoded["program"]["events"][0]["expanded_statement_ordinal"],
+                2
+            );
+        }
+    }
+
+    #[test]
+    fn step_bound_capture_retains_the_position_of_the_program_environment() {
+        let mut input = request();
+        let origin = input["program"]["real_bindings"][0]["origin"].clone();
+        input["program"]["step_bounds"] = json!([{
+            "value":{"op":"real_local","binding":0},
+            "active":{"op":"affine","constant":1.0,"terms":[]},
+            "origin":origin
+        }]);
+        input["program"]["procedures"][0]["body"]
+            .as_array_mut()
+            .unwrap()
+            .push(json!({"expanded_statement_ordinal":4,
+                   "action":{"kind":"step_bound_capture","step_bound":0}}));
+        let decoded = parse_request(&input.to_string()).expect("IR33 bound-step source position");
+        let encoded = serde_json::to_value(decoded).unwrap();
+        assert_eq!(
+            encoded["program"]["procedures"],
+            input["program"]["procedures"]
+        );
+        assert_eq!(
+            encoded["program"]["step_bounds"],
+            input["program"]["step_bounds"]
+        );
+    }
+}
 
 pub fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -45,6 +168,10 @@ pub struct Program {
     pub operators: Vec<OperatorSpec>,
     #[serde(default)]
     pub step_bounds: Vec<StepBound>,
+    #[serde(default)]
+    pub procedures: Vec<AnalogProcedure>,
+    #[serde(default)]
+    pub real_bindings: Vec<RealBinding>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -83,6 +210,36 @@ pub enum ContributionKind {
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[serde(tag = "op", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Expression {
+    /// One pure call activation. Body ordinals have their own strict DFS
+    /// namespace under this origin, independent of the enclosing procedure.
+    RealCall {
+        origin: Origin,
+        bindings: Vec<usize>,
+        body: Vec<ProcedureStep>,
+        result: Box<Expression>,
+    },
+    /// Recognized syntax with no numeric implementation. Static checking is
+    /// unconditional; a selected execution fails before publishing any writes.
+    UnsupportedSystemCall {
+        function: String,
+        seed: usize,
+        args: Vec<Expression>,
+        origin: Origin,
+    },
+    RealBinary {
+        operation: RealOperation,
+        left: Box<Expression>,
+        right: Box<Expression>,
+        origin: Origin,
+    },
+    RealBoundary {
+        value: Box<Expression>,
+        kind: RealBoundaryKind,
+        origin: Origin,
+    },
+    RealLocal {
+        binding: usize,
+    },
     Forcing {
         value: Box<Expression>,
         origin: Origin,
@@ -159,6 +316,20 @@ pub enum Expression {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum EventMathFunction {
+    // Private numerical layout nodes. Raw transport must use the existing
+    // source-owned Math/Sin specs and cannot deserialize these entry points.
+    #[serde(skip_deserializing)]
+    InternalSin,
+    #[serde(skip_deserializing)]
+    InternalCos,
+    #[serde(skip_deserializing)]
+    InternalExp,
+    #[serde(skip_deserializing)]
+    InternalLn,
+    #[serde(skip_deserializing)]
+    InternalSqrt,
+    #[serde(skip_deserializing)]
+    InternalTanh,
     Floor,
     Sqrt,
     Abs,
@@ -464,7 +635,7 @@ pub struct State {
     pub initial: StateInitial,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub struct Assignment {
     pub state: usize,
@@ -477,9 +648,110 @@ pub struct Event {
     pub trigger: EventTrigger,
     pub body: Vec<Statement>,
     pub origin: Origin,
+    #[serde(default)]
+    pub procedure_id: Option<usize>,
+    #[serde(default)]
+    pub expanded_statement_ordinal: Option<u64>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RealOperation {
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RealBoundaryKind {
+    Store,
+    Sample,
+    Snapshot,
+    Argument,
+    Return,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RealBindingLifetime {
+    Occurrence,
+    Call,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct RealBinding {
+    pub procedure_id: usize,
+    pub name: String,
+    pub origin: Origin,
+    pub lifetime: RealBindingLifetime,
+}
+
+/// Executable source order within one elaborated analog block. Event bodies
+/// remain owned by Program.events; a gate never carries a second body copy.
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct AnalogProcedure {
+    pub procedure_id: usize,
+    pub instance: String,
+    pub body: Vec<ProcedureStep>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct ProcedureStep {
+    /// Unique within the procedure, in elaborated depth-first source order.
+    /// Runtime loop iterations reuse this source identity.
+    pub expanded_statement_ordinal: u64,
+    pub action: ProcedureAction,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(untagged)]
+pub enum ProcedureAction {
+    Statement(Statement),
+    Control(ProcedureControl),
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+pub enum ProcedureControl {
+    ProcedureIf {
+        relation: Relation,
+        left: Box<Expression>,
+        right: Box<Expression>,
+        then_body: Vec<ProcedureStep>,
+        else_body: Vec<ProcedureStep>,
+        origin: Origin,
+    },
+    ProcedureLoop {
+        initialize: Vec<ProcedureStep>,
+        relation: Relation,
+        left: Box<Expression>,
+        right: Box<Expression>,
+        body: Vec<ProcedureStep>,
+        update: Vec<ProcedureStep>,
+        origin: Origin,
+    },
+    RealBind {
+        binding: usize,
+        value: Expression,
+        origin: Origin,
+    },
+    EventGate {
+        event: usize,
+    },
+    ContributionCapture {
+        contribution: usize,
+    },
+    StepBoundCapture {
+        step_bound: usize,
+    },
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Statement {
     ArrayWrite {

@@ -97,14 +97,18 @@ fn analytic_original_allowance_natural_exhaustion_preserves_complete_frame_and_t
     assert_eq!(c.records.len(), 1);
     assert_eq!(c.event, 1);
     assert!(!c.outputs.is_empty());
-    assert!(
-        c.accepted.state_bounds[0].lo < 0.7165063509461097
-            && c.accepted.state_bounds[0].hi > 0.7165063509461096
-    );
-    assert!(
-        c.accepted.value_proofs.is_empty(),
-        "irrational sine sample must not acquire a rational value proof"
-    );
+    // Physical sine at t=1/6 is 1/2+sqrt(3)/8. Its complete mathematical
+    // image rounds to this unique binary64 at the source sample and store.
+    // A stored binary proof must not be the unrounded irrational source value.
+    let expected = 0.7165063509461097;
+    assert_eq!(c.accepted.states[0], expected);
+    assert_eq!(c.accepted.state_bounds[0], I::point(expected));
+    if let Some(proof) = c.accepted.value_proofs.get(&0) {
+        assert_eq!(
+            proof,
+            &num_rational::BigRational::from_float(expected).unwrap()
+        );
+    }
     let before = signature(&c, &calendar);
     let (cm, ct, mut clean, mut clean_calendar) = fixture();
     clean
@@ -338,11 +342,16 @@ fn analytic_sampled_transition_original_allowance_two_failed_retries_preserve_fu
     assert_eq!(c.event, 1);
     assert_eq!(c.records.len(), 1);
     assert!(!c.outputs.is_empty());
-    assert!(c.accepted.state_bounds[0].lo < c.accepted.state_bounds[0].hi);
-    assert!(
-        c.accepted.value_proofs.is_empty(),
-        "irrational sampled value remains nonpoint"
-    );
+    // The physical sine value .5+sqrt(2)/8 is irrational; its selected
+    // sample/store is the unique binary64 value independently bracketed
+    // using an integer sqrt at512bits (not the native sine representative).
+    let expected = 0.6767766952966369;
+    assert_eq!(c.accepted.states[0], expected);
+    assert_eq!(c.accepted.state_bounds[0].lo, expected);
+    assert_eq!(c.accepted.state_bounds[0].hi, expected);
+    if let Some(proof) = c.accepted.value_proofs.get(&0) {
+        assert_eq!(proof, &crate::exact_source::binary(expected).unwrap());
+    }
     // The accepted sample actually reaches the Transition, including its error.
     let values = c.accepted.operators.values(0.25).unwrap();
     let bounds = c.accepted.operators.bounds(0.25).unwrap();

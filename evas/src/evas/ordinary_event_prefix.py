@@ -1,10 +1,11 @@
 """Bind a pure-input ordinary prefix separately at each runtime event site.
 
-Only source scalar reals without initial/event/loop writers enter this path.
+Source scalar reals and closed exact signed32 integer aliases without
+initial/event/loop writers enter this path.
 The returned trees read current physical inputs; no local becomes held state.
 """
 from .errors import CompileError
-from .ir import Origin, Select
+from .ir import Affine, Origin, Select
 from .lowering import lower
 from .syntax import Assignment, Conditional, Event, Loop, OPERATOR_NAMES
 
@@ -130,7 +131,8 @@ def bind(compiler, writes):
             return None
         try:
             resolve = compiler.typed_resolve(
-                lambda name: env[name] if name in env else compiler.parameter(name))
+                lambda name: env[name] if name in env else compiler.parameter(name),
+                program_real=True)
             value = lower(expr, resolve, compiler.node_ids, compiler.model.source,
                           preserve_structure=True, decisions=compiler.initial_select,
                           validate_decision=compiler.validate_initial_operand,
@@ -157,11 +159,22 @@ def bind(compiler, writes):
                     charge(item, 'snapshot_copy', 1 + len(missing))
                     snapshots[item.token] = {name: env[name] for name in missing if name in env}
             elif isinstance(item, Assignment):
-                if (item.name in forbidden or source.variables.get(item.name) != 'real'
+                kind = source.variables.get(item.name)
+                if (item.name in forbidden or kind not in ('real','integer')
                         or item.index is not None):
                     env.pop(item.name, None)
                     continue
                 value = expression(item.rhs, env)
+                if value is not None and kind == 'integer':
+                    # Only an existing closed exact signed32 value can be an
+                    # integer alias. Its original evaluation is retained by
+                    # the procedure producer, not moved to this later read.
+                    fact = compiler.program_real_closed(value)
+                    if (fact.closed and fact.finite and fact.value.is_integer()
+                            and -2147483648 <= fact.value <= 2147483647):
+                        value = compiler.make_ir(Affine,fact.value,())
+                    else:
+                        value = None
                 if value is None:
                     env.pop(item.name, None)
                 else:
@@ -177,9 +190,9 @@ def bind(compiler, writes):
                 merged = {}
                 for name in yes.keys() & no.keys():
                     charge(item, 'merge_binding')
-                    if yes[name] is no[name]:
-                        merged[name] = yes[name]
-                    elif left is not None and right is not None and relation is not None:
+                    # Keep source condition dependencies even for shared/equal
+                    # leaves: a proved value is not a closed source program.
+                    if left is not None and right is not None and relation is not None:
                         origin = compiler.make_ir(Origin, item.token.source or source.source,
                             item.token.line, item.token.column, compiler.instance.name,
                             item.token.expansion)

@@ -802,7 +802,19 @@ pub(crate) mod tests {
         // IR32 preserves this Program shape; its new optional analytic_sources
         // field defaults to empty for this PWL request. Keep the archived IR31.
         assert_eq!(q.program.schema_version, 31);
-        assert_eq!(SCHEMA_VERSION, 32, "re-audit the fixture");
+        assert_eq!(SCHEMA_VERSION, 33, "re-audit the fixture");
+        // IR33 legacy transport: retain pre-executed numeric seeds.
+        // Do not add an initial gate or procedure to this archived input.
+        assert!(q.program.procedures.is_empty());
+        assert!(q.program.real_bindings.is_empty());
+        assert!(q.program.events.iter().all(
+            |event| event.procedure_id.is_none() && event.expanded_statement_ordinal.is_none()
+        ));
+        assert!(q
+            .program
+            .states
+            .iter()
+            .all(|state| serde_json::to_value(&state.initial).unwrap().is_number()));
         assert!(q.transient.as_ref().unwrap().analytic_sources.is_empty());
         q.program.schema_version = SCHEMA_VERSION;
         let (result, report) =

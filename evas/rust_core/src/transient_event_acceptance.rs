@@ -124,22 +124,26 @@ impl CalendarPlan {
         trajectory: &Trajectory,
         next: &Frame,
         until: f64,
+        batch: Option<&[ScheduledEvent]>,
     ) -> Result<Vec<ScheduledEvent>, Error> {
         match self {
             Self::Held(future) => Ok(future),
-            Self::History { pending, consumed } => crate::schedule::history_epoch_with_time_proofs(
-                model,
-                trajectory,
-                &next.operators,
-                HistoryEpoch {
-                    states: &next.state_bounds,
-                    after: Some(next.time),
-                    until,
-                    consumed: &consumed,
-                    pending: &pending,
-                },
-                Some(&next.time_proofs),
-            ),
+            Self::History { pending, consumed } => {
+                crate::schedule::history_epoch_with_time_proofs_and_boundary(
+                    model,
+                    trajectory,
+                    &next.operators,
+                    HistoryEpoch {
+                        states: &next.state_bounds,
+                        after: Some(next.time),
+                        until,
+                        consumed: &consumed,
+                        pending: &pending,
+                    },
+                    Some(&next.time_proofs),
+                    batch,
+                )
+            }
         }
     }
 }
@@ -182,12 +186,9 @@ impl PreparedEvents {
             if let Some(w) = work {
                 let row =
                     (model.program.nodes.len() * 8 + model.program.states.len() * 16 + 512) as u64;
-                let time = events[first].time;
-                for event in &events[first..] {
+                let end = crate::schedule::batch_end(events, first, model)?;
+                for _event in &events[first..end] {
                     scan()?;
-                    if event.time != time {
-                        break;
-                    }
                     // Preserve the original per-leaf record/state storage
                     // allowance before prepare_changed_batch allocates it.
                     w.debit(2, row)?;
@@ -301,6 +302,7 @@ impl PreparedEvents {
                         &seed,
                         EventMoment {
                             exact_root: None,
+                            occurrence_certified: false,
                             representative: time,
                             observation: I::point(time),
                             fired_roots: &[],
@@ -393,6 +395,7 @@ impl PreparedEvents {
                 &seed,
                 EventMoment {
                     exact_root: None,
+                    occurrence_certified: false,
                     representative: time,
                     observation: I::point(time),
                     fired_roots: &[],
@@ -477,8 +480,13 @@ impl Controller {
         scope: CalendarScope,
     ) -> Result<PreparedBatch, Error> {
         let time = calendar[self.event].time;
-        let (mut next, records, end) =
-            self.prepare_events_until(model, trajectory, calendar, Some(time))?;
+        let (mut next, records, end, physical_phase) = self.prepare_events_until_phase(
+            model,
+            trajectory,
+            calendar,
+            Some(time),
+            matches!(strategy, Strategy::Static),
+        )?;
         let plan = match strategy {
             Strategy::Static => {
                 // The immutable static calendar keeps its original cursor.
@@ -492,17 +500,15 @@ impl Controller {
                         while cluster_end < calendar.len()
                             && event_bounds(model, &calendar[cluster_end])?.lo <= boundary
                         {
-                            if calendar[cluster_end].time > boundary {
-                                if steps >= crate::schedule::CAUSAL_MICROEVENT_BUDGET {
-                                    return Err(Error::new(
-                                        "event_budget",
-                                        "bounded static event closure exceeds 64 microevents",
-                                    ));
-                                }
-                                steps += 1;
-                                boundary = calendar[cluster_end].time;
+                            if steps >= crate::schedule::CAUSAL_MICROEVENT_BUDGET {
+                                return Err(Error::new(
+                                    "event_budget",
+                                    "bounded static event closure exceeds 64 microevents",
+                                ));
                             }
-                            cluster_end += 1;
+                            steps += 1;
+                            boundary = boundary.max(calendar[cluster_end].time);
+                            cluster_end = crate::schedule::batch_end(calendar, cluster_end, model)?;
                         }
                         crate::schedule::copy_calendar(
                             &calendar[end..(cluster_end + 1).min(calendar.len())],
@@ -548,7 +554,16 @@ impl Controller {
                 &calendar[end..],
             )?,
         };
-        let (frame, future) = Self::prepare_final_history(model, trajectory, next, plan)?;
+        let (frame, future) = Self::prepare_final_history_phase(
+            model,
+            trajectory,
+            next,
+            plan,
+            Some(&calendar[self.event..end]),
+            physical_phase
+                .as_ref()
+                .map(|(root, bounds)| (root, *bounds)),
+        )?;
         Ok(PreparedBatch {
             frame,
             records,
@@ -575,23 +590,43 @@ impl Controller {
     pub(super) fn prepare_final_history(
         model: &EventModel,
         trajectory: &Trajectory,
-        mut next: Frame,
+        next: Frame,
         plan: CalendarPlan,
     ) -> Result<(Frame, Vec<ScheduledEvent>), Error> {
+        Self::prepare_final_history_phase(model, trajectory, next, plan, None, None)
+    }
+    fn prepare_final_history_phase(
+        model: &EventModel,
+        trajectory: &Trajectory,
+        mut next: Frame,
+        plan: CalendarPlan,
+        batch: Option<&[ScheduledEvent]>,
+        physical_phase: Option<(&crate::exact_source::RootTime, I)>,
+    ) -> Result<(Frame, Vec<ScheduledEvent>), Error> {
         let until = plan.horizon(trajectory);
-        next.operators = next
-            .operators
-            .evaluation(next.time)?
-            .advanced_until_with_time_proofs(
-                I::point(next.time),
-                &next.states,
-                &next.state_bounds,
-                &[],
-                until,
-                None,
-                Some(&next.time_proofs),
-            )?;
-        let future = plan.resolve(model, trajectory, &next, until)?;
+        let evaluation = if let Some((root, bounds)) = physical_phase {
+            next.operators
+                .evaluation_at_root(next.time, Some(root), bounds)?
+        } else {
+            next.operators.evaluation(next.time)?
+        };
+        next.operators = evaluation.advanced_until_with_time_proofs(
+            physical_phase.map_or(I::point(next.time), |(_, bounds)| bounds),
+            &next.states,
+            &next.state_bounds,
+            &[],
+            until,
+            None,
+            Some(&next.time_proofs),
+        )?;
+        let future = plan.resolve(model, trajectory, &next, until, batch)?;
+        if physical_phase.is_some() && !future.first().is_some_and(|event| event.time == next.time)
+        {
+            return Err(Error::new(
+                "event_resolution",
+                "physical phase lost its certified pending successor",
+            ));
+        }
         next.operators.check_deadline_order(
             next.time,
             future
@@ -612,7 +647,27 @@ impl Controller {
                 hook(&mut next);
             }
         });
-        let inputs = trajectory.checked_value_bounds(next.time)?;
+        let inputs = if let Some((root, _)) = physical_phase {
+            root_epoch_phase::physical_inputs(
+                model,
+                trajectory,
+                root,
+                crate::real_expression::work(model),
+            )?
+        } else {
+            trajectory.checked_value_bounds(next.time)?
+        };
+        let (operator_values, operator_bounds) = if let Some((root, bounds)) = physical_phase {
+            let evaluation = next
+                .operators
+                .evaluation_at_root(next.time, Some(root), bounds)?;
+            (evaluation.values, evaluation.bounds)
+        } else {
+            (
+                next.operators.values(next.time)?,
+                next.operators.bounds(next.time)?,
+            )
+        };
         // Legacy bounds certify the residual rows. Remove only an installed
         // source offset from this exact physical phase; a nonzero same-branch
         // residual remains live. Full original certificates are rechecked below.
@@ -622,8 +677,21 @@ impl Controller {
             .map(|g| g.legacy_voltage_view(next.time, &next.solution.voltages, &next.circuit))
             .transpose()?;
         let legacy_voltages = projected.as_deref().unwrap_or(&next.solution.voltages);
-        let selection = model.conditions.select(&[], &inputs)?;
-        let operator_bounds = next.operators.bounds(next.time)?;
+        let selection = if let Some(view) = next.circuit.procedure_view() {
+            crate::real_expression::work(model).debit(2, 64)?;
+            crate::event_conditions::Selection {
+                plan: Some(view.plan.clone()),
+                ..Default::default()
+            }
+        } else {
+            model.observation_selection(
+                &inputs,
+                &next.states,
+                &next.state_bounds,
+                &operator_values,
+                &operator_bounds,
+            )?
+        };
         let observation_proof = model
             .dc_projection
             .as_ref()
@@ -640,7 +708,20 @@ impl Controller {
             })
             .transpose()?
             .flatten();
-        let (_, nodes) = if let Some(proof) = &observation_proof {
+        let (_, nodes) = if let Some(view) = next.circuit.procedure_occurrence() {
+            view.plan.certificate(
+                &model.program,
+                &model.driven,
+                model.tolerances.clone(),
+                &inputs,
+                &view.plan.base[..],
+                &operator_bounds,
+                legacy_voltages,
+                &next.states,
+                None,
+                crate::real_expression::work(model),
+            )?
+        } else if let Some(proof) = &observation_proof {
             model.certify_observation_with_held_ramp_proof(
                 &selection,
                 &inputs,
@@ -660,9 +741,19 @@ impl Controller {
                 &next.states,
             )?
         };
-        crate::observation::retain_bounds(&mut next.solution, nodes);
+        if let Some(reduced) = projected.as_deref() {
+            crate::observation::retain_residual_bounds(&mut next.solution, nodes, reduced);
+        } else {
+            crate::observation::retain_bounds(&mut next.solution, nodes);
+        }
         if let Some(graph) = &model.forcing {
-            graph.project(next.time, trajectory, &mut next.solution, &mut next.circuit)?;
+            graph.project(
+                next.time,
+                trajectory,
+                &mut next.solution,
+                &mut next.circuit,
+                &operator_bounds,
+            )?;
         }
         // This certifies one batch; cluster closure and queries still precede publication.
         Ok((next, future))
@@ -1537,6 +1628,7 @@ mod passive_seed_review {
                 &seed,
                 EventMoment {
                     exact_root: None,
+                    occurrence_certified: false,
                     representative: 0.75,
                     observation: I::point(0.75),
                     fired_roots: &[],
@@ -1553,6 +1645,7 @@ mod passive_seed_review {
                 &query,
                 EventMoment {
                     exact_root: None,
+                    occurrence_certified: false,
                     representative: 1.5,
                     observation: I::point(1.5),
                     fired_roots: &[],
@@ -1593,6 +1686,7 @@ mod passive_seed_review {
             &seed,
             EventMoment {
                 exact_root: None,
+                occurrence_certified: false,
                 representative: f64::NAN,
                 observation: I::point(f64::NAN),
                 fired_roots: &[],

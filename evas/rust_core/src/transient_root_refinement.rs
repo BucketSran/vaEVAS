@@ -198,6 +198,7 @@ impl Controller {
                 &next,
                 EventMoment {
                     exact_root: None,
+                    occurrence_certified: false,
                     representative: time,
                     observation: I::point(time),
                     fired_roots: &[],

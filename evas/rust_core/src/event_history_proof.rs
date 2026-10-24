@@ -44,7 +44,14 @@ pub(crate) fn inputs(
     time: f64,
 ) -> Result<Vec<f64>, Error> {
     if let Some(w) = crate::analytic_request::proof_owner(model).map(|o| o.work()) {
-        t.history_values(time, w)
+        if model.program.procedures.is_empty() {
+            t.history_values(time, w)
+        } else {
+            t.procedure_point_bundle(time, w).map(|(values, _)| values)
+        }
+    } else if !model.program.procedures.is_empty() {
+        t.procedure_point_bundle(time, crate::real_expression::work(model))
+            .map(|(values, _)| values)
     } else {
         Ok(t.values(time))
     }
@@ -224,11 +231,14 @@ pub(crate) fn context_new<'a>(
     w.step()?;
     Ok(Context {
         states,
+        rooted_occurrence: false,
+        nominal_frame: None,
         nodes,
         operators: vec![],
         floor_work: None,
         history_work: Some(w.clone()),
         floor_bounds: None,
+        source_domains: None,
     })
 }
 fn copy_options(values: &[Option<R>], w: &Work) -> Result<Vec<Option<R>>, Error> {
@@ -247,13 +257,22 @@ pub(crate) fn context_operators<'a>(c: &Context<'a>, ops: &[I]) -> Result<Contex
     let nodes = copy_options(&c.nodes, w)?;
     storage::<I>(ops.len(), w)?;
     w.step()?;
+    let source_domains = if let Some(bands) = &c.source_domains {
+        bands.share_cost()?;
+        Some(bands.clone())
+    } else {
+        None
+    };
     Ok(Context {
         states: c.states,
+        rooted_occurrence: c.rooted_occurrence,
+        nominal_frame: c.nominal_frame.clone(),
         nodes,
         operators: ops.to_vec(),
         floor_work: None,
         history_work: Some(w.clone()),
         floor_bounds: None,
+        source_domains,
     })
 }
 pub(crate) fn local_new(bounds: &[I], c: &Context<'_>) -> Result<LocalState, Error> {
@@ -261,26 +280,34 @@ pub(crate) fn local_new(bounds: &[I], c: &Context<'_>) -> Result<LocalState, Err
     storage::<I>(bounds.len(), w)?;
     storage::<Option<R>>(bounds.len(), w)?;
     let mut exact = Vec::with_capacity(bounds.len());
-    for b in bounds {
+    // A current Context proof may already own this exact point. Install it
+    // before constructing binary fallbacks, so no paid conversion is discarded.
+    for _ in bounds {
         w.step()?;
-        let mut p = Paid::new(w);
-        let value = if b.finite() && b.lo == b.hi {
-            p.binary(b.lo)
-        } else {
-            None
-        };
-        exact.push(p.finish(value)?)
+        exact.push(None);
     }
     for (&state, v) in c.states {
         w.step()?;
         if let Some(b) = bounds.get(state) {
-            if crate::exact_source::enclosure_with_work(v, w)?
-                .is_some_and(|i| b.lo <= i.lo && i.hi <= b.hi)
+            let exact_point = b.finite()
+                && b.lo.to_bits() == b.hi.to_bits()
+                && binary_state_identity(v, b.lo, w)?;
+            if exact_point
+                || crate::exact_source::enclosure_with_work(v, w)?
+                    .is_some_and(|i| b.lo <= i.lo && i.hi <= b.hi)
             {
                 let mut p = Paid::new(w);
                 let v = p.copy(v);
                 exact[state] = p.finish(v)?
             }
+        }
+    }
+    for (slot, b) in exact.iter_mut().zip(bounds) {
+        w.step()?;
+        if slot.is_none() && b.finite() && b.lo == b.hi {
+            let mut p = Paid::new(w);
+            let value = p.binary(b.lo);
+            *slot = p.finish(value)?;
         }
     }
     let nodes = copy_options(&c.nodes, w)?;
@@ -292,6 +319,7 @@ pub(crate) fn local_new(bounds: &[I], c: &Context<'_>) -> Result<LocalState, Err
         floor_work: None,
         history_work: Some(w.clone()),
         floor_bounds: None,
+        source_domains: None,
     })
 }
 pub(crate) fn charge_local_copy(local: &LocalState) -> Result<(), Error> {
@@ -342,6 +370,38 @@ fn eval(
         return None;
     }
     match e {
+        E::RealBoundary { value, .. } => {
+            let value = eval(value, nodes, states, proofs, p, w, depth + 1, count)?;
+            let rounded = crate::real_rounding::round_ratio(&value, false, &mut |n| w.debit(2, n))
+                .map_err(|e| match e {
+                    crate::real_rounding::Fault::Quota(e) => e,
+                    other => crate::real_expression::fault(other),
+                });
+            let rounded = p.accept(rounded)?;
+            p.binary(rounded)
+        }
+        E::RealBinary {
+            operation,
+            left,
+            right,
+            ..
+        } => {
+            let a = eval(left, nodes, states, proofs, p, w, depth + 1, count)?;
+            let b = eval(right, nodes, states, proofs, p, w, depth + 1, count)?;
+            let round = |v: &R| {
+                crate::real_rounding::round_ratio(v, false, &mut |n| w.debit(2, n)).map_err(|e| {
+                    match e {
+                        crate::real_rounding::Fault::Quota(e) => e,
+                        other => crate::real_expression::fault(other),
+                    }
+                })
+            };
+            let a = p.accept(round(&a))?;
+            let b = p.accept(round(&b))?;
+            p.pay(1)?;
+            let value = p.accept(crate::real_expression::point(*operation, a, b))?;
+            p.binary(value)
+        }
         E::Affine { constant, terms } => {
             if terms.len() > 512 {
                 return None;
@@ -606,14 +666,18 @@ pub(crate) fn apply(
         model.program.nodes.len()
     ];
     nodes[0] = I::ZERO;
-    for (&index, value) in crate::analytic_request::proof_owner(model)
-        .expect("paid apply role")
-        .input_nodes()
-        .iter()
-        .zip(inputs)
-    {
-        w.step()?;
-        nodes[index] = *value
+    w.debit(
+        2,
+        (model.driven.len().saturating_mul(model.program.nodes.len()) + model.driven.len()) as u64,
+    )?;
+    for (name, value) in model.driven.iter().zip(inputs) {
+        let index = model
+            .program
+            .nodes
+            .iter()
+            .position(|node| node == name)
+            .ok_or_else(|| Error::new("invalid_ir", "proof driven node missing"))?;
+        nodes[index] = *value;
     }
     let initial = local_new(before, context)?;
     let mut result = Proofs::new();
@@ -627,9 +691,13 @@ pub(crate) fn apply(
             }
         }
     }
+    let mut frames = crate::procedure_frames::Frames::new(selection, Some(w))?;
     for (event, indices) in &selection.actions {
         w.step()?;
-        let mut local = initial.try_clone()?;
+        let mut local = match frames.take(*event) {
+            Some(v) => v,
+            None => initial.try_clone()?,
+        };
         for &index in indices {
             w.step()?;
             let (state, e) = assignment(model, *event, index, w)?;
@@ -642,6 +710,7 @@ pub(crate) fn apply(
                 insert(&mut result, state, v, w)?
             }
         }
+        frames.put(*event, local);
     }
     let mut checked = Proofs::new();
     for (state, value) in result {
@@ -663,11 +732,14 @@ pub(crate) fn points(bounds: &[I], w: &Work) -> Result<LocalState, Error> {
     let empty = Proofs::new();
     let c = Context {
         states: &empty,
+        rooted_occurrence: false,
+        nominal_frame: None,
         nodes: vec![],
         operators: vec![],
         floor_work: None,
         history_work: Some(w.clone()),
         floor_bounds: None,
+        source_domains: None,
     };
     let mut local = local_new(bounds, &c)?;
     local.nodes = None;
@@ -700,12 +772,97 @@ pub(crate) fn held_value(
     let empty = Proofs::new();
     let context = Context {
         states: proofs.unwrap_or(&empty),
+        rooted_occurrence: false,
+        nominal_frame: None,
         nodes: vec![None; program.nodes.len()],
         operators: vec![],
         floor_work: None,
         history_work: Some(w.clone()),
         floor_bounds: None,
+        source_domains: None,
     };
     let local = local_new(bounds, &context)?;
     value(&local, &selected, &nodes, w)
+}
+
+#[cfg(test)]
+mod local_point_constructor_tests {
+    use super::*;
+    #[test]
+    fn local_point_constructor_preserves_missing_stale_uncontained_and_nonpoint_proofs() {
+        let w = Work::default();
+        let mut proofs = Proofs::new();
+        proofs.insert(0, binary(0.1).unwrap());
+        proofs.insert(1, R::new(1.into(), 5.into()));
+        proofs.insert(2, binary(4.).unwrap());
+        proofs.insert(3, R::new(1.into(), 3.into()));
+        proofs.insert(99, binary(9.).unwrap());
+        let bounds = [
+            I::point(0.1),
+            I::point(0.2),
+            I::point(3.),
+            I { lo: 0., hi: 1. },
+            I::point(-0.),
+            I { lo: -0., hi: 0. },
+            I { lo: 1., hi: 2. },
+        ];
+        let context = Context::candidate_frame(&proofs, 0, &[], &[], &w).unwrap();
+        let local = local_new(&bounds, &context).unwrap();
+        assert_eq!(local.exact[0], proofs.get(&0).cloned());
+        // 1/5 rounds to 0.2, but is not its exact binary value; old fallback survives.
+        assert_eq!(local.exact[1], binary(0.2));
+        assert_eq!(local.exact[2], binary(3.));
+        assert_eq!(local.exact[3], proofs.get(&3).cloned());
+        assert_eq!(local.exact[4], binary(-0.));
+        assert_eq!(local.exact[5], binary(-0.));
+        assert_eq!(local.exact[6], None);
+        for (actual, expected) in local.bounds.iter().zip(bounds) {
+            assert_eq!(actual.lo.to_bits(), expected.lo.to_bits());
+            assert_eq!(actual.hi.to_bits(), expected.hi.to_bits());
+        }
+        assert!(local.history_work.as_ref().unwrap().same_owner(&w));
+    }
+    #[test]
+    fn local_point_constructor_uses_current_context_and_spends_only_its_owner() {
+        let w = Work::default();
+        let foreign = Work::default();
+        let untouched = foreign.spent();
+        for point in [0., -0., f64::from_bits(1), 0.1, 0.2, f64::MAX] {
+            let proofs = Proofs::from([(0, binary(point).unwrap())]);
+            let context = Context::candidate_frame(&proofs, 0, &[], &[], &w).unwrap();
+            let local = local_new(&[I::point(point)], &context).unwrap();
+            assert_eq!(local.exact[0], binary(point));
+            assert_eq!(local.bounds[0].lo.to_bits(), point.to_bits());
+        }
+        assert_eq!(foreign.spent(), untouched);
+    }
+    #[test]
+    fn local_point_constructor_natural_exhaustion_is_sticky_without_context_mutation() {
+        let w = Work::limited([128, 8192, 50_000]);
+        let proofs = Proofs::from([(0, binary(0.1).unwrap())]);
+        let original = proofs.clone();
+        let context = Context::candidate_frame(&proofs, 0, &[], &[], &w).unwrap();
+        let mut exhausted = false;
+        for _ in 0..10_000 {
+            match local_new(&[I::point(0.1)], &context) {
+                Ok(local) => assert_eq!(local.exact[0], binary(0.1)),
+                Err(error) => {
+                    assert_eq!(error.kind, "step_budget");
+                    exhausted = true;
+                    break;
+                }
+            }
+        }
+        assert!(exhausted);
+        assert!(w.spent() > 50_000);
+        let spent = w.spent();
+        for _ in 0..2 {
+            assert_eq!(
+                local_new(&[I::point(0.1)], &context).err().unwrap().kind,
+                "step_budget"
+            );
+            assert_eq!(w.spent(), spent);
+            assert_eq!(proofs, original);
+        }
+    }
 }

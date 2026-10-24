@@ -904,6 +904,7 @@ mod tests {
             &controller.accepted,
             crate::transient::EventMoment {
                 exact_root: Some(&callback),
+                occurrence_certified: false,
                 representative: 0.5,
                 observation: I::point(0.5),
                 fired_roots: &[0],

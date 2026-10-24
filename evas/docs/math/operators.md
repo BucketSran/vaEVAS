@@ -26,6 +26,61 @@ See the [support matrix](../COMPARISON.md) for delivery status. Independent cont
 区分只读查询、同刻观察和未来历史。涉及事件的改动还需检查
 [settlement](events.md#同块顺序赋值与同刻联立求解)与[共同生命周期](continuous.md#shared-lifecycle-closure)。
 
+IR33 的局部过程不改变独立物理输入的历史。当前候选为无复位 `idt`、`idtmod`、
+单分子系数/二项分母的一阶 `laplace_nd`、`absdelay` 和 `slew` 保留直接路径，
+要求各历史输入的原始表达式仅含 ground 与实际驱动的仿射源。
+独立保持 Transition 及按顺序消费早期算子的纯函数可以共存；依赖、所有者和准入检查仍执行。
+贡献中的局部捕获继续按每次 Plan 求值。内部节点和状态输入继续走原联合准入，
+零系数引用也不能消去这些依赖；受限来源 RN 输入使用下述独立提供者。
+含 DDT 的程序保持原导数路径。包含非 Transition 历史的读出仅允许加减、常数缩放及
+常数分母，绑定的所有原始定义也须通过同一付费审计；状态乘历史和非线性包装交回原准入。
+[过程与直接滤波控制](../../rust_core/src/operator_procedure_direct_tests.rs)
+以及[公开滤波回归](../../tests/test_laplace.py)覆盖该有限组合。
+
+## IR33 源码位置的历史输入候选
+
+`a=q; y=transition(a,0,tr); a=9;` 的目标属于调用点处捕获的 `a`，
+后面的覆盖不能改写该历史。Plan 导出实际执行的输入图，保留每个 real 运算和存储的 RN 边界；
+`procedure_history.rs` 负责导出，`history_input.rs` 负责原始源域、保持历元及 guard 切点。
+依赖准入仍扫描原程序全部分支、控制依赖和零系数引用，当前选中图只用于数值执行。
+
+Transition 要求每个源分段内目标为可证明的 binary64 常量。单调仿射 RN guard 使用精确有理
+逆像和 ties-to-even 中点确定切点；每越过一个切点重新执行原过程，不能把一个已选图推广到未来。
+变化的物理 rail 可以作为 guard 的真实输入，因而无需把未来脉冲误证为全请求 DC。
+输入误差管、内部节点与历史反馈仍需要独立能力，本切片不予放行。
+
+候选复用原 Source 游标、目标队列与 Transition 边沿。复制、切点、图导出及重绑定向同一个
+请求 Work 预付，失败不退还额度，也不提交游标或目标。逐点 IEEE 运算在完成全域验证后
+复用现有 binary64 运算入口；区间和混合 signed-zero 仍检查所有角点，默认额度未提高。
+[公开输入捕获](../../tests/test_ir33_history_inputs.py)、
+[原079合同](../../tests/test_original079_contract.py)和
+[同控制器失败重试](../../rust_core/src/transient_procedure_history_tests.rs)覆盖本地候选；
+连续 RN 输入及近根拒绝见[连续动态说明](continuous.md#ir33-source-rn-history)。
+这些开发结果不替代原400、实际 Spectre 或发布验收。
+
+### 来源 RN 相位与仿射输入管
+
+本地候选为 `idtmod` 及无复位 `idt` 的直接物理采样接入调用点输入图。
+此提供者只接 ground 与实际 driven 源，先审计全部原绑定、控制和零系数依赖；
+状态、其他算子、内部节点和真实源误差管不借此放行。已有含保持参数或非线性源表达式的
+连续 RN 通路仍由[连续动态](continuous.md#ir33-source-rn-history)负责。
+
+每个已隔离的源/guard 段保留实际 RN 图 `g(t)`，另建数学仿射 proxy `f(t)`。
+逐节点证明全段 `|g-f|≤epsilon`，不把 RN 端点插值当作输入波形。
+传给原 Idt 积分器的端点盒为向外包围的 `F_i + [-epsilon,epsilon]`；
+相邻段共用端点时取两侧 hull，因此原凸插值和积分界包住每段实际输入。
+名义 proxy 的拼接误差继续由完整历史盒和原电压容差验收。
+
+只有原 RN 图逐节点证明在整个历史恒定且为同一个 binary64 值时，才保留精确常量相位证书。
+去 RN 后的 proxy 恒定不构成这项证明。非恒定输入保留完整回绕盒；跨回绕侧、非二进制切点、
+非仿射 proxy 或非有限中间域无法证明时明确拒绝，不能只取名义相位。
+例如 IR33 的 `1.5/3` 经一次程序除法得到精确 `0.5`，与旧 `1.5*RN(1/3)` 系数合同不同；
+原开发断言与判决保留，不能把两种输入语义混为同一参考。
+
+实现为 [history_source_affine.rs](../../rust_core/src/history_source_affine.rs)，复用原 Plan、
+有理 Work 与 Idt/IdtMod；[公开控制](../../tests/test_ir33_phase_inputs.py)检查实际常量的精确回绕、
+独立台阶积分面积、误差拒绝和额外查询。原生控制另检查 proxy 常量、零内部依赖及同 owner 耗尽重试。
+
 ## 公共执行方法
 
 下面固定当刻算子输出的推导适用于正边沿 transition 与直接输入的 absdelay/slew。
@@ -264,6 +319,16 @@ and time. Initial, candidate, and observation paths must all pass this projectio
 A successful reduced solve alone is not an output certificate. No per-query
 recompilation or reconstruction of the complete original source context is allowed.
 
+IR33 的私有过程坐标仅供原方程认证使用，不扩展公共 Solution 节点。
+每个新阶段从原 Plan、阶段前状态盒及当前算子盒重新计算私有点和外包围，
+再检查原 RHS 与其余仿射关系。设历史盒为 U，强迫项为 C，则认证使用完整的
+`2U+C`，不能沿用上一阶段较窄的 U，也不能将私有量替换为零或名义点。
+最终历史包围扩大后必须重新投影，并保留扩大后的残差盒。
+原程序审计同时检查过程元数据中的未选分支和被丢弃的零系数读，防止隐藏输出反馈。
+[私有阶段回归](../../rust_core/src/solver_private_phase_tests.rs)覆盖包围扩大、
+原容差拒绝、弃候选后重试及同一 Work 耗尽。
+初始解析源查询使用实际 provider 的 checked bounds，不能按空 PWL 存储索引。
+
 ### Exact physical reads and one request budget
 
 The current IR31 candidate avoids constructing a pending event's exact root when
@@ -364,7 +429,8 @@ consumers, and uncertain numerical source leaves remain outside this slice.
 例如 q 初始为0，固定 `timer(0,0,0.001)` 将 q 赋为1，
 `transition(q,0.125,0.5,0.5)` 从 t=0 起即为1；延迟不产生一条额外初始边沿。
 
-构造前只处理精确固定零时刻 timer，回调各执行一次。所有分支的读值必须仅依赖 held 状态和直接驱动输入，
+构造前处理有精确零时刻证书的固定 timer，以及由保持状态给出 start、period 或 enable 的 timer。
+回调各执行一次，OR 的多个零叶共用一个回调体。所有分支的读值必须仅依赖 held 状态和直接驱动输入，
 顺序赋值、共享旧状态、writer 与整数检查仍保留。默认要求最终完整状态向量有限且逐项得到 point 证书；
 后面的有界冷种子合同另行限定可保留非 point 盒的裸 real 目标。
 一个 point 证书表示精确区间只包含提交值；不能把带舍入区间的状态当作精确种子。
@@ -373,15 +439,26 @@ OR 的多个零叶共用一个回调体；正时刻邻居由原事件事务处�
 
 这条路径限定于闭合的 source-free 仿射状态 transition 及其直接一阶 filter、直接 integral 消费者。
 父 transition 与 filter 使用同一最终 DC 种子，`idt` 保留自身 ic。
-改变种子且混有其他历史、mutable held 日程或历史守卫时返回 `unsupported_initial_history`。
+旁边只依赖常量或直接驱动源、无 reset 的独立积分器保留自身的 IC。
+保持状态 timer 的零时刻回调完成后，重新认证 start、period 和 enable，保留已消费零事件之外的未来日程。
+改变其他 timer 的未来 start、周期或 enable 不能丢失其日程；新产生的零时刻事件仍须认证或明确拒绝。
+历史守卫及未准入的耦合历史继续返回 `unsupported_initial_history`，不能凭名义值重建其他历史。
 若全分支有序仿射传递证明 transition 种子不变，则完整保留原事件事务，
 兼容独立积分、滤波、数学历史和仅流向无关状态的内部电压读值；证明不会跳过实际事件检查。
-这里没有扩展 IR、source-target 或同刻日程闭包。实现入口是
+这里没有扩展 IR、source-target 或一般同刻日程闭包。实现入口是
 `transient_initialization::prepare`、`settlement_bounds::Bounds::held_inputs` 和
 `initial_state_invariance::unchanged`，最终历史仍由 `Operators::new_until` 构造。
 公开编译/内核的独立行为锚点见 `test_transition_initialization.py`，
 同对象失败重试见 `transient_initialization` 的 Rust 测试；这些是开发证据，不能单独代替 Spectre 对齐资格。
 [实际有限配对](../../../experiments/backends/support/README.md#initial-transition-seed)覆盖开、关及直接滤波三个初态反例；不扩展一般历史反馈支持。
+本地 #226 的保持状态 timer、未来日程及独立积分回归见
+[test_variable_zero_timer_transition.py](../../tests/test_variable_zero_timer_transition.py)。
+该候选的最终集成验证与同源 Spectre 配对仍待完成，不能沿用旧配对为新增范围授予资格。
+
+保持状态 timer、未来日程与独立积分回归见
+[test_variable_zero_timer_transition.py](../../tests/test_variable_zero_timer_transition.py)和
+[test_initial_seed_invariance.py](../../tests/test_initial_seed_invariance.py)。
+这些开发回归不扩大旧 Spectre 配对的资格范围。
 
 ### 混合实数与整数冷目标的本地候选
 
@@ -596,6 +673,15 @@ PR208的共用根窗证书进一步接收可严格排序的相异源切点与tim
 原计划和重新绑定的计划都须检查这个窗口；显式传入的新根或窗口仍按原检查验收。
 不能只恢复根、把窗口压成代表点，也不能另取一个更有利的窗口。原 CDS 验收仍由
 [#65](https://github.com/BucketSran/vaEVAS/issues/65) 跟踪，局部反例通过不等于整题通过。
+
+父 transition 与直接积分、滤波历史必须使用同一个结束时间判据。
+`Transition::end_reached_at` 在有精确时间证明时比较已接受事件根与边沿结束时间，
+否则保留原有包围检查。父历史移除旧斜坡前，子历史先累计该斜坡的面积或滤波响应。
+不能让父历史按精确根结束斜坡，而子历史因尚未达到包围上界漏掉最后一段。
+[无关 timer 反例](../../tests/test_timer_at_transition_ramp_end.py)和
+[结束时刻历史回归](../../tests/test_transition_endpoint_history.py)使用独立有理面积与80位闭式滤波答案，
+并检查查询网格、实例顺序、符号及邻近重定向。内核测试另检查失败试算后重试保留旧历史。
+该修复不扩展一般历史反馈支持，也不增加已有四后端表的共同 Q 资格。
 
 独立边沿可作为电压方程中的时变系数，例如 `V(y)<+V(h)*transition(q,0,tr,tr)`。
 这里每次读取当前的 `V(h)`，不是事件发生时的旧值。整个电压网络仍须联合仿射且唯一可解；

@@ -6,7 +6,7 @@ mod source_factor;
 use crate::events::AffineState;
 use crate::exact_source::RootTime;
 use crate::interval::Interval as I;
-use crate::ir::{Error, Expression, Program, Relation};
+use crate::ir::{Error, Expression, OperatorSpec, Program, Relation};
 use crate::pwl::Trajectory;
 use num_traits::Zero;
 #[cfg(test)]
@@ -40,7 +40,6 @@ impl Default for Work {
     }
 }
 impl Work {
-    #[cfg(test)]
     pub(crate) fn same_owner(&self, other: &Self) -> bool {
         Arc::ptr_eq(&self.0, &other.0)
     }
@@ -785,6 +784,7 @@ pub(crate) struct Spec {
     // insertion has paid the original exact reservation and cut quota.
     context: Arc<ProofContext>,
     factor: Option<Arc<Factor>>,
+    procedure_input: Option<usize>,
 }
 impl Drop for Spec {
     fn drop(&mut self) {
@@ -797,6 +797,57 @@ impl Drop for Spec {
     }
 }
 impl Spec {
+    pub(crate) fn procedure_work(&self) -> Option<&Work> {
+        self.procedure_input.map(|_| &self.work)
+    }
+
+    pub(crate) fn procedure_input(
+        operator: usize,
+        context: Arc<ProofContext>,
+    ) -> Result<Arc<Self>, Error> {
+        let p = context.program.as_ref();
+        let w = context.borrow_work();
+        let spec = p
+            .operators
+            .get(operator)
+            .ok_or_else(|| Error::new("invalid_ir", "history operator absent"))?;
+        let OperatorSpec::Transition { input, origin, .. } = spec else {
+            return Err(unsupported("procedure target requires Transition"));
+        };
+        let sources = crate::procedure::dependency_sources(p, w)?;
+        let deps = crate::procedure::source_dependencies(input, p, &sources, w)?;
+        if !deps.operator_dependencies.is_empty()
+            || deps
+                .node_dependencies
+                .iter()
+                .any(|n| *n != 0 && !context.input_nodes.contains(n))
+        {
+            return Err(unsupported(
+                "procedure Transition target requires original driven sources and held state",
+            ));
+        }
+        crate::history_admission::charge_expression_copy(input, w)?;
+        w.debit(
+            2,
+            ((context.input_nodes.len() + deps.state_dependencies.len() * 8) * 16
+                + origin.instance.len()
+                + 256) as u64,
+        )?;
+        Ok(Arc::new(Self {
+            expression: input.clone(),
+            program: context.program.clone(),
+            trajectory: context.trajectory.clone(),
+            input_nodes: context.input_nodes.clone(),
+            owner: origin.instance.clone(),
+            dependencies: deps.state_dependencies.clone(),
+            predicate_dependencies: deps.state_dependencies,
+            work: w.clone(),
+            context: context.clone(),
+            factor: None,
+            procedure_input: Some(operator),
+        }))
+    }
+
     /// Independent source contexts remain available to direct proof tests.
     #[cfg(test)]
     pub(crate) fn new(
@@ -966,6 +1017,7 @@ impl Spec {
                 work,
                 context,
                 factor,
+                procedure_input: None,
             })),
         ))
     }
@@ -1286,6 +1338,45 @@ impl Spec {
         Ok(())
     }
     fn target(&self, states: &[I], time: &Cut) -> Result<Target, Error> {
+        if let Some(operator) = self.procedure_input {
+            let plan = crate::history_input::activate(&self.context, states, &time.exact)?;
+            let cell = crate::history_input::held_value(&plan, operator, &self.context, states)?;
+            let value = cell.point()?;
+            let bounds = cell.bound()?;
+            let proved = match &cell.proof {
+                Some(proof) => {
+                    crate::event_value_proof::binary_state_identity(proof, value, &self.work)?
+                }
+                None => false,
+            };
+            if bounds.lo.to_bits() != value.to_bits()
+                || bounds.hi.to_bits() != value.to_bits()
+                || !proved
+            {
+                return Err(unsupported("source-position Transition requires one certified binary64 target in each held epoch"));
+            }
+
+            let proof = constant(value);
+            self.work.debit(
+                2,
+                ((self.program.nodes.len()
+                    + self.program.states.len() * 2
+                    + self.program.operators.len()
+                    + 8)
+                    * 32) as u64,
+            )?;
+            let mut affine = crate::events::affine(&proof, &self.program, &self.owner)?;
+            affine.state_dependencies = self.dependencies.clone();
+            let mut coefficients = vec![I::ZERO; states.len() + 1];
+            *coefficients.last_mut().unwrap() = bounds;
+            return Ok(Target {
+                value,
+                bounds,
+                proof,
+                affine,
+                coefficients,
+            });
+        }
         let selected = self.resolve(&self.expression, states, time)?;
         if let Some(f) = &self.factor {
             f.dense(
@@ -1343,6 +1434,10 @@ pub(crate) struct Target {
     pub(crate) coefficients: Vec<I>,
 }
 impl Target {
+    pub(crate) fn proof_for_copy(&self) -> &Expression {
+        &self.proof
+    }
+
     fn proven_equal(&self, other: &Self, spec: &Spec) -> Result<bool, Error> {
         crate::diagnostics::counter("source_target_equality_calls", 1);
         spec.proof_sign(
@@ -1464,6 +1559,22 @@ impl Plan {
         if let Some(f) = &spec.factor {
             f.charge("source_factor_root_debit", 8192)?;
         }
+        if spec.procedure_input.is_some() {
+            let roots = crate::history_input::partition(&spec.context, states)?;
+            spec.work.debit(2, (roots.len() * 64 + 64) as u64)?;
+            let mut cuts = Vec::with_capacity(roots.len());
+            for exact in roots {
+                let bounds = exact
+                    .memo_bounds_with_work(&spec.work)?
+                    .ok_or_else(|| invalid("cannot enclose procedure input cut"))?;
+                cuts.push(Cut {
+                    time: bounds.hi,
+                    bounds,
+                    exact,
+                });
+            }
+            return Self::with_point_policy(spec, states, Arc::new(cuts), strict_points);
+        }
         let mut cuts = vec![
             RootTime::point(0.).unwrap(),
             RootTime::point(spec.trajectory.config.stop).unwrap(),
@@ -1571,6 +1682,9 @@ impl Plan {
             .all(|&k| states[k] == self.states[k])
         {
             return Ok(true);
+        }
+        if self.spec.procedure_input.is_some() {
+            return Ok(false);
         }
         // Reuse one immutable target partition when only a held-only guard
         // changes its enclosure, and every selected target certificate stays

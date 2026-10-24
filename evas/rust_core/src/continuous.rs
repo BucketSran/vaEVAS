@@ -51,13 +51,42 @@ pub(crate) fn validate_integral_input(
 
 type DependencySets = (BTreeSet<usize>, BTreeSet<usize>, BTreeSet<usize>);
 
+/// Structural roots of an original source expression. An RN/local node is not
+/// a numerical affine expression until its occurrence frame executes. Follow
+/// all source definitions without evaluating any arm, using the request owner.
+pub(crate) fn source_dependency_edges(
+    expr: &Expression,
+    program: &Program,
+    owner: &str,
+    work: Option<&crate::transition_source_plan::Work>,
+) -> Result<DependencySets, Error> {
+    if program.procedures.is_empty() {
+        return integral_dependency_edges(expr, program, owner);
+    }
+    let work = work.ok_or_else(|| {
+        Error::new(
+            "invalid_ir",
+            "source dependency audit requires its request owner",
+        )
+    })?;
+    let sources = crate::procedure::dependency_sources(program, work)?;
+    let row = crate::procedure::source_dependencies(expr, program, &sources, work)?;
+    Ok((
+        row.node_dependencies,
+        row.state_dependencies,
+        row.operator_dependencies,
+    ))
+}
+
 pub(crate) fn integral_dependency_edges(
     expr: &Expression,
     program: &Program,
     owner: &str,
 ) -> Result<DependencySets, Error> {
     match expr {
-        Expression::Add { left, right }
+        Expression::RealBoundary { value, .. } => integral_dependency_edges(value, program, owner),
+        Expression::RealBinary { left, right, .. }
+        | Expression::Add { left, right }
         | Expression::Multiply { left, right }
         | Expression::Divide { left, right } => {
             let (mut n, mut s, mut o) = integral_dependency_edges(left, program, owner)?;
@@ -113,6 +142,8 @@ pub(crate) struct OperatorSlot {
 mod exact_affine;
 #[path = "continuous_history.rs"]
 mod history;
+#[path = "continuous_root_epoch.rs"]
+mod root_epoch;
 #[path = "continuous_runtime.rs"]
 mod runtime;
 #[path = "continuous_select.rs"]
@@ -141,6 +172,7 @@ pub(crate) struct LinearContinuous {
     exact_affine: Option<exact_affine::History>,
     exact_states: Vec<bool>,
     exact_seed: Option<Vec<Option<num_rational::BigRational>>>,
+    root_epoch: Option<Arc<root_epoch::Epoch>>,
 }
 
 #[derive(Clone)]
@@ -153,18 +185,47 @@ struct Context {
     detached_timed: bool,
     live_parameters: Option<Arc<BTreeSet<usize>>>,
     time_proofs: crate::exact_source::TimeProofs,
+    reset_captures: Arc<Vec<Option<I>>>,
+    source_history: Option<Arc<crate::transition_source_plan::ProofContext>>,
 }
 
 impl Context {
     fn new(program: &Program, trajectory: &Trajectory, driven: &[String]) -> Result<Self, Error> {
-        let projected = readout::project(program, driven)?;
+        let work = trajectory.procedure_work();
+        let projected = readout::project(program, driven, work)?;
         let live_parameters = projected
             .as_ref()
-            .map(readout::live_parameters)
+            .map(|program| readout::live_parameters(program, work))
             .transpose()?
             .map(Arc::new);
+        let mut needs_source = false;
+        if let Some(w) = work {
+            for spec in &program.operators {
+                if let OperatorSpec::Idt { input, .. } | OperatorSpec::LaplaceNd { input, .. } =
+                    spec
+                {
+                    needs_source |= crate::history_input::required_frame(input, w)?;
+                }
+            }
+        }
+        let source_history = if needs_source {
+            let w = work
+                .ok_or_else(|| Error::new("invalid_ir", "source history lost execution owner"))?;
+            let bytes = crate::event_floor::encoded_size(program, w)?;
+            w.debit(2, (bytes as u64).saturating_mul(8))?;
+            Some(crate::transition_source_plan::ProofContext::new(
+                program,
+                trajectory,
+                driven,
+                w.clone(),
+            )?)
+        } else {
+            None
+        };
         Ok(Self {
+            source_history,
             time_proofs: Default::default(),
+            reset_captures: Arc::new(Vec::new()),
             detached_timed: projected.is_some(),
             live_parameters,
             program: Arc::new(projected.unwrap_or_else(|| program.clone())),
@@ -203,6 +264,8 @@ fn local_context(context: &Arc<Context>, horizon: f64) -> Arc<Context> {
         detached_timed: context.detached_timed,
         live_parameters: context.live_parameters.clone(),
         time_proofs: context.time_proofs.clone(),
+        reset_captures: context.reset_captures.clone(),
+        source_history: context.source_history.clone(),
     })
 }
 
@@ -340,7 +403,12 @@ impl LinearContinuous {
                         "joint idt reset must depend only on instance event state and constants",
                     ));
                 }
-                crate::operators::ResetExpression::new(reset.clone()).active(&parameters)?
+                match context.reset_captures.get(operator).copied().flatten() {
+                    Some(value) => crate::operators::reset_active(value)?,
+                    None => {
+                        crate::operators::ResetExpression::new(reset.clone()).active(&parameters)?
+                    }
+                }
             } else {
                 false
             };
@@ -434,19 +502,21 @@ impl LinearContinuous {
             start,
         )?;
         let initial = segments[0].initial[..state_count].to_vec();
-        let event_dependent = operators.iter().any(|op| {
-            let spec = &program.operators[op.operator];
-            matches!(spec, OperatorSpec::Idt { reset: Some(_), .. })
-                || continuous_operator_input(spec).is_some_and(|(input, origin)| {
-                    history_event_dependency(
-                        input,
-                        program,
-                        origin,
-                        &driven_nodes,
-                        &mut BTreeSet::new(),
-                    )
-                })
-        });
+        let event_dependent = (!context.program.procedures.is_empty()
+            && !context.program.step_bounds.is_empty())
+            || operators.iter().any(|op| {
+                let spec = &program.operators[op.operator];
+                matches!(spec, OperatorSpec::Idt { reset: Some(_), .. })
+                    || continuous_operator_input(spec).is_some_and(|(input, origin)| {
+                        history_event_dependency(
+                            input,
+                            program,
+                            origin,
+                            &driven_nodes,
+                            &mut BTreeSet::new(),
+                        )
+                    })
+            });
         let mut exact_states = vec![false; state_count];
         for op in &operators {
             if matches!(
@@ -475,6 +545,7 @@ impl LinearContinuous {
             exact_affine,
             exact_states,
             exact_seed: None,
+            root_epoch: None,
         }))
     }
 
@@ -1799,6 +1870,8 @@ mod tests {
 
     fn program_with_idt(input: Expression, ic: f64) -> Program {
         Program {
+            procedures: vec![],
+            real_bindings: vec![],
             step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".to_string(), "y".to_string()],
@@ -1962,6 +2035,8 @@ mod tests {
     }
     fn ramp_filter_program(tau: f64) -> Program {
         Program {
+            procedures: vec![],
+            real_bindings: vec![],
             step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".to_string(), "u".to_string(), "y".to_string()],
@@ -2103,6 +2178,8 @@ mod tests {
     #[test]
     fn cancelled_internal_relay_enters_continuous_network_as_exact_zero() {
         let program = Program {
+            procedures: vec![],
+            real_bindings: vec![],
             step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".to_string(), "z".to_string(), "y".to_string()],
@@ -2139,6 +2216,8 @@ mod tests {
     #[test]
     fn cancelled_internal_relay_keeps_event_history_dependency() {
         let program = Program {
+            procedures: vec![],
+            real_bindings: vec![],
             step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".to_string(), "z".to_string(), "y".to_string()],
@@ -2192,6 +2271,8 @@ mod tests {
     #[test]
     fn selection_closes_through_voltage_relation_producers() {
         let program = Program {
+            procedures: vec![],
+            real_bindings: vec![],
             step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec![
@@ -2386,6 +2467,63 @@ mod tests {
 
         let t = 1.0_f64;
         assert_close(continuous.values(t).unwrap()[0], 1.0 - (-t).exp(), 1e-9);
+    }
+
+    #[test]
+    fn callsite_reset_release_preserves_accepted_history_and_failed_retry_owner() {
+        let input = Expression::Affine {
+            constant: 1.,
+            terms: vec![crate::ir::Term {
+                node: 1,
+                coefficient: -1.,
+            }],
+        };
+        let mut program = program_with_idt(input, 0.);
+        program.states.push(
+            serde_json::from_value(
+                serde_json::json!({"instance":"uut","name":"reset","kind":"integer","initial":0}),
+            )
+            .unwrap(),
+        );
+        if let OperatorSpec::Idt { reset, .. } = &mut program.operators[0] {
+            *reset = Some(Expression::State { state: 0 });
+        }
+        let accepted = Continuous::new(&program, &no_source_trajectory(1.), &[], &[0.])
+            .unwrap()
+            .unwrap();
+        let original = accepted.bounds(0.75).unwrap();
+        let work = crate::transition_source_plan::Work::default();
+        let mapped = accepted
+            .captured_resets(0.5, I::point(0.5), &[I::ONE], &[Some(I::ONE)], &work)
+            .unwrap();
+        let released = mapped
+            .captured_resets(0.5, I::point(0.5), &[I::ONE], &[Some(I::ZERO)], &work)
+            .unwrap();
+        let value = released.values(0.75).unwrap()[0];
+        assert!((value - (1. - (-0.25_f64).exp())).abs() < 1e-9);
+        assert_eq!(accepted.bounds(0.75).unwrap(), original);
+        let limited = crate::transition_source_plan::Work::limited([128, 8192, 1]);
+        assert_eq!(
+            accepted
+                .captured_resets(0.5, I::point(0.5), &[I::ONE], &[Some(I::ONE)], &limited)
+                .err()
+                .unwrap()
+                .kind,
+            "step_budget"
+        );
+        let spent = limited.spent();
+        let retry = limited.clone();
+        assert!(limited.same_owner(&retry));
+        assert_eq!(
+            accepted
+                .captured_resets(0.5, I::point(0.5), &[I::ONE], &[Some(I::ONE)], &retry)
+                .err()
+                .unwrap()
+                .kind,
+            "step_budget"
+        );
+        assert!(retry.spent() > spent);
+        assert_eq!(accepted.bounds(0.75).unwrap(), original);
     }
 
     #[test]

@@ -3,6 +3,8 @@
 Python's unbounded signed shifts are deliberately not the language operation.
 The finite-domain helpers bound work before constructing any decision tree.
 """
+from .syntax import BOOLEAN_OPS
+
 OPS = frozenset(('&', '|', '^', 'unary~', '<<', '>>'))
 MINIMUM, MAXIMUM, MASK = -2147483648, 2147483647, 0xffffffff
 DOMAIN_BUDGET = 256
@@ -79,7 +81,7 @@ def integer_type(expr, variables, parameters, genvars=(), *, child_types=None, v
         return variables.get(expr.value) == 'integer' or parameters.get(expr.value) == 'integer'
     if expr.op == 'checked':
         return child_types[0] if child_types is not None else integer_type(expr.args[0], variables, parameters, genvars, visit=visit)
-    if expr.op in ('<', '<=', '>', '>=', '==', '!=', '&&', '||', 'unary!'):
+    if expr.op in BOOLEAN_OPS:
         return True
     args = expr.args[1:] if expr.op == 'ternary' else expr.args
     if expr.op == 'ternary' or expr.op in OPS or expr.op in ('+', '-', '*', '/', '%', 'unary+', 'unary-'):

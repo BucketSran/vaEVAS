@@ -100,6 +100,9 @@ impl Idt {
         self
     }
 
+    pub(crate) fn reset_probe_cost(&self) -> u64 {
+        (self.knots.len().max(1).ilog2() as u64 + 2) * 3 * 16 + 32
+    }
     pub(crate) fn advance_reset(
         &mut self,
         time: f64,

@@ -131,10 +131,22 @@ def scalarize_nodes(model, parameters):
                 result.append(replace(s,**updates))
         return tuple(result)
 
+    def procedure(statements):
+        result = []
+        for s in statements:
+            if isinstance(s, Event):
+                result.append(replace(s, body=body(s.body), triggers=tuple(
+                    replace(leaf, arguments=tuple(expression(arg) if arg is not None else None
+                                                  for arg in leaf.arguments)) for leaf in s.triggers)))
+            else:
+                result.extend(body((s,)))
+        return tuple(result)
+
     return replace(model, ports=tuple(bit for p in model.ports for bit in groups[p]),
                    nodes={bit for n in model.nodes for bit in groups[n]},
                    directions={bit: direction for n,direction in model.directions.items() for bit in groups[n]},
                    node_ranges={},port_ranges={},analog=list(body(model.analog)),
+                   procedure=procedure(model.procedure),
                    initial=list(body(model.initial)),events=[replace(e,body=body(e.body),triggers=tuple(
                        replace(leaf,arguments=tuple(expression(a) if a is not None else None for a in leaf.arguments))
                        for leaf in e.triggers)) for e in model.events]), groups

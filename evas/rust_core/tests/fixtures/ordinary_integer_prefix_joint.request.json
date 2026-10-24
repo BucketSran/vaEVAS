@@ -3,613 +3,627 @@
     "u"
   ],
   "program": {
-    "contributions": [
-      {
-        "branch": {
-          "instance": "M",
-          "kind": "voltage",
-          "local_negative": "y",
-          "local_positive": "0"
-        },
-        "negative": 3,
-        "origin": {
-          "column": 5,
-          "expansion": [],
-          "instance": "M",
-          "line": 22,
-          "source": "ordinary_integer_prefix_joint.va"
-        },
-        "positive": 0,
-        "rhs": {
-          "left": {
-            "constant": -1.0,
-            "op": "affine",
-            "terms": []
-          },
-          "op": "multiply",
-          "right": {
-            "op": "operator",
-            "operator": 0
-          }
-        }
-      },
-      {
-        "branch": {
-          "instance": "M",
-          "kind": "voltage",
-          "local_negative": "h",
-          "local_positive": "0"
-        },
-        "negative": 1,
-        "origin": {
-          "column": 5,
-          "expansion": [],
-          "instance": "M",
-          "line": 23,
-          "source": "ordinary_integer_prefix_joint.va"
-        },
-        "positive": 0,
-        "rhs": {
-          "left": {
-            "constant": -1.0,
-            "op": "affine",
-            "terms": []
-          },
-          "op": "multiply",
-          "right": {
-            "op": "operator",
-            "operator": 1
-          }
-        }
-      }
-    ],
-    "events": [
-      {
-        "body": [
-          {
-            "kind": "assign",
-            "rhs": {
-              "args": [
-                {
-                  "left": {
-                    "left": {
-                      "left": {
-                        "constant": 0.0,
-                        "op": "affine",
-                        "terms": [
-                          {
-                            "coefficient": -1.0,
-                            "node": 0
-                          },
-                          {
-                            "coefficient": 1.0,
-                            "node": 2
-                          }
-                        ]
-                      },
-                      "op": "divide",
-                      "right": {
-                        "constant": 0.9,
-                        "op": "affine",
-                        "terms": []
-                      }
-                    },
-                    "op": "multiply",
-                    "right": {
-                      "constant": 15.0,
-                      "op": "affine",
-                      "terms": []
-                    }
-                  },
-                  "op": "add",
-                  "right": {
-                    "constant": 0.5,
-                    "op": "affine",
-                    "terms": []
-                  }
-                }
-              ],
-              "function": "floor",
-              "op": "event_math",
-              "origin": {
-                "column": 11,
-                "expansion": [],
-                "instance": "M",
-                "line": 8,
-                "source": "ordinary_integer_prefix_joint.va"
-              }
-            },
-            "state": 0
-          },
-          {
-            "else_body": [],
-            "kind": "if",
-            "left": {
-              "op": "state",
-              "state": 0
-            },
-            "origin": {
-              "column": 5,
-              "expansion": [],
-              "instance": "M",
-              "line": 9,
-              "source": "ordinary_integer_prefix_joint.va"
-            },
-            "relation": "lt",
-            "right": {
-              "constant": 1.0,
-              "op": "affine",
-              "terms": []
-            },
-            "then_body": [
-              {
-                "kind": "assign",
-                "rhs": {
-                  "constant": 1.0,
-                  "op": "affine",
-                  "terms": []
-                },
-                "state": 0
-              }
-            ]
-          },
-          {
-            "kind": "assign",
-            "rhs": {
-              "op": "state",
-              "state": 0
-            },
-            "state": 1
-          },
-          {
-            "kind": "assign",
-            "rhs": {
-              "constant": 0.25,
-              "op": "affine",
-              "terms": []
-            },
-            "state": 3
-          },
-          {
-            "args": [
-              {
-                "op": "state",
-                "state": 0
-              },
-              {
-                "op": "state",
-                "state": 1
-              },
-              {
-                "op": "state",
-                "state": 2
-              }
-            ],
-            "format": "ratio=%d q=%d keep=%d",
-            "kind": "display",
-            "origin": {
-              "column": 9,
-              "expansion": [],
-              "instance": "M",
-              "line": 12,
-              "source": "ordinary_integer_prefix_joint.va"
-            }
-          }
-        ],
-        "origin": {
-          "column": 5,
-          "expansion": [],
-          "instance": "M",
-          "line": 10,
-          "source": "ordinary_integer_prefix_joint.va"
-        },
-        "trigger": {
-          "enabled": true,
-          "kind": "timer",
-          "period": 0.0,
-          "start": 0.125,
-          "time_tolerance": 1e-12
-        }
-      },
-      {
-        "body": [
-          {
-            "kind": "assign",
-            "rhs": {
-              "args": [
-                {
-                  "left": {
-                    "left": {
-                      "left": {
-                        "constant": 0.0,
-                        "op": "affine",
-                        "terms": [
-                          {
-                            "coefficient": -1.0,
-                            "node": 0
-                          },
-                          {
-                            "coefficient": 1.0,
-                            "node": 2
-                          }
-                        ]
-                      },
-                      "op": "divide",
-                      "right": {
-                        "constant": 0.9,
-                        "op": "affine",
-                        "terms": []
-                      }
-                    },
-                    "op": "multiply",
-                    "right": {
-                      "constant": 15.0,
-                      "op": "affine",
-                      "terms": []
-                    }
-                  },
-                  "op": "add",
-                  "right": {
-                    "constant": 0.5,
-                    "op": "affine",
-                    "terms": []
-                  }
-                }
-              ],
-              "function": "floor",
-              "op": "event_math",
-              "origin": {
-                "column": 11,
-                "expansion": [],
-                "instance": "M",
-                "line": 8,
-                "source": "ordinary_integer_prefix_joint.va"
-              }
-            },
-            "state": 0
-          },
-          {
-            "else_body": [],
-            "kind": "if",
-            "left": {
-              "op": "state",
-              "state": 0
-            },
-            "origin": {
-              "column": 5,
-              "expansion": [],
-              "instance": "M",
-              "line": 9,
-              "source": "ordinary_integer_prefix_joint.va"
-            },
-            "relation": "lt",
-            "right": {
-              "constant": 1.0,
-              "op": "affine",
-              "terms": []
-            },
-            "then_body": [
-              {
-                "kind": "assign",
-                "rhs": {
-                  "constant": 1.0,
-                  "op": "affine",
-                  "terms": []
-                },
-                "state": 0
-              }
-            ]
-          },
-          {
-            "kind": "assign",
-            "rhs": {
-              "op": "state",
-              "state": 0
-            },
-            "state": 1
-          },
-          {
-            "kind": "assign",
-            "rhs": {
-              "constant": 0.75,
-              "op": "affine",
-              "terms": []
-            },
-            "state": 3
-          },
-          {
-            "args": [
-              {
-                "op": "state",
-                "state": 0
-              },
-              {
-                "op": "state",
-                "state": 1
-              },
-              {
-                "op": "state",
-                "state": 2
-              }
-            ],
-            "format": "ratio=%d q=%d keep=%d",
-            "kind": "display",
-            "origin": {
-              "column": 9,
-              "expansion": [],
-              "instance": "M",
-              "line": 16,
-              "source": "ordinary_integer_prefix_joint.va"
-            }
-          }
-        ],
-        "origin": {
-          "column": 5,
-          "expansion": [],
-          "instance": "M",
-          "line": 14,
-          "source": "ordinary_integer_prefix_joint.va"
-        },
-        "trigger": {
-          "enabled": true,
-          "kind": "timer",
-          "period": 0.0,
-          "start": 0.5,
-          "time_tolerance": 1e-12
-        }
-      },
-      {
-        "body": [
-          {
-            "kind": "assign",
-            "rhs": {
-              "args": [
-                {
-                  "left": {
-                    "left": {
-                      "left": {
-                        "constant": 0.0,
-                        "op": "affine",
-                        "terms": [
-                          {
-                            "coefficient": -1.0,
-                            "node": 0
-                          },
-                          {
-                            "coefficient": 1.0,
-                            "node": 2
-                          }
-                        ]
-                      },
-                      "op": "divide",
-                      "right": {
-                        "constant": 0.9,
-                        "op": "affine",
-                        "terms": []
-                      }
-                    },
-                    "op": "multiply",
-                    "right": {
-                      "constant": 15.0,
-                      "op": "affine",
-                      "terms": []
-                    }
-                  },
-                  "op": "add",
-                  "right": {
-                    "constant": 0.5,
-                    "op": "affine",
-                    "terms": []
-                  }
-                }
-              ],
-              "function": "floor",
-              "op": "event_math",
-              "origin": {
-                "column": 11,
-                "expansion": [],
-                "instance": "M",
-                "line": 8,
-                "source": "ordinary_integer_prefix_joint.va"
-              }
-            },
-            "state": 0
-          },
-          {
-            "else_body": [],
-            "kind": "if",
-            "left": {
-              "op": "state",
-              "state": 0
-            },
-            "origin": {
-              "column": 5,
-              "expansion": [],
-              "instance": "M",
-              "line": 9,
-              "source": "ordinary_integer_prefix_joint.va"
-            },
-            "relation": "lt",
-            "right": {
-              "constant": 1.0,
-              "op": "affine",
-              "terms": []
-            },
-            "then_body": [
-              {
-                "kind": "assign",
-                "rhs": {
-                  "constant": 1.0,
-                  "op": "affine",
-                  "terms": []
-                },
-                "state": 0
-              }
-            ]
-          },
-          {
-            "kind": "assign",
-            "rhs": {
-              "op": "state",
-              "state": 0
-            },
-            "state": 1
-          },
-          {
-            "kind": "assign",
-            "rhs": {
-              "constant": 0.5,
-              "op": "affine",
-              "terms": []
-            },
-            "state": 3
-          },
-          {
-            "args": [
-              {
-                "op": "state",
-                "state": 0
-              },
-              {
-                "op": "state",
-                "state": 1
-              },
-              {
-                "op": "state",
-                "state": 2
-              }
-            ],
-            "format": "ratio=%d q=%d keep=%d",
-            "kind": "display",
-            "origin": {
-              "column": 9,
-              "expansion": [],
-              "instance": "M",
-              "line": 20,
-              "source": "ordinary_integer_prefix_joint.va"
-            }
-          }
-        ],
-        "origin": {
-          "column": 5,
-          "expansion": [],
-          "instance": "M",
-          "line": 18,
-          "source": "ordinary_integer_prefix_joint.va"
-        },
-        "trigger": {
-          "enabled": true,
-          "kind": "timer",
-          "period": 0.0,
-          "start": 0.875,
-          "time_tolerance": 1e-12
-        }
-      }
-    ],
     "nodes": [
       "0",
       "h",
       "u",
       "y"
     ],
-    "operators": [
+    "contributions": [
       {
-        "delay": 0.0,
-        "fall": 0.125,
-        "input": {
-          "args": [
-            {
-              "args": [
-                {
-                  "op": "integer_state",
-                  "state": 1
-                },
-                {
-                  "op": "integer_literal",
-                  "value": 0
-                }
-              ],
-              "function": "shift_right",
-              "op": "integer_primitive",
-              "origin": {
-                "column": 24,
-                "expansion": [],
-                "instance": "M",
-                "line": 22,
-                "source": "ordinary_integer_prefix_joint.va"
-              }
-            },
-            {
-              "op": "integer_literal",
-              "value": 1
-            }
-          ],
-          "function": "bit_and",
-          "op": "integer_primitive",
-          "origin": {
-            "column": 28,
-            "expansion": [],
-            "instance": "M",
-            "line": 22,
-            "source": "ordinary_integer_prefix_joint.va"
+        "branch": {
+          "instance": "M",
+          "local_positive": "0",
+          "local_negative": "y",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 3,
+        "rhs": {
+          "op": "multiply",
+          "left": {
+            "constant": -1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "operator": 0,
+            "op": "operator"
           }
         },
-        "kind": "transition",
         "origin": {
-          "column": 11,
-          "expansion": [],
-          "instance": "M",
+          "source": "ordinary_integer_prefix_joint.va",
           "line": 22,
-          "source": "ordinary_integer_prefix_joint.va"
-        },
-        "rise": 0.125
+          "column": 5,
+          "instance": "M",
+          "expansion": []
+        }
       },
       {
-        "delay": 0.0,
-        "fall": 0.125,
-        "input": {
-          "op": "state",
-          "state": 3
-        },
-        "kind": "transition",
-        "origin": {
-          "column": 11,
-          "expansion": [],
+        "branch": {
           "instance": "M",
-          "line": 23,
-          "source": "ordinary_integer_prefix_joint.va"
+          "local_positive": "0",
+          "local_negative": "h",
+          "kind": "voltage"
         },
-        "rise": 0.125
+        "positive": 0,
+        "negative": 1,
+        "rhs": {
+          "op": "multiply",
+          "left": {
+            "constant": -1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "operator": 1,
+            "op": "operator"
+          }
+        },
+        "origin": {
+          "source": "ordinary_integer_prefix_joint.va",
+          "line": 23,
+          "column": 5,
+          "instance": "M",
+          "expansion": []
+        }
       }
     ],
-    "schema_version": 32,
     "states": [
       {
-        "initial": 0.0,
         "instance": "M",
+        "name": "ratio",
         "kind": "integer",
-        "name": "ratio"
+        "initial": 0.0
       },
       {
-        "initial": 0.0,
         "instance": "M",
+        "name": "q",
         "kind": "integer",
-        "name": "q"
+        "initial": 0.0
       },
       {
-        "initial": 7.0,
         "instance": "M",
+        "name": "keep",
         "kind": "integer",
-        "name": "keep"
+        "initial": 0.0
       },
       {
-        "initial": 0.0,
         "instance": "M",
+        "name": "spare",
         "kind": "real",
-        "name": "spare"
+        "initial": 0.0
       }
     ],
-    "step_bounds": []
+    "events": [
+      {
+        "trigger": {
+          "start": 0.125,
+          "period": 0.0,
+          "time_tolerance": 1e-12,
+          "enabled": true,
+          "kind": "timer"
+        },
+        "body": [
+          {
+            "state": 1,
+            "rhs": {
+              "state": 0,
+              "op": "state"
+            },
+            "kind": "assign"
+          },
+          {
+            "state": 3,
+            "rhs": {
+              "value": {
+                "constant": 0.25,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "store",
+              "origin": {
+                "source": "ordinary_integer_prefix_joint.va",
+                "line": 11,
+                "column": 17,
+                "instance": "M",
+                "expansion": []
+              },
+              "op": "real_boundary"
+            },
+            "kind": "assign"
+          },
+          {
+            "format": "ratio=%d q=%d keep=%d",
+            "args": [
+              {
+                "state": 0,
+                "op": "state"
+              },
+              {
+                "state": 1,
+                "op": "state"
+              },
+              {
+                "state": 2,
+                "op": "state"
+              }
+            ],
+            "origin": {
+              "source": "ordinary_integer_prefix_joint.va",
+              "line": 12,
+              "column": 9,
+              "instance": "M",
+              "expansion": []
+            },
+            "kind": "display"
+          }
+        ],
+        "origin": {
+          "source": "ordinary_integer_prefix_joint.va",
+          "line": 10,
+          "column": 5,
+          "instance": "M",
+          "expansion": []
+        },
+        "procedure_id": 0,
+        "expanded_statement_ordinal": 4
+      },
+      {
+        "trigger": {
+          "start": 0.5,
+          "period": 0.0,
+          "time_tolerance": 1e-12,
+          "enabled": true,
+          "kind": "timer"
+        },
+        "body": [
+          {
+            "state": 1,
+            "rhs": {
+              "state": 0,
+              "op": "state"
+            },
+            "kind": "assign"
+          },
+          {
+            "state": 3,
+            "rhs": {
+              "value": {
+                "constant": 0.75,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "store",
+              "origin": {
+                "source": "ordinary_integer_prefix_joint.va",
+                "line": 15,
+                "column": 17,
+                "instance": "M",
+                "expansion": []
+              },
+              "op": "real_boundary"
+            },
+            "kind": "assign"
+          },
+          {
+            "format": "ratio=%d q=%d keep=%d",
+            "args": [
+              {
+                "state": 0,
+                "op": "state"
+              },
+              {
+                "state": 1,
+                "op": "state"
+              },
+              {
+                "state": 2,
+                "op": "state"
+              }
+            ],
+            "origin": {
+              "source": "ordinary_integer_prefix_joint.va",
+              "line": 16,
+              "column": 9,
+              "instance": "M",
+              "expansion": []
+            },
+            "kind": "display"
+          }
+        ],
+        "origin": {
+          "source": "ordinary_integer_prefix_joint.va",
+          "line": 14,
+          "column": 5,
+          "instance": "M",
+          "expansion": []
+        },
+        "procedure_id": 0,
+        "expanded_statement_ordinal": 5
+      },
+      {
+        "trigger": {
+          "start": 0.875,
+          "period": 0.0,
+          "time_tolerance": 1e-12,
+          "enabled": true,
+          "kind": "timer"
+        },
+        "body": [
+          {
+            "state": 1,
+            "rhs": {
+              "state": 0,
+              "op": "state"
+            },
+            "kind": "assign"
+          },
+          {
+            "state": 3,
+            "rhs": {
+              "value": {
+                "constant": 0.5,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "store",
+              "origin": {
+                "source": "ordinary_integer_prefix_joint.va",
+                "line": 19,
+                "column": 17,
+                "instance": "M",
+                "expansion": []
+              },
+              "op": "real_boundary"
+            },
+            "kind": "assign"
+          },
+          {
+            "format": "ratio=%d q=%d keep=%d",
+            "args": [
+              {
+                "state": 0,
+                "op": "state"
+              },
+              {
+                "state": 1,
+                "op": "state"
+              },
+              {
+                "state": 2,
+                "op": "state"
+              }
+            ],
+            "origin": {
+              "source": "ordinary_integer_prefix_joint.va",
+              "line": 20,
+              "column": 9,
+              "instance": "M",
+              "expansion": []
+            },
+            "kind": "display"
+          }
+        ],
+        "origin": {
+          "source": "ordinary_integer_prefix_joint.va",
+          "line": 18,
+          "column": 5,
+          "instance": "M",
+          "expansion": []
+        },
+        "procedure_id": 0,
+        "expanded_statement_ordinal": 6
+      },
+      {
+        "trigger": {
+          "kind": "initial_step"
+        },
+        "body": [
+          {
+            "state": 1,
+            "rhs": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "kind": "assign"
+          },
+          {
+            "state": 2,
+            "rhs": {
+              "constant": 7.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "kind": "assign"
+          },
+          {
+            "state": 3,
+            "rhs": {
+              "value": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "store",
+              "origin": {
+                "source": "ordinary_integer_prefix_joint.va",
+                "line": 7,
+                "column": 38,
+                "instance": "M",
+                "expansion": []
+              },
+              "op": "real_boundary"
+            },
+            "kind": "assign"
+          }
+        ],
+        "origin": {
+          "source": "ordinary_integer_prefix_joint.va",
+          "line": 7,
+          "column": 5,
+          "instance": "M",
+          "expansion": []
+        },
+        "procedure_id": 0,
+        "expanded_statement_ordinal": 0
+      }
+    ],
+    "operators": [
+      {
+        "input": {
+          "function": "bit_and",
+          "args": [
+            {
+              "function": "shift_right",
+              "args": [
+                {
+                  "state": 1,
+                  "op": "integer_state"
+                },
+                {
+                  "value": 0,
+                  "op": "integer_literal"
+                }
+              ],
+              "origin": {
+                "source": "ordinary_integer_prefix_joint.va",
+                "line": 22,
+                "column": 24,
+                "instance": "M",
+                "expansion": []
+              },
+              "op": "integer_primitive"
+            },
+            {
+              "value": 1,
+              "op": "integer_literal"
+            }
+          ],
+          "origin": {
+            "source": "ordinary_integer_prefix_joint.va",
+            "line": 22,
+            "column": 28,
+            "instance": "M",
+            "expansion": []
+          },
+          "op": "integer_primitive"
+        },
+        "delay": 0.0,
+        "rise": 0.125,
+        "fall": 0.125,
+        "origin": {
+          "source": "ordinary_integer_prefix_joint.va",
+          "line": 22,
+          "column": 11,
+          "instance": "M",
+          "expansion": []
+        },
+        "kind": "transition"
+      },
+      {
+        "input": {
+          "state": 3,
+          "op": "state"
+        },
+        "delay": 0.0,
+        "rise": 0.125,
+        "fall": 0.125,
+        "origin": {
+          "source": "ordinary_integer_prefix_joint.va",
+          "line": 23,
+          "column": 11,
+          "instance": "M",
+          "expansion": []
+        },
+        "kind": "transition"
+      }
+    ],
+    "schema_version": 33,
+    "step_bounds": [],
+    "procedures": [
+      {
+        "procedure_id": 0,
+        "instance": "M",
+        "body": [
+          {
+            "expanded_statement_ordinal": 0,
+            "action": {
+              "event": 3,
+              "kind": "event_gate"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 1,
+            "action": {
+              "state": 0,
+              "rhs": {
+                "function": "floor",
+                "args": [
+                  {
+                    "operation": "add",
+                    "left": {
+                      "operation": "multiply",
+                      "left": {
+                        "operation": "divide",
+                        "left": {
+                          "value": {
+                            "constant": 0.0,
+                            "terms": [
+                              {
+                                "node": 0,
+                                "coefficient": -1.0
+                              },
+                              {
+                                "node": 2,
+                                "coefficient": 1.0
+                              }
+                            ],
+                            "op": "affine"
+                          },
+                          "kind": "sample",
+                          "origin": {
+                            "source": "ordinary_integer_prefix_joint.va",
+                            "line": 8,
+                            "column": 19,
+                            "instance": "M",
+                            "expansion": []
+                          },
+                          "op": "real_boundary"
+                        },
+                        "right": {
+                          "constant": 0.9,
+                          "terms": [],
+                          "op": "affine"
+                        },
+                        "origin": {
+                          "source": "ordinary_integer_prefix_joint.va",
+                          "line": 8,
+                          "column": 23,
+                          "instance": "M",
+                          "expansion": []
+                        },
+                        "op": "real_binary"
+                      },
+                      "right": {
+                        "constant": 15.0,
+                        "terms": [],
+                        "op": "affine"
+                      },
+                      "origin": {
+                        "source": "ordinary_integer_prefix_joint.va",
+                        "line": 8,
+                        "column": 28,
+                        "instance": "M",
+                        "expansion": []
+                      },
+                      "op": "real_binary"
+                    },
+                    "right": {
+                      "constant": 0.5,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "origin": {
+                      "source": "ordinary_integer_prefix_joint.va",
+                      "line": 8,
+                      "column": 31,
+                      "instance": "M",
+                      "expansion": []
+                    },
+                    "op": "real_binary"
+                  }
+                ],
+                "origin": {
+                  "source": "ordinary_integer_prefix_joint.va",
+                  "line": 8,
+                  "column": 11,
+                  "instance": "M",
+                  "expansion": []
+                },
+                "op": "event_math"
+              },
+              "kind": "assign"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 2,
+            "action": {
+              "relation": "lt",
+              "left": {
+                "state": 0,
+                "op": "state"
+              },
+              "right": {
+                "constant": 1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "then_body": [
+                {
+                  "expanded_statement_ordinal": 3,
+                  "action": {
+                    "state": 0,
+                    "rhs": {
+                      "constant": 1.0,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "kind": "assign"
+                  }
+                }
+              ],
+              "else_body": [],
+              "origin": {
+                "source": "ordinary_integer_prefix_joint.va",
+                "line": 9,
+                "column": 5,
+                "instance": "M",
+                "expansion": []
+              },
+              "kind": "procedure_if"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 4,
+            "action": {
+              "event": 0,
+              "kind": "event_gate"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 5,
+            "action": {
+              "event": 1,
+              "kind": "event_gate"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 6,
+            "action": {
+              "event": 2,
+              "kind": "event_gate"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 7,
+            "action": {
+              "contribution": 0,
+              "kind": "contribution_capture"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 8,
+            "action": {
+              "contribution": 1,
+              "kind": "contribution_capture"
+            }
+          }
+        ]
+      }
+    ],
+    "real_bindings": []
   },
   "samples": [],
   "tolerances": {

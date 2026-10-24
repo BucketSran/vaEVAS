@@ -13,6 +13,7 @@ pub(crate) fn classify(
     driven: &[String],
     admission: &crate::event_control::Admission<'_>,
     work: Option<&crate::transition_source_plan::Work>,
+    source_bindings: Option<&crate::procedure::DependencySources<'_>>,
 ) -> Result<Vec<bool>, Error> {
     let driven: BTreeSet<_> = p
         .nodes
@@ -24,6 +25,8 @@ pub(crate) fn classify(
         e: &E,
         driven: &BTreeSet<usize>,
         work: Option<&crate::transition_source_plan::Work>,
+        sources: Option<&crate::procedure::DependencySources<'_>>,
+        active: &mut BTreeSet<usize>,
     ) -> Result<Option<(usize, Option<f64>)>, Error> {
         if let Some(w) = work {
             crate::event_floor::charge(w, 1, "floor_source_qualification_ast")?;
@@ -50,8 +53,8 @@ pub(crate) fn classify(
             }
             E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
                 if work.is_none() && (matches!(e,E::Divide{..}) || matches!(e,E::Multiply{..}) && [left.as_ref(),right.as_ref()].iter().any(|v|matches!(v,E::Affine{constant,terms} if terms.is_empty()&&!crate::event_floor::binary_scale(*constant)))) {return Ok(None);}
-                let a = input_operand(left, driven, work)?;
-                let b = input_operand(right, driven, work)?;
+                let a = input_operand(left, driven, work, sources, active)?;
+                let b = input_operand(right, driven, work, sources, active)?;
                 match (a, b) {
                     (Some((ad, av)), Some((bd, bv))) => match e {
                         E::Add { .. } => Some((ad.max(bd), av.zip(bv).map(|(a, b)| a + b))),
@@ -68,13 +71,82 @@ pub(crate) fn classify(
                     _ => None,
                 }
             }
+            // Qualification follows the original source tree only. The Plan
+            // still evaluates every Boundary/Real operation at this occurrence;
+            // neither a driven-leaf check nor a closed scalar is a domain proof.
+            E::RealBoundary { value, .. } if sources.is_some() => {
+                input_operand(value, driven, work, sources, active)?
+            }
+            E::RealBinary {
+                operation,
+                left,
+                right,
+                ..
+            } if sources.is_some() => {
+                use crate::ir::RealOperation as R;
+                use crate::real_rounding::{point, Op};
+                let a = input_operand(left, driven, work, sources, active)?;
+                let b = input_operand(right, driven, work, sources, active)?;
+                match (a, b) {
+                    (Some((ad, av)), Some((bd, bv))) => {
+                        let degree = match operation {
+                            R::Add | R::Subtract => Some(ad.max(bd)),
+                            R::Multiply if ad + bd <= 1 => Some(ad + bd),
+                            R::Divide
+                                if bd == 0 && bv.is_some_and(|v| v.is_finite() && v != 0.) =>
+                            {
+                                Some(ad)
+                            }
+                            _ => None,
+                        };
+                        let op = match operation {
+                            R::Add => Op::Add,
+                            R::Subtract => Op::Subtract,
+                            R::Multiply => Op::Multiply,
+                            R::Divide => Op::Divide,
+                        };
+                        // This is only metadata for a closed denominator. Use
+                        // actual per-operation IEEE rounding, never reassociate.
+                        let value = av.zip(bv).and_then(|(a, b)| point(op, a, b).ok());
+                        degree.and_then(|d| (d != 0 || value.is_some()).then_some((d, value)))
+                    }
+                    _ => None,
+                }
+            }
+            E::RealLocal { binding } if sources.is_some() => {
+                let w =
+                    work.ok_or_else(|| Error::new("invalid_ir", "floor source ledger absent"))?;
+                // Prepay lookup, BTree path comparison/insertion/removal and
+                // storage before touching the set. No fresh Work or allowance.
+                let height = (active.len().saturating_add(1)).ilog2() as usize + 2;
+                crate::event_floor::charge(
+                    w,
+                    height.saturating_mul(64).saturating_add(64),
+                    "floor_source_binding_path",
+                )?;
+                if !active.insert(*binding) {
+                    return Ok(None);
+                }
+                let result = (|| {
+                    crate::event_floor::charge(w, 2, "floor_source_binding_definition")?;
+                    match sources
+                        .ok_or_else(|| Error::new("invalid_ir", "floor source index absent"))?
+                        .single_binding_value(*binding)?
+                    {
+                        Some(value) => input_operand(value, driven, work, sources, active),
+                        None => Ok(None),
+                    }
+                })();
+                active.remove(binding);
+                result?
+            }
             E::Power { base, exponent: 1 } => {
                 if let Some(w) = work {
                     if crate::event_floor::new_operand_charged(base, w)? {
                         return Ok(None);
                     }
                 }
-                input_operand(base, driven, work)?
+                input_operand(base, driven, work, sources, active)?
             }
             _ => None,
         };
@@ -84,6 +156,7 @@ pub(crate) fn classify(
         v: &serde_json::Value,
         driven: &BTreeSet<usize>,
         work: Option<&crate::transition_source_plan::Work>,
+        sources: Option<&crate::procedure::DependencySources<'_>>,
     ) -> Result<(), Error> {
         if let Some(w) = work {
             crate::event_floor::charge(w, 1, "floor_source_qualification_ast")?;
@@ -102,7 +175,9 @@ pub(crate) fn classify(
                     let expr: E = serde_json::from_value(v.clone())
                         .map_err(|e| Error::new("invalid_ir", e.to_string()))?;
                     if let E::IntegerRound { value, .. } = expr {
-                        if input_operand(&value, driven, work)?.is_none() {
+                        if input_operand(&value, driven, work, sources, &mut BTreeSet::new())?
+                            .is_none()
+                        {
                             return Err(Error::new(
                                 "unsupported_integer_conversion",
                                 "integer conversion requires actual driven inputs",
@@ -129,7 +204,10 @@ pub(crate) fn classify(
                         ..
                     } = expr
                     {
-                        if args.len() != 1 || input_operand(&args[0], driven, work)?.is_none() {
+                        if args.len() != 1
+                            || input_operand(&args[0], driven, work, sources, &mut BTreeSet::new())?
+                                .is_none()
+                        {
                             return Err(Error::new(
                                 "unsupported_floor",
                                 "native event floor requires actual driven affine inputs",
@@ -138,12 +216,12 @@ pub(crate) fn classify(
                     }
                 }
                 for child in m.values() {
-                    audit(child, driven, work)?;
+                    audit(child, driven, work, sources)?;
                 }
             }
             serde_json::Value::Array(a) => {
                 for child in a {
-                    audit(child, driven, work)?;
+                    audit(child, driven, work, sources)?;
                 }
             }
             _ => (),
@@ -190,7 +268,9 @@ pub(crate) fn classify(
             crate::event_floor::charge(w,bytes.len().saturating_mul(32),"floor_source_qualification_copy")?;
             serde_json::from_slice(&bytes).map_err(|e|Error::new("invalid_ir",e.to_string()))?
         } else {serde_json::to_value(&e.body).map_err(|e|Error::new("invalid_ir",e.to_string()))?};
-        audit(&body,&driven,work)?;
+        // Only procedure-backed source events execute these nodes through
+        // Plan's complete RN graph. Legacy events keep their old admission.
+        audit(&body,&driven,work,if e.procedure_id.is_some(){source_bindings}else{None})?;
         if passive[index] || (!has_integer(&body,work)? && !admission.floor_event(index) && e.assignments().iter().all(|a| crate::events::affine(&a.rhs,p,&e.origin.instance).is_ok())) {
             return Ok(false);
         }
@@ -204,13 +284,13 @@ pub(crate) fn classify(
         // keep the older contract. Scan predicates and unselected arms too:
         // an unrelated sampled product must not make observer mathematics
         // legal in a physical event.
-        fn control(v:&serde_json::Value,sampled:bool,used:&mut bool,work:Option<&crate::transition_source_plan::Work>)->Result<bool,Error>{
+        fn control(v:&serde_json::Value,sampled:bool,used:&mut bool,work:Option<&crate::transition_source_plan::Work>,procedure:bool)->Result<bool,Error>{
             if let Some(w)=work {crate::event_floor::charge(w,1,"floor_source_qualification_scan")?;}
             match v {
                 serde_json::Value::Object(m)=>{
                     let kind=m.get("kind").and_then(|v|v.as_str());
                     let op=m.get("op").and_then(|v|v.as_str());
-                    if kind.is_some_and(|s|matches!(s,"loop"|"array_write")) || op.is_some_and(|s|matches!(s,"array_read"|"checked_integer"|"checked_index")) {return Ok(true)}
+                    if !procedure && (kind.is_some_and(|s|matches!(s,"loop"|"array_write")) || op.is_some_and(|s|matches!(s,"array_read"|"checked_integer"|"checked_index"))) {return Ok(true)}
                     if op==Some("event_math") {
                         let function=m.get("function").and_then(|v|v.as_str());
                         if !(function==Some("floor") || sampled&&matches!(function,Some("sqrt"|"ln"))) {return Ok(true)}
@@ -226,23 +306,29 @@ pub(crate) fn classify(
                             (None,Some(_)) => sampled,
                             _ => false,
                         };
-                        if control(child,inherit,used,work)?{return Ok(true)}
+                        if control(child,inherit,used,work,procedure)?{return Ok(true)}
                     }
                 },
-                serde_json::Value::Array(a)=>{for child in a {if control(child,sampled,used,work)?{return Ok(true)}}},
+                serde_json::Value::Array(a)=>{for child in a {if control(child,sampled,used,work,procedure)?{return Ok(true)}}},
                 _=>{}
             }
             Ok(false)
         }
         // An isolated observer instance never has a physical sampled position.
         let mut used=false;
-        if control(&body,false,&mut used,work)?
+        if control(&body,false,&mut used,work,e.procedure_id.is_some())?
             || used && isolated.get_or_init(|| crate::passive_events::isolated_instances(p)).contains(&e.origin.instance) {
             return Err(Error::new("unsupported_transient","observer mathematics and control nodes require an isolated observer event"));
         }
         for a in e.assignments() {
-            let d=crate::event_numeric::dependencies(&a.rhs,p,&e.origin.instance)?;
-            if !d.operator_dependencies.is_empty() || !d.node_dependencies.is_subset(&driven) {
+            let d=if let Some(sources)=source_bindings{crate::procedure::source_dependencies(&a.rhs,p,sources,work.ok_or_else(||Error::new("invalid_ir","source dependency ledger absent"))?)?}else{crate::event_numeric::dependencies(&a.rhs,p,&e.origin.instance)?};
+            let operator_supported=d.operator_dependencies.is_empty() || (
+                e.procedure_id.is_some() && d.operator_dependencies.iter().all(|&i|matches!(p.operators.get(i),Some(crate::ir::OperatorSpec::Math{..}|crate::ir::OperatorSpec::Sin{..})))
+            );
+            if !operator_supported || !(
+                (e.procedure_id.is_some() && e.assignments().iter().all(|a|!crate::event_numeric::contains_legacy_math(&a.rhs)))
+                || d.node_dependencies.is_subset(&driven)
+            ) {
                 return Err(Error::new("unsupported_transient","nonlinear sampled arithmetic requires state-independent driven voltage inputs"));
             }
         }
@@ -280,7 +366,36 @@ fn continuous_provider(
     operators: &[I],
     assigned: &BTreeSet<usize>,
 ) -> Result<Option<I>, Error> {
-    let p = &model.program;
+    independent_voltage_bounds(
+        &model.program,
+        &model.driven,
+        node,
+        nodes,
+        states,
+        operators,
+        assigned,
+        None,
+    )
+}
+
+/// The same acyclic continuous provider, available before a procedure chooses
+/// a branch. Assigned-state loops remain unknown; no trial solution is used.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn independent_voltage_bounds(
+    p: &Program,
+    driven: &[String],
+    node: usize,
+    nodes: &[I],
+    states: &[I],
+    operators: &[I],
+    assigned: &BTreeSet<usize>,
+    work: Option<&crate::transition_source_plan::Work>,
+) -> Result<Option<I>, Error> {
+    if let Some(w) = work {
+        if !crate::procedure::unconditional_contributions(p, w)? {
+            return Ok(None);
+        }
+    }
     let probe = E::Affine {
         constant: 0.,
         terms: vec![crate::ir::Term {
@@ -288,9 +403,19 @@ fn continuous_provider(
             coefficient: 1.,
         }],
     };
-    let Ok(expanded) = crate::causal_voltage::expand(&probe, p, &model.driven) else {
-        return Ok(None);
+    let expanded = match work {
+        Some(w) => crate::causal_voltage::expand_paid(&probe, p, driven, w),
+        None => crate::causal_voltage::expand(&probe, p, driven),
     };
+    let expanded = match expanded {
+        Ok(value) => value,
+        Err(error) if error.kind == "unsupported_condition" => return Ok(None),
+        Err(error) => return Err(error),
+    };
+    if let Some(w) = work {
+        let bytes = crate::event_floor::encoded_size(&expanded, w)?;
+        w.debit(2, (bytes as u64).saturating_mul(8))?;
+    }
     // `expand` returns only affine leaves, State, Operator and arithmetic or
     // Select over them; every leaf, including zero weights and unselected
     // arms, must satisfy the provider rule.
@@ -332,6 +457,48 @@ fn continuous_provider(
     crate::causal_voltage::bounds(&expanded, nodes, states, operators).map(Some)
 }
 
+/// Rebuild the same pre-activation proof domains during selection and final
+/// parameter certification. Solved nominal voltages are never proof inputs.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn fill_independent_pre_event_nodes(
+    p: &Program,
+    driven: &[String],
+    fired: &[usize],
+    nodes: &mut [I],
+    before: &[I],
+    operators: &[I],
+    w: &crate::transition_source_plan::Work,
+) -> Result<bool, Error> {
+    if fired.is_empty() {
+        return Ok(false);
+    }
+    w.debit(
+        2,
+        ((p.states.len() + p.nodes.len() + driven.len()) * 64 + 64) as u64,
+    )?;
+    let assigned = crate::procedure::activation_writes(p, fired, w)?;
+    let mut provided = false;
+    for node in 1..nodes.len() {
+        w.step()?;
+        if !nodes[node].finite() {
+            if let Some(band) = independent_voltage_bounds(
+                p,
+                driven,
+                node,
+                nodes,
+                before,
+                operators,
+                &assigned,
+                Some(w),
+            )? {
+                nodes[node] = band;
+                provided = true;
+            }
+        }
+    }
+    Ok(provided)
+}
+
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn certificate(
     model: &EventModel,
@@ -346,6 +513,31 @@ pub(crate) fn certificate(
     check_voltages: bool,
     proofs: Option<&crate::event_value_proof::Context<'_>>,
 ) -> Result<Option<StateVoltageBounds>, Error> {
+    if let Some(plan) = &selection.plan {
+        if !plan.has_observation() && !check_voltages {
+            let nodes = input_nodes(model, inputs);
+            return Ok(Some((
+                plan.state_bounds(&nodes, before, proofs, crate::real_expression::work(model))?,
+                Vec::new(),
+            )));
+        }
+        let (bounds, nodes) = plan.certificate(
+            &model.program,
+            &model.driven,
+            model.tolerances.clone(),
+            inputs,
+            before,
+            operators,
+            voltages,
+            states,
+            proofs,
+            crate::real_expression::work(model),
+        )?;
+        return Ok(Some((
+            bounds,
+            if check_voltages { nodes } else { Vec::new() },
+        )));
+    }
     if !selection
         .actions
         .iter()
@@ -367,11 +559,16 @@ pub(crate) fn certificate(
         })
         .collect();
     let mut after = before.to_vec();
+    let mut frames =
+        crate::procedure_frames::Frames::new(selection, proofs.and_then(|p| p.execution_work()))?;
     for (event, indices) in &selection.actions {
         if model.passive_events[*event] {
             continue;
         }
-        let mut local = crate::event_value_proof::LocalState::try_with_context(before, proofs)?;
+        let mut local = match frames.take(*event) {
+            Some(v) => v,
+            None => crate::event_value_proof::LocalState::try_with_context(before, proofs)?,
+        };
         for &index in indices {
             let expression = &model.action_expressions[*event][index];
             let dependencies = crate::event_numeric::dependencies(
@@ -406,6 +603,7 @@ pub(crate) fn certificate(
             local.try_assign(state, expression, &nodes, value)?;
             after[state] = local[state];
         }
+        frames.put(*event, local);
     }
     // State transfer was certified from the original expression trees above.
     // Project the voltage equations with those new state boxes as forcing;
@@ -438,3 +636,7 @@ pub(crate) fn certificate(
     }
     Ok(Some(result))
 }
+
+#[cfg(test)]
+#[path = "causal_event_floor_rn_tests.rs"]
+mod floor_rn_tests;

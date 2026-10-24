@@ -38,6 +38,18 @@ def paper_sentence(node):
     return f"{node['title']}。{cells}。"
 
 
+def evidence_scope():
+    # All generated views are one directory below capabilities/.
+    return [
+        "成绩沿用[原支持矩阵](../../docs/COMPARISON.md#支持矩阵)的固定模型和配置，",
+        "只适用于各行的容差、停止时间及来源版本，不覆盖所有合法写法。",
+        "结果来自不同历史版本，不代表当前 main 或 IR33 的一次全量验收。",
+        "逐行范围见[验证覆盖](../../validation/paper/COVERAGE.md)，",
+        "执行版本与收据见[来源和补充证据](../../docs/development/COMPARISON.md#table-evidence)。",
+        "",
+    ]
+
+
 def comparison_markdown(data):
     lines = [
         "# 能力比较表",
@@ -46,6 +58,7 @@ def comparison_markdown(data):
         "[四后端支持表前五节](../../docs/COMPARISON.md#支持矩阵)，不改写该文的历史说明。",
         "没有四后端成绩的节点标为等待跑，不填通过或失败。",
         "",
+        *evidence_scope(),
         "| 能力 | 章节 | 状态 | Spectre | ngspice + OpenVAF-R | Gnucap + modelgen-verilog | EVAS |",
         "| --- | --- | --- | --- | --- | --- | --- |",
     ]
@@ -73,6 +86,7 @@ def paper_markdown(data):
         "由 `evas/capabilities/catalog.py` 生成。只包含已经有四后端成绩的能力节点。",
         "这一页不是实验开发的登记簿。落后和未验收留在格子里。",
         "",
+        *evidence_scope(),
         "| 能力 | 与其他仿真器的比较 |",
         "| --- | --- |",
     ]
@@ -98,6 +112,7 @@ def node_page(node):
         lines.append(f"依赖的基本节点：{deps}。组合通过不使这些节点自动合格。")
         lines.append("")
     if node["status"] == "compared":
+        lines.extend(evidence_scope())
         lines.append(paper_sentence(node))
         lines.append("")
         lines.append(f"成绩来源：[{node['evidence']}](../../../{node['evidence']})。")

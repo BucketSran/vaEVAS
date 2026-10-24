@@ -14,6 +14,7 @@ import unittest
 
 from evas import CompileError, KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
+from initial_record_contract import check_initial_record_batch
 
 COUNTER = model('''
   @(initial_step) begin up=0; down=0; end
@@ -28,11 +29,15 @@ def compile_event(source=COUNTER, instances=None):
 
 
 def execute_event(source=COUNTER, *, instances=None, sources=None, times=None,
-                  max_step=10e-6, stop=3e-6):
-    return transient(compile_event(source, instances),
+                  max_step=10e-6, stop=3e-6, initial_records=None):
+    program = compile_event(source, instances)
+    result = transient(program,
                      sources or {'u': [[0,.4],[1e-6,.6],[2e-6,.4],[3e-6,.6]]},
                      times or [0,.25e-6,.75e-6,1.75e-6,2.75e-6,3e-6],
                      stop=stop, max_step=max_step, kernel=KERNEL)
+    if initial_records is None:
+        return result
+    return check_initial_record_batch(result, program, *initial_records)
 
 
 class EventContracts(unittest.TestCase):
@@ -68,7 +73,7 @@ class EventContracts(unittest.TestCase):
                 transient(program, sources, [0,3e-6], **options, **aliases)
 
     def test_direction_count_time_and_post_event_voltage(self):
-        result = execute_event()
+        result = execute_event(initial_records=([0, 0], [0, 0], 1))
         events = result['transient']['events']
         self.assertEqual([e['event'] for e in events], [0,1,0])
         for event, expected in zip(events, [.5e-6,1.5e-6,2.5e-6]):
@@ -92,7 +97,7 @@ class EventContracts(unittest.TestCase):
                 expected = [shift+t for t in [.5e-6,1.5e-6,2.5e-6]]
                 for step in [7e-6,97e-9,11e-9]:
                     with self.subTest(shift=shift, amplitude=amplitude, step=step):
-                        r = execute_event(sources={'u':points}, times=[0,3e-6], max_step=step)
+                        r = execute_event(sources={'u':points}, times=[0,3e-6], max_step=step, initial_records=([0, 0], [0, 0], 1))
                         self.assertEqual(r['transient']['states'][-1], [2,1])
                         self.assertEqual(len(r['transient']['events']),3)
                         for event, root in zip(r['transient']['events'],expected):
@@ -100,13 +105,13 @@ class EventContracts(unittest.TestCase):
 
     def test_initial_high_and_initial_zero_do_not_fire(self):
         for start in [.6,.5]:
-            r = execute_event(sources={'u':[[0,start],[1e-6,.6],[2e-6,.4],[3e-6,.6]]})
+            r = execute_event(sources={'u':[[0,start],[1e-6,.6],[2e-6,.4],[3e-6,.6]]}, initial_records=([0, 0], [0, 0], 1))
             self.assertEqual([e['event'] for e in r['transient']['events']], [1,0])
             self.assertEqual(r['transient']['states'][-1],[1,1])
 
     def test_exact_knot_crossing_and_touch_each_fire_once(self):
         r = execute_event(sources={'u':[[0,.4],[.5e-6,.5],[1e-6,.6],
-                                       [1.5e-6,.5],[2e-6,.6],[3e-6,.4]]})
+                                       [1.5e-6,.5],[2e-6,.6],[3e-6,.4]]}, initial_records=([0, 0], [0, 0], 1))
         self.assertEqual([e['event'] for e in r['transient']['events']],[0,1,1])
         self.assertEqual(r['transient']['events'][0]['time'],.5e-6)
         self.assertEqual(r['transient']['events'][1]['time'],1.5e-6)
@@ -127,7 +132,7 @@ class EventContracts(unittest.TestCase):
                     for step in [10e-6, 7e-9]:
                         with self.subTest(before=before, after=after, direction=direction, step=step):
                             r = execute_event(source, sources={'u':[[0,before],[1.5e-6,.5],[3e-6,after]]},
-                                              times=times, max_step=step)
+                                              times=times, max_step=step, initial_records=([0], [0], 1))
                             events = r['transient']['events']
                             self.assertEqual([e['time'] for e in events], [1.5e-6]*expected)
                             self.assertEqual([e['guard_value'] for e in events], [0.]*expected)
@@ -139,7 +144,7 @@ class EventContracts(unittest.TestCase):
         times = [0, .75e-6, 1.5e-6, 2.25e-6, 3e-6]
         for side, event in [(.4,0), (.6,1)]:
             points = [[t, .5 if i%2 else side] for i,t in enumerate(times)]
-            r = execute_event(sources={'u':points}, times=times)
+            r = execute_event(sources={'u':points}, times=times, initial_records=([0, 0], [0, 0], 1))
             self.assertEqual([e['event'] for e in r['transient']['events']], [event,event])
             self.assertEqual([e['time'] for e in r['transient']['events']], [.75e-6,2.25e-6])
             self.assertEqual([s[event] for s in r['transient']['states']], [0,1,1,2,2])
@@ -150,10 +155,10 @@ class EventContracts(unittest.TestCase):
             # One representable value away from threshold is still nonzero,
             # even though its distance is far smaller than expression tolerance.
             near = math.nextafter(.5, side)
-            r = execute_event(sources={'u':[[0,side],[1.5e-6,near],[3e-6,side]]})
+            r = execute_event(sources={'u':[[0,side],[1.5e-6,near],[3e-6,side]]}, initial_records=([0, 0], [0, 0], 1))
             self.assertEqual(r['transient']['events'], [])
             beyond = .5 + (1e-6 if side < .5 else -1e-6)
-            r = execute_event(sources={'u':[[0,side],[1.5e-6,beyond],[3e-6,side]]})
+            r = execute_event(sources={'u':[[0,side],[1.5e-6,beyond],[3e-6,side]]}, initial_records=([0, 0], [0, 0], 1))
             order = [0,1] if side < .5 else [1,0]
             self.assertEqual([e['event'] for e in r['transient']['events']], order)
             self.assertEqual(r['transient']['states'][-1], [1,1])
@@ -162,7 +167,7 @@ class EventContracts(unittest.TestCase):
         source = model('''@(initial_step) begin n=start; v=1; end
           @(cross(V(u,r)-0.5,0)) begin n=n+1; v=n+v; end
           V(y,r)<+v;''', 'parameter real start=2; integer n; real v;')
-        r = execute_event(source)
+        r = execute_event(source, initial_records=([0, 0], [2, 1], 1))
         self.assertEqual(r['transient']['states'][-1],[5,13])
         self.assertEqual(len(r['transient']['events']),3)
 
@@ -171,7 +176,7 @@ class EventContracts(unittest.TestCase):
           V(z,r)<+V(u,r)+0.5*V(z,r);
           @(cross(V(z,r)-1,0)) n=n+1;
           V(y,r)<+0.1*n;''', 'integer n; electrical z;')
-        r = execute_event(source)
+        r = execute_event(source, initial_records=([0], [0], 1))
         self.assertEqual(r['transient']['states'][-1],[3])
         for e,t in zip(r['transient']['events'],[.5e-6,1.5e-6,2.5e-6]):
             self.assertAlmostEqual(e['time'],t,delta=1e-18)
@@ -181,7 +186,7 @@ class EventContracts(unittest.TestCase):
         b = instance('b',connections=dict(u='v',y='b',r='0'))
         sources = {'u':[[0,.4],[1e-6,.6],[2e-6,.4],[3e-6,.6]],
                    'v':[[0,.6],[1e-6,.4],[2e-6,.6],[3e-6,.4]]}
-        results = [execute_event(instances=order,sources=sources) for order in [[a,b],[b,a]]]
+        results = [execute_event(instances=order,sources=sources, initial_records=([0, 0, 0, 0], [0, 0, 0, 0], 2)) for order in [[a,b],[b,a]]]
         self.assertEqual(results[0]['solutions'],results[1]['solutions'])
         for r in results:
             states = dict(zip(r['transient']['state_names'],r['transient']['states'][-1]))
@@ -199,10 +204,10 @@ class EventContracts(unittest.TestCase):
     def test_tolerances_do_not_suppress_small_or_merge_close_crossings(self):
         points = [[0,.4],[1e-6,.6],[1e-6+2e-12,.4],[1e-6+4e-12,.6],[3e-6,.6]]
         for stimulus in [points, [[0,.5-1e-8],[1e-6,.5+1e-8],[2e-6,.5-1e-8],[3e-6,.5+1e-8]]]:
-            r = execute_event(sources={'u':stimulus},times=[0,3e-6])
+            r = execute_event(sources={'u':stimulus},times=[0,3e-6], initial_records=([0, 0], [0, 0], 1))
             self.assertEqual(r['transient']['states'][-1],[2,1])
             self.assertEqual(len(r['transient']['events']),3)
-        for e,t in zip(execute_event(sources={'u':points})['transient']['events'],
+        for e,t in zip(execute_event(sources={'u':points}, initial_records=([0, 0], [0, 0], 1))['transient']['events'],
                        [.5e-6,1e-6+1e-12,1e-6+3e-12]):
             self.assertAlmostEqual(e['time'],t,delta=1e-18)
 
@@ -268,7 +273,7 @@ class EventRejections(unittest.TestCase):
                         points.append([4e-6,1-before])
                     for step in [10e-6,7e-9]:
                         with self.subTest(before=before, direction=direction, continued=continued, step=step):
-                            r = execute_event(source, sources={'u':points}, times=[0,1.5e-6,3e-6], max_step=step)
+                            r = execute_event(source, sources={'u':points}, times=[0,1.5e-6,3e-6], max_step=step, initial_records=([0], [0], 1))
                             self.assertEqual([e['time'] for e in r['transient']['events']], [3e-6]*expected)
                             self.assertEqual(r['transient']['states'], [[0],[0],[expected]])
                             y = r['nodes'].index('y')
@@ -287,25 +292,25 @@ class EventRejections(unittest.TestCase):
                         for step in [10e-6,7e-9]:
                             with self.subTest(before=before, after=after, end=end, direction=direction, step=step):
                                 r = execute_event(source, sources={'u':[[0,before],[1e-6,.5],[end,.5],[3e-6,after]]},
-                                                  times=[0,1e-6,end,3e-6], max_step=step)
+                                                  times=[0,1e-6,end,3e-6], max_step=step, initial_records=([0], [0], 1))
                                 self.assertEqual([e['time'] for e in r['transient']['events']], [1e-6]*expected)
                                 self.assertEqual(r['transient']['states'], [[0]]+[[expected]]*3)
 
     def test_initial_constant_and_near_zero_plateaus_do_not_fire(self):
         for after in [.375,.5,.625]:
-            r = execute_event(sources={'u':[[0,.5],[1e-6,.5],[2e-6,.5],[3e-6,after]]})
+            r = execute_event(sources={'u':[[0,.5],[1e-6,.5],[2e-6,.5],[3e-6,after]]}, initial_records=([0, 0], [0, 0], 1))
             self.assertEqual(r['transient']['events'], [])
             self.assertEqual(r['transient']['states'][-1], [0,0])
         for side in [.375,.625]:
             near = math.nextafter(.5,side)
-            r = execute_event(sources={'u':[[0,side],[1e-6,near],[2e-6,near],[3e-6,side]]})
+            r = execute_event(sources={'u':[[0,side],[1e-6,near],[2e-6,near],[3e-6,side]]}, initial_records=([0, 0], [0, 0], 1))
             self.assertEqual(r['transient']['events'], [])
 
     def test_separate_zero_plateaus_rearm_once_each(self):
         times = [0,.5e-6,1e-6,1.5e-6,2e-6,2.5e-6,3e-6]
         for side,event in [(.375,0),(.625,1)]:
             points = [[t,v] for t,v in zip(times,[side,.5,.5,side,.5,.5,.5])]
-            r = execute_event(sources={'u':points}, times=times)
+            r = execute_event(sources={'u':points}, times=times, initial_records=([0, 0], [0, 0], 1))
             self.assertEqual([e['event'] for e in r['transient']['events']], [event,event])
             self.assertEqual([e['time'] for e in r['transient']['events']], [.5e-6,2e-6])
             self.assertEqual([s[event] for s in r['transient']['states']], [0,1,1,1,2,2,2])
@@ -317,7 +322,7 @@ class EventRejections(unittest.TestCase):
           @(cross(V(u,r)-0.5,1)) held=V(y,r);
           V(y,r)<+n;''', 'integer n; real held;')
         for times in [[0,1e-6],[0,1e-6,3e-6]]:
-            r = execute_event(source, sources={'u':[[0,.375],[3e-6,.5]]}, times=times)
+            r = execute_event(source, sources={'u':[[0,.375],[3e-6,.5]]}, times=times, initial_records=([0, 0], [0, 0], 1))
             events = r['transient']['events']
             self.assertEqual([e['time'] for e in events], [3e-6,3e-6])
             self.assertEqual([e['before'] for e in events], [[0,0],[0,0]])

@@ -186,6 +186,8 @@ mod tests {
 
     fn squared_pwl(stop: f64) -> DirectDerivative {
         let program = Program {
+            procedures: vec![],
+            real_bindings: vec![],
             step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".into(), "u".into()],

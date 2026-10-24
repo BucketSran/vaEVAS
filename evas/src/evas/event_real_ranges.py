@@ -12,6 +12,7 @@ from .errors import CompileError
 from .limits import MAX_IR_ITEMS
 from .integer_arithmetic import truncating_division
 from .syntax import Assignment, Conditional, Display, Loop
+from .condition_domains import compact_condition, compact_domains
 
 UNKNOWN = (None, None)
 MAX_BITS = 4096
@@ -155,8 +156,20 @@ def floor_use_sites(bodies, names, parameters, *, integer_type):
             pending.extend(expr.args)
 
     def refine(statement, env):
+        return refine_operands(statement.relation, statement.left, statement.right, env)
+
+    def refine_operands(relation, left, right, env):
+        if compact_condition(relation, left, right):
+            for _ in range(3):
+                tick()  # forwarding callback and captured references
+            def work(count):
+                for _ in range(count):
+                    tick()
+            return compact_domains(relation,left,right,env,
+                refine=refine_operands,hull=_hull,work=work)
+        collect(left, env)
+        collect(right, env)
         yes, no = dict(env), dict(env)
-        left, right, relation = statement.left, statement.right, statement.relation
         if left.op != 'parameter' or str(left.value) not in env:
             left, right = right, left
             relation = {'<': '>', '<=': '>=', '>': '<', '>=': '<='}[relation]
@@ -183,8 +196,6 @@ def floor_use_sites(bodies, names, parameters, *, integer_type):
         for statement in items:
             tick()
             if isinstance(statement, Conditional):
-                collect(statement.left, env)
-                collect(statement.right, env)
                 yes, no = refine(statement, env)
                 a, b = flow(statement.then_body, yes), flow(statement.else_body, no)
                 env = {name: _hull(a[name], b[name]) for name in env}

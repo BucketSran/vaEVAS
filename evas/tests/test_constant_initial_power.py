@@ -58,18 +58,37 @@ class ConstantInitialPower(unittest.TestCase):
             self.assertAlmostEqual(r['solutions'][0]['voltages'][r['nodes'].index(node)],want,delta=1e-11)
 
     def test_initial_observers_other_writers_and_ordinary_aliases_do_not_bind_early(self):
+        from fractions import Fraction as Q
         from evas import CompileError
         initial='gain=1/pow(b,e);'
-        for body,decl in [
-            ('@(initial_step)begin old=gain;'+initial+'end V(y,r)<+old;', 'real old;'),
-            ('@(initial_step)begin '+initial+'gain=3;end V(y,r)<+gain;', ''),
-            ('@(initial_step)'+initial+' @(timer(0.5))gain=3; V(y,r)<+gain;', ''),
-            ('@(initial_step)'+initial+' @(final_step)gain=3; V(y,r)<+gain;', ''),
-            ('@(initial_step)'+initial+' alias=gain;V(y,r)<+alias;', 'real alias;'),
-            ('@(initial_step)'+initial+' V(y,r)<+gain;', 'real old=gain;'),
+        for body,decl,wants,records in [
+            ('@(initial_step)begin old=gain;'+initial+'end V(y,r)<+old;', 'real old;',
+             [0.,0.,0.], [('initial_step',0.,[0.,0.],[.5,0.])]),
+            ('@(initial_step)begin '+initial+'gain=3;end V(y,r)<+gain;', '',
+             [3.,3.,3.], [('initial_step',0.,[0.],[3.])]),
+            ('@(initial_step)'+initial+' @(timer(0.5))gain=3; V(y,r)<+gain;', '',
+             [.5,3.,3.], [('initial_step',0.,[0.],[.5]),('timer',.5,[.5],[3.])]),
+            ('@(initial_step)'+initial+' @(final_step)gain=3; V(y,r)<+gain;', '',
+             [.5,.5,.5], [('initial_step',0.,[0.],[.5]),('final_step',1.,[.5],[3.])]),
+            ('@(initial_step)'+initial+' alias=gain;V(y,r)<+alias;', 'real alias;',
+             [.5,.5,.5], [('initial_step',0.,[0.],[.5])]),
         ]:
-            with self.subTest(body=body),self.assertRaises(CompileError):
-                self.program(body,'parameter real b=16;parameter real e=0.25;real gain;'+decl)
+            with self.subTest(body=body):
+                p=self.program(body,'parameter real b=16;parameter real e=0.25;real gain;'+decl)
+                r=self.run_program(p);y=r['nodes'].index('y')
+                # pow(16,1/4)=2 and 1/2 is exactly binary64. The observer
+                # sees declaration zero, later writers keep their source order,
+                # and final_step runs after the last observation at stop.
+                self.assertEqual([row['voltages'][y] for row in r['solutions']],wants)
+                for want,box in zip(wants,r['observation_evidence']['voltage_bounds_V'],strict=True):
+                    self.assertLessEqual(Q(box[y][0]),Q(want));self.assertLessEqual(Q(want),Q(box[y][1]))
+                actual=[(e['kind'],e['time'],[v.hex() for v in e['before']],[v.hex() for v in e['after']]) for e in r['transient']['events']]
+                expected=[(kind,time,[v.hex() for v in before],[v.hex() for v in after]) for kind,time,before,after in records]
+                self.assertEqual(actual,expected)
+        # Declaration initialization still cannot read a mutable stored state.
+        with self.assertRaises(CompileError):
+            self.program('@(initial_step)'+initial+' V(y,r)<+gain;',
+                         'parameter real b=16;parameter real e=0.25;real gain;real old=gain;')
 
     def test_hidden_function_argument_and_zero_weight_voltage_cannot_be_erased(self):
         from evas import CompileError
@@ -127,13 +146,20 @@ class ConstantInitialPower(unittest.TestCase):
                 self.assertEqual(r['solutions'][0]['voltages'][r['nodes'].index('y')],want)
 
     def test_source_integer_arithmetic_is_not_reinterpreted_as_real_division(self):
+        from fractions import Fraction as Q
         from evas import CompileError
-        # Integer division truncates to zero: the new real Divide chain must
-        # not reinterpret it as one half and accept a different exponent.
-        for exponent in ['0.25+n/2','0.25+(2147483647+1)']:
-            with self.subTest(exponent=exponent), self.assertRaises(CompileError):
-                self.program('@(initial_step)gain=1/pow(16,'+exponent+');V(y,r)<+gain;',
-                    'parameter integer n=1;real gain;')
+        # Integer 1/2 truncates to zero, so the exponent remains1/4 and
+        # gain is exactly1/2. A real-division rewrite would produce1/8.
+        p=self.program('@(initial_step)gain=1/pow(16,0.25+n/2);V(y,r)<+gain;',
+                       'parameter integer n=1;real gain;')
+        r=self.run_program(p);y=r['nodes'].index('y')
+        self.assertEqual([row['voltages'][y] for row in r['solutions']],[.5,.5,.5])
+        self.assertEqual(r['transient']['events'][0]['after'],[.5])
+        for box in r['observation_evidence']['voltage_bounds_V']:
+            self.assertLessEqual(Q(box[y][0]),Q(1,2));self.assertLessEqual(Q(1,2),Q(box[y][1]))
+        with self.assertRaises(CompileError):
+            self.program('@(initial_step)gain=1/pow(16,0.25+(2147483647+1));V(y,r)<+gain;',
+                         'parameter integer n=1;real gain;')
 
     def test_large_old_initializer_never_enters_optional_proof(self):
         from unittest.mock import patch

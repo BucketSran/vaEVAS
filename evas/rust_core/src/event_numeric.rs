@@ -40,9 +40,11 @@ pub(crate) fn contains_operator(e: &E) -> bool {
         | E::CheckedInteger { value: index, .. } => contains_operator(index),
         E::Operator { .. } => true,
         E::EventMath { args, .. } => args.iter().any(contains_operator),
-        E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
-            contains_operator(left) || contains_operator(right)
-        }
+        E::RealBoundary { value, .. } => contains_operator(value),
+        E::RealBinary { left, right, .. }
+        | E::Add { left, right }
+        | E::Multiply { left, right }
+        | E::Divide { left, right } => contains_operator(left) || contains_operator(right),
         E::Power { base, .. } => contains_operator(base),
         E::Select {
             left,
@@ -59,6 +61,11 @@ pub(crate) fn contains_operator(e: &E) -> bool {
 
 pub(crate) fn contains_math(e: &E) -> bool {
     match e {
+        E::RealCall { .. }
+        | E::UnsupportedSystemCall { .. }
+        | E::RealBinary { .. }
+        | E::RealBoundary { .. }
+        | E::RealLocal { .. } => true,
         E::IntegerPrimitive { .. }
         | E::ArrayRead { .. }
         | E::IntegerRound { .. }
@@ -82,21 +89,62 @@ pub(crate) fn contains_math(e: &E) -> bool {
     }
 }
 
+pub(crate) fn contains_legacy_math(e: &E) -> bool {
+    match e {
+        E::RealBinary { left, right, .. } => {
+            contains_legacy_math(left) || contains_legacy_math(right)
+        }
+        E::RealBoundary { value, .. } => contains_legacy_math(value),
+        E::RealLocal { .. } => false,
+        E::IntegerPrimitive { .. }
+        | E::ArrayRead { .. }
+        | E::IntegerRound { .. }
+        | E::CheckedInteger { .. }
+        | E::CheckedIndex { .. }
+        | E::EventMath { .. } => true,
+        E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
+            contains_legacy_math(left) || contains_legacy_math(right)
+        }
+        E::Power { base, .. } => contains_legacy_math(base),
+        E::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => [left, right, then_value, else_value]
+            .iter()
+            .any(|e| contains_legacy_math(e)),
+        _ => false,
+    }
+}
+
 pub(crate) fn dependencies(e: &E, p: &Program, owner: &str) -> Result<AffineState, Error> {
-    fn leaves(e: &E, out: &mut Vec<E>) {
+    fn leaves(e: &E, out: &mut Vec<E>, p: &Program, seen: &mut std::collections::BTreeSet<usize>) {
         match e {
-            E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
-                leaves(left, out);
-                leaves(right, out);
+            E::RealLocal { binding } => {
+                if seen.insert(*binding) {
+                    for value in crate::procedure::binding_values(p, *binding) {
+                        leaves(value, out, p, seen);
+                    }
+                }
+            }
+            E::RealBoundary { value, .. } => leaves(value, out, p, seen),
+            E::RealBinary { left, right, .. }
+            | E::Add { left, right }
+            | E::Multiply { left, right }
+            | E::Divide { left, right } => {
+                leaves(left, out, p, seen);
+                leaves(right, out, p, seen);
             }
             E::ArrayRead { states, index, .. } => {
-                leaves(index, out);
+                leaves(index, out, p, seen);
                 out.extend(states.iter().map(|&state| E::State { state }));
             }
             E::CheckedIndex { index, .. }
             | E::IntegerRound { value: index, .. }
-            | E::CheckedInteger { value: index, .. } => leaves(index, out),
-            E::Power { base, .. } => leaves(base, out),
+            | E::CheckedInteger { value: index, .. } => leaves(index, out, p, seen),
+            E::Power { base, .. } => leaves(base, out, p, seen),
             E::Select {
                 left,
                 right,
@@ -105,7 +153,7 @@ pub(crate) fn dependencies(e: &E, p: &Program, owner: &str) -> Result<AffineStat
                 ..
             } => {
                 for e in [left, right, then_value, else_value] {
-                    leaves(e, out);
+                    leaves(e, out, p, seen);
                 }
             }
             E::IntegerPrimitive { args, .. } => {
@@ -115,7 +163,7 @@ pub(crate) fn dependencies(e: &E, p: &Program, owner: &str) -> Result<AffineStat
             }
             E::EventMath { args, .. } => {
                 for e in args {
-                    leaves(e, out);
+                    leaves(e, out, p, seen);
                 }
             }
             _ => out.push(e.clone()),
@@ -123,7 +171,7 @@ pub(crate) fn dependencies(e: &E, p: &Program, owner: &str) -> Result<AffineStat
     }
     validate(e, p, owner)?;
     let mut refs = Vec::new();
-    leaves(e, &mut refs);
+    leaves(e, &mut refs, p, &mut std::collections::BTreeSet::new());
     let mut result = affine(
         &E::Affine {
             constant: 0.,
@@ -140,6 +188,32 @@ pub(crate) fn dependencies(e: &E, p: &Program, owner: &str) -> Result<AffineStat
 
 pub(crate) fn validate(e: &E, p: &Program, owner: &str) -> Result<(), Error> {
     match e {
+        E::RealCall { origin, .. } | E::UnsupportedSystemCall { origin, .. } => {
+            check_real_origin(origin, owner)?;
+            crate::procedure::call_children(e, &mut |e| validate(e, p, owner))?;
+        }
+        E::RealBinary {
+            left,
+            right,
+            origin,
+            ..
+        } => {
+            check_real_origin(origin, owner)?;
+            validate(left, p, owner)?;
+            validate(right, p, owner)?;
+        }
+        E::RealBoundary { value, origin, .. } => {
+            check_real_origin(origin, owner)?;
+            validate(value, p, owner)?;
+        }
+        E::RealLocal { binding } => {
+            if p.real_bindings
+                .get(*binding)
+                .is_none_or(|b| b.origin.instance != owner)
+            {
+                return Err(Error::new("invalid_ir", "real local owner mismatch"));
+            }
+        }
         E::ArrayRead {
             states,
             index,
@@ -268,11 +342,15 @@ pub(crate) fn validate(e: &E, p: &Program, owner: &str) -> Result<(), Error> {
                 validate(e, p, owner)?;
             }
         }
-        E::Operator { .. } => {
-            return Err(Error::new(
-                "unsupported_transient",
-                "operator calls are only allowed in contributions",
-            ))
+        E::Operator { operator } => {
+            if p.procedures.is_empty()
+                || !matches!(p.operators.get(*operator),Some(crate::ir::OperatorSpec::Math{origin,..}|crate::ir::OperatorSpec::Sin{origin,..}) if origin.instance==owner)
+            {
+                return Err(Error::new(
+                    "unsupported_transient",
+                    "operator calls are only allowed in contributions",
+                ));
+            }
         }
         _ => {
             affine(e, p, owner)?;
@@ -301,6 +379,25 @@ pub(crate) fn value(
 
 fn bind_math(e: &E, p: &Program, owner: &str, nodes: &[f64], states: &[f64]) -> Result<E, Error> {
     Ok(match e {
+        E::RealBinary {
+            operation,
+            left,
+            right,
+            ..
+        } => crate::real_expression::literal(crate::real_expression::point(
+            *operation,
+            self::value(left, p, owner, nodes, states)?,
+            self::value(right, p, owner, nodes, states)?,
+        )?),
+        E::RealBoundary { value, .. } => {
+            crate::real_expression::literal(self::value(value, p, owner, nodes, states)?)
+        }
+        E::RealCall { .. } | E::UnsupportedSystemCall { .. } | E::RealLocal { .. } => {
+            return Err(Error::new(
+                "invalid_ir",
+                "unexecuted real call/local requires its source frame",
+            ))
+        }
         E::Forcing { .. } => {
             return Err(Error::new(
                 "unsupported_forcing_scope",
@@ -407,6 +504,14 @@ fn bind_math(e: &E, p: &Program, owner: &str, nodes: &[f64], states: &[f64]) -> 
         E::EventMath { function, args, .. } => {
             let a = value(&args[0], p, owner, nodes, states)?;
             let result = match function {
+                F::InternalSin
+                | F::InternalCos
+                | F::InternalExp
+                | F::InternalLn
+                | F::InternalSqrt
+                | F::InternalTanh => crate::operators::Function::from_internal(*function)
+                    .unwrap()
+                    .value(a),
                 F::Sqrt => {
                     if a < 0. {
                         return Err(Error::new(
@@ -518,6 +623,26 @@ fn bounds_in(
         w.step()?;
     }
     let v = match e {
+        E::RealBinary {
+            operation,
+            left,
+            right,
+            ..
+        } => crate::real_expression::binary_interval(
+            *operation,
+            bounds_in(left, nodes, states, proofs)?,
+            bounds_in(right, nodes, states, proofs)?,
+            work,
+        )?,
+        E::RealBoundary { value, .. } => {
+            crate::real_expression::interval(bounds_in(value, nodes, states, proofs)?, work)?
+        }
+        E::RealCall { .. } | E::UnsupportedSystemCall { .. } | E::RealLocal { .. } => {
+            return Err(Error::new(
+                "invalid_ir",
+                "unexecuted real call/local requires its source frame",
+            ))
+        }
         E::Forcing { .. } => {
             return Err(Error::new(
                 "unsupported_forcing_scope",
@@ -668,6 +793,14 @@ fn bounds_in(
                             })?
                     }
                 }
+                F::InternalSin
+                | F::InternalCos
+                | F::InternalExp
+                | F::InternalLn
+                | F::InternalSqrt
+                | F::InternalTanh => crate::operators::Function::from_internal(*function)
+                    .unwrap()
+                    .bounds(a)?,
                 F::Sqrt => crate::math_functions::sqrt(a)
                     .map_err(|e| Error::new("event_domain", e.message))?,
                 // The whole argument enclosure must be strictly positive; a
@@ -756,7 +889,7 @@ pub(crate) fn checked_index(
     Ok(value)
 }
 
-fn checked_integer(value: I, origin: &crate::ir::Origin) -> Result<I, Error> {
+pub(crate) fn checked_integer(value: I, origin: &crate::ir::Origin) -> Result<I, Error> {
     checked_index(value, i32::MIN, i32::MAX, origin)
         .map_err(|e| Error::new("integer_range", e.message))
 }
@@ -976,5 +1109,18 @@ mod sampled_math_domain_tests {
             bounds(&math("sqrt"), &[I::ZERO, I { lo: 0., hi: 0. }], &[]).unwrap(),
             I::ZERO
         );
+    }
+}
+
+fn check_real_origin(origin: &crate::ir::Origin, owner: &str) -> Result<(), Error> {
+    if origin.instance != owner
+        || origin.source.is_empty()
+        || origin.line == 0
+        || origin.column == 0
+        || !origin.valid_expansion()
+    {
+        Err(Error::new("invalid_ir", "invalid real expression origin"))
+    } else {
+        Ok(())
     }
 }

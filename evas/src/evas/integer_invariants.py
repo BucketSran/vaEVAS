@@ -12,14 +12,53 @@ class ProofBudgetExceeded(ValueError):
     """The optional range certificate exhausted its existing work allowance."""
 
 
+class OptionalProofUnavailable(Exception):
+    """Decline a refinement before its next work unit has started."""
+
+
+class OptionalProofWork:
+    """A view of existing work, with no counter or independent allowance."""
+    def __init__(self, work):
+        self.work = work
+
+    @property
+    def used(self):
+        return self.work.used
+
+    def charge(self):
+        self.work.optional_charge()
+
+    def optional_view(self):
+        return self
+
+    def condition_plans(self, charge):
+        return self.work.condition_plans(charge)
+
+
 class ProofWork:
     def __init__(self):
         self.used = 0
 
-    def charge(self):
-        self.used += 1
+    def _check(self):
         if self.used > MAX_IR_ITEMS:
             raise ProofBudgetExceeded('integer invariant exceeds source proof budget (100000)')
+
+    def charge(self):
+        self.used += 1
+        self._check()
+
+    def optional_charge(self):
+        self._check()
+        if self.used == MAX_IR_ITEMS:
+            raise OptionalProofUnavailable()
+        self.charge()
+
+    def optional_view(self):
+        self.optional_charge()  # prepay the view object before construction
+        return OptionalProofWork(self)
+
+    def condition_plans(self, charge):
+        return _condition_plans(self, charge)
 
 
 class SourceProofRequest:
@@ -59,7 +98,35 @@ class SourceProofRequest:
             def charge(self):
                 request.charge()
                 self.local.charge()
+
+            def optional_charge(self):
+                # Check sticky failures before interpreting an unspent unit as
+                # optional. Inactive requests retain the original local cap.
+                self.local._check()
+                if request.active:
+                    request._check()
+                if self.local.used == MAX_IR_ITEMS or (request.active and request.used == MAX_IR_ITEMS):
+                    raise OptionalProofUnavailable()
+                self.charge()
+
+            def optional_view(self):
+                self.optional_charge()
+                return OptionalProofWork(self)
+
+            def condition_plans(self, charge):
+                return _condition_plans(self, charge)
         return LocalProofWork()
+
+
+def _condition_plans(owner, charge):
+    charge(1)
+    cache = getattr(owner, '_condition_plan_cache', None)
+    if cache is None:
+        from .condition_domains import ConditionPlans
+        charge(4)  # object, two dictionaries, owner retention
+        cache = ConditionPlans()
+        owner._condition_plan_cache = cache
+    return cache
 
 
 def proof_parameters(parameters, work):

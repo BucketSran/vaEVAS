@@ -43,6 +43,10 @@ impl LinearContinuous {
     }
 
     pub(crate) fn same_history(&self, other: &Self) -> bool {
+        root_epoch::Epoch::same(&self.root_epoch, &other.root_epoch)
+            && self.same_history_without_root_epoch(other)
+    }
+    pub(super) fn same_history_without_root_epoch(&self, other: &Self) -> bool {
         self.start == other.start
             && self.parameters == other.parameters
             && self.initial == other.initial
@@ -184,7 +188,14 @@ impl LinearContinuous {
         time_bounds: I,
         parameters: &[I],
     ) -> Result<Self, Error> {
-        self.event_candidate(time, time_bounds, parameters, true, self.context.clone())
+        self.event_candidate(
+            time,
+            time_bounds,
+            parameters,
+            true,
+            self.context.clone(),
+            None,
+        )
     }
 
     pub(super) fn restarted_with_context(
@@ -194,7 +205,7 @@ impl LinearContinuous {
         parameters: &[I],
         context: Arc<Context>,
     ) -> Result<Self, Error> {
-        self.event_candidate(time, time_bounds, parameters, true, context)
+        self.event_candidate(time, time_bounds, parameters, true, context, None)
     }
 
     pub(crate) fn mapped_event(
@@ -203,7 +214,14 @@ impl LinearContinuous {
         time_bounds: I,
         parameters: &[I],
     ) -> Result<Self, Error> {
-        self.event_candidate(time, time_bounds, parameters, false, self.context.clone())
+        self.event_candidate(
+            time,
+            time_bounds,
+            parameters,
+            false,
+            self.context.clone(),
+            None,
+        )
     }
 
     pub(super) fn mapped_event_with_context(
@@ -213,7 +231,19 @@ impl LinearContinuous {
         states: &[I],
         context: Arc<Context>,
     ) -> Result<Self, Error> {
-        self.event_candidate(time, bounds, states, false, context)
+        self.event_candidate(time, bounds, states, false, context, None)
+    }
+
+    pub(super) fn event_at_root(
+        &self,
+        time: f64,
+        bounds: I,
+        states: &[I],
+        propagate: bool,
+        context: Arc<Context>,
+        root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<Self, Error> {
+        self.event_candidate(time, bounds, states, propagate, context, root)
     }
 
     fn event_candidate(
@@ -223,9 +253,11 @@ impl LinearContinuous {
         parameters: &[I],
         propagate_to_representative: bool,
         context: Arc<Context>,
+        root: Option<&crate::exact_source::RootTime>,
     ) -> Result<Self, Error> {
         if (!self.event_dependent || self.parameters == parameters)
             && self.context.time_proofs == context.time_proofs
+            && self.context.reset_captures == context.reset_captures
         {
             return Ok(self.clone());
         }
@@ -235,6 +267,30 @@ impl LinearContinuous {
                 "linear event representative must be the upper endpoint of its time enclosure",
             ));
         }
+        let epoch_work = self.context.trajectory.procedure_work();
+        let bridge = if let (Some(root), Some(w)) = (root, epoch_work) {
+            let mut paid = crate::exact_source::history_paid::Paid::new(w);
+            let needed = (|| {
+                let display = paid.binary(time)?;
+                Some(self.root_epoch.is_some() || !paid.cmp(root.rational(), &display)?.is_eq())
+            })();
+            paid.finish(needed)?.unwrap_or(false)
+        } else {
+            false
+        };
+        let old_epoch = if bridge {
+            epoch_work
+                .map(|w| self.physical_epoch(w))
+                .transpose()?
+                .flatten()
+        } else {
+            None
+        };
+        let physical_exact = match (root, old_epoch.as_ref(), epoch_work) {
+            (Some(root), Some(epoch), Some(w)) => epoch.states_at(root.rational(), w)?,
+            _ => None,
+        };
+
         let mut physical = if time_bounds.lo < self.start {
             self.ordered_event_state(time_bounds)?
                 .into_iter()
@@ -263,6 +319,16 @@ impl LinearContinuous {
                 *slot = Some(slot.map_or(value, |prior| prior.hull(value)));
             }
         }
+        if let (Some(seeds), Some(w)) = (&physical_exact, epoch_work) {
+            for (slot, seed) in physical.iter_mut().zip(seeds) {
+                w.step()?;
+                if let Some(seed) = seed {
+                    if let Some(bound) = root_epoch::enclosure(seed, w)? {
+                        *slot = Some(bound);
+                    }
+                }
+            }
+        }
         let physical = physical
             .into_iter()
             .map(|v| {
@@ -289,6 +355,16 @@ impl LinearContinuous {
         // build applies the final held reset map. Save that physical state
         // before adding any propagation to the representative.
         let event_seed = (time_bounds, next.initial.clone());
+        let physical_epoch = match (root, physical_exact.as_deref(), epoch_work) {
+            (Some(root), Some(seeds), Some(w)) => root_epoch::Epoch::build(
+                &next,
+                root.rational(),
+                Some(seeds),
+                old_epoch.as_ref(),
+                w,
+            )?,
+            _ => None,
+        };
         if propagate_to_representative && time_bounds.lo != time_bounds.hi {
             // Enclose post-event propagation from any actual event in its root
             // box to the representative time. Prior and future dynamics both
@@ -334,6 +410,9 @@ impl LinearContinuous {
             )?
             .unwrap();
         }
+        if let (Some(epoch), Some(w)) = (&physical_epoch, epoch_work) {
+            next.install_physical_display(epoch, w)?;
+        }
         next.exact_affine = exact_seed.as_ref().and_then(|seed| {
             exact_affine::History::build(
                 &next.exact_states,
@@ -344,6 +423,11 @@ impl LinearContinuous {
             )
         });
         next.exact_seed = exact_seed;
+        if physical_epoch.is_some() {
+            next.exact_affine = None;
+            next.exact_seed = None;
+        }
+        next.root_epoch = physical_epoch;
         next.event_seed = Some(event_seed);
         Ok(next)
     }

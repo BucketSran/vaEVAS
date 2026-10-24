@@ -108,6 +108,32 @@ def is_exact_wrap_boundary(raw, modulus=1.0, offset=0.0):
     return (F(raw) - F(offset)) % F(modulus) == 0
 
 
+def check_direct_sin_samples(result, times):
+    # Exact binary64 PWL endpoints define f(t)=Fraction(pi)*t/2.
+    # This operator input is physical Affine, not a program sample boundary.
+    assert result['transient']['times'] == times
+    evidence = result['observation_evidence']
+    assert evidence['nodes'] == result['nodes']
+    assert len(result['solutions']) == len(evidence['voltage_bounds_V']) == len(times)
+    index = result['nodes'].index('out')
+    getcontext().prec = 80
+    for time, solution, boxes in zip(times, result['solutions'], evidence['voltage_bounds_V']):
+        assert len(solution['voltages']) == len(boxes) == len(result['nodes'])
+        argument = F(math.pi) * F(time) / 2
+        exact_argument = Decimal(argument.numerator) / Decimal(argument.denominator)
+        reference = decimal_sin(exact_argument)
+        # On [0, binary64(pi)] no range reduction occurs. 80-digit
+        # arithmetic and Taylor stop 1e-70 leave <1e-60 total error.
+        radius = Decimal(0) if argument == 0 else Decimal('1e-60')
+        actual = solution['voltages'][index]
+        lo, hi = boxes[index]
+        assert all(math.isfinite(v) for v in (actual, lo, hi))
+        assert lo <= actual <= hi
+        assert F(hi) - F(lo) <= F(1e-12)
+        assert Decimal.from_float(lo) <= reference - radius
+        assert reference + radius <= Decimal.from_float(hi)
+        assert abs(Decimal.from_float(actual) - reference) + radius <= Decimal('1e-12')
+
 class PhaseContracts(unittest.TestCase):
     def test_constant_phase_accumulates_wraps_and_sine_uses_constants_macro(self):
         points = [(0, 0.25), (4, 0.25)]
@@ -138,7 +164,8 @@ class PhaseContracts(unittest.TestCase):
         points = [(0, 0), (2, math.pi)]
         sparse = run_phase(points, [0, 1, 2], body, declarations="", vabstol=1e-12, reltol=0)
         dense = run_phase(points, [0, .5, 1, 1.5, 2], body, declarations="", vabstol=1e-12, reltol=0)
-        self.assertEqual(voltages(sparse, "out"), [0, 1, math.sin(math.pi)])
+        check_direct_sin_samples(sparse, [0, 1, 2])
+        check_direct_sin_samples(dense, [0, .5, 1, 1.5, 2])
         self.assertEqual([voltages(dense, "out")[i] for i in [0, 2, 4]], voltages(sparse, "out"))
 
     def test_direct_sin_matches_decimal_reference_for_binary64_inputs(self):

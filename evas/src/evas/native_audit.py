@@ -5,6 +5,7 @@ actual delegated work from the beginning, even before a new target activates it.
 """
 from collections import Counter
 from dataclasses import fields, is_dataclass
+import math
 
 from .errors import CompileError
 from .limits import MAX_IR_ITEMS
@@ -22,6 +23,44 @@ class NativeAudit:
         self.activations = 0
         self.debit("ir_cache_create")
         self.ir_cache = {}
+        self.debit("ir_leaf_cache_create")
+        self.ir_leaf_cache = {}
+
+    def emit_ir(self, cls, args, kwargs, prefix):
+        """Share only immutable, origin-free leaves in this compilation.
+
+        Arithmetic/rounding nodes are never normalized or merged. Wire copies
+        still expand every occurrence. float.hex keeps the two zero signs apart.
+        """
+        boundary_kind = kwargs.get('kind', args[1] if len(args) > 1 else None)
+        if (not self.active and cls.__module__ == 'evas.ir'
+                and (cls.__name__ in ('RealBinary', 'RealBind')
+                     or cls.__name__ == 'RealBoundary' and boundary_kind != 'store')):
+            # Program-real operations/captures opt into the same request cap.
+            # Argument/return/sample boundaries also qualify when an identity
+            # function has neither arithmetic nor a closed-value query. A
+            # legacy scalar store alone retains its old admission route.
+            # Activation checks all work accumulated before this first node.
+            self.activate(kwargs.get('origin', args[-1] if args else None))
+        key = None
+        if not kwargs and cls.__module__ == 'evas.ir':
+            if cls.__name__ == 'StateRef' and len(args) == 1 and type(args[0]) is int:
+                key = (cls, args[0])
+            elif (cls.__name__ == 'Affine' and len(args) == 2 and args[1] == ()
+                    and type(args[0]) is float and math.isfinite(args[0])):
+                key = (cls, args[0].hex())
+        if key is not None:
+            self.debit('ir_leaf_cache_lookup')
+            cached = self.ir_leaf_cache.get(key)
+            if cached is not None:
+                return cached
+        self.debit(prefix + '_object')
+        self.debit(prefix + '_field', len(fields(cls)))
+        value = cls(*args, **kwargs)
+        if key is not None:
+            self.debit('ir_leaf_cache_insert', 2)
+            self.ir_leaf_cache[key] = value
+        return value
 
     def debit(self, kind, amount=1, item=None, *, event=None, legacy=False):
         if amount < 0:

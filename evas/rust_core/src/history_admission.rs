@@ -50,6 +50,11 @@ fn charge_tree(e: &E, work: &Work) -> Result<usize, Error> {
 pub(crate) fn charge_expression_copy(e: &E, work: &Work) -> Result<(), Error> {
     work.step()?;
     match e {
+        E::RealLocal { .. } | E::RealBinary { .. } | E::RealBoundary { .. } | E::Power { .. } => {
+            let bytes = crate::event_floor::encoded_size(e, work)?;
+            work.debit(2, (bytes as u64).saturating_mul(8))?;
+        }
+
         E::Affine { terms, .. } => work.debit(2, terms.len().saturating_mul(2) as u64)?,
         E::State { .. } | E::Operator { .. } => (),
         E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {

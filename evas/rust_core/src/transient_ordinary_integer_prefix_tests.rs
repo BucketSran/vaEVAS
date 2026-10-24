@@ -24,7 +24,7 @@ fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
         "../tests/fixtures/ordinary_integer_prefix_joint.request.json"
     ))
     .unwrap();
-    let trajectory = Trajectory::new(request.transient.unwrap(), request.driven.len()).unwrap();
+    let mut trajectory = Trajectory::new(request.transient.unwrap(), request.driven.len()).unwrap();
     let m = EventModel::new_with_trajectory(
         request.program,
         request.driven,
@@ -34,15 +34,40 @@ fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
     .unwrap();
     assert_eq!(m.typed_transition_targets.len(), 1);
     assert_eq!(m.program.operators.len(), 2);
-    let states = m.initial();
-    let bounds: Vec<_> = states.iter().copied().map(I::point).collect();
+    // Declaration seeds are zero in IR33. Execute the actual original
+    // initial gate once through the same preparation used by public run,
+    // before histories, retaining its explicit record and original Work.
+    assert!(m.initial().iter().all(|&v| v == 0.));
+    trajectory
+        .bind_procedure_work(crate::real_expression::work(&m))
+        .unwrap();
+    let prepared = initialization::prepare(&m, &trajectory).unwrap().unwrap();
+    assert_eq!(prepared.records.len(), 1);
+    let initial = &prepared.records[0];
+    assert_eq!(initial.kind, "initial_step");
+    assert_eq!(initial.time, 0.);
+    assert!(initial
+        .observation_time_bounds
+        .is_none_or(|b| b == [0., 0.]));
+    assert!(initial.guard_value.is_none() && initial.fired_triggers.is_empty());
+    assert_eq!(initial.before, vec![0.; m.program.states.len()]);
+    assert_eq!(initial.after, prepared.states);
+    assert_eq!(prepared.states[slot(&m, "keep")], 7.);
+    assert_eq!(prepared.states[slot(&m, "ratio")], 1.);
+    let states = prepared.states.clone();
+    let bounds = prepared.bounds.clone();
     let calendar = independent_schedule(&m, &trajectory).unwrap();
     assert_eq!(calendar.len(), 3);
+    let cursor = prepared.cursor(&calendar).unwrap();
+    assert_eq!(cursor, 0, "initial gate must not consume the future timers");
     let owner = m.source_context.as_ref().unwrap().clone();
-    assert!(Arc::ptr_eq(
-        &owner,
-        &m.floor_source.as_ref().unwrap().source
-    ));
+    // IR33 executes the original RN Floor/store/clamp through procedures,
+    // not the legacy mathematical Floor request. Both still share the same
+    // original owner with the typed Transition transaction.
+    assert!(m.floor_source.is_none());
+    assert!(owner
+        .borrow_work()
+        .same_owner(m.mixed_cold_work.get().unwrap()));
     let operators = Operators::new_until_with_held_points(
         &m.program,
         &trajectory,
@@ -71,17 +96,21 @@ fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
             circuit,
             operators,
         },
-        event: 0,
-        records: vec![],
+        event: cursor,
+        records: prepared.records,
         outputs: vec![],
     };
     (m, trajectory, controller, calendar)
 }
 fn same_owner(m: &EventModel, operators: &Operators) {
     let context = m.source_context.as_ref().unwrap();
+    assert!(m.floor_source.is_none());
+    assert!(context
+        .borrow_work()
+        .same_owner(m.mixed_cold_work.get().unwrap()));
     assert!(Arc::ptr_eq(
         context,
-        &m.floor_source.as_ref().unwrap().source
+        operators.source_context.as_ref().unwrap()
     ));
     let held = operators.test_held_contexts();
     assert_eq!(held.len(), 1);
@@ -175,16 +204,9 @@ fn copy_record(r: &EventRecord) -> EventRecord {
         display_records: r.display_records.clone(),
     }
 }
-fn both_consumers(report: &Report) {
-    assert!(
-        report
-            .counters
-            .get("floor_source_exact_decisions")
-            .copied()
-            .unwrap_or(0)
-            > 0,
-        "the original Floor proof did not execute"
-    );
+fn typed_target_evaluated(report: &Report) {
+    // Floor/store/clamp correctness is asserted on the original source
+    // results and first-store overflow below, rather than a legacy counter.
     assert!(
         report
             .counters
@@ -207,7 +229,10 @@ fn warm(m: &EventModel, t: &Trajectory, c: &mut Controller, calendar: &mut Vec<S
         .unwrap();
     expected(m, &c.accepted, 1., 1., 0.25);
     assert!(!c.records.is_empty());
-    assert_eq!(c.records[0].display_records[0].text, "ratio=1 q=1 keep=7");
+    assert_eq!(
+        c.records.last().unwrap().display_records[0].text,
+        "ratio=1 q=1 keep=7"
+    );
     assert!(
         !c.outputs.is_empty(),
         "warm accepted output prefix must be real"
@@ -217,6 +242,28 @@ fn warm(m: &EventModel, t: &Trajectory, c: &mut Controller, calendar: &mut Vec<S
 
 #[test]
 fn public_integer_prefix_two_late_failures_then_retry_preserves_complete_frame() {
+    // The first selected ratio store must reject signed32 overflow before the
+    // following min-clamp can hide a negative value. Original source is intact;
+    // only this negative control's physical input levels change.
+    for value in [-1e9, 1e9] {
+        let mut wire: Value = serde_json::from_str(include_str!(
+            "../tests/fixtures/ordinary_integer_prefix_joint.request.json"
+        ))
+        .unwrap();
+        for point in wire["transient"]["pwl"][0].as_array_mut().unwrap() {
+            point[1] = json!(value);
+        }
+        let request: Request = serde_json::from_value(wire).unwrap();
+        let ratio = request
+            .program
+            .states
+            .iter()
+            .position(|s| s.name == "ratio")
+            .unwrap();
+        let error = crate::run(request).err().unwrap();
+        assert_eq!(error.kind, "integer_range");
+        assert!(error.message.contains(&format!("state {ratio}")));
+    }
     let (m, t, mut c, mut calendar) = fixture();
     warm(&m, &t, &mut c, &mut calendar);
     let before = signature(&c, &calendar);
@@ -266,7 +313,7 @@ fn public_integer_prefix_two_late_failures_then_retry_preserves_complete_frame()
         });
         assert!(seen.load(Ordering::Relaxed) > 0);
         assert_eq!(answer.unwrap_err().kind, "waveform_accuracy");
-        both_consumers(&report);
+        typed_target_evaluated(&report);
         assert!(
             work.spent() > before_fee,
             "retry={retry} refunded shared work"
@@ -285,10 +332,10 @@ fn public_integer_prefix_two_late_failures_then_retry_preserves_complete_frame()
             event_acceptance::Strategy::Static,
         )
         .unwrap();
-    expected(&m, &c.accepted, 2., 2., 0.75);
+    expected(&m, &c.accepted, 3., 3., 0.75);
     assert_eq!(
         c.records.last().unwrap().display_records[0].text,
-        "ratio=2 q=2 keep=7"
+        "ratio=3 q=3 keep=7"
     );
     let mut actual = signature(&c, &calendar);
     let mut independent = signature(&clean, &clean_calendar);
@@ -305,8 +352,8 @@ fn public_integer_prefix_two_late_failures_then_retry_preserves_complete_frame()
         .same_forcing_frame(&clean.accepted.operators));
     let values = c.accepted.operators.values(0.75).unwrap();
     let bounds = c.accepted.operators.bounds(0.75).unwrap();
-    assert_eq!(values, [0., 0.75]);
-    assert_eq!(bounds, [I::point(0.), I::point(0.75)]);
+    assert_eq!(values, [1., 0.75]);
+    assert_eq!(bounds, [I::point(1.), I::point(0.75)]);
     same_owner(&m, &c.accepted.operators);
 }
 
@@ -326,10 +373,10 @@ fn public_integer_prefix_natural_default_work_then_two_sticky_full_frame_retries
         let (answer, report) = capture(Options::default(), || c.prepare_events(&m, &t, &calendar));
         match answer {
             Ok((candidate, records, _)) => {
-                both_consumers(&report);
+                typed_target_evaluated(&report);
                 assert!(work.spent() > prior);
-                expected(&m, &candidate, 2., 2., 0.75);
-                assert_eq!(records[0].display_records[0].text, "ratio=2 q=2 keep=7");
+                expected(&m, &candidate, 3., 3., 0.75);
+                assert_eq!(records[0].display_records[0].text, "ratio=3 q=3 keep=7");
                 same_owner(&m, &candidate.operators);
             }
             Err(error) => {

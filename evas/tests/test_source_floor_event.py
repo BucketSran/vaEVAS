@@ -4,6 +4,7 @@ Fraction supplies independent original-tree answers. This is the explicit new
 engineering contract; it makes no Spectre tie-behavior assertion.
 """
 GUARDS = ['LANG', 'EVENT-ORDER', 'EVENT-CONDITIONS', 'CROSS', 'COMPOSE']
+from floor_rn_contract import floor_contract, divide_floor, mul_floor, rn
 import json
 import math
 import unittest
@@ -29,16 +30,20 @@ def final(result):
 
 class SourceFloorEvent(unittest.TestCase):
     def test_original_divide_point_box_bin_agree_at_rounding_cuts(self):
-        p = program()
-        for v in [.03, .09, .15, .87, -.03, -.09]:
-            expected = math.floor((F.from_float(v)/F.from_float(.9))*15+F(1, 2))
-            with self.subTest(v=v):
-                self.assertEqual(final(run(p, v)), expected)
-        self.assertEqual(final(run(program('q=floor(0.1*V(u,r));'), -10.)), -2)
-        self.assertEqual(final(run(program('q=pow(floor((V(u,r)/0.9)*15+0.5),2);'), .03)), 0)
-        tree = json.dumps(p.to_dict())
-        self.assertIn('"op": "divide"', tree)
-        self.assertIn('"function": "floor"', tree)
+        with floor_contract(self, 'source'):
+            p = program()
+            for v in [.03, .09, .15, .87, -.03, -.09]:
+                expected = divide_floor(v)
+                with self.subTest(v=v):
+                    self.assertEqual(final(run(p, v)), expected)
+            self.assertEqual(final(run(program('q=floor(0.1*V(u,r));'), -10.)), mul_floor(-10., .1))
+            self.assertEqual(final(run(program('q=pow(floor((V(u,r)/0.9)*15+0.5),2);'), .03)), divide_floor(.03)**2)
+            tree = json.dumps(p.to_dict())
+            self.assertIn('"operation": "divide"', tree)
+            self.assertIn('"op": "real_binary"', tree)
+            self.assertIn('"kind": "sample"', tree)
+            self.assertEqual(json.loads(tree)['states'][0]['kind'], 'integer')  # implicit checked typed store
+            self.assertIn('"function": "floor"', tree)
 
     def test_certified_bin_controls_source_order_branch_and_display(self):
         p = program('q=floor((V(u,r)/0.9)*15+0.5); $display("floor=%d",q);$display("direct=%g",floor((V(u,r)/0.9)*15+0.5)); if(q<1)q=7;else q=8;')
@@ -48,20 +53,22 @@ class SourceFloorEvent(unittest.TestCase):
         self.assertIn('direct=0', json.dumps(r))
 
     def test_divide_exact_cut_negative_and_real_floor_result_type(self):
-        for v, expected in [(3., 1), (-1., -1), (math.nextafter(3., 0), 0)]:
-            with self.subTest(v=v):
-                self.assertEqual(final(run(program('q=floor(V(u,r)/3);'), v)), expected)
-        self.assertEqual(final(run(program('q=floor(V(u,r)/3)/2;', 'real q;'), 3.)), .5)
-        with self.assertRaises(CompileError):
-            program('q=floor(V(u,r)/3)&1;')
+        with floor_contract(self, 'source'):
+            for v, expected in [(3., 1), (-1., -1), (math.nextafter(3., 0), 0)]:
+                with self.subTest(v=v):
+                    self.assertEqual(final(run(program('q=floor(V(u,r)/3);'), v)), expected)
+            self.assertEqual(final(run(program('q=floor(V(u,r)/3)/2;', 'real q;'), 3.)), .5)
+            with self.assertRaises(CompileError):
+                program('q=floor(V(u,r)/3)&1;')
 
     def test_source_constant_lsb_binding_retains_division(self):
-        p = program('lsb=0.9/8.0;q=floor(V(u,r)/lsb);if(q<0)q=0;if(q>7)q=7;',
-                    'real lsb;integer q;', 'lsb=0.9/8.0;q=0;')
-        for v in [0., .1, .45, .9]:
-            expected = min(7, max(0, math.floor(F.from_float(v)/(F.from_float(.9)/8))))
-            with self.subTest(v=v):
-                self.assertEqual(final(run(p, v)), expected)
+        with floor_contract(self, 'lsb'):
+            p = program('lsb=0.9/8.0;q=floor(V(u,r)/lsb);if(q<0)q=0;if(q>7)q=7;',
+                        'real lsb;integer q;', 'lsb=0.9/8.0;q=0;')
+            for v in [0., .1, .45, .9]:
+                expected = min(7, max(0, math.floor(rn(F(v)/rn(F(.9)/8)))))
+                with self.subTest(v=v):
+                    self.assertEqual(final(run(p, v)), expected)
 
     def test_true_source_uncertainty_crossing_bin_refuses_before_clamp(self):
         p = program('q=floor(V(u,r)/3);if(q<0)q=0;if(q>7)q=7;')
@@ -88,10 +95,11 @@ class SourceFloorEvent(unittest.TestCase):
                     run(p, 1e308)
 
     def test_direct_original_floor_predicate_uses_paired_bin_without_prior_assignment(self):
-        p=program('if(floor((V(u,r)/0.9)*15+0.5)<1)q=7;else q=8;')
-        for v in [.03,.09,.15,.87,-.03,-.09]:
-            k=math.floor((F.from_float(v)/F.from_float(.9))*15+F(1,2))
-            with self.subTest(v=v):self.assertEqual(final(run(p,v)),7 if k<1 else 8)
+        with floor_contract(self, 'source'):
+            p=program('if(floor((V(u,r)/0.9)*15+0.5)<1)q=7;else q=8;')
+            for v in [.03,.09,.15,.87,-.03,-.09]:
+                k=divide_floor(v)
+                with self.subTest(v=v):self.assertEqual(final(run(p,v)),7 if k<1 else 8)
 
     def test_inactive_original_constant_divisor_is_audited_in_raw_and_source(self):
         from evas.runtime import _invoke

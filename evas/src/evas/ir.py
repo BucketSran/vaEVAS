@@ -1,4 +1,4 @@
-"""Version 30: voltage/event IR with typed integers and forcing markers.
+"""Version 33: source-ordered procedures and rounded program real expressions.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 32
+SCHEMA_VERSION = 33
 
 
 @dataclass(frozen=True)
@@ -41,6 +41,30 @@ class Binary:
     op: Literal["add", "multiply", "divide"]
     left: "Expression"
     right: "Expression"
+
+
+@dataclass(frozen=True)
+class RealBinary:
+    """One source operation; its result rounds before any parent operation."""
+    operation: Literal["add", "subtract", "multiply", "divide"]
+    left: "Expression"
+    right: "Expression"
+    origin: Origin
+    op: str = field(default="real_binary", init=False)
+
+
+@dataclass(frozen=True)
+class RealBoundary:
+    value: "Expression"
+    kind: Literal["store", "sample", "snapshot", "argument", "return"]
+    origin: Origin
+    op: str = field(default="real_boundary", init=False)
+
+
+@dataclass(frozen=True)
+class RealLocal:
+    binding: int
+    op: str = field(default="real_local", init=False)
 
 
 @dataclass(frozen=True)
@@ -142,7 +166,25 @@ class IntegerPrimitive:
     op: str = field(default="integer_primitive", init=False)
 
 
-Expression = IntegerRound | Forcing | IntegerPrimitive | ArrayRead | CheckedInteger | CheckedIndex | Affine | Binary | Power | Select | StateRef | OperatorRef | EventMath
+@dataclass(frozen=True)
+class UnsupportedSystemCall:
+    function: Literal['rdist_normal']
+    seed: int
+    args: tuple["Expression", ...]
+    origin: Origin
+    op: str = field(default="unsupported_system_call", init=False)
+
+
+@dataclass(frozen=True)
+class RealCall:
+    origin: Origin
+    bindings: tuple[int, ...]
+    body: tuple["ProcedureStep", ...]
+    result: "Expression"
+    op: str = field(default="real_call", init=False)
+
+
+Expression = UnsupportedSystemCall | RealCall | IntegerRound | Forcing | IntegerPrimitive | ArrayRead | CheckedInteger | CheckedIndex | Affine | Binary | RealBinary | RealBoundary | RealLocal | Power | Select | StateRef | OperatorRef | EventMath
 
 
 @dataclass(frozen=True)
@@ -318,7 +360,7 @@ class HeldTimerTrigger:
 
 @dataclass(frozen=True)
 class OrTrigger:
-    triggers: tuple[CrossTrigger | TimerTrigger | HeldTimerTrigger, ...]
+    triggers: tuple[CrossTrigger | TimerTrigger | HeldTimerTrigger | InitialStepTrigger, ...]
     kind: str = field(default="or", init=False)
 
 
@@ -327,6 +369,8 @@ class Event:
     trigger: CrossTrigger | TimerTrigger | HeldTimerTrigger | OrTrigger | FinalStepTrigger | InitialStepTrigger
     body: tuple[Assignment | Conditional | Display | Loop | ArrayWrite, ...]
     origin: Origin
+    procedure_id: int | None = None
+    expanded_statement_ordinal: int | None = None
 
 
 @dataclass(frozen=True)
@@ -348,6 +392,81 @@ class Contribution:
 
 
 @dataclass(frozen=True)
+class RealBinding:
+    procedure_id: int
+    name: str
+    origin: Origin
+    lifetime: Literal["occurrence", "call"] = "occurrence"
+
+
+@dataclass(frozen=True)
+class RealBind:
+    """Execute now and retain the value/image/proof, rather than an alias tree."""
+    binding: int
+    value: Expression
+    origin: Origin
+    kind: str = field(default="real_bind", init=False)
+
+
+@dataclass(frozen=True)
+class EventGate:
+    """The referenced Event owns the only copy of its body."""
+    event: int
+    kind: str = field(default="event_gate", init=False)
+
+
+@dataclass(frozen=True)
+class ContributionCapture:
+    contribution: int
+    kind: str = field(default="contribution_capture", init=False)
+
+
+@dataclass(frozen=True)
+class StepBoundCapture:
+    step_bound: int
+    kind: str = field(default="step_bound_capture", init=False)
+
+
+@dataclass(frozen=True)
+class ProcedureConditional:
+    relation: Literal["lt", "le", "gt", "ge"]
+    left: Expression
+    right: Expression
+    then_body: tuple["ProcedureStep", ...]
+    else_body: tuple["ProcedureStep", ...]
+    origin: Origin
+    kind: str = field(default="procedure_if", init=False)
+
+
+@dataclass(frozen=True)
+class ProcedureLoop:
+    initialize: tuple["ProcedureStep", ...]
+    relation: Literal["lt", "le", "gt", "ge"]
+    left: Expression
+    right: Expression
+    body: tuple["ProcedureStep", ...]
+    update: tuple["ProcedureStep", ...]
+    origin: Origin
+    kind: str = field(default="procedure_loop", init=False)
+
+
+ProcedureAction = Assignment | Conditional | ArrayWrite | Loop | Display | RealBind | EventGate | ContributionCapture | StepBoundCapture | ProcedureConditional | ProcedureLoop
+
+
+@dataclass(frozen=True)
+class ProcedureStep:
+    expanded_statement_ordinal: int
+    action: ProcedureAction
+
+
+@dataclass(frozen=True)
+class AnalogProcedure:
+    procedure_id: int
+    instance: str
+    body: tuple[ProcedureStep, ...]
+
+
+@dataclass(frozen=True)
 class StepBound:
     value: Expression
     active: Expression
@@ -363,9 +482,14 @@ class Program:
     operators: tuple[Transition | AbsDelay | Slew | Idt | LaplaceNd | IdtMod | Sin | MathFunction | Ddt, ...] = ()
     schema_version: int = SCHEMA_VERSION
     step_bounds: tuple[StepBound, ...] = ()
+    procedures: tuple[AnalogProcedure, ...] = ()
+    real_bindings: tuple[RealBinding, ...] = ()
 
     def to_dict(self) -> dict:
         audit = getattr(self, "_native_audit", None)
         check_ir(self, work=audit.ir_work if audit is not None else None,
                  cache=audit.ir_cache if audit is not None else None)
+        from .program_real_validation import validate_program_ir
+        validate_program_ir(self, work=audit.ir_work if audit is not None else None,
+                            facts=audit.ir_cache if audit is not None else None)
         return audit.materialize(self) if audit is not None and audit.active else asdict(self)

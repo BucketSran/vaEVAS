@@ -38,7 +38,8 @@ _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
 OPERATOR_ARITIES = {"transition": (3, 4), "absdelay": (2,), "slew": (2, 3),
                     "idt": (2, 3), "laplace_nd": (3,), "laplace_np": (3, 4), "idtmod": (3, 4), "ddt": (1,)}
 OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin", "cos", "exp", "ln", "sqrt", "tanh"}
-DECISION_NAMES = frozenset(("<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!", "ternary", "abs", "min", "max"))
+BOOLEAN_OPS = frozenset(("<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!"))
+DECISION_NAMES = BOOLEAN_OPS | frozenset(("ternary", "abs", "min", "max"))
 _KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
              "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or",
              "function", "endfunction", "for", "genvar", "from", "exclude", "inf",
@@ -83,15 +84,17 @@ class Expr:
     op: Literal["number", "parameter", "node", "voltage", "array", "unary+", "unary-",
                 "+", "-", "*", "/", "%", "&", "|", "^", "unary~", "<<", ">>", "power", "sin", "cos", "exp", "ln", "sqrt", "transition", "absdelay", "slew",
                 "idt", "laplace_nd", "laplace_np", "idtmod", "ddt", "call", "index",
-                "<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!", "ternary", "abs", "min", "max", "floor", "tanh", "checked"]
+                "<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!", "ternary", "abs", "min", "max", "floor", "tanh", "checked", "unsupported_system_call"]
     value: str | float | None
     args: tuple["Expr", ...]
     token: Token
     expansion: tuple[tuple[str, int], ...] = ()
     result_type: str | None = None
+    real_boundary_kind: str | None = None
+    source_call: tuple[str, int, int] | None = None
 
 
-def contains_operator(expr: Expr, *, visit=None) -> bool:
+def contains_operator(expr: Expr, *, visit=None, names=OPERATOR_NAMES, allowed=None) -> bool:
     pending, seen = [expr], set()
     while pending:
         current = pending.pop()
@@ -99,7 +102,7 @@ def contains_operator(expr: Expr, *, visit=None) -> bool:
         if id(current) in seen:
             continue
         seen.add(id(current))
-        if current.op in OPERATOR_NAMES:
+        if current.op in names and not (allowed is not None and allowed(current)):
             return True
         pending.extend(current.args)
     return False
@@ -234,6 +237,10 @@ class Model:
     variable_initializers: dict[str, Expr] = field(default_factory=dict)
     local_alias_scopes: dict[Token, frozenset[str]] = field(default_factory=dict)
     local_array_alias_scopes: dict[Token, tuple[Assignment, ...]] = field(default_factory=dict)
+    # Complete lexical process before compatibility views split events/seeds.
+    # It is transformed by the same elaborators as the executable source.
+    procedure: tuple[Assignment | Conditional | ContributionStatement | Loop | Event, ...] = ()
+    deferred_system_calls: bool = False
 
 
 @dataclass(frozen=True)
@@ -456,10 +463,22 @@ class Parser:
             following = self.token
             if (token.text == '$' and following.kind == 'name' and following.line == token.line
                     and following.column == token.column + 1):
-                # e.g. $rdist_normal: no seeded/random system function is implemented.
-                self.fail(f"system function ${following.text} is not supported", token,
-                          code='unsupported_system_function')
-            self.fail(f"unsupported expression {token.text!r}", token)
+                # Parse its complete syntax, but confer no execution support.
+                # Instance qualification may discharge an unreachable call.
+                self.take()
+                arguments = []
+                if self.token.text == "(":
+                    self.take("(")
+                    if self.token.text != ")":
+                        arguments.append(self.expression())
+                        while self.token.text == ",":
+                            self.take(",")
+                            arguments.append(self.expression())
+                    self.take(")")
+                self.deferred_system_calls = True
+                left = Expr("unsupported_system_call", following.text, tuple(arguments), token)
+            else:
+                self.fail(f"unsupported expression {token.text!r}", token)
         precedence_table = {"||": 1, "&&": 2, "|": 3, "^": 4, "&": 5,
                             "==": 6, "!=": 6, "<": 7, "<=": 7, ">": 7, ">=": 7,
                             "<<": 8, ">>": 8, "+": 10, "-": 10, "*": 20, "/": 20, "%": 20}
@@ -481,31 +500,20 @@ class Parser:
         return replace(left, expansion=left.token.expansion)
 
     def condition(self, expr, yes, no, token):
-        """Lower pure Boolean control to the existing ordered comparison tree.
+        """Keep each source arm once; existing expression decisions own truth.
 
-        No assignment runs between comparisons. Duplicated fallback bodies keep
-        short-circuit order and are subject to the normal expanded IR budget.
+        Lowering a logical predicate into statement comparisons duplicates a
+        fallback body for every short-circuit route. Along an else-if chain
+        that multiplies the full remaining program. A Select-valued boolean
+        predicate already preserves ordered, lazy branch evaluation in the
+        shared expression and procedure representation.
         """
-        def choose(value, then_body, else_body):
-            return self.condition(value, then_body, else_body, token)
-        if expr.op == '&&':
-            result = choose(expr.args[0], choose(expr.args[1], yes, no), no)
-        elif expr.op == '||':
-            result = choose(expr.args[0], yes, choose(expr.args[1], yes, no))
-        elif expr.op == 'unary!':
-            result = choose(expr.args[0], no, yes)
-        elif expr.op in ('==', '!='):
-            if expr.op == '!=':
-                yes, no = no, yes
-            left, right = expr.args
-            equal = Conditional('>=', left, right, yes, no, token)
-            result = (Conditional('<=', left, right, (equal,), no, token),)
-        elif expr.op in ('<', '<=', '>', '>='):
+        if expr.op in ('<', '<=', '>', '>='):
             result = (Conditional(expr.op, *expr.args, yes, no, token),)
         else:
             zero = Expr('number', 0., (), token)
-            negative = Conditional('<', expr, zero, yes, no, token)
-            result = (Conditional('>', expr, zero, yes, (negative,), token),)
+            boolean = expr if expr.op in BOOLEAN_OPS else Expr('!=', None, (expr, zero), token)
+            result = (Conditional('>', boolean, zero, yes, no, token),)
         check_ir(result, token)
         return result
 
@@ -803,6 +811,7 @@ class Parser:
         self.take("analog")
         self.take("begin")
         analog, initial, events = [], [], []
+        self.procedure_body = []
         initial_segments = []
         self.local_alias_scopes = {}
         self.local_array_alias_scopes = {}
@@ -821,6 +830,14 @@ class Parser:
                 array_scope = tuple(available_array)
                 first_initial = len(initial)
                 event = self.monitored_event(token, initial)
+                initial_body = tuple(initial[first_initial:])
+                if initial_body:
+                    leaves = (Trigger('initial_step', (), token),)
+                    if event is not None:
+                        leaves += event.triggers
+                    self.procedure_body.append(Event(leaves, initial_body, token))
+                elif event is not None:
+                    self.procedure_body.append(event)
                 initial_segments.append(tuple(initial[first_initial:]))
                 if event is not None and any(t.kind == 'initial_step' for t in event.triggers):
                     initial_segments.append(event.body)
@@ -836,6 +853,7 @@ class Parser:
                     analog.append(event)
                 continue
             statements = self.statements(True, True)
+            self.procedure_body.extend(statements)
             analog.extend(statements)
             available.update(s.name for s in statements
                              if isinstance(s, Assignment) and s.index is None)
@@ -1020,6 +1038,7 @@ class Parser:
         self.module_attributes()
         module_token = self.take("module")
         self.function_names = set()
+        self.deferred_system_calls = False
         name = self.name()
         self.take("(")
         ports, directions, nodes, node_ranges, port_ranges = self.module_ports()
@@ -1157,4 +1176,4 @@ class Parser:
             self.fail('initial $display in a hierarchical model is not supported', module_token)
         if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys() | genvars):
             self.fail("function name conflicts with a module declaration")
-        return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children), parameter_types, parameter_ranges, node_ranges, port_ranges, module_token, variable_initializers, getattr(self, "local_alias_scopes", {}), getattr(self, "local_array_alias_scopes", {}))
+        return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children), parameter_types, parameter_ranges, node_ranges, port_ranges, module_token, variable_initializers, getattr(self, "local_alias_scopes", {}), getattr(self, "local_array_alias_scopes", {}), tuple(getattr(self, "procedure_body", ())), self.deferred_system_calls)

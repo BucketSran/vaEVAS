@@ -1,0 +1,246 @@
+{
+  "program": {
+    "nodes": [
+      "0",
+      "u",
+      "y"
+    ],
+    "contributions": [
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "r",
+          "local_negative": "y",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 2,
+        "rhs": {
+          "op": "multiply",
+          "left": {
+            "constant": -1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "operator": 0,
+            "op": "operator"
+          }
+        },
+        "origin": {
+          "source": "ir33_history_lifecycle.va",
+          "line": 2,
+          "column": 113,
+          "instance": "dut",
+          "expansion": []
+        }
+      }
+    ],
+    "states": [
+      {
+        "instance": "dut",
+        "name": "q",
+        "kind": "real",
+        "initial": 0.0
+      }
+    ],
+    "events": [
+      {
+        "trigger": {
+          "start": 0.5,
+          "period": 0.0,
+          "time_tolerance": 1e-12,
+          "enabled": true,
+          "kind": "timer"
+        },
+        "body": [
+          {
+            "state": 0,
+            "rhs": {
+              "value": {
+                "operation": "add",
+                "left": {
+                  "state": 0,
+                  "op": "state"
+                },
+                "right": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "origin": {
+                  "source": "ir33_history_lifecycle.va",
+                  "line": 2,
+                  "column": 104,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_binary"
+              },
+              "kind": "store",
+              "origin": {
+                "source": "ir33_history_lifecycle.va",
+                "line": 2,
+                "column": 101,
+                "instance": "dut",
+                "expansion": []
+              },
+              "op": "real_boundary"
+            },
+            "kind": "assign"
+          }
+        ],
+        "origin": {
+          "source": "ir33_history_lifecycle.va",
+          "line": 2,
+          "column": 87,
+          "instance": "dut",
+          "expansion": []
+        },
+        "procedure_id": 0,
+        "expanded_statement_ordinal": 0
+      }
+    ],
+    "operators": [
+      {
+        "input": {
+          "binding": 0,
+          "op": "real_local"
+        },
+        "delay": 0.0,
+        "rise": 0.125,
+        "fall": 0.125,
+        "origin": {
+          "source": "ir33_history_lifecycle.va",
+          "line": 2,
+          "column": 121,
+          "instance": "dut",
+          "expansion": []
+        },
+        "kind": "transition"
+      }
+    ],
+    "schema_version": 33,
+    "step_bounds": [],
+    "procedures": [
+      {
+        "procedure_id": 0,
+        "instance": "dut",
+        "body": [
+          {
+            "expanded_statement_ordinal": 0,
+            "action": {
+              "event": 0,
+              "kind": "event_gate"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 1,
+            "action": {
+              "binding": 0,
+              "value": {
+                "value": {
+                  "state": 0,
+                  "op": "state"
+                },
+                "kind": "snapshot",
+                "origin": {
+                  "source": "ir33_history_lifecycle.va",
+                  "line": 2,
+                  "column": 108,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "origin": {
+                "source": "ir33_history_lifecycle.va",
+                "line": 2,
+                "column": 108,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "real_bind"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 2,
+            "action": {
+              "contribution": 0,
+              "kind": "contribution_capture"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 3,
+            "action": {
+              "binding": 0,
+              "value": {
+                "value": {
+                  "constant": 9.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "snapshot",
+                "origin": {
+                  "source": "ir33_history_lifecycle.va",
+                  "line": 2,
+                  "column": 144,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "origin": {
+                "source": "ir33_history_lifecycle.va",
+                "line": 2,
+                "column": 144,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "real_bind"
+            }
+          }
+        ]
+      }
+    ],
+    "real_bindings": [
+      {
+        "procedure_id": 0,
+        "name": "a",
+        "origin": {
+          "source": "ir33_history_lifecycle.va",
+          "line": 2,
+          "column": 1,
+          "instance": "dut",
+          "expansion": []
+        },
+        "lifetime": "occurrence"
+      }
+    ]
+  },
+  "driven": [
+    "u"
+  ],
+  "samples": [],
+  "transient": {
+    "pwl": [
+      [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    ],
+    "output_times": [
+      0,
+      0.75,
+      1
+    ],
+    "stop": 1,
+    "max_step": 0.125
+  }
+}

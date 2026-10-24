@@ -5,6 +5,7 @@ use crate::ir::{Error, Expression, Program, Solution, Term};
 #[derive(Clone)]
 pub(crate) struct Bounds {
     expressions: Vec<(Expression, Expression)>,
+    procedure_owned: bool,
 }
 
 fn bind(expr: &Expression, p: &Program, owner: &str) -> Result<Expression, Error> {
@@ -127,6 +128,14 @@ pub(crate) fn possible_activation(
 
 impl Bounds {
     pub(crate) fn new(program: &Program) -> Result<Self, Error> {
+        // IR33 source captures own these expressions. They cannot be rebound
+        // through a final-frame local lookup by the legacy expression binder.
+        if !program.procedures.is_empty() {
+            return Ok(Self {
+                expressions: Vec::new(),
+                procedure_owned: !program.step_bounds.is_empty(),
+            });
+        }
         let mut expressions = Vec::new();
         for bound in &program.step_bounds {
             let o = &bound.origin;
@@ -145,7 +154,10 @@ impl Bounds {
             crate::expression::validate(&value, count)?;
             expressions.push((active, value));
         }
-        Ok(Self { expressions })
+        Ok(Self {
+            expressions,
+            procedure_owned: false,
+        })
     }
 
     pub(crate) fn next_time(
@@ -156,6 +168,12 @@ impl Bounds {
         states: &[I],
         operators: &[I],
     ) -> Result<f64, Error> {
+        if self.procedure_owned {
+            return Err(Error::new(
+                "invalid_ir",
+                "procedure timestep requests require their source-position capture provider",
+            ));
+        }
         if self.expressions.is_empty() {
             return Ok(time + max_step);
         }
@@ -182,6 +200,12 @@ impl Bounds {
         states: &[I],
         operators: &[I],
     ) -> Result<f64, Error> {
+        if self.procedure_owned {
+            return Err(Error::new(
+                "invalid_ir",
+                "procedure timestep requests require their source-position capture provider",
+            ));
+        }
         if self.expressions.is_empty() {
             return Ok(time + max_step);
         }
@@ -322,6 +346,7 @@ mod tests {
     fn uncertain_boolean_activation_caps_mesh_without_resolving_physical_predicate() {
         let active = uncertain_active();
         let bounds = Bounds {
+            procedure_owned: false,
             expressions: vec![(active.clone(), constant(0.1))],
         };
         let next = bounds.next_time(0., 1., &frame(), &[], &[]).unwrap();
@@ -341,6 +366,7 @@ mod tests {
             },
         ] {
             let bounds = Bounds {
+                procedure_owned: false,
                 expressions: vec![(active.clone(), value)],
             };
             assert!(bounds.next_time(0., 1., &frame(), &[], &[]).is_err());
@@ -356,6 +382,7 @@ mod tests {
             **else_value = constant(0.2);
         }
         let bounds = Bounds {
+            procedure_owned: false,
             expressions: vec![(active.clone(), selected_value)],
         };
         assert_eq!(

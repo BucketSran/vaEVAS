@@ -329,6 +329,7 @@ fn query(m: &EventModel, t: &Trajectory, c: &Controller) -> Result<Frame, Error>
         &c.accepted,
         EventMoment {
             exact_root: None,
+            occurrence_certified: false,
             representative: 1.5,
             observation: I::point(1.5),
             fired_roots: &[],

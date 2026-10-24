@@ -66,6 +66,13 @@ impl<'a> Paid<'a> {
         crate::diagnostics::counter("history_exact_rational_copy", 1);
         Some(v.clone())
     }
+    /// Copy the existing rational, then flip its owned numerator sign.
+    /// This performs no rational product or denominator normalization.
+    pub(crate) fn negated(&mut self, value: &R) -> Option<R> {
+        let value = self.copy(value)?;
+        self.pay(1)?;
+        self.local.check(-value)
+    }
     pub(crate) fn binary(&mut self, v: f64) -> Option<R> {
         self.pay(1)?;
         if !v.is_finite() {

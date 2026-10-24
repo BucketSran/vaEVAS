@@ -1,0 +1,205 @@
+{
+  "nodes": [
+    "0",
+    "lo",
+    "metric",
+    "rst",
+    "u",
+    "y"
+  ],
+  "contributions": [
+    {
+      "branch": {
+        "instance": "one",
+        "local_positive": "0",
+        "local_negative": "y",
+        "kind": "voltage"
+      },
+      "positive": 0,
+      "negative": 5,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": -1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "relation": "gt",
+          "left": {
+            "constant": 0.0,
+            "terms": [
+              {
+                "node": 0,
+                "coefficient": -1.0
+              },
+              {
+                "node": 3,
+                "coefficient": 1.0
+              }
+            ],
+            "op": "affine"
+          },
+          "right": {
+            "constant": 0.5,
+            "terms": [],
+            "op": "affine"
+          },
+          "then_value": {
+            "constant": 0.5,
+            "terms": [],
+            "op": "affine"
+          },
+          "else_value": {
+            "op": "add",
+            "left": {
+              "constant": 0.5,
+              "terms": [],
+              "op": "affine"
+            },
+            "right": {
+              "op": "multiply",
+              "left": {
+                "op": "multiply",
+                "left": {
+                  "constant": 1.25,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "add",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 4,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "constant": -0.5,
+                    "terms": [],
+                    "op": "affine"
+                  }
+                }
+              },
+              "right": {
+                "constant": 1.0,
+                "terms": [],
+                "op": "affine"
+              }
+            }
+          },
+          "origin": {
+            "source": "legacy.va",
+            "line": 9,
+            "column": 3,
+            "instance": "one",
+            "expansion": []
+          },
+          "op": "select"
+        }
+      },
+      "origin": {
+        "source": "legacy.va",
+        "line": 17,
+        "column": 3,
+        "instance": "one",
+        "expansion": []
+      }
+    },
+    {
+      "branch": {
+        "instance": "one",
+        "local_positive": "0",
+        "local_negative": "metric",
+        "kind": "voltage"
+      },
+      "positive": 0,
+      "negative": 2,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": -1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "operator": 0,
+          "op": "operator"
+        }
+      },
+      "origin": {
+        "source": "legacy.va",
+        "line": 18,
+        "column": 3,
+        "instance": "one",
+        "expansion": []
+      }
+    }
+  ],
+  "states": [
+    {
+      "instance": "one",
+      "name": "q",
+      "kind": "integer",
+      "initial": 0.0
+    }
+  ],
+  "events": [
+    {
+      "trigger": {
+        "start": 0.25,
+        "period": 0.0,
+        "time_tolerance": 1e-12,
+        "enabled": true,
+        "kind": "timer"
+      },
+      "body": [
+        {
+          "state": 0,
+          "rhs": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "kind": "assign"
+        }
+      ],
+      "origin": {
+        "source": "legacy.va",
+        "line": 8,
+        "column": 3,
+        "instance": "one",
+        "expansion": []
+      }
+    }
+  ],
+  "operators": [
+    {
+      "input": {
+        "state": 0,
+        "op": "state"
+      },
+      "delay": 0.0,
+      "rise": 0.125,
+      "fall": 0.125,
+      "origin": {
+        "source": "legacy.va",
+        "line": 18,
+        "column": 14,
+        "instance": "one",
+        "expansion": []
+      },
+      "kind": "transition"
+    }
+  ],
+  "schema_version": 28,
+  "step_bounds": []
+}

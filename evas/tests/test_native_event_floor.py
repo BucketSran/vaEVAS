@@ -5,6 +5,7 @@ cross-root input is -1/8 so its floor argument is exactly -1, not its
 rounded execution-time representative. No deck ranges prove admission.
 """
 GUARDS=['LANG','EVENT-ORDER','CROSS','EVENT-CONDITIONS','COMPOSE']
+from floor_rn_contract import floor_contract
 import copy
 import json
 import unittest
@@ -24,24 +25,27 @@ def run(p,value=.375,**options):
 
 class NativeEventFloor(unittest.TestCase):
     def test_unbounded_operand_positive_negative_and_integer_boundaries(self):
-        for value,want in [(0.375,3),(-0.0625,-1),(0.5,4),(-0.125,-1),(-0.12500000000000003,-2),(268435455.875,2147483647),(-268435456.,-2147483648)]:
-            with self.subTest(value=value):
-                r=run(program(),value)
-                self.assertEqual([s['voltages'][r['nodes'].index('y')] for s in r['solutions']],[0,want,want])
+        with floor_contract(self, 'native'):
+            for value,want in [(0.375,3),(-0.0625,-1),(0.5,4),(-0.125,-1),(-0.12500000000000003,-2),(268435455.875,2147483647),(-268435456.,-2147483648)]:
+                with self.subTest(value=value):
+                    r=run(program(),value)
+                    self.assertEqual([s['voltages'][r['nodes'].index('y')] for s in r['solutions']],[0,want,want])
 
     def test_original_integer_write_overflow_cannot_be_erased_by_clamp(self):
-        p=program('q=floor(8*V(u,r));if(q<0)q=0;if(q>7)q=7;')
-        for value in [268435456.,-268435456.125,1e308]:
-            with self.subTest(value=value),self.assertRaises(KernelError):run(p,value)
-        for value,want in [(-0.0625,0),(0.375,3),(2,7)]:
-            with self.subTest(value=value):
-                r=run(p,value);self.assertEqual(r['solutions'][-1]['voltages'][r['nodes'].index('y')],want)
+        with floor_contract(self, 'native'):
+            p=program('q=floor(8*V(u,r));if(q<0)q=0;if(q>7)q=7;')
+            for value in [268435456.,-268435456.125,1e308]:
+                with self.subTest(value=value),self.assertRaises(KernelError):run(p,value)
+            for value,want in [(-0.0625,0),(0.375,3),(2,7)]:
+                with self.subTest(value=value):
+                    r=run(p,value);self.assertEqual(r['solutions'][-1]['voltages'][r['nodes'].index('y')],want)
 
     def test_floor_sample_drives_contribution_mode_after_original_clamps(self):
-        text=model('@(initial_step)q=0;@(timer(0.25))begin q=floor(8*V(u,r));if(q<0)q=0;if(q>7)q=7;end V(y,r)<+(q<2?0:1);','integer q;')
-        p=compile_sources({'floor_mode.va':text},[instance()])
-        r=run(p)
-        self.assertEqual([s['voltages'][r['nodes'].index('y')] for s in r['solutions']],[0,1,1])
+        with floor_contract(self, 'native'):
+            text=model('@(initial_step)q=0;@(timer(0.25))begin q=floor(8*V(u,r));if(q<0)q=0;if(q>7)q=7;end V(y,r)<+(q<2?0:1);','integer q;')
+            p=compile_sources({'floor_mode.va':text},[instance()])
+            r=run(p)
+            self.assertEqual([s['voltages'][r['nodes'].index('y')] for s in r['solutions']],[0,1,1])
 
     def test_real_floor_value_does_not_gain_source_integer_type(self):
         with self.assertRaises(CompileError):program('q=floor(8*V(u,r))&1;')
@@ -51,12 +55,13 @@ class NativeEventFloor(unittest.TestCase):
             with self.subTest(body=body),self.assertRaises(CompileError):program(body)
 
     def test_floor_keeps_real_division_and_exact_physical_root(self):
-        p=program('q=floor(8*V(u,r))/2;','real q;')
-        r=run(p);self.assertEqual(r['solutions'][-1]['voltages'][r['nodes'].index('y')],1.5)
-        text=model('@(initial_step) q=0; @(cross(V(u,r)-0.5,+1)) q=floor(8*(V(u,r)-0.625)); V(y,r)<+q;', 'integer q;')
-        p=compile_sources({'root_floor.va':text},[instance()])
-        r=transient(p,{'u':[[0,0],[1,1]]},[0,.75,1],stop=1,max_step=.125,kernel=KERNEL)
-        self.assertEqual([s['voltages'][r['nodes'].index('y')] for s in r['solutions']],[0,-1,-1])
+        with floor_contract(self, 'native'):
+            p=program('q=floor(8*V(u,r))/2;','real q;')
+            r=run(p);self.assertEqual(r['solutions'][-1]['voltages'][r['nodes'].index('y')],1.5)
+            text=model('@(initial_step) q=0; @(cross(V(u,r)-0.5,+1)) q=floor(8*(V(u,r)-0.625)); V(y,r)<+q;', 'integer q;')
+            p=compile_sources({'root_floor.va':text},[instance()])
+            r=transient(p,{'u':[[0,0],[1,1]]},[0,.75,1],stop=1,max_step=.125,kernel=KERNEL)
+            self.assertEqual([s['voltages'][r['nodes'].index('y')] for s in r['solutions']],[0,-1,-1])
 
     def test_original_unselected_floor_operands_are_audited(self):
         for expression in ['floor(0*V(y,r)+V(u,r))', 'floor(q+V(u,r))', 'floor(V(u,r)+$abstime)']:

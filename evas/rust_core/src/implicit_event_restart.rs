@@ -502,7 +502,18 @@ mod tests {
         // adds optional analytic_sources to TransientInputs; this input is PWL.
         // Construct a current test input without rewriting the archived IR31.
         assert_eq!(p.schema_version, 31);
-        assert_eq!(crate::ir::SCHEMA_VERSION, 32, "re-audit the fixture");
+        assert_eq!(crate::ir::SCHEMA_VERSION, 33, "re-audit the fixture");
+        // IR33 legacy transport: retain pre-executed numeric seeds.
+        // Do not add an initial gate or procedure to this archived input.
+        assert!(p.procedures.is_empty());
+        assert!(p.real_bindings.is_empty());
+        assert!(p.events.iter().all(
+            |event| event.procedure_id.is_none() && event.expanded_statement_ordinal.is_none()
+        ));
+        assert!(p
+            .states
+            .iter()
+            .all(|state| serde_json::to_value(&state.initial).unwrap().is_number()));
         p.schema_version = crate::ir::SCHEMA_VERSION;
         let config = serde_json::from_value(json!({"pwl":[[[0.,0.],[1.,0.]]],"output_times":[0.,0.25,0.5,0.75,1.],"stop":1.,"max_step":1.})).unwrap();
         (p, Trajectory::new(config, 1).unwrap())

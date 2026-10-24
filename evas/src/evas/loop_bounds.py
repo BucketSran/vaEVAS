@@ -19,13 +19,13 @@ every event writer. Integer variables written by ordinary analog statements are
 not tracked. The fixpoint is checked post hoc: every body maps the invariant
 into itself. Bounds are recorded only during that checking pass.
 """
-from dataclasses import replace
+from dataclasses import replace, is_dataclass
 
 from .errors import CompileError
 from .limits import MAX_IR_ITEMS
 from . import event_index_domains as domains
 from .syntax import (Assignment, BoundStep, Conditional, ContributionStatement, Display,
-                     Event, Expr, Loop, Parser, While)
+                     Event, Expr, Loop, Parser, Token, While)
 
 #: Implementation bound on unrolled trips; the copies also obey the existing
 #: expanded IR size limit.
@@ -122,6 +122,47 @@ def bound_loops(model):
         return model
 
     records = _prove(model, events)
+    loop_sites = {}
+    copied_items = 0
+
+    def trip_copy(value, loop, iteration):
+        # Source expansion is per original loop occurrence, never token-only.
+        # Views sharing the original node receive the same expansion path.
+        if id(loop) not in loop_sites:
+            loop_sites[id(loop)] = (loop, len(loop_sites)+1)
+        path = (('bounded_loop', loop_sites[id(loop)][1]),
+                ('bounded_loop_trip', iteration))
+        memo = {}
+        def reserve(amount):
+            nonlocal copied_items
+            copied_items += amount
+            if copied_items > MAX_IR_ITEMS:
+                raise CompileError('bounded loop source expansion exceeds IR budget',
+                                   code='resource_budget', token=loop.token)
+        def copy(item):
+            if isinstance(item, (Expr, Token, tuple, list)) or is_dataclass(item):
+                old = memo.get(id(item))
+                if old is not None:
+                    return old[1]
+            if isinstance(item, Expr):
+                reserve(1+len(item.args)+len(item.expansion)+len(path))
+                result = replace(item, token=copy(item.token), args=tuple(copy(arg) for arg in item.args),
+                                 expansion=(*item.expansion, *path))
+            elif isinstance(item, Token):
+                reserve(1+len(item.expansion)+len(path))
+                result = replace(item, expansion=(*item.expansion, *path))
+            elif is_dataclass(item):
+                schema = type(item).__dataclass_fields__
+                reserve(1+len(schema))
+                result = replace(item, **{name:copy(getattr(item,name)) for name in schema})
+            elif isinstance(item, (tuple, list)):
+                reserve(1+len(item))
+                result = tuple(copy(child) for child in item)
+            else:
+                return item
+            memo[id(item)] = (item, result)
+            return result
+        return copy(value)
 
     def transform(items, runtime):
         result = []
@@ -129,15 +170,16 @@ def bound_loops(model):
             if isinstance(item, While):
                 if not runtime:
                     _fail(model, item.token, "while loops are supported only in timer, cross or final_step event bodies")
-                trips = records.get(id(item), (item, 0))[1] if records is not None else _UNBOUNDED
+                trips = records.get(id(item), (item, _UNBOUNDED))[1] if records is not None else _UNBOUNDED
                 if trips is _UNBOUNDED:
                     _fail(model, item.token, f"while loop needs an integer trip-count bound <= {MAX_TRIPS} "
                           "proven from integer state invariants within the proof budget")
                 body = transform(item.body, runtime)
                 trip = condition_tree(item.condition, body, (), item.token)
-                result.extend(trip * (trips + 1))
+                for iteration in range(trips + 1):
+                    result.extend(trip_copy(trip, item, iteration))
             elif isinstance(item, Loop):
-                trips = (records.get(id(item), (item, 0))[1] if records is not None else _UNBOUNDED)
+                trips = (records.get(id(item), (item, _UNBOUNDED))[1] if records is not None else _UNBOUNDED)
                 if not (runtime and candidate_for(item)) or trips is _UNBOUNDED:
                     # Retained loops keep their existing paths; nested whiles
                     # still need their own bound, which covers every outer trip.
@@ -147,7 +189,9 @@ def bound_loops(model):
                 control = Expr("parameter", item.name, (), item.token)
                 update = Assignment(item.name, item.update, item.token)
                 trip = Conditional(item.relation, control, item.limit, (*body, update), (), item.token)
-                result.extend((Assignment(item.name, item.start, item.token), *(trip,) * (trips + 1)))
+                result.append(Assignment(item.name, item.start, item.token))
+                for iteration in range(trips + 1):
+                    result.append(trip_copy(trip, item, iteration))
             elif isinstance(item, Conditional):
                 result.append(replace(item, then_body=transform(item.then_body, runtime),
                                       else_body=transform(item.else_body, runtime)))
@@ -159,6 +203,7 @@ def bound_loops(model):
 
     return replace(model, analog=list(transform(model.analog, False)),
                    initial=list(transform(model.initial, False)),
+                   procedure=transform(model.procedure, False),
                    events=list(transform(model.events, False)))
 
 

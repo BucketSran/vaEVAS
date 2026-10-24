@@ -11,12 +11,13 @@ y, its first-order filter f and its integral z must not depend on ``tick``.
 Independent answers: clipped ramp and its exact area with ``Fraction``; the
 filtered ramp step/ramp solution in 80-digit ``Decimal``.
 
-Contract: y and f within ``VOLTAGE_BUDGET`` (the requested vabstol), z within
-``AREA_BUDGET``, or an honest refusal. On main ``a4d2b875`` the ticks
+The repaired cases require y and f within ``VOLTAGE_BUDGET`` (the requested
+vabstol) and z within ``AREA_BUDGET``. The original safety contract also allowed
+honest refusal. On main ``a4d2b875`` the ticks
 2.2 us and 2.3 us match to about 7e-17 V. Tick 2.25 us equals the ramp end
 (2 us + 0.25 us): f(2.25 us) is -0.2135 instead of +0.0708 (error 0.284 V)
-and z(2.25 us) is 8.75e-7 instead of 1e-6, without a diagnostic. That tick
-is an expected failure for #227; remove the decorator when it is fixed.
+and z(2.25 us) is 8.75e-7 instead of 1e-6, without a diagnostic. The endpoint case
+is an ordinary successful-output regression after the repair.
 """
 GUARDS = ["TIMER", "TRANSITION", "LAPLACE", "DYNAMICS", "EVENT-ORDER",
           "DEV:silent-error-regression"]
@@ -25,8 +26,9 @@ from decimal import Decimal, localcontext
 from fractions import Fraction as F
 import unittest
 
-from evas import Instance, KernelError, compile_sources, transient
+from evas import Instance, compile_sources, transient
 from test_affine import KERNEL
+from initial_record_contract import check_initial_record_batch
 
 SOURCE = '''`include "disciplines.vams"
 module edge(y,f,z,n);
@@ -50,7 +52,6 @@ TIMES = [0., 2e-6, 2.2e-6, 2.25e-6, 2.3e-6, 2.4e-6, 2.5e-6, 2.6e-6, 2.8e-6]
 VOLTAGE_BUDGET = 1e-9
 # Same area budget as the branch's nearby-retarget control (z is about 1e-6 V*s).
 AREA_BUDGET = 2e-14
-REFUSAL_CATEGORIES = ("unsupported", "numerical")
 
 
 def answers(t, start=2e-6, width=2.5e-7, q0=.5, q1=-.5, tau=2e-7):
@@ -70,15 +71,13 @@ def answers(t, start=2e-6, width=2.5e-7, q0=.5, q1=-.5, tau=2e-7):
 
 
 class UnrelatedTimerAtRampEnd(unittest.TestCase):
-    def assert_answers_or_refused(self, tick):
+    def assert_answers(self, tick):
         program = compile_sources({"edge.va": SOURCE}, [Instance(
             "dut", "edge", {node: node for node in "yfzn"}, {"tick": tick})])
-        try:
-            result = transient(program, {}, TIMES, stop=TIMES[-1], max_step=3.125e-8,
-                               vabstol=VOLTAGE_BUDGET, reltol=0, kernel=KERNEL)
-        except KernelError as refusal:
-            self.assertIn(refusal.diagnostic["category"], REFUSAL_CATEGORIES, refusal.detail)
-            return
+        result = transient(program, {}, TIMES, stop=TIMES[-1], max_step=3.125e-8,
+                           vabstol=VOLTAGE_BUDGET, reltol=0, kernel=KERNEL)
+        # Declaration q/count start at zero; initial_step commits q0=.5.
+        result = check_initial_record_batch(result, program, [0,0], [.5,0], 1)
         events = result["transient"]["events"]
         self.assertEqual(len(events), 2)
         for event, nominal in zip(events, (START, tick), strict=True):
@@ -97,14 +96,13 @@ class UnrelatedTimerAtRampEnd(unittest.TestCase):
                 self.assertEqual(values[index["n"]], int(t > START) + int(t > tick), msg=("n", t))
 
     def test_tick_inside_ramp_keeps_independent_history(self):
-        self.assert_answers_or_refused(2.2e-6)
+        self.assert_answers(2.2e-6)
 
     def test_tick_after_ramp_keeps_independent_history(self):
-        self.assert_answers_or_refused(2.3e-6)
+        self.assert_answers(2.3e-6)
 
-    @unittest.expectedFailure  # Issue #227: silent wrong f and z on main.
     def test_tick_at_ramp_end_keeps_independent_history(self):
-        self.assert_answers_or_refused(2.25e-6)
+        self.assert_answers(2.25e-6)
 
 
 if __name__ == "__main__":

@@ -9,14 +9,17 @@ from pathlib import Path
 import unittest
 from evas import KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
+from initial_record_contract import check_initial_record_batch
 
 DUT = (Path(__file__).with_name("fixtures") / "event_relocalization.va").read_text()
 
 
-def run(source=DUT, *, module="event_relocalization", times=None, step=1):
+def run(source=DUT, *, module="event_relocalization", times=None, step=1,
+        initial_records=([0,0],[.75,0],2)):
     program = compile_sources({"relocalization.va": source}, [instance(module=module)])
-    return transient(program, {"u": [[0,0],[1,1]]}, times or [0,.25,.5,.75,1],
+    result = transient(program, {"u": [[0,0],[1,1]]}, times or [0,.25,.5,.75,1],
                      stop=1, max_step=step, kernel=KERNEL)
+    return check_initial_record_batch(result,program,*initial_records)
 
 
 class EventRelocalization(unittest.TestCase):
@@ -52,7 +55,7 @@ class EventRelocalization(unittest.TestCase):
     def test_initial_zero_of_held_guard_does_not_fire(self):
         source = model('''@(initial_step) n=0;
           @(cross(V(u,r)-n,1)) n=n+1; V(y,r)<+n;''', 'integer n;')
-        result = run(source, module='m')
+        result = run(source, module='m', initial_records=([0],[0],1))
         self.assertEqual(result['transient']['events'], [])
         self.assertEqual(result['transient']['states'][-1], [0])
 
@@ -91,6 +94,7 @@ class EventRelocalization(unittest.TestCase):
               'real q; integer n;',ports='u,y,z,r',directions='input u; output y,z; inout r;')
             times=[0,.25,.5,.75,1]
             r=run_history(program,{'u':[[0,0],[1,1]]},times,stop=1,vabstol=1e-9,reltol=0)
+            r=check_initial_record_batch(r,program,[0,0],[.75,0],1)
             self.assertEqual(len(r['transient']['events']),2)
             self.assertAlmostEqual(r['transient']['events'][1]['time'],root,delta=1e-9)
             for t,z in zip(times,values(r,'z')):
@@ -114,7 +118,7 @@ class EventRelocalization(unittest.TestCase):
           V(z,r)<+V(u,r)+q; V(y,r)<+n;''', 'real q; integer n; electrical z;')
         # u+q reaches 1 at .25 in the initial epoch; q changes at .125,
         # where both guard values remain negative. The new root is .5.
-        result=run(source,module='m')
+        result=run(source,module='m',initial_records=([0,0],[.75,0],1))
         events=result['transient']['events']
         self.assertEqual(len(events),2)
         self.assertEqual(events[0]['time'],.125)

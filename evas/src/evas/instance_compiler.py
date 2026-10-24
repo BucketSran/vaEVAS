@@ -8,9 +8,9 @@ import math
 from fractions import Fraction
 from typing import TYPE_CHECKING
 
-from .ir import (Affine, Term, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
+from .ir import (Affine, Term, Assignment, Conditional, Binary, RealBinary, RealBoundary, RealLocal, RealCall, UnsupportedSystemCall, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
                  IntegerPrimitive, IntegerLiteral, IntegerState, ArrayRead, ArrayWrite, IntegerRound, CheckedInteger, CheckedIndex, Loop as RuntimeLoop, EventMath, Origin, Program, Power, Select, Forcing, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
-from .lowering import lower, scale, UnsupportedConstantPower, FiniteIntegerUnavailable
+from .lowering import lower, scale, UnsupportedConstantPower, FiniteIntegerUnavailable, _SourceAuditMemo
 from .limits import check_ir, MAX_IR_ITEMS
 from .integer_table_composition import compose_integer_table
 from . import held_power2
@@ -54,6 +54,7 @@ class Compilation:
     readout_pending: list = field(default_factory=list)
     # Physical sampled sqrt/ln sites: (origin, voltage nodes of the argument).
     sampled_math_reads: list = field(default_factory=list)
+    memoryless_registry: object = field(default=None, repr=False)
     settled_integer_reads: bool = False
     history_consumer_candidate: bool = False
     # References only: bind_hierarchy/parse_sources already own these objects.
@@ -62,6 +63,9 @@ class Compilation:
     pending_contributions: list = field(init=False, repr=False)
     contribution_emission_index: int = field(default=0, init=False, repr=False)
     contribution_emission_error: Exception | None = field(default=None, init=False, repr=False)
+    procedure_builders: list = field(default_factory=list)
+    real_bindings: list = field(default_factory=list)
+    procedures: tuple = field(default=(), init=False)
 
     def __post_init__(self):
         self.indices = {name: i for i, name in enumerate(self.nodes)}
@@ -97,10 +101,13 @@ class Compilation:
         # Frontend has now compiled every instance's real states/operators.
         # Repeated Program reads never emit or bill these contributions again.
         self.emit_pending_contributions()
+        if self.procedure_builders and not self.procedures:
+            self.procedures = tuple(builder.emit() for builder in self.procedure_builders)
         self.native_audit.debit("program_copy",5+len(self.contributions)+len(self.states)+len(self.events)+len(self.operators)+len(self.step_bounds))
         self.native_audit.debit("emit_field",len(fields(Program)))
         result = Program(self.nodes, tuple(self.contributions), tuple(self.states), tuple(self.events), tuple(self.operators),
-                         step_bounds=tuple(self.step_bounds))
+                         step_bounds=tuple(self.step_bounds), procedures=self.procedures,
+                         real_bindings=tuple(self.real_bindings))
         check_ir(result, work=self.native_audit.ir_work, cache=self.native_audit.ir_cache)
         if any(isinstance(c.rhs, Forcing) for c in result.contributions):
             # Preserve R6's original, pre-scalarization component role audit.
@@ -147,7 +154,8 @@ class Compilation:
             self.native_audit.debit("program_copy", 5 + len(contributions))
             result = emit_forcing_ir(Program, result.nodes, tuple(contributions),
                                     result.states, result.events, result.operators,
-                                    step_bounds=result.step_bounds)
+                                    step_bounds=result.step_bounds, procedures=result.procedures,
+                                    real_bindings=result.real_bindings)
             check_ir(result, work=self.native_audit.ir_work, cache=self.native_audit.ir_cache)
         if self.history_consumer_candidate:
             from .history_consumer_scope import original_reads
@@ -234,7 +242,7 @@ def state_reads(expression):
     return found
 
 
-def _predicate_degree(expression, memo=None):
+def _predicate_degree(expression, memo=None, local_facts=None, work=None):
     """Structural scope: node-free constant (0), affine/select (1), or unsupported.
 
     No cancellation removes a dependency. Input-selected constants count as
@@ -243,27 +251,52 @@ def _predicate_degree(expression, memo=None):
     if memo is None:
         memo = {}
     key = id(expression)
+    if work is not None:
+        work("predicate_scope_visit", 1)
     if key in memo:
         return memo[key][1]
     if isinstance(expression, StateRef):
         result = 1
+    elif isinstance(expression, (RealLocal, RealCall)):
+        fact = local_facts.get(key) if local_facts is not None else None
+        result = fact[1] if fact is not None and fact[0] is expression else 1
+    elif isinstance(expression, RealBoundary):
+        result = _predicate_degree(expression.value, memo, local_facts, work)
+    elif isinstance(expression, RealBinary):
+        # Source admission only. The runtime must evaluate these as rounded
+        # program values, never differentiate this tree as an affine equation.
+        left, right = _predicate_degree(expression.left, memo, local_facts, work), _predicate_degree(expression.right, memo, local_facts, work)
+        if left is None or right is None:
+            result = None
+        elif expression.operation in ("add", "subtract"):
+            result = max(left, right)
+        elif expression.operation == "divide":
+            result = left if right == 0 else None
+        else:
+            result = left + right if left + right <= 1 else None
+    elif isinstance(expression, UnsupportedSystemCall):
+        # The selected leaf has no return value: runtime must fail atomically.
+        # No numerical degree/proof is inferred from a nominal random value.
+        result = 0
+    elif isinstance(expression, EventMath):
+        result = 0 if all(_predicate_degree(arg, memo, local_facts, work) == 0 for arg in expression.args) else None
     elif isinstance(expression, Affine):
         result = int(bool(expression.terms))
     elif isinstance(expression, Binary):
         if expression.op == "divide":
             result = None
         else:
-            left, right = _predicate_degree(expression.left, memo), _predicate_degree(expression.right, memo)
+            left, right = _predicate_degree(expression.left, memo, local_facts, work), _predicate_degree(expression.right, memo, local_facts, work)
             if left is None or right is None:
                 result = None
             else:
                 degree = max(left, right) if expression.op == "add" else left + right
                 result = degree if degree <= 1 else None
     elif isinstance(expression, Power):
-        degree = _predicate_degree(expression.base, memo)
+        degree = _predicate_degree(expression.base, memo, local_facts, work)
         result = degree if degree == 0 or expression.exponent == 1 else None
     elif isinstance(expression, Select):
-        degrees = [_predicate_degree(value, memo) for value in
+        degrees = [_predicate_degree(value, memo, local_facts, work) for value in
                    (expression.left, expression.right, expression.then_value, expression.else_value)]
         result = None if None in degrees else max(degrees)
     else:
@@ -273,6 +306,19 @@ def _predicate_degree(expression, memo=None):
 
 
 class InstanceCompiler:
+    def program_real_closed(self, expression):
+        return self.program_facts.query(expression)
+
+    def program_real_constant(self, expression):
+        fact = self.program_real_closed(expression)
+        return fact.value if fact.finite else None
+
+    def predicate_degree(self, expression):
+        builder = getattr(self, "procedure_builder", None)
+        facts = builder.degree_facts if builder is not None else None
+        return _predicate_degree(expression, local_facts=facts,
+                                 work=self.compilation.native_audit.ir_work)
+
     def scale_ir(self, expression, factor):
         return scale(expression, factor, work=self.compilation.native_audit.ir_work)
 
@@ -280,16 +326,17 @@ class InstanceCompiler:
         # Debit before constructing the dataclass; native/event/target emission
         # all use the same explicit Compilation owner, including failed tries.
         owner = self.compilation.native_audit
-        owner.debit("emit_object")
-        owner.debit("emit_field",len(fields(cls)))
-        return cls(*args, **kwargs)
+        return owner.emit_ir(cls, args, kwargs, "emit")
 
     def __init__(self, instance: "Instance", model: Model, nets: dict[str, str], compilation: Compilation, *,
                  source_model: Model | None = None):
         self.instance = instance
         self.model = model
         self.event_body_source_model = source_model
+        self.procedure_source_model = source_model or model
         self.compilation = compilation
+        from .program_real_facts import ProgramRealFacts
+        self.program_facts = ProgramRealFacts(compilation.native_audit.ir_work)
         self.cache: dict[str, float] = {}
         self.node_ids = {name: compilation.indices[net] for name, net in nets.items()}
         if "$abstime" in compilation.indices:
@@ -308,6 +355,8 @@ class InstanceCompiler:
     def compile(self):
         self.cache = bind_parameters(self.model, self.instance.parameters, self.instance.name)
         from .ordinary_held_state import plan as ordinary_held_state
+        from .deferred_system_calls import seed_storage
+        self.deferred_seed_names = seed_storage(self.model, self.compilation.native_audit)
         held_model = ordinary_held_state(self)
         if held_model is not None:
             # Original-source prefix routes do not see the rewritten roles.
@@ -325,7 +374,13 @@ class InstanceCompiler:
                 declaration_writers.add(item.name)
             for branch in ("then_body", "else_body", "body"):
                 pending.extend(getattr(item, branch, ()))
-        self.model = scalarize_arrays(self.model, self.parameter)
+        if self.model.functions:
+            self.model = scalarize_arrays(self.model, self.parameter,
+                native_audit=self.compilation.native_audit)
+        else:
+            self.model = scalarize_arrays(self.model, self.parameter)
+        from .procedural import ProcedureBuilder
+        self.procedure_builder = ProcedureBuilder(self) if self.model.procedure else None
         self.array_elements = self._declared_elements()
         self.array_dispatch_leaves = 0
         self.array_flow = {}
@@ -361,7 +416,9 @@ class InstanceCompiler:
                     yield from writes(statement.body)
 
         persistent = set(writes(self.model.initial))
-        event_writers = set()
+        self.compilation.native_audit.debit('deferred_seed_state_roles', 1+len(self.deferred_seed_names))
+        persistent.update(self.deferred_seed_names)
+        event_writers = set(self.deferred_seed_names)
         for event in self.model.events:
             persistent.update(writes(event.body))
             if any(trigger.kind in ("cross", "timer") for trigger in event.triggers):
@@ -370,6 +427,9 @@ class InstanceCompiler:
         all_writers = persistent | analog_writers
         immutable_names = set(self.model.variable_initializers) - all_writers - declaration_writers - set(self.model.arrays)
         self.local_variables = analog_writers - persistent
+        if self.procedure_builder is not None:
+            self.procedure_builder.declare(self.local_variables)
+            self.binding_values = self.procedure_builder.values
         self.integer_event_prefix = None
         if floor_prefix_candidates is not None:
             from .ordinary_integer_event_prefix import qualify as integer_event_prefix
@@ -380,9 +440,29 @@ class InstanceCompiler:
                 # original prefix. The hint above grants no qualification.
                 self.local_variables.difference_update(plan.names)
         self.preserve_analog_structure = self.compilation.preserve_structure or bool(self.local_variables)
+        read_query = None
+        if self.model.functions:
+            from .source_queries import SourceStructure
+            owner = self.compilation.native_audit
+            owner.debit('source_structure_instance_context', 3)
+            contexts = getattr(self.compilation, 'source_structure_contexts', None)
+            if contexts is None:
+                owner.debit('source_structure_contexts_container')
+                contexts = {}
+                owner.debit('source_structure_contexts_retain')
+                self.compilation.source_structure_contexts = contexts
+            read_query = contexts.get(self.instance.name)
+            if read_query is None:
+                # A prior instance with time can short-circuit global time
+                # discovery; this instance still owns an independent context.
+                read_query = SourceStructure(owner)
+                owner.debit('source_structure_context_record', 3)
+                contexts[self.instance.name] = read_query
         def expression_reads(expr):
             if expr is None:
                 return set()
+            if read_query is not None:
+                return read_query.reads(expr, self.array_elements)
             if expr.op == "index" and str(expr.value) in self.array_elements:
                 # A dynamic read can observe any declared slot.
                 names = {f'{expr.value}[{k}]' for k in self.array_elements[str(expr.value)]}
@@ -414,6 +494,21 @@ class InstanceCompiler:
         source_model = self.event_body_source_model or self.initial_math_source_model
         for name in analog_writers:
             owner.debit("ordinary_scratch_candidate")
+            if self.procedure_builder is not None and name in getattr(self, "ordinary_held_process_slots", ()):
+                # The held-state proof retains this original scalar slot;
+                # it is not the legacy same-evaluation integer alias route.
+                ordinary_scratch.add(name)
+                continue
+            if (self.procedure_builder is not None and self.integer_event_prefix is not None
+                    and name in self.integer_event_prefix.names):
+                owner.debit("integer_prefix_native_ordinary_scope", 2)
+                # The original prefix certificate owns this integer storage;
+                # execution now writes it at the retained source statement.
+                ordinary_scratch.add(name)
+                continue
+            if self.procedure_builder is not None and self.model.variables[name] == "real":
+                ordinary_scratch.add(name)
+                continue
             if name in persistent and self.model.variables[name] == "real" and name not in event_writers:
                 from .initial_ordinary_alias import admit
                 if admit(self, name, persistent, analog_writers, source_model):
@@ -536,6 +631,11 @@ class InstanceCompiler:
                                  if name not in self.local_variables and name not in immutable_names and name not in self.closed_initial_math
                                  and (name in persistent or name in referenced))
         self.state_ids = {name: len(self.compilation.states) + index for index, name in enumerate(self.state_names)}
+        if self.procedure_builder is not None:
+            self.procedure_builder.audit_local_availability()
+            if (self.procedure_builder.bindings or any(
+                    self.model.variables[name] == "real" for name in analog_writers & persistent)):
+                self.procedure_builder.audit_original_source(self.procedure_source_model)
         self.constant_local_aliases = self.bind_constant_local_aliases(writes)
         self.initial_voltage_aliases = bind_initial_voltage_aliases(self, writes)
         self.runtime_voltage_aliases = bind_runtime_voltage_aliases(self, writes)
@@ -570,6 +670,7 @@ class InstanceCompiler:
             self.active_event_aliases = self.aliases_at(event.token)
             self.runtime_event_checks = self.checked_event_context(event)
             self.native_integer_charge = native_allowances[id(event)]
+            self.trigger_argument_captures = None
             triggers = tuple(self.trigger(leaf) for leaf in event.triggers)
             event_trigger = triggers[0] if len(triggers) == 1 else self.make_ir(OrTrigger, triggers)
             origin = self.make_ir(Origin, event.token.source or self.model.source, event.token.line, event.token.column, self.instance.name, event.token.expansion)
@@ -579,7 +680,10 @@ class InstanceCompiler:
                 return tuple(replace(item, then_body=retained(item.then_body), else_body=retained(item.else_body))
                              if isinstance(item, SyntaxConditional) else item
                              for item in body if id(item) in self.event_reachable_statements)
-            if self.integer_event_prefix is None:
+            if self.integer_event_prefix is None or self.procedure_builder is not None:
+                # Native procedures execute the qualified prefix once at its
+                # actual ordinary source position. The Plan still supplies
+                # all-source/storage qualification; do not copy it into gates.
                 execution = specialize_event_body(retained(event.body), self.cache,
                                                   work=native_allowances[id(event)])
             else:
@@ -589,7 +693,10 @@ class InstanceCompiler:
                                                   work=native_allowances[id(event)])
             self.active_event_aliases = self.aliases_at(event.token, body=True)
             self.event_sampled_states = set()
+            event_index = len(self.compilation.events)
             self.compilation.events.append(self.make_ir(Event, event_trigger, self.body(execution), origin))
+            if self.procedure_builder is not None:
+                self.procedure_builder.event(event, event_index, self.trigger_argument_captures)
         self.active_event_aliases = {}
         statements = unroll_loops(self.model, self.parameter)
         self.validate_branch_presence(statements)
@@ -672,8 +779,13 @@ class InstanceCompiler:
             try:
                 def resolve(name):
                     return aliases[name] if name in aliases else self.parameter(name)
-                value = lower(statement.rhs, self.typed_resolve(resolve), {}, self.model.source)
-                if not isinstance(value, Affine) or value.terms or not math.isfinite(value.constant):
+                value = lower(statement.rhs, self.typed_resolve(resolve,
+                    program_real=self.model.variables[statement.name] == 'real'), {}, self.model.source)
+                if not isinstance(value, Affine) or value.terms:
+                    fact = self.program_real_closed(value)
+                    if not fact.closed or not fact.finite:
+                        continue
+                elif not math.isfinite(value.constant):
                     continue
                 if self.model.variables[statement.name] == "integer":
                     self.validate_integer_value(value, statement.token, initial=True)
@@ -713,11 +825,18 @@ class InstanceCompiler:
                             or item.op in OPERATOR_NAMES or item.op in DECISION_NAMES):
                         raise CompileError("declaration initializers require instance-constant parameter expressions")
                     pending.extend(item.args)
-                value = lower(expr, self.typed_resolve(self.parameter), {}, self.model.source)
-                if not isinstance(value, Affine) or value.terms or not math.isfinite(value.constant):
+                real = self.model.variables[name] == "real"
+                value = lower(expr, self.typed_resolve(self.parameter, program_real=real), {}, self.model.source)
+                fact = self.program_real_closed(value)
+                if not fact.closed or not fact.finite:
                     raise CompileError("declaration initialization requires a finite scalar constant")
                 if self.model.variables[name] == "integer":
                     self.validate_integer_value(value, expr.token, initial=True)
+                elif real:
+                    origin = self.make_ir(Origin, expr.token.source or self.model.source,
+                                          expr.token.line, expr.token.column, self.instance.name,
+                                          expr.token.expansion)
+                    value = self.make_ir(RealBoundary, value, "store", origin)
                 seeds[name] = value
             except CompileError as exc:
                 if exc.diagnostic['code'] == 'resource_budget':
@@ -735,8 +854,18 @@ class InstanceCompiler:
         # overwrite them. This environment belongs to only this instance.
         env.update(self.declaration_initials)
         def resolve(values, aliases):
-            return self.typed_resolve(lambda name: values[name] if name in values else
-                                      aliases[name] if name in aliases else self.parameter(name))
+            lookup = self.typed_resolve(lambda name: values[name] if name in values else
+                                      self.local_read(name, aliases.get(name)) if self.procedure_builder is not None and name in self.procedure_builder.bindings else
+                                      aliases[name] if name in aliases else self.parameter(name),
+                                      program_real=True)
+            lookup.initial_preview = self.procedure_builder is not None
+            if lookup.initial_preview:
+                from .initial_power import lower_power
+                def preview_power(expr, base, exponent):
+                    result = lower_power(self, expr, base, exponent, preview=True)
+                    return self.finite_power(expr, base, exponent) if result is None else result
+                lookup.finite_power = preview_power
+            return lookup
         snapshots = []
         def constant_snapshot(value):
             try:
@@ -748,10 +877,13 @@ class InstanceCompiler:
             # smuggle voltage/history observation into the new output contract.
             if isinstance(value, Affine) and not value.terms:
                 number = value.constant
-            elif isinstance(value, Binary):
+            elif isinstance(value, RealBoundary):
+                number = constant_snapshot(value.value)
+            elif isinstance(value, (Binary, RealBinary)):
                 a, b = constant_snapshot(value.left), constant_snapshot(value.right)
-                number = {'add': lambda: a+b, 'multiply': lambda: a*b,
-                          'divide': lambda: a/b}[value.op]()
+                operation = value.operation if isinstance(value, RealBinary) else value.op
+                number = {'add': lambda: a+b, 'subtract': lambda: a-b,
+                          'multiply': lambda: a*b, 'divide': lambda: a/b}[operation]()
             elif isinstance(value, Power):
                 number = constant_snapshot(value.base) ** value.exponent
             elif isinstance(value, Select):
@@ -784,7 +916,7 @@ class InstanceCompiler:
                                   preserve_structure=True, decisions=self.initial_select, node_declarations=True)
                     self.validate_initial_operand(statement.left, left)
                     self.validate_initial_operand(statement.right, right)
-                    if has_output(statement.then_body) or has_output(statement.else_body):
+                    if self.procedure_builder is None and (has_output(statement.then_body) or has_output(statement.else_body)):
                         a, b = constant_snapshot(left), constant_snapshot(right)
                         selected = {'<': a<b, '<=': a<=b, '>': a>b, '>=': a>=b}[statement.relation]
                     else:
@@ -797,6 +929,8 @@ class InstanceCompiler:
                                 {"<":"lt", "<=":"le", ">":"gt", ">=":"ge"}[statement.relation],
                                 left, right, yes[name], no[name])
                 elif isinstance(statement, SyntaxDisplay):
+                    if self.procedure_builder is not None:
+                        continue  # The unique runtime initial gate owns this output.
                     arguments = []
                     for argument in statement.args:
                         value = lower(argument, resolve(values, aliases), self.node_ids, self.model.source,
@@ -822,15 +956,24 @@ class InstanceCompiler:
                         if statement.name not in closed:
                             raise
                         self.closed_initial_math = closed
-                        self.state_names = ()
-                        self.state_ids = {}
-                        for name in closed:
-                            values.pop(name, None)
+                        if self.procedure_builder is None:
+                            self.state_names = ()
+                            self.state_ids = {}
+                            for name in closed:
+                                values.pop(name, None)
+                        else:
+                            origin = self.make_ir(Origin, statement.token.source or self.model.source,
+                                statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
+                            values[statement.name] = self.make_ir(RealBoundary, closed[statement.name], 'store', origin)
                         continue
                     self.validate_initial_operand(statement.rhs, value)
                     def constant_arms(item):
                         if isinstance(item, Affine):
                             return not item.terms
+                        if isinstance(item, RealBoundary):
+                            return constant_arms(item.value)
+                        if isinstance(item, (RealBinary, RealLocal)):
+                            return self.program_facts.query(item, 'leaf_values') is not None
                         if isinstance(item, Select):
                             return constant_arms(item.then_value) and constant_arms(item.else_value)
                         if isinstance(item, Binary):
@@ -840,6 +983,10 @@ class InstanceCompiler:
                         if not constant_arms(value):
                             raise CompileError("integer initial_step values require constant-valued arms selected by input predicates")
                         self.validate_integer_value(value, statement.token, initial=True)
+                    if self.model.variables[statement.name] == "real":
+                        origin = self.make_ir(Origin, statement.token.source or self.model.source,
+                            statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
+                        value = self.make_ir(RealBoundary, value, "store", origin)
                     values[statement.name] = value
             return values
         try:
@@ -851,7 +998,7 @@ class InstanceCompiler:
             raise CompileError(f'unsupported initial_step value: {exc}',
                                code='unsupported_initial_event', token=token,
                                instance=self.instance.name) from exc
-        if snapshots:
+        if snapshots and self.procedure_builder is None:
             self.compilation.events.append(self.make_ir(Event, self.make_ir(InitialStepTrigger, ), tuple(snapshots), snapshots[0].origin))
         for name, value in env.items():
             if isinstance(value, Affine) and not value.terms:
@@ -863,8 +1010,13 @@ class InstanceCompiler:
 
     def validate_initial_operand(self, expr, value):
         # Check all lowered function obligations, including dead branches.
-        if _predicate_degree(value) is None:
-            raise CompileError("initial comparison operands must be structurally affine")
+        if self.predicate_degree(value) is None:
+            # A finite union of source-selected constant leaves is an initial
+            # input observation, not a general nonlinear voltage function.
+            # Preserve the guard and rounded tree; this certificate does not
+            # turn the whole expression into a closed scalar.
+            if self.program_facts.query(value, 'selected_interval') is None:
+                raise CompileError("initial comparison operands must be structurally affine or finite input-selected constants")
         if not self.expression_nodes(value).issubset(self.allowed_condition_nodes):
             raise CompileError("initial comparison depends on a non-input voltage")
 
@@ -888,7 +1040,19 @@ class InstanceCompiler:
             raise CompileError(f"{self.model.source}: unknown parameter {name!r}")
         return self.cache[name]
 
+    def local_read(self, name, source=None):
+        read = self.make_ir(RealLocal, self.procedure_builder.bindings[name])
+        # The caller supplies an existing source-position alias/prefix proof,
+        # never a binding's later writer or a persistent state's seed. Closed
+        # qualification still inspects every source dependency of that proof.
+        if source is not None:
+            self.program_facts.record_read(read, (source,))
+        return read
+
     def symbol(self, name):
+        builder = getattr(self, "procedure_builder", None)
+        if builder is not None and name in builder.bindings:
+            return self.local_read(name, self.active_event_aliases.get(name))
         if name in self.active_event_aliases:
             return self.active_event_aliases[name]
         if name in self.local_variables:
@@ -911,8 +1075,20 @@ class InstanceCompiler:
         event_values = kwargs.pop("event_values", False)
         sampled_values = kwargs.pop("sampled_values", False)
         static_integer_audit = kwargs.pop("static_integer_audit", False)
-        typed = self.typed_resolve(resolve, allow_integer_assignment_root=assignment_root)
+        program_real = kwargs.pop("program_real", False)
+        execute_calls = kwargs.pop("execute_calls", False)
+        typed = self.typed_resolve(resolve, allow_integer_assignment_root=assignment_root,
+                                  program_real=program_real, execute_calls=execute_calls)
         typed.sampled_values = sampled_values
+        audit_memo = kwargs.get('memo')
+        if type(audit_memo) is _SourceAuditMemo:
+            # An original-tree audit cache is owned by one source use-site;
+            # binding, numeric roles and node declarations are fixed explicitly.
+            self.compilation.native_audit.debit('source_audit_lower_binding_flags', 7, expr)
+            audit_memo.bind(resolve, nodes, (assignment_root, event_values, sampled_values,
+                static_integer_audit, program_real, kwargs.get('node_declarations', False)))
+            self.compilation.native_audit.debit('source_audit_lower_binding_attach', 1, expr)
+            typed._source_audit_binding = audit_memo.binding_token
         if (event_values or sampled_values) and hasattr(self, 'native_integer_charge'):
             native_charge = self.native_integer_charge
             typed.native_integer = lambda item: self.native_event_integer(item, resolve, native_charge)
@@ -981,6 +1157,8 @@ class InstanceCompiler:
         # Do not introduce an implicit real-to-integer rounding rule.
         if isinstance(expression, Affine):
             return not expression.terms and expression.constant.is_integer()
+        if isinstance(expression, (RealBinary, RealBoundary, RealLocal)):
+            return self.program_facts.query(expression, 'integer_range') is not None
         if isinstance(expression, (IntegerRound, CheckedIndex, CheckedInteger, IntegerPrimitive)):
             return True
         if isinstance(expression, ArrayRead):
@@ -1024,6 +1202,10 @@ class InstanceCompiler:
             return expression.first, expression.last
         if isinstance(expression, Affine) and not expression.terms:
             return expression.constant, expression.constant
+        if isinstance(expression, (RealBinary, RealBoundary, RealLocal)):
+            bounds = self.program_facts.query(expression, 'integer_range')
+            if bounds is not None:
+                return bounds
         if isinstance(expression, StateRef):
             bounds = getattr(self, "ordinary_integer_bounds", None)
             if bounds is None:
@@ -1076,10 +1258,24 @@ class InstanceCompiler:
                         expr.token.column, self.instance.name, expr.expansion)
         return self.make_ir(CheckedInteger, value, origin)
 
-    def typed_resolve(self, resolve, *, allow_integer_assignment_root=False):
+    def typed_resolve(self, resolve, *, allow_integer_assignment_root=False, program_real=False, execute_calls=False):
         def lookup(name):
             return resolve(name)
-        lookup.native_work = lambda kind, amount: self.compilation.native_audit.debit(kind,amount)
+        lookup.native_work = self.compilation.native_audit.ir_work
+        lookup.program_real = program_real
+        from .deferred_system_calls import lower_unsupported
+        lookup.unsupported_system_call = lambda *args, **kwargs: lower_unsupported(self, *args, **kwargs)
+        lookup.defer_numeric_domain = getattr(resolve, "defer_numeric_domain", False)
+        lookup.initial_preview = getattr(resolve, "initial_preview", False)
+        if (execute_calls or getattr(resolve, "real_call", None) is not None) and self.procedure_builder is not None:
+            from .real_calls import lower_call
+            lookup.real_call = lambda *args, **kwargs: lower_call(self, *args, **kwargs)
+        lookup.instance_name = self.instance.name
+        lookup.is_program_real_expression = lambda expr: not self.integer_type(expr)
+        lookup.program_real_constant = self.program_real_constant
+        lookup.program_real_closed = self.program_real_closed
+        if hasattr(lookup, 'real_call') and not lookup.initial_preview:
+            lookup.function_math_value = self.function_math_value
         def function_integer_assignment(expr, value):
             if not self.integer_type(expr.args[0]) or not self.integral(value):
                 return False
@@ -1104,6 +1300,11 @@ class InstanceCompiler:
         return lookup
 
     def finite_power(self, expr, base, exponent):
+        if getattr(self, '_actual_initial_power', False):
+            from .initial_power import lower_power
+            result = lower_power(self, expr, base, exponent, preview=False)
+            if result is not None:
+                return result
         if not self.integer_type(expr.args[1]) or not self.integral(exponent):
             return None
         bounds = self.integral_bounds(exponent)
@@ -1124,7 +1325,7 @@ class InstanceCompiler:
 
     def finite_floor(self, expr, argument, *, native=False):
         from .finite_floor import floor_table
-        if (_predicate_degree(argument) is None
+        if (self.predicate_degree(argument) is None
                 or not self.expression_nodes(argument).issubset(self.allowed_condition_nodes)):
             raise CompileError('floor requires a source-clamped piecewise-affine input expression',
                                code='unsupported_floor', token=expr.token, instance=self.instance.name)
@@ -1134,7 +1335,9 @@ class InstanceCompiler:
         state_bounds = ({self.state_ids[name]: bounds for name, bounds in fact[1].items()}
                         if fact is not None and fact[0] is expr else None)
         try:
-            result = floor_table(argument, origin, state_bounds=state_bounds)
+            result = floor_table(argument, origin, state_bounds=state_bounds,
+                                 constant_value=self.program_real_constant(argument), factory=self.make_ir,
+                                 local_facts=self.program_facts.reads, work=self.compilation.native_audit.ir_work)
         except CompileError as error:
             if not native or error.diagnostic['code'] != 'unsupported_floor':
                 raise
@@ -1201,9 +1404,25 @@ class InstanceCompiler:
                            token=expr.token, instance=self.instance.name)
 
     def integer_type(self, expr):
-        return integer_bits.integer_type(expr, self.model.variables,
+        # Source Expr is immutable and the scalarized instance's type tables
+        # do not change during lowering. Reuse an actual earlier proof instead
+        # of recursively retyping the same arithmetic for every consumer.
+        audit = self.compilation.native_audit
+        cache = getattr(self, "_integer_type_cache", None)
+        if cache is None:
+            audit.debit("typing_cache_create")
+            self._integer_type_cache = cache = {}
+        audit.debit("typing_cache_lookup")
+        cached = cache.get(id(expr))
+        if cached is not None:
+            assert cached[0] is expr
+            return cached[1]
+        value = integer_bits.integer_type(expr, self.model.variables,
                                          self.model.parameter_types, self.model.genvars,
-                                         visit=lambda item: self.compilation.native_audit.extra(item, "typing_visit"))
+                                         visit=lambda item: audit.extra(item, "typing_visit"))
+        audit.debit("typing_cache_insert", 2)
+        cache[id(expr)] = (expr, value)
+        return value
 
     def infer_integer_state_ranges(self):
         # Only state-independent writers tighten a declaration's full domain.
@@ -1311,6 +1530,8 @@ class InstanceCompiler:
                 try:
                     value = lower(expr, typed, nodes, self.model.source, *args, **options)
                 except CompileError as error:
+                    if error.diagnostic.get('code') == 'resource_budget':
+                        raise
                     raise CompileError(context + " expression cannot prove every integer intermediate: " + str(error),
                         code=code, token=expr.token,
                         instance=self.instance.name) from error
@@ -1596,44 +1817,58 @@ class InstanceCompiler:
         from .integer_invariants import proof_parameters
         from .event_real_ranges import integer_floor_bounds
         parameters.real_floor_bounds = lambda expr: integer_floor_bounds(self.event_floor_range_facts, expr)
-        inference_parameters = proof_parameters(parameters, self.compilation.integer_proof_owner.instance())
+        proof_work = self.compilation.integer_proof_owner.instance()
+        baseline_parameters = proof_parameters(parameters, proof_work)
         def location_of(token):
             return f"{token.source or self.model.source}:{token.line}:{token.column}"
-        from .integer_invariants import ProofBudgetExceeded
+        from .integer_invariants import ProofBudgetExceeded, OptionalProofUnavailable
+
         try:
+            event_index_domains._charge(baseline_parameters, 6)
+            def collect(entry, lookup, partitioned=None):
+                # Every source use and every intermediate state is visited in the
+                # same complete flow. Nothing is published until it has finished.
+                event_index_domains._charge(lookup, 1 + len(entry))
+                lifetime = dict(entry)
+                event_index_domains._charge(lookup, 4)
+                def retain_intermediates(env):
+                    event_index_domains._charge(lookup, 3 * len(env))
+                    for name, value in env.items():
+                        lifetime[name] = event_index_domains.hull(lifetime[name], value)
+                event_index_domains._charge(lookup)
+                reached = set() if partitioned is not None else None
+                found, keepalive = event_index_domains.use_site_facts(
+                    bodies, entry, arrays=self.array_elements, parameters=lookup,
+                    location_of=location_of, partitioned=partitioned,
+                    reachable=reached, on_state=retain_intermediates)
+                return found, keepalive, lifetime, reached
+
+            # The mandatory baseline never assumes a seed is a runtime range.
+            # Its conservative facts may be upgraded before final admission.
+            event_index_domains._charge(baseline_parameters, 1 + len(states))
+            domains = {name: event_index_domains.TOP for name in states}
+            facts, holder, lifetime_domains, reachable = collect(domains, baseline_parameters)
             try:
-                domains, _widened = event_index_domains.entry_domains(
+                optional_work = proof_work.optional_view()
+                optional_work.charge()  # additional lookup closure
+                inference_parameters = proof_parameters(parameters, optional_work)
+                candidate, _widened = event_index_domains.entry_domains(
                     bodies, initial, arrays=self.array_elements,
                     parameters=inference_parameters, states=states)
-            except ProofBudgetExceeded:
-                if self.compilation.integer_proof_owner.active:
-                    self.compilation.integer_proof_owner._check()
-                # Range inference is optional. Exhaustion proves no finite
-                # invariant and must not reject an otherwise valid old model
-                # or restart the candidate search with a fresh allowance.
-                domains = {name: event_index_domains.TOP for name in states}
-                partitions = None
-            else:
                 partitions = event_index_domains.boolean_partitions(
                     bodies, initial, arrays=self.array_elements,
-                    parameters=parameters, states=states)
-            reachable = set() if partitions is not None else None
-            facts, holder = event_index_domains.use_site_facts(
-                bodies, domains, arrays=self.array_elements,
-                parameters=parameters, location_of=location_of, partitioned=partitions, reachable=reachable)
+                    parameters=inference_parameters, states=states)
+                upgraded = collect(candidate, inference_parameters, partitions)
+            except OptionalProofUnavailable:
+                # No unit was started after the cap. Partial use/reachability
+                # facts are discarded; spent work and the baseline remain.
+                pass
+            else:
+                domains = candidate
+                facts, holder, lifetime_domains, reachable = upgraded
         except ValueError as error:
             raise CompileError(f'{self.model.source}: {error}', code='resource_budget',
                                instance=self.instance.name)
-        # A closed event invariant also bounds persistent integers read by
-        # continuous expressions, e.g. a selector divided into bus bits. Keep
-        # unbounded endpoints under the existing checked-assignment policy.
-        lifetime_domains = dict(domains)
-        def retain_intermediates(env):
-            for name, value in env.items():
-                lifetime_domains[name] = event_index_domains.hull(lifetime_domains[name], value)
-        for body in bodies:
-            event_index_domains.flow(body, domains, arrays=self.array_elements,
-                                     parameters=parameters, on_state=retain_intermediates)
         for name, (low, high) in lifetime_domains.items():
             if -2147483648 < low <= high < 2147483647:
                 self.integer_state_ranges[self.state_ids[name]] = (low, high)
@@ -1725,6 +1960,8 @@ class InstanceCompiler:
         if kind == "integer" and not self.integral(value):
             raise CompileError("integer assignment requires integral state arithmetic",
                                token=statement.token, instance=self.instance.name)
+        if kind == "real":
+            value = self.make_ir(RealBoundary, value, "store", origin)
         if self.compact_event_candidate():
             self.array_dispatch_leaves += len(elements)
             if self.array_dispatch_leaves > ARRAY_BUDGET:
@@ -1788,8 +2025,52 @@ class InstanceCompiler:
             pending.extend(item.args)
         return charge if found else None
 
+    def memoryless_operator(self, spec):
+        from .memoryless_operators import Registry
+        owner = self.compilation.native_audit
+        owner.debit("memoryless_registry_dispatch", item=spec)
+        owner.debit("memoryless_occurrence_metadata", 1+len(spec.origin.expansion), spec)
+        if any(kind == "function_call" for kind, _ in spec.origin.expansion):
+            owner.activate(spec)
+        if self.compilation.memoryless_registry is None:
+            owner.debit("memoryless_registry_create", 4, spec)
+            self.compilation.memoryless_registry = Registry(owner)
+        return self.compilation.memoryless_registry.register(spec, self.compilation.operators)
+
+    def function_math_value(self, expr, value):
+        """Consume an already lowered executable call without rebuilding it."""
+        from dataclasses import is_dataclass
+        owner = self.compilation.native_audit
+        owner.debit('function_math_call_scan_container', 1, expr)
+        pending = [value]
+        while pending:
+            item = pending.pop()
+            owner.debit('function_math_call_scan', 1, expr)
+            if isinstance(item, RealCall):
+                origin = self.make_ir(Origin, expr.token.source or self.model.source,
+                    expr.token.line, expr.token.column, self.instance.name, expr.expansion)
+                index = self.memoryless_operator(self.make_ir(MathFunction, expr.op, value, origin))
+                return self.make_ir(RealBoundary, self.make_ir(OperatorRef, index), 'sample', origin)
+            if isinstance(item, tuple):
+                owner.debit('function_math_call_scan_tuple', len(item), expr)
+                pending.extend(item)
+            elif is_dataclass(item) and not isinstance(item, Origin):
+                descriptor = type(item).__dataclass_fields__
+                owner.debit('function_math_call_scan_fields', 2*len(descriptor), expr)
+                pending.extend(getattr(item, field.name) for field in descriptor.values())
+        return None
+
     def waveform(self, expr, resolve):
-        resolve = self.typed_resolve(resolve)
+        from .elaboration import MEMORYLESS_MATH
+        owner = self.compilation.native_audit
+        owner.debit("function_math_input_metadata", 1+len(expr.expansion), expr)
+        helper_math = (expr.op in MEMORYLESS_MATH and
+                       any(kind == "function_call" for kind, _ in expr.expansion))
+        # The callback closes over the caller's lookup; a real function body
+        # still owns rounded source arithmetic at every mathematical operand.
+        resolve = self.typed_resolve(resolve, program_real=
+            getattr(resolve, "program_real", False) or helper_math)
+        resolve.memoryless_decisions = self.procedure_builder is not None
         target_charge = None
         target_checked = False
         target_source = expr.args[0]
@@ -1909,39 +2190,27 @@ class InstanceCompiler:
                 raise CompileError("idtmod requires positive explicit modulus")
             self.compilation.operators.append(self.make_ir(IdtMod, value, ic, modulus, offset, origin))
         elif expr.op == "sin":
-            self.compilation.operators.append(self.make_ir(Sin, value, origin))
+            index = self.memoryless_operator(self.make_ir(Sin, value, origin))
         elif expr.op in ("cos", "exp", "ln", "sqrt", "tanh"):
-            self.compilation.operators.append(self.make_ir(MathFunction, expr.op, value, origin))
+            index = self.memoryless_operator(self.make_ir(MathFunction, expr.op, value, origin))
         elif expr.op == "absdelay":
             delay = settings[0].constant
             if delay < 0:
                 raise CompileError("absdelay requires nonnegative delay; zero is an EVAS extension")
             self.compilation.operators.append(self.make_ir(AbsDelay, value, delay, origin))
         elif expr.op == "transition":
+            builder = self.procedure_builder
+            state_sources = builder.state_scope_facts if builder is not None else None
+            generation = builder.scope_generation if builder is not None else 0
             def continuous_value(item):
-                if isinstance(item, Affine):
-                    return bool(item.terms)
-                if isinstance(item, Select):
-                    # A predicate may select held values using a source node;
-                    # the selected values themselves must remain held.
-                    return continuous_value(item.then_value) or continuous_value(item.else_value)
-                if isinstance(item, Binary):
-                    return continuous_value(item.left) or continuous_value(item.right)
-                return isinstance(item, Power) and continuous_value(item.base)
+                return self.program_facts.query(item, "continuous", state_sources=state_sources,
+                                                generation=generation)
             def dc_target_candidate(item):
-                # Admission only: the kernel must prove each original physical
-                # source constant on the entire run, including unselected arms.
-                if isinstance(item, Affine):
-                    nodes = {0} | {self.node_ids[port] for port, direction in self.model.directions.items()
-                                   if direction in ("input", "inout")}
-                    return all(term.node in nodes for term in item.terms)
-                if isinstance(item, StateRef):
-                    return True
-                if isinstance(item, Select):
-                    return dc_target_candidate(item.then_value) and dc_target_candidate(item.else_value)
-                if isinstance(item, Binary) and item.op in ("add", "multiply"):
-                    return dc_target_candidate(item.left) and dc_target_candidate(item.right)
-                return False
+                self.compilation.native_audit.debit("transition_scope_nodes", 1 + len(self.model.directions))
+                allowed_nodes = frozenset({0} | {self.node_ids[port] for port, direction in self.model.directions.items()
+                                                 if direction in ("input", "inout")})
+                return self.program_facts.query(item, "dc", state_sources=state_sources,
+                                                generation=generation, allowed_nodes=allowed_nodes)
             if continuous_value(value) and not dc_target_candidate(value):
                 raise CompileError("transition target values must be held states or constants; unsupported whole-domain DC candidate",
                                    token=expr.token, instance=self.instance.name)
@@ -1986,49 +2255,79 @@ class InstanceCompiler:
                         f'{self.model.source}:{expr.token.line}:{expr.token.column}: timer parameters cannot depend on continuous voltage or operator history',
                         code='unsupported_timer_dependency', token=expr.token, instance=self.instance.name)
                 pending.extend(expr.args)
+        def constant_value(value):
+            if isinstance(value, Affine) and not value.terms:
+                return value.constant
+            fact = self.program_real_closed(value)
+            return fact.value if fact.closed and fact.finite else None
+
         def setting(arg):
-            value = self.lower_event(arg, self.event_parameter, {})
-            if not isinstance(value, Affine) or value.terms:
+            value = self.lower_event(arg, self.event_parameter, {}, program_real=True)
+            number = constant_value(value)
+            if number is None:
                 raise CompileError(f"{leaf.kind} settings must be instance constants")
-            return value.constant
+            return value, number
+
+        def retain(arguments):
+            for arg, value in arguments:
+                if isinstance(value, Affine) and not value.terms:
+                    continue
+                if self.procedure_builder is None:
+                    raise CompileError('nonliteral fixed trigger arguments require a procedure capture', token=arg.token)
+                if self.trigger_argument_captures is None:
+                    self.compilation.native_audit.debit('trigger_argument_capture_create', 3, arg)
+                    self.trigger_argument_captures = []
+                self.compilation.native_audit.debit('trigger_argument_capture_append', 1, arg)
+                self.trigger_argument_captures.append(self.procedure_builder.argument(value, arg.token))
 
         if leaf.kind == "cross":
             settings = [0.0, 1e-12, 1e-9]
+            retained = []
             for index, arg in enumerate(leaf.arguments[1:]):
-                settings[index] = setting(arg)
+                value, settings[index] = setting(arg)
+                retained.append((arg, value))
             direction, time_tol, expr_tol = settings
             if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
                 raise CompileError("cross requires direction -1/0/1 and positive tolerances")
             result = self.make_ir(CrossTrigger, self.lower_event(leaf.arguments[0], self.symbol, self.node_ids, lambda expr: self.waveform(expr, self.symbol), preserve_structure=True, node_declarations=True),
                                    int(direction), time_tol, expr_tol)
+            retain(retained)
         else:
             # Lower optional source arguments into the existing explicit IR.
             # 1 ps is EVAS policy, not a prescribed LRM or Spectre default.
             arguments = leaf.arguments + (None,) * (4-len(leaf.arguments))
             start_arg, period_arg, tolerance_arg, enable_arg = arguments
-            time_tol = 1e-12 if tolerance_arg is None else setting(tolerance_arg)
+            tolerance_value, time_tol = (None, 1e-12) if tolerance_arg is None else setting(tolerance_arg)
             if time_tol < 0:
                 raise CompileError("timer requires nonnegative start and time_tol")
-            values = [self.lower_event(arg, self.symbol, {}, preserve_structure=True) if arg is not None else self.make_ir(Affine, 0., ())
+            values = [self.lower_event(arg, self.symbol, {}, preserve_structure=True, program_real=True) if arg is not None else self.make_ir(Affine, 0., ())
                       for arg in (start_arg, period_arg, enable_arg)]
             if enable_arg is None:
                 values[2] = self.make_ir(Affine, 1., ())
-            if all(isinstance(value, Affine) and not value.terms for value in values):
-                start, period, enabled = (value.constant for value in values)
+            constants = [constant_value(value) for value in values]
+            if all(value is not None for value in constants):
+                start, period, enabled = constants
                 if start < 0:
                     raise CompileError("timer requires nonnegative start and time_tol")
                 result = self.make_ir(TimerTrigger, start, period, time_tol, enabled != 0)
+                retain([(arg, value) for arg, value in
+                        ((start_arg, values[0]), (period_arg, values[1]),
+                         (tolerance_arg, tolerance_value), (enable_arg, values[2])) if arg is not None])
             else:
                 if time_tol == 0:
                     raise CompileError("zero time_tol requires fixed timer parameters")
                 result = self.make_ir(HeldTimerTrigger, values[0], values[1], time_tol, values[2])
+                if tolerance_arg is not None:
+                    retain(((tolerance_arg, tolerance_value),))
         return result
 
-    def numeric_observer_candidate(self):
+    def numeric_observer_candidate(self, *, visit=None):
         # This source check preserves existing physical-expression lowering.
         # The kernel proves isolation against the complete original bound IR.
         def physical(statements):
             for statement in statements:
+                if visit is not None:
+                    visit(statement)
                 if isinstance(statement, (ContributionStatement, BoundStep)):
                     return True
                 if isinstance(statement, SyntaxConditional) and (physical(statement.then_body) or physical(statement.else_body)):
@@ -2060,7 +2359,8 @@ class InstanceCompiler:
             kwargs["decisions"] = self.event_select
             kwargs.pop("validate_decision", None)
         return self.lower_event(expr, resolve, nodes, *args,
-                                event_values=observer, sampled_values=not observer, **kwargs)
+                                event_values=observer, sampled_values=not observer,
+                                program_real=True, execute_calls=True, **kwargs)
 
     def validate_runtime_loop(self, statement):
         def fail(message):
@@ -2135,7 +2435,9 @@ class InstanceCompiler:
                 # when a coefficient cancels or underflows to zero.
                 self.sampled_math_slot = True
                 try:
-                    value = self.lower_event_value(statement.rhs, self.symbol, self.node_ids, preserve_structure=True,
+                    value = self.closed_initial_math.get(statement.name)
+                    if value is None:
+                        value = self.lower_event_value(statement.rhs, self.symbol, self.node_ids, preserve_structure=True,
                                              decisions=self.expression_select, validate_decision=self.validate_decision_expression, node_declarations=True,
                                              indices=self.event_index_read,
                                              integer_assignment_root=self.model.variables[statement.name] == "integer")
@@ -2178,7 +2480,10 @@ class InstanceCompiler:
         return None
 
     def event_conditional(self, relation, left, right, yes, no, origin):
-        if self.compact_event_candidate():
+        # IR33's retained procedure executor resolves Select predicates lazily
+        # in both ordinary If and Event.body If. Do not expand its source arms
+        # again after Parser kept each one once. The legacy route is unchanged.
+        if self.procedure_builder is not None or self.compact_event_candidate():
             return (self.make_ir(Conditional, relation, left, right, yes, no, origin),)
         for field, expression in (("left", left), ("right", right)):
             choice = self.split_selection(expression)
@@ -2192,7 +2497,13 @@ class InstanceCompiler:
         return (self.make_ir(Conditional, relation, left, right, yes, no, origin),)
 
     def event_assignment(self, state, value, origin, *, compact_source=False):
-        if self.compact_event_candidate() or compact_source:
+        if self.compilation.states[state].kind == "real":
+            value = self.make_ir(RealBoundary, value, "store", origin)
+        if self.procedure_builder is not None or self.compact_event_candidate() or compact_source:
+            # IR33 evaluates nested Select lazily at the assignment's source
+            # position and applies the original integer conversion/range
+            # check. Keep source predicates once instead of duplicating the
+            # body for every combination of input-selected constants.
             return (self.make_ir(Assignment, state, value),)
         # Select RHS decisions before installing the assignment. Distribute
         # enclosing arithmetic so the ordered event solver keeps affine leaves.
@@ -2211,12 +2522,21 @@ class InstanceCompiler:
         return expand(value)
 
     def expression_nodes(self, expression):
+        if isinstance(expression, UnsupportedSystemCall):
+            return set().union(*(self.expression_nodes(argument) for argument in expression.args))
+        if isinstance(expression, RealCall):
+            return set(getattr(self, "real_call_nodes", {}).get(id(expression), ()))
         if isinstance(expression, EventMath):
             return set().union(*(self.expression_nodes(arg) for arg in expression.args))
         if isinstance(expression, Affine):
             return {term.node for term in expression.terms}
-        if isinstance(expression, Binary):
+        if isinstance(expression, (Binary, RealBinary)):
             return self.expression_nodes(expression.left) | self.expression_nodes(expression.right)
+        if isinstance(expression, RealBoundary):
+            return self.expression_nodes(expression.value)
+        if isinstance(expression, RealLocal):
+            builder = self.procedure_builder
+            return set(builder.binding_nodes.get(expression.binding, ())) if builder is not None else set()
         if hasattr(expression, "base"):
             return self.expression_nodes(expression.base)
         if isinstance(expression, Select):
@@ -2228,6 +2548,8 @@ class InstanceCompiler:
         def resolve(name):
             if name in env:
                 return env[name]
+            if self.procedure_builder is not None and name in self.state_ids:
+                return self.make_ir(StateRef, self.state_ids[name])
             if name in self.ordinary_alias_variables:
                 raise CompileError(f"{self.model.source}: local variable {name!r} is not assigned before use")
             return self.symbol(name)
@@ -2249,12 +2571,19 @@ class InstanceCompiler:
                     return False
             for field in ('body', 'then_body', 'else_body'):
                 pending.extend(getattr(statement, field, ()))
-        return input_rational_tree(value, self.allowed_condition_nodes) is not None
+        builder = self.procedure_builder
+        return input_rational_tree(value, self.allowed_condition_nodes,
+                                   local_facts=builder.scope_facts if builder is not None else None,
+                                   work=self.compilation.native_audit.ir_work) is not None
 
     def request_input_rational(self, origin):
         self.compilation.source_rational_origins.append(origin)
 
     def selected_value_supported(self, value):
+        if isinstance(value, (RealBinary, RealBoundary, RealLocal, RealCall, UnsupportedSystemCall)):
+            # Rounded program expressions own a different numerical consumer.
+            # Keep every source operand and defer proof/refusal to that owner.
+            return True
         # Rational value arms use the kernel's certified polynomial/rational
         # evaluation. Their guards retain the narrower affine predicate scope.
         def children(item):
@@ -2275,10 +2604,16 @@ class InstanceCompiler:
             if isinstance(item, (Affine, StateRef)):
                 return True
             if isinstance(item, Select):
-                return (_predicate_degree(item.left) is not None and _predicate_degree(item.right) is not None
+                return (self.predicate_degree(item.left) is not None and self.predicate_degree(item.right) is not None
                         and rational_tree(item.then_value) and rational_tree(item.else_value))
             return isinstance(item, (Binary, Power)) and all(rational_tree(c) for c in children(item))
         def value_degree(item):
+            if isinstance(item, (RealBinary, RealLocal)):
+                # As for these nodes at the outer value boundary above, this
+                # is source admission, not an affine proof for the real consumer.
+                return 0
+            if isinstance(item, RealBoundary):
+                return value_degree(item.value)
             if isinstance(item, OperatorRef):
                 return 0
             if isinstance(item, Binary) and item.op in ("add", "multiply"):
@@ -2290,11 +2625,11 @@ class InstanceCompiler:
             if isinstance(item, Select):
                 if has_history(item.then_value) or has_history(item.else_value):
                     return None
-                if _predicate_degree(item.left) is None or _predicate_degree(item.right) is None:
+                if self.predicate_degree(item.left) is None or self.predicate_degree(item.right) is None:
                     return None
                 a, b = value_degree(item.then_value), value_degree(item.else_value)
                 return max(a,b) if a is not None and b is not None else None
-            return _predicate_degree(item)
+            return self.predicate_degree(item)
         return value_degree(value) is not None or has_divide(value) and rational_tree(value)
 
     def source_forcing_candidate(self, value):
@@ -2350,7 +2685,7 @@ class InstanceCompiler:
         # Always call the original checker. Only its same-owner, strongly held
         # transitive-immutable identity cache can avoid a second structural walk.
         self.checked_ir(result, origin)
-        predicate_affine = _predicate_degree(left) is not None and _predicate_degree(right) is not None
+        predicate_affine = self.predicate_degree(left) is not None and self.predicate_degree(right) is not None
         if (not predicate_affine or not self.selected_value_supported(result)):
             if self.input_rational_candidate(result):
                 self.request_input_rational(origin)
@@ -2384,14 +2719,37 @@ class InstanceCompiler:
         return (expr.op in OPERATOR_NAMES-pure_math or
                 any(InstanceCompiler.contains_history_call(arg) for arg in expr.args))
 
-    def lower_local(self, expr, env, *, preserve_structure=False, conditional=False, positive_facts=()):
+    def lower_local(self, expr, env, *, preserve_structure=False, conditional=False, positive_facts=(), program_real=False, execute_calls=False, source_floor_prefix=False):
         resolve = self.local_symbol(env)
+        resolve.program_real = program_real
+        if source_floor_prefix:
+            resolve.source_floor = lambda item, operand: self.source_floor(item, operand, resolve)
+        if program_real and self.procedure_builder is not None:
+            from .real_calls import lower_call
+            resolve.real_call = lambda *args, **kwargs: lower_call(self, *args, **kwargs)
+        resolve.memoryless_decisions = self.procedure_builder is not None
         def outer_decision(item):
             if item.op in OPERATOR_NAMES:
                 return False
             return item.op in DECISION_NAMES or any(outer_decision(arg) for arg in item.args)
-        decision = outer_decision(expr)
-        if decision and contains_operator(expr):
+        if self.model.functions:
+            query = getattr(self, '_outer_decision_query', None)
+            if query is None:
+                from .source_queries import SourceQuery
+                query = self._outer_decision_query = SourceQuery(
+                    self.compilation.native_audit, 'source_outer_decision',
+                    lambda item: ((False, False) if item.op in OPERATOR_NAMES else
+                                  (True, False) if item.op in DECISION_NAMES else (False, True)),
+                    lambda item, local, children: any(children))
+            decision = query(expr)
+        else:
+            decision = outer_decision(expr)
+        permitted = None
+        if resolve.memoryless_decisions:
+            from .elaboration import function_math
+            permitted = lambda item:function_math(item, self.compilation.native_audit.ir_work)
+        if decision and contains_operator(expr, allowed=permitted,
+                visit=lambda item:self.compilation.native_audit.debit("function_decision_scan", item=item)):
             raise CompileError(f"{self.model.source}:{expr.token.line}: decision expressions do not support waveform operators in any operand or arm")
         def factory(item, relation, left, right, then_value, else_value):
             raw = self.make_ir(Select, relation, left, right, then_value, else_value,
@@ -2412,8 +2770,34 @@ class InstanceCompiler:
             if conditional and self.contains_history_call(op):
                 raise CompileError(f"{self.model.source}:{op.token.line}: history waveform call sites must be unconditional")
             return self.waveform(op, resolve)
+        audit_memo = None
+        if self.model.functions and not program_real:
+            # One read-only compatibility view. Actual source calls are emitted
+            # separately by the retained procedure and never use this cache.
+            from .source_queries import SourceQuery
+            owner = self.compilation.native_audit
+            owner.debit('compat_lower_allowed_ops', 16, expr)
+            allowed = frozenset(('number', 'parameter', 'node', 'voltage', '+', '-', '*', '/',
+                                 'unary+', 'unary-', 'checked', 'function_assign'))
+            def local(item):
+                qualified = item.op in allowed and not (item.op == 'function_assign' and item.value != 'real')
+                return (qualified, item.source_call is not None), qualified
+            def merge(item, value, children):
+                owner.debit('compat_lower_merge', 3+2*len(children), item)
+                return value[0] and all(child[0] for child in children), value[1] or any(child[1] for child in children)
+            qualified, has_call = SourceQuery(owner, 'compat_lower_qualification', local, merge)(expr)
+            if qualified and has_call and execute_calls:
+                from .real_calls import lower_call
+                resolve.real_call = lambda *args, **kwargs: lower_call(self, *args, **kwargs)
+            elif qualified and has_call:
+                audit_memo = _SourceAuditMemo(owner.ir_work,
+                    (waveform, factory, self.validate_decision_expression, None))
+                audit_memo.bind(resolve, self.node_ids,
+                    (preserve_structure or decision, decision, conditional, program_real))
+                resolve._source_audit_binding = audit_memo.binding_token
         value = lower(expr, resolve, self.node_ids, self.model.source,
-                      waveform, preserve_structure or decision, factory, self.validate_decision_expression, decision, node_declarations=True)
+                      waveform, preserve_structure or decision, factory, self.validate_decision_expression,
+                      decision, memo=audit_memo, node_declarations=True)
         # Validate the enclosing arithmetic too: an input-selected scalar must
         # not become a coefficient multiplying another input dependency.
         def has_expression_decision(item):
@@ -2471,8 +2855,8 @@ class InstanceCompiler:
         domains = dict(self.integer_state_ranges if domains is None else domains)
         emitted = []
         for statement in statements:
-            if (self.integer_event_prefix is not None and not conditional
-                    and statement.token in self.integer_event_prefix.moved_tokens):
+            if (self.integer_event_prefix is not None and self.procedure_builder is None
+                    and not conditional and statement.token in self.integer_event_prefix.moved_tokens):
                 # The complete original statement is audited and executed in
                 # each qualified callback; no continuous consumer exists.
                 self.compilation.native_audit.debit("integer_prefix_ordinary_transfer", 1, statement)
@@ -2480,23 +2864,28 @@ class InstanceCompiler:
             if isinstance(statement, BoundStep):
                 if contains_operator(statement.rhs):
                     raise CompileError(f'{self.model.source}:{statement.token.line}: $bound_step requires an expression without new waveform call sites')
-                value = self.lower_local(statement.rhs, result, preserve_structure=True, positive_facts=positive_facts)
+                value = self.lower_local(statement.rhs, result, preserve_structure=True, positive_facts=positive_facts, program_real=True)
                 if isinstance(value, Affine) and not value.terms and value.constant < 0:
                     raise CompileError('$bound_step requires a nonnegative value')
                 origin = self.make_ir(Origin, statement.token.source or self.model.source, statement.token.line, statement.token.column,
                                 self.instance.name, statement.token.expansion)
-                self.compilation.step_bounds.append(self.make_ir(StepBound, value, active, origin))
+                value = self.make_ir(RealBoundary, value, "argument", origin)
+                index = len(self.compilation.step_bounds)
+                selected = self.make_ir(Affine, 1., ()) if self.procedure_builder is not None else active
+                self.compilation.step_bounds.append(self.make_ir(StepBound, value, selected, origin))
+                if self.procedure_builder is not None:
+                    self.procedure_builder.step_bound(statement, index)
             elif isinstance(statement, ContributionStatement):
-                emitted.append((statement, self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure, conditional=conditional, positive_facts=positive_facts)))
+                emitted.append((statement, self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure, conditional=conditional, positive_facts=positive_facts, execute_calls=True)))
             elif isinstance(statement, SyntaxConditional):
                 if contains_operator(statement.left) or contains_operator(statement.right):
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates do not support waveform operators")
                 origin = self.make_ir(Origin, statement.token.source or self.model.source, statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
-                left = self.lower_local(statement.left, result, preserve_structure=True, positive_facts=positive_facts)
-                right = self.lower_local(statement.right, result, preserve_structure=True, positive_facts=positive_facts)
+                left = self.lower_local(statement.left, result, preserve_structure=True, positive_facts=positive_facts, program_real=True)
+                right = self.lower_local(statement.right, result, preserve_structure=True, positive_facts=positive_facts, program_real=True)
                 self.checked_ir(left, origin)
                 self.checked_ir(right, origin)
-                predicate_affine = _predicate_degree(left) is not None and _predicate_degree(right) is not None
+                predicate_affine = self.predicate_degree(left) is not None and self.predicate_degree(right) is not None
                 predicate_nodes = self.expression_nodes(left) | self.expression_nodes(right)
                 if not predicate_nodes.issubset(self.allowed_condition_nodes):
                     if not self.history_condition_candidate(predicate_affine,origin,predicate_nodes):
@@ -2510,6 +2899,8 @@ class InstanceCompiler:
                                 and not self.readout_candidate(candidate, origin, "ordinary analog if predicates must be affine or input-selected piecewise-affine; nonlinear products and powers are unsupported")):
                             raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates must be affine or input-selected piecewise-affine; nonlinear products and powers are unsupported")
                 relation = {"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation]
+                if self.procedure_builder is not None:
+                    self.procedure_builder.conditional(statement, relation, left, right, origin)
                 zero, one = self.make_ir(Affine, 0., ()), self.make_ir(Affine, 1., ())
                 yes = self.make_ir(Select, 'gt', active, zero, self.make_ir(Select, relation, left, right, one, zero, origin), zero, origin)
                 no = self.make_ir(Select, 'gt', active, zero, self.make_ir(Select, relation, left, right, zero, one, origin), zero, origin)
@@ -2519,9 +2910,10 @@ class InstanceCompiler:
                 else_env, else_emitted = self.execute_analog(statement.else_body, result, conditional=True, active=no, domains=no_domains, positive_facts=no_facts)
                 for selected, other, contributions in ((True, False, then_emitted), (False, True, else_emitted)):
                     for branch, value in contributions:
-                        value = self.make_ir(Select, relation, left, right,
-                                       value if selected else self.make_ir(Affine, 0., ()),
-                                       value if other else self.make_ir(Affine, 0., ()), origin)
+                        if self.procedure_builder is None:
+                            value = self.make_ir(Select, relation, left, right,
+                                           value if selected else self.make_ir(Affine, 0., ()),
+                                           value if other else self.make_ir(Affine, 0., ()), origin)
                         self.checked_ir(value, origin)
                         emitted.append((branch, value))
                 for name in sorted(set(then_env) | set(else_env) | set(result)):
@@ -2541,9 +2933,33 @@ class InstanceCompiler:
                         # following assignment defines a value on every path.
                         result.pop(name, None)
                         continue
+                    if self.procedure_builder is not None and (name in self.procedure_builder.bindings or name in self.state_ids):
+                        # Both arms write the same executable slot. Its value
+                        # is chosen when the branch runs, not by evaluating a
+                        # predicate again after an arm may have changed it.
+                        result[name] = (self.make_ir(StateRef, self.state_ids[name])
+                                        if name in self.state_ids else
+                                        self.make_ir(RealLocal, self.procedure_builder.bindings[name]))
+                        if isinstance(result[name], RealLocal):
+                            degrees = [self.predicate_degree(item) for item in
+                                       (left, right, then_env[name], else_env[name])]
+                            degree = None if None in degrees else max(degrees)
+                            self.compilation.native_audit.debit("procedure_binding_degree_merge", 2)
+                            self.procedure_builder.degree_facts[id(result[name])] = (result[name], degree)
+                            self.program_facts.record_read(result[name],
+                                (left, right, then_env[name], else_env[name]), relation=relation)
+                        continue
                     if then_env[name] is else_env[name]:
                         result[name] = then_env[name]
                         continue
+                    if self.procedure_builder is not None and self.model.variables[name] == "integer":
+                        a, b = then_env[name], else_env[name]
+                        if isinstance(a, Affine) and isinstance(b, Affine) and not a.terms and not b.terms and a.constant == b.constant:
+                            result[name] = a
+                            continue
+                        raise CompileError("conditional integer alias requires an executable typed binding",
+                                           code="unsupported_event_context", token=statement.token,
+                                           instance=self.instance.name)
                     result[name] = factor_integer_prefix(
                         relation, left, right, then_env[name], else_env[name], origin,
                         integer_target=self.model.variables.get(name) == "integer",
@@ -2565,11 +2981,43 @@ class InstanceCompiler:
                         self.compilation.native_audit.debit("held_power2_alias_ready", 4, statement)
                         self.held_power2_ready[statement.name] = statement.rhs
                         continue
-                value = self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure, conditional=conditional, positive_facts=positive_facts)
+                prefix_source = (self.procedure_builder is not None and self.integer_event_prefix is not None
+                                 and statement.name in self.integer_event_prefix.names
+                                 and statement.token in self.integer_event_prefix.moved_tokens)
+                value = self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure, conditional=conditional, positive_facts=positive_facts,
+                                         program_real=True, source_floor_prefix=prefix_source)
                 self.checked_ir(value, self.make_ir(Origin, self.model.source, statement.token.line, statement.token.column, self.instance.name))
                 if self.model.variables[statement.name] == "integer":
-                    self.validate_integer_value(value, statement.token)
-                result[statement.name] = value
+                    if prefix_source and isinstance(value, EventMath) and value.function == 'floor':
+                        # This qualified original prefix owns an actual Integer
+                        # state assignment. Floor proves integrality; the native
+                        # typed store must check its range before a later clamp.
+                        # Do not add a second real-to-integer conversion or grant
+                        # unbounded ordinary temporaries this checked-store role.
+                        self.compilation.native_audit.debit("integer_prefix_native_checked_store", 5, statement)
+                        state = self.state_ids.get(statement.name)
+                        if (state is None or self.compilation.states[state].kind != 'integer'
+                                or not self.integral(value)):
+                            raise CompileError("native source floor requires its checked integer state store",
+                                               token=statement.token, instance=self.instance.name)
+                    else:
+                        self.validate_integer_value(value, statement.token)
+                if self.procedure_builder is not None and (self.model.variables[statement.name] == "real" or statement.name in self.state_ids):
+                    result[statement.name] = self.procedure_builder.capture(statement, value)
+                else:
+                    result[statement.name] = value
+                    if self.procedure_builder is not None:
+                        if isinstance(value, Affine) and not value.terms:
+                            self.procedure_builder.elided_constants.add(statement.token)
+                        else:
+                            fact = self.program_real_closed(value)
+                            if fact.closed and fact.finite and fact.value.is_integer() and -2147483648 <= fact.value <= 2147483647:
+                                self.procedure_builder.closed_integer(statement, value)
+                                result[statement.name] = self.make_ir(Affine, fact.value, ())
+                            else:
+                                raise CompileError("ordinary integer alias requires an executable capture",
+                                                   code="unsupported_event_context", token=statement.token,
+                                                   instance=self.instance.name)
         return result, emitted
 
     def emit_contributions(self, analog_contributions):
@@ -2613,9 +3061,13 @@ class InstanceCompiler:
                 value = self.make_ir(Forcing, self.scale_ir(source, sign), origin, checked)
                 checked = ()
                 self.compilation.contributions.append(self.make_ir(Contribution, identity, p, n, value, origin))
+                if self.procedure_builder is not None:
+                    self.procedure_builder.contribution(branch_statement, len(self.compilation.contributions)-1)
                 expression = residual
             value = self.scale_ir(expression, sign)
             if index not in mixed and self.forcing_seen and source_forcing_tree(value, self.allowed_condition_nodes, self):
                 value = self.make_ir(Forcing, value, origin, checked)
                 checked = ()
             self.compilation.contributions.append(self.make_ir(Contribution, identity, p, n, value, origin))
+            if self.procedure_builder is not None:
+                self.procedure_builder.contribution(branch_statement, len(self.compilation.contributions)-1)

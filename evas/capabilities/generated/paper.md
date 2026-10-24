@@ -3,6 +3,12 @@
 由 `evas/capabilities/catalog.py` 生成。只包含已经有四后端成绩的能力节点。
 这一页不是实验开发的登记簿。落后和未验收留在格子里。
 
+成绩沿用[原支持矩阵](../../docs/COMPARISON.md#支持矩阵)的固定模型和配置，
+只适用于各行的容差、停止时间及来源版本，不覆盖所有合法写法。
+结果来自不同历史版本，不代表当前 main 或 IR33 的一次全量验收。
+逐行范围见[验证覆盖](../../validation/paper/COVERAGE.md)，
+执行版本与收据见[来源和补充证据](../../docs/development/COMPARISON.md#table-evidence)。
+
 | 能力 | 与其他仿真器的比较 |
 | --- | --- |
 | 宏与 include | 宏与 include。Spectre：✓ Q3；ngspice + OpenVAF-R：层次语法编译失败；Gnucap + modelgen-verilog：✓ Q3；EVAS：✓ Q3。 |

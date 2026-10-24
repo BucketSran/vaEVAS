@@ -218,6 +218,7 @@ fn advance_to_next_timer(
             &c.accepted,
             EventMoment {
                 exact_root: source_root.as_ref(),
+                occurrence_certified: false,
                 representative: time,
                 observation: source_window,
                 fired_roots: &[],

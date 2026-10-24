@@ -1,6 +1,7 @@
 """Early gates must distinguish the recorded wrong path and unrun evidence."""
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -8,10 +9,75 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT/'scripts'))
-from evas_integration_checks import budget_owners
+from evas_integration_checks import budget_owners, initial_budget
 
 
 class IntegrationChecks(unittest.TestCase):
+    @unittest.skipUnless(shutil.which('rustc'), 'Rust primitive probe requires rustc')
+    def test_production_optional_work_budget_retains_local_sticky_probe(self):
+        result = initial_budget(ROOT/'evas/rust_core/src/initial_state_invariance.rs')
+        self.assertEqual(result['exhausted_retry'], 'refused')
+        self.assertIn('aggregate caller work still needs review', result['scope'])
+
+    @unittest.skipUnless(shutil.which('rustc'), 'Rust primitive probe requires rustc')
+    def test_optional_work_adaptation_still_rejects_a_refunding_primitive(self):
+        # Calibration: refusing an oversized take must also consume the local
+        # remainder. Merely adding a compilable Work type cannot turn this green.
+        for fields in ['usize', 'usize, Option<crate::transition_source_plan::Work>']:
+            source = ('struct Budget('+fields+');\n'
+                      'impl Budget {fn take(&mut self,n:usize)->Option<()> {'
+                      'if n>self.0{return None;} self.0-=n;Some(())}}\n'
+                      'fn owner(){let _=Budget(3'+(',None' if ',' in fields else '')+');}\n')
+            with self.subTest(fields=fields), tempfile.TemporaryDirectory() as temporary:
+                path = Path(temporary)/'src/budget.rs'
+                path.parent.mkdir()
+                if ',' in fields:
+                    for name in ('src/transition_source_plan.rs', 'ir/src/lib.rs'):
+                        target = Path(temporary)/name
+                        target.parent.mkdir(parents=True, exist_ok=True)
+                        target.write_text((ROOT/'evas/rust_core'/name).read_text())
+                path.write_text(source)
+                with self.assertRaisesRegex(AssertionError, 'recovered on retry'):
+                    initial_budget(path)
+    def test_legacy_budget_still_rejects_recovery_after_exhaustion(self):
+        source = '''struct Budget(usize);
+impl Budget { fn take(&mut self,n:usize)->Option<()> {
+match self.0.checked_sub(n) {Some(left)=>{self.0=left;Some(())},
+None=>{self.0=0;None}}}}
+fn owner(){let _b=Budget(3);}'''
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary)/'budget.rs'
+            path.write_text(source)
+            self.assertEqual(initial_budget(path)['exhausted_retry'], 'refused')
+            path.write_text(source.replace('self.0=0;', ''))
+            with self.assertRaisesRegex(AssertionError, 'recovered on retry'):
+                initial_budget(path)
+
+    def test_shared_budget_checks_real_debit_and_sticky_shared_owner(self):
+        paths = ('src/initial_state_invariance.rs', 'src/transition_source_plan.rs',
+                 'ir/src/lib.rs')
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for name in paths:
+                target = root/name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text((ROOT/'evas/rust_core'/name).read_text())
+            budget, work = (root/name for name in paths[:2])
+            self.assertEqual(initial_budget(budget)['shared_owner_retry'],
+                             'refused without refund')
+            original = budget.read_text()
+            debit = 'work.debit(2, n as u64).ok()?;'
+            self.assertIn(debit, original)
+            budget.write_text(original.replace(debit, ''))
+            with self.assertRaisesRegex(AssertionError, 'recovered on retry'):
+                initial_budget(budget)
+            budget.write_text(original)
+            original_work = work.read_text()
+            self.assertIn('old.saturating_add(amount)', original_work)
+            work.write_text(original_work.replace('old.saturating_add(amount)', 'old'))
+            with self.assertRaisesRegex(AssertionError, 'recovered on retry'):
+                initial_budget(budget)
+
     def test_new_independent_allowance_has_two_production_owners(self):
         bad = '''struct Budget(usize);
 fn prove(){let b=Budget(2_000_000);}

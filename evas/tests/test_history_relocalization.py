@@ -6,14 +6,17 @@ import unittest
 from evas import Instance, KernelError, compile_sources, transient
 from evas.manifest import parse_manifest
 from test_affine import KERNEL, instance, model
+from initial_record_contract import check_initial_record_batch
 
 
-def run(body, declarations="real slope; integer n;", *, stop=2, times=None, step=2):
+def run(body, declarations="real slope; integer n;", *, stop=2, times=None, step=2,
+        initial_records=([0,0],[1,0],1)):
     source = model(body, declarations + " electrical z;")
     program = compile_sources({"history-relocalization.va": source}, [instance()])
-    return transient(program, {"u": [[0, 0], [stop, stop]]},
+    result = transient(program, {"u": [[0, 0], [stop, stop]]},
                      times or [0, stop], stop=stop, max_step=step,
                      kernel=KERNEL, vabstol=1e-8, reltol=0)
+    return check_initial_record_batch(result,program,*initial_records)
 
 
 def timer_body(slope):
@@ -43,7 +46,7 @@ class HistoryRelocalization(unittest.TestCase):
           @(timer(0.25,0,1e-12)) q=0.28125;
           V(z,r)<+idt(V(u,r),0);
           @(cross(V(z,r)-q,1,1e-9,1e-8)) n=n+1;
-          V(y,r)<+n;""", "real q; integer n;")
+          V(y,r)<+n;""", "real q; integer n;",initial_records=([0,0],[.125,0],1))
         self.assertEqual(len(result["transient"]["events"]), 2)
         self.assertAlmostEqual(result["transient"]["events"][1]["time"], .75, delta=1e-9)
 
@@ -62,6 +65,8 @@ class HistoryRelocalization(unittest.TestCase):
                 a = transient(program, **manifest["transient"], kernel=KERNEL, **manifest["tolerances"])
                 b = transient(program, **dict(manifest["transient"], max_step=.125, output_times=[i/8 for i in range(25)]),
                               kernel=KERNEL, **manifest["tolerances"])
+                a=check_initial_record_batch(a,program,[0,0],[1,0],1)
+                b=check_initial_record_batch(b,program,[0,0],[1,0],1)
                 for result in (a, b):
                     events = result["transient"]["events"]
                     self.assertEqual(len(events), 3)
@@ -91,7 +96,7 @@ class HistoryRelocalization(unittest.TestCase):
         result = run("""@(initial_step) n=0;
           V(z,r)<+idt(1-V(u,r),0);
           @(cross(V(z,r)-0.375,0,1e-9,1e-8)) n=n+1;
-          V(y,r)<+n;""", "integer n;")
+          V(y,r)<+n;""", "integer n;",initial_records=([0],[0],1))
         events = result["transient"]["events"]
         self.assertEqual(len(events), 2)
         for event, expected in zip(events, [.5, 1.5]):
@@ -101,7 +106,7 @@ class HistoryRelocalization(unittest.TestCase):
         result = run("""@(initial_step) begin slope=3; n=0; end
           V(z,r)<+idt(slope,0);
           @(cross(V(z,r)-1,1,1e-9,1e-8)) begin slope=1; n=n+1; end
-          V(y,r)<+n;""")
+          V(y,r)<+n;""",initial_records=([0,0],[3,0],1))
         self.assertEqual(len(result["transient"]["events"]), 1)
         self.assertAlmostEqual(result["transient"]["events"][0]["time"], 1/3, delta=1e-9)
         row = dict(zip(result["nodes"], result["solutions"][-1]["voltages"]))

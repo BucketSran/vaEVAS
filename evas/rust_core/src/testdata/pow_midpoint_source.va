@@ -1,0 +1,2 @@
+`include "disciplines.vams"
+module m(u,y);input u;output y;electrical u,y;real q;analog begin @(initial_step)q=pow(1.0000000000000002,0.5000000000000001);V(y)<+q;end endmodule

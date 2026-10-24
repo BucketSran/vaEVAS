@@ -22,12 +22,17 @@
 原生来源取值如下。
 
 - `stateless_working_point`：按请求时刻求解工作点，没有接受积分步。`accepted_steps=0` 与此相容。
+
 - `accepted_controller_frame`：从事件控制器已接受的完整帧读取电压和状态。
 - `certified_causal_frame`：从提交事务准备的因果阶段帧读取。它可能早于该事务最终提交的存储时刻，保留自己的请求时刻、状态与认证区间。
 - `implicit_history_evaluation`：读取已认证隐式历史在请求时刻的包围，并求解原始同时关系。
 - `unknown`：协议允许保留未知来源，不可转称已接受步。
 
 这些标签说明该行的生产路径，不把各路径统一称为 accepted integration step。它们也不替代实际版本、源代码与二进制身份的绑定。
+
+IR33 普通过程即使没有动态状态，也可能由控制器执行源码顺序语句。这种路径实际使用
+max_step 推进，返回 `accepted_controller_frame` 和真实接受步数。与旧无状态路径迁移比较时，
+必须先验证这组执行字段及实际细步长请求，不能把 `max_step_applied` 改成旧值来隐藏路径差异。
 
 ## 区间数学与范围
 

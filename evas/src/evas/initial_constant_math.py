@@ -6,8 +6,7 @@ relations consume the native math boxes, never a precomputed pow representative.
 from fractions import Fraction as Q
 import math
 from .errors import CompileError
-from .ir import Affine, Binary, MathFunction, OperatorRef, Origin
-from .limits import check_ir
+from .ir import Affine, Binary, MathFunction, OperatorRef, Origin, RealBinary, RealBoundary, Select
 from .integer_bits import integer_type
 from .syntax import Assignment, ContributionStatement
 
@@ -25,6 +24,7 @@ def binding(compiler, model):
         return {}
 
     def charge(n=1):
+        compiler.compilation.native_audit.ir_work('initial_math_source', n)
         remaining = compiler.compilation.initial_math_work
         if n > remaining:
             compiler.compilation.initial_math_work = 0
@@ -57,6 +57,8 @@ def binding(compiler, model):
         pending.extend(expr.args)
     if len(powers) != 1:
         return {}
+    if compiler.procedure_builder is not None:
+        compiler.compilation.native_audit.activate(statement)
 
     types = {}
 
@@ -86,6 +88,11 @@ def binding(compiler, model):
         typed = integer_type(expr, model.variables, model.parameter_types, model.genvars,
                              child_types=tuple(types[id(arg)] for arg in expr.args))
         types[id(expr)] = typed
+        if not typed and expr.op in ('+', '-', '*', '/', 'unary+', 'unary-'):
+            try:
+                result = Q(float(result))
+            except (OverflowError, ValueError):
+                fail('closed initial math is not finite')
         if (typed and expr.op in ('+', '-', '*', '/', 'unary+', 'unary-')
                 and not -2147483648 <= result <= 2147483647):
             fail('integer intermediate may exceed signed 32-bit range')
@@ -125,40 +132,56 @@ def binding(compiler, model):
         t = expr.token
         if stage and len(t.expansion) >= 64:
             raise CompileError('closed initial math expansion exceeds64',code='resource_budget',token=t)
-        return Origin(t.source or model.source,t.line,t.column,
+        return compiler.make_ir(Origin,t.source or model.source,t.line,t.column,
                       compiler.instance.name,t.expansion + ((stage,0),) if stage else t.expansion)
 
     def build(expr):
         charge()
         if expr.op == 'number':
-            return Affine(expr.value,())
+            return compiler.make_ir(Affine,expr.value,())
         if expr.op == 'parameter':
-            return Affine(compiler.parameter(expr.value),())
+            return compiler.make_ir(Affine,compiler.parameter(expr.value),())
         args = [build(a) for a in expr.args] if expr.op != 'power' else None
         if expr.op == 'checked':
             return args[0]
         if expr.op in ('unary+','unary-'):
-            return args[0] if expr.op == 'unary+' else Binary('multiply',Affine(-1.,()),args[0])
+            if expr.op == 'unary+':
+                return args[0]
+            if compiler.procedure_builder is not None and not compiler.integer_type(expr):
+                return compiler.make_ir(RealBinary, 'multiply', compiler.make_ir(Affine,-1.,()),args[0],origin(expr))
+            return compiler.make_ir(Binary,'multiply',compiler.make_ir(Affine,-1.,()),args[0])
         if expr.op in ('+','-','*','/'):
             a,b = args
+            if compiler.procedure_builder is not None and not compiler.integer_type(expr):
+                return compiler.make_ir(RealBinary, {'+':'add','-':'subtract','*':'multiply','/':'divide'}[expr.op],a,b,origin(expr))
             if expr.op == '-':
-                return Binary('add',a,Binary('multiply',Affine(-1.,()),b))
-            return Binary({'+':'add','*':'multiply','/':'divide'}[expr.op],a,b)
+                return compiler.make_ir(Binary,'add',a,compiler.make_ir(Binary,'multiply',compiler.make_ir(Affine,-1.,()),b))
+            return compiler.make_ir(Binary,{'+':'add','*':'multiply','/':'divide'}[expr.op],a,b)
         if expr.op == 'power':
             # Both complete operands were audited above. This exact identity
             # only applies to this positive, dependency-free base.
-            if exponent == 0:
-                return Affine(1.,())
             x,y = (build(a) for a in expr.args)
+            if compiler.procedure_builder is not None:
+                x = compiler.make_ir(RealBoundary,x,'argument',origin(expr.args[0]))
+                y = compiler.make_ir(RealBoundary,y,'argument',origin(expr.args[1]))
+            if exponent == 0:
+                result = compiler.make_ir(Affine,1.,())
+                if compiler.procedure_builder is not None:
+                    for argument in (y,x):
+                        result = compiler.make_ir(Select,'lt',argument,compiler.make_ir(Affine,0.,()),result,result,origin(expr))
+                return result
             charge(2)
             index = len(compiler.compilation.operators)
-            compiler.compilation.operators.append(MathFunction('ln',x,origin(expr,'_evas_closed_pow_ln')))
-            compiler.compilation.operators.append(MathFunction('exp',Binary('multiply',y,OperatorRef(index)),origin(expr,'_evas_closed_pow_exp')))
-            return OperatorRef(index+1)
+            compiler.compilation.operators.append(compiler.make_ir(MathFunction,'ln',x,origin(expr,'_evas_closed_pow_ln')))
+            compiler.compilation.operators.append(compiler.make_ir(MathFunction,'exp',compiler.make_ir(Binary,'multiply',y,compiler.make_ir(OperatorRef,index)),origin(expr,'_evas_closed_pow_exp')))
+            result = compiler.make_ir(OperatorRef,index+1)
+            if compiler.procedure_builder is not None:
+                result = compiler.make_ir(RealBoundary,result,'sample',origin(expr))
+            return result
         fail('unsupported closed initial arithmetic')
 
     # Audit arithmetic outside pow as well. Its denominator may be the proved
     # positive native power, so runtime outward arithmetic owns the final check.
     value = build(statement.rhs)
-    check_ir(value,origin(statement.rhs))
+    compiler.checked_ir(value,origin(statement.rhs))
     return {statement.name:value}

@@ -4,6 +4,7 @@ GUARDS = ["LANG", "CROSS", "EVENT-ORDER", "EVENT-CONDITIONS"]
 import unittest
 from evas import CompileError, Instance, KernelError, compile_sources, transient
 from test_affine import KERNEL, model
+from initial_union_contract import check_initial_union_batch
 
 
 def source(initial='initial_step or cross(V(u,r)-2,1,1e-12,1e-9)', value='7'):
@@ -18,9 +19,11 @@ def compiled(text, instances=None):
         Instance('dut', 'm', {'u': 'u', 'v': 'v', 'y': 'y', 'r': '0'})])
 
 
-def run(program):
-    return transient(program, {'u': [[0, 0], [2.5, 2.5]], 'v': [[0, 0], [2.5, 2.5]]},
+def run(program, initial_records=None, zero_timer=None):
+    result=transient(program, {'u': [[0, 0], [2.5, 2.5]], 'v': [[0, 0], [2.5, 2.5]]},
                      [0, .5, 1.5, 2.5], stop=2.5, max_step=2.5, kernel=KERNEL)
+    return (check_initial_union_batch(result,program,*initial_records,zero_timer=zero_timer)
+            if initial_records is not None else result)
 
 
 def values(result, node='y'):
@@ -30,7 +33,7 @@ def values(result, node='y'):
 
 class InitialCross(unittest.TestCase):
     def test_shared_body_initializes_once_then_runs_again_on_reset_cross(self):
-        result = run(compiled(source()))
+        result = run(compiled(source()),initial_records=([0],[7],1))
         self.assertEqual(values(result), [7, 7, 2, 7])
         self.assertEqual(len(result['transient']['events']), 2)
         for event, expected in zip(result['transient']['events'], [1, 2]):
@@ -42,7 +45,8 @@ class InitialCross(unittest.TestCase):
         for order in ([a, b], [b, a]):
             program = compiled(source(value='seed'), order)
             for _ in range(2):
-                result = run(program)
+                result = run(program,initial_records=([0,0],
+                    [7,9] if order[0].name=="a" else [9,7],2))
                 self.assertEqual(values(result, 'a'), [7, 7, 2, 7])
                 self.assertEqual(values(result, 'b'), [9, 9, 2, 9])
                 self.assertEqual(len(result['transient']['events']), 4)
@@ -53,7 +57,7 @@ class InitialCross(unittest.TestCase):
             'cross(V(u,r)-2,1,1e-12,1e-9) or initial_step or cross(V(u,r)-2,1,1e-12,1e-9)',
         ):
             with self.subTest(trigger=trigger):
-                result = run(compiled(source(initial=trigger)))
+                result = run(compiled(source(initial=trigger)),initial_records=([0],[7],1))
                 self.assertEqual(values(result), [7, 7, 2, 7])
                 self.assertEqual(len(result['transient']['events']), 2)
                 if trigger.count('cross') == 2:
@@ -69,7 +73,8 @@ class InitialCross(unittest.TestCase):
 
     def test_initialization_precedes_separate_t0_timer_without_extra_record(self):
         text = source().replace('cross(V(v,r)-1,1,1e-12,1e-9)', 'timer(0,0,1e-12)')
-        result = run(compiled(text))
+        result = run(compiled(text),initial_records=([0],[7],1),
+                     zero_timer=(1,[7],[2]))
         self.assertEqual(values(result), [2, 2, 2, 7])
         self.assertEqual(len(result['transient']['events']), 2)
         self.assertEqual(result['transient']['events'][0]['time'], 0)

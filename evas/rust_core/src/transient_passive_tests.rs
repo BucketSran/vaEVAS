@@ -614,6 +614,7 @@ fn source_fixture_with_period(
         &controller.accepted,
         EventMoment {
             exact_root: Some(&root),
+            occurrence_certified: false,
             representative: 0.25,
             observation: I::point(0.25),
             fired_roots: &[],

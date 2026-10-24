@@ -80,6 +80,14 @@ class NativeAuditTests(unittest.TestCase):
         instances=[Instance('dut','m',dict(y='y',z='z',r='0'))]
         old=compile_sources({'ledger.va':text},instances)
         owner=old._native_audit
+        # Origin-free leaf sharing now removes real repeated construction and
+        # scans. Keep the original320-source as a complete success control.
+        self.assertLess(owner.used,100000)
+        self.assertEqual(owner.used,sum(owner.counts.values()))
+        self.assertEqual(len(old.to_dict()['events']),3)
+        text=source(False).replace('n=n+1;','n=n+1;'*450).replace('m=m+1;','m=m+1;'*450)
+        old=compile_sources({'ledger.va':text},instances)
+        owner=old._native_audit
         self.assertGreater(owner.used,100000)
         self.assertTrue(all(used<100000 for used in owner.events.values()))
         self.assertFalse(owner.active)
@@ -87,22 +95,39 @@ class NativeAuditTests(unittest.TestCase):
             'V(y,r)<+transition(n&1,0,0.1,0.1);V(z,r)<+transition(m&1,0,0.1,0.1);')
         with self.assertRaisesRegex(CompileError,'aggregate audit'):
             compile_sources({'ledger.va':target},instances)
+        # The original inactive program has already done the work. Its first
+        # actual held-target view must charge that history, and retries cannot
+        # renew this owner or its consumed allowance.
+        for _ in range(3):
+            with self.assertRaisesRegex(CompileError,'aggregate audit'):
+                owner.target_view(None)
+            self.assertEqual(owner.used,sum(owner.counts.values()))
 
     def test_same_module_instances_keep_distinct_original_event_views(self):
+        from evas.ir import EventGate, InitialStepTrigger, TimerTrigger
         # Source AST tuple addresses can be reused after a bound compiler dies.
         # Exercise real sequential binding, not duplicated synthetic object IDs.
         for count in [2,3,5,10,20,40]:
             p=compile_sources({'shared.va':source(False)},[
                 Instance('dut'+str(i),'m',dict(y='y'+str(i),z='z'+str(i),r='0'))
                 for i in range(count)])
-            self.assertEqual(len(p.events),2*count)
-            self.assertEqual(len(p._native_audit.events),len(p.events),str(count))
+            self.assertEqual(len(p.events),3*count)
+            self.assertEqual(len(p._native_audit.events),2*count,str(count))
+            for procedure in p.procedures:
+                gates=[step.action.event for step in procedure.body
+                       if isinstance(step.action,EventGate)]
+                self.assertEqual(len(gates),3)
+                self.assertEqual(len(set(gates)),3)
+                events=[p.events[index] for index in gates]
+                self.assertEqual(sum(isinstance(e.trigger,InitialStepTrigger) for e in events),1)
+                self.assertEqual(sum(isinstance(e.trigger,TimerTrigger) for e in events),2)
+                self.assertTrue(all(e.origin.instance==procedure.instance for e in events))
         p=compile_sources({'shared.va':source(False)},[
             Instance('a','m',dict(y='a',z='az',r='0')),
             Instance('b','m',dict(y='b',z='bz',r='0'))])
         o=p._native_audit
         self.assertFalse(o.active)
-        self.assertEqual(len(p.events),4)
+        self.assertEqual(len(p.events),6)
         self.assertEqual(len(o.events),4)
         self.assertEqual(o.event_serial,4)
         self.assertEqual(o.event_view_calls,4)

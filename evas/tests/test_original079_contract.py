@@ -99,8 +99,14 @@ class Original079Contract(unittest.TestCase):
         self.assert_outputs(result, times)
         guard = result['nodes'].index('guard_out')
         by_time = dict(zip(times, [r['voltages'][guard] for r in result['solutions']]))
+        # IR33 samples $abstime before subtraction. The <= comparison remains
+        # high through the midpoint above 1.5, with even-significand tie owner.
+        # Derive the exact ramp values from that independent RN preimage;
+        # the original source, inputs and voltage tolerance remain unchanged.
+        cut = F(3, 2) + F(1, 2**53)
+        fall = lambda t: float(max(F(0), 1 - (F(t)-cut)/F(1, 4)))
         self.assertEqual([by_time[t] for t in [0, 1.5, 1.625, 1.75, 8, 8.125, 8.25]],
-                         [1, 1, .5, 0, 0, .5, 1])
+                         [1, 1, fall(F(13, 8)), fall(F(7, 4)), 0, .5, 1])
 
     def test_extra_queries_preserve_joint_history_and_future_periods(self):
         times = [0, 1.5, 1.625, 4, 8, 8.125, 9.625, 16, 24.125, 32, 34]
@@ -120,10 +126,32 @@ class Original079Contract(unittest.TestCase):
         self.assert_outputs(result, times, width=F(8))
 
     def test_future_rail_pulse_is_not_admitted_as_a_whole_request_dc_factor(self):
-        # The supplied waveform changes after every requested observation.
-        with self.assertRaises((CompileError, KernelError)) as caught:
-            run(program(), [0, 4, 8], future_pulse=True)
-        self.assertRegex(str(caught.exception), 'DC|source|affine|unsupported')
+        # Native source-position inputs do not use whole-request DC factors.
+        # Keep the original request as a prefix test, then observe the actual
+        # changed rail so a silently substituted DC coefficient cannot pass.
+        times = [0, 4, 8]
+        before = run(program(), times)
+        pulse = run(program(), times, future_pulse=True)
+        self.assertEqual([s['voltages'] for s in pulse['solutions']],
+                         [s['voltages'] for s in before['solutions']])
+        times = [24.125, 24.25, 25.625]
+        result = run(program(), times, future_pulse=True)
+        rail = [(F(t), F(v)) for t, v in sources(34, future_pulse=True)['VDD']]
+        def sampled_rail(t):
+            t = F(t)
+            for (a, x), (b, y) in zip(rail, rail[1:]):
+                if a <= t <= b:
+                    return F(float(x + (y-x)*(t-a)/(b-a)))
+            raise AssertionError('oracle time outside original PWL')
+        # Independent RN preimage at the binary cycle-start value 24.
+        cut = F(14355223812243457, 562949953421312)
+        guard = [F(1, 2), F(1), 1-(F(205, 8)-cut)/F(1, 4)]
+        for t, g, row in zip(times, guard, result['solutions']):
+            high = sampled_rail(t)
+            for node, expected in [('guard_out', high*g),
+                                   ('phase_out', high*(F(t)-24)/8)]:
+                actual = F(row['voltages'][result['nodes'].index(node)])
+                self.assertLessEqual(abs(actual-expected), F(1e-12), (t, node))
 
     def test_real_source_error_tube_is_not_erased_in_the_joint_consumer(self):
         with self.assertRaises((CompileError, KernelError)) as caught:
