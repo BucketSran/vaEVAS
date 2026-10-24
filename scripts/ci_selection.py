@@ -61,6 +61,7 @@ CALIBRATION_PREFIXES = (
 )
 # These are consumed by development regressions, not only by backend checkers.
 REGRESSION_INPUTS = {
+    'evas/validation/paper/case_inputs.py',
     'experiments/backends/paper/inputs.py',
     'experiments/backends/dvs2-spectre-validation/run_suite.py',
     'experiments/backends/dvs2-spectre-validation/check_results.py',

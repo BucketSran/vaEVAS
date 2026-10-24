@@ -1,6 +1,53 @@
 # EVAS：电压域 Verilog-A 仿真器
 
-模型支持范围及已有对照证据见[四后端支持范围](docs/COMPARISON.md)。
+<a id="evas-entry"></a>
+
+## EVAS统一入口
+
+EVAS相关内容统一从本页进入。源码、模型和原始结果仍保留在各自目录，
+专题文档负责详细内容，本页负责汇总入口。网站展示也引用这些来源。
+
+1. **实现与使用**：Python前端在 `evas/src/evas/`，Rust内核在 `evas/rust_core/`。从[构建与运行](#构建与运行)、[模块与接口](#模块与接口)查代码和用法。
+2. **原理与语义**：电压求解、事件、历史和误差如何处理。见[数学手册](docs/math/README.md)及[架构决定](docs/development/DECISIONS.md)。
+3. **模型、测试集与判据**：测什么、正确答案是什么、怎样判定。见下方[验证资料](#evas-validation)。
+4. **运行结果与错误诊断**：哪个版本跑过，哪些失败，依据什么修复。见下方[结果与诊断](#evas-results)。
+5. **后端比较**：共同要求由[比较标准](docs/COMPARISON-METHODOLOGY.md)定义，已验证的支持范围只在[比较表](docs/COMPARISON.md)维护。
+6. **验收交付与待办**：检查方法见[验证与开发](#验证与开发)，正式检查点见[版本与验证记录](#verification-checkpoints)，功能缺口与依赖见[统一进度表](docs/COMPARISON.md#progress-board)，具体任务沿用原Issue和PR。
+
+<a id="evas-validation"></a>
+
+### 验证资料：模型、测试与判据
+
+EVAS主要使用以下三类验证材料，各自保留明确的范围：
+
+- **开发回归**在 `evas/tests/` 和 `evas/rust_core/`，检查实现及已知缺陷。[TRACEABILITY](docs/development/TRACEABILITY.md)关联测试文件与能力合同。
+- **独立验证与共同比较条件**在 `evas/validation/`，包含模型、输入、数学答案、判定程序和错误对照。[验证入口](validation/README.md)说明用法，[COVERAGE](validation/paper/COVERAGE.md#summary-scopes)登记比较表每行的固定条件。
+- **工程原件重放**使用历史400家族以及实际工程请求，核对完整模型和消费者。原始材料见[来源库](../benchmark/material/historyref/README.md)，具体输入与checker修订以对应任务的记录为准。
+
+模型规定要模拟的问题；独立答案和容差规定对错；实际运行产生波形与事件记录；判定程序据此给出结果。
+比较表引用这些结果及其固定范围。开发测试方法数、比较条件数和工程家族数分别报告。
+新增测试可以扩展覆盖，但每次验收都须固定源码、用例和判据，保留原失败。
+
+现有模型、Python/Rust测试与实验之间的对应及具体归并顺序，见[共享资产审计与归并方案](validation/README.md#case-consolidation)。
+
+<a id="evas-results"></a>
+
+### 结果与诊断：执行证据在哪里
+
+[分项证据索引](../experiments/backends/support/README.md)汇总EVAS已整理的执行证据，
+[实验索引](../experiments/README.md)定位后端、性能等专题工具与结果。两者保存证据，支持结论仍回到比较表。
+
+开发候选的每轮诊断保存在其任务工作区的 `runs/<批次>/`。从对应Issue、PR或本地固定任务记录定位该目录后，
+依次查看：完整执行收据、逐测试方法的结果或失败清单、根因分析、定向修复复验。
+收据必须能查到源码与实际内核、用例和判据、结果分母及原始材料位置。
+旧根因分类继续绑定原快照，新版本的结果另存，不能把不同轮次拼成一次通过。
+
+运行失败清单与[诊断来源登记](docs/development/diagnostic-sources.md)分开：
+前者记录实际执行失败，后者登记代码可能产生哪些错误。错误码、拒绝、超差和环境失败也需分别核对。
+
+本页集中维护这些入口；各专题只更新自己负责的合同、工具或证据，不再维护另一份EVAS总体目录与进度。
+
+## EVAS的目标与范围
 
 EVAS 面向 Verilog-A 行为模型的开发与验证。首要目标是提供开源、可审查的电压域仿真环境，
 让使用者不依赖商业仿真器也能运行和验证目标模型，为 benchmark 提供开源复现路径。
@@ -31,6 +78,11 @@ EVAS 的价值需要由电压域工程行为证明：在正确时刻采样，保
 后续优先完善采样保持、迟滞比较器、定时与复位、VCO、边沿与滤波这些模型的组合验收。
 每类都检查初始化、事件前后读值、历史延续、多个实例和误差控制，再扩展反馈及更复杂组合。
 支持结论仍只维护在总表中。晶体管、电流与电荷方程不属于当前范围；性能优化排在行为与精度之后。
+
+<a id="verification-checkpoints"></a>
+
+<details>
+<summary>展开版本检查点与验证记录</summary>
 
 最近一次正式验收（同源400收据、完整CI与安装）的检查点为 **EVAS 0.24.1 / IR32**，生产源码 `0a8dc512`、身份测试修正 `159c0512`，本地release核 `3551db2dcdc6`。当时同源原始400为318通过、19失败、63拒绝；材料r3修订轨为321通过、15失败、64拒绝，剩79项。两轨仅新增019，旧317／320个通过全部保留。旧317份原响应仅engine版本标识变化，去掉该字段后完整JSON相同；19份旧失败checker字典不变。修订轨由当次396份原执行和4份新修订执行组成，未用此前部分运行补行。202份运行及构建输入与481份冻结打包源码分别计数，见[混合冷目标收据](../experiments/backends/support/low-cost-closure/mixed-cold-transition.json)。400全部PASS目标未完成。该检查点和下面两段2026-10-21候选的源码已随PR208于2026-10-21合入main（`deb5cf28`），版本仍为0.24.1、IR仍为32；未发布公共索引或tag。
 
@@ -81,6 +133,8 @@ IR28新增事件体 typed 二元Subtract与运行期Remainder除数；IR27的Add
 范围与失败规则见[事件循环](docs/reference/frontend-admission.md#runtime-event-loops)和[事件数学](docs/math/events.md#event-math)；版本升级不代表支持表新增通过。
 
 <a id="model-handoff"></a>
+
+</details>
 
 ## 与电路仿真配合
 
