@@ -164,3 +164,69 @@ impl Cascade {
             .copied()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Cascade;
+    use crate::interval::Interval as I;
+
+    fn cascade(points: &[(f64, f64)], rates: [(f64, f64); 2]) -> Cascade {
+        let bounds = points.iter().map(|(_, value)| I::point(*value)).collect();
+        Cascade::new(points.to_vec(), bounds, rates).unwrap()
+    }
+
+    #[test]
+    fn unit_ramp_outer_quarter_time_queries_do_not_change_history() {
+        let history = cascade(&[(0., 0.), (4., 4.)], [(0.5, -0.5), (0.25, -0.25)]);
+        for time in [0., 1., 2., 4.] {
+            assert_eq!(history.value(time).unwrap(), time / 4.);
+        }
+        let breakpoint = history.next_breakpoint(0.);
+        let bounds = history.value_bounds(2.).unwrap();
+        assert_eq!(breakpoint, Some(4.));
+        assert_eq!(bounds, I::point(0.5));
+        let candidate = history.clone();
+        assert_eq!(candidate.value(4.).unwrap(), 1.);
+        assert_eq!(candidate.value_bounds(2.).unwrap(), bounds);
+        assert_eq!(candidate.next_breakpoint(0.), breakpoint);
+        drop(candidate);
+        assert_eq!(history.value(2.).unwrap(), 0.5);
+        assert_eq!(history.value_bounds(2.).unwrap(), bounds);
+        assert_eq!(history.next_breakpoint(0.), breakpoint);
+
+        let wider = cascade(&[(0., 0.), (4., 4.)], [(0.5, -0.5), (0.5, -0.5)]);
+        assert_eq!(wider.value(4.).unwrap(), 2.);
+        assert_eq!(history.value(4.).unwrap(), 1.);
+        assert_eq!(history.next_breakpoint(0.), breakpoint);
+    }
+
+    #[test]
+    fn outer_chase_keeps_its_corner_and_breakpoint_query_is_stable() {
+        let history = cascade(
+            &[(0., 0.), (2., 4.), (4., -4.), (24., -4.)],
+            [(0.5, -0.5), (0.25, -0.25)],
+        );
+        assert_eq!(history.value(0.).unwrap(), 0.);
+        assert_eq!(history.value(2.).unwrap(), 0.5);
+        assert_eq!(history.value(3.).unwrap(), 0.75);
+        // Negative control: outer slope flips at the inner corner 8/3.
+        assert!((history.value(3.).unwrap() - 7. / 12.).abs() > 1e-10);
+        assert!((history.value(4.).unwrap() - 7. / 9.).abs() < 1e-12);
+        let turn = history.next_breakpoint(3.).unwrap();
+        assert!(turn > 3. && turn < 4.);
+        let bounds = history.value_bounds(3.).unwrap();
+        assert!(bounds.lo <= 0.75 && bounds.hi >= 0.75);
+        let candidate = history.clone();
+        assert_eq!(candidate.next_breakpoint(3.), Some(turn));
+        assert_eq!(candidate.value_bounds(3.).unwrap(), bounds);
+        drop(candidate);
+        assert_eq!(history.next_breakpoint(3.), Some(turn));
+        assert_eq!(history.value(3.).unwrap(), 0.75);
+        assert_eq!(history.value_bounds(3.).unwrap(), bounds);
+
+        let ramp = cascade(&[(0., 0.), (4., 4.)], [(0.5, -0.5), (0.25, -0.25)]);
+        assert_eq!(ramp.value(2.).unwrap(), 0.5);
+        assert_eq!(history.next_breakpoint(3.), Some(turn));
+        assert_eq!(history.value(3.).unwrap(), 0.75);
+    }
+}

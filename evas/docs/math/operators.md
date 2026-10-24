@@ -1421,9 +1421,10 @@ E 过宽时仍拒绝，不把代表值直接当作无误差状态。
 
 实现位于 [slew_cascade.rs](../../rust_core/src/slew_cascade.rs)，
 准入及电压误差传递位于 [operators.rs](../../rust_core/src/operators.rs)。
-[独立回归](../../tests/test_slew_cascade.py)检查两层公式、反向邻点、非零初态、实例顺序、
-时间尺度、查询密度和误差放大；同 Controller 的失败重试由
-[transient.rs](../../rust_core/src/transient.rs)检查。
+[独立回归](../../tests/test_slew_cascade.py)检查两层公式、`u=t` 的内层 `t/2` 与外层 `t/4`、
+反向拐点追赶负控、非零初态、实例顺序、调用点隔离、时间尺度、查询密度和误差放大。
+历史与断点的只读查询由 [slew_cascade.rs](../../rust_core/src/slew_cascade.rs) 检查；
+同 Controller 的失败重试由 [transient.rs](../../rust_core/src/transient.rs) 检查。
 [实际 Spectre 对照](../../../experiments/backends/slew-cascade/README.md)单列本批模型、设置和结果，
 不扩展历史表的分母，也不完成 #66 的 C4 滤波直接通路。
 
