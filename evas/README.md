@@ -7,6 +7,11 @@
 EVAS相关内容统一从本页进入。源码、模型和原始结果仍保留在各自目录，
 专题文档负责详细内容，本页负责汇总入口。网站展示也引用这些来源。
 
+当前源码为 **0.25.0 / IR33 开发基线**，完整组合验收尚未完成。
+逐次 binary64 舍入和同过程事件顺序采用[已定合同](docs/development/DECISIONS.md#adr-006)。
+已知失败与下一步见[统一功能缺口](docs/COMPARISON.md#engineering-status)和 [Issue #229](https://github.com/BucketSran/vaEVAS/issues/229)。
+下方旧版本检查点及能力目录中的 Q 成绩保留各自的来源版本，不代表本开发基线已通过相同验收。
+
 1. **实现与使用**：Python前端在 `evas/src/evas/`，Rust内核在 `evas/rust_core/`。从[构建与运行](#构建与运行)、[模块与接口](#模块与接口)查代码和用法。
 2. **原理与语义**：电压求解、事件、历史和误差如何处理。见[数学手册](docs/math/README.md)及[架构决定](docs/development/DECISIONS.md)。
 3. **模型、测试集与判据**：测什么、正确答案是什么、怎样判定。见下方[验证资料](#evas-validation)。
@@ -576,7 +581,7 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 
 ### IR 版本与迁移
 
-本地 0.25.0／IR33 候选的 Program 和成功 Response 使用 `schema_version=33`。前端与内核须在完整候选中同步，不能混用当前仍在开发的快照。该版本号不表示已经完成验收；已审 main 和最近正式验收仍为0.24.1／IR32。
+当前 0.25.0／IR33 开发基线的 Program 和成功 Response 使用 `schema_version=33`。前端与内核须配套，不能混用不同开发快照。该版本号不表示已经完成验收；最近正式验收的历史检查点仍为0.24.1／IR32。
 旧版本或未知整数版本先于载荷解码返回 `unsupported_ir_version`；版本缺失/错误类型及当前格式错误返回
 `invalid_request`。Rust 库构造入口也检查版本。迁移到 IR33 时，旧 IR 1–32 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
 前端与内核须配套使用。IR24 的源误差项兼容原数值形式，另接受严格的物理曲线对象；

@@ -193,7 +193,7 @@ C1–C5 的数学接口分别在[连续状态接口](../math/continuous.md#exten
 
 ## ADR-006：程序 real 逐次舍入，同一 analog 过程按源码执行
 
-状态：用户于 2026-10-24 确认采用，IR33 本地实现中。决定见
+状态：用户于 2026-10-24 确认采用；0.25.0 / IR33 按此合同开发，消费者迁移与组合验收仍未完成。决定见
 [#231](https://github.com/BucketSran/vaEVAS/issues/231) 与
 [#229](https://github.com/BucketSran/vaEVAS/issues/229)。决定成立不表示实现或验证已完成。
 
