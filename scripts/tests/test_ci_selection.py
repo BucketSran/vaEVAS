@@ -63,6 +63,23 @@ class RoutingTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertEqual(ci.classify([path]), ci.flags(*expected))
 
+    def test_capability_catalog_stays_on_maintenance(self):
+        maintenance = ci.flags("maintenance")
+        for path in (
+            "evas/capabilities/catalog.py",
+            "evas/capabilities/render.py",
+            "evas/capabilities/registry.json",
+            "evas/capabilities/generated/paper.md",
+            "evas/capabilities/timer/README.md",
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(ci.classify([path]), maintenance)
+        mixed = ci.classify([
+            "evas/capabilities/catalog.py",
+            "evas/rust_core/compiler/src/lib.rs",
+        ])
+        self.assertEqual(mixed, ci.flags(*ci.CHECKS[:-1]))
+
     def test_production_and_build_changes_keep_all_evas_checks(self):
         for path in ('evas/src/evas/compiler.py', 'evas/rust_core/Cargo.lock',
                      'evas/rust_core/build.rs', 'evas/rust_core/.cargo/config.toml',

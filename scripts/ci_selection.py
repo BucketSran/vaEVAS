@@ -159,6 +159,11 @@ def classify(paths):
         # Sources and contract docs also feed generated benchmark views.
         if path.startswith(BENCHMARK_PREFIXES) or path in BENCHMARK_FILES:
             selected.add('benchmark')
+        elif path.startswith('evas/capabilities/'):
+            # The catalog records capability results. It does not change the
+            # solver, fixtures, package, or differential checks. The registry
+            # test runs in the maintenance step.
+            selected.add('maintenance')
         elif suffix in ('.md', '.rst'):
             if path in ('evas/docs/COMPARISON.md', 'evas/docs/COMPARISON-METHODOLOGY.md'):
                 selected.add('provenance')

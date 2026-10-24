@@ -17,7 +17,7 @@ def cases(suite):
             yield item
 
 
-def partition(suite, modules, count, weights):
+def partition(suite, modules, count, weights, reserved=()):
     groups = {}
     for test in cases(suite):
         name = test.__class__.__module__
@@ -29,7 +29,10 @@ def partition(suite, modules, count, weights):
         if missing:
             raise ValueError('requested test modules missing: ' + ', '.join(sorted(missing)))
         groups = {name: groups[name] for name in sorted(set(modules))}
-    shards, loads = [[] for _ in range(count)], [0.] * count
+    if len(reserved) > count or any(item < 0 for item in reserved):
+        raise ValueError('shard reservations must be non-negative and no longer than the shard count')
+    shards = [[] for _ in range(count)]
+    loads = [float(reserved[index]) if index < len(reserved) else 0.0 for index in range(count)]
     for name in sorted(groups, key=lambda n: (-weights.get(n, len(groups[n])), n)):
         index = min(range(count), key=lambda i: (loads[i], i))
         shards[index].extend(groups[name])
@@ -170,10 +173,15 @@ def main(argv=None):
         parser.error('invalid shard index/count')
     suite = unittest.defaultTestLoader.discover(args.start_directory, pattern=args.pattern)
     try:
-        weights = json.loads(args.weights.read_text())['module_seconds'] if args.weights else {}
+        payload = json.loads(args.weights.read_text()) if args.weights else {}
+        weights = payload.get('module_seconds', {})
+        reserved = payload.get('shard_reserved_seconds', [])
         if any(not isinstance(v, (int, float)) or not 0 < v < 86400 for v in weights.values()):
             raise ValueError('invalid module duration')
-        shards = partition(suite, args.modules, args.shard_count, weights)
+        if (not isinstance(reserved, list) or any(
+                not isinstance(item, (int, float)) or item < 0 or item >= 86400 for item in reserved)):
+            raise ValueError('invalid shard reservation')
+        shards = partition(suite, args.modules, args.shard_count, weights, reserved)
     except (ValueError, KeyError, OSError, TypeError) as error:
         parser.error(str(error))
     assignment = [[test.id() for test in shard] for shard in shards]

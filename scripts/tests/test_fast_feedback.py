@@ -131,6 +131,55 @@ class Sharding(unittest.TestCase):
             self.assertEqual(len(manifests[0] | manifests[1]), 5)
             self.assertEqual(sorted(statuses), [0, 1])
 
+    def test_reservation_moves_the_heavy_module_off_shard_zero(self):
+        regression = load("run_regression")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "test_heavy.py").write_text(
+                "import unittest\nclass C(unittest.TestCase):\n def test_a(self): pass\n"
+            )
+            (root / "test_light.py").write_text(
+                "import unittest\nclass C(unittest.TestCase):\n def test_a(self): pass\n"
+            )
+            weights = {
+                "module_seconds": {"test_heavy": 100, "test_light": 1},
+                "shard_reserved_seconds": [50, 0],
+            }
+            (root / "weights.json").write_text(json.dumps(weights))
+            reports = []
+            for index in range(2):
+                report = root / f"report-{index}.json"
+                subprocess.run(
+                    [
+                        sys.executable, "-B", str(ROOT / "scripts/run_regression.py"),
+                        "--start-directory", str(root),
+                        "--shard-count", "2", "--shard-index", str(index),
+                        "--weights", str(root / "weights.json"),
+                        "--report", str(report),
+                    ],
+                    check=True, capture_output=True, text=True, timeout=20,
+                )
+                reports.append(json.loads(report.read_text()))
+            self.assertEqual(reports[0]["selected_test_ids"], ["test_light.C.test_a"])
+            self.assertEqual(reports[1]["selected_test_ids"], ["test_heavy.C.test_a"])
+            self.assertTrue(reports[0]["successful"] and reports[1]["successful"])
+            weights["shard_reserved_seconds"] = [1000, 0]
+            (root / "weights.json").write_text(json.dumps(weights))
+            empty = root / "empty.json"
+            subprocess.run(
+                [
+                    sys.executable, "-B", str(ROOT / "scripts/run_regression.py"),
+                    "--start-directory", str(root),
+                    "--shard-count", "2", "--shard-index", "0",
+                    "--weights", str(root / "weights.json"),
+                    "--report", str(empty),
+                ],
+                check=True, capture_output=True, text=True, timeout=20,
+            )
+            self.assertEqual(json.loads(empty.read_text())["selected_test_ids"], [])
+            with self.assertRaises(ValueError):
+                regression.partition(unittest.TestSuite(), [], 2, {}, reserved=(-1, 0))
+
     def test_unknown_module_cannot_turn_a_typo_into_success(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
