@@ -4,6 +4,7 @@ The VA and the request recipe stay the working source. The program inside
 the JSON is a derived frontend snapshot. The check compares them and does
 not write.
 """
+GUARDS = ["LANG", "DEV:fixture-freshness"]
 import hashlib
 import json
 import subprocess

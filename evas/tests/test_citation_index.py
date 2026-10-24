@@ -1,4 +1,5 @@
 """Cited contracts exist, and no edge authorizes execution reuse."""
+GUARDS = ["QUALIFICATION", "DEV:citation-index"]
 import importlib.util
 import unittest
 from pathlib import Path

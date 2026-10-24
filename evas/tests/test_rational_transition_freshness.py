@@ -1,4 +1,5 @@
 """Frozen IR31 rational-transition snapshots stay byte-stable."""
+GUARDS = ["TRANSITION", "DEV:fixture-freshness"]
 import hashlib
 import json
 import subprocess

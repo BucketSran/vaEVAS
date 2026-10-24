@@ -3,6 +3,7 @@
 The committed JSON is a derived snapshot. Knots and query windows are the
 source. Expected range bits are not an answer source.
 """
+GUARDS = ["TIMED-OPERATOR", "DEV:fixture-freshness"]
 import hashlib
 import importlib.util
 import json

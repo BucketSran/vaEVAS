@@ -1,4 +1,5 @@
 """History-consumer public and private obligations stay distinct."""
+GUARDS = ["COMPOSE", "DEV:fixture-freshness"]
 import hashlib
 import json
 import subprocess
