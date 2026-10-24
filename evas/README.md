@@ -478,6 +478,8 @@ tests 通过的数目不折算为验证条件数；分组与运行方式见
 ## IR 与贡献契约
 
 本地 0.25.0 候选正在集成 IR33（`schema_version` 为33，见[IR 版本与迁移](#ir-v8-migration)）。IR33 保留程序 real 运算、绑定与过程顺序，合同见[ADR-006](docs/development/DECISIONS.md#adr-006)。运行时和完整交付验证尚未完成，最近正式验收仍为本页开头的0.24.1／IR32。模型步长请求 `step_bounds`、连续纯数学函数及原动态契约继续保留。
+本地的[历史输入适配](docs/math/operators.md#ir33-源码位置的历史输入候选)保留 Plan 的调用点输入图，
+并为受限来源 RN 积分保存独立误差界；一般反馈、源误差管及不可隔离近根仍明确拒绝。
 IR23 新增 loop、array_read/array_write 和 checked_integer/checked_index；[执行合同](docs/reference/frontend-admission.md#runtime-event-loops)限定其范围。IR22 引入的 `event_math` 继续保留。每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
 `power` 含 `base` 和整数 `exponent`；半次幂编译为 `sqrt` 调用点。

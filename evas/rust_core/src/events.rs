@@ -2219,11 +2219,33 @@ impl EventModel {
         self.conditions
             .select_with_proofs(&[], inputs, &[], state_bounds, Some(&context))
     }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn circuit_at_procedure_observation(
+        &self,
+        states: &[f64],
+        state_bounds: &[I],
+        operators: &[f64],
+        operator_bounds: &[I],
+        inputs: &[I],
+        trajectory: &crate::pwl::Trajectory,
+        time: f64,
+    ) -> Result<Circuit, Error> {
+        if self.program.procedures.is_empty() {
+            return self.circuit_at(states, operators, inputs);
+        }
+        self.procedure_circuit_at(
+            states,
+            operators,
+            inputs,
+            Some((trajectory, time, state_bounds, operator_bounds)),
+        )
+    }
     fn procedure_circuit_at(
         &self,
         states: &[f64],
         operators: &[f64],
         inputs: &[I],
+        observation: Option<(&crate::pwl::Trajectory, f64, &[I], &[I])>,
     ) -> Result<Circuit, Error> {
         let work = crate::real_expression::work(self);
         work.debit(
@@ -2231,13 +2253,16 @@ impl EventModel {
             ((self.program.nodes.len() + states.len()) * 24 + 64) as u64,
         )?;
         let proofs = crate::event_value_proof::Proofs::new();
-        let context = crate::event_value_proof::Context::candidate_frame(
+        let mut context = crate::event_value_proof::Context::candidate_frame(
             &proofs,
             self.program.nodes.len(),
             states,
             operators,
             work,
         )?;
+        if let Some((_, _, _, bounds)) = observation {
+            context = context.try_with_operators(bounds)?;
+        }
         let mut nodes = vec![
             I {
                 lo: f64::NEG_INFINITY,
@@ -2251,23 +2276,58 @@ impl EventModel {
                 nodes[i] = bound;
             }
         }
-        let before = states.iter().copied().map(I::point).collect::<Vec<_>>();
-        let plan =
-            crate::procedure::execute(&self.program, &[], &nodes, &before, Some(&context), work)?;
-        work.debit(
-            2,
-            (std::mem::size_of_val(&plan) + 2 * std::mem::size_of::<usize>()) as u64,
-        )?;
-        let plan = std::sync::Arc::new(plan);
-        plan.circuit(
-            &self.program,
-            &self.driven,
-            states,
-            operators,
-            self.tolerances.clone(),
-            work,
-        )
+        let before = observation.map_or_else(
+            || states.iter().copied().map(I::point).collect::<Vec<_>>(),
+            |(_, _, bounds, _)| bounds.to_vec(),
+        );
+        let build = |context: &crate::event_value_proof::Context<'_>| {
+            let plan = crate::procedure::execute(
+                &self.program,
+                &[],
+                &nodes,
+                &before,
+                Some(context),
+                work,
+            )?;
+            work.debit(
+                2,
+                (std::mem::size_of_val(&plan) + 2 * std::mem::size_of::<usize>()) as u64,
+            )?;
+            std::sync::Arc::new(plan).circuit(
+                &self.program,
+                &self.driven,
+                states,
+                operators,
+                self.tolerances.clone(),
+                work,
+            )
+        };
+        match build(&context) {
+            Ok(circuit) => Ok(circuit),
+            Err(error) if error.kind == "event_condition" && observation.is_some() => {
+                // A complete interval proof suffices for most observations.
+                // Only an undecidable predicate or sampled value needs exact
+                // source membership at b. Neither pure candidate publishes
+                // state; both attempts spend the original, sticky Work owner.
+                let (trajectory, time, _, bounds) = observation.unwrap();
+                let root = crate::exact_source::RootTime::point(time).ok_or_else(|| {
+                    Error::new("invalid_ir", "invalid procedure observation time")
+                })?;
+                context = crate::event_value_proof::Context::try_new(
+                    self,
+                    trajectory,
+                    inputs,
+                    &proofs,
+                    Some(&root),
+                )?
+                .try_with_operators(bounds)?;
+                context.set_candidate_frame(states, operators, &[], false)?;
+                build(&context)
+            }
+            Err(error) => Err(error),
+        }
     }
+
     pub(crate) fn circuit_at(
         &self,
         states: &[f64],
@@ -2298,7 +2358,7 @@ impl EventModel {
         scratch: Option<&mut Option<crate::assembly::AssemblyPlan>>,
     ) -> Result<Circuit, Error> {
         if !self.program.procedures.is_empty() {
-            return self.procedure_circuit_at(states, operators, inputs);
+            return self.procedure_circuit_at(states, operators, inputs, None);
         }
         let program = if let Some(lineage) = lineage {
             self.bound_circuit_program_at_with_lineage(states, operators, inputs, Some(lineage))?
@@ -2341,7 +2401,7 @@ impl EventModel {
         proof: &crate::dc_projection::HeldRampObservationProof<'_>,
     ) -> Result<Circuit, Error> {
         if !self.program.procedures.is_empty() {
-            return self.procedure_circuit_at(states, operators, inputs);
+            return self.procedure_circuit_at(states, operators, inputs, None);
         }
         let program = self.bound_circuit_program_at_with_observation_proof(
             states,

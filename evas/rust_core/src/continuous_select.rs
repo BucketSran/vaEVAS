@@ -482,6 +482,7 @@ pub(super) fn build(
             live_parameters: context.live_parameters.clone(),
             time_proofs: context.time_proofs.clone(),
             reset_captures: context.reset_captures.clone(),
+            source_history: context.source_history.clone(),
         });
         let mut branch =
             LinearContinuous::build(branch_context.clone(), parameters.clone(), begin, seed)?
@@ -558,6 +559,41 @@ pub(super) fn nonlinear_parts(
     start: f64,
     horizon: f64,
 ) -> Result<Vec<(I, Option<I>)>, Error> {
+    if let Some(source) = &context.source_history {
+        let w = source.borrow_work();
+        let cuts = crate::history_input::partition(source, parameters)?;
+        w.debit(2, (cuts.len() * 64 + 64) as u64)?;
+        let mut roots = Vec::new();
+        for cut in cuts {
+            let bound = cut.memo_bounds_with_work(w)?.ok_or_else(|| {
+                Error::new("condition_precision", "source mode cut has no enclosure")
+            })?;
+            if bound.hi > start && bound.lo < horizon {
+                roots.push(bound);
+            }
+        }
+        let mut points = vec![start, horizon];
+        for root in &roots {
+            points.extend(
+                [root.lo, root.hi]
+                    .into_iter()
+                    .filter(|t| *t > start && *t < horizon),
+            );
+        }
+        points.sort_by(f64::total_cmp);
+        points.dedup();
+        return Ok(points
+            .windows(2)
+            .map(|p| {
+                let span = I { lo: p[0], hi: p[1] };
+                let root = roots
+                    .iter()
+                    .find(|r| r.lo < r.hi && span.lo < r.hi && span.hi > r.lo)
+                    .copied();
+                (span, root)
+            })
+            .collect());
+    }
     let program = step_simplify::program(context, parameters)?;
     let mut roots = candidates::Roots::new();
     for (expr, owner) in expressions(&program) {
@@ -616,6 +652,46 @@ pub(super) fn freeze_context(
     parameters: &[I],
     time: f64,
 ) -> Result<Arc<Context>, Error> {
+    if let Some(source) = &context.source_history {
+        let w = source.borrow_work();
+        let root = crate::exact_source::RootTime::point(time)
+            .ok_or_else(|| Error::new("invalid_ir", "invalid history witness"))?;
+        let plan = crate::history_input::activate(source, parameters, &root)?;
+        let bytes = crate::event_floor::encoded_size(context.program.as_ref(), w)?;
+        w.debit(2, (bytes as u64).saturating_mul(8))?;
+        let mut frozen = context.program.as_ref().clone();
+        for (i, spec) in frozen.operators.iter_mut().enumerate() {
+            if let OperatorSpec::Idt { input, origin, .. }
+            | OperatorSpec::LaplaceNd { input, origin, .. } = spec
+            {
+                if crate::history_input::required_frame(input, w)? {
+                    let (original, _, _) = source.original_binding();
+                    let sources = crate::procedure::dependency_sources(original, w)?;
+                    let row = crate::procedure::source_dependencies(input, original, &sources, w)?;
+                    if !row.operator_dependencies.is_empty()
+                        || row
+                            .node_dependencies
+                            .iter()
+                            .any(|n| *n != 0 && !source.event_input_nodes().contains(n))
+                    {
+                        return Err(Error::new("unsupported_history_input",format!("RN continuous input requires driven sources and held parameters at {}",origin.label())));
+                    }
+                    *input = plan.input_expression(i, w)?;
+                }
+            }
+        }
+        return Ok(Arc::new(Context {
+            program: Arc::new(frozen),
+            trajectory: context.trajectory.clone(),
+            driven: context.driven.clone(),
+            force_integrals: true,
+            detached_timed: context.detached_timed,
+            live_parameters: context.live_parameters.clone(),
+            time_proofs: context.time_proofs.clone(),
+            reset_captures: context.reset_captures.clone(),
+            source_history: None,
+        }));
+    }
     let mut nodes = vec![I::ZERO; context.program.nodes.len()];
     for (name, v) in context
         .driven
@@ -713,6 +789,7 @@ pub(super) fn freeze_context(
         live_parameters: context.live_parameters.clone(),
         time_proofs: context.time_proofs.clone(),
         reset_captures: context.reset_captures.clone(),
+        source_history: context.source_history.clone(),
     }))
 }
 
@@ -749,6 +826,30 @@ pub(super) fn isolated_root_witnesses(
     let right = root.hi.next_up();
     if !root.finite() || root.lo >= root.hi || left < 0. || right > context.trajectory.config.stop {
         return Err(fail());
+    }
+    if let Some(source) = &context.source_history {
+        // A binary side witness can cross a second exact RN cut, including a
+        // cut outside this prediction horizon. Never infer a two-mode field
+        // unless the complete original partition isolates this root.
+        let work = source.borrow_work();
+        let cuts = crate::history_input::partition(source, parameters)?;
+        let mut found = false;
+        for cut in cuts {
+            let bound = cut.memo_bounds_with_work(work)?.ok_or_else(fail)?;
+            if bound.hi >= left && bound.lo <= right {
+                if bound != root {
+                    return Err(fail());
+                }
+                if found {
+                    return Err(fail());
+                }
+                found = true;
+            }
+        }
+        if !found {
+            return Err(fail());
+        }
+        return Ok([left, right]);
     }
     let program = step_simplify::program(context, parameters)?;
     let mut roots = candidates::Roots::new();

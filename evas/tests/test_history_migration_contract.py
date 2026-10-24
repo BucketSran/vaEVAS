@@ -5,7 +5,7 @@ from fractions import Fraction
 import math
 import unittest
 from history_migration_contract import (rn, input_at, selected_ln_x,
-    selected_ln_oracle, strict_equal, legacy_program, source_cases)
+    selected_ln_oracle, strict_equal, legacy_program, source_cases, map_stateless_controller_metadata, TIMES)
 
 
 class HistoryMigrationContract(unittest.TestCase):
@@ -28,6 +28,31 @@ class HistoryMigrationContract(unittest.TestCase):
         self.assertEqual(rn(Fraction(1,2**1075)),0.0)
         self.assertEqual(math.copysign(1,rn(-Fraction(1,2**1075))),-1)
         self.assertEqual(rn(Fraction(3,2**1075)),float.fromhex('0x0.0000000000002p-1022'))
+
+    def test_controller_migration_requires_actual_route_and_zero_corrections(self):
+        import copy
+        old = dict(observation_evidence=dict(effective_controls=dict(max_step_applied=False),
+            sample_origins=['stateless_working_point'] * len(TIMES)),
+            transient=dict(accepted_steps=0, discarded_trials=0))
+        new = copy.deepcopy(old)
+        new['observation_evidence']['effective_controls']['max_step_applied'] = True
+        new['observation_evidence']['sample_origins'] = ['accepted_controller_frame'] * len(TIMES)
+        new['transient']['accepted_steps'] = len(TIMES) - 1
+        new['solutions'] = [dict(max_scaled_residual_ratio=0.0, max_voltage_correction_v=0.0,
+                                 max_voltage_correction_ratio=0.0) for _ in TIMES]
+        for change in (lambda r:r['observation_evidence']['effective_controls'].update(max_step_applied=1),
+                       lambda r:r['observation_evidence'].update(sample_origins=['stateless_working_point'] * len(TIMES)),
+                       lambda r:r['transient'].update(accepted_steps=0),
+                       lambda r:r['transient'].update(discarded_trials=1),
+                       lambda r:r['solutions'][0].update(max_voltage_correction_v=1e-3)):
+            mutant = copy.deepcopy(new)
+            change(mutant)
+            with self.assertRaises(AssertionError):
+                map_stateless_controller_metadata(copy.deepcopy(old), mutant)
+        mapped = copy.deepcopy(new)
+        map_stateless_controller_metadata(copy.deepcopy(old), mapped)
+        mapped.pop('solutions')
+        strict_equal(old, mapped)
 
     def test_rational_rounding_matches_independent_python_transport(self):
         for index in range(1001):

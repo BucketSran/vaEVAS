@@ -79,6 +79,7 @@ pub(crate) fn prepare_with_scratch(
         None,
         None,
         Some(scratch),
+        None,
     )
 }
 
@@ -98,6 +99,7 @@ pub(crate) fn prepare_with_physical_proofs(
     lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
     physical: Option<&crate::dc_projection::HeldRampPhysicalContext<'_>>,
     scratch: Option<&mut Option<crate::assembly::AssemblyPlan>>,
+    observation: Option<(&crate::pwl::Trajectory, f64)>,
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
@@ -115,6 +117,7 @@ pub(crate) fn prepare_with_physical_proofs(
         lineage,
         physical,
         scratch,
+        observation,
     )
 }
 
@@ -175,6 +178,7 @@ pub(crate) fn prepare_window_with_scratch(
         None,
         None,
         Some(scratch),
+        None,
     )
 }
 
@@ -194,6 +198,7 @@ pub(crate) fn prepare_window_with_physical_proofs(
     lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
     physical: Option<&crate::dc_projection::HeldRampPhysicalContext<'_>>,
     scratch: Option<&mut Option<crate::assembly::AssemblyPlan>>,
+    observation: Option<(&crate::pwl::Trajectory, f64)>,
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
@@ -211,6 +216,7 @@ pub(crate) fn prepare_window_with_physical_proofs(
         lineage,
         physical,
         scratch,
+        observation,
     )
 }
 
@@ -232,6 +238,7 @@ fn prepare_impl(
     lineage: Option<&crate::transient::point_lineage::PointLineage<'_>>,
     physical: Option<&crate::dc_projection::HeldRampPhysicalContext<'_>>,
     scratch: Option<&mut Option<crate::assembly::AssemblyPlan>>,
+    observation: Option<(&crate::pwl::Trajectory, f64)>,
 ) -> Result<Prepared, Error> {
     crate::diagnostics::counter("settlement_scratch_calls", 1);
     let mut scratch = scratch;
@@ -466,7 +473,19 @@ fn prepare_impl(
     // discard a certified sample/branch. Each later query builds a fresh Plan.
     // Stateful/event/history paths still need their separate ordinary refresh.
     if selection.plan.is_some() && !same_clock_combinational {
-        let mut ordinary = model.circuit_at(&states, operators, observation_inputs)?;
+        let mut ordinary = if let Some((trajectory, time)) = observation {
+            model.circuit_at_procedure_observation(
+                &states,
+                &bounds,
+                operators,
+                operator_bounds,
+                observation_inputs,
+                trajectory,
+                time,
+            )?
+        } else {
+            model.circuit_at(&states, operators, observation_inputs)?
+        };
         ordinary.retain_procedure_occurrence(&circuit);
         circuit = ordinary;
     }
@@ -518,6 +537,7 @@ mod activation_selection_owner_tests {
                 &[],
                 None,
                 &context,
+                None,
                 None,
                 None,
                 None,

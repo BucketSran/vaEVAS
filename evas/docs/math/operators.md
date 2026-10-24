@@ -33,6 +33,27 @@ IR33 的局部过程不改变独立物理输入的滤波历史。当前候选仅
 [过程与直接滤波控制](../../rust_core/src/operator_procedure_direct_tests.rs)
 以及[公开滤波回归](../../tests/test_laplace.py)覆盖该有限组合。
 
+## IR33 源码位置的历史输入候选
+
+`a=q; y=transition(a,0,tr); a=9;` 的目标属于调用点处捕获的 `a`，
+后面的覆盖不能改写该历史。Plan 导出实际执行的输入图，保留每个 real 运算和存储的 RN 边界；
+`procedure_history.rs` 负责导出，`history_input.rs` 负责原始源域、保持历元及 guard 切点。
+依赖准入仍扫描原程序全部分支、控制依赖和零系数引用，当前选中图只用于数值执行。
+
+Transition 要求每个源分段内目标为可证明的 binary64 常量。单调仿射 RN guard 使用精确有理
+逆像和 ties-to-even 中点确定切点；每越过一个切点重新执行原过程，不能把一个已选图推广到未来。
+变化的物理 rail 可以作为 guard 的真实输入，因而无需把未来脉冲误证为全请求 DC。
+输入误差管、内部节点与历史反馈仍需要独立能力，本切片不予放行。
+
+候选复用原 Source 游标、目标队列与 Transition 边沿。复制、切点、图导出及重绑定向同一个
+请求 Work 预付，失败不退还额度，也不提交游标或目标。逐点 IEEE 运算在完成全域验证后
+复用现有 binary64 运算入口；区间和混合 signed-zero 仍检查所有角点，默认额度未提高。
+[公开输入捕获](../../tests/test_ir33_history_inputs.py)、
+[原079合同](../../tests/test_original079_contract.py)和
+[同控制器失败重试](../../rust_core/src/transient_procedure_history_tests.rs)覆盖本地候选；
+连续 RN 输入及近根拒绝见[连续动态说明](continuous.md#ir33-source-rn-history)。
+这些开发结果不替代原400、实际 Spectre 或发布验收。
+
 ## 公共执行方法
 
 下面固定当刻算子输出的推导适用于正边沿 transition 与直接输入的 absdelay/slew。

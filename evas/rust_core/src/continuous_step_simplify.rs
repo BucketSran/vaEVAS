@@ -194,6 +194,7 @@ mod tests {
             live_parameters: None,
             time_proofs: Default::default(),
             reset_captures: Arc::new(Vec::new()),
+            source_history: None,
         }
     }
     #[test]

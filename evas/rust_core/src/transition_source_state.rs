@@ -42,6 +42,33 @@ fn same_plan(left: &Arc<Plan>, right: &Arc<Plan>) -> bool {
 }
 
 impl Source {
+    #[cfg(test)]
+    pub(crate) fn test_snapshot(&self) -> serde_json::Value {
+        serde_json::json!({"cursor":format!("{:?}",self.cursor),"time":self.time,
+            "last_root":format!("{:?}",self.last_root),
+            "last_window":[self.last_window.lo,self.last_window.hi],
+            "target":self.target.value,"bounds":[self.target.bounds.lo,self.target.bounds.hi],
+            "proof":format!("{:?}",self.target.proof_for_copy()),
+            "cuts":format!("{:?}",self.plan.cuts()),"certified":self.certified.len()})
+    }
+
+    pub(crate) fn procedure_copy_work(
+        &self,
+    ) -> Result<Option<&crate::transition_source_plan::Work>, Error> {
+        let Some(w) = self.spec.procedure_work() else {
+            return Ok(None);
+        };
+        w.debit(
+            2,
+            (self.certified.len() * 32
+                + self.target.affine.owned_copy_items() * 16
+                + self.target.coefficients.len() * 32
+                + 256) as u64,
+        )?;
+        crate::history_admission::charge_expression_copy(self.target.proof_for_copy(), w)?;
+        Ok(Some(w))
+    }
+
     /// Construction receives the already settled initial held state. Preserve
     /// the point seed separately from the right-hand target installed at zero.
     pub(crate) fn initialized(

@@ -373,6 +373,9 @@ impl Trajectory {
         self.procedure_work = Some(work.clone());
         Ok(())
     }
+    pub(crate) fn has_source_uncertainty(&self) -> bool {
+        self.source_errors.iter().any(|e| *e != 0.)
+    }
     pub(crate) fn procedure_work(&self) -> Option<&crate::transition_source_plan::Work> {
         self.procedure_work.as_ref()
     }

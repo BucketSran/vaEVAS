@@ -371,5 +371,11 @@ LANG、EVENT-ORDER 与 COMPOSE 的开发边界。观察认证使用原 Plan 捕�
 及包围控制条件审计依赖，并重映射私有贡献编号。相邻 VA/IR fixture 与
 [捕获正反控](../../rust_core/src/events_certificate_cache_tests.rs)、
 [依赖与共享预算回归](../../rust_core/src/continuous_readout.rs)固定相应故障检测。
-这些局部修复没有完成一般 source-position Transition/连续 RN 输入的历史适配；
+后续[源码位置历史输入](../math/operators.md#ir33-源码位置的历史输入候选)补充
+TRANSITION、DYNAMICS、EVENT-ORDER 与 COMPOSE：捕获输入图、逐次 RN 来源积分、
+同调用点重绑定、近根隔离拒绝及候选回滚有[公开控制](../../tests/test_ir33_history_inputs.py)
+和[原生事务控制](../../rust_core/src/transient_procedure_history_tests.rs)。
+C8 迁移明确核对实际控制器元数据，并以细 max_step 请求证明步长控制生效；
+两类[迁移合同](../../tests/history_migration_contract.py)与开发全量分母分别保留。
+一般 RN 反馈、非零源误差管及不可隔离多切点窗口仍未支持；
 完整 IR33、原400与同源后端仍未验收，不改变上述发布版本的结果。

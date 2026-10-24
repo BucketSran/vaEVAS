@@ -185,6 +185,27 @@ def audit_native_program(name, old, new):
         assert any(n.get('kind') == 'procedure_if' and n['relation'] == 'lt' for n in walk(new))
 
 
+def map_stateless_controller_metadata(previous, current):
+    """Validate this route migration before mapping its exact metadata fields."""
+    old = previous['observation_evidence']
+    new = current['observation_evidence']
+    strict_equal(old['effective_controls']['max_step_applied'], False)
+    strict_equal(new['effective_controls']['max_step_applied'], True)
+    strict_equal(old['sample_origins'], ['stateless_working_point'] * len(TIMES))
+    strict_equal(new['sample_origins'], ['accepted_controller_frame'] * len(TIMES))
+    strict_equal(previous['transient']['accepted_steps'], 0)
+    strict_equal(current['transient']['accepted_steps'], len(TIMES) - 1)
+    strict_equal(previous['transient']['discarded_trials'], 0)
+    strict_equal(current['transient']['discarded_trials'], 0)
+    for solution in current['solutions']:
+        for field in ('max_scaled_residual_ratio', 'max_voltage_correction_v',
+                      'max_voltage_correction_ratio'):
+            strict_equal(solution.pop(field), 0.0)
+    new['effective_controls']['max_step_applied'] = False
+    new['sample_origins'] = old['sample_origins'][:]
+    current['transient']['accepted_steps'] = 0
+
+
 def compare_native_response(test, name, old, new, program, engine):
     """Only named semantic differences are mapped; every other field is strict."""
     previous = response_body(old, 28, 'evas-events-0.21.0')
@@ -220,6 +241,7 @@ def compare_native_response(test, name, old, new, program, engine):
             assert_voltage(test, new, 'y', lambda t: Fraction(3,4) if t <= .25 else Fraction(5,8))
     else:
         assert_voltage(test, new, 'y', selected_ln_oracle)
+        map_stateless_controller_metadata(previous, current)
         # Validate all unchanged physical inputs, metadata, controller records,
         # residuals and certificate fields. Only y's RN-dependent point and box
         # have a different contract, checked above with the original thresholds.
@@ -232,7 +254,7 @@ def compare_native_response(test, name, old, new, program, engine):
         strict_equal(previous, current)
 
 
-def run_case(kernel, program, case, evidence, *, expected_sha):
+def run_case(kernel, program, case, evidence, *, expected_sha, max_step=1):
     import os
     import subprocess
     kernel = Path(kernel).resolve()
@@ -240,7 +262,7 @@ def run_case(kernel, program, case, evidence, *, expected_sha):
     evidence = Path(evidence)
     evidence.mkdir(parents=True, exist_ok=False)
     request = dict(program=program, driven=case['driven'], samples=[], transient=dict(
-        pwl=case['pwl'], output_times=TIMES, stop=1, max_step=1))
+        pwl=case['pwl'], output_times=TIMES, stop=1, max_step=max_step))
     payload = json.dumps(request, indent=2) + '\n'
     (evidence / 'request.json').write_text(payload)
     (evidence / 'kernel-identity.json').write_text(json.dumps(dict(

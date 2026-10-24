@@ -238,6 +238,17 @@ class HistoryForcingRed(unittest.TestCase):
                     current, _ = run_case(KERNEL, program, case, evidence / case['name'] / 'candidate',
                         expected_sha=os.environ['EVAS_TEST_CANDIDATE_SHA256'])
                     compare_native_response(self, case['name'], before, current, program, engine)
+                    if case['name'] == 'selected-ln135':
+                        from history_migration_contract import assert_voltage, selected_ln_oracle, strict_equal
+                        fine, _ = run_case(KERNEL, program, case, evidence / case['name'] / 'candidate-small-step',
+                            expected_sha=os.environ['EVAS_TEST_CANDIDATE_SHA256'], max_step=1/32)
+                        assert_voltage(self, fine, 'y', selected_ln_oracle)
+                        self.assertIs(fine['observation_evidence']['effective_controls']['max_step_applied'], True)
+                        self.assertEqual(fine['transient']['accepted_steps'], 32)
+                        self.assertEqual(fine['observation_evidence']['effective_controls']['max_step_s'], 1/32)
+                        fine['transient']['accepted_steps'] = current['transient']['accepted_steps']
+                        fine['observation_evidence']['effective_controls']['max_step_s'] = 1.0
+                        strict_equal(current, fine)
         finally:
             self.history_reference_identity()
 

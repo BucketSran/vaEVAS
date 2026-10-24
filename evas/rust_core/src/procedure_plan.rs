@@ -29,6 +29,14 @@ fn arena<T>(result: Result<T, Fault<Error>>) -> Result<T, Error> {
         Fault::InvalidId => invalid("procedure value graph has an invalid dependency"),
     })
 }
+#[path = "procedure_history.rs"]
+mod history;
+#[derive(Clone)]
+pub(crate) struct Guard {
+    pub relation: ir::Relation,
+    pub left: Id,
+    pub right: Id,
+}
 #[derive(Clone)]
 pub(crate) struct OperatorView {
     pub input: Id,
@@ -45,6 +53,7 @@ pub(crate) struct Plan {
     pub contributions: Vec<Vec<Id>>,
     pub bounds: Vec<Vec<(Id, Id)>>,
     pub operators: Vec<Option<OperatorView>>,
+    pub guards: Vec<Guard>,
     pub actions: Vec<(usize, Vec<usize>)>,
     pub displays: Vec<(usize, String, Vec<Id>, ir::Origin)>,
     pub point_states: Vec<Option<f64>>,
@@ -89,6 +98,7 @@ struct Builder<'a> {
     actions: Vec<(usize, Vec<usize>)>,
     displays: Vec<(usize, String, Vec<Id>, ir::Origin)>,
     decisions: Vec<bool>,
+    guards: Vec<Guard>,
 }
 impl Builder<'_> {
     fn add(&mut self, operation: O, operands: Vec<Id>) -> Result<Id, Error> {
@@ -461,7 +471,12 @@ impl Builder<'_> {
             )?;
             return Err(Error::new("event_condition",format!("procedure condition is not certified over its complete source-position enclosure at {}",origin.label())));
         };
-        self.w.debit(2, 8)?;
+        self.w.debit(2, 64)?;
+        self.guards.push(Guard {
+            relation,
+            left,
+            right,
+        });
         self.decisions.push(value);
         Ok(value)
     }
@@ -1277,6 +1292,7 @@ pub(crate) fn execute(
         actions: Vec::new(),
         displays: Vec::new(),
         decisions: Vec::new(),
+        guards: Vec::new(),
     };
     for state in 0..p.states.len() {
         let id = builder.add(O::State(state), Vec::new())?;
@@ -1362,6 +1378,7 @@ pub(crate) fn execute(
         contributions: builder.contributions,
         bounds: builder.bounds,
         operators: builder.operators,
+        guards: builder.guards,
         actions: builder.actions,
         displays: builder.displays,
         point_states: state_points,
@@ -1734,6 +1751,18 @@ impl Plan {
         w: &Work,
     ) -> Result<(Vec<I>, Vec<I>), Error> {
         w.debit(2, 0)?;
+        w.debit(2, (states.len() + voltages.len() + 1) as u64)?;
+        if states.len() != p.states.len()
+            || voltages.len() != p.nodes.len()
+            || states
+                .iter()
+                .chain(voltages)
+                .any(|value| !value.is_finite())
+        {
+            return Err(invalid(
+                "procedure observation has invalid state or voltage representatives",
+            ));
+        }
         if let Some(cell) = self.cell.get() {
             if cell.matches(input_bounds, before_bounds, Some(voltages), w)? {
                 w.debit(2, (states.len() * 16 + 32) as u64)?;

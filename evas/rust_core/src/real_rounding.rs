@@ -214,6 +214,12 @@ pub(crate) fn image<E>(
 }
 
 fn from_binary<E>(value: f64, debit: &mut impl FnMut(u64) -> Result<(), E>) -> Result<R, Fault<E>> {
+    // Zero has a one-bit reduced ratio, independently of its IEEE sign bit.
+    // It must not reserve a 1075-bit subnormal conversion it never performs.
+    if value == 0. {
+        pay(debit, 64)?;
+        return Ok(R::zero());
+    }
     let exponent = ((value.to_bits() >> 52) & 2047) as i32;
     let bits = if exponent == 0 {
         1075
@@ -280,6 +286,24 @@ pub(crate) fn binary_image<E>(
             Fault::DivisionAcrossZero
         });
     }
+    if let Some((a, b)) = left.singleton().zip(right.singleton()) {
+        // Each operand is one already-rounded IEEE value. Reuse the same
+        // single native operation as point(); no reassociation or FMA occurs.
+        // Intervals and mixed signed-zero domains still use all four corners.
+        pay(debit, 32)?;
+        let value = point(op, a, b).map_err(|error| match error {
+            Fault::NonFinite => Fault::NonFinite,
+            Fault::DivisionByZero => Fault::DivisionByZero,
+            Fault::DivisionAcrossZero => Fault::DivisionAcrossZero,
+            Fault::Overflow => Fault::Overflow,
+            Fault::InvalidBounds => Fault::InvalidBounds,
+            Fault::Quota(never) => match never {},
+        })?;
+        return Ok(Image {
+            lo: value,
+            hi: value,
+        });
+    }
     let mut result: Option<Image> = None;
     for a in [left.lo, left.hi] {
         for b in [right.lo, right.hi] {
@@ -313,6 +337,47 @@ mod tests {
 
     fn unlimited(_: u64) -> Result<(), Infallible> {
         Ok(())
+    }
+
+    #[test]
+    fn singleton_ieee_image_uses_original_small_budget_and_preserves_bits() {
+        use crate::transition_source_plan::Work;
+        for (op, a, b, bits) in [
+            (
+                Op::Add,
+                9007199254740992.,
+                1.,
+                9007199254740992_f64.to_bits(),
+            ),
+            (Op::Divide, 3., 10., 0x3fd3333333333333),
+            (Op::Multiply, f64::from_bits(1), 0.5, 0),
+            (Op::Multiply, -f64::from_bits(1), 0.5, (-0_f64).to_bits()),
+            (Op::Subtract, -0., 0., (-0_f64).to_bits()),
+        ] {
+            let work = Work::limited([128, 8192, 64]);
+            let result = binary_image(
+                op,
+                Image { lo: a, hi: a },
+                Image { lo: b, hi: b },
+                &mut |n| work.debit(2, n),
+            )
+            .unwrap();
+            assert_eq!(result.singleton().unwrap().to_bits(), bits);
+            assert!(work.spent() <= 64);
+        }
+        let work = Work::limited([128, 8192, 47]);
+        let retry = work.clone();
+        for _ in 0..2 {
+            let before = work.spent();
+            let result = binary_image(
+                Op::Add,
+                Image { lo: 1., hi: 1. },
+                Image { lo: 2., hi: 2. },
+                &mut |n| retry.debit(2, n),
+            );
+            assert!(matches!(result,Err(Fault::Quota(e)) if e.kind=="step_budget"));
+            assert!(work.spent() > before);
+        }
     }
 
     #[test]

@@ -195,7 +195,14 @@ impl Continuous {
             }
         }
         let prepared = Context::new(program, trajectory, driven)?;
+        if prepared.source_history.is_some() {
+            return nonlinear::NonlinearContinuous::new_with_tolerances(
+                program, trajectory, driven, states, horizon, tolerances,
+            )
+            .map(|v| Some(Self::Nonlinear(Box::new(v))));
+        }
         let program = &prepared.program;
+
         if selection::needed(program) {
             let parameters: Vec<_> = states.iter().copied().map(I::point).collect();
             let context = Arc::new(Context {
@@ -207,6 +214,7 @@ impl Continuous {
                 live_parameters: prepared.live_parameters.clone(),
                 time_proofs: prepared.time_proofs.clone(),
                 reset_captures: prepared.reset_captures.clone(),
+                source_history: prepared.source_history.clone(),
             });
             let frozen = selection::freeze_context(&context, &parameters, 0.)?;
             if program.operators.iter().any(|op|matches!(op,OperatorSpec::Idt{input,..}|OperatorSpec::LaplaceNd{input,..} if selection::has_variable_division(input)||nonlinear::contains_exp_operator(input,program))) || frozen.program.operators.iter().any(|op|matches!(op,OperatorSpec::Idt{input,..}|OperatorSpec::LaplaceNd{input,..} if affine_bounds::affine(input,&frozen.program).is_err())) {

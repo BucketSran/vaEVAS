@@ -84,7 +84,9 @@ pub(crate) fn integral_dependency_edges(
     owner: &str,
 ) -> Result<DependencySets, Error> {
     match expr {
-        Expression::Add { left, right }
+        Expression::RealBoundary { value, .. } => integral_dependency_edges(value, program, owner),
+        Expression::RealBinary { left, right, .. }
+        | Expression::Add { left, right }
         | Expression::Multiply { left, right }
         | Expression::Divide { left, right } => {
             let (mut n, mut s, mut o) = integral_dependency_edges(left, program, owner)?;
@@ -184,6 +186,7 @@ struct Context {
     live_parameters: Option<Arc<BTreeSet<usize>>>,
     time_proofs: crate::exact_source::TimeProofs,
     reset_captures: Arc<Vec<Option<I>>>,
+    source_history: Option<Arc<crate::transition_source_plan::ProofContext>>,
 }
 
 impl Context {
@@ -195,7 +198,32 @@ impl Context {
             .map(|program| readout::live_parameters(program, work))
             .transpose()?
             .map(Arc::new);
+        let mut needs_source = false;
+        if let Some(w) = work {
+            for spec in &program.operators {
+                if let OperatorSpec::Idt { input, .. } | OperatorSpec::LaplaceNd { input, .. } =
+                    spec
+                {
+                    needs_source |= crate::history_input::required_frame(input, w)?;
+                }
+            }
+        }
+        let source_history = if needs_source {
+            let w = work
+                .ok_or_else(|| Error::new("invalid_ir", "source history lost execution owner"))?;
+            let bytes = crate::event_floor::encoded_size(program, w)?;
+            w.debit(2, (bytes as u64).saturating_mul(8))?;
+            Some(crate::transition_source_plan::ProofContext::new(
+                program,
+                trajectory,
+                driven,
+                w.clone(),
+            )?)
+        } else {
+            None
+        };
         Ok(Self {
+            source_history,
             time_proofs: Default::default(),
             reset_captures: Arc::new(Vec::new()),
             detached_timed: projected.is_some(),
@@ -237,6 +265,7 @@ fn local_context(context: &Arc<Context>, horizon: f64) -> Arc<Context> {
         live_parameters: context.live_parameters.clone(),
         time_proofs: context.time_proofs.clone(),
         reset_captures: context.reset_captures.clone(),
+        source_history: context.source_history.clone(),
     })
 }
 

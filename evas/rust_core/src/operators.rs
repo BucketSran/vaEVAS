@@ -1806,6 +1806,31 @@ impl Operators {
             })
     }
     pub(crate) fn candidate_clone(&self) -> Result<Self, Error> {
+        for entry in &self.entries {
+            if let Runtime::Transition {
+                expression,
+                input,
+                input_bounds,
+                owner,
+                history,
+                source: Some(source),
+                ..
+            } = entry
+            {
+                if let Some(w) = source.procedure_copy_work()? {
+                    crate::history_admission::charge_expression_copy(expression, w)?;
+                    w.debit(
+                        2,
+                        (input.owned_copy_items() * 16
+                            + input_bounds.len() * 32
+                            + owner.len()
+                            + 128) as u64,
+                    )?;
+                    history.charge_held_copy(&|n| w.debit(2, n as u64))?;
+                }
+            }
+        }
+
         // Composed Forcing pays its Runtime AST through charge_forcing_copy,
         // including the native Spec branch. This ordinary history copier only
         // covers the original Admission and the analytic empty-operator role.
@@ -2684,6 +2709,9 @@ impl Operators {
         let initial_bounds = physical_bounds.as_deref();
 
         let mut identities = BTreeSet::new();
+        let procedure_work = trajectory
+            .procedure_work()
+            .or_else(|| shared.as_ref().map(|context| context.borrow_work()));
         for (spec_index, spec) in program.operators.iter().enumerate() {
             let origin = spec.origin();
             if origin.instance.is_empty()
@@ -2811,6 +2839,23 @@ impl Operators {
                     ));
                 }
             }
+            if matches!(
+                spec,
+                OperatorSpec::Transition { .. } | OperatorSpec::Idt { .. }
+            ) && !program.procedures.is_empty()
+            {
+                if let Some(work) = procedure_work {
+                    if crate::history_input::required_frame(input, work)? {
+                        crate::continuous::source_dependency_edges(
+                            input,
+                            program,
+                            &origin.instance,
+                            Some(work),
+                        )?;
+                        continue;
+                    }
+                }
+            }
             // Validate raw indices and ownership before any interval indexing.
             // The kernel must not assume a trusted Python producer.
             if matches!(
@@ -2849,7 +2894,7 @@ impl Operators {
                         program,
                         trajectory,
                         driven,
-                        crate::transition_source_plan::Work::default(),
+                        trajectory.procedure_work().cloned().unwrap_or_default(),
                     )
                 })
                 .transpose()?
@@ -3160,6 +3205,50 @@ impl Operators {
                             )?),
                         });
                         held_targets.insert(index, spec);
+                        continue;
+                    }
+                    if !program.procedures.is_empty()
+                        && crate::history_input::required_frame(
+                            input,
+                            source_context
+                                .as_ref()
+                                .map(|context| context.borrow_work())
+                                .ok_or_else(|| {
+                                    Error::new("invalid_ir", "history input lost request owner")
+                                })?,
+                        )?
+                    {
+                        let context = source_context.as_ref().ok_or_else(|| {
+                            Error::new("invalid_ir", "history input context absent")
+                        })?;
+                        let spec = crate::transition_source_plan::Spec::procedure_input(
+                            index,
+                            context.clone(),
+                        )?;
+                        let point_bounds;
+                        let bounds = match initial_bounds {
+                            Some(b) => b,
+                            None => {
+                                point_bounds =
+                                    states.iter().copied().map(I::point).collect::<Vec<_>>();
+                                &point_bounds
+                            }
+                        };
+                        let (source, point, changed) =
+                            crate::transition_source_state::Source::initialized(spec, bounds)?;
+                        let target = source.target();
+                        let mut history =
+                            Transition::enclosed(point.value, point.bounds, *delay, *rise, *fall)?;
+                        history.advance_at(0., I::ZERO, target.value, target.bounds, changed)?;
+                        entries.push(Runtime::Transition {
+                            expression: input.clone(),
+                            program: context.program_arc(),
+                            owner: origin.instance.clone(),
+                            input: target.affine.clone(),
+                            input_bounds: target.coefficients.clone(),
+                            history: Box::new(history),
+                            source: Some(Box::new(source)),
+                        });
                         continue;
                     }
                     let plan = if shared_history {
@@ -4940,6 +5029,19 @@ impl Operators {
             .iter()
             .filter_map(|e| match e {
                 Runtime::Transition { history, .. } => Some(history.as_ref().clone()),
+                _ => None,
+            })
+            .collect()
+    }
+    #[cfg(test)]
+    pub(crate) fn test_source_cursors(&self) -> Vec<serde_json::Value> {
+        self.entries
+            .iter()
+            .filter_map(|entry| match entry {
+                Runtime::Transition {
+                    source: Some(source),
+                    ..
+                } => Some(source.test_snapshot()),
                 _ => None,
             })
             .collect()

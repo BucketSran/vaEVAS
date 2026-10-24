@@ -39,6 +39,9 @@ mod integer_round_tests;
 #[path = "transient_point_lineage.rs"]
 pub(crate) mod point_lineage;
 #[cfg(test)]
+#[path = "transient_procedure_history_tests.rs"]
+mod procedure_history_tests;
+#[cfg(test)]
 #[path = "transient_source_factor_tests.rs"]
 mod source_factor_lifecycle_tests;
 #[cfg(test)]
@@ -909,6 +912,7 @@ fn prepare_root_window_selected_phase(
                 Some(&lineage),
                 physical_context.as_ref(),
                 Some(&mut assembly_scratch),
+                Some((trajectory, time)),
             )
         } else {
             crate::settlement::prepare_window_with_physical_proofs(
@@ -930,6 +934,7 @@ fn prepare_root_window_selected_phase(
                 Some(&lineage),
                 physical_context.as_ref(),
                 Some(&mut assembly_scratch),
+                Some((trajectory, time)),
             )
         }
     };
@@ -1367,19 +1372,35 @@ fn prepare_root_window_selected_phase(
                 proof,
             )?
         } else {
-            model.circuit_at(&prepared.states, &values, &observation_inputs)?
+            model.circuit_at_procedure_observation(
+                &prepared.states,
+                &prepared.bounds,
+                &values,
+                &bounds,
+                &observation_inputs,
+                trajectory,
+                time,
+            )?
         };
         circuit.reuse_affine_factor_from(&prepared.circuit);
         let mut solution = circuit.solve(&crate::event_value_proof::history::inputs(
             model, trajectory, time,
         )?)?;
-        let observation_selection = model.observation_selection(
-            &observation_inputs,
-            &prepared.states,
-            &prepared.bounds,
-            &values,
-            &bounds,
-        )?;
+        let observation_selection = if let Some(view) = circuit.procedure_view() {
+            crate::real_expression::work(model).debit(2, 64)?;
+            crate::event_conditions::Selection {
+                plan: Some(view.plan.clone()),
+                ..Default::default()
+            }
+        } else {
+            model.observation_selection(
+                &observation_inputs,
+                &prepared.states,
+                &prepared.bounds,
+                &values,
+                &bounds,
+            )?
+        };
         let (_, nodes) = if let Some(proof) = &observation_proof {
             model.certify_observation_with_held_ramp_proof(
                 &observation_selection,

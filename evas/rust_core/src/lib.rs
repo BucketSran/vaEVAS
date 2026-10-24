@@ -27,6 +27,7 @@ mod history_admission;
 mod history_calendar_typed_target;
 #[cfg(test)]
 mod history_consumer_fixture;
+mod history_input;
 mod history_storage;
 mod idt;
 mod idtmod;

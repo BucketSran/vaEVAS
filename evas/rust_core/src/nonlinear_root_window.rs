@@ -193,9 +193,7 @@ impl NonlinearContinuous {
             let mut derivatives = Vec::new();
             for mode in fields {
                 Self::charge_trial(remaining_work, span.lo, span.hi, work_limit)?;
-                let rows = mode
-                    .derivative_jets(&variables, &[], 0)
-                    .ok_or_else(|| fail("root-window field unavailable"))?;
+                let rows = mode.actual_derivatives(&variables, &[])?;
                 if rows.iter().any(|r| r.is_empty() || !r[0].finite()) {
                     return Err(fail("root-window field is nonfinite"));
                 }
@@ -305,7 +303,7 @@ impl NonlinearContinuous {
         let source_right = coordinates(self.context.trajectory.value_bounds(span.hi));
         let source_tube = coordinates(source.clone());
         for field in [&old, &post] {
-            for f in &field.functions {
+            for f in field.functions.iter() {
                 f.certify_source_denominators(
                     seed.len(),
                     &source_left,
@@ -402,6 +400,7 @@ mod tests {
                 },
             ]],
             remainder: vec![I { lo: 1e-6, hi: 2e-6 }],
+            rounding_defect: None,
             centered: None,
         };
         StepHistory::from_steps(vec![HistoryStep::taylor(step)])

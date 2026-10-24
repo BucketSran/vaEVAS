@@ -78,6 +78,25 @@ pub(crate) struct Context<'a> {
     source_domains: Option<std::sync::Arc<crate::source_domain::Sources>>,
 }
 impl<'a> Context<'a> {
+    pub(crate) fn history_inputs(
+        proofs: &'a Proofs,
+        node_count: usize,
+        bands: Vec<Option<std::sync::Arc<crate::source_domain::Domain>>>,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Self, crate::ir::Error> {
+        work.debit(2, (node_count * 32 + 64) as u64)?;
+        Ok(Self {
+            states: proofs,
+            rooted_occurrence: false,
+            nominal_frame: None,
+            nodes: vec![None; node_count],
+            operators: Vec::new(),
+            floor_work: None,
+            history_work: Some(work.clone()),
+            floor_bounds: None,
+            source_domains: Some(crate::source_domain::Sources::new(bands, work)?),
+        })
+    }
     pub(crate) fn candidate_frame(
         proofs: &'a Proofs,
         node_count: usize,

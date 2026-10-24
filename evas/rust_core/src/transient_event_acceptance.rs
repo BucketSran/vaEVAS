@@ -677,13 +677,21 @@ impl Controller {
             .map(|g| g.legacy_voltage_view(next.time, &next.solution.voltages, &next.circuit))
             .transpose()?;
         let legacy_voltages = projected.as_deref().unwrap_or(&next.solution.voltages);
-        let selection = model.observation_selection(
-            &inputs,
-            &next.states,
-            &next.state_bounds,
-            &operator_values,
-            &operator_bounds,
-        )?;
+        let selection = if let Some(view) = next.circuit.procedure_view() {
+            crate::real_expression::work(model).debit(2, 64)?;
+            crate::event_conditions::Selection {
+                plan: Some(view.plan.clone()),
+                ..Default::default()
+            }
+        } else {
+            model.observation_selection(
+                &inputs,
+                &next.states,
+                &next.state_bounds,
+                &operator_values,
+                &operator_bounds,
+            )?
+        };
         let observation_proof = model
             .dc_projection
             .as_ref()
