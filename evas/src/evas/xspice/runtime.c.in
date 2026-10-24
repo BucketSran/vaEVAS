@@ -122,6 +122,7 @@ void cm_evas_ir(ARGS) {
  if(ANALYSIS==MIF_DC) {
   memset(cur,0,sizeof(Frame));@INITIAL@
   for(i=0;i<NS;++i)states[i]=ad_const(cur->values[i]);
+  @INITIAL_STEP@
   if(TEST_HOOKS && PARAM(evas_bad_state) && PARAM(evas_inject_dc) && d->dc_injected)
    for(i=0;i<NS;++i)states[i]=ad_const(d->previous_trial.values[i]);
   @ZERO_BODY@

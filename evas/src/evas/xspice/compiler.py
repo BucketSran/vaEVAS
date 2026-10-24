@@ -90,6 +90,31 @@ class Emitter:
                 + self.expr(expr["right"])
                 + ")"
             )
+        if op == "real_binary":
+            # One source operation, rounded before its parent. Same Dual
+            # helpers as the legacy add/multiply forms; do not reassociate.
+            functions = {"add": "ad_add", "multiply": "ad_mul"}
+            function = functions.get(expr.get("operation"))
+            if function is None:
+                raise Unsupported(
+                    "real operation outside this slice: " + str(expr.get("operation"))
+                )
+            return (
+                function
+                + "("
+                + self.expr(expr["left"])
+                + ", "
+                + self.expr(expr["right"])
+                + ")"
+            )
+        if op == "real_boundary":
+            # store/sample/snapshot/argument/return name the rounding point.
+            # The generated value is the inner expression.
+            if expr.get("kind") not in ("store", "sample", "snapshot", "argument", "return"):
+                raise Unsupported(
+                    "real boundary outside this slice: " + str(expr.get("kind"))
+                )
+            return self.expr(expr["value"])
         if op == "select":
             return ("(" + self.condition(expr) + " ? "
                     + self.expr(expr["then_value"]) + " : "
@@ -106,6 +131,8 @@ class Emitter:
 
     def affine_guard(self, expr):
         """Admission only. Runtime expression retains IR operation ordering."""
+        if expr["op"] == "real_boundary":
+            return self.affine_guard(expr["value"])
         if expr["op"] == "affine":
             for term in expr["terms"]:
                 if self.ir["nodes"][term["node"]] not in ["0", *self.inputs]:
@@ -248,6 +275,15 @@ def compile_model(
         raise Unsupported("frontend IR schema does not match this package")
     if ir["step_bounds"]:
         raise Unsupported("bound_step is outside this backend slice")
+    # IR33 emits initial_step as an event and keeps declaration seeds in
+    # State.initial. The body runs once at DC initialization. It is not a
+    # timer and does not consume a scheduled-event slot.
+    initial_events = [
+        event for event in ir["events"] if event["trigger"]["kind"] == "initial_step"
+    ]
+    ir["events"] = [
+        event for event in ir["events"] if event["trigger"]["kind"] != "initial_step"
+    ]
     events = ir["events"]
     crosses = [i for i, e in enumerate(events) if e["trigger"]["kind"] == "cross"]
     independent_clock = not crosses and not inputs
@@ -271,12 +307,14 @@ def compile_model(
     def held_only(expr):
         if expr["op"] == "state":
             return True
+        if expr["op"] == "real_boundary":
+            return held_only(expr["value"])
         if expr["op"] == "affine":
             return all(ir["nodes"][t["node"]] == "0" for t in expr["terms"])
         if expr["op"] == "select":
             return all(held_only(expr[k]) for k in ("left", "right", "then_value", "else_value"))
         return (
-            expr["op"] in ("add", "multiply")
+            expr["op"] in ("add", "multiply", "real_binary")
             and held_only(expr["left"])
             and held_only(expr["right"])
         )
@@ -464,6 +502,7 @@ def compile_model(
         "TTOL": number(ttol),
         "VTOL": number(vtol),
         "INITIAL": "\n        ".join(initial),
+        "INITIAL_STEP": "\n".join(statements(event["body"]) for event in initial_events),
         "PARAM_CHECKS": "\n        ".join(param_checks),
         "GUARD": emitter.expr(trigger["guard"]) if trigger else "ad_const(0.0)",
         "INPUTS": "\n    ".join(
