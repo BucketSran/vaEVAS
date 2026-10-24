@@ -245,4 +245,3 @@ it includes the fixed .1 T delay, so offsets still refer to the timer shift.
                       '1/5' if n % 2 == 0 else '1/10', '-1/10000', '1/10000')
                 for n in range(5)]
     raise ValueError('condition has no implemented history contract')
-

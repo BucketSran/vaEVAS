@@ -86,4 +86,3 @@ def conditions():
             assert points[0][0] == 0 and points[-1][0] == c['stop_x']
             assert all(a[0] < b[0] for a,b in zip(points,points[1:]))
     return result
-

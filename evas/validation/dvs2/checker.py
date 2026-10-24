@@ -180,4 +180,3 @@ def check(rows,c):
     if not states: raise ValueError('unimplemented condition')
     result['status']='observed_violation' if 'F' in states else 'unresolved' if 'I' in states else 'observations_within_targets'
     return result
-

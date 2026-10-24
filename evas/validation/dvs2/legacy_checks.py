@@ -101,4 +101,3 @@ def analyze(rows,case):
         common_mode_error_v=common if card=='d2_v2_01' else None,
         max_relationship_residual_v=residual if card.startswith('d2_v7') else None,
         edges=edge,interpretation='finite exported observations; internal event and unsampled behavior remain unqualified')
-
