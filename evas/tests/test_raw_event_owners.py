@@ -11,6 +11,8 @@ from pathlib import Path
 import subprocess
 import unittest
 
+from test_affine import KERNEL as DEFAULT_KERNEL
+
 REQUEST = Path(__file__).parents[1] / 'rust_core/src/raw_event_owner_request.json'
 
 class RawEventOwners(unittest.TestCase):
@@ -18,7 +20,8 @@ class RawEventOwners(unittest.TestCase):
         return json.loads(REQUEST.read_text())
 
     def invoke(self, request):
-        result = subprocess.run([os.environ['EVAS_KERNEL']], input=json.dumps(request),
+        kernel = os.environ.get('EVAS_KERNEL', str(DEFAULT_KERNEL))
+        result = subprocess.run([kernel], input=json.dumps(request),
                                 capture_output=True, text=True, timeout=30)
         if result.returncode:
             return result, json.loads(result.stderr)
