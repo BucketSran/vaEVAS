@@ -140,6 +140,10 @@ endmodule
         with tempfile.TemporaryDirectory() as directory:
             with self.assertRaisesRegex(CompileError, "subtract"):
                 compile_model({"alias_box.va": subtracted}, Path(directory) / "model")
+        divided = subtracted.replace("q = vh - vl;", "q = vh / vl;")
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(CompileError, "constant denominator"):
+                compile_model({"alias_box.va": divided}, Path(directory) / "model")
 
     def test_reference_connection_retains_the_original_va_port_order(self):
         source = (ROOT / "examples/xspice/r53/multiphase_clock_generator_4ph.va").read_text()

@@ -113,6 +113,18 @@ class Emitter:
             # admitted alias guards. Subtraction stays rejected.
             operation = expr.get("operation")
             if operation == "divide":
+                # Guards and bodies share this emitter. A finite nonzero
+                # constant denominator is the admitted alias threshold.
+                # An input-dependent or zero divisor stays outside the slice.
+                denominator = self.pure_constant(expr["right"], set())
+                if (
+                    denominator is None
+                    or not math.isfinite(denominator)
+                    or denominator == 0.0
+                ):
+                    raise Unsupported(
+                        "real division requires a finite nonzero constant denominator"
+                    )
                 self.needs_div = True
                 function = "ad_div"
             else:
