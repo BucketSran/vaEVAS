@@ -49,8 +49,7 @@ def source_files():
            (p.suffix in ('.py','.rs','.toml') or p.name=='Cargo.lock') and
            'target' not in p.parts and '__pycache__' not in p.parts]
     paths += [Path(__file__),ROOT/'experiments/backends/support/precision_report.py',ROOT/'evas/pyproject.toml',
-              ROOT/'experiments/archive/dvs2-starter-pilot/analyze.py',
-              ROOT/'experiments/archive/dvs2-starter-pilot/suite.py',
+              ROOT/'experiments/backends/evidence/legacy_waveforms.py',
               ROOT/'evas/validation/paper/precision-v1.json']
     return sorted(set(paths))
 

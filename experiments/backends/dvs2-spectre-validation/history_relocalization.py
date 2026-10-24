@@ -94,8 +94,7 @@ def prepare(root):
     dump(root/'CHECKER_IDENTITY.json', {str(p.relative_to(ROOT)):digest(p) for p in [
         Path(__file__), Path(__file__).with_name('cross_touch.py'),
         Path(__file__).with_name('report.py'),
-        ROOT/'experiments/archive/dvs2-starter-pilot/analyze.py',
-        ROOT/'experiments/archive/dvs2-starter-pilot/suite.py']})
+        ROOT/'experiments/backends/evidence/legacy_waveforms.py']})
     dump(root/'contract.json', dict(denominator=len(cases), runner_sha256=digest(Path(__file__)),
         wave_allowance_v=WAVE_ALLOWANCE, event_time_allowance_s=TIME_ALLOWANCE,
         expected='Independent piecewise integrals and hand-computed strict crossings.',

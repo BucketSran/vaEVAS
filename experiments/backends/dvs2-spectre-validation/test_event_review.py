@@ -62,12 +62,18 @@ class IndependentEventReview(unittest.TestCase):
                     self.assertEqual(check(rational_rows(name),CASES[name])['status'],'observations_within_targets')
 
     def test_fixture_has_no_production_oracle_dependency(self):
-        with patch('check_results.reference',side_effect=AssertionError('shared oracle')), \
-             patch('check_results.histories',side_effect=AssertionError('shared history')), \
-             patch('check_results.v1.pwl',side_effect=AssertionError('shared PWL')):
+        with patch('dvs2.checker.reference',side_effect=AssertionError('shared oracle')), \
+             patch('dvs2.checker.histories',side_effect=AssertionError('shared history')), \
+             patch('dvs2.checker.v1.pwl',side_effect=AssertionError('shared PWL')):
             self.assertEqual(len(rational_rows('e2-low')),4001)
             self.assertEqual(rational_rows('e2-low')[1000]['vout'],.75)
             self.assertEqual(rational_rows('c1-main')[1000]['outb'],.275)
+
+    def test_independence_guard_rejects_a_checker_coupled_control(self):
+        data = rational_rows('e2-low')
+        with patch('dvs2.checker.histories', side_effect=AssertionError('shared history')):
+            with self.assertRaisesRegex(AssertionError, 'shared history'):
+                check(data, CASES['e2-low'])
 
     def test_missing_first_sample_is_rejected(self):
         data=rational_rows('e2-low')

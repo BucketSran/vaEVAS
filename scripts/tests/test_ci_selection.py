@@ -97,7 +97,8 @@ class RoutingTests(unittest.TestCase):
         for path in ('evas/validation/strobe/cases.json',
                      'evas/validation/paper/dut/hold.va',
                      'experiments/backends/event-alignment/vco-controls/original--tight/dut.va',
-                     'evas/validation/paper/core-v1.json', 'experiments/backends/paper/inputs.py',
+                     'evas/validation/paper/core-v1.json', 'evas/validation/paper/case_inputs.py',
+                     'experiments/backends/paper/inputs.py',
                      'experiments/backends/dvs2-spectre-validation/check_results.py'):
             with self.subTest(path=path):
                 self.assertEqual(ci.classify([path]),
@@ -184,6 +185,16 @@ class RoutingTests(unittest.TestCase):
                      'scripts/new_tool.py', 'experiments/new_backend/test.py', 'new_runtime/solver.py'):
             with self.subTest(path=path):
                 self.assertEqual(ci.classify([path]), ci.flags(*ci.CHECKS))
+
+
+    def test_shared_dvs2_scientific_sources_keep_their_public_regression(self):
+        root = SCRIPT.parents[1]
+        sources = sorted((root/'evas/validation/dvs2').glob('*.py'))
+        self.assertTrue(sources)
+        for source in sources:
+            with self.subTest(source=source.name):
+                self.assertEqual(ci.classify([str(source.relative_to(root))]),
+                                 ci.flags('maintenance', 'calibration', 'provenance', 'regression'))
 
 
 class GitChangeTests(unittest.TestCase):
