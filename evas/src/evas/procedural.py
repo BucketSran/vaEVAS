@@ -85,7 +85,7 @@ class ProcedureBuilder:
         return c.make_ir(Origin, token.source or c.model.source, token.line,
                          token.column, c.instance.name, token.expansion)
 
-    def declare(self, names):
+    def conditional_integer_bindings(self):
         c = self.compiler
         # A conditional integer write needs the same source-position slot as
         # a real local. Closed integer aliases keep their existing lowering.
@@ -116,10 +116,20 @@ class ProcedureBuilder:
                 if name not in conditional_integers and reads & conditional_integers:
                     conditional_integers.add(name)
                     changed = True
+        return conditional_integers
+
+    def declare(self, names):
+        c = self.compiler
+        conditional_integers = None
         for name in c.model.variables:
             c.compilation.native_audit.debit("procedure_binding_declaration", 3)
-            if name not in names or (c.model.variables[name] != "real" and name not in conditional_integers):
+            if name not in names:
                 continue
+            if c.model.variables[name] != 'real':
+                if conditional_integers is None:
+                    conditional_integers = self.conditional_integer_bindings()
+                if name not in conditional_integers:
+                    continue
             binding = len(c.compilation.real_bindings)
             c.compilation.real_bindings.append(c.make_ir(
                 RealBinding, self.procedure_id, name,
@@ -450,6 +460,9 @@ class ProcedureBuilder:
                 return c.make_ir(EventGate, index)
 
         steps = body(c.model.procedure)
+        if any(self.contributions.values()):
+            raise CompileError("source contribution has more than one capture occurrence",
+                               code="invalid_ir", instance=c.instance.name)
         if any(self.events.values()) or any(self.actions.values()) or any(self.conditions.values()):
             raise CompileError("compiled source steps are missing from the retained procedure",
                                instance=c.instance.name)

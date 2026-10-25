@@ -12,527 +12,529 @@
   },
   "production_sha256": {
     "evas/rust_core/src/event_control.rs": "ea64428e981d1031b7ec5400cde942915c33bcd548c06d66f3a246ccc42e6ddd",
+    "evas/rust_core/src/event_numeric.rs": "de784e796ac792085b45184d236bda6f2c67144ec99f42baf9b931e6e3d1f47e",
     "evas/rust_core/src/event_value_proof.rs": "a9c9a96651565dbb1d5b412c3c30921590b2677578bed3679119555dc52be2e4",
     "evas/rust_core/src/events.rs": "7e68265c36093186aeefd5f3869239ae1c7a3152ef4b451258ebbf2f1e477ce8",
     "evas/rust_core/src/implicit_dynamics.rs": "357cff32af0cfada23d6b43d5d46f5fd940c0abc00deba62615d0c3c9d0eb730",
     "evas/rust_core/src/operators.rs": "2c2e89294de60d10aa31dff97d003dd48d91155aa8577f193785242adac62fd6",
     "evas/rust_core/src/procedure.rs": "a5032512a7cfcb8db638d37aa159915741df315b053b271c361d6f8010da70e6",
     "evas/rust_core/src/procedure_plan.rs": "19bff45d8a64cf3c0e2a27ae585cd90d7ce2046c23eac2558bd8061fb05219dc",
+    "evas/rust_core/src/procedure_structure.rs": "b8f7049fbca6cf6ef829842f786468241bf410fc6c132e75f12bc02c7ffbdbb8",
     "evas/rust_core/src/step_bounds.rs": "be5f2117ccf8d22c6dac3d07847da560ef7ca3cadb6bf49c3026382d2e7c3c76",
     "evas/rust_core/src/transient.rs": "9ae4aa26dbcc76fd3a978945522303f9ae0891086e8f899937570a6e5c0bac6d",
-    "evas/src/evas/instance_compiler.py": "3f00ebcb5888e9bbee6774289d824ec5bde9cebef48d6368aa5c35297c856df5",
-    "evas/src/evas/procedural.py": "0ba9bc154d86370a6947312f9da640b0c56ae398d98d9d582f528c24fb3ef854",
+    "evas/src/evas/instance_compiler.py": "dd55882996abc353a786103f67e44f1526bf61234c50032b2541dc3f53e7957d",
+    "evas/src/evas/procedural.py": "0aa7deec4f7ce30438af35a710af3b9bddcf24c3da5e64e45fb95e9c477b5217",
     "evas/src/evas/program_real_facts.py": "1dc68fb579ec1bec653a3dd05ef1da79c3839a2e6d118d248477ca8f091578fd",
     "evas/src/evas/query.py": "566473d5e39f1c4f3fe7d2ba1d441fc493f2ed85ec76055531c09a9fbb757ac9",
     "evas/src/evas/readout_scope.py": "b713e8b56c9c748d6cc00eb273ebf5a9f56326e0e05d6f36ffe1360112ee05c7"
   },
   "scoped_execution": {
     "methods": 99,
-    "passed": 50,
-    "error": 44,
-    "failed": 5,
+    "passed": 47,
+    "error": 48,
+    "failed": 4,
     "tests": [
       {
         "id": "test_analog_conditions.OrdinaryAnalogConditionContracts.test_source_input_products_and_cancelled_predicates",
         "outcome": "passed",
-        "seconds": 0.13434433401562274
+        "seconds": 0.8699817919987254
       },
       {
         "id": "test_case_statements.CaseStatements.test_case_voltage_branch_exists_for_every_selected_arm",
         "outcome": "passed",
-        "seconds": 0.011606124986428767
+        "seconds": 0.011428750003688037
       },
       {
         "id": "test_constant_initial_power.ConstantInitialPower.test_closed_initial_quarter_power_scales_original_voltage_relation",
         "outcome": "passed",
-        "seconds": 0.37043987499782816
+        "seconds": 0.3651422919938341
       },
       {
         "id": "test_constant_initial_power.ConstantInitialPower.test_same_module_parameters_and_origins_are_instance_local",
         "outcome": "passed",
-        "seconds": 0.7286210000165738
+        "seconds": 0.7284332090057433
       },
       {
         "id": "test_constant_initial_power.ConstantInitialPower.test_zero_exponent_identity_and_negative_fractional_exponent",
         "outcome": "passed",
-        "seconds": 0.38593474999652244
+        "seconds": 0.3843282920133788
       },
       {
         "id": "test_event_conditions.ConditionalEvents.test_structural_internal_feedback_does_not_disappear",
         "outcome": "failed",
-        "seconds": 0.07649750000564381
+        "seconds": 0.07564345799619332
       },
       {
         "id": "test_forcing_history_bridge.ForcingTargetComposition.test_ordinary_held_select_target_uses_actual_phase_and_full_residual",
         "outcome": "passed",
-        "seconds": 0.10282133397413418
+        "seconds": 0.0997077499923762
       },
       {
         "id": "test_forcing_history_bridge.ForcingTargetComposition.test_typed_signed_target_rebinds_after_two_state_changes",
         "outcome": "passed",
-        "seconds": 0.11379604099784046
+        "seconds": 0.11234412499470636
       },
       {
         "id": "test_frontend_closure.ConstantEventAliases.test_parameter_aliases_drive_initial_and_cross_with_instance_overrides",
-        "outcome": "passed",
-        "seconds": 0.025349374976940453
+        "outcome": "error",
+        "seconds": 0.019236958993133157
       },
       {
         "id": "test_frontend_diagnostics.FrontendDiagnostics.test_previous_forcing_only_dae_boundary_now_completes",
         "outcome": "error",
-        "seconds": 0.01472854198073037
+        "seconds": 0.013086124992696568
       },
       {
         "id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_cross_ln_ratio_reaches_physical_transition",
         "outcome": "error",
-        "seconds": 0.013667208986589685
+        "seconds": 0.014185374981025234
       },
       {
         "id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_cross_sqrt_ratio_reaches_physical_transition_with_exact_edges",
         "outcome": "error",
-        "seconds": 0.012568374979309738
+        "seconds": 0.016059333982411772
       },
       {
         "id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_fixed_timer_uses_same_domain_contract_and_real_transition",
         "outcome": "error",
-        "seconds": 0.012856042012572289
+        "seconds": 0.016096542007289827
       },
       {
         "id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_four_sample_rms_uses_completed_sum_before_reset",
         "outcome": "error",
-        "seconds": 0.016196125012356788
+        "seconds": 0.018810875015333295
       },
       {
         "id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_ln_requires_strictly_positive_argument",
         "outcome": "failed",
-        "seconds": 0.015248125011567026
+        "seconds": 0.015185916010523215
       },
       {
         "id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_selected_negative_sqrt_is_not_hidden_by_later_clamp",
         "outcome": "failed",
-        "seconds": 0.014221833000192419
+        "seconds": 0.015147375001106411
       },
       {
         "id": "test_held_alias_probe.HeldAliasProbe.test_public_ring_real_clock_alias_complete_transport_and_numeric_outputs",
-        "outcome": "failed",
-        "seconds": 2.592824624996865
+        "outcome": "error",
+        "seconds": 0.18090450001182035
       },
       {
         "id": "test_held_alias_probe.HeldAliasProbe.test_supported_alias_still_pays_full_original_source_and_program_roles",
         "outcome": "passed",
-        "seconds": 0.0047662909782957286
+        "seconds": 0.004871665994869545
       },
       {
         "id": "test_held_power2_targets.HeldPower2Boundaries.test_active_source_probe_rejection_is_sticky_after_actual_wire_exhaustion",
         "outcome": "passed",
-        "seconds": 0.04068049998022616
+        "seconds": 0.040586624993011355
       },
       {
         "id": "test_held_power2_targets.HeldPower2Boundaries.test_all_256_values_quotient_remainder_powers_including_one",
         "outcome": "error",
-        "seconds": 7.544277749984758
+        "seconds": 7.512918541004183
       },
       {
         "id": "test_held_power2_targets.HeldPower2Boundaries.test_bin256_accepted_but257_still_refused_and_instance_bounds_fresh",
         "outcome": "passed",
-        "seconds": 0.022973124985583127
+        "seconds": 0.02251612499821931
       },
       {
         "id": "test_held_power2_targets.HeldPower2Boundaries.test_fresh_source_domain_and_mutable_AST_do_not_gain_cached_eligibility",
         "outcome": "passed",
-        "seconds": 0.00419166698702611
+        "seconds": 0.004390582995256409
       },
       {
         "id": "test_held_power2_targets.HeldPower2Boundaries.test_full_wire_budget_exhaustion_and_two_retries_share_one_owner",
         "outcome": "passed",
-        "seconds": 0.040945125016150996
+        "seconds": 0.04074066600878723
       },
       {
         "id": "test_held_power2_targets.HeldPower2Boundaries.test_zero_mask_keeps_integer_state_dependency_and_foreign_role_rejection",
         "outcome": "passed",
-        "seconds": 0.025431500020204112
+        "seconds": 0.026363917015260085
       },
       {
         "id": "test_held_power2_targets.HeldPower2ConstantBindings.test_composed_constant_divisors_keep_old_affine_contract",
         "outcome": "passed",
-        "seconds": 0.10320566699374467
+        "seconds": 0.10898120800266042
       },
       {
         "id": "test_held_power2_targets.HeldPower2ConstantBindings.test_constant_dispatch_cannot_bypass_active_exhaustion",
         "outcome": "passed",
-        "seconds": 0.04103120800573379
+        "seconds": 0.041282082995167
       },
       {
         "id": "test_held_power2_targets.HeldPower2ConstantBindings.test_nested_constant_numerator_stays_exact_integer_toward_zero",
         "outcome": "passed",
-        "seconds": 0.08773741600452922
+        "seconds": 0.09416949999285862
       },
       {
         "id": "test_held_power2_targets.HeldPower2Targets.test_original_public_eightbit_real_alias_default_owner_actual_kernel",
         "outcome": "passed",
-        "seconds": 0.8604600409744307
+        "seconds": 0.8827739999978803
       },
       {
         "id": "test_history_forcing.HistoryForcingRed.test_clipped_source_forcing_and_independent_history",
         "outcome": "error",
-        "seconds": 0.015598291996866465
+        "seconds": 0.011489458993310109
       },
       {
         "id": "test_history_forcing.HistoryForcingRed.test_extra_queries_do_not_change_common_forcing_or_history",
         "outcome": "error",
-        "seconds": 0.008882708003511652
+        "seconds": 0.00885995797580108
       },
       {
         "id": "test_history_forcing.HistoryForcingRed.test_owner_and_parameter_bindings_remain_distinct",
         "outcome": "error",
-        "seconds": 0.013085999991744757
+        "seconds": 0.013087500003166497
       },
       {
         "id": "test_history_forcing.HistoryForcingRed.test_reset_forcing_does_not_replace_independent_history",
         "outcome": "error",
-        "seconds": 0.008274249994428828
+        "seconds": 0.008341957989614457
       },
       {
         "id": "test_history_forcing_binding.GlobalForcingOriginalReads.test_unrelated_bound_input_read_is_allowed",
         "outcome": "error",
-        "seconds": 0.00862991699250415
+        "seconds": 0.008976915996754542
       },
       {
         "id": "test_history_forcing_shaped.PhysicalForcing.test_original_physical_pulse_predicate_and_independent_transition",
         "outcome": "error",
-        "seconds": 0.01054920899332501
+        "seconds": 0.008601917012128979
       },
       {
         "id": "test_history_forcing_shaped.PhysicalForcing.test_physical_cross_updates_real_independent_transition",
         "outcome": "error",
-        "seconds": 0.008539749978808686
+        "seconds": 0.011422457988373935
       },
       {
         "id": "test_implicit_event_restart.ImplicitEventRestart.test_original_model_preserves_integrals_and_changes_rate",
         "outcome": "error",
-        "seconds": 0.012267041020095348
+        "seconds": 0.012838166992878541
       },
       {
         "id": "test_implicit_event_restart.ImplicitEventRestartBoundaries.test_extra_queries_preserve_history_event_and_common_values",
         "outcome": "error",
-        "seconds": 0.011434290994657204
+        "seconds": 0.011895959003595635
       },
       {
         "id": "test_implicit_event_restart.ImplicitEventRestartBoundaries.test_filter_with_changed_forcing_keeps_its_accepted_physical_seed",
         "outcome": "error",
-        "seconds": 0.011554917000466958
+        "seconds": 0.01307654200354591
       },
       {
         "id": "test_implicit_event_restart.ImplicitEventRestartBoundaries.test_old_field_is_not_built_past_the_timer_horizon",
         "outcome": "error",
-        "seconds": 0.011012709001079202
+        "seconds": 0.011960958014242351
       },
       {
         "id": "test_implicit_event_restart.ImplicitEventRestartBoundaries.test_unrelated_filter_state_is_not_reinitialized_to_new_dc",
         "outcome": "error",
-        "seconds": 0.010913875012192875
+        "seconds": 0.011279083002591506
       },
       {
         "id": "test_implicit_step_bounds.ImplicitStepBounds.test_dynamic_voltage_bound_is_applied_to_internal_accepted_mesh",
         "outcome": "passed",
-        "seconds": 10.59855508300825
+        "seconds": 10.628659124980913
       },
       {
         "id": "test_implicit_step_bounds.ImplicitStepBounds.test_inactive_invalid_bound_is_not_evaluated_but_active_invalid_rejects",
         "outcome": "passed",
-        "seconds": 3.9681590409891214
+        "seconds": 4.010256500012474
       },
       {
         "id": "test_initial_compact_compat.InitialCompactCompatibility.test_direct_initial_comparison_assignment_keeps_the_same_seed",
         "outcome": "error",
-        "seconds": 0.012048957985825837
+        "seconds": 0.012839583010645583
       },
       {
         "id": "test_initial_compact_compat.InitialCompactCompatibility.test_exact_old_initial_node_contract_in_both_instance_and_module_orders",
         "outcome": "error",
-        "seconds": 0.04786070800037123
+        "seconds": 0.04975308300345205
       },
       {
         "id": "test_initial_compact_compat.InitialCompactCompatibility.test_unselected_initial_voltage_arm_still_excludes_compact",
         "outcome": "error",
-        "seconds": 0.013039249985013157
+        "seconds": 0.013330541987670586
       },
       {
         "id": "test_initial_display_transition.InitialDisplayTransition.test_unchanged_seed_preserves_internal_voltage_initial_display",
         "outcome": "error",
-        "seconds": 0.013256083009764552
+        "seconds": 0.015488041011849418
       },
       {
         "id": "test_initial_node_dependencies.InitialNodeDependencies.test_initial_comparison_reads_another_instances_transition_seed",
         "outcome": "error",
-        "seconds": 0.011462166992714629
+        "seconds": 0.013810250005917624
       },
       {
         "id": "test_initial_node_dependencies.InitialNodeDependencies.test_multiple_contributions_and_coupled_voltage_equations_are_solved_together",
         "outcome": "error",
-        "seconds": 0.03334045800147578
+        "seconds": 0.03751095797633752
       },
       {
         "id": "test_initial_node_dependencies.InitialNodeDependencies.test_nonground_branch_can_read_an_independently_certified_endpoint",
         "outcome": "error",
-        "seconds": 0.04962691699620336
+        "seconds": 0.05370279200724326
       },
       {
         "id": "test_initial_node_dependencies.InitialNodeDependencies.test_selected_transition_target_keeps_initial_statement_order",
         "outcome": "error",
-        "seconds": 0.013140084018232301
+        "seconds": 0.014800417004153132
       },
       {
         "id": "test_initial_node_dependencies.InitialNodeDependencies.test_shared_predicate_input_is_an_acyclic_dependency_in_either_instance_order",
         "outcome": "error",
-        "seconds": 0.01409208300174214
+        "seconds": 0.014426375011680648
       },
       {
         "id": "test_initial_observer_horizon.InitialObserverHorizon.test_initial_observation_does_not_predict_riccati_past_fixed_timer",
         "outcome": "error",
-        "seconds": 0.012150082999141887
+        "seconds": 0.01340850000269711
       },
       {
         "id": "test_initial_observer_horizon.InitialObserverHorizon.test_riccati_observation_is_stable_on_forced_and_dense_output_grids",
         "outcome": "error",
-        "seconds": 0.02146983300917782
+        "seconds": 0.021505040989723057
       },
       {
         "id": "test_initial_sampling_closure.FixedArrayVoltageAliases.test_array_initial_sampling_and_cross_use_the_same_fixed_slot",
-        "outcome": "passed",
-        "seconds": 0.017704291007248685
+        "outcome": "error",
+        "seconds": 0.012191791000077501
       },
       {
         "id": "test_initial_sampling_closure.RuntimeVoltageAliases.test_cross_guard_and_sample_use_the_physical_root_voltage",
-        "outcome": "passed",
-        "seconds": 0.03250958400894888
+        "outcome": "error",
+        "seconds": 0.012234374997206032
       },
       {
         "id": "test_input_initialization.InputInitialization.test_cross_instance_output_initialization_follows_the_certified_voltage_dependency",
         "outcome": "error",
-        "seconds": 0.024631916981888935
+        "seconds": 0.0252631249895785
       },
       {
         "id": "test_integer_bitops.IntegerBitops.test_finite_masks_in_ordinary_analog_values",
         "outcome": "passed",
-        "seconds": 0.05044841600465588
+        "seconds": 0.05399879199103452
       },
       {
         "id": "test_integer_prefix.IntegerPrefixContracts.test_eight_independent_inputs_count_to_four_bits",
         "outcome": "passed",
-        "seconds": 0.6946250410110224
+        "seconds": 0.6706041249854024
       },
       {
         "id": "test_integer_prefix.IntegerPrefixContracts.test_old_alias_and_each_delta_arm_keep_source_order",
         "outcome": "passed",
-        "seconds": 0.039884958998300135
+        "seconds": 0.041063542012125254
       },
       {
         "id": "test_integer_round.IntegerRoundContracts.test_direct_probe_half_ties_neighbors_and_signed32_before_clamp",
         "outcome": "passed",
-        "seconds": 0.6087692090077326
+        "seconds": 0.6491051659977529
       },
       {
         "id": "test_integer_round.IntegerRoundContracts.test_input_box_cannot_choose_nominal_rounding_bin",
         "outcome": "passed",
-        "seconds": 0.029847999976482242
+        "seconds": 0.03185295799630694
       },
       {
         "id": "test_integer_round.IntegerRoundContracts.test_sampled_clamp_real_target_transition_and_whole_nonbinary_root_window",
         "outcome": "failed",
-        "seconds": 0.3977694170025643
+        "seconds": 0.2981262080138549
       },
       {
         "id": "test_live_transition_coefficient.LiveTransitionCoefficient.test_filter",
         "outcome": "error",
-        "seconds": 0.02342220800346695
+        "seconds": 0.025237624999135733
       },
       {
         "id": "test_live_transition_coefficient.LiveTransitionCoefficient.test_filter_interrupt",
         "outcome": "error",
-        "seconds": 0.025338042003568262
+        "seconds": 0.028346041013719514
       },
       {
         "id": "test_live_transition_filter.LiveTransitionFilter.test_callback_samples_actual_filter_after_source_knot_and_interrupt",
         "outcome": "error",
-        "seconds": 0.019354499992914498
+        "seconds": 0.02174162497976795
       },
       {
         "id": "test_live_transition_filter.LiveTransitionFilter.test_direct_expression_uses_same_history_as_grounded_alias",
         "outcome": "error",
-        "seconds": 0.014156582998111844
+        "seconds": 0.01574854098726064
       },
       {
         "id": "test_live_transition_filter.LiveTransitionFilter.test_external_knots_signed_gain_offset_and_interruption",
         "outcome": "error",
-        "seconds": 0.03079262500978075
+        "seconds": 0.03627166600199416
       },
       {
         "id": "test_live_transition_filter.LiveTransitionFilter.test_saved_and_forced_grids_do_not_rebuild_forcing",
         "outcome": "error",
-        "seconds": 0.015653499984182417
+        "seconds": 0.017177458008518443
       },
       {
         "id": "test_loop_histories.LoopHistories.test_array_receivers_do_not_define_operator_identity",
         "outcome": "error",
-        "seconds": 0.014039291010703892
+        "seconds": 0.017859916988527402
       },
       {
         "id": "test_ordinary_held_state.OrdinaryHeldState.test_level_sensitive_latch_holds_between_pulses",
         "outcome": "error",
-        "seconds": 0.005551250011194497
+        "seconds": 0.006113541981903836
       },
       {
         "id": "test_paper_scenarios.PaperScenarios.test_cp_01",
         "outcome": "error",
-        "seconds": 0.012960624997504056
+        "seconds": 0.014828500017756596
       },
       {
         "id": "test_positive_clamped_divisor.PositiveClampedDivisorContracts.test_selected_quotient_overflow_is_still_rejected",
         "outcome": "passed",
-        "seconds": 0.0156700829975307
+        "seconds": 0.017216750013176352
       },
       {
         "id": "test_query.StaticQueryTests.test_equivalent_encodings_keep_dependency_meaning",
         "outcome": "passed",
-        "seconds": 0.007620499993208796
+        "seconds": 0.006392500014044344
       },
       {
         "id": "test_rational_predicate_closure.RationalPredicateClosureContracts.test_constant_threshold_and_reversed_quotient_comparison",
         "outcome": "passed",
-        "seconds": 0.04461070799152367
+        "seconds": 0.04166979200090282
       },
       {
         "id": "test_rational_predicate_closure.RationalPredicateClosureContracts.test_selected_quotient_overflow_keeps_existing_runtime_rejection",
         "outcome": "passed",
-        "seconds": 0.014712000003783032
+        "seconds": 0.02940383300301619
       },
       {
         "id": "test_readout_decision_outputs.ReadoutDecisionOutputs.test_division_by_a_box_containing_zero_is_refused",
         "outcome": "passed",
-        "seconds": 0.017956333002075553
+        "seconds": 0.02017487501143478
       },
       {
         "id": "test_readout_decision_outputs.ReadoutDecisionOutputs.test_held_gain_times_input_is_clamped_on_both_sides_of_the_event",
         "outcome": "passed",
-        "seconds": 0.11435616700327955
+        "seconds": 0.11817741699633189
       },
       {
         "id": "test_readout_decision_outputs.ReadoutDecisionOutputs.test_operator_sample_times_input_with_lower_and_upper_clamps",
         "outcome": "error",
-        "seconds": 0.019774791988311335
+        "seconds": 0.02315512500354089
       },
       {
         "id": "test_readout_decision_outputs.StatelessAlgebraicReadout.test_stateless_instance_beside_held_state_reads_rows",
         "outcome": "passed",
-        "seconds": 0.11266795799019746
+        "seconds": 0.11490312498062849
       },
       {
         "id": "test_selected_quotient_comparison.SelectedQuotientComparisonContracts.test_clipped_quotient_threshold_and_saturation_boundaries",
         "outcome": "error",
-        "seconds": 0.013930165994679555
+        "seconds": 0.013799874985124916
       },
       {
         "id": "test_selected_quotient_comparison.SelectedQuotientComparisonContracts.test_each_selected_arm_uses_its_own_positive_guard",
         "outcome": "passed",
-        "seconds": 0.019698583986610174
+        "seconds": 0.021334834018489346
       },
       {
         "id": "test_selected_quotient_comparison.SelectedQuotientComparisonContracts.test_reverse_comparison_and_output_amplification",
         "outcome": "error",
-        "seconds": 0.010033792001195252
+        "seconds": 0.010267584002576768
       },
       {
         "id": "test_selected_quotient_comparison.SelectedQuotientComparisonContracts.test_selected_original_quotient_value_keeps_overflow_rejection",
         "outcome": "passed",
-        "seconds": 0.016232291993219405
+        "seconds": 0.017146792000858113
       },
       {
         "id": "test_selected_quotient_comparison.SelectedQuotientComparisonContracts.test_source_order_keeps_comparison_before_alias_overwrite",
         "outcome": "error",
-        "seconds": 0.00971404099254869
+        "seconds": 0.01015516699408181
       },
       {
         "id": "test_source_polynomial_forcing.SourcePolynomialForcing.test_paid_scalar_held_expression_preserves_original_bare_target_values",
         "outcome": "passed",
-        "seconds": 0.02188216699869372
+        "seconds": 0.02399141702335328
       },
       {
         "id": "test_source_polynomial_guards.SourcePolynomialGuards.test_differential_product_clamp",
         "outcome": "passed",
-        "seconds": 0.09886724999523722
+        "seconds": 0.10615420798421837
       },
       {
         "id": "test_source_polynomial_guards.SourcePolynomialGuards.test_exact_product_cancellation_boundary",
         "outcome": "passed",
-        "seconds": 0.0602523330016993
+        "seconds": 0.06321345901233144
       },
       {
         "id": "test_source_polynomial_guards.SourcePolynomialGuards.test_existing_positive_helper_composes_with_another_operator_instance",
         "outcome": "passed",
-        "seconds": 0.007166541006881744
+        "seconds": 0.005388916993979365
       },
       {
         "id": "test_source_rational_guards.SourceOnlyRationalContracts.test_denominator_error_box_crossing_zero_rejects",
         "outcome": "passed",
-        "seconds": 0.009628041996620595
+        "seconds": 0.01185445801820606
       },
       {
         "id": "test_source_rational_guards.SourceOnlyRationalContracts.test_direct_quotient_guard_away_from_boundary",
         "outcome": "passed",
-        "seconds": 0.019427999999606982
+        "seconds": 0.02038249999168329
       },
       {
         "id": "test_source_rational_guards.SourceOnlyRationalContracts.test_exact_quotient_boundary_uses_original_source_certificate",
         "outcome": "passed",
-        "seconds": 0.06130491700605489
+        "seconds": 0.06241979097831063
       },
       {
         "id": "test_source_rational_guards.SourceOnlyRationalContracts.test_negative_but_nonzero_selected_denominator_is_evaluated",
         "outcome": "passed",
-        "seconds": 0.01970429200446233
+        "seconds": 0.024883459002012387
       },
       {
         "id": "test_source_rational_guards.SourceOnlyRationalContracts.test_nonfinite_guard_division_cannot_be_rescued_by_exact_sign",
         "outcome": "passed",
-        "seconds": 0.009621042001526803
+        "seconds": 0.010692457988625392
       },
       {
         "id": "test_source_rational_guards.SourceOnlyRationalContracts.test_rational_sum_and_difference_keep_original_tree",
         "outcome": "passed",
-        "seconds": 0.04267504200106487
+        "seconds": 0.04584837501170114
       },
       {
         "id": "test_source_rational_guards.SourceOnlyRationalContracts.test_selected_zero_denominator_rejects",
         "outcome": "passed",
-        "seconds": 0.009519708022708073
+        "seconds": 0.011109249986475334
       },
       {
         "id": "test_source_rational_guards.SourceOnlyRationalContracts.test_uncertain_guard_without_exact_source_provenance_rejects",
         "outcome": "passed",
-        "seconds": 0.010456332995090634
+        "seconds": 0.011022249993402511
       },
       {
         "id": "test_user_functions.PureFunctions.test_function_polynomial_guard_keeps_all_roots",
         "outcome": "error",
-        "seconds": 0.012140082981204614
+        "seconds": 0.01625516702188179
       },
       {
         "id": "test_timer.TimerContracts.test_zero_initialization_and_stop_are_committed_before_observation",
         "outcome": "passed",
-        "seconds": 0.03258358399034478
+        "seconds": 0.03536025001085363
       },
       {
         "id": "test_timer.TimerContracts.test_shared_self_increments_preserve_cross_and_timer_counts",
         "outcome": "passed",
-        "seconds": 0.03701562501373701
+        "seconds": 0.038603416993282735
       }
     ]
   },
   "full_regression": null,
   "independent_review": {
-    "spec": "completed; no actionable findings in frozen implementation diff",
-    "standards": "completed; no actionable findings, including shared-owner fallback supplement",
+    "spec": "completed; type-safety supplement resolved",
+    "standards": "completed; source-snapshot and owner/identity supplements resolved",
     "implementation_diff_sha256": "adeb956036b16a3ab084ef1f18683e540caf9f7099a39ffc3ff9facfcd039b97"
   },
   "spectre": "deferred_by_user",
@@ -574,12 +576,68 @@
       1
     ],
     "status": "unchanged open limitation",
-    "test": "RN_exit_band_retains_prior_held_value"
+    "test": "RN_exit_band_retains_prior_held_value",
+    "source": "`include \"disciplines.vams\"\nmodule m(u,y,r);input u;output y;inout r;electrical u,y,r;real q;analog begin @(initial_step)q=0;if(V(u,r)>0.5)q=1;V(y,r)<+q;end endmodule",
+    "instance": {
+      "name": "dut",
+      "module": "m",
+      "connections": {
+        "u": "u",
+        "y": "y",
+        "r": "0"
+      }
+    },
+    "inputs": {
+      "u": [
+        [
+          0,
+          0.4990234375
+        ],
+        [
+          0.5,
+          0.5009765625
+        ],
+        [
+          1,
+          0.4990234375
+        ]
+      ]
+    },
+    "output_times_s": [
+      0,
+      0.5,
+      0.7499999999999999,
+      0.75,
+      1
+    ],
+    "stop_s": 1,
+    "max_step_s": 1,
+    "oracle": "q is written to1 during the genuine pulse; there is no later source reset; a false current predicate retains prior q",
+    "evidence_status": "same original request rerun; open failure, not a passing regression"
   },
   "local_checks": {
     "lint": "passed before owner-fallback fix; final CI pending",
     "early_integration": "3/3 passed",
     "rust_initial": "881 passed;2 typed-calendar regressions;1 ignored in lib, plus11 IR tests passed",
-    "rust_repair": "2/2 typed-calendar regressions pass after reusing existing request owner; final CI pending"
+    "rust_repair": "2/2 typed-calendar regressions pass after reusing existing request owner; final CI pending",
+    "regression_repair": "15/15 original newly regressed methods pass after repair"
+  },
+  "rejected_candidate": {
+    "commit": "8b9eaf3c9de1ca079e4646283a6b356de53ec14b",
+    "ci_run": 40191215821,
+    "methods": 3257,
+    "passed": 2605,
+    "failed": 429,
+    "error": 220,
+    "expected_failure": 3,
+    "new_regressions": 15,
+    "status": "not accepted; original evidence retained",
+    "fixes": [
+      "prefix persistent/occurrence role ownership",
+      "retain public monitor snapshots and original RN division",
+      "static integer type audit on dormant/all-arm stores",
+      "lazy integer-only metadata scan and producer duplicate capture rejection",
+      "independently adjudicated lazy value expectation"
+    ]
   }
 }

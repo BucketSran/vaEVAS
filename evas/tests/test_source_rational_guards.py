@@ -77,9 +77,15 @@ class SourceOnlyRationalContracts(unittest.TestCase):
         self.assertEqual(outputs(run(p,d=0,en=0)),[0,0,0])
 
     def test_unselected_constant_zero_divisor_is_still_audited(self):
-        with self.assertRaises((CompileError,KernelError)):
-            p=compile_body('q=(V(en)>0.5)?V(n)/V(d):1.0/0.0; V(y)<+(q>0.5)?0.9:0.0;')
-            run(p)
+        # IR33 retains both source arms, but numeric domain errors belong to
+        # the selected arm. The original source with en=1 has q=0.5 exactly.
+        p=compile_body('q=(V(en)>0.5)?V(n)/V(d):1.0/0.0; V(y)<+(q>0.5)?0.9:0.0;')
+        self.assertEqual(outputs(run(p)),[0,0,0])
+        with self.assertRaisesRegex(KernelError,'DivisionByZero'):
+            run(p,en=0)
+        # Laziness does not license an invalid name in the unselected arm.
+        with self.assertRaises(CompileError):
+            compile_body('q=(V(en)>0.5)?V(n)/V(d):unknown; V(y)<+q;')
 
     def test_unselected_hidden_zero_output_dependency_stays_outside_scope(self):
         with self.assertRaises((CompileError,KernelError)):

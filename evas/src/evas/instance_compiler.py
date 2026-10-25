@@ -450,9 +450,6 @@ class InstanceCompiler:
         all_writers = persistent | analog_writers
         immutable_names = set(self.model.variable_initializers) - all_writers - declaration_writers - set(self.model.arrays)
         self.local_variables = analog_writers - persistent
-        if self.procedure_builder is not None:
-            self.procedure_builder.declare(self.local_variables)
-            self.binding_values = self.procedure_builder.values
         self.integer_event_prefix = None
         if floor_prefix_candidates is not None:
             from .ordinary_integer_event_prefix import qualify as integer_event_prefix
@@ -462,6 +459,11 @@ class InstanceCompiler:
                 # Every internal slot read is dominated by its same-callback
                 # original prefix. The hint above grants no qualification.
                 self.local_variables.difference_update(plan.names)
+        if self.procedure_builder is not None:
+            # Qualified callback prefixes own persistent integer slots. Do
+            # not also allocate an occurrence-local binding for their names.
+            self.procedure_builder.declare(self.local_variables)
+            self.binding_values = self.procedure_builder.values
         self.preserve_analog_structure = self.compilation.preserve_structure or bool(self.local_variables)
         read_query = None
         if self.model.functions:
@@ -1087,11 +1089,6 @@ class InstanceCompiler:
             if source is None and self.event_trigger_expression:
                 raise CompileError(f"{self.model.source}: event expressions cannot read ordinary analog local variable {name!r}; use direct input or persistent state expressions",
                                    code='unsupported_local_event', instance=self.instance.name)
-            if self.event_trigger_expression:
-                # Monitor evaluation has no procedure activation. aliases_at
-                # proved this particular source-position alias; the event body
-                # below still consumes the executable local capture.
-                return source
             return self.local_read(name, source)
         if name in self.active_event_aliases:
             return self.active_event_aliases[name]
@@ -3137,5 +3134,8 @@ class InstanceCompiler:
                 checked = ()
             self.compilation.contributions.append(self.make_ir(Contribution, identity, p, n, value, origin))
             if self.procedure_builder is not None:
-                self.procedure_builder.contribution(branch_statement, len(self.compilation.contributions)-1,
-                                                   continue_capture=index in mixed)
+                if index in mixed:
+                    self.procedure_builder.contribution(branch_statement, len(self.compilation.contributions)-1,
+                                                       continue_capture=True)
+                else:
+                    self.procedure_builder.contribution(branch_statement, len(self.compilation.contributions)-1)

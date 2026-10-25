@@ -15,6 +15,17 @@ pub(crate) fn integral(e: &E, p: &Program) -> bool {
         | E::CheckedIndex { .. } => true,
         E::Affine { constant, terms } => terms.is_empty() && constant.fract() == 0.,
         E::State { state } => p.states[*state].kind == crate::ir::StateKind::Integer,
+        E::RealBoundary { value, .. } => integral(value, p),
+        E::RealBinary {
+            operation,
+            left,
+            right,
+            ..
+        } => {
+            !matches!(operation, crate::ir::RealOperation::Divide)
+                && integral(left, p)
+                && integral(right, p)
+        }
         E::Add { left, right } | E::Multiply { left, right } => {
             integral(left, p) && integral(right, p)
         }
