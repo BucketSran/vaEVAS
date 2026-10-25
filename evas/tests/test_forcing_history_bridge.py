@@ -4,6 +4,7 @@ from fractions import Fraction as F
 from pathlib import Path
 import copy,unittest
 from evas import Instance,compile_sources,transient,KernelError
+from initial_named_batches_contract import check_named_initial_batches
 KERNEL=Path(__file__).resolve().parents[2]/'evas/rust_core/target/debug/evas-kernel'
 SOURCE='''`include "disciplines.vams"
 module sample(a,b,c,y,s); input a,b,c; output y,s; electrical a,b,c,y,s; real q,r;
@@ -20,7 +21,9 @@ class ForcingHistoryBridge(unittest.TestCase):
  def program(self,source=SOURCE):
   return compile_sources({'independent-mid-history.va':source},[Instance('dut','sample',{n:n for n in 'abcys'},{})])
  def run_sample(self,times):
-  result=transient(self.program(),INPUTS,times,stop=1,max_step=1,kernel=KERNEL)
+  p=self.program()
+  result=transient(p,INPUTS,times,stop=1,max_step=1,kernel=KERNEL)
+  result=check_named_initial_batches(result,p,dict(q=0,r=0),[])
   for t,row,box in zip(times,result['solutions'],result['observation_evidence']['voltage_bounds_V']):
    t=F(t);expected={'s':min(F(1),max(F(0),2*(t-F(1,4)))), 'y':t*(1-t)+min(F(1,2),max(F(0),4*(t-F(1,2))))}
    for name,want in expected.items():
@@ -100,6 +103,8 @@ class ForcingTargetComposition(unittest.TestCase):
   p=target_program(mode)
   if mode=='native':self.assertIn("'op': 'integer_primitive'",str(p.to_dict()['operators']))
   result=transient(p,TARGET_INPUTS,times,stop=1.25,max_step=1,kernel=KERNEL)
+  initial=dict(q=0) if mode=='history' else dict(q=0,n=-9999 if mode=='native' else -3)
+  result=check_named_initial_batches(result,p,initial,[])
   def ramp(t,start):return min(F(1),max(F(0),8*(t-start)))
   for t,row,box in zip(times,result['solutions'],result['observation_evidence']['voltage_bounds_V']):
    t=F(t);parent=min(F(1),max(F(0),2*(t-F(1,4))))-min(F(1),max(F(0),2*(t-F(3,4))))

@@ -9,6 +9,11 @@
 原失败和独立控制；同控制器拒绝重试检查状态与历史隔离。合同迁移、混合、待证及真实缺口分开记录，
 原失败分母保留。Spectre 按用户要求暂缓，四个同源案例已列入待跑，不授予对齐或共同Q资格。
 
+[过程帧消费者后续批次](../../../experiments/backends/support/ir33-recovery/README.md#过程帧与依赖传递后续批次)
+补充 LANG、ANALOG、EVENT-ORDER、EVENT-CONDITIONS、TRANSITION、DYNAMICS、COMPOSE
+的有限适配证据。收据绑定本批源码、逐方法差异和独立审查；原 691 项审计身份保持。
+静态结构依赖不等于物理取值证明，闭合选路不扩大一般 RN 历史/反馈范围，Spectre 仍待跑。
+
 [四路最小合同](../../../experiments/backends/support/low-cost-closure/minimum-contracts-four-lanes.json)
 补充 LANG、ANALOG、TIMER、TRANSITION、EVENT-ORDER、TIMED-OPERATOR、COMPOSE 和 DYNAMICS 的本地开发证据。
 受限 SCS 入口、原电压接口、有理截止点及 DC 保持斜坡分别以独立答案和拒绝控制验收；

@@ -104,7 +104,8 @@ class InitialSourceSequenceCalibration(unittest.TestCase):
     def test_rejects_initial_and_source_order_counterexamples(self):
         for mutation in ['missing','duplicate','wrong_before','wrong_after','forged_source',
                          'wrong_index','wrong_kind','wrong_bounds','guard','fired','order',
-                         'timer_before','timer_after','query_state','declaration']:
+                         'timer_before','timer_after','missing_timer','duplicate_timer','joint_snapshots',
+                         'query_state','declaration']:
             with self.subTest(mutation=mutation):
                 wire,result,expected=self.fixture();e=result['transient']['events']
                 if mutation=='missing':e.pop(0)
@@ -120,6 +121,12 @@ class InitialSourceSequenceCalibration(unittest.TestCase):
                 elif mutation=='order':e.reverse()
                 elif mutation=='timer_before':e[1]['before']=[0,0]
                 elif mutation=='timer_after':e[1]['after']=[.5,2]
+                elif mutation=='missing_timer':e.pop()
+                elif mutation=='duplicate_timer':e.append(copy.deepcopy(e[1]))
+                elif mutation=='joint_snapshots':
+                    for record in e:
+                        record['before']=[0,0]
+                        record['after']=[.5,1]
                 elif mutation=='query_state':result['transient']['states'][0]=[.5,0]
                 elif mutation=='declaration':wire['states'][0]['initial']=.5
                 with self.assertRaises(AssertionError):check_initial_source_sequence(result,wire,[0,0],expected)

@@ -179,6 +179,25 @@ analog begin @(initial_step)begin a=1;n=0;end
             positive=1,negative=0,rhs=dict(op='multiply',left=dict(op='affine',constant=0,terms=[]),right=dict(op='state',state=0)),
             origin=item['events'][0]['origin'])]
         bad.append(item)
+        # A dormant gate must still reject a real-to-integer assignment.
+        # Neither an explicit snapshot nor an array/unused branch may hide it.
+        for role in ('snapshot', 'array', 'inactive-arm'):
+            item=copy.deepcopy(p)
+            event=item['events'][0]
+            event['body']=list(event['body'])
+            assignment=event['body'][1]
+            real=dict(op='state',state=0)
+            scalar=lambda v:dict(op='affine',constant=v,terms=[])
+            if role=='snapshot':
+                assignment['rhs']=dict(op='real_boundary',value=real,kind='snapshot',origin=event['origin'])
+            elif role=='array':
+                event['body'][1]=dict(kind='array_write',states=[assignment['state']],index=scalar(0),
+                                     rhs=real,first=0,last=0,origin=event['origin'])
+            else:
+                assignment['rhs']=real
+                event['body'][1]=dict(kind='if',relation='gt',left=scalar(0),right=scalar(1),
+                                     then_body=[assignment],else_body=[],origin=event['origin'])
+            bad.append(item)
         for index, payload in enumerate(bad):
             payload['events'][0]['trigger']['start']=2.0
             with self.subTest(payload=payload):
@@ -193,7 +212,7 @@ analog begin @(initial_step)begin a=1;n=0;end
                     ('invalid_ir', 'source identity mismatch'),
                     ('unsupported_transient', 'integer assignments require integral state arithmetic'),
                     ('invalid_ir', 'contribution has no procedure capture owner'),
-                ]
+                ] + [('unsupported_transient', 'integer assignments require integral state arithmetic')]*3
                 self.assertEqual(error['kind'], expected[index][0])
                 self.assertRegex(error['message'], expected[index][1])
 

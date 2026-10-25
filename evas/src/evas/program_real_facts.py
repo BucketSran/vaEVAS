@@ -39,12 +39,12 @@ class ProgramRealFacts:
         self.memo = {}
         self.active = set()
 
-    def record_read(self, read, sources, *, relation=None):
+    def record_read(self, read, sources, *, relation=None, origin=None):
         self.work('program_fact_read_record', 2 + len(sources))
         # Keeping the read and its immutable source children prevents identity
         # reuse and future writes to the same binding from changing this fact.
         assert id(read) not in self.reads
-        self.reads[id(read)] = (read, tuple(sources), relation)
+        self.reads[id(read)] = (read, tuple(sources), relation, origin)
 
     def sources(self, read, *, values_only=False):
         self.work('program_fact_read_lookup', 1)

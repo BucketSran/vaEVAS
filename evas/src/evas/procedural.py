@@ -85,12 +85,51 @@ class ProcedureBuilder:
         return c.make_ir(Origin, token.source or c.model.source, token.line,
                          token.column, c.instance.name, token.expansion)
 
+    def conditional_integer_bindings(self):
+        c = self.compiler
+        # A conditional integer write needs the same source-position slot as
+        # a real local. Closed integer aliases keep their existing lowering.
+        conditional_integers = set()
+        integer_reads = []
+        pending = [(source, False) for source in c.model.analog]
+        while pending:
+            source, conditional = pending.pop()
+            c.compilation.native_audit.debit("procedure_integer_binding_scan", 3, source)
+            if isinstance(source, SourceConditional):
+                pending.extend((child, True) for child in (*source.then_body, *source.else_body))
+            elif isinstance(source, SourceAssignment) and c.model.variables.get(source.name) == 'integer':
+                if conditional:
+                    conditional_integers.add(source.name)
+                reads, expressions = set(), [source.rhs]
+                while expressions:
+                    expr = expressions.pop()
+                    c.compilation.native_audit.debit("procedure_integer_binding_read", 3 + len(expr.args), expr)
+                    if expr.op == 'parameter':
+                        reads.add(expr.value)
+                    expressions.extend(expr.args)
+                integer_reads.append((source.name, reads))
+        changed = True
+        while changed:
+            changed = False
+            for name, reads in integer_reads:
+                c.compilation.native_audit.debit("procedure_integer_binding_dependency", 2 + len(reads))
+                if name not in conditional_integers and reads & conditional_integers:
+                    conditional_integers.add(name)
+                    changed = True
+        return conditional_integers
+
     def declare(self, names):
         c = self.compiler
+        conditional_integers = None
         for name in c.model.variables:
             c.compilation.native_audit.debit("procedure_binding_declaration", 3)
-            if name not in names or c.model.variables[name] != "real":
+            if name not in names:
                 continue
+            if c.model.variables[name] != 'real':
+                if conditional_integers is None:
+                    conditional_integers = self.conditional_integer_bindings()
+                if name not in conditional_integers:
+                    continue
             binding = len(c.compilation.real_bindings)
             c.compilation.real_bindings.append(c.make_ir(
                 RealBinding, self.procedure_id, name,
@@ -301,9 +340,13 @@ class ProcedureBuilder:
             "procedure_contribution_key", 3 + len(expansion), source)
         return source.token, expansion
 
-    def contribution(self, source, index):
+    def contribution(self, source, index, *, continue_capture=False):
         self.compiler.compilation.native_audit.debit("procedure_contribution_record", 4, source)
-        self.contributions.setdefault(self.contribution_key(source), []).append(index)
+        captures = self.contributions.setdefault(self.contribution_key(source), [])
+        if continue_capture:
+            captures[-1].append(index)
+        else:
+            captures.append([index])
 
     def conditional(self, source, relation, left, right, origin):
         self.compiler.compilation.native_audit.debit("procedure_condition_record", 7, source)
@@ -367,7 +410,11 @@ class ProcedureBuilder:
                                            code="unsupported_event_context", token=source.token,
                                            instance=c.instance.name)
                 elif isinstance(source, ContributionStatement):
-                    for index in self.contributions.get(self.contribution_key(source), ()):
+                    # Lowered case defaults can share a source token in
+                    # mutually exclusive arms. Each expanded occurrence owns
+                    # its own emitted rows; do not replay every matching row.
+                    captures = self.contributions.get(self.contribution_key(source), [])
+                    for index in captures.pop(0) if captures else ():
                         steps.append(step(c.make_ir(ContributionCapture, index)))
                 elif isinstance(source, BoundStep):
                     for index in self.step_bounds.get(source.token, ()):
@@ -413,6 +460,9 @@ class ProcedureBuilder:
                 return c.make_ir(EventGate, index)
 
         steps = body(c.model.procedure)
+        if any(self.contributions.values()):
+            raise CompileError("source contribution has more than one capture occurrence",
+                               code="invalid_ir", instance=c.instance.name)
         if any(self.events.values()) or any(self.actions.values()) or any(self.conditions.values()):
             raise CompileError("compiled source steps are missing from the retained procedure",
                                instance=c.instance.name)

@@ -86,7 +86,7 @@ V(y) <+ w;'''
 if (x > 5) x = 1;
 else x = 0.01/(V(u) - 0.4);
 V(y) <+ x;'''
-        with self.assertRaisesRegex(KernelError, 'denominator interval contains zero'):
+        with self.assertRaisesRegex(KernelError, 'program-real arithmetic: DivisionByZero'):
             run(body, [0, .5, 1])
 
     def test_driven_or_shared_output_is_not_a_readout(self):

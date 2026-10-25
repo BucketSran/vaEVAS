@@ -54,30 +54,38 @@ class SourceOnlyRationalContracts(unittest.TestCase):
 
     def test_selected_zero_denominator_rejects(self):
         p=compile_body('q=V(n)/V(d); V(y)<+(q>0.5)?0.9:0.0;')
-        with self.assertRaisesRegex(KernelError,'denominator'):
+        with self.assertRaisesRegex(KernelError,'program-real arithmetic: DivisionByZero'):
             run(p,d=0)
 
     def test_denominator_error_box_crossing_zero_rejects(self):
         p=compile_body('q=V(n)/V(d); V(y)<+(q>0.5)?0.9:0.0;')
         with self.assertRaises(KernelError) as caught:
             run(p,d=.1,errors={'d':.2})
-        self.assertIn(caught.exception.diagnostic['kind'], ('nonfinite_arithmetic','waveform_accuracy'))
-        self.assertIn('zero', caught.exception.diagnostic['message'])
+        self.assertEqual(caught.exception.diagnostic['kind'], 'real_arithmetic')
+        self.assertIn('DivisionAcrossZero', caught.exception.diagnostic['message'])
 
     def test_uncertain_guard_without_exact_source_provenance_rejects(self):
         p=compile_body('q=V(n)/V(d); V(y)<+(q>0.5)?0.9:0.0;')
         with self.assertRaises(KernelError) as caught:
             run(p,errors={'n':.01})
-        self.assertEqual(caught.exception.diagnostic['kind'], 'condition_precision')
+        self.assertEqual(caught.exception.diagnostic['kind'], 'event_condition')
+        self.assertIn('not certified over its complete source-position enclosure',
+                      caught.exception.diagnostic['message'])
 
     def test_inactive_variable_pole_keeps_existing_lazy_value_semantics(self):
         p=compile_body('q=(V(en)>0.5)?V(n)/V(d):0.0; V(y)<+q;')
         self.assertEqual(outputs(run(p,d=0,en=0)),[0,0,0])
 
     def test_unselected_constant_zero_divisor_is_still_audited(self):
-        with self.assertRaises((CompileError,KernelError)):
-            p=compile_body('q=(V(en)>0.5)?V(n)/V(d):1.0/0.0; V(y)<+(q>0.5)?0.9:0.0;')
-            run(p)
+        # IR33 retains both source arms, but numeric domain errors belong to
+        # the selected arm. The original source with en=1 has q=0.5 exactly.
+        p=compile_body('q=(V(en)>0.5)?V(n)/V(d):1.0/0.0; V(y)<+(q>0.5)?0.9:0.0;')
+        self.assertEqual(outputs(run(p)),[0,0,0])
+        with self.assertRaisesRegex(KernelError,'DivisionByZero'):
+            run(p,en=0)
+        # Laziness does not license an invalid name in the unselected arm.
+        with self.assertRaises(CompileError):
+            compile_body('q=(V(en)>0.5)?V(n)/V(d):unknown; V(y)<+q;')
 
     def test_unselected_hidden_zero_output_dependency_stays_outside_scope(self):
         with self.assertRaises((CompileError,KernelError)):

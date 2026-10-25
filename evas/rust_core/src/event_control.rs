@@ -489,7 +489,12 @@ pub(crate) fn admit<'a>(
         .as_object()
         .unwrap()
         .iter()
-        .any(|(name, v)| name != "events" && name != "operators" && event_only(v))
+        // Procedure bodies have the same typed executor as event bodies and
+        // are validated by procedure::validate, including inactive branches.
+        // Numerical equation/trigger fields still cannot own these operations.
+        .any(|(name, v)| {
+            name != "events" && name != "operators" && name != "procedures" && event_only(v)
+        })
     {
         return Err(Error::new(
             "unsupported_analysis",

@@ -63,3 +63,26 @@ class StaticQueryTests(unittest.TestCase):
             self.assertEqual(dependencies, {'0', 'u'})
             self.assertTrue(all({program.nodes[c['positive']], program.nodes[c['negative']]}=={'0','y'}
                                 for c in index['contributions']))
+
+    def test_source_locals_keep_control_and_cancelled_dependencies(self):
+        for body in [
+            'local=V(u,r)-V(u,r); V(y,r)<+local;',
+            'if(V(u,r)>0) local=1; else local=2; V(y,r)<+local;',
+            'case(V(u)) 1:V(y,r)<+1; default:V(y,r)<+2; endcase',
+        ]:
+            with self.subTest(body=body):
+                p = compile_sources({'query.va':model(body, 'real local;')}, [instance()])
+                index = static_index(p)
+                self.assertEqual({p.nodes[n] for c in index['contributions'] for n in c['input_nodes']},
+                                 {'0', 'u'})
+
+    def test_local_dependencies_remain_instance_private_after_overwrites(self):
+        source = model('local=V(u,r); local=local+1; V(y,r)<+local;', 'real local;')
+        p = compile_sources({'query.va':source}, [
+            instance('a', connections=dict(u='ua',y='ya',r='0')),
+            instance('b', connections=dict(u='ub',y='yb',r='0'))])
+        before = p.to_dict()
+        rows = static_index(p)['contributions']
+        self.assertEqual({row['origin']['instance']:{p.nodes[n] for n in row['input_nodes']}
+                          for row in rows}, {'a':{'0','ua'}, 'b':{'0','ub'}})
+        self.assertEqual(p.to_dict(), before)

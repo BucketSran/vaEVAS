@@ -2326,7 +2326,26 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
             Some(prepared),
         );
     }
-    if !request.program.operators.is_empty()
+    let closed_procedure_math = if !request.program.procedures.is_empty()
+        && !request.program.operators.is_empty()
+        && request.program.operators.iter().all(|op| {
+            matches!(
+                op,
+                crate::ir::OperatorSpec::Math { .. } | crate::ir::OperatorSpec::Sin { .. }
+            )
+        }) {
+        let owner = trajectory
+            .procedure_work()
+            .or(trajectory.analytic_work())
+            .cloned()
+            .unwrap_or_default();
+        trajectory.bind_procedure_work(&owner)?;
+        crate::procedure::closed_math_program(&request.program, &owner)?
+    } else {
+        false
+    };
+    if !closed_procedure_math
+        && !request.program.operators.is_empty()
         && request
             .program
             .contributions

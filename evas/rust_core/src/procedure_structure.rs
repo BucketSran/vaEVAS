@@ -229,6 +229,19 @@ pub(super) fn expression(
     }
     Ok(())
 }
+fn integer_store(slot: usize, value: &E, p: &Program) -> Result<(), Error> {
+    // Type validity is independent of the event horizon or selected arm.
+    // A checked integer operation has its own runtime range obligation;
+    // an arbitrary real state/local is not an implicit integer conversion.
+    if p.states[slot].kind == ir::StateKind::Integer && !crate::event_numeric::integral(value, p) {
+        return Err(Error::new(
+            "unsupported_transient",
+            "integer assignments require integral state arithmetic",
+        ));
+    }
+    Ok(())
+}
+
 pub(super) fn statement(
     s: &S,
     p: &Program,
@@ -241,6 +254,7 @@ pub(super) fn statement(
         S::Assign(a) => {
             state(a.state, p, owner, w)?;
             expression(&a.rhs, p, Some(procedure), owner, w)?;
+            integer_store(a.state, &a.rhs, p)?;
         }
         S::ArrayWrite {
             states,
@@ -254,6 +268,9 @@ pub(super) fn statement(
             array(states, *first, *last, p, owner, w)?;
             expression(index, p, Some(procedure), owner, w)?;
             expression(rhs, p, Some(procedure), owner, w)?;
+            for &slot in states {
+                integer_store(slot, rhs, p)?;
+            }
         }
         S::Display {
             format,

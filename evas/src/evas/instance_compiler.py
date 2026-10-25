@@ -24,7 +24,7 @@ from .parameters import bind_parameters
 from .elaboration import unroll_loops
 from .array_elaboration import scalarize_arrays, ARRAY_BUDGET
 from . import event_index_domains, integer_bits, finite_math
-from .native_audit import NativeAudit
+from .native_audit import NativeAudit, Charge
 from .rational_predicates import condition_positive_facts, normalize_positive_quotient_comparison
 from .initialization_aliases import bind_initial_voltage_aliases, bind_runtime_voltage_aliases, bind_event_body_aliases
 from .syntax import (CompileError, Model, contains_operator, contains_decision,
@@ -210,8 +210,18 @@ class Compilation:
                 if nodes & targets:
                     raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: nonconstant mathematical functions require a waveform contribution")
         pending = list(self.readout_pending)
+        local_facts = {}
+        if self.source_rational_origins or pending:
+            # These immutable read facts belong to this compilation and retain
+            # source-position versions. Do not substitute the final local value.
+            for builder in self.procedure_builders:
+                self.native_audit.ir_work('input_rational_scope_copy', len(builder.scope_facts))
+                local_facts.update(builder.scope_facts)
         if self.source_rational_origins:
-            trees = [input_rational_tree(c.rhs, self.source_rational_nodes) for c in result.contributions]
+            trees = [input_rational_tree(c.rhs, self.source_rational_nodes,
+                                        local_facts=local_facts,
+                                        work=self.native_audit.ir_work)
+                     for c in result.contributions]
             if (result.states or result.events or result.operators or result.step_bounds
                     or any(tree is None for tree in trees)):
                 # A stateful program may still own these decisions as unread
@@ -219,7 +229,7 @@ class Compilation:
                 pending.extend((origin, "non-affine guards require a complete stateless input-only algebraic program")
                                for origin in self.source_rational_origins)
         if pending:
-            readout_scope.check(result, pending, self.native_audit)
+            readout_scope.check(result, pending, self.native_audit, local_facts)
         return result
 
 
@@ -440,9 +450,6 @@ class InstanceCompiler:
         all_writers = persistent | analog_writers
         immutable_names = set(self.model.variable_initializers) - all_writers - declaration_writers - set(self.model.arrays)
         self.local_variables = analog_writers - persistent
-        if self.procedure_builder is not None:
-            self.procedure_builder.declare(self.local_variables)
-            self.binding_values = self.procedure_builder.values
         self.integer_event_prefix = None
         if floor_prefix_candidates is not None:
             from .ordinary_integer_event_prefix import qualify as integer_event_prefix
@@ -452,6 +459,11 @@ class InstanceCompiler:
                 # Every internal slot read is dominated by its same-callback
                 # original prefix. The hint above grants no qualification.
                 self.local_variables.difference_update(plan.names)
+        if self.procedure_builder is not None:
+            # Qualified callback prefixes own persistent integer slots. Do
+            # not also allocate an occurrence-local binding for their names.
+            self.procedure_builder.declare(self.local_variables)
+            self.binding_values = self.procedure_builder.values
         self.preserve_analog_structure = self.compilation.preserve_structure or bool(self.local_variables)
         read_query = None
         if self.model.functions:
@@ -1151,7 +1163,8 @@ class InstanceCompiler:
                 return table
             value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)
             if assignment_root and not self.integral(value) and expr.op == "voltage":
-                if not isinstance(value, Affine) or not self.expression_nodes(value).issubset(self.allowed_condition_nodes):
+                probe = value.value if isinstance(value, RealBoundary) and value.kind == 'sample' else value
+                if not isinstance(probe, Affine) or not self.expression_nodes(value).issubset(self.allowed_condition_nodes):
                     raise CompileError("integer conversion requires a direct physical input probe", token=expr.token, instance=self.instance.name)
                 from .integer_invariants import ProofBudgetExceeded
                 work = self.compilation.integer_proof_owner
@@ -2682,7 +2695,8 @@ class InstanceCompiler:
     def readout_candidate(self, value, origin, message):
         # Defer only a structural candidate; Compilation.program() requires the
         # complete Program to keep this decision in unread grounded outputs.
-        if not readout_scope.readout_tree(value):
+        view = readout_scope.scope_view(value, self.program_facts.reads, self.compilation.native_audit)
+        if not readout_scope.readout_tree(view):
             return False
         self.compilation.readout_pending.append((origin, message))
         return True
@@ -2744,9 +2758,13 @@ class InstanceCompiler:
         return (expr.op in OPERATOR_NAMES-pure_math or
                 any(InstanceCompiler.contains_history_call(arg) for arg in expr.args))
 
-    def lower_local(self, expr, env, *, preserve_structure=False, conditional=False, positive_facts=(), program_real=False, execute_calls=False, source_floor_prefix=False):
+    def lower_local(self, expr, env, *, preserve_structure=False, conditional=False, positive_facts=(), program_real=False, execute_calls=False, source_floor_prefix=False, held_plan=None):
         resolve = self.local_symbol(env)
         resolve.program_real = program_real
+        if held_plan is not None:
+            charge = Charge(self.compilation.native_audit, None)
+            resolve.integer_arithmetic = lambda item, a, b: held_power2.arithmetic(self, held_plan, item, a, b)
+            resolve.native_integer = lambda item: self.native_event_integer(item, resolve, charge)
         if source_floor_prefix:
             resolve.source_floor = lambda item, operand: self.source_floor(item, operand, resolve)
         if program_real and self.procedure_builder is not None:
@@ -2781,6 +2799,12 @@ class InstanceCompiler:
                          self.make_ir(Origin, item.token.source or self.model.source, item.token.line, item.token.column,
                                 self.instance.name, item.expansion))
             self.checked_ir(raw, raw.origin)
+            if held_plan is not None:
+                # The complete held-power2 source plan has already checked
+                # every operand, integer domain and program role. Retain the
+                # executable decision in its ordinary capture, not an affine
+                # reinterpretation of the integer primitive.
+                return raw
             # Keep the existing denominator proof before the stateless input
             # fallback: another instance may add a waveform operator later.
             normalized = normalize_positive_quotient_comparison(relation, left, right, positive_facts)
@@ -2972,7 +2996,7 @@ class InstanceCompiler:
                             self.compilation.native_audit.debit("procedure_binding_degree_merge", 2)
                             self.procedure_builder.degree_facts[id(result[name])] = (result[name], degree)
                             self.program_facts.record_read(result[name],
-                                (left, right, then_env[name], else_env[name]), relation=relation)
+                                (left, right, then_env[name], else_env[name]), relation=relation, origin=origin)
                         continue
                     if then_env[name] is else_env[name]:
                         result[name] = then_env[name]
@@ -3009,6 +3033,12 @@ class InstanceCompiler:
                         self.compilation.native_audit.activate(statement)
                         self.compilation.native_audit.debit("held_power2_alias_ready", 4, statement)
                         self.held_power2_ready[statement.name] = statement.rhs
+                        if self.procedure_builder is not None:
+                            value = self.lower_local(statement.rhs, result,
+                                                     preserve_structure=self.preserve_analog_structure,
+                                                     program_real=True, held_plan=plan)
+                            self.checked_ir(value, self.procedure_builder.origin(statement.token))
+                            result[statement.name] = self.procedure_builder.capture(statement, value)
                         continue
                 prefix_source = (self.procedure_builder is not None and self.integer_event_prefix is not None
                                  and statement.name in self.integer_event_prefix.names
@@ -3031,7 +3061,7 @@ class InstanceCompiler:
                                                token=statement.token, instance=self.instance.name)
                     else:
                         self.validate_integer_value(value, statement.token)
-                if self.procedure_builder is not None and (self.model.variables[statement.name] == "real" or statement.name in self.state_ids):
+                if self.procedure_builder is not None and (statement.name in self.procedure_builder.bindings or statement.name in self.state_ids):
                     result[statement.name] = self.procedure_builder.capture(statement, value)
                 else:
                     result[statement.name] = value
@@ -3104,4 +3134,8 @@ class InstanceCompiler:
                 checked = ()
             self.compilation.contributions.append(self.make_ir(Contribution, identity, p, n, value, origin))
             if self.procedure_builder is not None:
-                self.procedure_builder.contribution(branch_statement, len(self.compilation.contributions)-1)
+                if index in mixed:
+                    self.procedure_builder.contribution(branch_statement, len(self.compilation.contributions)-1,
+                                                       continue_capture=True)
+                else:
+                    self.procedure_builder.contribution(branch_statement, len(self.compilation.contributions)-1)

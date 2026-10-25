@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "source_head": "d47f829945d9cc1cc559617d4d1e55987cec7f3d",
+  "merged_main": "ca943272dfcf223706f0573482d7260188fc2cd7",
+  "ci_run": "40180512662",
+  "ci_url": "https://github.com/BucketSran/vaEVAS/actions/runs/40180512662",
+  "method_inventory": 3255,
+  "method_outcomes": {
+    "passed": 2561,
+    "error": 268,
+    "failed": 423,
+    "expected_failure": 3
+  },
+  "audited_nonpassing_methods": 691,
+  "ci_failure_error_records": 957,
+  "categories": {
+    "test_expectation_error": 316,
+    "insufficient_evidence": 269,
+    "implementation_error": 105,
+    "unsupported_capability": 1
+  },
+  "candidate_categories": {
+    "implementation_error": 60,
+    "unsupported_capability": 1
+  },
+  "review_category_counts": {
+    "test_expectation_error": 316,
+    "implementation_error": 165,
+    "insufficient_evidence": 208,
+    "unsupported_capability": 2
+  },
+  "confirmed": {
+    "test_expectation_error": 316,
+    "insufficient_evidence": 0,
+    "implementation_error": 105,
+    "unsupported_capability": 1
+  },
+  "provisional": {
+    "test_expectation_error": 0,
+    "insufficient_evidence": 269,
+    "implementation_error": 0,
+    "unsupported_capability": 0
+  },
+  "category_by_symptom": {
+    "audit_contract": {
+      "insufficient_evidence": 4,
+      "test_expectation_error": 7
+    },
+    "binding_identity": {
+      "insufficient_evidence": 1,
+      "implementation_error": 5
+    },
+    "budget": {
+      "insufficient_evidence": 37,
+      "test_expectation_error": 2,
+      "implementation_error": 1
+    },
+    "diagnostic_contract": {
+      "test_expectation_error": 44,
+      "insufficient_evidence": 12,
+      "implementation_error": 4
+    },
+    "finite_domain": {
+      "insufficient_evidence": 49,
+      "test_expectation_error": 14
+    },
+    "frontend_binding": {
+      "insufficient_evidence": 10,
+      "unsupported_capability": 1,
+      "implementation_error": 15
+    },
+    "frontend_scope": {
+      "implementation_error": 37,
+      "insufficient_evidence": 18,
+      "test_expectation_error": 3
+    },
+    "history_scope": {
+      "implementation_error": 17,
+      "test_expectation_error": 3,
+      "insufficient_evidence": 15
+    },
+    "initial_records": {
+      "test_expectation_error": 113,
+      "insufficient_evidence": 3
+    },
+    "initialization": {
+      "implementation_error": 12,
+      "insufficient_evidence": 7
+    },
+    "ir_shape": {
+      "test_expectation_error": 34,
+      "insufficient_evidence": 2,
+      "implementation_error": 1
+    },
+    "negative_contract": {
+      "test_expectation_error": 64,
+      "insufficient_evidence": 67
+    },
+    "numeric_behavior": {
+      "test_expectation_error": 17
+    },
+    "predicate_domain": {
+      "test_expectation_error": 3,
+      "insufficient_evidence": 35,
+      "implementation_error": 1
+    },
+    "runtime_other": {
+      "insufficient_evidence": 8
+    },
+    "test_harness": {
+      "test_expectation_error": 12
+    },
+    "unbound_frame": {
+      "implementation_error": 12,
+      "insufficient_evidence": 1
+    }
+  },
+  "symptom_counts": {
+    "diagnostic_contract": 60,
+    "finite_domain": 63,
+    "negative_contract": 131,
+    "initial_records": 116,
+    "numeric_behavior": 17,
+    "ir_shape": 37,
+    "frontend_scope": 58,
+    "runtime_other": 8,
+    "budget": 40,
+    "predicate_domain": 39,
+    "history_scope": 35,
+    "frontend_binding": 26,
+    "audit_contract": 11,
+    "binding_identity": 6,
+    "unbound_frame": 13,
+    "test_harness": 12,
+    "initialization": 19
+  },
+  "pre243_status": {
+    "passed": 688,
+    "not_present": 3
+  },
+  "audit_priorities": {
+    "P3": 66,
+    "P1": 248,
+    "P2": 377
+  },
+  "alignment": {
+    "method_audited": 691,
+    "file_navigation_only": 2564,
+    "passed_not_oracle_reaudited": 2561,
+    "expected_failure_not_oracle_reaudited": 3,
+    "catalog_nodes": 78,
+    "methods_with_audited_node": 667,
+    "methods_without_audited_node": 24,
+    "file_candidates_without_node": 197,
+    "warning": "Many-to-many navigation is not coverage or support qualification; no capability score was promoted"
+  },
+  "review_sources": {
+    "review-migration.json": "13416bbd6b0f8319580d0a2f19f1c0c0b767b03a93d12063c65a552e39d7f685",
+    "review-events.json": "0e9748d370461e64b3b6e6d5e0d031b3be888e623c628bffc48ce5c17bfd9646",
+    "review-admission.json": "284162b4d6a72896a76f79a5937dbf357c77d148aecf57d23eb3a95e59b41011",
+    "review-proofs.json": "7794aa1695fa52a98850e700ada2565ba667ff37eb996cb6b4d86140155aea0b"
+  },
+  "raw_evidence_root": "/Volumes/vaEVAS-runs/pr-review-20261025/remaining691",
+  "limits": [
+    "No new full suite or Spectre execution; fixed CI reused.",
+    "Every failing method assessed, but multi-subcase and blocked downstream numeric obligations remain explicitly open.",
+    "Confirmed means the recorded classification has source/contract/CI evidence; it does not certify every assertion in the method.",
+    "Unreviewed passing and expected-failure methods have file-level navigation, not per-method oracle certification.",
+    "No production, test expectation, capability support score, remote issue or PR change."
+  ]
+}

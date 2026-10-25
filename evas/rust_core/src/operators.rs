@@ -2527,6 +2527,7 @@ impl Operators {
             None,
             false,
             None,
+            None,
         )
     }
 
@@ -2557,6 +2558,7 @@ impl Operators {
             Some(bounds),
             None,
             false,
+            None,
             None,
         )
     }
@@ -2690,7 +2692,7 @@ impl Operators {
     ) -> Result<Self, Error> {
         Self::new_until_with_seed_bounds(
             program, trajectory, driven, states, horizon, tolerances, shared, None, None, false,
-            None,
+            None, None,
         )
     }
 
@@ -2728,6 +2730,7 @@ impl Operators {
             Some(bounds),
             Some(typed_targets),
             false,
+            None,
             None,
         )
     }
@@ -2846,6 +2849,7 @@ impl Operators {
             },
             true,
             None,
+            Some(&execution),
         )
     }
     #[allow(clippy::too_many_arguments)]
@@ -2883,6 +2887,7 @@ impl Operators {
             },
             false,
             Some(token),
+            None,
         )
     }
     #[allow(clippy::too_many_arguments)]
@@ -2898,7 +2903,20 @@ impl Operators {
         typed_targets: Option<&BTreeSet<usize>>,
         shared_history: bool,
         analytic_token: Option<&crate::analytic_request::Request>,
+        forcing_token: Option<&crate::forcing_graph::PreparedExecution>,
     ) -> Result<Self, Error> {
+        // The token certifies the execution reduction against the original
+        // source owner. Its binding and Work cannot be replaced by a clone of
+        // the reduced program or a bare shared-history flag.
+        if let Some(token) = forcing_token {
+            let original = token.context(program, trajectory, driven)?;
+            if shared
+                .as_ref()
+                .is_none_or(|context| !Arc::ptr_eq(context, &original))
+            {
+                return Err(Error::new("invalid_ir", "forcing source owner mismatch"));
+            }
+        }
         let _timing = crate::diagnostics::span("history.prepare");
         if let Some(bounds) = initial_bounds {
             if states.len() != program.states.len()
@@ -2974,20 +2992,40 @@ impl Operators {
                 else {
                     return Err(refusal());
                 };
-                crate::event_floor::check_provided_binding(context, program, trajectory, driven)?;
-                let dependencies = crate::held_integer_target::scalar_dependencies(
-                    input,
-                    program,
-                    &origin.instance,
-                    context,
-                )
-                .map_err(|error| {
-                    if error.kind == "unsupported_held_integer_target" {
-                        refusal()
-                    } else {
-                        error
+                let source_program = if forcing_token.is_some() {
+                    context.original_binding().0
+                } else {
+                    crate::event_floor::check_provided_binding(
+                        context, program, trajectory, driven,
+                    )?;
+                    program
+                };
+                let dependencies = if !source_program.procedures.is_empty() {
+                    let (nodes, states, operators) = crate::continuous::source_dependency_edges(
+                        input,
+                        source_program,
+                        &origin.instance,
+                        Some(context.borrow_work()),
+                    )?;
+                    if nodes.iter().any(|&node| node != 0) || !operators.is_empty() {
+                        return Err(refusal());
                     }
-                })?;
+                    states
+                } else {
+                    crate::held_integer_target::scalar_dependencies(
+                        input,
+                        source_program,
+                        &origin.instance,
+                        context,
+                    )
+                    .map_err(|error| {
+                        if error.kind == "unsupported_held_integer_target" {
+                            refusal()
+                        } else {
+                            error
+                        }
+                    })?
+                };
                 context.charge(4 + 4 * dependencies.len())?;
                 if dependencies
                     .iter()
@@ -3039,8 +3077,16 @@ impl Operators {
                 // The existing bare-real constructor consumes its actual box.
                 // Other untyped targets retain the original point-seed gate;
                 // typed targets above still prove their own point dependencies.
-                let (_, deps, _) =
-                    crate::continuous::integral_dependency_edges(input, program, &origin.instance)?;
+                let (_, deps, _) = if !program.procedures.is_empty() {
+                    crate::continuous::source_dependency_edges(
+                        input,
+                        program,
+                        &origin.instance,
+                        procedure_work,
+                    )?
+                } else {
+                    crate::continuous::integral_dependency_edges(input, program, &origin.instance)?
+                };
                 let actual = initial_bounds.expect("held cold frame");
                 let nonpoint = deps
                     .iter()

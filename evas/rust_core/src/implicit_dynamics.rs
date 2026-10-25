@@ -894,6 +894,7 @@ fn build_segment(
             _ => unreachable!(),
         }
     }
+    let source_program = Arc::new(program.clone());
     let mut flow = NonlinearContinuous {
         context: Arc::new(Context {
             force_integrals: false,
@@ -902,7 +903,7 @@ fn build_segment(
             time_proofs: Default::default(),
             reset_captures: Arc::new(Vec::new()),
             source_history: None,
-            program: Arc::new(program.clone()),
+            program: source_program.clone(),
             trajectory: trajectory.clone(),
             driven: driven.to_vec(),
         }),
@@ -915,7 +916,8 @@ fn build_segment(
         implicit: Some(ImplicitField {
             physical,
             mesh_bounds: Some((
-                crate::step_bounds::Bounds::new(program)?,
+                crate::step_bounds::Bounds::new(program)?
+                    .with_procedure_provider(source_program, trajectory.procedure_work())?,
                 coordinates.clone(),
             )),
             gradients,
@@ -1029,7 +1031,10 @@ pub(crate) fn run(
     if !program.events.is_empty() || !program.states.is_empty() {
         return event_restart::run(program, driven, config, tolerances);
     }
-    let trajectory = Trajectory::new(config, driven.len())?;
+    let mut trajectory = Trajectory::new(config, driven.len())?;
+    if !program.procedures.is_empty() {
+        trajectory.bind_procedure_work(&crate::transition_source_plan::Work::default())?;
+    }
     let (flow, coordinates) = initialize(&program, &trajectory, &driven, &tolerances)?;
     let mut solutions = Vec::<Solution>::new();
     for &time in &trajectory.config.output_times {

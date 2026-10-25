@@ -17,11 +17,57 @@ grounded, undriven, singly-owned output contributions that nothing reads:
 The kernel re-audits the actual request with the same rules and evaluates each
 row from certified node boxes. Anything else raises the original diagnostic.
 """
-from dataclasses import fields, is_dataclass
+from dataclasses import fields, is_dataclass, replace
 import math
 
-from .ir import Affine, Binary, OperatorRef, Power, Select, StateRef, Term
+from .ir import Affine, Binary, OperatorRef, Power, Select, StateRef, Term, RealBoundary, RealBinary, RealLocal
 from .syntax import CompileError
+
+
+def scope_view(value, local_facts, audit):
+    """Read-only structural view for this admission check, never executable IR.
+
+    Degree and ownership do not need an RN value. Preserve every operand and
+    control edge while following immutable source-position facts. The original
+    Program, including all rounding boundaries, is still sent to the kernel.
+    """
+    memo, active = {}, set()
+
+    def visit(item):
+        audit.debit('readout_source_visit')
+        key = id(item)
+        if key in memo:
+            return memo[key]
+        if key in active:
+            raise CompileError('cyclic readout source facts')
+        active.add(key)
+        if isinstance(item, RealLocal):
+            fact = local_facts.get(key)
+            result = item
+            if fact is not None and fact[0] is item:
+                if len(fact[1]) == 1:
+                    result = visit(fact[1][0])
+                elif len(fact[1]) == 4 and len(fact) > 3 and fact[3] is not None:
+                    result = Select(fact[2], *(visit(child) for child in fact[1]), fact[3])
+        elif isinstance(item, RealBoundary):
+            result = visit(item.value)
+        elif isinstance(item, RealBinary):
+            operation = 'add' if item.operation == 'subtract' else item.operation
+            result = Binary(operation, visit(item.left), visit(item.right))
+        elif isinstance(item, (tuple, list)):
+            audit.debit('readout_source_copy', len(item))
+            result = tuple(visit(child) for child in item)
+        elif is_dataclass(item) and not isinstance(item, type):
+            names = [f.name for f in fields(item) if f.init]
+            audit.debit('readout_source_copy', len(names))
+            result = replace(item, **{name: visit(getattr(item, name)) for name in names})
+        else:
+            result = item
+        active.remove(key)
+        memo[key] = result
+        return result
+
+    return visit(value)
 
 
 def readout_tree(value):
@@ -216,8 +262,10 @@ def held_gain_decision(select):
             and _held_gain_degree(right, memo) is not None)
 
 
-def check(program, pending, audit):
+def check(program, pending, audit, local_facts=None):
     """Raise the first pending diagnostic that the complete Program does not admit."""
+    if local_facts:
+        program = scope_view(program, local_facts, audit)
     def fail(origin, message):
         raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: {message}")
     if not (program.states or program.events or program.operators):
