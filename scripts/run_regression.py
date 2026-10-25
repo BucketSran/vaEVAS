@@ -2,19 +2,43 @@
 
 import argparse
 import ast
+import dis
+import dataclasses
 from functools import lru_cache
+from fractions import Fraction
 import hashlib
 import inspect
 import json
+import math
 import os
 import platform
+import reprlib
 from pathlib import Path
 import sys
 import struct
 import traceback
 import time
+import types
 import unittest
 
+
+_BUILTIN_PARAMETERS = (('dict', dict), ('sum', sum), ('max', max))
+_MATH_EXPORTS = {key: value for key, value in vars(math).items() if not key.startswith('_')}
+_MATH_FILE = getattr(math, '__file__', None)
+MAX_PARAMETER_DEPTH = 64
+
+_FIELD_NAME = vars(dataclasses.Field)['name']
+_FIELD_KIND = vars(dataclasses.Field)['_field_type']
+_FIELD_FACTORY = vars(dataclasses.Field)['default_factory']
+_PLAIN_FIELD_KIND = dataclasses._FIELD
+_PURE_FACTORIES = (dict, list, tuple, set, frozenset)
+_GENERATED_METHODS = {'__init__', '__repr__', '__eq__', '__ne__', '__lt__', '__le__',
+                      '__gt__', '__ge__', '__hash__', '__setattr__', '__delattr__', '__replace__'}
+_GENERATED_METHOD_FILES = {'<string>', dataclasses.__file__, reprlib.__file__}
+_GENERATED_GLOBALS = {'type': type, 'hash': hash, 'super': super, 'object': object, 'NotImplemented': NotImplemented}
+_CLASS_METADATA = {'__module__', '__doc__', '__annotations__', '__annotate__', '__annotate_func__',
+                   '__annotations_cache__', '__firstlineno__', '__static_attributes__',
+                   '__dataclass_fields__', '__dataclass_params__', '__match_args__'}
 
 def cases(suite):
     for item in suite:
@@ -49,7 +73,7 @@ def partition(suite, modules, count, weights, reserved=()):
 
 def sibling_module(name):
     # The runner is also imported directly by maintenance tests without scripts
-    # on sys.path. Load the one maintained validator from its sibling path.
+    # on sys.path. Load the maintained sibling by its explicit file path.
     import importlib.util
     spec = importlib.util.spec_from_file_location(name, Path(__file__).with_name(name + '.py'))
     module = importlib.util.module_from_spec(spec)
@@ -187,33 +211,177 @@ def merge_reports(paths):
                 timing_scope='sum of shard test durations, not wall time')
 
 
-def parameter_value(value, depth=0):
+def plain_dataclass_state(value):
+    cls = type(value)
+    fields = vars(cls).get('__dataclass_fields__')
+    if (type(fields) is not dict or any(type(name) is not str or type(field) is not dataclasses.Field
+                                      for name, field in fields.items())):
+        return None
+    if (inspect.getattr_static(cls, '__getattribute__') is not object.__getattribute__
+            or inspect.getattr_static(cls, '__getattr__', None) is not None):
+        return None
+    for name, field in fields.items():
+        factory = _FIELD_FACTORY.__get__(field, dataclasses.Field)
+        field_name = _FIELD_NAME.__get__(field, dataclasses.Field)
+        if (type(field_name) is not str or field_name != name
+                or _FIELD_KIND.__get__(field, dataclasses.Field) is not _PLAIN_FIELD_KIND
+                or factory is not dataclasses.MISSING and not any(factory is pure for pure in _PURE_FACTORIES)):
+            return None
+    class_values = []
+    for base in cls.__mro__:
+        if base is object:
+            continue
+        attributes = {}
+        for name, member in vars(base).items():
+            if name in _CLASS_METADATA:
+                continue
+            if name in ('__dict__', '__weakref__') and type(member) is types.GetSetDescriptorType:
+                continue
+            if (name in _GENERATED_METHODS and type(member) is types.FunctionType
+                    and member.__code__.co_filename in _GENERATED_METHOD_FILES):
+                if member.__code__.co_filename == '<string>':
+                    if type(member.__globals__) is not dict or type(member.__builtins__) is not dict:
+                        return None
+                    clean = member.__code__.replace(co_consts=tuple(None for _ in member.__code__.co_consts))
+                    for instruction in dis.get_instructions(clean):
+                        if instruction.opname == 'LOAD_GLOBAL':
+                            key = instruction.argval
+                            bound = member.__globals__.get(key, member.__builtins__.get(key))
+                            if key not in _GENERATED_GLOBALS or bound is not _GENERATED_GLOBALS[key]:
+                                return None
+                continue
+            if inspect.getattr_static(type(member), '__get__', None) is not None:
+                return None
+            attributes[name] = member
+        module, name = base.__module__, base.__qualname__
+        if type(module) is not str or type(name) is not str:
+            return None
+        class_values.append(dict(owner=module + '.' + name, attributes=attributes))
+    descriptor = inspect.getattr_static(value, '__dict__', None)
+    if type(descriptor) is not types.GetSetDescriptorType:
+        return None
+    stored = descriptor.__get__(value, cls)
+    if type(stored) is not dict:
+        return None
+    state = dict(stored)
+    for name in fields:
+        if name not in state:
+            try:
+                state[name] = inspect.getattr_static(value, name)
+            except AttributeError:
+                return None
+    return dict(fields=state, declared_fields=tuple(fields), class_values=class_values)
+
+
+def parameter_mapping(mapping):
+    pairs = {name: parameter_value(value) for name, value in mapping.items()}
+    return {name: value for name, (value, _) in pairs.items()}, all(complete for _, complete in pairs.values())
+
+
+def parameter_type(value):
+    cls = type(value)
+    if type(cls) is not type:
+        return 'custom-metaclass-instance'
+    module, name = cls.__module__, cls.__qualname__
+    return module + '.' + name if type(module) is str and type(name) is str else 'unidentified-python-type'
+
+
+def parameter_value(value, depth=0, active=None):
+    active = set() if active is None else active
+    identity = id(value)
+    if identity in active:
+        return {'cyclic_parameter': parameter_type(value)}, False
+    active.add(identity)
+    try:
+        return _parameter_value(value, depth, active)
+    finally:
+        active.remove(identity)
+
+
+def _parameter_value(value, depth, active):
     """Retain JSON values; opaque parameters remain explicitly unmatchable."""
     if value is None or type(value) in (str, bool, int):
         return value, True
+    if type(value) is Fraction:
+        return {'fraction': {'numerator': value.numerator, 'denominator': value.denominator}}, True
+    if type(type(value)) is not type:
+        return {'opaque_type': 'custom-metaclass-instance'}, False
     if type(value) is float:
         return {'float64_bits': struct.pack('!d', value).hex()}, True
-    if depth < 12 and type(value) in (list, tuple):
-        pairs = [parameter_value(v, depth + 1) for v in value]
+    if depth < MAX_PARAMETER_DEPTH and type(value) in (list, tuple):
+        pairs = [parameter_value(v, depth + 1, active) for v in value]
         values = [v for v, _ in pairs]
         return ({'tuple': values} if type(value) is tuple else values), all(ok for _, ok in pairs)
-    if depth < 12 and type(value) is dict and all(type(k) is str for k in value):
-        pairs = {k: parameter_value(v, depth + 1) for k, v in value.items()}
+    if depth < MAX_PARAMETER_DEPTH and type(value) is dict and all(type(k) is str for k in value):
+        pairs = {k: parameter_value(v, depth + 1, active) for k, v in value.items()}
         values = {k: v for k, (v, _) in pairs.items()}
-        return (values if depth == 0 else {'mapping_items': list(values.items())}), all(ok for _, ok in pairs.values())
-    if depth < 12 and '__dataclass_fields__' in vars(type(value)):
-        # Read stored fields only. Do not call repr, asdict, custom iteration or
-        # field descriptors, any of which can execute test/user code.
-        try:
-            stored = object.__getattribute__(value, '__dict__')
-        except AttributeError:
-            stored = None
-        fields = vars(type(value))['__dataclass_fields__']
-        if type(stored) is dict and all(name in stored for name in fields):
-            values, complete = parameter_value(stored, depth + 1)
-            return {'dataclass': type(value).__module__ + '.' + type(value).__qualname__,
-                    'fields': values}, complete
-    return {'opaque_type': type(value).__module__ + '.' + type(value).__qualname__}, False
+        return {'mapping_items': list(values.items())}, all(ok for _, ok in pairs.values())
+    if depth < MAX_PARAMETER_DEPTH and '__dataclass_fields__' in vars(type(value)):
+        state = plain_dataclass_state(value)
+        if state is not None:
+            encoded, complete = parameter_value(state, depth + 1, active)
+            return {'dataclass': parameter_type(value), 'state': encoded}, complete
+        return {'opaque_type': parameter_type(value)}, False
+    for name, builtin in _BUILTIN_PARAMETERS:
+        if value is builtin:
+            return {'builtin': 'builtins.' + name}, True
+    if value is math and type(value) is types.ModuleType:
+        current = {key: member for key, member in vars(math).items() if not key.startswith('_')}
+        stable = current.keys() == _MATH_EXPORTS.keys() and all(
+            current[key] is member for key, member in _MATH_EXPORTS.items())
+        source_hash = source_digest(_MATH_FILE) if _MATH_FILE else None
+        return {'standard_module': 'math', 'source_sha256': source_hash}, bool(stable and source_hash)
+    if depth < MAX_PARAMETER_DEPTH and type(value) is types.CodeType:
+        code = dict(bytecode=value.co_code.hex(), constants=value.co_consts, names=value.co_names,
+                    varnames=value.co_varnames, freevars=value.co_freevars, cellvars=value.co_cellvars,
+                    argcount=value.co_argcount, posonlyargcount=value.co_posonlyargcount,
+                    kwonlyargcount=value.co_kwonlyargcount, flags=value.co_flags,
+                    exception_table=value.co_exceptiontable.hex(), name=value.co_name, qualname=value.co_qualname,
+                    line=value.co_firstlineno, source_sha256=source_digest(value.co_filename))
+        encoded, complete = parameter_value(code, depth + 1, active)
+        # Sanitized constants keep disassembly from calling repr on user values.
+        clean = value.replace(co_consts=tuple(None for _ in value.co_consts))
+        transparent = not any(i.opname.startswith('IMPORT_') for i in dis.get_instructions(clean))
+        transparent = transparent and not any(name.startswith('__') for name in value.co_names)
+        return {'python_code': encoded}, bool(complete and transparent and code['source_sha256'])
+    if depth < MAX_PARAMETER_DEPTH and type(value) is types.FunctionType:
+        if getattr(value, '__annotate__', None) is not None:
+            return {'opaque_type': 'lazily-annotated-function'}, False
+        annotations = value.__annotations__
+        type_parameters = getattr(value, '__type_params__', ())
+        if type(annotations) is not dict or annotations or type(type_parameters) is not tuple or type_parameters:
+            return {'opaque_type': 'annotated-or-generic-function'}, False
+        if type(value.__globals__) is not dict or type(value.__builtins__) is not dict:
+            return {'opaque_type': 'function-with-custom-namespace'}, False
+        code = value.__code__
+        names = set()
+        def referenced_names(part):
+            names.update(part.co_names)
+            for constant in part.co_consts:
+                if type(constant) is types.CodeType:
+                    referenced_names(constant)
+        referenced_names(code)
+        bindings = {}
+        for name in sorted(names):
+            if name in value.__globals__:
+                bindings[name] = dict(resolution='global', value=value.__globals__[name])
+            elif name in value.__builtins__:
+                bindings[name] = dict(resolution='builtin', value=value.__builtins__[name])
+            else:
+                bindings[name] = dict(resolution='unbound')
+        closure = []
+        for cell in value.__closure__ or ():
+            try:
+                closure.append(cell.cell_contents)
+            except ValueError:
+                return {'opaque_type': 'function-with-empty-cell'}, False
+        fields = dict(module=value.__module__, name=value.__name__, qualname=value.__qualname__,
+                      doc=value.__doc__, code=code,
+                      defaults=value.__defaults__, kwdefaults=value.__kwdefaults__,
+                      closure=closure, attributes=value.__dict__, bindings=bindings)
+        encoded, complete = parameter_value(fields, depth + 1, active)
+        return {'python_function': encoded}, complete
+    return {'opaque_type': parameter_type(value)}, False
 
 
 @lru_cache(maxsize=512)
@@ -446,7 +614,7 @@ class TimedResult(unittest.TextTestResult):
         super().addUnexpectedSuccess(test)
 
     def record_subtest(self, test, subtest, outcome, err=None, skip_reason=None):
-        params, complete = parameter_value(dict(subtest.params))
+        params, complete = parameter_mapping(dict(subtest.params))
         message = getattr(subtest, '_message', unittest.case._subtest_msg_sentinel)
         message, message_complete = parameter_value(
             None if message is unittest.case._subtest_msg_sentinel else message)

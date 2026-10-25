@@ -1,5 +1,6 @@
 """Report integrity and trusted-baseline behavior, without simulator execution."""
 import copy
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -58,6 +59,78 @@ class GateTests(unittest.TestCase):
         self.assertFalse(result['raw_successful'])
         self.assertTrue(result['merge_allowed'], result)
         self.assertFalse(self.gate.cacheable_report(self.old))
+
+    def test_baseline_keeps_complete_signatures_without_bulk_raw_payload(self):
+        observed=copy.deepcopy(self.old)
+        observed['tests'][0]['conditions'][0]['reason']['traceback']='large raw traceback'*1000
+        observed['source_identity']={'criteria_files':[['fixture.py','a'*64]]*1000}
+        before=copy.deepcopy(observed)
+        baseline=self.gate.propose_baseline(observed, {'commit':'b'*40,'raw_report':'retained-fixture'}, REVIEW)
+        entry=baseline['contexts'][0]
+        self.assertEqual(entry['observation_format'],'regression-observations-v1')
+        self.assertEqual(observed,before)
+        self.assertNotIn('source_identity',entry['observations'])
+        self.assertNotIn('traceback',entry['observations']['tests'][0]['conditions'][0]['reason'])
+        self.assertEqual(entry['observations']['tests'][0]['conditions'][0]['reason']['message'],
+                         observed['tests'][0]['conditions'][0]['reason']['message'])
+        encoded=json.dumps(observed,sort_keys=True,separators=(',',':'),allow_nan=False).encode()
+        self.assertEqual(entry['canonical_report_sha256'],hashlib.sha256(encoded).hexdigest())
+        self.assertTrue(self.gate.compare_report(observed,baseline)['merge_allowed'])
+        self.assertLess(len(json.dumps(baseline)),len(json.dumps(observed))//4)
+        changed=copy.deepcopy(observed)
+        changed['tests'][0]['conditions'][0]['reason']['message']='changed failure condition'
+        self.assertFalse(self.gate.compare_report(changed,baseline)['merge_allowed'])
+
+    def test_repeated_large_context_is_losslessly_pooled_and_tampering_blocks(self):
+        observed=copy.deepcopy(self.old)
+        context=[dict(function='case',line=12,values={'grid':list(range(1000)),'case':'A'})]
+        for condition in observed['tests'][0]['conditions']:
+            condition['context']=copy.deepcopy(context)
+            if 'reason' in condition: condition['reason']['context']=copy.deepcopy(context)
+        baseline=self.gate.propose_baseline(observed,{'commit':'b'*40},REVIEW)
+        entry=baseline['contexts'][0]
+        self.assertEqual(len(entry['value_pool']),1)
+        self.assertTrue(self.gate.compare_report(observed,baseline)['merge_allowed'])
+        self.assertLess(len(json.dumps(baseline)),len(json.dumps(observed)))
+        changed=copy.deepcopy(observed)
+        changed['tests'][0]['conditions'][0]['context'][0]['values']['grid'][0]=999
+        self.assertFalse(self.gate.compare_report(changed,baseline)['merge_allowed'])
+        broken=copy.deepcopy(baseline)
+        next(iter(broken['contexts'][0]['value_pool'].values())).append(1001)
+        self.assertFalse(self.gate.compare_report(observed,broken)['merge_allowed'])
+        missing=copy.deepcopy(baseline)
+        missing['contexts'][0]['value_pool'].clear()
+        self.assertFalse(self.gate.compare_report(observed,missing)['merge_allowed'])
+
+    def test_unknown_reason_structure_is_invalid_instead_of_crashing_comparison(self):
+        broken=report('passed')
+        broken['tests'][0]['conditions'][0]['reason']=None
+        self.assertFalse(self.gate.validate_report(broken)['valid'])
+        self.assertFalse(self.gate.compare_report(broken,self.baseline)['merge_allowed'])
+
+    def test_compact_merged_observations_keep_complete_part_coverage(self):
+        merged=copy.deepcopy(self.old)
+        merged.update(merged=True,shard_index=None,shard_count=2,
+                      assignment=[merged['discovered_test_ids'],[]],
+                      parts=[dict(shard_index=0,complete=True,collection_complete=True,
+                                  selected_test_ids=merged['discovered_test_ids'],
+                                  source_identity={'bulk':'retained outside baseline'}),
+                             dict(shard_index=1,complete=True,collection_complete=True,selected_test_ids=[])])
+        baseline=self.gate.propose_baseline(merged,{'commit':'b'*40},REVIEW)
+        self.assertTrue(self.gate.compare_report(merged,baseline)['merge_allowed'])
+        projected=baseline['contexts'][0]['observations']
+        self.assertTrue(self.gate.validate_report(projected)['valid'])
+        self.assertEqual(projected['assignment'],merged['assignment'])
+        self.assertEqual(projected['parts'][0]['selected_test_ids'],merged['selected_test_ids'])
+        broken=copy.deepcopy(baseline)
+        broken['contexts'][0]['observations']['parts'].pop()
+        self.assertFalse(self.gate.compare_report(merged,broken)['merge_allowed'])
+
+    def test_unknown_or_missing_observation_projection_format_is_not_trusted(self):
+        for value in (None,'future-unreviewed-format'):
+            baseline=copy.deepcopy(self.baseline)
+            baseline['contexts'][0]['observation_format']=value
+            self.assertFalse(self.gate.compare_report(self.old,baseline)['merge_allowed'])
 
     def test_replaced_condition_reason_and_phase_are_new_failures(self):
         for field, value in [('id', 'B'), ('phase', 'teardown')]:

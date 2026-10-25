@@ -186,6 +186,188 @@ class Cases(unittest.TestCase):
         self.assertEqual(len({c['id'] for c in opaque}), 2)
         self.assertFalse(any(c['identity_complete'] for c in opaque))
 
+    def test_exact_rational_parameters_and_loop_state_have_stable_distinct_identity(self):
+        result,report,_,_=self.run_fixture("""import unittest
+from fractions import Fraction
+class Cases(unittest.TestCase):
+    def test_rationals(self):
+        for value in (Fraction(1,3), Fraction(2,3), Fraction(0,1), 0, 0.0):
+            with self.subTest(value=value): self.fail('known rational condition')
+""")
+        self.assertEqual(result.returncode,1)
+        conditions=report['tests'][0]['conditions']
+        self.assertEqual(len({c['id'] for c in conditions}),5)
+        self.assertTrue(all(c['identity_complete'] for c in conditions))
+        self.assertEqual(conditions[0]['params']['value'],{'fraction':{'numerator':1,'denominator':3}})
+        self.assertEqual(conditions[0]['context'][0]['values']['value'],conditions[0]['params']['value'])
+
+    def test_dataclass_class_defaults_and_transparent_python_mutators_are_identified(self):
+        result,report,_,_=self.run_fixture("""import unittest
+from dataclasses import dataclass,field
+@dataclass(frozen=True)
+class Expression:
+    constant: float
+    op: str = field(default='affine',init=False)
+class Cases(unittest.TestCase):
+    def test_defaults(self):
+        for value in (Expression(1.0),Expression(2.0)):
+            with self.subTest(value=value): pass
+    def test_mutators(self):
+        for mutate in (lambda item:item.update(value=1), lambda item:item.update(left=dict(value=2))):
+            with self.subTest(label='mutation'):
+                mutate({})
+                self.fail('known mutation condition')
+""")
+        self.assertEqual(result.returncode,1)
+        for row in report['tests']:
+            self.assertEqual(len({c['id'] for c in row['conditions']}),2)
+            self.assertTrue(all(c['identity_complete'] for c in row['conditions']),row['id'])
+
+    def test_callable_global_values_change_identity_and_opaque_state_stays_unmatchable(self):
+        body="""import os,unittest
+OFFSET=int(os.environ['OFFSET'])
+def transparent(item): return item+OFFSET
+def opaque(item): return os.environ['OFFSET']
+class Cases(unittest.TestCase):
+    def test_functions(self):
+        for call in (transparent,opaque):
+            with self.subTest(call=call): self.fail('known callable condition')
+"""
+        observations=[]
+        for offset in ('1','2'):
+            result,report,_,_=self.run_fixture(body,{'OFFSET':offset})
+            self.assertEqual(result.returncode,1)
+            conditions=report['tests'][0]['conditions']
+            self.assertTrue(conditions[0]['identity_complete'])
+            self.assertFalse(conditions[1]['identity_complete'])
+            observations.append(conditions[0]['id'])
+        self.assertNotEqual(*observations)
+
+    def test_deferred_annotations_changed_math_and_recursive_state_remain_unmatchable(self):
+        result,report,_,_=self.run_fixture("""import math,unittest
+def annotated(x): return x
+annotated.__annotate__=lambda *args: (_ for _ in ()).throw(AssertionError('annotation executed'))
+def recursive(x): return recursive(x)
+def math_reference(x): return math.expm1(x)
+class Cases(unittest.TestCase):
+    def test_annotations(self):
+        with self.subTest(call=annotated): self.fail('known observation')
+    def test_recursive(self):
+        with self.subTest(call=recursive): self.fail('known observation')
+    def test_math(self):
+        original=math.expm1
+        try:
+            math.expm1=lambda x:0
+            with self.subTest(call=math_reference): self.fail('known observation')
+        finally: math.expm1=original
+""")
+        self.assertEqual(result.returncode,1,result.stderr)
+        self.assertEqual(len(report['tests']),3)
+        for row in report['tests']:
+            self.assertEqual(len(row['conditions']),1)
+            self.assertFalse(row['conditions'][0]['identity_complete'])
+            self.assertEqual(row['conditions'][0]['reason']['message'],'known observation')
+
+    def test_parameter_identity_does_not_call_shadowed_storage_or_metaclass_properties(self):
+        result,report,_,_=self.run_fixture("""import unittest
+from dataclasses import dataclass
+@dataclass
+class Guarded:
+    value:int
+    @property
+    def __dict__(self): raise AssertionError('collector invoked storage descriptor')
+class Meta(type):
+    def __getattribute__(self,name):
+        if name in ('__dict__','__module__','__qualname__'): raise AssertionError('collector invoked metaclass')
+        return super().__getattribute__(name)
+class Opaque(metaclass=Meta): pass
+class Cases(unittest.TestCase):
+    def test_parameters(self):
+        for value in (Guarded(1),Opaque()):
+            with self.subTest(value=value): pass
+""")
+        self.assertEqual(result.returncode,0,result.stderr)
+        conditions=report['tests'][0]['conditions']
+        self.assertEqual(len(conditions),2)
+        self.assertFalse(any(c['identity_complete'] for c in conditions))
+
+    def test_plain_loop_dictionary_cannot_impersonate_a_typed_float_tag(self):
+        body="""import os,unittest
+class Cases(unittest.TestCase):
+    def test_values(self):
+        for value in (0.0,{'float64_bits':'0000000000000000'}):
+            if isinstance(value,dict)==bool(int(os.environ['FAIL_DICT'])):
+                self.fail('same diagnostic')
+"""
+        observations=[]
+        for fail_dict in ('0','1'):
+            result,report,_,_=self.run_fixture(body,{'FAIL_DICT':fail_dict})
+            self.assertEqual(result.returncode,1)
+            condition=report['tests'][0]['conditions'][0]
+            self.assertTrue(condition['identity_complete'])
+            observations.append(condition['id'])
+        self.assertNotEqual(*observations)
+
+    def test_dataclass_descriptors_and_custom_field_metadata_remain_opaque_without_execution(self):
+        result,report,_,_=self.run_fixture("""import unittest
+from dataclasses import dataclass
+seen=[]
+class Descriptor:
+    def __get__(self,obj,owner=None):
+        seen.append('getter')
+        return 99
+    def __set__(self,obj,value): obj.__dict__['value']=value
+@dataclass
+class Guarded:
+    value:int
+Guarded.value=Descriptor()
+@dataclass
+class Malformed:
+    value:int
+class Fields:
+    def __iter__(self):
+        seen.append('iterator')
+        raise RuntimeError('metadata iterator invoked')
+@dataclass
+class BadName:
+    value:int
+class Name:
+    def __eq__(self,other):
+        seen.append('comparison')
+        raise RuntimeError('metadata comparison invoked')
+class Cases(unittest.TestCase):
+    def test_parameters(self):
+        value=Guarded(1)
+        malformed=Malformed(1)
+        Malformed.__dataclass_fields__=Fields()
+        badname=BadName(1)
+        BadName.__dataclass_fields__['value'].name=Name()
+        for item in (value,malformed,badname):
+            with self.subTest(item=item): pass
+        self.assertEqual(seen,[])
+""")
+        self.assertEqual(result.returncode,0,result.stderr)
+        conditions=report['tests'][0]['conditions']
+        self.assertEqual(len(conditions),3)
+        self.assertFalse(any(c['identity_complete'] for c in conditions))
+
+    def test_unbound_callable_global_cannot_equal_a_regular_dictionary_value(self):
+        body="""import os,unittest
+def call(): return MISSING
+if os.environ['BIND_GLOBAL']=='1': MISSING={'unbound_name':'MISSING'}
+class Cases(unittest.TestCase):
+    def test_state(self):
+        with self.subTest(call=call): self.fail('known observation')
+"""
+        observations=[]
+        for bound in ('0','1'):
+            result,report,_,_=self.run_fixture(body,{'BIND_GLOBAL':bound})
+            self.assertEqual(result.returncode,1)
+            condition=report['tests'][0]['conditions'][0]
+            self.assertTrue(condition['identity_complete'])
+            observations.append(condition['id'])
+        self.assertNotEqual(*observations)
+
     def test_unknown_while_state_cannot_be_a_matchable_failure(self):
         result, report, _, _ = self.run_fixture("""import unittest
 def hidden_state(): return True

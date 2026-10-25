@@ -7,6 +7,7 @@ as data; only a separately trusted full Git commit may supply the CLI comparator
 """
 import argparse
 import copy
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -58,6 +59,8 @@ def _condition(row):
         raise ValueError('condition lacks identity completeness')
     if row.get('outcome') not in OUTCOMES:
         raise ValueError('unknown or interrupted condition outcome')
+    if 'reason' in row and not isinstance(row['reason'], dict):
+        raise ValueError('condition reason must be an object')
     if row['outcome'] != 'passed':
         reason = row.get('reason')
         # unittest supplies no exception for an unexpected success.
@@ -195,6 +198,97 @@ def _reviewed(review):
             and isinstance(review.get('reference'), str) and bool(review['reference'].strip()))
 
 
+def _baseline_observations(report):
+    """Keep all comparison observations; raw payloads remain in their archive."""
+    fields = ('schema_version', 'complete', 'collection_complete', 'successful',
+              'discovered_test_ids', 'selected_test_ids', 'setup_skipped_test_ids',
+              'assignment', 'shard_count', 'shard_index', *COUNTERS)
+    observations = {key: copy.deepcopy(report[key]) for key in fields}
+    observations['metadata'] = copy.deepcopy(_context(report))
+    if report.get('merged') is True:
+        observations['merged'] = True
+        observations['parts'] = [{key: copy.deepcopy(part[key]) for key in
+            ('shard_index', 'complete', 'collection_complete', 'selected_test_ids')}
+            for part in report['parts']]
+
+    def condition(row):
+        retained = {key: copy.deepcopy(row[key]) for key in
+            ('id', 'phase', 'kind', 'site', 'params', 'context', 'message',
+             'outcome', 'identity_complete', 'repeated_identity', 'scope') if key in row}
+        if 'reason' in row:
+            retained['reason'] = {key: copy.deepcopy(row['reason'][key]) for key in
+                ('kind', 'exception_type', 'message', 'site', 'context',
+                 'context_complete', 'attribution') if key in row['reason']}
+        return retained
+
+    observations['tests'] = [dict(id=row['id'], outcome=row['outcome'], seconds=row['seconds'],
+                                 conditions=[condition(c) for c in row['conditions']])
+                             for row in report['tests']]
+    observations['fixtures'] = [condition(row) for row in report['fixtures']]
+    # This is a projection into the same observation schema, never a rewritten
+    # raw execution. Its canonical source hash is stored beside the projection.
+    validation = validate_report(observations)
+    if not validation['valid']:
+        raise ValueError('invalid baseline projection: ' + '; '.join(validation['errors']))
+    return observations
+
+
+def _context_frames(observations):
+    conditions = [c for row in observations['tests'] for c in row['conditions']] + observations['fixtures']
+    for condition in conditions:
+        for context in (condition.get('context'), condition.get('reason', {}).get('context')):
+            if isinstance(context, list):
+                yield from (frame for frame in context if isinstance(frame, dict))
+
+
+def _pool_context_values(observations):
+    pool = {}
+    for frame in _context_frames(observations):
+        if 'value_refs' in frame:
+            raise ValueError('raw context uses reserved baseline encoding fields')
+        values = frame.get('values')
+        if not isinstance(values, dict):
+            continue
+        references = {}
+        for name, value in list(values.items()):
+            encoded = _json(value).encode()
+            if len(encoded) >= 256:
+                identity = hashlib.sha256(encoded).hexdigest()
+                if identity not in pool:
+                    pool[identity] = value
+                references[name] = identity
+                del values[name]
+        if references:
+            frame['value_refs'] = references
+    return pool
+
+
+def _expand_baseline_observations(entry):
+    if entry.get('observation_encoding') != 'pooled-context-v1':
+        raise ValueError('unsupported baseline observation encoding')
+    pool = entry.get('value_pool')
+    if not isinstance(pool, dict):
+        raise ValueError('baseline value pool must be an object')
+    for identity, value in pool.items():
+        if not isinstance(identity, str) or hashlib.sha256(_json(value).encode()).hexdigest() != identity:
+            raise ValueError('baseline pooled value hash mismatch')
+    observations = copy.deepcopy(entry.get('observations'))
+    validation = validate_report(observations)
+    if not validation['valid']:
+        raise ValueError('invalid baseline observations: ' + '; '.join(validation['errors']))
+    for frame in _context_frames(observations):
+        if 'value_refs' not in frame:
+            continue
+        references = frame.pop('value_refs')
+        values = frame.get('values')
+        if (not isinstance(references, dict) or not isinstance(values, dict)
+                or any(not isinstance(name, str) or name in values or not isinstance(identity, str)
+                       or identity not in pool for name, identity in references.items())):
+            raise ValueError('missing or conflicting baseline pooled context value')
+        values.update({name: copy.deepcopy(pool[identity]) for name, identity in references.items()})
+    return observations
+
+
 def propose_baseline(report, source_identity, review=None):
     """Produce reviewable observations; this never publishes or trusts a baseline.
 
@@ -211,10 +305,15 @@ def propose_baseline(report, source_identity, review=None):
         review = dict(status='pending', semantic_status='pending')
     if not isinstance(review, dict):
         raise ValueError('review must be an object')
+    observations = _baseline_observations(report)
+    value_pool = _pool_context_values(observations)
     return dict(schema_version=1, contexts=[dict(
         context=copy.deepcopy(_context(report)), source_identity=copy.deepcopy(source_identity),
         review=copy.deepcopy(review), semantic_qualification=False,
-        observations=copy.deepcopy(report))])
+        observation_format='regression-observations-v1', observation_encoding='pooled-context-v1',
+        value_pool=value_pool,
+        canonical_report_sha256=hashlib.sha256(_json(report).encode()).hexdigest(),
+        observations=observations)])
 
 
 def _matchable(condition):
@@ -262,8 +361,15 @@ def compare_report(report, baseline):
         differences.append('expected exactly one matching trusted baseline context')
         return result
     entry = matches[0]
-    old = entry.get('observations')
-    if (not _reviewed(entry.get('review')) or not isinstance(entry.get('source_identity'), dict)
+    try:
+        old = _expand_baseline_observations(entry)
+    except (KeyError, TypeError, ValueError) as error:
+        differences.append('invalid baseline observation projection: ' + str(error))
+        return result
+    if (entry.get('observation_format') != 'regression-observations-v1'
+            or not isinstance(entry.get('canonical_report_sha256'), str)
+            or not re.fullmatch('[0-9a-f]{64}', entry['canonical_report_sha256'])
+            or not _reviewed(entry.get('review')) or not isinstance(entry.get('source_identity'), dict)
             or not entry['source_identity'] or not validate_report(old)['valid']
             or not _whole(old) or _json(_context(old)) != _json(entry['context'])):
         differences.append('baseline context lacks reviewed complete observations')
