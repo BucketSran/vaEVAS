@@ -1,0 +1,1328 @@
+{
+  "schema_version": 1,
+  "identity": "historical-comparison-import-f210ebd5",
+  "source": "evas/docs/COMPARISON.md",
+  "scope": "Historical transcription; not qualification for current main",
+  "chapters": [
+    "语言",
+    "静态电压传递",
+    "参考与供电",
+    "阈值、迟滞、启动",
+    "采样、保持、复位",
+    "延迟、边沿、周期",
+    "连续动态与相位",
+    "组合、反馈、实例"
+  ],
+  "backends": [
+    "spectre",
+    "ngspice",
+    "gnucap",
+    "evas"
+  ],
+  "campaigns": [
+    {
+      "id": "four-backend-q",
+      "title": "四后端支持表前五节",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "node_ids": [
+        "macro-include",
+        "parameters",
+        "conditions",
+        "case",
+        "sequential-assign",
+        "user-function",
+        "static-loop",
+        "array-static-index",
+        "electrical-vector",
+        "hierarchy",
+        "sin",
+        "cos",
+        "exp",
+        "ln",
+        "sqrt",
+        "pow-cube",
+        "pow-half",
+        "voltage-contribution",
+        "static-voltage-feedback",
+        "initial-step",
+        "cross",
+        "timer",
+        "event-or",
+        "transition",
+        "absdelay",
+        "slew",
+        "idt",
+        "idtmod",
+        "ddt-time",
+        "ddt-input",
+        "laplace-nd",
+        "laplace-np",
+        "filter-second-order",
+        "sample-hold-timer",
+        "sample-hold-cross",
+        "sample-reset-edge",
+        "hysteresis-edge",
+        "sample-integrate-timer",
+        "sample-integrate-ordered",
+        "integrator-cascade-reset",
+        "nonlinear-filter-feedthrough",
+        "filter-ddt-dc",
+        "two-absdelay",
+        "two-slew",
+        "interrupted-edge-integrate",
+        "array-event-update",
+        "chain-sample-hold-edge-filter",
+        "filter-then-sample",
+        "solve-delay-sample",
+        "vco",
+        "instance-integrator-reset",
+        "instance-phase",
+        "nonlinear-integral-filter-feedback",
+        "event-dynamics-linear",
+        "event-dynamics-riccati",
+        "near-timer-chain",
+        "near-timer-adjacent"
+      ],
+      "note": "这些节点的成绩转录自该表。表内历史说明仍留在原文件。"
+    },
+    {
+      "id": "dvs-31",
+      "title": "原 31 条件",
+      "evidence": "experiments/backends/dvs2-spectre-validation/README.md",
+      "node_ids": [],
+      "note": "冻结收据仍在 experiments/backends/dvs2-spectre-validation。逐条条件对应到能力节点尚未审核，这里不猜测映射。"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "macro-include",
+      "title": "宏与 include",
+      "chapter": "语言",
+      "label": "宏与 include（含实例）",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "层次语法编译失败",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "parameters",
+      "title": "参数",
+      "chapter": "语言",
+      "label": "参数",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "层次语法编译失败",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "conditions",
+      "title": "条件与逻辑表达式",
+      "chapter": "语言",
+      "label": "条件与逻辑表达式",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "case",
+      "title": "case 分支",
+      "chapter": "语言",
+      "label": "case 分支",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "sequential-assign",
+      "title": "顺序赋值",
+      "chapter": "语言",
+      "label": "顺序赋值",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "user-function",
+      "title": "用户函数",
+      "chapter": "语言",
+      "label": "用户函数",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "static-loop",
+      "title": "静态循环",
+      "chapter": "语言",
+      "label": "静态循环",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "编译失败",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "array-static-index",
+      "title": "变量数组：静态下标",
+      "chapter": "语言",
+      "label": "变量数组：静态下标",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "编译失败",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "electrical-vector",
+      "title": "电气向量",
+      "chapter": "语言",
+      "label": "电气向量",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "编译失败",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "hierarchy",
+      "title": "模块层次",
+      "chapter": "语言",
+      "label": "模块层次",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "编译失败",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "sin",
+      "title": "sin",
+      "chapter": "语言",
+      "label": "sin",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "cos",
+      "title": "cos",
+      "chapter": "语言",
+      "label": "cos",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "exp",
+      "title": "exp",
+      "chapter": "语言",
+      "label": "exp",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "ln",
+      "title": "ln",
+      "chapter": "语言",
+      "label": "ln",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "sqrt",
+      "title": "sqrt",
+      "chapter": "语言",
+      "label": "sqrt",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "pow-cube",
+      "title": "pow：三次幂",
+      "chapter": "语言",
+      "label": "pow：三次幂",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "pow-half",
+      "title": "pow：半次幂",
+      "chapter": "语言",
+      "label": "pow：半次幂",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "voltage-contribution",
+      "title": "电压访问与贡献",
+      "chapter": "静态电压传递",
+      "label": "电压访问与贡献",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "static-voltage-feedback",
+      "title": "静态电压反馈",
+      "chapter": "静态电压传递",
+      "label": "静态电压反馈",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "initial-step",
+      "title": "initial_step",
+      "chapter": "阈值、迟滞、启动",
+      "label": "initial_step：事件状态初始化",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "编译或初始化失败",
+        "gnucap": "编译失败",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "cross",
+      "title": "cross：斜坡穿越",
+      "chapter": "阈值、迟滞、启动",
+      "label": "cross：斜坡穿越",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "漏事件",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "timer",
+      "title": "固定 timer",
+      "chapter": "延迟、边沿、周期",
+      "label": "固定 timer",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "event-or",
+      "title": "事件 OR：采样与复位",
+      "chapter": "采样、保持、复位",
+      "label": "事件 OR：采样与复位",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "编译失败",
+        "gnucap": "漏事件",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "transition",
+      "title": "transition：定时非对称沿",
+      "chapter": "延迟、边沿、周期",
+      "label": "transition：定时非对称沿",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "absdelay",
+      "title": "固定 absdelay",
+      "chapter": "延迟、边沿、周期",
+      "label": "固定 absdelay",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "slew",
+      "title": "固定 slew",
+      "chapter": "延迟、边沿、周期",
+      "label": "固定 slew",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "编译失败",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "idt",
+      "title": "idt：非零初值与正负面积",
+      "chapter": "连续动态与相位",
+      "label": "idt：非零初值与正负面积",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q2",
+        "ngspice": "✓ Q3",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "idtmod",
+      "title": "idtmod：原始相位与环回",
+      "chapter": "连续动态与相位",
+      "label": "idtmod：原始相位与环回",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "环回边界未验收",
+        "ngspice": "环回边界未验收",
+        "gnucap": "编译失败",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "ddt-time",
+      "title": "ddt：二次时间表达式",
+      "chapter": "连续动态与相位",
+      "label": "ddt：二次时间表达式",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "Q1 误差超限",
+        "ngspice": "误差超限",
+        "gnucap": "✓ Q2",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "ddt-input",
+      "title": "ddt：电压斜坡平方",
+      "chapter": "连续动态与相位",
+      "label": "ddt：电压斜坡平方",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q2",
+        "ngspice": "误差超限",
+        "gnucap": "✓ Q2",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "laplace-nd",
+      "title": "一阶 laplace_nd",
+      "chapter": "连续动态与相位",
+      "label": "一阶 laplace_nd",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "✓ Q3",
+        "gnucap": "非零初态错误",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "laplace-np",
+      "title": "一阶 laplace_np",
+      "chapter": "连续动态与相位",
+      "label": "一阶 laplace_np",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "编译失败",
+        "gnucap": "误差超限",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "filter-second-order",
+      "title": "二阶滤波（内部微分）",
+      "chapter": "连续动态与相位",
+      "label": "二阶滤波（内部微分）",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "Q1 误差超限",
+        "gnucap": "误差超限",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "sample-hold-timer",
+      "title": "采样保持：定时",
+      "chapter": "采样、保持、复位",
+      "label": "采样保持：定时",
+      "status": "compared",
+      "depends_on": [
+        "timer"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "sample-hold-cross",
+      "title": "采样保持：阈值",
+      "chapter": "采样、保持、复位",
+      "label": "采样保持：阈值",
+      "status": "compared",
+      "depends_on": [
+        "cross"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "漏事件",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "sample-reset-edge",
+      "title": "采样、复位与输出边沿",
+      "chapter": "采样、保持、复位",
+      "label": "采样、复位与输出边沿",
+      "status": "compared",
+      "depends_on": [
+        "transition"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "编译失败",
+        "gnucap": "漏事件",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "hysteresis-edge",
+      "title": "迟滞比较器与边沿",
+      "chapter": "阈值、迟滞、启动",
+      "label": "迟滞比较器与边沿",
+      "status": "compared",
+      "depends_on": [
+        "cross",
+        "transition"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "误差超限",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "sample-integrate-timer",
+      "title": "定时采样→积分：原模型",
+      "chapter": "组合、反馈、实例",
+      "label": "定时采样→积分：原模型",
+      "status": "compared",
+      "depends_on": [
+        "timer",
+        "idt"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "漏定时事件",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "sample-integrate-ordered",
+      "title": "采样→积分：停止边界与非线性",
+      "chapter": "组合、反馈、实例",
+      "label": "采样→积分：停止边界与非线性",
+      "status": "compared",
+      "depends_on": [
+        "idt"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "停止边界未达标",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "integrator-cascade-reset",
+      "title": "积分级联与复位",
+      "chapter": "组合、反馈、实例",
+      "label": "积分级联与复位",
+      "status": "compared",
+      "depends_on": [
+        "idt"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "复位误差超限",
+        "ngspice": "初始化失败",
+        "gnucap": "误差超限",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "nonlinear-filter-feedthrough",
+      "title": "非线性输入与滤波直通项",
+      "chapter": "连续动态与相位",
+      "label": "非线性输入与滤波直通项",
+      "status": "compared",
+      "depends_on": [
+        "laplace-nd"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "Q2 误差超限",
+        "ngspice": "Q1/Q2 误差超限",
+        "gnucap": "误差超限",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "filter-ddt-dc",
+      "title": "滤波与微分：DC 直通项",
+      "chapter": "连续动态与相位",
+      "label": "滤波与微分：DC 直通项",
+      "status": "compared",
+      "depends_on": [
+        "laplace-nd",
+        "ddt-input"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "Q3 启动误差超限",
+        "ngspice": "✓ Q3",
+        "gnucap": "误差超限",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "two-absdelay",
+      "title": "两个固定延迟的历史",
+      "chapter": "延迟、边沿、周期",
+      "label": "两个固定延迟的历史",
+      "status": "compared",
+      "depends_on": [
+        "absdelay"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "编译失败",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "two-slew",
+      "title": "两级 slew 与反向追赶",
+      "chapter": "延迟、边沿、周期",
+      "label": "两级 slew 与反向追赶",
+      "status": "compared",
+      "depends_on": [
+        "slew"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "编译失败",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "interrupted-edge-integrate",
+      "title": "中断边沿→积分",
+      "chapter": "组合、反馈、实例",
+      "label": "中断边沿→积分",
+      "status": "compared",
+      "depends_on": [
+        "idt"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "新版验收未跑",
+        "gnucap": "新版验收未跑",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "array-event-update",
+      "title": "数组的事件状态更新",
+      "chapter": "语言",
+      "label": "数组的事件状态更新",
+      "status": "compared",
+      "depends_on": [
+        "array-static-index"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "编译失败",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "chain-sample-hold-edge-filter",
+      "title": "采样→保持→边沿→滤波",
+      "chapter": "组合、反馈、实例",
+      "label": "采样→保持→边沿→滤波",
+      "status": "compared",
+      "depends_on": [
+        "sample-hold-timer",
+        "transition",
+        "laplace-nd"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "编译失败",
+        "gnucap": "事件与输出错误",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "filter-then-sample",
+      "title": "滤波→采样保持",
+      "chapter": "组合、反馈、实例",
+      "label": "滤波→采样保持",
+      "status": "compared",
+      "depends_on": [
+        "laplace-nd",
+        "sample-hold-timer"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "编译失败",
+        "gnucap": "采样历史错误",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "solve-delay-sample",
+      "title": "电压求解→延迟→采样",
+      "chapter": "组合、反馈、实例",
+      "label": "电压求解→延迟→采样",
+      "status": "compared",
+      "depends_on": [
+        "absdelay"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "编译失败",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "vco",
+      "title": "VCO：扫频与原始相位",
+      "chapter": "连续动态与相位",
+      "label": "VCO：扫频与原始相位",
+      "status": "compared",
+      "depends_on": [
+        "idtmod"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "环回边界未验收",
+        "ngspice": "扫频误差超限",
+        "gnucap": "编译失败",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "instance-integrator-reset",
+      "title": "实例隔离：双积分器复位",
+      "chapter": "组合、反馈、实例",
+      "label": "实例隔离：双积分器复位",
+      "status": "compared",
+      "depends_on": [
+        "idt"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "复位误差超限",
+        "ngspice": "编译失败",
+        "gnucap": "误差超限",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "instance-phase",
+      "title": "实例隔离：双相位历史",
+      "chapter": "组合、反馈、实例",
+      "label": "实例隔离：双相位历史",
+      "status": "compared",
+      "depends_on": [
+        "idtmod"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "环回边界未验收",
+        "ngspice": "编译失败",
+        "gnucap": "编译失败",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "nonlinear-integral-filter-feedback",
+      "title": "非线性积分与滤波联合反馈",
+      "chapter": "组合、反馈、实例",
+      "label": "非线性积分与滤波联合反馈",
+      "status": "compared",
+      "depends_on": [
+        "idt",
+        "laplace-nd"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "误差超限",
+        "gnucap": "✓ Q3",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "event-dynamics-linear",
+      "title": "事件改变动态：线性反馈",
+      "chapter": "组合、反馈、实例",
+      "label": "事件改变动态：线性反馈",
+      "status": "compared",
+      "depends_on": [],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "Q1 误差超限",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "event-dynamics-riccati",
+      "title": "事件改变动态：Riccati 滤波",
+      "chapter": "组合、反馈、实例",
+      "label": "事件改变动态：Riccati 滤波",
+      "status": "compared",
+      "depends_on": [
+        "laplace-nd"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ Q3",
+        "ngspice": "初始化失败",
+        "gnucap": "误差超限",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "near-timer-chain",
+      "title": "近邻定时事件：原整链",
+      "chapter": "组合、反馈、实例",
+      "label": "近邻定时事件：原整链",
+      "status": "compared",
+      "depends_on": [
+        "timer"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "✓ 1 µV",
+        "ngspice": "初始化失败",
+        "gnucap": "✓ 1µV",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "near-timer-adjacent",
+      "title": "近邻定时事件：相邻浮点采样积分",
+      "chapter": "组合、反馈、实例",
+      "label": "近邻定时事件：相邻浮点采样积分",
+      "status": "compared",
+      "depends_on": [
+        "timer",
+        "idt"
+      ],
+      "review": "recorded",
+      "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+      "results": {
+        "spectre": "回调同刻",
+        "ngspice": "初始化失败",
+        "gnucap": "回调同刻",
+        "evas": "✓ Q3"
+      }
+    },
+    {
+      "id": "include-guard",
+      "title": "include 保护",
+      "chapter": "语言",
+      "label": "include 保护",
+      "status": "waiting",
+      "depends_on": [],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "include 保护、条件编译的独立验收尚未跑。"
+    },
+    {
+      "id": "parameter-range",
+      "title": "参数范围端点",
+      "chapter": "语言",
+      "label": "参数范围端点",
+      "status": "waiting",
+      "depends_on": [
+        "parameters"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "参数依赖与范围端点尚未跑。"
+    },
+    {
+      "id": "loop-bounds",
+      "title": "零次、一次与参数化循环",
+      "chapter": "语言",
+      "label": "零次、一次与参数化循环",
+      "status": "waiting",
+      "depends_on": [
+        "static-loop"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "零次、一次与参数化次数的循环尚未跑。"
+    },
+    {
+      "id": "array-declaration-order",
+      "title": "数组声明方向",
+      "chapter": "语言",
+      "label": "数组声明方向",
+      "status": "waiting",
+      "depends_on": [
+        "array-static-index"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "相反声明方向的数组尚未跑。"
+    },
+    {
+      "id": "supply-reference-precision",
+      "title": "供电与参考的统一精度",
+      "chapter": "参考与供电",
+      "label": "供电与参考的统一精度",
+      "status": "waiting",
+      "depends_on": [],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "原 v2 四条件已测；统一精度流程中的供电依赖和对应观察尚未跑。"
+    },
+    {
+      "id": "initial-threshold",
+      "title": "初始阈值",
+      "chapter": "阈值、迟滞、启动",
+      "label": "初始阈值",
+      "status": "waiting",
+      "depends_on": [],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "初始阈值尚未逐项补齐。"
+    },
+    {
+      "id": "above",
+      "title": "above",
+      "chapter": "阈值、迟滞、启动",
+      "label": "above",
+      "status": "waiting",
+      "depends_on": [],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "PROTOCOL 仍将 above 列为待补，独立答案尚未写入本登记。"
+    },
+    {
+      "id": "last-crossing",
+      "title": "last_crossing",
+      "chapter": "阈值、迟滞、启动",
+      "label": "last_crossing",
+      "status": "waiting",
+      "depends_on": [],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "PROTOCOL 仍将 last_crossing 列为待补，独立答案尚未写入本登记。"
+    },
+    {
+      "id": "period-update",
+      "title": "周期修改",
+      "chapter": "延迟、边沿、周期",
+      "label": "周期修改",
+      "status": "waiting",
+      "depends_on": [
+        "timer"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "周期修改尚未逐项补齐。"
+    },
+    {
+      "id": "schedule-cancel",
+      "title": "旧日程取消",
+      "chapter": "延迟、边沿、周期",
+      "label": "旧日程取消",
+      "status": "waiting",
+      "depends_on": [
+        "timer"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "旧日程取消尚未逐项补齐。"
+    },
+    {
+      "id": "same-time-rules",
+      "title": "同刻规则",
+      "chapter": "阈值、迟滞、启动",
+      "label": "同刻规则",
+      "status": "waiting",
+      "depends_on": [],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "同刻规则尚未逐项补齐。"
+    },
+    {
+      "id": "vco-gated",
+      "title": "VCO 门控",
+      "chapter": "连续动态与相位",
+      "label": "VCO 门控",
+      "status": "waiting",
+      "depends_on": [
+        "vco"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "门控 VCO 尚未跑。"
+    },
+    {
+      "id": "vco-long-phase",
+      "title": "VCO 长期相位",
+      "chapter": "连续动态与相位",
+      "label": "VCO 长期相位",
+      "status": "waiting",
+      "depends_on": [
+        "vco"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "长期相位尚未跑。"
+    },
+    {
+      "id": "phase-cross",
+      "title": "读取相位的 cross",
+      "chapter": "阈值、迟滞、启动",
+      "label": "读取相位的 cross",
+      "status": "waiting",
+      "depends_on": [
+        "cross",
+        "idtmod"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "读取相位的 cross 尚未跑。"
+    },
+    {
+      "id": "sine-response",
+      "title": "正弦幅相",
+      "chapter": "连续动态与相位",
+      "label": "正弦幅相",
+      "status": "waiting",
+      "depends_on": [
+        "laplace-nd"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "正弦幅相尚未跑。"
+    },
+    {
+      "id": "conjugate-poles",
+      "title": "共轭极点",
+      "chapter": "连续动态与相位",
+      "label": "共轭极点",
+      "status": "waiting",
+      "depends_on": [
+        "filter-second-order"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "共轭极点尚未跑。"
+    },
+    {
+      "id": "smooth-derivative",
+      "title": "光滑曲线导数",
+      "chapter": "连续动态与相位",
+      "label": "光滑曲线导数",
+      "status": "waiting",
+      "depends_on": [
+        "ddt-input"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "光滑曲线导数尚未跑。"
+    },
+    {
+      "id": "delay-then-slew",
+      "title": "延迟后限速",
+      "chapter": "延迟、边沿、周期",
+      "label": "延迟后限速",
+      "status": "waiting",
+      "depends_on": [
+        "absdelay",
+        "slew"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "延迟后限速尚未形成独立卡。"
+    },
+    {
+      "id": "short-pulse",
+      "title": "短脉冲",
+      "chapter": "延迟、边沿、周期",
+      "label": "短脉冲",
+      "status": "waiting",
+      "depends_on": [
+        "transition"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "短脉冲尚未形成独立卡。"
+    },
+    {
+      "id": "deeper-slew-cascade",
+      "title": "更深 slew 级联",
+      "chapter": "延迟、边沿、周期",
+      "label": "更深 slew 级联",
+      "status": "waiting",
+      "depends_on": [
+        "two-slew"
+      ],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "更深 slew 级联尚未形成独立卡。"
+    },
+    {
+      "id": "adc-codes",
+      "title": "ADC 端码、阈值、饱和与读取时序",
+      "chapter": "采样、保持、复位",
+      "label": "ADC 端码、阈值、饱和与读取时序",
+      "status": "waiting",
+      "depends_on": [],
+      "review": "pending",
+      "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+      "gap": "固定端码、阈值、饱和及读取时序的仿真器用例尚未跑，不能用 benchmark 成绩代替。"
+    }
+  ],
+  "source_revision": "f210ebd59dfd5db78eea7ac0751479bc9e02beed",
+  "source_sha256": "8c260945647147a1512eb9c2a1947c5faddb561989d55db98e65baf1895e11a9",
+  "qualification": "historical-only; identities not requalified"
+}

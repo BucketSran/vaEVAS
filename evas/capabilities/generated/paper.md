@@ -1,6 +1,6 @@
 # 给使用者和审稿人的能力比较
 
-由 `evas/capabilities/catalog.py` 生成。只包含已经有四后端成绩的能力节点。
+由 `evas/capabilities/data/` 生成。只包含已经有四后端成绩的能力节点。
 这一页不是实验开发的登记簿。落后和未验收留在格子里。
 
 成绩沿用[原支持矩阵](../../docs/COMPARISON.md#支持矩阵)的固定模型和配置，
