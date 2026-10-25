@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-10-25T23:19:42.617886+00:00",
+  "candidate": "PR2a-07-baseline-pending",
+  "candidate_identity": "f6ea3c146daa7b8df6aeefe58e7618983f0cbe8311fc68560440a7d367ac15a1",
+  "base": "b55cfc790c8b3d7bc2f2528a05db48456e96d03e",
+  "baseline_subject_sha256": "169269482f297e20735015f9289ae91767e4791b2651f688ceeedd34b22a3cd4",
+  "decision": "initial_baseline_content_and_provenance_accepted",
+  "findings": [],
+  "approved_scope": "Initial known regression observations for the exact declared criteria/language/collector/runtime context, based on actual secondCI40242082695 headb55. Approval is not semantic/capability qualification, merge acceptance or activation.",
+  "independent_checks": {
+    "snapshot": "10 hashes/identity match;9 code files equal accepted06 exactly",
+    "raw": "Actual merged bytes SHA3b5ec83bca33fe196c229585777e7c678bd91ce959e5d9857d85271aa3d0311f match proposal; canonical source hash58788f5ff1f10b6e2307756803bac95dd7af5dee679cd8f674b15e3d1e4b461e correct",
+    "scope": "3257 methods and7737 conditions; methods2617pass/423fail/214error/3xfail; conditions6841pass/597failed/296error/3xfail",
+    "projection": "All7737 signatures, identity flags, both context locations, method IDs/outcomes, shard assignment and runtime context match raw after389-value pool expansion",
+    "original_shards": "All4 original shard reports818/831/823/785 present, valid and bound to original execution/input identities; per-report bytes match collection SHA and merged.parts identities; independent merge reproduces entire merged JSON exactly",
+    "historical": "Method ID set and every result equal first fullCI and previously verified historical40192400498; no new methods/missing/skip/regression",
+    "unknown_limits": "All896 nonpassing observations matchable under accepted collector.58 opaque passed observations retain false identity flags and grant no stable semantic/input qualification",
+    "negative_controls": "Pending proposal denied; temporary in-memory synthetic review permits only exact same observed rawfalse; A->B replacement, missing passed condition and new opaque-input failure reject; actual CLI ignores staged baseline and errors on trusted baseb55 missing baseline",
+    "provenance": "Source commit/scientific trees/collector match prior independent publication checks. CI artifact metadata head/id/expiry match source_identity; local retained raw path resolves under canonical current task. Artifact is expiring, raw retained local-only."
+  },
+  "not_closed": [
+    "DR01",
+    "DR02",
+    "PR2a final merge",
+    "PR2b activation",
+    "Six-batch delivery"
+  ],
+  "reviewer": "independent-review-thread:01a1743b-0588-70e2-bbb3-b7ef61db0bd9",
+  "review_thread": "codex://threads/01a1743b-0588-70e2-bbb3-b7ef61db0bd9",
+  "original_review_sha256": "5b9cb52dea0be952412b1d7c37fae0411476ced6248ef77436422251b56d0735",
+  "original_review_availability": "local-only task record; this versioned receipt retains the accepted scope and checks",
+  "semantic_status": "pending",
+  "semantic_qualification": false,
+  "recorded_by": "implementation-thread:01a17428-2b0c-79e3-8db7-1662b3566ccd",
+  "raw_availability": "local-only retained full raw; expiring CI artifact in baseline source_identity"
+}
