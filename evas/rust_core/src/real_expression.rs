@@ -12,10 +12,13 @@ pub(crate) fn operation(op: RealOperation) -> Op {
     }
 }
 pub(crate) fn fault<T: std::fmt::Debug>(error: Fault<T>) -> Error {
-    Error::new(
-        "real_arithmetic",
-        format!("program-real arithmetic: {error:?}"),
-    )
+    // Overflow is a nonfinite result of finite operands. Division by zero
+    // stays real_arithmetic; callers already lock that kind.
+    let kind = match &error {
+        Fault::Overflow | Fault::NonFinite => "nonfinite_arithmetic",
+        _ => "real_arithmetic",
+    };
+    Error::new(kind, format!("program-real arithmetic: {error:?}"))
 }
 pub(crate) fn literal(value: f64) -> E {
     E::Affine {
