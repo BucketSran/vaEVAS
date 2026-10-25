@@ -121,6 +121,80 @@ class SlewCascadeContracts(unittest.TestCase):
                      stop=24, vabstol=1e-5, reltol=0)
         self.assertLessEqual(abs(F(rows(result)[1]['y'])-F(7*1073741824, 9)), F(1e-5))
 
+    def test_unit_ramp_is_inner_half_and_outer_quarter(self):
+        # u=t, initial value 0, fixed limits ±1/2 then ±1/4.
+        # Independent answer: inner .5t, outer .25t. The output grid is not the history.
+        times = [0, 0.5, 1, 2, 4]
+        result = run(compile_model(BODY, 'electrical h;'),
+                     {'u': [[0, 0], [4, 4]]}, times, stop=4, max_step=4,
+                     vabstol=1e-10, reltol=0)
+        for t, row in zip(times, rows(result)):
+            self.assertLessEqual(abs(F(row['dut:h']) - F(t) / 2), F(1e-10))
+            self.assertLessEqual(abs(F(row['y']) - F(t) / 4), F(1e-10))
+
+    def test_corner_chase_negative_control_stays_outside_the_voltage_budget(self):
+        # Reverse stimulus. Inner intersection is 8/3; outer is 32/9.
+        # Turning the inner stage at the input corner t=2 gives h(3)=1/2.
+        # Turning the outer stage at the inner corner 8/3 gives y(3)=7/12.
+        times = [0, 2, 3, 4]
+        result = run(compile_model(BODY, 'electrical h;'),
+                     {'u': [[0, 0], [2, 4], [4, -4], [24, -4]]},
+                     times, stop=24, max_step=24, vabstol=1e-10, reltol=0)
+        actual = rows(result)
+        for t, row in zip(times, actual):
+            h, y = answer('reverse', t)
+            self.assertLessEqual(abs(F(row['dut:h']) - h), F(1e-10))
+            self.assertLessEqual(abs(F(row['y']) - y), F(1e-10))
+        at_three = actual[times.index(3)]
+        self.assertGreater(abs(F(at_three['dut:h']) - F(1, 2)), F(1e-10))
+        self.assertGreater(abs(F(at_three['y']) - F(7, 12)), F(1e-10))
+
+    def test_error_amplification_negative_control_keeps_the_voltage_budget(self):
+        # Same 2^30 gain and voltage budgets as the direct-gain contract.
+        # Tight acceptance must still fail; the loose point stays on the chase
+        # formula and away from the outer-turned-at-8/3 value, gain/3.
+        program = compile_model(BODY.replace('V(y,r)<+', 'V(y,r)<+1073741824*'),
+                                'electrical h;')
+        points = {'u': [[0, 0], [2, 4], [4, -4], [24, -4]]}
+        with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
+            run(program, points, [0, 4, 24], stop=24, vabstol=1e-9, reltol=0)
+        result = run(program, points, [0, 4, 24], stop=24, vabstol=1e-5, reltol=0)
+        accepted = F(rows(result)[1]['y'])
+        self.assertLessEqual(abs(accepted - F(7 * 1073741824, 9)), F(1e-5))
+        self.assertGreater(abs(accepted - F(1073741824, 3)), F(1e-5))
+
+    def test_call_sites_keep_independent_two_level_histories(self):
+        ports = 'u,v,y,z,r'
+        directions = 'input u,v; output y,z; inout r;'
+        ramp = [[0, 0], [4, 4]]
+        cases = [
+            ('V(h1,r)<+slew(V(u,r),0.5,-0.5); V(y,r)<+slew(V(h1,r),0.25,-0.25); '
+             'V(h2,r)<+slew(V(v,r),0.5,-0.5); V(z,r)<+slew(V(h2,r),0.25,-0.25);',
+             'electrical h1,h2;', {'u': ramp, 'v': [[0, 0], [4, 0]]}, F(0)),
+            ('V(h2,r)<+slew(V(v,r),0.5,-0.5); V(z,r)<+slew(V(h2,r),0.25,-0.25); '
+             'V(h1,r)<+slew(V(u,r),0.5,-0.5); V(y,r)<+slew(V(h1,r),0.25,-0.25);',
+             'electrical h1,h2;', {'u': ramp, 'v': [[0, 0], [4, 0]]}, F(0)),
+            ('V(y,r)<+slew(slew(V(u,r),0.5,-0.5),0.25,-0.25); '
+             'V(z,r)<+slew(slew(V(v,r),0.5,-0.5),0.5,-0.5);',
+             '', {'u': ramp, 'v': ramp}, None),
+        ]
+        times = [0, 1, 2, 4]
+        for body, declarations, sources, held in cases:
+            program = compile_model(body, declarations, ports=ports, directions=directions)
+            operators = program.to_dict()['operators']
+            origins = [(item['origin']['line'], item['origin']['column'], item['origin']['instance'])
+                       for item in operators]
+            self.assertEqual(len(origins), 4)
+            self.assertEqual(len(set(origins)), 4)
+            result = run(program, sources, times, stop=4, max_step=4, vabstol=1e-10, reltol=0)
+            for t, row in zip(times, rows(result)):
+                self.assertLessEqual(abs(F(row['y']) - F(t) / 4), F(1e-10))
+                expected_z = F(t) / 2 if held is None else held
+                self.assertLessEqual(abs(F(row['z']) - expected_z), F(1e-10))
+                if 'V(h1,r)' in body:
+                    self.assertLessEqual(abs(F(row['dut:h1']) - F(t) / 2), F(1e-10))
+                    self.assertLessEqual(abs(F(row['dut:h2']) - held), F(1e-10))
+
     def test_deeper_nonunit_mixed_and_feedback_inputs_stay_rejected(self):
         for body in [
             'V(y,r)<+slew(slew(slew(V(u,r),1,-1),0.5,-0.5),0.25,-0.25);',
