@@ -1,0 +1,33 @@
+--- original
++++ standard
+@@ -11,14 +11,14 @@
+ module CLOCK_VA_SAMPLE_1800n(RST, S, SS, NC_AZ,NC,CONV);
+ 
+ output RST;
+-voltage RST;
++electrical RST;
+ 
+ output S,SS,NC_AZ, NC;
+-voltage S,SS, NC_AZ,NC;
++electrical S,SS, NC_AZ,NC;
+ 
+ 
+ output  CONV;
+-voltage  CONV;
++electrical  CONV;
+ 
+ 
+ 
+@@ -67,11 +67,7 @@
+ analog begin
+ 	// initialize everything to 0
+ 	@(initial_step) begin
+-		V(RST) <+ 0;
+-		V(S) <+ 0;
+-		V(SS) <+ 0;
+-		V(NC) <+ 0;
+-		V(NC_AZ) <+ 0;
++        rst=0; s=0; ss=0; nc_az=0; nc=0; conv=0;
+ 	end
+ 
+ 	// timing for RST

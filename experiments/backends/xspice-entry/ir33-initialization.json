@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-25",
+  "pr": 248,
+  "baseline_main": "cbfd88ac061f0d9442e784d4eadf76ba102c3c2c",
+  "ir_schema": 33,
+  "source_sha256": {
+    "evas/src/evas/xspice/compiler.py": "1fd783f8f5d22d51c9d053d40b376a2ef09129b401f4236fbbe30b2e7f983d91",
+    "evas/src/evas/xspice/runtime.c.in": "afb791c1016f0bd12f57e50b16dcf20f88a78517e41b80c2df89984b5ad96ecc",
+    "evas/tests/test_xspice_startup.py": "08dd8ea9ec961886ac3bab8bb024b452365ae17722001f1b63a37c100de58e27"
+  },
+  "prior_art": "Accellera VAMS LRM2.4 sections5.3/5.10; fixed legacy6cb6 and ngspice47 cfunc initialization. Research identity retained in task prior-art.json.",
+  "contract": "DC reruns declaration seeds and interleaves occurrence bindings with initial_step gates in source order; later state writes do not recompute earlier snapshots.",
+  "regressions": {
+    "before": {
+      "tests": 7,
+      "new_failures": 3,
+      "existing_passed": 4
+    },
+    "after": {
+      "xspice_tests": 23,
+      "passed": 23
+    },
+    "execution": "Generated C DC program compiled with cc; locals poisoned with NaN; two independent input values and repeated DC reconstruction."
+  },
+  "native": {
+    "platform": "macOS arm64 / ngspice47",
+    "source": "real a,q; analog begin a=V(u); @(initial_step) q=a; V(y)<+q; end",
+    "before": {
+      "returncode": 0,
+      "expected": {
+        "ya": 1.25,
+        "yb": -0.625
+      },
+      "points": 46,
+      "errors": {
+        "ya": 1.25,
+        "yb": 0.625
+      },
+      "passed": false
+    },
+    "after": {
+      "returncode": 0,
+      "expected": {
+        "ya": 1.25,
+        "yb": -0.625
+      },
+      "points": 46,
+      "errors": {
+        "ya": 0.0,
+        "yb": 0.0
+      },
+      "passed": true
+    },
+    "instances": true,
+    "clock_initial_cases": {
+      "selected": [
+        "zero",
+        "fall",
+        "positive",
+        "tiny"
+      ],
+      "runs": 6,
+      "passed": true,
+      "negative_control": "zero dc-leak rejected by state/cursor/DC reconstruction checks; counted as expected rejection"
+    },
+    "new_spectre_runs": 0
+  },
+  "raw_evidence": {
+    "task": "current/runs/pr-review-20261025/",
+    "native": "worktrees/issue-176-ngspice/runs/pr-review-20261025/",
+    "test_logs": "worktrees/issue-176-ngspice/runs/issue-176-round2/initial-tests-{red,green}.log",
+    "status": "Retained local files, not a published raw-data bundle."
+  },
+  "limits": [
+    "Historical IR28 r53 7/7, P0 6/6, P1 15/15 were not revalidated against this IR33 candidate.",
+    "Full Python CI outcome belongs to the exact pushed PR head and is reported separately.",
+    "No general transient procedure/reassignment support, Linux host qualification or full Spectre alignment claim."
+  ]
+}

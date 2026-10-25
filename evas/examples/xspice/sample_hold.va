@@ -1,0 +1,28 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module sample_hold(din,clk,out,held_out,count_out,ticks_out,order_out,stamp_out);
+ input din,clk;
+ output out,held_out,count_out,ticks_out,order_out,stamp_out;
+ electrical din,clk,out,held_out,count_out,ticks_out,order_out,stamp_out;
+ parameter real threshold=0.9, initial_value=0.1, reset_value=0.05;
+ parameter real ttol=1e-14, vtol=1e-9;
+ parameter real timer_start=1.18e-6, timer_period=3e-6;
+ parameter real delay=40e-9, rise=200e-9, fall=400e-9;
+ real held,last_event,order;
+ integer count,ticks;
+ analog begin
+  @(initial_step) begin held=initial_value; last_event=-1e-6; count=0; ticks=0; order=0; end
+  @(cross(V(clk)-threshold,+1,ttol,vtol)) begin
+   held=V(din); count=count+1; order=order*10+1; last_event=$abstime;
+  end
+  @(timer(timer_start,timer_period,ttol)) begin
+   held=reset_value; ticks=ticks+1; order=order*10+2; last_event=$abstime;
+  end
+  V(out)<+transition(held,delay,rise,fall);
+  V(held_out)<+held;
+  V(count_out)<+count;
+  V(ticks_out)<+ticks;
+  V(order_out)<+order;
+  V(stamp_out)<+last_event*1e6;
+ end
+endmodule

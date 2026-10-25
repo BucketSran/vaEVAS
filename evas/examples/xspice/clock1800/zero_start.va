@@ -1,0 +1,12 @@
+`include "disciplines.vams"
+module zero_start(y,count);
+output y,count; electrical y,count;
+parameter real level=1.1, old=0, start=0, period=10n, edge=20p;
+real q; integer hits;
+analog begin
+ @(initial_step) begin q=old; hits=0; end
+ @(timer(start,period)) begin q=level; hits=hits+1; end
+ V(y)<+transition(q,0,edge,edge);
+ V(count)<+hits;
+end
+endmodule

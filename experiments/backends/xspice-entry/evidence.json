@@ -1,0 +1,175 @@
+{
+  "status": "implemented_and_scoped_acceptance_passed",
+  "availability": "local-only raw evidence; source and validation assets are on the restoration branch and are not a published release",
+  "published": false,
+  "base": "358760415f545a9b9e10e1a3dc7ab3ba5c56fac9",
+  "branch": "codex/evas-xspice-entry",
+  "workspace": "omitted; historical workspace is outside this repository",
+  "local_run_root": "local-only runs/xspice-entry-20261018",
+  "scope": "Public EVAS API/CLI compiles a restricted voltage-event VA model through the actual frontend to an ngspice47 XSPICE code model; ngspice solves netlist devices and feedback",
+  "entrypoints": [
+    "evas-rebuild xspice compile",
+    "evas-rebuild xspice build",
+    "evas.xspice.compile_model",
+    "evas.xspice.build_model"
+  ],
+  "source_identity": {
+    "manifest": "candidate-identity.json",
+    "snapshot": "source-candidate.tar.gz",
+    "patch": "source-diff.patch",
+    "backend_version": 1,
+    "ir_schema_version": 23,
+    "canonical_va_sha256": "40eb8d5dade2dd5875b5dc175997ebe94263fdd85490c79330625bed4db1302e"
+  },
+  "tools": {
+    "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+    "python": "3.14.6",
+    "ngspice": "ngspice-47",
+    "ngspice_sha256": "5845b18cd68781daf9c7bd5bbce6b1b3e212eafe58f98861199dca2cba8e2511",
+    "ngspice_version": "47",
+    "sdk": "sdk-local.json",
+    "sdk_receipt": "demo/generated/native/build.json",
+    "compiler": "cc",
+    "compiler_sha256": "a961f78075d8e7621ef4f5d764c64ef8a41bf66c0a98ab5cb6ca39b85ce31c93",
+    "spectre_version": "21.1.0.509.isr12",
+    "spectre_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f"
+  },
+  "package": {
+    "wheel": "package-fixed/evas_rebuild-0.19.0-py3-none-macosx_26_0_arm64.whl",
+    "wheel_sha256": "9eff6087b61047fcae88e43a054b38ed0b5cb5a6dcda71a672109d27cea45d84",
+    "sdist": "package-fixed/evas_rebuild-0.19.0.tar.gz",
+    "sdist_sha256": "1e2aef0995652a821ede122330233f59daafb2416828035b5f336d1e9e46beec",
+    "installed_gate": "package-install-fixed/complete.json",
+    "installed_native": "checks/installed-instances/analysis.json",
+    "doc_command_demo": "demo/analysis.json"
+  },
+  "native_acceptance": {
+    "batch": "batches/fixed01",
+    "physical_passed": 20,
+    "physical_total": 20,
+    "paired_passed": 10,
+    "paired_total": 10,
+    "max_pair_event_time_s": 8.331606990419609e-14,
+    "max_pair_sample_V": 8.33160701541047e-09,
+    "max_pair_out_V": 2.618093084619244e-07,
+    "correct_rollback_passed": 3,
+    "leaked_frames_detected": 3,
+    "leaked_control_final_waveforms_still_pass": true,
+    "rollback_judgment": "First-retry complete-state and accepted-lineage invariants; final physical waveform alone does not detect the three injected leaks",
+    "boundary": {
+      "baseline": "boundary/baseline/analysis.json",
+      "fixed": "boundary/fixed/paired-analysis.json",
+      "passed": true,
+      "pair": {
+        "event_order_equal": true,
+        "max_event_time_s": 5.0000000001380185e-12,
+        "max_sample_V": 4.999999999866223e-07,
+        "max_out_V": 2.5163136088135474e-06,
+        "voltage_bound_V": 2e-05,
+        "passed": true
+      }
+    },
+    "default_multi_instance": true,
+    "uic_explicitly_rejected": true,
+    "checker_calibration": "evidence/calibration.json",
+    "reference_admission_controls": "evidence/reference-admission.json"
+  },
+  "accuracy_contract": {
+    "event_time_s": 5e-11,
+    "voltage_V": 2e-05,
+    "rollback_pair_V": 5e-08,
+    "common_output_grid_s": 1e-09,
+    "ngspice_requested_reltol": [
+      1e-09,
+      1e-10
+    ],
+    "spectre_effective_reltol": [
+      1e-10,
+      1e-11
+    ],
+    "voltage_abs_tol_V": [
+      1e-12,
+      1e-13
+    ],
+    "current_abs_tol_A": [
+      1e-15,
+      1e-16
+    ],
+    "maxstep_s": [
+      1e-09,
+      2.5e-10
+    ],
+    "note": "Each engine independently grades against analytic RC/piecewise-linear answers; conservative Spectre tightens reltol. Near-zero boundary uses maxstep10ps and stop1.6us."
+  },
+  "execution_accounting": {
+    "new_ngspice_build_probes": 22,
+    "new_ngspice_circuit_runs": 56,
+    "new_ngspice_total": 78,
+    "ngspice_cap": 80,
+    "excludes": "bounded --version identity queries; Python/Rust EVAS kernel tests",
+    "new_native_spectre_runs": 1,
+    "new_spectre_cap": 12,
+    "prior_native_references_reused": 10,
+    "copied_references_are_new_runs": false,
+    "single_process_per_engine": true,
+    "native_timeout_s": 30,
+    "build_probe_timeout_s": 10,
+    "spectre_timeout_s": 60
+  },
+  "software_checks": {
+    "xspice_focused": {
+      "passed": 12,
+      "total": 12,
+      "log": "evidence/public-entry-final.log"
+    },
+    "rust": {
+      "passed": 395,
+      "ignored": 1,
+      "log": "evidence/rust-tests.log"
+    },
+    "maintenance": {
+      "passed": 166,
+      "total": 166,
+      "log": "evidence/maintenance-tests.log"
+    },
+    "full_python_initial": {
+      "total": 1842,
+      "passed": 1840,
+      "errors": 1,
+      "failures": 1,
+      "wall_s": 1477.282,
+      "log": "evidence/python-full.log",
+      "status": "failed; code changed during this run; not a stable-candidate full pass"
+    },
+    "failed_module_rerun": {
+      "passed": 42,
+      "total": 42,
+      "wall_s": 87.597,
+      "log": "evidence/python-failed-modules-rerun.log",
+      "code_fixed_during_run": false
+    },
+    "full_python_classification": {
+      "legacy_chain": "Frozen/current production dependency hashes differed; concurrent backend Python edits are consistent with the guard failure; original temporary closure not retained, so exact changed file is unknown. Same targeted test and whole module pass with fixed source.",
+      "runtime_timeout": "The child PID file was absent at the1.5s startup timeout; same unchanged runtime test passes on module rerun. Startup delay is a hypothesis; no runtime source fix made.",
+      "claim_limit": "No single all-green stable-candidate full Python run is claimed."
+    },
+    "static": "evidence/static-final.json",
+    "lint": "evidence/ruff-acceptance.log",
+    "format": "evidence/format-acceptance.log"
+  },
+  "reviews": {
+    "spec": "review-spec.json; original arming defect fixed and actual new native Spectre pair checked",
+    "standards": "review-standards.json; native-reference admission and inherited trail origins corrected",
+    "open_source_findings": 0
+  },
+  "limits": [
+    "One rising affine input cross; fixed enabled positive-start periodic timers; scalar sequential state and held-input linear transition; grounded ideal voltage outputs.",
+    "Joint near/simultaneous state writers and .tran uic are outside the admitted scope.",
+    "macOS arm64/ngspice47 executed; Linux build command implemented but not natively validated; no Windows/other-version qualification.",
+    "Does not extend EVAS Rust interval guarantees or fixed benchmark/Q qualification.",
+    "Native Spectre internal rollback is not instrumented; paired physical results and NG same-process retry invariants are distinct checks.",
+    "Full Python first run had two failures;42 affected-module tests then passed. Logs retained, no aggregate stable-full-pass claim."
+  ],
+  "final_audit": "final-audit.json",
+  "captured_utc": "2026-10-18T13:40:33.309613+00:00"
+}

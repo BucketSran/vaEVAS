@@ -16,3 +16,6 @@ where = ["src"]
 
 [tool.setuptools]
 include-package-data = false
+
+[tool.setuptools.package-data]
+"evas.xspice" = ["runtime.c.in"]

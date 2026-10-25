@@ -1,0 +1,18 @@
+`include "disciplines.vams"
+module independent_batch(y0,y1,y2);
+output y0,y1,y2; electrical y0,y1,y2;
+parameter real period=9.5367431640625e-7, level=1.1, edge=20p;
+real a,b,c;
+analog begin
+ @(initial_step) begin a=0;b=0;c=0;end
+ @(timer(period/8,period)) a=level;
+ @(timer(period/8,period)) b=level;
+ @(timer(period/8,period)) c=level;
+ @(timer(period/4,period)) a=0;
+ @(timer(period/4,period)) b=0;
+ @(timer(period/4,period)) c=0;
+ V(y0)<+transition(a,0,edge,edge);
+ V(y1)<+transition(b,0,edge,edge);
+ V(y2)<+transition(c,0,edge,edge);
+end
+endmodule

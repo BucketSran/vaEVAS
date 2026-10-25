@@ -1,0 +1,131 @@
+{
+  "status": "scientific_acceptance_passed_local_unpublished",
+  "published": false,
+  "branch": "codex/evas-xspice-entry",
+  "branch_head": "358760415f545a9b9e10e1a3dc7ab3ba5c56fac9",
+  "dependency_commit": "c8dc2a7b688f7f21c8599db22c41f4b8aabd2026",
+  "version": "0.21.0",
+  "ir_schema_version": 28,
+  "backend_version": 2,
+  "implementation_changes": false,
+  "capabilities": [
+    "LANG",
+    "CROSS",
+    "COMPOSE"
+  ],
+  "source_manifest": "evas/examples/xspice/aliases/sources.json",
+  "contract": "evas/validation/xspice/README.md#p0-input-aliases",
+  "local_run_root": "local-only evas-ngspice-night-20261019/p0-aliases-20261019",
+  "summary": "summary.json",
+  "analysis": "analysis-final/analysis.json",
+  "ng_reanalysis": "local-reanalysis/analysis.json",
+  "protocol": "protocol-final.json",
+  "source_and_criteria": "source-and-criteria-identity.json",
+  "attempts": "attempts.json",
+  "preservation": "preservation-check.json",
+  "report": "REPORT.md",
+  "new_ngspice_circuit_runs": 9,
+  "new_spectre_circuit_runs": 6,
+  "native_pair_selection": {
+    "passed": 6,
+    "total": 6,
+    "cases": [
+      "ramp",
+      "supply",
+      "selected",
+      "commonmode",
+      "direct",
+      "nearzero"
+    ],
+    "prior_r53_seven_and_legacy_ten_separate": true
+  },
+  "rust": {
+    "pure_voltage_contract_cases": 5,
+    "transients_including_pilot": 6,
+    "admission_rejections": 7,
+    "external_RC": false,
+    "evidence": "rust01/analysis.json"
+  },
+  "calibration": {
+    "passed": 28,
+    "total": 28,
+    "evidence": "calibration02/analysis.json"
+  },
+  "independent_review": {
+    "initial_findings": 2,
+    "fixed": 2,
+    "open": 0,
+    "summary": "review-summary.txt",
+    "dispatch_capacity_failures_retained": 2
+  },
+  "micro_metrics": {
+    "ramp": {
+      "passed": true,
+      "max_pair_event_ps": 1.945455181650204e-06,
+      "max_ng_RC_uV": 0.08318130351181452,
+      "max_spectre_RC_uV": 0.02022057599138094,
+      "max_pair_RC_uV": 0.044524272213575244,
+      "edge_pair_observations": 1408
+    },
+    "supply": {
+      "passed": true,
+      "max_pair_event_ps": 5.050001125748247e-06,
+      "max_ng_RC_uV": 0.07055424883217754,
+      "max_spectre_RC_uV": 0.017148393482990798,
+      "max_pair_RC_uV": 0.05707223260653649,
+      "edge_pair_observations": 1348
+    },
+    "selected": {
+      "passed": true,
+      "max_pair_event_ps": 1.945455181650204e-06,
+      "max_ng_RC_uV": 0.0725490560404829,
+      "max_spectre_RC_uV": 0.017687795672571838,
+      "max_pair_RC_uV": 0.038817213443564924,
+      "edge_pair_observations": 1358
+    },
+    "commonmode": {
+      "passed": true,
+      "max_pair_event_ps": 1.9454535272889788e-06,
+      "max_ng_RC_uV": 0.0831831148406792,
+      "max_spectre_RC_uV": 0.020220575880358638,
+      "max_pair_RC_uV": 0.04452508356456164,
+      "edge_pair_observations": 1441
+    },
+    "direct": {
+      "passed": true,
+      "max_pair_event_ps": 1.945455181650204e-06,
+      "max_ng_RC_uV": 0.08318130351181452,
+      "max_spectre_RC_uV": 0.02022057599138094,
+      "max_pair_RC_uV": 0.044524272213575244,
+      "edge_pair_observations": 1408
+    }
+  },
+  "nearzero_pair": {
+    "event_order_equal": true,
+    "max_event_time_s": 9.990008223870889e-15,
+    "max_sample_V": 9.990007987514815e-10,
+    "max_out_V": 5.0264627252105676e-09,
+    "voltage_bound_V": 2e-05,
+    "passed": true
+  },
+  "retained_failures_and_revisions": [
+    "review-dispatch-failure.json",
+    "review-probes/pair-edge-blindspot.json",
+    "review-probes/pair-edge-v2-rejected.json",
+    "review-probes/expected-drift-v2/probe-result.json",
+    "protocol.json",
+    "snapshots-v1",
+    "analysis01",
+    "local01/ramp-leak/analysis.json",
+    "local01/ramp-retry/analysis.json"
+  ],
+  "prior_failures_preserved": "fix-115-068-20261019/evidence-manifest.json, rechecked3025 files",
+  "scope_limits": [
+    "finite derived microexamples, not original DFF/PFD",
+    "selected only true leaf; no predicate switching or false-leaf native acceptance",
+    "Rust pure voltage path excludes external RC",
+    "macOS arm64/ngspice47; Spectre21.1 serial licensed reference",
+    "No P1, Q13, current/charge switching or full400; no publication"
+  ],
+  "availability": "local-only"
+}
