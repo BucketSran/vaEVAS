@@ -2971,9 +2971,13 @@ class InstanceCompiler:
                         if isinstance(a, Affine) and isinstance(b, Affine) and not a.terms and not b.terms and a.constant == b.constant:
                             result[name] = a
                             continue
-                        raise CompileError("conditional integer alias requires an executable typed binding",
-                                           code="unsupported_event_context", token=statement.token,
-                                           instance=self.instance.name)
+                        # A proved floor table is already a Select. A later constant
+                        # clamp merges with that table; two plain constants still
+                        # need an executable integer slot.
+                        if not isinstance(a, Select) and not isinstance(b, Select):
+                            raise CompileError("conditional integer alias requires an executable typed binding",
+                                               code="unsupported_event_context", token=statement.token,
+                                               instance=self.instance.name)
                     result[name] = factor_integer_prefix(
                         relation, left, right, then_env[name], else_env[name], origin,
                         integer_target=self.model.variables.get(name) == "integer",
@@ -3028,6 +3032,11 @@ class InstanceCompiler:
                             if fact.closed and fact.finite and fact.value.is_integer() and -2147483648 <= fact.value <= 2147483647:
                                 self.procedure_builder.closed_integer(statement, value)
                                 result[statement.name] = self.make_ir(Affine, fact.value, ())
+                            elif isinstance(value, Select):
+                                # validate_integer_value already accepted this tree.
+                                # Keep the finite-floor Select inline for later
+                                # contributions; do not invent an integer slot.
+                                self.procedure_builder.elided_constants.add(statement.token)
                             else:
                                 raise CompileError("ordinary integer alias requires an executable capture",
                                                    code="unsupported_event_context", token=statement.token,
