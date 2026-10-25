@@ -222,6 +222,8 @@ jobs:
           targets: evas/rust_core/target
       - name: Verify the new release kernel for source-only delivery
         if: needs.selection.outputs.package != 'true'
+        env:
+          PYTHONPATH: evas/src
         run: |
           cargo +stable build --locked --release --manifest-path evas/rust_core/Cargo.toml
           python3 -B scripts/check_source_kernel.py --kernel evas/rust_core/target/release/evas-kernel --report runs/source-kernel.json
