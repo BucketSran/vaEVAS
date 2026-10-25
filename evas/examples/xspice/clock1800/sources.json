@@ -1,0 +1,24 @@
+{
+  "original_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/legacy/output/veriloga-source-recovery-20261003/originals/research-group/tangxy/Documents/Design_2021/2021_ZOOM_NSSAR/CLOCK_VA_SAMPLE_1800n/veriloga/veriloga.va",
+  "original_sha256": "0b53b172cde0bcb4079a1d157dfaab2a2da92b0bdc2e34c3424429a6438b1ed9",
+  "standard_sha256": "88c0fa4b16614eae3d0d26ae04405f48dd4f62b2d23ad65b0c78826406869255",
+  "changes": [
+    "voltage output disciplines to electrical",
+    "replace initial_step voltage contributions by six explicit state initializations"
+  ],
+  "all_timer_and_transition_expressions_preserved": true,
+  "scope": "Q14-Q16 standard normalization; original raw model is not qualified as-is.",
+  "files": {
+    "clock1800_standard.va": "88c0fa4b16614eae3d0d26ae04405f48dd4f62b2d23ad65b0c78826406869255",
+    "independent_batch.va": "61737f350c870e28cdb7f793323ae9711cef14002d3ab83afc4e29f934365cf8",
+    "independent_batch_reverse.va": "2970cc39fc5cf03ec00f240285332f656dd3c636ba9ac79ce6e0ead56c2d8882",
+    "independent_near.va": "0321bc849a7e833c6dff27be744dbb297b4f33284b3bb25ac8b71f24b200fb0c",
+    "zero_start.va": "3ce1578c950eb282f6544762940240d3f86eb401766b137b150add29aaa30c31"
+  },
+  "controls": {
+    "zero_start.va": "Final DC seed, non-idempotent private counter and positive-start controls",
+    "independent_batch.va": "Binary-exact independent simultaneous timers",
+    "independent_batch_reverse.va": "Independent declaration-order equivalence control",
+    "independent_near.va": "Separate 0.5ps neighbor events, explicit5fs tolerance"
+  }
+}

@@ -1,0 +1,194 @@
+/* EVAS -> XSPICE: candidate frame owns all physical history. */
+#include <math.h>
+#include <float.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include "ngspice/cktdefs.h"
+#define NS @NSTATE@
+#define NI @NINPUT@
+#define NE @NEVENT@
+#define NTRANS @NOP@
+#define NX ((NTRANS)>0?(NTRANS):1)
+#define SV ((NS)>0?(NS):1)
+#define IV ((NI)>0?(NI):1)
+#define EV ((NE)>0?(NE):1)
+#define CROSS @CROSS_INDEX@
+#define INDEPENDENT_CLOCK @INDEPENDENT_CLOCK@
+#define TTOL @TTOL@
+#define VTOL @VTOL@
+#define QMAX 64
+#define TEST_HOOKS @TEST_HOOKS@
+typedef struct { double v,d[IV]; } Dual;
+typedef struct { double time,target; } Target;
+typedef struct {
+ double input,settled,origin,target,y0,t0,end,slope;
+ int active,n; Target queue[QMAX];
+} Transition;
+typedef struct { double guard,values[SV]; int armed; uint64_t ticks[EV]; Transition tr[NX]; } Frame;
+typedef struct { FILE *trace; Frame previous_trial; double previous_call; int calls,injected,dc_injected; } Diagnostics;
+static unsigned long long fingerprint(const Frame *f) {
+ const unsigned char *p=(const unsigned char *)f;size_t j;unsigned long long h=1469598103934665603ULL;
+ for(j=0;j<sizeof(Frame);++j){h^=p[j];h*=1099511628211ULL;}return h;
+}
+static void fail(const char *s) { cm_message_send((char *)s); cm_cexit(1); }
+static Dual ad_const(double v) { Dual r; int j;r.v=v;for(j=0;j<NI;++j)r.d[j]=0;return r; }
+static Dual ad_input(double v,int i) { Dual r=ad_const(v);r.d[i]=1;return r; }
+static Dual ad_add(Dual a,Dual b) { Dual r;int j;r.v=a.v+b.v;for(j=0;j<NI;++j)r.d[j]=a.d[j]+b.d[j];return r; }
+static Dual ad_mul(Dual a,Dual b) { Dual r;int j;r.v=a.v*b.v;for(j=0;j<NI;++j)r.d[j]=a.d[j]*b.v+a.v*b.d[j];return r; }
+@AD_HELPERS@
+static Dual ad_tanh(Dual a) {
+ Dual r;int j;if(!isfinite(a.v))fail("nonfinite tanh input");r.v=tanh(a.v);
+ for(j=0;j<NI;++j)r.d[j]=(1-r.v*r.v)*a.d[j];return r;
+}
+static int ad_predicate(Dual a,Dual b,int relation) {
+ if(!isfinite(a.v)||!isfinite(b.v))fail("nonfinite conditional operand");
+ return relation==0?a.v<b.v:relation==1?a.v<=b.v:relation==2?a.v>b.v:a.v>=b.v;
+}
+static void request(double t,double now,double minbreak) {
+ if(t > now+minbreak) { if(cm_analog_set_perm_bkpt(t)!=MIF_OK) fail("future breakpoint failed"); }
+ else if(t < now-minbreak) { if(cm_analog_set_temp_bkpt(t)!=MIF_OK) fail("retry breakpoint failed"); }
+}
+static void clock_targets(const double *nominal,double *targets,double minbreak) {
+ int i,j,k,used[EV]={0};
+ for(i=0;i<NE;++i){targets[i]=nominal[i];if(!isfinite(nominal[i]))fail("nonfinite timer deadline");}
+ if(!INDEPENDENT_CLOCK)return;
+ /* Host-unresolvable independent neighbours share the latest nominal point.
+  * Every source keeps its own cursor/window; this never consumes one early. */
+ for(k=0;k<NE;++k){
+  int first=-1;double last;
+  for(i=0;i<NE;++i)if(!used[i]&&(first<0||nominal[i]<nominal[first]))first=i;
+  if(first<0)break;last=nominal[first];
+  for(i=0;i<NE;++i)if(!used[i]&&nominal[i]-nominal[first]<=minbreak)last=fmax(last,nominal[i]);
+  for(j=0;j<NE;++j)if(!used[j]&&nominal[j]-nominal[first]<=minbreak){targets[j]=last;used[j]=1;}
+ }
+}
+static double transition_value(const Transition *tr,double t) {
+ if(!tr->active) return tr->settled;
+ if(t>=tr->end) return tr->target;
+ double y=tr->y0+(t-tr->t0)*tr->slope;
+ return fmax(fmin(tr->y0,tr->target),fmin(fmax(tr->y0,tr->target),y));
+}
+static void transition_target(Transition *tr,double t,double q,double rise,double fall) {
+ double y=transition_value(tr,t), origin=y;
+ if(tr->active && t<tr->end) origin=((q-y)*tr->slope>0)?tr->origin:tr->target;
+ if(q==y) { tr->active=0;tr->settled=q;return; }
+ tr->origin=origin;tr->target=q;tr->y0=y;tr->t0=t;
+ tr->slope=(q-origin)/((q>y)?rise:fall);
+ if(!isfinite(tr->slope) || tr->slope==0 || (q-y)*tr->slope<=0) fail("unresolved transition direction");
+ tr->end=t+(q-y)/tr->slope;tr->active=1;
+ if(!isfinite(tr->end)||tr->end<=t) fail("transition time resolution");
+}
+static void transition_push(Transition *tr,double t,double q,double delay) {
+ if(!isfinite(q))fail("nonfinite transition target");
+ if(q==tr->input)return;
+ if(tr->n==QMAX)fail("transition queue budget exceeded");
+ tr->input=q;tr->queue[tr->n].time=t+delay;tr->queue[tr->n].target=q;++tr->n;
+}
+static void transition_advance(Transition *tr,double t,double rise,double fall) {
+ while(tr->n && tr->queue[0].time<=t) {
+  Target q=tr->queue[0];memmove(tr->queue,tr->queue+1,(--tr->n)*sizeof(Target));
+  transition_target(tr,q.time,q.target,rise,fall);
+ }
+ if(tr->active && t>=tr->end) { tr->settled=tr->target;tr->active=0; }
+}
+static void cleanup(ARGS,Mif_Callback_Reason_t reason) {
+ if(reason==MIF_CB_DESTROY) { Diagnostics *d=STATIC_VAR(diagnostics);if(d){if(d->trace)fclose(d->trace);free(d);}STATIC_VAR(diagnostics)=NULL; }
+}
+void cm_evas_ir(ARGS) {
+ Frame *cur,*prev;Diagnostics *d;Dual inputs[IV],states[SV];
+ @LOCAL_DECL@
+ double g=0,gp=0,root=-1,retry=-1,deadline,minbreak=cm_get_circuit()->CKTminBreak,nominal[EV]={0},targets[EV]={0},event_nominal[EV]={0},event_target[EV]={0};
+ int i,k,due[EV]={0},refine=0,rollback=0,changed=0,restored=1;uint64_t event_mask=0;
+ @INPUTS@
+ if(cm_get_circuit()->CKTmode & MODEUIC) fail("XSPICE requires DC initialization; .tran uic is unsupported");
+ if(INIT) {
+  @PARAM_CHECKS@
+  cm_analog_alloc(0,sizeof(Frame));STATIC_VAR(diagnostics)=calloc(1,sizeof(Diagnostics));d=STATIC_VAR(diagnostics);
+  if(!d)fail("diagnostics allocation");if(!TEST_HOOKS && (PARAM(evas_inject)||PARAM(evas_bad_state)||PARAM(evas_inject_time)!=0||PARAM(evas_inject_dc)))fail("test hooks were not enabled at compilation");
+  if(PARAM(evas_trace) && PARAM(evas_trace)[0] && strcmp(PARAM(evas_trace),"-")!=0) {
+   d->trace=fopen(PARAM(evas_trace),"wx");if(!d->trace)fail("trace path exists or is unavailable");
+  }
+  if((PARAM(evas_inject)||PARAM(evas_inject_dc)) && !d->trace)fail("fault injection requires an explicit trace path");
+  if(d->trace) {
+  fprintf(d->trace,"call,time,accepted_time,guard,prev_guard,event_mask,refine,retry,rollback,injected,prev_armed,trial_armed,last_time,prev_hash,trial_hash,last_hash,restored");
+  for(i=0;i<NS;++i)fprintf(d->trace,",prev_s%d,trial_s%d,last_s%d",i,i,i);
+  for(i=0;i<NE;++i)fprintf(d->trace,",prev_tick%d,trial_tick%d,last_tick%d",i,i,i);
+  for(i=0;i<NTRANS;++i)fprintf(d->trace,",prev_q%d,trial_q%d,last_q%d,prev_end%d,trial_end%d,last_end%d,prev_y%d,trial_y%d,last_y%d",i,i,i,i,i,i,i,i,i);
+  @TRACE_HEADER@
+  for(i=0;i<NE;++i)fprintf(d->trace,",nominal%d,host_target%d",i,i);
+  fprintf(d->trace,",analysis,dc_injected\n"); } CALLBACK=cleanup;
+ }
+ d=STATIC_VAR(diagnostics);cur=cm_analog_get_ptr(0,0);prev=cm_analog_get_ptr(0,1);
+ if(ANALYSIS==MIF_DC) {
+  memset(cur,0,sizeof(Frame));@INITIAL@
+  for(i=0;i<NS;++i)states[i]=ad_const(cur->values[i]);
+  @INITIAL_PROGRAM@
+  if(TEST_HOOKS && PARAM(evas_bad_state) && PARAM(evas_inject_dc) && d->dc_injected)
+   for(i=0;i<NS;++i)states[i]=ad_const(d->previous_trial.values[i]);
+  @ZERO_BODY@
+  @INTEGER_CHECKS@
+  for(i=0;i<NS;++i){if(!isfinite(states[i].v))fail("nonfinite initial state");cur->values[i]=states[i].v;}
+  cur->guard=(@GUARD@).v;cur->armed=cur->guard < 0.0;
+  @OP_SETUP@
+  if(PARAM(evas_inject_dc) && !d->dc_injected){cm_analog_not_converged();d->dc_injected=1;}
+ } else if(ANALYSIS==MIF_TRAN) {
+  *cur=*prev;restored=memcmp(cur,prev,sizeof(Frame))==0;
+  for(i=0;i<NS;++i)states[i]=ad_const(cur->values[i]);
+  @LOCALS@
+#if CROSS >= 0
+  cur->guard=(@GUARD@).v;g=cur->guard;gp=prev->guard;
+  if(!isfinite(g))fail("nonfinite cross guard");
+  if(2*minbreak>TTOL)fail("cross tolerance below host resolution");
+  if(!prev->armed && g < 0.0)cur->armed=1;
+  if(prev->armed && TIME>T(1) && gp<0 && g>=0) {
+   root=T(1)+(TIME-T(1))*(-gp)/(g-gp);
+   /* A crossing must meet both tolerances, not whichever is met first. */
+   if(g>VTOL || TIME-root>TTOL) {
+    retry=fmax(root,T(1)+2*minbreak);
+    if(TIME-retry<=minbreak)fail("cross expression tolerance below host resolution");
+    request(retry,TIME,minbreak);refine=1;
+   }
+   else due[CROSS]=1;
+  }
+#endif
+  @TIMER_DEADLINES@
+  @TIMER_FIND@
+  if(!refine) {
+   int n=0;for(i=0;i<NE;++i)n+=due[i];if(n>1 && !INDEPENDENT_CLOCK)fail("simultaneous event writers outside slice");
+   @BODY@
+  }
+  @INTEGER_CHECKS@
+  for(i=0;i<NS;++i){if(!isfinite(states[i].v))fail("nonfinite state");cur->values[i]=states[i].v;}
+  /* Each operator has its own delayed target queue and interrupted edge. */
+  @OP_UPDATES@
+  rollback=d->calls && TIME<d->previous_call;
+  for(i=0;i<NTRANS;++i)if(cur->tr[i].n!=prev->tr[i].n || cur->tr[i].t0!=prev->tr[i].t0 || cur->tr[i].active!=prev->tr[i].active)changed=1;
+  if(PARAM(evas_inject) && !d->injected && TIME>=PARAM(evas_inject_time) && (event_mask || changed) && TIME-T(1)>4*minbreak) {
+   retry=T(1)+(TIME-T(1))*0.5;request(retry,TIME,minbreak);d->injected=1;
+  }
+  if(PARAM(evas_bad_state) && d->injected && rollback) {
+   /* Calibration deliberately leaks the whole speculative physical frame. */
+   *cur=d->previous_trial;
+   for(i=0;i<NS;++i)states[i]=ad_const(cur->values[i]);
+  }
+ } else fail("DC/transient only");
+ @OUTPUTS@
+ for(i=0;i<NE;++i){event_nominal[i]=nominal[i];event_target[i]=targets[i];}
+ /* Speculative permanent breakpoints can add harmless evaluation points;
+  * they never carry state or target values outside the candidate frame. */
+ @TIMER_FUTURE@
+ for(i=0;i<NTRANS;++i){Transition *tr=&cur->tr[i];if(tr->n)request(tr->queue[0].time,TIME,minbreak);if(tr->active&&tr->end>TIME+minbreak)request(tr->end,TIME,minbreak);}
+ if(ANALYSIS==MIF_TRAN || ANALYSIS==MIF_DC) {
+  if(d->trace && (ANALYSIS==MIF_TRAN || PARAM(evas_trace_dc))) {
+  fprintf(d->trace,"%d,%.17g,%.17g,%.17g,%.17g,%llu,%d,%.17g,%d,%d,%d,%d",d->calls,TIME,T(1),g,gp,(unsigned long long)event_mask,refine,retry,rollback,d->injected,prev->armed,cur->armed);
+  fprintf(d->trace,",%.17g,%llu,%llu,%llu,%d",d->previous_call,fingerprint(prev),fingerprint(cur),fingerprint(&d->previous_trial),restored);
+  for(i=0;i<NS;++i)fprintf(d->trace,",%.17g,%.17g,%.17g",prev->values[i],cur->values[i],d->previous_trial.values[i]);
+  for(i=0;i<NE;++i)fprintf(d->trace,",%llu,%llu,%llu",(unsigned long long)prev->ticks[i],(unsigned long long)cur->ticks[i],(unsigned long long)d->previous_trial.ticks[i]);
+  for(i=0;i<NTRANS;++i)fprintf(d->trace,",%d,%d,%d,%.17g,%.17g,%.17g,%.17g,%.17g,%.17g",prev->tr[i].n,cur->tr[i].n,d->previous_trial.tr[i].n,prev->tr[i].end,cur->tr[i].end,d->previous_trial.tr[i].end,transition_value(&prev->tr[i],T(1)),transition_value(&cur->tr[i],TIME),transition_value(&d->previous_trial.tr[i],d->previous_call));
+  @TRACE_OUTPUTS@
+  for(i=0;i<NE;++i)fprintf(d->trace,",%.17g,%.17g",event_nominal[i],event_target[i]);
+  fprintf(d->trace,",%d,%d\n",ANALYSIS==MIF_TRAN?1:0,d->dc_injected);fflush(d->trace); } d->previous_trial=*cur;d->previous_call=TIME;++d->calls;
+ }
+}

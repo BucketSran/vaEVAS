@@ -387,3 +387,10 @@ C8 迁移明确核对实际控制器元数据，并以细 max_step 请求证明�
 [程序执行合同](../math/events.md#program-real-procedure-contract)，仍仅为本地开发候选。
 一般 RN 反馈、非零源误差管及不可隔离多切点窗口仍未支持；
 完整 IR33、原400与同源后端仍未验收，不改变上述发布版本的结果。
+
+### XSPICE IR33 初始化顺序
+
+[PR #248](https://github.com/BucketSran/vaEVAS/pull/248)恢复限定 XSPICE 出口，
+补充 DEV:xspice-compile、LANG、EVENT-ORDER、TIMER、TRANSITION 与 COMPOSE 的开发证据。
+[当前收据](../../../experiments/backends/xspice-entry/ir33-initialization.json)记录局部绑定与初始事件的顺序修复；
+[历史收据入口](../../../experiments/backends/xspice-entry/README.md)的 IR28 Spectre 数字不作为当前 IR33 资格。

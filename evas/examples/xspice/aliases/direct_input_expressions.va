@@ -1,0 +1,13 @@
+`include "disciplines.vams"
+module alias_box(clk,vin,vdd,vss,y);
+input clk,vin,vdd,vss; output y;
+electrical clk,vin,vdd,vss,y;
+real vh,vl,vth,a,q;
+analog begin
+ @(initial_step)q=0;
+ vh=V(vdd); vl=V(vss); vth=(vh+vl)/2;
+ a=2*V(vin,vss)+0.1;
+ @(cross(V(clk)-(V(vdd)+V(vss))/2,+1))q=2*V(vin,vss)+0.1;
+ V(y)<+transition(q,0,50p,50p);
+end
+endmodule

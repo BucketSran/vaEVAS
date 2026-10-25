@@ -2502,3 +2502,19 @@ settlement 和代表时刻刷新均复用实际电路 Plan 的选路，避免另
 源码序号都缺省时保留；孤立元数据拒绝。
 [原始事件控制](../../tests/test_raw_event_owners.py)核对原始 idt、integer table、
 有效唯一 owner 和旧形式。新增验证复用原付费扫描，不创建新的预算 owner。
+
+## XSPICE 的有限事件出口
+
+IR33 的 XSPICE 适配器由 ngspice 接受或回退物理帧，不使用 Rust 的区间求解器。
+DC 候选先取声明初值，再按 `procedures` 的源码次序执行 `real_bind` 和
+`initial_step` 的 `event_gate`，最后处理零起点独立 timer 并建立 transition 种子。
+局部绑定是该语句位置的快照，既不能在前一初始事件之前提前计算，
+也不能因后续状态写入而重算。每次 DC 重试均从初值重建；瞬态不重放初始事件。
+该顺序对应 LRM 2.4 §5.3、§5.10 的顺序执行与事件控制；零批次规则是此后端的有限准入合同。
+
+代码在 `xspice/compiler.py` 和 `xspice/runtime.c.in`；
+[test_xspice_startup.py](../../tests/test_xspice_startup.py)执行生成 C 的 DC 状态程序，
+以独立数值答案检查输入捕获、事件间依赖及快照不受后写影响。
+[IR33 收据](../../../experiments/backends/xspice-entry/ir33-initialization.json)区分当前 ngspice
+局部验证与旧 IR28 Spectre 对照。一般重赋值、动态 timer、事件 OR 和完整过程执行仍未取得资格；
+准入、宿主事件容差及历史边界见[后端说明](../reference/xspice.md)。
