@@ -1,0 +1,57 @@
+{
+  "inputs": [
+    {
+      "ref": "history-batch1/plan.json",
+      "sha256": "834e046a81fda8c570ba05ae89e0d7a9c03cb206a7b48ab68655d5a76340484e",
+      "availability": "local-only"
+    },
+    {
+      "ref": "history-batch1/cases/screening/plan.json",
+      "sha256": "5c48bd421453b470fce4f1ade26100c5db45e6e922180933fba5543d8953ce0d",
+      "availability": "local-only"
+    },
+    {
+      "ref": "history-batch1/cases/screening/omission-audit/current-pool.json",
+      "sha256": "6f2b3f0b931e512f3fd69a2664e0829f198d7ab5e5d4b1194d682cbe6f6ad55f",
+      "availability": "local-only"
+    },
+    {
+      "ref": "history-batch1/cases/screening/omission-audit/remaining-review.json",
+      "sha256": "c7f51db889bc37f2bf45b0cbbf5a161683c7e69a49c1942322c23bb8d722f608",
+      "availability": "local-only"
+    },
+    {
+      "ref": "history-batch1/cases/screening/omission-audit/plan.json",
+      "sha256": "6aadcdde2b108f31f74c16e4ab8da7d3d8195c8eb3ed420dcbb93daca34bb88b",
+      "availability": "local-only"
+    },
+    {
+      "ref": "history-batch1/cases/screening/extension-upgrades/candidate-review.json",
+      "sha256": "1e3be033ece569589a8c7e9e5223aa814f808914adab2b856a4d0bf6098c4d24",
+      "availability": "local-only"
+    },
+    {
+      "ref": "history-batch1/cases/screening/medium-review/reassessment/plan.json",
+      "sha256": "7f3dc66ea04d972e77c1493e0d91b0f1b24c938693167f9afad04950a6f2bb54",
+      "availability": "local-only"
+    }
+  ],
+  "source_files_verified_locally": 1269,
+  "sources": 1269,
+  "availability": {
+    "repository-contained": 676,
+    "local-only": 593
+  },
+  "artifact_policy": "只保存选题登记、来源身份和公开行为摘录；不复制完整源码树、波形或历史运行成绩。",
+  "final_review_scope": {
+    "required_behavior_rows": 92,
+    "remaining_historical_T_assessments": 39,
+    "remaining_historical_I_assessments": 2,
+    "reused_previous_tb_review": 57,
+    "reused_previous_R_review": 52,
+    "implementation_files_reread": 5,
+    "merged_source_mappings_rechecked": 40
+  },
+  "independent_review": "not_performed; draft PR awaits human or delegated review",
+  "runtime_executed": false
+}
