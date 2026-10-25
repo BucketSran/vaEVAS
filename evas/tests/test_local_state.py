@@ -57,6 +57,28 @@ class LocalStateContracts(unittest.TestCase):
                                 a=V(u,r); V(y,r)<+a+q;""")
         self.assertEqual(values(run(program)), [1, 1.25, 2, 2.25, 2.5])
 
+    def test_event_body_reads_the_ordinary_local_from_before_the_event(self):
+        # a=2 is before the timer and a=9 is after it. The body reads the
+        # source position, so q becomes 2 at t=0.5 and stays 2. It does not
+        # observe the later assignment, and the timer does not fire early.
+        program = compile_local("""@(initial_step) q=0;
+                                a=2;
+                                @(timer(0.5)) q=a;
+                                a=9;
+                                V(y,r)<+q;""")
+        self.assertEqual(values(run(program, times=(0, .25, .5, 1))), [0, 0, 2, 2])
+
+    def test_cross_of_assigned_integrator_local_keeps_the_language_rejection(self):
+        # The original VCO assigns triangle from idt, then reads it in
+        # cross(triangle-0.5). An ordinary local slot does not admit that read.
+        with self.assertRaisesRegex(CompileError, "event expressions cannot read ordinary analog local") as failure:
+            compile_local("@(initial_step) q=0; triangle=idt(1,0); "
+                          "@(cross(triangle-0.5,+1)) q=1; V(y,r)<+q;",
+                          "real triangle,q;")
+        self.assertEqual(failure.exception.diagnostic["code"], "unsupported_local_event")
+        self.assertEqual(failure.exception.diagnostic["category"], "unsupported")
+        self.assertEqual(failure.exception.diagnostic["capability"], "LANG")
+
     def test_event_cannot_capture_an_analog_local_at_an_ambiguous_sequence(self):
         # Unique input-affine aliases have public positive coverage in
         # test_initial_sampling_closure; nonlinear and future aliases stay rejected.

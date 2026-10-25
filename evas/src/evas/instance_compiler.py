@@ -380,6 +380,8 @@ class InstanceCompiler:
         else:
             self.model = scalarize_arrays(self.model, self.parameter)
         from .procedural import ProcedureBuilder
+        # Trigger lowering is the only place a process binding is not enough.
+        self.event_trigger_expression = False
         self.procedure_builder = ProcedureBuilder(self) if self.model.procedure else None
         self.array_elements = self._declared_elements()
         self.array_dispatch_leaves = 0
@@ -671,7 +673,11 @@ class InstanceCompiler:
             self.runtime_event_checks = self.checked_event_context(event)
             self.native_integer_charge = native_allowances[id(event)]
             self.trigger_argument_captures = None
-            triggers = tuple(self.trigger(leaf) for leaf in event.triggers)
+            self.event_trigger_expression = True
+            try:
+                triggers = tuple(self.trigger(leaf) for leaf in event.triggers)
+            finally:
+                self.event_trigger_expression = False
             event_trigger = triggers[0] if len(triggers) == 1 else self.make_ir(OrTrigger, triggers)
             origin = self.make_ir(Origin, event.token.source or self.model.source, event.token.line, event.token.column, self.instance.name, event.token.expansion)
             def retained(body):
@@ -1052,7 +1058,15 @@ class InstanceCompiler:
     def symbol(self, name):
         builder = getattr(self, "procedure_builder", None)
         if builder is not None and name in builder.bindings:
-            return self.local_read(name, self.active_event_aliases.get(name))
+            # A later event body reads this source-position binding. A cross
+            # or timer argument does not: without an alias or prefix already
+            # proved for this token, the original integrator-local guard stays
+            # rejected instead of becoming an unbound real_local.
+            source = self.active_event_aliases.get(name)
+            if source is None and self.event_trigger_expression:
+                raise CompileError(f"{self.model.source}: event expressions cannot read ordinary analog local variable {name!r}; use direct input or persistent state expressions",
+                                   code='unsupported_local_event', instance=self.instance.name)
+            return self.local_read(name, source)
         if name in self.active_event_aliases:
             return self.active_event_aliases[name]
         if name in self.local_variables:
