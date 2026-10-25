@@ -1,0 +1,69 @@
+{
+  "kind": "targeted reanalysis and calibration; not full-suite execution",
+  "kernel_sha256": "655a156529d857be8f5fcd467623a324cc463be5977b00aa6c2ea4a4592686d1",
+  "source_commit": "566c36a9366419c970ec008ef27f7bdd3d82e9f6",
+  "xfail_underlying": [
+    {
+      "id": "test_group_discrete_sample_contract.InternalVoltageSampleContract.test_internal_source_band_reaches_physical_output",
+      "underlying": "raised",
+      "type": "KernelError",
+      "message": "unsupported_source_uncertainty: source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds",
+      "detail": {
+        "kind": "unsupported_source_uncertainty",
+        "message": "source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds"
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"repository_root/runs/pr-review-20261025/full3257/coordinator_probes.py\", line 22, in <module>\n    getattr(case,method)()\n    ~~~~~~~~~~~~~~~~~~~~^^\n  File \"repository_root/evas/tests/test_group_discrete_sample_contract.py\", line 105, in test_internal_source_band_reaches_physical_output\n    response = run(program(), source_errors={'u': .125}, vabstol=.2)\n  File \"repository_root/evas/tests/test_group_discrete_sample_contract.py\", line 62, in run\n    return transient(p, {'u': [[0., 1.], [1., 1.]]}, times,\n                     stop=1., max_step=.0625, kernel=KERNEL,\n                     reltol=0, **options)\n  File \"repository_root/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n  File \"repository_root/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\nevas.errors.KernelError: unsupported_source_uncertainty: source voltage uncertainty currently supports algebraic voltage relations and fixed timer sampling only; operators, cross and held timers require additional time-shape bounds\n"
+    },
+    {
+      "id": "test_group_discrete_sample_contract.InternalVoltageSampleContract.test_same_band_cannot_pass_a_tight_voltage_budget",
+      "underlying": "raised",
+      "type": "AssertionError",
+      "message": "'unsupported_source_uncertainty' not found in ['waveform_accuracy', 'event_accuracy']",
+      "detail": null,
+      "traceback": "Traceback (most recent call last):\n  File \"repository_root/runs/pr-review-20261025/full3257/coordinator_probes.py\", line 22, in <module>\n    getattr(case,method)()\n    ~~~~~~~~~~~~~~~~~~~~^^\n  File \"repository_root/evas/tests/test_group_discrete_sample_contract.py\", line 119, in test_same_band_cannot_pass_a_tight_voltage_budget\n    self.assertIn(caught.exception.detail['kind'], ['waveform_accuracy', 'event_accuracy'])\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 1192, in assertIn\n    self.fail(self._formatMessage(msg, standardMsg))\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 750, in fail\n    raise self.failureException(msg)\nAssertionError: 'unsupported_source_uncertainty' not found in ['waveform_accuracy', 'event_accuracy']\n"
+    },
+    {
+      "id": "test_independent_driver_condition.IndependentDriverCondition.test_state_driver_condition_reads_independent_voltage",
+      "underlying": "raised",
+      "type": "AssertionError",
+      "message": "Lists differ: [0.0, 0.0, 0.5] != [0.5]\n\nFirst differing element 0:\n0.0\n0.5\n\nFirst list contains 2 additional elements.\nFirst extra element 1:\n0.0\n\n- [0.0, 0.0, 0.5]\n+ [0.5]",
+      "detail": null,
+      "traceback": "Traceback (most recent call last):\n  File \"repository_root/runs/pr-review-20261025/full3257/coordinator_probes.py\", line 22, in <module>\n    getattr(case,method)()\n    ~~~~~~~~~~~~~~~~~~~~^^\n  File \"repository_root/evas/tests/test_independent_driver_condition.py\", line 61, in test_state_driver_condition_reads_independent_voltage\n    self.assert_answer(STATE_DRIVER)\n    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\n  File \"repository_root/evas/tests/test_independent_driver_condition.py\", line 50, in assert_answer\n    self.assertEqual([event[\"time\"] for event in result[\"transient\"][\"events\"]], [.5])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 925, in assertEqual\n    assertion_func(first, second, msg=msg)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 1131, in assertListEqual\n    self.assertSequenceEqual(list1, list2, msg, seq_type=list)\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 1113, in assertSequenceEqual\n    self.fail(msg)\n    ~~~~~~~~~^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 750, in fail\n    raise self.failureException(msg)\nAssertionError: Lists differ: [0.0, 0.0, 0.5] != [0.5]\n\nFirst differing element 0:\n0.0\n0.5\n\nFirst list contains 2 additional elements.\nFirst extra element 1:\n0.0\n\n- [0.0, 0.0, 0.5]\n+ [0.5]\n"
+    }
+  ],
+  "protocol_controls": [
+    {
+      "case": "valid",
+      "expected": "accepted",
+      "actual": "accepted",
+      "detail": null
+    },
+    {
+      "case": "empty",
+      "expected": "rejected",
+      "actual": "rejected",
+      "detail": {
+        "kind": "invalid_response",
+        "message": "kernel solution count mismatch"
+      }
+    },
+    {
+      "case": "nan",
+      "expected": "rejected",
+      "actual": "rejected",
+      "detail": {
+        "kind": "invalid_response",
+        "message": "kernel solution must contain finite voltages and residuals with the requested shape"
+      }
+    },
+    {
+      "case": "extra",
+      "expected": "rejected",
+      "actual": "rejected",
+      "detail": {
+        "kind": "invalid_response",
+        "message": "kernel solution count mismatch"
+      }
+    }
+  ]
+}

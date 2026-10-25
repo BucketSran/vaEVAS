@@ -1,0 +1,193 @@
+{
+  "scope": "Independent review of the original frozen audit. Publication-path/tool adaptations receive separate review in the publishing PR.",
+  "semantic": {
+    "review": "independent final semantic review",
+    "status": "approved within stated independent semantic review scope",
+    "scope": "Semantic spot review of six source audits and strongest receipts; not an independent reread of all 3257 method bodies. No source edits, full suite, build, Spectre, or remote action. Three compile-only fixture inspections, no kernel execution.",
+    "findings": [
+      {
+        "id": "FS-F01",
+        "priority": "P1",
+        "audit_finding": "L4-F12",
+        "problem": "RN premise is absent from the exact current direct-contribution slew fixture. Current compiled operator input is Select with bare Affine comparison operands, not RealBoundary(sample); procedure Plan condition resolves operands without inserting RN. Hence the alleged always-false adjacent predicate is not established for this program. The exact physical interval (.5,nextafter(.5,1)) remains nonempty. A rate 1e16 yields height min(1,1e16*2^-53)=1, so >.9 assertion is mathematically consistent.",
+        "refs": [
+          "evas/tests/test_source_selected_slew.py:89",
+          "evas/rust_core/src/procedure_plan.rs:305",
+          "evas/rust_core/src/procedure_plan.rs:451",
+          "evas/rust_core/src/procedure_plan.rs:480",
+          "evas/docs/math/events.md:1483"
+        ],
+        "correction": "Withdraw RN-impossibility finding from these direct physical predicates or identify an explicit required boundary and explain a compiler defect rather than declaring test oracle false. Reclassify each affected row independently.",
+        "status": "resolved in final reviewed artifacts"
+      },
+      {
+        "id": "FS-F02",
+        "priority": "P1",
+        "audit_finding": "L1-F11",
+        "problem": "Current original root-window transition contribution also compiles condition $abstime>52n as Select with bare Affine operands. The program event-body if($abstime>=52n) has an RN boundary, but that does not move the earlier direct physical transition source cut. Thus root104*500p being below RN midpoint does not establish absent old prefix.",
+        "refs": [
+          "evas/tests/test_source_root_windows.py:163",
+          "evas/tests/test_source_root_windows.py:169",
+          "evas/rust_core/src/procedure_plan.rs:305"
+        ],
+        "correction": "Remove blanket absent-prefix conclusion; separately assess stored sample RN against strict boxes and budgets while retaining exact physical source cut. Do not use this finding to replace the four tests with zero-prefix targets.",
+        "status": "resolved in final reviewed artifacts"
+      },
+      {
+        "id": "FS-F03",
+        "priority": "P2",
+        "audit_finding": "L4-F10:first method",
+        "problem": "The exact nonbinary held due comment uses an unrounded reference, but the actual asserted values do not contradict current RN. query=float(Q(.1)+1/6) equals RN(.1+RN(.5/3)); both the old slightly later due and current due yield y=1 at this query, with y0=0 and y(.35)=0. Root-time discrepancy/0.01 is only9.251858538542972e-16, below1e-12 anyway. The evidence_gap designation must not be promoted to a bad numerical development target.",
+        "refs": [
+          "evas/tests/test_held_timer_provenance.py:45",
+          "evas/tests/test_held_timer_provenance.py:53",
+          "evas/tests/test_held_timer_provenance.py:57"
+        ],
+        "correction": "Classify the assertion-level numerical target as no identified defect; retain a documentation/provenance note if useful. Evaluate the separate future amplification method independently.",
+        "status": "resolved in final reviewed artifacts"
+      },
+      {
+        "id": "FS-F04",
+        "priority": "P2",
+        "audit_finding": "L4-F11:timer_ordering different periods",
+        "problem": "Exact-equal-writers test uses timer(.1,.1) and timer(.1,.2). ADR006 does not infer logical occurrence identity from equal exact physical times alone. Row acknowledges unresolved identity but still says mixed and repair_test_before_using_affected_assertion, counting it as a proven bad target.",
+        "refs": [
+          "evas/tests/test_timer_ordering.py:76",
+          "evas/docs/development/DECISIONS.md:204"
+        ],
+        "correction": "Classify as evidence_gap until occurrence identity/admissibility contract is resolved. Retain actual same-clock same-procedure counterexamples in L4-F11 separately.",
+        "status": "resolved in final reviewed artifacts"
+      }
+    ],
+    "confirmed": [
+      {
+        "ids": [
+          "L6-F09"
+        ],
+        "assessment": "Original timer sample RN at1 gives u1 and q0; on1<t<2 q0. Filter DC initial y1 stays1 until1 then y(1.5)=exp(-.5). Old helper .897756 differs from .606531 by .291226, far above1.01e-6. Valid concrete bad target."
+      },
+      {
+        "ids": [
+          "L6-F11"
+        ],
+        "assessment": "Full unchanged methods accept empty/truncated solutions under synthetic transport, but calibration baseline intentionally uses old runtime-only event metadata. Establishes assertion weakness, not valid IR33 baseline or kernel bug."
+      },
+      {
+        "ids": [
+          "L6-F12"
+        ],
+        "assessment": "Original method derives expected endpoints from returned DUT source bounds. Matching public-validator synthetic positive/drop-band/wrong-output controls substantiate vacuity against loss of requested source band."
+      },
+      {
+        "ids": [
+          "L5-F04"
+        ],
+        "assessment": "Shallow RHS field mutations hit RealBoundary rather than typed/affine leaf and can fail JSON parsing; do not credit target semantic rejection."
+      },
+      {
+        "ids": [
+          "L5-F08"
+        ],
+        "assessment": "No exact finite binary64 fixed point argument for s=RN(1-.5*s) is sound, but acceptance uses engineering residual rules and is not resolved by that proof. Keep evidence_gap; do not prescribe original rejection absent contract decision."
+      },
+      {
+        "ids": [
+          "L4-F09"
+        ],
+        "assessment": "Current generated exact truth contains explicit initial event plus shifted timer IDs. Baseline checker errors contaminate calibration. Numeric rectangle area is independently correct."
+      },
+      {
+        "ids": [
+          "L5-F01"
+        ],
+        "assessment": "Independent-driver matched receipt confirms correct u/y before obsolete event inventory assertion. expectedFailure cannot be interpreted as missing voltage provider without updating initial records and reassessing."
+      },
+      {
+        "ids": [
+          "L4-F16"
+        ],
+        "assessment": "Unlike direct slew contribution, assignment phase_v=idtmod(V(f)/3,...) does compile operator input with sample and real_binary divide. RN phase finding is grounded in actual boundaries."
+      }
+    ],
+    "limits": [
+      "Same exact float timestamp or even equal exact rational clock root does not alone prove identical logical occurrence. Different-period timer_ordering case must retain contract gap unless occurrence identity is established.",
+      "Approximate analytic references below declared tolerance are not wrong merely because RN changes exact answer. Strict enclosure assertions require separate analysis.",
+      "No qualification of all no_defect_found rows; these remain static review statements.",
+      "Final artifact coverage is independent semantic spot-check and claim/priority-plan review. Structural manifests, hashes, row completeness and schema are owned by separate Standards reviewer. Final README summary counts were read back, not independently rederived from CI."
+    ],
+    "final_assessment": "All four actionable semantic review findings were corrected. Direct physical Select RN overreach removed, approximate held-clock target retained within tolerance, different-period clock identity remains evidence_gap. Final priority plan can use these records to select reviewable development targets, provided mixed assertions are repaired and evidence_gap contracts resolved before implementation is forced to satisfy them. No blanket certification of 3257 numerical oracles is granted.",
+    "final_counts_semantic_readback": {
+      "contains_problem": 377,
+      "evidence_gap": 95,
+      "no_defect_found": 2785,
+      "passing_contains_problem": 32,
+      "finding_groups": 86
+    }
+  },
+  "standards": {
+    "review": "fresh-context independent Standards/evidence review",
+    "status": "complete; no open Standards/evidence findings",
+    "review_scope": "Inventory/source/CI identities, coverage and row/probe/evidence trail. Semantic source spot checks only; not a second independent reread of all3257 methods.",
+    "findings": [
+      {
+        "id": "ST-F01",
+        "priority": "P2",
+        "status": "resolved",
+        "problem": "36 lane2 rows had nonempty template strings but no extracted helper oracle/assertion. Example test_implicit_dynamics.ImplicitDynamicsContracts.test_near_singular_branch_remains_accurate_before_the_fold.",
+        "resolution": "Current review2 explicitly records assert_close expectation(-1+sqrt(1-4*t))/2 and1e-8; all36 empty extraction templates disappeared, and consolidator now rejects such templates.",
+        "evidence": [
+          "review-2.json",
+          "consolidate.py",
+          "evas/tests/test_implicit_dynamics.py:69"
+        ]
+      }
+    ],
+    "open_findings": [],
+    "limits": [
+      "332 modules read assertion belongs to six lane source reviewers. This independent reviewer checked all module SHA/read records and selected bodies/helpers, not every body again.",
+      "no_defect_found means static negative finding only; it is neither proof, full calibration, capability qualification nor release acceptance.",
+      "No full suite/build/Spectre/remote action or source/test edits by this reviewer. Probes above assess assertion detection only.",
+      "Old and current execution evidence, failure-obligation labels, test validity and semantic qualification remain distinct.",
+      "This review does not independently establish all external LRM clause interpretations; independent final semantic review owns that scope.",
+      "Final README is a detailed audit report, not the concise user review summary. Coordinator owns the one human delivery summary/output-length check."
+    ],
+    "conclusion": "Final inventory, evidence identities, coverage, per-method table, counts and bounded report claims pass this independent Standards review. Semantic review is a separate conclusion; no simulator/test qualification is granted.",
+    "final_counts": {
+      "methods": 3257,
+      "modules": 332,
+      "definition_positions": 3246,
+      "generated_methods": 12,
+      "no_defect_found": 2785,
+      "evidence_gap": 95,
+      "mixed": 359,
+      "test_defect": 18,
+      "problem_methods": 377,
+      "passing_problem_methods": 32,
+      "finding_groups": 86
+    },
+    "resolved_observations": [
+      {
+        "issue": "Lane4 contract reference-list representation",
+        "resolution": "Explicit source refs plus concrete oracle/assessment provide the row contract. Consolidator accepts descriptive strings or nonempty lists; no approval is inferred from this field type."
+      },
+      {
+        "issue": "Withdrawal L5-F02 passive oldDUE",
+        "resolution": "Independently computed oldDUE to RN due difference1/108086391056891904, but queried binary64 neighbours give same phase[0,1,1]and float(DUE)equalsRN due. No material oracle defect established at original budget; withdrawal reason preserved."
+      }
+    ],
+    "narrow_delta_review": {
+      "method": "test_timer_ordering.TimerOrdering.test_exact_equal_writers_still_fail_same_batch_ownership",
+      "old_verdict": "mixed",
+      "new_verdict": "evidence_gap",
+      "reason": "Different-period clocks with equal exact time lack established same logical occurrence. Uncertainty is preserved instead of declaring a test defect.",
+      "checks": [
+        "All unchanged lane1/2/3/5/6 SHA match prior reviewed snapshots",
+        "Updated review4 SHA matches final consolidated summary",
+        "All3257 TSV fields equal final JSON",
+        "Final counts377problem/95gap/2785no_defect;32passing problems;86groups",
+        "Coordinator correction reason preserved in summary reviews"
+      ],
+      "open_findings": []
+    }
+  }
+}

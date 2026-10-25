@@ -1,0 +1,478 @@
+{
+  "scope": "Selected prior failing-obligation context, copied from approved audit input; not new execution or full-method qualification",
+  "input_sha256": "87b172937ff0f53c8ba57d0cc3082da3d3c274f91b7dad5d65f0062a4baf9242",
+  "rows": [
+    {
+      "id": "test_causal_event_math.CausalEventMath.test_division_by_electrical_unknown_still_refuses",
+      "prior_failure_audit": {
+        "id": "test_causal_event_math.CausalEventMath.test_division_by_electrical_unknown_still_refuses",
+        "category": "test_expectation_error",
+        "confidence": "confirmed",
+        "capability_nodes": [
+          "sequential-assign"
+        ],
+        "capability_mapping_note": "列出现有具体节点作为语义归属；映射不表示该节点已经取得IR33数值验收。",
+        "contract_refs": [
+          "evas/tests/test_causal_event_math.py:93",
+          "evas/docs/development/DECISIONS.md#adr-006",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "oracle_basis": "独立判据是已给定输入的结构或数值不变量：不合法引用/无唯一解/中间signed32越界必须拒绝且不返回部分结果。具体旧诊断名称或前后检查顺序不是数学oracle；当前已拒绝与目标机制已执行须分别判断。",
+        "finding": "1/V(y)的选中分母在该程序为零，实际real_arithmetic DivisionByZero拒绝；旧unsupported_transient准入类别不是当前数值义务。",
+        "missing_evidence": "未执行迁移后的独立结果断言；现有CI只支持这里列出的失败义务，不证明方法整体数值正确。",
+        "priority": "P3",
+        "proposed_action": "迁移fixture或参考答案到IR33，并保留原始语义不变量和真实不确定性负控；不要机械改成通过。",
+        "semantic_family": "diagnostic",
+        "source_method_sha256": "b3a1740a08a5c9de8ebc0e8b45855c6c0a189825988bfff163e23c26842c81d2",
+        "execution_evidence": {
+          "kind": "reused_ci",
+          "ci_run": "40180512662",
+          "source_head": "d47f829945d9cc1cc559617d4d1e55987cec7f3d",
+          "input_file": "input-migration.json",
+          "input_case_index": 15
+        },
+        "prior_negative_audit_used_as_verdict": false,
+        "oracle_basis_refs": [
+          "evas/tests/test_causal_event_math.py:93",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "review_category": "test_expectation_error",
+        "review_confidence": "confirmed",
+        "candidate_category": "",
+        "outcome": "failed",
+        "source_file": "evas/tests/test_causal_event_math.py",
+        "definition_line": "93",
+        "definition_kind": "defined_here",
+        "fixed_source_url": "https://github.com/BucketSran/vaEVAS/blob/d47f829945d9cc1cc559617d4d1e55987cec7f3d/evas/tests/test_causal_event_math.py#L93",
+        "symptom_group": "diagnostic_contract",
+        "historical_group": "diagnostic_contract",
+        "pre243_status": "passed",
+        "review_source": "review-migration.json",
+        "review_source_sha256": "13416bbd6b0f8319580d0a2f19f1c0c0b767b03a93d12063c65a552e39d7f685",
+        "decision_scope": "Classification of observed failing obligation and audited oracle; not full method numerical qualification",
+        "ci_evidence": [
+          {
+            "log": "shard-1-clean.log",
+            "line": 4168,
+            "kind": "FAIL",
+            "header": "test_division_by_electrical_unknown_still_refuses (test_causal_event_math.CausalEventMath.test_division_by_electrical_unknown_still_refuses)"
+          }
+        ],
+        "source_module_sha256": "4801ec19f01e585376beb0e2ab71c6171c9d384dc5aa52a72447d11c33caebd8"
+      }
+    },
+    {
+      "id": "test_causal_event_math.CausalEventMath.test_division_uses_driven_values_and_retains_denominator_uncertainty",
+      "prior_failure_audit": {
+        "id": "test_causal_event_math.CausalEventMath.test_division_uses_driven_values_and_retains_denominator_uncertainty",
+        "category": "test_expectation_error",
+        "confidence": "confirmed",
+        "capability_nodes": [
+          "sequential-assign"
+        ],
+        "capability_mapping_note": "列出现有具体节点作为语义归属；映射不表示该节点已经取得IR33数值验收。",
+        "contract_refs": [
+          "evas/tests/test_causal_event_math.py:67",
+          "evas/docs/development/DECISIONS.md#adr-006",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "oracle_basis": "独立判据是已给定输入的结构或数值不变量：不合法引用/无唯一解/中间signed32越界必须拒绝且不返回部分结果。具体旧诊断名称或前后检查顺序不是数学oracle；当前已拒绝与目标机制已执行须分别判断。",
+        "finding": "正源2的正常路径已过500断言；source_errors=2.1跨零被DivisionAcrossZero拒绝。source_errors=.1的后置放大断言尚未运行，不能声称不确定性传播全验收。",
+        "missing_evidence": "未执行迁移后的独立结果断言；现有CI只支持这里列出的失败义务，不证明方法整体数值正确。",
+        "priority": "P3",
+        "proposed_action": "迁移fixture或参考答案到IR33，并保留原始语义不变量和真实不确定性负控；不要机械改成通过。",
+        "semantic_family": "diagnostic",
+        "source_method_sha256": "620144cfbc262d4dceef57cdc48be5fdebe7899ac69c2eea76fb9081fc3070d9",
+        "execution_evidence": {
+          "kind": "reused_ci",
+          "ci_run": "40180512662",
+          "source_head": "d47f829945d9cc1cc559617d4d1e55987cec7f3d",
+          "input_file": "input-migration.json",
+          "input_case_index": 16
+        },
+        "prior_negative_audit_used_as_verdict": false,
+        "oracle_basis_refs": [
+          "evas/tests/test_causal_event_math.py:67",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "review_category": "test_expectation_error",
+        "review_confidence": "confirmed",
+        "candidate_category": "",
+        "outcome": "failed",
+        "source_file": "evas/tests/test_causal_event_math.py",
+        "definition_line": "67",
+        "definition_kind": "defined_here",
+        "fixed_source_url": "https://github.com/BucketSran/vaEVAS/blob/d47f829945d9cc1cc559617d4d1e55987cec7f3d/evas/tests/test_causal_event_math.py#L67",
+        "symptom_group": "diagnostic_contract",
+        "historical_group": "diagnostic_contract",
+        "pre243_status": "passed",
+        "review_source": "review-migration.json",
+        "review_source_sha256": "13416bbd6b0f8319580d0a2f19f1c0c0b767b03a93d12063c65a552e39d7f685",
+        "decision_scope": "Classification of observed failing obligation and audited oracle; not full method numerical qualification",
+        "ci_evidence": [
+          {
+            "log": "shard-1-clean.log",
+            "line": 4181,
+            "kind": "FAIL",
+            "header": "test_division_uses_driven_values_and_retains_denominator_uncertainty (test_causal_event_math.CausalEventMath.test_division_uses_driven_values_and_retains_denominator_uncertainty)"
+          }
+        ],
+        "source_module_sha256": "4801ec19f01e585376beb0e2ab71c6171c9d384dc5aa52a72447d11c33caebd8"
+      }
+    },
+    {
+      "id": "test_causal_event_math.CausalEventMath.test_unselected_division_arm_is_lazy_but_selected_zero_refuses",
+      "prior_failure_audit": {
+        "id": "test_causal_event_math.CausalEventMath.test_unselected_division_arm_is_lazy_but_selected_zero_refuses",
+        "category": "test_expectation_error",
+        "confidence": "confirmed",
+        "capability_nodes": [
+          "sequential-assign"
+        ],
+        "capability_mapping_note": "列出现有具体节点作为语义归属；映射不表示该节点已经取得IR33数值验收。",
+        "contract_refs": [
+          "evas/tests/test_causal_event_math.py:81",
+          "evas/docs/development/DECISIONS.md#adr-006",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "oracle_basis": "独立判据是已给定输入的结构或数值不变量：不合法引用/无唯一解/中间signed32越界必须拒绝且不返回部分结果。具体旧诊断名称或前后检查顺序不是数学oracle；当前已拒绝与目标机制已执行须分别判断。",
+        "finding": "未选1/0臂的正路径已按lazy语义通过；被选零臂实际DivisionByZero拒绝。只需将数值域诊断定位到新real_arithmetic，不能改变lazy oracle。",
+        "missing_evidence": "未执行迁移后的独立结果断言；现有CI只支持这里列出的失败义务，不证明方法整体数值正确。",
+        "priority": "P3",
+        "proposed_action": "迁移fixture或参考答案到IR33，并保留原始语义不变量和真实不确定性负控；不要机械改成通过。",
+        "semantic_family": "diagnostic",
+        "source_method_sha256": "c014fac6b76c6c0a72f57cfeb952cc87115d9bc9c11c43529def4b2bf688e881",
+        "execution_evidence": {
+          "kind": "reused_ci",
+          "ci_run": "40180512662",
+          "source_head": "d47f829945d9cc1cc559617d4d1e55987cec7f3d",
+          "input_file": "input-migration.json",
+          "input_case_index": 19
+        },
+        "prior_negative_audit_used_as_verdict": false,
+        "oracle_basis_refs": [
+          "evas/tests/test_causal_event_math.py:81",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "review_category": "test_expectation_error",
+        "review_confidence": "confirmed",
+        "candidate_category": "",
+        "outcome": "failed",
+        "source_file": "evas/tests/test_causal_event_math.py",
+        "definition_line": "81",
+        "definition_kind": "defined_here",
+        "fixed_source_url": "https://github.com/BucketSran/vaEVAS/blob/d47f829945d9cc1cc559617d4d1e55987cec7f3d/evas/tests/test_causal_event_math.py#L81",
+        "symptom_group": "diagnostic_contract",
+        "historical_group": "diagnostic_contract",
+        "pre243_status": "passed",
+        "review_source": "review-migration.json",
+        "review_source_sha256": "13416bbd6b0f8319580d0a2f19f1c0c0b767b03a93d12063c65a552e39d7f685",
+        "decision_scope": "Classification of observed failing obligation and audited oracle; not full method numerical qualification",
+        "ci_evidence": [
+          {
+            "log": "shard-1-clean.log",
+            "line": 4232,
+            "kind": "FAIL",
+            "header": "test_unselected_division_arm_is_lazy_but_selected_zero_refuses (test_causal_event_math.CausalEventMath.test_unselected_division_arm_is_lazy_but_selected_zero_refuses) (condition='V(u,r)<0')"
+          }
+        ],
+        "source_module_sha256": "4801ec19f01e585376beb0e2ab71c6171c9d384dc5aa52a72447d11c33caebd8"
+      }
+    },
+    {
+      "id": "test_event_floor_ranges.EventFloorRanges.test_partition_signed_overflow_and_original_nonfinite_checks_remain",
+      "prior_failure_audit": {
+        "id": "test_event_floor_ranges.EventFloorRanges.test_partition_signed_overflow_and_original_nonfinite_checks_remain",
+        "category": "test_expectation_error",
+        "confidence": "confirmed",
+        "capability_nodes": [
+          "sequential-assign"
+        ],
+        "capability_mapping_note": "列出现有具体节点作为语义归属；映射不表示该节点已经取得IR33数值验收。",
+        "contract_refs": [
+          "evas/tests/test_event_floor_ranges.py:135",
+          "evas/docs/development/DECISIONS.md#adr-006",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "oracle_basis": "独立判据是已给定输入的结构或数值不变量：不合法引用/无唯一解/中间signed32越界必须拒绝且不返回部分结果。具体旧诊断名称或前后检查顺序不是数学oracle；当前已拒绝与目标机制已执行须分别判断。",
+        "finding": "floor分区边界检查先过；signed32溢出实际integer_range包含signed32而非signed 32-bit，最后非有限放大子例未运行。",
+        "missing_evidence": "未执行迁移后的独立结果断言；现有CI只支持这里列出的失败义务，不证明方法整体数值正确。",
+        "priority": "P3",
+        "proposed_action": "迁移fixture或参考答案到IR33，并保留原始语义不变量和真实不确定性负控；不要机械改成通过。",
+        "semantic_family": "diagnostic",
+        "source_method_sha256": "0a45f039fae41d3216b1ae52bcc73a2c761ba11239ecd352bf869c812f2f94f2",
+        "execution_evidence": {
+          "kind": "reused_ci",
+          "ci_run": "40180512662",
+          "source_head": "d47f829945d9cc1cc559617d4d1e55987cec7f3d",
+          "input_file": "input-migration.json",
+          "input_case_index": 52
+        },
+        "prior_negative_audit_used_as_verdict": false,
+        "oracle_basis_refs": [
+          "evas/tests/test_event_floor_ranges.py:135",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "review_category": "test_expectation_error",
+        "review_confidence": "confirmed",
+        "candidate_category": "",
+        "outcome": "failed",
+        "source_file": "evas/tests/test_event_floor_ranges.py",
+        "definition_line": "135",
+        "definition_kind": "defined_here",
+        "fixed_source_url": "https://github.com/BucketSran/vaEVAS/blob/d47f829945d9cc1cc559617d4d1e55987cec7f3d/evas/tests/test_event_floor_ranges.py#L135",
+        "symptom_group": "diagnostic_contract",
+        "historical_group": "diagnostic_contract",
+        "pre243_status": "passed",
+        "review_source": "review-migration.json",
+        "review_source_sha256": "13416bbd6b0f8319580d0a2f19f1c0c0b767b03a93d12063c65a552e39d7f685",
+        "decision_scope": "Classification of observed failing obligation and audited oracle; not full method numerical qualification",
+        "ci_evidence": [
+          {
+            "log": "shard-0-clean.log",
+            "line": 2418,
+            "kind": "FAIL",
+            "header": "test_partition_signed_overflow_and_original_nonfinite_checks_remain (test_event_floor_ranges.EventFloorRanges.test_partition_signed_overflow_and_original_nonfinite_checks_remain)"
+          }
+        ],
+        "source_module_sha256": "6439b87ba697c05fb98965670d6e83d78566ddf2c78d47b30f4e3da59515de1e"
+      }
+    },
+    {
+      "id": "test_initial_sampling_closure.BootstrapNonseedBounds.test_nonseed_rounding_is_retained_by_future_transition_and_amplification",
+      "prior_failure_audit": {
+        "id": "test_initial_sampling_closure.BootstrapNonseedBounds.test_nonseed_rounding_is_retained_by_future_transition_and_amplification",
+        "category": "test_expectation_error",
+        "confidence": "confirmed",
+        "capability_nodes": [
+          "conditions",
+          "sequential-assign"
+        ],
+        "contract_refs": [
+          "evas/tests/test_initial_sampling_closure.py:102",
+          "evas/docs/development/DECISIONS.md#adr-006",
+          "evas/docs/math/events.md#program-real-procedure-contract",
+          "evas/capabilities/catalog.py",
+          "evas/rust_core/src/solver.rs:251",
+          "evas/rust_core/src/solver.rs:519",
+          "evas/docs/math/solving.md:56"
+        ],
+        "oracle_basis": "未来物理1e12增益仍需对真实完整盒/输出量化误差拒绝。",
+        "finding": "实际waveform_accuracy拒绝，只有forward error消息断言不匹配；不等于误差链丢失。 最终CI实际：AssertionError: 'forward error' not found in 'procedure affine image [7.2000000001e10,7.200000000100003e10] excludes native 7.200000000100002e10 within original voltage budget; 0 fired gates'",
+        "missing_evidence": [
+          "需要改checker后在同一冻结源/预算上重验，当前审查未修改测试。",
+          "catalog映射只给已有粗能力节点；catalog没有逐次RN/源位置盒/证明预算的专门node，映射不授予该组合qualification。"
+        ],
+        "priority": "P2",
+        "proposed_action": "冻结新结构化错误并证明新的RN后物理输出误差。",
+        "semantic_family": "diagnostic",
+        "review_category": "test_expectation_error",
+        "review_confidence": "confirmed",
+        "candidate_category": "",
+        "outcome": "failed",
+        "source_file": "evas/tests/test_initial_sampling_closure.py",
+        "definition_line": "102",
+        "definition_kind": "defined_here",
+        "fixed_source_url": "https://github.com/BucketSran/vaEVAS/blob/d47f829945d9cc1cc559617d4d1e55987cec7f3d/evas/tests/test_initial_sampling_closure.py#L102",
+        "symptom_group": "finite_domain",
+        "historical_group": "finite_domain",
+        "pre243_status": "passed",
+        "review_source": "review-proofs.json",
+        "review_source_sha256": "7794aa1695fa52a98850e700ada2565ba667ff37eb996cb6b4d86140155aea0b",
+        "decision_scope": "Classification of observed failing obligation and audited oracle; not full method numerical qualification",
+        "ci_evidence": [
+          {
+            "log": "shard-0-clean.log",
+            "line": 2624,
+            "kind": "FAIL",
+            "header": "test_nonseed_rounding_is_retained_by_future_transition_and_amplification (test_initial_sampling_closure.BootstrapNonseedBounds.test_nonseed_rounding_is_retained_by_future_transition_and_amplification)"
+          }
+        ],
+        "source_module_sha256": "596c3ce0010b7fb65172277c145e30d780e927ba261ef7c4974308f869ba822e"
+      }
+    },
+    {
+      "id": "test_input_initialization.InputInitialization.test_undriven_inout_rejected_by_kernel",
+      "prior_failure_audit": {
+        "id": "test_input_initialization.InputInitialization.test_undriven_inout_rejected_by_kernel",
+        "category": "test_expectation_error",
+        "confidence": "confirmed",
+        "capability_nodes": [
+          "sequential-assign"
+        ],
+        "capability_mapping_note": "列出现有具体节点作为语义归属；映射不表示该节点已经取得IR33数值验收。",
+        "contract_refs": [
+          "evas/tests/test_input_initialization.py:146",
+          "evas/docs/development/DECISIONS.md#adr-006",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "oracle_basis": "独立判据是已给定输入的结构或数值不变量：不合法引用/无唯一解/中间signed32越界必须拒绝且不返回部分结果。具体旧诊断名称或前后检查顺序不是数学oracle；当前已拒绝与目标机制已执行须分别判断。",
+        "finding": "未驱动inout仍unsupported_initial_history拒绝，旧unsupported_initialization阶段不适用；不代表该初始化被支持。",
+        "missing_evidence": "未执行迁移后的独立结果断言；现有CI只支持这里列出的失败义务，不证明方法整体数值正确。",
+        "priority": "P3",
+        "proposed_action": "迁移fixture或参考答案到IR33，并保留原始语义不变量和真实不确定性负控；不要机械改成通过。",
+        "semantic_family": "diagnostic",
+        "source_method_sha256": "47e165e95f1530ada16c1b4764c3565e7e4d6cac098d6996a9d72acceb33fe74",
+        "execution_evidence": {
+          "kind": "reused_ci",
+          "ci_run": "40180512662",
+          "source_head": "d47f829945d9cc1cc559617d4d1e55987cec7f3d",
+          "input_file": "input-migration.json",
+          "input_case_index": 138
+        },
+        "prior_negative_audit_used_as_verdict": false,
+        "oracle_basis_refs": [
+          "evas/tests/test_input_initialization.py:146",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "review_category": "test_expectation_error",
+        "review_confidence": "confirmed",
+        "candidate_category": "",
+        "outcome": "failed",
+        "source_file": "evas/tests/test_input_initialization.py",
+        "definition_line": "146",
+        "definition_kind": "defined_here",
+        "fixed_source_url": "https://github.com/BucketSran/vaEVAS/blob/d47f829945d9cc1cc559617d4d1e55987cec7f3d/evas/tests/test_input_initialization.py#L146",
+        "symptom_group": "diagnostic_contract",
+        "historical_group": "diagnostic_contract",
+        "pre243_status": "passed",
+        "review_source": "review-migration.json",
+        "review_source_sha256": "13416bbd6b0f8319580d0a2f19f1c0c0b767b03a93d12063c65a552e39d7f685",
+        "decision_scope": "Classification of observed failing obligation and audited oracle; not full method numerical qualification",
+        "ci_evidence": [
+          {
+            "log": "shard-2-clean.log",
+            "line": 4490,
+            "kind": "FAIL",
+            "header": "test_undriven_inout_rejected_by_kernel (test_input_initialization.InputInitialization.test_undriven_inout_rejected_by_kernel)"
+          }
+        ],
+        "source_module_sha256": "64acad59f6b03dd97ed98279f60bad6e0740ba0632c0ac5952f9d6f88476f033"
+      }
+    },
+    {
+      "id": "test_migrate.ManifestMigrationTests.test_invalid_source_is_a_diagnostic_not_a_fake_ir",
+      "prior_failure_audit": {
+        "id": "test_migrate.ManifestMigrationTests.test_invalid_source_is_a_diagnostic_not_a_fake_ir",
+        "category": "test_expectation_error",
+        "confidence": "confirmed",
+        "capability_nodes": [
+          "sequential-assign"
+        ],
+        "capability_mapping_note": "列出现有具体节点作为语义归属；映射不表示该节点已经取得IR33数值验收。",
+        "contract_refs": [
+          "evas/tests/test_migrate.py:90",
+          "evas/docs/development/DECISIONS.md#adr-006",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "oracle_basis": "独立判据是已给定输入的结构或数值不变量：不合法引用/无唯一解/中间signed32越界必须拒绝且不返回部分结果。具体旧诊断名称或前后检查顺序不是数学oracle；当前已拒绝与目标机制已执行须分别判断。",
+        "finding": "1/0与1.0/0.0均编译失败，manifest结果非fake IR；实际division by zero替代旧两种细分英文文案，数值域不变。",
+        "missing_evidence": "未执行迁移后的独立结果断言；现有CI只支持这里列出的失败义务，不证明方法整体数值正确。",
+        "priority": "P3",
+        "proposed_action": "迁移fixture或参考答案到IR33，并保留原始语义不变量和真实不确定性负控；不要机械改成通过。",
+        "semantic_family": "diagnostic",
+        "source_method_sha256": "ea6c278446cd0f187d127221cf2d919839420ae2c00b30365ce75b5f06682af3",
+        "execution_evidence": {
+          "kind": "reused_ci",
+          "ci_run": "40180512662",
+          "source_head": "d47f829945d9cc1cc559617d4d1e55987cec7f3d",
+          "input_file": "input-migration.json",
+          "input_case_index": 152
+        },
+        "prior_negative_audit_used_as_verdict": false,
+        "oracle_basis_refs": [
+          "evas/tests/test_migrate.py:90",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "review_category": "test_expectation_error",
+        "review_confidence": "confirmed",
+        "candidate_category": "",
+        "outcome": "failed",
+        "source_file": "evas/tests/test_migrate.py",
+        "definition_line": "90",
+        "definition_kind": "defined_here",
+        "fixed_source_url": "https://github.com/BucketSran/vaEVAS/blob/d47f829945d9cc1cc559617d4d1e55987cec7f3d/evas/tests/test_migrate.py#L90",
+        "symptom_group": "diagnostic_contract",
+        "historical_group": "diagnostic_contract",
+        "pre243_status": "passed",
+        "review_source": "review-migration.json",
+        "review_source_sha256": "13416bbd6b0f8319580d0a2f19f1c0c0b767b03a93d12063c65a552e39d7f685",
+        "decision_scope": "Classification of observed failing obligation and audited oracle; not full method numerical qualification",
+        "ci_evidence": [
+          {
+            "log": "shard-0-clean.log",
+            "line": 4110,
+            "kind": "FAIL",
+            "header": "test_invalid_source_is_a_diagnostic_not_a_fake_ir (test_migrate.ManifestMigrationTests.test_invalid_source_is_a_diagnostic_not_a_fake_ir) (expression='1/0')"
+          },
+          {
+            "log": "shard-0-clean.log",
+            "line": 4118,
+            "kind": "FAIL",
+            "header": "test_invalid_source_is_a_diagnostic_not_a_fake_ir (test_migrate.ManifestMigrationTests.test_invalid_source_is_a_diagnostic_not_a_fake_ir) (expression='1.0/0.0')"
+          }
+        ],
+        "source_module_sha256": "03024b63f4f5697f05e0c4eae2bf13d006ffaffec5e896c9381c0918104f879c"
+      }
+    },
+    {
+      "id": "test_root_recovery.RootRecovery.test_too_small_budget_stops_without_losing_the_original_failure",
+      "prior_failure_audit": {
+        "id": "test_root_recovery.RootRecovery.test_too_small_budget_stops_without_losing_the_original_failure",
+        "category": "test_expectation_error",
+        "confidence": "confirmed",
+        "capability_nodes": [
+          "sequential-assign"
+        ],
+        "capability_mapping_note": "列出现有具体节点作为语义归属；映射不表示该节点已经取得IR33数值验收。",
+        "contract_refs": [
+          "evas/tests/test_root_recovery.py:198",
+          "evas/docs/development/DECISIONS.md#adr-006",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "oracle_basis": "独立判据是已给定输入的结构或数值不变量：不合法引用/无唯一解/中间signed32越界必须拒绝且不返回部分结果。具体旧诊断名称或前后检查顺序不是数学oracle；当前已拒绝与目标机制已执行须分别判断。",
+        "finding": "极小1e-30预算仍waveform_accuracy拒绝且result=None，旧event_accuracy枚举失效；bounded refinement与failure记录后置断言未运行。",
+        "missing_evidence": "未执行迁移后的独立结果断言；现有CI只支持这里列出的失败义务，不证明方法整体数值正确。",
+        "priority": "P3",
+        "proposed_action": "迁移fixture或参考答案到IR33，并保留原始语义不变量和真实不确定性负控；不要机械改成通过。",
+        "semantic_family": "diagnostic",
+        "source_method_sha256": "eef1932b9da4fce5d5a92aae28b9557db759206867500a1c666420e5ef7c6c2f",
+        "execution_evidence": {
+          "kind": "reused_ci",
+          "ci_run": "40180512662",
+          "source_head": "d47f829945d9cc1cc559617d4d1e55987cec7f3d",
+          "input_file": "input-migration.json",
+          "input_case_index": 197
+        },
+        "prior_negative_audit_used_as_verdict": false,
+        "oracle_basis_refs": [
+          "evas/tests/test_root_recovery.py:198",
+          "evas/docs/math/events.md#program-real-procedure-contract"
+        ],
+        "review_category": "test_expectation_error",
+        "review_confidence": "confirmed",
+        "candidate_category": "",
+        "outcome": "failed",
+        "source_file": "evas/tests/test_root_recovery.py",
+        "definition_line": "198",
+        "definition_kind": "defined_here",
+        "fixed_source_url": "https://github.com/BucketSran/vaEVAS/blob/d47f829945d9cc1cc559617d4d1e55987cec7f3d/evas/tests/test_root_recovery.py#L198",
+        "symptom_group": "diagnostic_contract",
+        "historical_group": "diagnostic_contract",
+        "pre243_status": "passed",
+        "review_source": "review-migration.json",
+        "review_source_sha256": "13416bbd6b0f8319580d0a2f19f1c0c0b767b03a93d12063c65a552e39d7f685",
+        "decision_scope": "Classification of observed failing obligation and audited oracle; not full method numerical qualification",
+        "ci_evidence": [
+          {
+            "log": "shard-0-clean.log",
+            "line": 3110,
+            "kind": "FAIL",
+            "header": "test_too_small_budget_stops_without_losing_the_original_failure (test_root_recovery.RootRecovery.test_too_small_budget_stops_without_losing_the_original_failure)"
+          }
+        ],
+        "source_module_sha256": "abf46b22dd275e12e9422ba204cdefee5433b2914e3f6a1cfcda06350c23eb4e"
+      }
+    }
+  ]
+}

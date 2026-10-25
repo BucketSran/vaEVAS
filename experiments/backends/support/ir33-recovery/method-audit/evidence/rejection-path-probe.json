@@ -1,0 +1,158 @@
+{
+  "method": "Observe assertRaises context without changing compiler/kernel/assertion behavior",
+  "kernel_sha256": "655a156529d857be8f5fcd467623a324cc463be5977b00aa6c2ea4a4592686d1",
+  "rows": [
+    {
+      "id": "test_event_body_input_aliases.EventBodyInputAliases.test_selected_alias_keeps_source_error_in_future_voltage",
+      "successful": true,
+      "errors": [],
+      "failures": [],
+      "accepted_exceptions": [
+        {
+          "type": "KernelError",
+          "message": "event_condition: procedure condition is not certified over its complete source-position enclosure at body-alias.va:2:99 (dut)",
+          "detail": {
+            "kind": "event_condition",
+            "message": "procedure condition is not certified over its complete source-position enclosure at body-alias.va:2:99 (dut)"
+          },
+          "compile_code": null
+        }
+      ]
+    },
+    {
+      "id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_other_sampled_math_functions_remain_rejected",
+      "successful": true,
+      "errors": [],
+      "failures": [],
+      "accepted_exceptions": [
+        {
+          "type": "CompileError",
+          "message": "sampled-math-domain.va:6:44: nonconstant mathematical functions require a waveform contribution",
+          "detail": null,
+          "compile_code": null
+        },
+        {
+          "type": "CompileError",
+          "message": "sampled-math-domain.va:6:44: nonconstant mathematical functions require a waveform contribution",
+          "detail": null,
+          "compile_code": null
+        },
+        {
+          "type": "CompileError",
+          "message": "event bodies do not support history/operator calls",
+          "detail": null,
+          "compile_code": null
+        }
+      ]
+    },
+    {
+      "id": "test_event_body_loops.EventBodyLoops.test_empty_outer_loop_cannot_hide_invalid_nested_controls_or_predicates",
+      "successful": true,
+      "errors": [],
+      "failures": [],
+      "accepted_exceptions": [
+        {
+          "type": "CompileError",
+          "message": "event-loop.va:3:63: event conditions require affine voltage/state predicates",
+          "detail": null,
+          "compile_code": null
+        },
+        {
+          "type": "CompileError",
+          "message": "event-loop.va:3:63: event conditions require affine voltage/state predicates",
+          "detail": null,
+          "compile_code": null
+        },
+        {
+          "type": "CompileError",
+          "message": "event-loop.va:3:57: event condition may depend on state through the voltage network",
+          "detail": null,
+          "compile_code": null
+        },
+        {
+          "type": "CompileError",
+          "message": "event-loop.va:3:57: event condition may depend on state through the voltage network",
+          "detail": null,
+          "compile_code": null
+        },
+        {
+          "type": "CompileError",
+          "message": "event-loop.va:3:68: static for control requires a signed 32-bit instance-constant integer: event-loop.va:3:68: undeclared electrical node in V(u,r)",
+          "detail": null,
+          "compile_code": null
+        },
+        {
+          "type": "CompileError",
+          "message": "event-loop.va:3:68: static for control requires a signed 32-bit instance-constant integer: event-loop.va:3:68: undeclared electrical node in V(u,r)",
+          "detail": null,
+          "compile_code": null
+        },
+        {
+          "type": "CompileError",
+          "message": "event-loop.va:3:69: static for control requires a signed 32-bit instance-constant integer",
+          "detail": null,
+          "compile_code": null
+        },
+        {
+          "type": "CompileError",
+          "message": "event-loop.va:3:69: static for control requires a signed 32-bit instance-constant integer",
+          "detail": null,
+          "compile_code": null
+        }
+      ]
+    },
+    {
+      "id": "test_absdelay.AbsDelayRejections.test_internal_state_nested_nonlinear_and_feedback_inputs_rejected",
+      "successful": true,
+      "errors": [],
+      "failures": [],
+      "accepted_exceptions": [
+        {
+          "type": "KernelError",
+          "message": "unsupported_operator: absdelay cannot depend on event state",
+          "detail": {
+            "kind": "unsupported_operator",
+            "message": "absdelay cannot depend on event state"
+          },
+          "compile_code": null
+        },
+        {
+          "type": "KernelError",
+          "message": "unsupported_operator: absdelay composition is limited to two stages; cycles are unsupported",
+          "detail": {
+            "kind": "unsupported_operator",
+            "message": "absdelay composition is limited to two stages; cycles are unsupported"
+          },
+          "compile_code": null
+        },
+        {
+          "type": "KernelError",
+          "message": "unsupported_transient: transient expressions must be jointly affine in voltage and state",
+          "detail": {
+            "kind": "unsupported_transient",
+            "message": "transient expressions must be jointly affine in voltage and state"
+          },
+          "compile_code": null
+        },
+        {
+          "type": "KernelError",
+          "message": "unsupported_operator: absdelay composition is limited to two stages; cycles are unsupported",
+          "detail": {
+            "kind": "unsupported_operator",
+            "message": "absdelay composition is limited to two stages; cycles are unsupported"
+          },
+          "compile_code": null
+        },
+        {
+          "type": "KernelError",
+          "message": "unsupported_operator: implicit polynomial DAE supports explicit-IC unreset integrals and proper filters at absdelay.va:2:86 (dut)",
+          "detail": {
+            "kind": "unsupported_operator",
+            "message": "implicit polynomial DAE supports explicit-IC unreset integrals and proper filters at absdelay.va:2:86 (dut)"
+          },
+          "compile_code": null
+        }
+      ]
+    }
+  ]
+}

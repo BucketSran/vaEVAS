@@ -1,0 +1,2636 @@
+[
+  {
+    "method": "test_101_timer_before_time_cut_preserves_both_transition_histories",
+    "input": {
+      "body": "@(initial_step) q=0; @(timer(0,1n)) q=1-q;\n            V(y,r)<+transition(($abstime>120n)?0.9:0,0,300p,300p);\n            V(z,r)<+transition(q,0,300p,300p);",
+      "declarations": "real q; electrical z;",
+      "sources": {
+        "u": [
+          [
+            0,
+            0
+          ],
+          [
+            1.21e-07,
+            0
+          ]
+        ]
+      },
+      "times": [
+        1.1975e-07,
+        1.2e-07,
+        1.2000000000000002e-07,
+        1.20075e-07,
+        1.2015e-07,
+        1.203e-07,
+        1.205e-07
+      ],
+      "stop": 1.205e-07
+    },
+    "expected_derivation": "Inspect actual compiled operator input and program event condition separately. Bare Select/Affine history input retains physical exact-time condition; RealBoundary/RealBinary program operations carry RN.",
+    "actual": {
+      "operators": [
+        {
+          "input": {
+            "relation": "gt",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 1,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 1.2000000000000002e-07,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "constant": 0.9,
+              "terms": [],
+              "op": "affine"
+            },
+            "else_value": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "origin": {
+              "source": "root-window.va",
+              "line": 3,
+              "column": 47,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "delay": 0.0,
+          "rise": 3e-10,
+          "fall": 3e-10,
+          "origin": {
+            "source": "root-window.va",
+            "line": 3,
+            "column": 21,
+            "instance": "dut",
+            "expansion": []
+          },
+          "kind": "transition"
+        },
+        {
+          "input": {
+            "state": 0,
+            "op": "state"
+          },
+          "delay": 0.0,
+          "rise": 3e-10,
+          "fall": 3e-10,
+          "origin": {
+            "source": "root-window.va",
+            "line": 4,
+            "column": 21,
+            "instance": "dut",
+            "expansion": []
+          },
+          "kind": "transition"
+        }
+      ],
+      "events": [
+        {
+          "trigger": {
+            "start": 0.0,
+            "period": 1e-09,
+            "time_tolerance": 1e-12,
+            "enabled": true,
+            "kind": "timer"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "value": {
+                  "operation": "subtract",
+                  "left": {
+                    "constant": 1.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "state": 0,
+                    "op": "state"
+                  },
+                  "origin": {
+                    "source": "root-window.va",
+                    "line": 2,
+                    "column": 138,
+                    "instance": "dut",
+                    "expansion": []
+                  },
+                  "op": "real_binary"
+                },
+                "kind": "store",
+                "origin": {
+                  "source": "root-window.va",
+                  "line": 2,
+                  "column": 135,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "root-window.va",
+            "line": 2,
+            "column": 120,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 1
+        },
+        {
+          "trigger": {
+            "kind": "initial_step"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "value": {
+                  "constant": 0.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "store",
+                "origin": {
+                  "source": "root-window.va",
+                  "line": 2,
+                  "column": 115,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "root-window.va",
+            "line": 2,
+            "column": 99,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 0
+        }
+      ],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "dut",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "event": 1,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 1,
+              "action": {
+                "event": 0,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 2,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 3,
+              "action": {
+                "contribution": 1,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "method": "test_changed_source_prefix_is_sampled_at_root_before_timer_update",
+    "input": {
+      "body": "@(initial_step) begin q=1; z=0; end\n            @(timer(500p,500p)) if($abstime>=52n) begin z=V(y,r); q=2; end\n            V(y,r)<+transition(($abstime>52n)?q:0,0,200p,200p);\n            V(w,r)<+1e6*transition(z,0,200p,200p);",
+      "declarations": "real q,z; electrical w;",
+      "sources": {
+        "u": [
+          [
+            0,
+            0
+          ],
+          [
+            5.3e-08,
+            0
+          ]
+        ]
+      },
+      "times": [
+        5.201e-08,
+        5.22e-08,
+        5.225e-08
+      ],
+      "stop": 5.225e-08
+    },
+    "expected_derivation": "Inspect actual compiled operator input and program event condition separately. Bare Select/Affine history input retains physical exact-time condition; RealBoundary/RealBinary program operations carry RN.",
+    "actual": {
+      "operators": [
+        {
+          "input": {
+            "relation": "gt",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 1,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 5.2e-08,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "state": 0,
+              "op": "state"
+            },
+            "else_value": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "origin": {
+              "source": "root-window.va",
+              "line": 4,
+              "column": 46,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "delay": 0.0,
+          "rise": 2e-10,
+          "fall": 2e-10,
+          "origin": {
+            "source": "root-window.va",
+            "line": 4,
+            "column": 21,
+            "instance": "dut",
+            "expansion": []
+          },
+          "kind": "transition"
+        },
+        {
+          "input": {
+            "state": 1,
+            "op": "state"
+          },
+          "delay": 0.0,
+          "rise": 2e-10,
+          "fall": 2e-10,
+          "origin": {
+            "source": "root-window.va",
+            "line": 5,
+            "column": 25,
+            "instance": "dut",
+            "expansion": []
+          },
+          "kind": "transition"
+        }
+      ],
+      "events": [
+        {
+          "trigger": {
+            "start": 5e-10,
+            "period": 5e-10,
+            "time_tolerance": 1e-12,
+            "enabled": true,
+            "kind": "timer"
+          },
+          "body": [
+            {
+              "relation": "ge",
+              "left": {
+                "value": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                },
+                "kind": "sample",
+                "origin": {
+                  "source": "root-window.va",
+                  "line": 3,
+                  "column": 36,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "right": {
+                "constant": 5.2e-08,
+                "terms": [],
+                "op": "affine"
+              },
+              "then_body": [
+                {
+                  "state": 1,
+                  "rhs": {
+                    "value": {
+                      "value": {
+                        "constant": 0.0,
+                        "terms": [
+                          {
+                            "node": 0,
+                            "coefficient": -1.0
+                          },
+                          {
+                            "node": 4,
+                            "coefficient": 1.0
+                          }
+                        ],
+                        "op": "affine"
+                      },
+                      "kind": "sample",
+                      "origin": {
+                        "source": "root-window.va",
+                        "line": 3,
+                        "column": 59,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "real_boundary"
+                    },
+                    "kind": "store",
+                    "origin": {
+                      "source": "root-window.va",
+                      "line": 3,
+                      "column": 57,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_boundary"
+                  },
+                  "kind": "assign"
+                },
+                {
+                  "state": 0,
+                  "rhs": {
+                    "value": {
+                      "constant": 2.0,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "kind": "store",
+                    "origin": {
+                      "source": "root-window.va",
+                      "line": 3,
+                      "column": 67,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_boundary"
+                  },
+                  "kind": "assign"
+                }
+              ],
+              "else_body": [],
+              "origin": {
+                "source": "root-window.va",
+                "line": 3,
+                "column": 33,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "if"
+            }
+          ],
+          "origin": {
+            "source": "root-window.va",
+            "line": 3,
+            "column": 13,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 1
+        },
+        {
+          "trigger": {
+            "kind": "initial_step"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "value": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "store",
+                "origin": {
+                  "source": "root-window.va",
+                  "line": 2,
+                  "column": 123,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "kind": "assign"
+            },
+            {
+              "state": 1,
+              "rhs": {
+                "value": {
+                  "constant": 0.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "store",
+                "origin": {
+                  "source": "root-window.va",
+                  "line": 2,
+                  "column": 128,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "root-window.va",
+            "line": 2,
+            "column": 101,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 0
+        }
+      ],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "dut",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "event": 1,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 1,
+              "action": {
+                "event": 0,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 2,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 3,
+              "action": {
+                "contribution": 1,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "method": "test_sine_of_old_transition_prefix_recomputes_at_physical_root",
+    "input": {
+      "body": "@(initial_step) begin q=1; z=0; end\n            @(timer(500p,500p)) if($abstime>=52n) begin z=V(y,r); q=2; end\n            V(y,r)<+sin(transition(($abstime>52n)?q:0,0,200p,200p));\n            V(w,r)<+1e6*transition(z,0,200p,200p);",
+      "declarations": "real q,z; electrical w;",
+      "sources": {
+        "u": [
+          [
+            0,
+            0
+          ],
+          [
+            5.3e-08,
+            0
+          ]
+        ]
+      },
+      "times": [
+        5.201e-08,
+        5.22e-08,
+        5.225e-08
+      ],
+      "stop": 5.225e-08
+    },
+    "expected_derivation": "Inspect actual compiled operator input and program event condition separately. Bare Select/Affine history input retains physical exact-time condition; RealBoundary/RealBinary program operations carry RN.",
+    "actual": {
+      "operators": [
+        {
+          "input": {
+            "relation": "gt",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 1,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 5.2e-08,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "state": 0,
+              "op": "state"
+            },
+            "else_value": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "origin": {
+              "source": "root-window.va",
+              "line": 4,
+              "column": 50,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "delay": 0.0,
+          "rise": 2e-10,
+          "fall": 2e-10,
+          "origin": {
+            "source": "root-window.va",
+            "line": 4,
+            "column": 25,
+            "instance": "dut",
+            "expansion": []
+          },
+          "kind": "transition"
+        },
+        {
+          "input": {
+            "operator": 0,
+            "op": "operator"
+          },
+          "origin": {
+            "source": "root-window.va",
+            "line": 4,
+            "column": 21,
+            "instance": "dut",
+            "expansion": []
+          },
+          "kind": "sin"
+        },
+        {
+          "input": {
+            "state": 1,
+            "op": "state"
+          },
+          "delay": 0.0,
+          "rise": 2e-10,
+          "fall": 2e-10,
+          "origin": {
+            "source": "root-window.va",
+            "line": 5,
+            "column": 25,
+            "instance": "dut",
+            "expansion": []
+          },
+          "kind": "transition"
+        }
+      ],
+      "events": [
+        {
+          "trigger": {
+            "start": 5e-10,
+            "period": 5e-10,
+            "time_tolerance": 1e-12,
+            "enabled": true,
+            "kind": "timer"
+          },
+          "body": [
+            {
+              "relation": "ge",
+              "left": {
+                "value": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                },
+                "kind": "sample",
+                "origin": {
+                  "source": "root-window.va",
+                  "line": 3,
+                  "column": 36,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "right": {
+                "constant": 5.2e-08,
+                "terms": [],
+                "op": "affine"
+              },
+              "then_body": [
+                {
+                  "state": 1,
+                  "rhs": {
+                    "value": {
+                      "value": {
+                        "constant": 0.0,
+                        "terms": [
+                          {
+                            "node": 0,
+                            "coefficient": -1.0
+                          },
+                          {
+                            "node": 4,
+                            "coefficient": 1.0
+                          }
+                        ],
+                        "op": "affine"
+                      },
+                      "kind": "sample",
+                      "origin": {
+                        "source": "root-window.va",
+                        "line": 3,
+                        "column": 59,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "real_boundary"
+                    },
+                    "kind": "store",
+                    "origin": {
+                      "source": "root-window.va",
+                      "line": 3,
+                      "column": 57,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_boundary"
+                  },
+                  "kind": "assign"
+                },
+                {
+                  "state": 0,
+                  "rhs": {
+                    "value": {
+                      "constant": 2.0,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "kind": "store",
+                    "origin": {
+                      "source": "root-window.va",
+                      "line": 3,
+                      "column": 67,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_boundary"
+                  },
+                  "kind": "assign"
+                }
+              ],
+              "else_body": [],
+              "origin": {
+                "source": "root-window.va",
+                "line": 3,
+                "column": 33,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "if"
+            }
+          ],
+          "origin": {
+            "source": "root-window.va",
+            "line": 3,
+            "column": 13,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 1
+        },
+        {
+          "trigger": {
+            "kind": "initial_step"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "value": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "store",
+                "origin": {
+                  "source": "root-window.va",
+                  "line": 2,
+                  "column": 123,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "kind": "assign"
+            },
+            {
+              "state": 1,
+              "rhs": {
+                "value": {
+                  "constant": 0.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "store",
+                "origin": {
+                  "source": "root-window.va",
+                  "line": 2,
+                  "column": 128,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "root-window.va",
+            "line": 2,
+            "column": 101,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 0
+        }
+      ],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "dut",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "event": 1,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 1,
+              "action": {
+                "event": 0,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 2,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 3,
+              "action": {
+                "contribution": 1,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "method": "test_sub_ulp_interrupted_source_pulse_remains_explicitly_unsupported",
+    "input": {
+      "body": "@(initial_step) begin q=1; z=0; end\n            @(timer(500p,500p)) if($abstime>=52n) begin z=V(y,r); q=0; end\n            V(y,r)<+transition(($abstime>52n)?q:0,0,200p,200p);\n            V(w,r)<+1e6*transition(z,0,200p,200p);",
+      "declarations": "real q,z; electrical w;",
+      "sources": {
+        "u": [
+          [
+            0,
+            0
+          ],
+          [
+            5.3e-08,
+            0
+          ]
+        ]
+      },
+      "times": [
+        5.201e-08,
+        5.22e-08,
+        5.225e-08
+      ],
+      "stop": 5.225e-08
+    },
+    "expected_derivation": "Inspect actual compiled operator input and program event condition separately. Bare Select/Affine history input retains physical exact-time condition; RealBoundary/RealBinary program operations carry RN.",
+    "actual": {
+      "operators": [
+        {
+          "input": {
+            "relation": "gt",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 1,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 5.2e-08,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "state": 0,
+              "op": "state"
+            },
+            "else_value": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "origin": {
+              "source": "root-window.va",
+              "line": 4,
+              "column": 46,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "delay": 0.0,
+          "rise": 2e-10,
+          "fall": 2e-10,
+          "origin": {
+            "source": "root-window.va",
+            "line": 4,
+            "column": 21,
+            "instance": "dut",
+            "expansion": []
+          },
+          "kind": "transition"
+        },
+        {
+          "input": {
+            "state": 1,
+            "op": "state"
+          },
+          "delay": 0.0,
+          "rise": 2e-10,
+          "fall": 2e-10,
+          "origin": {
+            "source": "root-window.va",
+            "line": 5,
+            "column": 25,
+            "instance": "dut",
+            "expansion": []
+          },
+          "kind": "transition"
+        }
+      ],
+      "events": [
+        {
+          "trigger": {
+            "start": 5e-10,
+            "period": 5e-10,
+            "time_tolerance": 1e-12,
+            "enabled": true,
+            "kind": "timer"
+          },
+          "body": [
+            {
+              "relation": "ge",
+              "left": {
+                "value": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                },
+                "kind": "sample",
+                "origin": {
+                  "source": "root-window.va",
+                  "line": 3,
+                  "column": 36,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "right": {
+                "constant": 5.2e-08,
+                "terms": [],
+                "op": "affine"
+              },
+              "then_body": [
+                {
+                  "state": 1,
+                  "rhs": {
+                    "value": {
+                      "value": {
+                        "constant": 0.0,
+                        "terms": [
+                          {
+                            "node": 0,
+                            "coefficient": -1.0
+                          },
+                          {
+                            "node": 4,
+                            "coefficient": 1.0
+                          }
+                        ],
+                        "op": "affine"
+                      },
+                      "kind": "sample",
+                      "origin": {
+                        "source": "root-window.va",
+                        "line": 3,
+                        "column": 59,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "real_boundary"
+                    },
+                    "kind": "store",
+                    "origin": {
+                      "source": "root-window.va",
+                      "line": 3,
+                      "column": 57,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_boundary"
+                  },
+                  "kind": "assign"
+                },
+                {
+                  "state": 0,
+                  "rhs": {
+                    "value": {
+                      "constant": 0.0,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "kind": "store",
+                    "origin": {
+                      "source": "root-window.va",
+                      "line": 3,
+                      "column": 67,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_boundary"
+                  },
+                  "kind": "assign"
+                }
+              ],
+              "else_body": [],
+              "origin": {
+                "source": "root-window.va",
+                "line": 3,
+                "column": 33,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "if"
+            }
+          ],
+          "origin": {
+            "source": "root-window.va",
+            "line": 3,
+            "column": 13,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 1
+        },
+        {
+          "trigger": {
+            "kind": "initial_step"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "value": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "store",
+                "origin": {
+                  "source": "root-window.va",
+                  "line": 2,
+                  "column": 123,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "kind": "assign"
+            },
+            {
+              "state": 1,
+              "rhs": {
+                "value": {
+                  "constant": 0.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "store",
+                "origin": {
+                  "source": "root-window.va",
+                  "line": 2,
+                  "column": 128,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "root-window.va",
+            "line": 2,
+            "column": 101,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 0
+        }
+      ],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "dut",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "event": 1,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 1,
+              "action": {
+                "event": 0,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 2,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 3,
+              "action": {
+                "contribution": 1,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "method": "test_isolated_third_boundary_value_still_rejects",
+    "input": {
+      "args": [
+        {
+          "u": [
+            [
+              0,
+              0
+            ],
+            [
+              5.3e-08,
+              0
+            ]
+          ]
+        },
+        [
+          0,
+          5.3e-08
+        ]
+      ],
+      "controls": {
+        "stop": "5.3e-08",
+        "max_step": "8e-11",
+        "strobetimes": "[]",
+        "kernel": "repository_root/evas/rust_core/target/debug/evas-kernel",
+        "timeout": "120"
+      }
+    },
+    "expected_derivation": "Inspect physical operator inputs independently of procedure program RN boundaries.",
+    "actual": {
+      "operators": [
+        {
+          "input": {
+            "relation": "le",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 1,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 5.2e-08,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "relation": "ge",
+              "left": {
+                "constant": 0.0,
+                "terms": [
+                  {
+                    "node": 1,
+                    "coefficient": 1.0
+                  }
+                ],
+                "op": "affine"
+              },
+              "right": {
+                "constant": 5.2e-08,
+                "terms": [],
+                "op": "affine"
+              },
+              "then_value": {
+                "constant": 1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "else_value": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "origin": {
+                "source": "root-window.va",
+                "line": 2,
+                "column": 112,
+                "instance": "dut",
+                "expansion": []
+              },
+              "op": "select"
+            },
+            "else_value": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "origin": {
+              "source": "root-window.va",
+              "line": 2,
+              "column": 112,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "delay": 0.0,
+          "rise": 2e-10,
+          "fall": 2e-10,
+          "origin": {
+            "source": "root-window.va",
+            "line": 2,
+            "column": 86,
+            "instance": "dut",
+            "expansion": []
+          },
+          "kind": "transition"
+        }
+      ],
+      "events": [],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "dut",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "method": "test_equal_nonpoint_physical_modes_retain_original_root_identity",
+    "input": {
+      "args": [
+        {
+          "ctrl": [
+            [
+              0,
+              0
+            ],
+            [
+              9.5367431640625e-07,
+              3
+            ],
+            [
+              1.9073486328125e-06,
+              3
+            ]
+          ]
+        },
+        [
+          0,
+          9.5367431640625e-07,
+          1.9073486328125e-06
+        ]
+      ],
+      "controls": {
+        "stop": "1.9073486328125e-06",
+        "max_step": "1.4901161193847656e-08",
+        "vabstol": "1e-10",
+        "reltol": "0",
+        "kernel": "repository_root/evas/rust_core/target/debug/evas-kernel"
+      }
+    },
+    "expected_derivation": "Inspect physical operator inputs independently of procedure program RN boundaries.",
+    "actual": {
+      "operators": [
+        {
+          "input": {
+            "relation": "gt",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 1,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 0.5,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "constant": 1048576.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "else_value": {
+              "constant": -1048576.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "origin": {
+              "source": "modes.va",
+              "line": 5,
+              "column": 25,
+              "instance": "M",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "ic": 0.0,
+          "origin": {
+            "source": "modes.va",
+            "line": 5,
+            "column": 8,
+            "instance": "M",
+            "expansion": []
+          },
+          "reset": null,
+          "kind": "idt"
+        },
+        {
+          "input": {
+            "relation": "gt",
+            "left": {
+              "op": "multiply",
+              "left": {
+                "constant": 2.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "right": {
+                "constant": 0.0,
+                "terms": [
+                  {
+                    "node": 0,
+                    "coefficient": -1.0
+                  },
+                  {
+                    "node": 1,
+                    "coefficient": 1.0
+                  }
+                ],
+                "op": "affine"
+              }
+            },
+            "right": {
+              "constant": 1.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "constant": 1048576.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "else_value": {
+              "constant": -1048576.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "origin": {
+              "source": "modes.va",
+              "line": 6,
+              "column": 25,
+              "instance": "M",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "ic": 0.25,
+          "origin": {
+            "source": "modes.va",
+            "line": 6,
+            "column": 8,
+            "instance": "M",
+            "expansion": []
+          },
+          "reset": null,
+          "kind": "idt"
+        },
+        {
+          "input": {
+            "state": 0,
+            "op": "state"
+          },
+          "delay": 0.0,
+          "rise": 9.5367431640625e-07,
+          "fall": 9.5367431640625e-07,
+          "origin": {
+            "source": "modes.va",
+            "line": 7,
+            "column": 21,
+            "instance": "M",
+            "expansion": []
+          },
+          "kind": "transition"
+        }
+      ],
+      "events": [
+        {
+          "trigger": {
+            "start": 4.76837158203125e-07,
+            "period": 0.0,
+            "time_tolerance": 1e-12,
+            "enabled": true,
+            "kind": "timer"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "modes.va",
+            "line": 4,
+            "column": 33,
+            "instance": "M",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 2
+        },
+        {
+          "trigger": {
+            "kind": "initial_step"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "modes.va",
+            "line": 4,
+            "column": 14,
+            "instance": "M",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 0
+        }
+      ],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "M",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "event": 1,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 1,
+              "action": {
+                "binding": 0,
+                "value": {
+                  "value": {
+                    "operation": "multiply",
+                    "left": {
+                      "constant": 0.5,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "right": {
+                      "constant": 9.5367431640625e-07,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "origin": {
+                      "source": "modes.va",
+                      "line": 4,
+                      "column": 44,
+                      "instance": "M",
+                      "expansion": []
+                    },
+                    "op": "real_binary"
+                  },
+                  "kind": "argument",
+                  "origin": {
+                    "source": "modes.va",
+                    "line": 4,
+                    "column": 44,
+                    "instance": "M",
+                    "expansion": []
+                  },
+                  "op": "real_boundary"
+                },
+                "origin": {
+                  "source": "modes.va",
+                  "line": 4,
+                  "column": 44,
+                  "instance": "M",
+                  "expansion": []
+                },
+                "kind": "real_bind"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 2,
+              "action": {
+                "event": 0,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 3,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 4,
+              "action": {
+                "contribution": 1,
+                "kind": "contribution_capture"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 5,
+              "action": {
+                "contribution": 2,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "method": "test_nonbinary_source_root_preserves_true_transition_time_enclosure",
+    "input": {
+      "args": [
+        {
+          "ctrl": [
+            [
+              0,
+              0
+            ],
+            [
+              9.5367431640625e-07,
+              3
+            ],
+            [
+              3.814697265625e-06,
+              3
+            ]
+          ]
+        },
+        [
+          0,
+          3.178914388020833e-07,
+          4.76837158203125e-07,
+          9.5367431640625e-07,
+          1.9073486328125e-06,
+          3.814697265625e-06
+        ]
+      ],
+      "controls": {
+        "stop": "3.814697265625e-06",
+        "max_step": "1.1920928955078125e-07",
+        "vabstol": "1e-10",
+        "reltol": "0",
+        "kernel": "repository_root/evas/rust_core/target/debug/evas-kernel"
+      }
+    },
+    "expected_derivation": "Inspect physical operator inputs independently of procedure program RN boundaries.",
+    "actual": {
+      "operators": [
+        {
+          "input": {
+            "relation": "gt",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 2,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 0.5,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "state": 0,
+              "op": "state"
+            },
+            "else_value": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "origin": {
+              "source": "source.va",
+              "line": 6,
+              "column": 30,
+              "instance": "M",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "delay": 0.0,
+          "rise": 9.5367431640625e-07,
+          "fall": 9.5367431640625e-07,
+          "origin": {
+            "source": "source.va",
+            "line": 6,
+            "column": 7,
+            "instance": "M",
+            "expansion": []
+          },
+          "kind": "transition"
+        }
+      ],
+      "events": [
+        {
+          "trigger": {
+            "start": 2.384185791015625e-06,
+            "period": 0.0,
+            "time_tolerance": 1e-12,
+            "enabled": true,
+            "kind": "timer"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 2.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            },
+            {
+              "state": 1,
+              "rhs": {
+                "op": "add",
+                "left": {
+                  "state": 1,
+                  "op": "state"
+                },
+                "right": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                }
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "source.va",
+            "line": 5,
+            "column": 1,
+            "instance": "M",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 2
+        },
+        {
+          "trigger": {
+            "kind": "initial_step"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            },
+            {
+              "state": 1,
+              "rhs": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "source.va",
+            "line": 4,
+            "column": 1,
+            "instance": "M",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 0
+        }
+      ],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "M",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "event": 1,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 1,
+              "action": {
+                "binding": 0,
+                "value": {
+                  "value": {
+                    "operation": "multiply",
+                    "left": {
+                      "constant": 2.5,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "right": {
+                      "constant": 9.5367431640625e-07,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "origin": {
+                      "source": "source.va",
+                      "line": 5,
+                      "column": 12,
+                      "instance": "M",
+                      "expansion": []
+                    },
+                    "op": "real_binary"
+                  },
+                  "kind": "argument",
+                  "origin": {
+                    "source": "source.va",
+                    "line": 5,
+                    "column": 12,
+                    "instance": "M",
+                    "expansion": []
+                  },
+                  "op": "real_boundary"
+                },
+                "origin": {
+                  "source": "source.va",
+                  "line": 5,
+                  "column": 12,
+                  "instance": "M",
+                  "expansion": []
+                },
+                "kind": "real_bind"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 2,
+              "action": {
+                "event": 0,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 3,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 4,
+              "action": {
+                "contribution": 1,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "method": "test_nonpoint_cross_and_source_cut_share_original_guard_root",
+    "input": {
+      "args": [
+        {
+          "ctrl": [
+            [
+              0,
+              0
+            ],
+            [
+              9.5367431640625e-07,
+              3
+            ],
+            [
+              1.9073486328125e-06,
+              3
+            ]
+          ]
+        },
+        [
+          0,
+          3.178914388020833e-07,
+          4.76837158203125e-07,
+          9.5367431640625e-07,
+          1.9073486328125e-06
+        ]
+      ],
+      "controls": {
+        "stop": "1.9073486328125e-06",
+        "max_step": "1.4901161193847656e-08",
+        "vabstol": "1e-10",
+        "reltol": "0",
+        "kernel": "repository_root/evas/rust_core/target/debug/evas-kernel"
+      }
+    },
+    "expected_derivation": "Inspect physical operator inputs independently of procedure program RN boundaries.",
+    "actual": {
+      "operators": [
+        {
+          "input": {
+            "relation": "gt",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 2,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 0.5,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "state": 0,
+              "op": "state"
+            },
+            "else_value": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "origin": {
+              "source": "cross.va",
+              "line": 7,
+              "column": 36,
+              "instance": "M",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "delay": 0.0,
+          "rise": 9.5367431640625e-07,
+          "fall": 9.5367431640625e-07,
+          "origin": {
+            "source": "cross.va",
+            "line": 7,
+            "column": 12,
+            "instance": "M",
+            "expansion": []
+          },
+          "kind": "transition"
+        }
+      ],
+      "events": [
+        {
+          "trigger": {
+            "guard": {
+              "op": "add",
+              "left": {
+                "constant": 0.0,
+                "terms": [
+                  {
+                    "node": 0,
+                    "coefficient": -1.0
+                  },
+                  {
+                    "node": 2,
+                    "coefficient": 1.0
+                  }
+                ],
+                "op": "affine"
+              },
+              "right": {
+                "constant": -0.5,
+                "terms": [],
+                "op": "affine"
+              }
+            },
+            "direction": 1,
+            "time_tolerance": 1e-12,
+            "expression_tolerance": 1e-10,
+            "kind": "cross"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "cross.va",
+            "line": 5,
+            "column": 1,
+            "instance": "M",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 1
+        },
+        {
+          "trigger": {
+            "kind": "initial_step"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "cross.va",
+            "line": 4,
+            "column": 14,
+            "instance": "M",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 0
+        }
+      ],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "M",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "event": 1,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 1,
+              "action": {
+                "event": 0,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 2,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 3,
+              "action": {
+                "contribution": 1,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "method": "test_query_at_lower_enclosure_endpoint_stays_before_nonbinary_cut",
+    "input": {
+      "args": [
+        {
+          "ctrl": [
+            [
+              0,
+              0
+            ],
+            [
+              9.5367431640625e-07,
+              3
+            ],
+            [
+              3.814697265625e-06,
+              3
+            ]
+          ]
+        },
+        [
+          0,
+          1.5894571940104166e-07,
+          1.5894571940104168e-07,
+          3.178914388020833e-07,
+          1.9073486328125e-06,
+          3.814697265625e-06
+        ]
+      ],
+      "controls": {
+        "stop": "3.814697265625e-06",
+        "max_step": "1.1920928955078125e-07",
+        "vabstol": "1e-10",
+        "reltol": "0",
+        "kernel": "repository_root/evas/rust_core/target/debug/evas-kernel"
+      }
+    },
+    "expected_derivation": "Inspect physical operator inputs independently of procedure program RN boundaries.",
+    "actual": {
+      "operators": [
+        {
+          "input": {
+            "relation": "gt",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 2,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 0.5,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "state": 0,
+              "op": "state"
+            },
+            "else_value": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "origin": {
+              "source": "source.va",
+              "line": 6,
+              "column": 30,
+              "instance": "M",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "delay": 0.0,
+          "rise": 9.5367431640625e-07,
+          "fall": 9.5367431640625e-07,
+          "origin": {
+            "source": "source.va",
+            "line": 6,
+            "column": 7,
+            "instance": "M",
+            "expansion": []
+          },
+          "kind": "transition"
+        }
+      ],
+      "events": [
+        {
+          "trigger": {
+            "start": 2.384185791015625e-06,
+            "period": 0.0,
+            "time_tolerance": 1e-12,
+            "enabled": true,
+            "kind": "timer"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 2.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            },
+            {
+              "state": 1,
+              "rhs": {
+                "op": "add",
+                "left": {
+                  "state": 1,
+                  "op": "state"
+                },
+                "right": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                }
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "source.va",
+            "line": 5,
+            "column": 1,
+            "instance": "M",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 2
+        },
+        {
+          "trigger": {
+            "kind": "initial_step"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            },
+            {
+              "state": 1,
+              "rhs": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "source.va",
+            "line": 4,
+            "column": 1,
+            "instance": "M",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 0
+        }
+      ],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "M",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "event": 1,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 1,
+              "action": {
+                "binding": 0,
+                "value": {
+                  "value": {
+                    "operation": "multiply",
+                    "left": {
+                      "constant": 2.5,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "right": {
+                      "constant": 9.5367431640625e-07,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "origin": {
+                      "source": "source.va",
+                      "line": 5,
+                      "column": 12,
+                      "instance": "M",
+                      "expansion": []
+                    },
+                    "op": "real_binary"
+                  },
+                  "kind": "argument",
+                  "origin": {
+                    "source": "source.va",
+                    "line": 5,
+                    "column": 12,
+                    "instance": "M",
+                    "expansion": []
+                  },
+                  "op": "real_boundary"
+                },
+                "origin": {
+                  "source": "source.va",
+                  "line": 5,
+                  "column": 12,
+                  "instance": "M",
+                  "expansion": []
+                },
+                "kind": "real_bind"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 2,
+              "action": {
+                "event": 0,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 3,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 4,
+              "action": {
+                "contribution": 1,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "method": "test_same_nonpoint_source_cut_and_edge_deadline_can_settle_together",
+    "input": {
+      "args": [
+        {
+          "ctrl": [
+            [
+              0,
+              0
+            ],
+            [
+              9.5367431640625e-07,
+              3
+            ],
+            [
+              3.814697265625e-06,
+              3
+            ]
+          ]
+        },
+        [
+          0.0,
+          1.5894571940104166e-07,
+          2.1855036417643228e-07,
+          2.7815500895182293e-07,
+          3.3775965372721356e-07,
+          3.973642985026042e-07,
+          9.5367431640625e-07,
+          3.814697265625e-06
+        ]
+      ],
+      "controls": {
+        "stop": "3.814697265625e-06",
+        "max_step": "1.1920928955078125e-07",
+        "vabstol": "1e-10",
+        "reltol": "0",
+        "kernel": "repository_root/evas/rust_core/target/debug/evas-kernel"
+      }
+    },
+    "expected_derivation": "Inspect physical operator inputs independently of procedure program RN boundaries.",
+    "actual": {
+      "operators": [
+        {
+          "input": {
+            "relation": "lt",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 2,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 0.5,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "else_value": {
+              "relation": "lt",
+              "left": {
+                "constant": 0.0,
+                "terms": [
+                  {
+                    "node": 0,
+                    "coefficient": -1.0
+                  },
+                  {
+                    "node": 2,
+                    "coefficient": 1.0
+                  }
+                ],
+                "op": "affine"
+              },
+              "right": {
+                "constant": 0.875,
+                "terms": [],
+                "op": "affine"
+              },
+              "then_value": {
+                "constant": 1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "else_value": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "origin": {
+                "source": "source.va",
+                "line": 6,
+                "column": 51,
+                "instance": "M",
+                "expansion": []
+              },
+              "op": "select"
+            },
+            "origin": {
+              "source": "source.va",
+              "line": 6,
+              "column": 30,
+              "instance": "M",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "delay": 0.0,
+          "rise": 1.1920928955078125e-07,
+          "fall": 1.1920928955078125e-07,
+          "origin": {
+            "source": "source.va",
+            "line": 6,
+            "column": 7,
+            "instance": "M",
+            "expansion": []
+          },
+          "kind": "transition"
+        }
+      ],
+      "events": [
+        {
+          "trigger": {
+            "start": 2.384185791015625e-06,
+            "period": 0.0,
+            "time_tolerance": 1e-12,
+            "enabled": true,
+            "kind": "timer"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 2.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            },
+            {
+              "state": 1,
+              "rhs": {
+                "op": "add",
+                "left": {
+                  "state": 1,
+                  "op": "state"
+                },
+                "right": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                }
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "source.va",
+            "line": 5,
+            "column": 1,
+            "instance": "M",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 2
+        },
+        {
+          "trigger": {
+            "kind": "initial_step"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            },
+            {
+              "state": 1,
+              "rhs": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "source.va",
+            "line": 4,
+            "column": 1,
+            "instance": "M",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 0
+        }
+      ],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "M",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "event": 1,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 1,
+              "action": {
+                "binding": 0,
+                "value": {
+                  "value": {
+                    "operation": "multiply",
+                    "left": {
+                      "constant": 2.5,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "right": {
+                      "constant": 9.5367431640625e-07,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "origin": {
+                      "source": "source.va",
+                      "line": 5,
+                      "column": 12,
+                      "instance": "M",
+                      "expansion": []
+                    },
+                    "op": "real_binary"
+                  },
+                  "kind": "argument",
+                  "origin": {
+                    "source": "source.va",
+                    "line": 5,
+                    "column": 12,
+                    "instance": "M",
+                    "expansion": []
+                  },
+                  "op": "real_boundary"
+                },
+                "origin": {
+                  "source": "source.va",
+                  "line": 5,
+                  "column": 12,
+                  "instance": "M",
+                  "expansion": []
+                },
+                "kind": "real_bind"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 2,
+              "action": {
+                "event": 0,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 3,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 4,
+              "action": {
+                "contribution": 1,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

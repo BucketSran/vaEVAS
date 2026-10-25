@@ -1,0 +1,1064 @@
+{
+  "held_clock_product": {
+    "rn": 0.03,
+    "exact_rational_of_stored_rn": "1080863910568919/36028797018963968"
+  },
+  "singleton_division": {
+    "rn": 0.24333333333333332,
+    "exact_rational_of_stored_rn": "8767007274614565/36028797018963968"
+  },
+  "root_time_add": {
+    "rn": 0.43333333333333335,
+    "exact_rational_of_stored_rn": "1951559838527215/4503599627370496"
+  },
+  "identity_time_add": {
+    "rn": 0.4,
+    "exact_rational_of_stored_rn": "3602879701896397/9007199254740992"
+  },
+  "sample_minus_half": {
+    "rn": 0.0,
+    "exact_rational_of_stored_rn": "0"
+  },
+  "sample_minus_one": {
+    "rn": 0.0,
+    "exact_rational_of_stored_rn": "0"
+  },
+  "raw_event_conditions": {
+    "kinds": [
+      "timer",
+      "initial_step"
+    ],
+    "event0_body": [
+      {
+        "relation": "gt",
+        "left": {
+          "value": {
+            "constant": 0.0,
+            "terms": [
+              {
+                "node": 0,
+                "coefficient": -1.0
+              },
+              {
+                "node": 1,
+                "coefficient": 1.0
+              }
+            ],
+            "op": "affine"
+          },
+          "kind": "sample",
+          "origin": {
+            "source": "raw.va",
+            "line": 2,
+            "column": 140,
+            "instance": "dut",
+            "expansion": []
+          },
+          "op": "real_boundary"
+        },
+        "right": {
+          "constant": 0.5,
+          "terms": [],
+          "op": "affine"
+        },
+        "then_body": [
+          {
+            "state": 0,
+            "rhs": {
+              "value": {
+                "constant": 2.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "store",
+              "origin": {
+                "source": "raw.va",
+                "line": 2,
+                "column": 152,
+                "instance": "dut",
+                "expansion": []
+              },
+              "op": "real_boundary"
+            },
+            "kind": "assign"
+          }
+        ],
+        "else_body": [
+          {
+            "state": 0,
+            "rhs": {
+              "value": {
+                "constant": 3.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "store",
+              "origin": {
+                "source": "raw.va",
+                "line": 2,
+                "column": 162,
+                "instance": "dut",
+                "expansion": []
+              },
+              "op": "real_boundary"
+            },
+            "kind": "assign"
+          }
+        ],
+        "origin": {
+          "source": "raw.va",
+          "line": 2,
+          "column": 136,
+          "instance": "dut",
+          "expansion": []
+        },
+        "kind": "if"
+      }
+    ]
+  },
+  "same_event_sequential": {
+    "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; integer q,p; analog begin @(initial_step)begin q=0;p=0;end @(timer(0.5))q=1;@(timer(0.5))if(q>0)p=7;else p=9;V(y,r)<+p; end endmodule",
+    "compile": "accepted",
+    "events": [
+      "timer",
+      "timer",
+      "initial_step"
+    ]
+  },
+  "prefix_square": {
+    "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real a,q; analog begin a=V(u,r)*V(u,r);@(initial_step)q=0;@(timer(0.5))q=a;V(y,r)<+q; end endmodule",
+    "compile": "accepted",
+    "events": [
+      "timer",
+      "initial_step"
+    ]
+  },
+  "prefix_after_callback": {
+    "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real a,q; analog begin @(initial_step)q=0;@(timer(0.5))q=a;a=V(u,r);V(y,r)<+q; end endmodule",
+    "compile": "rejected",
+    "type": "CompileError",
+    "message": "ordinary held physical update lacks its dense-time certificate"
+  },
+  "kernel_sha256": "655a156529d857be8f5fcd467623a324cc463be5977b00aa6c2ea4a4592686d1",
+  "same_timer_source_order": {
+    "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; integer q,p; analog begin @(initial_step)begin q=0;p=0;end @(timer(0.5))q=1;@(timer(0.5))if(q>0)p=7;else p=9;V(y,r)<+p; end endmodule",
+    "sources": {
+      "u": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    "times": [
+      0,
+      0.5,
+      1
+    ],
+    "expected": [
+      0,
+      7,
+      7
+    ],
+    "derivation": "Same exact timer at .5 executes writes in source order",
+    "actual": [
+      -0.0,
+      7.0,
+      7.0
+    ],
+    "events": [
+      {
+        "time": 0.0,
+        "event": 2,
+        "origin": "same_timer_source_order.va:2:90 (dut)",
+        "kind": "initial_step",
+        "before": [
+          0.0,
+          0.0
+        ],
+        "after": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "time": 0.5,
+        "event": 0,
+        "origin": "same_timer_source_order.va:2:123 (dut)",
+        "kind": "timer",
+        "before": [
+          0.0,
+          0.0
+        ],
+        "after": [
+          1.0,
+          7.0
+        ]
+      },
+      {
+        "time": 0.5,
+        "event": 1,
+        "origin": "same_timer_source_order.va:2:140 (dut)",
+        "kind": "timer",
+        "before": [
+          0.0,
+          0.0
+        ],
+        "after": [
+          1.0,
+          7.0
+        ]
+      }
+    ],
+    "agrees": true
+  },
+  "rounded_held_product": {
+    "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real next;integer n; analog begin @(initial_step)begin next=0.4;n=0;end @(timer(0.01,0,1e-6))next=0.1*V(u,r);@(timer(next,0,1e-6))n=n+1;V(y,r)<+n; end endmodule",
+    "sources": {
+      "u": [
+        [
+          0,
+          0.3
+        ],
+        [
+          0.5,
+          0.3
+        ]
+      ]
+    },
+    "times": [
+      0,
+      0.03,
+      0.5
+    ],
+    "expected": [
+      0,
+      1,
+      1
+    ],
+    "derivation": "Every source real sample, operation and store uses RN; point source rounds to unique f64",
+    "actual": [
+      -0.0,
+      1.0,
+      1.0
+    ],
+    "events": [
+      {
+        "time": 0.0,
+        "event": 2,
+        "origin": "rounded_held_product.va:2:98 (dut)",
+        "kind": "initial_step",
+        "before": [
+          0.0,
+          0.0
+        ],
+        "after": [
+          0.4,
+          0.0
+        ]
+      },
+      {
+        "time": 0.01,
+        "event": 0,
+        "origin": "rounded_held_product.va:2:136 (dut)",
+        "kind": "timer",
+        "before": [
+          0.4,
+          0.0
+        ],
+        "after": [
+          0.03,
+          0.0
+        ]
+      },
+      {
+        "time": 0.03,
+        "event": 1,
+        "origin": "rounded_held_product.va:2:173 (dut)",
+        "kind": "timer",
+        "before": [
+          0.03,
+          0.0
+        ],
+        "after": [
+          0.03,
+          1.0
+        ]
+      }
+    ],
+    "agrees": true
+  },
+  "rounded_sample_amplify": {
+    "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real held; analog begin @(initial_step)held=0;@(timer(1,0,1e-12))held=V(u,r)-1;V(y,r)<+1e16*held; end endmodule",
+    "sources": {
+      "u": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          1.0000000000000002
+        ]
+      ]
+    },
+    "times": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "expected": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "derivation": "Every source real sample, operation and store uses RN; point source rounds to unique f64",
+    "actual": [
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0
+    ],
+    "events": [
+      {
+        "time": 0.0,
+        "event": 1,
+        "origin": "rounded_sample_amplify.va:2:88 (dut)",
+        "kind": "initial_step",
+        "before": [
+          0.0
+        ],
+        "after": [
+          0.0
+        ]
+      },
+      {
+        "time": 1.0,
+        "event": 0,
+        "origin": "rounded_sample_amplify.va:2:110 (dut)",
+        "kind": "timer",
+        "before": [
+          0.0
+        ],
+        "after": [
+          0.0
+        ]
+      }
+    ],
+    "agrees": true
+  },
+  "compile_layouts": {
+    "forcing": {
+      "error": "synthetic_mixer.va:13:5: ordinary analog if predicates must be affine or input-selected piecewise-affine; nonlinear products and powers are unsupported"
+    },
+    "bits": {
+      "rhs": [
+        "multiply"
+      ],
+      "events": [
+        "timer",
+        "initial_step"
+      ],
+      "body0": {
+        "state": 2,
+        "rhs": {
+          "value": {
+            "function": "bit_and",
+            "args": [
+              {
+                "function": "shift_right",
+                "args": [
+                  {
+                    "state": 0,
+                    "op": "integer_state"
+                  },
+                  {
+                    "value": 1,
+                    "op": "integer_literal"
+                  }
+                ],
+                "origin": {
+                  "source": "bits29.va",
+                  "line": 2,
+                  "column": 145,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "integer_primitive"
+              },
+              {
+                "value": 1,
+                "op": "integer_literal"
+              }
+            ],
+            "origin": {
+              "source": "bits29.va",
+              "line": 2,
+              "column": 149,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "integer_primitive"
+          },
+          "kind": "store",
+          "origin": {
+            "source": "bits29.va",
+            "line": 2,
+            "column": 139,
+            "instance": "dut",
+            "expansion": []
+          },
+          "op": "real_boundary"
+        },
+        "kind": "assign"
+      },
+      "operators": []
+    },
+    "calendar": {
+      "rhs": [
+        "operator",
+        "multiply",
+        "multiply",
+        "multiply"
+      ],
+      "events": [
+        "timer",
+        "or",
+        "initial_step"
+      ],
+      "body0": {
+        "state": 0,
+        "rhs": {
+          "value": {
+            "operation": "subtract",
+            "left": {
+              "constant": 1.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "right": {
+              "state": 0,
+              "op": "state"
+            },
+            "origin": {
+              "source": "calendar.va",
+              "line": 10,
+              "column": 26,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "real_binary"
+          },
+          "kind": "store",
+          "origin": {
+            "source": "calendar.va",
+            "line": 10,
+            "column": 23,
+            "instance": "dut",
+            "expansion": []
+          },
+          "op": "real_boundary"
+        },
+        "kind": "assign"
+      },
+      "operators": [
+        {
+          "state": 0,
+          "op": "state"
+        },
+        {
+          "relation": "gt",
+          "left": {
+            "function": "bit_and",
+            "args": [
+              {
+                "state": 1,
+                "op": "integer_state"
+              },
+              {
+                "value": 1,
+                "op": "integer_literal"
+              }
+            ],
+            "origin": {
+              "source": "calendar.va",
+              "line": 17,
+              "column": 30,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "integer_primitive"
+          },
+          "right": {
+            "constant": 0.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "then_value": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "else_value": {
+            "relation": "lt",
+            "left": {
+              "function": "bit_and",
+              "args": [
+                {
+                  "state": 1,
+                  "op": "integer_state"
+                },
+                {
+                  "value": 1,
+                  "op": "integer_literal"
+                }
+              ],
+              "origin": {
+                "source": "calendar.va",
+                "line": 17,
+                "column": 30,
+                "instance": "dut",
+                "expansion": []
+              },
+              "op": "integer_primitive"
+            },
+            "right": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "constant": 1.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "else_value": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "origin": {
+              "source": "calendar.va",
+              "line": 17,
+              "column": 33,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "origin": {
+            "source": "calendar.va",
+            "line": 17,
+            "column": 33,
+            "instance": "dut",
+            "expansion": []
+          },
+          "op": "select"
+        },
+        {
+          "relation": "gt",
+          "left": {
+            "function": "bit_and",
+            "args": [
+              {
+                "function": "shift_right",
+                "args": [
+                  {
+                    "state": 2,
+                    "op": "integer_state"
+                  },
+                  {
+                    "value": 1,
+                    "op": "integer_literal"
+                  }
+                ],
+                "origin": {
+                  "source": "calendar.va",
+                  "line": 18,
+                  "column": 31,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "integer_primitive"
+              },
+              {
+                "value": 1,
+                "op": "integer_literal"
+              }
+            ],
+            "origin": {
+              "source": "calendar.va",
+              "line": 18,
+              "column": 35,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "integer_primitive"
+          },
+          "right": {
+            "constant": 0.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "then_value": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "else_value": {
+            "relation": "lt",
+            "left": {
+              "function": "bit_and",
+              "args": [
+                {
+                  "function": "shift_right",
+                  "args": [
+                    {
+                      "state": 2,
+                      "op": "integer_state"
+                    },
+                    {
+                      "value": 1,
+                      "op": "integer_literal"
+                    }
+                  ],
+                  "origin": {
+                    "source": "calendar.va",
+                    "line": 18,
+                    "column": 31,
+                    "instance": "dut",
+                    "expansion": []
+                  },
+                  "op": "integer_primitive"
+                },
+                {
+                  "value": 1,
+                  "op": "integer_literal"
+                }
+              ],
+              "origin": {
+                "source": "calendar.va",
+                "line": 18,
+                "column": 35,
+                "instance": "dut",
+                "expansion": []
+              },
+              "op": "integer_primitive"
+            },
+            "right": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "constant": 1.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "else_value": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "origin": {
+              "source": "calendar.va",
+              "line": 18,
+              "column": 38,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "origin": {
+            "source": "calendar.va",
+            "line": 18,
+            "column": 38,
+            "instance": "dut",
+            "expansion": []
+          },
+          "op": "select"
+        },
+        {
+          "relation": "gt",
+          "left": {
+            "state": 3,
+            "op": "state"
+          },
+          "right": {
+            "constant": 0.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "then_value": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "else_value": {
+            "relation": "lt",
+            "left": {
+              "state": 3,
+              "op": "state"
+            },
+            "right": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "then_value": {
+              "constant": 1.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "else_value": {
+              "constant": 0.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "origin": {
+              "source": "calendar.va",
+              "line": 19,
+              "column": 29,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "select"
+          },
+          "origin": {
+            "source": "calendar.va",
+            "line": 19,
+            "column": 29,
+            "instance": "dut",
+            "expansion": []
+          },
+          "op": "select"
+        }
+      ]
+    }
+  },
+  "affine_negative_compile": [
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+idt(V(u,r)); end endmodule",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va:2:86: idt requires 2 or 3 explicit arguments"
+      }
+    },
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin @(cross(V(u,r),1)) V(y,r)<+1; end endmodule",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va:2:97: expected a non-reserved identifier"
+      }
+    },
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin if (1) V(y,r)<+1; end endmodule",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va: conditional voltage branch may be inactive; switching to a zero-flow branch is unsupported"
+      }
+    },
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin I(y,r)<+1; end endmodule",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va:2:79: expected '=', got '('; outside affine-voltage syntax"
+      }
+    },
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+undeclared; end endmodule",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va: unknown parameter 'undeclared'"
+      }
+    },
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+V(missing,r); end endmodule",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va:2:86: undeclared electrical node in V(missing,r)"
+      }
+    },
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+1@; end endmodule",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va:2:87: expected ';', got '@'; outside affine-voltage syntax"
+      }
+    },
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+1e999; end endmodule",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va:2:86: nonfinite numeric literal"
+      }
+    },
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+1/0; end endmodule",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va:2:87: division by zero"
+      }
+    },
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+1e308*10; end endmodule",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va:2:91: nonfinite coefficient during constant folding"
+      }
+    },
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+1; end endmodule junk",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va:2:103: expected 'module', got 'junk'; outside affine-voltage syntax"
+      }
+    },
+    {
+      "source": "`include \"other.vams\"\n`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+1; end endmodule",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va:1:1: include source 'other.vams' was not provided"
+      }
+    },
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+1; end endmodule /* unclosed",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va:2:103: expected 'module', got '/'; outside affine-voltage syntax"
+      }
+    },
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; parameter real a=b; parameter real b=a; analog begin V(y,r)<+1; end endmodule",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va: cyclic parameter defaults involving 'a'"
+      }
+    },
+    {
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; parameter real a=V(u,r); analog begin V(y,r)<+1; end endmodule",
+      "compile": {
+        "type": "CompileError",
+        "message": "bad.va:2: invalid parameter default"
+      }
+    }
+  ],
+  "prior_reconciliation_probes": [
+    {
+      "name": "negative_quotient",
+      "source": "`include \"disciplines.vams\"\nmodule positive_clip(n,d,en,ref,y);\ninput n,d,en,ref; output y;\nelectrical n,d,en,ref,y;\nparameter real lower = 0.6;\nreal denominator, numerator, result;\nanalog function real clip;\n    input x; real x;\n    begin\n        if (x < 0.0) clip = 0.0;\n        else if (x > 1.0) clip = 1.0;\n        else clip = x;\n    end\nendfunction\nreal source_scope_witness; analog begin @(initial_step) source_scope_witness = 0;\n    denominator = V(d);\n    numerator = V(n);\n    if ((V(en) > 0.5) && (denominator <= -lower))\n        result = clip(numerator / denominator);\n    else result = -0.125;\n    V(y) <+ result;\nend\nendmodule\n",
+      "compile": "accepted",
+      "schema": 33
+    },
+    {
+      "name": "nonlinear_quotient",
+      "source": "`include \"disciplines.vams\"\nmodule positive_clip(n,d,en,ref,y);\ninput n,d,en,ref; output y;\nelectrical n,d,en,ref,y;\nparameter real lower = 0.6;\nreal denominator, numerator, result;\nanalog function real clip;\n    input x; real x;\n    begin\n        if (x < 0.0) clip = 0.0;\n        else if (x > 1.0) clip = 1.0;\n        else clip = x;\n    end\nendfunction\nreal source_scope_witness; analog begin @(initial_step) source_scope_witness = 0;\n    denominator = V(d);\n    numerator = V(n) * V(n);\n    if ((V(en) > 0.5) && (denominator >= lower))\n        result = clip(numerator / denominator);\n    else result = -0.125;\n    V(y) <+ result;\nend\nendmodule\n",
+      "compile": "accepted",
+      "schema": 33
+    },
+    {
+      "name": "old_budget_225",
+      "source": "`include \"disciplines.vams\"\nmodule m(y,z,r); output y,z;inout r;electrical y,z,r;integer n,m;real out;analog begin @(initial_step)begin n=0;m=0;out=0;end @(timer(1,1))begin n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;out=n&1;end @(timer(1.5,1))begin m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;out=m>>1;end V(y,r)<+transition((n>>1)&1,0,0.1,0.1); V(z,r)<+transition((m&1)?0.9:0.0,0,0.1,0.1);end endmodule",
+      "before_wire": 63765,
+      "after_wire": 87035,
+      "compile": "accepted"
+    },
+    {
+      "name": "old_budget_226",
+      "source": "`include \"disciplines.vams\"\nmodule m(y,z,r); output y,z;inout r;electrical y,z,r;integer n,m;real out;analog begin @(initial_step)begin n=0;m=0;out=0;end @(timer(1,1))begin n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;n=n+1;out=n&1;end @(timer(1.5,1))begin m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;m=m+1;out=m>>1;end V(y,r)<+transition((n>>1)&1,0,0.1,0.1); V(z,r)<+transition((m&1)?0.9:0.0,0,0.1,0.1);end endmodule",
+      "before_wire": 64035,
+      "after_wire": 87401,
+      "compile": "accepted"
+    },
+    {
+      "name": "finite_derivative",
+      "input": [
+        5e-301,
+        1e-300,
+        1,
+        0
+      ],
+      "expected_quotient": 0.5,
+      "derivation": "n/d=.5;true partials1e300 and-5e299 finite",
+      "actual": [
+        0.5
+      ]
+    }
+  ],
+  "diagnostic_obligations": [
+    {
+      "id": "test_auxiliary_continuous_roots.AuxiliaryRootContracts.test_conflicting_internal_definitions_still_rejects",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_auxiliary_continuous_roots.py\", line 175, in test_conflicting_internal_definitions_still_rejects\n    self.assertEqual(raised.exception.diagnostic[\"kind\"], \"event_resolution\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'residual_failure' != 'event_resolution'\n- residual_failure\n+ event_resolution\n\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_auxiliary_continuous_roots.AuxiliaryRootContracts.test_underconstrained_internal_voltage_still_rejects",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_auxiliary_continuous_roots.py\", line 163, in test_underconstrained_internal_voltage_still_rejects\n    self.assertEqual(raised.exception.diagnostic[\"kind\"], \"event_resolution\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'singular_system' != 'event_resolution'\n- singular_system\n+ event_resolution\n\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_event_conditions.ConditionalEvents.test_integer_intermediate_overflow_is_checked_only_on_selected_path",
+      "testsRun": 1,
+      "failures": [
+        "evas.errors.KernelError: integer_range: integer store to state 0 requires one signed32 value at conditions.va:2:118 (dut)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"repository_root/evas/tests/test_event_conditions.py\", line 214, in test_integer_intermediate_overflow_is_checked_only_on_selected_path\n    with self.assertRaisesRegex(KernelError,'state_range'):\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: \"state_range\" does not match \"integer_range: integer store to state 0 requires one signed32 value at conditions.va:2:118 (dut)\"\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_group_discrete_sample_contract.InternalVoltageSampleContract.test_same_time_nonlinear_electrical_feedback_still_refuses",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_group_discrete_sample_contract.py\", line 137, in test_same_time_nonlinear_electrical_feedback_still_refuses\n    self.assertIn(caught.exception.detail['kind'], ['unsupported_transient', 'unsupported_cross'])\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'singular_jacobian' not found in ['unsupported_transient', 'unsupported_cross']\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_group_event_calendar.GroupEventCalendar.test_foreign_integer_origin_in_raw_protocol_remains_rejected",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_group_event_calendar.py\", line 130, in test_foreign_integer_origin_in_raw_protocol_remains_rejected\n    self.assertEqual(response['kind'], 'unsupported_held_integer_target')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'invalid_ir' != 'unsupported_held_integer_target'\n- invalid_ir\n+ unsupported_held_integer_target\n\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_history_owner_contract.HistoryOwnerContract.test_raw_foreign_state_is_rejected_at_the_public_kernel_boundary",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_history_owner_contract.py\", line 113, in test_raw_foreign_state_is_rejected_at_the_public_kernel_boundary\n    self.assertIn('state reference must belong to its instance',\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                  diagnostic['message'])\n                  ^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'state reference must belong to its instance' not found in 'procedure state reference/target owner mismatch'\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_idt_pulse_reset.PulseAssertBoundaries.test_unsupported_pulse_forms_are_refused",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_idt_pulse_reset.py\", line 352, in test_unsupported_pulse_forms_are_refused\n    self.assertEqual(caught.exception.diagnostic['code'], 'unsupported_idt_pulse_reset')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'unsupported_event_context' != 'unsupported_idt_pulse_reset'\n- unsupported_event_context\n+ unsupported_idt_pulse_reset\n\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_ordinary_integer_event_prefix.OrdinaryIntegerEventPrefix.test_signed32_first_assignment_cannot_be_hidden_by_later_clamp",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_ordinary_integer_event_prefix.py\", line 70, in test_signed32_first_assignment_cannot_be_hidden_by_later_clamp\n    self.assertEqual(refused.exception.detail['kind'],'state_range')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'integer_range' != 'state_range'\n- integer_range\n+ state_range\n\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_original390_contract.Original390Contract.test_original_interface_cannot_be_replaced_by_raw_foreign_trim_state",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_original390_contract.py\", line 101, in test_original_interface_cannot_be_replaced_by_raw_foreign_trim_state\n    self.assertIn('state reference must belong to its instance', error['message'])\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'state reference must belong to its instance' not found in 'procedure state reference/target owner mismatch'\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_precision_chain.SampleHistoryAccuracy.test_state_only_transient_checks_off_knot_voltage_accuracy",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_precision_chain.py\", line 134, in test_state_only_transient_checks_off_knot_voltage_accuracy\n    self.assertEqual(caught.exception.detail[\"kind\"], \"event_accuracy\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'waveform_accuracy' != 'event_accuracy'\n- waveform_accuracy\n+ event_accuracy\n\n"
+      ],
+      "errors": []
+    }
+  ],
+  "rational_compile_rejection_obligations": [
+    {
+      "id": "test_rational_predicate_closure.RationalPredicateClosureContracts.test_negative_denominator_domain_stays_rejected",
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_rational_predicate_closure.py\", line 88, in test_negative_denominator_domain_stays_rejected\n    with self.assertRaises(CompileError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\nAssertionError: CompileError not raised\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_rational_predicate_closure.RationalPredicateClosureContracts.test_wrong_branch_does_not_inherit_positive_fact",
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_rational_predicate_closure.py\", line 110, in test_wrong_branch_does_not_inherit_positive_fact\n    with self.assertRaises(CompileError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\nAssertionError: CompileError not raised\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_rational_predicate_closure.RationalPredicateClosureContracts.test_zero_or_negative_lower_parameter_does_not_prove_positive_domain",
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_rational_predicate_closure.py\", line 115, in test_zero_or_negative_lower_parameter_does_not_prove_positive_domain\n    with self.subTest(lower=lower), self.assertRaises(CompileError):\n                                    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\nAssertionError: CompileError not raised\n",
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_rational_predicate_closure.py\", line 115, in test_zero_or_negative_lower_parameter_does_not_prove_positive_domain\n    with self.subTest(lower=lower), self.assertRaises(CompileError):\n                                    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\nAssertionError: CompileError not raised\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_rational_predicate_closure.RationalPredicateClosureContracts.test_unrelated_positive_voltage_does_not_prove_denominator_positive",
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_rational_predicate_closure.py\", line 120, in test_unrelated_positive_voltage_does_not_prove_denominator_positive\n    with self.assertRaises(CompileError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\nAssertionError: CompileError not raised\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_rational_predicate_closure.RationalPredicateClosureContracts.test_overwritten_alias_loses_its_previous_positive_domain",
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_rational_predicate_closure.py\", line 125, in test_overwritten_alias_loses_its_previous_positive_domain\n    with self.assertRaises(CompileError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\nAssertionError: CompileError not raised\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_rational_predicate_closure.RationalPredicateClosureContracts.test_nonlinear_numerator_remains_outside_affine_guard_scope",
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_rational_predicate_closure.py\", line 130, in test_nonlinear_numerator_remains_outside_affine_guard_scope\n    with self.assertRaises(CompileError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\nAssertionError: CompileError not raised\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_rational_predicate_closure.RationalPredicateClosureContracts.test_branch_positive_fact_does_not_escape_to_later_expression",
+      "failures": [],
+      "errors": []
+    }
+  ],
+  "source_graph_and_snapshot_obligations": [
+    {
+      "id": "test_frontend_limits.FrontendLimits.test_shared_expression_expansion_is_rejected_before_serialization",
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_frontend_limits.py\", line 57, in test_shared_expression_expansion_is_rejected_before_serialization\n    with self.assertRaisesRegex(CompileError, r'limits.va:\\d+:\\d+: .*limit'):\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: CompileError not raised\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_ordinary_event_prefix.OrdinaryEventPrefix.test_reassigned_prefix_retains_original_expanded_wire_budget",
+      "failures": [],
+      "errors": []
+    },
+    {
+      "id": "test_event_body_input_aliases.EventBodyInputAliases.test_original_array_and_zero_trip_writers_do_not_qualify_as_scalar_aliases",
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_event_body_input_aliases.py\", line 120, in test_original_array_and_zero_trip_writers_do_not_qualify_as_scalar_aliases\n    with self.assertRaises(CompileError) as failure:\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\nAssertionError: CompileError not raised\n",
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_event_body_input_aliases.py\", line 120, in test_original_array_and_zero_trip_writers_do_not_qualify_as_scalar_aliases\n    with self.assertRaises(CompileError) as failure:\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\nAssertionError: CompileError not raised\n",
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_event_body_input_aliases.py\", line 120, in test_original_array_and_zero_trip_writers_do_not_qualify_as_scalar_aliases\n    with self.assertRaises(CompileError) as failure:\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\nAssertionError: CompileError not raised\n",
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_event_body_input_aliases.py\", line 120, in test_original_array_and_zero_trip_writers_do_not_qualify_as_scalar_aliases\n    with self.assertRaises(CompileError) as failure:\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\nAssertionError: CompileError not raised\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_ordinary_event_prefix.OrdinaryEventPrefix.test_held_guard_before_callback_cannot_masquerade_as_pure_input_prefix",
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_ordinary_event_prefix.py\", line 168, in test_held_guard_before_callback_cannot_masquerade_as_pure_input_prefix\n    with self.assertRaises(CompileError) as failure:\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\nAssertionError: CompileError not raised\n"
+      ],
+      "errors": []
+    },
+    {
+      "id": "test_ordinary_event_prefix.OrdinaryEventPrefix.test_input_prefix_can_feed_post_callback_initial_only_metric",
+      "failures": [
+        "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_ordinary_event_prefix.py\", line 120, in test_input_prefix_can_feed_post_callback_initial_only_metric\n    self.assertEqual(result['transient']['states'], [[0.25, 7.]]*5)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [[0.25, 0.0], [0.25, 0.0], [0.25, 0.0], [0.25, 0.0], [0.25, 0.0]] != [[0.25, 7.0], [0.25, 7.0], [0.25, 7.0], [0.25, 7.0], [0.25, 7.0]]\n\nFirst differing element 0:\n[0.25, 0.0]\n[0.25, 7.0]\n\n- [[0.25, 0.0], [0.25, 0.0], [0.25, 0.0], [0.25, 0.0], [0.25, 0.0]]\n?         ^            ^            ^            ^            ^\n\n+ [[0.25, 7.0], [0.25, 7.0], [0.25, 7.0], [0.25, 7.0], [0.25, 7.0]]\n?         ^            ^            ^            ^            ^\n\n"
+      ],
+      "errors": []
+    }
+  ]
+}
