@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "candidate_pending_full_regression",
+  "status": "accepted_candidate_with_known_baseline_failures",
   "baseline": {
     "commit": "ca943272dfcf223706f0573482d7260188fc2cd7",
     "ci_run": 40180512662,
@@ -531,10 +531,186 @@
       }
     ]
   },
-  "full_regression": null,
+  "full_regression": {
+    "accepted": true,
+    "checks": {
+      "head": true,
+      "complete": true,
+      "no_regressions": true,
+      "no_removed": true,
+      "all_added_pass": true,
+      "original_xfail_preserved": true,
+      "no_skips": true,
+      "other_jobs_pass": true,
+      "setup_complete": true
+    },
+    "checked_commit": "66aaa8476eb45a7a11a4f1857547f30a2e2b12b3",
+    "ci_url": "https://github.com/BucketSran/vaEVAS/actions/runs/40192400498",
+    "counts": {
+      "passed": 2617,
+      "error": 214,
+      "failed": 423,
+      "expected_failure": 3
+    },
+    "methods": 3257,
+    "preserved_original_passes": 2561,
+    "recovered": 54,
+    "recovered_methods": [
+      "test_constant_initial_power.ConstantInitialPower.test_closed_initial_quarter_power_scales_original_voltage_relation",
+      "test_constant_initial_power.ConstantInitialPower.test_same_module_parameters_and_origins_are_instance_local",
+      "test_constant_initial_power.ConstantInitialPower.test_zero_exponent_identity_and_negative_fractional_exponent",
+      "test_integer_bitops.IntegerBitops.test_finite_masks_in_ordinary_analog_values",
+      "test_source_polynomial_forcing.SourcePolynomialForcing.test_paid_scalar_held_expression_preserves_original_bare_target_values",
+      "test_query.StaticQueryTests.test_equivalent_encodings_keep_dependency_meaning",
+      "test_timer.TimerContracts.test_shared_self_increments_preserve_cross_and_timer_counts",
+      "test_timer.TimerContracts.test_zero_initialization_and_stop_are_committed_before_observation",
+      "test_integer_invariants.IntegerInvariants.test_copy_array_certificate_propagates_all64_slots",
+      "test_held_alias_probe.HeldAliasProbe.test_supported_alias_still_pays_full_original_source_and_program_roles",
+      "test_analog_conditions.OrdinaryAnalogConditionContracts.test_source_input_products_and_cancelled_predicates",
+      "test_forcing_history_bridge.ForcingHistoryBridge.test_actual_mid_history_point_box_and_hold",
+      "test_forcing_history_bridge.ForcingHistoryBridge.test_extra_queries_preserve_history_and_complete_phase_box",
+      "test_forcing_history_bridge.ForcingTargetComposition.test_bare_two_events_preserve_nonzero_residual_source_offset_and_boxes",
+      "test_forcing_history_bridge.ForcingTargetComposition.test_ordinary_held_select_target_uses_actual_phase_and_full_residual",
+      "test_forcing_history_bridge.ForcingTargetComposition.test_producer_native_wide_integer_target_uses_signed_actual_epoch",
+      "test_forcing_history_bridge.ForcingTargetComposition.test_typed_signed_target_rebinds_after_two_state_changes",
+      "test_selected_quotient_comparison.SelectedQuotientComparisonContracts.test_each_selected_arm_uses_its_own_positive_guard",
+      "test_selected_quotient_comparison.SelectedQuotientComparisonContracts.test_selected_original_quotient_value_keeps_overflow_rejection",
+      "test_source_rational_guards.SourceOnlyRationalContracts.test_denominator_error_box_crossing_zero_rejects",
+      "test_source_rational_guards.SourceOnlyRationalContracts.test_direct_quotient_guard_away_from_boundary",
+      "test_source_rational_guards.SourceOnlyRationalContracts.test_exact_quotient_boundary_uses_original_source_certificate",
+      "test_source_rational_guards.SourceOnlyRationalContracts.test_negative_but_nonzero_selected_denominator_is_evaluated",
+      "test_source_rational_guards.SourceOnlyRationalContracts.test_nonfinite_guard_division_cannot_be_rescued_by_exact_sign",
+      "test_source_rational_guards.SourceOnlyRationalContracts.test_rational_sum_and_difference_keep_original_tree",
+      "test_source_rational_guards.SourceOnlyRationalContracts.test_selected_zero_denominator_rejects",
+      "test_source_rational_guards.SourceOnlyRationalContracts.test_uncertain_guard_without_exact_source_provenance_rejects",
+      "test_source_polynomial_guards.SourcePolynomialGuards.test_differential_product_clamp",
+      "test_source_polynomial_guards.SourcePolynomialGuards.test_exact_product_cancellation_boundary",
+      "test_source_polynomial_guards.SourcePolynomialGuards.test_existing_positive_helper_composes_with_another_operator_instance",
+      "test_source_polynomial_guards.SourcePolynomialGuards.test_nonfinite_selected_operations_reject_before_sign_certificate",
+      "test_held_power2_targets.HeldPower2Boundaries.test_active_source_probe_rejection_is_sticky_after_actual_wire_exhaustion",
+      "test_held_power2_targets.HeldPower2Boundaries.test_bin256_accepted_but257_still_refused_and_instance_bounds_fresh",
+      "test_held_power2_targets.HeldPower2Boundaries.test_fresh_source_domain_and_mutable_AST_do_not_gain_cached_eligibility",
+      "test_held_power2_targets.HeldPower2Boundaries.test_full_wire_budget_exhaustion_and_two_retries_share_one_owner",
+      "test_held_power2_targets.HeldPower2Boundaries.test_zero_mask_keeps_integer_state_dependency_and_foreign_role_rejection",
+      "test_held_power2_targets.HeldPower2ConstantBindings.test_composed_constant_divisors_keep_old_affine_contract",
+      "test_held_power2_targets.HeldPower2ConstantBindings.test_constant_dispatch_cannot_bypass_active_exhaustion",
+      "test_held_power2_targets.HeldPower2ConstantBindings.test_nested_constant_numerator_stays_exact_integer_toward_zero",
+      "test_held_power2_targets.HeldPower2Targets.test_original_public_eightbit_real_alias_default_owner_actual_kernel",
+      "test_implicit_step_bounds.ImplicitStepBounds.test_dynamic_voltage_bound_is_applied_to_internal_accepted_mesh",
+      "test_implicit_step_bounds.ImplicitStepBounds.test_inactive_invalid_bound_is_not_evaluated_but_active_invalid_rejects",
+      "test_case_statements.CaseStatements.test_case_voltage_branch_exists_for_every_selected_arm",
+      "test_integer_round.IntegerRoundContracts.test_direct_probe_half_ties_neighbors_and_signed32_before_clamp",
+      "test_integer_round.IntegerRoundContracts.test_input_box_cannot_choose_nominal_rounding_bin",
+      "test_positive_clamped_divisor.PositiveClampedDivisorContracts.test_selected_quotient_overflow_is_still_rejected",
+      "test_rational_predicate_closure.RationalPredicateClosureContracts.test_constant_threshold_and_reversed_quotient_comparison",
+      "test_rational_predicate_closure.RationalPredicateClosureContracts.test_selected_quotient_overflow_keeps_existing_runtime_rejection",
+      "test_integer_prefix.IntegerPrefixContracts.test_declared_real_merge_keeps_original_select",
+      "test_integer_prefix.IntegerPrefixContracts.test_eight_independent_inputs_count_to_four_bits",
+      "test_integer_prefix.IntegerPrefixContracts.test_old_alias_and_each_delta_arm_keep_source_order",
+      "test_readout_decision_outputs.ReadoutDecisionOutputs.test_division_by_a_box_containing_zero_is_refused",
+      "test_readout_decision_outputs.ReadoutDecisionOutputs.test_held_gain_times_input_is_clamped_on_both_sides_of_the_event",
+      "test_readout_decision_outputs.StatelessAlgebraicReadout.test_stateless_instance_beside_held_state_reads_rows"
+    ],
+    "new_methods": [
+      [
+        "test_query.StaticQueryTests.test_local_dependencies_remain_instance_private_after_overwrites",
+        "passed"
+      ],
+      [
+        "test_query.StaticQueryTests.test_source_locals_keep_control_and_cancelled_dependencies",
+        "passed"
+      ]
+    ],
+    "regressions": [],
+    "removed": [],
+    "remaining_nonpassing": 637,
+    "jobs": [
+      {
+        "name": "selection",
+        "conclusion": "success"
+      },
+      {
+        "name": "fast-checks",
+        "conclusion": "success"
+      },
+      {
+        "name": "static-checks",
+        "conclusion": "success"
+      },
+      {
+        "name": "properties-and-ngspice",
+        "conclusion": "success"
+      },
+      {
+        "name": "rust-regression",
+        "conclusion": "success"
+      },
+      {
+        "name": "fuzz-smoke (run, 24)",
+        "conclusion": "success"
+      },
+      {
+        "name": "fuzz-smoke (parse_request, 65536)",
+        "conclusion": "success"
+      },
+      {
+        "name": "provenance-paper",
+        "conclusion": "success"
+      },
+      {
+        "name": "regression (0)",
+        "conclusion": "failure"
+      },
+      {
+        "name": "regression (2)",
+        "conclusion": "failure"
+      },
+      {
+        "name": "provenance-support",
+        "conclusion": "success"
+      },
+      {
+        "name": "package / install (macos-14, arm64, 3.12)",
+        "conclusion": "success"
+      },
+      {
+        "name": "benchmark / first-batch",
+        "conclusion": "success"
+      },
+      {
+        "name": "benchmark / identity",
+        "conclusion": "success"
+      },
+      {
+        "name": "package / install (ubuntu-24.04, x86_64, 3.10)",
+        "conclusion": "success"
+      },
+      {
+        "name": "regression (1)",
+        "conclusion": "failure"
+      },
+      {
+        "name": "regression (3)",
+        "conclusion": "failure"
+      },
+      {
+        "name": "regression-coverage",
+        "conclusion": "skipped"
+      },
+      {
+        "name": "ci-result",
+        "conclusion": "failure"
+      }
+    ],
+    "limitations": [
+      "Known baseline failures retained",
+      "Known RN falling-root predecessor held-state failure remains open",
+      "Spectre deferred by user; no backend qualification"
+    ]
+  },
   "independent_review": {
-    "spec": "completed; type-safety supplement resolved",
-    "standards": "completed; source-snapshot and owner/identity supplements resolved",
+    "spec": "completed; findings resolved, current production delta covered",
+    "standards": "completed; all findings resolved; final CI source identity and complete method coverage independently verified",
     "implementation_diff_sha256": "adeb956036b16a3ab084ef1f18683e540caf9f7099a39ffc3ff9facfcd039b97"
   },
   "spectre": "deferred_by_user",
@@ -543,7 +719,7 @@
     "Known falling-root predecessor ULP held-state counterexample remains open",
     "No new original400 or common backend qualification"
   ],
-  "evidence_location": "Local-only current/runs/pr-review-20261025/phase2; full CI URL recorded after execution",
+  "evidence_location": "CI40192400498 artifacts and local-only current/runs/pr-review-20261025/phase2; no public raw local waveforms",
   "prior_art": [
     {
       "source": "Verilog-AMS LRM 2.4 §§4.2.1.1,5.3,5.7,5.10,6.9.1",
@@ -613,14 +789,18 @@
     "stop_s": 1,
     "max_step_s": 1,
     "oracle": "q is written to1 during the genuine pulse; there is no later source reset; a false current predicate retains prior q",
-    "evidence_status": "same original request rerun; open failure, not a passing regression"
+    "evidence_status": "same original request rerun; open failure, not a passing regression",
+    "current_candidate_rechecked": true,
+    "kernel_sha256": "655a156529d857be8f5fcd467623a324cc463be5977b00aa6c2ea4a4592686d1"
   },
   "local_checks": {
-    "lint": "passed before owner-fallback fix; final CI pending",
-    "early_integration": "3/3 passed",
+    "lint": "passed; final CI fast-checks also passed",
+    "early_integration": "final CI fast-checks succeeded",
     "rust_initial": "881 passed;2 typed-calendar regressions;1 ignored in lib, plus11 IR tests passed",
     "rust_repair": "2/2 typed-calendar regressions pass after reusing existing request owner; final CI pending",
-    "regression_repair": "15/15 original newly regressed methods pass after repair"
+    "regression_repair": "15/15 original newly regressed methods pass after repair",
+    "rust_final": "full Rust regression job succeeded at checked commit",
+    "procedure_rust": "70 passed; focused after static integer type repair"
   },
   "rejected_candidate": {
     "commit": "8b9eaf3c9de1ca079e4646283a6b356de53ec14b",
@@ -639,5 +819,17 @@
       "lazy integer-only metadata scan and producer duplicate capture rejection",
       "independently adjudicated lazy value expectation"
     ]
+  },
+  "checked_commit": "66aaa8476eb45a7a11a4f1857547f30a2e2b12b3",
+  "pr_url": "https://github.com/BucketSran/vaEVAS/pull/253",
+  "release_checks": {
+    "complete": true,
+    "kernel_sha256": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+    "kernel_invocations": 127,
+    "seconds": 3.489439415978268,
+    "tests_run": 75,
+    "failures": 0,
+    "errors": 0,
+    "unique_methods": 75
   }
 }
