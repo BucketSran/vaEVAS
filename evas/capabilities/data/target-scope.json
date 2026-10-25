@@ -1,0 +1,22 @@
+{
+  "id": "evas-voltage-domain-v1",
+  "version": "1",
+  "basis": ["evas/docs/development/DECISIONS.md#adr-001", "evas/validation/PROTOCOL.md#范围编码与可比性"],
+  "meaning": "Product target, separate from Verilog-A applicability, implementation and qualification.",
+  "included": [
+    {"id": "voltage-relations", "scope": "Deterministic behavioral voltage relations, declared ideal interfaces and finite uniquely solvable voltage feedback."},
+    {"id": "analog-state-events", "scope": "Continuous state, histories, initialization, discrete analog events and their voltage-domain compositions."},
+    {"id": "language-for-voltage-models", "scope": "Lexical, expression, parameter, hierarchy and analog procedural constructs needed by the voltage-domain models; individual legal constructs still need requirement and qualification records."}
+  ],
+  "excluded": [
+    {"id": "general-current-kcl", "reason": "ADR-001 excludes I contributions, KCL, device charge and general loaded circuit networks."},
+    {"id": "mixed-digital-ams", "reason": "Protocol excludes complete digital AMS co-simulation; Annex C separately excludes Clause 7 from Verilog-A."},
+    {"id": "noise-ac-pss-rf", "reason": "Protocol excludes noise statistics and AC/PSS/RF analyses."},
+    {"id": "general-multistability", "reason": "Protocol excludes general multistable, singular and ill-posed systems."},
+    {"id": "vpi", "reason": "No VPI implementation is part of this restructuring; Annex C analog VPI remains in the language inventory."}
+  ],
+  "pending": [
+    {"id": "fine-grained-clause-membership", "reason": "Fine-grained clauses and table rows require explicit scope review. An included domain does not grant every construct in its chapter."}
+  ],
+  "support_status": "Not conferred by this target declaration"
+}

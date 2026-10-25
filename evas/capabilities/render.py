@@ -7,6 +7,9 @@
 import argparse
 import json
 from pathlib import Path
+from collections import Counter
+
+from registry import load
 
 from catalog import BACKENDS, CAMPAIGNS, CHAPTERS, NODES
 
@@ -24,7 +27,13 @@ BACKEND_HEADINGS = {
 
 
 def registry():
+    normative = load()
     return {
+        "language_profile": normative.data["language_profile"]["id"],
+        "target_scope": normative.data["target_scope"]["id"],
+        "normative_index": {"items": len(normative.data["inventory"]),
+                            "dispositions": dict(sorted(Counter(
+                                x["decision"] for x in normative.data["dispositions"]).items()))},
         "chapters": list(CHAPTERS),
         "campaigns": CAMPAIGNS,
         "nodes": NODES,
@@ -54,7 +63,7 @@ def comparison_markdown(data):
     lines = [
         "# 能力比较表",
         "",
-        "由 `evas/capabilities/catalog.py` 生成。已比较的成绩转录自",
+        "由 `evas/capabilities/data/` 生成。已比较的成绩转录自",
         "[四后端支持表前五节](../../docs/COMPARISON.md#支持矩阵)，不改写该文的历史说明。",
         "没有四后端成绩的节点标为等待跑，不填通过或失败。",
         "",
@@ -83,7 +92,7 @@ def paper_markdown(data):
     lines = [
         "# 给使用者和审稿人的能力比较",
         "",
-        "由 `evas/capabilities/catalog.py` 生成。只包含已经有四后端成绩的能力节点。",
+        "由 `evas/capabilities/data/` 生成。只包含已经有四后端成绩的能力节点。",
         "这一页不是实验开发的登记簿。落后和未验收留在格子里。",
         "",
         *evidence_scope(),
@@ -126,11 +135,37 @@ def node_page(node):
     return "\n".join(lines)
 
 
+def normative_markdown(reg):
+    profile = reg.data['language_profile']
+    counts = Counter(x['decision'] for x in reg.data['dispositions'])
+    target = reg.data['target_scope']
+    lines = ['# 规范登记状态', '',
+             '由 `evas/capabilities/data/` 生成。规范索引、目标范围、资格和历史成绩分别记录。', '',
+             f"语言配置：`{profile['id']}`。基础为 LRM {profile['base']}，选入变化为 "
+             + ', '.join(profile['selected_changes']) + '。', '',
+             '未选入的变化继续采用基础版本；规范选入不表示后端已支持。Spectre 待跑。', '',
+             f"EVAS 目标配置：`{target['id']}`，目标域 {len(target['included'])} 项，明确目标外 {len(target['excluded'])} 项，待细分 {len(target['pending'])} 项。",
+             '这些是产品范围组，不是规范覆盖率或实现支持数。', '',
+             '| 来源处置 | 条目数 |', '| --- | ---: |']
+    lines.extend(f'| {key} | {value} |' for key, value in sorted(counts.items()))
+    lines += ['', '处置数是源索引的分母，不是要求数、测试方法数或规范覆盖率。',
+              '待判定条目及抽取边界保留在登记中；完整语义审核不能由目录自检代替。', '',
+              '| 当前对象 | 类型 | 资格缺口数 |', '| --- | --- | ---: |']
+    for name, version in sorted(reg.data['current'].items()):
+        obj = reg.objects[(name, version)]
+        if obj['kind'] == 'source':
+            continue
+        lines.append(f"| `{name}@{version}` | {obj['kind']} | {len(reg.qualification_gaps(name))} |")
+    lines += ['', '资格缺口来自固定版本的依赖、审核和来源检查，不把历史运行通过转授为当前支持。', '']
+    return '\n'.join(lines)
+
+
 def outputs(data):
     files = {
         REGISTRY: json.dumps(data, ensure_ascii=False, indent=2) + "\n",
         COMPARISON: comparison_markdown(data),
         PAPER: paper_markdown(data),
+        HERE / "generated" / "normative.md": normative_markdown(load()),
     }
     for node in data["nodes"]:
         files[HERE / node["id"] / "README.md"] = node_page(node)

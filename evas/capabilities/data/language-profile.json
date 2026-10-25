@@ -1,0 +1,86 @@
+{
+  "id": "evas-va-2.4-plus-2023-v1",
+  "version": "1",
+  "base": "2.4",
+  "sources": [
+    {
+      "id": "lrm-2.4",
+      "version": "1",
+      "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf"
+    },
+    {
+      "id": "lrm-2023",
+      "version": "1",
+      "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194"
+    }
+  ],
+  "selected_changes": [
+    "7780",
+    "7920"
+  ],
+  "changes": {
+    "7780": {
+      "expm1": "2023",
+      "ln1p": "2023",
+      "$ln1p": "2023",
+      "$expm1": "2023"
+    },
+    "7920": {
+      "$rtoi.analog-context": "2023",
+      "$itor.analog-context": "2023"
+    },
+    "7900": {
+      "pow.negative-integer-exponent": "2023"
+    }
+  },
+  "selection_policy": "Only the named feature deltas override 2.4. No whole-table replacement.",
+  "dependencies": [
+    {
+      "change": "7780",
+      "locations": [
+        "4.3.1 Table 4-14"
+      ],
+      "disposition": "selected for expm1/ln1p definitions, domains and aliases only"
+    },
+    {
+      "change": "7920",
+      "locations": [
+        "9.1 Table 9-8",
+        "9.11"
+      ],
+      "disposition": "selected for analog context only; conversion semantics retain referenced IEEE 1364 identity"
+    },
+    {
+      "change": "7900",
+      "locations": [
+        "4.3.1 Table 4-14"
+      ],
+      "disposition": "not selected; retain 2.4 pow behavior"
+    }
+  ],
+  "interpretation_gaps": [
+    {
+      "id": "ieee1364-conversion-definition",
+      "status": "pending-source-identity",
+      "reason": "9.11 delegates definitions to IEEE 1364; no backend qualification until the applicable reference is fixed and reviewed."
+    }
+  ],
+  "implementation_status": "not-conferred",
+  "external_comparison": {
+    "spectre": "pending"
+  },
+  "aliases": {
+    "ln1p": [
+      "ln1p",
+      "$ln1p"
+    ],
+    "expm1": [
+      "expm1",
+      "$expm1"
+    ]
+  },
+  "domains": {
+    "ln1p": "x > -1",
+    "expm1": "all real x"
+  }
+}

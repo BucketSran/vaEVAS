@@ -1,0 +1,569 @@
+{
+  "schema_version": 1,
+  "objects": [
+    {
+      "id": "lrm-2.4",
+      "version": "1",
+      "kind": "source",
+      "status": "active",
+      "origin": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf",
+      "sha256": "621b2a1a3751e7685600f180fe8f362766fe13e952023ded3d7ae48314337c03",
+      "availability": "official-public"
+    },
+    {
+      "id": "lrm-2023",
+      "version": "1",
+      "kind": "source",
+      "status": "active",
+      "origin": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf",
+      "sha256": "e93b5b6a767fe10e0e4a3ef312ffdc67907ffcc3c7553d16e04e03383a99c134",
+      "availability": "official-public"
+    },
+    {
+      "id": "requirement:expm1",
+      "version": "1",
+      "kind": "requirement",
+      "status": "pending",
+      "review": "pending",
+      "scope": "2023 selected delta; voltage-domain analog context",
+      "source_locations": [
+        "4.3.1 Table 4-14"
+      ],
+      "dependencies": [
+        {
+          "id": "lrm-2.4",
+          "version": "1",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf"
+        },
+        {
+          "id": "lrm-2023",
+          "version": "1",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194"
+        },
+        {
+          "id": "source:language-profile",
+          "version": "1",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599"
+        },
+        {
+          "id": "source:target-scope",
+          "version": "1",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc"
+        }
+      ],
+      "language_profile": "evas-va-2.4-plus-2023-v1",
+      "conditions": [
+        "definition and aliases",
+        "domain and boundary",
+        "analog context"
+      ],
+      "gap": "Requirement card and independent boundary answers require review; selection alone is not support.",
+      "allowed_behavior": "exp(x)-1 for numeric real-domain operands; operands converted to real.",
+      "observables": [
+        "expm1(x)",
+        "$expm1(x)"
+      ],
+      "required_boundaries": [
+        "x=0",
+        "small positive and negative x",
+        "large magnitudes within selected numerical domain"
+      ],
+      "budget": "No invented universal tolerance; independent numerical acceptance pending review."
+    },
+    {
+      "id": "requirement:ln1p",
+      "version": "1",
+      "kind": "requirement",
+      "status": "pending",
+      "review": "pending",
+      "scope": "2023 selected delta; voltage-domain analog context",
+      "source_locations": [
+        "4.3.1 Table 4-14"
+      ],
+      "dependencies": [
+        {
+          "id": "lrm-2.4",
+          "version": "1",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf"
+        },
+        {
+          "id": "lrm-2023",
+          "version": "1",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194"
+        },
+        {
+          "id": "source:language-profile",
+          "version": "1",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599"
+        },
+        {
+          "id": "source:target-scope",
+          "version": "1",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc"
+        }
+      ],
+      "language_profile": "evas-va-2.4-plus-2023-v1",
+      "conditions": [
+        "definition and aliases",
+        "domain and boundary",
+        "analog context"
+      ],
+      "gap": "Requirement card and independent boundary answers require review; selection alone is not support.",
+      "allowed_behavior": "Natural logarithm of 1+x for numeric x > -1; operands converted to real.",
+      "observables": [
+        "ln1p(x)",
+        "$ln1p(x)"
+      ],
+      "required_boundaries": [
+        "x approaches -1 from above",
+        "x=0",
+        "small positive and negative x"
+      ],
+      "budget": "Not a language-mandated binary64 ULP budget; numerical acceptance pending review."
+    },
+    {
+      "id": "requirement:$rtoi",
+      "version": "1",
+      "kind": "requirement",
+      "status": "pending",
+      "review": "pending",
+      "scope": "2023 selected delta; voltage-domain analog context",
+      "source_locations": [
+        "9.1 Table 9-8",
+        "9.11"
+      ],
+      "dependencies": [
+        {
+          "id": "lrm-2.4",
+          "version": "1",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf"
+        },
+        {
+          "id": "lrm-2023",
+          "version": "1",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194"
+        },
+        {
+          "id": "source:language-profile",
+          "version": "1",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599"
+        },
+        {
+          "id": "reference:IEEE-1364-2005",
+          "version": "1",
+          "sha256": "8d88283385b189d25ca45e99ab0b19b6409a33a1c68b4048b71a0865b6426fcf"
+        },
+        {
+          "id": "source:target-scope",
+          "version": "1",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc"
+        }
+      ],
+      "language_profile": "evas-va-2.4-plus-2023-v1",
+      "conditions": [
+        "definition and aliases",
+        "domain and boundary",
+        "analog context"
+      ],
+      "gap": "Requirement card and independent boundary answers require review; selection alone is not support.",
+      "allowed_behavior": "Permitted in analog context under selected 7920; actual conversion semantics depend on referenced IEEE 1364 definition.",
+      "required_boundaries": [
+        "positive and negative operands",
+        "fractional and integral operands",
+        "representation/range boundaries"
+      ],
+      "budget": "pending applicable referenced definition; no inferred rounding rule"
+    },
+    {
+      "id": "requirement:$itor",
+      "version": "1",
+      "kind": "requirement",
+      "status": "pending",
+      "review": "pending",
+      "scope": "2023 selected delta; voltage-domain analog context",
+      "source_locations": [
+        "9.1 Table 9-8",
+        "9.11"
+      ],
+      "dependencies": [
+        {
+          "id": "lrm-2.4",
+          "version": "1",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf"
+        },
+        {
+          "id": "lrm-2023",
+          "version": "1",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194"
+        },
+        {
+          "id": "source:language-profile",
+          "version": "1",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599"
+        },
+        {
+          "id": "reference:IEEE-1364-2005",
+          "version": "1",
+          "sha256": "8d88283385b189d25ca45e99ab0b19b6409a33a1c68b4048b71a0865b6426fcf"
+        },
+        {
+          "id": "source:target-scope",
+          "version": "1",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc"
+        }
+      ],
+      "language_profile": "evas-va-2.4-plus-2023-v1",
+      "conditions": [
+        "definition and aliases",
+        "domain and boundary",
+        "analog context"
+      ],
+      "gap": "Requirement card and independent boundary answers require review; selection alone is not support.",
+      "allowed_behavior": "Permitted in analog context under selected 7920; actual conversion semantics depend on referenced IEEE 1364 definition.",
+      "required_boundaries": [
+        "positive and negative operands",
+        "fractional and integral operands",
+        "representation/range boundaries"
+      ],
+      "budget": "pending applicable referenced definition; no inferred rounding rule"
+    },
+    {
+      "id": "source:sef-contract",
+      "version": "1",
+      "kind": "source",
+      "status": "active",
+      "origin": "evas/validation/sample_edge_filter/contract.py",
+      "path": "evas/validation/sample_edge_filter/contract.py",
+      "sha256": "1e43fabddc8ac38da510ff3cf1d77d3c2c43dd10e3cbcd4176c2cd2cfd43da74"
+    },
+    {
+      "id": "source:sef-calibration",
+      "version": "1",
+      "kind": "source",
+      "status": "active",
+      "origin": "evas/validation/sample_edge_filter/test_contract.py",
+      "path": "evas/validation/sample_edge_filter/test_contract.py",
+      "sha256": "35e1e874ec06510d0afab7196fc03549df2c87b2679681bf5e621d0645a99b52"
+    },
+    {
+      "id": "calibration:sef",
+      "version": "1",
+      "kind": "calibration",
+      "status": "pending",
+      "review": "pending",
+      "controls": {
+        "accept": [
+          "ContractCalibration.test_accepts_independent_analytical_histories"
+        ],
+        "reject": [
+          "ContractCalibration.test_rejects_history_reset_missing_events_input_drift_and_nonfinite"
+        ]
+      },
+      "dependencies": [
+        {
+          "id": "source:sef-contract",
+          "version": "1",
+          "sha256": "6a0d4c879b0cfb29a50866a8e0a6855fb849c2208f0356aaa1bd93613f4ff4d3"
+        },
+        {
+          "id": "source:sef-calibration",
+          "version": "1",
+          "sha256": "d0587738903d93870ca2a1e6e56edb5f70375fe3bc2a7932e195a932faeb5244"
+        }
+      ],
+      "gap": "Historical calibration methods registered; new execution and scope review not yet conferred."
+    },
+    {
+      "id": "checker:sef",
+      "version": "1",
+      "kind": "checker",
+      "status": "pending",
+      "review": "pending",
+      "scope": "SEF finite observation engineering contract",
+      "dependencies": [
+        {
+          "id": "source:sef-contract",
+          "version": "1",
+          "sha256": "6a0d4c879b0cfb29a50866a8e0a6855fb849c2208f0356aaa1bd93613f4ff4d3"
+        },
+        {
+          "id": "calibration:sef",
+          "version": "1",
+          "sha256": "dfa64101eb8614ece6a6e88d0e7cc06f12815c5b44eef52370b88fed991f7e61"
+        }
+      ],
+      "gap": "No transfer of historical qualification to current registration."
+    },
+    {
+      "id": "source:existing-positive",
+      "version": "1",
+      "kind": "source",
+      "status": "active",
+      "origin": "evas/validation/sample_edge_filter/test_contract.py",
+      "path": "evas/validation/sample_edge_filter/test_contract.py",
+      "sha256": "35e1e874ec06510d0afab7196fc03549df2c87b2679681bf5e621d0645a99b52"
+    },
+    {
+      "id": "example:existing-positive",
+      "version": "1",
+      "kind": "case",
+      "status": "pending",
+      "review": "pending",
+      "scope": "registration example only; no backend support claim",
+      "dependencies": [
+        {
+          "id": "source:existing-positive",
+          "version": "1",
+          "sha256": "6ca4e89199f661b352ae5bf7c7c0ec9c6d3d8d902e1324f23bf41a7bb5de3970"
+        },
+        {
+          "id": "checker:sef",
+          "version": "1",
+          "sha256": "e36eac6e1d42cd35779c720365c5e9d571951f527dcad9eeaa5321d163f1316b"
+        },
+        {
+          "id": "source:target-scope",
+          "version": "1",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc"
+        }
+      ],
+      "gap": "Registered identity; review and complete current evidence remain pending.",
+      "method": "test_contract.ContractCalibration.test_accepts_independent_analytical_histories"
+    },
+    {
+      "id": "source:negative-control",
+      "version": "1",
+      "kind": "source",
+      "status": "active",
+      "origin": "evas/validation/sample_edge_filter/test_contract.py",
+      "path": "evas/validation/sample_edge_filter/test_contract.py",
+      "sha256": "35e1e874ec06510d0afab7196fc03549df2c87b2679681bf5e621d0645a99b52"
+    },
+    {
+      "id": "example:negative-control",
+      "version": "1",
+      "kind": "case",
+      "status": "pending",
+      "review": "pending",
+      "scope": "registration example only; no backend support claim",
+      "dependencies": [
+        {
+          "id": "source:negative-control",
+          "version": "1",
+          "sha256": "a4d33b4a9950c7774324dba60b5e974dd9859bd991701b09b9e6c04085e761e7"
+        },
+        {
+          "id": "checker:sef",
+          "version": "1",
+          "sha256": "e36eac6e1d42cd35779c720365c5e9d571951f527dcad9eeaa5321d163f1316b"
+        },
+        {
+          "id": "source:target-scope",
+          "version": "1",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc"
+        }
+      ],
+      "gap": "Registered identity; review and complete current evidence remain pending.",
+      "method": "test_contract.ContractCalibration.test_rejects_history_reset_missing_events_input_drift_and_nonfinite"
+    },
+    {
+      "id": "source:internal-budget",
+      "version": "1",
+      "kind": "source",
+      "status": "active",
+      "origin": "evas/tests/test_bound_step.py",
+      "path": "evas/tests/test_bound_step.py",
+      "sha256": "1ff7d706256e24fd7a3276e6c743517e38b70c6ad1260d6ba6210ef8d51b0330"
+    },
+    {
+      "id": "example:internal-budget",
+      "version": "1",
+      "kind": "internal-contract",
+      "status": "pending",
+      "review": "pending",
+      "scope": "registration example only; no backend support claim",
+      "dependencies": [
+        {
+          "id": "source:internal-budget",
+          "version": "1",
+          "sha256": "0c2f20e91269c087bb504b6d65f7c13f3c515b76138a8801b4e71d4a5c6d3b3b"
+        },
+        {
+          "id": "source:target-scope",
+          "version": "1",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc"
+        }
+      ],
+      "gap": "Registered identity; review and complete current evidence remain pending."
+    },
+    {
+      "id": "source:language-profile",
+      "version": "1",
+      "kind": "source",
+      "status": "active",
+      "origin": "evas/capabilities/data/language-profile.json",
+      "path": "evas/capabilities/data/language-profile.json",
+      "sha256": "cb96d837943af90db29d359f57cc6e3a2f6f37fcf3956ed8163486f33d6111c1"
+    },
+    {
+      "id": "reference:IEEE-1364-2005",
+      "version": "1",
+      "kind": "source",
+      "status": "pending",
+      "origin": "IEEE-1364-2005 referenced by LRM 2.4",
+      "sha256": "",
+      "gap": "LRM 2.4 incorporates Verilog HDL; conversion-function definitions and inherited language constructs require clause review.",
+      "availability": "not-yet-retrieved"
+    },
+    {
+      "id": "reference:IEEE-754-1985",
+      "version": "1",
+      "kind": "source",
+      "status": "pending",
+      "origin": "IEEE-754-1985 referenced by LRM 2.4",
+      "sha256": "",
+      "gap": "LRM numeric representation reference; applicable clauses and source bytes not yet fixed.",
+      "availability": "not-yet-retrieved"
+    },
+    {
+      "id": "source:sef-calibration-execution",
+      "version": "1",
+      "kind": "source",
+      "status": "active",
+      "origin": "local-task:PR_REVIEW_20261025_DELIVERY/grill-vams-2023/pr1/representative-calibration.txt",
+      "sha256": "950407b15963f78b6ee80ab7d5760881e4e6a1358ca754c12e393140cac2045c",
+      "availability": "local-only; canonical task entry locates evidence"
+    },
+    {
+      "id": "execution:sef-calibration-pr1",
+      "version": "1",
+      "kind": "execution",
+      "status": "active",
+      "review": "pending",
+      "outcome": "passed",
+      "complete": true,
+      "backend": "Python 3.14.6 unittest; no simulator execution",
+      "method_count": 4,
+      "command": "python3 -B -m unittest discover -s evas/validation/sample_edge_filter -p test_contract.py -v",
+      "source_base": "f210ebd59dfd5db78eea7ac0751479bc9e02beed",
+      "dependencies": [
+        {
+          "id": "example:existing-positive",
+          "version": "1",
+          "sha256": "8dd8b0ac8689197c097ee08f1208c6d1d08ef211f645ce692e06efea139154b6"
+        },
+        {
+          "id": "source:sef-calibration-execution",
+          "version": "1",
+          "sha256": "6bdbe88bf9701506011e54bf8f0b0d1d6e9864a27b45a1d6881d5bedb46a3c0f"
+        }
+      ],
+      "scope": "Calibration collection only; independent numerical scope review remains pending."
+    },
+    {
+      "id": "analysis:sef-calibration-pr1",
+      "version": "1",
+      "kind": "analysis",
+      "status": "pending",
+      "review": "pending",
+      "outcome": "pending-scope-review",
+      "dependencies": [
+        {
+          "id": "execution:sef-calibration-pr1",
+          "version": "1",
+          "sha256": "5c3f0567a4b7d70d3644f54f1529c737ba24945741cd5c9e08ef071b3fbf5bb1"
+        },
+        {
+          "id": "checker:sef",
+          "version": "1",
+          "sha256": "e36eac6e1d42cd35779c720365c5e9d571951f527dcad9eeaa5321d163f1316b"
+        }
+      ],
+      "gap": "Method success recorded; reference independence and negative-control specificity not newly approved."
+    },
+    {
+      "id": "review:sef-calibration-pr1",
+      "version": "1",
+      "kind": "review",
+      "status": "pending",
+      "review": "pending",
+      "decision": "pending",
+      "reviewer": null,
+      "evidence": null,
+      "dependencies": [
+        {
+          "id": "analysis:sef-calibration-pr1",
+          "version": "1",
+          "sha256": "735a60e19d8f71c369f1bb50ec58b98b74baecffd3e348b86ff2a9bc3cb8ccfb"
+        }
+      ]
+    },
+    {
+      "id": "qualification:sef-registration-example",
+      "version": "1",
+      "kind": "qualification",
+      "status": "pending",
+      "review": "pending",
+      "scope": "SEF current calibration registration example only",
+      "dependencies": [
+        {
+          "id": "example:existing-positive",
+          "version": "1",
+          "sha256": "8dd8b0ac8689197c097ee08f1208c6d1d08ef211f645ce692e06efea139154b6"
+        },
+        {
+          "id": "execution:sef-calibration-pr1",
+          "version": "1",
+          "sha256": "5c3f0567a4b7d70d3644f54f1529c737ba24945741cd5c9e08ef071b3fbf5bb1"
+        },
+        {
+          "id": "analysis:sef-calibration-pr1",
+          "version": "1",
+          "sha256": "735a60e19d8f71c369f1bb50ec58b98b74baecffd3e348b86ff2a9bc3cb8ccfb"
+        },
+        {
+          "id": "review:sef-calibration-pr1",
+          "version": "1",
+          "sha256": "3bb9baa2f4fe869de6234d5f0a2417c616c42475a014eabdf741bf9e171660a0"
+        }
+      ],
+      "gap": "This example deliberately retains incomplete review; it grants no current EVAS or external-backend support."
+    },
+    {
+      "id": "source:target-scope",
+      "version": "1",
+      "kind": "source",
+      "status": "active",
+      "origin": "evas/capabilities/data/target-scope.json",
+      "path": "evas/capabilities/data/target-scope.json",
+      "sha256": "54471d86a6f06a5496d9cd7580a44825369869ebf16a1ba2ccced47343f98a85"
+    }
+  ],
+  "current": {
+    "lrm-2.4": "1",
+    "lrm-2023": "1",
+    "requirement:expm1": "1",
+    "requirement:ln1p": "1",
+    "requirement:$rtoi": "1",
+    "requirement:$itor": "1",
+    "source:sef-contract": "1",
+    "source:sef-calibration": "1",
+    "calibration:sef": "1",
+    "checker:sef": "1",
+    "source:existing-positive": "1",
+    "example:existing-positive": "1",
+    "source:negative-control": "1",
+    "example:negative-control": "1",
+    "source:internal-budget": "1",
+    "example:internal-budget": "1",
+    "source:language-profile": "1",
+    "reference:IEEE-1364-2005": "1",
+    "reference:IEEE-754-1985": "1",
+    "source:sef-calibration-execution": "1",
+    "execution:sef-calibration-pr1": "1",
+    "analysis:sef-calibration-pr1": "1",
+    "review:sef-calibration-pr1": "1",
+    "qualification:sef-registration-example": "1",
+    "source:target-scope": "1"
+  }
+}

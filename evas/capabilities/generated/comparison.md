@@ -1,6 +1,6 @@
 # 能力比较表
 
-由 `evas/capabilities/catalog.py` 生成。已比较的成绩转录自
+由 `evas/capabilities/data/` 生成。已比较的成绩转录自
 [四后端支持表前五节](../../docs/COMPARISON.md#支持矩阵)，不改写该文的历史说明。
 没有四后端成绩的节点标为等待跑，不填通过或失败。
 

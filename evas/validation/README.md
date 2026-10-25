@@ -40,19 +40,39 @@ EVAS全部资料见[统一入口](../README.md#evas-entry)；本目录维护独�
 
 ## 共享资产审计与归并方案
 
+<a id="lrm-workflow-restructure"></a>
+
+### 规范、能力与验证资产重构实施草案
+
+已确认的设计决定见 [ADR-007 至 ADR-009](../docs/development/DECISIONS.md#adr-007)。
+独立审查指出已知失败匹配粒度、CI 报告链、条款目录完整性、迁移收集入口四项需补充，
+以及资格失效传播、历史证据读取两项建议。
+
+[修改 main 的详细计划](../docs/development/validation-restructure-plan.md)是本轮实施计划的唯一维护入口，
+包含六批改造的文件清单、依赖和验收：规范登记、可信 CI、全量盘点、检测器修复、资产迁移、生成视图与工作流切换。
+该计划已反映上述六项审查意见，PR1 正在实施；各项仍须以实际验收和独立复审关闭。
+本页保留入口和早期审计记录，不再维护第二份分批计划。
+
+本轮范围为全量登记与分批补证，不包含一次修完全部 EVAS 缺口。
+规范采用 2.4 基础及选入的 2023 扩展，EVAS 电压域目标子集单列，Spectre 继续待跑。
+现有工具与历史成绩尚未按新登记迁移；登记完整不代表全部测试合格或全部能力已实现。
+
+### 2026-10-24 资产审计与原归并计划
+
 2026-10-24审计以main `b2e407fe`为主基线，IR33仅单列已提交 `55ebf19e` 的相关增量。
 #233可靠性评价候选另按 `b590110c` 补审协议与执行依赖，未读取留出样本内容。
 本轮是源码、引用和文件身份审计，没有运行测试或仿真，也没有证明任何整条测试可以删除。
-下面登记归并方案，实施状态仍由对应任务维护。
+下文保留当时的审计关系与分批方案，不表示所有批次仍未实施。
+当前共享源和 DVS 的使用方式见本页开头；后续总体迁移按上面的实施草案承接。
 
-### 当前模型可以共用，检查义务继续保留
+#### 审计时的模型共用关系与检查义务
 
 - [shared-counter测试](../tests/test_shared_counter.py)的HC01、[初始化测试](../tests/test_input_initialization.py)的原source，分别与[core模型卡](paper/core-v1.json)的EV-HC-01、EV-HC-02相同。可按case ID读取同一source，保留原参数、t=0、实例、状态和事件记录断言。
 - [input-clamp测试](../tests/test_input_clamp.py)读取的VCO源码与core CO-VCO-01相同。当前模型可以统一；手写面积参考、IR派生参考和旧执行快照的身份分别保留。
 - [paper回归](../tests/test_paper_scenarios.py)、[sample-edge-filter回归](../tests/test_sample_edge_filter.py)已经读取validation中的模型或合同。它们的稀疏/稠密查询和内部检查，与后端实际观测资格分别验收。
 - [普通integer前缀](../tests/test_ordinary_integer_event_prefix.py)已有VA与编译JSON的一致性检查，Rust使用同一请求做私有Controller检查；[shaped-range生成器](../tests/helpers/generate_shaped_range_oracle.py)已为Rust生成独立Fraction答案。JSON与参考向量应作为带版本的派生产物管理，而非手工重写的第二份模型。
 
-### 以下相同或相似内容不能直接删重
+#### 以下相同或相似内容不能直接删重
 
 - [一阶滤波开发参考](../tests/test_laplace.py)检查原始b0/d0/d1的除法、增益与误差放大；[旧点值参考](paper/precision_checker.py)和[新有向区间参考](paper/precision_reference.py)使用不同的数值合同。只能在保留这些差异和独立校准后提取共用部分。
 - [event-statistics](event_statistics/README.md)的相同VA分别用于fit-stop、fit-interior和Python控制，停止边界、final_step及步长要求不同；[EC05精度判据](paper/transition_integral_precision.py)也比原support probe增加了实际callback历史与边界义务。
@@ -60,7 +80,7 @@ EVAS全部资料见[统一入口](../README.md#evas-entry)；本目录维护独�
 - smoke-admission的三个manifest虽然相同，却按所在目录解析到不同VA。它们是原始拒绝与successor准入控制，完整输入并不相同；准入通过也不代表运行正确。
 - checker的手算锚点、故意错误的波形和证据，是判据自身的校准；Rust的完整Frame/History/Work/owner及失败重试检查、后端的原生来源与保存完整性检查，均不能被公共输出误差检查替代。
 
-### 按五批归并，各批单独验收
+#### 原五批归并方案及逐批验收
 
 1. **当前source与纯绑定。** [共享构造器](paper/case_inputs.py)统一HC01、初始化、VCO的当前源码来源，以及paper的绑定、刺激转换和请求网格；[使用说明](paper/README.md)区分开发回归与实验适配器。原source、参数、初态、数值位模式、观察和独立断言保留。旧VCO fixture继续绑定历史收据，不回写旧执行。
 2. **DVS科学定义与后端读取。** [静态回归](../tests/run_static_regression.py)目前经Spectre专题读取archive中的科学条件和判据；将其当前维护定义归到 `validation/dvs2/`，后端工具留experiments。paper等读取链转用[现有共享证据工具](../../experiments/backends/evidence/README.md)，保留token、重复时点、归档完整性和旧分析身份。
