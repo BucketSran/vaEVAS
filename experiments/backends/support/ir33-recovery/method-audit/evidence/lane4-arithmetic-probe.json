@@ -1,0 +1,330 @@
+{
+  "rn_cancel": {
+    "input": [
+      1.0,
+      1e+16
+    ],
+    "rounded": false,
+    "exact": true
+  },
+  "pwl_threshold": {
+    "sample": "1/3",
+    "sample_RN": 0.3333333333333333,
+    "threshold": 0.3333333333333333,
+    "predicate": false
+  },
+  "adjacent_predicate": {
+    "low": 0.5,
+    "high": 0.5000000000000001,
+    "binary64_between": false,
+    "reason": "Two adjacent binary64 numbers have no binary64 strictly between; RN(u)>a && RN(u)<b is always false."
+  },
+  "stored_additions": {
+    "steps": [
+      0.1,
+      0.2,
+      0.30000000000000004
+    ],
+    "predicate": true
+  },
+  "rounded_history_gain": {
+    "one_third": 0.3333333333333333,
+    "source_c": 1.0,
+    "unrounded_reference": "50331649/50331648"
+  },
+  "nonpoint_seed": {
+    "exact": "144115188075855873/1152921504606846976",
+    "rn": 0.125,
+    "rn_point": true
+  },
+  "generated_current_initial_truth": {
+    "source": "`include \"disciplines.vams\"\nmodule m(u,y,h,nc,r); input u; output y,h,nc; inout r; electrical u,y,h,nc,r; real q; integer n;\nanalog begin @(initial_step) begin q=0.5; n=0; end @(timer(1.0,0,1e-09)) begin q=-1.0; n=n+1; end @(timer(2.0,0,1e-09)) begin q=0.5; n=n+1; end V(h,r)<+q; V(y,r)<+idt(q,0.25); V(nc,r)<+n; end endmodule\n",
+    "result": {
+      "nodes": [
+        "y",
+        "h",
+        "nc"
+      ],
+      "solutions": [
+        {
+          "voltages": [
+            0.25,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "voltages": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "voltages": [
+            0.75,
+            -1.0,
+            1.0
+          ]
+        },
+        {
+          "voltages": [
+            0.25,
+            -1.0,
+            1.0
+          ]
+        },
+        {
+          "voltages": [
+            -0.25,
+            0.5,
+            2.0
+          ]
+        },
+        {
+          "voltages": [
+            0.0,
+            0.5,
+            2.0
+          ]
+        },
+        {
+          "voltages": [
+            0.25,
+            0.5,
+            2.0
+          ]
+        }
+      ],
+      "transient": {
+        "times": [
+          0.0,
+          0.5,
+          1.0,
+          1.5,
+          2.0,
+          2.5,
+          3.0
+        ],
+        "state_names": [
+          "dut:q",
+          "dut:n"
+        ],
+        "states": [
+          [
+            0.5,
+            0.0
+          ],
+          [
+            0.5,
+            0.0
+          ],
+          [
+            -1.0,
+            1.0
+          ],
+          [
+            -1.0,
+            1.0
+          ],
+          [
+            0.5,
+            2.0
+          ],
+          [
+            0.5,
+            2.0
+          ],
+          [
+            0.5,
+            2.0
+          ]
+        ],
+        "events": [
+          {
+            "event": 0,
+            "kind": "initial_step",
+            "time": 0.0,
+            "before": [
+              0.0,
+              0.0
+            ],
+            "after": [
+              0.5,
+              0.0
+            ]
+          },
+          {
+            "time": 1.0,
+            "kind": "timer",
+            "event": 1,
+            "before": [
+              0.5,
+              0.0
+            ],
+            "after": [
+              -1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 2.0,
+            "kind": "timer",
+            "event": 2,
+            "before": [
+              -1.0,
+              1.0
+            ],
+            "after": [
+              0.5,
+              2.0
+            ]
+          }
+        ]
+      }
+    },
+    "mismatches": [
+      {
+        "type": "event_count",
+        "actual": 3,
+        "expected": 2
+      },
+      {
+        "type": "event_time",
+        "index": 0,
+        "actual": 0.0,
+        "expected": 1.0
+      },
+      {
+        "type": "event_kind",
+        "index": 0,
+        "actual": "initial_step",
+        "expected": "timer"
+      },
+      {
+        "type": "event_before",
+        "index": 0,
+        "time": 0.0,
+        "state": "dut:q",
+        "actual": 0.0,
+        "expected": 0.5
+      },
+      {
+        "type": "event_after",
+        "index": 0,
+        "time": 0.0,
+        "state": "dut:q",
+        "actual": 0.5,
+        "expected": -1.0
+      },
+      {
+        "type": "event_after",
+        "index": 0,
+        "time": 0.0,
+        "state": "dut:n",
+        "actual": 0.0,
+        "expected": 1.0
+      },
+      {
+        "type": "event_time",
+        "index": 1,
+        "actual": 1.0,
+        "expected": 2.0
+      },
+      {
+        "type": "event_before",
+        "index": 1,
+        "time": 1.0,
+        "state": "dut:q",
+        "actual": 0.5,
+        "expected": -1.0
+      },
+      {
+        "type": "event_before",
+        "index": 1,
+        "time": 1.0,
+        "state": "dut:n",
+        "actual": 0.0,
+        "expected": 1.0
+      },
+      {
+        "type": "event_after",
+        "index": 1,
+        "time": 1.0,
+        "state": "dut:q",
+        "actual": -1.0,
+        "expected": 0.5
+      },
+      {
+        "type": "event_after",
+        "index": 1,
+        "time": 1.0,
+        "state": "dut:n",
+        "actual": 1.0,
+        "expected": 2.0
+      }
+    ],
+    "calibration": {
+      "wrong_value": {
+        "detected": true,
+        "mismatch_types": [
+          "event_after",
+          "event_before",
+          "event_count",
+          "event_kind",
+          "event_time",
+          "value"
+        ]
+      },
+      "missing_event": {
+        "detected": true,
+        "mismatch_types": [
+          "event_after",
+          "event_before",
+          "event_count",
+          "event_identity",
+          "event_kind",
+          "event_time"
+        ]
+      },
+      "duplicate_event": {
+        "detected": false,
+        "mismatch_types": [
+          "event_after",
+          "event_before",
+          "event_identity",
+          "event_kind",
+          "event_time"
+        ]
+      }
+    },
+    "derivation": "One explicit initial_step sets q=.5,n=0 before timers at1,2; current source-derived truth has3 event records. Numeric y are exact rectangle areas."
+  },
+  "corrections": [
+    {
+      "finding": "L4-F12",
+      "reason": "撤回L4-F12：原source-selected slew/transition的operator输入为Select与bare Affine物理操作数，没有RealBoundary(sample)；procedure_plan.condition/capture_operator只resolve而不隐式插入RN。先前证明“相邻binary64之间没有RN(u)”数学事实正确，但错误套用于没有程序RN边界的连续物理u。operators.md:639明确要求以严格有理中点见证相邻切点开放区间，不能以没有binary64内部点把该区间当空。",
+      "original_adjacent_predicate_result": "仅对显式RN(u)成立，不是原fixture actual output，也不能解释原物理Select目标。",
+      "physical_adjacent_interval": {
+        "low": ".5",
+        "high": "nextafter(.5,1)",
+        "exact_width": "1/9007199254740992",
+        "slew_unclipped_rise": "10000000000000000/9007199254740992",
+        "clipped_high_endpoint": 1
+      },
+      "new_kernel_run": false
+    },
+    {
+      "case": "test_held_timer_provenance.HeldTimerProvenance.test_exact_nonbinary_division_offset_preserves_physical_phase",
+      "old_unrounded_due": "28823037615171175/108086391056891904",
+      "current_RN_due": "4803839602528529/18014398509481984",
+      "query_boundary": 0.26666666666666666,
+      "query_equals_current_due": true,
+      "max_phase_voltage_difference": "16/17293822569102705",
+      "max_phase_voltage_difference_float": 9.251858538542972e-16,
+      "original_tolerance": 1e-12,
+      "derivation": "q从0于.1上升至1；第二timer旧due与当前RN due之差除.01是边沿输出最大位移。边界query为当前due，原expected仍1；.35两者均完成下降为0。旧未舍入due文字不准确，但该有限近似波形oracle在原预算内有效。",
+      "new_kernel_run": false
+    }
+  ]
+}

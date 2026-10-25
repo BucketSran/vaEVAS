@@ -1,0 +1,827 @@
+{
+  "scope": "Full unchanged unittest method; transient transport replaced by synthetic response that passed actual protocol.validate_response. No kernel run.",
+  "input_exact": {
+    "center": "3602879701896397/36028797018963968",
+    "radius": "6338253001141147/633825300114114700748351602688",
+    "low": "63382530011405135340271228005/633825300114114700748351602688",
+    "high": "63382530011417811846273510299/633825300114114700748351602688"
+  },
+  "derivation": "g=x*tanh(x/.05) is strictly increasing on the positive requested domain. Endpoint references must use original requested domain; original method instead derives endpoints from DUT-reported input bounds.",
+  "expected": {
+    "correct_source_band": "accept",
+    "dropped_source_band": "reject",
+    "wrong_output": "reject"
+  },
+  "source_sha256": "6046d9972325d51df1ccecda1be3dc3b7216a605c7cb1f2eddec2573473f432d",
+  "records": [
+    {
+      "mutation": "correct_source_band",
+      "actual": {
+        "testsRun": 1,
+        "passed": true,
+        "failures": [],
+        "errors": []
+      },
+      "requests": [
+        {
+          "program": {
+            "nodes": [
+              "0",
+              "u",
+              "y"
+            ],
+            "contributions": [
+              {
+                "branch": {
+                  "instance": "dut",
+                  "local_positive": "0",
+                  "local_negative": "y",
+                  "kind": "voltage"
+                },
+                "positive": 0,
+                "negative": 2,
+                "rhs": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": -1.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "op": "multiply",
+                    "left": {
+                      "constant": 0.0,
+                      "terms": [
+                        {
+                          "node": 0,
+                          "coefficient": -1.0
+                        },
+                        {
+                          "node": 1,
+                          "coefficient": 1.0
+                        }
+                      ],
+                      "op": "affine"
+                    },
+                    "right": {
+                      "operator": 0,
+                      "op": "operator"
+                    }
+                  }
+                },
+                "origin": {
+                  "source": "math.va",
+                  "line": 2,
+                  "column": 106,
+                  "instance": "dut",
+                  "expansion": []
+                }
+              }
+            ],
+            "states": [],
+            "events": [],
+            "operators": [
+              {
+                "function": "tanh",
+                "input": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 20.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  }
+                },
+                "origin": {
+                  "source": "math.va",
+                  "line": 2,
+                  "column": 117,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "kind": "math"
+              }
+            ],
+            "schema_version": 33,
+            "step_bounds": [],
+            "procedures": [
+              {
+                "procedure_id": 0,
+                "instance": "dut",
+                "body": [
+                  {
+                    "expanded_statement_ordinal": 0,
+                    "action": {
+                      "contribution": 0,
+                      "kind": "contribution_capture"
+                    }
+                  }
+                ]
+              }
+            ],
+            "real_bindings": []
+          },
+          "sources": {
+            "u": [
+              [
+                0.0,
+                0.1
+              ],
+              [
+                1.0,
+                0.1
+              ]
+            ]
+          },
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "options": {
+            "stop": 1.0,
+            "max_step": 0.1,
+            "kernel": "repository_root/evas/rust_core/target/debug/evas-kernel",
+            "source_errors": {
+              "u": 1e-14
+            }
+          },
+          "response": {
+            "schema_version": 33,
+            "engine": "synthetic-calibration",
+            "nodes": [
+              "0",
+              "u",
+              "y"
+            ],
+            "solutions": [
+              {
+                "voltages": [
+                  0.0,
+                  0.1,
+                  0.09640275800758169
+                ],
+                "max_residual_v": 0.0,
+                "max_residual_ratio": 0.0
+              },
+              {
+                "voltages": [
+                  0.0,
+                  0.1,
+                  0.09640275800758169
+                ],
+                "max_residual_v": 0.0,
+                "max_residual_ratio": 0.0
+              },
+              {
+                "voltages": [
+                  0.0,
+                  0.1,
+                  0.09640275800758169
+                ],
+                "max_residual_v": 0.0,
+                "max_residual_ratio": 0.0
+              }
+            ],
+            "transient": {
+              "times": [
+                0.0,
+                0.5,
+                1.0
+              ],
+              "state_names": [],
+              "states": [
+                [],
+                [],
+                []
+              ],
+              "events": [],
+              "display_records": [],
+              "accepted_steps": 0,
+              "discarded_trials": 0
+            },
+            "observation_evidence": {
+              "schema_version": 1,
+              "nodes": [
+                "0",
+                "u",
+                "y"
+              ],
+              "effective_controls": {
+                "absolute_V": 1e-12,
+                "relative": 1e-10,
+                "stop_s": 1.0,
+                "max_step_s": 0.1,
+                "max_step_applied": false
+              },
+              "sample_origins": [
+                "stateless_working_point",
+                "stateless_working_point",
+                "stateless_working_point"
+              ],
+              "initial_settled": true,
+              "voltage_bounds_V": [
+                [
+                  [
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.09999999999998999,
+                    0.10000000000001003
+                  ],
+                  [
+                    0.0964027580075706,
+                    0.09640275800759278
+                  ]
+                ],
+                [
+                  [
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.09999999999998999,
+                    0.10000000000001003
+                  ],
+                  [
+                    0.0964027580075706,
+                    0.09640275800759278
+                  ]
+                ],
+                [
+                  [
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.09999999999998999,
+                    0.10000000000001003
+                  ],
+                  [
+                    0.0964027580075706,
+                    0.09640275800759278
+                  ]
+                ]
+              ]
+            }
+          },
+          "public_validator": "accepted"
+        }
+      ]
+    },
+    {
+      "mutation": "dropped_source_band",
+      "actual": {
+        "testsRun": 1,
+        "passed": true,
+        "failures": [],
+        "errors": []
+      },
+      "requests": [
+        {
+          "program": {
+            "nodes": [
+              "0",
+              "u",
+              "y"
+            ],
+            "contributions": [
+              {
+                "branch": {
+                  "instance": "dut",
+                  "local_positive": "0",
+                  "local_negative": "y",
+                  "kind": "voltage"
+                },
+                "positive": 0,
+                "negative": 2,
+                "rhs": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": -1.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "op": "multiply",
+                    "left": {
+                      "constant": 0.0,
+                      "terms": [
+                        {
+                          "node": 0,
+                          "coefficient": -1.0
+                        },
+                        {
+                          "node": 1,
+                          "coefficient": 1.0
+                        }
+                      ],
+                      "op": "affine"
+                    },
+                    "right": {
+                      "operator": 0,
+                      "op": "operator"
+                    }
+                  }
+                },
+                "origin": {
+                  "source": "math.va",
+                  "line": 2,
+                  "column": 106,
+                  "instance": "dut",
+                  "expansion": []
+                }
+              }
+            ],
+            "states": [],
+            "events": [],
+            "operators": [
+              {
+                "function": "tanh",
+                "input": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 20.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  }
+                },
+                "origin": {
+                  "source": "math.va",
+                  "line": 2,
+                  "column": 117,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "kind": "math"
+              }
+            ],
+            "schema_version": 33,
+            "step_bounds": [],
+            "procedures": [
+              {
+                "procedure_id": 0,
+                "instance": "dut",
+                "body": [
+                  {
+                    "expanded_statement_ordinal": 0,
+                    "action": {
+                      "contribution": 0,
+                      "kind": "contribution_capture"
+                    }
+                  }
+                ]
+              }
+            ],
+            "real_bindings": []
+          },
+          "sources": {
+            "u": [
+              [
+                0.0,
+                0.1
+              ],
+              [
+                1.0,
+                0.1
+              ]
+            ]
+          },
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "options": {
+            "stop": 1.0,
+            "max_step": 0.1,
+            "kernel": "repository_root/evas/rust_core/target/debug/evas-kernel",
+            "source_errors": {
+              "u": 1e-14
+            }
+          },
+          "response": {
+            "schema_version": 33,
+            "engine": "synthetic-calibration",
+            "nodes": [
+              "0",
+              "u",
+              "y"
+            ],
+            "solutions": [
+              {
+                "voltages": [
+                  0.0,
+                  0.1,
+                  0.09640275800758169
+                ],
+                "max_residual_v": 0.0,
+                "max_residual_ratio": 0.0
+              },
+              {
+                "voltages": [
+                  0.0,
+                  0.1,
+                  0.09640275800758169
+                ],
+                "max_residual_v": 0.0,
+                "max_residual_ratio": 0.0
+              },
+              {
+                "voltages": [
+                  0.0,
+                  0.1,
+                  0.09640275800758169
+                ],
+                "max_residual_v": 0.0,
+                "max_residual_ratio": 0.0
+              }
+            ],
+            "transient": {
+              "times": [
+                0.0,
+                0.5,
+                1.0
+              ],
+              "state_names": [],
+              "states": [
+                [],
+                [],
+                []
+              ],
+              "events": [],
+              "display_records": [],
+              "accepted_steps": 0,
+              "discarded_trials": 0
+            },
+            "observation_evidence": {
+              "schema_version": 1,
+              "nodes": [
+                "0",
+                "u",
+                "y"
+              ],
+              "effective_controls": {
+                "absolute_V": 1e-12,
+                "relative": 1e-10,
+                "stop_s": 1.0,
+                "max_step_s": 0.1,
+                "max_step_applied": false
+              },
+              "sample_origins": [
+                "stateless_working_point",
+                "stateless_working_point",
+                "stateless_working_point"
+              ],
+              "initial_settled": true,
+              "voltage_bounds_V": [
+                [
+                  [
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.1,
+                    0.1
+                  ],
+                  [
+                    0.09640275800758168,
+                    0.0964027580075817
+                  ]
+                ],
+                [
+                  [
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.1,
+                    0.1
+                  ],
+                  [
+                    0.09640275800758168,
+                    0.0964027580075817
+                  ]
+                ],
+                [
+                  [
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.1,
+                    0.1
+                  ],
+                  [
+                    0.09640275800758168,
+                    0.0964027580075817
+                  ]
+                ]
+              ]
+            }
+          },
+          "public_validator": "accepted"
+        }
+      ]
+    },
+    {
+      "mutation": "wrong_output",
+      "actual": {
+        "testsRun": 1,
+        "passed": false,
+        "failures": [
+          "Traceback (most recent call last):\n  File \"repository_root/evas/tests/test_source_math.py\", line 73, in test_small_true_source_box_encloses_both_independent_endpoint_roots\n    self.assertLessEqual(lo, reference(x))\n    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: Decimal('0.1064027580075705969875343726016581058502197265625') not less than or equal to Decimal('0.0964027580075706186093741758071711923893876857910137283890334635059584675518298911890572472083218234538978520122712910238')\n"
+        ],
+        "errors": []
+      },
+      "requests": [
+        {
+          "program": {
+            "nodes": [
+              "0",
+              "u",
+              "y"
+            ],
+            "contributions": [
+              {
+                "branch": {
+                  "instance": "dut",
+                  "local_positive": "0",
+                  "local_negative": "y",
+                  "kind": "voltage"
+                },
+                "positive": 0,
+                "negative": 2,
+                "rhs": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": -1.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "op": "multiply",
+                    "left": {
+                      "constant": 0.0,
+                      "terms": [
+                        {
+                          "node": 0,
+                          "coefficient": -1.0
+                        },
+                        {
+                          "node": 1,
+                          "coefficient": 1.0
+                        }
+                      ],
+                      "op": "affine"
+                    },
+                    "right": {
+                      "operator": 0,
+                      "op": "operator"
+                    }
+                  }
+                },
+                "origin": {
+                  "source": "math.va",
+                  "line": 2,
+                  "column": 106,
+                  "instance": "dut",
+                  "expansion": []
+                }
+              }
+            ],
+            "states": [],
+            "events": [],
+            "operators": [
+              {
+                "function": "tanh",
+                "input": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 20.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  }
+                },
+                "origin": {
+                  "source": "math.va",
+                  "line": 2,
+                  "column": 117,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "kind": "math"
+              }
+            ],
+            "schema_version": 33,
+            "step_bounds": [],
+            "procedures": [
+              {
+                "procedure_id": 0,
+                "instance": "dut",
+                "body": [
+                  {
+                    "expanded_statement_ordinal": 0,
+                    "action": {
+                      "contribution": 0,
+                      "kind": "contribution_capture"
+                    }
+                  }
+                ]
+              }
+            ],
+            "real_bindings": []
+          },
+          "sources": {
+            "u": [
+              [
+                0.0,
+                0.1
+              ],
+              [
+                1.0,
+                0.1
+              ]
+            ]
+          },
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "options": {
+            "stop": 1.0,
+            "max_step": 0.1,
+            "kernel": "repository_root/evas/rust_core/target/debug/evas-kernel",
+            "source_errors": {
+              "u": 1e-14
+            }
+          },
+          "response": {
+            "schema_version": 33,
+            "engine": "synthetic-calibration",
+            "nodes": [
+              "0",
+              "u",
+              "y"
+            ],
+            "solutions": [
+              {
+                "voltages": [
+                  0.0,
+                  0.1,
+                  0.10640275800758169
+                ],
+                "max_residual_v": 0.0,
+                "max_residual_ratio": 0.0
+              },
+              {
+                "voltages": [
+                  0.0,
+                  0.1,
+                  0.10640275800758169
+                ],
+                "max_residual_v": 0.0,
+                "max_residual_ratio": 0.0
+              },
+              {
+                "voltages": [
+                  0.0,
+                  0.1,
+                  0.10640275800758169
+                ],
+                "max_residual_v": 0.0,
+                "max_residual_ratio": 0.0
+              }
+            ],
+            "transient": {
+              "times": [
+                0.0,
+                0.5,
+                1.0
+              ],
+              "state_names": [],
+              "states": [
+                [],
+                [],
+                []
+              ],
+              "events": [],
+              "display_records": [],
+              "accepted_steps": 0,
+              "discarded_trials": 0
+            },
+            "observation_evidence": {
+              "schema_version": 1,
+              "nodes": [
+                "0",
+                "u",
+                "y"
+              ],
+              "effective_controls": {
+                "absolute_V": 1e-12,
+                "relative": 1e-10,
+                "stop_s": 1.0,
+                "max_step_s": 0.1,
+                "max_step_applied": false
+              },
+              "sample_origins": [
+                "stateless_working_point",
+                "stateless_working_point",
+                "stateless_working_point"
+              ],
+              "initial_settled": true,
+              "voltage_bounds_V": [
+                [
+                  [
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.09999999999998999,
+                    0.10000000000001003
+                  ],
+                  [
+                    0.1064027580075706,
+                    0.10640275800759277
+                  ]
+                ],
+                [
+                  [
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.09999999999998999,
+                    0.10000000000001003
+                  ],
+                  [
+                    0.1064027580075706,
+                    0.10640275800759277
+                  ]
+                ],
+                [
+                  [
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.09999999999998999,
+                    0.10000000000001003
+                  ],
+                  [
+                    0.1064027580075706,
+                    0.10640275800759277
+                  ]
+                ]
+              ]
+            }
+          },
+          "public_validator": "accepted"
+        }
+      ]
+    }
+  ]
+}

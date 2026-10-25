@@ -1,0 +1,20 @@
+{
+  "checked_via": "official PDF opened and searched using web tool during this audit",
+  "sources": [
+    {
+      "url": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf",
+      "edition": "2.4.0",
+      "sections": [
+        "2.6.2 real constants",
+        "3.2 real storage and default initialization",
+        "4.2.2 associativity",
+        "4.2.3 short circuit and evaluation order"
+      ],
+      "scope": "Language clauses inform source review; project-specific RN proofs and support subset remain separate contracts."
+    },
+    {
+      "url": "https://www.verilogams.org/refman/modules/analog-procedural/assignment.html",
+      "scope": "Designer Guide explanation of contribution accumulation versus immediate variable assignment; supplementary to LRM"
+    }
+  ]
+}

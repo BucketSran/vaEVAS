@@ -1,0 +1,69 @@
+{
+  "scope": "No simulator or build. Arithmetic uses exact binary64 Fractions. Counterfeit response runs original two unittest methods with subprocess boundary replaced.",
+  "source_root": "repository_root",
+  "source_commit": "566c36a9366419c970ec008ef27f7bdd3d82e9f6",
+  "arithmetic": {
+    "ordinary_if": {
+      "input": "u(t)=t/3,t=1,threshold=binary64(0.3333333333333333)",
+      "derivation": "Sample RN(1/3) first; RN(1/3) equals threshold so strict > is false.",
+      "old_exact_truth": true,
+      "rounded_truth": false,
+      "rn_hex": "0x1.5555555555555p-2"
+    },
+    "cold_seed": {
+      "input": ".62-.01 stored in real out; y=transition(out)-.61 at cold start",
+      "derivation": "out=RN(binary(.62)-binary(.01))=.61. Physical output .61-.61=0.",
+      "unrounded_old_expected": "5/576460752303423488",
+      "rounded_state_hex": "0x1.3851eb851eb85p-1",
+      "rounded_output_exact": "0"
+    },
+    "cold_display_seed": {
+      "input": ".125+2**-60 stored in real a",
+      "derivation": "2**-60 is below half ulp of .125; RN gives .125, so singleton voltage box need not include unrounded sum.",
+      "unrounded_expected": "144115188075855873/1152921504606846976",
+      "rounded_state_hex": "0x1.0000000000000p-3"
+    },
+    "sampled_history": {
+      "input": "b=RN(1/3); c=RN(RN(2**30*b - binary(357913941.3333333))+1)",
+      "derivation": "2**30 scales the rounded b exactly to the same binary64 subtractand; c=1. No original 1/3 uncertainty survives singleton real sample.",
+      "old_expected": "50331649/50331648",
+      "rn_result_hex": "0x1.0000000000000p+0"
+    }
+  },
+  "counterfeit_response_calibration": [
+    {
+      "id": "test_refinement.RefinementContracts.test_exact_dyadic_solution_after_refinement_dense_and_sparse",
+      "input": {
+        "solutions": [
+          {
+            "voltages": [],
+            "max_residual_ratio": 0
+          }
+        ]
+      },
+      "expected": "Test must reject missing voltage/state evidence.",
+      "actual_test_success": true,
+      "failures": [],
+      "errors": [],
+      "process_calls": 2
+    },
+    {
+      "id": "test_idt.IdtContracts.test_raw_zero_voltage_feedback_preserves_explicit_initial_value",
+      "input": {
+        "solutions": []
+      },
+      "expected": "Test must reject missing voltage/state evidence.",
+      "actual_test_success": true,
+      "failures": [],
+      "errors": [],
+      "process_calls": 1
+    }
+  ],
+  "compiler_structure": {
+    "schema_version": 33,
+    "ordinary_if_step": "ProcedureConditional(relation='gt', left=RealBoundary(value=Affine(constant=0.0, terms=(Term(node=0, coefficient=-1.0), Term(node=1, coefficient=1.0)), op='affine'), kind='sample', origin=Origin(source='ordinary.va', line=2, column=90, instance='dut', expansion=()), op='real_boundary'), right=Affine(constant=0.3333333333333333, terms=(), op='affine'), then_body=(ProcedureStep(expanded_statement_ordinal=1, action=RealBind(binding=0, value=RealBoundary(value=Affine(constant=7.0, terms=(), op='affine'), kind='snapshot', origin=Origin(source='ordinary.va', line=2, column=117, instance='dut', expansion=()), op='real_boundary'), origin=Origin(source='ordinary.va', line=2, column=117, instance='dut', expansion=()), kind='real_bind')),), else_body=(ProcedureStep(expanded_statement_ordinal=2, action=RealBind(binding=0, value=RealBoundary(value=Affine(constant=-3.0, terms=(), op='affine'), kind='snapshot', origin=Origin(source='ordinary.va', line=2, column=129, instance='dut', expansion=()), op='real_boundary'), origin=Origin(source='ordinary.va', line=2, column=129, instance='dut', expansion=()), kind='real_bind')),), origin=Origin(source='ordinary.va', line=2, column=87, instance='dut', expansion=()), kind='procedure_if')",
+    "direct_equation_select": "Binary(op='multiply', left=Affine(constant=-1.0, terms=(), op='affine'), right=Select(relation='gt', left=Affine(constant=0.0, terms=(Term(node=0, coefficient=-1.0), Term(node=4, coefficient=1.0)), op='affine'), right=Affine(constant=0.3333333333333333, terms=(), op='affine'), then_value=Affine(constant=1.0, terms=(), op='affine'), else_value=Affine(constant=0.0, terms=(), op='affine'), origin=Origin(source='logic.va', line=2, column=112, instance='dut', expansion=()), op='select'))",
+    "constant_function_return": "Binary(op='multiply', left=Affine(constant=-1.0, terms=(), op='affine'), right=RealBoundary(value=Affine(constant=1.0, terms=(), op='affine'), kind='return', origin=Origin(source='logic.va', line=2, column=139, instance='dut', expansion=(('function_call', 2),)), op='real_boundary'))",
+    "interpretation": "Ordinary procedure predicate has sample boundary. Direct contribution Select has no sample boundary and keeps physical equation contract. Function return has explicit RealBoundary even when constant."
+  }
+}

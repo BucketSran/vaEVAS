@@ -1,0 +1,112 @@
+[
+  {
+    "name": "midpoint-condition",
+    "input": {
+      "start": 0.1,
+      "end": 0.9,
+      "time": 0.5
+    },
+    "expected_derivation": "Physical midpoint=.5+2^-56. Its RN image is .5, hence program condition >.5 is false and held=.25-.25=0.",
+    "actual": {
+      "exact": "36028797018963969/72057594037927936",
+      "rn": "0x1.0000000000000p-1",
+      "condition": false,
+      "held": 0.0
+    }
+  },
+  {
+    "name": "post-cross-cell",
+    "input": {
+      "root": "1/6",
+      "threshold": 0.5,
+      "source": "u=3*t"
+    },
+    "expected_derivation": "Any physical u in(.5,.5+2^-54) rounds to .5. A physical post-root direction certificate does not establish program >.5.",
+    "actual": {
+      "witness": "18014398509481985/36028797018963968",
+      "rn": "0x1.0000000000000p-1",
+      "condition": false
+    }
+  },
+  {
+    "name": "source-time-cut",
+    "input": {
+      "cut": 5.2e-08,
+      "clock_period": 5e-10,
+      "clock_index": 104
+    },
+    "expected_derivation": "Clock root is cut+1/8 ULP. RN(root)=cut, so $abstime>52n is false and an old rising prefix has value0 there.",
+    "actual": {
+      "root": "62864142619960721/1208925819614629174706176",
+      "ulp_fraction": "1/8",
+      "rn": "0x1.bead3593f1cb2p-25",
+      "cut_hex": "0x1.bead3593f1cb2p-25",
+      "condition": false
+    }
+  },
+  {
+    "name": "sequential-seed-rn",
+    "input": {
+      "source": "q=q+0.03+0.09*V(u)",
+      "u": 0.2,
+      "q0": 0.0
+    },
+    "expected_derivation": "Each multiply/add is RN. First and second accepted q are sequential host binary64 results, not exact delta or2*delta.",
+    "actual": {
+      "exact_delta": "31153781151208965266779819709825/649037107316853453566312041152512",
+      "rn_q": [
+        "0x1.89374bc6a7efap-5",
+        "0x1.89374bc6a7efap-4"
+      ],
+      "exact_rn_q": [
+        "3458764513820541/72057594037927936",
+        "3458764513820541/36028797018963968"
+      ],
+      "diff": [
+        "1152921504606847/649037107316853453566312041152512",
+        "1152921504606847/324518553658426726783156020576256"
+      ]
+    }
+  },
+  {
+    "name": "held-clock-singleton",
+    "input": {
+      "constant_u": 0.3,
+      "multiplier": 0.1
+    },
+    "expected_derivation": "Exact physical constant source samples to .3, the one program multiply stores RN(.1*.3)=.03. This is a singleton clock value.",
+    "actual": {
+      "p": 0.03,
+      "p_hex": "0x1.eb851eb851eb8p-6",
+      "equals_literal_03": true
+    }
+  },
+  {
+    "name": "source-time-cut-application-withdrawal",
+    "supersedes_application": "source-time-cut",
+    "input": "Four exact source_root_windows fixtures compiled by lane1-probe-operator-boundaries",
+    "expected_derivation": "RN(root)==cut is a correct arithmetic fact, but actual physical Transition input has no RN boundary. Therefore physical root>cut still yields a nonzero old prefix. Do not apply program-event sampling rules to this bare Select.",
+    "actual": {
+      "operator_input": "bare select(gt,affine(time),affine(threshold),...)",
+      "rn_boundary_present": false,
+      "finding": "L1-F11 withdrawn",
+      "evidence": "lane1-probe-operator-boundaries.json"
+    }
+  },
+  {
+    "name": "related-physical-select-gap-correction",
+    "expected_derivation": "Bare physical Select and multiply retain exact mathematical source roots in equality Transition and five live-transition fixtures; only explicit program boundaries introduce RN.",
+    "actual": {
+      "methods": [
+        "test_isolated_third_boundary_value_still_rejects",
+        "test_equal_nonpoint_physical_modes_retain_original_root_identity",
+        "test_nonbinary_source_root_preserves_true_transition_time_enclosure",
+        "test_nonpoint_cross_and_source_cut_share_original_guard_root",
+        "test_query_at_lower_enclosure_endpoint_stays_before_nonbinary_cut",
+        "test_same_nonpoint_source_cut_and_edge_deadline_can_settle_together"
+      ],
+      "reclassified": "evidence_gap -> no_defect_found within static scope",
+      "evidence": "lane1-probe-operator-boundaries.json"
+    }
+  }
+]

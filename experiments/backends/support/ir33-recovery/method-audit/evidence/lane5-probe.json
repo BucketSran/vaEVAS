@@ -1,0 +1,1959 @@
+{
+  "rn_due": {
+    "old_exact": "46837436124653159/108086391056891904",
+    "required_rounded": "1951559838527215/4503599627370496",
+    "rounded_hex": "0x1.bbbbbbbbbbbbcp-2",
+    "delta": "1/108086391056891904",
+    "query_phase_recheck": {
+      "old_round": "0x1.bbbbbbbbbbbbcp-2",
+      "new_round": "0x1.bbbbbbbbbbbbcp-2",
+      "lower": "0x1.bbbbbbbbbbbbbp-2",
+      "ordering": "7806239354108859/18014398509481984 < 46837436124653159/108086391056891904 < 1951559838527215/4503599627370496",
+      "phase_equivalence": "No binary64 query lies in [old,new); both count oracles coincide on every representable querytime. Timing shift is1/108086391056891904<1e-17. atan(3t)/3 derivative<=1, expm1 derivative<e on[0,.75], so observedsample difference<3e-17, far inside1e-8. Exact-anchor scheduling/refusal premises still require recomputation."
+    }
+  },
+  "compiled": {
+    "native_floor": {
+      "events": [
+        {
+          "trigger": {
+            "start": 0.25,
+            "period": 0.0,
+            "time_tolerance": 1e-12,
+            "enabled": true,
+            "kind": "timer"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "function": "floor",
+                "args": [
+                  {
+                    "operation": "multiply",
+                    "left": {
+                      "constant": 8.0,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "right": {
+                      "value": {
+                        "constant": 0.0,
+                        "terms": [
+                          {
+                            "node": 0,
+                            "coefficient": -1.0
+                          },
+                          {
+                            "node": 1,
+                            "coefficient": 1.0
+                          }
+                        ],
+                        "op": "affine"
+                      },
+                      "kind": "sample",
+                      "origin": {
+                        "source": "native_floor.va",
+                        "line": 2,
+                        "column": 140,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "real_boundary"
+                    },
+                    "origin": {
+                      "source": "native_floor.va",
+                      "line": 2,
+                      "column": 139,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_binary"
+                  }
+                ],
+                "origin": {
+                  "source": "native_floor.va",
+                  "line": 2,
+                  "column": 132,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "event_math"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "native_floor.va",
+            "line": 2,
+            "column": 109,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 1
+        },
+        {
+          "trigger": {
+            "kind": "initial_step"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "native_floor.va",
+            "line": 2,
+            "column": 88,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 0
+        }
+      ],
+      "operators": [],
+      "contributions": [
+        {
+          "branch": {
+            "instance": "dut",
+            "local_positive": "r",
+            "local_negative": "y",
+            "kind": "voltage"
+          },
+          "positive": 0,
+          "negative": 2,
+          "rhs": {
+            "op": "multiply",
+            "left": {
+              "constant": -1.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "right": {
+              "state": 0,
+              "op": "state"
+            }
+          },
+          "origin": {
+            "source": "native_floor.va",
+            "line": 2,
+            "column": 153,
+            "instance": "dut",
+            "expansion": []
+          }
+        }
+      ],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "dut",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "event": 1,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 1,
+              "action": {
+                "event": 0,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 2,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "native_integer": {
+      "events": [
+        {
+          "trigger": {
+            "start": 1.0,
+            "period": 1.0,
+            "time_tolerance": 1e-12,
+            "enabled": true,
+            "kind": "timer"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "op": "add",
+                "left": {
+                  "state": 0,
+                  "op": "state"
+                },
+                "right": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                }
+              },
+              "kind": "assign"
+            },
+            {
+              "state": 1,
+              "rhs": {
+                "value": {
+                  "function": "remainder",
+                  "args": [
+                    {
+                      "state": 0,
+                      "op": "integer_state"
+                    },
+                    {
+                      "value": 8,
+                      "op": "integer_literal"
+                    }
+                  ],
+                  "origin": {
+                    "source": "native.va",
+                    "line": 2,
+                    "column": 144,
+                    "instance": "dut",
+                    "expansion": []
+                  },
+                  "op": "integer_primitive"
+                },
+                "kind": "store",
+                "origin": {
+                  "source": "native.va",
+                  "line": 2,
+                  "column": 139,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "native.va",
+            "line": 2,
+            "column": 114,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 1
+        },
+        {
+          "trigger": {
+            "kind": "initial_step"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            },
+            {
+              "state": 1,
+              "rhs": {
+                "value": {
+                  "constant": 0.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "store",
+                "origin": {
+                  "source": "native.va",
+                  "line": 2,
+                  "column": 104,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "native.va",
+            "line": 2,
+            "column": 79,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 0
+        }
+      ],
+      "operators": [],
+      "contributions": [
+        {
+          "branch": {
+            "instance": "dut",
+            "local_positive": "r",
+            "local_negative": "y",
+            "kind": "voltage"
+          },
+          "positive": 0,
+          "negative": 1,
+          "rhs": {
+            "op": "multiply",
+            "left": {
+              "constant": -1.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "right": {
+              "state": 1,
+              "op": "state"
+            }
+          },
+          "origin": {
+            "source": "native.va",
+            "line": 2,
+            "column": 151,
+            "instance": "dut",
+            "expansion": []
+          }
+        }
+      ],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "dut",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "event": 1,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 1,
+              "action": {
+                "event": 0,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 2,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "source_floor": {
+      "events": [
+        {
+          "trigger": {
+            "start": 0.25,
+            "period": 0.0,
+            "time_tolerance": 1e-12,
+            "enabled": true,
+            "kind": "timer"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "function": "floor",
+                "args": [
+                  {
+                    "operation": "add",
+                    "left": {
+                      "operation": "multiply",
+                      "left": {
+                        "operation": "divide",
+                        "left": {
+                          "value": {
+                            "constant": 0.0,
+                            "terms": [
+                              {
+                                "node": 0,
+                                "coefficient": -1.0
+                              },
+                              {
+                                "node": 1,
+                                "coefficient": 1.0
+                              }
+                            ],
+                            "op": "affine"
+                          },
+                          "kind": "sample",
+                          "origin": {
+                            "source": "source_floor_event.va",
+                            "line": 2,
+                            "column": 149,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "op": "real_boundary"
+                        },
+                        "right": {
+                          "constant": 0.9,
+                          "terms": [],
+                          "op": "affine"
+                        },
+                        "origin": {
+                          "source": "source_floor_event.va",
+                          "line": 2,
+                          "column": 155,
+                          "instance": "dut",
+                          "expansion": []
+                        },
+                        "op": "real_binary"
+                      },
+                      "right": {
+                        "constant": 15.0,
+                        "terms": [],
+                        "op": "affine"
+                      },
+                      "origin": {
+                        "source": "source_floor_event.va",
+                        "line": 2,
+                        "column": 160,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "real_binary"
+                    },
+                    "right": {
+                      "constant": 0.5,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "origin": {
+                      "source": "source_floor_event.va",
+                      "line": 2,
+                      "column": 163,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_binary"
+                  }
+                ],
+                "origin": {
+                  "source": "source_floor_event.va",
+                  "line": 2,
+                  "column": 142,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "event_math"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "source_floor_event.va",
+            "line": 2,
+            "column": 119,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 1
+        },
+        {
+          "trigger": {
+            "kind": "initial_step"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "source_floor_event.va",
+            "line": 2,
+            "column": 88,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 0
+        }
+      ],
+      "operators": [],
+      "contributions": [
+        {
+          "branch": {
+            "instance": "dut",
+            "local_positive": "r",
+            "local_negative": "y",
+            "kind": "voltage"
+          },
+          "positive": 0,
+          "negative": 2,
+          "rhs": {
+            "op": "multiply",
+            "left": {
+              "constant": -1.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "right": {
+              "state": 0,
+              "op": "state"
+            }
+          },
+          "origin": {
+            "source": "source_floor_event.va",
+            "line": 2,
+            "column": 174,
+            "instance": "dut",
+            "expansion": []
+          }
+        }
+      ],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "dut",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "event": 1,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 1,
+              "action": {
+                "event": 0,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 2,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "constant_power": {
+      "events": [
+        {
+          "trigger": {
+            "kind": "initial_step"
+          },
+          "body": [
+            {
+              "state": 0,
+              "rhs": {
+                "value": {
+                  "operation": "divide",
+                  "left": {
+                    "constant": 1.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "value": {
+                      "operator": 1,
+                      "op": "operator"
+                    },
+                    "kind": "sample",
+                    "origin": {
+                      "source": "pow.va",
+                      "line": 2,
+                      "column": 150,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_boundary"
+                  },
+                  "origin": {
+                    "source": "pow.va",
+                    "line": 2,
+                    "column": 149,
+                    "instance": "dut",
+                    "expansion": []
+                  },
+                  "op": "real_binary"
+                },
+                "kind": "store",
+                "origin": {
+                  "source": "pow.va",
+                  "line": 2,
+                  "column": 143,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary"
+              },
+              "kind": "assign"
+            }
+          ],
+          "origin": {
+            "source": "pow.va",
+            "line": 2,
+            "column": 127,
+            "instance": "dut",
+            "expansion": []
+          },
+          "procedure_id": 0,
+          "expanded_statement_ordinal": 0
+        }
+      ],
+      "operators": [
+        {
+          "function": "ln",
+          "input": {
+            "value": {
+              "constant": 16.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "kind": "argument",
+            "origin": {
+              "source": "pow.va",
+              "line": 2,
+              "column": 154,
+              "instance": "dut",
+              "expansion": []
+            },
+            "op": "real_boundary"
+          },
+          "origin": {
+            "source": "pow.va",
+            "line": 2,
+            "column": 150,
+            "instance": "dut",
+            "expansion": [
+              [
+                "_evas_closed_pow_ln",
+                0
+              ]
+            ]
+          },
+          "kind": "math"
+        },
+        {
+          "function": "exp",
+          "input": {
+            "op": "multiply",
+            "left": {
+              "value": {
+                "constant": 0.25,
+                "terms": [],
+                "op": "affine"
+              },
+              "kind": "argument",
+              "origin": {
+                "source": "pow.va",
+                "line": 2,
+                "column": 156,
+                "instance": "dut",
+                "expansion": []
+              },
+              "op": "real_boundary"
+            },
+            "right": {
+              "operator": 0,
+              "op": "operator"
+            }
+          },
+          "origin": {
+            "source": "pow.va",
+            "line": 2,
+            "column": 150,
+            "instance": "dut",
+            "expansion": [
+              [
+                "_evas_closed_pow_exp",
+                0
+              ]
+            ]
+          },
+          "kind": "math"
+        }
+      ],
+      "contributions": [
+        {
+          "branch": {
+            "instance": "dut",
+            "local_positive": "r",
+            "local_negative": "y",
+            "kind": "voltage"
+          },
+          "positive": 0,
+          "negative": 2,
+          "rhs": {
+            "op": "multiply",
+            "left": {
+              "constant": -1.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "right": {
+              "op": "multiply",
+              "left": {
+                "state": 0,
+                "op": "state"
+              },
+              "right": {
+                "constant": 0.0,
+                "terms": [
+                  {
+                    "node": 0,
+                    "coefficient": -1.0
+                  },
+                  {
+                    "node": 1,
+                    "coefficient": 1.0
+                  }
+                ],
+                "op": "affine"
+              }
+            }
+          },
+          "origin": {
+            "source": "pow.va",
+            "line": 2,
+            "column": 160,
+            "instance": "dut",
+            "expansion": []
+          }
+        }
+      ],
+      "procedures": [
+        {
+          "procedure_id": 0,
+          "instance": "dut",
+          "body": [
+            {
+              "expanded_statement_ordinal": 0,
+              "action": {
+                "event": 0,
+                "kind": "event_gate"
+              }
+            },
+            {
+              "expanded_statement_ordinal": 1,
+              "action": {
+                "contribution": 0,
+                "kind": "contribution_capture"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "kernel_sha256": "655a156529d857be8f5fcd467623a324cc463be5977b00aa6c2ea4a4592686d1",
+  "raw_mutation_probes": [
+    {
+      "label": "native-integer-args",
+      "original_target": {
+        "value": {
+          "function": "remainder",
+          "args": [
+            {
+              "state": 0,
+              "op": "integer_state"
+            },
+            {
+              "value": 8,
+              "op": "integer_literal"
+            }
+          ],
+          "origin": {
+            "source": "native.va",
+            "line": 2,
+            "column": 144,
+            "instance": "dut",
+            "expansion": []
+          },
+          "op": "integer_primitive"
+        },
+        "kind": "store",
+        "origin": {
+          "source": "native.va",
+          "line": 2,
+          "column": 139,
+          "instance": "dut",
+          "expansion": []
+        },
+        "op": "real_boundary"
+      },
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "r",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 1,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "state": 1,
+                  "op": "state"
+                }
+              },
+              "origin": {
+                "source": "native.va",
+                "line": 2,
+                "column": 151,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [
+            {
+              "instance": "dut",
+              "name": "n",
+              "kind": "integer",
+              "initial": 0.0
+            },
+            {
+              "instance": "dut",
+              "name": "out",
+              "kind": "real",
+              "initial": 0.0
+            }
+          ],
+          "events": [
+            {
+              "trigger": {
+                "start": 1.0,
+                "period": 1.0,
+                "time_tolerance": 1e-12,
+                "enabled": true,
+                "kind": "timer"
+              },
+              "body": [
+                {
+                  "state": 0,
+                  "rhs": {
+                    "op": "add",
+                    "left": {
+                      "state": 0,
+                      "op": "state"
+                    },
+                    "right": {
+                      "constant": 1.0,
+                      "terms": [],
+                      "op": "affine"
+                    }
+                  },
+                  "kind": "assign"
+                },
+                {
+                  "state": 1,
+                  "rhs": {
+                    "value": {
+                      "function": "remainder",
+                      "args": [
+                        {
+                          "state": 0,
+                          "op": "integer_state"
+                        },
+                        {
+                          "value": 8,
+                          "op": "integer_literal"
+                        }
+                      ],
+                      "origin": {
+                        "source": "native.va",
+                        "line": 2,
+                        "column": 144,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "integer_primitive"
+                    },
+                    "kind": "store",
+                    "origin": {
+                      "source": "native.va",
+                      "line": 2,
+                      "column": 139,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_boundary",
+                    "args": [
+                      {
+                        "op": "integer_state",
+                        "state": 1
+                      },
+                      {
+                        "op": "integer_literal",
+                        "value": 8
+                      }
+                    ]
+                  },
+                  "kind": "assign"
+                }
+              ],
+              "origin": {
+                "source": "native.va",
+                "line": 2,
+                "column": 114,
+                "instance": "dut",
+                "expansion": []
+              },
+              "procedure_id": 0,
+              "expanded_statement_ordinal": 1
+            },
+            {
+              "trigger": {
+                "kind": "initial_step"
+              },
+              "body": [
+                {
+                  "state": 0,
+                  "rhs": {
+                    "constant": 0.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "kind": "assign"
+                },
+                {
+                  "state": 1,
+                  "rhs": {
+                    "value": {
+                      "constant": 0.0,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "kind": "store",
+                    "origin": {
+                      "source": "native.va",
+                      "line": 2,
+                      "column": 104,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_boundary"
+                  },
+                  "kind": "assign"
+                }
+              ],
+              "origin": {
+                "source": "native.va",
+                "line": 2,
+                "column": 79,
+                "instance": "dut",
+                "expansion": []
+              },
+              "procedure_id": 0,
+              "expanded_statement_ordinal": 0
+            }
+          ],
+          "operators": [],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "event": 1,
+                    "kind": "event_gate"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 1,
+                  "action": {
+                    "event": 0,
+                    "kind": "event_gate"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 2,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [],
+        "samples": [],
+        "transient": {
+          "pwl": [],
+          "output_times": [
+            0,
+            1
+          ],
+          "stop": 1,
+          "max_step": 1
+        }
+      },
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "{\"kind\":\"invalid_request\",\"message\":\"unknown field `args`, expected one of `value`, `kind`, `origin` at line 1 column 1328\"}\n"
+    },
+    {
+      "label": "native-integer-function",
+      "original_target": {
+        "value": {
+          "function": "remainder",
+          "args": [
+            {
+              "state": 0,
+              "op": "integer_state"
+            },
+            {
+              "value": 8,
+              "op": "integer_literal"
+            }
+          ],
+          "origin": {
+            "source": "native.va",
+            "line": 2,
+            "column": 144,
+            "instance": "dut",
+            "expansion": []
+          },
+          "op": "integer_primitive"
+        },
+        "kind": "store",
+        "origin": {
+          "source": "native.va",
+          "line": 2,
+          "column": 139,
+          "instance": "dut",
+          "expansion": []
+        },
+        "op": "real_boundary"
+      },
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "r",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 1,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "state": 1,
+                  "op": "state"
+                }
+              },
+              "origin": {
+                "source": "native.va",
+                "line": 2,
+                "column": 151,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [
+            {
+              "instance": "dut",
+              "name": "n",
+              "kind": "integer",
+              "initial": 0.0
+            },
+            {
+              "instance": "dut",
+              "name": "out",
+              "kind": "real",
+              "initial": 0.0
+            }
+          ],
+          "events": [
+            {
+              "trigger": {
+                "start": 1.0,
+                "period": 1.0,
+                "time_tolerance": 1e-12,
+                "enabled": true,
+                "kind": "timer"
+              },
+              "body": [
+                {
+                  "state": 0,
+                  "rhs": {
+                    "op": "add",
+                    "left": {
+                      "state": 0,
+                      "op": "state"
+                    },
+                    "right": {
+                      "constant": 1.0,
+                      "terms": [],
+                      "op": "affine"
+                    }
+                  },
+                  "kind": "assign"
+                },
+                {
+                  "state": 1,
+                  "rhs": {
+                    "value": {
+                      "function": "remainder",
+                      "args": [
+                        {
+                          "state": 0,
+                          "op": "integer_state"
+                        },
+                        {
+                          "value": 8,
+                          "op": "integer_literal"
+                        }
+                      ],
+                      "origin": {
+                        "source": "native.va",
+                        "line": 2,
+                        "column": 144,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "integer_primitive"
+                    },
+                    "kind": "store",
+                    "origin": {
+                      "source": "native.va",
+                      "line": 2,
+                      "column": 139,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_boundary",
+                    "function": "divide"
+                  },
+                  "kind": "assign"
+                }
+              ],
+              "origin": {
+                "source": "native.va",
+                "line": 2,
+                "column": 114,
+                "instance": "dut",
+                "expansion": []
+              },
+              "procedure_id": 0,
+              "expanded_statement_ordinal": 1
+            },
+            {
+              "trigger": {
+                "kind": "initial_step"
+              },
+              "body": [
+                {
+                  "state": 0,
+                  "rhs": {
+                    "constant": 0.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "kind": "assign"
+                },
+                {
+                  "state": 1,
+                  "rhs": {
+                    "value": {
+                      "constant": 0.0,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "kind": "store",
+                    "origin": {
+                      "source": "native.va",
+                      "line": 2,
+                      "column": 104,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_boundary"
+                  },
+                  "kind": "assign"
+                }
+              ],
+              "origin": {
+                "source": "native.va",
+                "line": 2,
+                "column": 79,
+                "instance": "dut",
+                "expansion": []
+              },
+              "procedure_id": 0,
+              "expanded_statement_ordinal": 0
+            }
+          ],
+          "operators": [],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "event": 1,
+                    "kind": "event_gate"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 1,
+                  "action": {
+                    "event": 0,
+                    "kind": "event_gate"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 2,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [],
+        "samples": [],
+        "transient": {
+          "pwl": [],
+          "output_times": [
+            0,
+            1
+          ],
+          "stop": 1,
+          "max_step": 1
+        }
+      },
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "{\"kind\":\"invalid_request\",\"message\":\"unknown field `function`, expected one of `value`, `kind`, `origin` at line 1 column 1264\"}\n"
+    },
+    {
+      "label": "constant-power-zero-source",
+      "original_target": {
+        "value": {
+          "constant": 16.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "kind": "argument",
+        "origin": {
+          "source": "pow.va",
+          "line": 2,
+          "column": 154,
+          "instance": "dut",
+          "expansion": []
+        },
+        "op": "real_boundary"
+      },
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "r",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "state": 0,
+                    "op": "state"
+                  },
+                  "right": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  }
+                }
+              },
+              "origin": {
+                "source": "pow.va",
+                "line": 2,
+                "column": 160,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [
+            {
+              "instance": "dut",
+              "name": "gain",
+              "kind": "real",
+              "initial": 0.0
+            }
+          ],
+          "events": [
+            {
+              "trigger": {
+                "kind": "initial_step"
+              },
+              "body": [
+                {
+                  "state": 0,
+                  "rhs": {
+                    "value": {
+                      "operation": "divide",
+                      "left": {
+                        "constant": 1.0,
+                        "terms": [],
+                        "op": "affine"
+                      },
+                      "right": {
+                        "value": {
+                          "operator": 1,
+                          "op": "operator"
+                        },
+                        "kind": "sample",
+                        "origin": {
+                          "source": "pow.va",
+                          "line": 2,
+                          "column": 150,
+                          "instance": "dut",
+                          "expansion": []
+                        },
+                        "op": "real_boundary"
+                      },
+                      "origin": {
+                        "source": "pow.va",
+                        "line": 2,
+                        "column": 149,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "real_binary"
+                    },
+                    "kind": "store",
+                    "origin": {
+                      "source": "pow.va",
+                      "line": 2,
+                      "column": 143,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "real_boundary"
+                  },
+                  "kind": "assign"
+                }
+              ],
+              "origin": {
+                "source": "pow.va",
+                "line": 2,
+                "column": 127,
+                "instance": "dut",
+                "expansion": []
+              },
+              "procedure_id": 0,
+              "expanded_statement_ordinal": 0
+            }
+          ],
+          "operators": [
+            {
+              "function": "ln",
+              "input": {
+                "value": {
+                  "constant": 16.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "argument",
+                "origin": {
+                  "source": "pow.va",
+                  "line": 2,
+                  "column": 154,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "real_boundary",
+                "terms": [
+                  {
+                    "node": 1,
+                    "coefficient": 0
+                  }
+                ]
+              },
+              "origin": {
+                "source": "pow.va",
+                "line": 2,
+                "column": 150,
+                "instance": "dut",
+                "expansion": [
+                  [
+                    "_evas_closed_pow_ln",
+                    0
+                  ]
+                ]
+              },
+              "kind": "math"
+            },
+            {
+              "function": "exp",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "value": {
+                    "constant": 0.25,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "kind": "argument",
+                  "origin": {
+                    "source": "pow.va",
+                    "line": 2,
+                    "column": 156,
+                    "instance": "dut",
+                    "expansion": []
+                  },
+                  "op": "real_boundary"
+                },
+                "right": {
+                  "operator": 0,
+                  "op": "operator"
+                }
+              },
+              "origin": {
+                "source": "pow.va",
+                "line": 2,
+                "column": 150,
+                "instance": "dut",
+                "expansion": [
+                  [
+                    "_evas_closed_pow_exp",
+                    0
+                  ]
+                ]
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "event": 0,
+                    "kind": "event_gate"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 1,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0,
+                0.25
+              ],
+              [
+                1,
+                0.75
+              ]
+            ]
+          ],
+          "output_times": [
+            0,
+            1
+          ],
+          "stop": 1,
+          "max_step": 1
+        }
+      },
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "{\"kind\":\"invalid_request\",\"message\":\"unknown field `terms`, expected one of `value`, `kind`, `origin` at line 1 column 1828\"}\n"
+    }
+  ],
+  "rounded_feedback_no_fixed_point": {
+    "equation": "s=RN(RN(-0.5*s)+1), physical y=s, count n=1",
+    "candidates": [
+      {
+        "s": "0x1.5555555555555p-1",
+        "map": "0x1.5555555555556p-1",
+        "fixed": false
+      },
+      {
+        "s": "0x1.5555555555556p-1",
+        "map": "0x1.5555555555555p-1",
+        "fixed": false
+      }
+    ],
+    "derivation": "A finite fixed point cannot be s<=0 (RHS>=1), s>=1 (RHS<=0.5), s<=0.5 (RHS>=0.75), or s>=0.75 (RHS<=0.625). Thus 0.5<s<0.75. Multiplication by -0.5 is exact here. 1-s/2 belongs to (0.625,0.75), whose binary64 spacing is 2^-53; final RN error <=2^-54. Hence |s-2/3|<=1/(3*2^53). The lower neighboring float L=0x1.5555555555555p-1 is exactly 1/(3*2^53) below 2/3, while U is 2/(3*2^53) above it, and all other floats are farther away. Only L is a possible fixed point. For L, 1-L/2 is the exact midpoint (L+U)/2; U has even significand, so RN gives U != L. Therefore no finite binary64 fixed point exists. The U->L computation is an additional 2-cycle illustration, not the global exclusion proof.",
+    "radius": "1/27021597764222976"
+  },
+  "source_floor_cut": {
+    "input": "0x1.eb851eb851eb8p-6",
+    "division": "0x1.1111111111111p-5",
+    "multiply": "0x1.0000000000000p-1",
+    "add": "0x1.0000000000000p+0",
+    "floor": 1,
+    "branch": 8,
+    "old_expected": {
+      "floor": 0,
+      "branch": 7
+    }
+  },
+  "diagnostic_probes": [
+    {
+      "label": "singular-same-time",
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real s; analog begin @(initial_step)s=0;@(timer(0.5,0,0.001))s=V(y,r);V(y,r)<+s; end endmodule",
+      "inputs": {
+        "u": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      },
+      "times": [
+        0,
+        1
+      ],
+      "exception": "KernelError",
+      "actual": {
+        "kind": "singular_jacobian",
+        "message": "iteration 0: voltage constraints have no numerically unique solution at column 4; constraints: diagnostic-probe.va:2:134 (dut), diagnostic-probe.va:2:134 (dut), diagnostic-probe.va:2:134 (dut), diagnostic-probe.va:2:134 (dut), diagnostic-probe.va:2:134 (dut)"
+      }
+    },
+    {
+      "label": "intermediate-overflow",
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; integer n; analog begin @(initial_step)n=2147483647;@(timer(0.5,0,0.001))begin n=n+1;n=n-1;end V(y,r)<+n; end endmodule",
+      "inputs": {
+        "u": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      },
+      "times": [
+        0,
+        1
+      ],
+      "exception": "KernelError",
+      "actual": {
+        "kind": "integer_range",
+        "message": "integer store to state 0 requires one signed32 value at diagnostic-probe.va:2:116 (dut)"
+      }
+    },
+    {
+      "label": "forcing-cursor",
+      "mutated_program": {
+        "nodes": [
+          "0",
+          "a",
+          "b",
+          "c",
+          "y"
+        ],
+        "contributions": [
+          {
+            "branch": {
+              "instance": "dut",
+              "local_positive": "0",
+              "local_negative": "y",
+              "kind": "voltage"
+            },
+            "positive": 0,
+            "negative": 4,
+            "rhs": {
+              "value": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 2,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  }
+                }
+              },
+              "origin": {
+                "source": "marked.va",
+                "line": 4,
+                "column": 1,
+                "instance": "dut",
+                "expansion": []
+              },
+              "checked": [
+                {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 1,
+                      "coefficient": 0.0
+                    },
+                    {
+                      "node": 2,
+                      "coefficient": 0.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              ],
+              "op": "forcing"
+            },
+            "origin": {
+              "source": "marked.va",
+              "line": 4,
+              "column": 1,
+              "instance": "dut",
+              "expansion": []
+            }
+          },
+          {
+            "branch": {
+              "instance": "dut",
+              "local_positive": "0",
+              "local_negative": "y",
+              "kind": "voltage"
+            },
+            "positive": 0,
+            "negative": 4,
+            "rhs": {
+              "op": "multiply",
+              "left": {
+                "constant": -1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "right": {
+                "operator": 0,
+                "op": "operator"
+              }
+            },
+            "origin": {
+              "source": "marked.va",
+              "line": 4,
+              "column": 1,
+              "instance": "dut",
+              "expansion": []
+            }
+          }
+        ],
+        "states": [
+          {
+            "instance": "dut",
+            "name": "q",
+            "kind": "real",
+            "initial": 0.0
+          }
+        ],
+        "events": [
+          {
+            "trigger": {
+              "guard": {
+                "op": "add",
+                "left": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 3,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": -0.5,
+                  "terms": [],
+                  "op": "affine"
+                }
+              },
+              "direction": 1,
+              "time_tolerance": 1e-12,
+              "expression_tolerance": 1e-09,
+              "kind": "cross"
+            },
+            "body": [
+              {
+                "state": 0,
+                "rhs": {
+                  "value": {
+                    "constant": 1.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "kind": "store",
+                  "origin": {
+                    "source": "marked.va",
+                    "line": 3,
+                    "column": 57,
+                    "instance": "dut",
+                    "expansion": []
+                  },
+                  "op": "real_boundary"
+                },
+                "kind": "assign"
+              }
+            ],
+            "origin": {
+              "source": "marked.va",
+              "line": 3,
+              "column": 35,
+              "instance": "dut",
+              "expansion": []
+            },
+            "procedure_id": 0,
+            "expanded_statement_ordinal": 1
+          },
+          {
+            "trigger": {
+              "kind": "initial_step"
+            },
+            "body": [
+              {
+                "state": 0,
+                "rhs": {
+                  "value": {
+                    "constant": 0.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "kind": "store",
+                  "origin": {
+                    "source": "marked.va",
+                    "line": 3,
+                    "column": 30,
+                    "instance": "dut",
+                    "expansion": []
+                  },
+                  "op": "real_boundary"
+                },
+                "kind": "assign"
+              }
+            ],
+            "origin": {
+              "source": "marked.va",
+              "line": 3,
+              "column": 14,
+              "instance": "dut",
+              "expansion": []
+            },
+            "procedure_id": 0,
+            "expanded_statement_ordinal": 0
+          }
+        ],
+        "operators": [
+          {
+            "input": {
+              "op": "affine",
+              "constant": 0,
+              "terms": [
+                {
+                  "node": 1,
+                  "coefficient": 1
+                }
+              ]
+            },
+            "delay": 0.0,
+            "rise": 0.125,
+            "fall": 0.125,
+            "origin": {
+              "source": "marked.va",
+              "line": 4,
+              "column": 17,
+              "instance": "dut",
+              "expansion": []
+            },
+            "kind": "transition"
+          }
+        ],
+        "schema_version": 33,
+        "step_bounds": [],
+        "procedures": [
+          {
+            "procedure_id": 0,
+            "instance": "dut",
+            "body": [
+              {
+                "expanded_statement_ordinal": 0,
+                "action": {
+                  "event": 1,
+                  "kind": "event_gate"
+                }
+              },
+              {
+                "expanded_statement_ordinal": 1,
+                "action": {
+                  "event": 0,
+                  "kind": "event_gate"
+                }
+              },
+              {
+                "expanded_statement_ordinal": 2,
+                "action": {
+                  "contribution": 0,
+                  "kind": "contribution_capture"
+                }
+              },
+              {
+                "expanded_statement_ordinal": 3,
+                "action": {
+                  "contribution": 1,
+                  "kind": "contribution_capture"
+                }
+              }
+            ]
+          }
+        ],
+        "real_bindings": []
+      },
+      "exception": "KernelError",
+      "actual": {
+        "kind": "unsupported_initial_history",
+        "message": "bounded bootstrap requires only bare same-owner real-state Transition targets"
+      }
+    }
+  ]
+}

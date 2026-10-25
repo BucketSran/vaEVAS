@@ -1,0 +1,36 @@
+{
+  "source": "a=(V(u,r)>0)?V(u,r):0; @(initial_step)q=0; @(timer(0.25))q=a; V(y,r)<+1000000*q;",
+  "oracle": "Original startup guard spans [-.01,.01]; stable input gives q interval [1.24,1.26] at .25 and later y nominal1250000 with radius10000; tight must reject, loose20000 can admit voltage requirement if supported",
+  "rows": [
+    {
+      "tag": "original",
+      "accepted": false,
+      "type": "KernelError",
+      "detail": {
+        "kind": "event_condition",
+        "message": "procedure condition is not certified over its complete source-position enclosure at body-alias.va:2:99 (dut)"
+      },
+      "message": "event_condition: procedure condition is not certified over its complete source-position enclosure at body-alias.va:2:99 (dut)"
+    },
+    {
+      "tag": "stable_tight",
+      "accepted": false,
+      "type": "KernelError",
+      "detail": {
+        "kind": "waveform_accuracy",
+        "message": "waveform residual interval [-1.0000000000000231e-2, 1.0000000000000231e-2] V exceeds ±1.26e-10 V at body-alias.va:2:149 (dut)"
+      },
+      "message": "waveform_accuracy: waveform residual interval [-1.0000000000000231e-2, 1.0000000000000231e-2] V exceeds ±1.26e-10 V at body-alias.va:2:149 (dut)"
+    },
+    {
+      "tag": "stable_loose",
+      "accepted": false,
+      "type": "KernelError",
+      "detail": {
+        "kind": "waveform_accuracy",
+        "message": "nonfinite interval Jacobian at body-alias.va:2:149 (dut)"
+      },
+      "message": "waveform_accuracy: nonfinite interval Jacobian at body-alias.va:2:149 (dut)"
+    }
+  ]
+}

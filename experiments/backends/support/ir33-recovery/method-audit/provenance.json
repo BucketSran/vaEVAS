@@ -1,0 +1,113 @@
+{
+  "source_artifacts": {
+    "audit.json": {
+      "sha256": "0df596c67689c55fcd5dd0db00cfc2f2d852f4eef7ae0125df12c4017976b402",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "methods.tsv": {
+      "sha256": "2cb8a8c3d7a4a11cbfcc12fc32490606a7119616c3abd634b2e8232592920928",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "scope.json": {
+      "sha256": "6a2312779cf6a43f5d1f152faf5ee792f93483f7d3cba54212726009672e4f10",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "acceptance.json": {
+      "sha256": "e5bc8d5abfc8e05bc296235a81ffb474788146059a495bb158338e6d429f1c4d",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "final-spec-review.json": {
+      "sha256": "c21ea94996cae0d3801c890899b3f2caab7e4dcc3706eda16ba9e4c709d084ae",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "standards-review.json": {
+      "sha256": "05d56023acc3b46f0cec0199e55376caa3908b2a2ef41e503f7a8ebd4b60510f",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "coordinator-probes.json": {
+      "sha256": "21b412d18f339d4c31c0a6060c1808f2d57214b81af26d1885933ae8fe952f2f",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "independent-driver-actual.json": {
+      "sha256": "40e09bbb831b5457d0abb61ee979968d74284ba275e27c9ec873539b5b95fa8b",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "rejection-path-probe.json": {
+      "sha256": "dae6baa8ff7053af8fa709d421cb46a668952a0aafc3d51d9382051af232edd5",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "startup-vs-future-probe.json": {
+      "sha256": "7e87486f580c09276946a19b6b87a14eb2c2639bd6ad270de1d81db654f8b903",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "lane1-probes.json": {
+      "sha256": "c527cde8a09c2898ee850f3edac54cd18afeaaeaa0768a54ad011deb65069420",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "lane1-probe-operator-boundaries.json": {
+      "sha256": "20011d15a564e48228893d0f387b59ae297b05088f9ab6659fda0ebea9b2012c",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "lane2-probe.json": {
+      "sha256": "bea2607df1e851ff53add8b91e50a196b91f9831a91358c11918050f6378a192",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "lane3-probe-results.json": {
+      "sha256": "b68d0cb26506ff97c461101d8b14cd30164e0846e9b3054082ffd097607b98c2",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "lane4-arithmetic-probe.json": {
+      "sha256": "80db7c976e9dd2e7d67059e7cb4ed0abdaf393d1b61c3de5d26d0b8cb1578517",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "lane5-probe.json": {
+      "sha256": "6b6b26f8e4892a5b1308de7683722937b8e9192b43749409c0622120b231b6e9",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "lane6-probe-rn.json": {
+      "sha256": "ae7654ac57f0f968425505fe0a78c8f8fe04c2e8b7f75960306fb13aa107f60c",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "lane6-probe-sourceband.json": {
+      "sha256": "11f6069fd10e697f214b5df4d2327746116c8e142178561c39e8c83270e49933",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "lane6-probe-vacuity.json": {
+      "sha256": "6cb2eb59004d130ea0e9cc2f6553a816c335e12a7615b59d71d464bfb9ae4f53",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "lane3-probe-checks.py": {
+      "sha256": "c19990bc326d86e6d5c2eb2c8d8fc79fd7ad6594b2f2b1965bd4057439c7e90b",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "lane6-probe-rn.py": {
+      "sha256": "d9fc74b78f769a9af45609285494c3b17a1517711ab41d0c351944a85460066e",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "lane6-probe-sourceband.py": {
+      "sha256": "57ddccddef67a76dfeb077ebac060b1945933eb66fb28da6ac427241b443808c",
+      "availability": "local-only original; curated derivative included where listed"
+    },
+    "lane6-probe-vacuity.py": {
+      "sha256": "e7af070da7d2ae6ecfef13d10e9ccdae679e9b2b0dfcfe506a44683a17a92383",
+      "availability": "local-only original; curated derivative included where listed"
+    }
+  },
+  "publication_transform": [
+    "Retain every method ID, outcome, verdict, contract, oracle, finding and limitation.",
+    "Store methods once as TSV; omit repeated historical capability navigation already published with the previous audit.",
+    "Rewrite local evidence references to repository-contained derivatives; normalize machine paths in stored tracebacks.",
+    "Preserve withdrawn findings and the reason for each reclassification.",
+    "Exclude raw lane inputs, duplicate draft builders, bulk CI logs and copied source trees."
+  ],
+  "availability": {
+    "repository_contained": "Method table, findings, frozen compact probes and original-review scope receipts",
+    "public_ci": "Original execution run and fixed source links",
+    "local_only": "Full audit inputs, draft builders, unabridged author/reviewer work records and bulk CI logs; hashes are identities, not retrieval links"
+  },
+  "no_claims": [
+    "No simulator/test repair",
+    "No new full regression result",
+    "No new capability/backend qualification"
+  ]
+}

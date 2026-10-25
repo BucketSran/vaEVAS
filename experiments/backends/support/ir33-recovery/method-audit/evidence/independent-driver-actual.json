@@ -1,0 +1,258 @@
+{
+  "portability_advisories": {
+    "schema_version": 2,
+    "record_limit": 128,
+    "records": [
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 2,
+        "event": 0,
+        "trigger": 0,
+        "origin": "model.va:3:103 (R)",
+        "query_source": "output_times",
+        "query_index": 2,
+        "query_time_s": 0.5,
+        "time_bounds_s": [
+          0.5,
+          0.5
+        ]
+      }
+    ],
+    "model_records": [],
+    "dropped_records": 0,
+    "truncated": false
+  },
+  "observation_evidence": {
+    "schema_version": 1,
+    "nodes": [
+      "0",
+      "u",
+      "y"
+    ],
+    "effective_controls": {
+      "absolute_V": 1e-12,
+      "relative": 1e-10,
+      "stop_s": 1.0,
+      "max_step_s": 0.125,
+      "max_step_applied": true
+    },
+    "sample_origins": [
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame"
+    ],
+    "initial_settled": true,
+    "voltage_bounds_V": [
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          -0.0,
+          0.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          -0.0,
+          0.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ]
+    ]
+  },
+  "engine": "evas-events-0.25.0",
+  "schema_version": 33,
+  "nodes": [
+    "0",
+    "u",
+    "y"
+  ],
+  "solutions": [
+    {
+      "voltages": [
+        0.0,
+        1.0,
+        -0.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        1.0,
+        -0.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    }
+  ],
+  "transient": {
+    "times": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "state_names": [
+      "D:q",
+      "R:p"
+    ],
+    "states": [
+      [
+        1.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ]
+    ],
+    "events": [
+      {
+        "time": 0.0,
+        "event": 1,
+        "origin": "model.va:2:67 (D)",
+        "kind": "initial_step",
+        "before": [
+          0.0,
+          0.0
+        ],
+        "after": [
+          1.0,
+          0.0
+        ]
+      },
+      {
+        "time": 0.0,
+        "event": 2,
+        "origin": "model.va:3:82 (R)",
+        "kind": "initial_step",
+        "before": [
+          0.0,
+          0.0
+        ],
+        "after": [
+          1.0,
+          0.0
+        ]
+      },
+      {
+        "time": 0.5,
+        "event": 0,
+        "origin": "model.va:3:103 (R)",
+        "kind": "timer",
+        "before": [
+          1.0,
+          0.0
+        ],
+        "after": [
+          1.0,
+          1.0
+        ]
+      }
+    ],
+    "display_records": [],
+    "accepted_steps": 8,
+    "discarded_trials": 0
+  }
+}

@@ -1,0 +1,1875 @@
+{
+  "findings": [
+    {
+      "id": "L1-F01",
+      "priority": "P2",
+      "affected_ids": [
+        "test_compact_physical_select.CompactPhysicalSelect.test_small_root_correlated_choice_keeps_legacy_conditional_certification",
+        "test_night_semantic_variants.NightSemanticVariants.test_exact_midpoint_condition_preserves_sample_and_operator_history"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_compact_physical_select.py:39",
+        "evas/tests/test_night_semantic_variants.py:251",
+        "evas/docs/math/events.md:1414",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane1-probes.json"
+      ],
+      "problem": "Program comparisons are applied after sampling RN. For u=3t at cross(u-.5), sufficiently small post-root values still RN to .5, so >.5 is false. At midpoint of binary64 .1,.9 the exact value .5+2^-56 RN maps to .5 and held must become0, while the test expects approximately.5.",
+      "recommended_correction": "Use source-ordered RN sampled comparisons and retain distinct physical root checks; expected q0/held0 follow directly from the stated model.",
+      "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited."
+    },
+    {
+      "id": "L1-F02",
+      "priority": "P2",
+      "affected_ids": [
+        "test_initial_seed_invariance.InitialSeedInvariance.test_rational_changed_seed_retains_bounded_history"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_initial_seed_invariance.py:45",
+        "evas/docs/development/DECISIONS.md:194",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane1-probes.json"
+      ],
+      "problem": "The exact-real delta=.03+.09*.2 is not q after sequential RN multiplication and addition. The first stored q is3458764513820541/72057594037927936, strictly above exact delta. Requiring a point/multi-point output enclosure to include pre-RN delta is contradictory. The second cycle must be evaluated sequentially, not inferred as2*delta.",
+      "recommended_correction": "Derive each RN operation/store independently; require enclosure of rounded accepted q, retain genuine source-band and later history uncertainty controls.",
+      "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited."
+    },
+    {
+      "id": "L1-F03",
+      "priority": "P2",
+      "affected_ids": [
+        "test_deadline_origin_contract.DeadlineOriginContract.test_nextafter_duration_and_declaration_order_do_not_merge_histories",
+        "test_deadline_origin_contract.DeadlineOriginContract.test_shared_nonpoint_held_epoch_equal_shifts_match_independent_ramps",
+        "test_deadline_origin_contract.DeadlineOriginContract.test_shared_origin_different_fixed_shifts_preserve_physical_waveforms",
+        "test_event_accuracy.EventAccuracy.test_coupled_voltage_roots_against_closed_form",
+        "test_event_accuracy.EventAccuracy.test_falling_roots_and_large_time_translation",
+        "test_event_accuracy.EventAccuracy.test_internal_solution_uncertainty_cannot_claim_tight_time_accuracy",
+        "test_event_accuracy.EventAccuracy.test_original_source_proves_neighbouring_roots_are_distinct",
+        "test_event_accuracy.EventAccuracy.test_scaled_simultaneous_guards_share_settled_voltage",
+        "test_event_accuracy.EventAccuracy.test_shallow_crossing_uses_true_root_and_post_crossing_side",
+        "test_frontend_diagnostics.FrontendDiagnostics.test_previous_forcing_only_dae_boundary_now_completes",
+        "test_implicit_event_restart.ImplicitEventRestart.test_original_model_preserves_integrals_and_changes_rate",
+        "test_live_transition_coefficient.CapturedClockModes.test_capture_with_exact_source_zero_offset_keeps_original_root_and_outputs",
+        "test_night_semantic_variants.NightSemanticVariants.test_baseline_probe_matches_rational_hand_answers",
+        "test_night_semantic_variants.NightSemanticVariants.test_equivalent_decompositions_preserve_answer_and_events",
+        "test_night_semantic_variants.NightSemanticVariants.test_extra_observation_times_and_unloaded_taps_preserve_history",
+        "test_night_semantic_variants.NightSemanticVariants.test_independent_instances_own_inputs_and_order",
+        "test_night_semantic_variants.NightSemanticVariants.test_renaming_preserves_bindings_answers_and_events",
+        "test_source_root_windows.SourceRootWindows.test_314_timer_after_source_corner_keeps_phase_and_interrupted_history",
+        "test_source_root_windows.SourceRootWindows.test_equal_source_corner_and_timer_remain_one_settlement",
+        "test_timer.TimerContracts.test_fraction_clock_bounds_long_history_and_large_absolute_time",
+        "test_source_root_windows.SourceRootWindows.test_101_timer_before_time_cut_preserves_both_transition_histories"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_deadline_origin_contract.py:93",
+        "evas/tests/test_deadline_origin_contract.py:71",
+        "evas/tests/test_deadline_origin_contract.py:83",
+        "evas/tests/test_event_accuracy.py:167",
+        "evas/tests/test_event_accuracy.py:215",
+        "evas/tests/test_event_accuracy.py:136",
+        "evas/tests/test_event_accuracy.py:180",
+        "evas/tests/test_event_accuracy.py:154",
+        "evas/tests/test_event_accuracy.py:105",
+        "evas/tests/test_frontend_diagnostics.py:25",
+        "evas/tests/test_implicit_event_restart.py:24",
+        "evas/tests/test_live_transition_coefficient.py:259",
+        "evas/tests/test_night_semantic_variants.py:190",
+        "evas/tests/test_night_semantic_variants.py:194",
+        "evas/tests/test_night_semantic_variants.py:230",
+        "evas/tests/test_night_semantic_variants.py:218",
+        "evas/tests/test_night_semantic_variants.py:209",
+        "evas/tests/test_source_root_windows.py:121",
+        "evas/tests/test_source_root_windows.py:237",
+        "evas/tests/test_timer.py:190",
+        "evas/tests/test_deadline_origin_contract.py:54",
+        "evas/tests/test_event_accuracy.py:25",
+        "evas/tests/test_night_semantic_variants.py:118",
+        "evas/tests/test_source_root_windows.py:63",
+        "evas/tests/initial_record_contract.py:12",
+        "evas/docs/math/events.md:1414",
+        "evas/tests/test_source_root_windows.py:107"
+      ],
+      "problem": "These methods or their inspected helpers compare the complete event record list with a runtime-only count/sequence/index. IR33 retains explicit initial_step records. Examples: assert_wave requires3 instead of initial+3; assert_root requires1 instead of initial+cross; timer_long_count requires2000 instead of initial+2000; query_variants maps initial window[0,0] to a timer clock root; night hand_events omits both initial records.",
+      "recommended_correction": "First validate initial gate identity,source-derived before/after and multiplicity, then compare runtime records by trigger identity/occurrence. Preserve physical waveform and enclosure assertions; do not merely drop arbitrary rows.",
+      "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited."
+    },
+    {
+      "id": "L1-F04",
+      "priority": "P2",
+      "affected_ids": [
+        "test_initial_ordinary_alias_admission.InitialOrdinaryAliasAdmission.test_unrelated_bound_step_keeps_existing_admission",
+        "test_initial_ordinary_alias_admission.InitialOrdinaryAliasAdmission.test_unrelated_input_predicate_keeps_bound_step_admission",
+        "test_local_state.LocalStateContracts.test_event_writers_default_to_zero_and_locals_keep_separate_roles"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_initial_ordinary_alias_admission.py:80",
+        "evas/tests/test_initial_ordinary_alias_admission.py:86",
+        "evas/tests/test_local_state.py:144",
+        "evas/docs/math/events.md:1414",
+        "evas/src/evas/instance_compiler.py:1029"
+      ],
+      "problem": "State.initial is declaration/default seed, which is0 in these sources. initial_step q=7 orq=1 is a later executable gate. The tests require State.initial7/1 and thereby confuse initial storage with post-initial runtime state; useful output/step-bound controls remain.",
+      "recommended_correction": "Expect declaration seed0 and independently assert initial event writes and post-initial observations. Retain alias state separation and step-bound structure checks.",
+      "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited."
+    },
+    {
+      "id": "L1-F05",
+      "priority": "P2",
+      "affected_ids": [
+        "test_compact_physical_select.CompactPhysicalSelect.test_legacy_expansion_boundary_counts_each_wire_use_and_guard_choice"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_compact_physical_select.py:113",
+        "evas/src/evas/instance_compiler.py:2537"
+      ],
+      "problem": "The manually constructed InstanceCompiler has Compilation.states empty but calls event_assignment(state=0). Current event_assignment indexes states[0].kind before any expansion, causing IndexError and never testing the4096 boundary. It also lacks current procedure_builder metadata.",
+      "recommended_correction": "Supply a complete legitimate compiler/state fixture and explicitly select legacy lowering, then preserve the independently derived within/beyond expansion controls.",
+      "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited."
+    },
+    {
+      "id": "L1-F06",
+      "priority": "P2",
+      "affected_ids": [
+        "test_event_parameter_specialization.EventParameterSpecialization.test_comparison_operands_and_equality_keep_decision_budget",
+        "test_event_parameter_specialization.EventParameterSpecialization.test_dead_assignment_decisions_keep_original_budget",
+        "test_event_parameter_specialization.EventParameterSpecialization.test_implicit_quotient_choices_keep_original_budget",
+        "test_lint.LintCLI.test_origin_specific_input_parameter_and_resource_rejections",
+        "test_selected_quotient_comparison.SelectedQuotientComparisonContracts.test_shared_alias_tree_obeys_expanded_ir_budget",
+        "test_compact_physical_select.CompactPhysicalSelect.test_held_time_and_observer_math_do_not_gain_compact_physical_admission"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_event_parameter_specialization.py:84",
+        "evas/tests/test_event_parameter_specialization.py:58",
+        "evas/tests/test_event_parameter_specialization.py:118",
+        "evas/tests/test_lint.py:54",
+        "evas/tests/test_selected_quotient_comparison.py:76",
+        "evas/src/evas/instance_compiler.py:2537",
+        "evas/docs/math/events.md:1414",
+        "evas/tests/test_compact_physical_select.py:182"
+      ],
+      "problem": "IR33 event_assignment keeps Select once and evaluates lazily; ordinary reassignment uses RealBind/RealLocal instead of copying the preceding value tree. Twelve abs choices, repeated quotient choices,30x=x+x or16selected=Select(selected,selected) therefore do not incur the old mandatory exponential work. Requiring the old expanded-decision/resource error is no longer justified; other malformed-input controls remain useful.",
+      "recommended_correction": "Replace obsolete expansion demand with the actual paid work/serialized representation boundary and sticky same-owner exhaustion. Preserve all dead-name,type,overflow and secondary admission checks.",
+      "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited."
+    },
+    {
+      "id": "L1-F07",
+      "priority": "P2",
+      "affected_ids": [
+        "test_implicit_event_restart.ImplicitEventRestartBoundaries.test_same_time_conflicting_writers_keep_the_shared_rejection",
+        "test_night_semantic_variants.NightSemanticVariants.test_simultaneous_writers_conflict_but_sequential_writers_commit",
+        "test_events.EventRejections.test_state_feedback_nonlinear_and_simultaneous_cross_block_dependency_rejected"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_implicit_event_restart.py:116",
+        "evas/tests/test_night_semantic_variants.py:271",
+        "evas/docs/development/DECISIONS.md:194",
+        "evas/tests/test_events.py:249"
+      ],
+      "problem": "Two fixed timer(.5) events in one analog procedure have a certified identical logical occurrence. ADR-006 orders their bodies by source. rate=2 then3 ends3; held=.25 then+1 then-1 ends.25. Mandatory event_conflict contradicts this process contract. This does not impose an order on unrelated processes or uncertain neighboring roots.",
+      "recommended_correction": "Use independent source-sequential state answers for proven same-occurrence same-process timers, and retain conflict/rejection controls for unproved roots or distinct process owners.",
+      "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited."
+    },
+    {
+      "id": "L1-F08",
+      "priority": "P2",
+      "affected_ids": [
+        "test_compact_physical_select.CompactPhysicalSelect.test_compact_value_is_sampled_and_later_gain_keeps_source_error",
+        "test_compact_physical_select.CompactPhysicalSelect.test_source_box_crossing_a_guard_is_not_replaced_by_nominal_selection",
+        "test_diagnostic_sources.DiagnosticSources.test_real_kernel_categories_survive_machine_cli",
+        "test_diagnostic_sources.DiagnosticSources.test_runtime_integer_range_is_an_implementation_boundary",
+        "test_event_accuracy.EventAccuracy.test_inconsistent_redundant_constraints_cannot_define_a_root",
+        "test_event_branch_agreement.EventBranchAgreement.test_alternative_predicate_reads_keep_cross_block_writer_checks",
+        "test_initial_seed_invariance.InitialSeedInvariance.test_ordinary_zero_integer_failure_is_not_skipped",
+        "test_laplace.LaplaceContracts.test_large_absolute_time_uncertainty_is_budgeted",
+        "test_timer.TimerContracts.test_overflow_and_uncertifiable_constraints_produce_no_partial_response",
+        "test_transient_accuracy_control.TransientAccuracyControl.test_amplified_initial_enclosure_has_explicit_precision_refusal",
+        "test_live_transition_coefficient.CapturedClockModes.test_capture_with_unknown_internal_zero_weight_still_refuses",
+        "test_root_witness_neighbors.RootWitnessNeighbors.test_neighbor_root_outside_horizon_cannot_erase_pulse",
+        "test_timer_history_order.TimerHistoryOrder.test_cross_inside_representative_delay_is_not_silently_lost"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_compact_physical_select.py:83",
+        "evas/tests/test_compact_physical_select.py:95",
+        "evas/tests/test_diagnostic_sources.py:119",
+        "evas/tests/test_diagnostic_sources.py:106",
+        "evas/tests/test_event_accuracy.py:239",
+        "evas/tests/test_event_branch_agreement.py:72",
+        "evas/tests/test_initial_seed_invariance.py:88",
+        "evas/tests/test_laplace.py:139",
+        "evas/tests/test_timer.py:294",
+        "evas/tests/test_transient_accuracy_control.py:54",
+        "evas/rust_core/src/procedure_plan.rs:467",
+        "evas/rust_core/src/procedure_plan.rs:2075",
+        "evas/rust_core/src/procedure_operations.rs:432",
+        "evas/src/evas/errors.py:68",
+        "evas/tests/test_live_transition_coefficient.py:295",
+        "evas/tests/test_root_witness_neighbors.py:28",
+        "evas/tests/test_timer_history_order.py:90"
+      ],
+      "problem": "Numeric/scope refusal is a useful obligation, but these assertions additionally demand superseded diagnostic phase or message text. Current procedure_plan emits event_condition source-position text and waveform_accuracy affine-image text, while procedure integer stores emit integer_range. Examples old regex at y/cannot certify same-time..., old event_accuracy and state_range reject the current structured errors even when the intended invalid domain is refused.",
+      "recommended_correction": "Check actual semantic failure category plus original input/source/domain where stable. If a specific public diagnostic text/code is required, document and implement that interface explicitly instead of treating legacy wording as mathematical correctness.",
+      "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited."
+    },
+    {
+      "id": "L1-F09",
+      "priority": "P2",
+      "affected_ids": [
+        "test_native_integer28.NativeInteger28.test_raw_new_trees_keep_operand_owner_version_and_consumer_gates"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_native_integer28.py:59",
+        "evas/src/evas/instance_compiler.py:2537",
+        "evas/tests/test_program_real_ir.py:420"
+      ],
+      "problem": "The raw-IR fixture searches only event.body statements whose immediate rhs.function is remainder. Real store/operation boundaries wrap the typed primitive in IR33, so this shallow next() can raise StopIteration before any malformed operand/version/consumer mutation executes.",
+      "recommended_correction": "Locate the typed remainder recursively in the current wire tree and assert its source/owner/position before applying each mutation. Preserve a valid positive raw request to rule out unrelated rejection.",
+      "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited."
+    },
+    {
+      "id": "L1-F10",
+      "priority": "P2",
+      "affected_ids": [
+        "test_laplace.LaplaceContracts.test_raw_self_feedback_without_unique_dc_initial_state_fails"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_laplace.py:243",
+        "evas/tests/test_program_real_ir.py:412",
+        "evas/docs/math/operators.md:40"
+      ],
+      "problem": "Changing operators[0].input alone leaves IR33 procedure capture graph and operator metadata inconsistent. The resulting raw payload may fail invalid_ir before unique-DC self-feedback is evaluated; expecting event_resolution assumes an obsolete standalone operator fixture.",
+      "recommended_correction": "Construct a current structurally valid self-feedback payload, validate its original identities and then assert the independent missing-DC refusal. Keep schema-inconsistency rejection separately.",
+      "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited."
+    },
+    {
+      "id": "L1-F12",
+      "priority": "P2",
+      "affected_ids": [
+        "test_source_root_windows.SourceRootWindows.test_uncertified_held_clock_over_source_cut_still_rejects"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_source_root_windows.py:251",
+        "evas/docs/math/events.md:1414",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane1-probes.json"
+      ],
+      "problem": "The rejection premise says held p=.1*binary64(.3) is a nonpoint mathematical product. Program p=RN(.1*RN(.3)) is exactly binary64(.03), a singleton equal to the literal threshold. The old nonpoint-clock must-reject premise does not follow from the program-real contract.",
+      "recommended_correction": "Use the singleton rounded clock answer for this deterministic input and separately add a genuinely multi-cell source-band clock negative control. Preserve source-cut timing qualification.",
+      "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited."
+    },
+    {
+      "id": "L1-F13",
+      "priority": "P2",
+      "affected_ids": [
+        "test_event_accuracy.EventAccuracy.test_raw_ir_products_require_causal_assignment_and_keep_structural_voltage_checks"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_event_accuracy.py:46",
+        "evas/tests/test_program_real_ir.py:426",
+        "evas/src/evas/ir.py:326"
+      ],
+      "problem": "The without_events mutation clears the events table but leaves ProcedureStep event_gate references in procedures. It therefore constructs a structurally invalid IR33 payload, so unsupported_transient cannot be required as if this were a valid event-free circuit. The four positions need independent current-IR validity controls; the mathematical raw add/multiply assignment is not itself a source real_binary oracle.",
+      "recommended_correction": "Rebuild each mutated Program with matching procedures,bindings and operator/contribution references. Assert valid positive payloads before checking guard/contribution/assignment scopes, and preserve the independent physical arithmetic reference.",
+      "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited."
+    },
+    {
+      "id": "L2-F01",
+      "priority": "P1",
+      "affected_ids": [
+        "test_bounded_event_closure.BoundedEventClosure.test_query_inside_uncertified_held_clock_interval_is_refused",
+        "test_event_singleton_exact.SingletonSampleExactBranch.test_nonsingleton_sample_still_refuses_the_branch",
+        "test_r01_event_conditions.OrderedStateConditions.test_exact_prior_sample_decides_sign_but_true_band_stays_unknown",
+        "test_history_forcing.HistoryForcingRed.test_each_actual_exact_near_tie_call_has_one_prepaid_reservation",
+        "test_dynamic_timer.DynamicTimer.test_uncertainty_and_raw_dependency_are_not_silently_dropped",
+        "test_held_time_provenance.HeldTimeProvenance.test_nonidentity_source_rewrite_drops_old_time_proof"
+      ],
+      "evidence_refs": [
+        "evas/docs/math/events.md:1456",
+        "evas/docs/development/DECISIONS.md:194",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane2-probe.json"
+      ],
+      "problem": "Pre-RN Fraction expression survives required sample/operation/store. RN(.1*.3)=.03 singleton clock,RN(.73/3) binary64 point,RN(midpoint(.1,.9))-.5=0. First method must not require phase refusal;division not itself nonsingleton;midpoint q>0false;forcing cannot select positive from unrounded interpolation.",
+      "recommended_correction": "Derive per-operation/source RN;retain genuine multi-cell band and independent current/future controls.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F02",
+      "priority": "P1",
+      "affected_ids": [
+        "test_precision_chain.SampleHistoryAccuracy.test_equivalent_sample_forms_preserve_input_uncertainty",
+        "test_precision_chain.SampleHistoryAccuracy.test_accepted_sample_error_survives_until_later_amplification",
+        "test_sample_state_precision.SampleStatePrecision.test_filter_consumes_exact_sample_after_an_accepted_event",
+        "test_sample_state_precision.SampleStatePrecision.test_current_output_amplification_still_rejects_uncertain_sample",
+        "test_sample_state_precision.SampleStatePrecision.test_later_event_amplification_keeps_the_original_state_enclosure",
+        "test_sample_state_precision.SampleStatePrecision.test_later_integral_amplification_uses_the_exact_source_sample",
+        "test_sample_state_precision.SampleStatePrecision.test_future_cross_threshold_keeps_sample_uncertainty",
+        "test_initialized_event_composition.InitializedEventComposition.test_projected_root_sample_retains_error_after_later_gain"
+      ],
+      "evidence_refs": [
+        "evas/docs/math/events.md:1456",
+        "evas/tests/test_sample_state_precision.py:21",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane2-probe.json"
+      ],
+      "problem": "Legacy oracle retains pre-RN point interpolation/multiplication residual in stored state. u(1)=1+2^-52/3 samples1,held=RN(1-1)=0;future1e16 gain/integral cannot recreate1/(3*2^52). q=RN(.45*threshold)=nominal,so later difference0. Required refusal/nonzero references contradict current program-real contract.",
+      "recommended_correction": "Recompute stored recurrences/filter drive with RN;retain uncertainty tests using genuine multi-cell source/history band,not vanished residual.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F03",
+      "priority": "P1",
+      "affected_ids": [
+        "test_held_time_provenance.HeldTimeProvenance.test_source_root_delay_neighbours_and_later_callback",
+        "test_held_time_provenance.HeldTimeProvenance.test_selected_sequential_copy_uses_new_local_time_value",
+        "test_held_time_provenance.HeldTimeProvenance.test_exact_source_offset_rewrite_replaces_old_time_proof",
+        "test_held_time_provenance.HeldTimeProvenance.test_complete_identity_curve_qualifies_without_abstime_name"
+      ],
+      "evidence_refs": [
+        "evas/docs/math/events.md:1456",
+        "evas/tests/test_held_time_provenance.py:16",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane2-probe.json"
+      ],
+      "problem": "due stores RN sample/addition,but oracle keeps unrounded tau+Q(.1). At fixed.3,RN(.3+.1)=.4 whereas Q(.3)+Q(.1)<Q(.4),wrong neighbor phase. Root1/3 also requires boundary-by-boundary RN.",
+      "recommended_correction": "Certify rational stored binary64 due;retain physical cross root separately.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F04",
+      "priority": "P1",
+      "affected_ids": [
+        "test_ordinary_integer_event_prefix.OrdinaryIntegerEventPrefix.test_original_binary64_floor_and_signed_cuts_keep_assignment_type"
+      ],
+      "evidence_refs": [
+        "evas/docs/math/events.md:1456",
+        "evas/tests/test_ordinary_integer_event_prefix.py:67"
+      ],
+      "problem": "value=nextafter(1.5,0):oracle floor(Q(value)+1/2)=1;source RN(value+.5)=2.0 ties-even,thenFloor2. Other sign/dyadic controls useful.",
+      "recommended_correction": "Apply independent RN before Floor/store,preserve neighbors and tie.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F05",
+      "priority": "P1",
+      "affected_ids": [
+        "test_ordinary_event_prefix.OrdinaryEventPrefix.test_simultaneous_conflicting_writers_keep_the_original_rejection",
+        "test_r01_event_conditions.OrderedStateConditions.test_simultaneous_condition_state_read_remains_structurally_rejected",
+        "test_integer_bitops.IntegerBitops.test_singleton_fold_retains_same_batch_state_read",
+        "test_integer_bitops.IntegerBitops.test_singleton_wrapper_retains_array_and_index_predicate_reads",
+        "test_native_held_bits29.NativeHeldBits29.test_hidden_illegal_dependencies_and_zero_mask_preserve_batch_reads",
+        "test_static_loops.StaticLoops.test_loop_unrolling_does_not_prioritize_conflicting_writers"
+      ],
+      "evidence_refs": [
+        "evas/docs/development/DECISIONS.md:203",
+        "evas/docs/math/events.md:1472",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane2-probe.json"
+      ],
+      "problem": "Same exact fixed timer in one analog process proves logical occurrence identity. Tests require event_conflict/cannot-read-written where ADR006 requires later source body read preceding write. Minimal matched probe q1 then if(q>0)p7 at timer.5 returns7. Invalid child/type subcases remain valid.",
+      "recommended_correction": "Migrate only proved same-process same-occurrence controls to independent ordered values;keep foreign-process ambiguity/illegal dependencies.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F06",
+      "priority": "P2",
+      "affected_ids": [
+        "test_bounded_event_closure.BoundedEventClosure.test_local_or_deduplicates_only_the_same_physical_root",
+        "test_bounded_event_closure.BoundedEventClosure.test_mixed_source_root_and_two_exact_clocks",
+        "test_bounded_event_closure.BoundedEventClosure.test_point_certified_held_timer_preserves_exact_order",
+        "test_bounded_event_closure.BoundedEventClosure.test_hidden_root_is_inserted_before_the_next_physical_clock",
+        "test_bounded_event_closure.BoundedEventClosure.test_local_affine_flow_change_exposes_a_second_causal_root",
+        "test_bounded_event_closure.BoundedEventClosure.test_local_polynomial_flow_change_exposes_a_second_causal_root",
+        "test_diagnostics.DiagnosticTests.test_timer_integral_answer_and_byte_equivalence",
+        "test_exact_affine_history_phase.ExactAffineHistoryPhase.test_original_changed_constant_integral_queries_and_sparse_grids",
+        "test_initialized_event_composition.InitializedEventComposition.test_cluster_construction_respects_existing_transaction_microevent_budget",
+        "test_initialized_event_composition.InitializedEventComposition.test_falling_source_root_and_equivalent_or_share_the_exact_time",
+        "test_initialized_event_composition.InitializedEventComposition.test_input_initialization_shared_counter_and_neighbor_clocks_share_one_history",
+        "test_initialized_event_composition.InitializedEventComposition.test_original_affine_cross_keeps_query_phase_and_transition_sample",
+        "test_initialized_event_composition.InitializedEventComposition.test_point_input_projection_certifies_internal_root_without_merging_events",
+        "test_initialized_event_composition.InitializedEventComposition.test_simultaneous_clock_leaves_share_one_microevent_budget_group",
+        "test_initialized_event_composition.InitializedEventComposition.test_source_roots_and_timer_keep_order_after_held_timer_replanning",
+        "test_sample_state_precision.SampleStatePrecision.test_unrelated_filter_preserves_exact_affine_root_after_flow_change",
+        "test_sample_state_precision.SampleStatePrecision.test_near_zero_sample_gain_preserves_nonzero_filter_history_and_later_event",
+        "test_sample_state_precision.SampleStatePrecision.test_filter_consumes_exact_sample_after_an_accepted_event",
+        "test_sample_state_precision.SampleStatePrecision.test_sampled_square_integral_drives_a_later_cross",
+        "test_static_loops.StaticLoops.test_nested_event_controls_substitute_body_and_keep_instance_identity",
+        "test_static_loops.StaticLoops.test_loop_event_or_uses_vector_guards_and_private_array_targets",
+        "test_static_loops.StaticLoops.test_loop_guard_operators_have_distinct_call_sites",
+        "test_transition_endpoint_history.TransitionEndpointHistory.test_both_exact_orders_and_signs_preserve_ramp_filter_and_area",
+        "test_transition_endpoint_history.TransitionEndpointHistory.test_exact_equality_and_separated_control_preserve_same_answers",
+        "test_transition_endpoint_history.TransitionEndpointHistory.test_queries_strobes_and_instance_order_do_not_change_history"
+      ],
+      "evidence_refs": [
+        "evas/tests/initial_record_contract.py:14",
+        "evas/tests/initial_source_sequence_contract.py:13",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane2-probe.json"
+      ],
+      "problem": "Raw current IR33 trace/declarations retain initial_step. Methods/helper demand runtime-only counts/order without independently checking initial prefix. E3 expects2 despite initial+timer+cross3;hidden expects runtime[0,0,2,1];endpoint2 clocks;loop8 despite two initial declarations. Correct waveform fails obsolete trace oracle.",
+      "recommended_correction": "Check full initial provenance/state/order,then runtime subset by kind/source identity. No silent initial drop or weaker waveform oracle.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F07",
+      "priority": "P2",
+      "affected_ids": [
+        "test_native_held_bits29.NativeHeldBits29.test_new_nodes_keep_ordinary_contribution_and_raw_protocol_gates"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_native_held_bits29.py:88",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane2-probe.json"
+      ],
+      "problem": "Mutation treats rhs as integer_primitive with args;current rhs is RealBoundary store,value=primitive. rhs[args] KeyError before kernel rejection. Compile-layout probe records node.",
+      "recommended_correction": "Traverse RealBoundary.value,verify function/owner,preserve source/procedure metadata,execute isolated mutation and accepted control.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F08",
+      "priority": "P2",
+      "affected_ids": [
+        "test_ordinary_integer_event_prefix.OrdinaryIntegerEventPrefix.test_callback_before_definition_cannot_read_later_prefix",
+        "test_ordinary_integer_event_prefix.OrdinaryIntegerEventPrefix.test_two_integer_prefix_variables_keep_the_unexpanded_contract"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_ordinary_integer_event_prefix.py:102",
+        "evas/tests/test_compile_admission.py:16"
+      ],
+      "problem": "Negative source timer(.25),V(u)+.5 has illegal literal spelling;lexical rejection precedes source availability. Compiler allowing wrong forward prefix read but rejecting illegal literal passes broad CompileError.",
+      "recommended_correction": "Use legal0.25/0.5,assert intended availability diagnostic and accepted counterpart.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F09",
+      "priority": "P2",
+      "affected_ids": [
+        "test_event_body_input_aliases.EventBodyInputAliases.test_selected_alias_keeps_source_error_in_future_voltage"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_event_body_input_aliases.py:62",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/rejection-path-probe.json",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/startup-vs-future-probe.json"
+      ],
+      "problem": "a=(V(u)>0)?V(u):0 at u0=0 plus error.01 has uncertifiable startup condition. Broad KernelError passes before timer.25/sample/future1e6gain;coordinator instrumentation observed startup event_condition. Future propagation unexercised.",
+      "recommended_correction": "Keep startup rejection separately;redesign startup-certifiable fixture and prove event/future consumer reached before intended refusal. Loosening alone unverified.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F10",
+      "priority": "P2",
+      "affected_ids": [
+        "test_idt_pulse_reset.PulseAssertBoundaries.test_coincident_pulse_events_remain_an_event_conflict",
+        "test_idt_pulse_reset.PulseAssertBoundaries.test_conditional_pulse_beside_a_simultaneous_writer_is_refused"
+      ],
+      "evidence_refs": [
+        "evas/docs/math/operators.md:1001",
+        "evas/docs/math/events.md:1472"
+      ],
+      "problem": "Legacy pulse doc explicitly requires hidden parity-writer conflict;ADR006 orders proved same occurrence/process. Both documented. Test does not settle whether pulse rewrite refusal remains intentional subset limit.",
+      "recommended_correction": "Resolve pulse rewrite subset versusIR33;retain honest refusal if agreed,add ordered numeric obligation separately. Not wrong sawtooth.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F11",
+      "priority": "P2",
+      "affected_ids": [
+        "test_event_body_input_aliases.EventBodyInputAliases.test_state_time_history_output_and_hidden_internal_dependencies_reject",
+        "test_ordinary_event_prefix.OrdinaryEventPrefix.test_missing_future_state_time_history_output_and_loop_prefixes_reject"
+      ],
+      "evidence_refs": [
+        "evas/docs/math/events.md:1456",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane2-probe.json"
+      ],
+      "problem": "Bundled old alias rejections include a=V(u)*V(u),now accepted under IR33 source-position RN binding as saved exact compile probe shows. Requiring CompileError for that subcase contradicts valid arithmetic mechanism. Other history/internal/availability cases need individual scope.",
+      "recommended_correction": "Split actual admission duties;accepted nonlinear input prefix gets independent RN answer;retain unsupported/malformed diagnostic controls.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F12",
+      "priority": "P3",
+      "affected_ids": [
+        "test_auxiliary_continuous_roots.AuxiliaryRootContracts.test_conflicting_internal_definitions_still_rejects",
+        "test_auxiliary_continuous_roots.AuxiliaryRootContracts.test_underconstrained_internal_voltage_still_rejects",
+        "test_event_conditions.ConditionalEvents.test_integer_intermediate_overflow_is_checked_only_on_selected_path",
+        "test_group_discrete_sample_contract.InternalVoltageSampleContract.test_same_time_nonlinear_electrical_feedback_still_refuses",
+        "test_group_event_calendar.GroupEventCalendar.test_foreign_integer_origin_in_raw_protocol_remains_rejected",
+        "test_history_owner_contract.HistoryOwnerContract.test_raw_foreign_state_is_rejected_at_the_public_kernel_boundary",
+        "test_idt_pulse_reset.PulseAssertBoundaries.test_unsupported_pulse_forms_are_refused",
+        "test_ordinary_integer_event_prefix.OrdinaryIntegerEventPrefix.test_signed32_first_assignment_cannot_be_hidden_by_later_clamp",
+        "test_original390_contract.Original390Contract.test_original_interface_cannot_be_replaced_by_raw_foreign_trim_state",
+        "test_precision_chain.SampleHistoryAccuracy.test_state_only_transient_checks_off_knot_voltage_accuracy"
+      ],
+      "evidence_refs": [
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane2-probe.json",
+        "evas/docs/math/solving.md:37",
+        "evas/docs/math/events.md:1452"
+      ],
+      "problem": "Valid rejection obligation is overspecified by obsolete stage/kind/English message. Current focused replays show contradictory drivers residual_failure,unconstrained f singular_system,typed overflow integer_range,nonreal feedback singular_jacobian,foreign owner invalid_ir/procedure owner mismatch,final_step unsupported_event_context and continuous output waveform_accuracy. Each independently matches the physical/type/owner duty;old event_resolution/state_range/unsupported-only list/text is not its mathematical oracle.",
+      "recommended_correction": "Assert documented current semantic diagnostic family plus original invalid source/location/no-output duty;preserve every numeric/type/owner refusal,not arbitrary-error acceptance.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F13",
+      "priority": "P2",
+      "affected_ids": [
+        "test_diagnostics.DiagnosticTests.test_parallel_default_transport_is_identical"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_diagnostics.py:131",
+        "evas/rust_core/src/raw_event_owner_request.json:1"
+      ],
+      "problem": "Fixture converts captured transient to static by clearing states/events/operators,but retains IR33 procedures event_gate referencing removed events. Payload is invalid before either parallel transport executes. This is a source-level construction defect,not a difference in parallel numeric results.",
+      "recommended_correction": "Compile a valid independent static source through current frontend,or coherently remove all dependent procedure/binding references and validate accepted fixture before comparing diagnostic transports.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F14",
+      "priority": "P2",
+      "affected_ids": [
+        "test_frontend_limits.FrontendLimits.test_shared_expression_expansion_is_rejected_before_serialization",
+        "test_ordinary_event_prefix.OrdinaryEventPrefix.test_original_typed_source_keeps_default_budget_and_full_wire",
+        "test_ordinary_integer_event_prefix.OrdinaryIntegerEventPrefix.test_original_typed_source_at_default_budget_boundary_keeps_full_wire"
+      ],
+      "evidence_refs": [
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane2-probe.json",
+        "evas/src/evas/native_audit.py:29",
+        "evas/docs/math/events.md:1472"
+      ],
+      "problem": "Old exponential inline tree/ledger boundary is demanded after IR33 source-position local graph makes repeated local assignment linear. Same source hash does not imply same emitted graph cost. Fixed225 has actual63765 before wire and87035 after,22664035/87401,all under unchanged100000 cap. Requiring82919/99899 or refusal at226 is obsolete layout budget oracle;30 simple local doublings compile legally;the distinct selected-prefix20 case was replayed and still correctly hits resource_budget,so it is excluded from this finding.",
+      "recommended_correction": "Retain unchanged aggregate100000 cap,actual paid work and sticky same-owner natural exhaustion;derive stress input from real current graph/wire cost. Keep independent2^k*u correctness and old-route success,not historical counter or repetition threshold.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F15",
+      "priority": "P2",
+      "affected_ids": [
+        "test_event_body_input_aliases.EventBodyInputAliases.test_original_array_and_zero_trip_writers_do_not_qualify_as_scalar_aliases",
+        "test_ordinary_event_prefix.OrdinaryEventPrefix.test_held_guard_before_callback_cannot_masquerade_as_pure_input_prefix",
+        "test_rational_predicate_closure.RationalPredicateClosureContracts.test_negative_denominator_domain_stays_rejected",
+        "test_rational_predicate_closure.RationalPredicateClosureContracts.test_wrong_branch_does_not_inherit_positive_fact",
+        "test_rational_predicate_closure.RationalPredicateClosureContracts.test_zero_or_negative_lower_parameter_does_not_prove_positive_domain",
+        "test_rational_predicate_closure.RationalPredicateClosureContracts.test_unrelated_positive_voltage_does_not_prove_denominator_positive",
+        "test_rational_predicate_closure.RationalPredicateClosureContracts.test_overwritten_alias_loses_its_previous_positive_domain",
+        "test_rational_predicate_closure.RationalPredicateClosureContracts.test_nonlinear_numerator_remains_outside_affine_guard_scope"
+      ],
+      "evidence_refs": [
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane2-probe.json",
+        "evas/docs/math/events.md:1456",
+        "evas/docs/math/events.md:1472"
+      ],
+      "problem": "Legacy scalar-alias/positive-affine helper admission gate is treated as mandatory rejection for current IR33 source-position program. Array identity and prior n-controlled e snapshot can be preserved by current procedure graph;negative/nonlinear denominator branches are not inherently illegal real programs. Six current exact quotient negative methods accept compilation;zero denominator or overflow must be checked when actually selected,not forced by old helper eligibility.",
+      "recommended_correction": "Replace obsolete blanket compile refusals with independent source-position/RN answers on legal inputs and selected invalid-domain runtime controls. Retain original array identity,zero-trip structure and no late reading of a changed n. Resolve documented subset boundary explicitly instead of weakening source validation.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F16",
+      "priority": "P2",
+      "affected_ids": [
+        "test_rational_predicate_closure.RationalPredicateClosureContracts.test_selected_quotient_derivative_nonfinite_keeps_runtime_rejection"
+      ],
+      "evidence_refs": [
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane2-probe.json",
+        "evas/tests/test_rational_predicate_closure.py:103"
+      ],
+      "problem": "n=5e-301,d=1e-300 has quotient.5 and true partial derivatives1e300,-5e299,both finite. Direct d*d underflow is an algorithm intermediate,not a semantic need to reject. Current exact public probe returns.5. Mandatory nonfinite_arithmetic perpetuates an avoidable arithmetic artifact.",
+      "recommended_correction": "Require accepted quotient.5 within original budget or an explicitly justified supported-slice refusal;use an actually nonfinite source/derivative for mandatory nonfinite negative control.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F17",
+      "priority": "P2",
+      "affected_ids": [
+        "test_ordinary_event_prefix.OrdinaryEventPrefix.test_input_prefix_can_feed_post_callback_initial_only_metric"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_ordinary_event_prefix.py:128",
+        "evas/docs/math/events.md:1486"
+      ],
+      "problem": "Positive output answers distinguish ordinary current metric,but trace requires persistent metric7 after t0. IR33 initial q=.25,metric7 then ordinary a=abs(0-.25)=.25,metric=q-a=0 before initial activation commits. Whole t0 process commits metric0;old retained declaration-initial-only7 ignores following executed source assignment.",
+      "recommended_correction": "Derive complete t0 source process snapshot and keep it distinct from later query-local ordinary recomputation. Preserve independently correct output trajectory and initial event record.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F18",
+      "priority": "P3",
+      "affected_ids": [
+        "test_history_forcing.HistoryForcingRed.test_legacy_route_has_zero_forcing_factory_and_proof_work"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_history_forcing.py:198",
+        "evas/src/evas/native_audit.py:29"
+      ],
+      "problem": "factory_calls=0 protects no new forcing factory. Blanket absence of every forcing_* counter also forbids legitimate IR33 RN enclosure helper accounting,which can be shared without constructing that factory. Counter prefix is incidental implementation ownership,not old-route semantics.",
+      "recommended_correction": "Keep factory admission/no-unpaid-work invariant and independent full output;account shared source RN proof by actual owner without banning its name prefix.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L2-F19",
+      "priority": "P3",
+      "affected_ids": [
+        "test_history_forcing.HistoryForcingRed.test_original_discarded_alias_and_zero_loop_reads_reject"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_history_forcing.py:183",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane2-probe.json"
+      ],
+      "problem": "Original discarded/zero-loop read refusals still protect structural scope,but exact code unsupported_forcing_scope is coupled to an older lowering entry. Current source base also has an earlier predicate admission blocker,so compile_error does not demonstrate that added original read was audited.",
+      "recommended_correction": "First prove accepted base/control under current mechanism,then isolate each original hidden read and assert intended source/location/category. Keep genuine rejection;do not call current early refusal wrong waveform.",
+      "fault_injection_calibration": "Not implied by static inspection. Only specifically cited saved probes executed."
+    },
+    {
+      "id": "L3-F01",
+      "priority": "P1",
+      "affected_ids": [
+        "test_decision_raw_reuse.DecisionRawReuse.test_public_sixbit_conditional_decoder_default_owner_full_wire"
+      ],
+      "problem": "公共六位decoder固定schema_version==32，并倒改31后比较旧whole-program hash；当前IR schema明确33，原断言阻止新流程进入独立数字输出校验。",
+      "recommended_correction": "使用SCHEMA_VERSION校验当前协议，保Fraction decoder答案与同owner预算；若确需冻结旧wire，独立放在明确IR32 fixture兼容用例而非要求IR33 byte-identical。",
+      "evidence_refs": [
+        "evas/tests/test_decision_raw_reuse.py:30",
+        "evas/src/evas/ir.py:14",
+        "evas/docs/development/DECISIONS.md#adr-006",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane3-probe-results.json"
+      ],
+      "independent_derivation": "probe从当前源码导入SCHEMA_VERSION=33；原32断言必错，semantic decoder oracle无需改变。",
+      "fault_injection_calibration": "Not run for this finding; static source/contract assessment."
+    },
+    {
+      "id": "L3-F02",
+      "priority": "P1",
+      "affected_ids": [
+        "test_display.DisplayMeasurements.test_same_batch_display_cannot_read_another_selected_writer",
+        "test_shared_counter.SharedCounter.test_simultaneous_self_updates_are_atomic_conflicts",
+        "test_shared_counter.SharedCounter.test_simultaneous_other_state_reads_keep_structural_dependencies",
+        "test_event_runtime_loops.InheritedObserverIndexCases.test_original_safe_paths_complete_and_invalid_active_paths_fail"
+      ],
+      "problem": "原IR32同批互读/多写者拒绝规则套用到同一analog过程且同一精确timer发生，违背ADR-006源码顺序。display应见前q=1；两个timer0自增得2；q先2后n读取是有序读取。七数组case中的extra_writer也不能继续因旧event_conflict而提前停。",
+      "recommended_correction": "保留原源与正负子例，按同过程展开顺序重建数值/记录oracle。需保旧冲突检测时，另用不同过程/实例、未证同次发生的独立fixture；extra_writer继续检验后续真正array_index_range，不以早拒冒充数组界。",
+      "evidence_refs": [
+        "evas/docs/math/events.md:1469",
+        "evas/docs/development/DECISIONS.md#adr-006",
+        "evas/tests/test_display.py:25",
+        "evas/tests/test_shared_counter.py:30",
+        "evas/tests/test_event_runtime_loops.py:155"
+      ],
+      "independent_derivation": "timer0: n0 -> n1 -> n2。q=.75先赋2后同过程表达式q-q/0*q均0，n+q-q仍原n1；extra_writer .5按序累加后复位counter0，后续.6用a[0]越[1:4]，不是同批写冲突。",
+      "fault_injection_calibration": "Not run for this finding; static source/contract assessment."
+    },
+    {
+      "id": "L3-F03",
+      "priority": "P1",
+      "affected_ids": [
+        "test_ordinary_boundary_certificates.OrdinaryBoundaryCertificates.test_nonbinary_interpolation_decides_discontinuous_branches"
+      ],
+      "problem": "ordinary if的oracle比较未舍入Fraction(t)/3，当前ProcedureConditional先RealBoundary(sample)。t=1时RN(1/3)恰为阈值，strict >必须假，原oracle真。",
+      "recommended_correction": "对程序条件按原binary64源求精确输入后逐步RN，覆盖四关系及相邻time；保直接连续贡献Select的精确数学oracle，勿一并改掉。",
+      "evidence_refs": [
+        "evas/tests/test_ordinary_boundary_certificates.py:15",
+        "evas/docs/math/events.md:1456",
+        "evas/src/evas/instance_compiler.py:2933",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane3-probe-results.json"
+      ],
+      "independent_derivation": "Fraction(1,3)>Fraction(.3333333333333333)，但float(Fraction(1,3))==.3333333333333333。编译probe确认ordinary if有sample boundary，direct equation Select无此边界。",
+      "fault_injection_calibration": "Not run for this finding; static source/contract assessment."
+    },
+    {
+      "id": "L3-F04",
+      "priority": "P1",
+      "affected_ids": [
+        "test_hierarchy.Hierarchy.test_hierarchical_event_states_settle_in_one_atomic_batch",
+        "test_idt.IdtContracts.test_level_reset_holds_ic_and_releases_from_reset_time",
+        "test_idt.IdtContracts.test_source_cross_timer_sampling_and_discarded_overshoot",
+        "test_initial_static_loops.InitialStaticLoops.test_mixed_body_initializes_each_element_and_restores_it_on_cross",
+        "test_initial_static_loops.InitialStaticLoops.test_legal_zero_trip_mixed_loop_matches_empty_or_body",
+        "test_initial_static_loops.InitialStaticLoops.test_pure_initial_nested_descending_and_empty_loops_use_existing_order",
+        "test_initial_static_loops.InitialStaticLoops.test_parameterized_instances_reversed_order_repeat_and_grid_remain_independent",
+        "test_initial_static_loops.InitialStaticLoops.test_pure_initial_loop_and_duplicate_event_leaves_execute_one_ordered_body",
+        "test_initial_static_loops.InitialStaticLoops.test_original_minimal_and_duplicate_cross_leaves_do_not_duplicate_initialization",
+        "test_original391_contract.Original391Contract.test_full_original391_consumers_clamp_pending_timer_reset_and_reenable",
+        "test_original391_contract.Original391Contract.test_original391_query_density_preserves_physical_events",
+        "test_sample_edge_filter.SampleEdgeFilter.test_periodic_sample_at_stop_preserves_transition_and_filter_history",
+        "test_shared_counter.SharedCounter.test_original_constant_initialization_hysteresis_counts",
+        "test_shared_counter.SharedCounter.test_later_block_reads_accepted_states_and_direct_source",
+        "test_strobe.StrobeControl.test_nearby_timers_stop_at_forced_phase_without_consuming_later_event",
+        "test_strobe.StrobeControl.test_nearby_timer_forced_points_preserve_each_history",
+        "test_strobe.StrobeControl.test_periodic_timer_forced_points_have_committed_state",
+        "test_transition.TransitionContracts.test_final_initial_seed_is_used_in_same_time_feedback",
+        "test_transition.TransitionContracts.test_positive_time_feedback_uses_current_operator_value_on_cached_batches",
+        "test_transition.TransitionContracts.test_same_target_does_not_restart"
+      ],
+      "problem": "这些方法仍把transient.events当成仅运行期事件，直接比较旧数量、id/time/after列表或events=[]。IR33真实执行initial_step或含initial leaf的OR，并保存t0记录，故独立波形义务之外的inventory断言过时。",
+      "recommended_correction": "先用源码声明种子、t0顺序/联合状态和leaf来源核对完整初始化记录，再检查运行期子序列。复用匹配initial_record/source_sequence/union helper，不能无验证地过滤initial或按响应自行生成期望。",
+      "evidence_refs": [
+        "evas/tests/initial_record_contract.py:14",
+        "evas/tests/initial_source_sequence_contract.py:13",
+        "evas/tests/initial_union_contract.py:13",
+        "evas/docs/math/events.md:2533"
+      ],
+      "independent_derivation": "例如两个hierarchy counter有2条initial加8条timer，共10，原断言8；sample-edge四timer加1initial共5。mixed OR的t0与future cross是同源不同发生，不能删t0 provenance。",
+      "fault_injection_calibration": "Not run for this finding; static source/contract assessment."
+    },
+    {
+      "id": "L3-F05",
+      "priority": "P1",
+      "affected_ids": [
+        "test_transition_bootstrap_bounds.TransitionBootstrapBounds.test_bare_real_and_typed_integer_targets_keep_separate_cold_boxes",
+        "test_transition_bootstrap_bounds.TransitionBootstrapBounds.test_mixed_cold_seed_error_still_reaches_the_voltage_budget",
+        "test_transition_bootstrap_bounds.TransitionBootstrapBounds.test_nonpoint_cold_seed_and_later_target_enclose_original_real_values",
+        "test_transition_bootstrap_bounds.TransitionBootstrapBounds.test_initial_voltage_budget_rejects_amplified_seed_error",
+        "test_transition_bootstrap_bounds.TransitionBootstrapBounds.test_bounded_cold_seed_retains_passive_initial_display_records"
+      ],
+      "problem": "cold-seed测试把程序real赋值前的exact-real误差当成必须保留的状态误差，并要求严格非点电压盒/放大后必须拒绝。当前real操作的完整舍入像若singleton应按binary64值继续；原oracle会拒绝正确的0或.125证书。",
+      "recommended_correction": "独立计算每步RN及真实输入域的完整舍入像。默认无source_errors的point case保正确singleton成功；需要非点误差传播负控时声明确实跨舍入格的source_errors或root域，再导出gain后的不可达预算。显示顺序义务保留。",
+      "evidence_refs": [
+        "evas/tests/test_transition_bootstrap_bounds.py:39",
+        "evas/tests/test_transition_bootstrap_bounds.py:62",
+        "evas/tests/test_transition_bootstrap_bounds.py:77",
+        "evas/docs/math/events.md:1456",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane3-probe-results.json"
+      ],
+      "independent_derivation": "binary(.62)-binary(.01)舍入后恰binary(.61)，cold y=seed-.61=0；原未舍入oracle为5/576460752303423488非0。RN(.125+2^-60)=.125。gain2^40乘0仍0。",
+      "fault_injection_calibration": "Not run for this finding; static source/contract assessment."
+    },
+    {
+      "id": "L3-F06",
+      "priority": "P1",
+      "affected_ids": [
+        "test_idt.IdtContracts.test_raw_reset_expression_uses_structural_state_bounds",
+        "test_idt.IdtContracts.test_raw_inexact_nested_reset_coefficient_is_rejected",
+        "test_integer_table_composition.IntegerTableComposition.test_equal_mapped_arms_keep_original_guard_origin_and_state_read",
+        "test_integer_table_composition.IntegerTableComposition.test_guard_checked_operator_hidden_and_role_rejections_stay_in_actual_kernel"
+      ],
+      "problem": "raw fixture从当前compiled Program复制后新增/替换events，却保留原procedures而没有对应唯一event_gate。合法owner是先决条件，positive reset会直接invalid_ir，negative/concurrent子例不能达到所称reset系数或跨writerguard验证。",
+      "recommended_correction": "使用完整owned raw fixture并补procedure_id、expanded_statement_ordinal与event_gate，或明确构造真正legacy程序并移除全部过程元数据。先保成功控制，再仅改目标非法字段。映射equal-arm原状态依赖义务继续保留。",
+      "evidence_refs": [
+        "evas/tests/test_idt.py:213",
+        "evas/tests/test_idt.py:237",
+        "evas/tests/test_integer_table_composition.py:97",
+        "evas/tests/test_integer_table_composition.py:193",
+        "evas/docs/math/events.md:2548",
+        "evas/tests/test_raw_event_owners.py:35"
+      ],
+      "independent_derivation": "compiled()没有原events但有contribution capture过程；加timer后gate集合仍空，不等events={0}。table两个concurrent追加event同样没有gate。当前raw-event-owner控制给出owned与legacy两种合法构造。",
+      "fault_injection_calibration": "Not run for this finding; static source/contract assessment."
+    },
+    {
+      "id": "L3-F07",
+      "priority": "P1",
+      "affected_ids": [
+        "test_refinement.RefinementContracts.test_exact_dyadic_solution_after_refinement_dense_and_sparse",
+        "test_idt.IdtContracts.test_raw_zero_voltage_feedback_preserves_explicit_initial_value"
+      ],
+      "problem": "两方法用raw subprocess解析JSON且仅zip/for遍历voltage或solutions，没有公共validate_response或本地shape检查。空vector/空solutions可使全部独立数值断言不执行且测试通过。",
+      "recommended_correction": "先核对requested solution count、nodes、完整有限voltage vector，再逐点数值断言。保dense/sparse手写线性答案与IC3义务，不以允许缺数据降低要求。",
+      "evidence_refs": [
+        "evas/tests/test_refinement.py:48",
+        "evas/tests/test_idt.py:391",
+        "evas/src/evas/protocol.py:195",
+        "experiments/backends/support/ir33-recovery/method-audit/probes/lane3-probe-checks.py",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane3-probe-results.json"
+      ],
+      "independent_derivation": "Refinement fake成功payload={solutions:[{voltages:[],max_residual_ratio:0}]}；rawzero fake={solutions:[]}。实际运行原两test method并替换process边界，两者都success=True。公共solve/transient方法另有shape/finite验证，未在其上泛化zip缺陷。",
+      "fault_injection_calibration": "Executed counterfeit-response calibration against the original two unittest methods, no kernel/build. Both accepted missing evidence. See lane3-probe-results.json."
+    },
+    {
+      "id": "L3-F08",
+      "priority": "P2",
+      "affected_ids": [
+        "test_stateless_expressions.StatelessExpressionContracts.test_validation_obligations_do_not_add_runtime_decisions",
+        "test_stateless_expressions.StatelessExpressionContracts.test_discarded_function_checks_preserve_pure_function_acceptance",
+        "test_stateless_expressions.StatelessExpressionContracts.test_bound_alias_controls_keep_plain_polynomials_and_skipped_precision"
+      ],
+      "problem": "三方法强制program.contributions[0].rhs为裸Affine。这是旧layout而非“常量函数输出1”的数学义务；IR33必须保函数return real边界，且规范化支路可有负方向Binary包装。当前compile probe直接见RealBoundary(return)，测试会在数值校验前失败。",
+      "recommended_correction": "保持原public fixed输出与source合法性/预算检查；若测试内部return边界，检查相应typed边界及scope，不要求把它消为Affine。不可通过删除程序real边界来满足旧layout。",
+      "evidence_refs": [
+        "evas/tests/test_stateless_expressions.py:258",
+        "evas/tests/test_stateless_expressions.py:276",
+        "evas/tests/test_stateless_expressions.py:397",
+        "evas/docs/math/events.md:1485",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane3-probe-results.json"
+      ],
+      "independent_derivation": "compile discard(V(a)>0)产生canonical Binary(-1,RealBoundary(Affine(1),return,...))；数值仍1，裸Affine断言却必失败。",
+      "fault_injection_calibration": "Not run for this finding; static source/contract assessment."
+    },
+    {
+      "id": "L4-F01",
+      "priority": "P1",
+      "affected_ids": [
+        "test_analog_conditions.OrdinaryAnalogConditionContracts.test_cancellation_predicate_uses_exact_binary64_affine_sign",
+        "test_analog_conditions.OrdinaryAnalogConditionContracts.test_nested_select_only_evaluates_selected_condition_path",
+        "test_analog_conditions.OrdinaryAnalogConditionContracts.test_pwl_error_acceptance_is_invariant_under_irrelevant_conditions",
+        "test_analog_conditions.OrdinaryAnalogConditionContracts.test_pwl_threshold_uses_original_rational_input",
+        "test_analog_conditions.OrdinaryAnalogConditionContracts.test_selected_branch_propagates_pwl_error_through_voltage_gain",
+        "test_analog_conditions.OrdinaryAnalogConditionContracts.test_unrelated_pwl_uncertainty_preserves_exact_point_predicate"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_analog_conditions.py:249",
+        "evas/tests/test_analog_conditions.py:284",
+        "evas/tests/test_analog_conditions.py:27",
+        "evas/tests/test_analog_conditions.py:138",
+        "evas/tests/test_analog_conditions.py:153",
+        "evas/tests/test_analog_conditions.py:208",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane4-arithmetic-probe.json"
+      ],
+      "problem": "普通条件/局部tmp的oracle跨过IR33采样与RN边界：RN(1e16+1)==1e16，RN(1/3)==binary64阈值。测试却用Fraction精确实数符号或要求保留舍入前差约0.185037。无关条件不改变程序结果，但物理直接贡献与有tmp存储不再等价。",
+      "recommended_correction": "分别写物理方程与程序表达式的独立参考；程序条件先采样RN再按源树逐次RN。保留正负/选中未选中子case和原电压预算，重建紧负控理由。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F02",
+      "priority": "P1",
+      "affected_ids": [
+        "test_cross_right_limit.CrossRightLimit.test_arrival_at_stop_has_no_right_limit",
+        "test_cross_right_limit.CrossRightLimit.test_coincident_unfired_input_uses_its_right_slope",
+        "test_cross_right_limit.CrossRightLimit.test_fired_guard_predicate_sees_crossing_side",
+        "test_cross_right_limit.CrossRightLimit.test_knot_at_the_threshold_takes_the_leaving_segment_side",
+        "test_cross_right_limit.CrossRightLimit.test_latched_crossing_value_needs_a_side_certificate",
+        "test_cross_right_limit.CrossRightLimit.test_negated_scale_on_a_falling_crossing",
+        "test_cross_right_limit.CrossRightLimit.test_or_leaves_with_opposite_simultaneous_crossings",
+        "test_cross_right_limit.CrossRightLimit.test_state_dependent_guard_reads_its_side",
+        "test_cross_right_limit.CrossRightLimit.test_unrelated_simultaneous_timer_keeps_the_crossing_side",
+        "test_cross_right_limit.CrossRightWindow.test_latched_input_cancels_exactly",
+        "test_cross_right_limit.CrossRightWindow.test_settled_history_is_a_plateau_but_a_moving_one_is_not",
+        "test_passive_events.PassiveEvents.test_condition_at_exact_cross_root_keeps_strict_comparison"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_cross_right_limit.py:123",
+        "evas/tests/test_cross_right_limit.py:87",
+        "evas/tests/test_cross_right_limit.py:70",
+        "evas/tests/test_cross_right_limit.py:108",
+        "evas/tests/test_cross_right_limit.py:143",
+        "evas/tests/test_cross_right_limit.py:165",
+        "evas/tests/test_cross_right_limit.py:81",
+        "evas/tests/test_cross_right_limit.py:155",
+        "evas/tests/test_cross_right_limit.py:131",
+        "evas/tests/test_cross_right_limit.py:204",
+        "evas/tests/test_cross_right_limit.py:226",
+        "evas/tests/test_passive_events.py:67",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194"
+      ],
+      "problem": "cross后方向被当成程序strict comparison的无舍入side。新合同明确RN阈值附近plateau，u=.5时RN(u)>.5及<.5均false；latched q=.5是确定值，不能因旧side证书缺失强拒绝。已迁移的test_fired_guard首子case正确，后续negative-scale子case仍旧，故整方法为mixed。",
+      "recommended_correction": "保留物理cross根定位，独立计算RN-image上的body条件；将旧物理方向判据另标物理guard合同。对每个UP/DOWN/KNOT/touch/plateau/stop/held子case写当前答案，不删负控。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F03",
+      "priority": "P1",
+      "affected_ids": [
+        "test_al4_lifecycle.BoundedLifecycleContracts.test_changed_flow_replaces_old_root_at_independent_exact_crossing",
+        "test_al4_lifecycle.BoundedLifecycleContracts.test_interrupted_edge_keeps_integral_and_nonzero_filter_continuation",
+        "test_cross_right_limit.CrossRightLimit.test_arrival_at_stop_has_no_right_limit",
+        "test_cross_right_limit.CrossRightLimit.test_coincident_unfired_input_uses_its_right_slope",
+        "test_cross_right_limit.CrossRightLimit.test_fired_guard_predicate_sees_crossing_side",
+        "test_cross_right_limit.CrossRightLimit.test_knot_at_the_threshold_takes_the_leaving_segment_side",
+        "test_cross_right_limit.CrossRightLimit.test_latched_crossing_value_needs_a_side_certificate",
+        "test_cross_right_limit.CrossRightLimit.test_negated_scale_on_a_falling_crossing",
+        "test_cross_right_limit.CrossRightLimit.test_negative_controls_keep_value_without_side_certificate",
+        "test_cross_right_limit.CrossRightLimit.test_or_leaves_with_opposite_simultaneous_crossings",
+        "test_cross_right_limit.CrossRightLimit.test_state_dependent_guard_reads_its_side",
+        "test_cross_right_limit.CrossRightLimit.test_unrelated_simultaneous_timer_keeps_the_crossing_side",
+        "test_cross_right_limit.CrossRightWindow.test_constant_inputs_keep_an_exact_root_tie",
+        "test_cross_right_limit.CrossRightWindow.test_latched_input_cancels_exactly",
+        "test_cross_right_limit.CrossRightWindow.test_settled_history_is_a_plateau_but_a_moving_one_is_not",
+        "test_initial_display_transition.InitialDisplayTransition.test_changed_seed_uses_initial_state_before_zero_timer_displays",
+        "test_initial_display_transition.InitialDisplayTransition.test_final_seed_and_display_answers_do_not_depend_on_output_grid",
+        "test_initial_display_transition.InitialDisplayTransition.test_initial_and_timer_display_replay_preserves_each_statement_position",
+        "test_initial_display_transition.InitialDisplayTransition.test_unchanged_seed_preserves_internal_voltage_initial_display",
+        "test_initial_display_transition.InitialDisplayTransition.test_zero_or_bodies_run_once_and_positive_neighbors_remain",
+        "test_initial_display_transition.InitialDisplayTransition.test_zero_timer_condition_reads_prior_initial_assignment",
+        "test_initial_observer_horizon.InitialObserverHorizon.test_initial_held_due_rebuilds_calendar_then_extends_history",
+        "test_initial_observer_horizon.InitialObserverHorizon.test_initial_observation_does_not_predict_riccati_past_fixed_timer",
+        "test_initial_observer_horizon.InitialObserverHorizon.test_riccati_observation_is_stable_on_forced_and_dense_output_grids",
+        "test_lifecycle_closure.LifecycleClosureContracts.test_immutable_history_sampling_keeps_the_root_window",
+        "test_lifecycle_closure.LifecycleClosureContracts.test_trace_binds_reset_sample_and_future_flow_to_one_root",
+        "test_passive_events.PassiveEvents.test_post_physical_voltage_order_display_and_own_timer",
+        "test_semantic_invariants.SemanticInvariants.test_extra_observation_times_and_unloaded_taps_preserve_history",
+        "test_semantic_invariants.SemanticInvariants.test_independent_history_contributions_commute",
+        "test_semantic_invariants.SemanticInvariants.test_node_instance_and_local_renaming_preserves_bindings",
+        "test_timer_closure.HeldTimerClosure.test_past_one_shot_is_empty_and_later_cross_rearms_it"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_al4_lifecycle.py:12",
+        "evas/tests/test_al4_lifecycle.py:36",
+        "evas/tests/test_cross_right_limit.py:123",
+        "evas/tests/test_cross_right_limit.py:87",
+        "evas/tests/test_cross_right_limit.py:70",
+        "evas/tests/test_cross_right_limit.py:108",
+        "evas/tests/test_cross_right_limit.py:143",
+        "evas/tests/test_cross_right_limit.py:165",
+        "evas/tests/test_cross_right_limit.py:93",
+        "evas/tests/test_cross_right_limit.py:81",
+        "evas/tests/test_cross_right_limit.py:155",
+        "evas/tests/test_cross_right_limit.py:131",
+        "evas/tests/test_cross_right_limit.py:214",
+        "evas/tests/test_cross_right_limit.py:204",
+        "evas/tests/test_cross_right_limit.py:226",
+        "evas/tests/test_initial_display_transition.py:86",
+        "evas/tests/test_initial_display_transition.py:209",
+        "evas/tests/test_initial_display_transition.py:192",
+        "evas/tests/test_initial_display_transition.py:182",
+        "evas/tests/test_initial_display_transition.py:116",
+        "evas/tests/test_initial_display_transition.py:107",
+        "evas/tests/test_initial_observer_horizon.py:117",
+        "evas/tests/test_initial_observer_horizon.py:103",
+        "evas/tests/test_initial_observer_horizon.py:109",
+        "evas/tests/test_lifecycle_closure.py:62",
+        "evas/tests/test_lifecycle_closure.py:206",
+        "evas/tests/test_passive_events.py:37",
+        "evas/tests/test_semantic_invariants.py:145",
+        "evas/tests/test_semantic_invariants.py:124",
+        "evas/tests/test_semantic_invariants.py:135",
+        "evas/tests/test_timer_closure.py:16",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194",
+        "evas/src/evas/procedural.py:429",
+        "evas/tests/initial_source_sequence_contract.py:12"
+      ],
+      "problem": "方法或共享helper直接把events当成仅运行时timer/cross列表，漏源码显式initial_step；部分直接events[0]取cross bounds/after或要求首record来自meter。IR33按每个实际initial gate记录，before/after须来自该源码步骤，因此合法实现仍会触发旧数量/索引断言。",
+      "recommended_correction": "先按源程序独立验证完整initial记录的event id、origin、源码序及逐gate before/after，再对已验证的运行期view做旧root/波形检查；禁止无条件过滤kind或改数量凑通过。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F04",
+      "priority": "P1",
+      "affected_ids": [
+        "test_event_relocalization.EventRelocalization.test_changed_threshold_invalidates_original_root",
+        "test_event_relocalization.EventRelocalization.test_history_dependent_relocalization_updates_the_root",
+        "test_event_relocalization.EventRelocalization.test_internal_voltage_projection_is_relocalized",
+        "test_event_relocalization.EventRelocalization.test_jump_across_zero_requires_separate_same_time_event_contract",
+        "test_event_relocalization.EventRelocalization.test_moved_later_root_and_stop_arrival",
+        "test_event_relocalization.EventRelocalization.test_nonrepresentable_root_is_consumed_once",
+        "test_event_relocalization.EventRelocalization.test_observations_and_steps_do_not_rearm_consumed_roots",
+        "test_event_relocalization.EventRelocalization.test_polynomial_held_threshold_uses_the_same_epoch_and_commit_rule",
+        "test_event_relocalization.EventRelocalization.test_removed_future_root_does_not_fire"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_event_relocalization.py:26",
+        "evas/tests/test_event_relocalization.py:82",
+        "evas/tests/test_event_relocalization.py:32",
+        "evas/tests/test_event_relocalization.py:77",
+        "evas/tests/test_event_relocalization.py:70",
+        "evas/tests/test_event_relocalization.py:62",
+        "evas/tests/test_event_relocalization.py:43",
+        "evas/tests/test_event_relocalization.py:103",
+        "evas/tests/test_event_relocalization.py:49",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194",
+        "evas/tests/initial_record_contract.py:12",
+        "evas/tests/fixtures/event_relocalization.va:8"
+      ],
+      "problem": "test_event_relocalization.run默认check_initial_record_batch(...,[0,0],[.75,0],2)，helper把两条initial均要求同一joint before/after；原源码先threshold=.75再n=0，第二条before应[.75,0]。多gate并非共同快照。test_jump_across_zero还要求特定unsupported_cross，helper未到达时不能解释成root缺陷。",
+      "recommended_correction": "用initial_source_sequence_contract逐条列出source-gate更新，再保留原root重定位/计数/拒绝义务。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F05",
+      "priority": "P1",
+      "affected_ids": [
+        "test_declaration_initializers.DeclarationInitializers.test_event_state_seed_and_initial_step_override",
+        "test_event_ordinary_scratch.EventOrdinaryScratch.test_initial_only_total_alias_preserves_its_initial_state"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_declaration_initializers.py:31",
+        "evas/tests/test_event_ordinary_scratch.py:39",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194",
+        "evas/src/evas/procedural.py:438"
+      ],
+      "problem": "编译对象State.initial被断言为initial_step执行后的值。IR33程序保留initial gate，字段应为声明/default seed；例如integer x=3;initial x=7的字段仍3，运行t0才7。",
+      "recommended_correction": "分开检查声明字段和public transient的t0结果，保留各自独立手算答案与层级/参数子case。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F06",
+      "priority": "P1",
+      "affected_ids": [
+        "test_analog_conditions.OrdinaryAnalogConditionContracts.test_raw_ir_select_predicate_must_be_driven",
+        "test_analog_conditions.OrdinaryAnalogConditionContracts.test_raw_ir_uncertified_condition_is_rejected_instead_of_rounded"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_analog_conditions.py:529",
+        "evas/tests/test_analog_conditions.py:445",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194",
+        "evas/src/evas/procedural.py:381"
+      ],
+      "problem": "修改raw条件前仅在contributions[0].rhs递归寻找Select。当前ordinary limiter通过RealLocal与ProcedureConditional捕获，find_select找不到即在mutation前失败，未测试目标kernel rejection。",
+      "recommended_correction": "针对明确冻结raw Select fixture测试其接收合同，或在当前Program.procedures定位并修改目标条件；先用同形正控确认原程序通过。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F07",
+      "priority": "P1",
+      "affected_ids": [
+        "test_forcing_history_bridge.ForcingHistoryBridge.test_nonpoint_cold_seed_retains_explicit_initial_history_rejection",
+        "test_initial_display_transition.InitialDisplayTransition.test_nonbare_point_certificate_retries_without_program_or_record_mutation"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_forcing_history_bridge.py:73",
+        "evas/tests/test_initial_display_transition.py:147",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane4-arithmetic-probe.json"
+      ],
+      "problem": "负控把.125+2^-60的舍入前不可表示性当成非点seed；IR33 RN完整点输入得到唯一binary64 .125，+0亦不增加域。故不能据旧未舍入证书强求unsupported_initial_history。",
+      "recommended_correction": "保留原模型为point正控，另用真实跨RN-cell源/根不确定域建立非点负控，不能仅放宽输出预算。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F08",
+      "priority": "P1",
+      "affected_ids": [
+        "test_frontend_closure.ConstantEventAliases.test_future_and_initial_reassigned_aliases_still_reject"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_frontend_closure.py:66",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194"
+      ],
+      "problem": "拒绝族包含a=1; @(initial_step)q=a; a=2，当前源码位置绑定合同应让q=1。将所有后续同名writer当成CompileError会与现有test_procedure_runtime.initial_event_uses_local_at_its_source_position正控冲突。",
+      "recommended_correction": "保留前序未定义等真正非法case，将有完整源码前缀的常量快照作为正控并检查q保持1。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F09",
+      "priority": "P1",
+      "affected_ids": [
+        "test_generated_transient.BatchOutcomeContracts.test_batch_preserves_seed_ids_and_separates_machine_outcomes",
+        "test_generated_transient.FailureReductionContracts.test_missing_event_failure_reduces_with_class_preserved",
+        "test_generated_transient.FailureReductionContracts.test_non_failure_outcomes_are_not_reduced",
+        "test_generated_transient.FailureReductionContracts.test_reduction_preserves_seed_and_diagnosed_failure",
+        "test_generated_transient.FailureReductionContracts.test_reduction_rejects_candidates_that_change_the_failure_class",
+        "test_generated_transient.GeneratedKernelContracts.test_corrupted_oracles_are_not_silently_accepted",
+        "test_generated_transient.GeneratedKernelContracts.test_generated_cases_match_exact_oracles",
+        "test_generated_transient.GeneratedKernelContracts.test_model_side_event_defects_are_diagnosed_not_accepted",
+        "test_generated_transient.GeneratedKernelContracts.test_numerical_defect_is_reported_as_value_mismatch",
+        "test_generated_transient.GeneratedOracleContracts.test_expected_event_records_and_states_are_exact",
+        "test_generated_transient.StrictEvidenceCalibration.test_batch_saves_fraction_reduction_and_original_before_reducer_failure",
+        "test_generated_transient.StrictEvidenceCalibration.test_before_state_is_checked",
+        "test_generated_transient.StrictEvidenceCalibration.test_calibration_cli_reports_a_classified_failure_as_portable_json",
+        "test_generated_transient.StrictEvidenceCalibration.test_event_identity_and_state_witness_are_not_exchangeable",
+        "test_generated_transient.StrictEvidenceCalibration.test_missing_malformed_and_nonfinite_response_is_not_a_pass"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_generated_transient.py:206",
+        "evas/tests/test_generated_transient.py:170",
+        "evas/tests/test_generated_transient.py:181",
+        "evas/tests/test_generated_transient.py:137",
+        "evas/tests/test_generated_transient.py:154",
+        "evas/tests/test_generated_transient.py:92",
+        "evas/tests/test_generated_transient.py:82",
+        "evas/tests/test_generated_transient.py:103",
+        "evas/tests/test_generated_transient.py:118",
+        "evas/tests/test_generated_transient.py:68",
+        "evas/tests/test_generated_transient.py:291",
+        "evas/tests/test_generated_transient.py:279",
+        "evas/tests/test_generated_transient.py:224",
+        "evas/tests/test_generated_transient.py:261",
+        "evas/tests/test_generated_transient.py:236",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194",
+        "evas/validation/generated_transient.py:223",
+        "evas/validation/generated_transient.py:246",
+        "evas/validation/generated_transient.py:448",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane4-arithmetic-probe.json"
+      ],
+      "problem": "generated_transient.expected只列timer，model_source却明确发initial_step；checker还按旧timer id0/1对当前id1/2。当前完整真值3记录被判event_count/kind/time错误，numerical_fail归约及baseline pass/校准均受污染。独立合成正确dyadic真值probe显示baseline不空，calibrate duplicate_event甚至detected=False。纯面积oracle本身正确。",
+      "recommended_correction": "先为生成器加入源derived初始seed、initial gate/id和逐事件trace，再校准具体mutation必须触发预期mismatch类型；归约比较相同witness，不让旧baseline事件错当注入成功。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F10",
+      "priority": "P2",
+      "affected_ids": [
+        "test_held_timer_provenance.HeldTimerProvenance.test_future_amplification_keeps_inherited_arithmetic_error"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_held_timer_provenance.py:45",
+        "evas/tests/test_held_timer_provenance.py:61",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194"
+      ],
+      "problem": "仅保留future_amplification_keeps_inherited_arithmetic_error的方法问题：x采样证书不得把确定RN(.45*.16)当舍入前产品的真实多值域。strict未来gain拒绝仍可能有最终输出表示误差或既有诊断合同理由，需要独立核定，不能从本项推出无需拒绝。第一方法的近似波形oracle已精确核对满足原1e-12，移出finding。",
+      "recommended_correction": "独立递推每个存储RN值；将真正采样域多值与确定算术RN分开，按当前目标及最终电压表示误差重建tight控制。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。",
+      "correction_note": "q从0于.1上升至1；第二timer旧due与当前RN due之差除.01是边沿输出最大位移。边界query为当前due，原expected仍1；.35两者均完成下降为0。旧未舍入due文字不准确，但该有限近似波形oracle在原预算内有效。"
+    },
+    {
+      "id": "L4-F11",
+      "priority": "P1",
+      "affected_ids": [
+        "test_integer_math_closure.IntegerMathClosure.test_finite_power_singleton_keeps_same_batch_read_dependency",
+        "test_integer_math_closure.IntegerMathClosure.test_runtime_divisor_singleton_preserves_same_batch_read",
+        "test_passive_events.PassiveEvents.test_cross_block_state_reader_remains_rejected",
+        "test_timer_ordering.TimerOrdering.test_exact_equal_writers_still_fail_same_batch_ownership"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_integer_math_closure.py:142",
+        "evas/tests/test_integer_math_closure.py:63",
+        "evas/tests/test_passive_events.py:62",
+        "evas/tests/test_timer_ordering.py:76",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194"
+      ],
+      "problem": "旧跨event块read/write一概冲突的目标与同实例同analog同次逻辑发生的源码顺序矛盾；两个相同固定timer(.25)可明确证明同发生。runtime divisor例先d=1后读n/d应3。不同period clock精确相交需按当前occurrence证明处理，不能仅据旧ownership强拒绝。",
+      "recommended_correction": "同procedure同occurrence改为逐source状态正控；另保留不同procedure/instance或未证明同发生的冲突负控，并避免由另一个缺约束实例提前拒绝。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F13",
+      "priority": "P1",
+      "affected_ids": [
+        "test_source_selected_slew.SourceSelectedSlew.test_sampled_root_error_survives_storage_and_later_gain",
+        "test_source_state_predicates.SourceStatePredicates.test_held_predicate_straddling_threshold_refuses_instead_of_selecting_center",
+        "test_transition_accuracy.TransitionAccuracy.test_initial_affine_input_roundoff_is_checked",
+        "test_transition_accuracy.TransitionAccuracy.test_sampled_state_keeps_history_error_across_events",
+        "test_transition_dc_target.DcTransition.test_product_error_survives_gain"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_source_selected_slew.py:75",
+        "evas/tests/test_source_state_predicates.py:37",
+        "evas/tests/test_transition_accuracy.py:95",
+        "evas/tests/test_transition_accuracy.py:79",
+        "evas/tests/test_transition_dc_target.py:57",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane4-arithmetic-probe.json"
+      ],
+      "problem": "stored real/transition target继续把确定RN误差作为真实不确定域传到未来。三次q+=.1是确定.30000000000000004；b=RN(1/3)后指定c逐次RN得1。完成目标RN(product)与同一rounded常量相减0。旧tight必拒绝或unrounded exact目标不由当前合同推出。",
+      "recommended_correction": "使用独立整数商余RN或逐源运算参考；保留真实source/root输入域负控及原外部预算，不能把确定RN差当物理error domain。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F14",
+      "priority": "P1",
+      "affected_ids": [
+        "test_source_rational_guards.SourceOnlyRationalContracts.test_exact_certificate_counts_expanded_occurrences",
+        "test_source_rational_guards.SourceOnlyRationalContracts.test_expanded_source_ir_resource_limit_remains"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_source_rational_guards.py:126",
+        "evas/tests/test_source_rational_guards.py:133",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194"
+      ],
+      "problem": "source-local q的存储被旧inline树/occurrence预算oracle处理。相同RN商相减0后8轮倍增仍0，不应仅因256未展开occurrences强制condition_precision；20轮source binding线性DAG不等同百万inline树，resource_budget必须来自实际现有aggregate费用。",
+      "recommended_correction": "正控检验q=0，预算负控使用实际wire/paid source工作超过现有cap的模型；保持原cap和成本所有者。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F15",
+      "priority": "P2",
+      "affected_ids": [
+        "test_timer_ordering.TimerOrdering.test_mixed_timer_cross_overlap_has_exact_physical_order",
+        "test_timer_ordering.TimerOrdering.test_nearby_nominal_clocks_preserve_order_count_and_query_invariance"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_timer_ordering.py:91",
+        "evas/tests/test_timer_ordering.py:24",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194"
+      ],
+      "problem": "以不同物理timer根必有严格递增event.time来检查排序。两个不同exact roots可共享同binary64代表；ADR006禁止用next_up人为拆时间。现有event identity/order/count约束有效，但strict记录时间<过强。",
+      "recommended_correction": "按精确root证书、occurrence身份及列表因果序核对不同根，允许同representative且保留独立窗口与顺序证据；不能合并实际不同事件。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F16",
+      "priority": "P1",
+      "affected_ids": [
+        "test_phase.PhaseContracts.test_wrapped_phase_voltage_certifies_binary64_coefficient_boundary"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_phase.py:392",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194",
+        "evas/docs/math/operators.md:61"
+      ],
+      "problem": "idtmod(V(f)/3)在当前IR33源码历史输入中保留程序除法边界；常输入1.5/3经一次RN为精确.5。测试仍明确采用1.5*binary64(1/3)旧reciprocal coefficient作为相位及strict拒绝oracle，和当前来源RN相位合同直接冲突。",
+      "recommended_correction": "保留该原source，以.125+.5*t的独立有理phase再执行程序store RN建立半开wrap答案；另用冻结raw Affine coefficient测试旧表示合同，不把两个oracle混用。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F17",
+      "priority": "P2",
+      "affected_ids": [
+        "test_absdelay.AbsDelayContracts.test_inconsistent_constraint_does_not_return_a_partial_waveform"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_absdelay.py:135",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194"
+      ],
+      "problem": "矛盾冗余约束的实质义务是拒绝且不返回部分波形；测试强制event_accuracy及redundant旧前置阶段。当前IR33保留相同安全拒绝可来自waveform_accuracy，精确诊断阶段并未由本模型数学唯一决定，且该旧阶段阻断后续valid retry。",
+      "recommended_correction": "以指定稳定诊断API为准；保留无部分结果及原有效重试，若要求特定redundant阶段需明确兼容合同和独立针对该阶段的fixture。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F18",
+      "priority": "P1",
+      "affected_ids": [
+        "test_active_initial_output.ActiveInitialOutput.test_active_initial_snapshot_of_input_selected_seed_is_rejected",
+        "test_active_initial_output.ActiveInitialOutput.test_snapshot_arithmetic_overflow_is_a_located_compile_error",
+        "test_initial_observer_horizon.InitialObserverHorizon.test_physical_initial_display_keeps_existing_rejection"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_active_initial_output.py:89",
+        "evas/tests/test_active_initial_output.py:108",
+        "evas/tests/test_initial_observer_horizon.py:132",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194"
+      ],
+      "problem": "源码initial gate现在在过程运行期执行显示和选中算术。输入条件先写q后strobe可在运行期得到0/1；1e100高次幂选中时必须拒绝nonfinite，但不再必须在compile抛constant/finite snapshots。物理initial display同样需运行域认证，不能用旧constant-only编译禁令替代。",
+      "recommended_correction": "保留原源输入，在public runtime检查source-position显示/状态及带origin的非有限拒绝；初始物理提供者资格单独验收。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F19",
+      "priority": "P1",
+      "affected_ids": [
+        "test_declaration_initializers.DeclarationInitializers.test_compile_failure_does_not_change_later_instance_seeds",
+        "test_declaration_initializers.DeclarationInitializers.test_mixed_declarators_real_and_integer_minimum",
+        "test_declaration_initializers.DeclarationInitializers.test_seed_survives_functions_arrays_and_hierarchy",
+        "test_declaration_initializers.DeclarationInitializers.test_source_integer_type_is_preserved_even_for_real_seed"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_declaration_initializers.py:92",
+        "evas/tests/test_declaration_initializers.py:38",
+        "evas/tests/test_declaration_initializers.py:131",
+        "evas/tests/test_declaration_initializers.py:101",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194",
+        "evas/src/evas/instance_compiler.py:841"
+      ],
+      "problem": "real声明seed在IR33保留RealBoundary(store)、函数seed还保留RealCall；initials辅助器直接返回对象却与float字典比较。手算P/.5/6等值合理，但此断言检验旧布局，未检验种子执行结果或实例污染。",
+      "recommended_correction": "分别检查必要store/call边界及public t0运行值；保留参数/层级、类型和失败后隔离控制，不将复杂对象机械转名义值绕开域/边界。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F20",
+      "priority": "P1",
+      "affected_ids": [
+        "test_event_ordinary_scratch.EventOrdinaryScratch.test_earlier_ordinary_writer_is_rejected",
+        "test_event_ordinary_scratch.EventOrdinaryScratch.test_scalarized_array_cannot_bypass_original_writer_order",
+        "test_event_ordinary_scratch.EventOrdinaryScratch.test_zero_trip_ordinary_loop_cannot_hide_an_undefined_scratch_read",
+        "test_event_ordinary_scratch.EventOrdinaryScratch.test_zero_trip_original_loop_old_read_is_rejected"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_event_ordinary_scratch.py:34",
+        "evas/tests/test_event_ordinary_scratch.py:66",
+        "evas/tests/test_event_ordinary_scratch.py:55",
+        "evas/tests/test_event_ordinary_scratch.py:43",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194",
+        "evas/src/evas/instance_compiler.py:521"
+      ],
+      "problem": "procedure_builder对real普通/event变量保留源码位置，不再经过旧scratch数组/先后/零循环 blanket gate。明确的前序e=2u→callback e=1,q=e及单槽数组具有独立可执行顺序；零轮loop中旧读不执行，随后已write的read受支配。旧follow callback/scratch loop诊断必拒绝目标过时。",
+      "recommended_correction": "按当前源码图给合法source-order正控并检查各位置输出；保留真正非法引用、未证旧值域和非零循环carry负控，不能靠旧角色限制凑拒绝。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F21",
+      "priority": "P1",
+      "affected_ids": [
+        "test_passive_events.PassiveEvents.test_nonrepresentable_root_retains_tau_sample_interval",
+        "test_physical_point_bundle.PhysicalPointBundle.test_passive_queries_preserve_events_and_future_samples",
+        "test_physical_point_bundle.PhysicalPointBundle.test_real_producer_kernel_original_point_box_and_held_history"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_passive_events.py:106",
+        "evas/tests/test_physical_point_bundle.py:31",
+        "evas/tests/test_physical_point_bundle.py:29",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194"
+      ],
+      "problem": "passive_events.nonrepresentable_root直接events[0]读cross值，physical_point_bundle.run_case把全部event.time断言为[.25,.5]。原source含initial_step，当前记录应包含初始条，所以旧首条索引/数量明确过时；其数值分段答案仍有独立根据。",
+      "recommended_correction": "先源derived验证initial身份和状态，再选择cross id/已验证runtime view核对后续root与盒；保留原物理shaped输入。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F22",
+      "priority": "P1",
+      "affected_ids": [
+        "test_passive_events.PassiveEvents.test_two_direct_operator_guards_preserve_indices_with_and_without_observer"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_passive_events.py:119",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194"
+      ],
+      "problem": "源码V(y)<+q+idt(1,0)在两个cross gate之前，贡献捕获之前q。t=.5捕获q=0给y=.5后q置1，t=.75捕获q=1给y=1.75后q置2。测试却期望[1.5,2.75]，把过程末状态回填较早贡献；state序列本身正确。",
+      "recommended_correction": "保留原source，独立输出应[0,.25,.5,1.75,3]；另设将贡献放在gate之后的source-order对照，不能挪原source掩盖差异。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L4-F23",
+      "priority": "P2",
+      "affected_ids": [
+        "test_integer_math_closure.IntegerMathClosure.test_finite_power_counts_actual_decisions_even_in_parameter_dead_code"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_integer_math_closure.py:132",
+        "evas/docs/math/events.md:1452",
+        "evas/docs/development/DECISIONS.md:194"
+      ],
+      "problem": "三个pow(2,n/m/k)在IR33保留实际程序运算图，不能仅凭旧finite选项笛卡尔积33³要求gate=0也resource_budget。选中臂lazy，真实预算应按实际source/query/materialize收费；原signed32与引用结构仍需审计。",
+      "recommended_correction": "区分gate=0结构审计与选中运行数值，使用实际付费超现有cap的模型作budget负控；保留原cap且不增加额度。",
+      "calibration": "静态源码/合同复核；除明确列出lane4 arithmetic/checker probe外未运行故障注入或内核。"
+    },
+    {
+      "id": "L5-F01",
+      "priority": "P1",
+      "affected_ids": [
+        "test_analytic_sources.AnalyticSourceContracts.test_nonbinary_physical_root_sample_and_timer",
+        "test_directed_triangle_endpoint.DirectedTriangleEndpoint.test_half_speed_original_grid_arrives_at_stop",
+        "test_dynamic_closure.NonlinearIntegralContracts.test_nonlinear_integral_guard_uses_certified_trajectory",
+        "test_event_writers.EventWriterContracts.test_hysteresis_events_write_one_state_in_different_batches",
+        "test_event_writers.EventWriterContracts.test_instance_order_does_not_merge_state_writers",
+        "test_event_writers.EventWriterContracts.test_no_trigger_holds_initial_state",
+        "test_event_writers.EventWriterContracts.test_same_time_conditional_blocks_count_only_selected_assignments",
+        "test_gap_integration.GapIntegration.test_multiple_writers_reset_integral_and_transition_commit_together",
+        "test_original_source_consumers.OriginalSourceConsumerContracts.test_fixed_timer_analytic_sample_drives_physical_transition",
+        "test_user_functions.PureFunctions.test_function_polynomial_guard_keeps_all_roots",
+        "test_independent_driver_condition.IndependentDriverCondition.test_continuous_driver_condition_is_accepted",
+        "test_independent_driver_condition.IndependentDriverCondition.test_state_driver_condition_reads_independent_voltage",
+        "test_passive_history_phase.PassiveHistoryPhase.test_exact_callback_time_preserves_physical_flow_and_mixed_refusal"
+      ],
+      "evidence_refs": [
+        "evas/docs/math/events.md:1454",
+        "evas/tests/initial_record_contract.py:13",
+        "evas/tests/test_independent_driver_condition.py:52",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/coordinator-probes.json:1"
+      ],
+      "problem": "Fixtures contain runtime initial_step gates, but assert raw events are runtime-only. For example no-trigger hysteresis expects[] despite its q=0 initial event; halfspeed triangle expects[1,3] instead of[0,1,3]. Independent-driver expectedFailure now masks the obsolete event-time check even though the current matched kernel attains u=1 and y=[0,0,1,1,1].",
+      "recommended_correction": "Check the complete original initial batch, identities, declaration/after states and advisories first. Then assert runtime event inventory using an explicit checked view. Reassess/remove expectedFailure using the actual remaining capability obligation.",
+      "fault_injection_calibration": "None implied; only explicitly saved lane5 standalone probes and coordinator probe are execution evidence."
+    },
+    {
+      "id": "L5-F03",
+      "priority": "P1",
+      "affected_ids": [
+        "test_initial_ordinary_alias.InitialOrdinaryAlias.test_initial_obligations_survive_total_overwrite",
+        "test_initial_ordinary_alias.InitialOrdinaryAlias.test_unsafe_guards_and_integer_conversion_keep_all_hidden_obligations",
+        "test_source_floor_event.SourceFloorEvent.test_inactive_original_constant_divisor_is_audited_in_raw_and_source"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_initial_ordinary_alias.py:231",
+        "evas/tests/test_initial_ordinary_alias.py:265",
+        "evas/tests/test_source_floor_event.py:104",
+        "evas/docs/math/events.md:1477"
+      ],
+      "problem": "These mixed rejection methods include numerically dead operands and require compile/runtime domain rejection: initial if(1>0)q=2;else q=1/0, ordinary q=(1>0)?1:1/0, or floor(u/0) under u>10 when allactual u=1. Current program contract checks everyarm for static legality but only evaluates numeric domains in the selectedarm. Undefined names/types remain invalid, selected divisionbyzero remains invalid.",
+      "recommended_correction": "Split static name/type/role failures from executed numeric domain failures. Require success for valid selectedarm controls and retain a paired input selecting the divisionbyzero arm. Raw mutation must locate the actual Floor leaf rather than guessing an obsolete path.",
+      "fault_injection_calibration": "None implied; only explicitly saved lane5 standalone probes and coordinator probe are execution evidence."
+    },
+    {
+      "id": "L5-F04",
+      "priority": "P1",
+      "affected_ids": [
+        "test_native_integer_events.NativeIntegerEvents.test_raw_typed_boundary_rejects_forged_operands_and_non_event_uses",
+        "test_constant_initial_power.ConstantInitialPower.test_raw_chain_rejects_cross_owner_forward_source_and_state_dependencies"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_native_integer_events.py:67",
+        "evas/tests/test_constant_initial_power.py:115",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane5-probe.json:1",
+        "evas/src/evas/program_real_validation.py:1"
+      ],
+      "problem": "Native integer mutation loop edits rhs.args/function on a RealBoundary(store), while the IntegerPrimitive is rhs.value. Constant-power source/zero_source mutations append terms to RealBoundary(argument), while the affine leaf is input.value. Matched kernel probes reject invalid_request unknownfield args/function/terms at JSON parse, so these passing negatives do not exercise typedoperand or hidden-source scope validation. Other ownership/version subcases retain useful checks.",
+      "recommended_correction": "Locate each typed/affine leaf by semantic tag and original source ownership; validate that the unmutatedrequest passes the intended boundary. Apply one legal-shape mutation and assert the specific intended semantic rejection, alongside typedstore/owner controls.",
+      "fault_injection_calibration": "None implied; only explicitly saved lane5 standalone probes and coordinator probe are execution evidence."
+    },
+    {
+      "id": "L5-F05",
+      "priority": "P1",
+      "affected_ids": [
+        "test_initial_ordinary_alias.InitialOrdinaryAlias.test_each_source_position_reads_its_current_alias",
+        "test_initial_ordinary_alias.InitialOrdinaryAlias.test_initial_order_and_output_snapshots_remain_initial_values",
+        "test_initial_ordinary_alias.InitialOrdinaryAlias.test_A_alias_and_unrelated_transition_preserve_both_instance_orders",
+        "test_initial_ordinary_alias.InitialOrdinaryAlias.test_integer_ordinary_constant_keeps_the_original_initial_state",
+        "test_initial_ordinary_alias.InitialOrdinaryAlias.test_time_and_pure_math_follow_the_plain_local_contract",
+        "test_initial_ordinary_alias.InitialOrdinaryAlias.test_declaration_identity_and_instance_parameter_binding",
+        "test_initial_ordinary_alias.InitialOrdinaryAlias.test_initial_input_seed_and_live_ordinary_input_are_distinct"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_initial_ordinary_alias.py:46",
+        "evas/tests/test_initial_ordinary_alias.py:60",
+        "evas/tests/test_initial_ordinary_alias.py:70",
+        "evas/docs/math/events.md:1483"
+      ],
+      "problem": "Older tests put initial_step results7/5/3/5 into State.initial or insist accepted state remains the initial-only value. IR33 State.initial is declaration/default seed0; runtime initial gate then ordinary sourcepositionwrites build cold acceptedstate. For q=V(u);q=2V(u) atcold u=.25, stateafter is.5, not.25; later passive queries must not mutate it. Numerical output snapshots can remain useful independently of these obsolete state assertions.",
+      "recommended_correction": "Keep declaration seeds0, assert initial records and the whole cold process afterstate independently, then test ordinary query output and acceptedstate isolation separately. Do not remove the sequential/display/history checks.",
+      "fault_injection_calibration": "None implied; only explicitly saved lane5 standalone probes and coordinator probe are execution evidence."
+    },
+    {
+      "id": "L5-F06",
+      "priority": "P1",
+      "affected_ids": [
+        "test_event_writers.EventWriterContracts.test_simultaneous_writers_are_atomic_conflicts",
+        "test_event_writers.EventWriterContracts.test_same_time_conditional_blocks_conflict_when_both_selected_even_same_value",
+        "test_event_writers.EventWriterContracts.test_asynchronous_cross_block_reads_and_simultaneous_structural_ambiguity"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_event_writers.py:77",
+        "evas/tests/test_event_writers.py:126",
+        "evas/tests/test_event_writers.py:144",
+        "evas/docs/development/DECISIONS.md:204"
+      ],
+      "problem": "Two identicalcross guards or identical fixedtimers in the same analogprocedure are a proven shared occurrence. ADR006 sourceorder permits firstq=1 thenq=2, two selectedq=1 writes, and earlierp/q=7 followed byp-p or0*p. The old method unconditionally demands event_conflict/unsupported_cross from IR32 parallelblock semantics. Independent asynchronous0 controls remain valid.",
+      "recommended_correction": "Assert sourceordered same-occurrence values/records. Retain true cross-process conflicts and unprovedoverlap identity rejection as separate controls rather than weakening writer checks generally.",
+      "fault_injection_calibration": "None implied; only explicitly saved lane5 standalone probes and coordinator probe are execution evidence."
+    },
+    {
+      "id": "L5-F07",
+      "priority": "P1",
+      "affected_ids": [
+        "test_source_floor_event.SourceFloorEvent.test_certified_bin_controls_source_order_branch_and_display"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_source_floor_event.py:46",
+        "evas/tests/floor_rn_contract.py:33",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane5-probe.json:1"
+      ],
+      "problem": "Atu=.03, binary64 .03/.9=0x1.1111111111111p-5, its product15 rounds to.5 and adding.5 gives1.0. Thus floor is1 and q<1 isfalse, finalq8; method requiresfloor0, direct0 and finalq7. This contradicts both ADR006 and its own independently written divide_floor helper.",
+      "recommended_correction": "Derive each operation via Fraction->RN as floor_rn_contract does; require displaysfloor1/direct1 and branch8 for this originalfixture. Keep negative and neighboring cuts.",
+      "fault_injection_calibration": "None implied; only explicitly saved lane5 standalone probes and coordinator probe are execution evidence."
+    },
+    {
+      "id": "L5-F08",
+      "priority": "P1",
+      "affected_ids": [
+        "test_settlement.SettlementContracts.test_unique_feedback_including_noncontractive_has_closed_form"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_settlement.py:40",
+        "evas/docs/math/events.md:1456",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane5-probe.json:1",
+        "evas/docs/math/continuous.md:150",
+        "evas/docs/math/continuous.md:208"
+      ],
+      "problem": "Gain=-.5,n=1 subcase requires acceptance based on exacts=2/3. Actual programfixedpoint is s=RN(RN(-.5*s)+1), physicaly=s. Anyfinitefixedpoint must lie.5<s<.75; multiplication isexact, finalroundingerror<=2^-54, so |s-2/3|<=1/(3*2^53). Only lowerneighborL liesinthisradius. AtL, exact1-L/2=(L+U)/2, ties-to-evenchoosesU, soL isnotfixed. Hence the exact self-consistent model has no finite binary64 fixed point; the old closed form is not an existence argument. Whether finite voltage-residual acceptance may permit this source request needs an explicit contract decision, so this method is evidence_gap rather than a claim that its 12-place numeric tolerance is wrong. Savedprobe includes globalbound andhex candidates;2cycle alone isnotusedasproof.",
+      "recommended_correction": "Preserve valid dyadic gain.5/2 controls. Give negativegain a source program with an actualroundedfixedpoint, and retain this exactoriginal as honest no-solution rejection control. Do not force the exactrational root through a programstore.",
+      "fault_injection_calibration": "None implied; only explicitly saved lane5 standalone probes and coordinator probe are execution evidence.",
+      "acceptance_contract_limit": "没有把12位数值容差本身判错；反例证明旧连续闭式值不能建立程序RN固定点存在性。若允许无精确一致根的请求仅凭电压残差进入验收，须明确其合同依据，当前保留evidence_gap。"
+    },
+    {
+      "id": "L5-F09",
+      "priority": "P1",
+      "affected_ids": [
+        "test_constant_initial_power.ConstantInitialPower.test_original_real_exponent_reference_lies_inside_every_root_box",
+        "test_original_source_consumers.SampledTransitionProfileContracts.test_nonpoint_sample_keeps_error_and_passive_query_invariance"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_constant_initial_power.py:32",
+        "evas/tests/test_original_source_consumers.py:172",
+        "evas/tests/test_analytic_sources.py:55",
+        "evas/docs/math/events.md:1463"
+      ],
+      "problem": "Strict outputbox oracle encloses unroundedreal gain/heldsine. Initialpower uses exact Decimal attenuation/20, exp and reciprocal without programRN boundaries. SampledTransition uses source_box(1/8) around true .5+.25sin(pi/4), although h=V(x) stores its RNimage. A valid singletonroundedoutput box neednotinclude theunroundedtranscendentalvalue; nonbinary physicalsource doesnotitselfprove multivalue storedhistory.",
+      "recommended_correction": "Keep physicalinput sourceboxes independently checked, derive complete RNimages atprogramargument/store boundaries, and propagate those through outputgain/Transition. Retain true sourceerror orrootuncertainty controls when the RNimage genuinelyspans cells.",
+      "fault_injection_calibration": "None implied; only explicitly saved lane5 standalone probes and coordinator probe are execution evidence."
+    },
+    {
+      "id": "L5-F10",
+      "priority": "P2",
+      "affected_ids": [
+        "test_source_polynomial_guards.SourcePolynomialGuards.test_existing_positive_helper_with_later_transition_keeps_compile_support",
+        "test_source_polynomial_guards.SourcePolynomialGuards.test_expanded_ir_budget_is_unchanged"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_source_polynomial_guards.py:94",
+        "evas/tests/test_source_polynomial_guards.py:117",
+        "evas/docs/math/events.md:1483",
+        "evas/src/evas/native_audit.py:25"
+      ],
+      "problem": "Firstmethod searches only op==divide and cannot recognize IR33 real_binary(operation=divide), making the absenceassertion ineffective; moreover preserving originalroundeddivision is required. Secondmethod assumes20q=q+q writes copyanexponentialexpressiontree, but explicitRealBind/RealLocal sourcepositionbindings permit lineargraphsize. Resourcebudgetrejectiondoesnotfollow solely from2^20 mathematicalexpansion.",
+      "recommended_correction": "Check required RealBinary division/store sourcepositions and actualbehavior instead of requiring affine rewrite. Use actualchargedwork/serializedsize and a genuinelyexhausting permittedprogram for budgetnegative; keep the original20writes as boundedrepresentation control.",
+      "fault_injection_calibration": "None implied; only explicitly saved lane5 standalone probes and coordinator probe are execution evidence."
+    },
+    {
+      "id": "L5-F11",
+      "priority": "P2",
+      "affected_ids": [
+        "test_passive_history_phase.PassiveHistoryPhase.test_zero_foreign_physical_state_reference_stays_invalid"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_passive_history_phase.py:138",
+        "evas/src/evas/program_real_validation.py:1",
+        "evas/docs/math/events.md:1505"
+      ],
+      "problem": "Test injects foreign observer StateRef into physicalcontribution then onlycatchesKernelError. Python IR33 validator now correctly rejects crossprocedureinstance state ownership during Program.to_dict, before raw request reachesnativeboundary. The earlier valid invalid_ir rejection falselyerrors the test.",
+      "recommended_correction": "Check structuredinvalid_ir across publicmaterialization for this mutation, and add an explicitlyraw validshape nativeownershipnegative if that separate boundary isrequired. Never bypass the Python ownershipcheck to satisfy oldstageexpectation.",
+      "fault_injection_calibration": "None implied; only explicitly saved lane5 standalone probes and coordinator probe are execution evidence."
+    },
+    {
+      "id": "L5-F12",
+      "priority": "P2",
+      "affected_ids": [
+        "test_r01_event_arrays.DynamicIndexAdmission.test_final_step_dynamic_display_read"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_r01_event_arrays.py:77",
+        "evas/docs/math/events.md:1454"
+      ],
+      "problem": "The fixture has final_step $display(\"%g\",held[b]), with held0=1,held1=2 and timerb=0, but method asserts only the finalbstate0. It passes if final_step is neverexecuted, displayisomitted, or dynamicread returnsheld1. Compilation/execution noexception is useful admissionevidence, but doesnot establish namedfinal_stepdynamicread behavior.",
+      "recommended_correction": "Assert complete finaldisplay inventory/sourceidentity/time and independently expected displayed1, retaining the bstate check. Add the b=1 partner if indexselection is the intended obligation.",
+      "fault_injection_calibration": "None implied; only explicitly saved lane5 standalone probes and coordinator probe are execution evidence."
+    },
+    {
+      "id": "L5-F13",
+      "priority": "P2",
+      "affected_ids": [
+        "test_analytic_sources.AnalyticSourceContracts.test_unsupported_parameter_and_original_role_combinations",
+        "test_certificate_cache.CertificateCache.test_singular_same_time_feedback_remains_rejected",
+        "test_constant_initial_power.ConstantInitialPower.test_closed_binding_proof_budget_is_shared_across_instances",
+        "test_dynamic_closure.JointEventDynamicsContracts.test_uncertain_linear_restart_refines_sampling_and_retains_output_budget",
+        "test_initial_node_dependencies.InitialNodeDependencies.test_raw_zero_voltage_dependency_cannot_hide_an_initial_state_cycle",
+        "test_r01_runtime_frontend.R01RuntimeFrontend.test_transition_selected_held_values_keep_continuous_target_rejection",
+        "test_settled_integer_reads.SettledIntegerReads.test_original_intermediate_overflow_is_not_hidden_by_later_clamp",
+        "test_settlement.SettlementContracts.test_no_unique_same_time_solution_is_rejected",
+        "test_settlement.SettlementContracts.test_repeated_integer_writes_check_each_intermediate_range",
+        "test_source_polynomial_forcing.SourcePolynomialForcing.test_raw_hidden_arms_roles_zero_reads_and_foreign_branches"
+      ],
+      "evidence_refs": [
+        "evas/docs/reference/diagnostics.md:39",
+        "evas/tests/test_certificate_cache.py:58",
+        "evas/tests/test_settlement.py:96",
+        "evas/src/evas/native_audit.py:28",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane5-probe.json:1"
+      ],
+      "problem": "Exact legacy diagnostic text/kind is used as a mathematical rejection oracle although IR33 may reject at an earlier valid certification boundary. Examples: singular_jacobian is excluded by old singular_system enumeration; checked integer store uses integer_range/signed32 rather than state_range/signed 32-bit. Original shared-budget method also requires source proof budget text even though programRN already activates the same100000 owner. The forcing nonheld cursor mutant now reaches unsupported_initial_history bootstrap refusal, not the old unsupported_operator expectation. Saved matched-kernel probes confirm these distinctions. These are test-expectation issues, not evidence of unsafe accepted outputs.",
+      "recommended_correction": "Preserve structured publicdiagnostic identity where specified. For mathematicalnegative controls, assert equivalent intended reason/category and prove the named mechanism was reached. Isolate legitimate early admissibility failures from targetchecker controls; do not broaden to arbitraryexceptions or fabricate waveform success. Preserve all positive and laternegative subcases that current firstfailure masks.",
+      "fault_injection_calibration": "None implied; only explicitly saved lane5 standalone probes and coordinator probe are execution evidence."
+    },
+    {
+      "id": "L5-F14",
+      "priority": "P2",
+      "affected_ids": [
+        "test_initial_ordinary_alias.InitialOrdinaryAlias.test_first_activation_includes_prior_inactive_compilation_work"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_initial_ordinary_alias.py:222",
+        "evas/src/evas/native_audit.py:28"
+      ],
+      "problem": "Former ordinary local assignments now emit RealBind/RealBinary that explicitly activate the shared NativeAudit, so first activation is no longer delayed until the second initial-only alias instance. Expecting observed[0]>100000 conflates old activation position with aggregate accounting. Same overall source may correctly hit resource_budget later while firstactivation had substantially lesswork.",
+      "recommended_correction": "Assert that all earlierwork remains charged on the sameowner and totalused neverresets; exercise actual firstactivation and laterexhaustion separately. Keep structuredresource_budget and fixed100000 limit.",
+      "fault_injection_calibration": "None implied; only explicitly saved lane5 standalone probes and coordinator probe are execution evidence."
+    },
+    {
+      "id": "L6-F01",
+      "priority": 2,
+      "affected_ids": [
+        "test_event_history_continuation.EventHistoryContinuation.test_nonlinear_physical_state_across_ordered_timer_windows",
+        "test_event_history_continuation.EventHistoryContinuation.test_linear_physical_state_across_pwl_corner",
+        "test_event_history_continuation.EventHistoryContinuation.test_three_clock_nonlinear_chain_preserves_physical_sampling",
+        "test_event_history_continuation.EventHistoryContinuation.test_nonlinear_ordered_history_with_pwl_forcing",
+        "test_event_history_continuation.EventHistoryContinuation.test_linear_event_window_spans_two_source_corners",
+        "test_initial_cross.InitialCross.test_empty_mixed_body_is_noop_initialization_with_existing_cross",
+        "test_root_recovery.RootRecovery.test_sample_gets_voltage_demand_and_stops_at_a_certified_target",
+        "test_root_recovery.RootRecovery.test_later_event_amplification_keeps_legacy_recovery",
+        "test_sparse_transient.SparseTransientContracts.test_same_time_ring_uses_new_voltage_and_sequential_assignments",
+        "test_sparse_transient.SparseTransientContracts.test_sparse_size_composition_keeps_callsite_histories_and_grid_invariance",
+        "test_event_body_loops.EventBodyLoops.test_periodic_timer_preserves_iteration_order_and_current_state",
+        "test_event_history_continuation.EventHistoryContinuation.test_near_clock_reset_release_preserves_downstream_filter",
+        "test_initial_events.InitialEvents.test_redundant_initial_leaves_execute_one_body",
+        "test_input_initialization.InputInitialization.test_original_high_low_and_exact_strict_tie",
+        "test_input_initialization.InputInitialization.test_original_high_start_then_both_cross_events_keep_one_history",
+        "test_input_initialization.InputInitialization.test_resolved_initial_is_used_by_operator_history_and_held_timer_guard",
+        "test_input_initialization.InputInitialization.test_t0_timer_reads_resolved_initial_before_first_output",
+        "test_scs_closure.AliasRootIdentity.test_distinct_neighbouring_alias_roots_keep_separate_callbacks",
+        "test_source_shape.SourceShapeContracts.test_equivalent_shape_keeps_internal_affine_root_sample_and_strict_tie",
+        "test_source_shape.SourceShapeContracts.test_output_after_timer_root_before_representative_keeps_source_history",
+        "test_source_shape.SourceShapeContracts.test_physical_corner_partition_replaces_displaced_nominal_crossing",
+        "test_source_shape.SourceShapeContracts.test_shaped_internal_affine_projection_keeps_branch_sign_and_feedback",
+        "test_source_shape.SourceShapeContracts.test_shaped_pulse_internal_affine_guard_reaches_transition_history",
+        "test_sparse_transient.SparseTransientContracts.test_held_guard_and_history_dependency_remain_distinct_in_sparse_networks",
+        "test_sparse_transient.SparseTransientContracts.test_internal_cross_chain_preserves_root_and_original_relations",
+        "test_transition_initialization.FinalInitialHistory.test_changed_fixed_zero_timer_seeds_final_point",
+        "test_transition_initialization.FinalInitialHistory.test_non_idempotent_or_body_runs_once_and_positive_neighbor_remains",
+        "test_transition_initialization.FinalInitialHistory.test_ordered_updates_and_independent_blocks_are_preserved",
+        "test_transition_initialization.FinalInitialHistory.test_unchanged_seed_preserves_independent_filter_and_math_histories",
+        "test_transition_initialization.FinalInitialHistory.test_unchanged_seed_retains_mixed_histories_and_unrelated_internal_read",
+        "test_variable_arrays.VariableArrays.test_non_idempotent_array_updates_share_accepted_event_history"
+      ],
+      "evidence_refs": [
+        "evas/tests/initial_source_sequence_contract.py:12",
+        "evas/docs/math/events.md:1454",
+        "evas/tests/test_timed_composition.py:42"
+      ],
+      "problem": "方法仍把原生events视为仅timer/cross列表，或假定首条是timer；IR33显式保留并记录initial gate，故数量、ID、time及events[0].after会误判正确初始化。波形/递推义务仍有用。",
+      "recommended_correction": "先从原源码和声明种子推导并验证initial记录，再对timed子集做原断言；避免直接过滤未验证记录。"
+    },
+    {
+      "id": "L6-F02",
+      "priority": 1,
+      "affected_ids": [
+        "test_proven_lineage_point_query.ProvenLineagePointQuery.test_fraction_lineage_beats_point_representative_and_queries_preserve_history"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_proven_lineage_point_query.py:38",
+        "evas/tests/fixtures/proven-lineage-point-query.va:7",
+        "evas/docs/math/events.md:1456",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane6-probe-rn.json"
+      ],
+      "problem": "强制h盒非点并包含未RN的SAMPLED，违背程序store的单值RN合同。完整RN下q=.27500000000000002，t=1.5输入先RN后减法恰为.125，y=0仍正确；旧“舍入前/代表值符号翻转”论证没有执行完整边界。",
+      "recommended_correction": "用独立Fraction→binary64逐次RN推导q和每次条件；h应认证已舍入单值，另用真实多值域校准非点传播。"
+    },
+    {
+      "id": "L6-F03",
+      "priority": 1,
+      "affected_ids": [
+        "test_initial_sampling_closure.InitialVoltageAliases.test_alias_cannot_discard_real_source_uncertainty_or_rounding",
+        "test_transition_initialization.FinalInitialHistory.test_nonbare_changed_seed_keeps_point_state_certificate",
+        "test_root_recovery.RootRecovery.test_inherited_sample_failure_does_not_refine_an_unrelated_root",
+        "test_slew_accuracy.HistoryAccuracy.test_sampled_history_error_survives_later_event"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_event_floor_ranges.py:99",
+        "evas/tests/test_initial_sampling_closure.py:69",
+        "evas/tests/test_initial_sampling_closure.py:102",
+        "evas/tests/test_transition_initialization.py:120",
+        "evas/docs/math/events.md:1456"
+      ],
+      "problem": "部分子例把程序确定性RN与未知误差混为一谈。initial alias q=RN(.1+.2)是单值，不能据未舍入和要求initialization_precision；非bare transition(a+0)同样单值。RootRecovery t=1输入RN为1，q=RN(1−1)=0，后续放大仍0，无retained误差要求必拒绝。HistoryAccuracy中b=RN(1/3)，程序2^30*b恰等literal357913941.3333333，随后减法加1得到精确c=1，旧tight必须拒绝同样无此数学依据。真实source_errors子例仍须保留完整域。",
+      "recommended_correction": "逐步RN作为独立oracle，给确定性路径成功数值/盒断言；只对真实多值输入、未认证history或不可满足输出预算要求拒绝。不得仅改正则使旧错误前提继续存在。"
+    },
+    {
+      "id": "L6-F04",
+      "priority": 1,
+      "affected_ids": [
+        "test_event_body_loops.EventBodyLoops.test_runtime_integer_overflow_and_same_time_conflicts_remain_errors",
+        "test_integer_round.IntegerRoundContracts.test_later_event_reads_committed_conversion_and_competing_writers_reject",
+        "test_transition_initialization.FinalInitialHistory.test_unchanged_seed_does_not_skip_writer_and_integer_validation"
+      ],
+      "evidence_refs": [
+        "evas/docs/development/DECISIONS.md:194",
+        "evas/docs/math/events.md:1474",
+        "evas/tests/test_event_body_loops.py:228"
+      ],
+      "problem": "同一analog过程两个相同固定timer发生的写者被一概要求event_conflict；ADR006在证明同一次发生时按源码序执行。例loop写n后紧接n=7，合法末值为7；两个a=a也不构成必须拒绝。整数越界/转换子例是不同义务。",
+      "recommended_correction": "拆开确实非法integer子例、同procedure源码序正控，以及不同procedure/未证明同次identity的冲突负控；逐项给出状态结果。"
+    },
+    {
+      "id": "L6-F05",
+      "priority": 2,
+      "affected_ids": [
+        "test_input_initialization.InputInitialization.test_kernel_rejects_malformed_and_structurally_hidden_initial_payloads",
+        "test_input_initialization.InputInitialization.test_raw_selected_initial_arms_have_their_actual_numeric_value"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_input_initialization.py:99",
+        "evas/tests/test_input_initialization.py:133",
+        "evas/docs/math/events.md:1515"
+      ],
+      "problem": "变异器把State.initial当旧Select字典；IR33该字段是声明/default数值种子，输入选择位于initial事件体，故.update/then_value在提交前TypeError，原始内核负控未执行。",
+      "recommended_correction": "沿source owner/gate定位实际initial赋值与选择节点，验证变异前后差异后提交；原来的非法引用/selected value=2义务保留。"
+    },
+    {
+      "id": "L6-F06",
+      "priority": 2,
+      "affected_ids": [
+        "test_static_loop_integer_type.StaticLoopIntegerType.test_genvar_existing_integral_remainder_remains_supported",
+        "test_static_loop_integer_type.StaticLoopIntegerType.test_integer_loop_remainder_preserves_negative_source_order",
+        "test_static_loop_integer_type.StaticLoopIntegerType.test_nested_integer_and_genvar_controls_bind_each_iteration"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_static_loop_integer_type.py:18",
+        "evas/tests/test_static_loop_integer_type.py:40",
+        "evas/docs/math/events.md:1515"
+      ],
+      "problem": "assigned_constants扫全部events，把IR33新增initial q=0也当作timer循环的迭代常量，导致额外0；三个独立整数序列本身正确。",
+      "recommended_correction": "限定timer所属事件/gate的循环展开，并独立验证initial种子和控制变量退出值。"
+    },
+    {
+      "id": "L6-F07",
+      "priority": 1,
+      "affected_ids": [
+        "test_source_shape.SourceShapeContracts.test_equivalent_shape_keeps_internal_affine_root_sample_and_strict_tie"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_source_shape.py:127",
+        "evas/docs/math/events.md:1466"
+      ],
+      "problem": "除旧initial列表问题外，事件体tie=(V(u)>.5)在物理root=.5被硬编码为1；IR33程序采样先RN，足够小右邻域仍RN为.5，因此strict比较应为假，sample=1且q=1，y应为2。",
+      "recommended_correction": "保留物理cross在.5的根和sample=1，程序tie按完整RN像判断为0；分别校准真实root后方向与程序比较。"
+    },
+    {
+      "id": "L6-F08",
+      "priority": 2,
+      "affected_ids": [
+        "test_input_clamp.InputClamp.test_original_four_wrap_centers_keep_exact_binary64_side",
+        "test_input_clamp.InputClamp.test_rational_clamp_roots_equality_sides_negative_phase_and_offset",
+        "test_input_clamp.InputClamp.test_unaligned_original_source_knots_preserve_affine_correlation"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_input_clamp.py:25",
+        "evas/tests/test_input_clamp.py:141",
+        "evas/docs/math/events.md:1456"
+      ],
+      "problem": "binary_phase_oracle直接读取旧Select/affine IR布局并精确积分未RN普通变量表达式；IR33源程序通过RealBind/RealLocal和RN边界给history输入。该helper在新布局可KeyError，且ULP wrap侧别不能靠旧未RN面积获得。",
+      "recommended_correction": "从原VA和binary64输入独立构造逐次RN的history-input参考，证明每个严格wrap侧别；不要从待测编译IR重建应有物理表达式。保留工程粗锚点与强侧别两种义务。"
+    },
+    {
+      "id": "L6-F09",
+      "priority": 1,
+      "affected_ids": [
+        "test_root_recovery.RootRecovery.test_filter_gets_time_budget_and_old_error_is_retained"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_root_recovery.py:157",
+        "evas/tests/test_sample_state_precision.py:24",
+        "evas/docs/math/events.md:1456",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane6-probe-rn.json"
+      ],
+      "problem": "第二请求调用sampled_filter_answer，其q(k)=k*1e16/(3*2^52)漏掉原V(u)采样RN。t=1采样为1而q=0；t=2采样为1+2^-52而q=2.220446049250313。y(1.5)应exp(−.5)=.6065306597，旧helper约.89776，远超1.01e-6预算。第一段filter预算检查与第三段history拒绝仍是不同有用义务。",
+      "recommended_correction": "为此原VA独立逐步RN得到held drive，再解分段y'+y=q；不要只修内部planning日志后继续使用旧filter oracle。"
+    },
+    {
+      "id": "L6-F10",
+      "priority": 2,
+      "affected_ids": [
+        "test_causal_event_math.CausalEventMath.test_division_by_electrical_unknown_still_refuses",
+        "test_causal_event_math.CausalEventMath.test_division_uses_driven_values_and_retains_denominator_uncertainty",
+        "test_causal_event_math.CausalEventMath.test_unselected_division_arm_is_lazy_but_selected_zero_refuses",
+        "test_event_floor_ranges.EventFloorRanges.test_partition_signed_overflow_and_original_nonfinite_checks_remain",
+        "test_initial_sampling_closure.BootstrapNonseedBounds.test_nonseed_rounding_is_retained_by_future_transition_and_amplification",
+        "test_input_initialization.InputInitialization.test_undriven_inout_rejected_by_kernel",
+        "test_migrate.ManifestMigrationTests.test_invalid_source_is_a_diagnostic_not_a_fake_ir",
+        "test_root_recovery.RootRecovery.test_too_small_budget_stops_without_losing_the_original_failure"
+      ],
+      "evidence_refs": [
+        "evas/rust_core/src/real_expression.rs:14",
+        "evas/rust_core/src/real_rounding.rs:282",
+        "evas/rust_core/src/procedure_operations.rs:434",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/prior-diagnostic-context.json:1",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane6-probe-rn.json"
+      ],
+      "problem": "拒绝数值义务或源安全性仍有效，但断言固定旧诊断分类/英文文案，导致实际正确拒绝不匹配。real_expression::fault明确将选中除零/跨零映射real_arithmetic和DivisionByZero/AcrossZero，而旧测试限定event_domain/unsupported_transient/旧小写文案；signed32、initial_history、division by zero和waveform_accuracy也与旧文案/阶段不同。Bootstrap的物理1e12增益确实使最近binary64误差6.821e-6>1e-8，应继续拒绝，问题仅强制forward error片语。",
+      "recommended_correction": "用实际稳定诊断类型/数值域类别核对拒绝，并保留正控、完整参数域和后置义务；不为了旧分类回退新执行路径。若某诊断标签确是公开版本合同，应先补该合同再决定实现或测试改动。"
+    },
+    {
+      "id": "L6-F11",
+      "priority": 2,
+      "affected_ids": [
+        "test_root_recovery.RootRecovery.test_sample_gets_voltage_demand_and_stops_at_a_certified_target",
+        "test_root_recovery.RootRecovery.test_second_consumer_can_require_a_bounded_fallback",
+        "test_root_recovery.RootRecovery.test_sampling_and_observation_time_do_not_cancel"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_root_recovery.py:41",
+        "evas/src/evas/runtime.py:91",
+        "evas/src/evas/runtime.py:126",
+        "evas/src/evas/protocol.py:188",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane6-probe-vacuity.json"
+      ],
+      "problem": "observe使用私有_invoke，只有JSON解析而没有公开validate_response；values(result)[2:]及zip在空solutions或仅前两行时跳过全部目标电压断言。已对三个未改整方法校准，其他断言保留，正确数值合成轨迹通过、错误末值拒绝，但empty/truncated_prefix均整方法通过。",
+      "recommended_correction": "在observe边界按原program、请求行数和output_times调用validate_response，或本方法独立检查完整行数/时刻/有限性后再检查解析电压；保留现有planning和event义务。"
+    },
+    {
+      "id": "L6-F12",
+      "priority": 1,
+      "affected_ids": [
+        "test_source_math.SourceMath.test_small_true_source_box_encloses_both_independent_endpoint_roots"
+      ],
+      "evidence_refs": [
+        "evas/tests/test_source_math.py:63",
+        "evas/tests/test_source_math.py:71",
+        "evas/src/evas/protocol.py:57",
+        "experiments/backends/support/ir33-recovery/method-audit/evidence/lane6-probe-sourceband.json"
+      ],
+      "problem": "所谓独立endpoint oracle从同一DUT返回的bounds[u]读取端点，未核其覆盖原请求u=.1±1e-14。若内核丢掉source_errors，把输入/输出盒同步坍为点附近，方法只验证g(.1)并通过。实际完整未改方法校准及真实公开validate_response均接受该丢源带变异；错误输出对照会拒绝。",
+      "recommended_correction": "从原sources和source_errors独立构造完整源域端点，再以独立Decimal g(x)检查输出盒同时覆盖两端；还应直接要求返回源盒覆盖原域。该正域g严格单调，原端点足够给真范围。"
+    }
+  ],
+  "withdrawn_findings": [
+    {
+      "lane": 1,
+      "items": [
+        {
+          "id": "L1-F11",
+          "priority": "P2",
+          "affected_ids": [
+            "test_source_root_windows.SourceRootWindows.test_101_timer_before_time_cut_preserves_both_transition_histories",
+            "test_source_root_windows.SourceRootWindows.test_changed_source_prefix_is_sampled_at_root_before_timer_update",
+            "test_source_root_windows.SourceRootWindows.test_sine_of_old_transition_prefix_recomputes_at_physical_root",
+            "test_source_root_windows.SourceRootWindows.test_sub_ulp_interrupted_source_pulse_remains_explicitly_unsupported"
+          ],
+          "evidence_refs": [
+            "evas/tests/test_source_root_windows.py:107",
+            "evas/tests/test_source_root_windows.py:163",
+            "evas/tests/test_source_root_windows.py:182",
+            "evas/tests/test_source_root_windows.py:215",
+            "evas/docs/math/operators.md:40",
+            "evas/docs/math/continuous.md:140",
+            "experiments/backends/support/ir33-recovery/method-audit/evidence/lane1-probes.json"
+          ],
+          "problem": "The expected histories use exact physical time in a program $abstime condition. At event104*binary64(500ps), time is only1/8ULP above binary64(52ns), so RN($abstime) equals the threshold and strict >52n remains false. The claimed old nonzero transition prefix and its sine sample/sub-ULP interruption are absent. Likewise a strict >120n program source cut uses an RN-cell boundary, not simply binary64(120n).",
+          "recommended_correction": "Derive source cuts from RN preimages with ties-to-even, then derive sampled old history and interrupted targets from that corrected source program. Retain the unmodified source and output budgets.",
+          "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited.",
+          "status": "withdrawn",
+          "withdrawal_reason": "Final independent Spec counterexample and lane1 structural probe show actual Transition operator input is bare Select(gt, Affine($abstime), threshold), without RealBoundary/RealBinary RN. The initial finding incorrectly applied the program-event RN boundary to this physical history expression. The physical clock root104*binary64(500ps) is strictly above exact binary64(52ns), so the old rising prefix exists. Only the event-body condition separately carries program RN. No sample-store defect is inferred without a separate concrete counterexample.",
+          "correction_evidence": "experiments/backends/support/ir33-recovery/method-audit/evidence/lane1-probe-operator-boundaries.json"
+        }
+      ]
+    },
+    {
+      "lane": 4,
+      "items": [
+        {
+          "id": "L4-F12",
+          "status": "withdrawn",
+          "affected_ids": [
+            "test_source_selected_slew.SourceSelectedSlew.test_adjacent_physical_roots_are_not_merged",
+            "test_source_selected_slew.SourceSelectedSlew.test_distinct_rational_roots_with_one_representative_reject",
+            "test_source_selected_slew.SourceSelectedSlew.test_isolated_target_point_is_not_a_fictitious_pulse",
+            "test_source_selected_slew.SourceSelectedSlew.test_simultaneous_predicates_preserve_a_third_boundary_point",
+            "test_source_selected_slew.SourceSelectedSlew.test_transition_third_boundary_point_remains_rejected"
+          ],
+          "reason": "撤回L4-F12：原source-selected slew/transition的operator输入为Select与bare Affine物理操作数，没有RealBoundary(sample)；procedure_plan.condition/capture_operator只resolve而不隐式插入RN。先前证明“相邻binary64之间没有RN(u)”数学事实正确，但错误套用于没有程序RN边界的连续物理u。operators.md:639明确要求以严格有理中点见证相邻切点开放区间，不能以没有binary64内部点把该区间当空。",
+          "replacement": "上述5行改为no_defect_found，按连续物理Select而非RN-image建立独立oracle。L4-F16的显式RealBinary divide/RealBoundary sample与此不同，保持独立。",
+          "evidence_refs": [
+            "evas/docs/math/operators.md:639",
+            "evas/rust_core/src/procedure_plan.rs:251",
+            "evas/rust_core/src/procedure_plan.rs:445",
+            "evas/rust_core/src/procedure_plan.rs:480",
+            "evas/rust_core/src/transition_source_plan.rs:1518"
+          ],
+          "related_gap_corrections": [
+            "test_source_selected_slew.SourceSelectedSlew.test_rational_root_window_survives_future_amplification",
+            "test_source_factor.SourceFactor.test_original_binary64_coefficient_and_nonthermometer_patterns_keep_real_box"
+          ]
+        }
+      ]
+    },
+    {
+      "lane": 5,
+      "items": [
+        {
+          "id": "L5-F02",
+          "status": "withdrawn",
+          "reason": "虽然 due=$abstime+0.1 的程序 RN 值不同于旧 Fraction(1,3)+Fraction(.1)，RN 值恰是旧精确和的向上相邻 binary64；前一 binary64 严格小于旧精确和。因此不存在位于 [旧 due, 新 due) 的 binary64 查询点，两个计数相位 oracle 在全部可表示查询点上一致。时间差为1/108086391056891904，小于1e-17。atan(3t)/3 的导数至多1，expm1 在[0,.75]的导数小于e，故 seen 样本差小于3e-17，远低于1e-8断言。两个正例不能仅因旧表达式未显式 RN 就判错。exact_callback 的初始化记录数量问题另见L5-F01，混合历史拒绝的精确锚点前提仍保留为证据缺口。",
+          "affected_ids": [
+            "test_passive_history_phase.PassiveHistoryPhase.test_nonlinear_observer_neighbours_dense_and_forced",
+            "test_passive_history_phase.PassiveHistoryPhase.test_autonomous_affine_flow_observer"
+          ],
+          "evidence_refs": [
+            "experiments/backends/support/ir33-recovery/method-audit/evidence/lane5-probe.json:7",
+            "evas/docs/math/events.md:1456"
+          ]
+        }
+      ]
+    }
+  ],
+  "coordinator_corrections": [
+    {
+      "lane": 4,
+      "items": [
+        {
+          "method": "test_timer_ordering.TimerOrdering.test_exact_equal_writers_still_fail_same_batch_ownership",
+          "reviewer": "full_audit_final_spec",
+          "old_verdict": "mixed",
+          "new_verdict": "evidence_gap",
+          "reason": "Distinct period clocks lack proved same logical occurrence; no established test defect from exact-time equality alone.",
+          "refs": [
+            "evas/tests/test_timer_ordering.py:76",
+            "evas/docs/math/events.md:1474"
+          ]
+        }
+      ]
+    }
+  ]
+}

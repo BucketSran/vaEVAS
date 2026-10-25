@@ -1,0 +1,22 @@
+{
+  "source_commit": "15eb7216f7071edb7eda7a9b0c56b7e8933c4c79",
+  "method_semantics_equal": 3257,
+  "finding_semantics_equal": 86,
+  "withdrawals_and_corrections_equal": true,
+  "production_and_original_tests_changed": false,
+  "no_new_full_suite": true,
+  "spectre": "pending",
+  "record_verification": {
+    "modules": 332,
+    "methods": 3257,
+    "findings": 86,
+    "repository_references": 3473
+  },
+  "calibration_replay": {
+    "lane3": "Two unchanged methods accept incomplete responses; arithmetic and compiler structures equal the saved result.",
+    "sourceband": "Correct and dropped-source-band controls pass; wrong output fails.",
+    "vacuity": "All three methods accept correct, empty and truncated-prefix traces; wrong numeric values fail.",
+    "rn": "All numeric derivations equal the saved result, including the continuous amplification rejection counterexample."
+  },
+  "publication_review": "See publishing PR for the review of path/tool adaptations; review.json preserves the earlier audit review."
+}

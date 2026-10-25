@@ -14,6 +14,11 @@
 的有限适配证据。收据绑定本批源码、逐方法差异和独立审查；原 691 项审计身份保持。
 静态结构依赖不等于物理取值证明，闭合选路不扩大一般 RN 历史/反馈范围，Spectre 仍待跑。
 
+[3257 项测试方法审计](../../../experiments/backends/support/ir33-recovery/method-audit/README.md)
+核对测试自身的合同、参考答案及断言，补充后续开发选择验收对象的依据。
+377 项含测试问题、95 项有证据缺口；其余 2785 项仅为静态范围内未发现具体缺陷。
+该审计不改变 capability 支持等级，不新增后端对齐资格；Spectre 继续待跑。
+
 [四路最小合同](../../../experiments/backends/support/low-cost-closure/minimum-contracts-four-lanes.json)
 补充 LANG、ANALOG、TIMER、TRANSITION、EVENT-ORDER、TIMED-OPERATOR、COMPOSE 和 DYNAMICS 的本地开发证据。
 受限 SCS 入口、原电压接口、有理截止点及 DC 保持斜坡分别以独立答案和拒绝控制验收；
