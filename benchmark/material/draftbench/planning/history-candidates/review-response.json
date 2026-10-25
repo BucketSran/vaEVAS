@@ -1,0 +1,2598 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-10-26",
+  "external_comment": {
+    "url": "https://github.com/BucketSran/vaEVAS/issues/159#issuecomment-6401348069",
+    "id": 6401348069,
+    "github_author": "BucketSran",
+    "reviewer_attribution": "用户称为Grok审查；GitHub发布者是用户账号",
+    "updated_at": "2026-10-25T18:16:42Z",
+    "body_sha256": "8166a70fbf01d2148124ba07c0d872920a747105c79319fc0c34281bc12b534c",
+    "count_scope": "342个摘录完整来源 + 101个规格缺口来源 + 12个观测量不匹配来源；与任务数不直接相加",
+    "availability": "原评论公开链接；这里只保留与109登记项关联的意见，不声称逐份深审其余来源"
+  },
+  "principles": [
+    "先核完整任务、参数和行为段，摘录缺失不自动成为原题缺失。",
+    "规格完整、工程价值、题目难度、作者建设成本分别判断。",
+    "必要公式、正常协议、单位和边界公开；不靠隐藏正确行为增加难度。",
+    "同源电路只计一个规划单元；S/R/T/I只有独立交付责任才分别录取，同源及组合依赖同组划分。",
+    "代理指标不能直接当真实孔径、毛刺冲量、镜像、相位或收敛。",
+    "已有79形式与升级方向统一按成熟度排序，不再按历史来源先后整批推进。"
+  ],
+  "claims": {
+    "acquisitionlimitedsampleandhold": {
+      "source_row": "acquisitionlimitedsampleandhold",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `acquisitionlimitedsampleandhold` · Acquisition Limited Sample And Hold · 时序或测量"
+    },
+    "activehighresetsynchronizer": {
+      "source_row": "activehighresetsynchronizer",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `activehighresetsynchronizer` · Active High Reset Synchronizer · 时序或测量"
+    },
+    "adpllratiohoptimer": {
+      "source_row": "adpllratiohoptimer",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `adpllratiohoptimer` · R04 · ADPLL Ratio Hop Timer · 分频比取整和重锁定的现象已有，没有定时误差到控制码的更新式"
+    },
+    "agcreceiverlevelingloop": {
+      "source_row": "agcreceiverlevelingloop",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `agcreceiverlevelingloop` · R06 · AGC Receiver Leveling Loop · testbench 有大幅输入降增益的意图，没有目标幅度和增益更新式"
+    },
+    "amplifierfilterchain": {
+      "source_row": "amplifierfilterchain",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `amplifierfilterchain` · Amplifier Filter Chain · 时序或测量"
+    },
+    "aperturedelaytrackandhold": {
+      "source_row": "aperturedelaytrackandhold",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `aperturedelaytrackandhold` · Aperture Delay Track And Hold · 时序或测量"
+    },
+    "bandgapstartuptrimsystem": {
+      "source_row": "bandgapstartuptrimsystem",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `bandgapstartuptrimsystem` · R03 · Bandgap Startup and Trim System · 缺 4 位修调码的加减规则和码到电压的修正量"
+    },
+    "bangbangcdrloop": {
+      "source_row": "bangbangcdrloop",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `bangbangcdrloop` · Bang-bang CDR Loop · 时序或测量"
+    },
+    "bangbangphasedetector": {
+      "source_row": "bangbangphasedetector",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `bangbangphasedetector` · Bang-Bang Phase Detector · 时序或测量"
+    },
+    "bbpddataedgealignment": {
+      "source_row": "bbpddataedgealignment",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `bbpddataedgealignment` · R04 · BBPD Data Edge Alignment · 早/晚沿判定已有，缺死区的时间宽度"
+    },
+    "binaryweightedvoltagedac": {
+      "source_row": "binaryweightedvoltagedac",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `binaryweightedvoltagedac` · Binary Weighted Voltage DAC · 时序或测量"
+    },
+    "buckconvertercontrollermacro": {
+      "source_row": "buckconvertercontrollermacro",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `buckconvertercontrollermacro` · R03 · Buck Converter Controller Macro · 缺占空比增减量，以及 pgood 连续三周期所检查的条件"
+    },
+    "capacitormismatchcalibrationengine": {
+      "source_row": "capacitormismatchcalibrationengine",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `capacitormismatchcalibrationengine` · R05 · Capacitor Mismatch Calibration Engine · 4 位码、端点饱和和 done 条件已有，缺每拍按误差符号累加的步长"
+    },
+    "cdreyemonitor": {
+      "source_row": "cdreyemonitor",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `cdreyemonitor` · R04 · CDR Eye Monitor · 眼图指标只写由样本裕量驱动，没有睁眼的算式"
+    },
+    "chargepumppfdstatemachine": {
+      "source_row": "chargepumppfdstatemachine",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `chargepumppfdstatemachine` · Charge Pump PFD State Machine · 时序或测量"
+    },
+    "chargepumpvoltagemultipliercontroller": {
+      "source_row": "chargepumpvoltagemultipliercontroller",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `chargepumpvoltagemultipliercontroller` · Charge-pump Voltage Multiplier Controller · 时序或测量"
+    },
+    "chopperstabilizeddifferentialamplifier": {
+      "source_row": "chopperstabilizeddifferentialamplifier",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `chopperstabilizeddifferentialamplifier` · Chopper-Stabilized Differential Amplifier · 时序或测量"
+    },
+    "clockdatavalidqualifier": {
+      "source_row": "clockdatavalidqualifier",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `clockdatavalidqualifier` · Clock-and-data Valid Qualifier · 时序或测量"
+    },
+    "clockdivider": {
+      "source_row": "clockdivider",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `clockdivider` · PLL Feedback Clock Divider · 时序或测量"
+    },
+    "clockedadc3bit": {
+      "source_row": "clockedadc3bit",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `clockedadc3bit` · Clocked ADC3bit · 时序或测量"
+    },
+    "clockedsampleandhold": {
+      "source_row": "clockedsampleandhold",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `clockedsampleandhold` · Clocked Sample And Hold · 时序或测量"
+    },
+    "clockedsinesource": {
+      "source_row": "clockedsinesource",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `clockedsinesource` · Clocked Sine Source · 时序或测量"
+    },
+    "commonmodefeedbackloop": {
+      "source_row": "commonmodefeedbackloop",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `commonmodefeedbackloop` · Common-mode Feedback Loop · 时序或测量"
+    },
+    "comparatordelayoverdrivemeter": {
+      "source_row": "comparatordelayoverdrivemeter",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `comparatordelayoverdrivemeter` · Comparator Delay Overdrive Meter · 时序或测量"
+    },
+    "completecalibrationloop": {
+      "source_row": "completecalibrationloop",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `completecalibrationloop` · R05 · Complete Calibration Loop · 要求闭环把输出收到 0.45 V 附近，没有对象方程和更新式"
+    },
+    "configshiftregister64b": {
+      "source_row": "configshiftregister64b",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `configshiftregister64b` · Config Shift Register 64b · 时序或测量"
+    },
+    "converterstaticlinearitymeasurement": {
+      "source_row": "converterstaticlinearitymeasurement",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `converterstaticlinearitymeasurement` · Converter Static Linearity Measurement · 时序或测量"
+    },
+    "correlateddoublesampleroffsetcancel": {
+      "source_row": "correlateddoublesampleroffsetcancel",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `correlateddoublesampleroffsetcancel` · Correlated Double Sampler Offset-cancel Macro · 时序或测量"
+    },
+    "cpplltrackingreacquiretimer": {
+      "source_row": "cpplltrackingreacquiretimer",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `cpplltrackingreacquiretimer` · R04 · CPPLL Tracking Reacquire Timer · 写了锁定在频率阶跃时掉再回来，没有相位误差到 vctrl 的更新式"
+    },
+    "ctleadaptationloop": {
+      "source_row": "ctleadaptationloop",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `ctleadaptationloop` · R06 · CTLE Adaptation Loop · 缺 boost 码步进、锁定容限和误差量"
+    },
+    "debouncelatch": {
+      "source_row": "debouncelatch",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `debouncelatch` · R08 · Debounce Latch · 缺资格定时器的时长"
+    },
+    "deserializerdemuxalignmentmacro": {
+      "source_row": "deserializerdemuxalignmentmacro",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `deserializerdemuxalignmentmacro` · Deserializer DEMUX Alignment Macro · 时序或测量"
+    },
+    "dfeerrorproxyloop": {
+      "source_row": "dfeerrorproxyloop",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `dfeerrorproxyloop` · DFE Error-proxy Loop · 时序或测量"
+    },
+    "dfereceiver2tap": {
+      "source_row": "dfereceiver2tap",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `dfereceiver2tap` · R06 · 2-tap DFE Receiver · 缺前两个判决合成反馈的系数"
+    },
+    "differentialvcoclipidtmod": {
+      "source_row": "differentialvcoclipidtmod",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `differentialvcoclipidtmod` · Differential VCO With Clip And Idtmod · 时序或测量"
+    },
+    "digitallycontrolleddelaycell": {
+      "source_row": "digitallycontrolleddelaycell",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `digitallycontrolleddelaycell` · Digitally Controlled Delay Cell · 时序或测量"
+    },
+    "dlldelaylinelock": {
+      "source_row": "dlldelaylinelock",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `dlldelaylinelock` · DLL Delay-line Lock · 时序或测量"
+    },
+    "dualtracksamplehold": {
+      "source_row": "dualtracksamplehold",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `dualtracksamplehold` · Dual Track Sample Hold · 时序或测量"
+    },
+    "dutycyclecorrector": {
+      "source_row": "dutycyclecorrector",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `dutycyclecorrector` · Duty-cycle Corrector · 时序或测量"
+    },
+    "dutycyclewindowmonitor": {
+      "source_row": "dutycyclewindowmonitor",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `dutycyclewindowmonitor` · Duty-cycle Window Monitor · 时序或测量"
+    },
+    "dwademencoder": {
+      "source_row": "dwademencoder",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `dwademencoder` · DWA DEM Encoder · 时序或测量"
+    },
+    "dynamicsupplyleveldriver": {
+      "source_row": "dynamicsupplyleveldriver",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `dynamicsupplyleveldriver` · Dynamic Supply Level Driver · 静态传递或逻辑"
+    },
+    "edgedelaylinewithdeglitch": {
+      "source_row": "edgedelaylinewithdeglitch",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `edgedelaylinewithdeglitch` · Edge Delay Line with Deglitch Window · 时序或测量"
+    },
+    "eventcounterwindowed16b": {
+      "source_row": "eventcounterwindowed16b",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `eventcounterwindowed16b` · Event Counter Windowed 16b · 时序或测量"
+    },
+    "ffetransmitter3tap": {
+      "source_row": "ffetransmitter3tap",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `ffetransmitter3tap` · 3-tap FFE Transmitter · 时序或测量"
+    },
+    "finecoarsetdcencoder": {
+      "source_row": "finecoarsetdcencoder",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `finecoarsetdcencoder` · Fine/coarse TDC Encoder · 时序或测量"
+    },
+    "firstorderlowpass": {
+      "source_row": "firstorderlowpass",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `firstorderlowpass` · First Order Lowpass · 时序或测量"
+    },
+    "fractionalndivideraccumulatorflow": {
+      "source_row": "fractionalndivideraccumulatorflow",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `fractionalndivideraccumulatorflow` · Fractional-N Divider Accumulator Flow · 时序或测量"
+    },
+    "fractionalnsynthesizerminiloop": {
+      "source_row": "fractionalnsynthesizerminiloop",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `fractionalnsynthesizerminiloop` · R04 · Fractional-N Synthesizer Mini Loop · frac 每拍累加，缺进位模数，平均分频比不能确定"
+    },
+    "frequencyworddcodividermonitor": {
+      "source_row": "frequencyworddcodividermonitor",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `frequencyworddcodividermonitor` · Frequency-word DCO with Divider Monitor · 时序或测量"
+    },
+    "gainextractionflow": {
+      "source_row": "gainextractionflow",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `gainextractionflow` · R07 · Gain Extraction Flow · 只要求输出变化大于输入，缺增益、抖动和端口方程"
+    },
+    "glitchlessclockmuxselector": {
+      "source_row": "glitchlessclockmuxselector",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `glitchlessclockmuxselector` · Glitchless Clock Mux Selector · 时序或测量"
+    },
+    "hysteresistripcharacterizer": {
+      "source_row": "hysteresistripcharacterizer",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `hysteresistripcharacterizer` · Hysteresis Trip Characterizer · 时序或测量"
+    },
+    "imagerejectmixercalibrationloop": {
+      "source_row": "imagerejectmixercalibrationloop",
+      "group": "observation_mismatch",
+      "comment_text": "- `imagerejectmixercalibrationloop` · R06 · Image-reject Mixer Calibration Loop · RF 与正交 LO 被写成代理，缺镜像指标和校正更新量"
+    },
+    "instrumentationamplifieroffsettrim": {
+      "source_row": "instrumentationamplifieroffsettrim",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `instrumentationamplifieroffsettrim` · Instrumentation Amplifier Offset-trim System · 时序或测量"
+    },
+    "interleavedadcskewmonitor": {
+      "source_row": "interleavedadcskewmonitor",
+      "group": "observation_mismatch",
+      "comment_text": "- `interleavedadcskewmonitor` · R09 · Interleaved ADC Timing-skew Monitor · skew 是两路最近采样之差，没有时间偏差"
+    },
+    "iqdownconversionchain": {
+      "source_row": "iqdownconversionchain",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `iqdownconversionchain` · R06 · IQ Downconversion Chain · 相位表没有写完，缺混频输出式"
+    },
+    "jitteredclocksourcedeterministic": {
+      "source_row": "jitteredclocksourcedeterministic",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `jitteredclocksourcedeterministic` · Deterministic Jittered Clock Source · 时序或测量"
+    },
+    "l2sarlogic4b": {
+      "source_row": "l2sarlogic4b",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `l2sarlogic4b` · L2 SAR Logic 4b · 时序或测量"
+    },
+    "laplacendlowpassfilter": {
+      "source_row": "laplacendlowpassfilter",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `laplacendlowpassfilter` · FILTER · Laplace Nd Lowpass Filter · 只写一阶低通，没有系数或截止"
+    },
+    "laplacenppolefilter": {
+      "source_row": "laplacenppolefilter",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `laplacenppolefilter` · FILTER · Laplace Np Pole Filter · 只写第一实极点，没有极点位置"
+    },
+    "latchedcomparatordelay": {
+      "source_row": "latchedcomparatordelay",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `latchedcomparatordelay` · R08 · Latched Comparator Delay · 缺比较为真时输出对应的高/低轨，以及随机项的标准差"
+    },
+    "ldoloadsteprecovery": {
+      "source_row": "ldoloadsteprecovery",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `ldoloadsteprecovery` · LDO Load-Step Recovery Flow · 时序或测量"
+    },
+    "levelshifterenablerailtracking": {
+      "source_row": "levelshifterenablerailtracking",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `levelshifterenablerailtracking` · Level Shifter with Enable and Rail Tracking · 时序或测量"
+    },
+    "linearityrdacoffsetsweep": {
+      "source_row": "linearityrdacoffsetsweep",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `linearityrdacoffsetsweep` · R10 · Linearity RDAC Offset Sweep · 位搜索的其余节拍已有，缺初始参考电压和网格 LSB"
+    },
+    "lockdetector": {
+      "source_row": "lockdetector",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `lockdetector` · Lock Detector · 时序或测量"
+    },
+    "multichannelsamplereadout": {
+      "source_row": "multichannelsamplereadout",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `multichannelsamplereadout` · Multi-channel Sample/Mux/Readout · 时序或测量"
+    },
+    "muxedtrackholdarrayreadout": {
+      "source_row": "muxedtrackholdarrayreadout",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `muxedtrackholdarrayreadout` · Muxed Track-hold Array Readout · 时序或测量"
+    },
+    "nonoverlapclockgenerator": {
+      "source_row": "nonoverlapclockgenerator",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `nonoverlapclockgenerator` · Non-overlapping Clock Generator · 时序或测量"
+    },
+    "offsetcalibratedcomparatorsystem": {
+      "source_row": "offsetcalibratedcomparatorsystem",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `offsetcalibratedcomparatorsystem` · Offset-calibrated Comparator System · 时序或测量"
+    },
+    "offsetrdacsearchflow": {
+      "source_row": "offsetrdacsearchflow",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `offsetrdacsearchflow` · R10 · Offset RDAC Search Flow · 缺初始参考网格电压和网格 LSB"
+    },
+    "paampmmemorytapmacro": {
+      "source_row": "paampmmemorytapmacro",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `paampmmemorytapmacro` · PA AM/PM Memory Tap Macro · 时序或测量"
+    },
+    "pfdactivelowreset": {
+      "source_row": "pfdactivelowreset",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `pfdactivelowreset` · PFD With External Active Low Reset · 时序或测量"
+    },
+    "pfdupdownstate": {
+      "source_row": "pfdupdownstate",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `pfdupdownstate` · PFD Up Down State · 时序或测量"
+    },
+    "pipeadcgaincontrolloop": {
+      "source_row": "pipeadcgaincontrolloop",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `pipeadcgaincontrolloop` · Pipe ADC Gain Control Loop · 时序或测量"
+    },
+    "pipelineadcstage": {
+      "source_row": "pipelineadcstage",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `pipelineadcstage` · Pipeline ADC Stage · 时序或测量"
+    },
+    "pipelineadctwostage": {
+      "source_row": "pipelineadctwostage",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `pipelineadctwostage` · R09 · Two-stage Pipeline ADC Mini Chain · 缺第一级电平是箱沿还是中心，以及第二级门限"
+    },
+    "plltimingmonitorsystem": {
+      "source_row": "plltimingmonitorsystem",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `plltimingmonitorsystem` · PLL Timing Monitor System · 时序或测量"
+    },
+    "poweronresetdetector": {
+      "source_row": "poweronresetdetector",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `poweronresetdetector` · R03 · Power-On Reset Detector · 意图是斜坡保持复位、延时释放、掉电再复位，没有电源阈值和释放拍数"
+    },
+    "powerresetsequencersystem": {
+      "source_row": "powerresetsequencersystem",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `powerresetsequencersystem` · Power and Reset Sequencer · 时序或测量"
+    },
+    "propagationdelaycomparator": {
+      "source_row": "propagationdelaycomparator",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `propagationdelaycomparator` · Propagation Delay Comparator · 时序或测量"
+    },
+    "quadraturephaseinterpolator": {
+      "source_row": "quadraturephaseinterpolator",
+      "group": "observation_mismatch",
+      "comment_text": "- `quadraturephaseinterpolator` · R04 · Quadrature Phase Interpolator · 象限 0/2 都选 clk_i、1/3 都选 clk_q 且不反相，现摘录做不出四象限插值"
+    },
+    "railrampratestartupmonitor": {
+      "source_row": "railrampratestartupmonitor",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `railrampratestartupmonitor` · R03 · Rail Ramp Rate Startup Monitor · 缺 rail_ok 所用电源窗的上下限"
+    },
+    "sampleandholdwithdroopleakage": {
+      "source_row": "sampleandholdwithdroopleakage",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `sampleandholdwithdroopleakage` · Sample And Hold With Droop Leakage · 时序或测量"
+    },
+    "sampledtruermstodcconverter": {
+      "source_row": "sampledtruermstodcconverter",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `sampledtruermstodcconverter` · Sampled True-RMS-to-DC Converter · 时序或测量"
+    },
+    "sampleholddroopfrontend": {
+      "source_row": "sampleholddroopfrontend",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `sampleholddroopfrontend` · R01 · Sample Hold Droop Front End · 缺时钟为低时 tau 与 dt 如何改变保持电压"
+    },
+    "saradcsystem4b": {
+      "source_row": "saradcsystem4b",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `saradcsystem4b` · 4-bit SAR ADC System · 时序或测量"
+    },
+    "sarcdacresidue": {
+      "source_row": "sarcdacresidue",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `sarcdacresidue` · SAR CDAC Residue · 时序或测量"
+    },
+    "sarfendlogic4b": {
+      "source_row": "sarfendlogic4b",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `sarfendlogic4b` · SAR Front-End Logic 4b · 时序或测量"
+    },
+    "sarlogic": {
+      "source_row": "sarlogic",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `sarlogic` · SAR Logic · 时序或测量"
+    },
+    "sarlogic4bselftimed": {
+      "source_row": "sarlogic4bselftimed",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `sarlogic4bselftimed` · 4-bit Self-Timed SAR Logic · 时序或测量"
+    },
+    "segmenteddacdemsystem": {
+      "source_row": "segmenteddacdemsystem",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `segmenteddacdemsystem` · Segmented DAC with DEM Control · 时序或测量"
+    },
+    "settlingwindowdetector": {
+      "source_row": "settlingwindowdetector",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `settlingwindowdetector` · Settling Window Detector · 时序或测量"
+    },
+    "sigmadeltaminiloop": {
+      "source_row": "sigmadeltaminiloop",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `sigmadeltaminiloop` · Sigma-delta Modulator Mini Loop · 时序或测量"
+    },
+    "slewlimitedenvelope": {
+      "source_row": "slewlimitedenvelope",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `slewlimitedenvelope` · FILTER · Slew Limited Envelope · 包络的攻击/释放规则已有，缺上升和下降斜率"
+    },
+    "startgatedoffsetsearch": {
+      "source_row": "startgatedoffsetsearch",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `startgatedoffsetsearch` · Start Gated Offset Search · 时序或测量"
+    },
+    "supplysupervisorbrownoutpor": {
+      "source_row": "supplysupervisorbrownoutpor",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `supplysupervisorbrownoutpor` · Supply Supervisor with Brownout POR · 时序或测量"
+    },
+    "switchedcapacitorintegratorphasepair": {
+      "source_row": "switchedcapacitorintegratorphasepair",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `switchedcapacitorintegratorphasepair` · Switched-capacitor Integrator Phase Pair · 时序或测量"
+    },
+    "sync8bdffsv2": {
+      "source_row": "sync8bdffsv2",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `sync8bdffsv2` · Synchronous 8-bit DFF Chain V2 · 时序或测量"
+    },
+    "tdcmeasurementsystem": {
+      "source_row": "tdcmeasurementsystem",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `tdcmeasurementsystem` · TDC Event Measurement System · 时序或测量"
+    },
+    "timediffdetector": {
+      "source_row": "timediffdetector",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `timediffdetector` · Time Difference Detector · 时序或测量"
+    },
+    "twostageopampslewmacromodel": {
+      "source_row": "twostageopampslewmacromodel",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `twostageopampslewmacromodel` · R07 · Two-stage Op-amp Slew Macromodel · 每拍摆率依赖没有写出的第一级比例"
+    },
+    "unarydacglitchenergymetric": {
+      "source_row": "unarydacglitchenergymetric",
+      "group": "observation_mismatch",
+      "comment_text": "- `unarydacglitchenergymetric` · R10 · Unary DAC Glitch-energy Metric · vout 和 glitch 只与一元计数及其变化成比例，没有能量、基线和窗口"
+    },
+    "weighteddecoder6bit": {
+      "source_row": "weighteddecoder6bit",
+      "group": "behavior_complete_in_excerpt",
+      "comment_text": "- `weighteddecoder6bit` · Weighted Decoder 6bit · 静态传递或逻辑"
+    },
+    "weightedsaradcdacloop": {
+      "source_row": "weightedsaradcdacloop",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `weightedsaradcdacloop` · R09 · Weighted SAR ADC DAC Loop · testbench 要求最终 DAC 与 8 位码一致，没有试位保留规则和权重式"
+    },
+    "zinddiscretefilter": {
+      "source_row": "zinddiscretefilter",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `zinddiscretefilter` · FILTER · Zi Nd Discrete Filter · 只写一阶采样低通，没有 zi 系数"
+    },
+    "zinpdiscretefilter": {
+      "source_row": "zinpdiscretefilter",
+      "group": "missing_contract_in_excerpt",
+      "comment_text": "- `zinpdiscretefilter` · FILTER · Zi Np Discrete Filter · 只写一阶采样低通，没有 zi 系数"
+    }
+  },
+  "source_reviews": {
+    "src-9276ce9b6eb2": {
+      "sha256": "1bf8ddc2b53f5045de9ccc9003b80a2d938e83cb151ce257a1ca6d68b870e801",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task-Specific Public Description",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-47bebeb94396": {
+      "sha256": "aa137424aa0268c8b28c2af56478e1b4aa04f6f5cf320cfd31eb960611432faf",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Acquisition Limited Sample And Hold`.\n- Form: `dut`\n- Level: `L1`\n- Category: `sampling_analog_memory`\n- Target artifact(s): `acquisition_limited_sample_hold.va`\n\nImplement `acquisition_limited_sample_hold.va` in Verilog-A."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "- `vth`: logic threshold, default `0.45`.\n- `vinit`: reset and initial held voltage, default `0.45`.\n- `alpha`: acquisition fraction per update, default `0.42`.\n- `tick`: acquisition update interval, default `1n`.\n- `tr`: output and monitor transition smoothing time, default `200p`."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-aed9a9062108": {
+      "sha256": "02da4b2d8a50994e44ad65be7e3388fddddf1913f99f2c4f2107eeb82d8a6b3b",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task-Specific Public Description",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-f0266764f7da": {
+      "sha256": "86d79b3374d86cca66437fb0abf9d79e96cbab599244456f93b0b901e4016e37",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Aperture Delay Track And Hold`.\n- Form: `dut`\n- Level: `L1`\n- Category: `sampling_analog_memory`\n- Target artifact(s): `sample_hold_aperture_ref.va`\n\nImplement `sample_hold_aperture_ref.va` in Verilog-A."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "- `vth`: clock threshold, default `0.45`.\n- `taperture`: aperture delay after a rising clock edge, default `200p`.\n- `tedge`: output transition smoothing time, default `50p`."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-4ea59e41b115": {
+      "sha256": "ed8bf50e46a20b4ec049494b0e31c04e6e649e3419cc2ee6a89ab5fb838a4285",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Sample And Hold With Droop Leakage`.\n- Form: `dut`\n- Level: `L1`\n- Category: `sampling_analog_memory`\n- Target artifact(s): `leaky_hold.va`\n\nImplement `leaky_hold.va` in Verilog-A."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "- `vth`: logic threshold, default `0.45`.\n- `decay`: held-value multiplier per leakage update, default `0.985`.\n- `leak_period`: leakage update interval, default `1n`.\n- `tr`: output transition smoothing time, default `500p`."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-b7c722bb24fd": {
+      "sha256": "a3705d86faf7ec22b628212d19bcf85cb01a2e10d64eab2dce3086c6e7a72549",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `correlated_double_sampler_top.va`, `reset_sample_latch.va`, `signal_sample_latch.va`\n- Public top module: `correlated_double_sampler_top`\n- Required public modules: `correlated_double_sampler_top`, `reset_sample_latch`, `signal_sample_latch`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the top-level DUT entry point; helper modules must be part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time.\n- `cds_gain = 1.0`: correlated-difference gain."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-f4ebc63fbfa6": {
+      "sha256": "ee727fba0bbe46cdbcbe2e7975581a8db217ac98d93c4f1cbadc1e2011759937",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement `dual_track_sample_hold.va`, a voltage-domain dual complementary track/hold DUT. This is a sampling/analog-memory L1 component, not a standalone L2 flow."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide overrideable public parameters:\n\n- `vth = 0.45 V`: clock threshold.\n- `tick = 0.5 ns from (0:inf)`: behavioral update interval.\n- `alpha_in = 0.45 from (0:1]`: input-stage tracking fraction per update.\n- `alpha_out = 0.55 from (0:1]`: output-stage tracking fraction per update.\n- `tedge = 50 ps from (0:inf)`: output smoothing time.\n- `vinit = 0.0 V`: initial stored value."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-eadd3885aca1": {
+      "sha256": "a0df8c434b35cc612f32335b4a590cd0b048ec7cf89222027ed3c332f71b4266",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `sample_mux_readout_top.va`, `sample_hold_bank.va`, `mux_controller.va`, `output_driver.va`\n- Public top module: `sample_mux_readout_top`\n- Required public modules: `sample_mux_readout_top`, `sample_hold_bank`, `mux_controller`, `output_driver`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for `clk`, `rst`, `sample`, and `read`.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-c8ee7d32af46": {
+      "sha256": "058b90f97895c679e7039dfd1e7f0fbda6e693404c1070d7699c4999f5d11882",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement one Verilog-A DUT artifact for a clocked sample-and-hold cell.\n\n- Target artifact: `sample_hold.va`"
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `vth = 0.45 V`: clock threshold.\n- `tedge = 100 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-c7493e03f385": {
+      "sha256": "acd3a1de2e51433ad78ff7062cd63e4f10613074a96f2486938a7c93467f5920",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Sample Hold Droop Front End`.\n- Form: `dut`\n- Level: `L2`\n- Category: `sampling_analog_memory`\n- Target artifact(s): `sample_hold_droop_ref.va`\n\nImplement `sample_hold_droop_ref.va` in Verilog-A."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "- `vth`: clock and decision threshold, default `0.45`.\n- `trf`: output transition smoothing time, default `40p`.\n- `tau`: droop time constant, default `90n`.\n- `dt`: droop update interval, default `0.5n`.\n- `taperture`: sampling aperture delay after a rising clock crossing, default\n  `200p`.\n- `valid_width`: valid-pulse duration after the aperture sample, default `2n`."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-68f01798b36b": {
+      "sha256": "c85b30213e7a0b607c6e983b4d04bb43e074b0e8b36de70187c69d8e057dfb8a",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the single-DUT Verilog-A artifact `flash_adc_3b.va` for a clocked\nthree-bit flash-style ADC quantizer. The model should be a reusable\nvoltage-domain data-converter primitive, not a testbench or validation wrapper."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "- `vrefp = 0.9 V`: upper endpoint of the conversion range.\n- `vrefn = 0.0 V`: lower endpoint of the conversion range.\n- `vth = 0.45 V`: rising-clock threshold.\n- `tedge = 100p`: output transition smoothing time.\n\nThese parameters may be overridden by the validation harness."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-27b1003f43d7": {
+      "sha256": "c0c2d9e50ca3628d7a536b801b23a6923d48a30107ebcab5b642ddf7d0baaf33",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Pipeline ADC Stage`.\n- Form: `dut`\n- Level: `L1`\n- Category: `data_converter`\n- Target artifact(s): `pipeline_stage.va`\n\nImplement a clocked 1.5-bit pipeline ADC MDAC stage."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `vth = 0.45 V`: clock decision threshold for `PHI1` and `PHI2`.\n- `vdd = 0.9 V`: nominal output high level used for initialization.\n- `tedge = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-a06f1307e0f3": {
+      "sha256": "16a5dea87e22a0320b33108699733c34dcb138f27f0fd46112b1e1dd71ed4fdf",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "- Form: `dut`.\n- Level: `L2`.\n- Category: SAR ADC asynchronous control logic.\n- Target artifact: `l2_sar_logic_7b.va`.\n- Role: 7-bit SAR comparator-clock and capacitor-control sequencer.\n- Output boundary: implement only the requested public Verilog-A DUT artifact."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide overrideable parameters `vdd = 1.1` and `t_logic_delay = 100p`. Use `vdd/2` as the threshold and 0/`vdd` as output levels."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-fbcbf46c3e1f": {
+      "sha256": "25d8cd6583aa5bcae951a7286de01ba2cd0366de47d3363a34b5dd1b7f2328d9",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "- Form: `dut`.\n- Level: `L2`.\n- Category: pipeline ADC calibration/control flow.\n- Target artifact: `pipe_adc_gain_control_loop.va`.\n- Role: backend-code driven gain-control adaptation loop.\n- Output boundary: implement only the requested public Verilog-A DUT artifact."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide overrideable parameters `vlo = 0.0`, `vhi = 0.9`, `vth = 0.45`, and integer `gaincodeinit = 90`."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-40687b8cacee": {
+      "sha256": "c4e324ed877a3c672967b2a6a0a233a6ff05b9be43ae118dc5ef6ce27bb50313",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `pipeline_adc_top.va`, `stage1_quantizer.va`, `residue_amp.va`, `stage2_quantizer.va`, `code_aligner.va`\n- Public top module: `pipeline_adc_top`\n- Required public modules: `pipeline_adc_top`, `stage1_quantizer`, `residue_amp`, `stage2_quantizer`, `code_aligner`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vref = 0.9 V`: full-scale input reference.\n- `vth = 0.45 V`: threshold for `clk`, `rst`, and `valid_i`.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-be0280f398f5": {
+      "sha256": "60b66750f0a9527ee5b595ce1a25299f8a4a6c48197df943f69f0b13cb654053",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `sar_adc_top.va`, `sample_hold.va`, `sar_comparator.va`, `sar_controller.va`, `binary_weighted_cdac.va`\n- Public top module: `sar_adc_top`\n- Required public modules: `sar_adc_top`, `sample_hold`, `sar_comparator`, `sar_controller`, `binary_weighted_cdac`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level and lower conversion endpoint.\n- `vref = 0.9 V`: full-scale conversion reference.\n- `vth = 0.45 V`: threshold for `clk`, `rst`, and `start`.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-c4ccef6e15dd": {
+      "sha256": "23681bfac9dd5623601cb029091ade2a2a4c47a7dc150922a9e5e84f84a4eac6",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "- Form: `dut`.\n- Level: `L2`.\n- Category: SAR ADC control logic.\n- Target artifact: `sarfend_logic_4b.va`.\n- Role: 4-bit SAR front-end handshake, test override, and DAC-control publisher.\n- Output boundary: implement only the requested public Verilog-A DUT artifact."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "No overrideable public parameters are required. Use 0.45 V thresholds and 0/1 V voltage-coded controls."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-5f0447df176e": {
+      "sha256": "f7bfe2198ac10e17453d623cfe7aea9b1cfb0191589b28e34ecc4df60051d11c",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "- Form: `dut`.\n- Level: `L2`.\n- Category: SAR ADC self-timed control logic.\n- Target artifact: `sar_logic_4b_self_timed.va`.\n- Role: four-decision self-timed SAR controller.\n- Output boundary: implement only the requested public Verilog-A DUT artifact."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide overrideable parameter `t_logic_delay = 100p`. Derive logic high, low, and threshold from the `vdd` and `gnd` pins."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-7fa703431694": {
+      "sha256": "11c1261691b29a8de56ccc28fb424d40545ad097efb18b2195bd5a69dcc7adf0",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `sigma_delta_top.va`, `integrator_state.va`, `sd_comparator.va`, `feedback_dac.va`, `decimator_lite.va`\n- Public top module: `sigma_delta_top`\n- Required public modules: `sigma_delta_top`, `integrator_state`, `sd_comparator`, `feedback_dac`, `decimator_lite`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vcm = 0.45 V`: midscale reference for the loop.\n- `vth = 0.45 V`: threshold for `clk` and `rst`.\n- `state_limit = 1.8 V`: absolute clamp for the integrator state.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-e1f43ba62387": {
+      "sha256": "ca44d67c6c3838b95d1f9536741e729cd3814925757c5500bef1ace3097d54e9",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "- Form: `dut`.\n- Level: `L1`.\n- Category: sampled-data alignment/control support.\n- Target artifact: `sync_8b_dffs_v2.va`.\n- Role: multi-phase nine-bit DFF alignment chain.\n- Output boundary: implement only the requested public Verilog-A DUT artifact."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide overrideable parameters `vth = 0.45` and `tt = 20p` for clock/input thresholds and output transition shaping."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-367fb859212f": {
+      "sha256": "e688895ca78440738c90bf8f76974517760a35d1df99e7430d98065dfd3c8d44",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement two Verilog-A DUT artifacts for a voltage-domain data-weighted-averaging dynamic-element-matching encoder and its companion voltage-to-binary helper.\n- Target artifacts: `dwa_ptr_gen.va`, `v2b_4b.va`"
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "For `dwa_ptr_gen`, provide these overrideable public parameters:\n\n- `vdd = 0.9 V`: logic high output level for `cell_en_o` and `ptr_o`.\n- `vth = 0.45 V`: logic threshold for `clk_i`, `rst_ni`, and `code_msb_i`.\n- `ptr_init = 0`: reset pointer index in the 16-element circular array.\n\nFor `v2b_4b`, provide these overrideable public parameters:\n\n- `vdd = 0.9 V`: logic high output level and clock threshold reference.\n- `tedge = 100 ps`: transition smoothing time for the output bits."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-c2010b6be712": {
+      "sha256": "a098d126709c0c79d7931b6ba87723c5951f25b4f6f6a750c15bfa26528bab31",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Binary Weighted Voltage DAC`.\n- Form: `dut`\n- Level: `L1`\n- Category: `data_converter`\n- Target artifact(s): `simple_binary_voltage_dac_4b.va`\n\nImplement a 4-bit binary-weighted voltage DAC."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `vth = 0.45 V`: digital decision threshold for each code bit.\n- `tr = 500 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-4e68ce58161e": {
+      "sha256": "6e5e89610f6b47391530af7aabad0cfa8481d9bc5404a6592ba8a57466140ad4",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `SAR CDAC Residue`.\n- Form: `dut`\n- Level: `L1`\n- Category: `data_converter_models`\n- Target artifact(s): `sar_cdac_residue.va`\n\nImplement the Verilog-A DUT `sar_cdac_residue.va` for a sampled SAR capacitive-DAC residue update model.\n\nThis is a data-converter support DUT. The testbench supplies switching events; the DUT must implement the residue state machine implied by the public ports and parameters."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Expose `vdd = 0.9`, `vrefp = 0.9`, `vrefn = 0.0`, and output transition time\n`tr = 1p`. Testbenches may override these parameters. The decision threshold\nfor `CLK` and all `S1` through `S6` switching inputs is `vdd/2`."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-1273a3b60bfb": {
+      "sha256": "b4a3d0de4f5d81f85c1930ffcd0916c79e1308c2491c14d9ee0111538691b929",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "- Form: `dut`.\n- Level: `L2`.\n- Category: calibration/linearity measurement flow.\n- Target artifact: `linearity_rdac_offset_sweep.va`.\n- Role: RDAC-code sweep with repeated comparator-directed offset search.\n- Output boundary: implement only the requested public Verilog-A DUT artifact."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide overrideable parameters `vcm = 0.6`, `vppd = 1.0`, `vdd = 1.0`, `nlvl = 17.0`, and integer `iter_num = 4`. The reference-grid LSB is `vppd / (nlvl - 1.0)`, and the initial signed differential reference is `(1.0 - nlvl / 2.0) * LSB`."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-aa6bbbd49f15": {
+      "sha256": "096339d5a15a34be0e821b8113dae98e8b94b74acf8e2370828a35f2b5642c12",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "- Form: `dut`.\n- Level: `L2`.\n- Category: calibration/trim control flow.\n- Target artifact: `offset_rdac_search_flow.va`.\n- Role: combined RDAC refinement and comparator-offset search flow.\n- Output boundary: implement only the requested public Verilog-A DUT artifact."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "No overrideable public parameters are required. Use 0/1 V logic, a 0.5 V decision threshold, a 0.6 V output common mode, 17 reference levels over a 1.0 V differential span, and a 40 mV initial offset-search step. The reference-grid LSB is `1.0 / 16.0`, and the initial signed differential reference and input values are both `-17.0 / 2.0` LSBs."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-4de7bc3ce78f": {
+      "sha256": "b399f82bb4e4b94f397b1ca02b6cd1b0fd8f3273b38d8aa0e34f0d0f52c46935",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Debounce Latch`.\n- Form: `dut`\n- Level: `L1`\n- Category: `comparator_decision`\n- Target artifact(s): `debounce_latch.va`\n\nImplement a voltage-domain comparator decision debounce latch."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `vth = 0.45 V`: logic threshold for `sig` and `rst_n`.\n- `vdd = 0.9 V`: logic high output level.\n- `stable = 12n`: qualification time after a rising comparator-decision edge.\n- `tr = 500p`: transition smoothing time for output changes."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-5e6125d8765b": {
+      "sha256": "eacfd0d87275a5984559d4fe870c19666f7c54b9f74054bbfed8421b0ccf5fdf",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Propagation Delay Comparator`.\n- Form: `dut`\n- Level: `L1`\n- Category: `comparator_decision`\n- Target artifact(s): `cmp_delay.va`, `edge_interval_timer.va`\n\nImplement a voltage-domain clocked comparator whose clock-to-output delay grows\nas the effective differential input becomes smaller, plus the supplied timing\nhelper artifact."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "For `cmp_delay`, provide these overrideable public parameters:\n\n- `voffset = 0`: input-referred offset subtracted from `VINP - VINN`.\n- `tau = 4.34e-12`: regeneration time constant.\n- `td_0 = 20.5e-12`: base delay offset.\n- `td_min = 20e-12`: minimum comparator delay.\n- `td_max = 200e-12`: maximum comparator delay.\n\nFor `edge_interval_timer`, provide `VTH = 0.4 V` as the edge-detection\nthreshold."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-da18a3e002a7": {
+      "sha256": "496aef76a2fb5630cd2097defd379039356398d3bcd1d0371b577bee5902645b",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `calibrated_comparator_top.va`, `comparator_core.va`, `offset_dac.va`, `calibration_fsm.va`\n- Public top module: `calibrated_comparator_top`\n- Required public modules: `calibrated_comparator_top`, `comparator_core`, `offset_dac`, `calibration_fsm`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for clocked control inputs.\n- `offset_lsb = 5e-3 V`: voltage represented by one offset-code step.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-f049bd1133a3": {
+      "sha256": "9564767c17c56eac8b66820090a32fd369607e54acd6c93474606df452c224f6",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "- Form: `dut`.\n- Level: `L2`.\n- Category: measurement/timing support primitive.\n- Target artifact: `comparator_delay_overdrive_meter.va`.\n- Role: clock-to-decision delay and overdrive meter for a supplied comparator support component.\n- Output boundary: implement only the requested public Verilog-A DUT artifact."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide overrideable parameter `tr = 20p` for report-output transition shaping. Use the midpoint between `vdd` and `vss` as the clock and decision threshold."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-d974d06d3d21": {
+      "sha256": "13832977dfced24b460aec2c1bbda40b9cdd004b93fd7eed6e3e0150bec8fe3b",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Start Gated Offset Search`.\n- Form: `dut`\n- Level: `L1`\n- Category: `data_converter`\n- Target artifact(s): `start_gated_offset_search.va`\n\nImplement a standalone start-gated comparator-offset calibration search driver\nfor a converter calibration loop."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `vdd = 0.9 V`: logic high and decision reference scale.\n- `vcm = 0.7 V`: common-mode voltage for `VINP` and `VINN`.\n- `vstart_th = 0.45 V`: decision threshold for `START`."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-f52f615aab36": {
+      "sha256": "71fc9fbe21101fb072de245ab893ba135d14120f61e1072ad78eb3e4741e3771",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a sampled true-RMS-to-DC signal-conditioning core.\n\n- Form: `dut`\n- Level: `L1`\n- Category: `baseband_signal_conditioning`\n- Target artifact: `sampled_true_rms_to_dc.va`\n\nThe DUT converts differential voltage samples into a held DC voltage equal to\nthe true RMS of each non-overlapping four-sample window."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "| Parameter | Default | Contract |\n| --- | ---: | --- |\n| `vth` | `0.45 V` | Logic threshold used for `clk`, `reset`, and `enable`. |\n| `vhigh` | `0.9 V` | Logic-high level driven on `valid`. |\n| `tr` | `100 ps` | Rise/fall smoothing for `rms_out` and `valid`; must be positive. |\n\nThe window length is fixed at four accepted samples and is not parameterized."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-9e09163b410e": {
+      "sha256": "8704977d6ded55da087ef18c5f0a4120446412ba016e83d46ab597a34b7ece2b",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Amplifier Filter Chain`.\n- Form: `dut`\n- Level: `L2`\n- Category: `baseband_signal_conditioning`\n- Target artifact(s): `amplifier_filter_chain.va`\n\nImplement `amplifier_filter_chain.va` in Verilog-A."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "- `tr`: output transition smoothing time, default `100p`.\n- `gain`: pre-filter gain around the `0.45 V` common-mode level, default `1.8`.\n- `alpha`: sampled low-pass update coefficient for each cascaded filter state,\n  default `0.30`."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-56a936c355af": {
+      "sha256": "7f8bc1a5e1417f4c66f2d8686e2f4bedc18c3fa7ca8e85a7c7514beb024a58a5",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a three-module L2 behavioral model of a chopper-stabilized differential amplifier. The circuit must compose input chopping and offset-bearing gain with a separate synchronous event-driven low-pass stage. This is a complete signal-flow model, not a bare sign chopper, sampled auto-zero store, or trim servo.\n\nTarget artifacts: `chopper_stabilized_differential_amplifier.va`, `chopper_gain_core.va`, and `synchronous_lp_state.va`."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "- `vdd = 0.9 V`, `vss = 0.0 V`, and `vcm = 0.45 V` define the output rails and common mode.\n- `vth = 0.45 V` is the control threshold.\n- `gain = 3.0` is the differential baseband gain.\n- `vos_amp = 20 mV` is the internal offset added after input chopping and before amplification.\n- `lp_alpha = 0.25` is the low-pass update fraction, with `0 < lp_alpha <= 1`.\n- `settle_tol = 20 mV` and integer `settle_cycles = 3` define convergence qualification.\n- `tr = 100 ps` is output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-c2659dfb61a2": {
+      "sha256": "a10f61c7f37a655cddf33514f8e5a4f1b21198a9b5e3c1d7e604008ee65a61f0",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `cmfb_loop_top.va`, `cm_sensor.va`, `trim_controller.va`, `output_balancer.va`\n- Public top module: `cmfb_loop_top`\n- Required public modules: `cmfb_loop_top`, `cm_sensor`, `trim_controller`, `output_balancer`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vcm = 0.45 V`: target common-mode voltage.\n- `vth = 0.45 V`: threshold for clock, reset, and enable.\n- `trim_lsb = 10e-3 V`: output correction represented by one trim step.\n- `lock_tol = 10e-3 V`: common-mode error tolerance for lock.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-8b12c5614e62": {
+      "sha256": "6baf1f7ced1a8575c35603f48b459c8deb139715eb6ad5a00f02cad0be14c62e",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a mixed-signal behavioral circuit block.\n\n- Target artifacts: `two_stage_opamp_slew_macromodel.va`\n- Public top module: `two_stage_opamp_slew_macromodel`\n- Required public module: `two_stage_opamp_slew_macromodel`\n\nThe submitted source must include the target artifact and public module listed above. Optional helper modules may be included only when they are part of the DUT source package."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for clock and control inputs.\n- `stage1_gain = 20.0`: first-stage differential gain metric.\n- `stage2_gain = 5.0`: second-stage gain from first-stage metric to output target.\n- `slew_step = 80e-3 V`: maximum output movement per enabled clock edge.\n- `settle_tol = 10e-3 V`: output error tolerance for `settled`.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-3684905fc022": {
+      "sha256": "23b5bef5a0a437b7d3966128df951b1268a0ba2e87236bade6b845e6bdcaca73",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Settling Window Detector`.\n- Form: `dut`\n- Level: `L1`\n- Category: `example harness_utility_modules`\n- Target artifact(s): `settling_window_detector.va`\n\nImplement `settling_window_detector.va`, a voltage-domain instrumentation helper that detects when an analog signal has stayed inside a target tolerance window for a required hold time.\n\n- This is a DUT/support-component task: implement only the requested Verilog-A source artifact.\n- Do not generate the validation harness or validation harness.\n- Preserve the public module name, port order, port directions, and parameter names.\n- Treat any public validation harness as an observable use case, not as values to hard-code into the DUT."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "| Parameter | Default | Contract |\n| --- | ---: | --- |\n| `vdd` | `0.9` | Logic-high output voltage. |\n| `tr` | `20p` | Output transition rise/fall smoothing time. |"
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-6a1cf8e12cbe": {
+      "sha256": "49f3da365c1607943b1ae4c56c54cb6e116199d19d37e3940e22970a7abdd93d",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement one Verilog-A DUT artifact for a discrete-time first-order low-pass filter.\n\n- Target artifact: `first_order_lowpass.va`"
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `alpha = 0.025`: low-pass update coefficient.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-4875a83af6fa": {
+      "sha256": "9e3ac167fbac2ffa65bbbd167cae0606874a633f7eb1c09b88ca8acc5810b191",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement one behavioral Verilog-A/AMS source file named `laplace_nd_lowpass_filter.va`. This is an L1 voltage-domain analog-operator source task for a continuous-time numerator/denominator low-pass filter.\n\nUse `laplace_nd(V(vin), {1.0}, {1.0, 100n})` as the public operator form for a 100 ns first-order low-pass response. The operator result must be computed in continuous analog context and then sampled by the clocked behavior; do not place the operator call inside the clock event body, reset conditional, loop, or other conditional/event-only context."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Expose the starter parameters `vth`, `vhi`, and `tr` with their starter defaults and units. `vth` is the voltage threshold used for `clk` and `rst`; `vhi` is retained for starter and harness compatibility and does not scale the required operator output; `tr` is the transition edge time for the voltage outputs."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-2abcd277abee": {
+      "sha256": "d3d6d413546cb673e6c4a805bf89c3b058426d2caf34dbafeb60fc60b2044857",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `switched_cap_integrator_phase_pair_top.va`, `sample_phase_cell.va`, `integrator_state_cell.va`\n- Public top module: `switched_cap_integrator_phase_pair_top`\n- Required public modules: `switched_cap_integrator_phase_pair_top`, `sample_phase_cell`, `integrator_state_cell`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the top-level DUT entry point; helper modules must be part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time.\n- `k_int = 0.2`: integration increment per phase pair."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-bad8f422df0a": {
+      "sha256": "27a566f6efe77dadfacb595a7f2440b0ec6443a9f4eaaa6c9f6d620a301e802c",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement one behavioral Verilog-A/AMS source file named `zi_nd_discrete_filter.va`. This is an L1 voltage-domain analog-operator source task for a sampled-data numerator/denominator filter.\n\nUse `zi_nd(V(vin), {0.25}, {1.0, -0.75}, 100n)` as the public operator form for a 100 ns sampled-data smoothing response. The operator result must be computed in continuous analog context and then sampled by the clocked behavior; do not place the operator call inside the clock event body, reset conditional, loop, or other conditional/event-only context."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Expose the starter parameters `vth`, `vhi`, and `tr` with their starter defaults and units. `vth` is the voltage threshold used for `clk` and `rst`; `vhi` is retained for starter and harness compatibility and does not scale the required operator output; `tr` is the transition edge time for the voltage outputs."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-9196e3f9608a": {
+      "sha256": "bb83874e2fb9d40dac2e583dc65f2439727c356af11b7a6addaf801e5a03d1cf",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement one behavioral Verilog-A DUT file named `slew_limited_envelope.va`. The DUT samples a voltage envelope target and drives both public outputs through the Verilog-A `slew()` operator.\n\nThis is a DUT-only Verilog-A modeling task. The supplied testbenches are verification scenarios; do not hard-code their stop times, sample times, or waveform breakpoints into the DUT."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "- `vth = 0.45` V is the reset, clock, and mode threshold.\n- `rise_rate = 8.0e8` V/s is the positive output slew-rate limit.\n- `fall_rate = 3.0e8` V/s is the positive magnitude of the falling slew-rate limit. Cadence Verilog-A `slew(expr, SRpos, SRneg)` expects `SRneg` to be negative, so use `-fall_rate` as the third argument."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-7153aa02e27c": {
+      "sha256": "9be58adfb1d7bf7e59337cb5e3a2982253be4899757d02e6e5e124072fd1796e",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement one Verilog-A DUT artifact for a bang-bang phase detector used in a clock/data recovery loop.\n\n- Target artifact: `bbpd_ref.va`\n\nThe model compares the sampled relationship between incoming data, clock, and retimed data, then emits short voltage-coded correction pulses on `up` or `down`."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `vdd = 0.9 V`: voltage-coded logic high level for `up` and `down`.\n- `vth = 0.45 V`: logic threshold for `data`, `clk`, and `retimed_data`.\n- `trf = 10 ps`: rise/fall smoothing time for correction pulses.\n- `td = 0 ps`: output transition delay."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-4531c081cd0c": {
+      "sha256": "2041db1e5e0d312e933fbc9de7a041c827e7ae6ef462b9171764a2823bca8a61",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Clock Divider`.\n- Form: `dut`\n- Level: `L1`\n- Category: `pll_clock_timing`\n- Target artifact(s): `clk_divider_ref.va`\n\nImplement `clk_divider_ref.va` in Verilog-A."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n| Parameter | Default | Unit / Range | Contract |\n| --- | ---: | --- | --- |\n| `vdd` | `0.9` | V, `(0:inf)` | High level for voltage-coded outputs. |\n| `vth` | `0.45` | V | Logic threshold for clock, reset, and ratio-code inputs. |\n| `trf` | `10 ps` | time, `(0:inf)` | Rise/fall smoothing for `clk_out` and `lock`. |\n| `td` | `0 ps` | time, `[0:inf)` | Transition delay for voltage-coded outputs. |"
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-064e0dca8a2f": {
+      "sha256": "0f914216ee007450b231d9cfd2b6d2842b87b150751621b08dfedd247006de3c",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Lock Detector`.\n- Form: `dut`\n- Level: `L1`\n- Category: `pll_clock_timing`\n- Target artifact(s): `lock_detector.va`\n\nImplement one Verilog-A DUT file named `lock_detector.va`.\n\nThe DUT is a voltage-domain reference/feedback lock detector for a PLL-style clock path. It observes rising edges on `ref_clk` and `fb_clk`, uses an active-low reset, and drives a scalar `lock` output."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `vth = 0.45 V`: logic threshold for `ref_clk`, `fb_clk`, and `rst_n`.\n- `vdd = 0.9 V`: logic high output level for `lock`.\n- `tol = 2 ns`: maximum allowed time separation between a reference rising edge and the most recent feedback rising edge.\n- `need = 3`: number of consecutive aligned reference events required before asserting lock.\n- `tr = 500 ps`: transition smoothing time for `lock`."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-c72d6877986b": {
+      "sha256": "d9ab6ab18534366fd76e86ac83539e1773b0f2352b9dae65df23aa3c5221c39c",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `PFD Up DN Logic`.\n- Form: `dut`\n- Level: `L1`\n- Category: `pll_clock_timing`\n- Target artifact(s): `pfd_updn.va`\n\nImplement `pfd_updn.va` in Verilog-A."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n| Parameter | Default | Unit / Range | Contract |\n| --- | ---: | --- | --- |\n| `vth` | `0.45` | V | Rising-edge threshold for `REF` and `DIV`. |\n| `tedge` | `20 ps` | time, `(0:inf)` | Rise/fall smoothing for `UP` and `DN`. |"
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-ab6fb112f844": {
+      "sha256": "aaf67d1928a0708d5963a44385b95f2ddb57cab3d316ecac7e54c6e53e1810e1",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `ADPLL Ratio Hop Timer`.\n- Form: `dut`\n- Level: `L2`\n- Category: `pll_clock_timing_systems`\n- Target artifact(s): `adpll_ratio_hop_ref.va`\n\nImplement `adpll_ratio_hop_ref.va` in Verilog-A."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "| Parameter | Default | Unit / range | Contract |\n| --- | ---: | --- | --- |\n| `f_center` | `240.0e6` | Hz, `(0:inf)` | DCO center frequency near the nominal control code. |\n| `freq_step_hz` | `5.0e6` | Hz/code, `(0:inf)` | DCO frequency change per control-code step. |\n| `f_min` | `120.0e6` | Hz, `(0:inf)` | Lower clamp for the generated DCO frequency. |\n| `f_max` | `420.0e6` | Hz, `(0:inf)` | Upper clamp for the generated DCO frequency. |\n| `code_min` | `0` | integer, `[0:inf)` | Minimum loop-control code. |\n| `code_max` | `63` | integer, `[1:inf)` | Maximum loop-control code. |\n| `code_center` | `32` | integer, `[0:inf)` | Code corresponding to the nominal DCO center. |\n| `code_init` | `24` | integer, `[0:inf)` | Initial loop-control code. |\n| `ratio_min` | `2` | integer, `[1:inf)` | Minimum allowed feedback divide ratio. |\n| `ratio_max` | `16` | integer, `[2:inf)` | Maximum allowed feedback divide ratio. |\n| `tedge` | `200 ps` | time, `(0:inf)` | Rise/fall smoothing for voltage-coded outputs. |\n| `lock_tol` | `2 ns` | time, `(0:inf)` | Timing-error tolerance used for lock qualification. |\n| `lock_count_target` | `5` | integer, `[1:inf)` | Consecutive in-tolerance feedback events before asserting `lock`. |\n\nSupport legal overrides of these public parameters."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-2c97cd8f5faf": {
+      "sha256": "2ab36c8905f8761e4d40f93f1039f1759f7979154709a0549884aef47ea5218c",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `BBPD Data Edge Alignment`.\n- Form: `dut`\n- Level: `L1`\n- Category: `pll_clock_timing_systems`\n- Target artifact(s): `bbpd_data_edge_alignment_ref.va`\n\nImplement `bbpd_data_edge_alignment_ref.va` in Verilog-A."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "| Parameter | Default | Unit / range | Contract |\n| --- | ---: | --- | --- |\n| `vth` | `0.45` | V | Logic threshold for `clk` and `data` relative to `vss`. |\n| `trf` | `30 ps` | time, `(0:inf)` | Rise/fall smoothing for voltage-coded outputs. |\n| `clk_period` | `20 ns` | time, `(0:inf)` | Nominal full clock period used to classify data-transition timing. |\n| `clk_delay` | `10 ns` | time, `[0:inf)` | Initial phase reference for the clock timing model. |\n| `deadzone` | `0.8 ns` | time, `[0:inf)` | Timing region around a clock edge where correction pulses are suppressed. |\n| `pulse_w` | `1 ns` | time, `(0:inf)` | Width of each UP or DN correction pulse. |\n| `poll_dt` | `50 ps` | time, `(0:inf)` | Timer cadence used to clear expired pulses. |\n\nSupport legal overrides of these public parameters."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-231ac5b31586": {
+      "sha256": "1e29d0e776782f3914f72787a95b69f0ecec30e2787b52a52c775a159d8f9612",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement one behavioral Verilog-A DUT file named `charge_pump_pfd_state_machine.va`.\n\nThis is a PLL clock-and-timing task following the common charge-pump PFD\nbehavioral pattern: rising reference and feedback edges update a tri-state\nphase-detector state, and that state moves a bounded control-voltage monitor.\nKeep the model pure voltage-domain behavioral Verilog-A, with no current\ncontributions and no instantiated devices."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Public parameters and legal overrides:\n\n| Parameter | Default | Unit / range | Contract |\n| --- | ---: | --- | --- |\n| `vth` | `0.45` | V | Logic decision threshold. |\n| `tstep` | `1.0e-9` | s, `(0:inf)` | Control-voltage integration timestep. |\n| `pump_rate` | `60.0e6` | V/s, `[0:inf)` | Control-voltage slew rate per unit state. |\n| `vctrl_init` | `0.45` | V | Initial control voltage. |\n| `vctrl_min` | `0.05` | V | Lower clamp for the control voltage. |\n| `vctrl_max` | `0.85` | V | Upper clamp for the control voltage. |\n| `tedge` | `200p` | s, `(0:inf)` | Output smoothing time. |\n| `metric_lo` | `0.1` | V | Metric voltage for state `-1`. |\n| `metric_mid` | `0.45` | V | Metric voltage for state `0`. |\n| `metric_hi` | `0.8` | V | Metric voltage for state `+1`. |\n\nThe supplied verification scenarios drive `ref` and `fb` as same-frequency\nsquare waves with fixed phase offsets. Positive phase offset means the\nreference edge leads and `vctrl` should move toward the upper rail; negative\nphase offset means feedback leads and `vctrl` should move toward the lower\nrail.\n\nThe verification harness supplies a companion support artifact `ref_fb_clk.va`\nthat generates the two phase-offset clock waves; you do not author it."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-29c42feb72df": {
+      "sha256": "eb393019902c796de0bfae2d4861f564f89577eee135e926577299de966be73a",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement one behavioral Verilog-A DUT file named `differential_vco_clip_idtmod.va`.\n\nThis is a PLL clock-and-timing task following the common differential\nbehavioral VCO pattern: a differential control voltage sets a clipped\ninstantaneous frequency, wrapped phase is integrated with `idtmod()`, and two\nopposite sine arms are driven around a common mode. Keep the model pure\nvoltage-domain behavioral Verilog-A: do not instantiate transistor-level\ndevices and do not use current-domain `I(...)` branch contributions."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Public parameters and legal overrides:\n\n| Parameter | Default | Unit / range | Contract |\n| --- | ---: | --- | --- |\n| `Fnom` | `20.0e6` | Hz, `(0:inf)` | Frequency at zero differential input. |\n| `dFdV` | `160.0e6` | Hz/V, `(-inf:inf) exclude 0.0` | Frequency shift per volt of `V(vinp, vinm)`. |\n| `Fmin` | `5.0e6` | Hz, `(0:inf)` | Lower clamp for the oscillation frequency. |\n| `Fmax` | `80.0e6` | Hz, `(0:inf)` | Upper clamp for the oscillation frequency. |\n| `Vcm` | `0.45` | V | Common-mode output center voltage. |\n| `Vac` | `0.4` | V, `(0:inf)` | Per-arm sine amplitude. |\n\nThe supplied verification scenarios hold `V(vinp)` and `V(vinm)` piecewise\nconstant: within one run the differential control steps between fixed offsets,\nso the instantaneous frequency changes during the simulation and the\n`idtmod()` phase must keep accumulating across each step. The offsets drive the\nraw frequency below, inside, and above the public clamp band, so the\nimplemented oscillator must use the clipped frequency rather than the unclipped\nexpression."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-a326e88531f2": {
+      "sha256": "297d976d691f6ef6721af8f1ad6f11b4c90b6228cf2166f2b13ac95dafa521f5",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `dll_top.va`, `phase_detector.va`, `delay_line.va`, `lock_detector.va`\n- Public top module: `dll_top`\n- Required public modules: `dll_top`, `phase_detector`, `delay_line`, `lock_detector`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for clocks, reset, and enable.\n- `delay_center = 16`: reset delay code.\n- `unit_delay = 5e-12 s`: delay represented by one code step.\n- `lock_window = 1`: maximum code error counted as locked.\n- `tr = 100 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-32202d65153d": {
+      "sha256": "1c464f10e22638ae753c4acba0b98969a91db235f28c20de993397da905df05d",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement one Verilog-A DUT artifact for `Edge Delay Line with Deglitch Window`.\n\n- Target artifact: `edge_delay_line_deglitch.va`\n- Public top module: `edge_delay_line_deglitch`\n- Task level: `L1`\n- Circuit category: `clock_timing`"
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these public parameters with the following defaults. Scored evaluation\nuses these published default values; alternative parameter overrides are outside\nthe scored behavior contract.\n\n- `vdd = 0.9 V`: logic-high output level\n- `vss = 0.0 V`: logic-low output level\n- `vth = 0.45 V`: logic threshold\n- `tick = 250 ps`: internal scheduling tick\n- `delay_ticks = 4`: qualified-edge delay in ticks\n- `min_width_ticks = 3`: minimum stable input duration before an edge can qualify\n- `tr = 100 ps`: output transition smoothing time"
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-ed9171bd2255": {
+      "sha256": "aae4b2f137ae2b271146bb3fa9fdc5e8e9ae3b53a5b6cdb69f8301f275c1d0ab",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement `fracn_pll_timer_ref.va` in Verilog-A."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Support these public parameters and legal overrides:\n\n| Parameter | Default | Unit / range | Contract |\n| --- | ---: | --- | --- |\n| `div_int` | `8` | integer, `[1:inf)` | Base DCO rising-edge count between feedback-output toggles. |\n| `frac_word` | `3` | integer, `[0:inf)` | Fractional accumulator increment after each feedback-output toggle. |\n| `acc_modulus` | `8` | integer, `[1:inf)` | Fractional accumulator modulus; the average DCO-edge count per feedback-output toggle is `div_int - frac_word/acc_modulus`. |\n| `f_center` | `800.0e6` | Hz, `(0:inf)` | DCO center frequency at the common-mode control voltage. |\n| `kvco_hz_per_v` | `350.0e6` | Hz/V, `(0:inf)` | DCO frequency sensitivity to `vctrl_mon`. |\n| `f_min` | `300.0e6` | Hz, `(0:inf)` | Lower clamp for generated DCO frequency. |\n| `f_max` | `1.6e9` | Hz, `(0:inf)` | Upper clamp for generated DCO frequency. |\n| `kp` | `8.0e6` | nonnegative loop scale, `[0:inf)` | Proportional phase-error correction scale. |\n| `ki` | `1.2e5` | nonnegative loop scale, `[0:inf)` | Accumulated phase-error correction scale. |\n| `integ_min` | `-0.45` | V-equivalent correction | Lower bound for the integral correction state. |\n| `integ_max` | `0.45` | V-equivalent correction | Upper bound for the integral correction state. |\n| `vctrl_init` | `0.45` | V | Initial control-voltage monitor value before tracking settles. |\n| `tedge` | `20 ps` | time, `(0:inf)` | Rise/fall smoothing for voltage-coded outputs. |\n| `lock_tol` | `0.4 ns` | time, `(0:inf)` | Phase-error tolerance for counting lock streaks. |\n| `lock_count_target` | `6` | integer, `[1:inf)` | Consecutive in-tolerance events before asserting `lock`. |"
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-9491f0e065e4": {
+      "sha256": "29624e7919e726c7b35eaf52dcdaa243281cace946957512cc4f85e7c31b3456",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `fracn_synth_top.va`, `accumulator.va`, `multi_modulus_divider.va`, `ratio_monitor.va`\n- Public top module: `fracn_synth_top`\n- Required public modules: `fracn_synth_top`, `accumulator`, `multi_modulus_divider`, `ratio_monitor`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for clocks, reset, enable, and fraction bits.\n- `n_int = 8`: integer divider ratio.\n- `window_len = 16`: monitor window in divider updates.\n- `tr = 100 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-1403add6b66d": {
+      "sha256": "0680ab28e7e6c61c3c73f37f7b6d9e2e87d6903fb77a3ae0e6385fe8b52d1a9f",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a mixed-signal behavioral circuit block.\n\n- Target artifacts: `frequency_word_dco.va`\n- Public top module: `frequency_word_dco`\n- Required public module: `frequency_word_dco`\n\nThe submitted source must include the target artifact and public module listed above. The public top module is the module instantiated by the evaluator; optional helper modules may be included only when they are part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for enable, reset, and code bits.\n- `f_min = 80.0e6 Hz`: minimum DCO frequency.\n- `f_step = 2.0e6 Hz`: frequency increment per frequency-control word step.\n- `f_max = 250.0e6 Hz`: maximum DCO frequency.\n- `divide_ratio = 4`: fixed monitor divider ratio.\n- `tr = 100 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-f892f6a35b37": {
+      "sha256": "f618a4eac2a4c5840a10140cbab730ade7d04f25faa1253b47edb55831167f2d",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a mixed-signal behavioral circuit block.\n\n- Target artifacts: `glitchless_clock_mux_selector.va`\n- Public top module: `glitchless_clock_mux_selector`\n- Required public module: `glitchless_clock_mux_selector`\n\nThe submitted source must include the target artifact and public module listed above. The public top module is the top-level DUT entry point; optional helper modules may be included only when they are part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-75bdfd7bedaf": {
+      "sha256": "8bf2d620752f704bea7453107bc580c2eadcd80212c8fa7130832cd1cbd961e5",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Deterministic Jittered Clock Source`.\n- Form: `dut`\n- Level: `L1`\n- Category: `example harness_utility_modules`\n- Target artifact(s): `deterministic_jittered_clock.va`\n\nImplement `deterministic_jittered_clock.va`, a repeatable voltage-domain jittered clock stimulus source for timing-margin and aperture-stress checks, whose cycle-to-cycle timing can be deterministically modulated by an 8-bit seed.\n\n- This is a DUT/support-component task: implement only the requested Verilog-A source artifact.\n- Do not generate the validation harness or validation harness.\n- Preserve the public module name, port order, port directions, and parameter names.\n- Treat any public validation harness as an observable use case, not as values to hard-code into the DUT."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "| Parameter | Default | Contract |\n| --- | ---: | --- |\n| `vdd` | `0.9` | Logic-high output voltage. |\n| `vth` | `0.45` | Decision threshold for voltage-coded digital inputs. |\n| `tr` | `20p` | Output transition rise/fall smoothing time. |"
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-6ac815c575f6": {
+      "sha256": "2f0c8d3fd2731c3064ec8a0fca7459bef6333ac8b9bea76c9165fbd27f11134c",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement one Verilog-A DUT artifact for `Non-overlapping Clock Generator`.\n\n- Target artifact: `nonoverlap_clock_generator.va`\n- Public top module: `nonoverlap_clock_generator`\n- Task level: `L1`\n- Circuit category: `clock_timing`"
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `vdd = 0.9 V`: logic-high output level\n- `vss = 0.0 V`: logic-low output level\n- `vth = 0.45 V`: logic threshold for input controls\n- `dead_ticks = 5`: number of internal timer ticks held both-low after a phase request\n- `tick = 200 ps`: internal discrete update interval for dead-time scheduling\n- `tr = 100 ps`: output transition smoothing time"
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-13dab9c27e53": {
+      "sha256": "c78c110c86260eb524f54b46052980f3301053cfcabd35a98ca5583c1a1c6ffc",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `pll_timing_monitor_top.va`, `phase_detector.va`, `divider.va`, `lock_detector.va`, `reacquire_timer.va`\n- Public top module: `pll_timing_monitor_top`\n- Required public modules: `pll_timing_monitor_top`, `phase_detector`, `divider`, `lock_detector`, `reacquire_timer`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for clock and control inputs.\n- `lock_window = 2`: maximum absolute phase-code error counted as locked.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-dfdcbf82ad9b": {
+      "sha256": "07931660ed46fe9c8e87cf05924351ef1c45c7dfb8e28859d83d9af2ec998a67",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `tdc_measurement_top.va`, `edge_detector.va`, `interval_counter.va`, `binary_encoder.va`, `valid_latch.va`\n- Public top module: `tdc_measurement_top`\n- Required public modules: `tdc_measurement_top`, `edge_detector`, `interval_counter`, `binary_encoder`, `valid_latch`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for `start`, `stop`, `clk`, and `rst`.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-6abc7041f976": {
+      "sha256": "93460fb7296aac71ccd5b2fc0ab61eeb007e29f19eab8970c9e2793c13f6b55e",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a mixed-signal behavioral circuit block.\n\n- Target artifacts: `duty_cycle_window_monitor.va`\n- Public top module: `duty_cycle_window_monitor`\n- Required public module: `duty_cycle_window_monitor`\n\nThe submitted source must include the target artifact and public module listed above. The public top module is the top-level DUT entry point; optional helper modules may be included only when they are part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-32b138bce352": {
+      "sha256": "789eddded4c329956d5e56e1b246d3664acd4ec1f454c054eb008fd5a0b08c22",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Time Diff Detector`.\n- Form: `dut`\n- Level: `L1`\n- Category: `mixed_signal`\n- Target artifact(s): `time_diff_detector.va`\n\nImplement the Verilog-A DUT `time_diff_detector.va` for a clocked timing detector that reports the previous cycle's input edge-time difference as a bounded voltage.\n\nThis is a single-DUT measurement utility. The DUT should derive timing from threshold crossings in the provided analog waveforms rather than from fixed testbench timestamps."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Expose `vdd = 0.9`, `vth_clk = 0.45`, `vth_in = 0.45`, `td = 0`, `tr = 1p`, and `scale = 1e9`. Testbenches may override these parameters."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-736ff92fda99": {
+      "sha256": "7ee18c4837b325620addd47783bc0bdc601dce04a58411f74ce07739a56b5de6",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement `pfd_active_low_reset.va`, a L1 voltage-domain clock timing DUT for PFD With External Active Low Reset."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "- `vth = 0.45`: overrides vth.\n- `vh = 0.9`: overrides vh.\n- `reset_delay = 80p from [0:inf)`: overrides reset_delay.\n- `tr = 10p from [0:inf)`: overrides tr."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-0c0cef57c1e1": {
+      "sha256": "c9feb2b61a07138a54f095279f4bf546b0a1bef4ad25c4b0fdc4ffcd5747d516",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `AGC Receiver Leveling Loop`.\n- Form: `dut`\n- Level: `L2`\n- Category: `rf_afe_behavioral_macromodels`\n- Target artifact(s): `agc_receiver_leveling_loop.va`\n\nImplement a voltage-domain automatic-gain-control receiver leveling loop."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `tr = 100p`: transition time used for smoothed voltage contributions.\n- `vth = 0.45 V`: threshold for voltage-coded logic decisions.\n- `target_amp = 0.18 V`: desired output-envelope amplitude around common mode.\n- `deadband = 0.025 V`: tolerance band around the target amplitude before gain\n  correction is needed."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-d52d04c2f7f8": {
+      "sha256": "260d210c20f3ddc08a49b78a0dfe8b95c100574ce9431dcc017b87405b8f0ebc",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a mixed-signal behavioral circuit block.\n\n- Target artifacts: `deserializer_demux_alignment_macro.va`\n- Public top module: `deserializer_demux_alignment_macro`\n- Required public module: `deserializer_demux_alignment_macro`\n\nThe submitted source must include the target artifact and public module listed above. The public top module is the required deliverable boundary; optional helper modules may be included only when they are part of the DUT source package, not external stimulus or harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for digital-voltage inputs.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-c7fc934fa1b1": {
+      "sha256": "864ab83882f6166c16c9ef7616f196530b3d9bc8ad794ac457f51165ee4b1dae",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `dfe_error_proxy_loop_top.va`, `decision_history.va`, `feedback_correction_core.va`\n- Public top module: `dfe_error_proxy_loop_top`\n- Required public modules: `dfe_error_proxy_loop_top`, `decision_history`, `feedback_correction_core`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the top-level DUT entry point; helper modules must be part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time.\n- `residual_tol = 35e-3 V`: convergence tolerance."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-a503dc51ad1e": {
+      "sha256": "20ba871a9113f288f54cbd2f68ea6e42c22e97b42cae3f22a74cb880d1604e54",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement one Verilog-A DUT artifact for `3-tap FFE Transmitter`.\n\n- Target artifact: `ffe_tx_3tap.va`\n- Public top module: `ffe_tx_3tap`\n- Task level: `L1`\n- Circuit category: `serdes_equalization_systems`"
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `vdd = 0.9 V`: output full-scale level\n- `vss = 0.0 V`: output low level\n- `vcm = 0.45 V`: common-mode level\n- `vth = 0.45 V`: logic threshold\n- `main_amp = 0.18 V`: main cursor amplitude around common mode\n- `tap_step = 0.04 V`: tap contribution per code step\n- `tr = 120 ps`: output transition smoothing time"
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-93d75e31f4e4": {
+      "sha256": "63e42a2a6cd22888d8765a1fe5e7756d87210b335bd14c05e9171cc2724cc04b",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `IQ Downconversion Chain`.\n- Form: `dut`\n- Level: `L2`\n- Category: `rf_afe_behavioral_macromodels`\n- Target artifact(s): `iq_downconversion_chain.va`\n\nImplement a voltage-domain I/Q downconversion receiver macromodel."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `tr = 80p`: transition time used for smoothed voltage contributions.\n- `vth = 0.45 V`: threshold for voltage-coded logic decisions."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-1fe280dd58b7": {
+      "sha256": "71ce2fdd80eb2e0e016bc3e6b58617a8c1ffcddb60ca25c3d278e060c0b95ed8",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Clocked Sine Source`.\n- Form: `dut`\n- Level: `L2`\n- Category: `measurement_instrumentation_flows`\n- Target artifact(s): `vin_src.va`\n- Public support artifact(s): `lfsr.va`, `dither_adder.va`, `gain_amp_fixed.va`\n\nImplement `vin_src.va` in Verilog-A."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "The public parameters declared by the target artifact are part of the contract and may be overridden by validation harnesses. Preserve their names, defaults, ranges, and meanings:\n\n- `parameter real vdd = 0.9;` in `vin_src.va`.\n- `parameter real vth = 0.45;` in `vin_src.va`.\n- `parameter real ampl = 0.15;` in `vin_src.va`.\n- `parameter real freq = 300e3;` in `vin_src.va`.\n- `parameter real sigma = 0.01;` in `vin_src.va`.\n- `parameter integer SEED = 0;` in `vin_src.va`."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-6701375cc923": {
+      "sha256": "ad08edd9bb6543030091ab2e43c8b36c90adbd53ff46702452addcd5609b5f1f",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Complete Calibration Loop`.\n- Form: `dut`\n- Level: `L2`\n- Category: `calibration_dem_control`\n- Target artifact(s): `complete_calibration_loop.va`\n\n- Base function: closed calibration loop\n- Domain: `voltage`\n\n- Return exactly one Verilog-A source file named `complete_calibration_loop.va`.\n- Preserve the public module name, positional port order, electrical disciplines, and observable output meanings.\n- Do not generate or modify a testbench."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `tr = 100p`: transition time used for smoothed voltage contributions.\n- `vth = 0.45 V`: threshold for voltage-coded clock and reset decisions.\n- `target = 0.45 V`: common-mode target for the loop.\n- `loop_gain = 0.40`: controller gain applied to residual error.\n- `plant_alpha = 0.35`: first-order plant update factor.\n- `vmin = 0.05 V`, `vmax = 0.85 V`: clamp range for bounded analog states."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-12df0a9f03eb": {
+      "sha256": "27111ea76516827fb12a57511533d6f0ea1a539d7d3a4bfed00e0ca8fb9b2c7b",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `instrumentation_amp_offset_trim_top.va`, `diff_gain_core.va`, `offset_trim_controller.va`\n- Public top module: `instrumentation_amp_offset_trim_top`\n- Required public modules: `instrumentation_amp_offset_trim_top`, `diff_gain_core`, `offset_trim_controller`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the top-level DUT entry point; helper modules must be part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time.\n- `diff_gain = 8.0`: corrected differential gain.\n- `trim_lsb = 8e-3 V`: correction step per trim code."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-b9ad0cb73ad2": {
+      "sha256": "19b78f82163651bae180eeec5c8d053f7123f3b560986289e26560e310255110",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Active Low Reset Synchronizer`.\n- Form: `dut`\n- Level: `L1`\n- Category: `testbench_utility_modules`\n- Target artifact(s): `reset_sync_active_low.va`\n\nImplement `reset_sync_active_low.va`, a two-stage voltage-coded reset synchronizer with immediate active-low assertion and synchronous release.\n\n- This is a DUT/support-component task: implement only the requested Verilog-A source artifact.\n- Do not generate a Spectre testbench or validation harness.\n- Preserve the public module name, port order, port directions, and parameter names.\n- Treat any public validation harness as an observable use case, not as values to hard-code into the DUT."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "| Parameter | Default | Contract |\n| --- | ---: | --- |\n| `vdd` | `0.9` | Logic-high output voltage. |\n| `vth` | `0.45` | Decision threshold for voltage-coded digital inputs. |\n| `tr` | `20p` | Output transition rise/fall smoothing time. |"
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-2f397ba7fdb1": {
+      "sha256": "52d385ea8b21941b178da8f1db0862d953a0239810317eee19a8766ceb05c7e8",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `voltage_multiplier_top.va`, `phase_generator.va`, `pump_stage_model.va`, `regulation_comparator.va`\n- Public top module: `voltage_multiplier_top`\n- Required public modules: `voltage_multiplier_top`, `phase_generator`, `pump_stage_model`, `regulation_comparator`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for clock and control inputs.\n- `pump_step = 40e-3 V`: voltage-domain output increment per active pump phase.\n- `leak_step = 5e-3 V`: voltage-domain decay per disabled update.\n- `ready_tol = 25e-3 V`: regulation tolerance around `target`.\n- `vout_max = 1.8 V`: maximum modeled multiplier output.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-203a68fd055e": {
+      "sha256": "a568130c6e08b2ea2170fb7121c2abe5bacd9421a3cade6ce7b935336b4cd9d5",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a mixed-signal behavioral circuit block.\n\n- Target artifacts: `clock_data_valid_qualifier.va`\n- Public top module: `clock_data_valid_qualifier`\n- Required public module: `clock_data_valid_qualifier`\n\nThe submitted source must include the target artifact and public module listed above. The public top module is the module instantiated by the evaluator; optional helper modules may be included only when they are part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for digital-voltage inputs.\n- `max_age_cycles = 3`: maximum allowed data-edge age in clock cycles.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-bffe3d72eb3d": {
+      "sha256": "b5e5ae3c8c0a30223f817a31e10bd31a8fb582a695b557469c26842696e04438",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Build a dynamic-supply voltage-domain level driver. The module thresholds its\ninput relative to local supply rails, drives its output relative to those same\nrails, and falls back to the local low level when the supply is invalid."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "- `vsup_min = 0.55 V`: minimum `V(vdd, vss)` required for normal operation.\n- `vth_frac = 0.5`: input threshold expressed as a fraction of the local supply\n  range above `vss`.\n- `vlo_frac = 0.0`, `vhi_frac = 1.0`: output low and high levels expressed as\n  fractions of the local supply range above `vss`.\n- `tr = 40p`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-347c941453f3": {
+      "sha256": "951a8b2df6c1e1eda7c09c3d2ea7a96710d000379e6fdf9a68e196dd7528adb4",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `LDO Load Step Recovery`.\n- Form: `dut`\n- Level: `L2`\n- Category: `bias_reference_power_management`\n- Target artifact(s): `ldo_load_step_recovery_flow.va`\n\n- Target artifact: `ldo_load_step_recovery_flow.va`\n- Implement only the requested Verilog-A flow DUT. Do not generate a testbench, validation logic, or auxiliary test hooks.\n- Preserve the public module name, port order, starter parameters, and saved waveform observable names."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "The public parameters declared by the target artifact are part of the contract and may be overridden by validation harnesses. Preserve their names, defaults, ranges, and meanings:\n\n- `parameter real tr = 100p;` in `ldo_load_step_recovery_flow.va`.\n- `parameter real vth = 0.45;` in `ldo_load_step_recovery_flow.va`."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-639104123d19": {
+      "sha256": "7583b071a9b869529447042163f9a2365e83c12d4069efa9bc4c370c8e2b4a20",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `power_reset_seq_top.va`, `por_detector.va`, `reset_synchronizer.va`, `enable_sequencer.va`, `ready_flag.va`\n- Public top module: `power_reset_seq_top`\n- Required public modules: `power_reset_seq_top`, `por_detector`, `reset_synchronizer`, `enable_sequencer`, `ready_flag`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vhi = 0.9 V`: logic high output level.\n- `vlo = 0.0 V`: logic low output level.\n- `vpor = 0.72 V`: power-good threshold for `vdd_sense`.\n- `vth = 0.45 V`: threshold for digital control inputs.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-a18fbad75908": {
+      "sha256": "183e00c4ba29ebc56190ec957203b7312cfca13badfc03195c86dd3766b1011a",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Build a voltage-domain startup monitor for a locally supplied analog block. The\nmodule samples the local rail on a clock, checks whether the rail is inside the\nallowed operating window, qualifies the startup ramp rate, and releases a\nstartup-ready flag only after the rail has settled for consecutive sampled\nupdates."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "- `vth = 0.45 V`: logic threshold for `clk` and `en`.\n- `vhi = 0.9 V`: high level for voltage-coded outputs.\n- `vdd_min = 0.72 V`, `vdd_max = 1.08 V`: valid `V(vdd, vss)` operating\n  window.\n- `vready = 0.86 V`: sampled rail level above which settling qualification is\n  required before readiness can assert.\n- `dv_min = 0.025 V`, `dv_max = 0.20 V`: acceptable positive sampled rail\n  movement before the rail reaches `vready`.\n- `dv_settle_max = 0.030 V`: maximum absolute sampled rail movement while the\n  rail is settling above `vready`.\n- `ready_cycles = 3`: number of consecutive settled sampled updates required\n  before `startup_ready` may assert.\n- `tr = 60p`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-dd5424898b56": {
+      "sha256": "31d3a27aeec69695bcbd642fac38ad1bb2c87101eccd95bd1458613e0b3ed4ff",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a mixed-signal behavioral circuit block.\n\n- Target artifacts: `supply_supervisor_brownout_por.va`\n- Public top module: `supply_supervisor_brownout_por`\n- Required public module: `supply_supervisor_brownout_por`\n\nThe submitted source must include the target artifact and public module listed above. The public top module is the module instantiated by the evaluator; optional helper modules may be included only when they are part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `voh = 0.9 V`: logic high output level.\n- `vol = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for clock and control inputs.\n- `uvlo_rise = 0.72 V`: supply rising threshold for leaving brownout.\n- `uvlo_fall = 0.64 V`: supply falling threshold for entering brownout.\n- `release_cycles = 4`: consecutive good clock cycles required before releasing reset.\n- `tr = 100 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-0fe809882b4c": {
+      "sha256": "a7a73e8f3a3fd3ec2812d748c538b8fa23866e27788358c6b86be9e9aa1ecf97",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `bandgap_trim_top.va`, `startup_detector.va`, `ptat_ctat_core.va`, `trim_controller.va`\n- Public top module: `bandgap_trim_top`\n- Required public modules: `bandgap_trim_top`, `startup_detector`, `ptat_ctat_core`, `trim_controller`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vhi = 0.9 V`: logic high output level.\n- `vlo = 0.0 V`: logic low output level.\n- `vpor = 0.72 V`: startup threshold for `vdd_sense`.\n- `vref_nom = 0.6 V`: nominal reference target.\n- `trim_lsb = 2e-3 V`: reference correction per trim-code step.\n- `ready_tol = 5e-3 V`: ready tolerance around the reference target.\n- `vth = 0.45 V`: threshold for clock, reset, and trim request.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-c5ba7629974c": {
+      "sha256": "040375e5bfef87cdbbe4682cf5d56daee95a1147dd71dfe81eb061362e0fdd6b",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Converter Static Linearity Measurement`.\n- Form: `dut`\n- Level: `L2`\n- Category: `data_converter_models`\n- Target artifact(s): `converter_static_linearity_measurement_flow.va`\n\nImplement one Verilog-A source file named\n`converter_static_linearity_measurement_flow.va`."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "- `vth = 0.45 V`: threshold for voltage-coded clock and reset logic.\n- `vfs = 0.9 V`: full-scale input range for the 4-bit converter sweep.\n- `tr = 120p`: transition smoothing time for the metric outputs."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-1d8adfdb904e": {
+      "sha256": "199bb4f7b7e6988770a0cf37cd4981dcbdecddef6fb2a1a0f0252182ec5d932d",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `segmented_dac_dem_top.va`, `thermometer_decoder.va`, `binary_decoder.va`, `dwa_rotator.va`, `dac_driver.va`\n- Public top module: `segmented_dac_dem_top`\n- Required public modules: `segmented_dac_dem_top`, `thermometer_decoder`, `binary_decoder`, `dwa_rotator`, `dac_driver`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vref = 0.9 V`: full-scale DAC reference.\n- `vth = 0.45 V`: threshold for input code bits, `clk`, and `rst`.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-4fd5fa5c69e4": {
+      "sha256": "f336e61228e878018ea66ad54d453ccd5d440cc9f3125ae7adec3392055e829b",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `image_reject_mixer_cal_loop_top.va`, `quadrature_mixer_proxy.va`, `image_cal_controller.va`\n- Public top module: `image_reject_mixer_cal_loop_top`\n- Required public modules: `image_reject_mixer_cal_loop_top`, `quadrature_mixer_proxy`, `image_cal_controller`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the top-level DUT entry point; helper modules must be part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time.\n- `image_tol = 40e-3 V`: calibration threshold."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-bf602e30adf6": {
+      "sha256": "68525efd00310377a8af3674b7a067916172828d95e80a1cc2e3a3360b2ea20d",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a mixed-signal behavioral circuit block.\n\n- Target artifacts: `pa_ampm_memory_tap_macro.va`\n- Public top module: `pa_ampm_memory_tap_macro`\n- Required public module: `pa_ampm_memory_tap_macro`\n\nThe submitted source must include the target artifact and public module listed above. The public top module is the top-level DUT entry point; optional helper modules may be included only when they are part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time.\n- `drive_start = 0.55 V`: compression onset.\n- `memory_gain = 0.2`: previous-sample memory coefficient."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-0a108bcbac0b": {
+      "sha256": "9043fd851d3481babb796d2252b3800999a5ad2e7c8de0134724f9ad8cde2670",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Config Shift Register 64b`.\n- Form: `dut`\n- Level: `L1`\n- Category: `example harness_utility_modules`\n- Target artifact(s): `config_shift_reg_64b.va`\n\nImplement `config_shift_reg_64b.va`, a clocked serial-to-parallel trim/configuration loader for voltage-coded AMS calibration and mode-control models.\n\n- This is a DUT/support-component task: implement only the requested Verilog-A source artifact.\n- Do not generate the validation harness or validation harness.\n- Preserve the public module name, port order, port directions, and parameter names.\n- Treat any public validation harness as an observable use case, not as values to hard-code into the DUT."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "| Parameter | Default | Contract |\n| --- | ---: | --- |\n| `vdd` | `0.9` | Logic-high output voltage. |\n| `vth` | `0.45` | Decision threshold for voltage-coded digital inputs. |\n| `tr` | `20p` | Output transition rise/fall smoothing time. |"
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-fc02aa6893f6": {
+      "sha256": "18e3b231699448f44a2f0e29364e17709de4dc47a063f42ef7da5e4b2224de7a",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `muxed_track_hold_array_top.va`, `track_hold_cell.va`, `readout_mux.va`\n- Public top module: `muxed_track_hold_array_top`\n- Required public modules: `muxed_track_hold_array_top`, `track_hold_cell`, `readout_mux`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the top-level DUT entry point; helper modules must be part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-36f6bceb4e23": {
+      "sha256": "a075708849a6ff84ca8fa33cbc2f0871a27d00e7fac49c7be9fb36eaab752cc9",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `interleaved_adc_skew_monitor_top.va`, `sample_pair_latch.va`, `skew_metric_core.va`\n- Public top module: `interleaved_adc_skew_monitor_top`\n- Required public modules: `interleaved_adc_skew_monitor_top`, `sample_pair_latch`, `skew_metric_core`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the top-level DUT entry point; helper modules must be part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time.\n- `skew_limit = 40e-3 V`: alarm threshold for skew proxy."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-e8a8a8406250": {
+      "sha256": "8bec64ced31fcb3a3e7e9251d05f3e1fadcc47992be2b0e2bdceab61391ac187",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a mixed-signal behavioral circuit block.\n\n- Target artifacts: `unary_dac_glitch_energy_metric.va`\n- Public top module: `unary_dac_glitch_energy_metric`\n- Required public module: `unary_dac_glitch_energy_metric`\n\nThe submitted source must include the target artifact and public module listed above. The public top module is the top-level DUT entry point; optional helper modules may be included only when they are part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-b1c7eb70378d": {
+      "sha256": "8afe53096785b9907043de6711ec812816b82314e07613ef630aab9d8fa6a5b4",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Hysteresis Trip Characterizer`.\n- Form: `dut`\n- Level: `L2`\n- Category: `comparator`\n- Target artifact(s): `hysteresis_trip_characterizer.va`\n- Public support artifact(s): `support_hysteretic_comparator.va`\n\nImplement a voltage-domain measurement component that observes a comparator\ninput ramp and output decision waveform, captures the observable rising and\nfalling trip voltages, and reports the hysteresis width."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide this overrideable public parameter:\n\n- `tr = 20p`: output transition time for reported measurement voltages."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-d1b9590b0bfd": {
+      "sha256": "6488468e43e05f2f8fc277030039824a8a0863d882b4ca4b801f02fcfaa61300",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Build a measurement L2 flow for gain extraction from a dithered differential input path through a fixed-gain differential amplifier. The benchmark judges the composed source, dither, gain, and Spectre transient flow together."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "The flow uses public testbench parameters such as `vdd=0.9`, `ACTUAL_GAIN=8.64`, `DITHER_AMP=0.014063`, a 50 MHz clock, active-low reset, and deterministic input perturbation settings. Component defaults should expose the same roles: source amplitude/frequency/noise seed, LFSR seed and reset, dither amplitude and threshold, and fixed amplifier gain."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-5de85fa7bc88": {
+      "sha256": "1362dbb3dfd79307e55ea0ca556e1ccc99ebab7eda168931eb338e33855038f1",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `ctle_adaptation_loop_top.va`, `ctle_boost_core.va`, `boost_adapt_controller.va`\n- Public top module: `ctle_adaptation_loop_top`\n- Required public modules: `ctle_adaptation_loop_top`, `ctle_boost_core`, `boost_adapt_controller`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the top-level DUT entry point; helper modules must be part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time.\n- `edge_target = 0.55 V`: desired edge metric.\n- `adapt_tol = 30e-3 V`: lock tolerance."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-fe9cc846c212": {
+      "sha256": "2ed6b3b94f723a1faed205206452a82b0a119540d2167ed0ae179696b574b0f2",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement one Verilog-A DUT artifact for `Level Shifter with Enable and Rail Tracking`.\n\n- Target artifact: `level_shifter_enable_rail_tracking.va`\n- Public top module: `level_shifter_enable_rail_tracking`\n- Task level: `L1`\n- Circuit category: `bias_reference_power_management`"
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `vss = 0.0 V`: shared ground reference\n- `vth_default = 0.45 V`: fallback threshold if `vddl` is too small\n- `min_high_rail = 0.2 V`: minimum high-side rail for valid operation\n- `tr = 100 ps`: output transition smoothing time"
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-fdf77f24b3c0": {
+      "sha256": "b3c7772e9da28f33fb68b69098d4e335c000e2efa00acd110e18cc98144f3a36",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Latched Comparator Delay`.\n- Form: `dut`\n- Level: `L1`\n- Category: `data_converter`\n- Target artifact(s): `latched_comparator_delay.va`\n\nImplement `latched_comparator_delay.va` in Verilog-A as a converter front-end\ninterface primitive: a differential analog input is sampled by a latch clock and\npublished as a supply-referenced voltage-coded decision."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters:\n\n- `td = 1n`: output delay after a latch event.\n- `tr = 100p`: output transition smoothing time.\n- `vos = 0`: deterministic input-referred offset.\n- `vn = 1m`: standard deviation of the input-referred random decision term.\n- `seed_init = 0`: seed used to initialize the random decision sequence."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-30c887d52ca0": {
+      "sha256": "aa21494376000c95a0e0929bfb45292bc03e5c5b9ff404a1172977c83178a48d",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `Event Counter Windowed 16b`.\n- Form: `dut`\n- Level: `L1`\n- Category: `example harness_utility_modules`\n- Target artifact(s): `event_counter_windowed_16b.va`\n\nImplement `event_counter_windowed_16b.va`, a voltage-domain timing/readout instrumentation block that counts event edges inside an enable window and reports the final count.\n\n- This is a DUT/support-component task: implement only the requested Verilog-A source artifact.\n- Do not generate the validation harness or validation harness.\n- Preserve the public module name, port order, port directions, and parameter names.\n- Treat any public validation harness as an observable use case, not as values to hard-code into the DUT."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "| Parameter | Default | Contract |\n| --- | ---: | --- |\n| `vdd` | `0.9` | Logic-high output voltage. |\n| `vth` | `0.45` | Decision threshold for voltage-coded digital inputs. |\n| `tr` | `20p` | Output transition rise/fall smoothing time. |"
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-76e425b8eda2": {
+      "sha256": "61db2c239acb0e170becd05de3770172e40f7590fe700058493d614ff7aec6de",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a mixed-signal behavioral circuit block.\n\n- Target artifacts: `digitally_controlled_delay_cell.va`\n- Public top module: `digitally_controlled_delay_cell`\n- Required public module: `digitally_controlled_delay_cell`\n\nThe submitted source must include the target artifact and public module listed above. The public top module is the module instantiated by the evaluator; optional helper modules may be included only when they are part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for digital inputs.\n- `delay_min = 20e-12 s`: minimum output delay.\n- `delay_lsb = 3e-12 s`: delay added per code step.\n- `tr = 100 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-145a2fa31e0f": {
+      "sha256": "b1e74b82b4634932305caf56968d5dbc1677940314933b8c6a64df48c24d29b1",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `fine_coarse_tdc_encoder_top.va`, `coarse_counter.va`, `fine_residual_metric.va`\n- Public top module: `fine_coarse_tdc_encoder_top`\n- Required public modules: `fine_coarse_tdc_encoder_top`, `coarse_counter`, `fine_residual_metric`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the top-level DUT entry point; helper modules must be part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-ca9546843cba": {
+      "sha256": "56b1c7a01224c2e2448ea40b130718e7d905e29d09b41dbe3d445ac4a5e37454",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `dfe_rx_top.va`, `slicer.va`, `feedback_filter.va`, `decision_latch.va`\n- Public top module: `dfe_rx_top`\n- Required public modules: `dfe_rx_top`, `slicer`, `feedback_filter`, `decision_latch`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vcm = 0.45 V`: slicer threshold center.\n- `vth = 0.45 V`: threshold for clock, reset, and tap-code inputs.\n- `tap_lsb = 20e-3 V`: feedback correction per tap-code step.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-32a72c70266b": {
+      "sha256": "7084cc51b138670aa8b34b6891a4e09153e1b5e975122a1f767ae427c8a089bd",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `buck_ctrl_top.va`, `soft_start.va`, `error_comparator.va`, `pwm_modulator.va`, `power_good.va`\n- Public top module: `buck_ctrl_top`\n- Required public modules: `buck_ctrl_top`, `soft_start`, `error_comparator`, `pwm_modulator`, `power_good`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for clock and control inputs.\n- `duty_min = 0.05`: minimum duty metric.\n- `duty_max = 0.95`: maximum duty metric.\n- `soft_step = 25e-3 V`: soft-start reference increment per clock.\n- `pgood_tol = 25e-3 V`: power-good tolerance.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-e031574057e8": {
+      "sha256": "8ae28c79a093cb71e4e7b2a29dc797e453183e8ac6b137524c8bd7112d94d30f",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `cdr_eye_monitor_top.va`, `edge_margin_sampler.va`, `eye_metric_filter.va`\n- Public top module: `cdr_eye_monitor_top`\n- Required public modules: `cdr_eye_monitor_top`, `edge_margin_sampler`, `eye_metric_filter`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the top-level DUT entry point; helper modules must be part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time.\n- `eye_min = 0.55 V`: lock-hint threshold.\n- `edge_window = 600 ps`: timing window used to classify nearby data edges around a sampling edge."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-a81b685343ea": {
+      "sha256": "c64a59e107b5bea9b898e3d07a03c5f98ea652f6558c64e2fb7d05f56d6ddf67",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `capacitor_mismatch_cal_engine_top.va`, `cal_code_accumulator.va`, `correction_metric_dac.va`\n- Public top module: `capacitor_mismatch_cal_engine_top`\n- Required public modules: `capacitor_mismatch_cal_engine_top`, `cal_code_accumulator`, `correction_metric_dac`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the top-level DUT entry point; helper modules must be part of the returned DUT source package, not verification harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high and upper output rail.\n- `vss = 0.0 V`: logic low and lower output rail.\n- `vcm = 0.45 V`: signal common-mode reference.\n- `vth = 0.45 V`: threshold for voltage-coded control inputs.\n- `tr = 200 ps`: output transition smoothing time.\n- `err_tol = 20e-3 V`: completion tolerance.\n- `corr_lsb = 6e-3 V`: correction step."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-7ee4aec7aad2": {
+      "sha256": "4d4008abf2a92e9bb35f5ccc4f871b49a9d6472a4c70925c8a73a4d6e5e8550a",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement the requested Verilog-A artifact for `CPPLL Tracking Reacquire Timer`.\n- Form: `dut`\n- Level: `L2`\n- Category: `pll_clock_timing_systems`\n- Target artifact(s): `cppll_timer_ref.va`, `ref_step_clk.va`\n\nImplement the two-file DUT bundle in Verilog-A: `cppll_timer_ref.va` and\n`ref_step_clk.va`."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "| Parameter | Default | Unit / range | Contract |\n| --- | ---: | --- | --- |\n| `div_ratio` | `8` | integer, `[1:inf)` | DCO rising-edge division ratio used to generate `fb_clk`: `fb_clk` toggles on every `div_ratio`-th DCO rising edge, so one `fb_clk` period spans `2 * div_ratio` DCO periods. |\n| `f_center` | `800.0e6` | Hz, `(0:inf)` | DCO center frequency at the common-mode control voltage. |\n| `kvco_hz_per_v` | `350.0e6` | Hz/V, `(0:inf)` | DCO frequency sensitivity to `vctrl_mon`. |\n| `f_min` | `300.0e6` | Hz, `(0:inf)` | Lower clamp for generated DCO frequency. |\n| `f_max` | `1.6e9` | Hz, `(0:inf)` | Upper clamp for generated DCO frequency. |\n| `kp` | `8.0e6` | nonnegative loop scale, `[0:inf)` | Proportional phase-error correction scale. |\n| `ki` | `1.2e5` | nonnegative loop scale, `[0:inf)` | Accumulated phase-error correction scale. |\n| `integ_min` | `-0.45` | V-equivalent correction | Lower bound for the integral correction state. |\n| `integ_max` | `0.45` | V-equivalent correction | Upper bound for the integral correction state. |\n| `vctrl_init` | `0.45` | V | Initial control-voltage monitor value before tracking settles. |\n| `tedge` | `20 ps` | time, `(0:inf)` | Rise/fall smoothing for voltage-coded outputs. |\n| `lock_tol` | `0.4 ns` | time, `(0:inf)` | Phase-error tolerance for counting lock streaks. |\n| `lock_count_target` | `6` | integer, `[1:inf)` | Number of consecutive in-tolerance events before asserting `lock`. |\n\nSupport legal overrides of these public `cppll_timer_ref` parameters.\n\nThe bundled reference-step clock module uses public defaults\n`period_pre = 20 ns`, `period_post = 19.5 ns`, `t_switch = 2 us`, and\n`tedge = 100 ps`. It is a required DUT-bundle artifact for this L2 system\nflow, and the CPPLL model must work when a legal nearby reference cadence is\napplied on `ref_clk`.\n\n| Parameter | Default | Unit / range | Contract |\n| --- | ---: | --- | --- |\n| `period_pre` | `20 ns` | time, `(0:inf)` | `CLK` period before the cadence step. |\n| `period_post` | `19.5 ns` | time, `(0:inf)` | `CLK` period after the cadence step. |\n| `t_switch` | `2 us` | time, `[0:inf)` | Cadence-step time: `CLK` half periods that start at a toggle at or after `t_switch` use `period_post`. |\n| `tedge` | `100 ps` | time, `(0:inf)` | Rise/fall smoothing for `CLK`. |\n\n`ref_step_clk` drives `CLK` as a 50% duty-cycle voltage-coded clock between\n`VSS` and `VDD`. `CLK` starts low and toggles every half period, so its first\nrising edge is at `period_pre / 2`. Support legal overrides of these\n`ref_step_clk` parameters."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-51156613fa65": {
+      "sha256": "eb960cb63b273400c7e320b7637c4fef4bd22bc52450f8016c549f49a7121a63",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `dcc_top.va`, `duty_meter.va`, `trim_controller.va`, `delay_pair.va`\n- Public top module: `dcc_top`\n- Required public modules: `dcc_top`, `duty_meter`, `trim_controller`, `delay_pair`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for clock and control inputs.\n- `target_duty = 0.5`: desired high-time fraction.\n- `duty_tol = 0.03`: lock tolerance around `target_duty`.\n- `trim_step = 5e-12 s`: falling-edge delay added by one trim-code step.\n- `tr = 100 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-516ca477d310": {
+      "sha256": "2c6630680cf38ddddaf44709f4d937e6de49002b12f33c9e7501134e706453a2",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a mixed-signal behavioral circuit block.\n\n- Target artifacts: `quadrature_phase_interpolator.va`\n- Public top module: `quadrature_phase_interpolator`\n- Required public module: `quadrature_phase_interpolator`\n\nThe submitted source must include the target artifact and public module listed above. The public top module is the required deliverable boundary; optional helper modules may be included only when they are part of the DUT source package, not external stimulus or harness code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for clocks, reset, and code bits.\n- `unit_delay = 5e-12 s`: phase step represented by one interpolation code.\n- `tr = 100 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-58f034da10fe": {
+      "sha256": "e2a8b119c3143eb95bf24bbb11889d96005a9f217722a549ad6f6df837ee9403",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task Contract",
+          "text": "Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.\n\n- Target artifacts: `cdr_top.va`, `bbpd.va`, `loop_filter_code.va`, `phase_rotator.va`\n- Public top module: `cdr_top`\n- Required public modules: `cdr_top`, `bbpd`, `loop_filter_code`, `phase_rotator`\n\nThe submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the only module instantiated by the evaluator; helper modules must be part of the DUT source package, not testbench code."
+        },
+        {
+          "heading": "Public Parameter Contract",
+          "text": "Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:\n\n- `vdd = 0.9 V`: logic high output level.\n- `vss = 0.0 V`: logic low output level.\n- `vth = 0.45 V`: threshold for clock, edge, reset, and enable inputs.\n- `phase_center = 16`: reset phase code.\n- `unit_phase_delay = 5e-12 s`: recovered-clock delay represented by one phase-code step.\n- `lock_window = 2`: maximum edge-code error counted as locked.\n- `tr = 200 ps`: output transition smoothing time."
+        },
+        {
+          "heading": "Required Behavior",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-250873fedb9d": {
+      "sha256": "c3d1e3a38053ca26922bc9af860296e659bc10f398d5ec80657136a9f47ae4a7",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task-Specific Public Description",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-bd077e517813": {
+      "sha256": "73f6fffa0a6f9cc01f7317be9ba463d8d4aa7e21b01531abf4c8a7d089bda84a",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Public L2 Behavior Contract",
+          "text": "This row is an ADPLL lock and ratio-hop flow. The testbench must expose the\npre-hop ratio, post-hop ratio, and reacquired lock:\n\n1. Drive `ref_clk` as a stable 0 V/0.9 V periodic reference clock.\n2. Drive `ratio_ctrl` initially near 4 and step it later to near 6.\n3. Run long enough before the step for `lock` to assert and the pre-hop\n   `vout`/`ref_clk` ratio to be visible.\n4. Run long enough after the step for the loop to reacquire lock and the\n   post-hop ratio to be visible.\n5. Save `ref_clk ratio_ctrl fb_clk vout vctrl_mon lock` exactly.\n\nDo not generate checker logic; the evaluator derives the pre-hop ratio,\npost-hop ratio, `vout`/`fb_clk` divider relation, `fb_clk`/`ref_clk` tracking,\nand lock reacquisition from these saved waveforms. The supplied DUT is expected\nto use feedback timing in its control and lock decision, so the testbench should\nnot replace `fb_clk` with an independent source."
+        },
+        {
+          "heading": "Task-Specific Public Description",
+          "text": ""
+        }
+      ]
+    },
+    "src-2c435dbec9ec": {
+      "sha256": "edbc1bf6c3535f8bb3b4e0c1f1284621bec095d5af3d25b048c405b655bbeeb0",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Public L2 Behavior Contract",
+          "text": "This row is a composed SAR ADC plus weighted DAC loop. The testbench must make\nthe sample, conversion code, and reconstruction visible:\n\n1. Drive a full-swing analog input that produces broad 8-bit code coverage\n   after reset.\n2. Drive the sampling/conversion clock long enough for many completed\n   conversions.\n3. Save the held sample `vin_sh`, the ADC's `vin_sample`, all eight SAR output\n   bits, the trial monitor outputs, and the weighted DAC output `vout`.\n4. Feed `vin_sh` into the SAR ADC input, then connect the SAR output bits into\n   the weighted DAC path so `vout` is reconstructable from the saved code.\n\nThe expected public relation is: `vin` is sampled to `vin_sh`/`vin_sample`, the\nSAR trial monitors show an MSB-to-LSB approximation sequence, the final SAR bits\nencode that held input, and `vout` follows the weighted reconstruction of the\nsame saved code. Do not generate checker logic; the evaluator checks trial\nvisibility, comparator/trial-DAC consistency, coverage, monotonicity, and\ncode-to-DAC consistency.\n\nConcrete public stimulus guidance:\n\n- Use `parameters vdd=0.9 fin=100e3`.\n- Drive `clks` as a 50 MHz pulse clock with 0 V/`vdd` levels.\n- Keep active-low `rst_n` low for the first few clock cycles, then high for the\n  rest of the 20 us transient.\n- Drive `vin` with a full-swing sine around mid-supply, for example\n  `sinedc=0.45`, `ampl=0.45`, and `freq=fin`, so many post-reset samples cover\n  the ADC range.\n- The testbench should instantiate all three supplied modules in the chain:\n  `vin -> sh_ideal -> sar_adc_weighted_8b -> dac_weighted_8b -> vout`."
+        },
+        {
+          "heading": "Task-Specific Public Description",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-efc223caaf76": {
+      "sha256": "3933e50795d06248c313c53fa57320e675cb82c699129416cf43bf7879cc727b",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task-Specific Public Description",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-aef15c29cd60": {
+      "sha256": "7dc678c1f733f7df4edc2faf0426763930e9b240e8fc441d3797e40851415afe",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Public Behavioral Targets",
+          "text": "- Treat vin as a supply ramp. Keep out reset-asserted high while reset input is high or vin is below about 0.62 V.\n- After vin is power-good and reset is released, wait about four rising clock updates before deasserting out low.\n- During the release delay, metric may indicate partial release; after release, metric should be high.\n- If supply falls below threshold or reset asserts again, immediately assert out high and clear the release delay."
+        },
+        {
+          "heading": "Task-Specific Public Description",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    },
+    "src-d04bf21b5add": {
+      "sha256": "efb56220927f0bbdc4867b109c9d1bd25966cebff4cdfdfcd6d842a8ceaa70ed",
+      "identity_verified_locally": true,
+      "review_scope": "任务、参数、行为段及重点接口/全文；未审阅全部实现与评分器",
+      "supplemental_public_context": [
+        {
+          "heading": "Task-Specific Public Description",
+          "text": "[该段已保留于 inventory.jsonl 对应来源的 behavior_excerpt。]"
+        }
+      ]
+    }
+  },
+  "coverage": {
+    "main_candidates": 108,
+    "conditional_reserves": 1,
+    "primary_contract_identities_verified": 109,
+    "selected_comment_sources": 107,
+    "source_availability": {
+      "repository-contained": 73,
+      "local-only": 36
+    },
+    "runtime_executed": false,
+    "full_implementation_audit": false,
+    "new_independent_review": false
+  },
+  "limitations": [
+    "本轮是作者对外部意见的逐项处理，不等于Grok已审阅本次回复或新增独立二审。",
+    "local-only原件在维护者机器按登记哈希核对；补充公开上下文不能替代完整原件发布。",
+    "原历史behavior_excerpt保持不变，补充参数与后续行为段在source_reviews中单列。"
+  ]
+}
