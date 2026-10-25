@@ -426,9 +426,11 @@ def compile_model(
     # IR33 emits initial_step as an event and keeps declaration seeds in
     # State.initial. The body runs once at DC initialization. It is not a
     # timer and does not consume a scheduled-event slot.
-    initial_events = [
-        event for event in ir["events"] if event["trigger"]["kind"] == "initial_step"
-    ]
+    initial_by_index = {
+        index: event for index, event in enumerate(ir["events"])
+        if event["trigger"]["kind"] == "initial_step"
+    }
+    initial_events = list(initial_by_index.values())
     ir["events"] = [
         event for event in ir["events"] if event["trigger"]["kind"] != "initial_step"
     ]
@@ -575,6 +577,30 @@ def compile_model(
                 )
         return "\n".join(body)
 
+    # IR event gates refer to the original event indices, before the scheduled
+    # event table excludes initial_step. Preserve their position relative to
+    # occurrence bindings: both reads of input and reads of initialized state
+    # must observe the value at that source statement.
+    needed_bindings = emitter.ready_bindings.copy()
+    emitter.ready_bindings = set()
+    initial_program = []
+    emitted_initial = set()
+    for procedure in ir.get("procedures") or []:
+        for statement in procedure["body"]:
+            action = statement["action"]
+            if action["kind"] == "real_bind" and action["binding"] in needed_bindings:
+                index = action["binding"]
+                initial_program.append(
+                    f"locals[{index}] = {emitter.expr(action['value'])};"
+                )
+                emitter.ready_bindings.add(index)
+            elif action["kind"] == "event_gate" and action["event"] in initial_by_index:
+                index = action["event"]
+                initial_program.append(statements(initial_by_index[index]["body"]))
+                emitted_initial.add(index)
+    if emitted_initial != set(initial_by_index) or emitter.ready_bindings != needed_bindings:
+        raise Unsupported("initialization requires ordered procedure bindings and event gates")
+
     bodies = []
     for ei, event in enumerate(events):
         suffix = "cur->armed=0;" if ei == cross_index else f"++cur->ticks[{ei}];"
@@ -653,7 +679,7 @@ def compile_model(
         "TTOL": number(ttol),
         "VTOL": number(vtol),
         "INITIAL": "\n        ".join(initial),
-        "INITIAL_STEP": "\n".join(statements(event["body"]) for event in initial_events),
+        "INITIAL_PROGRAM": "\n".join(initial_program),
         "PARAM_CHECKS": "\n        ".join(param_checks),
         "GUARD": emitter.expr(trigger["guard"]) if trigger else "ad_const(0.0)",
         "INPUTS": "\n    ".join(

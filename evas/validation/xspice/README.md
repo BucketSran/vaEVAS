@@ -2,6 +2,8 @@
 
 本目录验证 EVAS 公开 CLI 生成的模型在真实 ngspice 网表中的行为。参考来自实际原生 Spectre 执行；不会自动启动服务器、获取许可证或把复制的参考算作新运行。
 
+当前代码适配 IR33。下文 r53/P0/P1 的 Spectre 次数与结论来自 IR28 历史收据；当前版本的有限初始化复验单列于[IR33 收据](../../../experiments/backends/xspice-entry/ir33-initialization.json)，不替代完整同源对照。
+
 从仓库根目录执行：
 
 ```sh

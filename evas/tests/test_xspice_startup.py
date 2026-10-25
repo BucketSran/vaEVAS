@@ -2,6 +2,8 @@
 GUARDS = ["LANG", "TIMER", "TRANSITION", "COMPOSE"]
 
 from pathlib import Path
+import re
+import subprocess
 import tempfile
 import unittest
 
@@ -48,6 +50,63 @@ class ZeroPeriodicAdmission(unittest.TestCase):
                 else:
                     compile_model({'clock.va':source},Path(d)/'model',parameters=params)
                     self.assertEqual(len(json.loads((Path(d)/'model/ir.json').read_text())['events']),42)
+
+
+class InitialProcedureExecution(unittest.TestCase):
+    def check_initial_states(self, body, expected):
+        # Execute the public artifact's DC state program with a C compiler.
+        # Poison locals so a read before assignment fails deterministically.
+        # This isolates source ordering from the optional ngspice SDK.
+        source = ('`include "disciplines.vams"\nmodule m(u,y); input u; output y; '
+                  'electrical u,y; real a,q,z; analog begin ' + body + ' end endmodule')
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            meta = compile_model({"initial.va": source}, root / "model")
+            generated = (root / "model/cfunc.mod").read_text()
+            defines = "\n".join(re.findall(r"^#define .*$", generated, re.MULTILINE))
+            helpers = generated.split("static Dual ad_const", 1)[1].split("static void request", 1)[0]
+            dc = generated.split("if(ANALYSIS==MIF_DC) {", 1)[1].split("cur->guard=", 1)[0]
+            indices = {name: index for index, name in enumerate(meta["state_names"])}
+            assertions = "\n".join(
+                f'if (!isfinite(states[{indices[name]}].v) || '
+                f'fabs(states[{indices[name]}].v - ({value})) > 1e-12) return 1;'
+                for name, value in expected.items()
+            )
+            harness = '''#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+''' + defines + '''
+#define PARAM(name) 0
+typedef struct { double v,d[IV]; } Dual;
+typedef struct { double values[SV]; } Frame;
+typedef struct { Frame previous_trial; int dc_injected; } Diagnostics;
+static void fail(const char *message) { fputs(message, stderr); exit(2); }
+static Dual ad_const''' + helpers + '''
+int main(void) {
+ Frame storage, *cur=&storage;
+ Diagnostics diagnostic={0}, *d=&diagnostic;
+ Dual inputs[IV], states[SV], locals[64]; int i;
+ for (int trial=0; trial<2; ++trial) {
+  double input=trial ? -0.625 : 1.25;
+  inputs[0]=ad_input(input,0);
+  memset(cur,0x55,sizeof(*cur));
+  for(i=0;i<64;++i)locals[i]=ad_const(NAN);
+''' + dc + assertions + '\n }\n return 0;\n}\n'
+            (root / "check.c").write_text(harness)
+            compiled = subprocess.run(["cc", "-std=c99", str(root / "check.c"), "-lm", "-o", str(root / "check")], capture_output=True, text=True, timeout=30)
+            self.assertEqual(compiled.returncode, 0, compiled.stderr)
+            run = subprocess.run([str(root / "check")], capture_output=True, text=True, timeout=10)
+            self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+
+    def test_initial_event_reads_preceding_input_snapshot(self):
+        self.check_initial_states('a=V(u); @(initial_step) q=a; V(y)<+q;', {"q": "input"})
+
+    def test_local_between_initial_events_reads_updated_state(self):
+        self.check_initial_states('@(initial_step) q=2; a=q*V(u); @(initial_step) z=a; V(y)<+z;', {"q": "2", "z": "2*input"})
+
+    def test_later_initial_write_does_not_recompute_earlier_snapshot(self):
+        self.check_initial_states('@(initial_step) q=2; a=q*V(u); @(initial_step) begin q=9; z=a; end V(y)<+z;', {"q": "9", "z": "2*input"})
 
 
 if __name__ == "__main__":

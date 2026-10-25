@@ -124,10 +124,9 @@ void cm_evas_ir(ARGS) {
  if(ANALYSIS==MIF_DC) {
   memset(cur,0,sizeof(Frame));@INITIAL@
   for(i=0;i<NS;++i)states[i]=ad_const(cur->values[i]);
-  @INITIAL_STEP@
+  @INITIAL_PROGRAM@
   if(TEST_HOOKS && PARAM(evas_bad_state) && PARAM(evas_inject_dc) && d->dc_injected)
    for(i=0;i<NS;++i)states[i]=ad_const(d->previous_trial.values[i]);
-  @LOCALS@
   @ZERO_BODY@
   @INTEGER_CHECKS@
   for(i=0;i<NS;++i){if(!isfinite(states[i].v))fail("nonfinite initial state");cur->values[i]=states[i].v;}

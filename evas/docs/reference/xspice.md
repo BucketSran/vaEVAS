@@ -1,6 +1,6 @@
 # 将 VA 模型编译成 ngspice XSPICE 模型
 
-`evas-rebuild xspice` 把限定的电压模型编译成 XSPICE 源文件，再用匹配的 ngspice SDK 构建动态库。网表、器件、负载、Newton 迭代和时间步由 ngspice 求解；事件状态与输出过渡由生成模型实现。编译不调用 EVAS Rust 内核。当前本地后端版本为2，固定依赖 EVAS `c8dc2a7b`、IR28；尚未提交或发布。
+`evas-rebuild xspice` 把限定的电压模型编译成 XSPICE 源文件，再用匹配的 ngspice SDK 构建动态库。网表、器件、负载、Newton 迭代和时间步由 ngspice 求解；事件状态与输出过渡由生成模型实现。编译不调用 EVAS Rust 内核。当前后端版本为2，接入仓库的 IR33 前端。恢复与初始化顺序修复在 [PR #248](https://github.com/BucketSran/vaEVAS/pull/248) 交付。`c8dc2a7b` / IR28 是下述原生对照的历史版本，不是当前依赖或当前验收结果。
 
 ## 运行采样保持与反馈网表
 
@@ -93,7 +93,7 @@ VA 的端口声明顺序仍保存在 `ports`，展开后的连接保存在 `inst
 
 每次 Newton 调用与时间回退都从 ngspice 的上一已接受帧复制候选。VA 状态、cross 负号侧 arming、timer 游标、延迟目标队列与活动边沿一起交由 host 接受或回退。普通执行不从静态诊断对象恢复物理状态。
 
-纯时钟的DC候选每次从常量初始化重建，只执行起点精确为0的独立timer，然后用最终状态建立transition种子。零周期游标随首个接受帧交给瞬态，不能再次消费。正起点即使只有1fs也不归入零批次；正延迟才产生启动边沿。没有静态物理started标志。
+每个DC候选从声明初值重建，再按 IR33 过程的源码顺序交错执行局部绑定与 `initial_step` 事件。例如 `a=V(u); @(initial_step) q=a;` 捕获当次输入；前一初始事件写入的状态可供后续绑定读取，后续写入不重算早先快照。之后只执行起点精确为0的独立timer，用最终状态建立transition种子。零周期游标随首个接受帧交给瞬态，不能再次消费。正起点即使只有1fs也不归入零批次；正延迟才产生启动边沿。没有静态物理started标志。
 
 `cross` 同时检查时间和表达式容差，不能满足时请求回退；host 分辨率不足则明确拒绝。固定 timer 预先请求日程断点，在指定时刻或稍后触发，超过原容差仍回退。数学依据和有限验证边界见[事件手册](../math/events.md#xspice-的有限事件出口)。
 
@@ -107,11 +107,13 @@ VA 的端口声明顺序仍保存在 `ports`，展开后的连接保存在 `inst
 
 `--test-hooks` 仅供回归，允许 `evas_inject=true`、`evas_inject_time=...`、强制DC重试的`evas_inject_dc=true`和故意错误的 `evas_bad_state=true`。没有显式编译开关时，这些故障请求会拒绝；注入还要求独立 trace 路径。`evas_trace_dc=true`追加DC候选，默认追踪仍仅含瞬态；timer另记录各自名义期限和宿主请求点。
 
-固定的 [XSPICE 验收入口](../../validation/xspice/README.md)保留实际 Spectre 参考输入校验、独立 RC/折线答案、全部已接受波形评分、三类同进程拒步及三个泄漏负控。负控的最终波形可能仍达标，因此还检查状态和已接受历史继承。执行来源、两档设置差异、校准与本轮限制见[实验入口](../../../experiments/backends/xspice-entry/README.md)。
+固定的 [XSPICE 验收入口](../../validation/xspice/README.md)保留实际 Spectre 参考输入校验、独立 RC/折线答案、全部已接受波形评分、三类同进程拒步及三个泄漏负控。负控的最终波形可能仍达标，因此还检查状态和已接受历史继承。执行来源、两档设置差异、校准与历史执行限制见[实验入口](../../../experiments/backends/xspice-entry/README.md)。
 
-新增 r53 检查使用[六份具名样本](../../examples/xspice/r53/sources.json)，覆盖单路及四路采样、整数回绕、带参考端四相时钟、时钟采样链路，以及连续 tanh 与导数。它们是 benchmark 整理样本。115与068修复后，固定七例同源 Spectre 对照7/7通过；原配对超差、收敛失败及各次重试仍保留。这是上述有限电路的结果，不扩大为完整兼容。
+以下 r53、P0、P1 数字均为 **IR28 历史验收**，保留原源码与工具身份；本次 IR33 恢复未重跑这些完整 Spectre 对照，不据此声称当前版本已通过它们。当前验证见[IR33 修复收据](../../../experiments/backends/xspice-entry/ir33-initialization.json)。
 
-[P0专项](../../validation/xspice/README.md#p0-input-aliases)复用已有别名能力，固定六例ngspice/Spectre同源验收6/6通过，含动态阈值、事件保持、RC全轨迹及原近零边界。微例沿用0.1ps/0.1mV/边沿5mV独立预算，近零保留原50ps/20µV；各自分母不并入r53七例。两份别名VA保持前次探针身份，失败校准及重分析均保留，未提交发布。
+历史 r53 检查使用[六份具名样本](../../examples/xspice/r53/sources.json)，覆盖单路及四路采样、整数回绕、带参考端四相时钟、时钟采样链路，以及连续 tanh 与导数。它们是 benchmark 整理样本。115与068修复后，固定七例同源 Spectre 对照7/7通过；原配对超差、收敛失败及各次重试仍保留。这是上述有限电路的结果，不扩大为完整兼容。
+
+[P0专项](../../validation/xspice/README.md#p0-input-aliases)复用已有别名能力，固定六例ngspice/Spectre同源验收6/6通过，含动态阈值、事件保持、RC全轨迹及原近零边界。微例沿用0.1ps/0.1mV/边沿5mV独立预算，近零保留原50ps/20µV；各自分母不并入r53七例。两份别名VA保持前次探针身份，失败校准及重分析均保留。
 
 [P1专项](../../validation/xspice/README.md#p1-parameterized-clock)使用已确认的[1800ns标准整理版](../../examples/xspice/clock1800/README.md)，固定15例ngspice/Spectre同源对照15/15通过。零起点最终初态、32/42路、跨周期六输出、独立同刻及近邻、两实例、1000周期和stop边界分别验收。原件原样、11通道采样器、一般共享状态及动态timer仍未取得资格。
 
