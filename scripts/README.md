@@ -234,6 +234,49 @@ python3 -B scripts/run_regression.py --merge runs/<task>/shard0.json runs/<task>
 [分阶段持续集成](https://martinfowler.com/articles/continuousIntegration.html#KeepTheBuildFast)与
 [测试范围和隔离](https://testing.googleblog.com/2010/12/test-sizes.html)。
 
+### 原始观察、基线提案与合入门禁
+
+`run_regression.py` 的 schema 3 保留方法、子测试、测试体及清理阶段的诊断。
+普通循环失败记录当次循环变量；无法稳定序列化的条件标为 `identity_complete=false`，
+不能自动按旧失败豁免。没有子测试的通过方法只记录方法完成，不推定内部断言已逐项认证。
+`successful` 沿用 unittest 原始结论，预期失败和跳过仍可令该字段为真。
+`collection_complete` 另记导入和收集是否完整。空集合、缺片、中断或覆盖不符不能通过完整性检查。
+
+完整的失败分片仍能合并；合并命令保留失败诊断并返回 1。
+旧 schema 2 仅保留原有只读合并规则，不补造子条件或转成可信基线。
+`metadata` 绑定判据文件、语言配置、采集器、运行环境和模块选择。
+判据身份覆盖 `evas/tests`、`evas/validation`、`evas/examples`、`experiments` 的实际文件，
+排除缓存、构建输出、临时运行及基线目录。生产源码与内核另记在 `source_identity`。
+CI 的运行配置同时绑定完整执行身份中的实际编译器、Cargo 及构建配置，内核内容归 DUT 身份。
+无法确定状态的 `while` 调用和属性条件不授予稳定身份，子测试沿用这个限制。
+这是保守的输入边界，身份变化需要独立审核相应基线配置。
+
+CI 先生成完整输入身份，再用 `--input-identity` 绑定采集报告。
+`ci_evidence.py collect --raw-exit` 检查输入未漂移、报告完整以及原始退出码一致。
+`ci_evidence.py` 统一维护内核选择、运行配置和额外证据输出变量。
+采集器使用同一份表，其内容哈希纳入采集器身份。Python 配置读取及 Rust 运行配置读取有消费者覆盖检查；
+新增键或无法解析的动态读取须先补齐审核。所有登记内核选择及实际文件字节纳入执行身份，
+缺失选择文件拒绝身份生成和复用。未设置与空值分别记录。
+请求额外证据文件时强制执行，不复用成功报告；性能专用 `EVAS_PROFILE_INPUTS` 不在此回归缓存范围内。
+采集成功只表示数据可用。`record` 和 `verify` 只接受非空、全部实际通过的独立分片；
+跳过、预期失败和已知失败均不能写入成功缓存。恢复与保存缓存分别执行。
+
+当前 PR2a 的 CI 仅承担完整采集和覆盖对账。汇总同时显示原始结果、固定分母、
+`gate_active=false`、`merge_allowed=null` 和 `manual_review_required=true`。
+合入仍需固定候选的人工比较与独立审查；CI 采集成功不表示无回退或语义合格。
+PR2b 将从已审核的可信 base 同时读取门禁代码与基线后激活自动准入，缺任一项即拒绝。
+
+```sh
+python3 -B scripts/regression_gate.py validate runs/<task>/complete.json
+python3 -B scripts/regression_gate.py propose runs/<task>/complete.json --source-identity runs/<task>/source.json > runs/<task>/baseline-proposal.json
+python3 -B scripts/regression_gate.py compare runs/<task>/complete.json --repo . --trusted-base <full-commit-id> --inactive
+```
+
+提案默认待审，不自动信任工作树或同一 PR 内修改的基线。
+比较器只接受完整可信提交中的 `evas/validation/baselines/regression-v1.json`。
+原通过条件消失、同一方法由失败 A 换成失败 B、新增非通过或条件身份不明均阻断。
+已审核且条件不变的失败可与原始 `successful=false` 并存；这不授予能力资格。
+
 ### 找出回归慢在哪里
 
 Python 回归在 Actions 摘要列出最慢的 20 个测试，并保留 `python-regression-timings` 附件。
