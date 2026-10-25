@@ -173,6 +173,15 @@ impl Resolver<'_> {
             // Callers separately validate state/history ownership and semantics.
             // This walk only retains the complete original voltage dependency set.
             Expression::State { .. } | Expression::Operator { .. } => {}
+            // IR33 samples an affine probe through a real boundary. The
+            // dependency is the inner voltage, same as expression::predicate_nodes.
+            Expression::RealBoundary { value, .. } | Expression::Forcing { value, .. } => {
+                self.node_dependencies(value, out)?;
+            }
+            Expression::RealBinary { left, right, .. } => {
+                self.node_dependencies(left, out)?;
+                self.node_dependencies(right, out)?;
+            }
             _ => return Err(unsupported("unsupported initial voltage dependency")),
         }
         Ok(())
@@ -181,6 +190,20 @@ impl Resolver<'_> {
     fn bind(&mut self, e: &Expression, owner: &str, target: bool) -> Result<Expression, Error> {
         self.charge()?;
         Ok(match e {
+            Expression::RealBoundary { value, .. } | Expression::Forcing { value, .. } => {
+                self.bind(value, owner, target)?
+            }
+            Expression::RealBinary {
+                operation,
+                left,
+                right,
+                origin,
+            } => Expression::RealBinary {
+                operation: *operation,
+                left: Box::new(self.bind(left, owner, target)?),
+                right: Box::new(self.bind(right, owner, target)?),
+                origin: origin.clone(),
+            },
             Expression::State { state } => {
                 if self
                     .program
@@ -307,6 +330,12 @@ impl Resolver<'_> {
     fn ready(&self, e: &Expression, target: bool) -> bool {
         match e {
             Expression::Affine { terms, .. } => !target || terms.iter().all(|t| t.node == 0),
+            Expression::RealBoundary { value, .. } | Expression::Forcing { value, .. } => {
+                self.ready(value, target)
+            }
+            Expression::RealBinary { left, right, .. } => {
+                self.ready(left, target) && self.ready(right, target)
+            }
             Expression::State { state } => self.states.get(*state).is_some_and(Option::is_some),
             Expression::Operator { operator } if !target => {
                 match self.program.operators.get(*operator) {
@@ -331,6 +360,11 @@ impl Resolver<'_> {
                     match e {
                         Expression::Affine { terms, .. } => {
                             terms.iter().all(|t| nodes.contains(&t.node))
+                        }
+                        Expression::RealBoundary { value, .. }
+                        | Expression::Forcing { value, .. } => known(value, nodes),
+                        Expression::RealBinary { left, right, .. } => {
+                            known(left, nodes) && known(right, nodes)
                         }
                         Expression::State { .. } => true,
                         Expression::Add { left, right }

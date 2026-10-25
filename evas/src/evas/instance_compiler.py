@@ -310,6 +310,13 @@ class InstanceCompiler:
         return self.program_facts.query(expression)
 
     def program_real_constant(self, expression):
+        # Declaration/initial seeds are often already bare floats (integer n=0)
+        # or closed Affines. Querying a non-Affine scalar used to activate the
+        # held-target aggregate audit and then refuse large legal timer decks.
+        if isinstance(expression, (int, float)):
+            return float(expression) if math.isfinite(expression) else None
+        if isinstance(expression, Affine) and not expression.terms:
+            return expression.constant if math.isfinite(expression.constant) else None
         fact = self.program_real_closed(expression)
         return fact.value if fact.finite else None
 
@@ -359,8 +366,12 @@ class InstanceCompiler:
         self.deferred_seed_names = seed_storage(self.model, self.compilation.native_audit)
         held_model = ordinary_held_state(self)
         if held_model is not None:
-            # Original-source prefix routes do not see the rewritten roles.
-            self.model, self.event_body_source_model = held_model, None
+            # Keep original source identity for admit/scratch/prefix; execute
+            # the rewritten held model. Clearing the source made those proofs
+            # fall through onto rewritten roles.
+            if self.event_body_source_model is None:
+                self.event_body_source_model = self.model
+            self.model = held_model
         self.closed_initial_math = {}
         self.initial_math_source_model = self.model
         # Inspect source writers before scalarization unrolls even zero-trip

@@ -322,6 +322,22 @@ def elaborate_loops(model: Model, parameter):
     if model.procedure:
         # Expand the one complete source sequence, then derive compatibility
         # views. Do not try to recover lexical order by sorting source tokens.
+        # Charge model.initial plus monitored/continuous leaves under one budget
+        # first (INITIAL_STATIC_LOOP_CONTRACT): pure initial_step bodies are not
+        # leaves of the procedure Event wrapper, and mixed bodies count twice.
+        # Zero-trip validation of model.initial also happens on that pass.
+        monitored, stripped_initial = [], False
+        for statement in model.procedure:
+            if isinstance(statement, Event):
+                leaves = tuple(t for t in statement.triggers if t.kind != 'initial_step')
+                stripped_initial |= len(leaves) != len(statement.triggers)
+                if leaves:
+                    monitored.append(replace(statement, triggers=leaves))
+                continue
+            monitored.append(statement)
+        if model.initial or stripped_initial:
+            elaborate_loops(replace(model, analog=monitored, initial=list(model.initial),
+                                    events=[], procedure=()), parameter)
         full = elaborate_loops(replace(model, analog=list(model.procedure),
                                        initial=[], events=[], procedure=()), parameter)
         procedure = tuple(full.analog)
@@ -779,21 +795,30 @@ def elaborate_loops(model: Model, parameter):
                 result.append(replace(statement, left=substitute(statement.left,indices), right=substitute(statement.right,indices),
                                       then_body=body(statement.then_body,indices,depth+1,runtime=runtime,in_runtime_loop=in_runtime_loop),
                                       else_body=body(statement.else_body,indices,depth+1,runtime=runtime,in_runtime_loop=in_runtime_loop), token=origin(statement.token,indices)))
+            elif isinstance(statement, Event):
+                # Pure initial_step wrappers are not leaves: initial+analog share
+                # one 4096 budget and must still admit 2048+2048. Monitored
+                # timer/cross/final_step Events keep the historical leaf charge
+                # so expansion overflow still reports statement budget before
+                # later compile work can hit the aggregate audit.
+                monitored = any(t.kind in ("timer", "cross", "final_step") for t in statement.triggers)
+                if monitored:
+                    count += 1
+                    if count > budget:
+                        fail('elaborated statement budget (4096) exceeded', statement.token, code="resource_budget")
+                event_bodies.append((statement.body, indices))
+                result.append(replace(statement, token=origin(statement.token,indices),
+                    body=body(statement.body,indices,depth+1,runtime=all(t.kind in ("timer", "cross", "final_step") for t in statement.triggers),
+                              in_runtime_loop=has_runtime_control(statement.body)), triggers=tuple(
+                        replace(leaf, token=origin(leaf.token,indices), arguments=tuple(
+                            substitute(arg,indices) if arg is not None else None for arg in leaf.arguments))
+                        for leaf in statement.triggers)))
             else:
                 if isinstance(statement, Assignment) and statement.name in model.genvars:
                     fail('genvar can only be assigned in its for control',statement.token)
                 count += 1
                 if count > budget:
                     fail('elaborated statement budget (4096) exceeded', statement.token, code="resource_budget")
-                if isinstance(statement, Event):
-                    event_bodies.append((statement.body, indices))
-                    result.append(replace(statement, token=origin(statement.token,indices),
-                        body=body(statement.body,indices,depth+1,runtime=all(t.kind in ("timer", "cross", "final_step") for t in statement.triggers),
-                                  in_runtime_loop=has_runtime_control(statement.body)), triggers=tuple(
-                            replace(leaf, token=origin(leaf.token,indices), arguments=tuple(
-                                substitute(arg,indices) if arg is not None else None for arg in leaf.arguments))
-                            for leaf in statement.triggers)))
-                    continue
                 if isinstance(statement, Display):
                     result.append(replace(statement, token=origin(statement.token, indices),
                         args=tuple(substitute(arg, indices) for arg in statement.args)))

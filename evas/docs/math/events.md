@@ -2518,3 +2518,23 @@ DC 候选先取声明初值，再按 `procedures` 的源码次序执行 `real_bi
 [IR33 收据](../../../experiments/backends/xspice-entry/ir33-initialization.json)区分当前 ngspice
 局部验证与旧 IR28 Spectre 对照。一般重赋值、动态 timer、事件 OR 和完整过程执行仍未取得资格；
 准入、宿主事件容差及历史边界见[后端说明](../reference/xspice.md)。
+
+### IR33 回归修复的兼容边界
+
+[PR #250](https://github.com/BucketSran/vaEVAS/pull/250)保留 IR33 的源码位置语义：
+初始事件在过程门执行，`State.initial` 只保存声明种子。
+例如 `a=2; @(initial_step) q=a; a=9;` 在整个瞬态中保持 q=2；
+不能把 occurrence 局部引用写入静态种子，或折叠掉原始事件门。
+固定 timer 的常量参数也保留源码实数运算和捕获步骤，
+`NativeAudit` 继续在相同请求中累计工作并执行不可重置的 100000 上限。
+
+该候选补初始表达式消费者对现有 RealBinary/RealBoundary 的处理，
+保留源电压依赖和同实例状态约束；常量与过程、事件共享的源码身份保持分离。
+展开前继续检查初始循环，即使零次展开也不能隐藏非法表达式或索引。
+这些改动不代表全部输入初始化或初始化循环已经通过。新增整数位运算初始解析
+尚无完整的逐层工作计费，已从候选撤出，沿用主线的明确拒绝边界。
+同一过程门的顺序写入规则保持主线行为，不把所有跨事件写入一律判为冲突。
+[过程数值回归](../../tests/test_procedure_runtime.py)、
+[源码实数与预算合同](../../tests/test_program_real_ir.py)、
+[初始循环合同](../../tests/test_initial_static_loops.py)保留独立答案及拒绝条件；
+逐方法结果和已知主线失败由 PR 的固定候选 CI 记录，不修改既有测试预期。

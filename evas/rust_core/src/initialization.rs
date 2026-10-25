@@ -15,6 +15,37 @@ fn unsupported(message: impl Into<String>) -> Error {
 /// Preserve structural dependencies, including zero coefficients/cancelled terms.
 fn affine_degree(expression: &Expression, allowed: &HashSet<usize>) -> Result<u8, Error> {
     Ok(match expression {
+        Expression::RealBoundary { value, .. } | Expression::Forcing { value, .. } => {
+            affine_degree(value, allowed)?
+        }
+        Expression::RealBinary {
+            operation,
+            left,
+            right,
+            ..
+        } => {
+            use crate::ir::RealOperation::{Add, Divide, Multiply, Subtract};
+            match operation {
+                Add | Subtract => affine_degree(left, allowed)?.max(affine_degree(right, allowed)?),
+                Multiply => {
+                    let degree = affine_degree(left, allowed)? + affine_degree(right, allowed)?;
+                    if degree > 1 {
+                        return Err(unsupported(
+                            "initial comparison must be structurally affine",
+                        ));
+                    }
+                    degree
+                }
+                Divide => {
+                    if affine_degree(right, allowed)? != 0 {
+                        return Err(unsupported(
+                            "initial comparison must be structurally affine",
+                        ));
+                    }
+                    affine_degree(left, allowed)?
+                }
+            }
+        }
         Expression::Affine { terms, .. } => {
             if terms.iter().any(|t| !allowed.contains(&t.node)) {
                 return Err(unsupported(
@@ -111,6 +142,9 @@ fn predicate(
     // Propagate original input enclosures; a nominal evaluation is not proof.
     fn enclosure(e: &Expression, nodes: &[I]) -> Result<I, Error> {
         Ok(match e {
+            Expression::RealBoundary { value, .. } | Expression::Forcing { value, .. } => {
+                enclosure(value, nodes)?
+            }
             Expression::Affine { constant, terms } => {
                 terms.iter().fold(I::point(*constant), |value, term| {
                     value + I::point(term.coefficient) * nodes[term.node]

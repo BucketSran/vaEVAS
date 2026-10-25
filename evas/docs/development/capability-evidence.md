@@ -394,3 +394,11 @@ C8 迁移明确核对实际控制器元数据，并以细 max_step 请求证明�
 补充 DEV:xspice-compile、LANG、EVENT-ORDER、TIMER、TRANSITION 与 COMPOSE 的开发证据。
 [当前收据](../../../experiments/backends/xspice-entry/ir33-initialization.json)记录局部绑定与初始事件的顺序修复；
 [历史收据入口](../../../experiments/backends/xspice-entry/README.md)的 IR28 Spectre 数字不作为当前 IR33 资格。
+
+### IR33 源码位置与预算回归修复
+
+[PR #250](https://github.com/BucketSran/vaEVAS/pull/250)补充 LANG、EVENT-ORDER、TIMER、COMPOSE 的开发验证。
+[过程回归](../../tests/test_procedure_runtime.py)新增初始事件读取源码位置局部量的数值检查；
+[实数 IR 回归](../../tests/test_program_real_ir.py)沿用固定 timer 捕获及共享预算耗尽检查。
+[事件说明](../math/events.md#ir33-回归修复的兼容边界)限定初始值与过程执行关系。
+本次不更新旧 Spectre 或 Q 资格总数；完整回退比较绑定 PR CI 的具体提交。
