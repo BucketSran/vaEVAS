@@ -1821,11 +1821,9 @@ impl EventModel {
         for (event, indices) in &selection.actions {
             for &index in indices {
                 let state = self.actions[*event][index].0;
-                // Distinct event blocks in one batch always conflict on a shared
-                // write, even when procedure_groups would order their gates for
-                // read-after-write. Static-loop unrolling must not prioritize by
-                // expansion ordinal (events.md / test_loop_unrolling...).
-                if writers[state].is_some_and(|writer| writer != *event) {
+                if writers[state].is_some_and(|writer| {
+                    writer != *event && !crate::procedure_frames::ordered(selection, writer, *event)
+                }) {
                     return Err(Error::new(
                         "event_conflict",
                         format!(

@@ -12,6 +12,14 @@ from test_affine import KERNEL, instance, model
 
 
 class ProcedureRuntime(unittest.TestCase):
+    def test_initial_gates_write_shared_state_in_source_order(self):
+        source = model('@(initial_step) q=1; @(initial_step) q=2; V(y,r)<+q;', 'real q;')
+        program = compile_sources({'ordered-initial.va': source}, [instance()])
+        result = transient(program, {'u': [[0, 0], [1, 0]]}, [0, 0.5, 1],
+                           stop=1, max_step=0.5, kernel=KERNEL)
+        self.assertEqual([s['voltages'][result['nodes'].index('y')]
+                          for s in result['solutions']], [2, 2, 2])
+
     def test_initial_event_uses_local_at_its_source_position(self):
         for initial, later in [(2.0, 9.0), (-0.625, 1.25)]:
             with self.subTest(initial=initial, later=later):

@@ -172,9 +172,7 @@ impl Resolver<'_> {
             }
             // Callers separately validate state/history ownership and semantics.
             // This walk only retains the complete original voltage dependency set.
-            Expression::State { .. }
-            | Expression::Operator { .. }
-            | Expression::IntegerPrimitive { .. } => {}
+            Expression::State { .. } | Expression::Operator { .. } => {}
             // IR33 samples an affine probe through a real boundary. The
             // dependency is the inner voltage, same as expression::predicate_nodes.
             Expression::RealBoundary { value, .. } | Expression::Forcing { value, .. } => {
@@ -216,45 +214,6 @@ impl Resolver<'_> {
                     return Err(Error::new("invalid_ir", "initial state owner mismatch"));
                 }
                 constant(self.state(*state)?)
-            }
-            Expression::IntegerPrimitive {
-                function,
-                args,
-                origin,
-            } => {
-                // Source-typed integer tree over same-owner integer states, e.g.
-                // `(code >> k) & 1` in a held transition target. Evaluate with the
-                // same checked signed32 ops as at run time; the tree reads no voltage.
-                // Main's resolver stores point seeds only (no separate exact[] track).
-                crate::integer_primitive::validate(*function, args, origin, self.program, owner)?;
-                let mut used = Vec::new();
-                crate::integer_primitive::states(args, &mut used);
-                let mut values = BTreeMap::new();
-                for state in used {
-                    if values.contains_key(&state) {
-                        continue;
-                    }
-                    let value = self.state(state)?;
-                    values.insert(
-                        state,
-                        crate::integer_primitive::point(I::point(value), origin)?,
-                    );
-                }
-                let mut visits = 0_usize;
-                let value = crate::integer_primitive::evaluate(
-                    *function,
-                    args,
-                    origin,
-                    &mut |state| Ok(values[&state]),
-                    &mut || {
-                        visits += 1;
-                        Ok(())
-                    },
-                )?;
-                for _ in 0..visits {
-                    self.charge()?;
-                }
-                constant(f64::from(value))
             }
             Expression::Operator { operator } if !target => {
                 let spec = self
@@ -378,12 +337,6 @@ impl Resolver<'_> {
                 self.ready(left, target) && self.ready(right, target)
             }
             Expression::State { state } => self.states.get(*state).is_some_and(Option::is_some),
-            Expression::IntegerPrimitive { args, .. } => {
-                let mut used = Vec::new();
-                crate::integer_primitive::states(args, &mut used);
-                used.iter()
-                    .all(|state| self.states.get(*state).is_some_and(Option::is_some))
-            }
             Expression::Operator { operator } if !target => {
                 match self.program.operators.get(*operator) {
                     Some(OperatorSpec::Transition { input, .. }) => self.ready(input, true),
