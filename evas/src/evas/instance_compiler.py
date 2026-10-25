@@ -502,6 +502,8 @@ class InstanceCompiler:
         owner = self.compilation.native_audit
         owner.debit("copy_container")
         ordinary_scratch = set()
+        self.initial_ordinary_record_aliases = set()
+        self.initial_ordinary_seed_aliases = set()
         source_model = self.event_body_source_model or self.initial_math_source_model
         for name in analog_writers:
             owner.debit("ordinary_scratch_candidate")
@@ -518,10 +520,14 @@ class InstanceCompiler:
                 ordinary_scratch.add(name)
                 continue
             if name in persistent and self.model.variables[name] == "real" and name not in event_writers:
-                from .initial_ordinary_alias import admit
+                from .initial_ordinary_alias import admit, record_contract
                 if admit(self, name, persistent, analog_writers, source_model):
                     owner.debit("copy_element")
                     ordinary_scratch.add(name)
+                    if record_contract(name, source_model):
+                        self.initial_ordinary_record_aliases.add(name)
+                    else:
+                        self.initial_ordinary_seed_aliases.add(name)
                 continue
             if name in persistent and self.model.variables[name] == "integer":
                 from .ordinary_integer_current_alias import admit as admit_current_integer
@@ -627,6 +633,9 @@ class InstanceCompiler:
             self.ordinary_alias_variables = self.local_variables | ordinary_scratch
         else:
             self.ordinary_alias_variables = self.local_variables
+        if self.procedure_builder is not None and self.initial_ordinary_seed_aliases:
+            # Seed-mode aliases keep State.initial and use RealBind for ordinary writes.
+            self.procedure_builder.declare(self.initial_ordinary_seed_aliases)
         referenced = reads(self.model.initial) | reads(self.model.analog)
         for event in self.model.events:
             referenced.update(reads(event.body))
@@ -937,14 +946,17 @@ class InstanceCompiler:
                                 {"<":"lt", "<=":"le", ">":"gt", ">=":"ge"}[statement.relation],
                                 left, right, yes[name], no[name])
                 elif isinstance(statement, SyntaxDisplay):
-                    if self.procedure_builder is not None:
-                        continue  # The unique runtime initial gate owns this output.
+                    # Constant-snapshot obligations survive even when the runtime
+                    # initial gate owns emission (procedure path). A later total
+                    # ordinary overwrite must not erase an illegal initial display.
                     arguments = []
                     for argument in statement.args:
                         value = lower(argument, resolve(values, aliases), self.node_ids, self.model.source,
                                       preserve_structure=True, decisions=self.initial_select,
                                       validate_decision=self.validate_initial_operand, node_declarations=True)
                         arguments.append(self.make_ir(Affine, constant_snapshot(value), ()))
+                    if self.procedure_builder is not None:
+                        continue  # The unique runtime initial gate owns this output.
                     origin = self.make_ir(Origin, statement.token.source or self.model.source, statement.token.line,
                                     statement.token.column, self.instance.name, statement.token.expansion)
                     if active:
@@ -1059,6 +1071,10 @@ class InstanceCompiler:
 
     def symbol(self, name):
         builder = getattr(self, "procedure_builder", None)
+        # Seed-mode aliases keep the State slot inside event bodies; ordinary
+        # analog evaluation binds a separate occurrence local after callbacks.
+        if name in getattr(self, 'initial_ordinary_seed_aliases', ()) and name in self.state_ids:
+            return self.make_ir(StateRef, self.state_ids[name])
         if builder is not None and name in builder.bindings:
             return self.local_read(name, self.active_event_aliases.get(name))
         if name in self.active_event_aliases:
@@ -2578,6 +2594,11 @@ class InstanceCompiler:
         def resolve(name):
             if name in env:
                 return env[name]
+            # Seed-mode ordinary aliases are bound occurrence locals; do not
+            # fall back to the preserved State slot for ordinary reads.
+            if (self.procedure_builder is not None and name in self.procedure_builder.bindings
+                    and name in getattr(self, 'initial_ordinary_seed_aliases', ())):
+                raise CompileError(f"{self.model.source}: local variable {name!r} is not assigned before use")
             if self.procedure_builder is not None and name in self.state_ids:
                 return self.make_ir(StateRef, self.state_ids[name])
             if name in self.ordinary_alias_variables:
@@ -2967,9 +2988,10 @@ class InstanceCompiler:
                         # Both arms write the same executable slot. Its value
                         # is chosen when the branch runs, not by evaluating a
                         # predicate again after an arm may have changed it.
-                        result[name] = (self.make_ir(StateRef, self.state_ids[name])
-                                        if name in self.state_ids else
-                                        self.make_ir(RealLocal, self.procedure_builder.bindings[name]))
+                        # Prefer the occurrence binding for seed-mode aliases.
+                        result[name] = (self.make_ir(RealLocal, self.procedure_builder.bindings[name])
+                                        if name in self.procedure_builder.bindings else
+                                        self.make_ir(StateRef, self.state_ids[name]))
                         if isinstance(result[name], RealLocal):
                             degrees = [self.predicate_degree(item) for item in
                                        (left, right, then_env[name], else_env[name])]

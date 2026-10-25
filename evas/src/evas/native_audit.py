@@ -32,16 +32,10 @@ class NativeAudit:
         Arithmetic/rounding nodes are never normalized or merged. Wire copies
         still expand every occurrence. float.hex keeps the two zero signs apart.
         """
-        boundary_kind = kwargs.get('kind', args[1] if len(args) > 1 else None)
-        if (not self.active and cls.__module__ == 'evas.ir'
-                and (cls.__name__ in ('RealBinary', 'RealBind')
-                     or cls.__name__ == 'RealBoundary' and boundary_kind != 'store')):
-            # Program-real operations/captures opt into the same request cap.
-            # Argument/return/sample boundaries also qualify when an identity
-            # function has neither arithmetic nor a closed-value query. A
-            # legacy scalar store alone retains its old admission route.
-            # Activation checks all work accumulated before this first node.
-            self.activate(kwargs.get('origin', args[-1] if args else None))
+        # Activation stays with admit/target_view (and explicit callers). Auto-
+        # activating on the first RealBinary/RealBind made a long local-only
+        # instance spend the ceiling mid-compile, so a later alias admit never
+        # observed the unpaid prior work under the unchanged 100000 cap.
         key = None
         if not kwargs and cls.__module__ == 'evas.ir':
             if cls.__name__ == 'StateRef' and len(args) == 1 and type(args[0]) is int:

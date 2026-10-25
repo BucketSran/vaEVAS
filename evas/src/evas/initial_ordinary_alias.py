@@ -9,6 +9,78 @@ from .syntax import (Assignment, Conditional, ContributionStatement, Display,
                      BoundStep, Loop, Event, OPERATOR_ARITIES, OPERATOR_NAMES)
 
 
+def record_contract(name, source):
+    """IR33 record-batch aliases keep declaration seeds and emit initial_step.
+
+    Seed-preserving aliases (multiple ordinary writes, parameter initials,
+    time/math dependence, settings, or initial displays) keep initialize_states
+    seeds and a RealBind trajectory instead.
+    """
+    initial_writes = []
+    pending = list(source.initial)
+    while pending:
+        item = pending.pop()
+        if isinstance(item, Assignment) and item.name == name:
+            initial_writes.append(item)
+        for field in ('then_body', 'else_body', 'body'):
+            pending.extend(getattr(item, field, ()))
+    if len(initial_writes) != 1:
+        return False
+    seed = initial_writes[0].rhs
+    if seed is None or seed.op != 'number':
+        return False
+
+    ordinary_writes = []
+    has_setting = False
+    has_time = False
+    has_input = False
+
+    def scan_expr(expr):
+        nonlocal has_time, has_input
+        if expr is None:
+            return
+        if expr.op == 'time':
+            has_time = True
+        if expr.op == 'node':
+            has_input = True
+        for child in expr.args:
+            scan_expr(child)
+
+    pending = list(source.analog)
+    while pending:
+        item = pending.pop()
+        if isinstance(item, BoundStep):
+            has_setting = True
+        if isinstance(item, Assignment) and item.name == name:
+            ordinary_writes.append(item)
+            scan_expr(item.rhs)
+        for field in ('rhs', 'left', 'right', 'index', 'start', 'limit', 'update'):
+            scan_expr(getattr(item, field, None))
+        if isinstance(item, Display):
+            for arg in item.args:
+                scan_expr(arg)
+        if isinstance(item, Event):
+            for trigger in item.triggers:
+                for arg in trigger.arguments:
+                    scan_expr(arg)
+            pending.extend(item.body)
+        else:
+            for field in ('then_body', 'else_body', 'body'):
+                pending.extend(getattr(item, field, ()))
+    # Record mode is for live input aliases (public_red). Constant or
+    # state-only ordinary RHS keeps the initialize_states seed trajectory.
+    if has_setting or has_time or not has_input or len(ordinary_writes) != 1:
+        return False
+    for item in source.initial:
+        if isinstance(item, Display):
+            return False
+        for field in ('then_body', 'else_body', 'body'):
+            for child in getattr(item, field, ()):
+                if isinstance(child, Display):
+                    return False
+    return True
+
+
 def admit(compiler, name, persistent, analog_writers, source):
     owner = compiler.compilation.native_audit
     owner.activate(source.declaration_token)
