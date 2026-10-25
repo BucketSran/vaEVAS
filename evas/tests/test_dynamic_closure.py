@@ -87,14 +87,42 @@ class InternalDerivativeContracts(unittest.TestCase):
 
 
 class JointEventDynamicsContracts(unittest.TestCase):
-    def test_uncertain_linear_restart_rejects_uncertified_input_branches(self):
-        # At tau=sqrt(2)<1.414214, the correct branch sets q=3.
-        # Thus y(2)=tau+3*(2-tau)=6-2*sqrt(2), not 4-sqrt(2).
+    def test_wide_linear_root_window_uses_the_branch_proved_at_tau(self):
+        # tau=sqrt(2) is below 1.414214 and above 1.414213. The discovered
+        # cross window straddles only the higher literal; contracting that
+        # same root certificate selects q=3, so y=t on [0,tau] and
+        # y=tau+3*(t-tau) afterwards. The opposite arm, 4-sqrt(2) at t=2,
+        # stays outside the original 1e-4 V budget.
         program = compile_model(
             "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) "
             "if (V(u,r)>1.414214) q=2; else q=3; V(y,r)<+idt(q,0);", "integer q;")
-        with self.assertRaisesRegex(KernelError, "event_condition"):
-            run(program, {"u": [[0, 0], [2, 2]]}, [0, 2], stop=2, vabstol=1e-4, reltol=0)
+        sources = {"u": [[0, 0], [2, 2]]}
+        sparse, dense = [0, 2], [0, 1, 1.5, 2]
+        tau = math.sqrt(2)
+        def answer(t):
+            return t if t <= tau else tau+3*(t-tau)
+        results = [run(program, sources, grid, stop=2, vabstol=1e-4, reltol=0)
+                   for grid in (sparse, dense)]
+        for grid, result in zip((sparse, dense), results):
+            for t, actual in zip(grid, values(result)):
+                assert_close(self, actual, answer(t), delta=1e-4)
+            cross = next(event for event in result['transient']['events'] if event['kind']=='cross')
+            self.assertEqual(cross['after'], [3])
+            lo, hi = cross['observation_time_bounds']
+            self.assertLessEqual(lo, tau)
+            self.assertGreaterEqual(hi, tau)
+            self.assertLessEqual(hi, 1.414214)
+        self.assertEqual(results[0]['solutions'],
+                         [results[1]['solutions'][dense.index(t)] for t in sparse])
+        self.assertEqual(results[0]['transient']['events'], results[1]['transient']['events'])
+        self.assertGreater(abs(values(results[0])[-1]-(4-tau)), 1e-4)
+        below = compile_model(
+            "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) "
+            "if (V(u,r)>1.414213) q=2; else q=3; V(y,r)<+idt(q,0);", "integer q;")
+        lower = run(below, sources, sparse, stop=2, vabstol=1e-4, reltol=0)
+        assert_close(self, values(lower)[-1], 4-tau, delta=1e-4)
+        lower_cross = next(event for event in lower['transient']['events'] if event['kind']=='cross')
+        self.assertEqual(lower_cross['after'], [2])
 
     def test_uncertain_linear_restart_refines_sampling_and_retains_output_budget(self):
         # At tau=sqrt(2), q=tau and y(10)=10*tau-2. The old coarse
@@ -409,17 +437,31 @@ class NonlinearIntegralContracts(unittest.TestCase):
                         else 1/(5/3+(3/5)*(t-.5)))
             assert_close(self, actual, expected, delta=1e-10)
 
-    def test_uncertain_nonlinear_restart_rejects_uncertified_branch_selection(self):
-        # u=sqrt(2)<1.414214 at the true root; the certified representative can
-        # lie above 1.414214 and select the opposite branch. Literal RHS values
-        # do not remove that event-time-dependent choice.
+    def test_wide_nonlinear_root_window_keeps_pre_event_history(self):
+        # The same threshold is below the discovered window's upper edge and
+        # above tau. q stays 1 until tau, then becomes 3. y(0)=1, y'=-q*y^2,
+        # so y=1/(1+t) before tau and y=1/(1+tau+3*(t-tau)) after. The
+        # original absolute budget remains 1e-4 V.
         program = compile_model(
             "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) "
             "if (V(u,r)>1.414214) q=2; else q=3; "
             "V(y,r)<+idt(-q*pow(V(y,r),2),1);", "integer q;")
-        with self.assertRaisesRegex(KernelError, "event_condition"):
-            run(program, {"u": [[0, 0], [2, 2]]}, [0, 2], stop=2,
-                vabstol=1e-4, reltol=0)
+        tau = math.sqrt(2)
+        times = [0, 1, 2]
+        def answer(t):
+            return 1/(1+t) if t <= tau else 1/(1+tau+3*(t-tau))
+        result = run(program, {"u": [[0, 0], [2, 2]]}, times, stop=2,
+                     vabstol=1e-4, reltol=0)
+        node = result['nodes'].index('y')
+        for t, actual, bounds in zip(
+                times, values(result), result['observation_evidence']['voltage_bounds_V']):
+            expected = answer(t)
+            assert_close(self, actual, expected, delta=1e-4)
+            lo, hi = bounds[node]
+            self.assertLessEqual(lo, expected)
+            self.assertGreaterEqual(hi, expected)
+        cross = next(event for event in result['transient']['events'] if event['kind']=='cross')
+        self.assertEqual(cross['after'], [3])
 
 
 if __name__ == "__main__":
