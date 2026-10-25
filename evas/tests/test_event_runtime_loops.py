@@ -87,6 +87,18 @@ class RuntimeLoopExecution(unittest.TestCase):
                            'integer i,j,n,q;')
             with self.subTest(loops=loops), self.assertRaisesRegex(KernelError,'event_loop_budget'):run(p)
 
+    def test_iteration_allowance_belongs_to_each_event_activation(self):
+        # Each event performs 3000 iterations, below its own 4096 limit. A
+        # procedure-wide counter would incorrectly reject the second event.
+        for second in ('final_step', 'timer(0.25)'):
+            with self.subTest(second=second):
+                p=compile_body('@(initial_step) n=3000; '
+                               '@(timer(0.25)) for(i=0;i<n;i=i+1) q=q+1; '
+                               '@('+second+') for(i=0;i<n;i=i+1) q=q+1;',
+                               'integer i,n,q;')
+                states,_=run(p)
+                self.assertEqual(states['dut:q'],6000)
+
     def test_compact_array_statement_reads_previous_writes_with_descending_declaration(self):
         p=compile_body('@(initial_step) n=3; @(final_step) for(i=-1;i<n-1;i=i+1) begin a[i]=i+2; q=q+a[i]; end',
                        'integer i,n,q,a[1:-1];')

@@ -72,6 +72,10 @@ pub(crate) mod time_provenance;
 #[path = "procedure_cell_controller_tests.rs"]
 mod procedure_cell_controller_tests;
 
+#[cfg(test)]
+#[path = "ordinary_held_retry_tests.rs"]
+mod ordinary_held_retry_tests;
+
 #[derive(Clone)]
 struct Frame {
     value_proofs: crate::event_value_proof::Proofs,

@@ -98,6 +98,7 @@ struct Builder<'a> {
     owner: &'a str,
     procedure: usize,
     event: usize,
+    event_loop_iterations: usize,
     fired: &'a [usize],
     effects: Vec<Id>,
     contributions: Vec<Vec<Id>>,
@@ -638,6 +639,21 @@ impl Builder<'_> {
                     let update_start = start + count(body, self.w)?;
                     let end = update_start + count(update, self.w)?;
                     while self.condition(*relation, left, right, origin)? {
+                        // One event shares the original 4096 allowance across
+                        // sibling and nested loops. The request Work owner is
+                        // still charged by every executed operation.
+                        if self.event != usize::MAX {
+                            if self.event_loop_iterations >= 4096 {
+                                return Err(Error::new(
+                                    "event_loop_budget",
+                                    format!(
+                                        "event exceeds 4096 total loop iterations at {}",
+                                        origin.label()
+                                    ),
+                                ));
+                            }
+                            self.event_loop_iterations += 1;
+                        }
                         let mut i = start;
                         self.statements(body, &mut i)?;
                         i = update_start;
@@ -665,6 +681,7 @@ impl Builder<'_> {
                         self.w.debit(2, 16)?;
                         self.actions.push((*event, Vec::new()));
                         self.event = *event;
+                        self.event_loop_iterations = 0;
                         self.statements(&self.p.events[*event].body, &mut 0)?;
                         self.event = usize::MAX;
                     }
@@ -1279,6 +1296,7 @@ pub(crate) fn execute(
         owner: "",
         procedure: usize::MAX,
         event: usize::MAX,
+        event_loop_iterations: 0,
         fired,
         effects: Vec::new(),
         contributions: vec![Vec::new(); p.contributions.len()],

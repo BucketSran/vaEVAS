@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "status": "deferred_by_user",
+  "authorization": "2026-10-25: Spectre暂时不连接，补充到Spectre待跑；本轮继续本地、CI及审查",
+  "source_identity": "Files in this directory; record Git revision and hashes before execution",
+  "requested_command": "In each case directory: spectre -format psfascii input.scs +log spectre.log",
+  "commands_verified": false,
+  "limits": "Decks prepared but not submitted or syntax-validated by Spectre. Resolve existing circuit harness profile and effective version/settings before executing. Preserve first failure and output precision. No Spectre compatibility claim.",
+  "pending_checks": [
+    "Run each exact VA and physical stimulus on EVAS and Spectre at the future checked revision.",
+    "Run held-pulse with sparse observations [0,5.5] and maxstep 0.005 as well; preserve both requested and effective settings.",
+    "Repeat hierarchy-held with parent before leaf and separate VA files to test parser isolation.",
+    "Check full exported waveform and strobe values; confirm reference precision before comparison. Do not count the mathematical root as a certified event observation."
+  ],
+  "cases": [
+    {
+      "id": "held-pulse",
+      "model": "held-pulse/model.va",
+      "spectre_netlist": "held-pulse/input.scs",
+      "stimulus": {
+        "s": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1.1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2.1,
+            0
+          ],
+          [
+            6,
+            0
+          ]
+        ],
+        "r": [
+          [
+            0,
+            0
+          ],
+          [
+            6,
+            0
+          ]
+        ]
+      },
+      "observations_s": [
+        0,
+        0.5,
+        1.5,
+        2.5,
+        5.5
+      ],
+      "expected_y_V": [
+        7,
+        7,
+        1,
+        1,
+        1
+      ],
+      "independent_voltage_limit_V": 1e-06,
+      "comparison_voltage_limit_V": 1e-06,
+      "scope": "Frozen observation values; no root-window alignment claim",
+      "status": "pending"
+    },
+    {
+      "id": "held-reset-callback",
+      "model": "held-reset-callback/model.va",
+      "spectre_netlist": "held-reset-callback/input.scs",
+      "stimulus": {
+        "s": [
+          [
+            0,
+            0
+          ],
+          [
+            0.5,
+            0
+          ],
+          [
+            0.6,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1.1,
+            0
+          ],
+          [
+            1.5,
+            0
+          ],
+          [
+            1.6,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2.1,
+            0
+          ],
+          [
+            4.5,
+            0
+          ],
+          [
+            4.6,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5.1,
+            0
+          ],
+          [
+            6,
+            0
+          ]
+        ],
+        "r": [
+          [
+            0,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3.1,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4.1,
+            0
+          ],
+          [
+            6,
+            0
+          ]
+        ]
+      },
+      "observations_s": [
+        0,
+        0.8,
+        1.8,
+        2.5,
+        3.5,
+        4.2,
+        5.5
+      ],
+      "expected_y_V": [
+        0,
+        1,
+        2,
+        2,
+        0,
+        0,
+        1
+      ],
+      "independent_voltage_limit_V": 1e-06,
+      "comparison_voltage_limit_V": 1e-06,
+      "scope": "Frozen observation values; no root-window alignment claim",
+      "status": "pending"
+    },
+    {
+      "id": "rounded-false-pulse",
+      "model": "rounded-false-pulse/model.va",
+      "spectre_netlist": "rounded-false-pulse/input.scs",
+      "stimulus": {
+        "s": [
+          [
+            0,
+            -1
+          ],
+          [
+            0.5,
+            0.5
+          ],
+          [
+            1,
+            -1
+          ],
+          [
+            6,
+            -1
+          ]
+        ],
+        "r": [
+          [
+            0,
+            0
+          ],
+          [
+            6,
+            0
+          ]
+        ]
+      },
+      "observations_s": [
+        0,
+        0.25,
+        0.5,
+        0.75,
+        1,
+        5
+      ],
+      "expected_y_V": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "independent_voltage_limit_V": 1e-06,
+      "comparison_voltage_limit_V": 1e-06,
+      "scope": "Frozen observation values; no root-window alignment claim",
+      "status": "pending"
+    },
+    {
+      "id": "hierarchy-held",
+      "model": "hierarchy-held/model.va",
+      "spectre_netlist": "hierarchy-held/input.scs",
+      "stimulus": {
+        "a": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            6,
+            0
+          ]
+        ],
+        "b": [
+          [
+            0,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            6,
+            0
+          ]
+        ]
+      },
+      "observations_s": [
+        0,
+        2.5,
+        6
+      ],
+      "expected_xy_V": [
+        [
+          7,
+          9
+        ],
+        [
+          1,
+          9
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "independent_voltage_limit_V": 1e-06,
+      "comparison_voltage_limit_V": 1e-06,
+      "status": "pending"
+    }
+  ]
+}

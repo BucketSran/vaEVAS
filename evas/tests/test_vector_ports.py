@@ -47,11 +47,17 @@ module bus(y); output [N-1:0] y; electrical [N-1:0] y;
         parent = '''`include "disciplines.vams"
 module top(u,y); input [1:0] u; output [1:0] y;
           electrical [1:0] u,y; bus child(u,y); endmodule'''
-        program = compile_sources({'hier.va':leaf+'\n'+parent},[Instance('dut','top',
-            {'u[0]':'a','u[1]':'b','y[0]':'c','y[1]':'d'})])
-        result = solve(program,['a','b'],[[3,7]],kernel=KERNEL)
-        row = dict(zip(result['nodes'],result['solutions'][0]['voltages']))
-        self.assertEqual((row['c'],row['d']),(6,8))
+        # Module order and file boundaries cannot add the child's analog body
+        # to its structural parent. The reversed port ranges give c=2*a,d=b+1.
+        for label, sources in (('child_first', {'hier.va':leaf+'\n'+parent}),
+                               ('parent_first', {'hier.va':parent+'\n'+leaf}),
+                               ('separate_files', {'leaf.va':leaf, 'parent.va':parent})):
+            with self.subTest(layout=label):
+                program = compile_sources(sources,[Instance('dut','top',
+                    {'u[0]':'a','u[1]':'b','y[0]':'c','y[1]':'d'})])
+                result = solve(program,['a','b'],[[3,7]],kernel=KERNEL)
+                row = dict(zip(result['nodes'],result['solutions'][0]['voltages']))
+                self.assertEqual((row['c'],row['d']),(6,8))
 
     def test_range_mismatch_unindexed_and_dynamic_bits_are_rejected(self):
         cases = [bus_model().replace('electrical [1:0]','electrical [0:1]'),

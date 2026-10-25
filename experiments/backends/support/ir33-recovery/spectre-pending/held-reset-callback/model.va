@@ -1,0 +1,4 @@
+`include "disciplines.vams"
+module m(s,r,y);input s,r;output y;electrical s,r,y;integer n;
+analog begin @(initial_step)n=0;if(V(r)>0.5)n=0;@(cross(V(s)-0.5,+1))n=n+1;V(y)<+n;
+end endmodule

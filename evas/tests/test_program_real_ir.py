@@ -425,7 +425,11 @@ class ProgramRealCompilerContracts(unittest.TestCase):
         self.assertEqual(len([n for n in nodes(program['procedures'])
                               if n.get('kind')=='procedure_if']),1)
         self.assertEqual(len(program['events']),2)
-        self.assertTrue(all(len(e['body'])==1 for e in program['events']))
+        # A wakeup may restore the certified pre-side held value before the
+        # original process runs. Its body length is not a transport contract;
+        # numeric pulse/rounded-cell controls live in test_ordinary_held_state.
+        gates=[n['event'] for n in nodes(program['procedures']) if n.get('kind')=='event_gate']
+        self.assertEqual(sorted(gates),list(range(len(program['events']))))
 
     def test_step_bound_capture_stays_inside_the_selected_branch(self):
         program=compile_body('''@(initial_step) a=1;

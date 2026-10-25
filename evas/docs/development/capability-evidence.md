@@ -4,6 +4,11 @@
 面向使用者的支持结论只在[四后端支持范围](../COMPARISON.md)维护，详细接受与拒绝条件由所链接的契约维护。
 收据只证明其固定执行版本；下表仅登记 ID 与证据，供追溯工具读取，不维护第二份支持状态或当前 main 通过率。
 
+[IR33 首批回归修复与133项负控审计](../../../experiments/backends/support/ir33-recovery/README.md)
+补充 LANG、EVENT-ORDER 和 COMPOSE。模块隔离、受限普通保持状态及每事件4096循环上限分别留有
+原失败和独立控制；同控制器拒绝重试检查状态与历史隔离。合同迁移、混合、待证及真实缺口分开记录，
+原失败分母保留。Spectre 按用户要求暂缓，四个同源案例已列入待跑，不授予对齐或共同Q资格。
+
 [四路最小合同](../../../experiments/backends/support/low-cost-closure/minimum-contracts-four-lanes.json)
 补充 LANG、ANALOG、TIMER、TRANSITION、EVENT-ORDER、TIMED-OPERATOR、COMPOSE 和 DYNAMICS 的本地开发证据。
 受限 SCS 入口、原电压接口、有理截止点及 DC 保持斜坡分别以独立答案和拒绝控制验收；

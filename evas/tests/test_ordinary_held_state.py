@@ -6,6 +6,7 @@ write in the same evaluation observes the previous value.
 """
 GUARDS=['LANG','EVENT-ORDER','COMPOSE']
 import os
+import math
 from pathlib import Path
 import unittest
 from evas import CompileError, KernelError, Instance, compile_sources, transient
@@ -33,6 +34,58 @@ LATCH=('@(initial_step)q=0;'
 
 
 class OrdinaryHeldState(unittest.TestCase):
+    def test_optional_timer_period_does_not_break_probe_scope_audit(self):
+        p=program('@(initial_step)q=7;if(V(s)>0.5)q=1;'
+                  '@(timer(0.25,,1e-12))a=1;V(y)<+q+a;','real q,a;')
+        drive={'s':[[0,0],[6,0]],'r':[[0,0],[6,0]]}
+        self.assertEqual(run(p,drive,[0,0.5,2]),[7,8,8])
+
+    def test_hierarchical_instances_keep_separate_pulse_history(self):
+        leaf=('module leaf(s,y);input s;output y;electrical s,y;'
+              'parameter real seed=7;real q;analog begin '
+              '@(initial_step)q=seed;if(V(s)>0.5)q=1;V(y)<+q;end endmodule')
+        parent=('module top(a,b,x,y);input a,b;output x,y;electrical a,b,x,y;'
+                'leaf #(.seed(7)) first(a,x);leaf #(.seed(9)) second(b,y);endmodule')
+        sources={'held.va':'`include "disciplines.vams"\n'+leaf+'\n'+parent}
+        p=compile_sources(sources,[Instance('dut','top',dict(a='a',b='b',x='x',y='y'))])
+        drive={'a':[[0,0],[1,1],[2,0],[6,0]],'b':[[0,0],[3,0],[4,1],[5,0],[6,0]]}
+        for times, expected in (([0,6],[(7,9),(1,1)]),
+                                ([0,2.5,6],[(7,9),(1,9),(1,1)])):
+            with self.subTest(times=times):
+                result=transient(p,drive,times,stop=6,max_step=2,kernel=KERNEL)
+                x,y=(result['nodes'].index(n) for n in ('x','y'))
+                self.assertEqual([(r['voltages'][x],r['voltages'][y])
+                                  for r in result['solutions']],expected)
+
+    def test_completed_pulse_holds_without_an_observation_inside_it(self):
+        # The pulse, not an output query, writes q. Sparse observations still
+        # have to see that write after the pulse has ended.
+        p=program('@(initial_step)q=7;if(V(s)>0.5)q=1;V(y)<+q;','real q;')
+        for step in (0.25, 2.0):
+            for times, expected in (([0,5.5],[7,1]),
+                                    ([0,0.5,1.5,2.5,5.5],[7,7,1,1,1])):
+                with self.subTest(step=step,times=times):
+                    result=transient(p,PULSES,times,stop=6,max_step=step,kernel=KERNEL)
+                    y=result['nodes'].index('y')
+                    self.assertEqual([row['voltages'][y] for row in result['solutions']],expected)
+
+    def test_rounded_false_pulse_cannot_create_a_held_write(self):
+        # u <= 0.5, so binary64 RN(2**53+u) never exceeds 2**53.
+        # Its mathematical affine zero is not a program condition boundary.
+        drive={'s':[[0,-1],[0.5,0.5],[1,-1],[6,-1]],'r':[[0,0],[6,0]]}
+        for condition in ('V(s)+9007199254740992.0>9007199254740992.0',
+                          '(9007199254740992.0+V(s))-9007199254740992.0>0'):
+            with self.subTest(condition=condition):
+                p=program('@(initial_step)q=0;if('+condition+')q=1;V(y)<+q;','real q;')
+                self.assertEqual(run(p,drive,[0,0.25,0.5,0.75,1,5]),[0,0,0,0,0,0])
+
+    def test_direct_probe_keeps_the_rounded_cell_after_its_physical_root(self):
+        # Exact u(nextafter(0.5,+inf)) = 0.5 + 2**-62 still rounds to 0.5.
+        p=program('@(initial_step)q=0;if(V(s)>0.5)q=1;V(y)<+q;','real q;')
+        drive={'s':[[0,0.5-2**-10],[1,0.5+2**-10],[6,0.5+2**-10]],
+               'r':[[0,0],[6,0]]}
+        self.assertEqual(run(p,drive,[0,0.5,math.nextafter(0.5,math.inf),0.5+2**-40]),[0,0,0,1])
+
     def test_level_sensitive_latch_holds_between_pulses(self):
         # s pulse at [1.1,2]: set and hold; r pulse at [3.1,4]: reset and hold.
         p=program(LATCH+'V(y)<+q;')
