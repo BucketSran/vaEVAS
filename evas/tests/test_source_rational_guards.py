@@ -54,21 +54,23 @@ class SourceOnlyRationalContracts(unittest.TestCase):
 
     def test_selected_zero_denominator_rejects(self):
         p=compile_body('q=V(n)/V(d); V(y)<+(q>0.5)?0.9:0.0;')
-        with self.assertRaisesRegex(KernelError,'denominator'):
+        with self.assertRaisesRegex(KernelError,'program-real arithmetic: DivisionByZero'):
             run(p,d=0)
 
     def test_denominator_error_box_crossing_zero_rejects(self):
         p=compile_body('q=V(n)/V(d); V(y)<+(q>0.5)?0.9:0.0;')
         with self.assertRaises(KernelError) as caught:
             run(p,d=.1,errors={'d':.2})
-        self.assertIn(caught.exception.diagnostic['kind'], ('nonfinite_arithmetic','waveform_accuracy'))
-        self.assertIn('zero', caught.exception.diagnostic['message'])
+        self.assertEqual(caught.exception.diagnostic['kind'], 'real_arithmetic')
+        self.assertIn('DivisionAcrossZero', caught.exception.diagnostic['message'])
 
     def test_uncertain_guard_without_exact_source_provenance_rejects(self):
         p=compile_body('q=V(n)/V(d); V(y)<+(q>0.5)?0.9:0.0;')
         with self.assertRaises(KernelError) as caught:
             run(p,errors={'n':.01})
-        self.assertEqual(caught.exception.diagnostic['kind'], 'condition_precision')
+        self.assertEqual(caught.exception.diagnostic['kind'], 'event_condition')
+        self.assertIn('not certified over its complete source-position enclosure',
+                      caught.exception.diagnostic['message'])
 
     def test_inactive_variable_pole_keeps_existing_lazy_value_semantics(self):
         p=compile_body('q=(V(en)>0.5)?V(n)/V(d):0.0; V(y)<+q;')

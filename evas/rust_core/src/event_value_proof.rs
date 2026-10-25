@@ -1172,6 +1172,34 @@ pub(crate) fn apply_charged(
     after: &[I],
     context: &Context<'_>,
 ) -> Result<Proofs, crate::ir::Error> {
+    if let Some(plan) = &selection.plan {
+        // The procedure has already executed and certified every selected
+        // source operation. Replaying legacy event RHSs loses local captures
+        // and RN boundaries (and can execute an inactive branch again).
+        // A singleton accepted state box is a full-domain binary64 proof.
+        // Nonpoint boxes remain unknown; never use their nominal centre or an
+        // inherited pre-write proof to manufacture exact provenance.
+        let w = &plan.work;
+        w.debit(2, (after.len() * 64 + 32) as u64)?;
+        if after.len() != plan.updates.len() {
+            return Err(crate::ir::Error::new(
+                "invalid_ir",
+                "procedure state proof width mismatch",
+            ));
+        }
+        let mut proofs = Proofs::new();
+        for (state, value) in after.iter().enumerate() {
+            w.step()?;
+            if value.finite() && value.lo.to_bits() == value.hi.to_bits() {
+                let mut paid = crate::exact_source::history_paid::Paid::new(w);
+                let value = paid.binary(value.lo);
+                if let Some(value) = paid.finish(value)? {
+                    proofs.insert(state, value);
+                }
+            }
+        }
+        return Ok(proofs);
+    }
     if let Some(w) = context.history_work.as_ref() {
         return history::apply(model, selection, inputs, before, after, context, w);
     }

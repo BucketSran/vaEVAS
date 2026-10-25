@@ -6,6 +6,7 @@ use crate::ir::{Error, Expression, Program, Solution, Term};
 pub(crate) struct Bounds {
     expressions: Vec<(Expression, Expression)>,
     procedure_owned: bool,
+    procedure_provider: Option<(std::sync::Arc<Program>, crate::transition_source_plan::Work)>,
 }
 
 fn bind(expr: &Expression, p: &Program, owner: &str) -> Result<Expression, Error> {
@@ -134,6 +135,7 @@ impl Bounds {
             return Ok(Self {
                 expressions: Vec::new(),
                 procedure_owned: !program.step_bounds.is_empty(),
+                procedure_provider: None,
             });
         }
         let mut expressions = Vec::new();
@@ -157,7 +159,23 @@ impl Bounds {
         Ok(Self {
             expressions,
             procedure_owned: false,
+            procedure_provider: None,
         })
+    }
+
+    pub(crate) fn with_procedure_provider(
+        mut self,
+        program: std::sync::Arc<Program>,
+        work: Option<&crate::transition_source_plan::Work>,
+    ) -> Result<Self, Error> {
+        if self.procedure_owned {
+            let work =
+                work.ok_or_else(|| Error::new("invalid_ir", "missing procedure request owner"))?;
+            crate::procedure::validate(&program, work)?;
+            work.debit(2, 32)?;
+            self.procedure_provider = Some((program, work.clone()));
+        }
+        Ok(self)
     }
 
     pub(crate) fn next_time(
@@ -168,13 +186,13 @@ impl Bounds {
         states: &[I],
         operators: &[I],
     ) -> Result<f64, Error> {
-        if self.procedure_owned {
+        if self.procedure_owned && self.procedure_provider.is_none() {
             return Err(Error::new(
                 "invalid_ir",
                 "procedure timestep requests require their source-position capture provider",
             ));
         }
-        if self.expressions.is_empty() {
+        if self.expressions.is_empty() && !self.procedure_owned {
             return Ok(time + max_step);
         }
         let nodes = solution.certified_voltage_bounds.as_ref().ok_or_else(|| {
@@ -200,13 +218,26 @@ impl Bounds {
         states: &[I],
         operators: &[I],
     ) -> Result<f64, Error> {
-        if self.procedure_owned {
+        if let Some((program, work)) = &self.procedure_provider {
+            let proofs = crate::event_value_proof::Proofs::new();
+            let context = crate::event_value_proof::Context::history_inputs(
+                &proofs,
+                nodes.len(),
+                Vec::new(),
+                work,
+            )?
+            .try_with_operators(operators)?;
+            let plan =
+                crate::procedure::execute(program, &[], nodes, states, Some(&context), work)?;
+            return plan.next_bound_time_from_boxes(time, max_step, nodes, operators, work);
+        }
+        if self.procedure_owned && self.procedure_provider.is_none() {
             return Err(Error::new(
                 "invalid_ir",
                 "procedure timestep requests require their source-position capture provider",
             ));
         }
-        if self.expressions.is_empty() {
+        if self.expressions.is_empty() && !self.procedure_owned {
             return Ok(time + max_step);
         }
         let values: Vec<_> = nodes
@@ -347,6 +378,7 @@ mod tests {
         let active = uncertain_active();
         let bounds = Bounds {
             procedure_owned: false,
+            procedure_provider: None,
             expressions: vec![(active.clone(), constant(0.1))],
         };
         let next = bounds.next_time(0., 1., &frame(), &[], &[]).unwrap();
@@ -367,6 +399,7 @@ mod tests {
         ] {
             let bounds = Bounds {
                 procedure_owned: false,
+                procedure_provider: None,
                 expressions: vec![(active.clone(), value)],
             };
             assert!(bounds.next_time(0., 1., &frame(), &[], &[]).is_err());
@@ -383,6 +416,7 @@ mod tests {
         }
         let bounds = Bounds {
             procedure_owned: false,
+            procedure_provider: None,
             expressions: vec![(active.clone(), selected_value)],
         };
         assert_eq!(

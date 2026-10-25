@@ -1160,8 +1160,8 @@ impl EventModel {
                     ));
                 }
                 let ordinary = affine(&assignment.rhs, &program, &event.origin.instance);
-                let is_numeric = general_events[index] && ordinary.is_err();
-                let value = if is_numeric {
+                let is_numeric = (executes || general_events[index]) && ordinary.is_err();
+                let value = if executes || is_numeric {
                     if executes {
                         crate::procedure::source_dependencies(
                             &assignment.rhs,
@@ -1181,7 +1181,8 @@ impl EventModel {
                 };
                 expressions.push(assignment.rhs.clone());
                 numeric.push(is_numeric);
-                if !(value.operator_dependencies.is_empty()
+                if !(executes
+                    || value.operator_dependencies.is_empty()
                     || (event.procedure_id.is_some()
                         && value.operator_dependencies.iter().all(|&i| {
                             matches!(
@@ -1198,7 +1199,8 @@ impl EventModel {
                         "operator calls are only allowed in contributions",
                     ));
                 }
-                if state.kind == StateKind::Integer
+                if !executes
+                    && state.kind == StateKind::Integer
                     && general_events[index]
                     && !crate::event_numeric::integral(&assignment.rhs, &program)
                 {
@@ -1207,7 +1209,8 @@ impl EventModel {
                         "integer assignments require integral state arithmetic",
                     ));
                 }
-                if state.kind == StateKind::Integer
+                if !executes
+                    && state.kind == StateKind::Integer
                     && !general_events[index]
                     && (value.constant.fract() != 0.0
                         || value.nodes.iter().any(|v| *v != 0.0)

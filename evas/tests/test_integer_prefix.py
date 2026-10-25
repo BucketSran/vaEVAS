@@ -57,16 +57,15 @@ class IntegerPrefixContracts(unittest.TestCase):
                 compile_sources({'negative.va':model(body,decl)},[instance()])
 
     def test_declared_real_merge_keeps_original_select(self):
-        from evas.ir import Affine,Binary,Select
+        from evas.ir import Affine,Binary,RealLocal
         p=compile_sources({'real.va':model(
             'code=1;if(V(u,r)>0.25)code=code+2;if(V(u,r)>0.5)code=code+4;V(y,r)<+code;', 'real code;')},[instance()])
+        # IR33 reads the source-position capture. Replaying a Select tree
+        # here would read the overwritten alias and lose statement order.
         rhs=p.contributions[0].rhs
         if isinstance(rhs,Binary) and rhs.op=='multiply' and isinstance(rhs.left,Affine):
             rhs=rhs.right
-        self.assertIsInstance(rhs,Select)
-        self.assertIsInstance(rhs.then_value,Binary)
-        self.assertEqual(rhs.then_value.op,'add')
-        self.assertIs(rhs.then_value.left,rhs.else_value)
+        self.assertIsInstance(rhs,RealLocal)
         self.assertEqual(outputs(solve(p,['u'],[[0],[0.5],[1]],kernel=KERNEL)),[1,3,7])
 
     def test_helper_only_uses_identical_declared_integer_prefixes(self):

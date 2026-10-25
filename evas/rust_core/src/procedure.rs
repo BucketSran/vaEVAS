@@ -450,6 +450,37 @@ pub(crate) fn closed_math_input(e: &E, w: &Work) -> Result<bool, Error> {
     })
 }
 
+/// Closed memoryless call sites belong to the source activation, not the
+/// physical DAE dispatcher. Include every local definition/control dependency;
+/// a zero coefficient or declaration seed cannot erase a physical dependency.
+pub(crate) fn closed_math_program(p: &Program, w: &Work) -> Result<bool, Error> {
+    if p.procedures.is_empty() || p.operators.is_empty() {
+        return Ok(false);
+    }
+    if !p.operators.iter().all(|op| {
+        matches!(
+            op,
+            ir::OperatorSpec::Math { .. } | ir::OperatorSpec::Sin { .. }
+        )
+    }) {
+        return Ok(false);
+    }
+    let sources = dependency_sources(p, w)?;
+    for (index, op) in p.operators.iter().enumerate() {
+        let deps = source_dependencies(calls::input(op), p, &sources, w)?;
+        if deps.node_dependencies.iter().any(|&node| node != 0)
+            || !deps.state_dependencies.is_empty()
+            || deps
+                .operator_dependencies
+                .iter()
+                .any(|&other| other >= index)
+        {
+            return Ok(false);
+        }
+    }
+    Ok(true)
+}
+
 /// Held trigger arithmetic uses the same rounded source primitives and sticky
 /// owner as event values. No physical input is supplied by this state-only
 /// admission; source locals still require their owning occurrence frame.

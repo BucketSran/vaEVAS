@@ -18,6 +18,7 @@ from evas import CompileError, KernelError, compile_sources, transient
 from evas.ir import SCHEMA_VERSION
 from test_affine import KERNEL, instance, model
 from initial_record_contract import check_initial_record_batch
+from initial_source_sequence_contract import check_initial_source_sequence
 
 
 def timer_source(arguments="2,5,0.001", initial=0):
@@ -25,11 +26,15 @@ def timer_source(arguments="2,5,0.001", initial=0):
       @(timer({arguments})) n=n+1; V(y,r)<+n;''', 'integer n;')
 
 
-def run_timer(source=None, *, stop=19, times=None, step=100, instances=None, initial_records=None):
+def run_timer(source=None, *, stop=19, times=None, step=100, instances=None, initial_records=None,
+              initial_sequence=None):
     program = compile_sources({'timer.va': source or timer_source()}, instances or [instance()])
     result = transient(program, {'u': [[0, 0], [stop, stop]]},
                      times or [0, 1, 3, 8, 13, 18, stop],
                      stop=stop, max_step=step, kernel=KERNEL)
+    if initial_sequence is not None:
+        assert initial_records is None
+        return check_initial_source_sequence(result, program, *initial_sequence)
     return (check_initial_record_batch(result, program, *initial_records)
             if initial_records is not None else result)
 
@@ -97,11 +102,13 @@ class TimerContracts(unittest.TestCase):
 
     def test_zero_initialization_and_stop_are_committed_before_observation(self):
         for times in [[0, 0.25, 0.5, 1], [0.25]]:
-            result = run_timer(timer_source('0,0.5,0.001', initial=7), stop=1, times=times, initial_records=([0], [8], 1))
+            result = run_timer(timer_source('0,0.5,0.001', initial=7), stop=1, times=times,
+                               initial_sequence=([0], [(0,'initial_step',[0],[7]),
+                                                       (1,'timer',[7],[8])]))
             self.assertEqual([e['time'] for e in result['transient']['events']], [0, 0.5, 1])
             expected = {0: 8, 0.25: 8, 0.5: 9, 1: 10}
             self.assertEqual(result['transient']['states'], [[expected[t]] for t in times])
-            self.assertEqual(result['transient']['events'][0]['before'], [0])  # joint declaration-before, including initial_step
+            self.assertEqual(result['transient']['events'][0]['before'], [7])
             self.assertEqual(result['transient']['events'][-1]['after'], [10])
 
     def test_stop_before_at_and_after_one_shot(self):
@@ -243,7 +250,9 @@ class TimerContracts(unittest.TestCase):
             source = model('''@(initial_step) begin n=0; m=0; end
                 @(timer(0,0,0.001)) n=n+1;''' + statement + 'V(y,r)<+1.0*n+m;', 'integer n,m;')
             with self.subTest(statement=statement):
-                result = run_timer(source, stop=1, times=[0, 1], initial_records=([0,0], [1,0], 1))
+                result = run_timer(source, stop=1, times=[0, 1],
+                                   initial_sequence=([0,0], [(0,'initial_step',[0,0],[0,0]),
+                                                             (1,'timer',[0,0],[1,0])]))
                 self.assertEqual(result['transient']['states'], [[1,0],[2,0]])
                 self.assertEqual([event['time'] for event in result['transient']['events']], [0,.5])
 

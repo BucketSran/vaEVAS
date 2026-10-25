@@ -1135,6 +1135,18 @@ impl Plan {
             .iter()
             .map(|b| I { lo: b[0], hi: b[1] })
             .collect::<Vec<_>>();
+        self.next_bound_time_from_boxes(time, max_step, &nodes, operator_bounds, w)
+    }
+    /// Accepted physical boxes, with no nominal midpoint used as a proof.
+    pub(crate) fn next_bound_time_from_boxes(
+        &self,
+        time: f64,
+        max_step: f64,
+        nodes: &[I],
+        operator_bounds: &[I],
+        w: &Work,
+    ) -> Result<f64, Error> {
+        w.debit(2, ((nodes.len() + self.count) * 32 + 64) as u64)?;
         let points = nodes
             .iter()
             .map(|b| (b.lo.to_bits() == b.hi.to_bits()).then_some(b.lo))
@@ -1151,7 +1163,7 @@ impl Plan {
             true,
             &roots,
             &points,
-            &nodes,
+            nodes,
             &self.point_states,
             &self.base[..],
             &self.point_operators,

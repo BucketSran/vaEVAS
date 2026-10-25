@@ -5,27 +5,50 @@ from .ir import Program
 from .frontend import parse_sources
 
 
-def _references(value):
-    """Collect dependencies from IR expressions, not from model text heuristics."""
+def _binding_sources(ir):
+    """Structural definitions, including control edges and inactive writes.
+
+    This is an overapproximation for connectivity, never a numerical local
+    substitution. Binding indices are unique across the validated Program.
+    """
+    sources, captures = {}, {}
+    pending = [(ir, ())]
+    while pending:
+        value, guards = pending.pop()
+        if isinstance(value, dict):
+            if value.get('kind') == 'real_bind':
+                sources.setdefault(value['binding'], []).extend((value['value'], *guards))
+            elif value.get('kind') == 'contribution_capture':
+                captures.setdefault(value['contribution'], []).extend(guards)
+            if value.get('kind') in ('procedure_if', 'procedure_loop'):
+                guards = (*guards, value['left'], value['right'])
+            pending.extend((child, guards) for child in value.values())
+        elif isinstance(value, (list, tuple)):
+            pending.extend((child, guards) for child in value)
+    return sources, captures
+
+
+def _references(value, bindings):
+    """Collect structural dependencies, retaining zero terms and source locals."""
     nodes, states, operators = set(), set(), set()
-    if isinstance(value, dict):
-        if value.get("op") == "affine":
-            nodes.update(term["node"] for term in value["terms"])
-        elif value.get("op") == "state":
-            states.add(value["state"])
-        elif value.get("op") == "operator":
-            operators.add(value["operator"])
-        for child in value.values():
-            n, s, o = _references(child)
-            nodes.update(n)
-            states.update(s)
-            operators.update(o)
-    elif isinstance(value, (list, tuple)):
-        for child in value:
-            n, s, o = _references(child)
-            nodes.update(n)
-            states.update(s)
-            operators.update(o)
+    pending, seen_bindings = [value], set()
+    while pending:
+        value = pending.pop()
+        if isinstance(value, dict):
+            if value.get("op") == "affine":
+                nodes.update(term["node"] for term in value["terms"])
+            elif value.get("op") == "state":
+                states.add(value["state"])
+            elif value.get("op") == "operator":
+                operators.add(value["operator"])
+            elif value.get("op") == "real_local":
+                binding = value['binding']
+                if binding not in seen_bindings:
+                    seen_bindings.add(binding)
+                    pending.extend(bindings.get(binding, ()))
+            pending.extend(value.values())
+        elif isinstance(value, (list, tuple)):
+            pending.extend(value)
     return nodes, states, operators
 
 
@@ -36,15 +59,16 @@ def static_index(program: Program, instances=(), sources=None):
         modules.append(dict(name=model.name, source=model.source, ports=list(model.ports),
                             local_nodes=sorted(model.nodes), parameters=list(model.parameters)))
     ir = program.to_dict()
+    bindings, captures = _binding_sources(ir)
     contributions = []
     for index, contribution in enumerate(ir["contributions"]):
-        nodes, states, operators = _references(contribution["rhs"])
+        nodes, states, operators = _references((contribution["rhs"], captures.get(index, ())), bindings)
         contributions.append(dict(index=index, **contribution,
                                   input_nodes=sorted(nodes), states=sorted(states),
                                   operators=sorted(operators)))
     operators = []
     for index, operator in enumerate(ir["operators"]):
-        nodes, states, dependencies = _references(operator)
+        nodes, states, dependencies = _references(operator, bindings)
         operators.append(dict(index=index, **operator, input_nodes=sorted(nodes),
                               states=sorted(states), dependencies=sorted(dependencies)))
     instance_rows = [asdict(instance) if not isinstance(instance, dict) else dict(instance)

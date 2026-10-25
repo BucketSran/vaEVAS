@@ -311,5 +311,28 @@
       "comparison_voltage_limit_V": 1e-06,
       "status": "pending"
     }
+  ],
+  "procedure_consumer_followups": [
+    {
+      "id": "integer-source-order",
+      "test": "evas/tests/test_integer_prefix.py::IntegerPrefixContracts.test_old_alias_and_each_delta_arm_keep_source_order",
+      "expected": "[15,15,37], [8,8,7], [8,8,5] on original samples",
+      "status": "pending_deck_materialization"
+    },
+    {
+      "id": "closed-quarter-power",
+      "test": "evas/tests/test_constant_initial_power.py::ConstantInitialPower.test_closed_initial_quarter_power_scales_original_voltage_relation",
+      "expected": "Source 16**0.25=2 and original voltage relation",
+      "status": "pending_deck_materialization"
+    },
+    {
+      "id": "source-bound-and-held-forcing",
+      "tests": [
+        "evas/tests/test_implicit_step_bounds.py",
+        "evas/tests/test_forcing_history_bridge.py"
+      ],
+      "expected": "Use original physical models, stimuli and independent formulas; do not compare internal EVAS records as Spectre interface",
+      "status": "pending_case_selection_and_deck_materialization"
+    }
   ]
 }
