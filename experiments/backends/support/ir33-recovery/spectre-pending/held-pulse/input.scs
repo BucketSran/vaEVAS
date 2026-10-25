@@ -1,0 +1,8 @@
+simulator lang=spectre
+ahdl_include "model.va"
+dut (s r y) m
+Vs (s 0) vsource type=pwl wave=[0 0 1 0 1.1 1 2 1 2.1 0 6 0]
+Vr (r 0) vsource type=pwl wave=[0 0 6 0]
+opts options reltol=1e-6 vabstol=1e-9 iabstol=1e-12
+tran tran stop=6 maxstep=0.01 errpreset=conservative strobeoutput=all strobetimes=[0 0.5 1.5 2.5 5.5]
+save y

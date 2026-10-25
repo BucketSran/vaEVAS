@@ -201,6 +201,68 @@ def _side_truth(relation, sign):
     return (sign > 0) if relation in ('>', '>=') else (sign < 0)
 
 
+def _unconstrained_probe(compiler, node, charge):
+    """Keep the probe out of circuit equations that could determine its value.
+
+    Port direction alone is insufficient: another instance can drive an input.
+    Exclude both LHS providers and numerical RHS/alias reads. Otherwise exact
+    physical projection could invert an equation whose output is driven.
+    Predicate reads are safe here: conditional contributions disable that
+    projection, and state/select source values are opaque to it. A non-driven
+    probe then has neither a causal provider nor a nonzero projection column;
+    its retained condition fails the finite event-frame check before commit.
+    Inspect the complete bound program, including unselected arms. Binding
+    has already removed zero-iteration loops, which contribute no equation.
+    Unexpanded functions and complex endpoints keep the previous route.
+    """
+    bindings = compiler.compilation.held_power2_bindings
+    target = compiler.compilation.nodes[node]
+    charge('held_probe_bindings', len(bindings) + 2)
+    for _, model, nets in bindings:
+        charge('held_probe_functions', 1)
+        if model.functions:
+            return False
+        charge('held_probe_roots', len(model.analog) + len(model.initial) + len(model.events) + 4)
+        pending = [*model.analog, *model.initial, *model.events]
+        while pending:
+            charge('held_probe_statement', 4)
+            item = pending.pop()
+            if isinstance(item, ContributionStatement):
+                charge('held_probe_endpoints', len(item.branch.args) + 2)
+                for endpoint in item.branch.args:
+                    if endpoint.op != 'node':
+                        return False
+                    name = str(endpoint.value)
+                    charge('held_probe_net', len(name) + len(target) + 2)
+                    mapped = '0' if name == '0' else nets.get(name)
+                    if mapped is None or mapped == target:
+                        return False
+            if not isinstance(item, Conditional):
+                charge('held_probe_expression_roots', 8 + (len(item.args) if isinstance(item, Display) else 0))
+                expressions = list(_statement_exprs(item))
+                if isinstance(item, Event):
+                    charge('held_probe_triggers', len(item.triggers) + 1)
+                    for trigger in item.triggers:
+                        charge('held_probe_arguments', len(trigger.arguments) + 1)
+                        expressions.extend(arg for arg in trigger.arguments if arg is not None)
+                while expressions:
+                    charge('held_probe_expression', 4)
+                    expr = expressions.pop()
+                    if expr.op == 'node':
+                        name = str(expr.value)
+                        charge('held_probe_read_net', len(name) + len(target) + 2)
+                        mapped = '0' if name == '0' else nets.get(name)
+                        if mapped is None or mapped == target:
+                            return False
+                    charge('held_probe_expression_children', len(expr.args) + 1)
+                    expressions.extend(expr.args)
+            for field in ('then_body', 'else_body', 'body'):
+                children = getattr(item, field, ())
+                charge('held_probe_children', len(children) + 1)
+                pending.extend(children)
+    return True
+
+
 def plan(compiler):
     """Return a rewritten executable model, or None when the slice does not apply."""
     model = compiler.model
@@ -517,15 +579,39 @@ def _plan(compiler, model, ordinary, writers, charge, queries=None):
         charge('callback', len(body))
         new_events.append(replace(event, body=tuple(body) + tuple(closing)))
 
+    # A mathematical affine zero need not be a program-RN boundary. For
+    # example V(u)+2**53 can round to 2**53 on both sides of V(u)==0.
+    # Earlier reads and shared-root callbacks need a separate frame proof.
+    preparations = None
+    if model.procedure:
+        charge('procedure_preparation_scope', 5 + len(atoms) + len(runtime))
+        direct_atoms = all(
+            item.left.op == 'voltage' and len(item.left.args) == 2
+            and item.left.args[0].op == item.left.args[1].op == 'node'
+            and compiler.node_ids.get(str(item.left.args[1].value)) == 0
+            and compiler.node_ids.get(str(item.left.args[0].value)) in compiler.allowed_condition_nodes
+            and compiler.node_ids.get(str(item.left.args[0].value)) != 0
+            and item.right.op == 'number'
+            for item, _, _ in atoms)
+        if len(classes) == 1 and first == 0 and not merged and direct_atoms \
+                and all(_position(event) > end for event in runtime) \
+                and _unconstrained_probe(compiler,
+                    compiler.node_ids[str(atoms[0][0].left.args[0].value)], charge):
+            preparations = []
+
     for index, (_, guard, origin) in enumerate(classes):
         for direction in (1, -1):
             if (index, direction) in merged:
                 continue
             number = Expr('number', 1., (), origin)
             setting = number if direction > 0 else Expr('unary-', None, (number,), origin)
-            body = (*forced(update, index, -direction), *update, *closing)
+            previous = tuple(forced(update, index, -direction))
+            body = (*previous, *update, *closing)
             charge('atom_event', len(body))
             new_events.append(Event((Trigger('cross', (guard, setting), origin),), body, origin))
+            if preparations is not None:
+                charge('atom_preparation', 8 + len(previous) + len(closing))
+                preparations.append(replace(new_events[-1], body=(*previous, *closing)))
 
     initial = list(model.initial)
     if initial_events:
@@ -537,18 +623,18 @@ def _plan(compiler, model, ordinary, writers, charge, queries=None):
         initial.extend(update)
 
     if model.procedure:
-        # The retained process already executes U at its actual source
-        # position, before/after whichever original gate is selected. Do not
-        # replay the legacy callback-prefix/suffix copies or rename U into a
-        # late symbolic alias. Only its certified atom crossings need extra
-        # wakeup gates. Identity writes declare the original held slots and
-        # leave the selected process candidate unchanged.
-        wakeups = tuple(replace(event, body=tuple(closing))
-                        for event in new_events[len(events):])
+        # In the admitted direct-probe slice, a crossing reconstructs the left-side
+        # value U(slot, pre). The source procedure then evaluates U(root) at
+        # its original position. Queries execute neither of these gates and
+        # must not commit their temporary ordinary values.
+        wakeups = (tuple(preparations) if preparations is not None else
+                   tuple(replace(event, body=tuple(closing))
+                         for event in new_events[len(events):]))
         compiler.ordinary_held_process_slots = frozenset(held)
         charge('procedure_wakeups', len(wakeups) + sum(len(e.body) for e in wakeups))
-        return replace(model, events=[*events, *wakeups],
-                       procedure=(*model.procedure, *wakeups))
+        procedure = ((*wakeups, *model.procedure) if preparations is not None else
+                     (*model.procedure, *wakeups))
+        return replace(model, events=[*events, *wakeups], procedure=procedure)
 
     mapping = {name: name + SUFFIX for name in held}
     if any(alias in model.variables or alias in model.parameters for alias in mapping.values()):

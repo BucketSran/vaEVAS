@@ -50,6 +50,9 @@ EVAS全部资料见[统一入口](../evas/README.md#evas-entry)；本目录维�
 
 ## 目录结构
 
+[IR33 首批回归恢复](backends/support/ir33-recovery/README.md)保存解析器、普通保持状态与
+133项负控审计的有限证据，以及用户要求暂缓的 Spectre 待跑清单。
+
 部分目录沿用历史批次名，以便追溯原链接和来源。按职责查阅以下入口：
 
 | 目录 | 职责 | 内容 |

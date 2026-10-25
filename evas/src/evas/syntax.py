@@ -1039,6 +1039,9 @@ class Parser:
         module_token = self.take("module")
         self.function_names = set()
         self.deferred_system_calls = False
+        # One Parser may read several modules. A structural parent has no
+        # analog_block() call to reset the previous module's procedure.
+        self.procedure_body = []
         name = self.name()
         self.take("(")
         ports, directions, nodes, node_ranges, port_ranges = self.module_ports()
