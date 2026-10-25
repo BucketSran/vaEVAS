@@ -26,9 +26,7 @@ fn affine_degree(expression: &Expression, allowed: &HashSet<usize>) -> Result<u8
         } => {
             use crate::ir::RealOperation::{Add, Divide, Multiply, Subtract};
             match operation {
-                Add | Subtract => {
-                    affine_degree(left, allowed)?.max(affine_degree(right, allowed)?)
-                }
+                Add | Subtract => affine_degree(left, allowed)?.max(affine_degree(right, allowed)?),
                 Multiply => {
                     let degree = affine_degree(left, allowed)? + affine_degree(right, allowed)?;
                     if degree > 1 {

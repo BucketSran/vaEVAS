@@ -504,8 +504,6 @@ class InstanceCompiler:
         owner = self.compilation.native_audit
         owner.debit("copy_container")
         ordinary_scratch = set()
-        self.initial_ordinary_record_aliases = set()
-        self.initial_ordinary_seed_aliases = set()
         source_model = self.event_body_source_model or self.initial_math_source_model
         for name in analog_writers:
             owner.debit("ordinary_scratch_candidate")
@@ -521,15 +519,14 @@ class InstanceCompiler:
                 # execution now writes it at the retained source statement.
                 ordinary_scratch.add(name)
                 continue
+            if self.procedure_builder is not None and self.model.variables[name] == "real":
+                ordinary_scratch.add(name)
+                continue
             if name in persistent and self.model.variables[name] == "real" and name not in event_writers:
-                from .initial_ordinary_alias import admit, record_contract
+                from .initial_ordinary_alias import admit
                 if admit(self, name, persistent, analog_writers, source_model):
                     owner.debit("copy_element")
                     ordinary_scratch.add(name)
-                    if record_contract(name, source_model):
-                        self.initial_ordinary_record_aliases.add(name)
-                    else:
-                        self.initial_ordinary_seed_aliases.add(name)
                 continue
             if name in persistent and self.model.variables[name] == "integer":
                 from .ordinary_integer_current_alias import admit as admit_current_integer
@@ -635,9 +632,6 @@ class InstanceCompiler:
             self.ordinary_alias_variables = self.local_variables | ordinary_scratch
         else:
             self.ordinary_alias_variables = self.local_variables
-        if self.procedure_builder is not None and self.initial_ordinary_seed_aliases:
-            # Seed-mode aliases keep State.initial and use RealBind for ordinary writes.
-            self.procedure_builder.declare(self.initial_ordinary_seed_aliases)
         referenced = reads(self.model.initial) | reads(self.model.analog)
         for event in self.model.events:
             referenced.update(reads(event.body))
@@ -952,17 +946,14 @@ class InstanceCompiler:
                                 {"<":"lt", "<=":"le", ">":"gt", ">=":"ge"}[statement.relation],
                                 left, right, yes[name], no[name])
                 elif isinstance(statement, SyntaxDisplay):
-                    # Constant-snapshot obligations survive even when the runtime
-                    # initial gate owns emission (procedure path). A later total
-                    # ordinary overwrite must not erase an illegal initial display.
+                    if self.procedure_builder is not None:
+                        continue  # The unique runtime initial gate owns this output.
                     arguments = []
                     for argument in statement.args:
                         value = lower(argument, resolve(values, aliases), self.node_ids, self.model.source,
                                       preserve_structure=True, decisions=self.initial_select,
                                       validate_decision=self.validate_initial_operand, node_declarations=True)
                         arguments.append(self.make_ir(Affine, constant_snapshot(value), ()))
-                    if self.procedure_builder is not None:
-                        continue  # The unique runtime initial gate owns this output.
                     origin = self.make_ir(Origin, statement.token.source or self.model.source, statement.token.line,
                                     statement.token.column, self.instance.name, statement.token.expansion)
                     if active:
@@ -1077,10 +1068,6 @@ class InstanceCompiler:
 
     def symbol(self, name):
         builder = getattr(self, "procedure_builder", None)
-        # Seed-mode aliases keep the State slot inside event bodies; ordinary
-        # analog evaluation binds a separate occurrence local after callbacks.
-        if name in getattr(self, 'initial_ordinary_seed_aliases', ()) and name in self.state_ids:
-            return self.make_ir(StateRef, self.state_ids[name])
         if builder is not None and name in builder.bindings:
             # A later event body reads this source-position binding. A cross
             # or timer argument does not: without an alias or prefix already
@@ -2300,14 +2287,8 @@ class InstanceCompiler:
             return fact.value if fact.closed and fact.finite else None
 
         def setting(arg):
-            # Fixed cross/timer settings are instance constants; ordinary Affine
-            # lowering is enough. Avoid program_real trees that activate the
-            # held-target aggregate on legal static calendar decks (va03-zoom).
-            value = self.lower_event(arg, self.event_parameter, {})
+            value = self.lower_event(arg, self.event_parameter, {}, program_real=True)
             number = constant_value(value)
-            if number is None:
-                value = self.lower_event(arg, self.event_parameter, {}, program_real=True)
-                number = constant_value(value)
             if number is None:
                 raise CompileError(f"{leaf.kind} settings must be instance constants")
             return value, number
@@ -2344,22 +2325,11 @@ class InstanceCompiler:
             tolerance_value, time_tol = (None, 1e-12) if tolerance_arg is None else setting(tolerance_arg)
             if time_tol < 0:
                 raise CompileError("timer requires nonnegative start and time_tol")
-
-            def timer_arg(arg, *, default=None):
-                if arg is None:
-                    value = default if default is not None else self.make_ir(Affine, 0., ())
-                    return value, constant_value(value)
-                value = self.lower_event(arg, self.symbol, {}, preserve_structure=True)
-                number = constant_value(value)
-                if number is not None:
-                    return value, number
-                value = self.lower_event(arg, self.symbol, {}, preserve_structure=True, program_real=True)
-                return value, constant_value(value)
-
-            pairs = [timer_arg(start_arg), timer_arg(period_arg),
-                     timer_arg(enable_arg, default=self.make_ir(Affine, 1., ()))]
-            values = [pair[0] for pair in pairs]
-            constants = [pair[1] for pair in pairs]
+            values = [self.lower_event(arg, self.symbol, {}, preserve_structure=True, program_real=True) if arg is not None else self.make_ir(Affine, 0., ())
+                      for arg in (start_arg, period_arg, enable_arg)]
+            if enable_arg is None:
+                values[2] = self.make_ir(Affine, 1., ())
+            constants = [constant_value(value) for value in values]
             if all(value is not None for value in constants):
                 start, period, enabled = constants
                 if start < 0:
@@ -2371,11 +2341,6 @@ class InstanceCompiler:
             else:
                 if time_tol == 0:
                     raise CompileError("zero time_tol requires fixed timer parameters")
-                # Held timers keep executable program-real argument trees.
-                values = [self.lower_event(arg, self.symbol, {}, preserve_structure=True, program_real=True) if arg is not None else value
-                          for arg, value in ((start_arg, values[0]), (period_arg, values[1]), (enable_arg, values[2]))]
-                if enable_arg is None:
-                    values[2] = self.make_ir(Affine, 1., ())
                 result = self.make_ir(HeldTimerTrigger, values[0], values[1], time_tol, values[2])
                 if tolerance_arg is not None:
                     retain(((tolerance_arg, tolerance_value),))
@@ -2608,11 +2573,6 @@ class InstanceCompiler:
         def resolve(name):
             if name in env:
                 return env[name]
-            # Seed-mode ordinary aliases are bound occurrence locals; do not
-            # fall back to the preserved State slot for ordinary reads.
-            if (self.procedure_builder is not None and name in self.procedure_builder.bindings
-                    and name in getattr(self, 'initial_ordinary_seed_aliases', ())):
-                raise CompileError(f"{self.model.source}: local variable {name!r} is not assigned before use")
             if self.procedure_builder is not None and name in self.state_ids:
                 return self.make_ir(StateRef, self.state_ids[name])
             if name in self.ordinary_alias_variables:
@@ -3002,10 +2962,9 @@ class InstanceCompiler:
                         # Both arms write the same executable slot. Its value
                         # is chosen when the branch runs, not by evaluating a
                         # predicate again after an arm may have changed it.
-                        # Prefer the occurrence binding for seed-mode aliases.
-                        result[name] = (self.make_ir(RealLocal, self.procedure_builder.bindings[name])
-                                        if name in self.procedure_builder.bindings else
-                                        self.make_ir(StateRef, self.state_ids[name]))
+                        result[name] = (self.make_ir(StateRef, self.state_ids[name])
+                                        if name in self.state_ids else
+                                        self.make_ir(RealLocal, self.procedure_builder.bindings[name]))
                         if isinstance(result[name], RealLocal):
                             degrees = [self.predicate_degree(item) for item in
                                        (left, right, then_env[name], else_env[name])]

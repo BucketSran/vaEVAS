@@ -12,6 +12,20 @@ from test_affine import KERNEL, instance, model
 
 
 class ProcedureRuntime(unittest.TestCase):
+    def test_initial_event_uses_local_at_its_source_position(self):
+        for initial, later in [(2.0, 9.0), (-0.625, 1.25)]:
+            with self.subTest(initial=initial, later=later):
+                source = model(
+                    f'a={initial}; @(initial_step) q=a; a={later}; V(y,r)<+q;',
+                    'real a,q;',
+                )
+                program = compile_sources({'initial-local.va': source}, [instance()])
+                result = transient(program, {'u': [[0, 0], [1, 0]]}, [0, 1],
+                                   stop=1, max_step=0.5, kernel=KERNEL)
+                actual = [s['voltages'][result['nodes'].index('y')]
+                          for s in result['solutions']]
+                self.assertEqual(actual, [initial, initial])
+
     def test_feedback_reset_releases_at_same_occurrence(self):
         source = model('''reset=0;
             @(timer(0.5,0.5)) reset=1;

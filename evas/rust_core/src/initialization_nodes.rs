@@ -408,9 +408,8 @@ impl Resolver<'_> {
                         Expression::Affine { terms, .. } => {
                             terms.iter().all(|t| nodes.contains(&t.node))
                         }
-                        Expression::RealBoundary { value, .. } | Expression::Forcing { value, .. } => {
-                            known(value, nodes)
-                        }
+                        Expression::RealBoundary { value, .. }
+                        | Expression::Forcing { value, .. } => known(value, nodes),
                         Expression::RealBinary { left, right, .. } => {
                             known(left, nodes) && known(right, nodes)
                         }

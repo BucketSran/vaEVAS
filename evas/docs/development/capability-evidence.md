@@ -387,3 +387,11 @@ C8 迁移明确核对实际控制器元数据，并以细 max_step 请求证明�
 [程序执行合同](../math/events.md#program-real-procedure-contract)，仍仅为本地开发候选。
 一般 RN 反馈、非零源误差管及不可隔离多切点窗口仍未支持；
 完整 IR33、原400与同源后端仍未验收，不改变上述发布版本的结果。
+
+### IR33 源码位置与预算回归修复
+
+[PR #250](https://github.com/BucketSran/vaEVAS/pull/250)补充 LANG、EVENT-ORDER、TIMER、COMPOSE 的开发验证。
+[过程回归](../../tests/test_procedure_runtime.py)新增初始事件读取源码位置局部量的数值检查；
+[实数 IR 回归](../../tests/test_program_real_ir.py)沿用固定 timer 捕获及共享预算耗尽检查。
+[事件说明](../math/events.md#ir33-回归修复的兼容边界)限定初始值与过程执行关系。
+本次不更新旧 Spectre 或 Q 资格总数；完整回退比较绑定 PR CI 的具体提交。

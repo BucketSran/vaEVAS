@@ -2502,3 +2502,21 @@ settlement 和代表时刻刷新均复用实际电路 Plan 的选路，避免另
 源码序号都缺省时保留；孤立元数据拒绝。
 [原始事件控制](../../tests/test_raw_event_owners.py)核对原始 idt、integer table、
 有效唯一 owner 和旧形式。新增验证复用原付费扫描，不创建新的预算 owner。
+
+### IR33 回归修复的兼容边界
+
+[PR #250](https://github.com/BucketSran/vaEVAS/pull/250)保留 IR33 的源码位置语义：
+初始事件在过程门执行，`State.initial` 只保存声明种子。
+例如 `a=2; @(initial_step) q=a; a=9;` 在整个瞬态中保持 q=2；
+不能把 occurrence 局部引用写入静态种子，或折叠掉原始事件门。
+固定 timer 的常量参数也保留源码实数运算和捕获步骤，
+`NativeAudit` 继续在相同请求中累计工作并执行不可重置的 100000 上限。
+
+该候选补初始表达式消费者对现有 RealBinary/RealBoundary 与整数位运算的处理，
+保留源电压依赖和同实例状态约束；常量与过程、事件共享的源码身份保持分离。
+展开前继续检查初始循环，即使零次展开也不能隐藏非法表达式或索引。
+这些改动不代表全部输入初始化或初始化循环已经通过。
+[过程数值回归](../../tests/test_procedure_runtime.py)、
+[源码实数与预算合同](../../tests/test_program_real_ir.py)、
+[初始循环合同](../../tests/test_initial_static_loops.py)保留独立答案及拒绝条件；
+逐方法结果和已知主线失败由 PR 的固定候选 CI 记录，不修改既有测试预期。

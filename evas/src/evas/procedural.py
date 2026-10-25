@@ -8,11 +8,10 @@ from dataclasses import replace
 from .errors import CompileError
 from .native_audit import Charge
 from .ir import (Affine, Assignment, AnalogProcedure, ContributionCapture, Event,
-                 EventGate, InitialStepTrigger, Origin, ProcedureStep,
+                 EventGate, InitialStepTrigger, OrTrigger, Origin, ProcedureStep,
                  ProcedureConditional, RealBind, RealBinding, RealBoundary, RealLocal, StateRef, StepBoundCapture)
-from .syntax import (Assignment as SourceAssignment, ContributionStatement, Display,
-                     Event as SourceEvent, Conditional as SourceConditional, BoundStep,
-                     Loop as SourceLoop)
+from .syntax import (Assignment as SourceAssignment, ContributionStatement,
+                     Event as SourceEvent, Conditional as SourceConditional, BoundStep)
 
 
 class ProcedureBuilder:
@@ -177,9 +176,7 @@ class ProcedureBuilder:
         """Charge/check original RHS scopes even when a loop expands to zero."""
         c = self.compiler
         owner = c.compilation.native_audit
-        # Do not activate here: a prior local-only instance must be able to
-        # accumulate inactive work that the next admit/target still sees under
-        # the unchanged 100000 cap (test_first_activation_*).
+        owner.activate(model.declaration_token)
         if model.functions:
             length = len(model.procedure) if model.procedure else len(model.analog)+len(model.initial)+len(model.events)
             owner.debit("procedure_original_pending", 2+length, model.declaration_token)
@@ -235,10 +232,15 @@ class ProcedureBuilder:
         c = self.compiler
         c.compilation.native_audit.debit("procedure_capture_record", 8, statement)
         origin = self.origin(statement.token)
-        # Seed-mode initial-ordinary aliases keep the State slot at its installed
-        # seed; ordinary writes bind a separate occurrence local (315e4830).
-        # Record-mode aliases Assign into the slot so t0 after tracks the live value.
-        if statement.name in self.bindings:
+        if statement.name in c.state_ids:
+            if c.model.variables[statement.name] == "real":
+                value = c.make_ir(RealBoundary, value, "store", origin)
+            action = c.make_ir(Assignment, c.state_ids[statement.name], value)
+            result = c.make_ir(StateRef, c.state_ids[statement.name])
+            c.compilation.native_audit.debit("procedure_state_scope_record", 2)
+            self.state_scope_facts.setdefault(result.state, []).append(value)
+            self.scope_generation += 1
+        else:
             binding = self.bindings[statement.name]
             value = c.make_ir(RealBoundary, value, "snapshot", origin)
             action = c.make_ir(RealBind, binding, value, origin)
@@ -253,17 +255,6 @@ class ProcedureBuilder:
             c.compilation.native_audit.debit("procedure_binding_dependencies", 2 + len(dependencies))
             self.binding_nodes.setdefault(binding, set()).update(dependencies)
             self.values[binding] = value
-        elif statement.name in c.state_ids:
-            if c.model.variables[statement.name] == "real":
-                value = c.make_ir(RealBoundary, value, "store", origin)
-            action = c.make_ir(Assignment, c.state_ids[statement.name], value)
-            result = c.make_ir(StateRef, c.state_ids[statement.name])
-            c.compilation.native_audit.debit("procedure_state_scope_record", 2)
-            self.state_scope_facts.setdefault(result.state, []).append(value)
-            self.scope_generation += 1
-        else:
-            raise CompileError("ordinary real assignment lacks its source-position binding",
-                               token=statement.token, instance=c.instance.name)
         self.actions.setdefault(statement.token, []).append(action)
         return result
 
@@ -359,9 +350,6 @@ class ProcedureBuilder:
                     steps.append(step(action, number))
                 elif isinstance(source, SourceEvent):
                     gate = event_gate(source)
-                    if gate is None:
-                        # Pure initial_step body was installed in State.initial.
-                        continue
                     if self.event_arguments is not None:
                         c.compilation.native_audit.debit('procedure_argument_gate_lookup', 1, source)
                         for argument in self.event_arguments.get(gate.event, ()):
@@ -390,48 +378,19 @@ class ProcedureBuilder:
                                        instance=c.instance.name)
             return tuple(steps)
 
-        def has_display(statements):
-            for statement in statements:
-                if isinstance(statement, Display):
-                    return True
-                if isinstance(statement, SourceConditional) and (
-                        has_display(statement.then_body) or has_display(statement.else_body)):
-                    return True
-                if isinstance(statement, SourceLoop) and has_display(statement.body):
-                    return True
-            return False
-
-        def writes_record_alias(statements):
-            record = getattr(c, 'initial_ordinary_record_aliases', ())
-            if not record:
-                return False
-            pending = list(statements)
-            while pending:
-                item = pending.pop()
-                if isinstance(item, SourceAssignment) and item.name in record:
-                    return True
-                for field in ('then_body', 'else_body', 'body'):
-                    pending.extend(getattr(item, field, ()))
-            return False
-
         def event_gate(source):
                 choices = self.events.get(source.token, [])
                 initial = any(leaf.kind == "initial_step" for leaf in source.triggers)
                 if choices:
                     index = choices.pop(0)
-                    # Mixed initial_step|cross: monitored leaves were compiled
-                    # without initial_step. Initialization is State.initial
-                    # (INITIAL_STATIC_LOOP_CONTRACT / 3553bb2a); do not re-attach
-                    # an initial_step leaf that would emit a second t=0 record.
+                    if initial:
+                        event = c.compilation.events[index]
+                        leaves = event.trigger.triggers if isinstance(event.trigger, OrTrigger) else (event.trigger,)
+                        trigger = c.make_ir(OrTrigger, (c.make_ir(InitialStepTrigger), *leaves))
+                        c.compilation.events[index] = replace(event, trigger=trigger)
                 elif initial:
-                    # Static-loop / seed-mode bodies are already in State.initial.
-                    # IR33 record-contract aliases still need the source gate so
-                    # the t0 batch keeps declaration before and live after.
-                    # Display-only initial_step never enters model.initial.
-                    if (all(leaf.kind == "initial_step" for leaf in source.triggers)
-                            and not has_display(source.body)
-                            and not writes_record_alias(source.body)):
-                        return None
+                    # Initial source statements execute once in the procedure.
+                    # State.initial below contains declaration/default seeds.
                     c.runtime_event_checks = False
                     c.active_event_aliases = c.aliases_at(source.token, body=True)
                     # Initial replay is aggregate work, but it is not a new
@@ -457,25 +416,8 @@ class ProcedureBuilder:
         if any(self.events.values()) or any(self.actions.values()) or any(self.conditions.values()):
             raise CompileError("compiled source steps are missing from the retained procedure",
                                instance=c.instance.name)
-        record_aliases = getattr(c, 'initial_ordinary_record_aliases', ())
         for name, state in c.state_ids.items():
-            # Record-contract aliases keep declaration seeds for the t0 before=
-            # snapshot; their initial_step gate runs as an EventGate. Seed-mode
-            # aliases and static-loop installs keep initialize_states values.
-            if name in record_aliases:
-                seed = c.declaration_initials.get(name, Affine(0., ()))
-            elif name in c.initials:
-                seed = c.initials[name]
-                while isinstance(seed, RealBoundary):
-                    seed = seed.value
-                # SEED+i and other closed real trees must become scalars in
-                # State.initial; the kernel voltage resolver rejects operator
-                # initials that are not declaration constants or closed numbers.
-                closed = c.program_real_constant(seed)
-                if closed is not None:
-                    seed = closed
-            else:
-                seed = c.declaration_initials.get(name, Affine(0., ()))
+            seed = c.declaration_initials.get(name, Affine(0., ()))
             if isinstance(seed, Affine) and not seed.terms:
                 seed = seed.constant
             c.compilation.states[state] = replace(c.compilation.states[state], initial=seed)

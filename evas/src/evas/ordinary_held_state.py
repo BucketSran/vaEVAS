@@ -47,6 +47,7 @@ PURE = frozenset(('number', 'parameter', 'unary+', 'unary-', '+', '-', '*', '/',
                   '&', '|', '^', 'unary~', '<<', '>>', '<', '<=', '>', '>=', '==', '!=',
                   '&&', '||', 'unary!', 'ternary', 'abs', 'min', 'max'))
 VOLTAGE = frozenset(('voltage', 'node'))
+PHYSICAL = VOLTAGE | frozenset(('time',))
 SUFFIX = '$held'
 
 
@@ -235,9 +236,33 @@ def plan(compiler):
     try:
         return _plan(compiler, model, ordinary, writers, charge, queries)
     except _Unsupported:
-        # A failed held proof keeps the previous compiler path. Admit/scratch
-        # still inspect original source; do not replace those diagnostics with
-        # a dense-time certificate error for shapes held rewrite cannot own.
+        if model.procedure and getattr(compiler, 'ordinary_held_proof_required', False):
+            # Retaining the process is not itself a dense-time certificate.
+            # A failed held proof must not admit tracking/running-max or a
+            # timer input with an uncertified exact-zero side merely because
+            # real assignments now have executable source-position captures.
+            pending_statements = list(ordinary)
+            while pending_statements:
+                item = pending_statements.pop()
+                charge('unproved_process_statement')
+                for expr in _statement_exprs(item):
+                    if queries is not None:
+                        if queries.ops(expr) & PHYSICAL:
+                            raise CompileError('ordinary held physical update lacks its dense-time certificate',
+                                               code='unsupported_local_event', token=item.token,
+                                               instance=compiler.instance.name)
+                        continue
+                    pending_exprs = [expr]
+                    while pending_exprs:
+                        current = pending_exprs.pop()
+                        charge('unproved_process_expression')
+                        if current.op in VOLTAGE or current.op == 'time':
+                            raise CompileError('ordinary held physical update lacks its dense-time certificate',
+                                               code='unsupported_local_event', token=item.token,
+                                               instance=compiler.instance.name)
+                        pending_exprs.extend(current.args)
+                for field in ('then_body', 'else_body', 'body'):
+                    pending_statements.extend(getattr(item, field, ()))
         return None
 
 
