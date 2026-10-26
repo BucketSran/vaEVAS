@@ -268,7 +268,13 @@ CI 先生成完整输入身份，再用 `--input-identity` 绑定采集报告。
 当前 PR2a 的 CI 仅承担完整采集和覆盖对账。汇总同时显示原始结果、固定分母、
 `gate_active=false`、`merge_allowed=null` 和 `manual_review_required=true`。
 合入仍需固定候选的人工比较与独立审查；CI 采集成功不表示无回退或语义合格。
-PR2b 将从已审核的可信 base 同时读取门禁代码与基线后激活自动准入，缺任一项即拒绝。
+可信比较 loader 作为 inactive bootstrap 提供，尚未接入必需准入 job。
+它从事件选定的可信提交同时读取 gate、transition API 和基线，head 基线仅作候选数据；
+这些比较器测试不证明 workflow 的 loader 本体来源已固定。
+合入本 bootstrap 后，后续独立激活 PR 才能固定其完整已审 main commit，
+从该 commit 的 regular Git blob 抽取 loader 并以 `python -I` 执行。
+直接执行 PR checkout 的同名脚本不能作为可信准入；`-I` 不能防脚本本体被替换。
+激活前继续采用上述人工比较与独立审查，不把采集成功称为自动允许合入。
 
 ```sh
 python3 -B scripts/regression_gate.py validate runs/<task>/complete.json
