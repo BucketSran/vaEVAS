@@ -8,6 +8,8 @@ import sys
 import tempfile
 import unittest
 
+import git_fixture
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -211,58 +213,59 @@ class EvidenceIdentity(unittest.TestCase):
         evidence = load("ci_evidence")
         with tempfile.TemporaryDirectory() as directory:
             repo = Path(directory)
-            subprocess.run(["git", "init", "-q", str(repo)], check=True)
-            files = [
-                "evas/rust_core/src/main.rs",
-                "evas/tests/test_real.py",
-                "evas/rust_core/Cargo.lock",
-                "scripts/run_regression.py",
-                "evas/docs/development/diagnostic-inventory.json",
-            ]
-            for name in files:
-                path = repo / name
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text("original\n")
-            subprocess.run(["git", "add", "."], cwd=repo, check=True)
-            base = evidence.fingerprint(repo, {"toolchain": "fixed", "budget": 120})
-            for name in files:
-                with self.subTest(name=name):
+            with git_fixture.isolate():
+                git_fixture.run(["init", "-q", str(repo)], scratch=repo, check=True, capture_output=True)
+                files = [
+                    "evas/rust_core/src/main.rs",
+                    "evas/tests/test_real.py",
+                    "evas/rust_core/Cargo.lock",
+                    "scripts/run_regression.py",
+                    "evas/docs/development/diagnostic-inventory.json",
+                ]
+                for name in files:
                     path = repo / name
-                    path.write_text("changed\n")
-                    changed = evidence.fingerprint(
-                        repo, {"toolchain": "fixed", "budget": 120}
-                    )
-                    self.assertEqual(base == changed, name in evidence.EXCLUDED)
+                    path.parent.mkdir(parents=True, exist_ok=True)
                     path.write_text("original\n")
-            path = repo / files[0]
-            old_mode = path.stat().st_mode
-            path.chmod(0o755)
-            self.assertNotEqual(
-                base, evidence.fingerprint(repo, {"toolchain": "fixed", "budget": 120})
-            )
-            path.chmod(old_mode)
-            self.assertNotEqual(
-                base, evidence.fingerprint(repo, {"toolchain": "new", "budget": 120})
-            )
-            self.assertNotEqual(
-                base, evidence.fingerprint(repo, {"toolchain": "fixed", "budget": 121})
-            )
-            for receipt in [
-                {},
-                {
-                    "identity": base,
-                    "shard": "0",
-                    "successful": False,
-                    "report_sha256": "x",
-                },
-                {
-                    "identity": base,
-                    "shard": "1",
-                    "successful": True,
-                    "report_sha256": "x",
-                },
-            ]:
-                self.assertFalse(evidence.valid_receipt(receipt, base, "0"))
+                git_fixture.run(["add", "."], cwd=repo, scratch=repo, check=True, capture_output=True)
+                base = evidence.fingerprint(repo, {"toolchain": "fixed", "budget": 120})
+                for name in files:
+                    with self.subTest(name=name):
+                        path = repo / name
+                        path.write_text("changed\n")
+                        changed = evidence.fingerprint(
+                            repo, {"toolchain": "fixed", "budget": 120}
+                        )
+                        self.assertEqual(base == changed, name in evidence.EXCLUDED)
+                        path.write_text("original\n")
+                path = repo / files[0]
+                old_mode = path.stat().st_mode
+                path.chmod(0o755)
+                self.assertNotEqual(
+                    base, evidence.fingerprint(repo, {"toolchain": "fixed", "budget": 120})
+                )
+                path.chmod(old_mode)
+                self.assertNotEqual(
+                    base, evidence.fingerprint(repo, {"toolchain": "new", "budget": 120})
+                )
+                self.assertNotEqual(
+                    base, evidence.fingerprint(repo, {"toolchain": "fixed", "budget": 121})
+                )
+                for receipt in [
+                    {},
+                    {
+                        "identity": base,
+                        "shard": "0",
+                        "successful": False,
+                        "report_sha256": "x",
+                    },
+                    {
+                        "identity": base,
+                        "shard": "1",
+                        "successful": True,
+                        "report_sha256": "x",
+                    },
+                ]:
+                    self.assertFalse(evidence.valid_receipt(receipt, base, "0"))
 
 
 class CoverageGate(unittest.TestCase):
@@ -341,13 +344,12 @@ class CoverageGate(unittest.TestCase):
 class GitDraftStages(unittest.TestCase):
     def test_incremental_draft_and_ready_use_different_scopes(self):
         ci = load("ci_selection")
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory() as directory, git_fixture.isolate():
             repo = Path(directory)
 
             def git(*args):
-                return subprocess.check_output(
-                    ["git", *args], cwd=repo, text=True
-                ).strip()
+                return git_fixture.run(args, cwd=repo, scratch=repo, check=True,
+                                       capture_output=True, text=True).stdout.strip()
 
             git("init", "-q")
             git("config", "user.name", "Workflow fixture")
@@ -424,14 +426,14 @@ class ReceiptRoundTrip(unittest.TestCase):
         from unittest.mock import patch
 
         evidence = load("ci_evidence")
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory() as directory, git_fixture.isolate():
             root = Path(directory)
-            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            git_fixture.run(["init", "-q", str(root)], scratch=root, check=True, capture_output=True)
             source = root / "test_fixture.py"
             source.write_text(
                 "import unittest\nclass Case(unittest.TestCase):\n def test_ok(self): pass\n"
             )
-            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            git_fixture.run(["add", "."], cwd=root, scratch=root, check=True, capture_output=True)
             report = root / "report.json"
             identity = root / "identity.json"
             receipt = root / "receipt.json"

@@ -11,6 +11,8 @@ import re
 import textwrap
 import unittest
 
+import git_fixture
+
 HELPER = Path(__file__).resolve().parents[1] / 'capabilities/discover_rust.py'
 
 
@@ -18,6 +20,7 @@ class RustListingTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
+        git_fixture.bind(self, Path(self.tmp.name))
         self.repo = Path(self.tmp.name) / 'repo'
         self.repo.mkdir()
         self.git('init', '-b', 'main')
@@ -68,9 +71,10 @@ class RustListingTests(unittest.TestCase):
                 body='print("rustc FAKE-fixture-not-Rust\\nhost: fixture")\n'
             script.write_text('#!' + sys.executable + '\n' + body)
             script.chmod(0o755)
-        self.env = dict(os.environ, PATH=str(tools) + os.pathsep + os.environ['PATH'],
-                        CARGO_PROFILE_DEV_OPT_LEVEL='1', CARGO_PROFILE_DEV_DEBUG_ASSERTIONS='true',
-                        CARGO_PROFILE_DEV_OVERFLOW_CHECKS='true')
+        self.env = git_fixture.child_env(PATH=str(tools) + os.pathsep + os.environ['PATH'],
+                                         CARGO_PROFILE_DEV_OPT_LEVEL='1',
+                                         CARGO_PROFILE_DEV_DEBUG_ASSERTIONS='true',
+                                         CARGO_PROFILE_DEV_OVERFLOW_CHECKS='true')
         self.build = self.repo / 'runs/build.jsonl'
         self.report = self.repo / 'runs/listing.json'
         self.raw = self.repo / 'runs/listing'
@@ -78,7 +82,9 @@ class RustListingTests(unittest.TestCase):
         self.write_messages()
 
     def git(self, *args):
-        return subprocess.check_output(['git', '-C', str(self.repo), *args], stderr=subprocess.DEVNULL, text=True).strip()
+        return git_fixture.run(['-C', str(self.repo), *args], scratch=Path(self.tmp.name),
+                               stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True,
+                               check=True).stdout.strip()
 
     def write(self, path, text):
         target = self.repo / path

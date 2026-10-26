@@ -11,6 +11,8 @@ import sys
 import tempfile
 import unittest
 
+import git_fixture
+
 EVIDENCE = Path(__file__).resolve().parents[1] / 'ci_evidence.py'
 
 
@@ -45,9 +47,10 @@ class EvidenceV3Tests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
-        subprocess.run(['git', 'init', str(self.root)], check=True, capture_output=True)
+        git_fixture.bind(self, self.root)
+        git_fixture.run(['init', str(self.root)], scratch=self.root, check=True, capture_output=True)
         (self.root / 'input.txt').write_text('actual fixture input\n')
-        subprocess.run(['git', '-C', str(self.root), 'add', 'input.txt'], check=True, capture_output=True)
+        git_fixture.run(['-C', str(self.root), 'add', 'input.txt'], scratch=self.root, check=True, capture_output=True)
         kernel = self.root / 'evas/rust_core/target/debug/evas-kernel'
         kernel.parent.mkdir(parents=True)
         kernel.write_bytes(b'fixture kernel identity')
@@ -57,7 +60,7 @@ class EvidenceV3Tests(unittest.TestCase):
             tool = toolbin / name
             tool.write_text('#!/bin/sh\necho "fixture-tool-version-1"\n')
             tool.chmod(0o755)
-        self.env = dict(os.environ, PATH=str(toolbin) + os.pathsep + os.environ['PATH'])
+        self.env = git_fixture.child_env(PATH=str(toolbin) + os.pathsep + os.environ['PATH'])
         self.identity_path = self.root / 'identity.json'
         self.report_path = self.root / 'report.json'
         self.receipt_path = self.root / 'receipt.json'
@@ -286,8 +289,8 @@ class EvidenceV3Tests(unittest.TestCase):
     def test_real_collector_binds_pre_execution_identity_to_cache_receipt(self):
         fixture = self.root / 'test_real.py'
         fixture.write_text('import unittest\nclass Real(unittest.TestCase):\n def test_pass(self): pass\n')
-        subprocess.run(['git', '-C', str(self.root), 'add', 'test_real.py'],
-                       check=True, capture_output=True)
+        git_fixture.run(['-C', str(self.root), 'add', 'test_real.py'], scratch=self.root,
+                        check=True, capture_output=True)
         result = self.run_cli('identity')
         self.assertEqual(result.returncode, 0, result.stderr)
         self.identity = json.loads(self.identity_path.read_text())

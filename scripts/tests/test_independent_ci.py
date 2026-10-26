@@ -2,9 +2,10 @@
 
 import importlib.util
 from pathlib import Path
-import subprocess
 import tempfile
 import unittest
+
+import git_fixture
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -21,6 +22,7 @@ class IndependentDelivery(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.repo = Path(self.temp.name)
+        git_fixture.bind(self, self.repo)
         self.git('init', '-q')
         self.git('config', 'user.email', 'fixture@example.invalid')
         self.git('config', 'user.name', 'Fixture')
@@ -33,7 +35,9 @@ class IndependentDelivery(unittest.TestCase):
         self.base = self.commit()
 
     def git(self, *args):
-        return subprocess.check_output(['git', *args], cwd=self.repo, text=True).strip()
+        completed = git_fixture.run(args, cwd=self.repo, scratch=self.repo, check=True,
+                                    capture_output=True, text=True)
+        return completed.stdout.strip()
 
     def write(self, name, text):
         target = self.repo / name

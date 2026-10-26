@@ -6,7 +6,8 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
-from unittest.mock import patch
+
+import git_fixture
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / 'ci_selection.py'
@@ -219,6 +220,7 @@ class GitChangeTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.repo = Path(self.tmp.name)
+        git_fixture.bind(self, self.repo)
         self.git('init', '-q')
         self.git('config', 'user.email', 'ci-test@example.invalid')
         self.git('config', 'user.name', 'CI Test')
@@ -231,7 +233,9 @@ class GitChangeTests(unittest.TestCase):
         self.base = self.commit()
 
     def git(self, *args):
-        return subprocess.check_output(['git', *args], cwd=self.repo, text=True).strip()
+        completed = git_fixture.run(args, cwd=self.repo, scratch=self.repo, check=True,
+                                    capture_output=True, text=True)
+        return completed.stdout.strip()
 
     def write(self, path, data):
         target = self.repo / path
@@ -259,10 +263,14 @@ class GitChangeTests(unittest.TestCase):
             with self.subTest(policy=policy):
                 config.write_text(settings)
                 fixture = GitChangeTests()
-                with patch.dict(os.environ, {'GIT_CONFIG_GLOBAL': str(config),
-                                             'GIT_CONFIG_NOSYSTEM': '1'}):
+                with git_fixture.explicit(GIT_CONFIG_GLOBAL=str(config), GIT_CONFIG_NOSYSTEM='1'):
                     try:
                         fixture.setUp()
+                        if policy == 'signing':
+                            self.assertEqual(fixture.git('config', '--global', '--get', 'commit.gpgsign'), 'true')
+                        else:
+                            self.assertEqual(fixture.git('config', '--global', '--get', 'core.hooksPath'), str(hooks))
+                        self.assertEqual(fixture.git('config', '--local', '--get', 'commit.gpgsign'), 'false')
                         fixture.write('evas/docs/new.md', 'maintenance fixture\n')
                         self.assertNotEqual(fixture.commit(), fixture.base)
                         self.assertEqual(fixture.git('status', '--porcelain'), '')
@@ -330,7 +338,7 @@ class GitChangeTests(unittest.TestCase):
             'python3', '-B', str(SCRIPT), 'select', '--repo', str(self.repo),
             '--event-name', 'push', '--event-path', str(event_file),
             '--output', str(output_file), '--json',
-        ], text=True, capture_output=True, check=True)
+        ], env=git_fixture.child_env(), text=True, capture_output=True, check=True)
         self.assertFalse(json.loads(completed.stdout)['regression'])
         self.assertIn('regression=false\n', output_file.read_text())
         self.assertIn('package=false\n', output_file.read_text())
@@ -344,7 +352,7 @@ class GitChangeTests(unittest.TestCase):
         run = subprocess.run(['python3', '-B', str(SCRIPT), 'select', '--repo', str(self.repo),
                               '--event-name', 'push', '--event-path', str(event),
                               '--output', str(output), '--report', str(report)],
-                             capture_output=True, text=True, check=True)
+                             env=git_fixture.child_env(), capture_output=True, text=True, check=True)
         self.assertIn('Selected: maintenance', run.stdout)
         self.assertIn(str(report), run.stdout)
         self.assertEqual(json.loads(report.read_text())['paths'], ['scripts/check_workspaces.py'])
@@ -457,13 +465,12 @@ class GateTests(unittest.TestCase):
                         self.assertTrue(ci.gate_errors(needs))
 
     def test_cli_gate_returns_nonzero_for_failed_selected_check(self):
-        import os
         for failed in (False, True):
             needs = self.results('regression')
             if failed:
                 needs['regression']['result'] = 'failure'
             result = subprocess.run(['python3', '-B', str(SCRIPT), 'gate'],
-                                    env={**os.environ, 'CI_NEEDS': json.dumps(needs)},
+                                    env=git_fixture.child_env(CI_NEEDS=json.dumps(needs)),
                                     capture_output=True, text=True)
             self.assertEqual(result.returncode, int(failed), result.stderr)
 

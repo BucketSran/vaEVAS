@@ -8,6 +8,8 @@ import sys
 import tempfile
 import unittest
 
+import git_fixture
+
 ROOT = Path(__file__).resolve().parents[2]
 def module(name, path):
     spec = importlib.util.spec_from_file_location(name, path)
@@ -32,12 +34,14 @@ class RustCatalogReconciliation(unittest.TestCase):
         objects = assets.make_data(self.data)
         archive = self.root/'runs/archive'
         archive.mkdir()
-        subprocess.run(['git','init','-b','main',str(archive)],check=True,capture_output=True)
+        scratch = Path(self.fx.tmp.name)
+        git_fixture.run(['init','-b','main',str(archive)],scratch=scratch,check=True,capture_output=True)
         (archive/'rust.json').write_text(json.dumps(self.receipt))
         self.archive = archive
         for args in [('add','.'),('-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-m','stub receipt')]:
-            subprocess.run(['git','-C',str(archive),*args],check=True,capture_output=True)
-        commit = subprocess.check_output(['git','-C',str(archive),'rev-parse','HEAD'],text=True).strip()
+            git_fixture.run(['-C',str(archive),*args],scratch=scratch,check=True,capture_output=True)
+        commit = git_fixture.run(['-C',str(archive),'rev-parse','HEAD'],scratch=scratch,
+                                 check=True,capture_output=True,text=True).stdout.strip()
         source = dict(schema_version=1,id='source:rust',version='1',kind='source',status='active',
             availability='published-archive',origin='local fixture git archive; not published CI',
             locator=dict(kind='git-object',repository='receipt-archive',revision=commit,path='rust.json'),
