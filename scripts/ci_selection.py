@@ -28,6 +28,7 @@ JOB_FLAGS = {
     'provenance-support': ('provenance',),
     'regression': ('regression',),
     'rust-regression': ('regression',),
+    'regression-admission': ('regression',),
     'properties-and-ngspice': ('differential',),
     'fuzz-smoke': ('fuzz',),
     'package': ('package',),
