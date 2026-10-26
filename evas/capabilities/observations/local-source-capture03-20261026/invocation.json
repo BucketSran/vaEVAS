@@ -1,0 +1,25 @@
+{
+  "scope": "actual local construction; not original CI job execution or science",
+  "argv": [
+    "/opt/homebrew/bin/python3.12",
+    "-B",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr3/source-capture-03/source/scripts/capabilities/collect_ci_inventory.py",
+    "--root",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr3/source-capture-03/source",
+    "--output",
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr3/fresh-discovery-03-python312",
+    "--observe-only",
+    "--source-repository",
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night",
+    "--source-revision",
+    "55e62ba06b5db54e9f05cfab399a5877e922475b"
+  ],
+  "source_commit": "55e62ba06b5db54e9f05cfab399a5877e922475b",
+  "actual_python": "Python 3.12.13",
+  "replayed_original_CI_outputs": {
+    "CI_BASE": "dafa9214f741ae813d4820d1f5b6955b03369b69",
+    "CI_HEAD": "3498f49abb929cb67bac2c644c3d30bd9040517b"
+  },
+  "replayed_output_source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr3/ci-40274116394/artifacts/catalog-inventory/entry-000.json",
+  "replayed_output_source_sha256": "2fe7d51788057a7ba4ee15edb75ab58a0f9428e02f4cfe2d3f0c7c22a4b2f41b"
+}

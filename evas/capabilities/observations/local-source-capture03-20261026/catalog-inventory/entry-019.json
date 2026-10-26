@@ -1,0 +1,2415 @@
+{
+  "entry": {
+    "collector": "unittest",
+    "command": "python3 -B -m unittest discover -s experiments/backends/paper -p 'test_*.py' -v",
+    "declared_python_versions": [
+      "3.12"
+    ],
+    "entry_id": "e6db98abe0fc30f603ea95256b3a72fbc14416636834346f6b67a0aeecdc5c27",
+    "environment_overrides": {},
+    "job": "provenance-paper",
+    "job_if": "needs.selection.outputs.provenance == 'true'",
+    "line": 210,
+    "mode": "declared-ci-literal",
+    "namespace": "validation",
+    "pattern": "test_*.py",
+    "purpose": "role-not-semantic-qualification",
+    "start": "experiments/backends/paper",
+    "step": "Paper contracts, observable criteria and table provenance",
+    "step_if": null,
+    "workflow": ".github/workflows/numerical-assurance.yml"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 129,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/opt/homebrew/opt/python@3.12/bin/python3.12",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr3/source-capture-03/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/opt/homebrew/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 24,
+          "name": "test_actual_radius_not_tolerance_and_continuous_input_sup",
+          "path": "experiments/backends/paper/test_actual_observation.py",
+          "sha256": "4e61195918eef67407c6466ed7558dd5ec122d554c57ff61555e8c75ea80bd2c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_actual_observation.py",
+        "module_sha256": "a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024",
+        "runtime_id": "test_actual_observation.ActualEvidence.test_actual_radius_not_tolerance_and_continuous_input_sup",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 87,
+          "name": "test_boundary_role_uses_unique_actual_request_id_and_same_response",
+          "path": "experiments/backends/paper/test_actual_observation.py",
+          "sha256": "963d9659e2f4b0b0c19ffe598606cea714837fc9cdd3379f7d8d4fb865874670"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_actual_observation.py",
+        "module_sha256": "a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024",
+        "runtime_id": "test_actual_observation.ActualEvidence.test_boundary_role_uses_unique_actual_request_id_and_same_response",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 77,
+          "name": "test_causal_and_stateless_native_require_certificate_and_execution_identity",
+          "path": "experiments/backends/paper/test_actual_observation.py",
+          "sha256": "e44589a2a98357f3ecd4a19369877787b885940d3bea053acb3bf7c712f14e2d"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_actual_observation.py",
+        "module_sha256": "a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024",
+        "runtime_id": "test_actual_observation.ActualEvidence.test_causal_and_stateless_native_require_certificate_and_execution_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 56,
+          "name": "test_continuous_union_bound_detects_positive_and_negative_perturbations",
+          "path": "experiments/backends/paper/test_actual_observation.py",
+          "sha256": "0e96bf31d91b46a1f6a1dc5680860105d0b372a0e44517ee2be0f091551f34a0"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_actual_observation.py",
+        "module_sha256": "a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024",
+        "runtime_id": "test_actual_observation.ActualEvidence.test_continuous_union_bound_detects_positive_and_negative_perturbations",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 65,
+          "name": "test_executed_domain_and_stop_roundoff_are_explicit",
+          "path": "experiments/backends/paper/test_actual_observation.py",
+          "sha256": "dbc1c53a488812339572be6000a8781792eea608fb0354aa5a79c756a9722f00"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_actual_observation.py",
+        "module_sha256": "a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024",
+        "runtime_id": "test_actual_observation.ActualEvidence.test_executed_domain_and_stop_roundoff_are_explicit",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 52,
+          "name": "test_failed_unknown_or_empty_review_is_not_source_qualification",
+          "path": "experiments/backends/paper/test_actual_observation.py",
+          "sha256": "206f9bc2053d9dedb17d29a82367d44cadca620aebb6194877250358f96874bb"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_actual_observation.py",
+        "module_sha256": "a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024",
+        "runtime_id": "test_actual_observation.ActualEvidence.test_failed_unknown_or_empty_review_is_not_source_qualification",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 128,
+          "name": "test_full_existing_receipt_chain_and_boundary_packet_fail_closed_on_drift",
+          "path": "experiments/backends/paper/test_actual_observation.py",
+          "sha256": "0a4d7fa35412a0621b0be516e151e02ba5778a0cbb15f754bbf3cd2f306b15cb"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_actual_observation.py",
+        "module_sha256": "a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024",
+        "runtime_id": "test_actual_observation.ActualEvidence.test_full_existing_receipt_chain_and_boundary_packet_fail_closed_on_drift",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 41,
+          "name": "test_identity_and_invalid_interval_fail_closed",
+          "path": "experiments/backends/paper/test_actual_observation.py",
+          "sha256": "769bf75689f730c2e4301e2b3a4d6d122d2e70279590129809a0c0cb7de02c13"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_actual_observation.py",
+        "module_sha256": "a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024",
+        "runtime_id": "test_actual_observation.ActualEvidence.test_identity_and_invalid_interval_fail_closed",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 38,
+          "name": "test_initial_callback_bound_touching_zero_stays_unknown",
+          "path": "experiments/backends/paper/test_actual_observation.py",
+          "sha256": "56b5adf53c094af162b90f56e7be1b2ba6368b053ae28a0f18d7e857ba730516"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_actual_observation.py",
+        "module_sha256": "a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024",
+        "runtime_id": "test_actual_observation.ActualEvidence.test_initial_callback_bound_touching_zero_stays_unknown",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 32,
+          "name": "test_missing_interval_and_direct_query_are_not_promoted",
+          "path": "experiments/backends/paper/test_actual_observation.py",
+          "sha256": "c576f534df660ba6124802360c0bec58384dae49a4f9965623b3db436b50e6b1"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_actual_observation.py",
+        "module_sha256": "a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024",
+        "runtime_id": "test_actual_observation.ActualEvidence.test_missing_interval_and_direct_query_are_not_promoted",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 99,
+          "name": "test_new_packet_preserves_raw_bytes_and_uses_actual_review_schema",
+          "path": "experiments/backends/paper/test_actual_observation.py",
+          "sha256": "c725a158c339733e629db18df49d6dc248c32fb80d1cfeeba080f4ec37918a12"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_actual_observation.py",
+        "module_sha256": "a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024",
+        "runtime_id": "test_actual_observation.ActualEvidence.test_new_packet_preserves_raw_bytes_and_uses_actual_review_schema",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 184,
+          "name": "test_outward_conversion_never_shrinks_rational_bound",
+          "path": "experiments/backends/paper/test_actual_observation.py",
+          "sha256": "181765bb66264b15c2aeb78fd493e430ae3ec032be811f8592a336c97e784c56"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_actual_observation.py",
+        "module_sha256": "a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024",
+        "runtime_id": "test_actual_observation.ActualEvidence.test_outward_conversion_never_shrinks_rational_bound",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 164,
+          "name": "test_production_closure_cannot_be_omitted_or_changed_in_manifest",
+          "path": "experiments/backends/paper/test_actual_observation.py",
+          "sha256": "75b54b7eeeaf806fb03b44f2c4b957687ddd2271da6bc04b1a25ecca12175925"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_actual_observation.py",
+        "module_sha256": "a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024",
+        "runtime_id": "test_actual_observation.ActualEvidence.test_production_closure_cannot_be_omitted_or_changed_in_manifest",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 33,
+          "name": "test_exact_sources_and_hierarchical_isolation_survive_all_decks",
+          "path": "experiments/backends/paper/test_inputs.py",
+          "sha256": "ae493f316e3db96a98bbbf1efcf077d575f2aad8530d666ed434151c2045baa9"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_inputs.py",
+        "module_sha256": "46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0",
+        "runtime_id": "test_inputs.InputContracts.test_exact_sources_and_hierarchical_isolation_survive_all_decks",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 72,
+          "name": "test_freeze_cannot_exceed_authorized_stage_limit",
+          "path": "experiments/backends/paper/test_inputs.py",
+          "sha256": "2995c6c7bb16ecc1ce23f884dffbe7d09406a7d80a1daf39344e9be800451f65"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_inputs.py",
+        "module_sha256": "46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0",
+        "runtime_id": "test_inputs.InputContracts.test_freeze_cannot_exceed_authorized_stage_limit",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 98,
+          "name": "test_gnucap_observer_continuations_preserve_all_ordered_corners",
+          "path": "experiments/backends/paper/test_inputs.py",
+          "sha256": "1eaadff405a24312c5a342cabb6dd4f059ea24aea07b5fa778b4c9b0043429ca"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_inputs.py",
+        "module_sha256": "46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0",
+        "runtime_id": "test_inputs.InputContracts.test_gnucap_observer_continuations_preserve_all_ordered_corners",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 53,
+          "name": "test_grid_requests_global_local_and_exact_root_obligations",
+          "path": "experiments/backends/paper/test_inputs.py",
+          "sha256": "c73981e9c3885d95948d3b7bad3ef30e23e3a2e9e309367b045a0038d970e201"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_inputs.py",
+        "module_sha256": "46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0",
+        "runtime_id": "test_inputs.InputContracts.test_grid_requests_global_local_and_exact_root_obligations",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 64,
+          "name": "test_nested_manifest_named_file_cannot_evade_frozen_file_set",
+          "path": "experiments/backends/paper/test_inputs.py",
+          "sha256": "a7ce029796580059308f3fc920ff0c32aef1e35d087b68c01ea7a26e0206bb43"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_inputs.py",
+        "module_sha256": "46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0",
+        "runtime_id": "test_inputs.InputContracts.test_nested_manifest_named_file_cannot_evade_frozen_file_set",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 12,
+          "name": "test_ngspice_operator_named_nodes_are_exported_without_renaming_ports",
+          "path": "experiments/backends/paper/test_inputs.py",
+          "sha256": "cbd79e8927c71a814fb02050180db84f12e96b049c08c908cc8de6983de32d03"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_inputs.py",
+        "module_sha256": "46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0",
+        "runtime_id": "test_inputs.InputContracts.test_ngspice_operator_named_nodes_are_exported_without_renaming_ports",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 77,
+          "name": "test_spice_local_requests_are_decoupled_and_fit_frozen_budget",
+          "path": "experiments/backends/paper/test_inputs.py",
+          "sha256": "c8a5a385a8ccb8c91d015ad999346588c376797d041297a51c760f89097778d3"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_inputs.py",
+        "module_sha256": "46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0",
+        "runtime_id": "test_inputs.InputContracts.test_spice_local_requests_are_decoupled_and_fit_frozen_budget",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 81,
+          "name": "test_boolean_is_not_a_physical_sample",
+          "path": "experiments/backends/paper/test_observations.py",
+          "sha256": "449f92279bfaa651e2a0bbb85cd767f81a69685e835275d12601597a846f2d3d"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_observations.py",
+        "module_sha256": "9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d",
+        "runtime_id": "test_observations.ObservationContracts.test_boolean_is_not_a_physical_sample",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 72,
+          "name": "test_boundary_request_provenance_is_preserved_without_qualification",
+          "path": "experiments/backends/paper/test_observations.py",
+          "sha256": "3a043311ed443e3050b9b9bfd79df05c0a950d8b8e7c6f1639bd9ccecb837ed1"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_observations.py",
+        "module_sha256": "9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d",
+        "runtime_id": "test_observations.ObservationContracts.test_boundary_request_provenance_is_preserved_without_qualification",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 9,
+          "name": "test_dense_interpolated_counter_cannot_become_native_evidence",
+          "path": "experiments/backends/paper/test_observations.py",
+          "sha256": "23ee0fcc921cdce2ae63fcbd6ecd992579be45ef1befc8897a799bbcf5655a94"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_observations.py",
+        "module_sha256": "9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d",
+        "runtime_id": "test_observations.ObservationContracts.test_dense_interpolated_counter_cannot_become_native_evidence",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 124,
+          "name": "test_different_nominal_identity_is_diagnosed_not_tolerance_matched",
+          "path": "experiments/backends/paper/test_observations.py",
+          "sha256": "6138992767c6e5947df89ea313bafdae02f64f22e1f17787e057c753d1473cf2"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_observations.py",
+        "module_sha256": "9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d",
+        "runtime_id": "test_observations.ObservationContracts.test_different_nominal_identity_is_diagnosed_not_tolerance_matched",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 47,
+          "name": "test_empty_local_window_not_hidden_by_contained_point_filter",
+          "path": "experiments/backends/paper/test_observations.py",
+          "sha256": "e26d04337ecc39d3b076caa0692985287a068203c7a48b7c99c39cf4eb9109cd"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_observations.py",
+        "module_sha256": "9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d",
+        "runtime_id": "test_observations.ObservationContracts.test_empty_local_window_not_hidden_by_contained_point_filter",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 25,
+          "name": "test_invalid_input_rows_are_preserved_and_flagged",
+          "path": "experiments/backends/paper/test_observations.py",
+          "sha256": "c2a57abc681b6cc9f6f4fce21b84010cc4d8bb72c19184f6868d130873cda9e6"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_observations.py",
+        "module_sha256": "9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d",
+        "runtime_id": "test_observations.ObservationContracts.test_invalid_input_rows_are_preserved_and_flagged",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 137,
+          "name": "test_malformed_boundary_nominals_remain_diagnosed",
+          "path": "experiments/backends/paper/test_observations.py",
+          "sha256": "15e1d94633695f2f40445cbd42aec3bc8b6469befcd5219db6d171952cbd000b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_observations.py",
+        "module_sha256": "9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d",
+        "runtime_id": "test_observations.ObservationContracts.test_malformed_boundary_nominals_remain_diagnosed",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 19,
+          "name": "test_missing_uncertainty_never_inferred_from_native_grid",
+          "path": "experiments/backends/paper/test_observations.py",
+          "sha256": "5cf0a741304b4d3f970c8a3af82e3ebe351034634111bf7c447036c3045a976c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_observations.py",
+        "module_sha256": "9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d",
+        "runtime_id": "test_observations.ObservationContracts.test_missing_uncertainty_never_inferred_from_native_grid",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 31,
+          "name": "test_native_format_reader_preserves_raw_boundary_values",
+          "path": "experiments/backends/paper/test_observations.py",
+          "sha256": "b0e637d9465dedc961d4d6be916af5ba1049d9b37458c22737325de8f88d885c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_observations.py",
+        "module_sha256": "9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d",
+        "runtime_id": "test_observations.ObservationContracts.test_native_format_reader_preserves_raw_boundary_values",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 108,
+          "name": "test_proved_boundary_serialization_offset_does_not_fail_exact_literal_gate",
+          "path": "experiments/backends/paper/test_observations.py",
+          "sha256": "c4343a8619a116208a25e8d4741c617da768f40c906d428aeac4414fd0048019"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_observations.py",
+        "module_sha256": "9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d",
+        "runtime_id": "test_observations.ObservationContracts.test_proved_boundary_serialization_offset_does_not_fail_exact_literal_gate",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 53,
+          "name": "test_qualified_native_export_requires_unchanged_role_certificates",
+          "path": "experiments/backends/paper/test_observations.py",
+          "sha256": "920a44f8597efc93bb7e8b0c9dfd0853b5d8cd25c8832e42cdd43d8255a50928"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_observations.py",
+        "module_sha256": "9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d",
+        "runtime_id": "test_observations.ObservationContracts.test_qualified_native_export_requires_unchanged_role_certificates",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 86,
+          "name": "test_reader_leaves_suite_unchanged_on_success_and_parse_failure",
+          "path": "experiments/backends/paper/test_observations.py",
+          "sha256": "0f1c0f9704b0638f721f2aa9f696a5ec886b7151b0ceb1e82c579ebc602e43b0"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_observations.py",
+        "module_sha256": "9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d",
+        "runtime_id": "test_observations.ObservationContracts.test_reader_leaves_suite_unchanged_on_success_and_parse_failure",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 41,
+          "name": "test_legacy_and_current_producers_keep_distinct_reader_contracts",
+          "path": "experiments/backends/paper/test_producer_dependencies.py",
+          "sha256": "21a785281b379718d2c5832efd632e3ab6bed33454eccac27ecac217b67709b9"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_producer_dependencies.py",
+        "module_sha256": "0c4ac1c7ca1cdb350a4065c9f9d191eb064af5e12c55dc0e5e68a95d300e2006",
+        "runtime_id": "test_producer_dependencies.ProducerDependencyContracts.test_legacy_and_current_producers_keep_distinct_reader_contracts",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 57,
+          "name": "test_missing_current_reader_does_not_fall_back_to_existing_legacy_files",
+          "path": "experiments/backends/paper/test_producer_dependencies.py",
+          "sha256": "fcdc1efdd074417be398df8570164200800bea19f646d4ab44d22d67063841e2"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_producer_dependencies.py",
+        "module_sha256": "0c4ac1c7ca1cdb350a4065c9f9d191eb064af5e12c55dc0e5e68a95d300e2006",
+        "runtime_id": "test_producer_dependencies.ProducerDependencyContracts.test_missing_current_reader_does_not_fall_back_to_existing_legacy_files",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 66,
+          "name": "test_shared_constructor_is_required_when_the_audited_worker_imports_it",
+          "path": "experiments/backends/paper/test_producer_dependencies.py",
+          "sha256": "6ecf50305e2654cb1b901423f7e5d70dcc3c765068d02446d2b3cebf1df4f203"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_producer_dependencies.py",
+        "module_sha256": "0c4ac1c7ca1cdb350a4065c9f9d191eb064af5e12c55dc0e5e68a95d300e2006",
+        "runtime_id": "test_producer_dependencies.ProducerDependencyContracts.test_shared_constructor_is_required_when_the_audited_worker_imports_it",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 79,
+          "name": "test_unknown_or_ambiguous_reader_contract_cannot_claim_a_complete_producer",
+          "path": "experiments/backends/paper/test_producer_dependencies.py",
+          "sha256": "b1b3d41f27cae609b94741c7f1cfcf771cb113bae1f17aed89bea56ce01bf77e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_producer_dependencies.py",
+        "module_sha256": "0c4ac1c7ca1cdb350a4065c9f9d191eb064af5e12c55dc0e5e68a95d300e2006",
+        "runtime_id": "test_producer_dependencies.ProducerDependencyContracts.test_unknown_or_ambiguous_reader_contract_cannot_claim_a_complete_producer",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 122,
+          "name": "test_actual_controls_override_request_echo_and_keep_unsupported_unknown",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "f3a984e296a9b39e8aecc3daf3eef15becfc63c2ae4690240f0852127c6f9d13"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_actual_controls_override_request_echo_and_keep_unsupported_unknown",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 28,
+          "name": "test_allocation_must_bind_frozen_inputs_and_profile",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "60e875f264e68a9b29076ada74b84ff8660b4b8c9a0e7f2d073d72c41c069923"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_allocation_must_bind_frozen_inputs_and_profile",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 17,
+          "name": "test_cleanup_failure_overrides_zero_exit_and_aborts",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "427917603177d2dc0ee74809bd1ce4ccacc4f7ca19bfc09cdc97f33300ec2ee3"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_cleanup_failure_overrides_zero_exit_and_aborts",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 105,
+          "name": "test_compact_response_preserves_all_fields_values_and_unknown_bounds",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "4eaf3151def26249540505d4b50b9be5e487b4f50fd49e96b1ec787bd5c012d3"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_compact_response_preserves_all_fields_values_and_unknown_bounds",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 23,
+          "name": "test_compile_failure_and_timeout_keep_stage_and_different_states",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "7137b0342d30ac4da33288c95d485856cddfefa18c0565e40ac68e359700cf2c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_compile_failure_and_timeout_keep_stage_and_different_states",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 64,
+          "name": "test_container_allocation_cannot_claim_less_than_factory_memory",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "830e630885d82266177f155a6a56a2162edd2930fbaf7dd5a76e8a20179c4561"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_container_allocation_cannot_claim_less_than_factory_memory",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 71,
+          "name": "test_container_manifest_and_package_cannot_drift_together",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "f261094edac8bb3048235c3f87dc3ce1128dd240838fb44c20119c5a2ffe5ce2"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_container_manifest_and_package_cannot_drift_together",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 152,
+          "name": "test_drift_after_first_case_preserves_complete_lane_receipt",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "523f975c55ce385b25e8d00c1c76f6bff5ac1111465074f52401070ed79ca12e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_drift_after_first_case_preserves_complete_lane_receipt",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 317,
+          "name": "test_gnucap_parser_errors_override_existing_waveform_and_zero_exit",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "bba31b243db6d3636f34abea25913d7b80be3d15fac9c946e0d5ee2617b729e2"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_gnucap_parser_errors_override_existing_waveform_and_zero_exit",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 44,
+          "name": "test_owned_container_is_checked_after_success_and_failed_removal",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "ed1fc47f60156c3c4a7852cbe7a5fc102a7186c14b8fdd21aff81351dde2faeb"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_owned_container_is_checked_after_success_and_failed_removal",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 36,
+          "name": "test_raw_parser_error_retains_invalid_observation_state",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "288f68ff831e33271f9b82b024e8a1c940226a9f57d350805137d54ba3ccbba8"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_raw_parser_error_retains_invalid_observation_state",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 90,
+          "name": "test_request_echo_cannot_be_effective_evas_readback",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "b9abd5169bcd9d46f4e9baa6a682c8712bbfa2f68e57c9bac3d17ff93d32c8b7"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_request_echo_cannot_be_effective_evas_readback",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 201,
+          "name": "test_selected_plan_is_checked_against_actual_allocation_before_preflight",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "49852f9408a039fa78cd27b9e8bec02eaec4b112f2a31ff181a919b33e0c0a2e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_selected_plan_is_checked_against_actual_allocation_before_preflight",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 217,
+          "name": "test_subset_selection_requires_known_distinct_ids_and_matching_grants",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "0e586c4f091533599b03d62e5e3707499c1530aa997956346a785101324c64ec"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_subset_selection_requires_known_distinct_ids_and_matching_grants",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 8,
+          "name": "test_successful_exit_without_artifact_is_not_success",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "b14941a8e1bc0f0a36f7e26ac7547fa9fd11b74529aadbbd186b826660a3fb5b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_successful_exit_without_artifact_is_not_success",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 229,
+          "name": "test_terminal_directory_budget_is_actual_and_excess_is_explicit",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "eff32116de0ec4c137d086b45c835aced753863fba30d859fc7d870223d2c06c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_terminal_directory_budget_is_actual_and_excess_is_explicit",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 238,
+          "name": "test_two_selected_conditions_keep_twelve_records_without_launching_others",
+          "path": "experiments/backends/paper/test_runner.py",
+          "sha256": "4206bcadb2228fa886a66964498c64ce97255dc942850e47892a03cc62400ea6"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_runner.py",
+        "module_sha256": "44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185",
+        "runtime_id": "test_runner.RunnerContracts.test_two_selected_conditions_keep_twelve_records_without_launching_others",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 102,
+          "name": "test_dimension_wrong",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "9e99f560094661baa40acb9c2d61c9d44375a706ce53d57858326bb8fcae9d19"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_dimension_wrong",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 108,
+          "name": "test_global_after_analysis",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "bf33048c9cd882eefa65aafb440742c4e1a0b2115bd5702fefbe1691503a124e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_global_after_analysis",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 160,
+          "name": "test_gnucap_conflicting_parsed_settings_are_rejected",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "b2710fa867277cdf2e0e5e6e20da312b8debafd2886a338b7825740e0bce116e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_gnucap_conflicting_parsed_settings_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 192,
+          "name": "test_gnucap_equivalent_suffix_and_exponent_readbacks_are_accepted",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "c0c79dc3b8b936d3c5697477b898c9ba308e22e2ff563d45b7acf044fd82606f"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_gnucap_equivalent_suffix_and_exponent_readbacks_are_accepted",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 171,
+          "name": "test_gnucap_identical_repeated_settings_are_preserved",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "9bf9ed32ac081498050a1f90013b0db14336407410adc141a28d40db6335be18"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_gnucap_identical_repeated_settings_are_preserved",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 150,
+          "name": "test_gnucap_parse_error_blocks_settings",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "fb24b215e5d69d1dcc31b93ae8eaf5c5505c03ad7a717d768094a75900467bf6"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_gnucap_parse_error_blocks_settings",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 92,
+          "name": "test_ng_ambiguity",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "81b03a2f96629e8f24cb3dbf61d6ecc06827dccb5fc41867e8997caf94724197"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_ambiguity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 123,
+          "name": "test_ng_analysis_outside_snapshots",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "354057420b7c960292a04333befd9f05fb11172a8351eb8a413ba17f2af14d78"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_analysis_outside_snapshots",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 114,
+          "name": "test_ng_command_suffix_mutation",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "a9c9b7c441c8183de55575f7a102ef77553a45eeaf40dfa8570e023dccc0bf6f"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_command_suffix_mutation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 100,
+          "name": "test_ng_intervening_mutator",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "c59af4bd9a42360f5c424578c93c95fc373388a8ada22942e9e7db4dfa3766e8"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_intervening_mutator",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 121,
+          "name": "test_ng_logged_mutator_rejected",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "68c848760620996ad741a43ee163f9fa70f26f89c7ce5e13e52732cd588f8051"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_logged_mutator_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 96,
+          "name": "test_ng_malformed",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "578ae85753921ac2598a7c9828a59e08ebc7737c30767f003e09024539dc984e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_malformed",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 94,
+          "name": "test_ng_missing",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "77cc01463abbb68c1c05e5f5a248643c0e354714c9721c59a212b6080683b107"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_missing",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 98,
+          "name": "test_ng_multianalysis",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "d5f8cbbb40840fc91a6fa76fa678834d652d14668ab74c2c4ce2c4637486da86"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_multianalysis",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 111,
+          "name": "test_ng_mutable_commands",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "5e324c3f8162bfb43e000156f2e83f57a02b8583723cecc0696bad22740ff186"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_mutable_commands",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 86,
+          "name": "test_ng_quoted_exports_reject_commands_and_expressions",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "7d99445b1d525911c8c455cf5f951c07ba060aac774d9055e543b7455c87d099"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_quoted_exports_reject_commands_and_expressions",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 79,
+          "name": "test_ng_quoted_node_exports_preserve_readback",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "2eab6649c3f775aa69b8d31abfbe1ac4c0ad5e3e177073c4e0451354a7e654b2"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_quoted_node_exports_preserve_readback",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 74,
+          "name": "test_ng_scope_positive",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "00fd8308311adc7c35060e2cec6974d77f260dba2314ccfc95308d2655560b0c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_scope_positive",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 125,
+          "name": "test_ng_setting_change_after_snapshot",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "75cb2344e6a78ce7576e0cba410f468e1a893e9a0ba7e633d98434ec9dbcb105"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_setting_change_after_snapshot",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 118,
+          "name": "test_ng_source_stepping_is_failure_diagnostic",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "6dd47c089962de90a3996fd929e917c5910e114c9d53eb44f8318a0051c79130"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_ng_source_stepping_is_failure_diagnostic",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 129,
+          "name": "test_psf_duplicate",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "65a5eac805f6a1041f9f6443f7a6db5929230c20a54496e751d6b213b7f80301"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_psf_duplicate",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 127,
+          "name": "test_psf_malformed_method_quotes",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "62572c4a70e9cea3491ba32bbc3c8ba40ee221891f7ff773d7a6eb57b089d328"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_psf_malformed_method_quotes",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 71,
+          "name": "test_psf_mismatch",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "8a46e2a7add4d48c4abce80f13fd600de5e5176dd73e1a710289b8eb1b683ac7"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_psf_mismatch",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 131,
+          "name": "test_runner_preserves_scopes_mismatch_unknown",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "f01050b322d30ab1e8655c6b2e56ea346fa2b23699594c6d85f6b466e993bf97"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_runner_preserves_scopes_mismatch_unknown",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 62,
+          "name": "test_spectre_ambiguity",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "6ae726dfe1942de7187a5ef0c4436b44f950774a227a83bf4c25001e79c86200"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_spectre_ambiguity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 66,
+          "name": "test_spectre_malformed",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "4e221afb6a51d4b6fa07fd846e14f23232a18a6598be03ba4dd2cc4d24de1b9d"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_spectre_malformed",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 64,
+          "name": "test_spectre_missing",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "bb636a99932f9094294b5aea698e7d42c772211f7c0b9270cf8cdc8e82092b18"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_spectre_missing",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 69,
+          "name": "test_spectre_multianalysis",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "a9622f0807b350b148f1481e9de42d5aa89818ade4818452941ba70ad8d299fd"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_spectre_multianalysis",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 47,
+          "name": "test_spectre_observed_si_prefixes",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "2182cdee882fbe1f200bb88804922bccf870b3a176e00b752cde4a6aa3a16eeb"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_spectre_observed_si_prefixes",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 57,
+          "name": "test_spectre_scoped_positive",
+          "path": "experiments/backends/paper/test_settings_readback.py",
+          "sha256": "3f7ec1049dd40439eb962982972f477be3d5528010439f7280f2e96d35e1d9c6"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_settings_readback.py",
+        "module_sha256": "dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae",
+        "runtime_id": "test_settings_readback.Calibration.test_spectre_scoped_positive",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 59,
+          "name": "test_actual_global_format_controls_are_required_only_for_calibrated_mode",
+          "path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+          "sha256": "90227cb98da37e9fca6c42bceca58f82e85b27902bc95084d24de8eb700f7140"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+        "module_sha256": "bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca",
+        "runtime_id": "test_spectre_printed_metadata.PrintedMetadata.test_actual_global_format_controls_are_required_only_for_calibrated_mode",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 16,
+          "name": "test_actual_sci_producer_uses_log_values_and_printed_intervals",
+          "path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+          "sha256": "286b6d04fe844b08f26f5757d90a2e09948068ecb7a4b8a0421b4d4e07d754ba"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+        "module_sha256": "bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca",
+        "runtime_id": "test_spectre_printed_metadata.PrintedMetadata.test_actual_sci_producer_uses_log_values_and_printed_intervals",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 48,
+          "name": "test_changed_calibration_is_not_an_admission_flag",
+          "path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+          "sha256": "6980ee269072dc45a511015e248ba0d9cf268ec109f3828c688e0df67973e44f"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+        "module_sha256": "bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca",
+        "runtime_id": "test_spectre_printed_metadata.PrintedMetadata.test_changed_calibration_is_not_an_admission_flag",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 52,
+          "name": "test_decimal_power_of_ten_lower_bin_is_narrower",
+          "path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+          "sha256": "eec2b486ff198a45fb8cff57768de1f232e7b532044191b931dbe7f02eed6976"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+        "module_sha256": "bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca",
+        "runtime_id": "test_spectre_printed_metadata.PrintedMetadata.test_decimal_power_of_ten_lower_bin_is_narrower",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 24,
+          "name": "test_opt_in_rejects_scope_format_identity_and_value_corruption",
+          "path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+          "sha256": "39540af6437f87b6ee42cd853c6b2403272cde8f8831c43654338ada6682324e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+        "module_sha256": "bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca",
+        "runtime_id": "test_spectre_printed_metadata.PrintedMetadata.test_opt_in_rejects_scope_format_identity_and_value_corruption",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 13,
+          "name": "test_rounding_alone_is_not_calibration",
+          "path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+          "sha256": "2106a82823fbda5ce3e11a689d1a1b658b17e96212490a86b31cba9bdce14ec1"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+        "module_sha256": "bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca",
+        "runtime_id": "test_spectre_printed_metadata.PrintedMetadata.test_rounding_alone_is_not_calibration",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 9,
+          "name": "test_strict_mode_does_not_accept_rounded_header",
+          "path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+          "sha256": "a38279810b8cfaf20202ba80d1670ee3d3797143288aa4a36883e31aa1d8e8f5"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+        "module_sha256": "bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca",
+        "runtime_id": "test_spectre_printed_metadata.PrintedMetadata.test_strict_mode_does_not_accept_rounded_header",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 719,
+          "name": "test_all_six_statuses_are_retained",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "f1295d0d06940d3de6cb328a0eef63ef83610558fef496ee27c19e96ad0eee65"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_all_six_statuses_are_retained",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 817,
+          "name": "test_bound_deck_parse_X_needs_no_rejected_waveform_when_none_created",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "a5586fb5de39265de2328acc857b89a2e7f50d6a097262279af813aded4ec03b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_bound_deck_parse_X_needs_no_rejected_waveform_when_none_created",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 280,
+          "name": "test_checker_reanalysis_composes_with_unchanged_observation_derivation",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "d3e0f32a1e181fa536b3fef1af617324b908517b920e58842b58a1692444eb48"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_checker_reanalysis_composes_with_unchanged_observation_derivation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 268,
+          "name": "test_checker_reanalysis_preserves_original_verdict_for_all_backends_and_X",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "d29a65935372761cd7af1ebe2c965c1e9070275d0a15f30b0203f47ee2738a7c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_checker_reanalysis_preserves_original_verdict_for_all_backends_and_X",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 296,
+          "name": "test_checker_reanalysis_rejects_changes_to_execution_or_observation_fields",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "d9058aa3a90e8651e47778ae784be7a792ec402dac0de3e22a7e6d0f336ca805"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_checker_reanalysis_rejects_changes_to_execution_or_observation_fields",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 285,
+          "name": "test_checker_reanalysis_rejects_unadmitted_method_and_snapshot_drift",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "6ff51debf8bb83dcff3d783bf7c99fa00fee24424358186e06c0e9c01c0e7436"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_checker_reanalysis_rejects_unadmitted_method_and_snapshot_drift",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 306,
+          "name": "test_checker_reanalysis_requires_actual_original_record_validation",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "4f6b5226223c6a7bb4ea4d913a23dfc488e5a44eb3557cfca780b6c115cb233e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_checker_reanalysis_requires_actual_original_record_validation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 498,
+          "name": "test_condition_observation_and_card_bindings_are_checked",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "7e291110168ff639616d6dc709f617336b3a0101f60757a16f3eac460731e036"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_condition_observation_and_card_bindings_are_checked",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 778,
+          "name": "test_deck_parse_X_rejects_unbound_diagnostic_and_raw_evidence",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "1d34d5a721a5d21979f6948a76d9485bc123f573620d6c446ac4fa9714900c89"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_deck_parse_X_rejects_unbound_diagnostic_and_raw_evidence",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 797,
+          "name": "test_deck_parse_X_requires_manifest_bound_diagnostic_log",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "f1821670aff12816b359e763c24335a18020661e98be9e219593966861068794"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_deck_parse_X_requires_manifest_bound_diagnostic_log",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 807,
+          "name": "test_deck_parse_X_requires_manifest_bound_rejected_raw",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "0c8a02a9b0ee99f8f7060c6afec5fa97685b47c6bb5eb4ad7b40ad0fd5f3f896"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_deck_parse_X_requires_manifest_bound_rejected_raw",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 190,
+          "name": "test_derived_analysis_cannot_change_time_voltage_or_geometry",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "1b62109ced0eb3650b9f273dbc2128820b18b121d16ff2d3f5136c1edcdf3eab"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_derived_analysis_cannot_change_time_voltage_or_geometry",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 171,
+          "name": "test_derived_analysis_keeps_original_I_without_new_attempt",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "1122831290bff97a286d616e2846a91ef220a8ee97c4e57bbdecb499aea9900b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_derived_analysis_keeps_original_I_without_new_attempt",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 180,
+          "name": "test_derived_analysis_rejects_actual_or_analysis_artifact_drift",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "c65ac803c908f3b10dbfa7c80efd5aebf604cdd13dfe932ea93505c6a02677ea"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_derived_analysis_rejects_actual_or_analysis_artifact_drift",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 318,
+          "name": "test_derived_analysis_rejects_rehashed_evidence_identity_changes",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "f009148e428c677e913894210f2ed84f7a3ea0191aac8df2cc9dc22c30074f6e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_derived_analysis_rejects_rehashed_evidence_identity_changes",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 231,
+          "name": "test_derived_analysis_requires_original_assessment_and_exact_execution",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "d27700109f8ac9ad6bdef12b8e25767920e342ee96b59a7f42a1f47001d5f167"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_derived_analysis_requires_original_assessment_and_exact_execution",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 333,
+          "name": "test_derived_analysis_retained_adapter_does_not_require_latest_checkout",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "55f5b12fdc1c0552336aad85d716ce194187e2f6269f588a7d979bde388de580"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_derived_analysis_retained_adapter_does_not_require_latest_checkout",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 205,
+          "name": "test_derived_analysis_retains_required_roles_and_property_failure",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "29293a673ac04173c62c34bf2159da3d50296a8a04c4725cd9693d0601796631"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_derived_analysis_retains_required_roles_and_property_failure",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 620,
+          "name": "test_dynamic_tool_receipts_allow_disjoint_two_plus_ten",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "2cf1bfb3ca5565ac223bc2bdbf35333f25a57ed115e893607afb90f850bcb8a4"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_dynamic_tool_receipts_allow_disjoint_two_plus_ten",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 539,
+          "name": "test_execution_status_cannot_be_relabelled_U_X_or_T",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "99e2555523a0a378952c082d719c155b53e6c3efc69d868371c7d13a06b82148"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_execution_status_cannot_be_relabelled_U_X_or_T",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 485,
+          "name": "test_fake_pass_and_changed_artifacts_are_rejected",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "421656eb7a61b92c77f9530fa89186a3a3b547dc728415ea2be27474800c4908"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_fake_pass_and_changed_artifacts_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 698,
+          "name": "test_final_lane_requires_unique_identical_row_and_unchanged_artifact",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "ea79172c5f28ed1315b676398fdf06480bca3f6980cd06a07fe947732bb6a289"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_final_lane_requires_unique_identical_row_and_unchanged_artifact",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 371,
+          "name": "test_frozen_identity_json_bytes_are_verified",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "3a8efec1424b69ff932ec2ecf37541328e35736a4125007794c54f8b1e1ab5f2"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_frozen_identity_json_bytes_are_verified",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 353,
+          "name": "test_frozen_runner_checker_and_dependency_digest_are_bound",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "03fd69597229dfdd91acd3d17de9b4b28380ed7abb22fe39f2d6e2be7c175d95"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_frozen_runner_checker_and_dependency_digest_are_bound",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 404,
+          "name": "test_frozen_waveform_deleted_or_changed_is_rejected",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "6c713449b05e9d83263d187540792337151aa9ce44cec02425f78251afe9f781"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_frozen_waveform_deleted_or_changed_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 731,
+          "name": "test_gnucap_deck_parse_error_requires_immutable_final_record_and_counts_X",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "c06b287eaf6001f6c490c025c68d4976881ceb0389a8c8d32fa1ee9dea022982"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_gnucap_deck_parse_error_requires_immutable_final_record_and_counts_X",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 382,
+          "name": "test_historical_valid_frozen_checker_is_accepted",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "f77e630e740ca4539419d5a4a5accaa70e9a92cdf503f6d5e6c71213097563dc"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_historical_valid_frozen_checker_is_accepted",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 386,
+          "name": "test_malformed_record_public_url_and_observation_are_ValueError",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "66f45ca3f4dfb6b30d588982a3f7f678edf81d20cea00a248cd304e80f78ea37"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_malformed_record_public_url_and_observation_are_ValueError",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 475,
+          "name": "test_missing_duplicate_and_unknown_slots_are_rejected",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "8751f81960c35bcd7ae48159e6638d19a1879b55e50913ad2c4bef004c99ff56"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_missing_duplicate_and_unknown_slots_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 657,
+          "name": "test_other_attempt_started_or_tool_not_in_lane_manifest_is_rejected",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "4be7ab3f1c2b71c8ee98097a1ad18d142b7b597679978d6087f0cce31d8f1f98"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_other_attempt_started_or_tool_not_in_lane_manifest_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 460,
+          "name": "test_partial_batch_keeps_all_denominators_and_card_design_separate",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "d76c4ed162acdeecd4434d320f461a0a27df42c70233b874d44fdd7e5f62bb48"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_partial_batch_keeps_all_denominators_and_card_design_separate",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 242,
+          "name": "test_pending_placeholder_cannot_claim_derived_analysis",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "15413203ade94785bb9b791b108a46995782d4eb71656f8254f77e39567cb08e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_pending_placeholder_cannot_claim_derived_analysis",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 521,
+          "name": "test_previous_assessment_cannot_grade_new_observation_or_execution",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "9a9e407b506b8e1fd33e2290f1941091c2fa3d28e38961185ab011334c8b5e5f"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_previous_assessment_cannot_grade_new_observation_or_execution",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 571,
+          "name": "test_same_backend_two_plus_ten_requires_one_execution_identity",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "69bab9496abb923763145c3338626829835d7d0793707e3b01aec4d403363cb6"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_same_backend_two_plus_ten_requires_one_execution_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 665,
+          "name": "test_selected_slot_keeps_declared_prior_failure_without_increasing_N",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "f9dfdc78d37a09e29cfd1a49baf4d34c304f246481b0124b3156928b28298ed0"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_selected_slot_keeps_declared_prior_failure_without_increasing_N",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 446,
+          "name": "test_spectre_nested_waveform_is_accepted",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "39a61c270de4a9d7fe35bf77cdb631121eed3fe2eab47149e5e67a3cddc80b69"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_spectre_nested_waveform_is_accepted",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 599,
+          "name": "test_started_source_and_deck_match_executed_source_and_frozen_inputs",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "fd430b320c80b0103d5657a6c9d10709d045f8b4508e663cc475afcda4310c92"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_started_source_and_deck_match_executed_source_and_frozen_inputs",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 681,
+          "name": "test_terminal_budget_failure_rejects_earlier_waveform_snapshot",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "3264ff953aa509c781478438ff2b6a1e30c1b51f0c0fc83df0e8a9aa0e30c664"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_terminal_budget_failure_rejects_earlier_waveform_snapshot",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 417,
+          "name": "test_waveform_digest_and_condition_path_are_checked",
+          "path": "experiments/backends/paper/test_table.py",
+          "sha256": "7927d5591327755d5accb0e3539798f53ec5496c1caff0b07f01aa2d3c7edc91"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/paper/test_table.py",
+        "module_sha256": "c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c",
+        "runtime_id": "test_table.TableControls.test_waveform_digest_and_condition_path_are_checked",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "transport": {
+      "actual_resolved_overrides": {},
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr3/source-capture-03/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr3/source-capture-03/source",
+        "--start",
+        "experiments/backends/paper",
+        "--pattern",
+        "test_*.py",
+        "--namespace",
+        "validation"
+      ],
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr3/source-capture-03/source",
+      "environment_overrides": {},
+      "original_python_equivalence": "major-minor-declared-only",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 129, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/opt/homebrew/opt/python@3.12/bin/python3.12\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr3/source-capture-03/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/opt/homebrew/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 24, \"name\": \"test_actual_radius_not_tolerance_and_continuous_input_sup\", \"path\": \"experiments/backends/paper/test_actual_observation.py\", \"sha256\": \"4e61195918eef67407c6466ed7558dd5ec122d554c57ff61555e8c75ea80bd2c\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_actual_observation.py\", \"module_sha256\": \"a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024\", \"runtime_id\": \"test_actual_observation.ActualEvidence.test_actual_radius_not_tolerance_and_continuous_input_sup\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 87, \"name\": \"test_boundary_role_uses_unique_actual_request_id_and_same_response\", \"path\": \"experiments/backends/paper/test_actual_observation.py\", \"sha256\": \"963d9659e2f4b0b0c19ffe598606cea714837fc9cdd3379f7d8d4fb865874670\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_actual_observation.py\", \"module_sha256\": \"a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024\", \"runtime_id\": \"test_actual_observation.ActualEvidence.test_boundary_role_uses_unique_actual_request_id_and_same_response\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 77, \"name\": \"test_causal_and_stateless_native_require_certificate_and_execution_identity\", \"path\": \"experiments/backends/paper/test_actual_observation.py\", \"sha256\": \"e44589a2a98357f3ecd4a19369877787b885940d3bea053acb3bf7c712f14e2d\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_actual_observation.py\", \"module_sha256\": \"a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024\", \"runtime_id\": \"test_actual_observation.ActualEvidence.test_causal_and_stateless_native_require_certificate_and_execution_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 56, \"name\": \"test_continuous_union_bound_detects_positive_and_negative_perturbations\", \"path\": \"experiments/backends/paper/test_actual_observation.py\", \"sha256\": \"0e96bf31d91b46a1f6a1dc5680860105d0b372a0e44517ee2be0f091551f34a0\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_actual_observation.py\", \"module_sha256\": \"a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024\", \"runtime_id\": \"test_actual_observation.ActualEvidence.test_continuous_union_bound_detects_positive_and_negative_perturbations\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 65, \"name\": \"test_executed_domain_and_stop_roundoff_are_explicit\", \"path\": \"experiments/backends/paper/test_actual_observation.py\", \"sha256\": \"dbc1c53a488812339572be6000a8781792eea608fb0354aa5a79c756a9722f00\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_actual_observation.py\", \"module_sha256\": \"a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024\", \"runtime_id\": \"test_actual_observation.ActualEvidence.test_executed_domain_and_stop_roundoff_are_explicit\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 52, \"name\": \"test_failed_unknown_or_empty_review_is_not_source_qualification\", \"path\": \"experiments/backends/paper/test_actual_observation.py\", \"sha256\": \"206f9bc2053d9dedb17d29a82367d44cadca620aebb6194877250358f96874bb\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_actual_observation.py\", \"module_sha256\": \"a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024\", \"runtime_id\": \"test_actual_observation.ActualEvidence.test_failed_unknown_or_empty_review_is_not_source_qualification\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 128, \"name\": \"test_full_existing_receipt_chain_and_boundary_packet_fail_closed_on_drift\", \"path\": \"experiments/backends/paper/test_actual_observation.py\", \"sha256\": \"0a4d7fa35412a0621b0be516e151e02ba5778a0cbb15f754bbf3cd2f306b15cb\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_actual_observation.py\", \"module_sha256\": \"a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024\", \"runtime_id\": \"test_actual_observation.ActualEvidence.test_full_existing_receipt_chain_and_boundary_packet_fail_closed_on_drift\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 41, \"name\": \"test_identity_and_invalid_interval_fail_closed\", \"path\": \"experiments/backends/paper/test_actual_observation.py\", \"sha256\": \"769bf75689f730c2e4301e2b3a4d6d122d2e70279590129809a0c0cb7de02c13\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_actual_observation.py\", \"module_sha256\": \"a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024\", \"runtime_id\": \"test_actual_observation.ActualEvidence.test_identity_and_invalid_interval_fail_closed\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 38, \"name\": \"test_initial_callback_bound_touching_zero_stays_unknown\", \"path\": \"experiments/backends/paper/test_actual_observation.py\", \"sha256\": \"56b5adf53c094af162b90f56e7be1b2ba6368b053ae28a0f18d7e857ba730516\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_actual_observation.py\", \"module_sha256\": \"a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024\", \"runtime_id\": \"test_actual_observation.ActualEvidence.test_initial_callback_bound_touching_zero_stays_unknown\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 32, \"name\": \"test_missing_interval_and_direct_query_are_not_promoted\", \"path\": \"experiments/backends/paper/test_actual_observation.py\", \"sha256\": \"c576f534df660ba6124802360c0bec58384dae49a4f9965623b3db436b50e6b1\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_actual_observation.py\", \"module_sha256\": \"a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024\", \"runtime_id\": \"test_actual_observation.ActualEvidence.test_missing_interval_and_direct_query_are_not_promoted\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 99, \"name\": \"test_new_packet_preserves_raw_bytes_and_uses_actual_review_schema\", \"path\": \"experiments/backends/paper/test_actual_observation.py\", \"sha256\": \"c725a158c339733e629db18df49d6dc248c32fb80d1cfeeba080f4ec37918a12\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_actual_observation.py\", \"module_sha256\": \"a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024\", \"runtime_id\": \"test_actual_observation.ActualEvidence.test_new_packet_preserves_raw_bytes_and_uses_actual_review_schema\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 184, \"name\": \"test_outward_conversion_never_shrinks_rational_bound\", \"path\": \"experiments/backends/paper/test_actual_observation.py\", \"sha256\": \"181765bb66264b15c2aeb78fd493e430ae3ec032be811f8592a336c97e784c56\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_actual_observation.py\", \"module_sha256\": \"a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024\", \"runtime_id\": \"test_actual_observation.ActualEvidence.test_outward_conversion_never_shrinks_rational_bound\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 164, \"name\": \"test_production_closure_cannot_be_omitted_or_changed_in_manifest\", \"path\": \"experiments/backends/paper/test_actual_observation.py\", \"sha256\": \"75b54b7eeeaf806fb03b44f2c4b957687ddd2271da6bc04b1a25ecca12175925\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_actual_observation.py\", \"module_sha256\": \"a3b77b149bf7d273a215192572edb6b0108430ed7612a90b40fb7c22841ff024\", \"runtime_id\": \"test_actual_observation.ActualEvidence.test_production_closure_cannot_be_omitted_or_changed_in_manifest\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 33, \"name\": \"test_exact_sources_and_hierarchical_isolation_survive_all_decks\", \"path\": \"experiments/backends/paper/test_inputs.py\", \"sha256\": \"ae493f316e3db96a98bbbf1efcf077d575f2aad8530d666ed434151c2045baa9\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_inputs.py\", \"module_sha256\": \"46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0\", \"runtime_id\": \"test_inputs.InputContracts.test_exact_sources_and_hierarchical_isolation_survive_all_decks\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 72, \"name\": \"test_freeze_cannot_exceed_authorized_stage_limit\", \"path\": \"experiments/backends/paper/test_inputs.py\", \"sha256\": \"2995c6c7bb16ecc1ce23f884dffbe7d09406a7d80a1daf39344e9be800451f65\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_inputs.py\", \"module_sha256\": \"46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0\", \"runtime_id\": \"test_inputs.InputContracts.test_freeze_cannot_exceed_authorized_stage_limit\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 98, \"name\": \"test_gnucap_observer_continuations_preserve_all_ordered_corners\", \"path\": \"experiments/backends/paper/test_inputs.py\", \"sha256\": \"1eaadff405a24312c5a342cabb6dd4f059ea24aea07b5fa778b4c9b0043429ca\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_inputs.py\", \"module_sha256\": \"46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0\", \"runtime_id\": \"test_inputs.InputContracts.test_gnucap_observer_continuations_preserve_all_ordered_corners\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 53, \"name\": \"test_grid_requests_global_local_and_exact_root_obligations\", \"path\": \"experiments/backends/paper/test_inputs.py\", \"sha256\": \"c73981e9c3885d95948d3b7bad3ef30e23e3a2e9e309367b045a0038d970e201\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_inputs.py\", \"module_sha256\": \"46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0\", \"runtime_id\": \"test_inputs.InputContracts.test_grid_requests_global_local_and_exact_root_obligations\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 64, \"name\": \"test_nested_manifest_named_file_cannot_evade_frozen_file_set\", \"path\": \"experiments/backends/paper/test_inputs.py\", \"sha256\": \"a7ce029796580059308f3fc920ff0c32aef1e35d087b68c01ea7a26e0206bb43\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_inputs.py\", \"module_sha256\": \"46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0\", \"runtime_id\": \"test_inputs.InputContracts.test_nested_manifest_named_file_cannot_evade_frozen_file_set\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 12, \"name\": \"test_ngspice_operator_named_nodes_are_exported_without_renaming_ports\", \"path\": \"experiments/backends/paper/test_inputs.py\", \"sha256\": \"cbd79e8927c71a814fb02050180db84f12e96b049c08c908cc8de6983de32d03\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_inputs.py\", \"module_sha256\": \"46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0\", \"runtime_id\": \"test_inputs.InputContracts.test_ngspice_operator_named_nodes_are_exported_without_renaming_ports\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 77, \"name\": \"test_spice_local_requests_are_decoupled_and_fit_frozen_budget\", \"path\": \"experiments/backends/paper/test_inputs.py\", \"sha256\": \"c8a5a385a8ccb8c91d015ad999346588c376797d041297a51c760f89097778d3\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_inputs.py\", \"module_sha256\": \"46358717f2cc4d8ef0cb13e46714cfcdd54e16dfc1ebf7cb9f8feb47ae27b2f0\", \"runtime_id\": \"test_inputs.InputContracts.test_spice_local_requests_are_decoupled_and_fit_frozen_budget\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 81, \"name\": \"test_boolean_is_not_a_physical_sample\", \"path\": \"experiments/backends/paper/test_observations.py\", \"sha256\": \"449f92279bfaa651e2a0bbb85cd767f81a69685e835275d12601597a846f2d3d\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_observations.py\", \"module_sha256\": \"9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d\", \"runtime_id\": \"test_observations.ObservationContracts.test_boolean_is_not_a_physical_sample\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 72, \"name\": \"test_boundary_request_provenance_is_preserved_without_qualification\", \"path\": \"experiments/backends/paper/test_observations.py\", \"sha256\": \"3a043311ed443e3050b9b9bfd79df05c0a950d8b8e7c6f1639bd9ccecb837ed1\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_observations.py\", \"module_sha256\": \"9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d\", \"runtime_id\": \"test_observations.ObservationContracts.test_boundary_request_provenance_is_preserved_without_qualification\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 9, \"name\": \"test_dense_interpolated_counter_cannot_become_native_evidence\", \"path\": \"experiments/backends/paper/test_observations.py\", \"sha256\": \"23ee0fcc921cdce2ae63fcbd6ecd992579be45ef1befc8897a799bbcf5655a94\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_observations.py\", \"module_sha256\": \"9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d\", \"runtime_id\": \"test_observations.ObservationContracts.test_dense_interpolated_counter_cannot_become_native_evidence\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 124, \"name\": \"test_different_nominal_identity_is_diagnosed_not_tolerance_matched\", \"path\": \"experiments/backends/paper/test_observations.py\", \"sha256\": \"6138992767c6e5947df89ea313bafdae02f64f22e1f17787e057c753d1473cf2\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_observations.py\", \"module_sha256\": \"9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d\", \"runtime_id\": \"test_observations.ObservationContracts.test_different_nominal_identity_is_diagnosed_not_tolerance_matched\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 47, \"name\": \"test_empty_local_window_not_hidden_by_contained_point_filter\", \"path\": \"experiments/backends/paper/test_observations.py\", \"sha256\": \"e26d04337ecc39d3b076caa0692985287a068203c7a48b7c99c39cf4eb9109cd\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_observations.py\", \"module_sha256\": \"9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d\", \"runtime_id\": \"test_observations.ObservationContracts.test_empty_local_window_not_hidden_by_contained_point_filter\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 25, \"name\": \"test_invalid_input_rows_are_preserved_and_flagged\", \"path\": \"experiments/backends/paper/test_observations.py\", \"sha256\": \"c2a57abc681b6cc9f6f4fce21b84010cc4d8bb72c19184f6868d130873cda9e6\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_observations.py\", \"module_sha256\": \"9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d\", \"runtime_id\": \"test_observations.ObservationContracts.test_invalid_input_rows_are_preserved_and_flagged\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 137, \"name\": \"test_malformed_boundary_nominals_remain_diagnosed\", \"path\": \"experiments/backends/paper/test_observations.py\", \"sha256\": \"15e1d94633695f2f40445cbd42aec3bc8b6469befcd5219db6d171952cbd000b\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_observations.py\", \"module_sha256\": \"9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d\", \"runtime_id\": \"test_observations.ObservationContracts.test_malformed_boundary_nominals_remain_diagnosed\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 19, \"name\": \"test_missing_uncertainty_never_inferred_from_native_grid\", \"path\": \"experiments/backends/paper/test_observations.py\", \"sha256\": \"5cf0a741304b4d3f970c8a3af82e3ebe351034634111bf7c447036c3045a976c\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_observations.py\", \"module_sha256\": \"9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d\", \"runtime_id\": \"test_observations.ObservationContracts.test_missing_uncertainty_never_inferred_from_native_grid\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 31, \"name\": \"test_native_format_reader_preserves_raw_boundary_values\", \"path\": \"experiments/backends/paper/test_observations.py\", \"sha256\": \"b0e637d9465dedc961d4d6be916af5ba1049d9b37458c22737325de8f88d885c\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_observations.py\", \"module_sha256\": \"9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d\", \"runtime_id\": \"test_observations.ObservationContracts.test_native_format_reader_preserves_raw_boundary_values\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 108, \"name\": \"test_proved_boundary_serialization_offset_does_not_fail_exact_literal_gate\", \"path\": \"experiments/backends/paper/test_observations.py\", \"sha256\": \"c4343a8619a116208a25e8d4741c617da768f40c906d428aeac4414fd0048019\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_observations.py\", \"module_sha256\": \"9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d\", \"runtime_id\": \"test_observations.ObservationContracts.test_proved_boundary_serialization_offset_does_not_fail_exact_literal_gate\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 53, \"name\": \"test_qualified_native_export_requires_unchanged_role_certificates\", \"path\": \"experiments/backends/paper/test_observations.py\", \"sha256\": \"920a44f8597efc93bb7e8b0c9dfd0853b5d8cd25c8832e42cdd43d8255a50928\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_observations.py\", \"module_sha256\": \"9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d\", \"runtime_id\": \"test_observations.ObservationContracts.test_qualified_native_export_requires_unchanged_role_certificates\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 86, \"name\": \"test_reader_leaves_suite_unchanged_on_success_and_parse_failure\", \"path\": \"experiments/backends/paper/test_observations.py\", \"sha256\": \"0f1c0f9704b0638f721f2aa9f696a5ec886b7151b0ceb1e82c579ebc602e43b0\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_observations.py\", \"module_sha256\": \"9e136f9e592a446823d79c93961bc13eb71eeeffdee2cc43948a0c5a53ed9f1d\", \"runtime_id\": \"test_observations.ObservationContracts.test_reader_leaves_suite_unchanged_on_success_and_parse_failure\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 41, \"name\": \"test_legacy_and_current_producers_keep_distinct_reader_contracts\", \"path\": \"experiments/backends/paper/test_producer_dependencies.py\", \"sha256\": \"21a785281b379718d2c5832efd632e3ab6bed33454eccac27ecac217b67709b9\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_producer_dependencies.py\", \"module_sha256\": \"0c4ac1c7ca1cdb350a4065c9f9d191eb064af5e12c55dc0e5e68a95d300e2006\", \"runtime_id\": \"test_producer_dependencies.ProducerDependencyContracts.test_legacy_and_current_producers_keep_distinct_reader_contracts\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 57, \"name\": \"test_missing_current_reader_does_not_fall_back_to_existing_legacy_files\", \"path\": \"experiments/backends/paper/test_producer_dependencies.py\", \"sha256\": \"fcdc1efdd074417be398df8570164200800bea19f646d4ab44d22d67063841e2\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_producer_dependencies.py\", \"module_sha256\": \"0c4ac1c7ca1cdb350a4065c9f9d191eb064af5e12c55dc0e5e68a95d300e2006\", \"runtime_id\": \"test_producer_dependencies.ProducerDependencyContracts.test_missing_current_reader_does_not_fall_back_to_existing_legacy_files\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 66, \"name\": \"test_shared_constructor_is_required_when_the_audited_worker_imports_it\", \"path\": \"experiments/backends/paper/test_producer_dependencies.py\", \"sha256\": \"6ecf50305e2654cb1b901423f7e5d70dcc3c765068d02446d2b3cebf1df4f203\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_producer_dependencies.py\", \"module_sha256\": \"0c4ac1c7ca1cdb350a4065c9f9d191eb064af5e12c55dc0e5e68a95d300e2006\", \"runtime_id\": \"test_producer_dependencies.ProducerDependencyContracts.test_shared_constructor_is_required_when_the_audited_worker_imports_it\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 79, \"name\": \"test_unknown_or_ambiguous_reader_contract_cannot_claim_a_complete_producer\", \"path\": \"experiments/backends/paper/test_producer_dependencies.py\", \"sha256\": \"b1b3d41f27cae609b94741c7f1cfcf771cb113bae1f17aed89bea56ce01bf77e\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_producer_dependencies.py\", \"module_sha256\": \"0c4ac1c7ca1cdb350a4065c9f9d191eb064af5e12c55dc0e5e68a95d300e2006\", \"runtime_id\": \"test_producer_dependencies.ProducerDependencyContracts.test_unknown_or_ambiguous_reader_contract_cannot_claim_a_complete_producer\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 122, \"name\": \"test_actual_controls_override_request_echo_and_keep_unsupported_unknown\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"f3a984e296a9b39e8aecc3daf3eef15becfc63c2ae4690240f0852127c6f9d13\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_actual_controls_override_request_echo_and_keep_unsupported_unknown\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 28, \"name\": \"test_allocation_must_bind_frozen_inputs_and_profile\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"60e875f264e68a9b29076ada74b84ff8660b4b8c9a0e7f2d073d72c41c069923\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_allocation_must_bind_frozen_inputs_and_profile\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 17, \"name\": \"test_cleanup_failure_overrides_zero_exit_and_aborts\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"427917603177d2dc0ee74809bd1ce4ccacc4f7ca19bfc09cdc97f33300ec2ee3\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_cleanup_failure_overrides_zero_exit_and_aborts\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 105, \"name\": \"test_compact_response_preserves_all_fields_values_and_unknown_bounds\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"4eaf3151def26249540505d4b50b9be5e487b4f50fd49e96b1ec787bd5c012d3\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_compact_response_preserves_all_fields_values_and_unknown_bounds\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 23, \"name\": \"test_compile_failure_and_timeout_keep_stage_and_different_states\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"7137b0342d30ac4da33288c95d485856cddfefa18c0565e40ac68e359700cf2c\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_compile_failure_and_timeout_keep_stage_and_different_states\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 64, \"name\": \"test_container_allocation_cannot_claim_less_than_factory_memory\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"830e630885d82266177f155a6a56a2162edd2930fbaf7dd5a76e8a20179c4561\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_container_allocation_cannot_claim_less_than_factory_memory\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 71, \"name\": \"test_container_manifest_and_package_cannot_drift_together\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"f261094edac8bb3048235c3f87dc3ce1128dd240838fb44c20119c5a2ffe5ce2\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_container_manifest_and_package_cannot_drift_together\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 152, \"name\": \"test_drift_after_first_case_preserves_complete_lane_receipt\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"523f975c55ce385b25e8d00c1c76f6bff5ac1111465074f52401070ed79ca12e\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_drift_after_first_case_preserves_complete_lane_receipt\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 317, \"name\": \"test_gnucap_parser_errors_override_existing_waveform_and_zero_exit\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"bba31b243db6d3636f34abea25913d7b80be3d15fac9c946e0d5ee2617b729e2\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_gnucap_parser_errors_override_existing_waveform_and_zero_exit\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 44, \"name\": \"test_owned_container_is_checked_after_success_and_failed_removal\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"ed1fc47f60156c3c4a7852cbe7a5fc102a7186c14b8fdd21aff81351dde2faeb\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_owned_container_is_checked_after_success_and_failed_removal\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 36, \"name\": \"test_raw_parser_error_retains_invalid_observation_state\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"288f68ff831e33271f9b82b024e8a1c940226a9f57d350805137d54ba3ccbba8\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_raw_parser_error_retains_invalid_observation_state\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 90, \"name\": \"test_request_echo_cannot_be_effective_evas_readback\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"b9abd5169bcd9d46f4e9baa6a682c8712bbfa2f68e57c9bac3d17ff93d32c8b7\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_request_echo_cannot_be_effective_evas_readback\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 201, \"name\": \"test_selected_plan_is_checked_against_actual_allocation_before_preflight\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"49852f9408a039fa78cd27b9e8bec02eaec4b112f2a31ff181a919b33e0c0a2e\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_selected_plan_is_checked_against_actual_allocation_before_preflight\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 217, \"name\": \"test_subset_selection_requires_known_distinct_ids_and_matching_grants\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"0e586c4f091533599b03d62e5e3707499c1530aa997956346a785101324c64ec\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_subset_selection_requires_known_distinct_ids_and_matching_grants\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 8, \"name\": \"test_successful_exit_without_artifact_is_not_success\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"b14941a8e1bc0f0a36f7e26ac7547fa9fd11b74529aadbbd186b826660a3fb5b\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_successful_exit_without_artifact_is_not_success\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 229, \"name\": \"test_terminal_directory_budget_is_actual_and_excess_is_explicit\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"eff32116de0ec4c137d086b45c835aced753863fba30d859fc7d870223d2c06c\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_terminal_directory_budget_is_actual_and_excess_is_explicit\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 238, \"name\": \"test_two_selected_conditions_keep_twelve_records_without_launching_others\", \"path\": \"experiments/backends/paper/test_runner.py\", \"sha256\": \"4206bcadb2228fa886a66964498c64ce97255dc942850e47892a03cc62400ea6\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_runner.py\", \"module_sha256\": \"44f1cd260cbb6b1ab665269b5821a22814d58495aa0ff304e0b7759e97e69185\", \"runtime_id\": \"test_runner.RunnerContracts.test_two_selected_conditions_keep_twelve_records_without_launching_others\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 102, \"name\": \"test_dimension_wrong\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"9e99f560094661baa40acb9c2d61c9d44375a706ce53d57858326bb8fcae9d19\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_dimension_wrong\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 108, \"name\": \"test_global_after_analysis\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"bf33048c9cd882eefa65aafb440742c4e1a0b2115bd5702fefbe1691503a124e\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_global_after_analysis\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 160, \"name\": \"test_gnucap_conflicting_parsed_settings_are_rejected\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"b2710fa867277cdf2e0e5e6e20da312b8debafd2886a338b7825740e0bce116e\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_gnucap_conflicting_parsed_settings_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 192, \"name\": \"test_gnucap_equivalent_suffix_and_exponent_readbacks_are_accepted\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"c0c79dc3b8b936d3c5697477b898c9ba308e22e2ff563d45b7acf044fd82606f\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_gnucap_equivalent_suffix_and_exponent_readbacks_are_accepted\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 171, \"name\": \"test_gnucap_identical_repeated_settings_are_preserved\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"9bf9ed32ac081498050a1f90013b0db14336407410adc141a28d40db6335be18\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_gnucap_identical_repeated_settings_are_preserved\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 150, \"name\": \"test_gnucap_parse_error_blocks_settings\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"fb24b215e5d69d1dcc31b93ae8eaf5c5505c03ad7a717d768094a75900467bf6\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_gnucap_parse_error_blocks_settings\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 92, \"name\": \"test_ng_ambiguity\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"81b03a2f96629e8f24cb3dbf61d6ecc06827dccb5fc41867e8997caf94724197\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_ambiguity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 123, \"name\": \"test_ng_analysis_outside_snapshots\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"354057420b7c960292a04333befd9f05fb11172a8351eb8a413ba17f2af14d78\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_analysis_outside_snapshots\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 114, \"name\": \"test_ng_command_suffix_mutation\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"a9c9b7c441c8183de55575f7a102ef77553a45eeaf40dfa8570e023dccc0bf6f\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_command_suffix_mutation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 100, \"name\": \"test_ng_intervening_mutator\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"c59af4bd9a42360f5c424578c93c95fc373388a8ada22942e9e7db4dfa3766e8\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_intervening_mutator\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 121, \"name\": \"test_ng_logged_mutator_rejected\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"68c848760620996ad741a43ee163f9fa70f26f89c7ce5e13e52732cd588f8051\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_logged_mutator_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 96, \"name\": \"test_ng_malformed\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"578ae85753921ac2598a7c9828a59e08ebc7737c30767f003e09024539dc984e\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_malformed\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 94, \"name\": \"test_ng_missing\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"77cc01463abbb68c1c05e5f5a248643c0e354714c9721c59a212b6080683b107\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_missing\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 98, \"name\": \"test_ng_multianalysis\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"d5f8cbbb40840fc91a6fa76fa678834d652d14668ab74c2c4ce2c4637486da86\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_multianalysis\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 111, \"name\": \"test_ng_mutable_commands\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"5e324c3f8162bfb43e000156f2e83f57a02b8583723cecc0696bad22740ff186\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_mutable_commands\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 86, \"name\": \"test_ng_quoted_exports_reject_commands_and_expressions\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"7d99445b1d525911c8c455cf5f951c07ba060aac774d9055e543b7455c87d099\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_quoted_exports_reject_commands_and_expressions\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 79, \"name\": \"test_ng_quoted_node_exports_preserve_readback\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"2eab6649c3f775aa69b8d31abfbe1ac4c0ad5e3e177073c4e0451354a7e654b2\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_quoted_node_exports_preserve_readback\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 74, \"name\": \"test_ng_scope_positive\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"00fd8308311adc7c35060e2cec6974d77f260dba2314ccfc95308d2655560b0c\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_scope_positive\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 125, \"name\": \"test_ng_setting_change_after_snapshot\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"75cb2344e6a78ce7576e0cba410f468e1a893e9a0ba7e633d98434ec9dbcb105\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_setting_change_after_snapshot\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 118, \"name\": \"test_ng_source_stepping_is_failure_diagnostic\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"6dd47c089962de90a3996fd929e917c5910e114c9d53eb44f8318a0051c79130\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_ng_source_stepping_is_failure_diagnostic\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 129, \"name\": \"test_psf_duplicate\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"65a5eac805f6a1041f9f6443f7a6db5929230c20a54496e751d6b213b7f80301\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_psf_duplicate\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 127, \"name\": \"test_psf_malformed_method_quotes\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"62572c4a70e9cea3491ba32bbc3c8ba40ee221891f7ff773d7a6eb57b089d328\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_psf_malformed_method_quotes\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 71, \"name\": \"test_psf_mismatch\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"8a46e2a7add4d48c4abce80f13fd600de5e5176dd73e1a710289b8eb1b683ac7\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_psf_mismatch\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 131, \"name\": \"test_runner_preserves_scopes_mismatch_unknown\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"f01050b322d30ab1e8655c6b2e56ea346fa2b23699594c6d85f6b466e993bf97\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_runner_preserves_scopes_mismatch_unknown\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 62, \"name\": \"test_spectre_ambiguity\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"6ae726dfe1942de7187a5ef0c4436b44f950774a227a83bf4c25001e79c86200\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_spectre_ambiguity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 66, \"name\": \"test_spectre_malformed\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"4e221afb6a51d4b6fa07fd846e14f23232a18a6598be03ba4dd2cc4d24de1b9d\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_spectre_malformed\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 64, \"name\": \"test_spectre_missing\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"bb636a99932f9094294b5aea698e7d42c772211f7c0b9270cf8cdc8e82092b18\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_spectre_missing\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 69, \"name\": \"test_spectre_multianalysis\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"a9622f0807b350b148f1481e9de42d5aa89818ade4818452941ba70ad8d299fd\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_spectre_multianalysis\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 47, \"name\": \"test_spectre_observed_si_prefixes\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"2182cdee882fbe1f200bb88804922bccf870b3a176e00b752cde4a6aa3a16eeb\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_spectre_observed_si_prefixes\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 57, \"name\": \"test_spectre_scoped_positive\", \"path\": \"experiments/backends/paper/test_settings_readback.py\", \"sha256\": \"3f7ec1049dd40439eb962982972f477be3d5528010439f7280f2e96d35e1d9c6\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_settings_readback.py\", \"module_sha256\": \"dab092fda8cac378e7671f74a0dc98b49319f66a1f79f6503faff110471298ae\", \"runtime_id\": \"test_settings_readback.Calibration.test_spectre_scoped_positive\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 59, \"name\": \"test_actual_global_format_controls_are_required_only_for_calibrated_mode\", \"path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"sha256\": \"90227cb98da37e9fca6c42bceca58f82e85b27902bc95084d24de8eb700f7140\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"module_sha256\": \"bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca\", \"runtime_id\": \"test_spectre_printed_metadata.PrintedMetadata.test_actual_global_format_controls_are_required_only_for_calibrated_mode\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 16, \"name\": \"test_actual_sci_producer_uses_log_values_and_printed_intervals\", \"path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"sha256\": \"286b6d04fe844b08f26f5757d90a2e09948068ecb7a4b8a0421b4d4e07d754ba\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"module_sha256\": \"bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca\", \"runtime_id\": \"test_spectre_printed_metadata.PrintedMetadata.test_actual_sci_producer_uses_log_values_and_printed_intervals\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 48, \"name\": \"test_changed_calibration_is_not_an_admission_flag\", \"path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"sha256\": \"6980ee269072dc45a511015e248ba0d9cf268ec109f3828c688e0df67973e44f\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"module_sha256\": \"bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca\", \"runtime_id\": \"test_spectre_printed_metadata.PrintedMetadata.test_changed_calibration_is_not_an_admission_flag\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 52, \"name\": \"test_decimal_power_of_ten_lower_bin_is_narrower\", \"path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"sha256\": \"eec2b486ff198a45fb8cff57768de1f232e7b532044191b931dbe7f02eed6976\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"module_sha256\": \"bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca\", \"runtime_id\": \"test_spectre_printed_metadata.PrintedMetadata.test_decimal_power_of_ten_lower_bin_is_narrower\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 24, \"name\": \"test_opt_in_rejects_scope_format_identity_and_value_corruption\", \"path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"sha256\": \"39540af6437f87b6ee42cd853c6b2403272cde8f8831c43654338ada6682324e\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"module_sha256\": \"bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca\", \"runtime_id\": \"test_spectre_printed_metadata.PrintedMetadata.test_opt_in_rejects_scope_format_identity_and_value_corruption\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 13, \"name\": \"test_rounding_alone_is_not_calibration\", \"path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"sha256\": \"2106a82823fbda5ce3e11a689d1a1b658b17e96212490a86b31cba9bdce14ec1\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"module_sha256\": \"bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca\", \"runtime_id\": \"test_spectre_printed_metadata.PrintedMetadata.test_rounding_alone_is_not_calibration\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 9, \"name\": \"test_strict_mode_does_not_accept_rounded_header\", \"path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"sha256\": \"a38279810b8cfaf20202ba80d1670ee3d3797143288aa4a36883e31aa1d8e8f5\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_spectre_printed_metadata.py\", \"module_sha256\": \"bfb477c8c2e28a2b56ca919f6447bcb0246f2dcdc266aef10336dfeb332900ca\", \"runtime_id\": \"test_spectre_printed_metadata.PrintedMetadata.test_strict_mode_does_not_accept_rounded_header\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 719, \"name\": \"test_all_six_statuses_are_retained\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"f1295d0d06940d3de6cb328a0eef63ef83610558fef496ee27c19e96ad0eee65\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_all_six_statuses_are_retained\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 817, \"name\": \"test_bound_deck_parse_X_needs_no_rejected_waveform_when_none_created\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"a5586fb5de39265de2328acc857b89a2e7f50d6a097262279af813aded4ec03b\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_bound_deck_parse_X_needs_no_rejected_waveform_when_none_created\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 280, \"name\": \"test_checker_reanalysis_composes_with_unchanged_observation_derivation\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"d3e0f32a1e181fa536b3fef1af617324b908517b920e58842b58a1692444eb48\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_checker_reanalysis_composes_with_unchanged_observation_derivation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 268, \"name\": \"test_checker_reanalysis_preserves_original_verdict_for_all_backends_and_X\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"d29a65935372761cd7af1ebe2c965c1e9070275d0a15f30b0203f47ee2738a7c\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_checker_reanalysis_preserves_original_verdict_for_all_backends_and_X\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 296, \"name\": \"test_checker_reanalysis_rejects_changes_to_execution_or_observation_fields\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"d9058aa3a90e8651e47778ae784be7a792ec402dac0de3e22a7e6d0f336ca805\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_checker_reanalysis_rejects_changes_to_execution_or_observation_fields\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 285, \"name\": \"test_checker_reanalysis_rejects_unadmitted_method_and_snapshot_drift\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"6ff51debf8bb83dcff3d783bf7c99fa00fee24424358186e06c0e9c01c0e7436\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_checker_reanalysis_rejects_unadmitted_method_and_snapshot_drift\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 306, \"name\": \"test_checker_reanalysis_requires_actual_original_record_validation\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"4f6b5226223c6a7bb4ea4d913a23dfc488e5a44eb3557cfca780b6c115cb233e\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_checker_reanalysis_requires_actual_original_record_validation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 498, \"name\": \"test_condition_observation_and_card_bindings_are_checked\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"7e291110168ff639616d6dc709f617336b3a0101f60757a16f3eac460731e036\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_condition_observation_and_card_bindings_are_checked\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 778, \"name\": \"test_deck_parse_X_rejects_unbound_diagnostic_and_raw_evidence\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"1d34d5a721a5d21979f6948a76d9485bc123f573620d6c446ac4fa9714900c89\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_deck_parse_X_rejects_unbound_diagnostic_and_raw_evidence\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 797, \"name\": \"test_deck_parse_X_requires_manifest_bound_diagnostic_log\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"f1821670aff12816b359e763c24335a18020661e98be9e219593966861068794\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_deck_parse_X_requires_manifest_bound_diagnostic_log\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 807, \"name\": \"test_deck_parse_X_requires_manifest_bound_rejected_raw\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"0c8a02a9b0ee99f8f7060c6afec5fa97685b47c6bb5eb4ad7b40ad0fd5f3f896\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_deck_parse_X_requires_manifest_bound_rejected_raw\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 190, \"name\": \"test_derived_analysis_cannot_change_time_voltage_or_geometry\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"1b62109ced0eb3650b9f273dbc2128820b18b121d16ff2d3f5136c1edcdf3eab\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_derived_analysis_cannot_change_time_voltage_or_geometry\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 171, \"name\": \"test_derived_analysis_keeps_original_I_without_new_attempt\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"1122831290bff97a286d616e2846a91ef220a8ee97c4e57bbdecb499aea9900b\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_derived_analysis_keeps_original_I_without_new_attempt\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 180, \"name\": \"test_derived_analysis_rejects_actual_or_analysis_artifact_drift\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"c65ac803c908f3b10dbfa7c80efd5aebf604cdd13dfe932ea93505c6a02677ea\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_derived_analysis_rejects_actual_or_analysis_artifact_drift\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 318, \"name\": \"test_derived_analysis_rejects_rehashed_evidence_identity_changes\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"f009148e428c677e913894210f2ed84f7a3ea0191aac8df2cc9dc22c30074f6e\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_derived_analysis_rejects_rehashed_evidence_identity_changes\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 231, \"name\": \"test_derived_analysis_requires_original_assessment_and_exact_execution\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"d27700109f8ac9ad6bdef12b8e25767920e342ee96b59a7f42a1f47001d5f167\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_derived_analysis_requires_original_assessment_and_exact_execution\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 333, \"name\": \"test_derived_analysis_retained_adapter_does_not_require_latest_checkout\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"55f5b12fdc1c0552336aad85d716ce194187e2f6269f588a7d979bde388de580\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_derived_analysis_retained_adapter_does_not_require_latest_checkout\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 205, \"name\": \"test_derived_analysis_retains_required_roles_and_property_failure\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"29293a673ac04173c62c34bf2159da3d50296a8a04c4725cd9693d0601796631\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_derived_analysis_retains_required_roles_and_property_failure\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 620, \"name\": \"test_dynamic_tool_receipts_allow_disjoint_two_plus_ten\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"2cf1bfb3ca5565ac223bc2bdbf35333f25a57ed115e893607afb90f850bcb8a4\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_dynamic_tool_receipts_allow_disjoint_two_plus_ten\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 539, \"name\": \"test_execution_status_cannot_be_relabelled_U_X_or_T\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"99e2555523a0a378952c082d719c155b53e6c3efc69d868371c7d13a06b82148\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_execution_status_cannot_be_relabelled_U_X_or_T\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 485, \"name\": \"test_fake_pass_and_changed_artifacts_are_rejected\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"421656eb7a61b92c77f9530fa89186a3a3b547dc728415ea2be27474800c4908\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_fake_pass_and_changed_artifacts_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 698, \"name\": \"test_final_lane_requires_unique_identical_row_and_unchanged_artifact\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"ea79172c5f28ed1315b676398fdf06480bca3f6980cd06a07fe947732bb6a289\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_final_lane_requires_unique_identical_row_and_unchanged_artifact\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 371, \"name\": \"test_frozen_identity_json_bytes_are_verified\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"3a8efec1424b69ff932ec2ecf37541328e35736a4125007794c54f8b1e1ab5f2\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_frozen_identity_json_bytes_are_verified\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 353, \"name\": \"test_frozen_runner_checker_and_dependency_digest_are_bound\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"03fd69597229dfdd91acd3d17de9b4b28380ed7abb22fe39f2d6e2be7c175d95\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_frozen_runner_checker_and_dependency_digest_are_bound\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 404, \"name\": \"test_frozen_waveform_deleted_or_changed_is_rejected\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"6c713449b05e9d83263d187540792337151aa9ce44cec02425f78251afe9f781\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_frozen_waveform_deleted_or_changed_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 731, \"name\": \"test_gnucap_deck_parse_error_requires_immutable_final_record_and_counts_X\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"c06b287eaf6001f6c490c025c68d4976881ceb0389a8c8d32fa1ee9dea022982\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_gnucap_deck_parse_error_requires_immutable_final_record_and_counts_X\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 382, \"name\": \"test_historical_valid_frozen_checker_is_accepted\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"f77e630e740ca4539419d5a4a5accaa70e9a92cdf503f6d5e6c71213097563dc\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_historical_valid_frozen_checker_is_accepted\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 386, \"name\": \"test_malformed_record_public_url_and_observation_are_ValueError\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"66f45ca3f4dfb6b30d588982a3f7f678edf81d20cea00a248cd304e80f78ea37\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_malformed_record_public_url_and_observation_are_ValueError\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 475, \"name\": \"test_missing_duplicate_and_unknown_slots_are_rejected\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"8751f81960c35bcd7ae48159e6638d19a1879b55e50913ad2c4bef004c99ff56\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_missing_duplicate_and_unknown_slots_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 657, \"name\": \"test_other_attempt_started_or_tool_not_in_lane_manifest_is_rejected\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"4be7ab3f1c2b71c8ee98097a1ad18d142b7b597679978d6087f0cce31d8f1f98\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_other_attempt_started_or_tool_not_in_lane_manifest_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 460, \"name\": \"test_partial_batch_keeps_all_denominators_and_card_design_separate\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"d76c4ed162acdeecd4434d320f461a0a27df42c70233b874d44fdd7e5f62bb48\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_partial_batch_keeps_all_denominators_and_card_design_separate\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 242, \"name\": \"test_pending_placeholder_cannot_claim_derived_analysis\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"15413203ade94785bb9b791b108a46995782d4eb71656f8254f77e39567cb08e\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_pending_placeholder_cannot_claim_derived_analysis\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 521, \"name\": \"test_previous_assessment_cannot_grade_new_observation_or_execution\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"9a9e407b506b8e1fd33e2290f1941091c2fa3d28e38961185ab011334c8b5e5f\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_previous_assessment_cannot_grade_new_observation_or_execution\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 571, \"name\": \"test_same_backend_two_plus_ten_requires_one_execution_identity\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"69bab9496abb923763145c3338626829835d7d0793707e3b01aec4d403363cb6\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_same_backend_two_plus_ten_requires_one_execution_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 665, \"name\": \"test_selected_slot_keeps_declared_prior_failure_without_increasing_N\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"f9dfdc78d37a09e29cfd1a49baf4d34c304f246481b0124b3156928b28298ed0\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_selected_slot_keeps_declared_prior_failure_without_increasing_N\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 446, \"name\": \"test_spectre_nested_waveform_is_accepted\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"39a61c270de4a9d7fe35bf77cdb631121eed3fe2eab47149e5e67a3cddc80b69\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_spectre_nested_waveform_is_accepted\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 599, \"name\": \"test_started_source_and_deck_match_executed_source_and_frozen_inputs\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"fd430b320c80b0103d5657a6c9d10709d045f8b4508e663cc475afcda4310c92\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_started_source_and_deck_match_executed_source_and_frozen_inputs\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 681, \"name\": \"test_terminal_budget_failure_rejects_earlier_waveform_snapshot\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"3264ff953aa509c781478438ff2b6a1e30c1b51f0c0fc83df0e8a9aa0e30c664\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_terminal_budget_failure_rejects_earlier_waveform_snapshot\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 417, \"name\": \"test_waveform_digest_and_condition_path_are_checked\", \"path\": \"experiments/backends/paper/test_table.py\", \"sha256\": \"7927d5591327755d5accb0e3539798f53ec5496c1caff0b07f01aa2d3c7edc91\"}, \"generated\": false, \"module_path\": \"experiments/backends/paper/test_table.py\", \"module_sha256\": \"c035b5871de9a0126bed074eae42ad35a08716de49c9028f668f6d7b3f88831c\", \"runtime_id\": \"test_table.TableControls.test_waveform_digest_and_condition_path_are_checked\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    },
+    "unresolved_instances": []
+  }
+}

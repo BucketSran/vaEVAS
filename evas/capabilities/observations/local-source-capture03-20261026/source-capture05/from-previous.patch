@@ -1,0 +1,103 @@
+diff --git a/scripts/capabilities/collect_ci_inventory.py b/scripts/capabilities/collect_ci_inventory.py
+index 88314216bdc71b28071f98c174290c1523eee837..9e99ce86e9c077b0a394506a6b42cf598998e5b5 100644
+--- a/scripts/capabilities/collect_ci_inventory.py
++++ b/scripts/capabilities/collect_ci_inventory.py
+@@ -361,6 +361,9 @@ def require_catalog(root, data, observation, merged, entries):
+         catalog.read_history(obj)
+     rows = observation['assets']
+     assets = catalog.reconcile_assets(rows, external_manifest={row['path']: row for row in rows})
++    unobserved = {obj['namespace'] for obj in catalog.current('method')} - set(merged)
++    if unobserved:
++        raise ValueError('registered Python namespace has no actual discovery: ' + ', '.join(sorted(unobserved)))
+     for ns, receipt in merged.items():
+         catalog.reconcile_methods(ns, receipt)
+     expected = {(e['namespace'], e['start'], e.get('pattern', 'test*.py'))
+diff --git a/scripts/capabilities/generate_catalog.py b/scripts/capabilities/generate_catalog.py
+index a8102edef7bd8aa66cf279d07ad4f2ec27b13305..2e60a36c6cd0ce93832b7def476312fdfe614656 100644
+--- a/scripts/capabilities/generate_catalog.py
++++ b/scripts/capabilities/generate_catalog.py
+@@ -137,7 +137,9 @@ def build(config,out):
+  for bridge in config.get('bridge_evidence',[]):
+   path=bridge['path']
+   if not path.startswith('benchmark/') or path not in observed or path in bridge_by_path:raise ValueError('bridge must be an actual exact external path')
+-  chosen=[e for e in entries if any(i in bridge['consumer_entry_ids'] for i in e['ci_entrypoint_ids']) or e['provenance'].get('entry_id') in bridge['consumer_entry_ids']]
++  consumer_ids=bridge['consumer_entry_ids']
++  if not isinstance(consumer_ids,list) or not consumer_ids or any(not isinstance(i,str) or not i for i in consumer_ids):raise ValueError('bridge requires explicit consumer entry IDs')
++  chosen=[e for e in entries if any(i in consumer_ids for i in e.get('ci_entrypoint_ids',[])) or e.get('provenance',{}).get('entry_id') in consumer_ids]
+   if not chosen:raise ValueError('bridge has no actual declared consumer entrypoint')
+   proof=source('reviewed-bridge:'+path,bridge['source_file'],bridge.get('source_locator'));sources.append(proof)
+   record={'path':path,'owner':'benchmark','reason':bridge['reason'],'source':ref(proof),'consumers':[ref(e) for e in chosen]}
+@@ -168,18 +170,18 @@ def build(config,out):
+   previous_asset=prior_assets.get(prior_path)
+   if prior_path!=path and previous_asset is None:raise ValueError('asset move lacks previous identity')
+   external=path in metadata_paths or path in generated or path in GOVERNANCE
+-  role='catalog-meta' if path in metadata_paths else 'derived' if path in generated else 'governance' if path in GOVERNANCE else 'conservative-rust-tree-identity-input' if owner and all(e['collector']=='binary-listing' for e in owner.values()) else 'actual-unittest-owner' if owner else None
++  role='catalog-meta' if path in metadata_paths else 'derived' if path in generated else 'governance' if path in GOVERNANCE else 'cross-component-source-read' if bridge else 'conservative-rust-tree-identity-input' if owner and all(e['collector']=='binary-listing' for e in owner.values()) else 'actual-unittest-owner' if owner else None
+   a={'schema_version':1,'id':previous_asset['id'] if previous_asset else readiness.get(path,{}).get('id',sid('asset',path)),'version':'1' if external else row['sha256'],
+     'kind':'asset','status':'active','namespace':'EVAS-assets','current_path':path,
+     'content':{'algorithm':'external-input-manifest','scope':'actual-execution-inputs','producer':'capabilities.observe-assets-v1'} if external else {'algorithm':'sha256','value':row['sha256']},
+-    'role':{'status':'confirmed' if role else 'pending','value':role,'reason':'exact Registry/producer/governance path' if external else 'conservative native source-tree identity; not compiler read or runtime closure' if role=='conservative-rust-tree-identity-input' else 'actual TestLoader owner module; no semantic qualification' if owner else 'responsibility awaits source review; path does not infer semantics'},
++    'role':{'status':'confirmed' if role else 'pending','value':role,'reason':'exact Registry/producer/governance path' if external else 'exact source-bound external read; partial consumers only' if bridge else 'conservative native source-tree identity; not compiler read or runtime closure' if role=='conservative-rust-tree-identity-input' else 'actual TestLoader owner module; no semantic qualification' if owner else 'responsibility awaits source review; path does not infer semantics'},
+     'consumers':[ref(ep) for ep in sorted(owner.values(),key=lambda e:e['id'])],
+     'consumer_status':'partial' if owner else 'pending','location_history':[],
+     'location_history_status':'pending-per-file-lineage','semantic_status':'pending','qualification_status':'not-granted',
+     'dependencies':[ref(bridge[0])] if bridge else []}
+   if previous_asset:a['location_history']=copy.deepcopy(previous_asset.get('location_history',[]))
+   if previous_asset and prior_path!=path:a['location_history']=[*previous_asset.get('location_history',[]),{'prior_asset':ref(previous_asset),'reason':'explicit reviewed identity_moves mapping'}]
+-  if owner:a['role']['facts']=[{'entrypoint':ref(ep),'proof':'actual-rust-conservative-source-tree-identity' if ep['collector']=='binary-listing' else 'actual-discovery-owner-module'} for ep in sorted(owner.values(),key=lambda e:e['id'])]
++  if owner:a['role']['facts']=[{'entrypoint':ref(ep),'proof':'source-bound-external-read-partial-consumer' if bridge else 'actual-rust-conservative-source-tree-identity' if ep['collector']=='binary-listing' else 'actual-discovery-owner-module'} for ep in sorted(owner.values(),key=lambda e:e['id'])]
+   if not row:a['observation_status']='pending-generation-then-final-capture';pending.append({'kind':'planned-metadata-not-in-capture','path':path})
+   old=readiness.get(path)
+   if old:
+@@ -187,7 +189,7 @@ def build(config,out):
+       'row_canonical_sha256':canonical({k:v for k,v in old.items() if k!='_row_index'}),
+       'source_revision':old['source_revision'],'git_blob':old['git_blob'],'confirmed_fact_count':len(old['confirmed_facts']),
+       'current_blob_matches_prior':bool(row and row.get('git_blob_oid')==old['git_blob']),
+-      'status':'prior limited facts; source availability pending, not a current semantic or consumer-closure endorsement'}
++      'status':'prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified'}
+    a['dependencies'].append(ref(readiness_source))
+   if previous_asset and prior_path!=path:
+    a['location_history']=[{'prior_asset':ref(old),'reason':'explicit move; retain every known earlier path version'} for old in previous_objects if old['id']==a['id'] and old.get('current_path')!=path]
+@@ -293,7 +295,7 @@ def build(config,out):
+  historical_checked=0
+  for obj in histories:catalog.read_history(obj);historical_checked+=1
+  for src in sources:
+-  if src['availability']=='published-archive' and src['origin'].startswith(('actual-discovery:','actual-rust-listing:')):
++  if src['availability']=='published-archive':
+    reg.read_source(src)
+  rust_checks=[]
+  for item,raw,src in rust_records:
+diff --git a/scripts/tests/test_ci_inventory.py b/scripts/tests/test_ci_inventory.py
+index d15aecc16fc8e89a35ed07a4b4bd4a0de87edbd5..805b9ee84e4ddaec9dba6fab3542253f1b0d3bca 100644
+--- a/scripts/tests/test_ci_inventory.py
++++ b/scripts/tests/test_ci_inventory.py
+@@ -278,7 +278,7 @@ setattr(Main,'test_generated',factory())
+                           workflow_sha256=inventory.sha((self.root / inventory.WORKFLOW).read_bytes()))
+         catalog = types.SimpleNamespace(
+             validate=lambda: calls.append('validate'),
+-            current=lambda kind: [registered] if kind == 'entrypoint' else [{'fixture': kind}],
++            current=lambda kind: [registered] if kind == 'entrypoint' else [{'namespace': 'validation'}] if kind == 'method' else [{'fixture': kind}],
+             read_history=lambda obj: calls.append(obj['id']),
+             reconcile_assets=lambda rows, **kw: {'ok': True},
+             reconcile_methods=lambda ns, receipt: calls.append(ns),
+@@ -297,6 +297,20 @@ setattr(Main,'test_generated',factory())
+         self.assertEqual(result['historical_rows_read'], 2)
+         self.assertIn('pending', result['rust_status'])
+ 
++    def test_registered_namespace_without_actual_discovery_is_not_reconciled(self):
++        catalog = types.SimpleNamespace(
++            validate=lambda: None,
++            current=lambda kind: [{'namespace': 'calibration'}] if kind == 'method' else [{}] if kind == 'asset' else [],
++            read_history=lambda obj: {},
++            reconcile_assets=lambda rows, **kw: {'ok': True},
++            reconcile_methods=lambda ns, receipt: None,
++            namespace_counts=lambda: {'calibration': {'methods': 1}})
++        registry = types.SimpleNamespace(data={'asset_scope': {'id': 'EVAS-scope-v1'}},
++            objects={('h', '1'): {'kind': 'historical-audit-record'}}, catalog=lambda: catalog)
++        with patch.object(inventory, 'load', return_value=types.SimpleNamespace(load=lambda *a, **kw: registry)):
++            with self.assertRaisesRegex(ValueError, 'namespace has no actual discovery'):
++                inventory.require_catalog(self.root, self.root / 'data', self.observed(self.root), {}, [])
++
+     def test_require_catalog_history_retrieval_failure_is_not_structure_success(self):
+         def unavailable(obj):
+             raise ValueError('exact archived history bytes unavailable')

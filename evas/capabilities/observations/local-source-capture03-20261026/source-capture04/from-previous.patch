@@ -1,0 +1,42 @@
+diff --git a/scripts/traceability.py b/scripts/traceability.py
+index 7cc20a37975de330685f91298eefb226bda68066..3c525a806b0b99bb797542d3142a57dcfaa8c32b 100644
+--- a/scripts/traceability.py
++++ b/scripts/traceability.py
+@@ -12,6 +12,7 @@ Read source with AST; never import test modules. Invalid tags fail both modes.
+ """
+ import argparse
+ import ast
++from collections import Counter
+ import importlib.util
+ import json
+ import pathlib
+@@ -213,9 +214,14 @@ def main():
+ def render_catalog_navigation(registry):
+     """Navigation only: pending and discovery counts are never normative coverage."""
+     catalog = registry.catalog()
+-    history = catalog.current('historical-audit-record') + catalog.current('historical-finding')
++    audits = catalog.current('historical-audit-record')
++    audit_ids = {obj['id'] for obj in audits}
++    history = audits + catalog.current('historical-finding')
++    historical_verdicts = Counter()
+     for obj in history:
+-        catalog.read_history(obj)
++        row = catalog.read_history(obj)
++        if obj['id'] in audit_ids:
++            historical_verdicts[str(row.get('verdict', 'unavailable'))] += 1
+     counts = catalog.namespace_counts()
+     lines = ['## Registry asset and method navigation', '',
+              'Metadata navigation only; GUARDS remain AST navigation. No normative coverage or qualification is inferred.', '']
+@@ -234,6 +240,12 @@ def render_catalog_navigation(registry):
+                      + ' IDs in the archived native listing; ' + str(facts['ignored_tests_discovered'])
+                      + ' ignored; ' + str(len(facts['binaries'])) + ' binary entrypoints; listing only')
+     lines.append('- ' + str(len(history)) + ' historical records verified against their original sources; no qualification is inferred')
++    reviews = Counter(method['semantic_status'] for method in catalog.current('method'))
++    lines.append('- Current method semantic review: ' + '; '.join(
++        state + '=' + str(reviews[state]) for state in ('reviewed', 'pending')))
++    if historical_verdicts:
++        lines.append('- Original historical audit verdicts (original scope only): ' + '; '.join(
++            verdict + '=' + str(count) for verdict, count in sorted(historical_verdicts.items())))
+     assets = catalog.current('asset')
+     lines.append('- Pending asset roles: ' + str(sum(a['role']['status'] == 'pending' for a in assets)))
+     lines.append('- Consumer closure pending/partial: ' + str(sum(a['consumer_status'] != 'complete' for a in assets)))

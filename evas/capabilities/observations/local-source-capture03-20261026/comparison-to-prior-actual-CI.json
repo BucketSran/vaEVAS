@@ -1,0 +1,246 @@
+{
+  "scope": "actual local construction identity comparison, not body outcomes or qualification",
+  "source_commit": "55e62ba06b5db54e9f05cfab399a5877e922475b",
+  "local_python": "3.12.13",
+  "prior_actual_CI_python": "3.12.15",
+  "namespaces": {
+    "maintenance": {
+      "unique": 550,
+      "instances": 643,
+      "generated": 0,
+      "source_identity_changes": [
+        [
+          "scripts/tests/test_discover_rust.py",
+          "test_discover_rust.RustListingTests.test_empty_complete_listing_and_nonregular_or_outside_executable_refused"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ConstructionTests.test_observe_only_never_calls_catalog_reconciliation"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.RequiredGateTests.test_workflow_has_dedicated_unconditional_phase_and_always_artifact"
+        ],
+        [
+          "scripts/tests/test_traceability.py",
+          "test_traceability.TraceabilityChecks.test_missing_anchor_is_an_error"
+        ],
+        [
+          "scripts/tests/test_discover_rust.py",
+          "test_discover_rust.RustListingTests.test_summary_duplicates_unknown_stdout_and_nonzero_exit_retain_binary_receipt"
+        ],
+        [
+          "scripts/tests/test_regression_admission.py",
+          "test_regression_admission.BootstrapSourceTests.test_actual_workflow_rejects_new_B_after_only_head_loader_replacement"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ConstructionTests.test_same_source_skip_and_native_runtime_observations_can_differ"
+        ],
+        [
+          "scripts/tests/test_discover_rust.py",
+          "test_discover_rust.RustListingTests.test_actual_fake_harness_listings_have_independent_binary_denominators"
+        ],
+        [
+          "scripts/tests/test_regression_admission.py",
+          "test_regression_admission.BootstrapSourceTests.test_missing_or_nonregular_bootstrap_blob_never_uses_head_loader"
+        ],
+        [
+          "scripts/tests/test_discover_rust.py",
+          "test_discover_rust.RustListingTests.test_compiler_failure_terminal_missing_and_truncated_json_refused"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ConstructionTests.test_require_catalog_reads_each_history_with_explicit_local_repository_map"
+        ],
+        [
+          "scripts/tests/test_traceability.py",
+          "test_traceability.TraceabilityChecks.test_invalid_tags_fail_in_both_modes"
+        ],
+        [
+          "scripts/tests/test_regression_admission.py",
+          "test_regression_admission.AdmissionIntegrationTests.test_selected_admission_failure_skip_or_absence_blocks_total_gate"
+        ],
+        [
+          "scripts/tests/test_traceability.py",
+          "test_traceability.TraceabilityChecks.test_stale_or_missing_matrix_fails_without_rewriting"
+        ],
+        [
+          "scripts/tests/test_regression_admission.py",
+          "test_regression_admission.AdmissionIntegrationTests.test_required_job_wiring_and_separate_always_uploaded_artifacts"
+        ],
+        [
+          "scripts/tests/test_traceability.py",
+          "test_traceability.TraceabilityChecks.test_annotated_tags_and_development_topics"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ConstructionTests.test_changed_source_or_workflow_during_construction_fails"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ConstructionTests.test_runtimeID_collision_in_distinct_owner_modules_is_not_swallowed"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ConstructionTests.test_require_catalog_history_retrieval_failure_is_not_structure_success"
+        ],
+        [
+          "scripts/tests/test_discover_rust.py",
+          "test_discover_rust.RustListingTests.test_binary_mutation_and_dirty_rust_source_refused"
+        ],
+        [
+          "scripts/tests/test_traceability.py",
+          "test_traceability.TraceabilityChecks.test_explicit_catalogue_cli_renders_same_registry_and_checks_freshness"
+        ],
+        [
+          "scripts/tests/test_discover_rust.py",
+          "test_discover_rust.RustListingTests.test_real_workflow_listing_block_keeps_build_failure_and_raw_artifacts"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.RequiredGateTests.test_gate_always_requires_inventory_without_changing_scientific_JOB_FLAGS"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ConstructionTests.test_import_error_is_retained_and_construction_fails"
+        ],
+        [
+          "scripts/tests/test_traceability.py",
+          "test_traceability.TraceabilityChecks.test_human_overview_can_change_without_invalidating_evidence"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ConstructionTests.test_require_catalog_failure_never_falls_back_to_observe"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ParserTests.test_dynamic_or_unknown_unittest_syntax_fails_instead_of_guessing"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ConstructionTests.test_namespace_source_identity_conflict_is_rejected"
+        ],
+        [
+          "scripts/tests/test_discover_rust.py",
+          "test_discover_rust.RustListingTests.test_custom_harness_manifest_cannot_claim_native_test_listing"
+        ],
+        [
+          "scripts/tests/test_regression_admission.py",
+          "test_regression_admission.BootstrapSourceTests.test_fixed_bootstrap_hash_mismatch_refuses_without_head_fallback"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ParserTests.test_capability_discovery_and_namespace_patch_are_present"
+        ],
+        [
+          "scripts/tests/test_discover_rust.py",
+          "test_discover_rust.RustListingTests.test_missing_duplicate_unknown_or_shared_executable_artifacts_refused"
+        ],
+        [
+          "scripts/tests/test_traceability.py",
+          "test_traceability.TraceabilityChecks.test_missing_contract_or_evidence_target_fails"
+        ],
+        [
+          "scripts/tests/test_traceability.py",
+          "test_traceability.TraceabilityChecks.test_round_trip_is_read_only_and_includes_capabilities_and_evidence"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ParserTests.test_inline_pipe_and_folded_origins_retained"
+        ],
+        [
+          "scripts/tests/test_discover_rust.py",
+          "test_discover_rust.RustListingTests.test_unknown_metadata_structures_refuse_with_error_report"
+        ],
+        [
+          "scripts/tests/test_traceability.py",
+          "test_traceability.TraceabilityChecks.test_empty_test_inventory_is_an_error"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ParserTests.test_current_workflow_has_23_literals_plus_separate_primary"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ConstructionTests.test_independent_children_construct_only_and_keep_unique_vs_instance_counts"
+        ],
+        [
+          "scripts/tests/test_traceability.py",
+          "test_traceability.TraceabilityChecks.test_corrupt_historical_source_or_missing_catalogue_cannot_rewrite_view"
+        ],
+        [
+          "scripts/tests/test_discover_rust.py",
+          "test_discover_rust.RustListingTests.test_effective_artifact_profile_must_match_requested_ci_profile"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ParserTests.test_unknown_dynamic_phase_env_fails_but_known_outputs_are_declared"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ConstructionTests.test_invalid_child_JSON_preserves_actual_stdout_and_stderr"
+        ],
+        [
+          "scripts/tests/test_regression_admission.py",
+          "test_regression_admission.AdmissionIntegrationTests.test_actual_coverage_then_admission_commands_preserve_raw_failure_and_reject_drift"
+        ],
+        [
+          "scripts/tests/test_regression_admission.py",
+          "test_regression_admission.BootstrapSourceTests.test_missing_invalid_or_short_fixed_pin_never_uses_head_loader"
+        ],
+        [
+          "scripts/tests/test_ci_inventory.py",
+          "test_ci_inventory.ConstructionTests.test_import_side_effect_failure_is_not_reported_as_a_test_body_result"
+        ]
+      ],
+      "added": [
+        [
+          "scripts/tests/test_traceability.py",
+          "test_traceability.TraceabilityChecks.test_rust_navigation_uses_verified_native_listing_denominator"
+        ],
+        [
+          "scripts/tests/test_rust_catalog_reconcile.py",
+          "test_rust_catalog_reconcile.RustCatalogReconciliation.test_cli_opt_in_retains_observation_on_requirement_failure"
+        ],
+        [
+          "scripts/tests/test_rust_catalog_reconcile.py",
+          "test_rust_catalog_reconcile.RustCatalogReconciliation.test_unavailable_unpublished_source_and_duplicate_registration_refused"
+        ],
+        [
+          "scripts/tests/test_rust_catalog_reconcile.py",
+          "test_rust_catalog_reconcile.RustCatalogReconciliation.test_source_toolchain_profile_ids_and_ignored_drift_refused"
+        ],
+        [
+          "scripts/tests/test_rust_catalog_reconcile.py",
+          "test_rust_catalog_reconcile.RustCatalogReconciliation.test_complete_qualified_denominator_preserves_both_actual_hashes"
+        ],
+        [
+          "scripts/tests/test_rust_catalog_reconcile.py",
+          "test_rust_catalog_reconcile.RustCatalogReconciliation.test_missing_extra_duplicate_target_and_unknown_profile_fail_closed"
+        ],
+        [
+          "scripts/tests/test_traceability.py",
+          "test_traceability.TraceabilityChecks.test_fast_metadata_consumer_accepts_the_complete_generated_view"
+        ]
+      ],
+      "removed": []
+    },
+    "python-regression": {
+      "unique": 3257,
+      "instances": 3257,
+      "generated": 12,
+      "source_identity_changes": [],
+      "added": [],
+      "removed": []
+    },
+    "validation": {
+      "unique": 691,
+      "instances": 691,
+      "generated": 0,
+      "source_identity_changes": [],
+      "added": [],
+      "removed": []
+    }
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "entry": {
+    "collector": "unittest",
+    "command": "python3 -B -m unittest discover -s evas/validation/support -p 'test_*.py' -v",
+    "declared_python_versions": [
+      "3.12"
+    ],
+    "entry_id": "c095f85c25f1745daee948b10a4c41055d6c3f622ca38ab7e647411ded728f84",
+    "environment_overrides": {},
+    "job": "provenance-paper",
+    "job_if": "needs.selection.outputs.provenance == 'true'",
+    "line": 211,
+    "mode": "declared-ci-literal",
+    "namespace": "validation",
+    "pattern": "test_*.py",
+    "purpose": "role-not-semantic-qualification",
+    "start": "evas/validation/support",
+    "step": "Paper contracts, observable criteria and table provenance",
+    "step_if": null,
+    "workflow": ".github/workflows/numerical-assurance.yml"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 3,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/opt/homebrew/opt/python@3.12/bin/python3.12",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr3/source-capture-03/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/opt/homebrew/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 34,
+          "name": "test_good_and_bad_outputs_for_every_card",
+          "path": "evas/validation/support/test_checker.py",
+          "sha256": "7331c8f06a045bce299e67a1fa8cfe4e15f05ab18c2af4b5c3354683b675c7a3"
+        },
+        "generated": false,
+        "module_path": "evas/validation/support/test_checker.py",
+        "module_sha256": "0ae2d42776f8b3ef9f8b686d1425259237110fb3eac9e65bd29ca70c07c2eb0c",
+        "runtime_id": "test_checker.Calibration.test_good_and_bad_outputs_for_every_card",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 19,
+          "name": "test_hand_calculated_anchors",
+          "path": "evas/validation/support/test_checker.py",
+          "sha256": "14620042c9a987f244e0e5c99ebd0952d24e73c344a7df16b0105408394874fd"
+        },
+        "generated": false,
+        "module_path": "evas/validation/support/test_checker.py",
+        "module_sha256": "0ae2d42776f8b3ef9f8b686d1425259237110fb3eac9e65bd29ca70c07c2eb0c",
+        "runtime_id": "test_checker.Calibration.test_hand_calculated_anchors",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 52,
+          "name": "test_predeclared_boundaries_remain_ungraded",
+          "path": "evas/validation/support/test_checker.py",
+          "sha256": "e47ebcbc95f3719d27368031aac1a664a6d31211a990eb68f8bdea04da886f62"
+        },
+        "generated": false,
+        "module_path": "evas/validation/support/test_checker.py",
+        "module_sha256": "0ae2d42776f8b3ef9f8b686d1425259237110fb3eac9e65bd29ca70c07c2eb0c",
+        "runtime_id": "test_checker.Calibration.test_predeclared_boundaries_remain_ungraded",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "transport": {
+      "actual_resolved_overrides": {},
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr3/source-capture-03/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr3/source-capture-03/source",
+        "--start",
+        "evas/validation/support",
+        "--pattern",
+        "test_*.py",
+        "--namespace",
+        "validation"
+      ],
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr3/source-capture-03/source",
+      "environment_overrides": {},
+      "original_python_equivalence": "major-minor-declared-only",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 3, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/opt/homebrew/opt/python@3.12/bin/python3.12\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr3/source-capture-03/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/opt/homebrew/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 34, \"name\": \"test_good_and_bad_outputs_for_every_card\", \"path\": \"evas/validation/support/test_checker.py\", \"sha256\": \"7331c8f06a045bce299e67a1fa8cfe4e15f05ab18c2af4b5c3354683b675c7a3\"}, \"generated\": false, \"module_path\": \"evas/validation/support/test_checker.py\", \"module_sha256\": \"0ae2d42776f8b3ef9f8b686d1425259237110fb3eac9e65bd29ca70c07c2eb0c\", \"runtime_id\": \"test_checker.Calibration.test_good_and_bad_outputs_for_every_card\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 19, \"name\": \"test_hand_calculated_anchors\", \"path\": \"evas/validation/support/test_checker.py\", \"sha256\": \"14620042c9a987f244e0e5c99ebd0952d24e73c344a7df16b0105408394874fd\"}, \"generated\": false, \"module_path\": \"evas/validation/support/test_checker.py\", \"module_sha256\": \"0ae2d42776f8b3ef9f8b686d1425259237110fb3eac9e65bd29ca70c07c2eb0c\", \"runtime_id\": \"test_checker.Calibration.test_hand_calculated_anchors\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 52, \"name\": \"test_predeclared_boundaries_remain_ungraded\", \"path\": \"evas/validation/support/test_checker.py\", \"sha256\": \"e47ebcbc95f3719d27368031aac1a664a6d31211a990eb68f8bdea04da886f62\"}, \"generated\": false, \"module_path\": \"evas/validation/support/test_checker.py\", \"module_sha256\": \"0ae2d42776f8b3ef9f8b686d1425259237110fb3eac9e65bd29ca70c07c2eb0c\", \"runtime_id\": \"test_checker.Calibration.test_predeclared_boundaries_remain_ungraded\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    },
+    "unresolved_instances": []
+  }
+}

@@ -1,0 +1,35 @@
+diff --git a/scripts/capabilities/collect_ci_inventory.py b/scripts/capabilities/collect_ci_inventory.py
+index 9e99ce86e9c077b0a394506a6b42cf598998e5b5..e29723f1a7a2702ac7bef6c1aaf16904f54d0586 100644
+--- a/scripts/capabilities/collect_ci_inventory.py
++++ b/scripts/capabilities/collect_ci_inventory.py
+@@ -392,7 +392,7 @@ def require_catalog(root, data, observation, merged, entries):
+     return {'reconciled': True, 'assets': assets, 'historical_rows_read': len(histories),
+             'namespace_counts': catalog.namespace_counts(),
+             'reconciled_scope': ['Python namespaces', 'reviewed asset scope', 'declared historical source rows'],
+-            'rust_status': 'not collected by this Python/assets job; independent reviewed receipt integration pending'}
++            'rust_status': 'not collected by this Python/assets job; native observation pending here and required independently by the selected rust-regression job'}
+ 
+ 
+ def collect(root, output, *, mode, registry_data=None, timeout=30,
+diff --git a/scripts/capabilities/generate_catalog.py b/scripts/capabilities/generate_catalog.py
+index 2e60a36c6cd0ce93832b7def476312fdfe614656..8823b5377acc13454965ab3399e9b31da440fae7 100644
+--- a/scripts/capabilities/generate_catalog.py
++++ b/scripts/capabilities/generate_catalog.py
+@@ -327,7 +327,7 @@ def build(config,out):
+  write(data_dir/'registry.json',base)
+  write(out/'guards-transition.json',{'schema_version':1,'facts':guardfacts,'legacy_node_ids':[n['id'] for n in legacy['nodes']],
+   'legacy_source':{'path':'evas/capabilities/data/historical-comparison.json','sha256':file_sha(root/'evas/capabilities/data/historical-comparison.json')},'crosswalk_status':'pending-explicit-semantic-review','qualification':False})
+- report={'schema_version':1,'status':'full-data-preview-not-final-PR3-acceptance','source_capture':observation['source_commit'],
++ report={'schema_version':1,'status':'generated; final source observation and required CI remain separate','source_capture':observation['source_commit'],
+   'input_asset_receipt_sha256':file_sha(config['asset_receipt']),'scope_reconciliation':asset_report,'objects':{k:len(v) for k,v in values.items()},
+   'namespace_counts':catalog.namespace_counts(),'entry_checks':method_checks,'rust_checks':rust_checks,'historical_rows_read_and_bound':historical_checked,
+   'history_alignment_counts':{status:sum(h['alignment']['status']==status for h in histories) for status in ['matched','pending']},
+@@ -335,7 +335,7 @@ def build(config,out):
+   'consumer_closure':{'complete':0,'partial':sum(a['consumer_status']=='partial' for a in assets.values()),'pending':sum(a['consumer_status']=='pending' for a in assets.values())},
+   'pending':pending+[{'kind':'semantic-role-consumer-and-location-review','paths':[p for p,a in assets.items() if a['role']['status']=='pending']},
+     {'kind':'historical-node-guards-crosswalk','guards':sorted({tag for f in guardfacts for tag in (f['declared_tags'] or [])}),'legacy_node_ids':[n['id'] for n in legacy['nodes']]}],
+-  'migrations':migrations,'previous_object_versions_retained':len(previous_objects),'qualification_added':False,'raw_history_or_discovery_embedded':False,'external_metadata_final_byte_binding':'pending fresh final source observation; capture02 bytes do not authenticate generated output bytes'}
++  'migrations':migrations,'previous_object_versions_retained':len(previous_objects),'qualification_added':False,'raw_history_or_discovery_embedded':False,'external_metadata_final_byte_binding':'input capture bytes do not authenticate later generated metadata bytes; verify actual final inputs'}
+  write(out/'generation-report.json',report)
+  return report
+ 

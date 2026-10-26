@@ -1,0 +1,470 @@
+{
+  "entries": [
+    {
+      "command": "python3 -B scripts/ci_selection.py select --report runs/ci-plan.json",
+      "declared_python_versions": [],
+      "environment_overrides": {},
+      "executed": false,
+      "job": "selection",
+      "job_if": null,
+      "kind": "other-python-script",
+      "line": 53,
+      "method_denominator": null,
+      "source": "scripts/ci_selection.py",
+      "source_sha256": "a830dc21d632822dc42d6170027caa98f972e338e4e0b99ca12cdb4c945be5ce",
+      "step": null,
+      "step_if": null,
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/evas_check_policy.py --check-docs",
+      "declared_python_versions": [],
+      "environment_overrides": {
+        "CI_BASE": "${{ steps.changes.outputs.base }}",
+        "CI_HEAD": "${{ steps.changes.outputs.head }}"
+      },
+      "executed": false,
+      "job": "selection",
+      "job_if": null,
+      "kind": "other-python-script",
+      "line": 60,
+      "method_denominator": null,
+      "source": "scripts/evas_check_policy.py",
+      "source_sha256": "b146324d5d5e028b33e6468a5c462f29bcc417ddc184f6b4a82deb86d03097e9",
+      "step": "Check CI routing and changed-line whitespace",
+      "step_if": null,
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/ci_selection.py select --report runs/ci-plan.json",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+        "PYTHONPATH": "evas/src"
+      },
+      "executed": false,
+      "job": "fast-checks",
+      "job_if": null,
+      "kind": "other-python-script",
+      "line": 94,
+      "method_denominator": null,
+      "source": "scripts/ci_selection.py",
+      "source_sha256": "a830dc21d632822dc42d6170027caa98f972e338e4e0b99ca12cdb4c945be5ce",
+      "step": "Select and check formatting, lint and generated metadata first",
+      "step_if": null,
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/ci_lint.py --plan runs/ci-plan.json",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+        "PYTHONPATH": "evas/src"
+      },
+      "executed": false,
+      "job": "fast-checks",
+      "job_if": null,
+      "kind": "other-python-script",
+      "line": 95,
+      "method_denominator": null,
+      "source": "scripts/ci_lint.py",
+      "source_sha256": "3db707561f073ad72a8347b1b46f65d5e48f6c52e4319543d8bf6249db4bc5a8",
+      "step": "Select and check formatting, lint and generated metadata first",
+      "step_if": null,
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/evas_check_policy.py --early-checks --plan runs/ci-plan.json --report runs/early-integration.json || status=$?",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+        "PYTHONPATH": "evas/src"
+      },
+      "executed": false,
+      "job": "fast-checks",
+      "job_if": null,
+      "kind": "other-python-script",
+      "line": 99,
+      "method_denominator": null,
+      "source": "scripts/evas_check_policy.py",
+      "source_sha256": "b146324d5d5e028b33e6468a5c462f29bcc417ddc184f6b4a82deb86d03097e9",
+      "step": "Early integration counterexamples",
+      "step_if": null,
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/evas_check_policy.py --early-checks --plan runs/ci-plan.json --kernel evas/rust_core/target/debug/evas-kernel --report runs/early-integration.json",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+        "PYTHONPATH": "evas/src"
+      },
+      "executed": false,
+      "job": "fast-checks",
+      "job_if": null,
+      "kind": "other-python-script",
+      "line": 102,
+      "method_denominator": null,
+      "source": "scripts/evas_check_policy.py",
+      "source_sha256": "b146324d5d5e028b33e6468a5c462f29bcc417ddc184f6b4a82deb86d03097e9",
+      "step": "Early integration counterexamples",
+      "step_if": null,
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/capabilities/collect_ci_inventory.py --root . --output runs/catalog-inventory --require-catalog --registry-data evas/capabilities/data",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {
+        "CI_INVENTORY_BASE": "${{ needs.selection.outputs.base }}",
+        "CI_INVENTORY_HEAD": "${{ needs.selection.outputs.head }}"
+      },
+      "executed": false,
+      "job": "catalog-inventory",
+      "job_if": "always() && needs.selection.result == 'success' && needs.fast-checks.result == 'success'",
+      "kind": "other-python-script",
+      "line": 147,
+      "method_denominator": null,
+      "source": "scripts/capabilities/collect_ci_inventory.py",
+      "source_sha256": "7a20f0649493155b895426a345ef599b251bae02027c660b9baca6391bcb7484",
+      "step": "Observe declared Python entries and tracked asset facts",
+      "step_if": null,
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/traceability.py --check --catalog-data evas/capabilities/data",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {},
+      "executed": false,
+      "job": "static-checks",
+      "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+      "kind": "other-python-script",
+      "line": 171,
+      "method_denominator": null,
+      "source": "scripts/traceability.py",
+      "source_sha256": "c332615ae193b831db7d04f8efd9279d439269ec143c7b063ce0401838084273",
+      "step": "Traceability and frozen validation identities",
+      "step_if": "needs.selection.outputs.maintenance == 'true'",
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/diagnostic_inventory.py --check",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {},
+      "executed": false,
+      "job": "static-checks",
+      "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+      "kind": "other-python-script",
+      "line": 172,
+      "method_denominator": null,
+      "source": "scripts/diagnostic_inventory.py",
+      "source_sha256": "55783ea11a8181e5c35663281c2b84456981ff5ca6f3fc6400a4ff994b33f802",
+      "step": "Traceability and frozen validation identities",
+      "step_if": "needs.selection.outputs.maintenance == 'true'",
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/verify_validation_version.py",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {},
+      "executed": false,
+      "job": "static-checks",
+      "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+      "kind": "other-python-script",
+      "line": 173,
+      "method_denominator": null,
+      "source": "scripts/verify_validation_version.py",
+      "source_sha256": "3d1203bff0a610959113d3a1a2c68a4922b8f0a74440813a7185229c963fbed0",
+      "step": "Traceability and frozen validation identities",
+      "step_if": "needs.selection.outputs.maintenance == 'true'",
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B evas/validation/check_design_math.py",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {},
+      "executed": false,
+      "job": "static-checks",
+      "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+      "kind": "direct-math-script",
+      "line": 179,
+      "method_denominator": null,
+      "source": "evas/validation/check_design_math.py",
+      "source_sha256": "fe4bb3e9aea3f802803db890ff174ef4cc17a9e87d31d01a1013dd78ed55cd6a",
+      "step": "Independent mathematics and checker calibration (no simulator)",
+      "step_if": "needs.selection.outputs.calibration == 'true'",
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B evas/validation/check_timed_operator_math.py",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {},
+      "executed": false,
+      "job": "static-checks",
+      "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+      "kind": "direct-math-script",
+      "line": 180,
+      "method_denominator": null,
+      "source": "evas/validation/check_timed_operator_math.py",
+      "source_sha256": "8571bfb8781728d9f71ff377033d13308da60bc69e3c1c4431fa405b02814c05",
+      "step": "Independent mathematics and checker calibration (no simulator)",
+      "step_if": "needs.selection.outputs.calibration == 'true'",
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B evas/validation/check_dynamics_math.py",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {},
+      "executed": false,
+      "job": "static-checks",
+      "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+      "kind": "direct-math-script",
+      "line": 181,
+      "method_denominator": null,
+      "source": "evas/validation/check_dynamics_math.py",
+      "source_sha256": "bcdc6074a611c61d41b17c7ea0ddb805be50ccc7e0cacee949ee010736c4b5b3",
+      "step": "Independent mathematics and checker calibration (no simulator)",
+      "step_if": "needs.selection.outputs.calibration == 'true'",
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B evas/validation/check_event_conditions_math.py",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {},
+      "executed": false,
+      "job": "static-checks",
+      "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+      "kind": "direct-math-script",
+      "line": 182,
+      "method_denominator": null,
+      "source": "evas/validation/check_event_conditions_math.py",
+      "source_sha256": "3f66633fabaa9792c0dac608b320b3867838393e32106ebcab76cdf43ae6eae4",
+      "step": "Independent mathematics and checker calibration (no simulator)",
+      "step_if": "needs.selection.outputs.calibration == 'true'",
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B evas/validation/paper/check_design.py",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {},
+      "executed": false,
+      "job": "provenance-paper",
+      "job_if": "needs.selection.outputs.provenance == 'true'",
+      "kind": "other-python-script",
+      "line": 207,
+      "method_denominator": null,
+      "source": "evas/validation/paper/check_design.py",
+      "source_sha256": "1c7e0fd73ed369c8bc5320722a4d5fffc9105b053c25e2de21b9eb2b07a527aa",
+      "step": "Paper contracts, observable criteria and table provenance",
+      "step_if": null,
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/check_source_kernel.py --kernel evas/rust_core/target/release/evas-kernel --report runs/source-kernel.json",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+        "PYTHONPATH": "evas/src"
+      },
+      "executed": false,
+      "job": "rust-regression",
+      "job_if": "needs.selection.outputs.regression == 'true'",
+      "kind": "other-python-script",
+      "line": 253,
+      "method_denominator": null,
+      "source": "scripts/check_source_kernel.py",
+      "source_sha256": "c439531d094bd07522ba9dc0046647f315f2fbe1207af841607fdd31e0b6e5bb",
+      "step": "Verify the new release kernel for source-only delivery",
+      "step_if": "needs.selection.outputs.package != 'true'",
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/capabilities/discover_rust.py --repo . --build-messages runs/rust-test-build.jsonl --build-exit \"$build_exit\" --report runs/rust-test-listing.json --raw-directory runs/rust-test-listing --require-catalog evas/capabilities/data --listing-profile linux-x86_64-regression-opt1-v1 --source-repository vaevas=.",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true"
+      },
+      "executed": false,
+      "job": "rust-regression",
+      "job_if": "needs.selection.outputs.regression == 'true'",
+      "kind": "other-python-script",
+      "line": 271,
+      "method_denominator": null,
+      "source": "scripts/capabilities/discover_rust.py",
+      "source_sha256": "9827d89f761ef7492230886e3ad7eceb9155bc62cc53ae6faec8e2050d323482",
+      "step": "Collect actual owned Rust binary listing",
+      "step_if": "always()",
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/ci_evidence.py identity --identity runs/regression-identity.json --shard ${{ matrix.shard }}-of-4 --output \"$GITHUB_OUTPUT\"",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+        "PYTHONPATH": "evas/src"
+      },
+      "executed": false,
+      "job": "regression",
+      "job_if": "needs.selection.outputs.regression == 'true'",
+      "kind": "other-python-script",
+      "line": 319,
+      "method_denominator": null,
+      "source": "scripts/ci_evidence.py",
+      "source_sha256": "238c45d156225b29e566665997fdd5e1fc19b2301142e69cdc39243ce56c0257",
+      "step": "Identify complete regression inputs and actual toolchain",
+      "step_if": null,
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/run_regression.py --shard-count 4 --shard-index ${{ matrix.shard }} --weights scripts/regression-weights.json --input-identity runs/regression-identity.json --report runs/regression-evidence/report.json",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+        "PYTHONPATH": "evas/src"
+      },
+      "executed": false,
+      "job": "regression",
+      "job_if": "needs.selection.outputs.regression == 'true'",
+      "kind": "other-python-script",
+      "line": 343,
+      "method_denominator": null,
+      "source": "scripts/run_regression.py",
+      "source_sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+      "step": "Collect complete Python regression observations",
+      "step_if": "steps.reuse.outputs.verified != 'true'",
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/ci_evidence.py collect --identity runs/regression-identity.json --shard ${{ matrix.shard }}-of-4 --report runs/regression-evidence/report.json --raw-exit \"$raw_exit\" > runs/regression-evidence/collection.json",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+        "PYTHONPATH": "evas/src"
+      },
+      "executed": false,
+      "job": "regression",
+      "job_if": "needs.selection.outputs.regression == 'true'",
+      "kind": "other-python-script",
+      "line": 346,
+      "method_denominator": null,
+      "source": "scripts/ci_evidence.py",
+      "source_sha256": "238c45d156225b29e566665997fdd5e1fc19b2301142e69cdc39243ce56c0257",
+      "step": "Collect complete Python regression observations",
+      "step_if": "steps.reuse.outputs.verified != 'true'",
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/ci_evidence.py record --identity runs/regression-identity.json --shard ${{ matrix.shard }}-of-4 --receipt runs/regression-evidence/receipt.json --report runs/regression-evidence/report.json",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+        "PYTHONPATH": "evas/src"
+      },
+      "executed": false,
+      "job": "regression",
+      "job_if": "needs.selection.outputs.regression == 'true'",
+      "kind": "other-python-script",
+      "line": 357,
+      "method_denominator": null,
+      "source": "scripts/ci_evidence.py",
+      "source_sha256": "238c45d156225b29e566665997fdd5e1fc19b2301142e69cdc39243ce56c0257",
+      "step": "Record only newly executed all-pass evidence",
+      "step_if": "steps.collect.outputs.cacheable == 'true'",
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B evas/validation/differential/ngspice_compare.py --kernel evas/rust_core/target/debug/evas-kernel --out runs/ngspice-ci",
+      "declared_python_versions": [
+        "3.12"
+      ],
+      "environment_overrides": {},
+      "executed": false,
+      "job": "properties-and-ngspice",
+      "job_if": "needs.selection.outputs.differential == 'true'",
+      "kind": "other-python-script",
+      "line": 554,
+      "method_denominator": null,
+      "source": "evas/validation/differential/ngspice_compare.py",
+      "source_sha256": "de0ff4707c7f54f4f43becb196171bebaae5e7307daf0df1a7b41421065c3a7d",
+      "step": null,
+      "step_if": null,
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    },
+    {
+      "command": "python3 -B scripts/ci_selection.py gate",
+      "declared_python_versions": [],
+      "environment_overrides": {
+        "CI_NEEDS": "${{ toJSON(needs) }}"
+      },
+      "executed": false,
+      "job": "ci-result",
+      "job_if": "always()",
+      "kind": "other-python-script",
+      "line": 631,
+      "method_denominator": null,
+      "source": "scripts/ci_selection.py",
+      "source_sha256": "a830dc21d632822dc42d6170027caa98f972e338e4e0b99ca12cdb4c945be5ce",
+      "step": "Require every selected check and reusable child job to succeed",
+      "step_if": null,
+      "workflow": ".github/workflows/numerical-assurance.yml"
+    }
+  ],
+  "method_denominator": null
+}
