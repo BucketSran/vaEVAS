@@ -17,6 +17,8 @@ import tempfile
 
 CODE_PATH = 'scripts/regression_gate.py'
 BASELINE_PATH = 'evas/validation/baselines/regression-v1.json'
+REVIEW_PATH = 'evas/validation/baselines/regression-v1.review.json'
+REGISTRATION_PATH = 'scripts/regression_context_registration.py'
 _WORKER = '''import json, runpy, sys
 module = runpy.run_path(sys.argv[1], run_name="trusted_regression_gate")
 for name in ("compare_report", "validate_report", "validate_baseline_transition"):
@@ -31,6 +33,22 @@ if sys.argv[4] == "compare":
     result = {"comparison": comparison}
     if not comparison["merge_allowed"]:
         result["result"] = module["validate_baseline_transition"](report, baseline, None)
+elif sys.argv[4] == "register":
+    from pathlib import Path
+    import types
+    registration = runpy.run_path(sys.argv[6], run_name="trusted_context_registration")
+    with open(sys.argv[5]) as stream:
+        proposal = json.load(stream)
+    with open(sys.argv[7]) as stream:
+        transaction = json.load(stream)
+    bundle = Path(transaction["bundle"])
+    roles = ("composition_recipe", "snapshot_manifest", "dut_build", "kernel_binary",
+             "collector_manifest", "artifact_manifest", "stdout", "stderr", "shard_reports")
+    blobs = {role: (bundle / role).read_bytes() for role in roles}
+    result = registration["validate_context_registration"](
+        types.SimpleNamespace(**module), report, baseline, proposal,
+        transaction["trusted_review"], transaction["head_review"],
+        transaction["changed_paths"], (bundle / "report.json").read_bytes(), blobs)
 else:
     with open(sys.argv[5]) as stream:
         proposal = json.load(stream)
@@ -107,7 +125,7 @@ def _checked_result(result, report):
     return result
 
 
-def compare_from_commit(repo, commit, report):
+def compare_from_commit(repo, commit, report, registration_bundle=None):
     """Compare first; only then read the fixed HEAD baseline as untrusted data."""
     commit = _full_commit(repo, commit)
     code = _blob(repo, commit, CODE_PATH)
@@ -135,7 +153,8 @@ def compare_from_commit(repo, commit, report):
         def worker(phase):
             process = subprocess.run([sys.executable, '-I', '-c', _WORKER, str(root / 'gate.py'),
                                       str(root / 'report.json'), str(root / 'baseline.json'), phase,
-                                      str(root / 'head-proposal.json')],
+                                      str(root / 'head-proposal.json'), str(root / 'registration.py'),
+                                      str(root / 'registration-transaction.json')],
                                      cwd=root, capture_output=True, text=True)
             if process.returncode:
                 raise ValueError('trusted comparator failed: ' + process.stderr.strip())
@@ -160,7 +179,28 @@ def compare_from_commit(repo, commit, report):
             except (ValueError, OSError) as error:
                 candidate.update(loaded=False, error=str(error))
             (root / 'head-proposal.json').write_text(json.dumps(proposal, allow_nan=False))
-            result = _checked_result(worker('transition'), report)
+            appending = (isinstance(proposal, dict) and isinstance(proposal.get('contexts'), list)
+                         and len(proposal['contexts']) == len(decoded['contexts']) + 1)
+            if appending:
+                if registration_bundle is None:
+                    raise ValueError('context append requires a fixed registration evidence bundle')
+                # Read authority only from the same event-selected base. HEAD can
+                # provide data, never registration code or approval authority.
+                registration = _blob(repo, commit, REGISTRATION_PATH)
+                review = _blob(repo, commit, REVIEW_PATH)
+                head_review = _blob(repo, head, REVIEW_PATH)
+                changed = _git(repo, 'diff', '--name-only', '-z', commit, head, '--')
+                paths = [os.fsdecode(path) for path in changed.split(b'\0') if path]
+                transaction = dict(trusted_review=json.loads(review), head_review=json.loads(head_review),
+                                   changed_paths=paths, bundle=str(Path(registration_bundle).resolve()))
+                (root / 'registration.py').write_bytes(registration)
+                (root / 'registration-transaction.json').write_text(json.dumps(transaction, allow_nan=False))
+                trust['registration'] = dict(trusted_commit=commit, code_path=REGISTRATION_PATH,
+                    code_sha256=hashlib.sha256(registration).hexdigest(), review_path=REVIEW_PATH,
+                    review_sha256=hashlib.sha256(review).hexdigest(), head_authority=False)
+                result = _checked_result(worker('register'), report)
+            else:
+                result = _checked_result(worker('transition'), report)
         if (result.get('trusted_comparison') != comparison
                 or not isinstance(result.get('transition'), dict)
                 or (result['merge_allowed'] and not result['transition'].get('accepted'))):
@@ -169,10 +209,10 @@ def compare_from_commit(repo, commit, report):
     return result
 
 
-def evaluate_event(repo, report, event_name, event, default_branch='main'):
+def evaluate_event(repo, report, event_name, event, default_branch='main', registration_bundle=None):
     """Return the trusted comparator result plus its immutable source facts."""
     commit, source = select_trusted_commit(repo, event_name, event, default_branch)
-    result = compare_from_commit(repo, commit, report)
+    result = compare_from_commit(repo, commit, report, registration_bundle)
     result['trust']['source'] = source
     result['trust']['default_branch'] = default_branch
     return result
@@ -183,6 +223,8 @@ def main(argv=None):
     parser.add_argument('--repo', type=Path, required=True)
     parser.add_argument('--report', type=Path, required=True)
     parser.add_argument('--default-branch', default='main')
+    parser.add_argument('--registration-bundle', type=Path,
+                        help='untrusted E1 report.json and nine fixed artifact-role files')
     args = parser.parse_args(argv)
     report = None
     try:
@@ -191,7 +233,7 @@ def main(argv=None):
             raise ValueError('report must be an object')
         event_name = os.environ['GITHUB_EVENT_NAME']
         event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
-        result = evaluate_event(args.repo, report, event_name, event, args.default_branch)
+        result = evaluate_event(args.repo, report, event_name, event, args.default_branch, args.registration_bundle)
         print(json.dumps(result, indent=2, allow_nan=False))
         return 0 if result['merge_allowed'] else 1
     except (OSError, ValueError, TypeError, KeyError, SyntaxError) as error:

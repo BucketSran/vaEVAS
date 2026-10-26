@@ -45,9 +45,14 @@ class AdmissionIntegrationTests(unittest.TestCase):
         return textwrap.dedent('\n'.join(body))+'\n'
 
     def pin_body(self,body,commit):
-        # Fixture-only substitution of the workflow's fixed literal. No CLI/env override exists.
-        return re.sub(r'(?m)^BOOTSTRAP_COMMIT = "[^"]*"$',
+        # The fixture installs maintained loader bytes into its synthetic Git.
+        # Pin both independently selected literals to that fixture source. Never
+        # derive the expected SHA from the requested commit or hostile HEAD.
+        body = re.sub(r'(?m)^BOOTSTRAP_COMMIT = "[^"]*"$',
                       'BOOTSTRAP_COMMIT = '+json.dumps(commit),body,count=1)
+        fixture_sha = hashlib.sha256(LOADER.read_bytes()).hexdigest()
+        return re.sub(r'(?m)^BOOTSTRAP_SHA256 = "[^"]*"$',
+                      'BOOTSTRAP_SHA256 = '+json.dumps(fixture_sha),body,count=1)
 
     def needs(self, regression=True):
         flags=('maintenance','calibration','provenance','regression','differential','fuzz','package','benchmark')

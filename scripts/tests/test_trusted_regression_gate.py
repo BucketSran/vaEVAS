@@ -387,5 +387,150 @@ class TransitionIntegrationTests(unittest.TestCase):
         self.assertFalse(json.loads(result.stdout)['merge_allowed'])
 
 
+
+
+class RegistrationLoaderIntegrationTests(unittest.TestCase):
+    """Exercise trusted/base versus HEAD authority through actual CLI and Git."""
+    git = TrustedLoaderTests.git
+    write = TrustedLoaderTests.write
+    commit = TrustedLoaderTests.commit
+    call = TrustedLoaderTests.call
+
+    def setUp(self):
+        TrustedLoaderTests.setUp(self)
+        import regression_registration_fixtures as fixtures
+        self.fixtures = fixtures
+        self.fixture = fixtures.make_fixture()
+        self.registration_path = 'scripts/regression_context_registration.py'
+        self.review_path = 'evas/validation/baselines/regression-v1.review.json'
+        self.write(self.registration_path, (ROOT / self.registration_path).read_bytes())
+        self.write(BASELINE_PATH, fixtures.raw(self.fixture['baseline']))
+        self.write(self.review_path, fixtures.raw(self.fixture['review']))
+        self.trusted = self.commit('trusted context registration code and synthetic authorization')
+        self.bundle = self.root / 'bundle'
+        self.bundle.mkdir()
+        (self.bundle / 'report.json').write_bytes(self.fixture['e1_bytes'])
+        for role, raw in self.fixture['blobs'].items():
+            (self.bundle / role).write_bytes(raw)
+        self.report_path.write_bytes(self.fixture['current_bytes'])
+        self.write(BASELINE_PATH, fixtures.raw(self.fixture['head']))
+        self.commit('append exactly the preauthorized context')
+
+    def test_exact_trusted_authorization_registers_via_real_cli(self):
+        result = self.call('pull_request', None, '--registration-bundle', str(self.bundle))
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        facts = json.loads(result.stdout)
+        self.assertTrue(facts['merge_allowed'])
+        self.assertTrue(facts['transition']['registration'])
+        self.assertEqual(facts['trust']['registration']['trusted_commit'], self.trusted)
+        self.assertFalse(facts['semantic_qualification'])
+
+    def test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels(self):
+        spec = importlib.util.spec_from_file_location('registration_evidence_control',
+                                                       ROOT / 'scripts/ci_evidence.py')
+        ci_evidence = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(ci_evidence)
+        fx = self.fixtures
+        for merged in (False, True):
+            for mode in ('coherent', 'input_identity', 'shard_label'):
+                with self.subTest(merged=merged, mode=mode):
+                    def alter(shard, entries):
+                        if shard['shard_index'] != shard['shard_count'] - 1:
+                            return
+                        if mode == 'input_identity':
+                            shard['input_identity'] = '0' * 64
+                        elif mode == 'shard_label':
+                            identity = shard['source_identity']['execution_identity']
+                            identity['environment']['shard'] = '0-of-2' if merged else '1-of-1'
+                            identity['key'] = fx.api.digest(dict(version=3, report_schema_version=3,
+                                files=entries, environment=identity['environment']))
+                            fx.bind_input_identity(shard)
+
+                    fixture = fx.make_fixture(merged=merged, alter_shard=alter)
+                    shards = [json.loads(raw) for raw in json.loads(fixture['blobs']['shard_reports'])]
+                    for shard in shards:
+                        identity = shard['source_identity']['execution_identity']
+                        label = str(shard['shard_index']) + '-of-' + str(shard['shard_count'])
+                        malformed_input = mode == 'input_identity' and shard is shards[-1]
+                        if malformed_input:
+                            with self.assertRaisesRegex(ValueError, 'input_identity'):
+                                ci_evidence.bound_report(shard, identity, label)
+                        else:
+                            ci_evidence.bound_report(shard, identity, label)
+                    self.write(BASELINE_PATH, fx.raw(fixture['baseline']))
+                    self.write(self.review_path, fx.raw(fixture['review']))
+                    self.trusted = self.commit('preauthorize exact synthetic ' + mode)
+                    self.write(BASELINE_PATH, fx.raw(fixture['head']))
+                    self.commit('append exact synthetic context ' + mode)
+                    self.report_path.write_bytes(fixture['current_bytes'])
+                    (self.bundle / 'report.json').write_bytes(fixture['e1_bytes'])
+                    for role, raw in fixture['blobs'].items():
+                        (self.bundle / role).write_bytes(raw)
+                    result = self.call('pull_request', None, '--registration-bundle', str(self.bundle))
+                    facts = json.loads(result.stdout)
+                    self.assertEqual(result.returncode, 0 if mode == 'coherent' else 1,
+                                     result.stdout + result.stderr)
+                    self.assertEqual(facts['merge_allowed'], mode == 'coherent', facts)
+                    if mode == 'coherent':
+                        self.assertTrue(facts['transition']['registration'])
+                    else:
+                        expected = 'shard input_identity' if mode == 'input_identity' else 'shard environment label'
+                        self.assertIn(expected, ' '.join(facts['differences']))
+
+    def test_head_registration_code_cannot_execute_or_authorize_append(self):
+        marker = self.root / 'head-code-executed'
+        self.write(self.registration_path,
+                   'from pathlib import Path\nPath(' + repr(str(marker)) + ').write_text("bad")\n'
+                   'def validate_context_registration(*args): return {"merge_allowed": True}\n')
+        self.commit('untrusted HEAD registration code')
+        result = self.call('pull_request', None, '--registration-bundle', str(self.bundle))
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertFalse(marker.exists())
+        self.assertIn('only fixed baseline path', result.stdout)
+        facts = json.loads(result.stdout)
+        expected = hashlib.sha256((ROOT / self.registration_path).read_bytes()).hexdigest()
+        self.assertEqual(facts['trust']['registration']['code_sha256'], expected)
+
+    def test_unknown_current_context_stops_before_registration_bundle(self):
+        current = copy.deepcopy(self.fixture['current'])
+        current['metadata']['criteria_id'] = '9' * 64
+        self.report_path.write_text(json.dumps(current))
+        result = self.call('pull_request', None, '--registration-bundle', str(self.root / 'absent'))
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        facts = json.loads(result.stdout)
+        self.assertFalse(facts['trust']['candidate_baseline']['evaluated'])
+        self.assertNotIn('registration', facts['trust'])
+
+    def test_append_without_bundle_fails_closed(self):
+        result = self.call()
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn('requires a fixed registration evidence bundle', result.stdout)
+
+    def test_new_authorization_in_HEAD_cannot_supply_missing_base_authority(self):
+        empty = copy.deepcopy(self.fixture['review'])
+        empty['context_registration_authorizations'] = []
+        self.write(BASELINE_PATH, self.fixtures.raw(self.fixture['baseline']))
+        self.write(self.review_path, self.fixtures.raw(empty))
+        self.trusted = self.commit('trusted base has no authorization')
+        self.write(BASELINE_PATH, self.fixtures.raw(self.fixture['head']))
+        self.write(self.review_path, self.fixtures.raw(self.fixture['review']))
+        self.commit('head attempts to approve itself')
+        result = self.call('pull_request', None, '--registration-bundle', str(self.bundle))
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertFalse(json.loads(result.stdout)['merge_allowed'])
+
+    def test_base_registration_symlink_is_rejected(self):
+        self.write(BASELINE_PATH, self.fixtures.raw(self.fixture['baseline']))
+        target = self.repo / self.registration_path
+        target.unlink()
+        target.symlink_to('regression_gate.py')
+        self.trusted = self.commit('nonregular trusted registration path')
+        self.write(BASELINE_PATH, self.fixtures.raw(self.fixture['head']))
+        self.commit('append cannot use nonregular trusted source')
+        result = self.call('pull_request', None, '--registration-bundle', str(self.bundle))
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn('regular Git blob', result.stdout)
+
+
 if __name__ == '__main__':
     unittest.main()

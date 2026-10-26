@@ -356,7 +356,36 @@ python3 -B scripts/regression_gate.py compare runs/<task>/complete.json --repo .
 
 提案保留其原始执行的完整报告 SHA 和审查身份。该 SHA 可以不同于写入提案后再次执行的报告 SHA，
 但实际观察、上下文和上述完整输入主体必须匹配。缺失、篡改、混用分片或漏掉输入均拒绝；
-不为缺少新主体字段的旧报告补造资格。当前 PR2a 仍只执行采集，正式准入由 PR2b 接线启用。
+不为缺少新主体字段的旧报告补造资格。正式准入已通过固定可信引导接入 CI。
+
+### 新判据和采集器的可信 context 登记
+
+`regression_context_registration.py` 校验一个预先授权的追加事务。新 loader
+支持 `--registration-bundle <directory>`；该目录只提供不可信数据，不能指定代码
+或审批来源。`report.json` 保存新判据在旧 DUT 上的完整实际报告，另外九个固定
+文件名为 `composition_recipe`、`snapshot_manifest`、`dut_build`、`kernel_binary`、
+`collector_manifest`、`artifact_manifest`、`stdout`、`stderr` 和 `shard_reports`。
+各文件的原始 bytes 由先前可信主线的授权记录锁定。完整快照、所有分片、实际
+DUT/kernel、环境及旧新义务映射均参与核验；夹具测试不能替代这些实际执行。
+每个原始分片的 `input_identity` 须与实际元数据、来源和所选方法的摘要一致，
+执行环境中的分片标签须匹配该报告的分片序号及总数；精确预授权不能豁免这两项检查。
+
+登记顺序是先在已审主线安装校验器，再取得新判据/旧 DUT 的完整证据并独审，
+将精确授权追加到既有 `regression-v1.review.json` 的
+`context_registration_authorizations`，最后另提一个只改固定 baseline 的追加事务。
+授权须先进入事件选择的可信 base；HEAD 的授权、同名源码和未提交修改不能授予权限。
+所有旧 context 的内容和顺序必须保留，每次只追加一个。新判据启用另作下一次正常
+CI，不得沿用旧 criteria/collector ID，也不得在未知 context 失败后改用 HEAD 基线。
+
+普通可信比较先执行，拒绝时不读取 HEAD 或新证据。追加流程还要求旧 context 的
+改进保留检查通过、旧新 DUT/binary 和语言/runtime/invocation 相同，全部旧义务有
+精确映射。新 skip/xfail、丢失义务、非通过身份不全或任意证据哈希不符均拒绝。
+JSON 中的 reviewer 字段仅记录已审主线的决定，不认证独立审查者身份。
+
+当前提交只预装 API 和 loader，固定 workflow 引导仍使用先前已审版本；须先合入
+本代码，再单独将引导锁定到可取得的该版本，才能启用新登记入口。现有科学判据、
+collector 和基线没有因此获得新资格。
+
 
 ### 找出回归慢在哪里
 
