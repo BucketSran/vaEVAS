@@ -39,7 +39,10 @@ def _git(repo, *args):
     env['GIT_TERMINAL_PROMPT'] = '0'
     env['GIT_OPTIONAL_LOCKS'] = '0'
     env['GIT_PAGER'] = 'cat'
-    result = subprocess.run(['git', '-C', str(repo), *args], capture_output=True, env=env)
+    # Object reads in a partial clone can otherwise fetch from a promisor remote.
+    # A command-line option overrides a caller's GIT_NO_LAZY_FETCH=0 preference.
+    result = subprocess.run(['git', '--no-lazy-fetch', '-C', str(repo), *args],
+                            capture_output=True, env=env)
     if result.returncode:
         detail = result.stderr.decode(errors='replace').strip()
         raise ValueError(detail or 'Git read failed')

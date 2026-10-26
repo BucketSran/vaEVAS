@@ -251,6 +251,31 @@ class BundleMaterializationTests(unittest.TestCase):
         self.assertEqual((output/'other-owner').read_text(), 'preserve')
         self.assertFalse(list(self.root.glob('.materialize-*')))
 
+    def test_partial_clone_missing_blobs_are_not_fetched(self):
+        self.git('config', 'uploadpack.allowFilter', 'true')
+        clone = self.root/'partial-clone'
+        subprocess.run(['git', 'clone', '--filter=blob:none', '--no-checkout',
+                        self.repo.as_uri(), str(clone)], check=True, capture_output=True)
+
+        def missing():
+            output = subprocess.check_output(['git', '-C', str(clone), 'rev-list',
+                                              '--objects', '--missing=print', 'HEAD'], text=True)
+            return {line for line in output.splitlines() if line.startswith('?')}
+
+        before = missing()
+        self.assertGreaterEqual(len(before), len(self.payloads))
+        trace = self.root/'helper-git-trace.txt'
+        # A caller's fetch preference cannot override the helper's local-only boundary.
+        env = dict(os.environ, GIT_NO_LAZY_FETCH='0', GIT_TRACE=str(trace))
+        process = subprocess.run([sys.executable, '-I', str(ROOT/HELPER), '--repo', str(clone),
+                                  '--manifest', str(self.manifest), '--output', str(self.output)],
+                                 env=env, capture_output=True, text=True)
+        self.assertEqual(process.returncode, 2, process.stdout+process.stderr)
+        self.assertFalse(json.loads(process.stdout)['materialized'])
+        self.assertFalse(self.output.exists())
+        self.assertEqual(missing(), before)
+        self.assertNotIn(' fetch ', trace.read_text())
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1890,6 +1890,56 @@
     {
       "actual_receipt": {
         "id": "source:190d1a46dc90c4060b1397bf",
+        "sha256": "5627a9dfd3c02ac380711eba3ae4dfe9ec9c71309e6bc78843f079aad8423156",
+        "version": "bfa6ac15b3a41be530d0c0cc2afbb905c1c0a6c1b5282ea0e8ab883633785873"
+      },
+      "ci_entrypoint_ids": [
+        "9d894bb3affa4eb59be6922a9b352d3e03f04462a91568b0411cc7a5ebadad35"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -v",
+      "dependencies": [
+        {
+          "id": "source:190d1a46dc90c4060b1397bf",
+          "sha256": "5627a9dfd3c02ac380711eba3ae4dfe9ec9c71309e6bc78843f079aad8423156",
+          "version": "bfa6ac15b3a41be530d0c0cc2afbb905c1c0a6c1b5282ea0e8ab883633785873"
+        }
+      ],
+      "id": "entry:af5ec5e7df18539c1f0109d7",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "9d894bb3affa4eb59be6922a9b352d3e03f04462a91568b0411cc7a5ebadad35",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 174,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "280beb5bc4ee3e2c6a6f9c50d1966a6a0db742299de3dc71d85b4285b44afffe",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "6d955dbafe65d7f2479633f18f988c1c210cf54f9af714abc11a60da20cfe201",
+      "workflow_sha256": "37456de701eea3dc7943ea1be778994dfd55fc40ce7b3fcc9985c7972310859c"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:190d1a46dc90c4060b1397bf",
         "sha256": "61786cd78f1a3da86dc3af7dc1e533ca0c22200a2db092fae67da11628d489e7",
         "version": "299d03e12ee4df49790ee9da8197d11b7cad6d298aeb2ee7decd3994b8ffa56e"
       },
