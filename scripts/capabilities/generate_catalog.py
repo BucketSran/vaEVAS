@@ -53,6 +53,28 @@ def select_audited_method(row,current,previous_objects,current_assets):
  if owner is not None:return current,owner,'current-observed-method'
  raise ValueError('historical original source identity unavailable; explicit unbound migration required: '+row['id'])
 
+def select_finding_method(history,document,row,runtime_id,current,previous_objects,current_assets,validator):
+ """Use the fixed reader protocol to select identity; never claim matched."""
+ owners={(o['id'],o['version']):o for o in previous_objects if o['kind']=='asset'}
+ owners.update({(o['id'],o['version']):o for o in current_assets})
+ previous=[o for o in previous_objects if o['kind']=='method' and o.get('namespace')=='python-regression' and o.get('runtime_id')==runtime_id]
+ candidates=([current] if current is not None else [])+sorted(previous,key=lambda o:(o['id'],o['version']))
+ # Prefer the original module hash where that protocol actually records one.
+ # The identity-only pass remains pending when no tested-code hash is available.
+ for module_exact in (True,False):
+  for method in candidates:
+   if method.get('runtime_id')!=runtime_id:continue
+   owner=owners.get((method['module']['id'],method['module']['version']))
+   if owner is None or ref(owner)!=method['module']:continue
+   probe=dict(history,methods=[ref(method)],subject_coverage='partial')
+   if module_exact:
+    if not owner['content'].get('value'):continue
+    probe['source_module_sha256']=owner['content']['value']
+   try:validator.validate(probe,document,row,[(method,owner)])
+   except ValueError:continue
+   return method
+ raise ValueError('finding original subject identity unavailable; explicit unbound migration required: '+runtime_id)
+
 def entry_inputs(config):
  result=[]
  for item in config['discoveries']:
@@ -285,13 +307,13 @@ def build(config,out):
   doc,s=original(group,prefix+'passing-detectors-20261025/original/test-scheme-audit/'+group+'/findings.json')
   for index,row in enumerate(doc[key]):
    ids=row.get('test_ids',row.get('methods',[row.get('method_id')]))
-   bound_findings={i:by_runtime.get(i) or next((m for m in previous_objects if m['kind']=='method' and m.get('namespace')=='python-regression' and m['runtime_id']==i),None) for i in ids}
-   if any(m is None for m in bound_findings.values()):raise ValueError('finding subject needs explicit unbound migration')
    h={'schema_version':1,'id':sid('history-finding',group+':'+row['id']),'version':s['sha256'],'kind':'historical-finding','status':'active',
     'source':ref(s),'row_pointer':'/'+key+'/'+str(index),'original_row_sha256':canonical(row),'scope_pointer':scope_pointer,
     'scope_sha256':canonical(doc['scope'] if scope_pointer else doc),'identity_binding':'bound','history_protocol':protocol,
-    'methods':[ref(bound_findings[i]) for i in ids],'subject_coverage':'complete','alignment':{'status':'pending','reason':'original detector has no tested-method SHA; raw module identity is narrower than semantic alignment'},
+    'methods':[],'subject_coverage':'complete','alignment':{'status':'pending','reason':'original detector has no tested-method SHA; raw module identity is narrower than semantic alignment'},
     'original_finding_id':row['id'],'qualification_status':'not-granted','dependencies':[ref(s)]}
+   bound_findings={i:select_finding_method(h,doc,row,i,by_runtime.get(i),previous_objects,assets.values(),api._owned('history_binding')) for i in ids}
+   h['methods']=[ref(bound_findings[i]) for i in ids]
    histories.append(h)
  for h in histories:versioned(h)
  values={'sources':sources,'assets':list(assets.values()),'methods':list(methods.values()),'entrypoints':entries,'history':histories}

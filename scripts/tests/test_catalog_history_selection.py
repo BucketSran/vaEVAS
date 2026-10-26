@@ -30,6 +30,20 @@ class HistoricalMethodSelectionTests(unittest.TestCase):
         cls.source = catalog.bound(cls.history['source'])
         cls.row = catalog.read_history(cls.history)
         cls.audit_scope = json.loads(registry.read_source(cls.source))['summary']['scope']
+        cls.findings = catalog.current('historical-finding')
+        cls.finding_documents = {}
+        cls.finding_sources = {}
+        cls.finding_methods = {}
+        cls.finding_owners = {}
+        for history in cls.findings:
+            source = catalog.bound(history['source'])
+            cls.finding_documents[source['origin']] = json.loads(registry.read_source(source))
+            cls.finding_sources[source['origin']] = source
+            for ref in history['methods']:
+                method = catalog.bound(ref)
+                owner = catalog.bound(method['module'])
+                cls.finding_methods[method['runtime_id']] = method
+                cls.finding_owners[owner['current_path']] = owner
 
     def moved(self):
         owner = copy.deepcopy(self.old_owner)
@@ -79,3 +93,47 @@ class HistoricalMethodSelectionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'original source identity'):
             self.generator.select_audited_method(self.row, current,
                 [wrong_owner, wrong_method], [owner])
+
+    def test_all_original_finding_protocols_keep_paths_after_file_moves(self):
+        tree = ast.parse((ROOT / 'scripts/capabilities/generate_catalog.py').read_text())
+        build = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == 'build')
+        specs = next(node for node in build.body if isinstance(node, ast.Assign)
+                     and any(isinstance(t, ast.Name) and t.id == 'specs' for t in node.targets))
+        loop = next(node for node in build.body if isinstance(node, ast.For)
+                    and isinstance(node.target, ast.Tuple)
+                    and [item.id for item in node.target.elts] == ['group', 'protocol', 'key', 'scope_pointer'])
+        for history in self.findings:
+            with self.subTest(protocol=history['history_protocol']):
+                target = self.finding_methods[next(m['runtime_id'] for m in self.finding_methods.values()
+                    if self.api.reference(m) == history['methods'][0])]
+                old_owner = self.finding_owners[target['definition']['path']]
+                new_owner = copy.deepcopy(old_owner)
+                new_owner.update(version='finding-moved-owner',
+                    current_path='evas/tests/review_moved/' + Path(old_owner['current_path']).name)
+                current = copy.deepcopy(self.finding_methods)
+                for method in current.values():
+                    if method['module'] == self.api.reference(old_owner):
+                        method['module'] = self.api.reference(new_owner)
+                        method['definition']['path'] = new_owner['current_path']
+                        method['version'] = 'finding-moved-method'
+                assets = dict(self.finding_owners)
+                del assets[old_owner['current_path']]
+                assets[new_owner['current_path']] = new_owner
+                previous = [*self.finding_methods.values(), *self.finding_owners.values()]
+                def original(group, path):
+                    self.assertEqual(path, self.finding_sources[group]['locator']['path'])
+                    return self.finding_documents[group], self.finding_sources[group]
+                context = dict(self.generator.__dict__, original=original,
+                    prefix='evas/capabilities/history/', by_runtime=current, previous_objects=previous,
+                    assets=assets, histories=[], api=self.api)
+                exec(compile(ast.Module(body=[specs, loop], type_ignores=[]),
+                             'actual-generator-finding-loop', 'exec'), context)
+                objects = [*previous, *assets.values(), *current.values(), *self.finding_sources.values()]
+                registry = types.SimpleNamespace(objects={(o['id'], o['version']): o for o in objects},
+                    root=ROOT, repositories={'vaevas': ROOT})
+                catalog = self.api._owned('asset_catalog').Catalog(registry)
+                for generated in context['histories']:
+                    old = next(h for h in self.findings if h['id'] == generated['id'])
+                    self.assertEqual(generated['methods'], old['methods'])
+                    self.assertEqual(generated['alignment']['status'], 'pending')
+                    self.assertEqual(catalog.read_history(generated), catalog.read_history(old))
