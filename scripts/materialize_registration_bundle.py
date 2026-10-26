@@ -5,6 +5,11 @@ commit and a repo-relative directory; it does not grant review authority,
 semantic qualification, or permission to execute bundle bytes. Callers must
 already have the commit locally. This tool does not fetch, and it does not
 update refs or the index.
+
+Schema 1 copies every selected blob unchanged. Schema 2 stores only the
+kernel_binary blob as one gzip member and writes that member's original
+bytes; the other nine blobs stay unchanged. Byte contents are never inspected
+to discover compression.
 """
 import argparse
 import hashlib
@@ -14,6 +19,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import zlib
 
 FIXED_FILES = (
     'report.json',
@@ -30,6 +36,10 @@ FIXED_FILES = (
 _ALLOWED_GIT = {'rev-parse', 'ls-tree', 'cat-file'}
 _COMMIT = re.compile(r'(?:[0-9a-f]{40}|[0-9a-f]{64})')
 _BLOB = re.compile(r'(?:[0-9a-f]{40}|[0-9a-f]{64})')
+_SHA256 = re.compile(r'[0-9a-f]{64}')
+# Read window for zlib. It is not a limit on the kernel or on declared_bytes.
+_GZIP_WINDOW = 65536
+_KERNEL = 'kernel_binary'
 
 
 def _git(repo, *args):
@@ -49,16 +59,44 @@ def _git(repo, *args):
     return result.stdout
 
 
-def _manifest(path):
-    value = json.loads(Path(path).read_text())
-    if not isinstance(value, dict) or set(value) != {'schema_version', 'commit', 'prefix'}:
-        raise ValueError('unknown or incomplete manifest schema')
-    if type(value['schema_version']) is not int or value['schema_version'] != 1:
-        raise ValueError('unknown manifest schema version')
-    commit = value['commit']
+def _commit(commit):
     if not isinstance(commit, str) or not _COMMIT.fullmatch(commit) or set(commit) == {'0'}:
         raise ValueError('manifest commit must be a nonzero exact full Git commit')
-    return commit, _prefix(value['prefix'])
+    return commit
+
+
+def _kernel_descriptor(value):
+    if not isinstance(value, dict) or set(value) != {'encoding', 'decoded_bytes', 'decoded_sha256'}:
+        raise ValueError('unknown or incomplete kernel_binary descriptor')
+    if value['encoding'] != 'gzip':
+        raise ValueError('unknown kernel_binary encoding')
+    size = value['decoded_bytes']
+    if type(size) is not int or size < 1:
+        raise ValueError('kernel decoded_bytes must be a positive integer')
+    digest = value['decoded_sha256']
+    if not isinstance(digest, str) or not _SHA256.fullmatch(digest):
+        raise ValueError('kernel decoded_sha256 must be a lowercase SHA-256')
+    return size, digest
+
+
+def _manifest(path):
+    value = json.loads(Path(path).read_text())
+    if not isinstance(value, dict):
+        raise ValueError('unknown or incomplete manifest schema')
+    version = value.get('schema_version')
+    if type(version) is not int:
+        raise ValueError('unknown manifest schema version')
+    if version == 1:
+        if set(value) != {'schema_version', 'commit', 'prefix'}:
+            raise ValueError('unknown or incomplete manifest schema')
+        kernel = None
+    elif version == 2:
+        if set(value) != {'schema_version', 'commit', 'prefix', 'kernel_binary'}:
+            raise ValueError('unknown or incomplete manifest schema')
+        kernel = _kernel_descriptor(value['kernel_binary'])
+    else:
+        raise ValueError('unknown manifest schema version')
+    return version, _commit(value['commit']), _prefix(value['prefix']), kernel
 
 
 def _prefix(prefix):
@@ -102,6 +140,61 @@ def _regular_blob(repo, commit, path):
     return mode, blob
 
 
+def _gzip_failure(error):
+    detail = str(error).lower()
+    if 'data check' in detail or 'length check' in detail:
+        return ValueError('kernel gzip checksum does not match')
+    return ValueError('kernel gzip is truncated')
+
+
+def _gunzip_member(payload, declared):
+    """Return one gzip member, reading at most declared + 1 decoded bytes."""
+    decoder = zlib.decompressobj(16 + zlib.MAX_WBITS)
+    out = bytearray()
+    view = payload
+    try:
+        while view:
+            room = declared + 1 - len(out)
+            if room <= 0:
+                raise ValueError('kernel gzip exceeds declared decoded_bytes')
+            step = _GZIP_WINDOW if room > _GZIP_WINDOW else room
+            produced = decoder.decompress(view, step)
+            nxt = decoder.unconsumed_tail
+            if not produced and nxt == view:
+                raise ValueError('kernel gzip is truncated')
+            view = nxt
+            out += produced
+            if decoder.unused_data:
+                raise ValueError('kernel gzip has trailing data')
+            if len(out) > declared:
+                raise ValueError('kernel gzip exceeds declared decoded_bytes')
+            if decoder.eof:
+                break
+    except zlib.error as error:
+        raise _gzip_failure(error) from None
+    if decoder.unused_data:
+        raise ValueError('kernel gzip has trailing data')
+    if not decoder.eof:
+        raise ValueError('kernel gzip is truncated')
+    if len(out) != declared:
+        if len(out) > declared:
+            raise ValueError('kernel gzip exceeds declared decoded_bytes')
+        raise ValueError('kernel decoded length does not match the manifest')
+    return bytes(out)
+
+
+def _inventory_file(version, item):
+    if version == 1:
+        return dict(name=item['name'], path=item['path'], mode=item['mode'], blob=item['blob'],
+                    sha256=item['sha256'], byte_count=item['byte_count'])
+    row = dict(name=item['name'], path=item['path'], mode=item['mode'], blob=item['blob'],
+               stored_sha256=item['stored_sha256'], stored_byte_count=item['stored_byte_count'],
+               materialized_sha256=item['sha256'], materialized_byte_count=item['byte_count'])
+    if item['name'] == _KERNEL:
+        row['encoding'] = 'gzip'
+    return row
+
+
 def materialize(repo, manifest, output):
     """Copy the fixed ten blobs into a new directory and return their inventory."""
     repo = Path(repo)
@@ -113,7 +206,7 @@ def materialize(repo, manifest, output):
     inventory_path = Path(str(output) + '.inventory.json')
     if inventory_path.exists() or inventory_path.is_symlink():
         raise ValueError('inventory path already exists')
-    commit, prefix = _manifest(manifest)
+    version, commit, prefix, kernel = _manifest(manifest)
     tree = _exact_commit(repo, commit)
     selected = []
     for name in FIXED_FILES:
@@ -121,10 +214,19 @@ def materialize(repo, manifest, output):
         if path != '/'.join((prefix, name)) or '..' in path.split('/'):
             raise ValueError('path escapes the repository: ' + path)
         mode, blob = _regular_blob(repo, commit, path)
-        payload = _git(repo, 'cat-file', 'blob', blob)
+        stored = _git(repo, 'cat-file', 'blob', blob)
+        stored_sha = hashlib.sha256(stored).hexdigest()
+        if version == 2 and name == _KERNEL:
+            data = _gunzip_member(stored, kernel[0])
+            file_sha = hashlib.sha256(data).hexdigest()
+            if file_sha != kernel[1]:
+                raise ValueError('kernel decoded sha256 does not match the manifest')
+        else:
+            data = stored
+            file_sha = stored_sha
         selected.append(dict(name=name, path=path, mode=mode, blob=blob,
-                             sha256=hashlib.sha256(payload).hexdigest(),
-                             byte_count=len(payload), data=payload))
+                             stored_sha256=stored_sha, stored_byte_count=len(stored),
+                             sha256=file_sha, byte_count=len(data), data=data))
     temporary = output.with_name('.materialize-' + output.name + '-' + os.urandom(4).hex())
     published = False
     try:
@@ -147,12 +249,10 @@ def materialize(repo, manifest, output):
                 child.unlink()
             output.rmdir()
         raise
-    inventory = dict(schema_version=1, kind='registration-bundle-materialization',
+    inventory = dict(schema_version=version, kind='registration-bundle-materialization',
                      materialized=True, commit=commit, tree=tree, prefix=prefix,
                      output=str(output),
-                     files=[dict(name=item['name'], path=item['path'], mode=item['mode'],
-                                 blob=item['blob'], sha256=item['sha256'],
-                                 byte_count=item['byte_count']) for item in selected])
+                     files=[_inventory_file(version, item) for item in selected])
     try:
         inventory_path.write_text(json.dumps(inventory, indent=2, sort_keys=True) + '\n')
     except Exception:
