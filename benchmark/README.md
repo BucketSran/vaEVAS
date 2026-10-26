@@ -24,7 +24,7 @@ benchmark/
 | [tasks/defaults.toml](tasks/defaults.toml) | 共用环境默认值，具体任务可以覆盖 |
 | [material/draftbench/](material/draftbench/README.md) | 电路资产、选题讨论、设计批次与待审核题包 |
 | [material/historyref/](material/historyref/README.md) | 原始 benchmark、外部来源和历史建设源码 |
-| [历史投稿候选规划](material/draftbench/planning/history-candidates/README.md) | 108 项主候选建议与 1 项条件后备；保留原题来源、变体和未选理由，尚未建题或录取 |
+| [历史投稿候选规划](material/draftbench/planning/history-candidates/README.md) | 全面复审 Grok 的 455 项来源，原 108 项加 30 项新增建议，共 138 项候选与 1 项条件后备；逐项保留新增、变体、配套或暂缓理由，尚未建题或录取 |
 
 2026-10-19，正式清单为空，状态为 `draft`。草稿区按[三批](material/draftbench/batches/README.md)保存两批 56 个实现和 2 个 R01 待审题包，共 58 个题包。
 更早的 41 个题包保存为[历史材料](material/historyref/tasks/README.md)。这些资产均未获得本版完整题目审核认可。

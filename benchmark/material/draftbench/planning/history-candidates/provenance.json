@@ -52,7 +52,7 @@
     "implementation_files_reread": 5,
     "merged_source_mappings_rechecked": 40
   },
-  "independent_review": "not_performed; draft PR awaits human or delegated review",
+  "independent_review": "Initial screening had no independent second review; current planning delta has two fresh-context reviews, scoped in full_grok_review_20261026.",
   "runtime_executed": false,
   "construction_review_20261026": {
     "baseline_commit": "5bc76496079860e56597a1d01340492c06f30772",
@@ -83,5 +83,140 @@
     "method": "逐项核对首选合同的任务、参数、行为段及重点接口/全文，按工程责任、规格成熟度和作者建设成本重排；保留历史摘录和初次终审记录。",
     "changes": "仅规划登记、候选说明和静态校验；108主候选/103单元与1后备不变，基础层仍6项。",
     "independent_review": "Grok历史来源评论作为外部输入；本轮回复由作者整理，未新增独立二审。"
+  },
+  "full_grok_review_20261026": {
+    "baseline_commit": "6b1270f063c14724b185019e9123bd80056f8c66",
+    "review_file": "pool-review.json",
+    "counts": {
+      "grok_sources": 455,
+      "grok_groups": {
+        "complete": 342,
+        "spec_gap": 101,
+        "observation_gap": 12
+      },
+      "baseline_mapped_sources": 107,
+      "outside_reviewed": 348,
+      "dispositions": {
+        "existing": 107,
+        "support": 185,
+        "variant": 129,
+        "add": 30,
+        "defer": 4
+      },
+      "new_tasks": 30,
+      "baseline_tasks": 108,
+      "current_tasks": 138,
+      "current_units": 133,
+      "conditional_reserves": 1,
+      "by_family": {
+        "BASE": {
+          "support": 16,
+          "defer": 1
+        },
+        "LOGIC": {
+          "support": 38,
+          "existing": 1,
+          "variant": 4
+        },
+        "R01": {
+          "existing": 9,
+          "support": 8,
+          "variant": 9,
+          "defer": 1,
+          "add": 1
+        },
+        "R09": {
+          "support": 10,
+          "variant": 13,
+          "existing": 13,
+          "add": 3
+        },
+        "R10": {
+          "existing": 9,
+          "variant": 18,
+          "support": 26,
+          "add": 2
+        },
+        "R07": {
+          "support": 28,
+          "existing": 7,
+          "add": 4,
+          "variant": 11,
+          "defer": 1
+        },
+        "R08": {
+          "variant": 11,
+          "add": 3,
+          "support": 10,
+          "existing": 7,
+          "defer": 1
+        },
+        "R04": {
+          "existing": 29,
+          "variant": 31,
+          "support": 15,
+          "add": 7
+        },
+        "R06": {
+          "support": 10,
+          "existing": 10,
+          "variant": 11,
+          "add": 3
+        },
+        "R05": {
+          "add": 2,
+          "support": 9,
+          "variant": 2,
+          "existing": 3
+        },
+        "R03": {
+          "existing": 12,
+          "variant": 10,
+          "support": 8,
+          "add": 2
+        },
+        "TOOL": {
+          "support": 1
+        },
+        "FILTER": {
+          "variant": 9,
+          "support": 6,
+          "existing": 7,
+          "add": 3
+        }
+      },
+      "source_availability": {
+        "repository-contained": 290,
+        "local-only": 165
+      },
+      "distinct_source_identities": 455
+    },
+    "method": "348池外来源逐项阅读公开合同并手工判定；107已关联来源复用上一轮逐项判断，重新核对来源身份与关联；来源SHA逐份核对。",
+    "runtime_executed": false,
+    "full_implementation_audit": false,
+    "independent_review": {
+      "baseline_commit": "6b1270f063c14724b185019e9123bd80056f8c66",
+      "method": "two fresh-context read-only reviewers under code-review workflow",
+      "reviewers": [
+        {
+          "axis": "standards",
+          "task": "/root/standards_review",
+          "model": "gpt-6.1-sol",
+          "reasoning": "medium",
+          "result": "no actionable standards/evidence findings",
+          "scope": "complete 455-source identity/comment mapping, prior109 preservation, case identity/assessment, generated views, verifier and query behavior"
+        },
+        {
+          "axis": "spec",
+          "task": "/root/spec_review",
+          "model": "gpt-6.1-sol",
+          "reasoning": "medium",
+          "result": "one source-scope wording finding corrected; no change requested to 30 additions or 4 deferrals",
+          "scope": "all30 additions, all4 deferrals, complete source-set checks and sampled variant/support relations; decision trail latest grok-full rows"
+        }
+      ],
+      "fixed_finding": "C124 only promises immediate partial-sum output; removed unsupported claim of a comparator feedback consumer.",
+      "limits": "Not a second exhaustive 348-item value judgment; no full gold/checker audit, simulation, difficulty validation or formal task acceptance."
+    }
   }
 }

@@ -1,12 +1,12 @@
 # 历史候选逐项清单
 
-本表由 `register.json` 生成，包含108项主候选与另列的U30后备。105项原确认、3项终审建议的来源状态保持不变；本轮只重新安排建设。所有任务仍待建设和验收。
+本表由 `register.json` 生成，包含138项候选/133个规划单元，另列U30后备。原105项确认、3项终审建议保留，本轮另建议30项。新增建议尚待用户审核，所有任务仍待建设和验收。
 
-P0首批15项，P1第二批65项，P2后置28项，其中包含既定六项基础题。建设成本L/M/H分别为低/中/高，是作者工作量估计，与题目难度分开。HOLD不计入108。具体定义见[建设规则](README.md#建设顺序与进入正式集的条件)。
+P0首批15项，P1第二批90项，P2后置33项。原六项基础题保留；新增B–M项存在偏简单风险，后置实测。建设成本L/M/H是作者工作量估计，与求解难度分开。HOLD不计入候选池。具体定义见[建设规则](README.md#建设顺序与进入正式集的条件)。
 
 每项都还需独立参考、正常与违约对照、评分校准和最小starter审核。下面的“改造”列出各题特有工作，不表示共同工作已经完成。
 
-Grok意见来自[Issue #159中的评论](https://github.com/BucketSran/vaEVAS/issues/159#issuecomment-6401348069)，针对历史来源代表。新S/R/T/I职责由本规划提出，评论没有直接验收它们。[逐条对应及补充原文](review-response.json)记录了意见来源、版本和参数/行为上下文。
+Grok意见来自[Issue #159中的评论](https://github.com/BucketSran/vaEVAS/issues/159#issuecomment-6401348069)。[455项全量复审](GROK-REVIEW.md)列出池外条目的每项去向，[候选意见与补充原文](review-response.json)保留来源身份。S/R/T/I按实际交付责任建设，评论没有直接验收新增题目。
 
 | 候选 / 来源案例 | 任务内容 | 功能家族 | 动作 | 预估难度 | 优先级 / 建设成本 | 状态 | 原始题号和版本 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -119,6 +119,36 @@ Grok意见来自[Issue #159中的评论](https://github.com/BucketSran/vaEVAS/is
 | [U28-T1](#u28-t1) / C348 | AGC捕获、过载与恢复的独立表征 | RF、均衡与调制信号源 | T | M-H | P1 / H | 终审建议候选 | [v1:vbr1_l2_agc_receiver_leveling_loop:tb](../../../../../benchmark/material/historyref/v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_agc_receiver_leveling_loop/forms/tb/prompt.md) |
 | [U29-T1](#u29-t1) / C393 | 欠压复位断言与释放资格验证 | 电源与复位 | T | M-H | P1 / H | 终审建议候选 | [v1:vbr1_l1_power_on_reset_detector:tb](../../../../../benchmark/material/historyref/v1/tasks/CT07_bias_reference_power_management/vbr1_l1_power_on_reset_detector/forms/tb/prompt.md) |
 | [U30-R1](#u30-r1) / C090 | SAR完成握手导致结果提前捕获的诊断修复 | ADC与转换控制 | R | M，待实测 | HOLD / H | 条件后备 | [v1:vbr1_l1_sar_logic:bugfix](../../../../../benchmark/material/historyref/v1/tasks/CT01_data_converter_models/vbr1_l1_sar_logic/forms/bugfix/prompt.md) |
+| [C284-S1](#c284-s1) / C284 | Configurable Pulse Train Generator | PLL、时钟与时间测量 | S | M | P1 / M | Grok全量复审新增建议 | [v4:069-configurable-pulse-train-generator](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/069-configurable-pulse-train-generator/public/instruction.md) |
+| [C335-S1](#c335-s1) / C335 | Last Crossing Edge Age | PLL、时钟与时间测量 | S | M | P1 / M | Grok全量复审新增建议 | v3:334-last-crossing-edge-age，原件local-only，行为摘录随清单保留 |
+| [C309-S1](#c309-s1) / C309 | Ready/Valid Latency Counter 12b | PLL、时钟与时间测量 | S | B–M | P2 / M | Grok全量复审新增建议 | [v4:062-latency-counter-ready-valid-12b](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/062-latency-counter-ready-valid-12b/public/instruction.md) |
+| [C310-S1](#c310-s1) / C310 | LC VCO Behavioral Source | PLL、时钟与时间测量 | S | M | P1 / M | Grok全量复审新增建议 | [v4:391-lc-vco-behavioral-source](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/391-lc-vco-behavioral-source/public/instruction.md) |
+| [C321-S1](#c321-s1) / C321 | 实际I/Q边沿的正交相位误差监控 | PLL、时钟与时间测量 | S | M | P1 / M | Grok全量复审新增建议 | v4:335-quadrature-oscillator-phase-error-monitor（历史修订），原件local-only，行为摘录随清单保留 |
+| [C326-S1](#c326-s1) / C326 | Single-Shot Pulse | PLL、时钟与时间测量 | S | M | P1 / M | Grok全量复审新增建议 | [v4:105-single-shot-pulse](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/105-single-shot-pulse/public/instruction.md) |
+| [C341-S1](#c341-s1) / C341 | Switched-cap Phase Sequencer | PLL、时钟与时间测量 | S | M | P1 / M | Grok全量复审新增建议 | v4:385-switched-cap-phase-sequencer（历史修订），原件local-only，行为摘录随清单保留 |
+| [C379-S1](#c379-s1) / C379 | Adaptive Threshold Tracker | 校准与伺服 | S | B–M | P2 / M | Grok全量复审新增建议 | [v4:273-adaptive-threshold-tracker](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/273-adaptive-threshold-tracker/public/instruction.md) |
+| [C387-S1](#c387-s1) / C387 | Residue Amplifier Gain-calibration Loop | 校准与伺服 | S | M | P1 / M | Grok全量复审新增建议 | [v4:316-residue-amplifier-gain-calibration](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/316-residue-amplifier-gain-calibration/public/instruction.md) |
+| [C361-I1](#c361-i1) / C361 | I/Q上变频链集成与边带极性 | RF、均衡与调制信号源 | I | M–H | P1 / H | Grok全量复审新增建议 | [v4:364-iq-upconversion-mixer-chain](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/364-iq-upconversion-mixer-chain/public/instruction.md) |
+| [C228-S1](#c228-s1) / C228 | For Loop Windowed Peak | 放大与模拟信号处理 | S | B–M | P2 / M | Grok全量复审新增建议 | v3:314-for-loop-windowed-peak，原件local-only，行为摘录随清单保留 |
+| [C183-S1](#c183-s1) / C183 | Auto-zero Comparator Preamplifier | 比较器与门限 | S | M | P1 / M | Grok全量复审新增建议 | v4:309-autozero-comparator-preamplifier（历史修订），原件local-only，行为摘录随清单保留 |
+| [C184-S1](#c184-s1) / C184 | Clocked Comparator Reset Low | 比较器与门限 | S | M | P1 / M | Grok全量复审新增建议 | [v4:106-clocked-comparator-reset-low](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/106-clocked-comparator-reset-low/public/instruction.md) |
+| [C094-S1](#c094-s1) / C094 | Cyclic Decoder 10b | ADC与转换控制 | S | M | P1 / M | Grok全量复审新增建议 | [v4:163-cyclic-decoder-10b](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/163-cyclic-decoder-10b/public/instruction.md) |
+| [C097-T1](#c097-t1) / C097 | Flash ADC抽头、温度码与最终编码一致性验证 | ADC与转换控制 | T | M | P1 / M | Grok全量复审新增建议 | [v1:vbr1_l2_flash_adc_mini_array:e2e](../../../../../benchmark/material/historyref/v1/tasks/CT01_data_converter_models/vbr1_l2_flash_adc_mini_array/forms/e2e/prompt.md) |
+| [C102-S1](#c102-s1) / C102 | Pipe15 Data Align | ADC与转换控制 | S | M | P1 / M | Grok全量复审新增建议 | v4:181-pipe15-data-align（历史修订），原件local-only，行为摘录随清单保留 |
+| [C251-S1](#c251-s1) / C251 | Clocked Cascaded Two-Pole Filter | 滤波、积分与包络 | S | M | P1 / M | Grok全量复审新增建议 | [v4:028-higher-order-filter](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/028-higher-order-filter/public/instruction.md) |
+| [C261-S1](#c261-s1) / C261 | 连续高通记忆与外部输出采样 | 滤波、积分与包络 | S | M | P1 / M | Grok全量复审新增建议 | v3:439-laplace-zd-zero-den-filter，原件local-only，行为摘录随清单保留 |
+| [C265-S1](#c265-s1) / C265 | 离散高通状态与外部输出采样 | 滤波、积分与包络 | S | M | P1 / M | Grok全量复审新增建议 | v3:443-zi-zd-discrete-filter，原件local-only，行为摘录随清单保留 |
+| [C401-S1](#c401-s1) / C401 | Current-limited Regulator Macro | 电源与复位 | S | M | P1 / M | Grok全量复审新增建议 | v4:378-current-limited-regulator-macro（历史修订），原件local-only，行为摘录随清单保留 |
+| [C413-S1](#c413-s1) / C413 | Reference Startup Enable Flow | 电源与复位 | S | M | P1 / M | Grok全量复审新增建议 | [v4:099-reference-startup-enable-flow](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/099-reference-startup-enable-flow/public/instruction.md) |
+| [C366-I1](#c366-i1) / C366 | Gray映射、DAC与预加重的PAM4发射链集成 | RF、均衡与调制信号源 | I | M–H | P1 / H | Grok全量复审新增建议 | [v4:355-pam4-tx-driver](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/355-pam4-tx-driver/public/instruction.md) |
+| [C367-S1](#c367-s1) / C367 | 输入控制的多模式刺激与连续切换 | RF、均衡与调制信号源 | S | M–H | P2 / H | Grok全量复审新增建议 | v4:097-programmable-stimulus-sequencer（历史修订），原件local-only，行为摘录随清单保留 |
+| [G001-I1](#g001-i1) / basebandagcfilterchain | 滤波输出反馈的基带AGC链集成 | 放大与模拟信号处理 | I | M–H | P1 / H | Grok全量复审新增建议 | [v4:367-baseband-agc-filter-chain](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/367-baseband-agc-filter-chain/public/instruction.md) |
+| [C213-S1](#c213-s1) / C213 | 有记忆的迟滞限幅通路 | 放大与模拟信号处理 | S | B–M | P2 / M | Grok全量复审新增建议 | [v4:043-soft-hysteretic-limiter](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/043-soft-hysteretic-limiter/public/instruction.md) |
+| [C191-S1](#c191-s1) / C191 | Hysteretic Window Comparator | 比较器与门限 | S | M | P1 / M | Grok全量复审新增建议 | [v4:314-hysteretic-window-comparator](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/314-hysteretic-window-comparator/public/instruction.md) |
+| [C124-S1](#c124-s1) / C124 | DAC Serial Accumulator | DAC与重构 | S | M | P1 / M | Grok全量复审新增建议 | [v4:173-dac-serial-accumulator](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/173-dac-serial-accumulator/public/instruction.md) |
+| [C154-T1](#c154-t1) / C154 | 外部PAM4发射输出的电平间距表征 | DAC与重构 | T | M–H | P1 / H | Grok全量复审新增建议 | v4:328-pam4-linearity-monitor（历史修订），原件local-only，行为摘录随清单保留 |
+| [C068-S1](#c068-s1) / C068 | 跟踪保持切换与累计下垂监控 | 采样保持与多通道读出 | S | M | P1 / M | Grok全量复审新增建议 | [v4:180-track-hold-with-droop-and-aperture](../../../../../benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/180-track-hold-with-droop-and-aperture/public/instruction.md) |
+| [C244-S1](#c244-s1) / C244 | 电压编码接收前端的限幅、判决与有效资格 | 放大与模拟信号处理 | S | M | P1 / M | Grok全量复审新增建议 | v4:368-tia-limiting-receiver-macro（历史修订），原件local-only，行为摘录随清单保留 |
 
 ## 逐项建设与意见处理
 
@@ -1211,3 +1241,313 @@ SAR完成握手导致结果提前捕获的诊断修复。HOLD，建设成本H，
 - 排序理由：仍为条件后备，不计108；先确认消费者失效与修复价值。
 - Grok意见处理：部分采纳。采纳SAR代表；R可保留独立职责，但评论没有验证诊断难度，不能据“完整”提升后备。
 - 对应历史条目：`sarlogic`。
+
+### C284-S1
+
+Configurable Pulse Train Generator。P1，建设成本M，补行为边界。
+
+- 可复用：空闲锁存period/width/count、有限脉冲序列和done
+- 需要改：明确width大于等于period时合法行为、完成后重启与start持续高、参数变化不影响在途序列
+- 排序理由：与连续分频和U15延迟不同，须管理一次命令的快照、脉冲数量和完成交接；历史合同可支撑有界补充。
+- Grok意见处理：采纳方向。与连续分频和U15延迟不同，须管理一次命令的快照、脉冲数量和完成交接；历史合同可支撑有界补充。 明确width大于等于period时合法行为、完成后重启与start持续高、参数变化不影响在途序列
+- 对应历史条目：`configurablepulsetraingenerator`。
+
+### C335-S1
+
+Last Crossing Edge Age。P1，建设成本M，补行为边界。
+
+- 可复用：最近上升沿时间、周期刷新和超龄指示
+- 需要改：公开采样龄而非实时龄的保证、reset后历史作废、阈值恰等及漏沿恢复
+- 排序理由：与U13频率估计不同，本例检测最后事件距今多久及过期，涉及停钟/重启和失效状态，具有独立监控用途。
+- Grok意见处理：采纳方向。与U13频率估计不同，本例检测最后事件距今多久及过期，涉及停钟/重启和失效状态，具有独立监控用途。 公开采样龄而非实时龄的保证、reset后历史作废、阈值恰等及漏沿恢复
+- 对应历史条目：`lastcrossingedgeage`。
+
+### C309-S1
+
+Ready/Valid Latency Counter 12b。P2，建设成本M，补行为边界。
+
+- 可复用：valid启动、ready完成、零延迟与结果锁存
+- 需要改：明确active时valid、完成同刻新请求、12位溢出和初始状态
+- 排序理由：与模拟TDC不同，本例考握手事务归属和离散周期计数，实际接口时延监控可复用；不增加不存在的握手协议假设。
+- Grok意见处理：采纳方向。与模拟TDC不同，本例考握手事务归属和离散周期计数，实际接口时延监控可复用；不增加不存在的握手协议假设。 明确active时valid、完成同刻新请求、12位溢出和初始状态
+- 对应历史条目：`latencycounterreadyvalid12b`。
+
+### C310-S1
+
+LC VCO Behavioral Source。P1，建设成本M，补行为边界。
+
+- 可复用：互补振荡、控制改变只影响下一半周期、两周期有效
+- 需要改：补reset/disable取消在途事件、频率域和完成周期计数
+- 排序理由：与C286连续相位积分VCO不同，本例明确锁存半周期和事件不能被重排，有独立调度机制；仅声称行为振荡器。
+- Grok意见处理：采纳方向。与C286连续相位积分VCO不同，本例明确锁存半周期和事件不能被重排，有独立调度机制；仅声称行为振荡器。 补reset/disable取消在途事件、频率域和完成周期计数
+- 对应历史条目：`lcvcobehavioralsource`。
+
+### C321-S1
+
+实际I/Q边沿的正交相位误差监控。P1，建设成本M，补行为边界。
+
+- 可复用：实际I/Q边沿间隔除I周期、偏离90度指标与连续资格
+- 需要改：修正未量到I周期前的valid、phase_tol单位、缺沿/频差合法域及同刻边沿
+- 排序理由：完整原文已补时间比和3.6V缩放；相比C316的先后累计，本例使用实际时间且有明确90度参考，值得重新晋升。
+- Grok意见处理：采纳方向。完整原文已补时间比和3.6V缩放；相比C316的先后累计，本例使用实际时间且有明确90度参考，值得重新晋升。 修正未量到I周期前的valid、phase_tol单位、缺沿/频差合法域及同刻边沿
+- 对应历史条目：`quadratureoscillatorphaseerrormonitor`。
+
+### C326-S1
+
+Single-Shot Pulse。P1，建设成本M，补行为边界。
+
+- 可复用：阈值触发、可参数化脉宽及定时回落
+- 需要改：明确可重触发或不可重触发协议、在途定时器失效和外部可见脉宽定义
+- 排序理由：与U15逐沿延迟不同，本例从单事件生成有生命周期的脉冲，重触发旧定时器是可区分的实际故障，改造有界。
+- Grok意见处理：采纳方向。与U15逐沿延迟不同，本例从单事件生成有生命周期的脉冲，重触发旧定时器是可区分的实际故障，改造有界。 明确可重触发或不可重触发协议、在途定时器失效和外部可见脉宽定义
+- 对应历史条目：`singleshotpulse`。
+
+### C341-S1
+
+Switched-cap Phase Sequencer。P1，建设成本M，补行为边界。
+
+- 可复用：四相顺序、采样/保持命令和完整周期有效
+- 需要改：补相位初始索引、复位重入、模拟阈值下非重叠/死区条件
+- 排序理由：与C312双相非重叠源和C263积分器不同，本例交付完整开关调度与周期资格，关注命令/相位一致性；多文件不是其入选理由。
+- Grok意见处理：采纳方向。与C312双相非重叠源和C263积分器不同，本例交付完整开关调度与周期资格，关注命令/相位一致性；多文件不是其入选理由。 补相位初始索引、复位重入、模拟阈值下非重叠/死区条件
+- 对应历史条目：`switchedcapphasesequencer`。
+
+### C379-S1
+
+Adaptive Threshold Tracker。P2，建设成本M，补行为边界。
+
+- 可复用：旧阈值判决、受控阈值自适应和上下限
+- 需要改：明确比较先于更新、adapt冻结、系数合法域及基线变化的测试
+- 排序理由：具有基线跟踪检测用途，关键是当前判决不能偷用新阈值；作为待实测难度的候选保留，不宣称已达到CVDP难度。
+- Grok意见处理：采纳方向。具有基线跟踪检测用途，关键是当前判决不能偷用新阈值；作为待实测难度的候选保留，不宣称已达到CVDP难度。 明确比较先于更新、adapt冻结、系数合法域及基线变化的测试
+- 对应历史条目：`adaptivethresholdtracker`。
+
+### C387-S1
+
+Residue Amplifier Gain-calibration Loop。P1，建设成本M，补行为边界。
+
+- 可复用：实际残差输出反馈、增益码饱和和连续锁定
+- 需要改：明确已知校准刺激的灵敏度符号、可达域、钳位/饱和时失败状态及前后更新观测
+- 排序理由：完整修订原文已给增益方程；相对C103双相ADC码差，本例直接校准残差放大器输出且须处理错误方向和不可达目标，值得恢复候选。
+- Grok意见处理：采纳方向。完整修订原文已给增益方程；相对C103双相ADC码差，本例直接校准残差放大器输出且须处理错误方向和不可达目标，值得恢复候选。 明确已知校准刺激的灵敏度符号、可达域、钳位/饱和时失败状态及前后更新观测
+- 对应历史条目：`residueamplifiergaincalibration`。
+
+### C361-I1
+
+I/Q上变频链集成与边带极性。P1，建设成本H，新增对象或真值。
+
+- 可复用：两路带符号混频、RF合成、LO使能历史和调试口
+- 需要改：建设并提供已验证LO/混频子块；求解者负责I/Q符号、共模/增益接口与RF合成，独立查边带方向，修正quad_ok只代表toggle
+- 排序理由：与C360接收下变频和U12镜像校准不同，本例是发射上变频集成，错误Q符号会改变实际边带；按给定模块集成责任出题才计I。
+- Grok意见处理：采纳方向。与C360接收下变频和U12镜像校准不同，本例是发射上变频集成，错误Q符号会改变实际边带；按给定模块集成责任出题才计I。 建设并提供已验证LO/混频子块；求解者负责I/Q符号、共模/增益接口与RF合成，独立查边带方向，修正quad_ok只代表toggle
+- 对应历史条目：`iqupconversionmixerchain`。
+
+- 计划共建对象：C360-S1；尚未提供或建成，同源对象与实质复用部分须共同考虑数据划分。
+
+### C228-S1
+
+For Loop Windowed Peak。P2，建设成本M，补行为边界。
+
+- 可复用：四样本历史、峰/谷滑窗及异步清零
+- 需要改：允许等价实现而不强制for；补窗口未满有效样本和复位后零填充的合同
+- 排序理由：相对累计峰值，旧极值离窗必须撤销且峰/谷同窗，有实际窗口监控用途；难度预计偏低，后续实测决定录取。
+- Grok意见处理：采纳方向。相对累计峰值，旧极值离窗必须撤销且峰/谷同窗，有实际窗口监控用途；难度预计偏低，后续实测决定录取。 允许等价实现而不强制for；补窗口未满有效样本和复位后零填充的合同
+- 对应历史条目：`forloopwindowedpeak`。
+
+### C183-S1
+
+Auto-zero Comparator Preamplifier。P1，建设成本M，补行为边界。
+
+- 可复用：auto-zero存储偏置、评价相减偏置和ready
+- 需要改：明确az/eval同时有效、未校零评价、校零刺激及更新前后偏置；保留有符号内部值
+- 排序理由：与C193逐码校准和C060模拟CDS输出不同，本例先记偏置再判决，考两阶段状态使用与失效协议，有实际比较器前端用途。
+- Grok意见处理：采纳方向。与C193逐码校准和C060模拟CDS输出不同，本例先记偏置再判决，考两阶段状态使用与失效协议，有实际比较器前端用途。 明确az/eval同时有效、未校零评价、校零刺激及更新前后偏置；保留有符号内部值
+- 对应历史条目：`autozerocomparatorpreamplifier`。
+
+### C184-S1
+
+Clocked Comparator Reset Low。P1，建设成本M，补行为边界。
+
+- 可复用：上沿锁差分、下沿清双输出、等输入双低
+- 需要改：补传播延迟期间复位/新评价的取消规则、差分offset变体和合法时钟域
+- 排序理由：与C179输入变化触发的传播延迟不同，本例有评价/复位两相及在途决定；strongarm来源同案例并入，不宣称晶体再生过程。
+- Grok意见处理：采纳方向。与C179输入变化触发的传播延迟不同，本例有评价/复位两相及在途决定；strongarm来源同案例并入，不宣称晶体再生过程。 补传播延迟期间复位/新评价的取消规则、差分offset变体和合法时钟域
+- 对应历史条目：`clockedcomparatorresetlow`、`strongarmstylelatchcomparator`。
+
+### C094-S1
+
+Cyclic Decoder 10b。P1，建设成本M，补行为边界。
+
+- 可复用：ready串行三值决策、满/半权和clks发布后重置
+- 需要改：明确dp/dn同时高、未满帧、超额ready、clks/ready同刻及归一化
+- 排序理由：与C100控制逐次逼近不同，本例接收外部冗余决策并管理跨帧累加/发布；属于实际循环转换读出的独立责任。
+- Grok意见处理：采纳方向。与C100控制逐次逼近不同，本例接收外部冗余决策并管理跨帧累加/发布；属于实际循环转换读出的独立责任。 明确dp/dn同时高、未满帧、超额ready、clks/ready同刻及归一化
+- 对应历史条目：`cyclicdecoder10b`。
+
+### C097-T1
+
+Flash ADC抽头、温度码与最终编码一致性验证。P1，建设成本M，新增对象或真值。
+
+- 可复用：七比较抽头、thermometer和最终码的公开一致性
+- 需要改：提供健康flash阵列及门限/编码违例对象，公开抽头位置、采样周期；交付独立VA检查与激励，不只列save信号
+- 排序理由：与U04外部静态码表征不同，本例要定位内部抽头、前缀与编码不一致，最终码正确也可能漏掉内部违例；按验证职责建设。
+- Grok意见处理：采纳方向。与U04外部静态码表征不同，本例要定位内部抽头、前缀与编码不一致，最终码正确也可能漏掉内部违例；按验证职责建设。 提供健康flash阵列及门限/编码违例对象，公开抽头位置、采样周期；交付独立VA检查与激励，不只列save信号
+- 对应历史条目：`flashadcminiarray`。
+
+- 计划共建对象：C184-S1；尚未提供或建成，同源对象与实质复用部分须共同考虑数据划分。
+
+### C102-S1
+
+Pipe15 Data Align。P1，建设成本M，补行为边界。
+
+- 可复用：四组0/1/2/4拍历史、启动零填充和同时发布
+- 需要改：明确每组采样年龄、首次输出及重置选择；保留电压电平而非任意实数
+- 排序理由：相对C114统一DFF链，本例需要不同流水级的码组对应同一发布时刻，非均匀延迟对齐有独立系统用途。
+- Grok意见处理：采纳方向。相对C114统一DFF链，本例需要不同流水级的码组对应同一发布时刻，非均匀延迟对齐有独立系统用途。 明确每组采样年龄、首次输出及重置选择；保留电压电平而非任意实数
+- 对应历史条目：`pipe15dataalign`。
+
+### C251-S1
+
+Clocked Cascaded Two-Pole Filter。P1，建设成本M，补行为边界。
+
+- 可复用：双低通状态、级间滞后和共模初值
+- 需要改：原文已有alpha/gain，仍需明确第二级读旧/新一级状态、完整边界和lag metric
+- 排序理由：相对C250一阶及C214放大后滤波，本例须保持两个动态状态和级间时序一致，提供真正二极点瞬态/相位覆盖。
+- Grok意见处理：部分采纳。相对C250一阶及C214放大后滤波，本例须保持两个动态状态和级间时序一致，提供真正二极点瞬态/相位覆盖。 原文已有alpha/gain，仍需明确第二级读旧/新一级状态、完整边界和lag metric
+- 对应历史条目：`higherorderfilter`。
+
+### C261-S1
+
+连续高通记忆与外部输出采样。P1，建设成本M，补行为边界。
+
+- 可复用：100ns连续高通后外部时钟采样
+- 需要改：Task Contract已给算子系数；明确初态、reset仅清采样值、输入跳变和独立动态误差
+- 排序理由：与C260低通不同，必须抑制DC且保留变化/衰减符号，连续记忆和观测时钟相互作用有独立覆盖价值。
+- Grok意见处理：部分采纳。与C260低通不同，必须抑制DC且保留变化/衰减符号，连续记忆和观测时钟相互作用有独立覆盖价值。 Task Contract已给算子系数；明确初态、reset仅清采样值、输入跳变和独立动态误差
+- 对应历史条目：`laplacezdzerodenfilter`、`laplacezpzeropolefilter`。
+
+### C265-S1
+
+离散高通状态与外部输出采样。P1，建设成本M，补行为边界。
+
+- 可复用：含z=1零点的离散高通和外部输出采样
+- 需要改：Task Contract已给zi系数/100ns，补差分真值、内部初相、reset不清滤波记忆及两时钟边界
+- 排序理由：与C264离散低通和C261连续高通各有不同状态/采样关系，可区分错误地事件内重算滤波器的实现。
+- Grok意见处理：部分采纳。与C264离散低通和C261连续高通各有不同状态/采样关系，可区分错误地事件内重算滤波器的实现。 Task Contract已给zi系数/100ns，补差分真值、内部初相、reset不清滤波记忆及两时钟边界
+- 对应历史条目：`zizddiscretefilter`、`zizpdiscretefilter`。
+
+### C401-S1
+
+Current-limited Regulator Macro。P1，建设成本M，补行为边界。
+
+- 可复用：压差与过载共同约束目标、超限指标和调节资格
+- 需要改：明确向目标逼近的动态合同、低输入时下限、正常窗口及恢复；保留电压编码负载域
+- 排序理由：相比C403的单一负载阶跃，压差不足与限流竞争及退出有独立失效模式，改造范围有界；过载比例在修订原文已给出。
+- Grok意见处理：部分采纳。相比C403的单一负载阶跃，压差不足与限流竞争及退出有独立失效模式，改造范围有界；过载比例在修订原文已给出。 明确向目标逼近的动态合同、低输入时下限、正常窗口及恢复；保留电压编码负载域
+- 对应历史条目：`currentlimitedregulatormacro`。
+
+### C413-S1
+
+Reference Startup Enable Flow。P1，建设成本M，补行为边界。
+
+- 可复用：供电/使能四态、参考建立、双条件资格和掉电重启
+- 需要改：保留完整原文的0.32V、0.32更新及计数规则；补边沿间失效、状态/输出一致性
+- 排序理由：与C421的码修调闭环不同，本例考启动中禁用、掉电重启及数值建立和计数同时合格；可独立检验流程而非重复trim。
+- Grok意见处理：部分采纳。与C421的码修调闭环不同，本例考启动中禁用、掉电重启及数值建立和计数同时合格；可独立检验流程而非重复trim。 保留完整原文的0.32V、0.32更新及计数规则；补边沿间失效、状态/输出一致性
+- 对应历史条目：`referencestartupenableflow`。
+
+### C366-I1
+
+Gray映射、DAC与预加重的PAM4发射链集成。P1，建设成本H，新增对象或真值。
+
+- 可复用：Gray映射、DAC电平、历史符号delta与预加重
+- 需要改：提供已校验mapper/DAC/emphasis部件；明确emph_step按符号还是完整delta、更新次序及削顶，考集成后的真实波形
+- 排序理由：相对C358二值三tap FFE，本例需跨Gray符号、模拟电平和前一符号保持一致，具有多电平发射链集成价值；不以文件数认定I。
+- Grok意见处理：部分采纳。相对C358二值三tap FFE，本例需跨Gray符号、模拟电平和前一符号保持一致，具有多电平发射链集成价值；不以文件数认定I。 提供已校验mapper/DAC/emphasis部件；明确emph_step按符号还是完整delta、更新次序及削顶，考集成后的真实波形
+- 对应历史条目：`pam4txdriver`。
+
+- 计划共建对象：C358-S1；尚未提供或建成，同源对象与实质复用部分须共同考虑数据划分。
+
+### C367-S1
+
+输入控制的多模式刺激与连续切换。P2，建设成本H，新增对象或真值。
+
+- 可复用：模式控制ramp/chirp/burst、门控及切换连续性意图
+- 需要改：补各段公开方程、起相/状态保留、任意合法切换和连续性定义，不按原bench时间表拼波形
+- 排序理由：相对固定多音或PRBS源，本例须实现输入驱动的多模式波形生命周期与平滑交接；有实用刺激发生器价值，规格工作较多故后置。
+- Grok意见处理：部分采纳。相对固定多音或PRBS源，本例须实现输入驱动的多模式波形生命周期与平滑交接；有实用刺激发生器价值，规格工作较多故后置。 补各段公开方程、起相/状态保留、任意合法切换和连续性定义，不按原bench时间表拼波形
+- 对应历史条目：`programmablestimulussequencer`。
+
+### G001-I1
+
+滤波输出反馈的基带AGC链集成。P1，建设成本H，新增对象或真值。
+
+- 可复用：VGA码控、低通状态、过载与稳定资格接口
+- 需要改：提供健康VGA/滤波器/电平仪表，反馈改读实际滤波输出，明确测量窗、更新节奏、抗饱和和复位；以公开性能约束评分
+- 排序理由：与C348直接包络建模不同，滤波延迟参与环路且模块接口/反馈位置决定稳定性，适合作完整AGC链集成；旧输入表征不能证明闭环成立。
+- Grok意见处理：部分采纳。与C348直接包络建模不同，滤波延迟参与环路且模块接口/反馈位置决定稳定性，适合作完整AGC链集成；旧输入表征不能证明闭环成立。 提供健康VGA/滤波器/电平仪表，反馈改读实际滤波输出，明确测量窗、更新节奏、抗饱和和复位；以公开性能约束评分
+- 对应历史条目：`basebandagcfilterchain`。
+
+- 计划共建对象：C348-S1、C214-S1；尚未提供或建成，同源对象与实质复用部分须共同考虑数据划分。
+
+### C213-S1
+
+有记忆的迟滞限幅通路。P2，建设成本M，补行为边界。
+
+- 可复用：阈外写迟滞偏置、阈内保持、模拟增益与钳位
+- 需要改：原文已有完整阈值/更新式；改称有记忆迟滞限幅通路，补同输入不同历史及复位
+- 排序理由：与U07二值比较器表征不同，本例的连续幅度受历史改变；保留有代表性的非线性记忆候选，低难度风险待实测。
+- Grok意见处理：部分采纳。与U07二值比较器表征不同，本例的连续幅度受历史改变；保留有代表性的非线性记忆候选，低难度风险待实测。 原文已有完整阈值/更新式；改称有记忆迟滞限幅通路，补同输入不同历史及复位
+- 对应历史条目：`softhystereticlimiter`。
+
+### C191-S1
+
+Hysteretic Window Comparator。P1，建设成本M，补行为边界。
+
+- 可复用：进入窗口、外侧迟滞退出、状态变化脉冲和使能复位
+- 需要改：明确low/high数值或端口、四个进入/退出边界、初始化和toggled宽度/重触发
+- 排序理由：相对单阈Schmitt和静态电压窗，须处理两侧进入/退出的历史一致性与事件脉冲；Grok缺口可有界补齐，值得从暂缓晋升。
+- Grok意见处理：部分采纳。相对单阈Schmitt和静态电压窗，须处理两侧进入/退出的历史一致性与事件脉冲；Grok缺口可有界补齐，值得从暂缓晋升。 明确low/high数值或端口、四个进入/退出边界、初始化和toggled宽度/重触发
+- 对应历史条目：`hystereticwindowcomparator`。
+
+### C124-S1
+
+DAC Serial Accumulator。P1，建设成本M，补行为边界。
+
+- 可复用：独立sample清累加、ready逐位即时反馈和有限位窗
+- 需要改：原参数已有bit_count；补完整位权/总基、初始化、超额ready和同刻sample/ready
+- 排序理由：与C094帧末发布decoder不同，本例每次决定即发布公开部分和，须处理有效位窗、采样重启和同刻事件，具有独立的逐决定发布责任；原合同没有给出比较器消费者。
+- Grok意见处理：部分采纳。与C094帧末发布decoder不同，本例每次决定即发布公开部分和，须处理有效位窗、采样重启和同刻事件，具有独立的逐决定发布责任；原合同没有给出比较器消费者。 原参数已有bit_count；补完整位权/总基、初始化、超额ready和同刻sample/ready
+- 对应历史条目：`dacserialaccumulator`。
+
+### C154-T1
+
+外部PAM4发射输出的电平间距表征。P1，建设成本H，新增对象或真值。
+
+- 可复用：四符号采样控制、资格接口和等间距目标
+- 需要改：改为测外部PAM4发射输出，建设健康/间距失配/削顶对象，规定从实际电平估计间距、采样窗及前符号影响
+- 排序理由：旧对象自行生成理想电平无法测线性度；升级后与U04 ADC转移、U06毛刺时间测量不同，独立考四电平间距和动态预加重后的稳态分离。
+- Grok意见处理：部分采纳。旧对象自行生成理想电平无法测线性度；升级后与U04 ADC转移、U06毛刺时间测量不同，独立考四电平间距和动态预加重后的稳态分离。 改为测外部PAM4发射输出，建设健康/间距失配/削顶对象，规定从实际电平估计间距、采样窗及前符号影响
+- 对应历史条目：`pam4linearitymonitor`。
+
+- 计划共建对象：C366-I1；尚未提供或建成，同源对象与实质复用部分须共同考虑数据划分。
+
+### C068-S1
+
+跟踪保持切换与累计下垂监控。P1，建设成本M，补行为边界。
+
+- 可复用：电平跟踪、下降沿捕获、周期下垂累计与资格状态
+- 需要改：改名为跟踪保持及下垂监控；幅值跳变量如保留须正确命名，补tick/切换同刻和钳位累计规则
+- 排序理由：与C067的边沿延迟采样不同，本例持续跟踪再进入保持，输出与累计误差须一致，具有独立状态交接职责；原文已给aperture_gain和下垂累计。
+- Grok意见处理：采纳重建。与C067的边沿延迟采样不同，本例持续跟踪再进入保持，输出与累计误差须一致，具有独立状态交接职责；原文已给aperture_gain和下垂累计。 改名为跟踪保持及下垂监控；幅值跳变量如保留须正确命名，补tick/切换同刻和钳位累计规则
+- 对应历史条目：`trackholdwithdroopandaperture`。
+
+### C244-S1
+
+电压编码接收前端的限幅、判决与有效资格。P1，建设成本M，补行为边界。
+
+- 可复用：连续限幅通路、时钟判决和双次幅度资格
+- 需要改：按电压编码接收前端命名，公开输入电流代理比例或直接电压域；明确valid撤销、异步控制和同刻判决
+- 排序理由：完整原文已有判决和valid条件；相对纯比较器/静态限幅，本例须使模拟输出、削顶、采样判决和弱信号失效一致，不声称真实TIA器件行为。
+- Grok意见处理：采纳重建。完整原文已有判决和valid条件；相对纯比较器/静态限幅，本例须使模拟输出、削顶、采样判决和弱信号失效一致，不声称真实TIA器件行为。 按电压编码接收前端命名，公开输入电流代理比例或直接电压域；明确valid撤销、异步控制和同刻判决
+- 对应历史条目：`tialimitingreceivermacro`。
