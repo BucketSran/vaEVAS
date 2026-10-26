@@ -113,6 +113,53 @@ class TraceabilityChecks(unittest.TestCase):
         shutil.rmtree(self.root / "evas/tests")
         self.assertNotEqual(self.run_cli("--check").returncode, 0)
 
+    def catalog_fixture(self, *, corrupt=False):
+        self.write("evas/capabilities/data/registry.json", "{}\n")
+        self.write("evas/capabilities/registry.py", '''
+class Catalog:
+    def namespace_counts(self):
+        return {'maintenance': {'methods': 2, 'generated': 0, 'entrypoints': 1}}
+    def current(self, kind):
+        if kind == 'asset':
+            return [{'role': {'status': 'pending'}, 'consumer_status': 'partial'}]
+        if kind == 'historical-audit-record':
+            return [{'id': 'old-audit'}]
+        return []
+    def read_history(self, obj):
+        HISTORY_CHECK
+class Registry:
+    def catalog(self):
+        return Catalog()
+def load(data_dir, *, root, repositories):
+    if not (data_dir / 'registry.json').is_file() or repositories != {'vaevas': root}:
+        raise ValueError('missing or incorrect catalogue source')
+    return Registry()
+'''.replace('HISTORY_CHECK', "raise ValueError('historical row drift')" if corrupt else 'return {}'))
+
+    def test_explicit_catalogue_cli_renders_same_registry_and_checks_freshness(self):
+        self.catalog_fixture()
+        flags = ('--catalog-data', str(self.root / 'evas/capabilities/data'))
+        result = self.run_cli(*flags)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        output = self.root / 'evas/docs/development/TRACEABILITY.md'
+        self.assertIn('maintenance: 2 registered methods', output.read_text())
+        self.assertIn('1 historical records verified', output.read_text())
+        self.assertEqual(self.run_cli('--check', *flags).returncode, 0)
+
+    def test_corrupt_historical_source_or_missing_catalogue_cannot_rewrite_view(self):
+        self.assertEqual(self.run_cli().returncode, 0)
+        output = self.root / 'evas/docs/development/TRACEABILITY.md'
+        before = output.read_bytes()
+        self.catalog_fixture(corrupt=True)
+        flags = ('--catalog-data', str(self.root / 'evas/capabilities/data'))
+        result = self.run_cli(*flags)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('historical row drift', result.stderr)
+        self.assertEqual(output.read_bytes(), before)
+        shutil.rmtree(self.root / 'evas/capabilities/data')
+        self.assertNotEqual(self.run_cli(*flags).returncode, 0)
+        self.assertEqual(output.read_bytes(), before)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -55,5 +55,45 @@
 python3 -B evas/capabilities/registry.py
 python3 -B evas/capabilities/render.py
 python3 -B evas/capabilities/render.py --check
-python3 -B -m unittest discover -s evas/capabilities -p 'test_registry.py' -v
+python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v
 ```
+
+## 资产、实际方法与历史来源
+
+`data/registry.json` 的 `current` 选择当前版本，`object_parts` 只把同一逻辑登记拆成文件。
+`asset_catalog.py` 通过原 Registry 解析资产、方法、入口及历史记录，沿用同一内容绑定规则。
+文件级 GUARDS、实际发现方法和语义资格分别保存。生成方法保留工厂定义身份，
+原生 `unittest.skip` 包装器保留跳过声明及原方法定义；发现过程不执行测试体或 `setUp`。
+
+`scripts/capabilities/observe_assets.py` 独立观察 Git 跟踪的普通文件，保留所有观察行。
+范围策略分别列出 EVAS 资产、其他组件所有的文件和无法分类的路径。
+跨组件桥接必须登记具体路径及来源，未知目录会使对账失败。
+资产职责和消费者关系允许明确待审；没有发现调用者不能据此断言文件已无用途。
+
+普通源码使用整文件 SHA-256。目录元数据、派生视图及回归基线使用
+`external-input-manifest`，由实际执行输入清单绑定其本次字节。
+把目录自身的最新文件哈希写回目录会形成自引用，不能用这种方式认证当前目录。
+独立资产观察与回归 `ci_input_key` 的关系仍须按各自协议核对，不能凭两个摘要推定相等。
+
+历史审计原文保存在同仓库的固定提交
+[`3b1c193817b91a85cff8ea150b9710d9ba37d86c`](https://github.com/BucketSran/vaEVAS/tree/3b1c193817b91a85cff8ea150b9710d9ba37d86c/evas/capabilities/history)。
+它保留原裁决和执行范围，不授予当前方法资格。`source_reader.py` 仅读取固定 Git 对象，
+不自动取回来源，也不导入归档代码。缺少对象时可显式取回该提交：
+
+```sh
+git fetch origin 3b1c193817b91a85cff8ea150b9710d9ba37d86c
+```
+
+仅加载 Registry 会校验历史记录的声明结构。消费原裁决前，必须逐条调用
+`registry.catalog().read_history(record)`，核对原文的行、范围、ID、裁决及源码绑定。
+历史源码未匹配当前方法时保留具体原因，不能把模块匹配当作方法匹配。
+追溯矩阵的显式目录入口同时执行这些核对：
+
+```sh
+python3 -B scripts/traceability.py --catalog-data evas/capabilities/data
+python3 -B scripts/traceability.py --catalog-data evas/capabilities/data --check
+```
+
+Rust 方法使用实际 Cargo 测试二进制的原生 listing，与 Python 方法分别计数。
+`scripts/capabilities/discover_rust.py` 保留工具链、目标、二进制哈希和原始输出，
+listing 不表示测试体执行或逐函数源码归属。Rust job 原有完整测试仍独立执行。

@@ -128,6 +128,30 @@ jobs:
             runs/draft-regression.json*
           if-no-files-found: warn
           retention-days: 14
+  catalog-inventory:
+    needs: [selection, fast-checks]
+    if: always() && needs.selection.result == 'success' && needs.fast-checks.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Observe declared Python entries and tracked asset facts
+        env:
+          CI_INVENTORY_BASE: ${{ needs.selection.outputs.base }}
+          CI_INVENTORY_HEAD: ${{ needs.selection.outputs.head }}
+        run: python3 -B scripts/capabilities/collect_ci_inventory.py --root . --output runs/catalog-inventory --observe-only
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: catalog-inventory
+          path: runs/catalog-inventory/
+          if-no-files-found: error
+          retention-days: 14
   static-checks:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'
@@ -148,7 +172,7 @@ jobs:
           python3 -B scripts/diagnostic_inventory.py --check
           python3 -B scripts/verify_validation_version.py
           python3 -B -m unittest discover -s scripts/tests -v
-          python3 -B -m unittest discover -s evas/capabilities -p 'test_registry.py' -v
+          python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v
       - name: Independent mathematics and checker calibration (no simulator)
         if: needs.selection.outputs.calibration == 'true'
         run: |
@@ -236,6 +260,26 @@ jobs:
           retention-days: 14
       - name: Full Rust regression, including interval properties
         run: cargo +stable test --locked --workspace --manifest-path evas/rust_core/Cargo.toml
+      - name: Collect actual owned Rust binary listing
+        if: always()
+        run: |
+          mkdir -p runs
+          set +e
+          cargo +stable test --locked --workspace --no-run --message-format=json --manifest-path evas/rust_core/Cargo.toml > runs/rust-test-build.jsonl 2> runs/rust-test-build.stderr.txt
+          build_exit=$?
+          set -e
+          python3 -B scripts/capabilities/discover_rust.py --repo . --build-messages runs/rust-test-build.jsonl --build-exit "$build_exit" --report runs/rust-test-listing.json --raw-directory runs/rust-test-listing
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: rust-test-listing
+          path: |
+            runs/rust-test-listing.json
+            runs/rust-test-build.jsonl
+            runs/rust-test-build.stderr.txt
+            runs/rust-test-listing/
+          if-no-files-found: error
+          retention-days: 14
   regression:
     strategy:
       fail-fast: false
@@ -575,7 +619,7 @@ jobs:
     uses: ./.github/workflows/benchmark-evidence.yml
   ci-result:
     name: ${{ needs.selection.outputs.mode == 'iteration' && 'iteration-result' || 'ci-result' }}
-    needs: [selection, fast-checks, static-checks, provenance-paper, provenance-support, regression, rust-regression, regression-coverage, regression-admission, properties-and-ngspice, fuzz-smoke, package, benchmark]
+    needs: [selection, fast-checks, catalog-inventory, static-checks, provenance-paper, provenance-support, regression, rust-regression, regression-coverage, regression-admission, properties-and-ngspice, fuzz-smoke, package, benchmark]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5

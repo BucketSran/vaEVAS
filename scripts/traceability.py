@@ -12,6 +12,7 @@ Read source with AST; never import test modules. Invalid tags fail both modes.
 """
 import argparse
 import ast
+import importlib.util
 import pathlib
 import re
 import sys
@@ -177,6 +178,8 @@ def test_links(names):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--check", action="store_true", help="validate without writing; reject stale matrix")
+    ap.add_argument("--catalog-data", type=pathlib.Path,
+                    help="include the version-bound Registry catalogue and verify every historical source")
     args = ap.parse_args()
     try:
         caps = capabilities()
@@ -185,6 +188,14 @@ def main():
         cases = {f"case:{p.parent.name}" for p in (ROOT / "evas/validation/cases").glob("*/dut.va")}
         rows = collect(set(CONTRACTS) | set(caps), cases)
         result = render(rows, caps, cases)
+        if args.catalog_data is not None:
+            spec = importlib.util.spec_from_file_location(
+                '_traceability_registry', ROOT / 'evas/capabilities/registry.py')
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            data = args.catalog_data if args.catalog_data.is_absolute() else ROOT / args.catalog_data
+            registry = module.load(data, root=ROOT, repositories={'vaevas': ROOT})
+            result += '\n' + render_catalog_navigation(registry)
         if args.check:
             if not OUT.exists() or OUT.read_text() != result:
                 raise ValueError("TRACEABILITY.md is missing or stale; run python3 scripts/traceability.py")
@@ -196,6 +207,24 @@ def main():
         print(f"Traceability check failed: {error}", file=sys.stderr)
         return 1
     return 0
+
+
+def render_catalog_navigation(registry):
+    """Navigation only: pending and discovery counts are never normative coverage."""
+    catalog = registry.catalog()
+    history = catalog.current('historical-audit-record') + catalog.current('historical-finding')
+    for obj in history:
+        catalog.read_history(obj)
+    counts = catalog.namespace_counts()
+    lines = ['## Registry asset and method navigation', '',
+             'Metadata navigation only; GUARDS remain AST navigation. No normative coverage or qualification is inferred.', '']
+    for namespace, value in counts.items():
+        lines.append('- ' + namespace + ': ' + str(value['methods']) + ' registered methods; ' + str(value['generated']) + ' generated; ' + str(value['entrypoints']) + ' entrypoints')
+    lines.append('- ' + str(len(history)) + ' historical records verified against their original sources; no qualification is inferred')
+    assets = catalog.current('asset')
+    lines.append('- Pending asset roles: ' + str(sum(a['role']['status'] == 'pending' for a in assets)))
+    lines.append('- Consumer closure pending/partial: ' + str(sum(a['consumer_status'] != 'complete' for a in assets)))
+    return '\n'.join(lines) + '\n'
 
 
 if __name__ == "__main__":
